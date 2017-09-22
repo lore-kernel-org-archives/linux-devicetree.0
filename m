@@ -1,425 +1,688 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [RESEND PATCH v5 2/4] dmaengine: Add STM32 DMAMUX driver
-Date: Fri, 22 Sep 2017 09:31:30 +0200
-Message-ID: <1506065492-31478-3-git-send-email-pierre-yves.mordret@st.com>
-References: <1506065492-31478-1-git-send-email-pierre-yves.mordret@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: [PATCH v2] Input: add support for the Samsung S6SY761 touchscreen
+Date: Fri, 22 Sep 2017 16:40:01 +0900
+Message-ID: <20170922074001.20670-1-andi.shyti@samsung.com>
+References: <CGME20170922073955epcas2p2dd876b085514d587e9f08f627f29a871@epcas2p2.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506065492-31478-1-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the STM32 DMAMUX driver.
+The S6SY761 touchscreen is a capicitive multi-touch controller
+for mobile use. It's connected with i2c at the address 0x48.
 
-The DMAMUX request multiplexer allows routing a DMA request line between
-the peripherals and the DMA controllers of the product. The routing
-function is ensured by a programmable multi-channel DMA request line
-multiplexer. Each channel selects a unique DMA request line,
-unconditionally or synchronously with events from its DMAMUX
-synchronization inputs. The DMAMUX may also be used as a DMA request
-generator from programmable events on its input trigger signals
+This commit provides a basic version of the driver which can
+handle only initialization, touch events and power states.
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
----
- Version history:
-    v5:
-        * Set selected channel ID within a lock to avoid race condition.
-          Release if any error occurs
-    v4:
-        * Get rid of st,dmamux property and custom API between STM32
-          DMAMUX and DMA.
-          DMAMUX will read DMA masters from Device Tree from now on.
-          Merely one DMAMUX node is needed now.
-        * Only STM32 DMA are allowed to be connected onto DMAMUX
-        * channelID is computed locally within the driver and crafted in
-          dma_psec to be passed toward DMA master.
-          DMAMUX router sorts out which DMA master will serve the
-          request automatically.
-        * This version forbids the use of DMA in standalone and DMAMUX at
-          the same time : all clients need to be connected either on DMA
-          or DMAMUX ; no mix up
-    v3:
-        * change compatible to st,stm32h7-dmamux to be mode SoC specific
-    v2:
-        * Dynamic channelID allocation.
-        * Change of_property_... by device_property.
-        * New clock management.
-        * DMAMUX Configuration API.
----
----
- drivers/dma/Kconfig        |   9 ++
- drivers/dma/Makefile       |   1 +
- drivers/dma/stm32-dmamux.c | 327 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 337 insertions(+)
- create mode 100644 drivers/dma/stm32-dmamux.c
+The controller is controlled by a firmware which, in the version
+I currently have, doesn't provide all the possible
+functionalities mentioned in the datasheet.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index fadc4d8..04e381b 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -483,6 +483,15 @@ config STM32_DMA
- 	  If you have a board based on such a MCU and wish to use DMA say Y
- 	  here.
- 
-+config STM32_DMAMUX
-+	bool "STMicroelectronics STM32 dma multiplexer support"
-+	depends on STM32_DMA || COMPILE_TEST
-+	help
-+	  Enable support for the on-chip DMA multiplexer on STMicroelectronics
-+	  STM32 MCUs.
-+	  If you have a board based on such a MCU and wish to use DMAMUX say Y
-+	  here.
-+
- config S3C24XX_DMAC
- 	bool "Samsung S3C24XX DMA support"
- 	depends on ARCH_S3C24XX || COMPILE_TEST
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index f08f8de..a145ad1 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_RENESAS_DMA) += sh/
- obj-$(CONFIG_SIRF_DMA) += sirf-dma.o
- obj-$(CONFIG_STE_DMA40) += ste_dma40.o ste_dma40_ll.o
- obj-$(CONFIG_STM32_DMA) += stm32-dma.o
-+obj-$(CONFIG_STM32_DMAMUX) += stm32-dmamux.o
- obj-$(CONFIG_S3C24XX_DMAC) += s3c24xx-dma.o
- obj-$(CONFIG_TXX9_DMAC) += txx9dmac.o
- obj-$(CONFIG_TEGRA20_APB_DMA) += tegra20-apb-dma.o
-diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+---
+Hi,
+
+few changes from version 1:
+
+ - remove the low power functionality as it doesn't bring any
+   benefit
+ - use get_unaligned_be16 instead of the form 'a << 8 | b'
+ - use max_t instead of '? :'
+ - use managed 'devm_device_add_group()'
+
+Thanks Dimitry for your review,
+Andi
+
+ .../bindings/input/touchscreen/samsung,s6sy761.txt |  34 ++
+ drivers/input/touchscreen/Kconfig                  |  11 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/s6sy761.c                | 562 +++++++++++++++++++++
+ 4 files changed, 608 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
+ create mode 100644 drivers/input/touchscreen/s6sy761.c
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt b/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
 new file mode 100644
-index 0000000..22812e7
+index 000000000000..d9b7c2ff611e
 --- /dev/null
-+++ b/drivers/dma/stm32-dmamux.c
-@@ -0,0 +1,327 @@
++++ b/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
+@@ -0,0 +1,34 @@
++* Samsung S6SY761 touchscreen controller
++
++Required properties:
++- compatible		: must be "samsung,s6sy761"
++- reg			: I2C slave address, (e.g. 0x48)
++- interrupt-parent	: the phandle to the interrupt controller which provides
++			  the interrupt
++- interrupts		: interrupt specification
++- avdd-supply		: analogic power supply
++- vdd-supply		: power supply
++
++Optional properties:
++- touchscreen-size-x	: see touchscreen.txt. This property is embedded in the
++			  device. If defined it forces a different x resolution.
++- touchscreen-size-y	: see touchscreen.txt. This property is embedded in the
++			  device. If defined it forces a different y resolution.
++
++Example:
++
++i2c@00000000 {
++
++	/* ... */
++
++	touchscreen@48 {
++		compatible = "samsung,s6sy761";
++		reg = <0x48>;
++		interrupt-parent = <&gpa1>;
++		interrupts = <1 IRQ_TYPE_NONE>;
++		avdd-supply = <&ldo30_reg>;
++		vdd-supply = <&ldo31_reg>;
++		touchscreen-size-x = <4096>;
++		touchscreen-size-y = <4096>;
++	};
++};
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 176b1a74b2b7..c903db4cf7b2 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -383,6 +383,17 @@ config TOUCHSCREEN_S3C2410
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called s3c2410_ts.
+ 
++config TOUCHSCREEN_S6SY761
++	tristate "Samsung S6SY761 Touchscreen driver"
++	depends on I2C
++	help
++	  Say Y if you have the Samsung S6SY761 driver
++
++	  If unsure, say N
++
++	  To compile this driver as module, choose M here: the
++	  module will be called s6sy761.
++
+ config TOUCHSCREEN_GUNZE
+ 	tristate "Gunze AHL-51S touchscreen"
+ 	select SERIO
+diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
+index 6badce87037b..4f63439211fd 100644
+--- a/drivers/input/touchscreen/Makefile
++++ b/drivers/input/touchscreen/Makefile
+@@ -64,6 +64,7 @@ obj-$(CONFIG_TOUCHSCREEN_PENMOUNT)	+= penmount.o
+ obj-$(CONFIG_TOUCHSCREEN_PIXCIR)	+= pixcir_i2c_ts.o
+ obj-$(CONFIG_TOUCHSCREEN_RM_TS)		+= raydium_i2c_ts.o
+ obj-$(CONFIG_TOUCHSCREEN_S3C2410)	+= s3c2410_ts.o
++obj-$(CONFIG_TOUCHSCREEN_S6SY761)	+= s6sy761.o
+ obj-$(CONFIG_TOUCHSCREEN_SILEAD)	+= silead.o
+ obj-$(CONFIG_TOUCHSCREEN_SIS_I2C)	+= sis_i2c.o
+ obj-$(CONFIG_TOUCHSCREEN_ST1232)	+= st1232.o
+diff --git a/drivers/input/touchscreen/s6sy761.c b/drivers/input/touchscreen/s6sy761.c
+new file mode 100644
+index 000000000000..e9ad4fad1152
+--- /dev/null
++++ b/drivers/input/touchscreen/s6sy761.c
+@@ -0,0 +1,562 @@
 +/*
++ * Copyright (c) 2017 Samsung Electronics Co., Ltd.
++ * Author: Andi Shyti <andi.shyti@samsung.com>
 + *
-+ * Copyright (C) STMicroelectronics SA 2017
-+ * Author(s): M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-+ *            Pierre-Yves Mordret <pierre-yves.mordret@st.com>
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * License terms: GPL V2.0.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-+ * details.
-+ *
-+ * DMA Router driver for STM32 DMA MUX
-+ *
-+ * Based on TI DMA Crossbar driver
-+ *
++ * Samsung S6SY761 Touchscreen device driver
 + */
 +
-+#include <linux/clk.h>
++#include <asm/unaligned.h>
 +#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
++#include <linux/i2c.h>
++#include <linux/input/mt.h>
++#include <linux/input/touchscreen.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
 +#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_dma.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
++#include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
 +
-+#define STM32_DMAMUX_CCR(x)		(0x4 * (x))
-+#define STM32_DMAMUX_MAX_DMA_REQUESTS	32
-+#define STM32_DMAMUX_MAX_REQUESTS	255
++/* commands */
++#define S6SY761_SENSE_ON		0x10
++#define S6SY761_SENSE_OFF		0x11
++#define S6SY761_TOUCH_FUNCTION		0x30 /* R/W for get/set */
++#define S6SY761_FIRMWARE_INTEGRITY	0x21
++#define S6SY761_PANEL_ID		0x23
++#define S6SY761_DEVICE_ID		0x52
++#define S6SY761_BOOT_STATUS		0x55
++#define S6SY761_READ_ONE_EVENT		0x60
++#define S6SY761_READ_ALL_EVENT		0x61
++#define S6SY761_CLEAR_EVENT_STACK	0x62
++#define S6SY761_APPLICATION_MODE	0xe4
++#define S6SY761_TS_STATUS		0xaf
 +
-+struct stm32_dmamux {
-+	u32 master;
-+	u32 request;
-+	u32 chan_id;
++/* events */
++#define S6SY761_EVENT_INFO		0x02
++#define S6SY761_EVENT_VENDOR_INFO	0x07
++
++/* info */
++#define S6SY761_INFO_BOOT_COMPLETE	0x00
++
++/* firmware status */
++#define S6SY761_FW_OK			0x80
++
++/*
++ * the functionalities are put as a reference
++ * as in the device I am using none of them
++ * works therefore not used in this driver yet.
++ */
++/* touchscreen functionalities */
++#define S6SY761_MASK_TOUCH		BIT(0)
++#define S6SY761_MASK_HOVER		BIT(1)
++#define S6SY761_MASK_COVER		BIT(2)
++#define S6SY761_MASK_GLOVE		BIT(3)
++#define S6SY761_MASK_STYLUS		BIT(4)
++#define S6SY761_MASK_PALM		BIT(5)
++#define S6SY761_MASK_WET		BIT(6)
++#define S6SY761_MASK_PROXIMITY		BIT(7)
++
++/* event id */
++#define S6SY761_EVENT_ID_COORDINATE	0x00
++#define S6SY761_EVENT_ID_STATUS		0x01
++
++/* event register masks */
++#define S6SY761_MASK_TOUCH_STATE	0xc0 /* byte 0 */
++#define S6SY761_MASK_TID		0x3c
++#define S6SY761_MASK_EID		0x03
++#define S6SY761_MASK_X			0xf0 /* byte 3 */
++#define S6SY761_MASK_Y			0x0f
++#define S6SY761_MASK_Z			0x3f /* byte 6 */
++#define S6SY761_MASK_LEFT_EVENTS	0x3f /* byte 7 */
++#define S6SY761_MASK_TOUCH_TYPE		0xc0 /* MSB in byte 6, LSB in byte 7 */
++
++/* event touch state values */
++#define S6SY761_TS_NONE			0x00
++#define S6SY761_TS_PRESS		0x01
++#define S6SY761_TS_MOVE			0x02
++#define S6SY761_TS_RELEASE		0x03
++
++/* application modes */
++#define S6SY761_APP_NORMAL		0x0
++#define S6SY761_APP_LOW_POWER		0x1
++#define S6SY761_APP_TEST		0x2
++#define S6SY761_APP_FLASH		0x3
++#define S6SY761_APP_SLEEP		0x4
++
++#define S6SY761_EVENT_SIZE	8
++#define S6SY761_EVENT_COUNT	32
++#define S6SY761_ALL_EVENT	(S6SY761_EVENT_SIZE * S6SY761_EVENT_COUNT)
++#define S6SY761_DEVID_SIZE	3
++#define S6SY761_PANEL_ID_SIZE	11
++#define S6SY761_TS_STATUS_SIZE	5
++#define S6SY761_MAX_FINGERS	10
++
++#define S6SY761_DEV_NAME	"s6sy761"
++
++enum s6sy761_regulators {
++	S6SY761_REGULATOR_VDD,
++	S6SY761_REGULATOR_AVDD,
 +};
 +
-+struct stm32_dmamux_data {
-+	struct dma_router dmarouter;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	void __iomem *iomem;
-+	u32 dma_requests; /* Number of DMA requests connected to DMAMUX */
-+	u32 dmamux_requests; /* Number of DMA requests routed toward DMAs */
-+	spinlock_t lock; /* Protects register access */
-+	unsigned long *dma_inuse; /* Used DMA channel */
-+	u32 dma_reqs[]; /* Number of DMA Request per DMA masters.
-+			 *  [0] holds number of DMA Masters.
-+			 *  To be kept at very end end of this structure
-+			 */
++struct s6sy761_data {
++	struct i2c_client *client;
++	struct regulator_bulk_data regulators[2];
++	struct input_dev *input;
++	struct touchscreen_properties prop;
++	struct mutex mutex;
++
++	u8 data[S6SY761_ALL_EVENT];
++
++	u16 devid;
++	s32 prev_pm_state;
++	u8 tx_channel;
 +};
 +
-+static inline u32 stm32_dmamux_read(void __iomem *iomem, u32 reg)
++
++/*
++ * We can't simply use i2c_smbus_read_i2c_block_data because we
++ * need to read more than 255 bytes
++ */
++static int s6sy761_read_events(struct s6sy761_data *sdata, u16 left_event)
 +{
-+	return readl_relaxed(iomem + reg);
-+}
-+
-+static inline void stm32_dmamux_write(void __iomem *iomem, u32 reg, u32 val)
-+{
-+	writel_relaxed(val, iomem + reg);
-+}
-+
-+static void stm32_dmamux_free(struct device *dev, void *route_data)
-+{
-+	struct stm32_dmamux_data *dmamux = dev_get_drvdata(dev);
-+	struct stm32_dmamux *mux = route_data;
-+	unsigned long flags;
-+
-+	/* Clear dma request */
-+	spin_lock_irqsave(&dmamux->lock, flags);
-+
-+	stm32_dmamux_write(dmamux->iomem, STM32_DMAMUX_CCR(mux->chan_id), 0);
-+	clear_bit(mux->chan_id, dmamux->dma_inuse);
-+
-+	if (!IS_ERR(dmamux->clk))
-+		clk_disable(dmamux->clk);
-+
-+	spin_unlock_irqrestore(&dmamux->lock, flags);
-+
-+	dev_dbg(dev, "Unmapping DMAMUX(%u) to DMA%u(%u)\n",
-+		mux->request, mux->master, mux->chan_id);
-+
-+	kfree(mux);
-+}
-+
-+static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
-+					 struct of_dma *ofdma)
-+{
-+	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
-+	struct stm32_dmamux_data *dmamux = platform_get_drvdata(pdev);
-+	struct stm32_dmamux *mux;
-+	u32 i, min, max;
++	u8 cmd = S6SY761_READ_ALL_EVENT;
++	struct i2c_msg msgs[2] = {
++		{
++			.addr	= sdata->client->addr,
++			.len	= 1,
++			.buf	= &cmd,
++		},
++		{
++			.addr	= sdata->client->addr,
++			.flags	= I2C_M_RD,
++			.len	= left_event,
++			.buf	= sdata->data + S6SY761_EVENT_COUNT,
++		},
++	};
 +	int ret;
-+	unsigned long flags;
 +
-+	if (dma_spec->args_count != 3) {
-+		dev_err(&pdev->dev, "invalid number of dma mux args\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (dma_spec->args[0] > dmamux->dmamux_requests) {
-+		dev_err(&pdev->dev, "invalid mux request number: %d\n",
-+			dma_spec->args[0]);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		return ERR_PTR(-ENOMEM);
-+
-+	spin_lock_irqsave(&dmamux->lock, flags);
-+	mux->chan_id = find_first_zero_bit(dmamux->dma_inuse,
-+					   dmamux->dma_requests);
-+	set_bit(mux->chan_id, dmamux->dma_inuse);
-+	spin_unlock_irqrestore(&dmamux->lock, flags);
-+
-+	if (mux->chan_id == dmamux->dma_requests) {
-+		dev_err(&pdev->dev, "Run out of free DMA requests\n");
-+		ret = -ENOMEM;
-+		goto error;
-+	}
-+
-+	/* Look for DMA Master */
-+	for (i = 1, min = 0, max = dmamux->dma_reqs[i];
-+	     i <= dmamux->dma_reqs[0];
-+	     min += dmamux->dma_reqs[i], max += dmamux->dma_reqs[++i])
-+		if (mux->chan_id < max)
-+			break;
-+	mux->master = i - 1;
-+
-+	/* The of_node_put() will be done in of_dma_router_xlate function */
-+	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", i - 1);
-+	if (!dma_spec->np) {
-+		dev_err(&pdev->dev, "can't get dma master\n");
-+		ret = -EINVAL;
-+		goto error;
-+	}
-+
-+	/* Set dma request */
-+	spin_lock_irqsave(&dmamux->lock, flags);
-+	if (!IS_ERR(dmamux->clk)) {
-+		ret = clk_enable(dmamux->clk);
-+		if (ret < 0) {
-+			spin_unlock_irqrestore(&dmamux->lock, flags);
-+			dev_err(&pdev->dev, "clk_prep_enable issue: %d\n", ret);
-+			goto error;
-+		}
-+	}
-+	spin_unlock_irqrestore(&dmamux->lock, flags);
-+
-+	mux->request = dma_spec->args[0];
-+
-+	/*  craft DMA spec */
-+	dma_spec->args[3] = dma_spec->args[2];
-+	dma_spec->args[2] = dma_spec->args[1];
-+	dma_spec->args[1] = 0;
-+	dma_spec->args[0] = mux->chan_id - min;
-+	dma_spec->args_count = 4;
-+
-+	stm32_dmamux_write(dmamux->iomem, STM32_DMAMUX_CCR(mux->chan_id),
-+			   mux->request);
-+	dev_dbg(&pdev->dev, "Mapping DMAMUX(%u) to DMA%u(%u)\n",
-+		mux->request, mux->master, mux->chan_id);
-+
-+	return mux;
-+
-+error:
-+	clear_bit(mux->chan_id, dmamux->dma_inuse);
-+	kfree(mux);
-+	return ERR_PTR(ret);
-+}
-+
-+static const struct of_device_id stm32_stm32dma_master_match[] = {
-+	{ .compatible = "st,stm32-dma", },
-+	{},
-+};
-+
-+static int stm32_dmamux_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	struct device_node *dma_node;
-+	struct stm32_dmamux_data *stm32_dmamux;
-+	struct resource *res;
-+	void __iomem *iomem;
-+	int i, count, ret;
-+	u32 dma_req;
-+
-+	if (!node)
-+		return -ENODEV;
-+
-+	count = device_property_read_u32_array(&pdev->dev, "dma-masters",
-+					       NULL, 0);
-+	if (count < 0) {
-+		dev_err(&pdev->dev, "Can't get DMA master(s) node\n");
-+		return -ENODEV;
-+	}
-+
-+	stm32_dmamux = devm_kzalloc(&pdev->dev, sizeof(*stm32_dmamux) +
-+				    sizeof(u32) * (count + 1), GFP_KERNEL);
-+	if (!stm32_dmamux)
-+		return -ENOMEM;
-+
-+	dma_req = 0;
-+	for (i = 1; i <= count; i++) {
-+		dma_node = of_parse_phandle(node, "dma-masters", i - 1);
-+
-+		match = of_match_node(stm32_stm32dma_master_match, dma_node);
-+		if (!match) {
-+			dev_err(&pdev->dev, "DMA master is not supported\n");
-+			of_node_put(dma_node);
-+			return -EINVAL;
-+		}
-+
-+		if (of_property_read_u32(dma_node, "dma-requests",
-+					 &stm32_dmamux->dma_reqs[i])) {
-+			dev_info(&pdev->dev,
-+				 "Missing MUX output information, using %u.\n",
-+				 STM32_DMAMUX_MAX_DMA_REQUESTS);
-+			stm32_dmamux->dma_reqs[i] =
-+				STM32_DMAMUX_MAX_DMA_REQUESTS;
-+		}
-+		dma_req += stm32_dmamux->dma_reqs[i];
-+		of_node_put(dma_node);
-+	}
-+
-+	if (dma_req > STM32_DMAMUX_MAX_DMA_REQUESTS) {
-+		dev_err(&pdev->dev, "Too many DMA Master Requests to manage\n");
-+		return -ENODEV;
-+	}
-+
-+	stm32_dmamux->dma_requests = dma_req;
-+	stm32_dmamux->dma_reqs[0] = count;
-+	stm32_dmamux->dma_inuse = devm_kcalloc(&pdev->dev,
-+					       BITS_TO_LONGS(dma_req),
-+					       sizeof(unsigned long),
-+					       GFP_KERNEL);
-+	if (!stm32_dmamux->dma_inuse)
-+		return -ENOMEM;
-+
-+	if (device_property_read_u32(&pdev->dev, "dma-requests",
-+				     &stm32_dmamux->dmamux_requests)) {
-+		stm32_dmamux->dmamux_requests = STM32_DMAMUX_MAX_REQUESTS;
-+		dev_warn(&pdev->dev, "DMAMUX defaulting on %u requests\n",
-+			 stm32_dmamux->dmamux_requests);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	iomem = devm_ioremap_resource(&pdev->dev, res);
-+	if (!iomem)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&stm32_dmamux->lock);
-+
-+	stm32_dmamux->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(stm32_dmamux->clk)) {
-+		ret = PTR_ERR(stm32_dmamux->clk);
-+		if (ret == -EPROBE_DEFER)
-+			dev_info(&pdev->dev, "Missing controller clock\n");
++	ret = i2c_transfer(sdata->client->adapter, msgs, ARRAY_SIZE(msgs));
++	if (ret < 0)
 +		return ret;
++
++	return ret == ARRAY_SIZE(msgs) ? 0 : -EIO;
++}
++
++static void s6sy761_report_coordinates(struct s6sy761_data *sdata, u8 *event)
++{
++	u8 tid = ((event[0] & S6SY761_MASK_TID) >> 2) - 1;
++	u8 major = event[4];
++	u8 minor = event[5];
++	u8 z = event[6] & S6SY761_MASK_Z;
++	u16 x = (event[1] << 3) | ((event[3] & S6SY761_MASK_X) >> 4);
++	u16 y = (event[2] << 3) | (event[3] & S6SY761_MASK_Y);
++
++	input_mt_slot(sdata->input, tid);
++
++	input_mt_report_slot_state(sdata->input, MT_TOOL_FINGER, true);
++	input_report_abs(sdata->input, ABS_MT_POSITION_X, x);
++	input_report_abs(sdata->input, ABS_MT_POSITION_Y, y);
++	input_report_abs(sdata->input, ABS_MT_TOUCH_MAJOR, major);
++	input_report_abs(sdata->input, ABS_MT_TOUCH_MINOR, minor);
++	input_report_abs(sdata->input, ABS_MT_PRESSURE, z);
++
++	input_sync(sdata->input);
++}
++
++static void s6sy761_report_release(struct s6sy761_data *sdata, u8 *event)
++{
++	u8 tid = ((event[0] & S6SY761_MASK_TID) >> 2) - 1;
++
++	input_mt_slot(sdata->input, tid);
++	input_mt_report_slot_state(sdata->input, MT_TOOL_FINGER, false);
++
++	input_sync(sdata->input);
++}
++
++static void s6sy761_handle_coordinates(struct s6sy761_data *sdata, u8 *event)
++{
++	u8 touch_state = (event[0] & S6SY761_MASK_TOUCH_STATE) >> 6;
++
++	switch (touch_state) {
++
++	case S6SY761_TS_NONE:
++		break;
++	case S6SY761_TS_RELEASE:
++		s6sy761_report_release(sdata, event);
++		break;
++	case S6SY761_TS_PRESS:
++	case S6SY761_TS_MOVE:
++		s6sy761_report_coordinates(sdata, event);
++		break;
++	}
++}
++
++static void s6sy761_handle_events(struct s6sy761_data *sdata, u8 left_event)
++{
++	int i;
++
++	for (i = 0; i < left_event; i++) {
++		u8 *event = &sdata->data[i * S6SY761_EVENT_SIZE];
++		u8 event_id = event[0] & S6SY761_MASK_EID;
++
++		if (!event[0])
++			return;
++
++		switch (event_id) {
++
++		case S6SY761_EVENT_ID_COORDINATE:
++			s6sy761_handle_coordinates(sdata, event);
++			break;
++
++		case S6SY761_EVENT_ID_STATUS:
++			break;
++
++		default:
++			break;
++		}
++	}
++}
++
++static irqreturn_t s6sy761_irq_handler(int irq, void *dev)
++{
++	struct s6sy761_data *sdata = dev;
++	int ret;
++	u8 left_event;
++
++	mutex_lock(&sdata->mutex);
++	if (unlikely(!sdata->input))
++		goto out;
++
++	ret = i2c_smbus_read_i2c_block_data(sdata->client,
++					    S6SY761_READ_ONE_EVENT,
++					    S6SY761_EVENT_SIZE,
++					    sdata->data);
++	if (ret < 0) {
++		dev_err(&sdata->client->dev, "failed to read events\n");
++		goto out;
 +	}
 +
-+	stm32_dmamux->rst = devm_reset_control_get(&pdev->dev, NULL);
-+	if (!IS_ERR(stm32_dmamux->rst)) {
-+		reset_control_assert(stm32_dmamux->rst);
-+		udelay(2);
-+		reset_control_deassert(stm32_dmamux->rst);
-+	}
++	if (!sdata->data[0])
++		goto out;
 +
-+	stm32_dmamux->iomem = iomem;
-+	stm32_dmamux->dmarouter.dev = &pdev->dev;
-+	stm32_dmamux->dmarouter.route_free = stm32_dmamux_free;
++	left_event = sdata->data[7] & S6SY761_MASK_LEFT_EVENTS;
++	if (unlikely(left_event > S6SY761_EVENT_COUNT - 1))
++		goto out;
 +
-+	platform_set_drvdata(pdev, stm32_dmamux);
-+
-+	if (!IS_ERR(stm32_dmamux->clk)) {
-+		ret = clk_prepare_enable(stm32_dmamux->clk);
++	if (left_event) {
++		ret = s6sy761_read_events(sdata,
++					  left_event * S6SY761_EVENT_COUNT);
 +		if (ret < 0) {
-+			dev_err(&pdev->dev, "clk_prep_enable error: %d\n", ret);
-+			return ret;
++			dev_err(&sdata->client->dev, "failed to read events\n");
++			goto out;
 +		}
 +	}
 +
-+	/* Reset the dmamux */
-+	for (i = 0; i < stm32_dmamux->dma_requests; i++)
-+		stm32_dmamux_write(stm32_dmamux->iomem, STM32_DMAMUX_CCR(i), 0);
++	s6sy761_handle_events(sdata, left_event +  1);
 +
-+	if (!IS_ERR(stm32_dmamux->clk))
-+		clk_disable(stm32_dmamux->clk);
++	i2c_smbus_write_byte(sdata->client, S6SY761_CLEAR_EVENT_STACK);
 +
-+	return of_dma_router_register(node, stm32_dmamux_route_allocate,
-+				     &stm32_dmamux->dmarouter);
++out:
++	mutex_unlock(&sdata->mutex);
++	return IRQ_HANDLED;
 +}
 +
-+static const struct of_device_id stm32_dmamux_match[] = {
-+	{ .compatible = "st,stm32h7-dmamux" },
-+	{},
-+};
-+
-+static struct platform_driver stm32_dmamux_driver = {
-+	.probe	= stm32_dmamux_probe,
-+	.driver = {
-+		.name = "stm32-dmamux",
-+		.of_match_table = stm32_dmamux_match,
-+	},
-+};
-+
-+static int __init stm32_dmamux_init(void)
++static int s6sy761_input_open(struct input_dev *dev)
 +{
-+	return platform_driver_register(&stm32_dmamux_driver);
-+}
-+arch_initcall(stm32_dmamux_init);
++	struct s6sy761_data *sdata = input_get_drvdata(dev);
 +
-+MODULE_DESCRIPTION("DMA Router driver for STM32 DMA MUX");
-+MODULE_AUTHOR("M'boumba Cedric Madianga <cedric.madianga@gmail.com>");
-+MODULE_AUTHOR("Pierre-Yves Mordret <pierre-yves.mordret@st.com>");
++	return i2c_smbus_write_byte(sdata->client, S6SY761_SENSE_ON);
++}
++
++static void s6sy761_input_close(struct input_dev *dev)
++{
++	struct s6sy761_data *sdata = input_get_drvdata(dev);
++	int ret;
++
++	ret = i2c_smbus_write_byte(sdata->client, S6SY761_SENSE_OFF);
++	if (ret)
++		dev_err(&sdata->client->dev, "failed to turn off sensing\n");
++}
++
++static ssize_t s6sy761_sysfs_devid(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct s6sy761_data *sdata = dev_get_drvdata(dev);
++
++	return sprintf(buf, "%#x\n", sdata->devid);
++}
++
++static DEVICE_ATTR(devid, 0444, s6sy761_sysfs_devid, NULL);
++
++static struct attribute *s6sy761_sysfs_attrs[] = {
++	&dev_attr_devid.attr,
++	NULL
++};
++
++static struct attribute_group s6sy761_attribute_group = {
++	.attrs = s6sy761_sysfs_attrs
++};
++
++static int s6sy761_hw_init(struct s6sy761_data *sdata)
++{
++	u8 buffer[S6SY761_PANEL_ID_SIZE]; /* larger read size */
++	u8 event;
++	int ret;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(sdata->regulators),
++				    sdata->regulators);
++	if (ret)
++		return ret;
++
++	msleep(140);
++
++	ret = i2c_smbus_read_i2c_block_data(sdata->client,
++					    S6SY761_READ_ONE_EVENT,
++					    S6SY761_EVENT_SIZE,
++					    buffer);
++	if (ret < 0)
++		return ret;
++
++	event = (buffer[0] >> 2) & 0xf;
++
++	if ((event != S6SY761_EVENT_INFO &&
++		event != S6SY761_EVENT_VENDOR_INFO) ||
++		buffer[1] != S6SY761_INFO_BOOT_COMPLETE)
++		return -ENODEV;
++
++	ret = i2c_smbus_read_i2c_block_data(sdata->client,
++					    S6SY761_DEVICE_ID,
++					    S6SY761_DEVID_SIZE,
++					    buffer);
++	if (ret < 0)
++		return ret;
++
++	sdata->devid = get_unaligned_be16(buffer + 1);
++
++	ret = i2c_smbus_read_i2c_block_data(sdata->client,
++					    S6SY761_PANEL_ID,
++					    S6SY761_PANEL_ID_SIZE,
++					    buffer);
++	if (ret < 0)
++		return ret;
++
++	/* the user hasn't specified the touchscreen resolution */
++	if (!sdata->prop.max_x)
++		sdata->prop.max_x = get_unaligned_be16(buffer);
++
++	if (!sdata->prop.max_y)
++		sdata->prop.max_y = get_unaligned_be16(buffer + 2);
++
++	/* check if both max_x and max_y have a value */
++	if (!sdata->prop.max_x || !sdata->prop.max_y)
++		return -EINVAL;
++
++	/* if no tx channels defined, at least keep one */
++	sdata->tx_channel = max_t(u8, buffer[8], 1);
++
++	ret = i2c_smbus_read_byte_data(sdata->client,
++				       S6SY761_FIRMWARE_INTEGRITY);
++	if (ret < 0)
++		return ret;
++	else if (ret != S6SY761_FW_OK)
++		return -ENODEV;
++
++	ret = i2c_smbus_read_byte_data(sdata->client, S6SY761_BOOT_STATUS);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_read_i2c_block_data(sdata->client,
++					    S6SY761_TS_STATUS,
++					    S6SY761_TS_STATUS_SIZE,
++					    buffer);
++	if (ret < 0)
++		return ret;
++
++	ret = i2c_smbus_write_word_data(sdata->client,
++					S6SY761_TOUCH_FUNCTION,
++					S6SY761_MASK_TOUCH);
++	if (ret)
++		return ret;
++
++	enable_irq(sdata->client->irq);
++
++	return 0;
++}
++
++static void s6sy761_power_off(void *data)
++{
++	struct s6sy761_data *sdata = data;
++
++	disable_irq(sdata->client->irq);
++	regulator_bulk_disable(ARRAY_SIZE(sdata->regulators),
++						sdata->regulators);
++}
++
++static int s6sy761_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct s6sy761_data *sdata;
++	int err;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
++						I2C_FUNC_SMBUS_BYTE_DATA |
++						I2C_FUNC_SMBUS_I2C_BLOCK))
++		return -ENODEV;
++
++	sdata = devm_kzalloc(&client->dev, sizeof(*sdata), GFP_KERNEL);
++	if (!sdata)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, sdata);
++	sdata->client = client;
++	mutex_init(&sdata->mutex);
++
++	sdata->regulators[S6SY761_REGULATOR_VDD].supply = "vdd";
++	sdata->regulators[S6SY761_REGULATOR_AVDD].supply = "avdd";
++	err = devm_regulator_bulk_get(&client->dev,
++				      ARRAY_SIZE(sdata->regulators),
++				      sdata->regulators);
++	if (err)
++		return err;
++
++	err = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++					s6sy761_irq_handler,
++					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++					"s6sy761_irq", sdata);
++	if (err)
++		return err;
++
++	disable_irq(client->irq);
++
++	err = devm_add_action_or_reset(&client->dev, s6sy761_power_off, sdata);
++	if (err)
++		return err;
++
++	err = s6sy761_hw_init(sdata);
++	if (err)
++		return err;
++
++	sdata->input = devm_input_allocate_device(&client->dev);
++	if (!sdata->input)
++		return -ENOMEM;
++
++	sdata->input->name = S6SY761_DEV_NAME;
++	sdata->input->id.bustype = BUS_I2C;
++	sdata->input->open = s6sy761_input_open;
++	sdata->input->close = s6sy761_input_close;
++
++	touchscreen_parse_properties(sdata->input, true, &sdata->prop);
++
++	input_set_abs_params(sdata->input, ABS_MT_POSITION_X, 0,
++			     sdata->prop.max_x, 0, 0);
++	input_set_abs_params(sdata->input, ABS_MT_POSITION_Y, 0,
++			     sdata->prop.max_y, 0, 0);
++	input_set_abs_params(sdata->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
++	input_set_abs_params(sdata->input, ABS_MT_TOUCH_MINOR, 0, 255, 0, 0);
++	/* the pressure is represented in 6 bits */
++	input_set_abs_params(sdata->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
++
++	err = input_mt_init_slots(sdata->input,
++				  sdata->tx_channel,
++				  INPUT_MT_DIRECT);
++	if (err)
++		return err;
++
++	input_set_drvdata(sdata->input, sdata);
++
++	err = input_register_device(sdata->input);
++	if (err)
++		return err;
++
++	err = devm_device_add_group(&client->dev, &s6sy761_attribute_group);
++	if (err)
++		return err;
++
++	pm_runtime_enable(&client->dev);
++
++	return 0;
++}
++
++static int s6sy761_remove(struct i2c_client *client)
++{
++	pm_runtime_disable(&client->dev);
++
++	return 0;
++}
++
++static int __maybe_unused s6sy761_runtime_suspend(struct device *dev)
++{
++	struct s6sy761_data *sdata = dev_get_drvdata(dev);
++
++	sdata->prev_pm_state = i2c_smbus_read_byte_data(sdata->client,
++						S6SY761_APPLICATION_MODE);
++	if (sdata->prev_pm_state < 0)
++		return sdata->prev_pm_state;
++
++	return i2c_smbus_write_byte_data(sdata->client,
++				S6SY761_APPLICATION_MODE, S6SY761_APP_SLEEP);
++}
++
++static int __maybe_unused s6sy761_runtime_resume(struct device *dev)
++{
++	struct s6sy761_data *sdata = dev_get_drvdata(dev);
++
++	return i2c_smbus_write_byte_data(sdata->client,
++				S6SY761_APPLICATION_MODE, sdata->prev_pm_state);
++}
++
++static int __maybe_unused s6sy761_suspend(struct device *dev)
++{
++	struct s6sy761_data *sdata = dev_get_drvdata(dev);
++
++	s6sy761_power_off(sdata);
++
++	return 0;
++}
++
++static int __maybe_unused s6sy761_resume(struct device *dev)
++{
++	struct s6sy761_data *sdata = dev_get_drvdata(dev);
++
++	return s6sy761_hw_init(sdata);
++}
++
++static const struct dev_pm_ops s6sy761_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(s6sy761_suspend, s6sy761_resume)
++	SET_RUNTIME_PM_OPS(s6sy761_runtime_suspend,
++				s6sy761_runtime_resume, NULL)
++};
++
++#ifdef CONFIG_OF
++static const struct of_device_id s6sy761_of_match[] = {
++	{ .compatible = "samsung,s6sy761", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, s6sy761_of_match);
++#endif
++
++static const struct i2c_device_id s6sy761_id[] = {
++	{ "s6sy761", 0 },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, stmfts_id);
++
++static struct i2c_driver s6sy761_driver = {
++	.driver = {
++		.name = S6SY761_DEV_NAME,
++		.of_match_table = of_match_ptr(s6sy761_of_match),
++		.pm = &s6sy761_pm_ops,
++	},
++	.probe = s6sy761_probe,
++	.remove = s6sy761_remove,
++	.id_table = s6sy761_id,
++};
++
++module_i2c_driver(s6sy761_driver);
++
++MODULE_AUTHOR("Andi Shyti <andi.shyti@samsung.com>");
++MODULE_DESCRIPTION("Samsung S6SY761 Touch Screen");
 +MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.14.1
