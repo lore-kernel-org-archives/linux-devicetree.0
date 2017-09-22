@@ -1,100 +1,62 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 13/13] firmware: arm_sdei: Discover SDEI support via ACPI
-Date: Fri, 22 Sep 2017 19:26:14 +0100
-Message-ID: <20170922182614.27885-14-james.morse@arm.com>
-References: <20170922182614.27885-1-james.morse@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170922182614.27885-1-james.morse-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Al Cooper <al.cooper@broadcom.com>
+Subject: Re: [PATCH V5 0/4] Add Broadcom STB USB phy driver
+Date: Fri, 22 Sep 2017 14:33:45 -0400
+Message-ID: <CAGh=XADFNeQ9yp4hT8MHTXB-y1s7VTEa3r4Y5eyF9YXE72y4OA@mail.gmail.com>
+References: <1503683495-11766-1-git-send-email-alcooperx@gmail.com>
+ <f4625f5e-db00-ebcc-4618-6f00247edfab@gmail.com> <f7bb89bf-1a09-891c-4ae5-3dc2e4b38d97@ti.com>
+ <5DDF9572-B2D1-4316-B307-14749365221E@gmail.com> <4068eb4a-3982-742f-2b23-28a4b1484de2@gmail.com>
+ <73815a53-b07c-64f2-3648-b50e12e92958@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <73815a53-b07c-64f2-3648-b50e12e92958@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SDEI defines a new ACPI table to indicate the presence of the interface.
-The conduit is discovered in the same way as PSCI.
+I'll re-submit with all the CHECK warnings fixed.
 
-For ACPI we need to create the platform device ourselves as SDEI doesn't
-have an entry in the DSDT.
+Thanks
+Al
 
-The SDEI platform device should be created after ACPI has been initialised
-so that we can parse the table, but before GHES devices are created, which
-may register SDE events if they use SDEI as their notification type.
-
-Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
----
- drivers/firmware/arm_sdei.c | 41 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index 3bee2719d6f4..50b6b1d0fe72 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -912,6 +912,14 @@ static int sdei_get_conduit(struct platform_device *pdev)
- 		}
- 
- 		pr_warn("invalid \"method\" property: %s\n", method);
-+	} else if (IS_ENABLED(CONFIG_ACPI) && !acpi_disabled) {
-+		if (acpi_psci_use_hvc()) {
-+			sdei_firmware_call = &sdei_smccc_hvc;
-+			return CONDUIT_HVC;
-+		} else {
-+			sdei_firmware_call = &sdei_smccc_smc;
-+			return CONDUIT_SMC;
-+		}
- 	}
- 
- 	return CONDUIT_INVALID;
-@@ -1025,14 +1033,45 @@ static bool __init sdei_present_dt(void)
- 	return true;
- }
- 
-+static bool __init sdei_present_acpi(void)
-+{
-+	acpi_status status;
-+	struct platform_device *pdev;
-+	struct acpi_table_header *sdei_table_header;
-+
-+	if (acpi_disabled)
-+		return false;
-+
-+	status = acpi_get_table(ACPI_SIG_SDEI, 0, &sdei_table_header);
-+	if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
-+		const char *msg = acpi_format_exception(status);
-+
-+		pr_info("Failed to get ACPI:SDEI table, %s\n", msg);
-+	}
-+	if (ACPI_FAILURE(status))
-+		return false;
-+
-+	pdev = platform_device_register_simple(sdei_driver.driver.name, 0, NULL,
-+					       0);
-+	if (IS_ERR(pdev))
-+		return false;
-+
-+	return true;
-+}
-+
- static int __init sdei_init(void)
- {
--	if (sdei_present_dt())
-+	if (sdei_present_dt() || sdei_present_acpi())
- 		platform_driver_register(&sdei_driver);
- 
- 	return 0;
- }
- 
-+/*
-+ * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-+ * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-+ * by device_initcall(). We want to be called in the middle.
-+ */
- subsys_initcall_sync(sdei_init);
- 
- int sdei_event_handler(struct pt_regs *regs,
--- 
-2.13.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Sep 21, 2017 at 5:39 AM, 'Kishon Vijay Abraham I' via
+BCM-KERNEL-FEEDBACK-LIST,PDL
+<bcm-kernel-feedback-list.pdl@broadcom.com> wrote:
+> Hi Florian,
+>
+> On Thursday 21 September 2017 04:07 AM, Florian Fainelli wrote:
+>> Hi Kishon,
+>>
+>> On 09/15/2017 04:49 PM, Florian Fainelli wrote:
+>>> On September 4, 2017 11:11:47 PM PDT, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>> Florian,
+>>>>
+>>>> On Saturday 02 September 2017 07:46 AM, Florian Fainelli wrote:
+>>>>>
+>>>>>
+>>>>> On 08/25/2017 10:51 AM, Al Cooper wrote:
+>>>>>> Add a new USB Phy driver for Broadcom STB SoCs. This driver
+>>>>>> supports Broadcom STB ARM SoCs. This driver in
+>>>>>> combination with the Broadcom STB ohci, ehci and xhci
+>>>>>> drivers will enable USB1.1, USB2.0 and USB3.0 support.
+>>>>>> This Phy driver also supports the Broadcom BDC gadget
+>>>>>> driver.
+>>>>>
+>>>>> Thanks Al! Kishon, feel free to merge everything through your tree
+>>>> there
+>>>>> should not be any conflicts with drivers/soc/bcm/brcmstb/common.c and
+>>>>> include/linux/soc/brcmstb/brcmstb.h.
+>>>>
+>>>> I'll start merging once 4.14 -rc1 is tagged.
+>>>
+>>> OK, does not that mean we will be missing this driver in 4.14? I suppose that's fine. Thanks!
+>>
+>> Gentle ping, v4.14-rc1 is now out, can you let us know if this patch
+>> series is good with you? Thanks!
+>
+> Thank you for reminding. Actually the patch series has quite a few "CHECK"
+> checkpatch warnings. Can that be fixed before merging it?
+>
+> Thanks
+> Kishon
