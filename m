@@ -1,80 +1,126 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: enable gpio for pin groups
-Date: Fri, 22 Sep 2017 15:23:05 +0200
-Message-ID: <CACRpkdacz+oC_8J5VHSsKXHGqxn96ETziu+ifUp4XHHrwcqbtA@mail.gmail.com>
-References: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v2] ARM: dts: iwg22d: Enable SDHI0 controller
+Date: Fri, 22 Sep 2017 13:33:39 +0000
+Message-ID: <TY1PR06MB08955E235768A72D33FE2AD3C0670@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <TY1PR06MB0702E99A48352C055705E3A9B7670@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <1506085262-13639-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506085262-13639-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 21, 2017 at 8:28 AM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+Hello Simon,
 
-> on an i.MX25 machine on my desk a UART RX line is guarded by a transistor
-> like this:
+just to clarify the changes between v1 and v2, we can't use SDR50 and SDR10=
+4 (due to an HW issue) therefore the pinctrl for UHS has been removed and w=
+e dropped property "sd-uhs-sdr104". High Speed has been tested, therefore i=
+f you are happy with the patch I guess you can update the following page ac=
+cordingly:
+http://elinux.org/index.php?title=3DRenesas-MMC-Enabled-Speeds&type=3Drevis=
+ion&diff=3D451426&oldid=3D451421
+
+Although (due to a bug) sdhi0 may not hold a reference to "vccq_sdhi0", the=
+ gpio regulator will initialize "SDHI0 VccQ" at 3.3V.
+I have sent another patch (mmc: tmio: check mmc_regulator_get_supply return=
+ value) to start a discussion about a possible fix for the bug.
+
+Let me know if you need more information.
+
+Thanks,
+Fabrizio
+
+> -----Original Message-----
+> From: linux-renesas-soc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-renesas-soc-o=
+wner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Fabrizio Castro
+> Sent: 22 September 2017 14:01
+> To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>=
+; Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>;
+> Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Chris Paterson <Chris.Paterson2@ren=
+esas.com>; Fabrizio Castro
+> <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>; Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>; dev=
+icetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-renesas-
+> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Chris Paterson=
+ <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Subject: [PATCH v2] ARM: dts: iwg22d: Enable SDHI0 controller
 >
->         ,------------------------.
->         | ,---------.            |
->         | |  imx25  o--RX----=E2=97=81---o---
->         | |         o--GPIO--'   |
->         | `---------'            |
->         `------------------------'
-
-This is inside the SoC, right, not outside it?
-
-In the rest of my answer I assume this.
-
-If this is on the board, using enable-gpios is proper.
-
-> My first idea was to make this a property of the UART and added a
-> enable-gpios property for it[1]. But now I wonder if this is better
-> abstracted as an enable-gpios property in the pinctrl node. Something
-> like:
+> Enable the SDHI0 controller on iWave RZ/G1E carrier board.
 >
->         pinctrl_uart5: uart5 {
->                 fsl,pins =3D <
->                         MX25_PAD_ECB__UART5_TXD                 0x0000208=
-0 /* TXD */
->                         MX25_PAD_LBA__UART5_RXD                 0x0000000=
-0 /* RXD */
->                         MX25_PAD_CS4__UART5_CTS                 0x0000200=
-1 /* RTS */
->                         MX25_PAD_CS5__GPIO_3_21                 0x0000200=
-1 /* #RXD_EN */
->                 >;
->                 enable-gpios =3D <&gpio3 21 GPIO_ACTIVE_LOW>;
->         };
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 29 +++++++++++++++++++++++=
+++++++
+>  1 file changed, 29 insertions(+)
 >
-> Would this make sense? Maybe with a more intuitive name?
+> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/=
+dts/r8a7745-iwg22d-sodimm.dts
+> index aac84c6..8772c56 100644
+> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> @@ -24,6 +24,19 @@
+>  bootargs =3D "ignore_loglevel rw root=3D/dev/nfs ip=3Ddhcp";
+>  stdout-path =3D "serial0:115200n8";
+>  };
+> +
+> +vccq_sdhi0: regulator-vccq-sdhi0 {
+> +compatible =3D "regulator-gpio";
+> +
+> +regulator-name =3D "SDHI0 VccQ";
+> +regulator-min-microvolt =3D <1800000>;
+> +regulator-max-microvolt =3D <3300000>;
+> +
+> +gpios =3D <&gpio0 20 GPIO_ACTIVE_LOW>;
+> +gpios-states =3D <1>;
+> +states =3D <3300000 1
+> +  1800000 0>;
+> +};
+>  };
+>
+>  &pfc {
+> @@ -36,6 +49,12 @@
+>  groups =3D "avb_mdio", "avb_gmii";
+>  function =3D "avb";
+>  };
+> +
+> +sdhi0_pins: sd0 {
+> +groups =3D "sdhi0_data4", "sdhi0_ctrl";
+> +function =3D "sdhi0";
+> +power-source =3D <3300>;
+> +};
+>  };
+>
+>  &scif4 {
+> @@ -63,3 +82,13 @@
+>  micrel,led-mode =3D <1>;
+>  };
+>  };
+> +
+> +&sdhi0 {
+> +pinctrl-0 =3D <&sdhi0_pins>;
+> +pinctrl-names =3D "default";
+> +
+> +vmmc-supply =3D <&reg_3p3v>;
+> +vqmmc-supply =3D <&vccq_sdhi0>;
+> +cd-gpios =3D <&gpio6 6 GPIO_ACTIVE_LOW>;
+> +status =3D "okay";
+> +};
+> --
+> 2.7.4
 
-I would point to "GPIO mode pitfalls" in
-Documentation/driver-api/pinctl.rst
 
-If the construction above is inside the SoC, this line is just called
-"GPIO" out of habit.
 
-Think about it: is it really "general purpose input/output"?
-It looks more like "special purpose, output-only, RX-enable line".
 
-The only reason it is called "GPIO" is because the bit activating
-it happens to be inside some silicon block that the hardware
-engineer calls "GPIO", but it is not GPIO.
-
-I would definately try to set it up as part of the pin control state
-in the device tree like you illustrate, and not use the enable-gpios
-at all.
-
-Possibly, if this bit also appears in a generic GPIO block with a bunch
-of other GPIOs you need to mask off this GPIO from generic use
-if you want to be pedantic about things. But generally we just leave
-that kind of things open for the developer so they can freely
-shoot themselves in the foot with it.
-
-Yours,
-Linus Walleij
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
