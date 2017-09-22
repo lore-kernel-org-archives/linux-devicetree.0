@@ -1,37 +1,42 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 0/2] Support SDHCI on 8974pro devices
-Date: Fri, 22 Sep 2017 11:45:32 +0200
-Message-ID: <CAPDyKFqM6x2QM9Jz4J2ddh7fOLaR+AELCC7AgiZgxxKjNFETzQ@mail.gmail.com>
-References: <20170915233524.1375-1-bjorn.andersson@linaro.org>
+From: Tao Wang <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH 0/9] add support for Hi3660 tsensor
+Date: Fri, 22 Sep 2017 17:42:03 +0800
+Message-ID: <1506073332-92438-1-git-send-email-kevin.wangtao@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170915233524.1375-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Ritesh Harjani <riteshh@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lonela.Voinescu-5wv7dgnIgG8@public.gmane.org, Valentin.Schneider-5wv7dgnIgG8@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gengyanping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kevin Wangtao <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 September 2017 at 01:35, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> The calibration clocks for the delay circut should be enabled, as done in the
-> downstream kernel, in order for reset of the SDHCI not to fail on some Qualcomm
-> platforms (e.g. 8974pro). These patches makes it possible to reference these
-> clocks.
->
-> Bjorn Andersson (2):
->   mmc: sdhci-msm: Utilize bulk clock API
->   mmc: sdhci-msm: Enable delay circuit calibration clocks
->
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |  2 +
->  drivers/mmc/host/sdhci-msm.c                       | 90 +++++++++++-----------
->  2 files changed, 46 insertions(+), 46 deletions(-)
->
-> --
-> 2.12.0
->
+From: Kevin Wangtao <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thanks, applied for next!
+This patchset reorganize hisi thermal driver and make it both
+support Hi6220 and Hi3660.
+This patchset is based on Daniel thermal patch V2.
+https://lkml.org/lkml/2017/9/4/432
 
-Kind regards
-Uffe
+Kevin Wangtao (9):
+  thermal/drivers/hisi: move clk operation to related function
+  thermal/drivers/hisi: use round up step value
+  thermal/drivers/hisi: put platform code together
+  thermal/drivers/hisi: add platform prefix to function name
+  thermal/drivers/hisi: perpare to add support for other hisi platform
+  thermal/drivers/hisi: add support for multi temp threshold
+  dt-bindings: Document the hi3660 thermal sensor binding
+  thermal/drivers/hisi: add support for hi3660 SoC
+  arm64: dts: register Hi3660's thermal sensor
+
+ .../bindings/thermal/hisilicon-thermal.txt         |   9 +
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   8 +
+ drivers/thermal/hisi_thermal.c                     | 494 ++++++++++++++-------
+ 3 files changed, 351 insertions(+), 160 deletions(-)
+
+-- 
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
