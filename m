@@ -1,87 +1,72 @@
-From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: bcm283x: Fix console path on RPi3
-Date: Fri, 22 Sep 2017 09:15:54 +0200
-Message-ID: <1506064554-4991-1-git-send-email-loic.poulain@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+Date: Fri, 22 Sep 2017 09:30:51 +0200
+Message-ID: <87377fmbpw.fsf@free-electrons.com>
+References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170922020429.20941-1-kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+        (Kalyan Kinthada's message of "Fri, 22 Sep 2017 14:04:29 +1200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Contrary to other RPi devices, RPi3 uses uart0 to communicate with
-the BCM43438 bluetooth controller. uart1 is then used for the console.
-Today, the console configuration is inherited from the bcm283x dtsi
-(bootargs) which is not the correct one for the RPi3. This leads to
-routing issue and confuses the Bluetooth controller with unexpected
-data.
-
-This patch introduces chosen/stdout path to configure console to uart0
-on bcm283x family and overwrite it to uart1 in the RPi3 dts.
-
-Create serial0/1 aliases referring to uart0 ant uart1 paths.
-Remove unneeded earlyprintk.
-
-Fixes: 4188ea2aeb6d ("ARM: bcm283x: Define UART pinmuxing on board level")
-Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- v2: remove serial aliases redefinition in bcm2835-rpi-zero-w.dts
-
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 2 --
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts    | 5 +++++
- arch/arm/boot/dts/bcm283x.dtsi           | 7 ++++++-
- 3 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-index 82651c3..35ace1b 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -22,8 +22,6 @@
- 	aliases {
- 		uart0 = "/soc/serial@7e201000";
- 		uart1 = "/soc/serial@7e215040";
--		serial0 = "/soc/serial@7e201000";
--		serial1 = "/soc/serial@7e215040";
- 	};
+Hi Kalyan,
  
- 	leds {
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index 20725ca..f1c0811 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -8,6 +8,11 @@
- 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
- 	model = "Raspberry Pi 3 Model B";
- 
-+	chosen {
-+		/* 8250 auxiliar UART instead of pl011 */
-+		stdout-path = "serial1:115200n8";
-+	};
-+
- 	memory {
- 		reg = <0 0x40000000>;
- 	};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 431dcfc..013431e 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -20,8 +20,13 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
- 	chosen {
--		bootargs = "earlyprintk console=ttyAMA0";
-+		stdout-path = "serial0:115200n8";
- 	};
- 
- 	thermal-zones {
+ On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
+
+> All armada-38x variants(380, 385, 388) SoCs have an issue
+> in i2c controller which violates the i2c repeated start timing.
+
+
+Did you had an issue with one of the SoC ?
+If yes what was your setting ?
+On my side I never managed to have this sort of issue on Armada 38x.
+
+>
+> This errata is fixed in the i2c-mv64xxx driver but enabled
+> only for devices with compatible string "marvell,mv78230-i2c".
+
+In this case why not just adding the "marvell,mv78230-i2c" as compatible
+string in the appropriate device tree files ?
+
+Gregory
+
+>
+> This patch introduces a new compatible string
+> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs
+> so that the workaound is enabled.
+
+
+>
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> index 5c30026921..fc100b6bdb 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> @@ -14,6 +14,7 @@ Required properties :
+>                           very rare, initial version of the SoC which
+>                           had broken offload support.  Linux
+>                           auto-detects this and sets it appropriately.
+> +                     - "marvell,armada-38x-i2c"
+>   - interrupts      : The interrupt number
+>  
+>  Optional properties :
+> -- 
+> 2.14.1
+>
+
 -- 
-1.9.1
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
