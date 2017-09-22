@@ -1,69 +1,49 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device
- Tree bindings
-Date: Fri, 22 Sep 2017 16:52:14 +0200
-Message-ID: <20170922145214.u245ka35az5ewthm@flea.lan>
-References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
- <20170922114703.30511-2-maxime.ripard@free-electrons.com>
- <20170922120106.mfxoh34anazqakvz@valkosipuli.retiisi.org.uk>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: add compatible string for Allwinner
+ V3s SoC
+Date: Fri, 22 Sep 2017 22:52:19 +0800
+Message-ID: <01d17ee85f0e59b927a9f24d1c541d33@aosc.io>
+References: <20170822052322.15338-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yvg77p54kzhem33d"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170922120106.mfxoh34anazqakvz@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170822052322.15338-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+在 2017-08-22 13:23，Icenowy Zheng 写道：
+> The compatible string for Allwinner V3s SoC used to be missing.
+> 
+> Add it to the binding document.
+> 
+> Fixes: b074fede01c0 ("arm: sunxi: add support for V3s SoC")
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
---yvg77p54kzhem33d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maxime,
+Ping. Have you checked this patchset?
 
-Hi Sakari,
-
-On Fri, Sep 22, 2017 at 12:01:06PM +0000, Sakari Ailus wrote:
-> On Fri, Sep 22, 2017 at 01:47:02PM +0200, Maxime Ripard wrote:
-> > The Cadence MIPI-CSI2 RX controller is a CSI2 bridge that supports up t=
-o 4
->=20
-> Should this be TX?
->=20
-> I was just thinking what does this chip do, and saw both. RX it at least
-> less common. :-)
-
-Yes, definitely :)
-
-This one's a transceiver, the other one a receiver.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---yvg77p54kzhem33d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZxSOeAAoJEBx+YmzsjxAgFNoP/jAnAZoXrmACWmp81/g53dlT
-AM5W8Z3qH9+imHq8ubnGpWXKY34D0gMQTcNzHofaxK/aZNvAAcWlq0I2BaD93RzO
-GsCOss2jbRUBHHAdoQY2wJf/uMK4caFjBI0HiQILcihhwUgH4kY6CLjOrGE5dvW3
-uewqSE7DIxiSNOggIplH5tXvi3SXBS1L4PjYFUvU2lwNWl6Ip7I3d8mDUafJrlOM
-X3lak8A7afwS/9aejF26j9G8GJNOuSW2mM2u6xv0mqeCU+KfrAWRDkEGRVkgB0ad
-OQEjmxU/S8Mav/yDCIXt4+Gyi6yVRsDCNF2A3UVjalT73AmsRGtvKFUJfZdXvjJf
-0d0qs0CGXNizTUuA6clBrwOwEicmPza9w5D3FNFzNX3sEc78ITwB2OTytTMpyDjT
-nDEUO6WyiJjmOx+y/ghzoSyRSeWkoO83VDWLTzb4SZnZC3pqhBYiGHNfzpy79xdQ
-uDNDK4pjYauzLvMS9G5iO0BVNN6EUuPSZFMoW9Ck45ULFu72cFSjCgY6gF3s+g1t
-4LQr9821WdoaVIoq0kgfuxP9Ucst06FczDIt7gwZxy7AUGtc9u0LolUJNyNsQhHI
-iymx9pjeiK0nu1rcUlZSOoP0zM94+ZXyGOK6SD9HjY6jnrpW31dFAsLG6NzT1yqo
-wvRQXd/+ZC79enutDgJw
-=uB1p
------END PGP SIGNATURE-----
-
---yvg77p54kzhem33d--
+> ---
+>  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt
+> b/Documentation/devicetree/bindings/arm/sunxi.txt
+> index d2c46449b4eb..f35c6ada5a65 100644
+> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
+> @@ -14,6 +14,7 @@ using one of the following compatible strings:
+>    allwinner,sun8i-a83t
+>    allwinner,sun8i-h2-plus
+>    allwinner,sun8i-h3
+> +  allwinner,sun8i-v3s
+>    allwinner,sun9i-a80
+>    allwinner,sun50i-a64
+>    nextthing,gr8
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
