@@ -1,142 +1,68 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2
- receiver
-Date: Fri, 22 Sep 2017 19:39:45 +0200 (CEST)
-Message-ID: <73619863.196918.1506101985740@email.1und1.de>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
- <1814950930.414004.1506062733728@email.1und1.de>
- <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: enable gpio for pin groups
+Date: Fri, 22 Sep 2017 20:02:19 +0200
+Message-ID: <20170922180219.chvjuxmrharnw332@pengutronix.de>
+References: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
+ <CACRpkdacz+oC_8J5VHSsKXHGqxn96ETziu+ifUp4XHHrwcqbtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdacz+oC_8J5VHSsKXHGqxn96ETziu+ifUp4XHHrwcqbtA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
-
-> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 22. September 2017 um 18:07 geschrieben:
+On Fri, Sep 22, 2017 at 03:23:05PM +0200, Linus Walleij wrote:
+> On Thu, Sep 21, 2017 at 8:28 AM, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
 > 
-> 
-> Hi Stefan
-> 
-> On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> > Hi Dave,
+> > on an i.MX25 machine on my desk a UART RX line is guarded by a transistor
+> > like this:
 > >
-> >> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 20. September 2017 um 18:07 geschrieben:
-> >>
-> >>
-> >> Document the DT bindings for the CSI2/CCP2 receiver peripheral
-> >> (known as Unicam) on BCM283x SoCs.
-> >>
-> >> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-> >> ---
-> >>
-> >> Changes since v2
-> >> - Removed all references to Linux drivers.
-> >> - Reworded section about disabling the firmware driver.
-> >> - Renamed clock from "lp_clock" to "lp" in description and example.
-> >> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
-> >>   and data-lanes.
-> >> - Corrected typo in example from csi to csi1.
-> >> - Removed unnecessary #address-cells and #size-cells in example.
-> >> - Removed setting of status from the example.
-> >>
-> >>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
-> >>  1 file changed, 85 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> new file mode 100644
-> >> index 0000000..7714fb3
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> @@ -0,0 +1,85 @@
-> >> +Broadcom BCM283x Camera Interface (Unicam)
-> >> +------------------------------------------
-> >> +
-> >> +The Unicam block on BCM283x SoCs is the receiver for either
-> >> +CSI-2 or CCP2 data from image sensors or similar devices.
-> >> +
-> >> +The main platform using this SoC is the Raspberry Pi family of boards.
-> >> +On the Pi the VideoCore firmware can also control this hardware block,
-> >> +and driving it from two different processors will cause issues.
-> >> +To avoid this, the firmware checks the device tree configuration
-> >> +during boot. If it finds device tree nodes called csi0 or csi1 then
-> >> +it will stop the firmware accessing the block, and it can then
-> >> +safely be used via the device tree binding.
-> >> +
-> >> +Required properties:
-> >> +===================
-> >> +- compatible : must be "brcm,bcm2835-unicam".
-> >> +- reg                : physical base address and length of the register sets for the
-> >> +               device.
-> >> +- interrupts : should contain the IRQ line for this Unicam instance.
-> >> +- clocks     : list of clock specifiers, corresponding to entries in
-> >> +               clock-names property.
-> >> +- clock-names        : must contain an "lp" entry, matching entries in the
-> >> +               clocks property.
-> >> +
-> >> +Unicam supports a single port node. It should contain one 'port' child node
-> >> +with child 'endpoint' node. Please refer to the bindings defined in
-> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >> +
-> >> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
-> >> +are mandatory.
-> >> +Data lane reordering is not supported so the data lanes must be in order,
-> >> +starting at 1. The number of data lanes should represent the number of
-> >> +usable lanes for the hardware block. That may be limited by either the SoC or
-> >> +how the platform presents the interface, and the lower value must be used.
-> >> +
-> >> +Lane reordering is not supported on the clock lane either, so the optional
-> >> +property "clock-lane" will implicitly be <0>.
-> >> +Similarly lane inversion is not supported, therefore "lane-polarities" will
-> >> +implicitly be <0 0 0 0 0>.
-> >> +Neither of these values will be checked.
-> >> +
-> >> +Example:
-> >> +     csi1: csi1@7e801000 {
-> >> +             compatible = "brcm,bcm2835-unicam";
-> >> +             reg = <0x7e801000 0x800>,
-> >> +                   <0x7e802004 0x4>;
+> >         ,------------------------.
+> >         | ,---------.            |
+> >         | |  imx25  o--RX----◁---o---
+> >         | |         o--GPIO--'   |
+> >         | `---------'            |
+> >         `------------------------'
+> 
+> This is inside the SoC, right, not outside it?
+> 
+> In the rest of my answer I assume this.
+
+No, that's on the board. So your reply unfortunately doesn't match the
+problem :-|
+
+> If this is on the board, using enable-gpios is proper.
+
+enable-gpios as I suggested below that is? If so I assume you will be
+open for a generic approach to implement this?
+
+> > My first idea was to make this a property of the UART and added a
+> > enable-gpios property for it[1]. But now I wonder if this is better
+> > abstracted as an enable-gpios property in the pinctrl node. Something
+> > like:
 > >
-> > sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
-> 
-> CMI (Clock Manager Image) consists of a total of 4 registers.
-> 0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
-> inversion of the clock and data lanes (2 data lanes available on
-> CAM0).
-> 0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
-> inversion of the clock and data lanes (4 data lanes available on
-> CAM1).
-> 0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
-> 0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
-> default value is the required value. Nothing touches it that I can
-> find.
+> >         pinctrl_uart5: uart5 {
+> >                 fsl,pins = <
+> >                         MX25_PAD_ECB__UART5_TXD                 0x00002080 /* TXD */
+> >                         MX25_PAD_LBA__UART5_RXD                 0x00000000 /* RXD */
+> >                         MX25_PAD_CS4__UART5_CTS                 0x00002001 /* RTS */
+> >                         MX25_PAD_CS5__GPIO_3_21                 0x00002001 /* #RXD_EN */
+> >                 >;
+> >                 enable-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
+> >         };
+> >
+> > Would this make sense? Maybe with a more intuitive name?
 
-thanks for providing these information.
+(kept for reference)
 
-> 
-> The range listed only covers the one register associated with that
-> Unicam instance, so no other users. The other two aren't touched.
-> Do 16 active register bits solely for camera clock gating really
-> warrant a full clock driver?
+Uwe
 
-As long as there no new driver in the future, which also needs to touch these gates i'm fine.
-
-Stefan
-
-> 
->   Dave
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
