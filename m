@@ -1,67 +1,47 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/4] rtc: mediatek: enhance the description for MediaTek
- PMIC based RTC
-Date: Fri, 22 Sep 2017 16:07:16 +0800
-Message-ID: <1506067636.26847.2.camel@mtksdaap41>
-References: <cover.1506049341.git.sean.wang@mediatek.com>
-         <0d9d5559d9d884c98ef589a8f56ab0dcb140e5e0.1506049341.git.sean.wang@mediatek.com>
+From: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add dwc3 SUSPHY quirk
+Date: Fri, 22 Sep 2017 10:18:54 +0200
+Message-ID: <894725fe-595b-45dc-e567-41caf48a012b@samsung.com>
+References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
+        <CGME20170918100230eucas1p29fae00c53f1106af1961a6e269740b2f@eucas1p2.samsung.com>
+        <1505728934-6200-2-git-send-email-andrzej.p@samsung.com>
+        <20170919174038.2sspjvadt6ggka65@kozik-lap>
+        <fcefaaab-b99c-a8cc-9684-98cc3c4d803e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0d9d5559d9d884c98ef589a8f56ab0dcb140e5e0.1506049341.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <fcefaaab-b99c-a8cc-9684-98cc3c4d803e@arm.com>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Kukjin Kim <kgene@kernel.org>, Felipe Balbi <balbi@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+Hi,
 
-On Fri, 2017-09-22 at 11:33 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+W dniu 19.09.2017 o 20:10, Robin Murphy pisze:
+> On 19/09/17 18:40, Krzysztof Kozlowski wrote:
+>> On Mon, Sep 18, 2017 at 12:02:13PM +0200, Andrzej Pietrasiewicz wrote:
+>>> Odroid XU4 board does not enumerate SuperSpeed devices.
+>>> This patch makes exynos5 series chips use USB SUSPHY quirk,
+>>> which solves the problem.
+>>>
+>>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+>>> ---
+>>>   arch/arm/boot/dts/exynos54xx.dtsi | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>
+>> Makes sense to me... was it tested also on XU3 and XU?
 > 
-> Give a better description for original MediaTek RTC driver as PMIC based
-> RTC in order to distinguish SoC based RTC. Also turning all words with
-> Mediatek to MediaTek here.
+> Well, it at least doesn't make USB3 on my XU any more or less broken
+> than it was before ;) (both ports still report an over-current condition
+> even with nothing plugged in - I suspect there's probably still some
+> pinctrl/regulator stuff missing)
 > 
-> Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/rtc/Kconfig | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Robin.
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 4226295..4500f77 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1716,14 +1716,14 @@ config RTC_DRV_MEDIATEK
->  	  will be called rtc-mediatek.
->  
->  config RTC_DRV_MT6397
-> -	tristate "Mediatek Real Time Clock driver"
-> +	tristate "MediaTek PMIC based RTC"
->  	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
->  	help
-> -	  This selects the Mediatek(R) RTC driver. RTC is part of Mediatek
-> +	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
->  	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
-> -	  Mediatek(R) RTC driver.
-> +	  MediaTek(R) RTC driver.
->  
-> -	  If you want to use Mediatek(R) RTC interface, select Y or M here.
-> +	  If you want to use MediaTek(R) RTC interface, select Y or M here.
->  
->  config RTC_DRV_XGENE
->  	tristate "APM X-Gene RTC"
+Similar with XU3: nothing is any more or less broken with this patch
+compared to the situation without the patch.
 
-Thanks your correction.
-
-Acked-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-Regards,
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andrzej
