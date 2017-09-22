@@ -1,95 +1,87 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1088a: Add USB support
-Date: Fri, 22 Sep 2017 14:54:56 +0800
-Message-ID: <20170922065454.GF26358@dragon>
-References: <20170913091009.21448-1-yinbo.zhu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: bcm283x: Fix console path on RPi3
+Date: Fri, 22 Sep 2017 09:15:54 +0200
+Message-ID: <1506064554-4991-1-git-send-email-loic.poulain@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170913091009.21448-1-yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yinbo.zhu-3arQi8VN3Tc@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Catalin Marinas )" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Will Deacon )" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Raghav Dogra <raghav.dogra-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 13, 2017 at 05:10:09PM +0800, yinbo.zhu-3arQi8VN3Tc@public.gmane.org wrote:
-> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> 
-> Fix the issue that usb is not detected on ls1088ardb
+Contrary to other RPi devices, RPi3 uses uart0 to communicate with
+the BCM43438 bluetooth controller. uart1 is then used for the console.
+Today, the console configuration is inherited from the bcm283x dtsi
+(bootargs) which is not the correct one for the RPi3. This leads to
+routing issue and confuses the Bluetooth controller with unexpected
+data.
 
-It's not really about fixing issue but adding support.
+This patch introduces chosen/stdout path to configure console to uart0
+on bcm283x family and overwrite it to uart1 in the RPi3 dts.
 
-> 
-> Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
-> ---
+Create serial0/1 aliases referring to uart0 ant uart1 paths.
+Remove unneeded earlyprintk.
 
-You should better have a version history here to tell what's changed
-between version.
+Fixes: 4188ea2aeb6d ("ARM: bcm283x: Define UART pinmuxing on board level")
+Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ v2: remove serial aliases redefinition in bcm2835-rpi-zero-w.dts
 
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index 213abb72de93..6c3c3bc4b681 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -118,6 +118,14 @@
->  	status = "okay";
->  };
->  
-> +&usb0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb1 {
-> +	status = "okay";
-> +};
-> +
->  &esdhc {
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 2 --
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts    | 5 +++++
+ arch/arm/boot/dts/bcm283x.dtsi           | 7 ++++++-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
 
-Please sort these labeled nodes alphabetically.
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+index 82651c3..35ace1b 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -22,8 +22,6 @@
+ 	aliases {
+ 		uart0 = "/soc/serial@7e201000";
+ 		uart1 = "/soc/serial@7e215040";
+-		serial0 = "/soc/serial@7e201000";
+-		serial1 = "/soc/serial@7e215040";
+ 	};
+ 
+ 	leds {
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index 20725ca..f1c0811 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -8,6 +8,11 @@
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+ 	model = "Raspberry Pi 3 Model B";
+ 
++	chosen {
++		/* 8250 auxiliar UART instead of pl011 */
++		stdout-path = "serial1:115200n8";
++	};
++
+ 	memory {
+ 		reg = <0 0x40000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 431dcfc..013431e 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -20,8 +20,13 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	chosen {
+-		bootargs = "earlyprintk console=ttyAMA0";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	thermal-zones {
+-- 
+1.9.1
 
-Shawn
-
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index c144d06a6e33..c23fede8cf5d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -359,6 +359,26 @@
->  			status = "disabled";
->  		};
->  
-> +		usb0: usb3@3100000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0x3100000 0x0 0x10000>;
-> +			interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
-> +			dr_mode = "host";
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,dis_rxdet_inp3_quirk;
-> +			status = "disabled";
-> +		};
-> +
-> +		usb1: usb3@3110000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0x3110000 0x0 0x10000>;
-> +			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
-> +			dr_mode = "host";
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,dis_rxdet_inp3_quirk;
-> +			status = "disabled";
-> +		};
-> +
->  		sata: sata@3200000 {
->  			compatible = "fsl,ls1088a-ahci";
->  			reg = <0x0 0x3200000 0x0 0x10000>,
-> -- 
-> 2.14.1
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
