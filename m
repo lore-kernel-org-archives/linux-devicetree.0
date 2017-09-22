@@ -1,45 +1,76 @@
-From: Pierre-Hugues Husson <phh-8tEavu1zA38@public.gmane.org>
-Subject: Description of a gamepad device?
-Date: Fri, 22 Sep 2017 17:58:47 +0200
-Message-ID: <CAJ-oXjQkbHE3HZ=x3bJkAhk5+kNZ-nXKGzAumQDOeVOjTwqGMA@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 9/9 v2] usb: usb251xb: Use GPIO descriptor consumer
+ interface
+Date: Fri, 22 Sep 2017 18:05:20 +0200
+Message-ID: <20170922160520.GA1310@kroah.com>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-10-fancer.lancer@gmail.com>
+ <20170921082338.GA30669@kroah.com>
+ <20170921145129.GA25888@mobilestation>
+ <20170921150714.GA7791@kroah.com>
+ <20170922152654.GA10152@mobilestation>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170922152654.GA10152@mobilestation>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: richard.leitner@skidata.com, robh+dt@kernel.org, mark.rutland@arm.com, Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Sep 22, 2017 at 06:26:54PM +0300, Serge Semin wrote:
+> On Thu, Sep 21, 2017 at 05:07:14PM +0200, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > On Thu, Sep 21, 2017 at 05:51:29PM +0300, Serge Semin wrote:
+> > > On Thu, Sep 21, 2017 at 10:23:38AM +0200, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > On Sat, Sep 16, 2017 at 01:42:20PM +0300, Serge Semin wrote:
+> > > > > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> > > > > index 71994b883..c2dd9742f 100644
+> > > > > --- a/drivers/usb/misc/usb251xb.c
+> > > > > +++ b/drivers/usb/misc/usb251xb.c
+> > > > > @@ -3,6 +3,7 @@
+> > > > >   * Configuration via SMBus.
+> > > > >   *
+> > > > >   * Copyright (c) 2017 SKIDATA AG
+> > > > > + * Copyright (c) 2017 T-platforms
+> > > > 
+> > > > Again, no, please consult with your corporate lawyers why this isn't ok.
+> > > > 
+> > > > greg k-h
+> > > 
+> > > I still can't see why this isn't right. We submitted the patchset. It is not
+> > > that big and still it isn't just two lines. As I've seen all over the kernel, It is
+> > > a common practice to have multiple copyrights in kernel files. We are not claiming
+> > > the copyright to the whole file, but to the contribution only. I got a consent to
+> > > contribute when I was employed by the company. What's wrong with that? Shall I
+> > > send the patchset from my corporate e-mail then?
+> > 
+> > Well, yes, I need some way to properly identify that this corporation
+> > did do the changes.  I said that before, I don't know why you ignored
+> > that.
+> > 
+> > And yes, multiple copyrights are just fine, but again, please talk to
+> > your corporate lawyer about why these changes don't seem to warrant that
+> > "mark".  If they do think that they do warrant that, great, I will be
+> > glad to discuss that with them, off-list if needed.
+> > 
+> > For even more fun, try discussing with your lawyers about why copyright
+> > marks like this don't even mean anything anymore, and haven't for 20+
+> > years now (can't remember the actual date...)  But that's a different
+> > topic, and one not really relevant here.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Alright then. We'll remove the Copyright mark and I'll resend the patchset
+> from my corporate e-mail. Hope it will solve this issue.
+> Could you review the rest of the patchset?
 
-I'm currently trying to port mainline to the GPD XD. This is an
-handled game console, running an rk3288.
-My current situation is the following:
-- the buttons are connected to GPIOs, so they are well defined by a gpio-keys
-- the joysticks are connected on I2C
-- the device can connect to other gamepad (for instance through USB)
+I'll wait for the resend, as Rob already pointed out issues, so it is
+long-gone from my patchqueue.
 
-My problem is that I need a way to describe in the DTS that the
-buttons and the joystick are the same game controller.
+thanks,
 
-In Linux userland, this means that at the moment, there is one inputX
-for the buttons, one for the joysticks, one for an external gamepad.
-Most applications will be lost, and consider those are three different
-game controllers.
-Hence, the OS needs a way to know, via the device-tree description,
-that the two first input have to be merged.
-
-I see two possibilities:
-- do a sort of master/slave description, where the joystick's driver
-has a slave-device = <&gpio-keys> property
-- do a brand new i2c driver/compatible for the joystick, including the
-description of the keys on gpios
-
-But both of those ideas seems clunky to me...
-
-Would you have some suggestion?
-
-Thanks,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
