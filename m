@@ -1,96 +1,61 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH RFC] gpio: of: document gpio-init nodes
-Date: Fri, 22 Sep 2017 22:41:38 +0200
-Message-ID: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v3 0/6] drivers: fsi: Add SBEFIFO and OCC drivers
+Date: Fri, 22 Sep 2017 16:05:56 -0500
+Message-ID: <1506114362-492-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bradleyb@fuzziesquirrel.com, jk@ozlabs.org, cbostic@linux.vnet.ibm.com, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Sometimes it is desirable to define a "safe" configuration for a GPIO in
-the device tree but let the operating system later still make use of
-this pin.
+From: "Edward A. James" <eajames@us.ibm.com>
 
-This might for example be useful to initially configure a debug pin that
-is usually unconnected as output to prevent floating until it is used
-later.
+This series adds two FSI-based device drivers. The OCC driver is dependent on
+the SBEFIFO driver, as a user of it's in-kernel API. The in-kernel API provided
+by the OCC driver will be used by a hwmon driver (on the lkml as "Add On-Chip
+Controller (OCC) hwmon driver").
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+Changes since v2:
+ * Rename occ.c and occ.h to fsi-occ.c and fsi-occ.h
+ * Improved remove() ordering in both drivers.
+ * Added cancel functionality to OCC driver to make sure no xfrs started during
+   remove().
+ * Fix spin_unlock with spin_unlock_irq in OCC driver.
+ * Fix list_first_entry with list_first_entry_or_null in OCC worker function.
+ * Add OCC response definitions to OCC include file.
+ * Handle probe() failures better.
 
-this picks up a discussion that pops up now and then with our customers.
+Changes since v1:
+ * Split bindings into separate patch and added SBEFIFO device binding
+ * Fixed #includes
+ * Fix SBEFIFO race condition between write() and poll_timer().
+ * Followed Rob's suggestion to just create one platform device for hwmon
+   driver, instead of using the device tree.
+ * Also check for "command in progress" response from OCC and try a while
 
-Last time I discussed this topic with Linus Walleij my suggestion was to
-merge this usecase with gpio-hogs, but he wasn't happy with it because
-hogging implies that the pin is not free for other usage and he
-suggested to use "gpio-init" instead.
+Edward A. James (6):
+  dt-bindings: fsi: Add SBEFIFO documentation
+  drivers: fsi: Add SBEFIFO FSI client device driver
+  drivers: fsi: sbefifo: Add in-kernel API
+  dt-bindings: fsi: Add OCC documentation
+  drivers: fsi: Add On-Chip Controller (OCC) driver
+  drivers: fsi: occ: Add in-kernel API
 
-Maybe it's arguable if this "initial configuration" belongs into the
-device tree, but IMHO defining a "safe configuration" should have a
-place and the requirements are identical. This isn't implied by the name
-however, but I don't have a better idea for a different name.
+ .../devicetree/bindings/fsi/ibm,p9-occ.txt         |  15 +
+ .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt     |  20 +
+ drivers/fsi/Kconfig                                |  17 +
+ drivers/fsi/Makefile                               |   2 +
+ drivers/fsi/fsi-occ.c                              | 851 ++++++++++++++++++
+ drivers/fsi/fsi-sbefifo.c                          | 956 +++++++++++++++++++++
+ include/linux/fsi-occ.h                            |  41 +
+ include/linux/fsi-sbefifo.h                        |  30 +
+ 8 files changed, 1932 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+ create mode 100644 drivers/fsi/fsi-occ.c
+ create mode 100644 drivers/fsi/fsi-sbefifo.c
+ create mode 100644 include/linux/fsi-occ.h
+ create mode 100644 include/linux/fsi-sbefifo.h
 
-Thinking further (which was also discussed last time) it would also be
-nice to restrict usage. For example that a given pin that has
-"output-low" as its safe setting might be configured later als high
-output but not as input. Maybe:
-
-	companion-reset {
-		gpio-somethingwithsafe;
-		gpios = <12 0>;
-		output-low;
-		fixed-direction;
-	};
-
-(Conceptually we would have a hog then when also adding "fixed-value".)
-
-I'm not sure the early configuration should be implemented in Linux. I'd
-target the bootloader for that instead, still having the blessing of a
-binding document would be great.
-
-I look forward to your comments and ideas.
-
-Best regards
-Uwe
-
- Documentation/devicetree/bindings/gpio/gpio.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 802402f6cc5d..849d620cee4d 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -207,6 +207,11 @@ configuration.
- Optional properties:
- - line-name:  The GPIO label name. If not present the node name is used.
- 
-+Similar to hogging above GPIOs can be initialized to a certain configuration
-+only which compared to hogs doesn't prevent the operating system to change the
-+pin later. The syntax is similar to hog definitons, the difference is only that
-+the identifying property is "gpio-init" instead of "gpio-hog".
-+
- Example of two SOC GPIO banks defined as gpio-controller nodes:
- 
- 	qe_pio_a: gpio-controller@1400 {
-@@ -221,6 +226,12 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
- 			output-low;
- 			line-name = "foo-bar-gpio";
- 		};
-+
-+		companion-reset {
-+			gpio-init;
-+			gpios = <12 0>;
-+			output-low;
-+		};
- 	};
- 
- 	qe_pio_e: gpio-controller@1460 {
 -- 
-2.11.0
-
+1.8.3.1
