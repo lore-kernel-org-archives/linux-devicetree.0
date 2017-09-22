@@ -1,87 +1,60 @@
-From: Al Cooper <alcooperx@gmail.com>
-Subject: [PATCH V6 1/4] soc: brcmstb: Add Product ID and Family ID helper
- functions
-Date: Fri, 22 Sep 2017 15:33:59 -0400
-Message-ID: <1506108842-39072-2-git-send-email-alcooperx@gmail.com>
-References: <1506108842-39072-1-git-send-email-alcooperx@gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 0/4] AS3645A fixes
+Date: Fri, 22 Sep 2017 21:37:06 +0200
+Message-ID: <650b7cb3-f7dd-5959-3147-df7284415521@gmail.com>
+References: <20170922093238.13070-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1506108842-39072-1-git-send-email-alcooperx@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Cooper <alcooperx@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170922093238.13070-1-sakari.ailus@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org
+Cc: linux-media@vger.kernel.org, devicetree@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
----
- drivers/soc/bcm/brcmstb/common.c    | 12 ++++++++++++
- include/linux/soc/brcmstb/brcmstb.h | 17 +++++++++++++++++
- 2 files changed, 29 insertions(+)
+Hi Sakari,
 
-diff --git a/drivers/soc/bcm/brcmstb/common.c b/drivers/soc/bcm/brcmstb/common.c
-index 22e98a9..a71730d 100644
---- a/drivers/soc/bcm/brcmstb/common.c
-+++ b/drivers/soc/bcm/brcmstb/common.c
-@@ -40,6 +40,18 @@ bool soc_is_brcmstb(void)
- 	return of_match_node(brcmstb_machine_match, root) != NULL;
- }
- 
-+u32 brcmstb_get_family_id(void)
-+{
-+	return family_id;
-+}
-+EXPORT_SYMBOL(brcmstb_get_family_id);
-+
-+u32 brcmstb_get_product_id(void)
-+{
-+	return product_id;
-+}
-+EXPORT_SYMBOL(brcmstb_get_product_id);
-+
- static const struct of_device_id sun_top_ctrl_match[] = {
- 	{ .compatible = "brcm,bcm7125-sun-top-ctrl", },
- 	{ .compatible = "brcm,bcm7346-sun-top-ctrl", },
-diff --git a/include/linux/soc/brcmstb/brcmstb.h b/include/linux/soc/brcmstb/brcmstb.h
-index 337ce41..8baafd6 100644
---- a/include/linux/soc/brcmstb/brcmstb.h
-+++ b/include/linux/soc/brcmstb/brcmstb.h
-@@ -1,10 +1,27 @@
- #ifndef __BRCMSTB_SOC_H
- #define __BRCMSTB_SOC_H
- 
-+static inline u32 BRCM_ID(u32 reg)
-+{
-+	return reg >> 28 ? reg >> 16 : reg >> 8;
-+}
-+
-+static inline u32 BRCM_REV(u32 reg)
-+{
-+	return reg & 0xff;
-+}
-+
- /*
-  * Bus Interface Unit control register setup, must happen early during boot,
-  * before SMP is brought up, called by machine entry point.
-  */
- void brcmstb_biuctrl_init(void);
- 
-+/*
-+ * Helper functions for getting family or product id from the
-+ * SoC driver.
-+ */
-+u32 brcmstb_get_family_id(void);
-+u32 brcmstb_get_product_id(void);
-+
- #endif /* __BRCMSTB_SOC_H */
--- 
-1.9.0.138.g2de3478
+On 09/22/2017 11:32 AM, Sakari Ailus wrote:
+> Hi Jacek and others,
+> 
+> Here are a few fixes for the as3645a DTS as well as changes in bindings.
+> The driver is not in a release yet.
+> 
+> Jacek: Could you take these to your fixes branch so we don't get faulty DT
+> bindings to a release? I've dropped the patches related to LED naming and
+> label property as the discusion appears to continue on that.
+
+No problem. One question - isn't patch 3/4 missing?
+
+Best regards,
+Jacek Anaszewski
+
+> Thanks.
+> 
+> 
+> since v2:
+> 
+> - Drop patches related to LED naming.
+> 
+> - No other changes.
+> 
+> since v1:
+> 
+> - Add LED colour to the name of the LED, this adds two patches to the set.
+> 
+> - Add a patch to unregister the indicator LED in driver remove function.
+> 
+> - No changes to v1 patches.
+> 
+> Sakari Ailus (4):
+>   as3645a: Use ams,input-max-microamp as documented in DT bindings
+>   dt: bindings: as3645a: Use LED number to refer to LEDs
+>   as3645a: Use integer numbers for parsing LEDs
+>   as3645a: Unregister indicator LED on device unbind
+> 
+>  .../devicetree/bindings/leds/ams,as3645a.txt       | 28 +++++++++++++--------
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi               | 10 +++++---
+>  drivers/leds/leds-as3645a.c                        | 29 +++++++++++++++++++---
+>  3 files changed, 51 insertions(+), 16 deletions(-)
+> 
