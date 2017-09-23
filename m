@@ -1,185 +1,183 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH 2/4] media: dt-bindings: Add bindings for TDA1997X
-Date: Fri, 22 Sep 2017 15:24:11 -0700
-Message-ID: <1506119053-21828-3-git-send-email-tharvey@gateworks.com>
-References: <1506119053-21828-1-git-send-email-tharvey@gateworks.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1506119053-21828-1-git-send-email-tharvey@gateworks.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: =?iso-8859-1?Q?Br=FCns=2C_Stefan?= <Stefan.Bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] dmaengine: sun6i: Retrieve channel
+ count/max request from devicetree
+Date: Sat, 23 Sep 2017 00:00:15 +0000
+Message-ID: <3154933.I7MMVk5mkV@sbruens-linux>
+References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de>
+ <6028407.VKu5LCmQv0@sbruens-linux>
+ <20170922213027.xpnaut3an5or6edl@flea.home>
+Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBEGIS3HAKGQEH6KNYQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170922213027.xpnaut3an5or6edl-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
+Content-ID: <758DC10755E7CE4DAAECBDDD8174164F-KnNo0XtUZUuELgA04lAiVw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- .../devicetree/bindings/media/i2c/tda1997x.txt     | 159 +++++++++++++++++++++
- 1 file changed, 159 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+On Freitag, 22. September 2017 23:30:27 CEST Maxime Ripard wrote:
+> On Tue, Sep 19, 2017 at 04:17:59PM +0000, Br=C3=BCns, Stefan wrote:
+> > On Dienstag, 19. September 2017 16:25:08 CEST Maxime Ripard wrote:
+> > > On Mon, Sep 18, 2017 at 02:09:43PM +0000, Br=C3=BCns, Stefan wrote:
+> > > > On Montag, 18. September 2017 10:18:24 CEST you wrote:
+> > > > > Hi,
+> > > > >=20
+> > > > > On Sun, Sep 17, 2017 at 05:19:53AM +0200, Stefan Br=C3=BCns wrote=
+:
+> > > > > > +	ret =3D of_property_read_u32(np, "dma-channels",
+> > > > > > &sdc->num_pchans);
+> > > > > > +	if (ret && !sdc->num_pchans) {
+> > > > > > +		dev_err(&pdev->dev, "Can't get dma-channels.\n");
+> > > > > > +		return ret;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (sdc->num_pchans > DMA_MAX_CHANNELS) {
+> > > > > > +		dev_err(&pdev->dev, "Number of dma-channels out of range.
+\n");
+> > > > > > +		return -EINVAL;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	ret =3D of_property_read_u32(np, "dma-requests",
+> > > > > > &sdc->max_request);
+> > > > > > +	if (ret && !sdc->max_request) {
+> > > > > > +		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
+> > > > > > +			 DMA_CHAN_MAX_DRQ);
+> > > > > > +		sdc->max_request =3D DMA_CHAN_MAX_DRQ;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (sdc->max_request > DMA_CHAN_MAX_DRQ) {
+> > > > > > +		dev_err(&pdev->dev, "Value of dma-requests out of range.\n")=
+;
+> > > > > > +		return -EINVAL;
+> > > > > > +	}
+> > > > >=20
+> > > > > I'm not really convinced about these two checks. They don't catch
+> > > > > all
+> > > > > errors (the range between the actual number of channels / DRQ and
+> > > > > the
+> > > > > maximum allowed per the registers), they might increase in the
+> > > > > future
+> > > > > too, and if we want to make that check actually working, we would
+> > > > > have
+> > > > > to duplicate the number of requests and channels into the driver.
+> > > >=20
+> > > > 1. If these values increase, we have a new register layout and and
+> > > > need a new compatible anyway.
+> > >=20
+> > > And you want to store a new maximum attached to the compatible? Isn't
+> > > that exactly the situation you're trying to get away from?
+> >=20
+> > Yes, and no. H3, H5, A64 and R40 have the exact same register layout, b=
+ut
+> > different number of channels and ports. They could share a compatible (=
+if
+> > DMA channels were generalized), and we already have several register
+> > offsets/ widths (implicitly via the callbacks) attached to the compatib=
+le
+> > (so these don't need generalization via DT).
+> >=20
+> > Now, we could also move everything that is currently attached to the
+> > compatible, i.e. clock gate register offset, burst widths/lengths etc.
+> > into
+> > the devicetree binding, but that would just be too much.
+> >=20
+> > The idea is to find a middle ground here, using common patterns in the
+> > existing SoCs. The register layout has hardly changed, while the number=
+ of
+> > DMA channels and ports changes all the time. Moving the number of DMA
+> > channels and ports to the DT is trivial, and a pattern also found in
+> > other DMA controller drivers.
+>=20
+> I'm sorry, but the code is inconsistent here. You basically have two
+> variables from one SoC to the other, the number of channels and
+> requests.
+>=20
+> In one case (channels), it mandates that the property is provided in
+> the device tree, and doesn't default to anything.
+>=20
+> In the other case (requests), the property is optional and it will
+> provide a default. All that in 20 lines.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-new file mode 100644
-index 0000000..8330733
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-@@ -0,0 +1,159 @@
-+Device-Tree bindings for the NXP TDA1997x HDMI receiver
-+
-+The TDA19971/73 are HDMI video receivers.
-+
-+The TDA19971 Video port output pins can be used as follows:
-+ - RGB 8bit per color (24 bits total): R[11:4] B[11:4] G[11:4]
-+ - YUV444 8bit per color (24 bits total): Y[11:4] Cr[11:4] Cb[11:4]
-+ - YUV422 semi-planar 8bit per component (16 bits total): Y[11:4] CbCr[11:4]
-+ - YUV422 semi-planar 10bit per component (20 bits total): Y[11:2] CbCr[11:2]
-+ - YUV422 semi-planar 12bit per component (24 bits total): - Y[11:0] CbCr[11:0]
-+ - YUV422 BT656 8bit per component (8 bits total): YCbCr[11:4] (2-cycles)
-+ - YUV422 BT656 10bit per component (10 bits total): YCbCr[11:2] (2-cycles)
-+ - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-+
-+The TDA19973 Video port output pins can be used as follows:
-+ - RGB 12bit per color (36 bits total): R[11:0] B[11:0] G[11:0]
-+ - YUV444 12bit per color (36 bits total): Y[11:0] Cb[11:0] Cr[11:0]
-+ - YUV422 semi-planar 12bit per component (24 bits total): Y[11:0] CbCr[11:0]
-+ - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-+
-+The Video port output pins are mapped via 4-bit 'pin groups' allowing
-+for a variety fo connection possibilities including swapping pin order within
-+pin groups. The video_portcfg device-tree property consists of register mapping
-+pairs which map a chip-specific VP output register to a 4-bit pin group. If
-+the pin group needs to be bit-swapped you can use the *_S pin-group defines.
-+
-+Required Properties:
-+ - compatible      :
-+  - "nxp,tda19971" for the TDA19971
-+  - "nxp,tda19973" for the TDA19973
-+ - reg             : I2C slave address
-+ - interrupts      : The interrupt number
-+ - DOVDD-supply    : Digital I/O supply
-+ - DVDD-supply     : Digital Core supply
-+ - AVDD-supply     : Analog supply
-+ - vidout_portcfg  : array of pairs mapping VP output pins to pin groups
-+
-+Optional Properties:
-+ - max-pixel-rate  : Maximum pixel rate supported by the SoC (MP/sec)
-+ - audio-port      : parameters defining audio output port connection
-+
-+Optional Endpoint Properties:
-+  The following three properties are defined in video-interfaces.txt and
-+  are valid for source endpoints only:
-+  - hsync-active: Horizontal synchronization polarity. Defaults to active high.
-+  - vsync-active: Vertical synchronization polarity. Defaults to active high.
-+  - data-active: Data polarity. Defaults to active high.
-+
-+The Audio output port consists of A_CLK, A_WS, AP0, AP1, AP2, and AP3 pins
-+and can support up to 8-chanenl audio using the following audio bus DAI formats:
-+ - I2S16
-+ - I2S32
-+ - SPDIF
-+ - OBA (One-Bit-Audio)
-+ - I2S16_HBR_STRAIGHT (High Bitrate straight through)
-+ - I2S16_HBR_DEMUX (High Bitrate demuxed)
-+ - I2S32_HBR_DEMUX (High Bitrate demuxed)
-+ - DST (Direct Stream Transfer)
-+
-+Audio samples can be output in either SPDIF or I2S bus formats.
-+In I2S mode, the TDF1997X is the master with 16bit or 32bit words.
-+The audio port output is configured by three parameters: DAI format, layout
-+and clock scaler.
-+
-+Each DAI format has two pin layouts shown by the following table:
-+       |  SPDIF  |  SPDIF  |   I2S   |   I2S   |         HBR demux
-+       | Layout0 | Layout1 | Layout0 | Layout1 | SPDIF      | I2S
-+ ------+---------+---------+---------+---------+------------+------------
-+ A_WS  | WS      | WS      | WS      | WS      | WS         | WS
-+ AP3   |         | SPDIF3  |         | SD3     | SPDIF[x+3] | SD[x+3]
-+ AP2   |         | SPDIF2  |         | SD2     | SPDIF[x+2] | SD[x+2]
-+ AP1   |         | SPDIF1  |         | SD1     | SPDIF[x+1] | SD[x+1]
-+ AP0   | SPDIF   | SPDIF0  | SD      | SD0     | SPDIF[x]   | SD[x]
-+ A_CLK | (32*Fs) | (32*Fs) |(32*Fs)  | (32*Fs) | (32*Fs)    | (32*Fs)
-+       | (64*Fs) | (64*Fs) |(64*Fs)  | (64*Fs) | (64*Fs)    | (64*Fs)
-+
-+Freq(Sysclk) = 2*freq(Aclk)
-+
-+Examples:
-+ - VP[15:0] connected to IMX6 CSI_DATA[19:4] for 16bit YUV422
-+   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-+	hdmi_receiver@48 {
-+		compatible = "nxp,tda19971";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tda1997x>;
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		DOVDD-supply = <&reg_3p3v>;
-+		AVDD-supply = <&reg_1p8v>;
-+		DVDD-supply = <&reg_1p8v>;
-+		/* audio output format */
-+		audio-port = < TDA1997X_I2S16
-+			       TDA1997X_LAYOUT0
-+			       TDA1997X_ACLK_128FS >;
-+		/*
-+		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-+		 * and Y[11:4] across 16bits in the same pixclk cycle.
-+		 */
-+		vidout_portcfg =
-+			/* Y[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-+			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-+			/* Y[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-+			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-+			/* CbCc[11:8]<->VP[07:04]<->CSI_DATA[11:8] */
-+			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-+			/* CbCr[7:4]<->VP[03:00]<->CSI_DATA[7:4] */
-+			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-+		max-pixel-rate = <180>; /* IMX6 CSI max pixel rate 180MP/sec */
-+
-+		port@0 {
-+			reg = <0>;
-+		};
-+		port@1 {
-+			reg = <1>;
-+			hdmi_in: endpoint {
-+				remote-endpoint = <&ccdc_in>;
-+			};
-+		};
-+	};
-+ - VP[15:8] connected to IMX6 CSI_DATA[19:12] for 8bit BT656
-+   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-+	hdmi_receiver@48 {
-+		compatible = "nxp,tda19971";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tda1997x>;
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		DOVDD-supply = <&reg_3p3v>;
-+		AVDD-supply = <&reg_1p8v>;
-+		DVDD-supply = <&reg_1p8v>;
-+		/* audio output format */
-+		#sound-dai-cells = <0>;
-+		audio-port = < TDA1997X_I2S16
-+			       TDA1997X_LAYOUT0
-+			       TDA1997X_ACLK_128FS >;
-+		/*
-+		 * The 8bpp BT656 mode outputs YCbCr[11:4] across 8bits over
-+		 * 2 pixclk cycles.
-+		 */
-+		vidout_portcfg =
-+			/* YCbCr[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-+			< TDA1997X_VP24_V15_12 TDA1997X_R_CR_CBCR_11_8 >,
-+			/* YCbCr[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-+			< TDA1997X_VP24_V11_08 TDA1997X_R_CR_CBCR_7_4 >,
-+		max-pixel-rate = <180>; /* IMX6 CSI max pixel rate 180MP/sec */
-+
-+		port@0 {
-+			reg = <0>;
-+		};
-+		port@1 {
-+			reg = <1>;
-+			hdmi_in: endpoint {
-+				remote-endpoint = <&ccdc_in>;
-+			};
-+		};
-+	};
-+
--- 
-2.7.4
+The channel number is a hardware property. Using more channels than the=20
+hardware provides is a bug. There is no default.
+
+The port/request is just some lax property to limit the resource allocation=
+=20
+upfront. As long as the bindings of the different IP blocks (SPI, audio, ..=
+.)=20
+provide the correct port numbers, all required information is available.
+=20
+> I guess we already reached that middle ground by providing them
+> through the DT, we just have to make sure we remain consistent.
+>=20
+> > *If* the number of dma channels and ports is ever increased,
+> > exceeding the current maximum, this would amount to major changes in
+> > the driver and maybe even warrant a completely new driver.
+> >=20
+> > > > 2. As long as the the limits are adhered to, no other
+> > > > registers/register
+> > > > fields are overwritten. As the channel number and port are used to
+> > > > calculate memory offsets bounds checking is IMHO a good idea.
+> > >=20
+> > > And this is true for many other resources, starting with the one
+> > > defined in reg. We don't error check every register range, clock
+> > > index, reset line, interrupt, DMA channel, the memory size, etc. yet
+> > > you could make the same argument.
+> > >=20
+> > > The DT has to be right, and we have to trust it. Otherwise we can jus=
+t
+> > > throw it away.
+> >=20
+> > So your argument here basically is - don't do any checks on DT provided
+> > values, these are always correct. So, following this argument, not only
+> > the
+> > range check, but also the of_property_read return values should be
+> > ignored, as the DT is correct, thus of_property_read will never return =
+an
+> > error.
+> No, my argument is don't do a check if you can catch only half of the
+> errors, and with no hope of fixing it.
+>=20
+> The functions you mentionned have a 100% error catch rate. This is the
+> difference.
+>=20
+> > That clearly does not match the implementation of drivers throughout th=
+e
+> > various subsystems for DT properties, which is in general - do all the
+> > checks that can be done, trust everything you can not verify.
+>=20
+> And my point is that we're falling into the latter here. You cannot
+> verify it properly.
+
+Please check the following line:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/
+drivers/dma/sun6i-dma.c#n951
+
+Thats far from 100% - the highest allowed port for each SoC differs between=
+ RX=20
+and TX, and port allocation is sparse.
+
+Regards,
+
+Stefan
+
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
