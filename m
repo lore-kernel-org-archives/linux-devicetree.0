@@ -1,146 +1,149 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] extcon: gpio: Add DT bindings
-Date: Sun, 24 Sep 2017 14:56:04 -0500
-Message-ID: <CAL_JsqKth+EHVZEVpT1U7qVvN77i7oZjBJH5bbowXcjJxETuoA@mail.gmail.com>
-References: <20170924145622.4031-1-linus.walleij@linaro.org> <20170924145622.4031-2-linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/3] drm/panel: Add DT bindings for Ilitek ILI9322
+Date: Sun, 24 Sep 2017 15:36:41 -0500
+Message-ID: <CAL_JsqKNprVAW_5XBGjwm3EzqVh=xP1Q9gQ8n_taWFDzzcz2Aw@mail.gmail.com>
+References: <20170813114448.20179-1-linus.walleij@linaro.org>
+ <20170813114448.20179-2-linus.walleij@linaro.org>
+ <20170817204424.e2wdkmyp4vyx2qj3@rob-hp-laptop>
+ <CACRpkdZgaKUDhVZ4spMsK_pG+LWOAkSWKrQTAbbXOFpUEk4rLQ@mail.gmail.com>
+ <CACRpkdY2bo0EBp+d16ksrjwsVTLp2BzV7=XS0vWxno5EHWoFig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170924145622.4031-2-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACRpkdY2bo0EBp+d16ksrjwsVTLp2BzV7=XS0vWxno5EHWoFig@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Mike Lockwood <lockwood@google.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee.jones@linaro.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 24, 2017 at 9:56 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> Add some reasonable device tree bindings and also add the cable defines
-> to the extcon include in <dt-bindings/extcon/connectors.h> since
-> the GPIO extcon definately need to specify which cable/connector it is
-> detecting.
->
-> Adding the include file makes the (as it happens) Linux numbers into an
-> ABI, but I do not see any better method. It is possible to define strings
-> for all cable types but it seems like overkill, just reusing Linux'
-> enumerators seems like a good idea.
->
-> The binding supports any number of GPIOs and connectors, but the driver
-> currently only supports one connector on one GPIO line.
-
-My view of extcon binding is it is fundamentally broken. I've
-expressed this multiple times before.
-
-TL;DR: Anything extending the existing extcon binding will be NAKed.
-
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../devicetree/bindings/extcon/extcon-gpio.txt     | 24 ++++++++++++++
->  include/dt-bindings/extcon/connectors.h            | 38 ++++++++++++++++++++++
->  2 files changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
->  create mode 100644 include/dt-bindings/extcon/connectors.h
->
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> new file mode 100644
-> index 000000000000..2f5e21b94a64
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-> @@ -0,0 +1,24 @@
-> +External Connector Using GPIO
-
-What kind of connector? All connectors external to something... And
-GPIO is not a kind of connector on its own, but an implementation.
-
-> +
-> +Required properties:
-> +- compatible: should be "extcon-gpio"
-> +- extcon-gpios: the GPIO lines used for the external connectors
-
-This doesn't tell me what the GPIOs functions are and should. For
-example we have hpd-gpios for HDMI hotplug detect in HDMI connector
-binding.
-
-> +  See gpio/gpio.txt
-> +- extcon-connector-types: set to an unsigned integer value arrat representing the types
-> +  of this connector, matched to the corresponding GPIO lines in the previous array.
-
-This should be determined by the compatible string.
-
-> +  Those are defined with unique IDs in <dt-bindings/extcon/connectors.h>
-> +- input-debounce: The number of microseconds to wait for the
-> +  connector state to stabilize. This property is reused from pin control
-> +  See pinctrl/pinctrl-bindings.txt
-> +
-> +Example:
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/extcon/connectors.h>
-> +
-> +extcon {
-> +       compatible = "extcon-gpio";
-> +       extcon-gpios = <&gpio0 42 GPIO_ACTIVE_LOW>;
-> +       extcon-connector-types = <EXTCON_USB>;
-> +       input-debounce = <20000>; /* 20 ms */
-> +};
-> diff --git a/include/dt-bindings/extcon/connectors.h b/include/dt-bindings/extcon/connectors.h
-> new file mode 100644
-> index 000000000000..61bed24eaadc
-> --- /dev/null
-> +++ b/include/dt-bindings/extcon/connectors.h
-> @@ -0,0 +1,38 @@
-> +#ifndef _DT_BINDINGS_EXTCON_CONNECTORS_H
-> +#define _DT_BINDINGS_EXTCON_CONNECTORS_H
-> +
-> +/* USB external connector */
-> +#define EXTCON_USB             1
-> +#define EXTCON_USB_HOST                2
-> +#define EXTCON_CHG_USB_SDP     5       /* Standard Downstream Port */
-> +#define EXTCON_CHG_USB_DCP     6       /* Dedicated Charging Port */
-> +#define EXTCON_CHG_USB_CDP     7       /* Charging Downstream Port */
-> +#define EXTCON_CHG_USB_ACA     8       /* Accessory Charger Adapter */
-> +#define EXTCON_CHG_USB_FAST    9
-> +#define EXTCON_CHG_USB_SLOW    10
-> +#define EXTCON_CHG_WPT         11      /* Wireless Power Transfer */
-> +#define EXTCON_CHG_USB_PD      12      /* USB Power Delivery */
-
-These don't all look to be mutually exclusive.
-
-For USB PD, isn't that discoverable?
-
-> +/* Jack external connector */
-> +#define EXTCON_JACK_MICROPHONE 20
-> +#define EXTCON_JACK_HEADPHONE  21
-> +#define EXTCON_JACK_LINE_IN    22
-> +#define EXTCON_JACK_LINE_OUT   23
-> +#define EXTCON_JACK_VIDEO_IN   24
-> +#define EXTCON_JACK_VIDEO_OUT  25
-> +#define EXTCON_JACK_SPDIF_IN   26      /* Sony Philips Digital InterFace */
-> +#define EXTCON_JACK_SPDIF_OUT  27
-
-> +/* Display external connector */
-> +#define EXTCON_DISP_HDMI       40      /* High-Definition Multimedia Interface */
-> +#define EXTCON_DISP_MHL                41      /* Mobile High-Definition Link */
-> +#define EXTCON_DISP_DVI                42      /* Digital Visual Interface */
-> +#define EXTCON_DISP_VGA                43      /* Video Graphics Array */
-> +#define EXTCON_DISP_DP         44      /* Display Port */
-> +#define EXTCON_DISP_HMD                45      /* Head-Mounted Display */
-
-We already have connector bindings for most of these. Use those as a
-model for whatever you want to do.
-
-> +/* Miscellaneous external connector */
-> +#define EXTCON_DOCK            60
-> +#define EXTCON_JIG             61
-> +#define EXTCON_MECHANICAL      62
-> +
-> +#define EXTCON_NUM             63
-> +
-> +#endif /* _DT_BINDINGS_EXTCON_CONNECTORS_H */
-> --
-> 2.13.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBTZXAgMjAsIDIwMTcgYXQgNjo1NiBBTSwgTGludXMgV2FsbGVpaiA8bGludXMud2Fs
+bGVpakBsaW5hcm8ub3JnPiB3cm90ZToKPiBPbiBTYXQsIFNlcCAyLCAyMDE3IGF0IDExOjE3IFBN
+LCBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgo+PiBPbiBU
+aHUsIEF1ZyAxNywgMjAxNyBhdCAxMDo0NCBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz4gd3JvdGU6Cj4+PiBPbiBTdW4sIEF1ZyAxMywgMjAxNyBhdCAwMTo0NDo0N1BNICswMjAwLCBM
+aW51cyBXYWxsZWlqIHdyb3RlOgo+Pgo+Pj4+IFRoaXMgYWRkcyBkZXZpY2UgdHJlZSBiaW5kaW5n
+cyBmb3IgdGhlIElsaXRlayBJTEk5MzIyCj4+Pj4gMzIweDI0MCBURlQgcGFuZWwgZHJpdmVyLgo+
+Pj4+Cj4+Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+Pj4gU2lnbmVkLW9mZi1i
+eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+PiAoLi4uKQo+Pj4+
+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+Pj4+ICsgIC0gd2lkdGgtbW06IHBoeXNpY2FsIHBhbmVs
+IHdpZHRoIFttbV0KPj4+PiArICAtIGhlaWdodC1tbTogcGh5c2ljYWwgcGFuZWwgaGVpZ2h0IFtt
+bV0KPj4+PiArICAtIHZjYy1zdXBwbHk6IGNvcmUgdm9sdGFnZSBzdXBwbHksIHNlZSByZWd1bGF0
+b3IvcmVndWxhdG9yLnR4dAo+Pj4+ICsgIC0gaW92Y2Mtc3VwcGx5OiB2b2x0YWdlIHN1cHBseSBm
+b3IgdGhlIGludGVyZmFjZSBpbnB1dC9vdXRwdXQgc2lnbmFscywKPj4+PiArICAgIHNlZSByZWd1
+bGF0b3IvcmVndWxhdG9yLnR4dAo+Pj4+ICsgIC0gdmNpLXN1cHBseTogdm9sdGFnZSBzdXBwbHkg
+Zm9yIGFuYWxvZyBwYXJ0cywgc2VlIHJlZ3VsYXRvci9yZWd1bGF0b3IudHh0Cj4+Pj4gKyAgLSBy
+ZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRoZSByZXNldCBwaW4sIHNlZSBncGlvL2dwaW8u
+dHh0Cj4+Pj4gKyAgLSBpbGl0ZWssdnJlZzFvdXQtbWljcm92b2x0OiB0aGUgb3V0cHV0IGluIG1p
+Y3Jvdm9sdHMgZm9yIHRoZSBWUkVHT1VUMQo+Pj4+ICsgICAgcmVndWxhdG9yIHVzZWQgdG8gZHJp
+dmUgdGhlIHBoeXNpY2FsIGRpc3BsYXkuIFZhbGlkIHJhbmdlcyBhcmUgMzYwMCB0aHJ1Cj4+Pj4g
+KyAgICA2MDAwIGluIDEwMCBtaWNyb3ZvbHQgaW5jcmVtZW50cy4gSWYgbm90IHNwZWNpZmllZCwg
+aGFyZHdhcmUgZGVmYXVsdHMgd2lsbAo+Pj4+ICsgICAgYmUgdXNlZCAoNC41VikuCj4+Pj4gKyAg
+LSBpbGl0ZWssdmNvbS1hbXBsaXR1ZGUtcGVyY2VudDogdGhlIHBlcmNlbnRhZ2Ugb2YgVlJFR09V
+VDEgdXNlZCBmb3IgdGhlCj4+Pj4gKyAgICBwZWFrLXRvLXBlYWsgYW1wbGl0dWRlIG9mIHRoZSBj
+b21tdW5jYXRpb24gc2lnbmFscyB0byB0aGUgcGh5c2ljYWwgZGlzcGxheS4KPj4+PiArICAgIFZh
+bGlkIHJhbmdlcyBhcmUgNzAgdGhydSAxMzIgcGVyY2VudCBpbiBpbmNyZW1lbnRzIGlmIHR3byBw
+ZXJjZW50LiBPZGQKPj4+PiArICAgIHBlcmNlbnRhZ2VzIHdpbGwgYmUgdHJ1bmNhdGVkLiBJZiBu
+b3Qgc3BlY2lmaWVkLCBoYXJkd2FyZSBkZWZhdWx0cyB3aWxsIGJlCj4+Pj4gKyAgICB1c2VkICgx
+MTQlKS4KPj4+PiArICAtIGlsaXRlayx2Y29tLWhpZ2gtcGVyY2VudDogdGhlIHBlcmNlbnRhZ2Ug
+b2YgVlJFR09VVDEgdXNlZCBmb3IgdGhlIHBlYWsKPj4+PiArICAgIHZvbHRhZ2Ugb24gdGhlIGNv
+bW11bmljYXRpb25zIGxpbmsuIFZhbGlkIHJhbmdlcyBhcmUgMzcgdGhydSAxMDAgcGVyY2VudC4K
+Pj4+PiArICAgIElmIG5vdCBzcGVjaWZpZWQsIGhhcmR3YXJlIGRlZmF1bHRzIHdpbGwgYmUgdXNl
+ZCAoOTElKS4KPj4+PiArICAtIGlsaXRlayxnYW1tYS1jb3JyZWN0aW9uLW5lZzogYSBzZXQgb2Yg
+OCBueWJibGVzIGRlc2NyaWJpbmcgbmVnYXRpdmUKPj4+PiArICAgIGdhbW1hIGNvcnJlY3Rpb24g
+Zm9yIHZvbHRhZ2VzIFYxIHRocnUgVjguIFZhbGlkIHJhbmdlIDAuLjE1Cj4+Pj4gKyAgLSBpbGl0
+ZWssZ2FtbWEtY29ycmVjdGlvbi1wb3M6IGEgc2V0IG9mIDggbnliYmxlcyBkZXNjcmliaW5nIHBv
+c2l0aXZlCj4+Pj4gKyAgICBnYW1tYSBjb3JyZWN0aW9uIGZvciB2b2x0YWdlcyBWMSB0aHJ1IFY4
+LiBWYWxpZCByYW5nZSAwLi4xNQo+Pj4+ICsgICAgVGhlc2UgYWRqdXN0IHdoYXQgZ3JheXNjYWxl
+IHZvbHRhZ2Ugd2lsbCBiZSBvdXRwdXQgZm9yIGlucHV0IGRhdGEgVjEgPSAwLAo+Pj4+ICsgICAg
+VjIgPSAxNiwgVjMgPSA0OCwgVjQgPSA5NiwgVjUgPSAxNjAsIFY2ID0gMjA4LCBWNyA9IDI0MCBh
+bmQgVjggPSAyNTUuCj4+Pj4gKyAgICBUaGUgY3VydmUgaXMgc2hhcGVkIGxpa2UgdGhpczoKPj4+
+PiArCj4+Pj4gKyAgICBeCj4+Pj4gKyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBWOAo+Pj4+ICsgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFY3Cj4+Pj4gKyAgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVjYKPj4+PiArICAgIHwgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgVjUKPj4+PiArICAgIHwgICAgICAgICAgICAgICAgICAgIFY0
+Cj4+Pj4gKyAgICB8ICAgICAgICAgICAgVjMKPj4+PiArICAgIHwgICAgIFYyCj4+Pj4gKyAgICB8
+IFYxCj4+Pj4gKyAgICArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0+Cj4+Pj4gKyAgICAgIDAgICAxNiAgICAgNDggICAgICA5NiAgICAg
+ICAgIDE2MCAgICAgICAgMjA4ICAgICAgMjQwICAyNTUKPj4+PiArCj4+Pj4gKyAgICBUaGUgbmVn
+YXRpdmUgYW5kIHBvc3RpdmUgZ2FtbWEgdmFsdWVzIGFkanVzdCB0aGUgVjEgdGhydSBWOCB1cC9k
+b3duCj4+Pj4gKyAgICBhY2NvcmRpbmcgdG8gdGhlIGRhdGFzaGVldCBzcGVjaWZpY2F0aW9ucy4g
+VGhpcyBpcyBhIHByb3BlcnR5IG9mIHRoZQo+Pj4+ICsgICAgcGh5c2ljYWwgZGlzcGxheSBjb25u
+ZWN0ZWQgdG8gdGhlIGRpc3BsYXkgY29udHJvbGxlciBhbmQgbWF5IHZhcnkuCj4+Pj4gKyAgICBJ
+ZiBkZWZpbmVkLCBib3RoIGFycmF5cyBtdXN0IGJlIHN1cHBsaWVkIGluIGZ1bGwuIElmIHRoZSBw
+cm9wZXJ0aWVzCj4+Pj4gKyAgICBhcmUgbm90IHN1cHBsaWVkLCBoYXJkd2FyZSBkZWZhdWx0cyB3
+aWxsIGJlIHVzZWQuCj4+Pgo+Pj4gTm9ybWFsbHksIHdlIHRoZSBwaHlzaWNhbCBwYW5lbCBpcyBk
+ZXNjcmliZWQgd2hpY2ggd291bGQgaW1wbHkgYWxsIHRoZXNlCj4+PiBzZXR0aW5ncy4gQXJlIHRo
+ZXJlIGxvdHMgb2YgcGFuZWxzIHdpdGggdGhpcyBjb250cm9sbGVyIHRoYXQgd291bGQKPj4+IGp1
+c3RpZnkgYWxsIHRoZXNlIHNldHRpbmdzPwo+Pgo+PiBUaGUgZGF0YXNoZWV0IGZvciB0aGUgaWxp
+OTMyMiBqdXN0IHNheXMgaXQgImRyaXZlcyBwYW5lbHMiIGVzc2VudGlhbGx5Lgo+PiBHb29nbGlu
+ZyBhcm91bmQgZ2l2ZXMgYXQgaGFuZCB0aGF0IGl0IGlzIHVzZWQgcHJldHR5IGZyZXF1ZW50bHkg
+aW4KPj4gU2hlbnpoZW4gQ2hpbmEgZm9yIGFkYXB0aW5nIGRpZmZlcmVudCBvZmYtdGhlLXNoZWxm
+IHBhbmVscyB0bwo+PiBkaWZmZXJlbnQgaW5wdXRzLgo+Pgo+PiBJIGNhbid0IHJlYWxseSBhbnN3
+ZXIgaG93IG1hbnkgb2YgdGhlc2UgcHJvZHVjdHMgdGhhdCBydW4gb25lIG9yCj4+IGFub3RoZXIg
+T1MgdXNpbmcgZGV2aWNlIHRyZWUgdG8gZGVzY3JpYmUgdGhlIGNvbmZpZ3VyYXRpb24uIEl0IGZl
+ZWxzIG1vcmUKPj4gbGlrZSBJJ20gcGF2aW5nIHRoZSByb2FkIGZvciBvdGhlcnMgdG8gdHJhdmVs
+LgoKTm90IHJlYWxseSBhIHJvYWQgSSB3YW50IHRvIHBhdmUgYW5kIGVuY291cmFnZSBvdGhlcnMu
+Cgo+PiBQcm9iYWJseSBvdGhlciBJbGl0ZWsgcGFuZWwgYWRhcHRlcnMgd2lsbCBuZWVkIHNvbWV0
+aGluZyBzaW1pbGFyLgo+Pgo+Pj4+ICsgIC0gaWxpdGVrLGVudHJ5LW1vZGU6IHRoZSBwYW5lbCBj
+YW4gYmUgY29ubmVjdGVkIHRvIHZhcmlvdXMgaW5wdXQgc3RyZWFtcwo+Pj4+ICsgICAgYW5kIGZv
+dXIgb2YgdGhlbSBjYW4gYmUgc2VsZWN0ZWQgYnkgZWxlY3Ryb25pYyBzdHJhcHMgb24gdGhlIGRp
+c3BsYXkuCj4+Pj4gKyAgICBIb3dldmVyIGl0IGlzIHBvc3NpYmxlIHRvIHNlbGVjdCBhbm90aGVy
+IG1vZGUgb3Igb3ZlcnJpZGUgdGhlCj4+Pj4gKyAgICBlbGVjdHJvbmljIGRlZmF1bHQgd2l0aCB0
+aGlzIHByb3BlcnR5LiBWYWxpZCB2YWx1ZXM6Cj4+Pj4gKyAgICAwOiA4IGJpdCBzZXJpYWwgUkdC
+IHRocm91Z2gKPj4+PiArICAgIDE6IDggYml0IHNlcmlhbCBSR0IgYWxpZ25lZAo+Pj4+ICsgICAg
+MjogOCBiaXQgc2VyaWFsIFJHQiBkdW1teSAzMjB4MjQwCj4+Pj4gKyAgICAzOiA4IGJpdCBzZXJp
+YWwgUkdCIGR1bW15IDM2MHgyNDAKPj4+PiArICAgIDQ6IGRpc2FibGVkCj4+Pj4gKyAgICA1OiAy
+NCBiaXQgcGFyYWxsZWwgUkdCIHRocm91Z2gKPj4+PiArICAgIDY6IDI0IGJpdCBwYXJhbGxlbCBS
+R0IgYWxpZ25lZAo+Pj4+ICsgICAgNzogMjQgYml0IFlVViA2NDBZIDMyMENiQ3IKPj4+PiArICAg
+IDg6IDI0IGJpdCBZVVYgNzIwWSAzNjBDYkNyCj4+Pj4gKyAgICA5OiBkaXNhYmxlZAo+Pj4+ICsg
+ICAgMTA6IDggYml0IElUVS1SIEJULjY1NiA3MjBZIDM2MENiQ3IKPj4+PiArICAgIDExOiA4IGJp
+dCBJVFUtUiBCVC42NTYgNjQwWSAzMjBDYkNyCj4+Pgo+Pj4gVG8gc29tZSBleHRlbnQsIHdlIGhh
+dmUgc29tZSBzdGFuZGFyZCBiaW5kaW5ncyB0byBkZXNjcmliZSB0aGlzLgo+Pgo+PiBJIGRvbid0
+IGZpbmQgYW55LiBNYXliZSBJJ20gbG9va2luZyBpbiB0aGUgd3JvbmcgcGxhY2VzIDooCgpJIGd1
+ZXNzIGJ1cy13aWR0aCBpcyBhbGwgd2UgaGF2ZS4gTm9ybWFsbHksIHRoaXMgaXMgYWxsIGltcGxp
+ZWQgYnkgdGhlCmNvbXBhdGlibGUgc3RyaW5ncyBvZiBlaXRoZXIgdGhlIGNvbnRyb2xsZXIsIHBh
+bmVsIG9yIGJvdGguCgpBbm90aGVyIHdheSB0byBsb29rIGF0IGl0IGlzLCB3ZSBhbHJlYWR5IGhh
+dmUgc3VwcG9ydCBmb3IgbG90cyBvZgpwYW5lbHMgYW5kIGNvbnRyb2xsZXJzLiBJZiB0aG9zZSBo
+YXZlbid0IG5lZWRlZCB0byBzcGVjaWZ5IHRoaXMKaW5mb3JtYXRpb24sIHRoZW4gd2h5IGRvIHlv
+dT8KCj4+Cj4+IFRoZXNlIGFyZSBjbG9zZXN0IGFzc29jaWF0ZWQgd2l0aCB0aGUgRFJNICJtZWRp
+YSBidXMgZm9ybWF0cyIKPj4gaW4gTGludXggaW5jbHVkZS91YXBpL2xpbnV4L21lZGlhLWJ1cy1m
+b3JtYXQuaAo+PiBzdWNoIGFzOgo+Pgo+PiAjZGVmaW5lIE1FRElBX0JVU19GTVRfUkdCNDQ0XzFY
+MTIgICAgICAgICAgICAgICAweDEwMTYKPj4gI2RlZmluZSBNRURJQV9CVVNfRk1UX1JHQjQ0NF8y
+WDhfUEFESElfQkUgICAgICAgMHgxMDAxCj4+ICNkZWZpbmUgTUVESUFfQlVTX0ZNVF9SR0I0NDRf
+Mlg4X1BBREhJX0xFICAgICAgIDB4MTAwMgo+PiAjZGVmaW5lIE1FRElBX0JVU19GTVRfUkdCNTU1
+XzJYOF9QQURISV9CRSAgICAgICAweDEwMDMKPj4gI2RlZmluZSBNRURJQV9CVVNfRk1UX1JHQjU1
+NV8yWDhfUEFESElfTEUgICAgICAgMHgxMDA0Cj4+ICNkZWZpbmUgTUVESUFfQlVTX0ZNVF9SR0I1
+NjVfMVgxNiAgICAgICAgICAgICAgIDB4MTAxNwo+PiAjZGVmaW5lIE1FRElBX0JVU19GTVRfQkdS
+NTY1XzJYOF9CRSAgICAgICAgICAgICAweDEwMDUKPj4gI2RlZmluZSBNRURJQV9CVVNfRk1UX0JH
+UjU2NV8yWDhfTEUgICAgICAgICAgICAgMHgxMDA2Cj4+ICNkZWZpbmUgTUVESUFfQlVTX0ZNVF9S
+R0I1NjVfMlg4X0JFICAgICAgICAgICAgIDB4MTAwNwo+PiAjZGVmaW5lIE1FRElBX0JVU19GTVRf
+UkdCNTY1XzJYOF9MRSAgICAgICAgICAgICAweDEwMDgKPj4gI2RlZmluZSBNRURJQV9CVVNfRk1U
+X1JHQjY2Nl8xWDE4ICAgICAgICAgICAgICAgMHgxMDA5Cj4+ICNkZWZpbmUgTUVESUFfQlVTX0ZN
+VF9SQkc4ODhfMVgyNCAgICAgICAgICAgICAgIDB4MTAwZQo+PiAjZGVmaW5lIE1FRElBX0JVU19G
+TVRfUkdCNjY2XzFYMjRfQ1BBREhJICAgICAgICAweDEwMTUKPj4gI2RlZmluZSBNRURJQV9CVVNf
+Rk1UX1JHQjY2Nl8xWDdYM19TUFdHICAgICAgICAgMHgxMDEwCj4+ICguLi4pCj4+Cj4+IFdlIGNh
+biBzdXJlbHkgcmVnYXJkIHRoaXMgYnVzIGZvcm1hdCBsaXN0IGFzIHN0YW5kYXJkIGFuZAo+PiBj
+b3B5IGFuZCBleHRlbmQgaXQgaW4gRFQgKGl0IGRvZXMgbm90IGhhdmUgSVRVLVIgZm9ybWF0cyBm
+b3IKPj4gdGhlIG1vbWVudCkgYnV0IEkgZG9uJ3Qga25vdyBpZiB0aGF0IGlzIHdpc2UuCj4+Cj4+
+IEFsc28gdGhlIGlucHV0IG1vZGVzIG9mIGlsaTkzMjIgaXMgY291cGxlZCB3aXRoIHJlc29sdXRp
+b24gc28KPj4gaXQgd291bGQgbmVlZCB0d28gbW9yZSBjZWxscyBvciBzbyBmb3IgcmVzb2x1dGlv
+biBzbyBJIGZlZWwKPj4gaXQgd291bGQgb3Zlci1jb21wbGljYXRlIHRoaW5ncyBmb3IgdGhlc2Ug
+MTIgZW51bWVyYXRvcnMuCj4KPiBDYW4gd2UgcHJvY2VlZCB3aXRoIHRoZXNlIHBhdGNoZXM/Cj4K
+PiBBbnkgb3BpbmlvbiBmcm9tIERUIG9yIHBhbmVsIG1haW50YWluZXJzPwoKWW91IGhhdmUgbXkg
+b3Bpbmlvbi4gSSBkb24ndCB0aGluayBUaGllcnJ5J3Mgd2lsbCBiZSBkaWZmZXJlbnQuCgpNeSBz
+dWdnZXN0aW9uIGlzIHRvIG1vdmUgdGhlIHNldHRpbmdzIHlvdSBuZWVkIGludG8gdGhlIHBhbmVs
+IGRyaXZlcgphbmQgb3V0IG9mIERULiBXZSBjYW4gYWx3YXlzIG1vdmUgdGhpbmdzIHRvIERUIGxh
+dGVyIGlmIGl0IG1ha2VzCnNlbnNlLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
