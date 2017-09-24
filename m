@@ -1,78 +1,75 @@
-From: Stefan Bruens <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH v2 06/10] arm64: allwinner: a64: Add devicetree binding for DMA controller
-Date: Sun, 24 Sep 2017 01:34:58 +0200
-Message-ID: <1673036.ZUJy1pffid@pebbles.site>
-References: <20170917031956.28010-1-stefan.bruens@rwth-aachen.de> <20170917031956.28010-7-stefan.bruens@rwth-aachen.de> <20170920205300.io3ghr54kzk763kt@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+From: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 1/2] media:imx274 device tree binding file
+Date: Sun, 24 Sep 2017 00:53:28 -0700
+Message-ID: <20170924075329.9927-1-leonl@leopardimaging.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920205300.io3ghr54kzk763kt@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mittwoch, 20. September 2017 22:53:00 CEST Rob Herring wrote:
-> On Sun, Sep 17, 2017 at 05:19:52AM +0200, Stefan Brüns wrote:
-> > The A64 is register compatible with the H3, but has a different number
-> > of dma channels and request ports.
-> > 
-> > Attach additional properties to the node to allow future reuse of the
-> > compatible for controllers with different number of channels/requests.
-> > 
-> > If dma-requests is not specified, the register layout defined maximum
-> > of 32 is used.
-> > 
-> > Signed-off-by: Stefan Brüns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> > ---
-> > 
-> >  .../devicetree/bindings/dma/sun6i-dma.txt          | 26
-> >  ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> > b/Documentation/devicetree/bindings/dma/sun6i-dma.txt index
-> > 98fbe1a5c6dd..6ebc79f95202 100644
-> > --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> > 
-> > @@ -27,6 +27,32 @@ Example:
-> >  		#dma-cells = <1>;
-> >  	
-> >  	};
-> > 
-> > +-------------------------------------------------------------------------
-> > ----- +For A64 DMA controller:
-> > +
-> > +Required properties:
-> > +- compatible:	"allwinner,sun50i-a64-dma"
-> > +- dma-channels: Number of DMA channels supported by the controller.
-> > +		Refer to Documentation/devicetree/bindings/dma/dma.txt
-> > +- all properties above, i.e. reg, interrupts, clocks, resets and
-> > #dma-cells +
-> > +Optional properties:
-> > +- dma-requests: Number of DMA request signals supported by the
-> > controller.
-> > +		Refer to Documentation/devicetree/bindings/dma/dma.txt
-> > +
-> > +Example:
-> > +	dma: dma-controller@01c02000 {
-> 
-> Drop the leading 0. Building dtbs with W=2 will tell you this.
-> 
-> With that,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The binding file for imx274 CMOS sensor V4l2 driver
 
-The leading 0 was copied from the A31 example just a few lines above. Should I 
-also correct that one, or should that go in a separate patch?
+Signed-off-by: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+---
+v6:
+ - no changes
+v5:
+ - add 'port' and 'endpoint' information
+v4:
+ - no changes
+v3:
+ - remove redundant properties and references
+ - document 'reg' property
+v2:
+ - no changes
+---
+ .../devicetree/bindings/media/i2c/imx274.txt       | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
 
-Kind regards,
-
-Stefan
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+new file mode 100644
+index 000000000000..80f2e89568e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+@@ -0,0 +1,33 @@
++* Sony 1/2.5-Inch 8.51Mp CMOS Digital Image Sensor
++
++The Sony imx274 is a 1/2.5-inch CMOS active pixel digital image sensor with
++an active array size of 3864H x 2202V. It is programmable through I2C
++interface. The I2C address is fixed to 0x1a as per sensor data sheet.
++Image data is sent through MIPI CSI-2, which is configured as 4 lanes
++at 1440 Mbps.
++
++
++Required Properties:
++- compatible: value should be "sony,imx274" for imx274 sensor
++- reg: I2C bus address of the device
++
++Optional Properties:
++- reset-gpios: Sensor reset GPIO
++
++The imx274 device node should contain one 'port' child node with
++an 'endpoint' subnode. For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++	sensor@1a {
++		compatible = "sony,imx274";
++		reg = <0x1a>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reset-gpios = <&gpio_sensor 0 0>;
++		port {
++			sensor_out: endpoint {
++				remote-endpoint = <&csiss_in>;
++			};
++		};
++	};
 -- 
-Stefan Brüns  /  Bergstraße 21  /  52062 Aachen
-home: +49 241 53809034     mobile: +49 151 50412019
+2.14.0.rc1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
