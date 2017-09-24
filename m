@@ -1,95 +1,42 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [RFC v2 1/2] dt-bindings: mmc: Document the Amlogic Meson8 and Meson8b SDIO bindings
-Date: Sun, 24 Sep 2017 21:05:27 +0200
-Message-ID: <20170924190528.21841-2-martin.blumenstingl@googlemail.com>
-References: <20170924190528.21841-1-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] media:imx274 device tree binding file
+Date: Sun, 24 Sep 2017 14:39:49 -0500
+Message-ID: <20170924193949.el6gtsbxx5c3gd3v@rob-hp-laptop>
+References: <20170924075329.9927-1-leonl@leopardimaging.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170924190528.21841-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170924075329.9927-1-leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On Sun, Sep 24, 2017 at 12:53:28AM -0700, Leon Luo wrote:
+> The binding file for imx274 CMOS sensor V4l2 driver
+> 
+> Signed-off-by: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+> ---
+> v6:
+>  - no changes
+> v5:
+>  - add 'port' and 'endpoint' information
+> v4:
+>  - no changes
+> v3:
+>  - remove redundant properties and references
+>  - document 'reg' property
+> v2:
+>  - no changes
+> ---
+>  .../devicetree/bindings/media/i2c/imx274.txt       | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
 
-This documents the devicetree bindings for the SDIO/MMC host found in
-Amlogic Meson8 and Meson8b SoCs. It supports the SD specification v2.0
-and the eMMC specification v4.41.
-It has an internal "mux" which allows connecting up to three MMC devices
-to it. The maximum supported bus-width is 4-bits.
+Please add acks when posting new versions.
 
-Amlogic's GPL kernel sources call it "SDIO" to differentiate it from the
-other MMC controller in (at least the Meson8 and Meson8b) the SoCs (they
-call the other one "SDHC", which supports a bus-width of up to 8-bits).
-
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- .../bindings/mmc/amlogic,meson-mx-sdio.txt         | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.txt
-new file mode 100644
-index 000000000000..124ea362eec9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.txt
-@@ -0,0 +1,52 @@
-+* Amlogic Meson6, Meson8 and Meson8b SDIO/MMC controller
-+
-+The highspeed MMC host controller on Amlogic SoCs provides an interface
-+for MMC, SD, SDIO and SDHC types of memory cards.
-+
-+Supported maximum speeds are the ones of the eMMC standard 4.41 as well
-+as the speed of SD standard 2.0.
-+
-+The hardware provides an internal "mux" which allows up to three slots
-+to be controlled. Only one slot can be accessed at a time.
-+
-+Required properties:
-+ - compatible : must be one of
-+	- "amlogic,meson8-sdio"
-+	- "amlogic,meson8b-sdio"
-+	along with the generic "amlogic,meson-mx-sdio"
-+ - reg : mmc controller base registers
-+ - interrupts : mmc controller interrupt
-+ - #address-cells : must be 1
-+ - size-cells : must be 0
-+ - clocks : phandle to clock providers
-+ - clock-names : must contain "core" and "clkin"
-+
-+Required child nodes:
-+A node for each slot provided by the MMC controller is required.
-+
-+Required properties on each child node (= slot):
-+ - compatible : must be "mmc-slot" (see mmc.txt within this directory)
-+ - reg : the slot (or "port") ID
-+
-+Optional properties on each child node (= slot):
-+ - bus-width : must be 1 or 4 (8-bit bus is not supported)
-+ - for cd and all other additional generic mmc parameters
-+   please refer to mmc.txt within this directory
-+
-+Examples:
-+	mmc@c1108c20 {
-+		compatible = "amlogic,meson8-sdio", "amlogic,meson-mx-sdio";
-+		reg = <0xc1108c20 0x20>;
-+		interrupts = <0 28 1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&clkc CLKID_SDIO>, <&clkc CLKID_CLK81>;
-+		clock-names = "core", "clkin";
-+
-+		slot@1 {
-+			compatible = "mmc-slot";
-+			reg = <1>;
-+
-+			bus-width = <4>;
-+		};
-+	};
--- 
-2.14.1
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
