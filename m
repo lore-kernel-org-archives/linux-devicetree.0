@@ -1,173 +1,114 @@
-From: StarNight <starnight@g.ncu.edu.tw>
-Subject: Re: [PATCH] linux-wpan: Add an IEEE 802.15.4 over LoRa Semtech
- SX1276/77/78/79 device driver
-Date: Sun, 24 Sep 2017 22:53:39 +0800
-Message-ID: <CAC=mGzi+wD-Fob6NMviZyZHGpekhAGvuXjB45P71zL6cc2+88g@mail.gmail.com>
-References: <20170910093026.4386-1-starnight@g.ncu.edu.tw> <fda61128-d27a-8b08-5a31-97e8a57677fe@osg.samsung.com>
- <CAC=mGzja5h1xq66au-CX92oARptFaFGjZcOH5KU0oujBfH4vvw@mail.gmail.com> <d463f3a2-e12b-a708-1ade-e9309fa068fa@osg.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/8] extcon: gpio: Add DT bindings
+Date: Sun, 24 Sep 2017 16:56:15 +0200
+Message-ID: <20170924145622.4031-2-linus.walleij@linaro.org>
+References: <20170924145622.4031-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d463f3a2-e12b-a708-1ade-e9309fa068fa-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+In-Reply-To: <20170924145622.4031-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: Alexander Aring <alex.aring-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-wpan - ML <linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Lockwood <lockwood-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add some reasonable device tree bindings and also add the cable defines
+to the extcon include in <dt-bindings/extcon/connectors.h> since
+the GPIO extcon definately need to specify which cable/connector it is
+detecting.
 
-I have written a note which is reordered and extracted from LoRaWAN 1.0.2.
-https://hackmd.io/s/S1kg6Ymo-#
-Hope this wiil be easier for readers.
+Adding the include file makes the (as it happens) Linux numbers into an
+ABI, but I do not see any better method. It is possible to define strings
+for all cable types but it seems like overkill, just reusing Linux'
+enumerators seems like a good idea.
 
-LoRaWAN defiened by LoRa Alliance is the MAC layer over LoRa PHY.
-(The relation between LoRaWAN and LoRa PHY)
+The binding supports any number of GPIOs and connectors, but the driver
+currently only supports one connector on one GPIO line.
 
-2017-09-19 15:10 GMT+08:00 Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>:
-> Hello.
->
-> On 09/16/2017 09:08 AM, StarNight wrote:
->>
->> 2017-09-15 20:26 GMT+08:00 Stefan Schmidt <stefan-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>:
->>>
->>> Hello.
->>>
->>> On 09/10/2017 11:30 AM, Jian-Hong Pan wrote:
->>>>
->>>>
->>>> LoRa is an implementation of LPWPAN.
->>>> Chirp Spread Spectrum (CSS) modulation, which is used by LoRa has been
->>>> specified by IEEE 802.15.4a.
->>>> This driver implements IEEE 802.15.4 mac over LoRa physical layer not
->>>> LoRaWAN.
->>>
->>>
->>>
->>> Please see my architectural comments on how to fit in LoRa transceiver in
->>> my
->>> other mail. I have a very specific question on this driver and its use
->>> with
->>> the mac802154 subsystem though.
->>>
->>> I had a look at the first datasheet I could find for it
->>> (http://www.semtech.com/images/datasheet/sx1276_77_78_79.pdf) and
->>> stumbled
->>> over this sentence:
->>> "Standard GFSK, FSK, OOK, and GMSK modulation is also provided
->>> to allow compatibility with existing systems or standards such
->>> as wireless MBUS and IEEE 802.15.4g."
->>>
->>> Does this mean the transceiver can run in a mode where it would be
->>> compatible with an plain (no LoRA support) IEEE 802.15.4g transceiver on
->>> the
->>> same frequency band, subHGZ here?
->>
->>
->> It is the datasheet that I refer to when I write the driver.
->
->
-> OK
->
->> This series of chips (Semtech SX1276/77/78/79) have two operating modes:
->> LoRa mode and FSK/OOK mode
->> Its registers may be in different meaning and usage with in different
->> operating
->> mode.
->> The overall registers comparing list can be found at "Table 41 Registers
->> Summary" of the datasheet.
->>
->> However, the operating frequency of the chip is an issue.
->> It shuold meet regional regulatory requirements.
->> The meeted frequency could be found in the series of chips.
->
->
-> Sure, you would need to make sure that the 802.15.4g compliant transceiver
-> on the other side operates actually in the same frequencies (based on
-> regional regulations).
->
-> What I try to understand is if we can setup this device in a 802.15.4
-> compliant phy mode. In that case I have no problem with it landing in the
-> ieee802154 subsystem.
->
-> If this is not possible and we could only run mac802514 over them but they
-> would only work against the same device I do not think it should go into
-> ieee802154. In that case we should rather work out what parts of 802.15.4
-> can be shared with a full LoRa subsystem and work on that.
->
->
->>> While we do not have support for the 15.4g extension (MTU size, etc) in
->>> our
->>> stack right now this would be a very interesting first test for the
->>> driver.
->>> If this would be the case.
->>
->>
->> According to the datasheat, the FIFO buffer size of this series of chips
->> is:
->> - 256 bytes in LoRa mode (Chapter 4.1.2.3. LoRa Mode FIFO Data Buffer)
->> - 64 bytes in FSK/OOK mode (Chapter 4.2.10. FIFO)
->>
->>> How did you test your driver so far? Making sure that the device gets
->>> detected and setup correctly I assume. Did you also do full transmission
->>> and
->>> receive tests with this transceiver and mac802154? If yes, was it the
->>> same
->>> hardware on both sides or different?
->>
->>
->> I use a Raspberry Pi as the board and Archlinux ARM as the OS.
->> I make two SX1278 transceivers as SPI slaves connect to the Raspberry Pi,
->> because the Raspberry Pi has two SPI chip selector addresses.
->>
->> Then, prepare the Device Tree overlap and install it before modprobe the
->> driver
->> as a module.
->> There wil be two wpan interfaces in the system and show them with "ip
->> addr".
->> I refer to the shell script in the "Setup a 6LoWPAN test network" section
->> of
->> http://wpan.cakelab.org/ to setup the wpan interfaces.
->>
->> iwpan dev wpan${i} set pan_id $panid
->> ip link add link wpan${i} name lowpan${i} type lowpan
->> ip link set wpan${i} up
->> ip link set lowpan${i} up
->>
->> Two lowpan interfaces will be added and brought up.
->> Use "ip addr" again and will see the IPv6 addresses of the lowpan
->> interfaces.
->>
->> I also use an echo server and a client written by myself in Python 3 to
->> test the
->> UDP communication between the two interfaces.
->>
->> console of server side:
->> server.py <listening IPv6 address> <listening port>
->>
->> console of client side:
->> client.py <src IPv6 address> <dest IPv6 address> <dest port> <data string>
->>
->> Client will send the data string to server.
->> Server will capitalize the recieved data string from the client and send
->> back to
->> the client.
->> Client will receive the capitalized data string and print it out.
->>
->> By the way, those could be found in the project on my GitHub:
->> https://github.com/starnight/LoRa
->
->
-> Thanks for the explanation.
->
-> You tested full communication up to UDP over 6LoWPAN adaption, but only
-> between the same devices. Did these devices run in LoRa or in FSK/OOK mode?
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/extcon/extcon-gpio.txt     | 24 ++++++++++++++
+ include/dt-bindings/extcon/connectors.h            | 38 ++++++++++++++++++++++
+ 2 files changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+ create mode 100644 include/dt-bindings/extcon/connectors.h
 
-The driver which I wrote makes the devices in LoRa mode (Make them
-only as LoRa PHYs).
-The devices are two SX1278 tranceivers.
-So, the SX1278 driver is IEEE 802.15.4 MAC over LoRa PHY.
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+new file mode 100644
+index 000000000000..2f5e21b94a64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+@@ -0,0 +1,24 @@
++External Connector Using GPIO
++
++Required properties:
++- compatible: should be "extcon-gpio"
++- extcon-gpios: the GPIO lines used for the external connectors
++  See gpio/gpio.txt
++- extcon-connector-types: set to an unsigned integer value arrat representing the types
++  of this connector, matched to the corresponding GPIO lines in the previous array.
++  Those are defined with unique IDs in <dt-bindings/extcon/connectors.h>
++- input-debounce: The number of microseconds to wait for the
++  connector state to stabilize. This property is reused from pin control
++  See pinctrl/pinctrl-bindings.txt
++
++Example:
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/extcon/connectors.h>
++
++extcon {
++	compatible = "extcon-gpio";
++	extcon-gpios = <&gpio0 42 GPIO_ACTIVE_LOW>;
++	extcon-connector-types = <EXTCON_USB>;
++	input-debounce = <20000>; /* 20 ms */
++};
+diff --git a/include/dt-bindings/extcon/connectors.h b/include/dt-bindings/extcon/connectors.h
+new file mode 100644
+index 000000000000..61bed24eaadc
+--- /dev/null
++++ b/include/dt-bindings/extcon/connectors.h
+@@ -0,0 +1,38 @@
++#ifndef _DT_BINDINGS_EXTCON_CONNECTORS_H
++#define _DT_BINDINGS_EXTCON_CONNECTORS_H
++
++/* USB external connector */
++#define EXTCON_USB		1
++#define EXTCON_USB_HOST		2
++#define EXTCON_CHG_USB_SDP	5	/* Standard Downstream Port */
++#define EXTCON_CHG_USB_DCP	6	/* Dedicated Charging Port */
++#define EXTCON_CHG_USB_CDP	7	/* Charging Downstream Port */
++#define EXTCON_CHG_USB_ACA	8	/* Accessory Charger Adapter */
++#define EXTCON_CHG_USB_FAST	9
++#define EXTCON_CHG_USB_SLOW	10
++#define EXTCON_CHG_WPT		11	/* Wireless Power Transfer */
++#define EXTCON_CHG_USB_PD	12	/* USB Power Delivery */
++/* Jack external connector */
++#define EXTCON_JACK_MICROPHONE	20
++#define EXTCON_JACK_HEADPHONE	21
++#define EXTCON_JACK_LINE_IN	22
++#define EXTCON_JACK_LINE_OUT	23
++#define EXTCON_JACK_VIDEO_IN	24
++#define EXTCON_JACK_VIDEO_OUT	25
++#define EXTCON_JACK_SPDIF_IN	26	/* Sony Philips Digital InterFace */
++#define EXTCON_JACK_SPDIF_OUT	27
++/* Display external connector */
++#define EXTCON_DISP_HDMI	40	/* High-Definition Multimedia Interface */
++#define EXTCON_DISP_MHL		41	/* Mobile High-Definition Link */
++#define EXTCON_DISP_DVI		42	/* Digital Visual Interface */
++#define EXTCON_DISP_VGA		43	/* Video Graphics Array */
++#define EXTCON_DISP_DP		44	/* Display Port */
++#define EXTCON_DISP_HMD		45	/* Head-Mounted Display */
++/* Miscellaneous external connector */
++#define EXTCON_DOCK		60
++#define EXTCON_JIG		61
++#define EXTCON_MECHANICAL	62
++
++#define EXTCON_NUM		63
++
++#endif /* _DT_BINDINGS_EXTCON_CONNECTORS_H */
+-- 
+2.13.5
 
-Jian-Hong Pan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
