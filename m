@@ -1,63 +1,99 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 2/4] thermal: add brcmstb AVS TMON driver
-Date: Sun, 24 Sep 2017 14:11:25 -0700
-Message-ID: <4ec0715e-fcd7-3aec-3589-96426575c373@gmail.com>
-References: <20170809220257.4234-1-code@mmayer.net>
- <20170809220257.4234-3-code@mmayer.net> <1502777298.2591.1.camel@intel.com>
- <95da51df3cadbb05f721f2e5b8d59f8d@milecki.pl>
- <1502779721.2591.4.camel@intel.com>
+From: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+Date: Sun, 24 Sep 2017 21:44:21 +0000
+Message-ID: <1506289460890.34765@alliedtelesis.co.nz>
+References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>,<87377fmbpw.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502779721.2591.4.camel@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Cc: Markus Mayer <code@mmayer.net>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <87377fmbpw.fsf@free-electrons.com>
+Content-Language: en-NZ
+Sender: linux-i2c-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-Le 08/14/17 à 23:48, Zhang Rui a écrit :
-> On Tue, 2017-08-15 at 08:42 +0200, Rafał Miłecki wrote:
->> On 2017-08-15 08:08, Zhang Rui wrote:
->>>
->>>>
->>>> diff --git a/drivers/thermal/broadcom/Kconfig
->>>> b/drivers/thermal/broadcom/Kconfig
->>>> index 42c098e..c106a15 100644
->>>> --- a/drivers/thermal/broadcom/Kconfig
->>>> +++ b/drivers/thermal/broadcom/Kconfig
->>>> @@ -6,6 +6,13 @@ config BCM2835_THERMAL
->>>>  	help
->>>>  	  Support for thermal sensors on Broadcom bcm2835 SoCs.
->>>>  
->>>> +config BRCMSTB_THERMAL
->>>> +	tristate "Broadcom STB AVS TMON thermal driver"
->>>> +	depends on ARCH_BRCMSTB || COMPILE_TEST
->>>> +	help
->>>> +	  Enable this driver if you have a Broadcom STB SoC and
->>>> would like
->>>> +	  thermal framework support.
->>>> +
->>> I don't understand why I got the following checkpatch warning
->>>
->>> WARNING: please write a paragraph that describes the config symbol
->>> fully
->>> #73: FILE: drivers/thermal/broadcom/Kconfig:9:
->>> +config BRCMSTB_THERMAL
->>>
->>> I didn't see this for other Kconfig changes.
->> It's because your help message is only 2 lines long (instead of 3).
->>
->> Some (many?) maintainers aren't pedantic about that, a common sense 
->> should
->> be applied ;)
-> 
-> thanks for explaining.
-> Patch 1 and 2 queued for next merge window.
-
-Humm, I don't see this driver in your latest 4.14 pull request to Linus,
-so what happened here exactly? Can we expect this driver to be submitted
-for 4.14 or we just happened to have missed this window now?
--- 
-Florian
+Hi Gregory,=0A=
+=0A=
+I got this information from Armada-38x functional errata document.=0A=
+=0A=
+I can add the "marvell,mv78230-i2c" compatible string to the appropriate  d=
+evice tree files =0A=
+but the i2c-mv64xxx driver enables an additional  feature (offload i2c tran=
+sactions)=0A=
+based on the compatible string "marvell,mv78230-i2c".=0A=
+=0A=
+I am not sure if this feature (offload i2c transactions) should be enabled =
+for Armada-38x devices.=0A=
+That is the reason I felt for the need of a new compatible string specifica=
+lly for Armada-38x SoCs.=0A=
+=0A=
+Thanks,=0A=
+Kalyan=0A=
+________________________________________=0A=
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>=0A=
+Sent: Friday, 22 September 2017 7:30 p.m.=0A=
+To: Kalyan Kinthada=0A=
+Cc: devicetree@vger.kernel.org; wsa@the-dreams.de; robh+dt@kernel.org; pawe=
+l.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; galak@=
+codeaurora.org; linux-i2c@vger.kernel.org; linux-kernel@vger.kernel.org; Ch=
+ris Packham=0A=
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding=0A=
+=0A=
+Hi Kalyan,=0A=
+=0A=
+ On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.=
+nz> wrote:=0A=
+=0A=
+> All armada-38x variants(380, 385, 388) SoCs have an issue=0A=
+> in i2c controller which violates the i2c repeated start timing.=0A=
+=0A=
+=0A=
+Did you had an issue with one of the SoC ?=0A=
+If yes what was your setting ?=0A=
+On my side I never managed to have this sort of issue on Armada 38x.=0A=
+=0A=
+>=0A=
+> This errata is fixed in the i2c-mv64xxx driver but enabled=0A=
+> only for devices with compatible string "marvell,mv78230-i2c".=0A=
+=0A=
+In this case why not just adding the "marvell,mv78230-i2c" as compatible=0A=
+string in the appropriate device tree files ?=0A=
+=0A=
+Gregory=0A=
+=0A=
+>=0A=
+> This patch introduces a new compatible string=0A=
+> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs=0A=
+> so that the workaound is enabled.=0A=
+=0A=
+=0A=
+>=0A=
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>=0A=
+> ---=0A=
+>  Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +=0A=
+>  1 file changed, 1 insertion(+)=0A=
+>=0A=
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Docu=
+mentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
+> index 5c30026921..fc100b6bdb 100644=0A=
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
+> @@ -14,6 +14,7 @@ Required properties :=0A=
+>                           very rare, initial version of the SoC which=0A=
+>                           had broken offload support.  Linux=0A=
+>                           auto-detects this and sets it appropriately.=0A=
+> +                     - "marvell,armada-38x-i2c"=0A=
+>   - interrupts      : The interrupt number=0A=
+>=0A=
+>  Optional properties :=0A=
+> --=0A=
+> 2.14.1=0A=
+>=0A=
+=0A=
+--=0A=
+Gregory Clement, Free Electrons=0A=
+Kernel, drivers, real-time and embedded Linux=0A=
+development, consulting, training and support.=0A=
+http://free-electrons.com=0A=
