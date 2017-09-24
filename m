@@ -1,40 +1,56 @@
-From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] of: configure DMA for host1x devices
-Date: Sun, 24 Sep 2017 12:04:54 +0300
-Message-ID: <20170924090454.28116-2-mperttunen@nvidia.com>
-References: <20170924090454.28116-1-mperttunen@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170924090454.28116-1-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v3 0/5] K2G: Add QSPI support
+Date: Sun, 24 Sep 2017 16:29:19 +0530
+Message-ID: <20170924105924.23923-1-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Vignesh R <vigneshr@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Devices in the host1x bus rely on the old behavior of of_dma_configure
-to set up DMA ops. Add a check for them into of_dma_configure.
+This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
+The patches enhance the existing cadence-quadspi driver to support
+loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
 
-We must do the check using a string comparison instead of using
-pointers since the host1x bus can be compiled into a module.
+Change log:
 
-Fixes: 723288836628 ("of: restrict DMA configuration")
-Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/device.c | 3 +++
- 1 file changed, 3 insertions(+)
+v3:
+* Fix build warnings reported by kbuild test bot.
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 64b710265d39..12368418cd33 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -104,6 +104,9 @@ int of_dma_configure(struct device *dev, struct device_node *np)
- 		if (!dev_is_pci(dev) &&
- #ifdef CONFIG_ARM_AMBA
- 		    dev->bus != &amba_bustype &&
-+#endif
-+#if IS_ENABLED(CONFIG_TEGRA_HOST1X)
-+		    !(dev->bus && !strcmp("host1x", dev->bus->name)) &&
- #endif
- 		    dev->bus != &platform_bus_type)
- 			return ret == -ENODEV ? 0 : ret;
+Resend:
+* Rebase to latest linux-next.
+* Collect Acked-bys
+
+v2:
+* Drop DT patches. Will be sent as separate series as requested by
+ maintainer.
+* Split binding docs into separate patches.
+* Address comments by Rob Herring.
+
+
+Vignesh R (5):
+  mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
+  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+  mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back
+    circuit
+  mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock
+    circuit
+  mtd: spi-nor: cadence-quadspi: Add runtime PM support
+
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  7 +++-
+ drivers/mtd/spi-nor/cadence-quadspi.c              | 46 ++++++++++++++++++++--
+ 2 files changed, 49 insertions(+), 4 deletions(-)
+
 -- 
 2.14.1
