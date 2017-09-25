@@ -1,102 +1,38 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 6/7] arm64: allwinner: a64: add power
- supply nodes in AXP803 DTSI
-Date: Mon, 25 Sep 2017 11:24:43 +0200
-Message-ID: <39833379-66a4-4657-3d12-26bc51c88815@free-electrons.com>
-References: <20170920151814.22461-1-icenowy@aosc.io>
- <20170920151814.22461-7-icenowy@aosc.io>
- <7ce5c53e-70ba-456e-ecf7-5132ef2c2c64@free-electrons.com>
- <D7CAB179-F2AF-434F-82F7-07F146842FCF@aosc.io>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: [PATCH] ARM: dts: at91: at91-sama5d27_som1: fix PHY ID
+Date: Mon, 25 Sep 2017 11:42:36 +0200
+Message-ID: <20170925094236.8599-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBZUWUPHAKGQEC7D36QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <D7CAB179-F2AF-434F-82F7-07F146842FCF-h8G6r0blFSE@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+The PHY ID is incorrect. It leads to troubles when resuming from standby
+or mem power states.
 
-On 25/09/2017 11:14, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2017=E5=B9=B49=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-5:11:57, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
-=B0:
->> Hi Icenowy,
->>
->> On 20/09/2017 17:18, Icenowy Zheng wrote:
->>> AXP803 PMIC features AC/USB/Battery power supplies.
->>>
->>> As we have now the device tree bindings for them, add device tree
->>> nodes for them.
->>>
->>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> ---
->>>  arch/arm64/boot/dts/allwinner/axp803.dtsi | 15 +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi
->> b/arch/arm64/boot/dts/allwinner/axp803.dtsi
->>> index ff8af52743ff..3a8615231b7c 100644
->>> --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
->>> +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
->>> @@ -49,6 +49,16 @@
->>>  	interrupt-controller;
->>>  	#interrupt-cells =3D <1>;
->>> =20
->>> +	ac_power_supply: ac-power-supply {
->>> +		compatible =3D "x-powers,axp221-ac-power-supply";
->>> +		status =3D "disabled";
->>> +	};
->>> +
->>> +	battery_power_supply: battery-power-supply {
->>> +		compatible =3D "x-powers,axp803-battery-power-supply";
->>> +		status =3D "disabled";
->>> +	};
->>> +
->>>  	regulators {
->>>  		/* Default work frequency for buck regulators */
->>>  		x-powers,dcdc-freq =3D <3000>;
->>> @@ -147,4 +157,9 @@
->>>  			regulator-name =3D "rtc-ldo";
->>>  		};
->>>  	};
->>> +
->>> +	usb_power_supply: usb_power_supply {
->>> +		compatible =3D "x-powers,axp803-usb-power-supply";
->>> +		status =3D "disabled";
->>> +	};
->>
->> No. You have added support for the AC and battery power supply drivers
->> in this patchset, not for USB.
->=20
-> But I added its device tree binding.
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: af690fa37e39 ("ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1 support")
+---
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes and that is wrong. That would mislead users into thinking the usb
-power supply is supported (since the dt binding is here) while it's not.
-
-I would add the dt binding and the DT node only once it is supported.
-
-Quentin
---=20
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+index 63a5af898165..cf0087b4c9e1 100644
+--- a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
++++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+@@ -67,8 +67,8 @@
+ 				pinctrl-0 = <&pinctrl_macb0_default>;
+ 				phy-mode = "rmii";
+ 
+-				ethernet-phy@1 {
+-					reg = <0x1>;
++				ethernet-phy@0 {
++					reg = <0x0>;
+ 					interrupt-parent = <&pioA>;
+ 					interrupts = <PIN_PD31 IRQ_TYPE_LEVEL_LOW>;
+ 					pinctrl-names = "default";
+-- 
+2.12.2
