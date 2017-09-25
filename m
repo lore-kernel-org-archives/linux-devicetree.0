@@ -1,92 +1,85 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH 1/2] arm: dts: Add support for National Instruments
- Project Sulfur SDRs
-Date: Mon, 25 Sep 2017 09:11:36 -0700
-Message-ID: <20170925161136.GA12943@tyrael.ni.corp.natinst.com>
-References: <20170911232223.91894-1-mdf@kernel.org>
- <314acb1f-1f0f-7893-70a8-9379c01112ac@xilinx.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] watchdog: dw_wdt: add stop watchdog operation
+Date: Mon, 25 Sep 2017 09:16:43 -0700
+Message-ID: <20170925161643.GA32601@roeck-us.net>
+References: <20170925052531.1692-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <314acb1f-1f0f-7893-70a8-9379c01112ac@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Moritz Fischer <mdf@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, davem@davemloft.net, linux-kernel@vger.kernel.org
+In-Reply-To: <20170925052531.1692-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 25, 2017 at 07:25:30AM +0200, Oleksij Rempel wrote:
+> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> The only way of stopping the watchdog is by resetting it.
+> Add the watchdog op for stopping the device and reset if
+> a reset line is provided.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> 
+> changes v3:
+>  - don't return error if rst is not present and set WDOG_HW_RUNNING bit
+>    to notify watchdog core.
+> 
+> changes v2:
+>  - test if dw_wdt->rst is NULL instead of IS_ERR
+> 
+>  drivers/watchdog/dw_wdt.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index 36be987ff9ef..6cc56b18ee52 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -135,6 +135,21 @@ static int dw_wdt_start(struct watchdog_device *wdd)
+>  	return 0;
+>  }
+>  
+> +static int dw_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> +
+> +	if (!dw_wdt->rst) {
+> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Setting WDOG_HW_RUNNING should be dropped from dw_wdt_start().
 
-Hi Michal,
+Guenter
 
-On Mon, Sep 25, 2017 at 10:19:44AM +0200, Michal Simek wrote:
-> Hi Moritz
->=20
-> sorry for delay.
-
-No problem.
-
->=20
-> On 12.9.2017 01:22, Moritz Fischer wrote:
-> > Add support for the National Instruments Project Sulfur SDR
-> > motherboards Rev 2,3 and 4.
-> >=20
-> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
-> > ---
-> >  arch/arm/boot/dts/Makefile                |   3 +
-> >  arch/arm/boot/dts/zynq-ni-sulfur-rev2.dts |  84 +++++++++++++++++++
-> >  arch/arm/boot/dts/zynq-ni-sulfur-rev3.dts | 118 ++++++++++++++++++++++=
-++++
-> >  arch/arm/boot/dts/zynq-ni-sulfur-rev4.dts |  26 ++++++
-> >  arch/arm/boot/dts/zynq-ni-sulfur.dtsi     | 133 ++++++++++++++++++++++=
-++++++++
-> >  5 files changed, 364 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev2.dts
-> >  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev3.dts
-> >  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev4.dts
-> >  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur.dtsi
->=20
-> Is this publicly available board?
-
-Will be in Q1 2018 was announced at GRCon'17 ([1]).
-Some of the Rev3s are currently deployed in Norway as part of a radar
-system.
-
-> I am not quite sure we should apply these dts files. There are a lot of
-> boards with zynq and there must be any strong argument for applying this
-> to the tree. For arm32 with even flat tree structure.
-
-What's the issue with merging them, except for having 3 more files?=20
-
-> Arnd: Do you have any policy about it?
->=20
-> Thanks,
-> Michal
-
-Thanks,
-
-Moritz
-
-[1] https://drive.google.com/file/d/0B-CV_07uSBIuODc5bmV2QXhnODA/view
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEWcxjJBP2M15CncZ7vkIQd6kWqi8FAlnJKrQACgkQvkIQd6kW
-qi+InQgAyzdK63z7KCX7H8xuUxEuuK9PKzqSjsnfwJAUcR3nOKJegeBxqGduTsxp
-dqJ7EQF31V+x+m4eMzUCxNpVXPoAFrgQI7cQ33cYfgYq4B+cXA6o3G3h9zfXHeIV
-058t+Yak1R0isucahoJ3IOTki8PT70kjoVyG2H5rfzZJa39Pnd5XmO5zmXjTchfC
-A2JX7QK8hYlqLajIZEsTd9v4wPiU5C7KmuyyR2G9joytW01RAWoKfLK1r9hRhuZN
-2l1m+C5tDRPgvT5FOftxiYcNqQizE1/zo8stQ1YJhfU5ukDDANHFeV2UPRJIbdlw
-YAxrYZ5KraNKijh3BggBafj6Vqkz6w==
-=ghr7
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+> +		return 0;
+> +	}
+> +
+> +	reset_control_assert(dw_wdt->rst);
+> +	reset_control_deassert(dw_wdt->rst);
+> +
+> +	return 0;
+> +}
+> +
+>  static int dw_wdt_restart(struct watchdog_device *wdd,
+>  			  unsigned long action, void *data)
+>  {
+> @@ -173,6 +188,7 @@ static const struct watchdog_info dw_wdt_ident = {
+>  static const struct watchdog_ops dw_wdt_ops = {
+>  	.owner		= THIS_MODULE,
+>  	.start		= dw_wdt_start,
+> +	.stop		= dw_wdt_stop,
+>  	.ping		= dw_wdt_ping,
+>  	.set_timeout	= dw_wdt_set_timeout,
+>  	.get_timeleft	= dw_wdt_get_timeleft,
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
