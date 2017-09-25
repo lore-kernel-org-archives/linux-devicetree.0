@@ -1,164 +1,235 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v14 22/28] v4l: async: Add a convenience function for registering sensors
-Date: Tue, 26 Sep 2017 01:25:33 +0300
-Message-ID: <20170925222540.371-23-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain device / integer references
+Date: Tue, 26 Sep 2017 01:25:31 +0300
+Message-ID: <20170925222540.371-21-sakari.ailus@linux.intel.com>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170925222540.371-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a convenience function for parsing firmware for information on related
-devices using v4l2_async_notifier_parse_fwnode_sensor_common() registering
-the notifier and finally the async sub-device itself.
+v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+the device's own fwnode, it will follow child fwnodes with the given
+property-value pair and return the resulting fwnode.
 
-This should be useful for sensor drivers that do not have device specific
-requirements related to firmware information parsing or the async
-framework.
-
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/v4l2-core/v4l2-async.c  |  5 +++++
- drivers/media/v4l2-core/v4l2-fwnode.c | 41 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-async.h            | 22 +++++++++++++++++++
- include/media/v4l2-subdev.h           |  3 +++
- 4 files changed, 71 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 201 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index fe383c5d1215..f2c82f5a9747 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -580,6 +580,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
- {
- 	struct v4l2_async_notifier *notifier = sd->notifier;
- 
-+	if (sd->subdev_notifier)
-+		v4l2_async_notifier_unregister(sd->subdev_notifier);
-+	v4l2_async_notifier_cleanup(sd->subdev_notifier);
-+	kfree(sd->subdev_notifier);
-+
- 	if (!sd->asd) {
- 		if (!list_empty(&sd->async_list))
- 			v4l2_async_cleanup(sd);
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 4976096a1d83..622bdcc2df2d 100644
+index f739dfd16cf7..f93049c361e4 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -29,6 +29,7 @@
- 
- #include <media/v4l2-async.h>
- #include <media/v4l2-fwnode.h>
-+#include <media/v4l2-subdev.h>
- 
- enum v4l2_fwnode_bus_type {
- 	V4L2_FWNODE_BUS_TYPE_GUESS = 0,
-@@ -814,6 +815,46 @@ int v4l2_async_notifier_parse_fwnode_sensor_common(
+@@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_sensor_common);
  
-+int v4l2_async_register_subdev_sensor_common(struct v4l2_subdev *sd)
++/*
++ * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
++ *					arguments
++ * @dev: struct device pointer
++ * @notifier: notifier for @dev
++ * @prop: the name of the property
++ * @index: the index of the reference to get
++ * @props: the array of integer property names
++ * @nprops: the number of integer property names in @nprops
++ *
++ * Find fwnodes referred to by a property @prop, then under that
++ * iteratively, @nprops times, follow each child node which has a
++ * property in @props array at a given child index the value of which
++ * matches the integer argument at an index.
++ *
++ * For example, if this function was called with arguments and values
++ * @dev corresponding to device "SEN", @prop == "flash-leds", @index
++ * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
++ * it would return the node marked with THISONE. The @dev argument in
++ * the ASL below.
++ *
++ *	Device (LED)
++ *	{
++ *		Name (_DSD, Package () {
++ *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
++ *			Package () {
++ *				Package () { "led0", "LED0" },
++ *				Package () { "led1", "LED1" },
++ *			}
++ *		})
++ *		Name (LED0, Package () {
++ *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++ *			Package () {
++ *				Package () { "led", 0 },
++ *			}
++ *		})
++ *		Name (LED1, Package () {
++ *			// THISONE
++ *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++ *			Package () {
++ *				Package () { "led", 1 },
++ *			}
++ *		})
++ *	}
++ *
++ *	Device (SEN)
++ *	{
++ *		Name (_DSD, Package () {
++ *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++ *			Package () {
++ *				Package () {
++ *					"flash-leds",
++ *					Package () { ^LED, 0, ^LED, 1 },
++ *				}
++ *			}
++ *		})
++ *	}
++ *
++ * where
++ *
++ *	LED	LED driver device
++ *	LED0	First LED
++ *	LED1	Second LED
++ *	SEN	Camera sensor device (or another device the LED is
++ *		related to)
++ *
++ * Return: 0 on success
++ *	   -ENOENT if no entries (or the property itself) were found
++ *	   -EINVAL if property parsing otherwise failed
++ *	   -ENOMEM if memory allocation failed
++ */
++static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
++	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
++	const char **props, unsigned int nprops)
 +{
-+	struct v4l2_async_notifier *notifier;
++	struct fwnode_reference_args fwnode_args;
++	unsigned int *args = fwnode_args.args;
++	struct fwnode_handle *child;
 +	int ret;
 +
-+	if (WARN_ON(!sd->dev))
-+		return -ENODEV;
++	/*
++	 * Obtain remote fwnode as well as the integer arguments.
++	 *
++	 * Note that right now both -ENODATA and -ENOENT may signal
++	 * out-of-bounds access. Return -ENOENT in that case.
++	 */
++	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
++						 index, &fwnode_args);
++	if (ret)
++		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
 +
-+	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
-+	if (!notifier)
++	/*
++	 * Find a node in the tree under the referred fwnode corresponding the
++	 * integer arguments.
++	 */
++	fwnode = fwnode_args.fwnode;
++	while (nprops--) {
++		u32 val;
++
++		/* Loop over all child nodes under fwnode. */
++		fwnode_for_each_child_node(fwnode, child) {
++			if (fwnode_property_read_u32(child, *props, &val))
++				continue;
++
++			/* Found property, see if its value matches. */
++			if (val == *args)
++				break;
++		}
++
++		fwnode_handle_put(fwnode);
++
++		/* No property found; return an error here. */
++		if (!child) {
++			fwnode = ERR_PTR(-ENOENT);
++			break;
++		}
++
++		props++;
++		args++;
++		fwnode = child;
++	}
++
++	return fwnode;
++}
++
++/*
++ * v4l2_fwnode_reference_parse_int_props - parse references for async sub-devices
++ * @dev: struct device pointer
++ * @notifier: notifier for @dev
++ * @prop: the name of the property
++ * @props: the array of integer property names
++ * @nprops: the number of integer properties
++ *
++ * Use v4l2_fwnode_reference_get_int_prop to find fwnodes through reference in
++ * property @prop with integer arguments with child nodes matching in properties
++ * @props. Then, set up V4L2 async sub-devices for those fwnodes in the notifier
++ * accordingly.
++ *
++ * While it is technically possible to use this function on DT, it is only
++ * meaningful on ACPI. On Device tree you can refer to any node in the tree but
++ * on ACPI the references are limited to devices.
++ *
++ * Return: 0 on success
++ *	   -ENOENT if no entries (or the property itself) were found
++ *	   -EINVAL if property parsing otherwisefailed
++ *	   -ENOMEM if memory allocation failed
++ */
++static int v4l2_fwnode_reference_parse_int_props(
++	struct device *dev, struct v4l2_async_notifier *notifier,
++	const char *prop, const char **props, unsigned int nprops)
++{
++	struct fwnode_handle *fwnode;
++	unsigned int index;
++	int ret;
++
++	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
++					 dev_fwnode(dev), prop, index, props,
++					 nprops))); index++)
++		fwnode_handle_put(fwnode);
++
++	/*
++	 * Note that right now both -ENODATA and -ENOENT may signal
++	 * out-of-bounds access. Return the error in cases other than that.
++	 */
++	if (PTR_ERR(fwnode) != -ENOENT && PTR_ERR(fwnode) != -ENODATA)
++		return PTR_ERR(fwnode);
++
++	ret = v4l2_async_notifier_realloc(notifier,
++					  notifier->num_subdevs + index);
++	if (ret)
 +		return -ENOMEM;
 +
-+	ret = v4l2_async_notifier_parse_fwnode_sensor_common(sd->dev,
-+							     notifier);
-+	if (ret < 0)
-+		goto out_cleanup;
++	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
++					 dev_fwnode(dev), prop, index, props,
++					 nprops))); index++) {
++		struct v4l2_async_subdev *asd;
 +
-+	ret = v4l2_async_subdev_notifier_register(sd, notifier);
-+	if (ret < 0)
-+		goto out_cleanup;
++		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
++			ret = -EINVAL;
++			goto error;
++		}
 +
-+	ret = v4l2_async_register_subdev(sd);
-+	if (ret < 0)
-+		goto out_unregister;
++		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
++		if (!asd) {
++			ret = -ENOMEM;
++			goto error;
++		}
 +
-+	sd->subdev_notifier = notifier;
++		notifier->subdevs[notifier->num_subdevs] = asd;
++		asd->match.fwnode.fwnode = fwnode;
++		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
++		notifier->num_subdevs++;
++	}
 +
-+	return 0;
++	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
 +
-+out_unregister:
-+	v4l2_async_notifier_unregister(notifier);
-+
-+out_cleanup:
-+	v4l2_async_notifier_cleanup(notifier);
-+	kfree(notifier);
-+
++error:
++	fwnode_handle_put(fwnode);
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(v4l2_async_register_subdev_sensor_common);
 +
  MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-index 479c317fab2f..74f2ea27d117 100644
---- a/include/media/v4l2-async.h
-+++ b/include/media/v4l2-async.h
-@@ -173,6 +173,28 @@ void v4l2_async_notifier_cleanup(struct v4l2_async_notifier *notifier);
- int v4l2_async_register_subdev(struct v4l2_subdev *sd);
- 
- /**
-+ * v4l2_async_register_subdev_sensor_common - registers a sensor sub-device to
-+ *					      the asynchronous sub-device
-+ *					      framework and parse set up common
-+ *					      sensor related devices
-+ *
-+ * @sd: pointer to struct &v4l2_subdev
-+ *
-+ * This function is just like v4l2_async_register_subdev() with the exception
-+ * that calling it will also parse firmware interfaces for remote references
-+ * using v4l2_async_notifier_parse_fwnode_sensor_common() and registers the
-+ * async sub-devices. The sub-device is similarly unregistered by calling
-+ * v4l2_async_unregister_subdev().
-+ *
-+ * While registered, the subdev module is marked as in-use.
-+ *
-+ * An error is returned if the module is no longer loaded on any attempts
-+ * to register it.
-+ */
-+int __must_check v4l2_async_register_subdev_sensor_common(
-+	struct v4l2_subdev *sd);
-+
-+/**
-  * v4l2_async_unregister_subdev - unregisters a sub-device to the asynchronous
-  * 	subdevice framework
-  *
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index e83872078376..ec399c770301 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -793,6 +793,8 @@ struct v4l2_subdev_platform_data {
-  *	list.
-  * @asd: Pointer to respective &struct v4l2_async_subdev.
-  * @notifier: Pointer to the managing notifier.
-+ * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
-+ *		     device using v4l2_device_register_sensor_subdev().
-  * @pdata: common part of subdevice platform data
-  *
-  * Each instance of a subdev driver should create this struct, either
-@@ -823,6 +825,7 @@ struct v4l2_subdev {
- 	struct list_head async_list;
- 	struct v4l2_async_subdev *asd;
- 	struct v4l2_async_notifier *notifier;
-+	struct v4l2_async_notifier *subdev_notifier;
- 	struct v4l2_subdev_platform_data *pdata;
- };
- 
+ MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+ MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
