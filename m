@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v14 18/28] dt: bindings: Add lens-focus binding for image sensors
-Date: Tue, 26 Sep 2017 01:25:29 +0300
-Message-ID: <20170925222540.371-19-sakari.ailus@linux.intel.com>
+Subject: [PATCH v14 09/28] omap3isp: Print the name of the entity where no source pads could be found
+Date: Tue, 26 Sep 2017 01:25:20 +0300
+Message-ID: <20170925222540.371-10-sakari.ailus@linux.intel.com>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170925222540.371-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
@@ -10,32 +10,30 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The lens-focus property contains a phandle to the lens voice coil driver
-that is associated to the sensor; typically both are contained in the same
-camera module.
+If no source pads are found in an entity, print the name of the entity.
 
 Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/omap3isp/isp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index fdba30479b47..b535bdde861c 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -74,6 +74,8 @@ Optional properties
- - flash-leds: An array of phandles, each referring to a flash LED, a sub-node
-   of the LED driver device node.
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index 4afd7ba4fad6..35687c9707e0 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -1669,8 +1669,8 @@ static int isp_link_entity(
+ 			break;
+ 	}
+ 	if (i == entity->num_pads) {
+-		dev_err(isp->dev, "%s: no source pad in external entity\n",
+-			__func__);
++		dev_err(isp->dev, "%s: no source pad in external entity %s\n",
++			__func__, entity->name);
+ 		return -EINVAL;
+ 	}
  
-+- lens-focus: A phandle to the node of the focus lens controller.
-+
- 
- Optional endpoint properties
- ----------------------------
 -- 
 2.11.0
 
