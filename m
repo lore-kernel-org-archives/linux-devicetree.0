@@ -1,58 +1,85 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH v2] ARM: dts: iwg22d: Enable SDHI0 controller
-Date: Mon, 25 Sep 2017 07:25:00 +0000
-Message-ID: <TY1PR06MB07025B6A19C90C354EA23775B77A0@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <TY1PR06MB0702E99A48352C055705E3A9B7670@TY1PR06MB0702.apcprd06.prod.outlook.com>
- <1506085262-13639-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY1PR06MB08955E235768A72D33FE2AD3C0670@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20170925071800.GF1019@verge.net.au>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: configure DMA for host1x devices
+Date: Mon, 25 Sep 2017 09:44:48 +0200
+Message-ID: <20170925074448.GB12494@ulmo.fritz.box>
+References: <20170924090454.28116-1-mperttunen@nvidia.com>
+ <20170924090454.28116-2-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170925071800.GF1019@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="R3G7APHDIzY6R/pk"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170924090454.28116-2-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
 
-> From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 25 September 2017 08:18
+--R3G7APHDIzY6R/pk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Sep 24, 2017 at 12:04:54PM +0300, Mikko Perttunen wrote:
+> Devices in the host1x bus rely on the old behavior of of_dma_configure
+> to set up DMA ops. Add a check for them into of_dma_configure.
 >=20
-> On Fri, Sep 22, 2017 at 01:33:39PM +0000, Fabrizio Castro wrote:
-> > Hello Simon,
-> >
-> > just to clarify the changes between v1 and v2, we can't use SDR50 and
-> SDR104 (due to an HW issue) therefore the pinctrl for UHS has been
-> removed and we dropped property "sd-uhs-sdr104". High Speed has been
-> tested, therefore if you are happy with the patch I guess you can update =
-the
-> following page accordingly:
-> > http://elinux.org/index.php?title=3DRenesas-MMC-Enabled-
-> Speeds&type=3Drevi
-> > sion&diff=3D451426&oldid=3D451421
-> >
-> > Although (due to a bug) sdhi0 may not hold a reference to "vccq_sdhi0",
-> the gpio regulator will initialize "SDHI0 VccQ" at 3.3V.
-> > I have sent another patch (mmc: tmio: check mmc_regulator_get_supply
-> return value) to start a discussion about a possible fix for the bug.
-> >
-> > Let me know if you need more information.
+> We must do the check using a string comparison instead of using
+> pointers since the host1x bus can be compiled into a module.
 >=20
-> Thanks again for following up on this.
+> Fixes: 723288836628 ("of: restrict DMA configuration")
+> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/of/device.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> I have applied the patch with Geert's tag.
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 64b710265d39..12368418cd33 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -104,6 +104,9 @@ int of_dma_configure(struct device *dev, struct devic=
+e_node *np)
+>  		if (!dev_is_pci(dev) &&
+>  #ifdef CONFIG_ARM_AMBA
+>  		    dev->bus !=3D &amba_bustype &&
+> +#endif
+> +#if IS_ENABLED(CONFIG_TEGRA_HOST1X)
+> +		    !(dev->bus && !strcmp("host1x", dev->bus->name)) &&
+>  #endif
+>  		    dev->bus !=3D &platform_bus_type)
+>  			return ret =3D=3D -ENODEV ? 0 : ret;
 
-Thanks
+Maybe a slightly better solution would be to add a dev_is_host1x()
+function that returns dev->bus =3D=3D &host1x_bus_type if TEGRA_HOST1X is
+enabled and returns false otherwise. That way we can have a "proper"
+check for the bus type and avoid the #if in this file.
 
->=20
-> I have also updated the Wiki at the URL above, feel free to make any furt=
-her
-> updates there as appropriate.
+It's slightly more complicated because of the dependencies between the
+DT and Tegra DRM trees, but I'm sure we can get Rob to either give his
+Acked-by on the drivers/of/device.c change or carry the Tegra DRM patch
+in the DT tree.
 
-Thanks, looks okay to me.
+Thierry
 
-Kind regards, Chris
+--R3G7APHDIzY6R/pk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnIs/AACgkQ3SOs138+
+s6Gtww/+NdPSvOPh58HPoZS9XmrLsbsRR2Gxip+vyrIoTHkqFOUAbdEdHLhCWjpS
+U7qWqrUGzRw5ijPJcmElQI9f5Tje517PUyiMFMrkMnankaJLBgkjosbm0hKVasnI
+6isXX5A0Cucf8PxDWrGYaGQ9vcMPDi+TBQM4B1rHQ43N/X1hA51BuaCLU4iga06z
+T6VF0+u8lLztpnfIsUEVa5i1TGpj05j2IcrrBLtU3IpbO2by+G23tUq0XpMFNDVi
+vUoDd4KSep191sbtN3dMNQ+blTClCtNIcmh9QgWzDQEJB88qiXV77Nmzftpl/TbK
+/HOysQG7/An2tRo4xBleFdb2IDI44GTH+6kMp5IVxRSHtq3fW7tlnYIG7hcLuKwA
+SmhpRXvxBCpx4Nqav+WqDI10qk4zccYUt3M/fejLfsKB/1I1cPBEl411TsR8NHd9
+QkyLE/Lp2ffk+1CzGnsVf4bZW79274wRqySy8fv7cg7v0f57P7VPvNW9krFD2C+A
+bghe0kOaXdclVj4sOxoY+ZI6QPtPEi/8zFSEPLMV4CwPX2myd6A59bsngCFcvOyD
+1eI7+PYI1eb/r/SjYdXLrY7mLX9WJ9HvGSZzTChdyzgfcr8BRFnDtykzZxLGvRpj
+2U0wABMqcfXIt7R9EhqR52KQsCf7IqB4tqfcaseTZ2/YeiEIZ0U=
+=t4/K
+-----END PGP SIGNATURE-----
+
+--R3G7APHDIzY6R/pk--
