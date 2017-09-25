@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v14 19/28] v4l: fwnode: Add a helper function for parsing generic references
-Date: Tue, 26 Sep 2017 01:25:30 +0300
-Message-ID: <20170925222540.371-20-sakari.ailus@linux.intel.com>
+Subject: [PATCH v14 21/28] v4l: fwnode: Add convenience function for parsing common external refs
+Date: Tue, 26 Sep 2017 01:25:32 +0300
+Message-ID: <20170925222540.371-22-sakari.ailus@linux.intel.com>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170925222540.371-1-sakari.ailus@linux.intel.com>
@@ -10,95 +10,111 @@ To: linux-media@vger.kernel.org
 Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add function v4l2_fwnode_reference_parse() for parsing them as async
-sub-devices. This can be done on e.g. flash or lens async sub-devices that
-are not part of but are associated with a sensor.
+Add v4l2_fwnode_parse_reference_sensor_common for parsing common
+sensor properties that refer to adjacent devices such as flash or lens
+driver chips.
+
+As this is an association only, there's little a regular driver needs to
+know about these devices as such.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 69 +++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 35 +++++++++++++++++++++++++++++++++++
+ include/media/v4l2-async.h            |  3 ++-
+ include/media/v4l2-fwnode.h           | 21 +++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index ea67d673c4a8..f739dfd16cf7 100644
+index f93049c361e4..4976096a1d83 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -509,6 +509,75 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+@@ -779,6 +779,41 @@ static int v4l2_fwnode_reference_parse_int_props(
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_endpoints_by_port);
  
-+/*
-+ * v4l2_fwnode_reference_parse - parse references for async sub-devices
-+ * @dev: the device node the properties of which are parsed for references
-+ * @notifier: the async notifier where the async subdevs will be added
-+ * @prop: the name of the property
-+ *
-+ * Return: 0 on success
-+ *	   -ENOENT if no entries were found
-+ *	   -ENOMEM if memory allocation failed
-+ *	   -EINVAL if property parsing failed
-+ */
-+static int v4l2_fwnode_reference_parse(
-+	struct device *dev, struct v4l2_async_notifier *notifier,
-+	const char *prop)
++int v4l2_async_notifier_parse_fwnode_sensor_common(
++	struct device *dev, struct v4l2_async_notifier *notifier)
 +{
-+	struct fwnode_reference_args args;
-+	unsigned int index;
-+	int ret;
++	static const char *led_props[] = { "led" };
++	static const struct {
++		const char *name;
++		const char **props;
++		unsigned int nprops;
++	} props[] = {
++		{ "flash-leds", led_props, ARRAY_SIZE(led_props) },
++		{ "lens-focus", NULL, 0 },
++	};
++	unsigned int i;
 +
-+	for (index = 0;
-+	     !(ret = fwnode_property_get_reference_args(
-+		       dev_fwnode(dev), prop, NULL, 0, index, &args));
-+	     index++)
-+		fwnode_handle_put(args.fwnode);
++	for (i = 0; i < ARRAY_SIZE(props); i++) {
++		int ret;
 +
-+	if (!index)
-+		return -ENOENT;
-+
-+	/*
-+	 * Note that right now both -ENODATA and -ENOENT may signal
-+	 * out-of-bounds access. Return the error in cases other than that.
-+	 */
-+	if (ret != -ENOENT && ret != -ENODATA)
-+		return ret;
-+
-+	ret = v4l2_async_notifier_realloc(notifier,
-+					  notifier->num_subdevs + index);
-+	if (ret)
-+		return ret;
-+
-+	for (index = 0; !fwnode_property_get_reference_args(
-+		     dev_fwnode(dev), prop, NULL, 0, index, &args);
-+	     index++) {
-+		struct v4l2_async_subdev *asd;
-+
-+		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-+			ret = -EINVAL;
-+			goto error;
++		if (props[i].props && is_acpi_node(dev_fwnode(dev)))
++			ret = v4l2_fwnode_reference_parse_int_props(
++				dev, notifier, props[i].name,
++				props[i].props, props[i].nprops);
++		else
++			ret = v4l2_fwnode_reference_parse(
++				dev, notifier, props[i].name);
++		if (ret && ret != -ENOENT) {
++			dev_warn(dev, "parsing property \"%s\" failed (%d)\n",
++				 props[i].name, ret);
++			return ret;
 +		}
-+
-+		asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-+		if (!asd) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		notifier->subdevs[notifier->num_subdevs] = asd;
-+		asd->match.fwnode.fwnode = args.fwnode;
-+		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-+		notifier->num_subdevs++;
 +	}
 +
 +	return 0;
-+
-+error:
-+	fwnode_handle_put(args.fwnode);
-+	return ret;
 +}
++EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_sensor_common);
 +
  MODULE_LICENSE("GPL");
  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+index 0b30a631ad19..479c317fab2f 100644
+--- a/include/media/v4l2-async.h
++++ b/include/media/v4l2-async.h
+@@ -155,7 +155,8 @@ void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier);
+  * Release memory resources related to a notifier, including the async
+  * sub-devices allocated for the purposes of the notifier but not the notifier
+  * itself. The user is responsible for calling this function to clean up the
+- * notifier after calling @v4l2_async_notifier_parse_fwnode_endpoints.
++ * notifier after calling @v4l2_async_notifier_parse_fwnode_endpoints or
++ * @v4l2_fwnode_reference_parse_sensor_common.
+  *
+  * There is no harm from calling v4l2_async_notifier_cleanup in other
+  * cases as long as its memory has been zeroed after it has been
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index add721695fbd..834e74246412 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -319,4 +319,25 @@ int v4l2_async_notifier_parse_fwnode_endpoints_by_port(
+ 			      struct v4l2_fwnode_endpoint *vep,
+ 			      struct v4l2_async_subdev *asd));
+ 
++/**
++ * v4l2_fwnode_reference_parse_sensor_common - parse common references on
++ *					       sensors for async sub-devices
++ * @dev: the device node the properties of which are parsed for references
++ * @notifier: the async notifier where the async subdevs will be added
++ *
++ * Parse common sensor properties for remote devices related to the
++ * sensor and set up async sub-devices for them.
++ *
++ * Any notifier populated using this function must be released with a call to
++ * v4l2_async_notifier_release() after it has been unregistered and the async
++ * sub-devices are no longer in use, even in the case the function returned an
++ * error.
++ *
++ * Return: 0 on success
++ *	   -ENOMEM if memory allocation failed
++ *	   -EINVAL if property parsing failed
++ */
++int v4l2_async_notifier_parse_fwnode_sensor_common(
++	struct device *dev, struct v4l2_async_notifier *notifier);
++
+ #endif /* _V4L2_FWNODE_H */
 -- 
 2.11.0
