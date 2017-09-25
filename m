@@ -1,40 +1,44 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt-bindings: bus: Minimal TI sysc interconnect
- target module binding
-Date: Mon, 25 Sep 2017 07:37:34 -0700
-Message-ID: <20170925143733.GF4394@atomide.com>
-References: <20170920224621.16236-1-tony@atomide.com>
- <20170920224621.16236-2-tony@atomide.com>
- <20170925070345.2uraikhswru77rm4@squirrel.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/3] Enable NAND on Armada-7040-DB board
+Date: Mon, 25 Sep 2017 16:53:49 +0200
+Message-ID: <20170925145352.13145-1-miquel.raynal@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170925070345.2uraikhswru77rm4-2pNSKKP3PSK44ywRPIzf9A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170925 00:04]:
-> On Wed, Sep 20, 2017 at 03:46:12PM -0700, Tony Lindgren wrote:
-> > TI sysc interconnect target module hardware is independent of the
-> > interconnect. It is used at least with TI L3 interconnect (Arteris NoC)
-> > and TI L4 interconnect (Sonics s3220).
-> 
-> This is because the interface between interconnect and module is
-> standardized (Open Core Protocol), so it doesn't really matter which
-> interconnect technology is used.
-> 
-> Also, afaik sysc mostly just concerns the interaction between module and
-> PRCM.  The only role the interconnect plays here is that it participates
-> in the OCP Disconnect Protocol to allow the module to safely disconnect
-> itself when it or the interconnect enters idle state.
+Hi,
 
-OK thanks for clarifying it, I'll add a note regarding OCP there.
+This series adds support for NAND on Armada-7040-DB board.
+
+Besides standard NAND node addition, it also introduces a new compatible
+string for the pxa3xx_nand driver to support the subitilities of A7k/A8k
+SoCs, as well as a new property used by the pxa3xx_nand driver to grab a
+phandle on the system control node in order to enable the NAND
+controller itself.
 
 Regards,
+Miquel
 
-Tony
+
+Gregory CLEMENT (1):
+  arm64: dts: marvell: add NAND support on the 7040-DB board
+
+Miquel Raynal (2):
+  Documentation: devicetree: add pxa3xx compatible and syscon property
+  mtd: nand: pxa3xx: enable NAND controller if the SoC needs it
+
+ .../devicetree/bindings/mtd/pxa3xx-nand.txt        |  4 +++
+ arch/arm64/boot/dts/marvell/armada-7040-db.dts     | 24 +++++++++++++
+ arch/arm64/boot/dts/marvell/armada-70x0.dtsi       | 14 ++++++++
+ .../boot/dts/marvell/armada-cp110-master.dtsi      |  3 +-
+ drivers/mtd/nand/pxa3xx_nand.c                     | 41 +++++++++++++++++++---
+ 5 files changed, 81 insertions(+), 5 deletions(-)
+
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
