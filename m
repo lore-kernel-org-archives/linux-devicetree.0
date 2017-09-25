@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v3 07/10] dmaengine: sun6i: Retrieve channel
- count/max request from devicetree
-Date: Mon, 25 Sep 2017 02:02:41 +0200
-Message-ID: <b8b9dff1-cec7-437b-8712-450f0f42f96f@rwthex-w2-a.rwth-ad.de>
+Subject: [PATCH v3 05/10] dmaengine: sun6i: Move number of
+ pchans/vchans/request to device struct
+Date: Mon, 25 Sep 2017 02:02:39 +0200
+Message-ID: <7c806ea2-1c3d-4c5b-bcd1-3c6f9b1737f9@rwthex-w2-a.rwth-ad.de>
 References: <20170925000244.11679-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
@@ -21,94 +21,128 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To avoid introduction of a new compatible for each small SoC/DMA controller
-variation, move the definition of the channel count to the devicetree.
-
-The number of vchans is no longer explicit, but limited by the highest
-port/DMA request number. The result is a slight overallocation for SoCs
-with a sparse port mapping.
+Preparatory patch: If the same compatible is used for different SoCs which
+have a common register layout, but different number of channels, the
+channel count can no longer be stored in the config. Store it in the
+device structure instead.
 
 Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
 
 Changes in v3: None
-Changes in v2:
-- Set default number of dma-request if not provided in config or devicetree
+Changes in v2: None
 
- drivers/dma/sun6i-dma.c | 37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ drivers/dma/sun6i-dma.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index b08b89fa4679..34d70af442ff 100644
+index c7ad3b4e836c..b08b89fa4679 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -42,6 +42,9 @@
+@@ -185,6 +185,9 @@ struct sun6i_dma_dev {
+ 	struct sun6i_pchan	*pchans;
+ 	struct sun6i_vchan	*vchans;
+ 	const struct sun6i_dma_config *cfg;
++	u32			num_pchans;
++	u32			num_vchans;
++	u32			max_request;
+ };
 =20
- #define DMA_STAT		0x30
-=20
-+/* Offset between DMA_IRQ_EN and DMA_IRQ_STAT limits number of channels */
-+#define DMA_MAX_CHANNELS	(DMA_IRQ_CHAN_NR * 0x10 / 4)
-+
- /*
-  * sun8i specific registers
-  */
-@@ -65,7 +68,8 @@
- #define DMA_CHAN_LLI_ADDR	0x08
-=20
- #define DMA_CHAN_CUR_CFG	0x0c
--#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
-+#define DMA_CHAN_MAX_DRQ		0x1f
-+#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & DMA_CHAN_MAX_DRQ)
- #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
- #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
- #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
-@@ -1152,6 +1156,7 @@ MODULE_DEVICE_TABLE(of, sun6i_dma_match);
- static int sun6i_dma_probe(struct platform_device *pdev)
+ static struct device *chan2dev(struct dma_chan *chan)
+@@ -431,7 +434,6 @@ static int sun6i_dma_start_desc(struct sun6i_vchan *vch=
+an)
+ static void sun6i_dma_tasklet(unsigned long data)
  {
- 	const struct of_device_id *device;
-+	struct device_node *np =3D pdev->dev.of_node;
- 	struct sun6i_dma_dev *sdc;
- 	struct resource *res;
- 	int ret, i;
-@@ -1227,6 +1232,36 @@ static int sun6i_dma_probe(struct platform_device *p=
-dev)
- 	sdc->num_vchans =3D sdc->cfg->nr_max_vchans;
- 	sdc->max_request =3D sdc->cfg->nr_max_requests;
+ 	struct sun6i_dma_dev *sdev =3D (struct sun6i_dma_dev *)data;
+-	const struct sun6i_dma_config *cfg =3D sdev->cfg;
+ 	struct sun6i_vchan *vchan;
+ 	struct sun6i_pchan *pchan;
+ 	unsigned int pchan_alloc =3D 0;
+@@ -459,7 +461,7 @@ static void sun6i_dma_tasklet(unsigned long data)
+ 	}
 =20
-+	ret =3D of_property_read_u32(np, "dma-channels", &sdc->num_pchans);
-+	if (ret && !sdc->num_pchans) {
-+		dev_err(&pdev->dev, "Can't get dma-channels.\n");
-+		return ret;
-+	}
+ 	spin_lock_irq(&sdev->lock);
+-	for (pchan_idx =3D 0; pchan_idx < cfg->nr_max_channels; pchan_idx++) {
++	for (pchan_idx =3D 0; pchan_idx < sdev->num_pchans; pchan_idx++) {
+ 		pchan =3D &sdev->pchans[pchan_idx];
+=20
+ 		if (pchan->vchan || list_empty(&sdev->pending))
+@@ -480,7 +482,7 @@ static void sun6i_dma_tasklet(unsigned long data)
+ 	}
+ 	spin_unlock_irq(&sdev->lock);
+=20
+-	for (pchan_idx =3D 0; pchan_idx < cfg->nr_max_channels; pchan_idx++) {
++	for (pchan_idx =3D 0; pchan_idx < sdev->num_pchans; pchan_idx++) {
+ 		if (!(pchan_alloc & BIT(pchan_idx)))
+ 			continue;
+=20
+@@ -502,7 +504,7 @@ static irqreturn_t sun6i_dma_interrupt(int irq, void *d=
+ev_id)
+ 	int i, j, ret =3D IRQ_NONE;
+ 	u32 status;
+=20
+-	for (i =3D 0; i < sdev->cfg->nr_max_channels / DMA_IRQ_CHAN_NR; i++) {
++	for (i =3D 0; i < sdev->num_pchans / DMA_IRQ_CHAN_NR; i++) {
+ 		status =3D readl(sdev->base + DMA_IRQ_STAT(i));
+ 		if (!status)
+ 			continue;
+@@ -982,7 +984,7 @@ static struct dma_chan *sun6i_dma_of_xlate(struct of_ph=
+andle_args *dma_spec,
+ 	struct dma_chan *chan;
+ 	u8 port =3D dma_spec->args[0];
+=20
+-	if (port > sdev->cfg->nr_max_requests)
++	if (port > sdev->max_request)
+ 		return NULL;
+=20
+ 	chan =3D dma_get_any_slave_channel(&sdev->slave);
+@@ -1015,7 +1017,7 @@ static inline void sun6i_dma_free(struct sun6i_dma_de=
+v *sdev)
+ {
+ 	int i;
+=20
+-	for (i =3D 0; i < sdev->cfg->nr_max_vchans; i++) {
++	for (i =3D 0; i < sdev->num_vchans; i++) {
+ 		struct sun6i_vchan *vchan =3D &sdev->vchans[i];
+=20
+ 		list_del(&vchan->vc.chan.device_node);
+@@ -1221,26 +1223,30 @@ static int sun6i_dma_probe(struct platform_device *=
+pdev)
+ 	sdc->slave.residue_granularity		=3D DMA_RESIDUE_GRANULARITY_BURST;
+ 	sdc->slave.dev =3D &pdev->dev;
+=20
+-	sdc->pchans =3D devm_kcalloc(&pdev->dev, sdc->cfg->nr_max_channels,
++	sdc->num_pchans =3D sdc->cfg->nr_max_channels;
++	sdc->num_vchans =3D sdc->cfg->nr_max_vchans;
++	sdc->max_request =3D sdc->cfg->nr_max_requests;
 +
-+	if (sdc->num_pchans > DMA_MAX_CHANNELS) {
-+		dev_err(&pdev->dev, "Number of dma-channels out of range.\n");
-+		return -EINVAL;
-+	}
-+
-+	ret =3D of_property_read_u32(np, "dma-requests", &sdc->max_request);
-+	if (ret && !sdc->max_request) {
-+		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
-+			 DMA_CHAN_MAX_DRQ);
-+		sdc->max_request =3D DMA_CHAN_MAX_DRQ;
-+	}
-+
-+	if (sdc->max_request > DMA_CHAN_MAX_DRQ) {
-+		dev_err(&pdev->dev, "Value of dma-requests out of range.\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * If the number of vchans is not specified, derive it from the
-+	 * highest port number, at most one channel per port and direction.
-+	 */
-+	if (!sdc->num_vchans)
-+		sdc->num_vchans =3D 2 * (sdc->max_request + 1);
-+
- 	sdc->pchans =3D devm_kcalloc(&pdev->dev, sdc->num_pchans,
++	sdc->pchans =3D devm_kcalloc(&pdev->dev, sdc->num_pchans,
  				   sizeof(struct sun6i_pchan), GFP_KERNEL);
  	if (!sdc->pchans)
+ 		return -ENOMEM;
+=20
+-	sdc->vchans =3D devm_kcalloc(&pdev->dev, sdc->cfg->nr_max_vchans,
++	sdc->vchans =3D devm_kcalloc(&pdev->dev, sdc->num_vchans,
+ 				   sizeof(struct sun6i_vchan), GFP_KERNEL);
+ 	if (!sdc->vchans)
+ 		return -ENOMEM;
+=20
+ 	tasklet_init(&sdc->task, sun6i_dma_tasklet, (unsigned long)sdc);
+=20
+-	for (i =3D 0; i < sdc->cfg->nr_max_channels; i++) {
++	for (i =3D 0; i < sdc->num_pchans; i++) {
+ 		struct sun6i_pchan *pchan =3D &sdc->pchans[i];
+=20
+ 		pchan->idx =3D i;
+ 		pchan->base =3D sdc->base + 0x100 + i * 0x40;
+ 	}
+=20
+-	for (i =3D 0; i < sdc->cfg->nr_max_vchans; i++) {
++	for (i =3D 0; i < sdc->num_vchans; i++) {
+ 		struct sun6i_vchan *vchan =3D &sdc->vchans[i];
+=20
+ 		INIT_LIST_HEAD(&vchan->node);
 --=20
 2.14.1
 
