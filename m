@@ -1,50 +1,71 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v14 04/28] v4l: async: Add V4L2 async documentation to the documentation build
-Date: Tue, 26 Sep 2017 01:25:15 +0300
-Message-ID: <20170925222540.371-5-sakari.ailus@linux.intel.com>
-References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: Re: [PATCH v3 5/5] mtd: spi-nor: cadence-quadspi: Add runtime PM
+ support
+Date: Mon, 25 Sep 2017 15:41:40 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox>
+References: <20170924105924.23923-1-vigneshr@ti.com> <20170924105924.23923-6-vigneshr@ti.com> <3a1160f9-a0ae-c84c-d209-af97c3c3b0f6@gmail.com> <4ee69ea4-14cc-4305-bf3f-8fe76d43bf6b@ti.com> <fa700cdf-f0b5-779b-4f38-3138a7612cc2@gmail.com>
+ <038919d3-ff32-d0a7-4c0a-3be16436052d@ti.com> <e4ad5d80-9093-b667-f0a5-d3105be4e8cf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170925222540.371-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e4ad5d80-9093-b667-f0a5-d3105be4e8cf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The V4L2 async wasn't part of the documentation build. Fix this.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- Documentation/media/kapi/v4l2-async.rst | 3 +++
- Documentation/media/kapi/v4l2-core.rst  | 1 +
- 2 files changed, 4 insertions(+)
- create mode 100644 Documentation/media/kapi/v4l2-async.rst
 
-diff --git a/Documentation/media/kapi/v4l2-async.rst b/Documentation/media/kapi/v4l2-async.rst
-new file mode 100644
-index 000000000000..523ff9eb09a0
---- /dev/null
-+++ b/Documentation/media/kapi/v4l2-async.rst
-@@ -0,0 +1,3 @@
-+V4L2 async kAPI
-+^^^^^^^^^^^^^^^
-+.. kernel-doc:: include/media/v4l2-async.h
-diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/media/kapi/v4l2-core.rst
-index c7434f38fd9c..5cf292037a48 100644
---- a/Documentation/media/kapi/v4l2-core.rst
-+++ b/Documentation/media/kapi/v4l2-core.rst
-@@ -19,6 +19,7 @@ Video4Linux devices
-     v4l2-mc
-     v4l2-mediabus
-     v4l2-mem2mem
-+    v4l2-async
-     v4l2-fwnode
-     v4l2-rect
-     v4l2-tuner
--- 
-2.11.0
+On Sun, 24 Sep 2017, Marek Vasut wrote:
+
+> On 09/24/2017 03:27 PM, Vignesh R wrote:
+>>
+>>
+>> On 9/24/2017 6:42 PM, Marek Vasut wrote:
+>>> On 09/24/2017 03:08 PM, Vignesh R wrote:
+>>>>
+>>>>
+>>>> On 9/24/2017 5:31 PM, Marek Vasut wrote:
+>>>>> On 09/24/2017 12:59 PM, Vignesh R wrote:
+>>>>>> Add pm_runtime* calls to cadence-quadspi driver. This is required to
+>>>>>> switch on QSPI power domain on TI 66AK2G SoC during probe.
+>>>>>>
+>>>>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+>>>>>
+>>>>> Are you planning to add some more fine-grained PM control later?
+>>>>
+>>>> Yes, I will need to add fine-grained PM control at some point. But, for
+>>>> now SoC does not really support low power mode or runtime power saving
+>>>> option.
+>>>> The fact that driver still uses clk_prepare_*() calls to enable/disable
+>>>> clocks instead of pm_*() calls makes it a bit tricky though.
+>>>>
+>>>> Just figured out I forgot to add cleanup code in error handling path of
+>>>> probe(). Will fix that and send a v4.
+>>>
+>>> OK, fine. Cleanups are welcome. The SoCFPGA doesn't do much runtime PM
+>>> either, so it's fine for now.
+>>>
+>>
+>> Ok thanks! Do you know if pm_runtime_get_sync() can enable clocks for
+>> QSPI on SoCFPGA or if clk_prepare_enable() is needed? Just trying to see
+>> if its possible to get rid of clk_*() calls in favor of pm_*() calls.
+>
+> Not of the top of my head, sorry. +CC Matthew, he should know.
+
+I am not an expert at the clock framework nor the power management, but I
+did ask around a bit.  No one I asked was planning to change the clk_*()
+calls to pm_*() call, but the feedback was that it would be a good idea.
+
+Matthew Gerlach
+
+
+>
+> -- 
+> Best regards,
+> Marek Vasut
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
