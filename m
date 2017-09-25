@@ -1,70 +1,80 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]" to the spi tree
-Date: Mon, 25 Sep 2017 17:16:37 +0100 (BST)
-Message-ID: <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
-References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506329660-4064-2-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/9] ASoC: cygnus: Update bindings for audio clock changes
+Date: Mon, 25 Sep 2017 17:28:39 +0100
+Message-ID: <20170925162839.wvnxm5kbzsqpwwj6@sirena.org.uk>
+References: <1502748417-26417-1-git-send-email-lori.hikichi@broadcom.com>
+ <1502748417-26417-3-git-send-email-lori.hikichi@broadcom.com>
+ <20170815171424.whcy4mftex6sgzgj@sirena.org.uk>
+ <d7e7144b-26c7-b96a-663d-03744bb60c36@broadcom.com>
+ <20170816105954.ve434zeeqinweo5a@sirena.org.uk>
+ <8c2fc92d-5ea8-8163-a588-0a4cba55e0f8@broadcom.com>
+ <20170822160703.nusf7sv6k4gj3pti@sirena.org.uk>
+ <492cb202-f4cb-4f5d-5d32-3dee4f1226b5@broadcom.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6387233675705899550=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <492cb202-f4cb-4f5d-5d32-3dee4f1226b5@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lori Hikichi <lori.hikichi@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   spi: sh-msiof: Add compatible strings for r8a774[35]
+--===============6387233675705899550==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cfkq5nj4dwnxwnsw"
+Content-Disposition: inline
 
-has been applied to the spi tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+--cfkq5nj4dwnxwnsw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+On Wed, Sep 06, 2017 at 06:45:22PM -0700, Lori Hikichi wrote:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> This will likely impact a couple of the other patches in the series, but
+> most should be applicable. What would be the best way to have some of the
+> other patches in this series reviewed?  Should I just drop this series and
+> resubmit new individual patches for review.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Resubmit the ones that can be applied as is please, that'll avoid me
+making a mistake about which ones have the dependency.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--cfkq5nj4dwnxwnsw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mark
+-----BEGIN PGP SIGNATURE-----
 
->From bdacfc7b6216dd30d07c10732fd4c0a660c62853 Mon Sep 17 00:00:00 2001
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Date: Mon, 25 Sep 2017 09:54:19 +0100
-Subject: [PATCH] spi: sh-msiof: Add compatible strings for r8a774[35]
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnJLrYACgkQJNaLcl1U
+h9BU8Af+JvLz6Fku2pK0Ya2GrFTXbyc3N83SwYhAmHWm2XcSYRtk9XgKeA+ZviOP
+pb6x03vyjoyDl8s126mZ/fs5lXzRyMW41rAMdXnBpj6vP5NhW4yvpazcRRxo+Lrw
+xxhfENIVIw6pi56JJZtw10QFFkdVQSHkGBMsIqow1RdbHfr+6tPy37TKbBYzdUH1
+cVKEe7PhUmZ78Ingj8BcSK/iIcpocOxa8/W9vwTBbH9LQ0JVGmaGb1lzun6L9l/a
+drBeDHffP1VdO/Gn31EEAZwR0222d+Gy4UOz98lCyMD6JHhYY1M8p90L4sAcZEnv
+VQfrBtjn1lCyomwxxDCiedkTCjFkxA==
+=T7Tw
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/spi/spi-sh-msiof.c | 2 ++
- 1 file changed, 2 insertions(+)
+--cfkq5nj4dwnxwnsw--
 
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 0eb1e9583485..00808448cf35 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -1021,6 +1021,8 @@ static const struct sh_msiof_chipdata rcar_gen3_data = {
- 
- static const struct of_device_id sh_msiof_match[] = {
- 	{ .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
-+	{ .compatible = "renesas,msiof-r8a7743",   .data = &rcar_gen2_data },
-+	{ .compatible = "renesas,msiof-r8a7745",   .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,msiof-r8a7790",   .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,msiof-r8a7791",   .data = &rcar_gen2_data },
- 	{ .compatible = "renesas,msiof-r8a7792",   .data = &rcar_gen2_data },
--- 
-2.14.1
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============6387233675705899550==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6387233675705899550==--
