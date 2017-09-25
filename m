@@ -1,52 +1,55 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: single: Allow indicating loss of pin states
- during low-power
-Date: Mon, 25 Sep 2017 12:15:49 -0700
-Message-ID: <2905a73d-2e73-e590-12a2-f7af7ac83b9e@gmail.com>
-References: <20170921010421.7467-1-f.fainelli@gmail.com>
- <20170921010421.7467-3-f.fainelli@gmail.com>
- <CACRpkdbmrEottfArW-Hnv63M1k4zASfMg7W+SUNY6D1N2nxOVA@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]" to
+ the spi tree
+Date: Mon, 25 Sep 2017 21:15:53 +0200
+Message-ID: <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg@mail.gmail.com>
+References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
+ <CAMuHMdVsRwW+10ERyTJAa8XhhkPMn4ruymUwPKot+kmczBwbcA@mail.gmail.com> <20170925184545.5k4nke27rgud3uwp@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbmrEottfArW-Hnv63M1k4zASfMg7W+SUNY6D1N2nxOVA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, ext Tony Lindgren <tony@atomide.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Cooper <alcooperx@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170925184545.5k4nke27rgud3uwp-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2017 06:03 AM, Linus Walleij wrote:
-> On Thu, Sep 21, 2017 at 3:04 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 
->> Some platforms (e.g: Broadcom STB: BMIPS_GENERIC/ARCH_BRCMSTB) will lose
->> their register contents when entering their lower power state. In such a
->> case, the pinctrl-single driver that is used will not be able to restore
->> the power states without telling the core about it and having
->> pinctrl_select_state() check for that.
->>
->> This patch adds a new optional boolean property that Device Tree can
->> define in order to obtain exactly that and having the core pinctrl code
->> take that into account.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> If we use this per-controller approach rather than the per-state approach
-> I discuss in reply to patch 1/2, we should probably make it a generic
-> property for pin controllers and not just a pinctrl-single business.
+Hi Mark,
 
-I suppose it makes sense to make this a generic pinctrl property then.
-drivers/pinctrl/core.c does not appear to be trying to fetch any
-properties for a pinctrl device, but that is probably not too hard to add.
+On Mon, Sep 25, 2017 at 8:45 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Sep 25, 2017 at 07:48:44PM +0200, Geert Uytterhoeven wrote:
+>> Please drop this patch, as there's no need to add explicit matching for these
+>> compatible values. The family-specific compatible values (which the driver
+>> already matches against) are sufficient.
+>
+> While the patch is not needed if people list the fallback property it
+> also does no harm and provides a marginal documentation benefit in
+> saying that someone has considered if any special handling is useful and
+> decided that it isn't.
 
-> 
-> So patch pinctrl-bindings.txt and put the code somewhere in
-> core.
-> 
-> But that is more of a detail, first we need to figure out how to
-> handle this business in general.
+All true.
 
-Fair enough.
--- 
-Florian
+My rebuttal is threefold:
+  1. Listing the fallback property is mandatory for new SoCs. We only keep
+     the per-SoC compatible values in the driver for older SoCs that predate
+     the introduction of fallback properties.
+  2. Some harm is involved, in the form of increased kernel image size.
+  3. When updating DT bindings for new SoCs, we usually add "No driver
+     update is needed" to the patch description to clarify. Unfortunately
+     that was missed here.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
