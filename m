@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v3 08/10] dmaengine: sun6i: Add support for
- Allwinner A64 and compatibles
-Date: Mon, 25 Sep 2017 02:02:42 +0200
-Message-ID: <6c3aee4d-3a08-4d41-9e31-f1fb817a691f@rwthex-w2-a.rwth-ad.de>
+Subject: [PATCH v3 01/10] dmaengine: sun6i: Correct setting of
+ clock autogating register for A83T/H3
+Date: Mon, 25 Sep 2017 02:02:35 +0200
+Message-ID: <8b0e3c36-850c-4211-b647-b03143be67f7@rwthex-w2-a.rwth-ad.de>
 References: <20170925000244.11679-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRBOMPUHHAKGQECF4I3ZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBNEPUHHAKGQEJJ4NCBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170925000244.11679-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,10 +21,14 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A64 SoC has the same dma engine as the H3 (sun8i), with a
-reduced amount of physical channels. To allow future reuse of the
-compatible, leave the channel count etc. in the config data blank
-and retrieve it from the devicetree.
+The H83T uses a compatible string different from the A23, but requires
+the same clock autogating register setting.
+
+The H3 also requires setting the clock autogating register, but has
+the register at a different offset.
+
+Add three suitable callbacks for the existing controller generations
+and set it in the controller config structure.
 
 Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -32,57 +36,109 @@ Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.g
 ---
 
 Changes in v3:
-- Omit default values from sun50i_a64_dma_cfg definition
+- Check for callback instead of using a no-op callback
 
-Changes in v2: None
+Changes in v2:
+- Use callback for autogating instead of variable for different SoC generat=
+ions
 
- drivers/dma/sun6i-dma.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/dma/sun6i-dma.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 34d70af442ff..b4e759f4aa75 100644
+index bcd496edc70f..b4a29d1a100d 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -1122,6 +1122,25 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D =
-{
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+@@ -48,6 +48,9 @@
+ #define SUN8I_DMA_GATE		0x20
+ #define SUN8I_DMA_GATE_ENABLE	0x4
+=20
++#define SUNXI_H3_SECURE_REG		0x20
++#define SUNXI_H3_DMA_GATE		0x28
++#define SUNXI_H3_DMA_GATE_ENABLE	0x4
+ /*
+  * Channels specific registers
+  */
+@@ -111,7 +114,7 @@ struct sun6i_dma_config {
+ 	 * however these SoCs really have and need this bit, as seen in the
+ 	 * BSP kernel source code.
+ 	 */
+-	bool gate_needed;
++	void (*clock_autogate_enable)();
  };
 =20
-+/*
-+ * The A64 binding uses the number of dma channels from the
-+ * device tree node.
-+ */
-+static struct sun6i_dma_config sun50i_a64_dma_cfg =3D {
-+	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3;
-+	.set_burst_length =3D sun6i_set_burst_length_h3;
-+	.src_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16);
-+	.dst_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16);
-+	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
-+	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
-+};
-+
  /*
-  * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
-  * and a total of 24 usable source and destination endpoints.
-@@ -1149,6 +1168,7 @@ static const struct of_device_id sun6i_dma_match[] =
+@@ -267,6 +270,16 @@ static inline s8 convert_buswidth(enum dma_slave_buswi=
+dth addr_width)
+ 	return addr_width >> 1;
+ }
+=20
++static void sun6i_enable_clock_autogate_a23(struct sun6i_dma_dev *sdev)
++{
++	writel(SUN8I_DMA_GATE_ENABLE, sdev->base + SUN8I_DMA_GATE);
++}
++
++static void sun6i_enable_clock_autogate_h3(struct sun6i_dma_dev *sdev)
++{
++	writel(SUNXI_H3_DMA_GATE_ENABLE, sdev->base + SUNXI_H3_DMA_GATE);
++}
++
+ static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+ {
+ 	struct sun6i_desc *txd =3D pchan->desc;
+@@ -1020,24 +1033,28 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =
 =3D {
- 	{ .compatible =3D "allwinner,sun8i-a83t-dma", .data =3D &sun8i_a83t_dma_c=
-fg },
- 	{ .compatible =3D "allwinner,sun8i-h3-dma", .data =3D &sun8i_h3_dma_cfg }=
-,
- 	{ .compatible =3D "allwinner,sun8i-v3s-dma", .data =3D &sun8i_v3s_dma_cfg=
- },
-+	{ .compatible =3D "allwinner,sun50i-a64-dma", .data =3D &sun50i_a64_dma_c=
-fg },
- 	{ /* sentinel */ }
+ 	.nr_max_channels =3D 8,
+ 	.nr_max_requests =3D 24,
+ 	.nr_max_vchans   =3D 37,
+-	.gate_needed	 =3D true,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23;
  };
- MODULE_DEVICE_TABLE(of, sun6i_dma_match);
+=20
+ static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
+ 	.nr_max_channels =3D 8,
+ 	.nr_max_requests =3D 28,
+ 	.nr_max_vchans   =3D 39,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23;
+ };
+=20
+ /*
+  * The H3 has 12 physical channels, a maximum DRQ port id of 27,
+  * and a total of 34 usable source and destination endpoints.
++ * It also supports additional burst lengths and bus widths,
++ * and the burst length fields have different offsets.
+  */
+=20
+ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
+ 	.nr_max_channels =3D 12,
+ 	.nr_max_requests =3D 27,
+ 	.nr_max_vchans   =3D 34,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3;
+ };
+=20
+ /*
+@@ -1049,7 +1066,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D =
+{
+ 	.nr_max_channels =3D 8,
+ 	.nr_max_requests =3D 23,
+ 	.nr_max_vchans   =3D 24,
+-	.gate_needed	 =3D true,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23;
+ };
+=20
+ static const struct of_device_id sun6i_dma_match[] =3D {
+@@ -1199,8 +1216,8 @@ static int sun6i_dma_probe(struct platform_device *pd=
+ev)
+ 		goto err_dma_unregister;
+ 	}
+=20
+-	if (sdc->cfg->gate_needed)
+-		writel(SUN8I_DMA_GATE_ENABLE, sdc->base + SUN8I_DMA_GATE);
++	if (sdc->cfg->clock_autogate_enable)
++		sdc->cfg->clock_autogate_enable();
+=20
+ 	return 0;
+=20
 --=20
 2.14.1
 
