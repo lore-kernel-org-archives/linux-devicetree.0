@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v14 16/28] v4l: async: Ensure only unique fwnodes are registered to notifiers
-Date: Tue, 26 Sep 2017 01:25:27 +0300
-Message-ID: <20170925222540.371-17-sakari.ailus@linux.intel.com>
+Subject: [PATCH v14 28/28] arm: dts: omap3: N9/N950: Add flash references to the camera
+Date: Tue, 26 Sep 2017 01:25:40 +0300
+Message-ID: <20170925222540.371-30-sakari.ailus@linux.intel.com>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170925222540.371-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
@@ -10,145 +10,62 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-While registering a notifier, check that each newly added fwnode is
-unique, and return an error if it is not. Also check that a newly added
-notifier does not have the same fwnodes twice.
+Add flash and indicator LED phandles to the sensor node.
 
 Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 88 ++++++++++++++++++++++++++++++++----
- 1 file changed, 79 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/omap3-n9.dts       | 1 +
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 4 ++--
+ arch/arm/boot/dts/omap3-n950.dts     | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 735f72f81740..470607da96b2 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -307,8 +307,71 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
- 	sd->dev = NULL;
- }
- 
-+/* See if an fwnode can be found in a notifier's lists. */
-+static bool __v4l2_async_notifier_fwnode_has_async_subdev(
-+	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode)
-+{
-+	struct v4l2_async_subdev *asd;
-+	struct v4l2_subdev *sd;
-+
-+	list_for_each_entry(asd, &notifier->waiting, list) {
-+		if (asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
-+			continue;
-+
-+		if (asd->match.fwnode.fwnode == fwnode)
-+			return true;
-+	}
-+
-+	list_for_each_entry(sd, &notifier->done, async_list) {
-+		if (WARN_ON(!sd->asd))
-+			continue;
-+
-+		if (sd->asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
-+			continue;
-+
-+		if (sd->asd->match.fwnode.fwnode == fwnode)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/*
-+ * Find out whether an async sub-device was set up for an fwnode already or
-+ * whether it exists in a given notifier before @this_index.
-+ */
-+static bool v4l2_async_notifier_fwnode_has_async_subdev(
-+	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode,
-+	unsigned int this_index)
-+{
-+	unsigned int j;
-+
-+	lockdep_assert_held(&list_lock);
-+
-+	/* Check that an fwnode is not being added more than once. */
-+	for (j = 0; j < this_index; j++) {
-+		struct v4l2_async_subdev *asd = notifier->subdevs[this_index];
-+		struct v4l2_async_subdev *other_asd = notifier->subdevs[j];
-+
-+		if (other_asd->match_type == V4L2_ASYNC_MATCH_FWNODE &&
-+		    asd->match.fwnode.fwnode ==
-+		    other_asd->match.fwnode.fwnode)
-+			return true;
-+	}
-+
-+	/* Check than an fwnode did not exist in other notifiers. */
-+	list_for_each_entry(notifier, &notifier_list, list)
-+		if (__v4l2_async_notifier_fwnode_has_async_subdev(
-+			    notifier, fwnode))
-+			return true;
-+
-+	return false;
-+}
-+
- static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- {
-+	struct device *dev =
-+		notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL;
- 	struct v4l2_async_subdev *asd;
- 	int ret;
- 	int i;
-@@ -319,6 +382,8 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- 	INIT_LIST_HEAD(&notifier->waiting);
- 	INIT_LIST_HEAD(&notifier->done);
- 
-+	mutex_lock(&list_lock);
-+
- 	for (i = 0; i < notifier->num_subdevs; i++) {
- 		asd = notifier->subdevs[i];
- 
-@@ -326,30 +391,35 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- 		case V4L2_ASYNC_MATCH_CUSTOM:
- 		case V4L2_ASYNC_MATCH_DEVNAME:
- 		case V4L2_ASYNC_MATCH_I2C:
-+			break;
- 		case V4L2_ASYNC_MATCH_FWNODE:
-+			if (v4l2_async_notifier_fwnode_has_async_subdev(
-+				    notifier, asd->match.fwnode.fwnode, i)) {
-+				dev_err(dev,
-+					"fwnode has already been registered or in notifier's subdev list\n");
-+				ret = -EEXIST;
-+				goto out_unlock;
-+			}
- 			break;
- 		default:
--			dev_err(notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL,
--				"Invalid match type %u on %p\n",
-+			dev_err(dev, "Invalid match type %u on %p\n",
- 				asd->match_type, asd);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out_unlock;
- 		}
- 		list_add_tail(&asd->list, &notifier->waiting);
- 	}
- 
--	mutex_lock(&list_lock);
--
- 	ret = v4l2_async_notifier_try_all_subdevs(notifier);
--	if (ret) {
--		mutex_unlock(&list_lock);
--		return ret;
--	}
-+	if (ret)
-+		goto out_unlock;
- 
- 	ret = v4l2_async_notifier_try_complete(notifier);
- 
- 	/* Keep also completed notifiers on the list */
- 	list_add(&notifier->list, &notifier_list);
- 
-+out_unlock:
- 	mutex_unlock(&list_lock);
- 
- 	return ret;
+diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+index b9e58c536afd..39e35f8b8206 100644
+--- a/arch/arm/boot/dts/omap3-n9.dts
++++ b/arch/arm/boot/dts/omap3-n9.dts
+@@ -26,6 +26,7 @@
+ 		clocks = <&isp 0>;
+ 		clock-frequency = <9600000>;
+ 		nokia,nvm-size = <(16 * 64)>;
++		flash-leds = <&as3645a_flash &as3645a_indicator>;
+ 		port {
+ 			smia_1_1: endpoint {
+ 				link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index 1b0bd72945f2..12fbb3da5fce 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -271,14 +271,14 @@
+ 		#size-cells = <0>;
+ 		reg = <0x30>;
+ 		compatible = "ams,as3645a";
+-		flash@0 {
++		as3645a_flash: flash@0 {
+ 			reg = <0x0>;
+ 			flash-timeout-us = <150000>;
+ 			flash-max-microamp = <320000>;
+ 			led-max-microamp = <60000>;
+ 			ams,input-max-microamp = <1750000>;
+ 		};
+-		indicator@1 {
++		as3645a_indicator: indicator@1 {
+ 			reg = <0x1>;
+ 			led-max-microamp = <10000>;
+ 		};
+diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
+index 646601a3ebd8..c354a1ed1e70 100644
+--- a/arch/arm/boot/dts/omap3-n950.dts
++++ b/arch/arm/boot/dts/omap3-n950.dts
+@@ -60,6 +60,7 @@
+ 		clocks = <&isp 0>;
+ 		clock-frequency = <9600000>;
+ 		nokia,nvm-size = <(16 * 64)>;
++		flash-leds = <&as3645a_flash &as3645a_indicator>;
+ 		port {
+ 			smia_1_1: endpoint {
+ 				link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
 -- 
 2.11.0
 
