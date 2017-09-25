@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v14 12/28] v4l: async: Register sub-devices before calling bound callback
-Date: Tue, 26 Sep 2017 01:25:23 +0300
-Message-ID: <20170925222540.371-13-sakari.ailus@linux.intel.com>
+Subject: [PATCH v14 08/28] omap3isp: Fix check for our own sub-devices
+Date: Tue, 26 Sep 2017 01:25:19 +0300
+Message-ID: <20170925222540.371-9-sakari.ailus@linux.intel.com>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170925222540.371-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
@@ -10,38 +10,30 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Register the sub-device before calling the notifier's bound callback.
-Doing this the other way around is problematic as the struct v4l2_device
-has not assigned for the sub-device yet and may be required by the bound
-callback.
+We only want to link sub-devices that were bound to the async notifier the
+isp driver registered but there may be other sub-devices in the
+v4l2_device as well. Check for the correct async notifier.
 
 Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- drivers/media/v4l2-core/v4l2-async.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/platform/omap3isp/isp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 8eed6676f15c..933ad9ec4ba7 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -130,13 +130,13 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- {
- 	int ret;
- 
--	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
-+	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
- 	if (ret < 0)
+diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+index 97a5206b6ddc..4afd7ba4fad6 100644
+--- a/drivers/media/platform/omap3isp/isp.c
++++ b/drivers/media/platform/omap3isp/isp.c
+@@ -2155,7 +2155,7 @@ static int isp_subdev_notifier_complete(struct v4l2_async_notifier *async)
  		return ret;
  
--	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
-+	ret = v4l2_async_notifier_call_bound(notifier, sd, asd);
- 	if (ret < 0) {
--		v4l2_async_notifier_call_unbind(notifier, sd, asd);
-+		v4l2_device_unregister_subdev(sd);
- 		return ret;
- 	}
+ 	list_for_each_entry(sd, &v4l2_dev->subdevs, list) {
+-		if (!sd->asd)
++		if (sd->notifier != &isp->notifier)
+ 			continue;
  
+ 		ret = isp_link_entity(isp, &sd->entity,
 -- 
 2.11.0
 
