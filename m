@@ -1,37 +1,52 @@
-From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH] ARM: dts: rk3288-vyasa: Enable mali GPU node
-Date: Tue, 26 Sep 2017 00:19:07 +0530
-Message-ID: <1506365347-18655-1-git-send-email-jteki@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add dwc3 SUSPHY quirk
+Date: Mon, 25 Sep 2017 20:49:58 +0200
+Message-ID: <20170925184958.quneytvejne2pjyb@kozik-lap>
+References: <1505728934-6200-1-git-send-email-andrzej.p@samsung.com>
+ <CGME20170918100230eucas1p29fae00c53f1106af1961a6e269740b2f@eucas1p2.samsung.com>
+ <1505728934-6200-2-git-send-email-andrzej.p@samsung.com>
+ <20170919174038.2sspjvadt6ggka65@kozik-lap>
+ <fcefaaab-b99c-a8cc-9684-98cc3c4d803e@arm.com>
+ <894725fe-595b-45dc-e567-41caf48a012b@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <894725fe-595b-45dc-e567-41caf48a012b@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Kukjin Kim <kgene@kernel.org>, Felipe Balbi <balbi@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+On Fri, Sep 22, 2017 at 10:18:54AM +0200, Andrzej Pietrasiewicz wrote:
+> Hi,
+> 
+> W dniu 19.09.2017 o 20:10, Robin Murphy pisze:
+> > On 19/09/17 18:40, Krzysztof Kozlowski wrote:
+> > > On Mon, Sep 18, 2017 at 12:02:13PM +0200, Andrzej Pietrasiewicz wrote:
+> > > > Odroid XU4 board does not enumerate SuperSpeed devices.
+> > > > This patch makes exynos5 series chips use USB SUSPHY quirk,
+> > > > which solves the problem.
+> > > > 
+> > > > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+> > > > ---
+> > > >   arch/arm/boot/dts/exynos54xx.dtsi | 2 ++
+> > > >   1 file changed, 2 insertions(+)
+> > > 
+> > > Makes sense to me... was it tested also on XU3 and XU?
+> > 
+> > Well, it at least doesn't make USB3 on my XU any more or less broken
+> > than it was before ;) (both ports still report an over-current condition
+> > even with nothing plugged in - I suspect there's probably still some
+> > pinctrl/regulator stuff missing)
+> > 
+> > Robin.
+> > 
+> Similar with XU3: nothing is any more or less broken with this patch
+> compared to the situation without the patch.
 
-Enable mali GPU node for rk3288 vyasa board.
+OK, thanks, applied!
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- arch/arm/boot/dts/rk3288-vyasa.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index 156193b..932311c 100644
---- a/arch/arm/boot/dts/rk3288-vyasa.dts
-+++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -82,6 +82,11 @@
- 	cpu0-supply = <&vdd_cpu>;
- };
- 
-+&gpu {
-+	mali-supply = <&vdd_gpu>;
-+	status = "okay";
-+};
-+
- &hdmi {
- 	ddc-i2c-bus = <&i2c2>;
- 	status = "okay";
--- 
-2.7.4
+Best regards,
+Krzysztof
