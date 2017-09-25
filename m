@@ -1,30 +1,33 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/9] hwmon: gpio-fan: Move DT bindings to the right place
-Date: Tue, 26 Sep 2017 01:09:03 +0200
-Message-ID: <20170925230911.20824-2-linus.walleij@linaro.org>
-References: <20170925230911.20824-1-linus.walleij@linaro.org>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170925230911.20824-1-linus.walleij@linaro.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, Nishanth Menon <nm@ti.com>, Simon Guinot <simon.guinot@sequanux.org>, Jamie Lentin <jm@lentin.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v3 0/7] clocksource: sh_cmt: Update driver for DT binding
+ rework
+Date: Tue, 26 Sep 2017 01:21:31 +0200
+Message-ID: <02c39cc5-5d03-23a4-fd1e-4d0f40fa3276@linaro.org>
+References: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <damm+renesas@opensource.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This moves the GPIO fan bindings to the hwmon bindings. The GPIO
-fan is a hwmon class hardware, not related to GPIO other than being
-a consumer of GPIOs.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/devicetree/bindings/{gpio => hwmon}/gpio-fan.txt | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{gpio => hwmon}/gpio-fan.txt (100%)
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/hwmon/gpio-fan.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/gpio/gpio-fan.txt
-rename to Documentation/devicetree/bindings/hwmon/gpio-fan.txt
+last call for comments before I merge this series.
+
+Thanks.
+
+  -- Daniel
+
+
 -- 
-2.13.5
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
