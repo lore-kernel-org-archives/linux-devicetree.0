@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v14 28/28] arm: dts: omap3: N9/N950: Add flash references to the camera
-Date: Tue, 26 Sep 2017 01:25:40 +0300
-Message-ID: <20170925222540.371-30-sakari.ailus@linux.intel.com>
+Subject: [PATCH v14 26/28] ov5670: Add support for flash and lens devices
+Date: Tue, 26 Sep 2017 01:25:38 +0300
+Message-ID: <20170925222540.371-28-sakari.ailus@linux.intel.com>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170925222540.371-1-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
@@ -10,62 +10,27 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add flash and indicator LED phandles to the sensor node.
+Parse async sub-devices related to the sensor by switching the async
+sub-device registration function.
 
 Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 ---
- arch/arm/boot/dts/omap3-n9.dts       | 1 +
- arch/arm/boot/dts/omap3-n950-n9.dtsi | 4 ++--
- arch/arm/boot/dts/omap3-n950.dts     | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov5670.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-index b9e58c536afd..39e35f8b8206 100644
---- a/arch/arm/boot/dts/omap3-n9.dts
-+++ b/arch/arm/boot/dts/omap3-n9.dts
-@@ -26,6 +26,7 @@
- 		clocks = <&isp 0>;
- 		clock-frequency = <9600000>;
- 		nokia,nvm-size = <(16 * 64)>;
-+		flash-leds = <&as3645a_flash &as3645a_indicator>;
- 		port {
- 			smia_1_1: endpoint {
- 				link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index 1b0bd72945f2..12fbb3da5fce 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -271,14 +271,14 @@
- 		#size-cells = <0>;
- 		reg = <0x30>;
- 		compatible = "ams,as3645a";
--		flash@0 {
-+		as3645a_flash: flash@0 {
- 			reg = <0x0>;
- 			flash-timeout-us = <150000>;
- 			flash-max-microamp = <320000>;
- 			led-max-microamp = <60000>;
- 			ams,input-max-microamp = <1750000>;
- 		};
--		indicator@1 {
-+		as3645a_indicator: indicator@1 {
- 			reg = <0x1>;
- 			led-max-microamp = <10000>;
- 		};
-diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
-index 646601a3ebd8..c354a1ed1e70 100644
---- a/arch/arm/boot/dts/omap3-n950.dts
-+++ b/arch/arm/boot/dts/omap3-n950.dts
-@@ -60,6 +60,7 @@
- 		clocks = <&isp 0>;
- 		clock-frequency = <9600000>;
- 		nokia,nvm-size = <(16 * 64)>;
-+		flash-leds = <&as3645a_flash &as3645a_indicator>;
- 		port {
- 			smia_1_1: endpoint {
- 				link-frequencies = /bits/ 64 <210000000 333600000 398400000>;
+diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+index 6f7a1d6d2200..0a1723f5a66c 100644
+--- a/drivers/media/i2c/ov5670.c
++++ b/drivers/media/i2c/ov5670.c
+@@ -2514,7 +2514,7 @@ static int ov5670_probe(struct i2c_client *client)
+ 	}
+ 
+ 	/* Async register for subdev */
+-	ret = v4l2_async_register_subdev(&ov5670->sd);
++	ret = v4l2_async_register_subdev_sensor_common(&ov5670->sd);
+ 	if (ret < 0) {
+ 		err_msg = "v4l2_async_register_subdev() error";
+ 		goto error_entity_cleanup;
 -- 
 2.11.0
 
