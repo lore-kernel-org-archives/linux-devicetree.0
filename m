@@ -1,96 +1,83 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt-bindings: bus: Minimal TI sysc interconnect
- target module binding
-Date: Mon, 25 Sep 2017 10:44:14 -0700
-Message-ID: <20170925174413.GH4394@atomide.com>
-References: <20170920224621.16236-1-tony@atomide.com>
- <20170920224621.16236-2-tony@atomide.com>
- <20170925063545.nn3gr5drea6o2g6m@squirrel.local>
- <20170925142520.GE4394@atomide.com>
- <20170925172120.xu6k3leg4ac6mjya@squirrel.local>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]" to
+ the spi tree
+Date: Mon, 25 Sep 2017 19:48:44 +0200
+Message-ID: <CAMuHMdVsRwW+10ERyTJAa8XhhkPMn4ruymUwPKot+kmczBwbcA@mail.gmail.com>
+References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com> <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170925172120.xu6k3leg4ac6mjya-2pNSKKP3PSK44ywRPIzf9A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-* Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170925 10:22]:
-> On Mon, Sep 25, 2017 at 07:25:20AM -0700, Tony Lindgren wrote:
-> > * Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170924 23:36]:
-> > > Is the meaning of these documented anywhere?  I'm assuming one of them
-> > > corresponds to the standard omap2/3 sysconfig/sysstatus
-> >
-> > Yes that's the type1 sysc.
-> >
-> > > and one to the standard omap4/5 sysconfig
-> >
-> > Yeah and that's what we call sysc type 2 in the kernel.
-> 
-> Might it then not make more sense to call those something like
-> ti,omap2-sysc and ti,omap4-sysc respectively?
+Hi Mark,
 
-OK that's a good idea.
+On Mon, Sep 25, 2017 at 6:16 PM, Mark Brown <broonie@kernel.org> wrote:
+> The patch
+>
+>    spi: sh-msiof: Add compatible strings for r8a774[35]
+>
+> has been applied to the spi tree at
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+>
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+>
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+>
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+>
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
 
-> > The sysc type3 is what we have on am335x/ti81xx, see:
-> >
-> > $ git grep -B10 -A1 "&omap_hwmod_sysc_type3" arch/arm/mach-omap2
-> 
-> Ah... three "foreign" modules with an idlemode carelessly thrown into a
-> register without care for existing layouts.  I think these are more just
-> exceptional cases which happen to agree by coincidence since they all
-> just added idlemode in the simplest way possible, but I can understand
-> how it came to be viewed as a standard type.
+Please drop this patch, as there's no need to add explicit matching for these
+compatible values. The family-specific compatible values (which the driver
+already matches against) are sufficient.
 
-So we shall then name this fine centauroid sysc ti,81xx-sysc?
+Thanks!
 
-> > > ISS (omap4/5, dm814x) is also fun since it has top-level sysconfig, but
-> > > most of the child modules (e.g. isp5 and simcop) also have their own
-> > > sysconfig, and some child modules of simcop again have sysconfig.
-> >
-> > Interesting. Sounds like there's yet another interconnect instance
-> > lurking there similar to L4 ABE?
-> 
-> ISS has a 32-bit configuration interconnect and a 64/128-bit data
-> interconnect:
->       .......................................
->      :              ISS                      :
->      :                                       :
-> L3 --:--> configuration interconnect <-------:-- Cortex-M3/M4 subsystem
->      :      ||||||||||        |   |          :
->      :      vvvvvvvvvv        |   |          :
->      :      submodules        |   '---.      :
->      :       ||||||||         |       |      :
->      :       vvvvvvvv         v       v      :
->      : data interconnect --> BTE --> CBUFF --:--> L3
->      '.......................................'
-> 
-> It also has a local prcm controller to manage all this, and an irq
-> combiner.  See the section "ISS Power Management" (8.1.2.4 in the public
-> omap5 TRM, SWPU249AF) for a better diagram of all this.  The various
-> versions of ISS differ somewhat in the submodules but all share the same
-> overall structure.
+> From bdacfc7b6216dd30d07c10732fd4c0a660c62853 Mon Sep 17 00:00:00 2001
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Date: Mon, 25 Sep 2017 09:54:19 +0100
+> Subject: [PATCH] spi: sh-msiof: Add compatible strings for r8a774[35]
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/spi/spi-sh-msiof.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+> index 0eb1e9583485..00808448cf35 100644
+> --- a/drivers/spi/spi-sh-msiof.c
+> +++ b/drivers/spi/spi-sh-msiof.c
+> @@ -1021,6 +1021,8 @@ static const struct sh_msiof_chipdata rcar_gen3_data = {
+>
+>  static const struct of_device_id sh_msiof_match[] = {
+>         { .compatible = "renesas,sh-mobile-msiof", .data = &sh_data },
+> +       { .compatible = "renesas,msiof-r8a7743",   .data = &rcar_gen2_data },
+> +       { .compatible = "renesas,msiof-r8a7745",   .data = &rcar_gen2_data },
+>         { .compatible = "renesas,msiof-r8a7790",   .data = &rcar_gen2_data },
+>         { .compatible = "renesas,msiof-r8a7791",   .data = &rcar_gen2_data },
+>         { .compatible = "renesas,msiof-r8a7792",   .data = &rcar_gen2_data },
 
-OK thanks for the pointer.
+Gr{oetje,eeting}s,
 
-> One of the ISS submodules, SIMCOP, is itself again a fairly complicated
-> subsystem with two local interconnects, of which you can find a block
-> diagram in the "ISS Still Image Coprocessor" chapter (8.4).
+                        Geert
 
-OK
-
-> Having a local interconnect is itself not a particularly rare thing (you
-> can find one in ABE, DSS, CPSW, PRUSS, PWMSS, etc), but ISS does have
-> unusual complexity with its multiple interconnects and nested subsystems.
-
-OK
-
-Regards,
-
-Tony
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
