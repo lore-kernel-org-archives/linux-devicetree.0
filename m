@@ -1,65 +1,81 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 1/2] staging: Introduce NVIDIA Tegra20 video decoder
- driver
-Date: Tue, 26 Sep 2017 02:45:23 +0300
-Message-ID: <d19d709b-7451-0cdc-8bd0-913dc9c0a27d@gmail.com>
-References: <cover.1506377430.git.digetx@gmail.com>
- <5c8b83775b982e6ee851c127444a8e839f422ad0.1506377430.git.digetx@gmail.com>
- <38daee0d-0595-a7e4-69bb-5a2ddbd832b5@wwwdotorg.org>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] mtd: spi-nor: cadence-quadspi: Add runtime PM
+ support
+Date: Tue, 26 Sep 2017 01:49:46 +0200
+Message-ID: <fdfe29bf-ff46-7542-8e36-e8e45e1ca85f@gmail.com>
+References: <20170924105924.23923-1-vigneshr@ti.com>
+ <20170924105924.23923-6-vigneshr@ti.com>
+ <3a1160f9-a0ae-c84c-d209-af97c3c3b0f6@gmail.com>
+ <4ee69ea4-14cc-4305-bf3f-8fe76d43bf6b@ti.com>
+ <fa700cdf-f0b5-779b-4f38-3138a7612cc2@gmail.com>
+ <038919d3-ff32-d0a7-4c0a-3be16436052d@ti.com>
+ <e4ad5d80-9093-b667-f0a5-d3105be4e8cf@gmail.com>
+ <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38daee0d-0595-a7e4-69bb-5a2ddbd832b5@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26.09.2017 02:01, Stephen Warren wrote:
-> On 09/25/2017 04:15 PM, Dmitry Osipenko wrote:
->> Video decoder, found on NVIDIA Tegra20 SoC, supports a standard set of
->> video formats like H.264 / MPEG-4 / WMV / VC1. Currently driver supports
->> decoding of CAVLC H.264 only.
+On 09/26/2017 12:41 AM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
 > 
-> Note: I don't know anything much about video decoding on Tegra (just NV desktop
-> GPUs, and that was a while ago), but I had a couple small comments on the DT
-> binding:
 > 
->> diff --git
->> a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
->> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+> On Sun, 24 Sep 2017, Marek Vasut wrote:
 > 
->> +NVIDIA Tegra Video Decoder Engine
->> +
->> +Required properties:
->> +- compatible : "nvidia,tegra20-vde"
->> +- reg : Must contain 2 register ranges: registers and IRAM area.
->> +- reg-names : Must include the following entries:
->> +  - regs
->> +  - iram
+>> On 09/24/2017 03:27 PM, Vignesh R wrote:
+>>>
+>>>
+>>> On 9/24/2017 6:42 PM, Marek Vasut wrote:
+>>>> On 09/24/2017 03:08 PM, Vignesh R wrote:
+>>>>>
+>>>>>
+>>>>> On 9/24/2017 5:31 PM, Marek Vasut wrote:
+>>>>>> On 09/24/2017 12:59 PM, Vignesh R wrote:
+>>>>>>> Add pm_runtime* calls to cadence-quadspi driver. This is required to
+>>>>>>> switch on QSPI power domain on TI 66AK2G SoC during probe.
+>>>>>>>
+>>>>>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+>>>>>>
+>>>>>> Are you planning to add some more fine-grained PM control later?
+>>>>>
+>>>>> Yes, I will need to add fine-grained PM control at some point. But,
+>>>>> for
+>>>>> now SoC does not really support low power mode or runtime power saving
+>>>>> option.
+>>>>> The fact that driver still uses clk_prepare_*() calls to
+>>>>> enable/disable
+>>>>> clocks instead of pm_*() calls makes it a bit tricky though.
+>>>>>
+>>>>> Just figured out I forgot to add cleanup code in error handling
+>>>>> path of
+>>>>> probe(). Will fix that and send a v4.
+>>>>
+>>>> OK, fine. Cleanups are welcome. The SoCFPGA doesn't do much runtime PM
+>>>> either, so it's fine for now.
+>>>>
+>>>
+>>> Ok thanks! Do you know if pm_runtime_get_sync() can enable clocks for
+>>> QSPI on SoCFPGA or if clk_prepare_enable() is needed? Just trying to see
+>>> if its possible to get rid of clk_*() calls in favor of pm_*() calls.
+>>
+>> Not of the top of my head, sorry. +CC Matthew, he should know.
 > 
-> I think the IRAM region needs more explanation: What is the region used for and
-> by what? Can it be moved, and if so does the move need to be co-ordinated with
-> any other piece of SW?
-> 
+> I am not an expert at the clock framework nor the power management, but I
+> did ask around a bit.  No one I asked was planning to change the clk_*()
+> calls to pm_*() call, but the feedback was that it would be a good idea.
 
-IRAM region is used by Video Decoder HW for internal use and some of decoding
-parameters are supplied via IRAM, like frames order list. AFAIK IRAM addresses
-are hardwired in HW and aren't movable, it is not 100% but I'm pretty sure.
-Should it be explained in the binding?
-
->> +- clocks : Must contain one entry, for the module clock.
->> +  See ../clocks/clock-bindings.txt for details.
->> +- resets : Must contain an entry for each entry in reset-names.
->> +  See ../reset/reset.txt for details.
->> +- reset-names : Must include the following entries:
->> +  - vde
-> 
-> Let's require a clock-names property too.
-
-Okay, I'll add this property to the binding.
+The question is, if we do the replacement, will it break on socfpga ?
+A quick test might be useful.
 
 -- 
-Dmitry
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
