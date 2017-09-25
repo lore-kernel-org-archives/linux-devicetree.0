@@ -1,73 +1,58 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [RFC PATCH 2/7] iio: adc: axp20x-adc: allow to skip ADC rate
- setup now
-Date: Mon, 25 Sep 2017 09:20:02 +0200
-Message-ID: <300803eb-4526-52c4-e74b-92625602a6da@free-electrons.com>
-References: <20170920151814.22461-1-icenowy@aosc.io>
- <20170920151814.22461-3-icenowy@aosc.io>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH v2] ARM: dts: iwg22d: Enable SDHI0 controller
+Date: Mon, 25 Sep 2017 07:25:00 +0000
+Message-ID: <TY1PR06MB07025B6A19C90C354EA23775B77A0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <TY1PR06MB0702E99A48352C055705E3A9B7670@TY1PR06MB0702.apcprd06.prod.outlook.com>
+ <1506085262-13639-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR06MB08955E235768A72D33FE2AD3C0670@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20170925071800.GF1019@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170920151814.22461-3-icenowy@aosc.io>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170925071800.GF1019@verge.net.au>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-sunxi@googlegroups.com
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+Hello Simon,
 
-On 20/09/2017 17:18, Icenowy Zheng wrote:
-> The ADC rate setup on AXP803 is more complex than AXP20x/22x.
-> 
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 25 September 2017 08:18
+>=20
+> On Fri, Sep 22, 2017 at 01:33:39PM +0000, Fabrizio Castro wrote:
+> > Hello Simon,
+> >
+> > just to clarify the changes between v1 and v2, we can't use SDR50 and
+> SDR104 (due to an HW issue) therefore the pinctrl for UHS has been
+> removed and we dropped property "sd-uhs-sdr104". High Speed has been
+> tested, therefore if you are happy with the patch I guess you can update =
+the
+> following page accordingly:
+> > http://elinux.org/index.php?title=3DRenesas-MMC-Enabled-
+> Speeds&type=3Drevi
+> > sion&diff=3D451426&oldid=3D451421
+> >
+> > Although (due to a bug) sdhi0 may not hold a reference to "vccq_sdhi0",
+> the gpio regulator will initialize "SDHI0 VccQ" at 3.3V.
+> > I have sent another patch (mmc: tmio: check mmc_regulator_get_supply
+> return value) to start a discussion about a possible fix for the bug.
+> >
+> > Let me know if you need more information.
+>=20
+> Thanks again for following up on this.
+>=20
+> I have applied the patch with Geert's tag.
 
-Can you elaborate?
+Thanks
 
-I can see two rate settings in register 0x85.
+>=20
+> I have also updated the Wiki at the URL above, feel free to make any furt=
+her
+> updates there as appropriate.
 
-Bits 7-6 => TS/GPIO ADC speed setting (25, 50, 100, 200 Hz) ((ilog2(x) /
-25) << 6, same as AXP20X).
-Bits 5-4 => Vol/Cur ADC speed setting (100, 200, 400, 800 Hz) ((ilog2(x)
-/ 100) << 4, same as AXP22X except the bit shift).
+Thanks, looks okay to me.
 
-Just set both to 100 or 200 by default (common rate). If someone wants
-to add a more specific rate setting, he could do it in the future.
-
-Setting a default is safer as we don't know if anything before the
-kernel does anything to this register.
-
-Thanks,
-Quentin
-
-> As it's not a necessary setup, allow it to be skipped, to allow simpler
-> AXP803 support now.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  drivers/iio/adc/axp20x_adc.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
-> index 11e177180ea0..93dd6b80059e 100644
-> --- a/drivers/iio/adc/axp20x_adc.c
-> +++ b/drivers/iio/adc/axp20x_adc.c
-> @@ -556,8 +556,10 @@ static int axp20x_probe(struct platform_device *pdev)
->  				   AXP20X_ADC_EN2_MASK, AXP20X_ADC_EN2_MASK);
->  
->  	/* Configure ADCs rate */
-> -	regmap_update_bits(info->regmap, AXP20X_ADC_RATE, AXP20X_ADC_RATE_MASK,
-> -			   info->data->adc_rate(100));
-> +	if (info->data->adc_rate)
-> +		regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
-> +				   AXP20X_ADC_RATE_MASK,
-> +				   info->data->adc_rate(100));
->  
->  	ret = iio_map_array_register(indio_dev, info->data->maps);
->  	if (ret < 0) {
-> 
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Kind regards, Chris
