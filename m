@@ -1,88 +1,49 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH v2] iio: proximity: as3935: noise detection + threshold
- changes
-Date: Mon, 25 Sep 2017 19:50:39 +0100
-Message-ID: <20170925195039.4d9258e2@archlinux>
-References: <20170525055229.11659-1-matt.ranostay@konsulko.com>
-        <20170528165830.3878c05c@kernel.org>
-        <20170530213259.qbcikyy446g726pk@rob-hp-laptop>
-        <20170603100049.02fa3c76@kernel.org>
+From: Jagan Teki <jagannadh.teki@gmail.com>
+Subject: Re: [PATCH v5 1/5] ARM: dts: imx6qdl-icore: Add Sound card support
+Date: Tue, 26 Sep 2017 00:22:10 +0530
+Message-ID: <CAD6G_RTfuegBSN9w-pOYbUq=N9z0u6e24iOMLUUpbycWxH+BeQ@mail.gmail.com>
+References: <1505734113-9708-1-git-send-email-jteki@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170603100049.02fa3c76-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505734113-9708-1-git-send-email-jteki@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 3 Jun 2017 10:00:49 +0100
-Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Hi Shawn,
 
-> On Tue, 30 May 2017 16:32:59 -0500
-> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
-> > On Sun, May 28, 2017 at 04:58:30PM +0100, Jonathan Cameron wrote:  
-> > > On Wed, 24 May 2017 22:52:29 -0700
-> > > Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> > >     
-> > > > Most applications are too noisy to allow the default noise and
-> > > > watchdog settings, and thus need to be configurable via DT
-> > > > properties.
-> > > > 
-> > > > Also default settings to POR defaults on a reset, and register
-> > > > distuber interrupts as noise since it prevents proper usage.
-> > > > 
-> > > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > > Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>    
-> > > I wonder if there are many other devices where this sort of
-> > > feature is relevant.  Anyone else come across any?
-> > > 
-> > > I suppose if we need to modify the ABI for any that show up
-> > > in future, it shouldn't be too hard to maintain this one
-> > > for backwards compatibility.
-> > > 
-> > > Anyhow, new devicetree bindings so I'll give Rob / Mark time
-> > > to have a chance to look at it.    
-> > 
-> > I acked v1.  
-> Given there are a couple of precursors working their way towards
-> mainline and stable, I'll need to wait for those to filter through.
-> 
-> Matt give me a bump if it looks like I've forgotten this once
-> it will apply!
+On Mon, Sep 18, 2017 at 4:58 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
+> From: Jagan Teki <jagan@amarulasolutions.com>
+>
+> Linux Sound card now uses generic simple-audio-card, so add
+> the same along with related audmux and codec(via u2c3) for
+> i.CoreM6 QDL module boards.
+>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> Cc: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v5:
+> - Add adumux
+> - Update simple-audio-card,widgets
+> - Add ssi1 fsl,mode
+> - Add #sound-dai-cells in codec
+> Changes for v4:
+> - Moved sgtl5000 node into dtsi instead of multiple copies of
+>   same in dts files
+> Changes for v3:
+> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+> Changes for v2:
+> - Use proper [label:] node-name[@unit-address] for codec
 
-And indeed I forgot it.  A mess up with my local email labelling means
-I'm going through the last few months patches making sure I haven't
-missed anything.  So far just this one.
+Series has tested, request for comments?
 
-Applied to the togreg branch of iio.git with usual push out as testing etc.
-
-Thanks,
-
-Jonathan
-> 
-> Thanks,
-> 
-> Jonathan
-> >   
-> > > My immediate thought is that you might be able to do something
-> > > a little more user (i.e. devicetree writer) friendly than
-> > > just using the register value...    
-> > 
-> > We certainly don't want that to be the norm, but sometimes it makes 
-> > sense when it's very specific to a certain device.
-> >   
-> > > I see there are values, but it depends on whether the device
-> > > is in 'indoor mode' or 'outdoor mode' (which are just gain
-> > > settings?).  You could just use them though.
-> > > 
-> > > Given the gain is userspace controlled, and seems to effect
-> > > the meaning of this setting, is it valid to just put it
-> > > in the devicetree?    
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks!
+-- 
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
