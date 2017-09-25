@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v3 03/10] dmaengine: sun6i: Restructure code to
- allow extension for new SoCs
-Date: Mon, 25 Sep 2017 02:02:37 +0200
-Message-ID: <98e511f9-8f66-42eb-962f-b33520d0be89@rwthex-w2-a.rwth-ad.de>
+Subject: [PATCH v3 04/10] dmaengine: sun6i: Enable additional
+ burst lengths/widths on H3
+Date: Mon, 25 Sep 2017 02:02:38 +0200
+Message-ID: <ec539919-e0c2-4765-96ed-3aeb71af6e73@rwthex-w2-a.rwth-ad.de>
 References: <20170925000244.11679-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
@@ -21,15 +21,11 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current code mixes three distinct operations when transforming
-the slave config to register settings:
+The H3 supports bursts lengths of 1, 4, 8 and 16 transfers, each with
+a width of 1, 2, 4 or 8 bytes.
 
-  1. special handling of DMA_SLAVE_BUSWIDTH_UNDEFINED, maxburst =3D=3D 0
-  2. range checking
-  3. conversion of raw to register values
-
-As the range checks depend on the specific SoC, move these out of the
-conversion to distinct operations.
+The register value for the the width is log2-encoded, change the
+conversion function to provide the correct value for width =3D=3D 8.
 
 Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -38,153 +34,146 @@ Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.g
 
 Changes in v3: None
 Changes in v2:
-- Store burst lengths in config instead of device structure
+- Store burst widths in config
 
- drivers/dma/sun6i-dma.c | 66 ++++++++++++++++++++++++++++-----------------=
+ drivers/dma/sun6i-dma.c | 54 ++++++++++++++++++++++++++++++++++++++++-----=
 ----
- 1 file changed, 38 insertions(+), 28 deletions(-)
+ 1 file changed, 45 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 269d4ea194e8..5d0c009bad02 100644
+index 5d0c009bad02..c7ad3b4e836c 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -118,6 +118,8 @@ struct sun6i_dma_config {
- 	 */
- 	void (*clock_autogate_enable)();
+@@ -120,6 +120,8 @@ struct sun6i_dma_config {
  	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
-+	u32 src_burst_lengths;
-+	u32 dst_burst_lengths;
+ 	u32 src_burst_lengths;
+ 	u32 dst_burst_lengths;
++	u32 src_addr_widths;
++	u32 dst_addr_widths;
  };
 =20
  /*
-@@ -266,10 +268,6 @@ static inline s8 convert_burst(u32 maxburst)
-=20
- static inline s8 convert_buswidth(enum dma_slave_buswidth addr_width)
- {
--	if ((addr_width < DMA_SLAVE_BUSWIDTH_1_BYTE) ||
--	    (addr_width > DMA_SLAVE_BUSWIDTH_4_BYTES))
--		return -EINVAL;
--
- 	return addr_width >> 1;
- }
-=20
-@@ -538,41 +536,43 @@ static int set_config(struct sun6i_dma_dev *sdev,
- 			enum dma_transfer_direction direction,
- 			u32 *p_cfg)
- {
-+	enum dma_slave_buswidth src_addr_width, dst_addr_width;
-+	u32 src_maxburst, dst_maxburst;
- 	s8 src_width, dst_width, src_burst, dst_burst;
-=20
-+	src_addr_width =3D sconfig->src_addr_width;
-+	dst_addr_width =3D sconfig->dst_addr_width;
-+	src_maxburst =3D sconfig->src_maxburst;
-+	dst_maxburst =3D sconfig->dst_maxburst;
-+
- 	switch (direction) {
- 	case DMA_MEM_TO_DEV:
--		src_burst =3D convert_burst(sconfig->src_maxburst ?
--					sconfig->src_maxburst : 8);
--		src_width =3D convert_buswidth(sconfig->src_addr_width !=3D
--						DMA_SLAVE_BUSWIDTH_UNDEFINED ?
--				sconfig->src_addr_width :
--				DMA_SLAVE_BUSWIDTH_4_BYTES);
--		dst_burst =3D convert_burst(sconfig->dst_maxburst);
--		dst_width =3D convert_buswidth(sconfig->dst_addr_width);
-+		if (src_addr_width =3D=3D DMA_SLAVE_BUSWIDTH_UNDEFINED)
-+			src_addr_width =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		src_maxburst =3D src_maxburst ? src_maxburst : 8;
- 		break;
- 	case DMA_DEV_TO_MEM:
--		src_burst =3D convert_burst(sconfig->src_maxburst);
--		src_width =3D convert_buswidth(sconfig->src_addr_width);
--		dst_burst =3D convert_burst(sconfig->dst_maxburst ?
--					sconfig->dst_maxburst : 8);
--		dst_width =3D convert_buswidth(sconfig->dst_addr_width !=3D
--						DMA_SLAVE_BUSWIDTH_UNDEFINED ?
--				sconfig->dst_addr_width :
--				DMA_SLAVE_BUSWIDTH_4_BYTES);
-+		if (dst_addr_width =3D=3D DMA_SLAVE_BUSWIDTH_UNDEFINED)
-+			dst_addr_width =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		dst_maxburst =3D dst_maxburst ? dst_maxburst : 8;
- 		break;
+@@ -259,8 +261,12 @@ static inline s8 convert_burst(u32 maxburst)
+ 	switch (maxburst) {
+ 	case 1:
+ 		return 0;
++	case 4:
++		return 1;
+ 	case 8:
+ 		return 2;
++	case 16:
++		return 3;
  	default:
  		return -EINVAL;
  	}
+@@ -268,7 +274,7 @@ static inline s8 convert_burst(u32 maxburst)
 =20
--	if (src_burst < 0)
--		return src_burst;
--	if (src_width < 0)
--		return src_width;
--	if (dst_burst < 0)
--		return dst_burst;
--	if (dst_width < 0)
--		return dst_width;
-+	if (!(BIT(src_addr_width) & sdev->slave.src_addr_widths))
-+		return -EINVAL;
-+	if (!(BIT(dst_addr_width) & sdev->slave.dst_addr_widths))
-+		return -EINVAL;
-+	if (!(BIT(src_maxburst) & sdev->cfg->src_burst_lengths))
-+		return -EINVAL;
-+	if (!(BIT(dst_maxburst) & sdev->cfg->dst_burst_lengths))
-+		return -EINVAL;
-+
-+	src_width =3D convert_buswidth(src_addr_width);
-+	dst_width =3D convert_buswidth(dst_addr_width);
-+	dst_burst =3D convert_burst(dst_maxburst);
-+	src_burst =3D convert_burst(src_maxburst);
+ static inline s8 convert_buswidth(enum dma_slave_buswidth addr_width)
+ {
+-	return addr_width >> 1;
++	return ilog2(addr_width);
+ }
 =20
- 	*p_cfg =3D DMA_CHAN_CFG_SRC_WIDTH(src_width) |
- 		DMA_CHAN_CFG_DST_WIDTH(dst_width);
-@@ -1038,6 +1038,8 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D =
-{
- 	.nr_max_requests =3D 30,
- 	.nr_max_vchans   =3D 53,
+ static void sun6i_enable_clock_autogate_a23(struct sun6i_dma_dev *sdev)
+@@ -1040,6 +1046,12 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D=
+ {
  	.set_burst_length =3D sun6i_set_burst_length_a31;
-+	.src_burst_lengths =3D BIT(1) | BIT(8);
-+	.dst_burst_lengths =3D BIT(1) | BIT(8);
+ 	.src_burst_lengths =3D BIT(1) | BIT(8);
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8);
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
  };
 =20
  /*
-@@ -1051,6 +1053,8 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =3D =
-{
- 	.nr_max_vchans   =3D 37,
- 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23;
+@@ -1055,6 +1067,12 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =3D=
+ {
  	.set_burst_length =3D sun6i_set_burst_length_a31;
-+	.src_burst_lengths =3D BIT(1) | BIT(8);
-+	.dst_burst_lengths =3D BIT(1) | BIT(8);
+ 	.src_burst_lengths =3D BIT(1) | BIT(8);
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8);
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
  };
 =20
  static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
-@@ -1059,6 +1063,8 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D=
- {
- 	.nr_max_vchans   =3D 39,
- 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23;
+@@ -1065,11 +1083,19 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg =
+=3D {
  	.set_burst_length =3D sun6i_set_burst_length_a31;
-+	.src_burst_lengths =3D BIT(1) | BIT(8);
-+	.dst_burst_lengths =3D BIT(1) | BIT(8);
+ 	.src_burst_lengths =3D BIT(1) | BIT(8);
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8);
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
  };
 =20
  /*
-@@ -1072,6 +1078,8 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
+  * The H3 has 12 physical channels, a maximum DRQ port id of 27,
+  * and a total of 34 usable source and destination endpoints.
++ * It also supports additional burst lengths and bus widths,
++ * and the burst length fields have different offsets.
+  */
+=20
+ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
+@@ -1078,8 +1104,16 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D =
+{
  	.nr_max_vchans   =3D 34,
  	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3;
  	.set_burst_length =3D sun6i_set_burst_length_h3;
-+	.src_burst_lengths =3D BIT(1) | BIT(8);
-+	.dst_burst_lengths =3D BIT(1) | BIT(8);
+-	.src_burst_lengths =3D BIT(1) | BIT(8);
+-	.dst_burst_lengths =3D BIT(1) | BIT(8);
++	.src_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16);
++	.dst_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16);
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
  };
 =20
  /*
-@@ -1085,6 +1093,8 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D =
-{
- 	.nr_max_vchans   =3D 24,
- 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23;
+@@ -1095,6 +1129,12 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D=
+ {
  	.set_burst_length =3D sun6i_set_burst_length_a31;
-+	.src_burst_lengths =3D BIT(1) | BIT(8);
-+	.dst_burst_lengths =3D BIT(1) | BIT(8);
+ 	.src_burst_lengths =3D BIT(1) | BIT(8);
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8);
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
  };
 =20
  static const struct of_device_id sun6i_dma_match[] =3D {
+@@ -1174,12 +1214,8 @@ static int sun6i_dma_probe(struct platform_device *p=
+dev)
+ 	sdc->slave.device_pause			=3D sun6i_dma_pause;
+ 	sdc->slave.device_resume		=3D sun6i_dma_resume;
+ 	sdc->slave.device_terminate_all		=3D sun6i_dma_terminate_all;
+-	sdc->slave.src_addr_widths		=3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+-	sdc->slave.dst_addr_widths		=3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	sdc->slave.src_addr_widths		=3D sdc->cfg->src_addr_widths;
++	sdc->slave.dst_addr_widths		=3D sdc->cfg->dst_addr_widths;
+ 	sdc->slave.directions			=3D BIT(DMA_DEV_TO_MEM) |
+ 						  BIT(DMA_MEM_TO_DEV);
+ 	sdc->slave.residue_granularity		=3D DMA_RESIDUE_GRANULARITY_BURST;
 --=20
 2.14.1
 
