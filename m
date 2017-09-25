@@ -1,65 +1,111 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 4.14
-Date: Sun, 24 Sep 2017 17:31:14 -0500
-Message-ID: <CAL_JsqLyeh_-NjnvxhHZhDQ+rAMrrtOXdbBqRo+RtErKK6JzVg@mail.gmail.com>
+From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH v3 00/10] Commit 3a03ea763a67 ("dmaengine:
+ sun6i: Add support for Allwinner A83T
+Date: Mon, 25 Sep 2017 02:02:34 +0200
+Message-ID: <439d95d6-1ce0-45e9-a4e4-42bc1f97838b@rwthex-w2-a.rwth-ad.de>
+Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBNMPUHHAKGQEMCFQ34Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+(sun8i) variant") and commit f008db8c00c1 ("dmaengine: sun6i: Add support f=
+or
+Allwinner H3 (sun8i) variant") added support for the A83T resp. H3, but mis=
+sed
+some differences between the original A31 and A83T/H3.
 
-Please pull. Details below.
+The first patch adds a callback to the controller config to set the clock
+autogating register of different SoC generations, i.e. A31, A23+A83T, H3+la=
+ter,
+and uses it to for the correct clock autogating setting.
 
-Rob
+The second patch adds a callback for the burst length setting in the channe=
+l
+config register, which has different field offsets and new burst widths/len=
+gths,
+which differs between H3 and earlier generations
 
+The third patch restructures some code required for the fourth patch and ad=
+ds the
+burst lengths to the controller config.
 
-The following changes since commit 2bd6bf03f4c1c59381d62c61d03f6cc3fe71f66e:
+The fourth patch adds the burst widths to the config and adds the handling =
+of the
+H3 specific burst widths.
 
-  Linux 4.14-rc1 (2017-09-16 15:47:51 -0700)
+Patch 5 restructures the code to decouple some controller details (e.g. cha=
+nnel
+count) from the compatible string/the config.
 
-are available in the git repository at:
+Patches 6, 7 and 8 introduce and use the "dma-chans" property for the A64. =
+Although
+register compatible to the H3, the channel count differs and thus it requir=
+es a
+new compatible. To avoid introduction of new compatibles for each minor var=
+iation,
+anything but the register model is moved to devicetree properties. There
+is at least one SoC (R40) which can then reuse the A64 compatible, the same
+would have worked for A83T+V3s.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.14
+Patches 9 and 10 add the DMA controller node to the devicetree and add the =
+DMA
+controller reference to the SPI nodes.
 
-for you to fetch changes up to 127b8e2692b6c145955bb71e482ca1bc6ce10027:
+This patch series could be called v2, but the patches were split and signif=
+icantly
+restructured, thus listing changes individually is not to meaningful.
 
-  dt-bindings: clk: stm32h7: fix clock-cell size (2017-09-21 18:39:11 -0500)
+Changes in v3:
+- Check for callback instead of using a no-op callback
+- Drop leading 0 from unit name in DT example
+- Omit default values from sun50i_a64_dma_cfg definition
+- Drop leading 0 from dma controller unit name
 
-----------------------------------------------------------------
-DeviceTree fixes for 4.14:
+Changes in v2:
+- Use callback for autogating instead of variable for different SoC generat=
+ions
+- Use controller specific callback for burst length setting
+- Store burst lengths in config instead of device structure
+- Store burst widths in config
+- Set default number of dma-request if not provided in config or devicetree
 
-- Fix build for !OF providing empty of_find_device_by_node
+Stefan Br=C3=BCns (10):
+  dmaengine: sun6i: Correct setting of clock autogating register for
+    A83T/H3
+  dmaengine: sun6i: Correct burst length field offsets for H3
+  dmaengine: sun6i: Restructure code to allow extension for new SoCs
+  dmaengine: sun6i: Enable additional burst lengths/widths on H3
+  dmaengine: sun6i: Move number of pchans/vchans/request to device
+    struct
+  arm64: allwinner: a64: Add devicetree binding for DMA controller
+  dmaengine: sun6i: Retrieve channel count/max request from devicetree
+  dmaengine: sun6i: Add support for Allwinner A64 and compatibles
+  arm64: allwinner: a64: Add device node for DMA controller
+  arm64: allwinner: a64: add dma controller references to spi nodes
 
-- Fix Abracon vendor prefix
+ .../devicetree/bindings/dma/sun6i-dma.txt          |  28 ++-
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  15 ++
+ drivers/dma/sun6i-dma.c                            | 258 ++++++++++++++++-=
+----
+ 3 files changed, 242 insertions(+), 59 deletions(-)
 
-- Sync dtx_diff include paths (again)
+--=20
+2.14.1
 
-- A stm32h7 clock binding doc fix
-
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      dt-bindings: fix vendor prefix for Abracon
-
-Arnd Bergmann (1):
-      of: provide inline helper for of_find_device_by_node
-
-Frank Rowand (1):
-      scripts/dtc: dtx_diff - 2nd update of include dts paths to match build
-
-Gabriel Fernandez (1):
-      dt-bindings: clk: stm32h7: fix clock-cell size
-
- .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |  2 +-
- .../devicetree/bindings/vendor-prefixes.txt        |  2 +-
- include/linux/of_platform.h                        |  7 +++++++
- scripts/dtc/dtx_diff                               | 22 +++++++++-------------
- 4 files changed, 18 insertions(+), 15 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
