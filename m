@@ -1,143 +1,47 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 13/14] arm64: allwinner: a64: fix pin name
-Date: Tue, 26 Sep 2017 09:22:33 +0200
-Message-ID: <20170926072234.27481-14-clabbe.montjoie@gmail.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 02/14] ARM: dts: sunxi: h3/h5: Fix i2c2 register address
+Date: Tue, 26 Sep 2017 09:22:22 +0200
+Message-ID: <20170926072234.27481-3-clabbe.montjoie@gmail.com>
 References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170926072234.27481-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-All pinmux nodes should have the suffix "_pins" or "_pin".
+The unit address and register address does not match.
+This patch fix the register address with the good one.
 
-In the case where there are multiple choices, the node name should convey
-what or which pingroup the choice is.
-
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts     | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts       | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts        | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts     | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts           | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi                 | 6 +++---
- 7 files changed, 9 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 45bdbfb96126..36a56e3ab92f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -248,7 +248,7 @@
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index b37ed3461229..289f2cd06dfe 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -632,7 +632,7 @@
  
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index 2beef9e6cb88..15019edb7dd6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -198,7 +198,7 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 338e786155b1..ec62c86cc236 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -194,6 +194,6 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 5f8ff4017d45..1c8b9d2721f0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -85,7 +85,7 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 806442d3e846..69743ff171d0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -232,7 +232,7 @@
- /* On Exp and Euler connectors */
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 0eb2acedf8c3..e41eb71eb438 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -135,7 +135,7 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pins_a>;
-+	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index b02a8476b0c8..2d2937b7dc68 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -347,7 +347,7 @@
- 				function = "spi1";
- 			};
- 
--			uart0_pins_a: uart0 {
-+			uart0_pb_pins: uart0 {
- 				pins = "PB8", "PB9";
- 				function = "uart0";
- 			};
-@@ -571,7 +571,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 
--			r_rsb_pins: rsb {
-+			rsb_pins: rsb {
- 				pins = "PL0", "PL1";
- 				function = "s_rsb";
- 			};
-@@ -585,7 +585,7 @@
- 			clock-frequency = <3000000>;
- 			resets = <&r_ccu 2>;
- 			pinctrl-names = "default";
--			pinctrl-0 = <&r_rsb_pins>;
-+			pinctrl-0 = <&rsb_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ 		i2c2: i2c@1c2b400 {
+ 			compatible = "allwinner,sun6i-a31-i2c";
+-			reg = <0x01c2b000 0x400>;
++			reg = <0x01c2b400 0x400>;
+ 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_BUS_I2C2>;
+ 			resets = <&ccu RST_BUS_I2C2>;
 -- 
 2.13.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
