@@ -1,87 +1,137 @@
 From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 09/12] usb: typec: tcpm: only drives the connected cc line
- when attached
-Date: Tue, 26 Sep 2017 09:53:07 +0000
-Message-ID: <DB4PR04MB07689A95430FA6F4AA219539897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 01/12] usb: typec: add API to get port type and preferred
+ role
+Date: Tue, 26 Sep 2017 09:55:05 +0000
+Message-ID: <DB4PR04MB07686F2B9947D0974B2946A4897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
 References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-10-git-send-email-jun.li@nxp.com>
- <9c461105-fa96-3989-5a95-b9f82b154ea2@roeck-us.net>
+ <1506386727-16370-2-git-send-email-jun.li@nxp.com>
+ <20170926080231.GB14296@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9c461105-fa96-3989-5a95-b9f82b154ea2-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20170926080231.GB14296-FZxXFokcWpatqXYlAKuG4QC/G2K4zDHf@public.gmane.org>
 Content-Language: en-US
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2Vj
-ayBbbWFpbHRvOmdyb2VjazdAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgR3VlbnRlciBSb2Vjaw0K
-PiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMjYsIDIwMTcgMzoxNyBQTQ0KPiBUbzogSnVuIExp
-IDxqdW4ubGlAbnhwLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyByb2JoK2R0QGtl
-cm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBoZWlra2kua3JvZ2VydXNAbGludXgu
-aW50ZWwuY29tDQo+IENjOiB5dWV5YW9AZ29vZ2xlLmNvbTsgb19sZXZlcXVlQG9yYW5nZS5mcjsg
-UGV0ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgQS5zLiBEb25nIDxhaXNoZW5nLmRv
-bmdAbnhwLmNvbT47IGxpbnV4LQ0KPiB1c2JAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDA5LzEyXSB1c2I6IHR5cGVjOiB0
-Y3BtOiBvbmx5IGRyaXZlcyB0aGUgY29ubmVjdGVkIGNjIGxpbmUNCj4gd2hlbiBhdHRhY2hlZA0K
-PiANCj4gT24gMDkvMjUvMjAxNyAwNTo0NSBQTSwgTGkgSnVuIHdyb3RlOg0KPiA+IEFzIHdlIHNo
-b3VsZCBvbmx5IGRyaXZlIGNvbm5lY3RlZCBjYyBsaW5lIHRvIGJlIHRoZSByaWdodCBzdGF0ZSB3
-aGVuDQo+ID4gYXR0YWNoZWQsIGFuZCBrZWVwcyB0aGUgb3RoZXIgb25lIHRvIGJlIG9wZW4sIHNv
-IHVwZGF0ZSB0aGUgc2V0X2NjDQo+ID4gaW50ZXJmYWNlIGZvciB0aGF0Lg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZl
-cnMvdXNiL3R5cGVjL3RjcG0uYyB8IDEyICsrKysrKysrKysrLQ0KPiA+ICAgaW5jbHVkZS9saW51
-eC91c2IvdGNwbS5oIHwgIDMgKystDQo+ID4gICAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
-dHlwZWMvdGNwbS5jIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jIGluZGV4DQo+ID4gMzhhNjIy
-My4uYzk5NjZlZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4g
-PiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4gPiBAQCAtMTg1Nyw5ICsxODU3LDE1
-IEBAIHN0YXRpYyBib29sIHRjcG1fc3RhcnRfZHJwX3RvZ2dsaW5nKHN0cnVjdA0KPiA+IHRjcG1f
-cG9ydCAqcG9ydCwNCj4gPg0KPiA+ICAgc3RhdGljIHZvaWQgdGNwbV9zZXRfY2Moc3RydWN0IHRj
-cG1fcG9ydCAqcG9ydCwgZW51bSB0eXBlY19jY19zdGF0dXMgY2MpDQo+ID4gICB7DQo+ID4gKwli
-b29sIGF0dGFjaGVkOw0KPiA+ICsNCj4gPiAgIAl0Y3BtX2xvZyhwb3J0LCAiY2M6PSVkIiwgY2Mp
-Ow0KPiA+ICAgCXBvcnQtPmNjX3JlcSA9IGNjOw0KPiA+IC0JcG9ydC0+dGNwYy0+c2V0X2NjKHBv
-cnQtPnRjcGMsIGNjKTsNCj4gPiArCWlmIChwb3J0LT5zdGF0ZSA9PSBTUkNfQVRUQUNIRUQgfHwg
-cG9ydC0+c3RhdGUgPT0gU05LX0FUVEFDSEVEKQ0KPiA+ICsJCWF0dGFjaGVkID0gdHJ1ZTsNCj4g
-PiArCWVsc2UNCj4gPiArCQlhdHRhY2hlZCA9IGZhbHNlOw0KPiA+ICsJcG9ydC0+dGNwYy0+c2V0
-X2NjKHBvcnQtPnRjcGMsIGNjLCBhdHRhY2hlZCwgcG9ydC0+cG9sYXJpdHkpOw0KPiANCj4gUG9s
-YXJpdHkgc2hvdWxkIGJlIHNldCB3aXRoIHNldF9wb2xhcml0eSgpLiBJcyBpdCBuZWNlc3Nhcnkg
-dG8gZHVwbGljYXRlIHRoYXQgPw0KDQpJbiB0Y3BjaSBjYXNlLCBzZXRfcG9sYXJpdHkgb25seSBz
-ZXRzIFBsdWcgT3JpZW50YXRpb24gYml0Og0KIiAwYjogV2hlbiBWY29ubiBpcyBlbmFibGVkLCBh
-cHBseSBpdCB0byB0aGUgQ0MyIHBpbi4gTW9uaXRvciB0aGUgQ0MxIHBpbiBmb3INCkJNQyBjb21t
-dW5pY2F0aW9ucyBpZiBQRCBtZXNzYWdpbmcgaXMgZW5hYmxlZC4NCjFiOiBXaGVuIFZjb25uIGlz
-IGVuYWJsZWQsIGFwcGx5IGl0IHRvIHRoZSBDQzEgcGluLiBNb25pdG9yIHRoZSBDQzIgcGluIGZv
-cg0KQk1DIGNvbW11bmljYXRpb25zIGlmIFBEIG1lc3NhZ2luZyBpcyBlbmFibGVkLiINCg0KVGhl
-cmUgaXMgbm8gZHVwbGljYXRpb24gZm9yIHRjcGNpLCBvciB5b3UgdGhpbmsgSSBzaG91bGQgZG8g
-dGhpcyBpbiBzZXRfcG9sYXJpdHkNCm9mIHRjcGNpIGRyaXZlciBpbnRlcm5hbGx5PyBsb29rcyBi
-ZXR0ZXIgZnJvbSBteSBwb2ludCB2aWV3IGFzIEkgbWF5IGRvbid0DQpuZWVkIGNoYW5nZSB0Y3Bt
-IHNldF9jYyBpbnRlcmZhY2UuDQoNCnRoYW5rcw0KTGkgSnVuDQo+IA0KPiA+ICAgfQ0KPiA+DQo+
-ID4gICBzdGF0aWMgaW50IHRjcG1faW5pdF92YnVzKHN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQpIEBA
-IC0xOTEzLDYgKzE5MTksOA0KPiA+IEBAIHN0YXRpYyBpbnQgdGNwbV9zcmNfYXR0YWNoKHN0cnVj
-dCB0Y3BtX3BvcnQgKnBvcnQpDQo+ID4gICAJaWYgKHJldCA8IDApDQo+ID4gICAJCXJldHVybiBy
-ZXQ7DQo+ID4NCj4gPiArCXRjcG1fc2V0X2NjKHBvcnQsIHRjcG1fcnBfY2MocG9ydCkpOw0KPiA+
-ICsNCj4gPiAgIAlyZXQgPSB0Y3BtX3NldF9yb2xlcyhwb3J0LCB0cnVlLCBUWVBFQ19TT1VSQ0Us
-IFRZUEVDX0hPU1QpOw0KPiA+ICAgCWlmIChyZXQgPCAwKQ0KPiA+ICAgCQlyZXR1cm4gcmV0Ow0K
-PiA+IEBAIC0yMDI4LDYgKzIwMzYsOCBAQCBzdGF0aWMgaW50IHRjcG1fc25rX2F0dGFjaChzdHJ1
-Y3QgdGNwbV9wb3J0ICpwb3J0KQ0KPiA+ICAgCWlmIChyZXQgPCAwKQ0KPiA+ICAgCQlyZXR1cm4g
-cmV0Ow0KPiA+DQo+ID4gKwl0Y3BtX3NldF9jYyhwb3J0LCBUWVBFQ19DQ19SRCk7DQo+ID4gKw0K
-PiA+ICAgCXJldCA9IHRjcG1fc2V0X3JvbGVzKHBvcnQsIHRydWUsIFRZUEVDX1NJTkssIFRZUEVD
-X0RFVklDRSk7DQo+ID4gICAJaWYgKHJldCA8IDApDQo+ID4gICAJCXJldHVybiByZXQ7DQo+ID4g
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdXNiL3RjcG0uaCBiL2luY2x1ZGUvbGludXgvdXNi
-L3RjcG0uaCBpbmRleA0KPiA+IGE2N2NmNzcuLmEwMDdlMmExIDEwMDY0NA0KPiA+IC0tLSBhL2lu
-Y2x1ZGUvbGludXgvdXNiL3RjcG0uaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvdXNiL3RjcG0u
-aA0KPiA+IEBAIC0xNTksNyArMTU5LDggQEAgc3RydWN0IHRjcGNfZGV2IHsNCj4gPiAgIAlpbnQg
-KCppbml0KShzdHJ1Y3QgdGNwY19kZXYgKmRldik7DQo+ID4gICAJaW50ICgqZ2V0X3ZidXMpKHN0
-cnVjdCB0Y3BjX2RldiAqZGV2KTsNCj4gPiAgIAlpbnQgKCpnZXRfY3VycmVudF9saW1pdCkoc3Ry
-dWN0IHRjcGNfZGV2ICpkZXYpOw0KPiA+IC0JaW50ICgqc2V0X2NjKShzdHJ1Y3QgdGNwY19kZXYg
-KmRldiwgZW51bSB0eXBlY19jY19zdGF0dXMgY2MpOw0KPiA+ICsJaW50ICgqc2V0X2NjKShzdHJ1
-Y3QgdGNwY19kZXYgKmRldiwgZW51bSB0eXBlY19jY19zdGF0dXMgY2MsDQo+ID4gKwkJCWJvb2wg
-YXR0YWNoZWQsIGVudW0gdHlwZWNfY2NfcG9sYXJpdHkgcG9sYXJpdHkpOw0KPiA+ICAgCWludCAo
-KmdldF9jYykoc3RydWN0IHRjcGNfZGV2ICpkZXYsIGVudW0gdHlwZWNfY2Nfc3RhdHVzICpjYzEs
-DQo+ID4gICAJCSAgICAgIGVudW0gdHlwZWNfY2Nfc3RhdHVzICpjYzIpOw0KPiA+ICAgCWludCAo
-KnNldF9wb2xhcml0eSkoc3RydWN0IHRjcGNfZGV2ICpkZXYsDQo+ID4NCg0K
+
+
+> -----Original Message-----
+> From: Heikki Krogerus [mailto:heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org]
+> Sent: Tuesday, September 26, 2017 4:03 PM
+> To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> mark.rutland-5wv7dgnIgG8@public.gmane.org; yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org; Peter
+> Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>; linux-
+> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH 01/12] usb: typec: add API to get port type and prefe=
+rred
+> role
+>=20
+> Hi,
+>=20
+> On Tue, Sep 26, 2017 at 08:45:16AM +0800, Li Jun wrote:
+> > This patch add 2 APIs to get port type and preferred role from
+> > firmware description.
+> >
+> > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> >  drivers/usb/typec/typec.c | 45
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/typec.h |  2 ++
+> >  2 files changed, 47 insertions(+)
+> >
+> > diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
+> > index 24e355b..0c77cc4 100644
+> > --- a/drivers/usb/typec/typec.c
+> > +++ b/drivers/usb/typec/typec.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/device.h>
+> >  #include <linux/module.h>
+> >  #include <linux/mutex.h>
+> > +#include <linux/of.h>
+>=20
+> Not needed.
+
+I will change to #include <linux/property.h>
+
+>=20
+> >  #include <linux/slab.h>
+> >  #include <linux/usb/typec.h>
+> >
+> > @@ -1249,6 +1250,50 @@ void typec_set_pwr_opmode(struct typec_port
+> > *port,  }  EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
+> >
+> > +/**
+> > + * typec_get_port_type - Get the typec port type
+> > + * @dev: Device to get the property of
+> > + *
+> > + * This routine is used by typec hardware driver to read property
+> > +port type
+> > + * from the device firmware description.
+> > + *
+> > + * Returns typec_port_type if success, otherwise negative error code.
+> > + */
+> > +int typec_get_port_type(struct device *dev) {
+> > +	const char *type_str;
+> > +	int ret;
+> > +
+> > +	ret =3D device_property_read_string(dev, "port-type", &type_str);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
+> > +								 type_str);
+> > +}
+> > +EXPORT_SYMBOL_GPL(typec_get_port_type);
+> > +
+> > +/**
+> > + * typec_get_power_role - Get the typec preferred role
+> > + * @dev: Device to get the property of
+> > + *
+> > + * This routine is used by typec hardware driver to read property
+> > +default role
+> > + * from the device firmware description.
+> > + *
+> > + * Returns typec_role if success, otherwise negative error code.
+> > + */
+> > +int typec_get_power_role(struct device *dev) {
+> > +	const char *power_str;
+> > +	int ret;
+> > +
+> > +	ret =3D device_property_read_string(dev, "default-role", &power_str);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return match_string(typec_roles, ARRAY_SIZE(typec_roles),
+> > +power_str); } EXPORT_SYMBOL_GPL(typec_get_power_role);
+> >  /* --------------------------------------- */
+> >
+> >  /**
+> > diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+> > index ffe7487..bfac685 100644
+> > --- a/include/linux/usb/typec.h
+> > +++ b/include/linux/usb/typec.h
+> > @@ -243,5 +243,7 @@ void typec_set_data_role(struct typec_port *port,
+> > enum typec_data_role role);  void typec_set_pwr_role(struct typec_port
+> > *port, enum typec_role role);  void typec_set_vconn_role(struct
+> > typec_port *port, enum typec_role role);  void
+> > typec_set_pwr_opmode(struct typec_port *port, enum typec_pwr_opmode
+> > mode);
+> > +int typec_get_port_type(struct device *dev); int
+> > +typec_get_power_role(struct device *dev);
+> >
+> >  #endif /* __LINUX_USB_TYPEC_H */
+> > --
+> > 2.6.6
+>=20
+> Thanks,
+>=20
+> --
+> heikki
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
