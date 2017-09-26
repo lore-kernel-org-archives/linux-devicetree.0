@@ -1,68 +1,117 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] MIPS: jz4780: DTS: Probe the jz4740-watchdog
- driver from devicetree
-Date: Tue, 26 Sep 2017 18:47:14 +0530
-Message-ID: <CANc+2y6gZ4UQ7fKbJeV7HhDLLW9pbUEr0K0Tq5eBfg1ba2s_LQ@mail.gmail.com>
-References: <20170908183558.1537-3-malat@debian.org> <20170915191837.27564-1-malat@debian.org>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] pinctrl: axp209: use drv_data of
+ pinctrl_pin_desc to store pin reg
+Date: Tue, 26 Sep 2017 15:17:05 +0200
+Message-ID: <0ae64e95-ee49-fb4c-e79b-e8c25c86580c@free-electrons.com>
+References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <7993a30fbc2e50a2d228fa0c8fad643c4034b101.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <20170926130108.uibnri32b73elfy6@flea>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915191837.27564-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="vSHPog3EoUl0rPKW3pRvkEVwkG1WG7sTx"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBYFGVHHAKGQERVLWTKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170926130108.uibnri32b73elfy6@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--vSHPog3EoUl0rPKW3pRvkEVwkG1WG7sTx
+Content-Type: multipart/mixed; boundary="vrocQsabtXwawM6sGkv2mo3NPT4vHRvTS";
+ protected-headers="v1"
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org,
+ wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org,
+ linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Message-ID: <0ae64e95-ee49-fb4c-e79b-e8c25c86580c-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] pinctrl: axp209: use drv_data of
+ pinctrl_pin_desc to store pin reg
+References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+ <7993a30fbc2e50a2d228fa0c8fad643c4034b101.1506428208.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+ <20170926130108.uibnri32b73elfy6@flea>
+In-Reply-To: <20170926130108.uibnri32b73elfy6@flea>
 
-On 16 September 2017 at 00:48, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
-> The jz4740-watchdog driver supports both jz4740 & jz4780.
->
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
-> Changes in v2:
-> * make the node name generic (Paul Cercueil)
->
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> index 20e37d2d6008..76055bbc823a 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -263,6 +263,11 @@
->                 status = "disabled";
->         };
->
-> +       watchdog: watchdog@10002000 {
-> +               compatible = "ingenic,jz4780-watchdog";
+--vrocQsabtXwawM6sGkv2mo3NPT4vHRvTS
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
 
-In drivers/watchdog/jz4740_wdt.c the compatible is declared as
-"ingenic,jz4740-watchdog" while your change says
-"ingenic,jz4780-watchdog". Can you modify that?
+Hi Maxime,
 
-> +               reg = <0x10002000 0x100>;
-> +       };
-> +
+On 26/09/2017 15:01, Maxime Ripard wrote:
+> On Tue, Sep 26, 2017 at 12:17:13PM +0000, Quentin Schulz wrote:
+>> Instead of using a function to retrieve each pin's correct control
+>> register, use drv_data within pinctrl_pin_desc to store the ctrl reg.
+>>
+>> Remove axp20x_gpio_get_reg and replace every occurrence by a get from
+>> drv_data.
+> 
+> Why do you need to do that? This should be explained.
+> 
 
-The structures jz4740_wdt_device and jz4740_wdt_resources can be
-removed form arch/mips/jz4740/platform.c as watchdog is declared in
-device tree. For JZ4740 platform watchdog is not used so the variables
-can be removed.
+Agreed that it misses an explanation.
 
-Do you mind adding watchdog entry to JZ4740 device tree? Currently
-watchdog is not enabled for JZ4740 platform.
+Today, to get a register addr of one of the GPIOs in the PMIC, we
+basically get the GPIO number and returns the register via this info.
 
->         nemc: nemc@13410000 {
->                 compatible = "ingenic,jz4780-nemc";
->                 reg = <0x13410000 0x10000>;
-> --
-> 2.11.0
->
+There are 3 GPIOs in AXP209, 2 in AXP813. I didn't want to have a switch
+case for the GPIO number and then an if/else inside one of the case to
+check if the device is AXP209 or AXP813 in which case we return -EINVAL
+instead of the GPIO2 reg. With support for new PMIC, we would have a
+bunch of if conditions and complexify the process for something really
+simple.
 
-Regards,
-PrasannaKumar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+IMHO, this also allows easier integration of future PMICs which might
+have different regs for the GPIOs.
+
+I don't *need* it but I find this solution nicer.
+
+Thanks,
+Quentin
+
+-- 
+Quentin Schulz, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--vrocQsabtXwawM6sGkv2mo3NPT4vHRvTS--
+
+--vSHPog3EoUl0rPKW3pRvkEVwkG1WG7sTx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJZylNRAAoJEIS4mnU+4PGjausP/jCLjovT11NgMXFOVjpQzfXz
+MzOgi+lsdHY9fX+D3+l/RzC6ptBJbokeaWC6nqhiwMBHx5m3yI0hiNOQKQjn9HSi
+7APd+jVP5DGJfKhPORSbggGuWOU1c19Yf+GdtTV2PuEysXGztU4m2Ye+JHFd3ywA
++Ky7t8mrpi1yRVVoqGROnMqHARaWqzLqKF308gL4Xi5nnUgrUht4TFS0K2z67hoX
+JqAN8ewqBVfx1RAOct6KYL051QbP1rp7uRahWEDchBCrJ706oF7iFpLhJ7JkQPaN
+0fASEfTeC8T7SOdYImJCY1Sr8H98FKyBeshYxNTjnZKqzDJoui7/D2+b5XbbUEo3
+V6SC6FCVCFVlWut/h3Y9HIzi8d9nFKrHYXZpOUqVta8hi0L/TuKpNAl07uuI6sKm
+2zQjcKAN15L3SqyLsLNgtfEFQM0a+PXnseK99lTgFihzipayfTAwUDRGUmU2MTXn
+hLXQSFLTIjJsWT8ci0x0BrIS80/GrFc8NCw75zr1F9XmYqNzS+qpckdg2iIaCuUp
+39mNK8u4Y+AAs17GtNXzvi/wT0sh2tKLb7Fb4PWMXg3rhNBJt8a+UGS5aN5lklLy
+SR5GAUjZX2d9+nSnIb3OUb0Ranw7bKzz9yzXIA7o82IxzHv/GLUpIaNrrDyki5LB
+gE0rot06wA11hwv9ZDua
+=Oin5
+-----END PGP SIGNATURE-----
+
+--vSHPog3EoUl0rPKW3pRvkEVwkG1WG7sTx--
