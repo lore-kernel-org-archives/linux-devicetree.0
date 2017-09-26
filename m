@@ -1,70 +1,63 @@
-From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] watchdog: dw_wdt: add stop watchdog operation
-Date: Tue, 26 Sep 2017 07:17:32 +0200
-Message-ID: <2203f151-99c8-6c58-8766-70813fafe64d@pengutronix.de>
-References: <20170925052531.1692-1-o.rempel@pengutronix.de>
- <20170925161643.GA32601@roeck-us.net>
+From: "Mohandass, Divagar" <divagar.mohandass@intel.com>
+Subject: RE: [PATCH v6 2/3] eeprom: at24: add support to fetch eeprom device
+ property "size"
+Date: Tue, 26 Sep 2017 05:29:06 +0000
+Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DF0721@BGSMSX107.gar.corp.intel.com>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <1504520928-5191-3-git-send-email-divagar.mohandass@intel.com>
+ <6F87890CF0F5204F892DEA1EF0D77A5972FC126B@FMSMSX114.amr.corp.intel.com>
+ <CAHp75Ve_1oRe6w_yyQW_76NHf-boF+VqYNenTKit0PJPFj+N7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170925161643.GA32601-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Ve_1oRe6w_yyQW_76NHf-boF+VqYNenTKit0PJPFj+N7A@mail.gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tfiga@chromium.org" <tfiga@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 25.09.2017 18:16, Guenter Roeck wrote:
-> On Mon, Sep 25, 2017 at 07:25:30AM +0200, Oleksij Rempel wrote:
->> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>
->> The only way of stopping the watchdog is by resetting it.
->> Add the watchdog op for stopping the device and reset if
->> a reset line is provided.
->>
->> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
->> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>
->> changes v3:
->>   - don't return error if rst is not present and set WDOG_HW_RUNNING bit
->>     to notify watchdog core.
->>
->> changes v2:
->>   - test if dw_wdt->rst is NULL instead of IS_ERR
->>
->>   drivers/watchdog/dw_wdt.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
->> index 36be987ff9ef..6cc56b18ee52 100644
->> --- a/drivers/watchdog/dw_wdt.c
->> +++ b/drivers/watchdog/dw_wdt.c
->> @@ -135,6 +135,21 @@ static int dw_wdt_start(struct watchdog_device *wdd)
->>   	return 0;
->>   }
->>   
->> +static int dw_wdt_stop(struct watchdog_device *wdd)
->> +{
->> +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
->> +
->> +	if (!dw_wdt->rst) {
->> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> 
-> Setting WDOG_HW_RUNNING should be dropped from dw_wdt_start().
-
-you mean, this patch is OK, and i need to provide one more which is 
-removing WDOG_HW_RUNNING from dw_wdt_start(). Correct?
-
-Regards,
-Oleksij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5keSwNCg0KU29ycnkgbWlzc2VkIHRoZSAnU3VnZ2VzdGVkLWJ5JyB0YWcuIENhbiBJIHJl
+c2VuZCB0aGUgdjYgd2l0aCB0aGlzIGNoYW5nZSwgc28gdGhhdCBXb2xmcmFtIGNhbiBwaWNrIHRo
+ZXNlIHBhdGNoZXMgPw0KDQotLS0NCl5EaXZhZ2FyDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
+LS0tLQ0KPkZyb206IEFuZHkgU2hldmNoZW5rbyBbbWFpbHRvOmFuZHkuc2hldmNoZW5rb0BnbWFp
+bC5jb21dDQo+U2VudDogRnJpZGF5LCBTZXB0ZW1iZXIgMjIsIDIwMTcgOTo0MiBQTQ0KPlRvOiBN
+YW5pLCBSYWptb2hhbiA8cmFqbW9oYW4ubWFuaUBpbnRlbC5jb20+DQo+Q2M6IE1vaGFuZGFzcywg
+RGl2YWdhciA8ZGl2YWdhci5tb2hhbmRhc3NAaW50ZWwuY29tPjsNCj5yb2JoK2R0QGtlcm5lbC5v
+cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyB3c2FAdGhlLWRyZWFtcy5kZTsNCj5zYWthcmkuYWls
+dXNAaWtpLmZpOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtaTJjQHZnZXIua2Vy
+bmVsLm9yZzsNCj5saW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyB0ZmlnYUBjaHJvbWl1bS5v
+cmcNCj5TdWJqZWN0OiBSZTogW1BBVENIIHY2IDIvM10gZWVwcm9tOiBhdDI0OiBhZGQgc3VwcG9y
+dCB0byBmZXRjaCBlZXByb20NCj5kZXZpY2UgcHJvcGVydHkgInNpemUiDQo+DQo+T24gV2VkLCBT
+ZXAgMjAsIDIwMTcgYXQgNjo1MiBBTSwgTWFuaSwgUmFqbW9oYW4NCj48cmFqbW9oYW4ubWFuaUBp
+bnRlbC5jb20+IHdyb3RlOg0KPj4gQWRkaW5nIFRvbWFzei4uLg0KPg0KPlBsZWFzZSwgZG9uJ3Qg
+dG9wIHBvc3QuDQo+QmV0dGVyIHRvIHJlc2VuZCBlbnRpcmUgc2VyaWVzIHdpdGggYWxsIHN0YWtl
+aG9sZGVycyBpbmNsdWRlZC4NCj4NCj4+PiBPYnRhaW4gdGhlIHNpemUgb2YgdGhlIEVFUFJPTSBj
+aGlwIGZyb20gRFQgaWYgdGhlICJzaXplIiBwcm9wZXJ0eSBpcw0KPj4+IHNwZWNpZmllZCBmb3Ig
+dGhlIGRldmljZS4NCj4+Pg0KPg0KPkkgZ3Vlc3MgaXQgbGFja3MNCj5TdWdnZXN0ZWQtYnk6IEFu
+ZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPg0KPk90
+aGVyIHRoYW4gdGhhdCwgbG9va3MgZ29vZCB0byBtZSENCj4NCj5SZXZpZXdlZC1ieTogQW5keSBT
+aGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPg0KPg0KPldvbGZyYW0sIHRo
+ZSBiaW5kaW5nIGlzIEFDS2VkIGJ5IFJvYiBhbmQgdGhpcyBvbmUgaXMgaW4gYSBnb29kIHNoYXBl
+Lg0KPk1vcmVvdmVyLCBpdCBzZWVtcyBsaWtlIGEgZGVtYW5kIGZvciB0aGUgcHJvcGVydHkgc2lu
+Y2Ugc29tZSBJb1Qgc3R1ZmYNCj53b3VsZCBsaWtlIHRvIHVzZSB0aGUgZHJpdmVyIG9uIEFDUEkg
+ZW5hYmxlZCBwbGF0Zm9ybXMgd2l0aCBkaWZmZXJlbnQgc2l6ZXMuDQo+DQo+Q2FuIHlvdSBnbyBh
+aGVhZCBhbmQgYXBwbHkgZmlyc3QgdHdvIHBhdGNoZXM/IEl0IHdvdWxkIGJlIHJlYWxseSBhcHBy
+ZWNpYXRlZC4NCj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBEaXZhZ2FyIE1vaGFuZGFzcyA8ZGl2YWdh
+ci5tb2hhbmRhc3NAaW50ZWwuY29tPg0KPj4+IC0tLQ0KPj4+ICBkcml2ZXJzL21pc2MvZWVwcm9t
+L2F0MjQuYyB8IDQgKysrKw0KPj4+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+
+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgYi9kcml2ZXJz
+L21pc2MvZWVwcm9tL2F0MjQuYw0KPj4+IGluZGV4DQo+Pj4gNzY0ZmY1ZGYuLjIxOTljNDIgMTAw
+NjQ0DQo+Pj4gLS0tIGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMNCj4+PiArKysgYi9kcml2
+ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KPj4+IEBAIC01NzAsNiArNTcwLDEwIEBAIHN0YXRpYyB2
+b2lkIGF0MjRfZ2V0X3BkYXRhKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4+PiBzdHJ1Y3QgYXQyNF9w
+bGF0Zm9ybV9kYXRhICpjaGlwKQ0KPj4+ICAgICAgIGlmIChkZXZpY2VfcHJvcGVydHlfcHJlc2Vu
+dChkZXYsICJyZWFkLW9ubHkiKSkNCj4+PiAgICAgICAgICAgICAgIGNoaXAtPmZsYWdzIHw9IEFU
+MjRfRkxBR19SRUFET05MWTsNCj4+Pg0KPj4+ICsgICAgIGVyciA9IGRldmljZV9wcm9wZXJ0eV9y
+ZWFkX3UzMihkZXYsICJzaXplIiwgJnZhbCk7DQo+Pj4gKyAgICAgaWYgKCFlcnIpDQo+Pj4gKyAg
+ICAgICAgICAgICBjaGlwLT5ieXRlX2xlbiA9IHZhbDsNCj4+PiArDQo+Pj4gICAgICAgZXJyID0g
+ZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgInBhZ2VzaXplIiwgJnZhbCk7DQo+Pj4gICAg
+ICAgaWYgKCFlcnIpIHsNCj4+PiAgICAgICAgICAgICAgIGNoaXAtPnBhZ2Vfc2l6ZSA9IHZhbDsN
+Cj4+PiAtLQ0KPj4+IDEuOS4xDQo+Pg0KPg0KPg0KPg0KPi0tDQo+V2l0aCBCZXN0IFJlZ2FyZHMs
+DQo+QW5keSBTaGV2Y2hlbmtvDQo=
