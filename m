@@ -1,47 +1,161 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v14 15/28] v4l: async: Allow binding notifiers to
- sub-devices
-Date: Tue, 26 Sep 2017 11:20:46 +0300
-Message-ID: <20170926082046.sfmhyf7xmkutzjbe@valkosipuli.retiisi.org.uk>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v14 16/28] v4l: async: Ensure only unique fwnodes are
+ registered to notifiers
+Date: Tue, 26 Sep 2017 10:22:29 +0200
+Message-ID: <e5dbe28c-6afc-2dcf-3b85-07e044522258@xs4all.nl>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-16-sakari.ailus@linux.intel.com>
+ <20170925222540.371-17-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170925222540.371-16-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170925222540.371-17-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 01:25:26AM +0300, Sakari Ailus wrote:
-> Registering a notifier has required the knowledge of struct v4l2_device
-> for the reason that sub-devices generally are registered to the
-> v4l2_device (as well as the media device, also available through
-> v4l2_device).
+On 26/09/17 00:25, Sakari Ailus wrote:
+> While registering a notifier, check that each newly added fwnode is
+> unique, and return an error if it is not. Also check that a newly added
+> notifier does not have the same fwnodes twice.
 > 
-> This information is not available for sub-device drivers at probe time.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c | 88 ++++++++++++++++++++++++++++++++----
+>  1 file changed, 79 insertions(+), 9 deletions(-)
 > 
-> What this patch does is that it allows registering notifiers without
-> having v4l2_device around. Instead the sub-device pointer is stored in the
-> notifier. Once the sub-device of the driver that registered the notifier
-> is registered, the notifier will gain the knowledge of the v4l2_device,
-> and the binding of async sub-devices from the sub-device driver's notifier
-> may proceed.
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 735f72f81740..470607da96b2 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -307,8 +307,71 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
+>  	sd->dev = NULL;
+>  }
+>  
+> +/* See if an fwnode can be found in a notifier's lists. */
+> +static bool __v4l2_async_notifier_fwnode_has_async_subdev(
+> +	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode)
+> +{
+> +	struct v4l2_async_subdev *asd;
+> +	struct v4l2_subdev *sd;
+> +
+> +	list_for_each_entry(asd, &notifier->waiting, list) {
+> +		if (asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
+> +			continue;
+> +
+> +		if (asd->match.fwnode.fwnode == fwnode)
+> +			return true;
+> +	}
+> +
+> +	list_for_each_entry(sd, &notifier->done, async_list) {
+> +		if (WARN_ON(!sd->asd))
+> +			continue;
+> +
+> +		if (sd->asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
+> +			continue;
+> +
+> +		if (sd->asd->match.fwnode.fwnode == fwnode)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * Find out whether an async sub-device was set up for an fwnode already or
+> + * whether it exists in a given notifier before @this_index.
+> + */
+> +static bool v4l2_async_notifier_fwnode_has_async_subdev(
+> +	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode,
+> +	unsigned int this_index)
+> +{
+> +	unsigned int j;
+> +
+> +	lockdep_assert_held(&list_lock);
+> +
+> +	/* Check that an fwnode is not being added more than once. */
+> +	for (j = 0; j < this_index; j++) {
+> +		struct v4l2_async_subdev *asd = notifier->subdevs[this_index];
+> +		struct v4l2_async_subdev *other_asd = notifier->subdevs[j];
+> +
+> +		if (other_asd->match_type == V4L2_ASYNC_MATCH_FWNODE &&
+> +		    asd->match.fwnode.fwnode ==
+> +		    other_asd->match.fwnode.fwnode)
+> +			return true;
+> +	}
+> +
+> +	/* Check than an fwnode did not exist in other notifiers. */
+> +	list_for_each_entry(notifier, &notifier_list, list)
+> +		if (__v4l2_async_notifier_fwnode_has_async_subdev(
+> +			    notifier, fwnode))
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+>  static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  {
+> +	struct device *dev =
+> +		notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL;
+>  	struct v4l2_async_subdev *asd;
+>  	int ret;
+>  	int i;
+> @@ -319,6 +382,8 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  	INIT_LIST_HEAD(&notifier->waiting);
+>  	INIT_LIST_HEAD(&notifier->done);
+>  
+> +	mutex_lock(&list_lock);
+> +
+>  	for (i = 0; i < notifier->num_subdevs; i++) {
+>  		asd = notifier->subdevs[i];
+>  
+> @@ -326,30 +391,35 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  		case V4L2_ASYNC_MATCH_CUSTOM:
+>  		case V4L2_ASYNC_MATCH_DEVNAME:
+>  		case V4L2_ASYNC_MATCH_I2C:
+> +			break;
+>  		case V4L2_ASYNC_MATCH_FWNODE:
+> +			if (v4l2_async_notifier_fwnode_has_async_subdev(
+> +				    notifier, asd->match.fwnode.fwnode, i)) {
+> +				dev_err(dev,
+> +					"fwnode has already been registered or in notifier's subdev list\n");
+> +				ret = -EEXIST;
+> +				goto out_unlock;
+> +			}
+>  			break;
+>  		default:
+> -			dev_err(notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL,
+> -				"Invalid match type %u on %p\n",
+> +			dev_err(dev, "Invalid match type %u on %p\n",
+>  				asd->match_type, asd);
+> -			return -EINVAL;
+> +			ret = -EINVAL;
+> +			goto out_unlock;
+>  		}
+>  		list_add_tail(&asd->list, &notifier->waiting);
+>  	}
+>  
+> -	mutex_lock(&list_lock);
+> -
+>  	ret = v4l2_async_notifier_try_all_subdevs(notifier);
+> -	if (ret) {
+> -		mutex_unlock(&list_lock);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto out_unlock;
+>  
+>  	ret = v4l2_async_notifier_try_complete(notifier);
+>  
+>  	/* Keep also completed notifiers on the list */
+>  	list_add(&notifier->list, &notifier_list);
+>  
+> +out_unlock:
+>  	mutex_unlock(&list_lock);
+>  
+>  	return ret;
 > 
-> The root notifier's complete callback is only called when all sub-device
-> notifiers are completed.
-
-This paragraph is actually no longer true. I changed it to:
-
-	The complete callbacks will be called only when the v4l2_device is
-	available and no notifier has pending sub-devices to bind.
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
