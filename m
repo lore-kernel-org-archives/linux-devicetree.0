@@ -1,74 +1,160 @@
 From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH resend 03/12] staging: typec: tcpci: add documentation for tcpci
-Date: Tue, 26 Sep 2017 12:05:14 +0800
-Message-ID: <1506398723-19359-4-git-send-email-jun.li@nxp.com>
+Subject: [PATCH resend 04/12] staging: typec: tcpci: support port config passed via dt
+Date: Tue, 26 Sep 2017 12:05:15 +0800
+Message-ID: <1506398723-19359-5-git-send-email-jun.li@nxp.com>
 References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1506398723-19359-1-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TCPCI stands for typec port controller interface, its implementation
-has full typec port control with power delivery support, it's a
-standard i2c slave with GPIO input as irq interface, detail see spec
-"Universal Serial Bus Type-C Port Controller Interface Specification
-Revision 1.0, Version 1.1"
+User can define the typec port properties in tcpci node to setup
+the port config.
 
 Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
 ---
- .../devicetree/bindings/usb/typec-tcpci.txt        | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ drivers/staging/typec/tcpci.c | 89 +++++++++++++++++++++++++++++++++++++++----
+ include/linux/usb/tcpm.h      |  6 +--
+ 2 files changed, 85 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-new file mode 100644
-index 0000000..9268440
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-@@ -0,0 +1,36 @@
-+TCPCI(Typec port cotroller interface) binding
-+---------------------------------------------
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 4636804..0119453 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -425,17 +425,92 @@ static const struct regmap_config tcpci_regmap_config = {
+ 	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+ };
+ 
+-static const struct tcpc_config tcpci_tcpc_config = {
+-	.type = TYPEC_PORT_DFP,
+-	.default_role = TYPEC_SINK,
+-};
+-
++/* Populate struct tcpc_config from device-tree */
+ static int tcpci_parse_config(struct tcpci *tcpci)
+ {
++	struct tcpc_config *tcfg;
++	int ret = -EINVAL;
 +
-+Required properties:
-+- compatible:       should be "usb,tcpci".
-+- reg:              the i2c slave address of typec port controller device.
-+- interrupt-parent: the phandle to the interrupt controller which provides
-+                    the interrupt.
-+- interrupts:       interrupt specification for tcpci alert.
-+- port-type:        typec port type.
-+- default-role:     preferred power role if port type is "dual".
+ 	tcpci->controls_vbus = true; /* XXX */
+ 
+-	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+-	tcpci->tcpc.config = &tcpci_tcpc_config;
++	tcpci->tcpc.config = devm_kzalloc(tcpci->dev, sizeof(*tcfg),
++					  GFP_KERNEL);
++	if (!tcpci->tcpc.config)
++		return -ENOMEM;
 +
-+Required properties only for power source or drp:
-+- src-pdos
++	tcfg = tcpci->tcpc.config;
 +
-+Required properties only for power sink or drp:
-+- snk-pdos
-+- max-snk-mv
-+- max-snk-ma
-+- op-snk-mw
++	/* Get port-type */
++	ret = typec_get_port_type(tcpci->dev);
++	if (ret < 0) {
++		dev_err(tcpci->dev, "typec port type is NOT correct!\n");
++		return ret;
++	}
++	tcfg->type = ret;
 +
-+Example:
++	if (tcfg->type == TYPEC_PORT_UFP)
++		goto sink;
 +
-+ptn5110@50 {
-+	compatible = "usb,tcpci";
-+	reg = <0x50>;
-+	interrupt-parent = <&gpio3>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+	port-type = "dual";
-+	default-role = "sink";
-+	src-pdos = <0x380190c8>;
-+	snk-pdos = <0x380190c8 0x3802d0c8>;
-+	max-snk-mv = <9000>;
-+	max-snk-ma = <1000>;
-+	op-snk-mw = <9000>;
-+};
++	/* Get source PDO */
++	tcfg->nr_src_pdo = device_property_read_u32_array(tcpci->dev,
++						"src-pdos", NULL, 0);
++	if (tcfg->nr_src_pdo <= 0) {
++		dev_err(tcpci->dev, "typec source pdo is missing!\n");
++		return -EINVAL;
++	}
++
++	tcfg->src_pdo = devm_kzalloc(tcpci->dev,
++		sizeof(*tcfg->src_pdo) * tcfg->nr_src_pdo, GFP_KERNEL);
++	if (!tcfg->src_pdo)
++		return -ENOMEM;
++
++	ret = device_property_read_u32_array(tcpci->dev, "src-pdos",
++				tcfg->src_pdo, tcfg->nr_src_pdo);
++	if (ret) {
++		dev_err(tcpci->dev, "Failed to read src pdo!\n");
++		return -EINVAL;
++	}
++
++	if (tcfg->type == TYPEC_PORT_DFP)
++		return 0;
++
++	/* Get the preferred power role for drp */
++	ret = typec_get_power_role(tcpci->dev);
++	if (ret < 0) {
++		dev_err(tcpci->dev, "typec preferred role is wrong!\n");
++		return ret;
++	}
++	tcfg->default_role = ret;
++sink:
++	/* Get sink power capability */
++	tcfg->nr_snk_pdo = device_property_read_u32_array(tcpci->dev,
++						"snk-pdos", NULL, 0);
++	if (tcfg->nr_snk_pdo <= 0) {
++		dev_err(tcpci->dev, "typec sink pdo is missing!\n");
++		return -EINVAL;
++	}
++
++	tcfg->snk_pdo = devm_kzalloc(tcpci->dev,
++		sizeof(*tcfg->snk_pdo) * tcfg->nr_snk_pdo, GFP_KERNEL);
++	if (!tcfg->snk_pdo)
++		return -ENOMEM;
++
++	ret = device_property_read_u32_array(tcpci->dev, "snk-pdos",
++				tcfg->snk_pdo, tcfg->nr_snk_pdo);
++	if (ret) {
++		dev_err(tcpci->dev, "Failed to read sink pdo!\n");
++		return -EINVAL;
++	}
++
++	if (device_property_read_u32(tcpci->dev, "max-snk-mv",
++				     &tcfg->max_snk_mv) ||
++		device_property_read_u32(tcpci->dev, "max-snk-ma",
++					 &tcfg->max_snk_ma) ||
++		device_property_read_u32(tcpci->dev, "op-snk-mw",
++					 &tcfg->operating_snk_mw)) {
++		dev_err(tcpci->dev, "Failed to read sink capability!\n");
++		return -EINVAL;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+index 073197f..a67cf77 100644
+--- a/include/linux/usb/tcpm.h
++++ b/include/linux/usb/tcpm.h
+@@ -76,10 +76,10 @@ enum tcpm_transmit_type {
+  * @alt_modes:	List of supported alternate modes
+  */
+ struct tcpc_config {
+-	const u32 *src_pdo;
++	u32 *src_pdo;
+ 	unsigned int nr_src_pdo;
+ 
+-	const u32 *snk_pdo;
++	u32 *snk_pdo;
+ 	unsigned int nr_snk_pdo;
+ 
+ 	const u32 *snk_vdo;
+@@ -154,7 +154,7 @@ struct tcpc_mux_dev {
+  * @mux:	Pointer to multiplexer data
+  */
+ struct tcpc_dev {
+-	const struct tcpc_config *config;
++	struct tcpc_config *config;
+ 
+ 	int (*init)(struct tcpc_dev *dev);
+ 	int (*get_vbus)(struct tcpc_dev *dev);
 -- 
 2.6.6
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
