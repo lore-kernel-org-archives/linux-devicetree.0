@@ -1,98 +1,58 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] watchdog: dw_wdt: add stop watchdog operation
-Date: Tue, 26 Sep 2017 08:13:09 -0700
-Message-ID: <20170926151309.GA14894@roeck-us.net>
-References: <20170926061123.29614-1-o.rempel@pengutronix.de>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Tue, 26 Sep 2017 18:16:50 +0300
+Message-ID: <91112d33-2fd3-cb1c-a1db-5e5be9540d68@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170926061123.29614-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 08:11:22AM +0200, Oleksij Rempel wrote:
-> The only way of stopping the watchdog is by resetting it.
-> Add the watchdog op for stopping the device and reset if
-> a reset line is provided.
+On 26.09.2017 17:50, Jon Hunter wrote:
 > 
-> At same time WDOG_HW_RUNNING should be remove from dw_wdt_start.
-> As commented by Guenter Roeck:
-> dw_wdt sets WDOG_HW_RUNNING in its open function. Result is
-> that the kref_get() in watchdog_open() won't be executed. But then
-> kref_put() in close will be called since the watchdog now does stop.
-> This causes the imbalance.
+> On 26/09/17 00:22, Dmitry Osipenko wrote:
+>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>> on Tegra20/30 SoC's.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>> new file mode 100644
+>> index 000000000000..2af9aa76ae11
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>> @@ -0,0 +1,23 @@
+>> +* NVIDIA Tegra AHB DMA controller
+>> +
+>> +Required properties:
+>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
+>> +- reg:		Should contain registers base address and length.
+>> +- interrupts:	Should contain one entry, DMA controller interrupt.
+>> +- clocks:	Should contain one entry, DMA controller clock.
+>> +- resets :	Should contain one entry, DMA controller reset.
+>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
+>> +		for the peripheral. For more details consult the Tegra TRM's
+>> +		documentation, in particular AHB DMA channel control register
+>> +		REQ_SEL field.
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> What about the TRIG_SEL field? Do we need to handle this here as well?
+> 
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+I've followed APB DMA here, that HW also has TRIG_SEL but ignores it for some
+reason. I think technically it should be present in the binding, yeah.
 
-> ---
-> 
-> changes v4:
->  - remove WDOG_HW_RUNNING from dw_wdt_start.
-> 
-> changes v3:
->  - don't return error if rst is not present and set WDOG_HW_RUNNING bit
->    to notify watchdog core.
-> 
-> changes v2:
->  - test if dw_wdt->rst is NULL instead of IS_ERR
-> 
->  drivers/watchdog/dw_wdt.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index 36be987ff9ef..c2f4ff516230 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -127,14 +127,27 @@ static int dw_wdt_start(struct watchdog_device *wdd)
->  
->  	dw_wdt_set_timeout(wdd, wdd->timeout);
->  
-> -	set_bit(WDOG_HW_RUNNING, &wdd->status);
-> -
->  	writel(WDOG_CONTROL_REG_WDT_EN_MASK,
->  	       dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
->  
->  	return 0;
->  }
->  
-> +static int dw_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
-> +
-> +	if (!dw_wdt->rst) {
-> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> +		return 0;
-> +	}
-> +
-> +	reset_control_assert(dw_wdt->rst);
-> +	reset_control_deassert(dw_wdt->rst);
-> +
-> +	return 0;
-> +}
-> +
->  static int dw_wdt_restart(struct watchdog_device *wdd,
->  			  unsigned long action, void *data)
->  {
-> @@ -173,6 +186,7 @@ static const struct watchdog_info dw_wdt_ident = {
->  static const struct watchdog_ops dw_wdt_ops = {
->  	.owner		= THIS_MODULE,
->  	.start		= dw_wdt_start,
-> +	.stop		= dw_wdt_stop,
->  	.ping		= dw_wdt_ping,
->  	.set_timeout	= dw_wdt_set_timeout,
->  	.get_timeleft	= dw_wdt_get_timeleft,
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
