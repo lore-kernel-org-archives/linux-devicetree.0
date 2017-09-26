@@ -1,142 +1,54 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 03/13] drm/sun4i: tcon: Add support for demuxing TCON
- output on A31
-Date: Tue, 26 Sep 2017 11:56:03 +0200
-Message-ID: <20170926095603.c67y4rytydya7kjd@flea>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 04/13] drm/sun4i: hdmi: Disable clks in bind function
+ error path and unbind function
+Date: Tue, 26 Sep 2017 11:56:29 +0200
+Message-ID: <20170926095629.hp3igc4zx7u6yn55@flea>
 References: <20170926065919.24446-1-wens@csie.org>
- <20170926065919.24446-4-wens@csie.org>
+ <20170926065919.24446-5-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="fwfopzxho5wg6h5l"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170926065919.24446-4-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1327557185=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170926065919.24446-5-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---fwfopzxho5wg6h5l
+--===============1327557185==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tpspz472yzsgjpbf"
+Content-Disposition: inline
+
+
+--tpspz472yzsgjpbf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Sep 26, 2017 at 06:59:09AM +0000, Chen-Yu Tsai wrote:
-> On systems with 2 TCONs such as the A31, it is possible to demux the
-> output of the TCONs to one encoder.
+On Tue, Sep 26, 2017 at 06:59:10AM +0000, Chen-Yu Tsai wrote:
+> The HDMI driver enables the bus and mod clocks in the bind function, but
+> does not disable them if it then bails our due to any errors. Neither
+> does it disable the clocks in the unbind function.
 >=20
-> Add support for this for the A31.
+> Fix this by adding a proper error path to the bind function, and
+> clk_disable_unprepare calls to the unbind function.
 >=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 61 ++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 61 insertions(+)
+> Also rename the err_cleanup_connector label to err_cleanup_encoder,
+> since it is the encoder that gets cleaned up.
 >=20
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/s=
-un4i_tcon.c
-> index e853dfe51389..770b843a6fa9 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -14,9 +14,12 @@
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_crtc.h>
->  #include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_encoder.h>
->  #include <drm/drm_modes.h>
->  #include <drm/drm_of.h>
-> =20
-> +#include <uapi/drm/drm_mode.h>
-> +
->  #include <linux/component.h>
->  #include <linux/ioport.h>
->  #include <linux/of_address.h>
-> @@ -109,11 +112,69 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tc=
-on, bool enable)
->  }
->  EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
-> =20
-> +static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
-> +{
-> +	struct sun4i_drv *drv =3D drm->dev_private;
-> +	struct sun4i_tcon *tcon;
-> +
-> +	list_for_each_entry(tcon, &drv->tcon_list, list)
-> +		if (tcon->id =3D=3D 0)
-> +			return tcon;
-> +
-> +	dev_warn(drm->dev,
-> +		 "TCON0 not found, display output muxing may not work\n");
-> +
-> +	return tcon;
-> +}
-> +
-> +static int _sun6i_tcon_set_mux(struct drm_encoder *encoder)
-> +{
-> +	struct sun4i_tcon *tcon =3D sun4i_get_first_tcon(encoder->dev);
-> +	int tcon_id =3D drm_crtc_to_sun4i_crtc(encoder->crtc)->tcon->id;
-> +	u32 shift;
-> +
-> +	DRM_DEBUG_DRIVER("Muxing encoder %s to CRTC %s (TCON %d)\n",
-> +			 encoder->name, encoder->crtc->name, tcon_id);
-> +
-> +	/* Only 2 TCONs */
-> +	if (tcon_id >=3D 2)
-> +		return -EINVAL;
-> +
-> +	switch (encoder->encoder_type) {
-> +	case DRM_MODE_ENCODER_TMDS:
-> +		/* HDMI */
-> +		shift =3D 8;
-> +		break;
-> +	case DRM_MODE_ENCODER_DSI:
-> +		/* No MIPI DSI on A31s */
-> +		if (of_device_is_compatible(tcon->dev->of_node,
-> +					    "allwinner,sun6i-a31s-tcon"))
+> Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-I'm not sure that test is needed.
-
-We won't end up in that case if we don't have a connected DSI block,
-which isn't going to be the case on the A31. And I guess we can tackle
-DSI later (when I'll send my patches...).
-
-> +			return -EINVAL;
-> +		shift =3D 0;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	regmap_update_bits(tcon->regs, SUN4I_TCON_MUX_CTRL_REG,
-> +			   0x3 << shift, tcon_id << shift);
-> +
-> +	return 0;
-> +}
-> +
->  void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
->  			struct drm_encoder *encoder)
->  {
-> +	/* Get the device node of the display engine */
-> +	struct device_node *node =3D encoder->dev->dev->of_node;
->  	u32 val;
-> =20
-> +	if (of_device_is_compatible(node, "allwinner,sun6i-a31-display-engine")=
- ||
-> +	    of_device_is_compatible(node, "allwinner,sun6i-a31s-display-engine"=
-)) {
-> +		_sun6i_tcon_set_mux(encoder);
-> +		return;
-> +	}
-> +
-
-I'd really like to avoid mix and matching the structure defined
-behaviour and those of_device_is_compatible calls spread out
-everywhere.
-
-You can either add a flag or a function pointer.
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
 Maxime
 
@@ -145,28 +57,36 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---fwfopzxho5wg6h5l
+--tpspz472yzsgjpbf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZyiQzAAoJEBx+YmzsjxAgqMwP/3tZVN7F6Xj3iCLDqmrB1jUk
-hkXd4ZkpoZbU2o/HV0x4WgvkPaV4BKru89zxuefZO6OLsbK/Zt6RINy+JTL0jZss
-0LdJu3JZplnZulU4BBUMvmjIIYNdz2MupubhWYOxkYZ6DAa5UAT4z8P5PzojXOPm
-Rz+O5kQ6axk5mLE7tdYy0W2UZZX2JUnExDWqNekyxRNtLNWqAwxmOlPrsI0QmRK3
-z9AgcC3xDISn/R25dughBVUCQTMmJAAWY2lkZpjY7rehtJmrqCgGqKNxnryVGJfG
-k7RMZJYgli2tiTOTpm+J9sWLBn2G1IhOkwc6ETVmVvkocjm+AU/7fcfoCpTc0Rnm
-d7hXXE5iTgPbE7gXHD/3wm4KpF8vRvmzAx4SSqWgbp1clOWw+DuH+mwo6rVrFSo4
-kGmEGQPZCUWTYee3xBkz8mCh2ii6s+BYPdP7M8pYiqVZc6MS4P/q4cLENvF7WSdF
-5rU4VG3juMMN9kd/Lz8Excqk3O3DBKvZeg0wXIiWPsX3W+Q0XZesUcFoEdcHysBU
-ncfxxqWhBuCFBMg2kJ2OI4b+5tdLghrKSWueIWbIy28Yuh6h8hV/Ing8ISmFh6uG
-XNxXPid+Nnd8QTOuZjRByrxh9oSGa/WdYMZW9p3y7875Rnp/+BiwY8VG7eRv5NKY
-YcppixABuYLI24c/2+nD
-=P+kw
+iQIcBAEBAgAGBQJZyiRNAAoJEBx+YmzsjxAggowQALHnTI21BOWs96TP7Ykj9CI3
+O6H+SivibXJfBrs27usEAg/EHInlMmwUujOD26OQCD7yjJWFiVjNznb6Lu+/OWdE
+l3SbfqBDvCc/i2Woy9A1UaGjFOax+VHAXTkzzEenTGwZ7ZiWkun/jUtNPf9/9vKD
+r1vR/ZD9XOBMZW0M26JBOe70neMYdOsy+RAvAaPZnLNsTfKr/Yya8GeQbNApyYmS
+f+ni6cZ16SqkTFBVe7eOh6yKD9HpTuVDdD8T0wlPnihc8KOM/efPBKX2AGP+pza+
+hSEk3+pEbh/DaCCUo7n09Mu+DjDZCCYvIPC6xHYhVEJGjurTsXd8giCjUojtOCqk
+jKFrXfBTP3ChW1Xqrh2KcVu9MR5f7m2dBZMlcP5BeD1tX4qErW7DOUuwTo8x5zYc
+s33XIdkfCwdUDDhoVMLa61DC4grYuRiBOmM4GLF93+qWJZs6S5ip/ccG+dIRseMu
+LbBFOGMyg1F3BdgaqOaw0mJcaAZwSDoCDYpAdf8MqAlUonaKx9Lqxvy7Nnml/DeZ
+BR36y/mU0bqT6SHhv7RR1RxPRPGybPkLVUzyfBLqwVU4+GsBLqTRoDKk0HFaqA2Y
+xNkPtdNbf5GcsDR8HfYz2AkxibASnY2MrvH8mp9TK5g2TcofMHcCpuzduRF+LtTb
+atUY4p2IqWci83DGnKPa
+=u+Js
 -----END PGP SIGNATURE-----
 
---fwfopzxho5wg6h5l--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--tpspz472yzsgjpbf--
+
+--===============1327557185==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1327557185==--
