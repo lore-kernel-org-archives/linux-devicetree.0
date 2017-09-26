@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 05/10] clk: bcm: Add Broadcom Hurricane 2 clock support
-Date: Mon, 25 Sep 2017 17:09:26 -0700
-Message-ID: <20170926000931.670-6-f.fainelli@gmail.com>
+Subject: [PATCH 10/10] ARM: multi_v7_defconfig: Enable CONFIG_ARCH_BCM_HR2
+Date: Mon, 25 Sep 2017 17:09:31 -0700
+Message-ID: <20170926000931.670-11-f.fainelli@gmail.com>
 References: <20170926000931.670-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170926000931.670-1-f.fainelli@gmail.com>
@@ -12,82 +12,25 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Broadcom Hurricane 2 SoC clock controller. We can
-re-use the existing iProc clock library since the SoC's architecture is
-largely the same as its predecessors.
+Turn on Broadcom Hurrican 2 SoC support by default to get access to its
+drivers.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/clk/bcm/Kconfig   |  9 +++++++++
- drivers/clk/bcm/Makefile  |  1 +
- drivers/clk/bcm/clk-hr2.c | 27 +++++++++++++++++++++++++++
- 3 files changed, 37 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-hr2.c
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index 1d9187df167b..4c4bd85f707c 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -30,6 +30,15 @@ config CLK_BCM_CYGNUS
- 	help
- 	  Enable common clock framework support for the Broadcom Cygnus SoC
- 
-+config CLK_BCM_HR2
-+	bool "Broadcom Hurricane 2 clock support"
-+	depends on ARCH_BCM_HR2 || COMPILE_TEST
-+	select COMMON_CLK_IPROC
-+	default ARCH_BCM_HR2
-+	help
-+	  Enable common clock framework support for the Broadcom Hurricane 2
-+	  SoC
-+
- config CLK_BCM_NSP
- 	bool "Broadcom Northstar/Northstar Plus clock support"
- 	depends on ARCH_BCM_5301X || ARCH_BCM_NSP || COMPILE_TEST
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index a0c14fa4aa1e..755144195541 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
- obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835-aux.o
- obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
- obj-$(CONFIG_CLK_BCM_CYGNUS)	+= clk-cygnus.o
-+obj-$(CONFIG_CLK_BCM_HR2)	+= clk-hr2.o
- obj-$(CONFIG_CLK_BCM_NSP)	+= clk-nsp.o
- obj-$(CONFIG_CLK_BCM_NS2)	+= clk-ns2.o
- obj-$(CONFIG_CLK_BCM_SR)	+= clk-sr.o
-diff --git a/drivers/clk/bcm/clk-hr2.c b/drivers/clk/bcm/clk-hr2.c
-new file mode 100644
-index 000000000000..f7c5b7379475
---- /dev/null
-+++ b/drivers/clk/bcm/clk-hr2.c
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright (C) 2017 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/err.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include "clk-iproc.h"
-+
-+static void __init hr2_armpll_init(struct device_node *node)
-+{
-+	iproc_armpll_setup(node);
-+}
-+CLK_OF_DECLARE(hr2_armpll, "brcm,hr2-armpll", hr2_armpll_init);
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 0cacdbf84a71..810cecf66eeb 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -31,6 +31,7 @@ CONFIG_SOC_SAMA5D3=y
+ CONFIG_SOC_SAMA5D4=y
+ CONFIG_ARCH_BCM=y
+ CONFIG_ARCH_BCM_CYGNUS=y
++CONFIG_ARCH_BCM_HR2=y
+ CONFIG_ARCH_BCM_NSP=y
+ CONFIG_ARCH_BCM_21664=y
+ CONFIG_ARCH_BCM_281XX=y
 -- 
 2.14.1
