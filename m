@@ -1,12 +1,13 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 08/10] ARM: dts: add dtsi for AXP813 PMIC
-Date: Tue, 26 Sep 2017 14:17:18 +0200
-Message-ID: <d0d72d485596fa2b6bb0000c67132c97374798ce.1506428208.git-series.quentin.schulz@free-electrons.com>
+Subject: [PATCH v2 03/10] pinctrl: axp209: use drv_data of
+ pinctrl_pin_desc to store pin reg
+Date: Tue, 26 Sep 2017 14:17:13 +0200
+Message-ID: <7993a30fbc2e50a2d228fa0c8fad643c4034b101.1506428208.git-series.quentin.schulz@free-electrons.com>
 References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
 Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBB4LVHHAKGQEHOJ3JHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBB7UKVHHAKGQEIPAOAPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 In-Reply-To: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -21,80 +22,116 @@ To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdn
 Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Instead of using a function to retrieve each pin's correct control
+register, use drv_data within pinctrl_pin_desc to store the ctrl reg.
 
-The AXP813 PMIC is used with some Allwinner SoCs. Create a dtsi to
-include in each board embedding it.
+Remove axp20x_gpio_get_reg and replace every occurrence by a get from
+drv_data.
 
 Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/axp813.dtsi | 58 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 58 insertions(+)
- create mode 100644 arch/arm/boot/dts/axp813.dtsi
+ drivers/pinctrl/pinctrl-axp209.c | 42 +++++++--------------------------
+ 1 file changed, 9 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm/boot/dts/axp813.dtsi b/arch/arm/boot/dts/axp813.dtsi
-new file mode 100644
-index 0000000..e7f95e8
---- /dev/null
-+++ b/arch/arm/boot/dts/axp813.dtsi
-@@ -0,0 +1,58 @@
-+/*
-+ * Copyright 2017 Free Electrons
-+ *
-+ * Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/*
-+ * AXP813 Integrated Power Management Chip
-+ */
-+
-+&axp813 {
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+
-+	axp_pctl: axp_pctl {
-+		compatible = "x-powers,axp813-pctl";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
+diff --git a/drivers/pinctrl/pinctrl-axp209.c b/drivers/pinctrl/pinctrl-axp209.c
+index b35e8dd..4bbcba2 100644
+--- a/drivers/pinctrl/pinctrl-axp209.c
++++ b/drivers/pinctrl/pinctrl-axp209.c
+@@ -32,10 +32,11 @@
+ #define AXP20X_GPIO_FUNCTION_OUT_HIGH	1
+ #define AXP20X_GPIO_FUNCTION_INPUT	2
+ 
+-#define AXP20X_PINCTRL_PIN(_pin_num, _pin)			\
++#define AXP20X_PINCTRL_PIN(_pin_num, _pin, _regs)		\
+ 	{							\
+ 		.number = _pin_num,				\
+ 		.name = _pin,					\
++		.drv_data = _regs,				\
+ 	}
+ 
+ #define AXP20X_PIN(_pin, ...)					\
+@@ -91,17 +92,17 @@ struct axp20x_gpio {
+ };
+ 
+ static const struct axp20x_desc_pin axp209_pins[] = {
+-	AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
++	AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0", (void *)AXP20X_GPIO0_CTRL),
+ 		   AXP20X_FUNCTION(0x0, "gpio_out"),
+ 		   AXP20X_FUNCTION(0x2, "gpio_in"),
+ 		   AXP20X_FUNCTION(0x3, "ldo"),
+ 		   AXP20X_FUNCTION(0x4, "adc")),
+-	AXP20X_PIN(AXP20X_PINCTRL_PIN(1, "GPIO1"),
++	AXP20X_PIN(AXP20X_PINCTRL_PIN(1, "GPIO1", (void *)AXP20X_GPIO1_CTRL),
+ 		   AXP20X_FUNCTION(0x0, "gpio_out"),
+ 		   AXP20X_FUNCTION(0x2, "gpio_in"),
+ 		   AXP20X_FUNCTION(0x3, "ldo"),
+ 		   AXP20X_FUNCTION(0x4, "adc")),
+-	AXP20X_PIN(AXP20X_PINCTRL_PIN(2, "GPIO2"),
++	AXP20X_PIN(AXP20X_PINCTRL_PIN(2, "GPIO2", (void *)AXP20X_GPIO2_CTRL),
+ 		   AXP20X_FUNCTION(0x0, "gpio_out"),
+ 		   AXP20X_FUNCTION(0x2, "gpio_in")),
+ };
+@@ -111,20 +112,6 @@ static const struct axp20x_pinctrl_desc axp20x_pinctrl_data = {
+ 	.npins	= ARRAY_SIZE(axp209_pins),
+ };
+ 
+-static int axp20x_gpio_get_reg(unsigned offset)
+-{
+-	switch (offset) {
+-	case 0:
+-		return AXP20X_GPIO0_CTRL;
+-	case 1:
+-		return AXP20X_GPIO1_CTRL;
+-	case 2:
+-		return AXP20X_GPIO2_CTRL;
+-	}
+-
+-	return -EINVAL;
+-}
+-
+ static int axp20x_gpio_input(struct gpio_chip *chip, unsigned offset)
+ {
+ 	return pinctrl_gpio_direction_input(chip->base + offset);
+@@ -146,12 +133,9 @@ static int axp20x_gpio_get(struct gpio_chip *chip, unsigned offset)
+ static int axp20x_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct axp20x_gpio *gpio = gpiochip_get_data(chip);
++	int reg = (int)gpio->desc->pins[offset].pin.drv_data;
+ 	unsigned int val;
+-	int reg, ret;
+-
+-	reg = axp20x_gpio_get_reg(offset);
+-	if (reg < 0)
+-		return reg;
++	int ret;
+ 
+ 	ret = regmap_read(gpio->regmap, reg, &val);
+ 	if (ret)
+@@ -184,11 +168,7 @@ static void axp20x_gpio_set(struct gpio_chip *chip, unsigned offset,
+ 			    int value)
+ {
+ 	struct axp20x_gpio *gpio = gpiochip_get_data(chip);
+-	int reg;
+-
+-	reg = axp20x_gpio_get_reg(offset);
+-	if (reg < 0)
+-		return;
++	int reg = (int)gpio->desc->pins[offset].pin.drv_data;
+ 
+ 	regmap_update_bits(gpio->regmap, reg,
+ 			   AXP20X_GPIO_FUNCTIONS,
+@@ -200,11 +180,7 @@ static int axp20x_pmx_set(struct pinctrl_dev *pctldev, unsigned int offset,
+ 			  u8 config)
+ {
+ 	struct axp20x_gpio *gpio = pinctrl_dev_get_drvdata(pctldev);
+-	int reg;
+-
+-	reg = axp20x_gpio_get_reg(offset);
+-	if (reg < 0)
+-		return reg;
++	int reg = (int)gpio->desc->pins[offset].pin.drv_data;
+ 
+ 	return regmap_update_bits(gpio->regmap, reg, AXP20X_GPIO_FUNCTIONS,
+ 				  config);
 -- 
 git-series 0.9.1
