@@ -1,161 +1,83 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v14 16/28] v4l: async: Ensure only unique fwnodes are
- registered to notifiers
-Date: Tue, 26 Sep 2017 10:22:29 +0200
-Message-ID: <e5dbe28c-6afc-2dcf-3b85-07e044522258@xs4all.nl>
-References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-17-sakari.ailus@linux.intel.com>
+From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 02/12] usb: typec: add basic typec properties
+Date: Tue, 26 Sep 2017 11:23:00 +0300
+Message-ID: <20170926082300.GC14296@kuha.fi.intel.com>
+References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+ <1506386727-16370-3-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170925222540.371-17-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1506386727-16370-3-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/17 00:25, Sakari Ailus wrote:
-> While registering a notifier, check that each newly added fwnode is
-> unique, and return an error if it is not. Also check that a newly added
-> notifier does not have the same fwnodes twice.
+On Tue, Sep 26, 2017 at 08:45:17AM +0800, Li Jun wrote:
+> port-type is required for any typec port; default-role is only required
+> for drp; power source capable needs src-pdos; power sink capable needs
+> snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
 > ---
->  drivers/media/v4l2-core/v4l2-async.c | 88 ++++++++++++++++++++++++++++++++----
->  1 file changed, 79 insertions(+), 9 deletions(-)
+>  Documentation/devicetree/bindings/usb/typec.txt | 46 +++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 735f72f81740..470607da96b2 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -307,8 +307,71 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
->  	sd->dev = NULL;
->  }
->  
-> +/* See if an fwnode can be found in a notifier's lists. */
-> +static bool __v4l2_async_notifier_fwnode_has_async_subdev(
-> +	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode)
-> +{
-> +	struct v4l2_async_subdev *asd;
-> +	struct v4l2_subdev *sd;
+> diff --git a/Documentation/devicetree/bindings/usb/typec.txt b/Documentation/devicetree/bindings/usb/typec.txt
+> new file mode 100644
+> index 0000000..36d4467
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/typec.txt
+> @@ -0,0 +1,46 @@
+> +Generic typec and power delivery properties
+> +-------------------------------------------
 > +
-> +	list_for_each_entry(asd, &notifier->waiting, list) {
-> +		if (asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
-> +			continue;
-> +
-> +		if (asd->match.fwnode.fwnode == fwnode)
-> +			return true;
-> +	}
-> +
-> +	list_for_each_entry(sd, &notifier->done, async_list) {
-> +		if (WARN_ON(!sd->asd))
-> +			continue;
-> +
-> +		if (sd->asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
-> +			continue;
-> +
-> +		if (sd->asd->match.fwnode.fwnode == fwnode)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * Find out whether an async sub-device was set up for an fwnode already or
-> + * whether it exists in a given notifier before @this_index.
-> + */
-> +static bool v4l2_async_notifier_fwnode_has_async_subdev(
-> +	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode,
-> +	unsigned int this_index)
-> +{
-> +	unsigned int j;
-> +
-> +	lockdep_assert_held(&list_lock);
-> +
-> +	/* Check that an fwnode is not being added more than once. */
-> +	for (j = 0; j < this_index; j++) {
-> +		struct v4l2_async_subdev *asd = notifier->subdevs[this_index];
-> +		struct v4l2_async_subdev *other_asd = notifier->subdevs[j];
-> +
-> +		if (other_asd->match_type == V4L2_ASYNC_MATCH_FWNODE &&
-> +		    asd->match.fwnode.fwnode ==
-> +		    other_asd->match.fwnode.fwnode)
-> +			return true;
-> +	}
-> +
-> +	/* Check than an fwnode did not exist in other notifiers. */
-> +	list_for_each_entry(notifier, &notifier_list, list)
-> +		if (__v4l2_async_notifier_fwnode_has_async_subdev(
-> +			    notifier, fwnode))
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
->  static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
->  {
-> +	struct device *dev =
-> +		notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL;
->  	struct v4l2_async_subdev *asd;
->  	int ret;
->  	int i;
-> @@ -319,6 +382,8 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
->  	INIT_LIST_HEAD(&notifier->waiting);
->  	INIT_LIST_HEAD(&notifier->done);
->  
-> +	mutex_lock(&list_lock);
-> +
->  	for (i = 0; i < notifier->num_subdevs; i++) {
->  		asd = notifier->subdevs[i];
->  
-> @@ -326,30 +391,35 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
->  		case V4L2_ASYNC_MATCH_CUSTOM:
->  		case V4L2_ASYNC_MATCH_DEVNAME:
->  		case V4L2_ASYNC_MATCH_I2C:
-> +			break;
->  		case V4L2_ASYNC_MATCH_FWNODE:
-> +			if (v4l2_async_notifier_fwnode_has_async_subdev(
-> +				    notifier, asd->match.fwnode.fwnode, i)) {
-> +				dev_err(dev,
-> +					"fwnode has already been registered or in notifier's subdev list\n");
-> +				ret = -EEXIST;
-> +				goto out_unlock;
-> +			}
->  			break;
->  		default:
-> -			dev_err(notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL,
-> -				"Invalid match type %u on %p\n",
-> +			dev_err(dev, "Invalid match type %u on %p\n",
->  				asd->match_type, asd);
-> -			return -EINVAL;
-> +			ret = -EINVAL;
-> +			goto out_unlock;
->  		}
->  		list_add_tail(&asd->list, &notifier->waiting);
->  	}
->  
-> -	mutex_lock(&list_lock);
-> -
->  	ret = v4l2_async_notifier_try_all_subdevs(notifier);
-> -	if (ret) {
-> -		mutex_unlock(&list_lock);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		goto out_unlock;
->  
->  	ret = v4l2_async_notifier_try_complete(notifier);
->  
->  	/* Keep also completed notifiers on the list */
->  	list_add(&notifier->list, &notifier_list);
->  
-> +out_unlock:
->  	mutex_unlock(&list_lock);
->  
->  	return ret;
-> 
+> +Required properties:
+> +- port-type:    should be one of "source", "sink" or "dual".
+> +- default-role: preferred power role if drp, should be "sink" or "source".
+> +- src-pdos:     An array of u32 with each entry providing supported power
+> +                source data object(PDO), the detailed bit definitions of
+> +                PDO can be found in "Universal Serial Bus Power Delivery
+> +                Specification" chapter 6.4.1.2 Source_Capabilities Message,
+> +                the order of each entry(PDO) should follow the PD spec chapter
+> +                6.4.1. Required only for power source and power dual role with
+> +                power delivery support.
+> +- snk-pdos:     An array of u32 with each entry providing supported power
+> +                sink data object(PDO), the detailed bit definitions of PDO
+> +                can be found in "Universal Serial Bus Power Delivery
+> +                Specification" chapter 6.4.1.3 Sink Capabilities Message,
+> +                the order of each entry(PDO) should follow the PD spec chapter
+> +                6.4.1. Required only for power sink and power dual role with
+> +                power delivery support.
+
+Wouldn't it be better to supply a property per detail and let the
+drivers construct the pdos as needed?
+
+> +- max-snk-mv:   The max voltage the sink can support in millivoltage, required
+> +                only for power sink and power dual role with power delivery
+> +                support.
+> +- max-snk-ma:   The max current the sink can support in milliampere, required
+> +                only for power sink and power dual role with power delivery
+> +                support.
+> +- op-snk-mw:    Sink required operating power in milliwatts, if source offered
+> +                power is less then it, Capability Mismatch is set, required
+> +                only for power sink and power dual role with power delivery
+> +                support.
+
+I'm a little bit concerned about these. Has any OF/DT guys reviewed
+them?
+
+We should also keep in mind that the same properties should also be
+possible to use with ACPI. That may not be a problem as such, but we
+should consult the ACPI guys as well.
+
+
+Thanks,
+
+-- 
+heikki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
