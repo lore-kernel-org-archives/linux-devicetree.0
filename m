@@ -1,71 +1,91 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 12/12] staging: typec: tcpci: move tcpci driver out of
- staging
-Date: Tue, 26 Sep 2017 07:16:24 +0000
-Message-ID: <DB4PR04MB0768423268C5D9D7BFFD3625897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 09/12] usb: typec: tcpm: only drives the connected cc line
+ when attached
+Date: Tue, 26 Sep 2017 00:16:37 -0700
+Message-ID: <9c461105-fa96-3989-5a95-b9f82b154ea2@roeck-us.net>
 References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-13-git-send-email-jun.li@nxp.com>
- <20170926065749.GE6250@kroah.com>
+ <1506386727-16370-10-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170926065749.GE6250-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506386727-16370-10-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
 Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 09/25/2017 05:45 PM, Li Jun wrote:
+> As we should only drive connected cc line to be the right state when
+> attached, and keeps the other one to be open, so update the set_cc
+> interface for that.
+> 
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> ---
+>   drivers/usb/typec/tcpm.c | 12 +++++++++++-
+>   include/linux/usb/tcpm.h |  3 ++-
+>   2 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+> index 38a6223..c9966ee 100644
+> --- a/drivers/usb/typec/tcpm.c
+> +++ b/drivers/usb/typec/tcpm.c
+> @@ -1857,9 +1857,15 @@ static bool tcpm_start_drp_toggling(struct tcpm_port *port,
+>   
+>   static void tcpm_set_cc(struct tcpm_port *port, enum typec_cc_status cc)
+>   {
+> +	bool attached;
+> +
+>   	tcpm_log(port, "cc:=%d", cc);
+>   	port->cc_req = cc;
+> -	port->tcpc->set_cc(port->tcpc, cc);
+> +	if (port->state == SRC_ATTACHED || port->state == SNK_ATTACHED)
+> +		attached = true;
+> +	else
+> +		attached = false;
+> +	port->tcpc->set_cc(port->tcpc, cc, attached, port->polarity);
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org]
-> Sent: Tuesday, September 26, 2017 2:58 PM
-> To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-> Cc: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org; yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org;
-> Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>; linux-
-> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH 12/12] staging: typec: tcpci: move tcpci driver out o=
-f
-> staging
->=20
-> On Tue, Sep 26, 2017 at 08:45:27AM +0800, Li Jun wrote:
-> > Move TCPCI(Typec port controller interface) driver out of staging.
-> >
-> > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  drivers/staging/Kconfig        |   2 -
-> >  drivers/staging/Makefile       |   1 -
-> >  drivers/staging/typec/Kconfig  |  14 -
-> >  drivers/staging/typec/Makefile |   1 -
-> >  drivers/staging/typec/TODO     |   5 -
-> >  drivers/staging/typec/tcpci.c  | 637
-> > -----------------------------------------
-> >  drivers/staging/typec/tcpci.h  | 133 ---------
-> >  drivers/usb/typec/Kconfig      |   7 +
-> >  drivers/usb/typec/Makefile     |   1 +
-> >  drivers/usb/typec/tcpci.c      | 637
-> +++++++++++++++++++++++++++++++++++++++++
-> >  drivers/usb/typec/tcpci.h      | 133 +++++++++
-> >  11 files changed, 778 insertions(+), 793 deletions(-)
->=20
->=20
-> Creating patches like this with "-M" to git format-patch is nice, that wa=
-y we see
-> the rename as just a rename, and not a big delete/add patch.
->=20
-> Can you do that instead and resend this series?
+Polarity should be set with set_polarity(). Is it necessary to duplicate that ?
 
-Thanks, I will do that and resend.
+>   }
+>   
+>   static int tcpm_init_vbus(struct tcpm_port *port)
+> @@ -1913,6 +1919,8 @@ static int tcpm_src_attach(struct tcpm_port *port)
+>   	if (ret < 0)
+>   		return ret;
+>   
+> +	tcpm_set_cc(port, tcpm_rp_cc(port));
+> +
+>   	ret = tcpm_set_roles(port, true, TYPEC_SOURCE, TYPEC_HOST);
+>   	if (ret < 0)
+>   		return ret;
+> @@ -2028,6 +2036,8 @@ static int tcpm_snk_attach(struct tcpm_port *port)
+>   	if (ret < 0)
+>   		return ret;
+>   
+> +	tcpm_set_cc(port, TYPEC_CC_RD);
+> +
+>   	ret = tcpm_set_roles(port, true, TYPEC_SINK, TYPEC_DEVICE);
+>   	if (ret < 0)
+>   		return ret;
+> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+> index a67cf77..a007e2a1 100644
+> --- a/include/linux/usb/tcpm.h
+> +++ b/include/linux/usb/tcpm.h
+> @@ -159,7 +159,8 @@ struct tcpc_dev {
+>   	int (*init)(struct tcpc_dev *dev);
+>   	int (*get_vbus)(struct tcpc_dev *dev);
+>   	int (*get_current_limit)(struct tcpc_dev *dev);
+> -	int (*set_cc)(struct tcpc_dev *dev, enum typec_cc_status cc);
+> +	int (*set_cc)(struct tcpc_dev *dev, enum typec_cc_status cc,
+> +			bool attached, enum typec_cc_polarity polarity);
+>   	int (*get_cc)(struct tcpc_dev *dev, enum typec_cc_status *cc1,
+>   		      enum typec_cc_status *cc2);
+>   	int (*set_polarity)(struct tcpc_dev *dev,
+> 
 
-Li Jun
->=20
-> thanks,
->=20
-> greg k-h
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
