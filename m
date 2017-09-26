@@ -1,59 +1,84 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 4/4] ARM: configs: stm32: Add DMAMUX support in
- STM32 defconfig
-Date: Tue, 26 Sep 2017 22:16:03 +0530
-Message-ID: <20170926164603.GP30097@localhost>
-References: <1506065492-31478-1-git-send-email-pierre-yves.mordret@st.com>
- <1506065492-31478-5-git-send-email-pierre-yves.mordret@st.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 3/5 v2] input: mouse: Add DT bindings for GPIO mice
+Date: Tue, 26 Sep 2017 09:54:46 -0700
+Message-ID: <20170926165446.GC14833@dtor-ws>
+References: <20170925163430.22397-1-linus.walleij@linaro.org>
+ <20170925163430.22397-3-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1506065492-31478-5-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170925163430.22397-3-linus.walleij@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 09:31:32AM +0200, Pierre-Yves MORDRET wrote:
-> This patch adds DMAMUX support in STM32 defconfig file
-
-Need ACK from ARM folks on this.
-
+On Mon, Sep 25, 2017 at 06:34:28PM +0200, Linus Walleij wrote:
+> This adds DT bindings for simple mice attached to GPIO lines.
+> As the properties are very general and pertains to all mice I
+> can think of, we use very generic names for the 4-7 GPIO lines,
+> "up", "down" etc.
 > 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+> Acked-by: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Adding Rob. I am good with the patches unless there is objection to the
+binding...
+
 > ---
->  Version history:
->     v5:
->     v4:
->     v3:
->     v2:
->         * None
+> ChangeLog v1->v2:
+> - Collect Hand-Christian's ACK
+> - Uses 5-7 lines rather than 4-7 lines
+> - Add suffix "-ms" to the scan interval property
+> - Fix compatible string in the example
 > ---
-> ---
->  arch/arm/configs/stm32_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/input/gpio-mouse.txt       | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-mouse.txt
 > 
-> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-> index 90e5c46..988f395 100644
-> --- a/arch/arm/configs/stm32_defconfig
-> +++ b/arch/arm/configs/stm32_defconfig
-> @@ -67,6 +67,7 @@ CONFIG_RTC_CLASS=y
->  CONFIG_RTC_DRV_STM32=y
->  CONFIG_DMADEVICES=y
->  CONFIG_STM32_DMA=y
-> +CONFIG_STM32_DMAMUX=y
->  CONFIG_IIO=y
->  CONFIG_STM32_ADC_CORE=y
->  CONFIG_STM32_ADC=y
+> diff --git a/Documentation/devicetree/bindings/input/gpio-mouse.txt b/Documentation/devicetree/bindings/input/gpio-mouse.txt
+> new file mode 100644
+> index 000000000000..519510a11af9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/gpio-mouse.txt
+> @@ -0,0 +1,32 @@
+> +Device-Tree bindings for GPIO attached mice
+> +
+> +This simply uses standard GPIO handles to define a simple mouse connected
+> +to 5-7 GPIO lines.
+> +
+> +Required properties:
+> +	- compatible: must be "gpio-mouse"
+> +	- scan-interval-ms: The scanning interval in milliseconds
+> +	- up-gpios: GPIO line phandle to the line indicating "up"
+> +	- down-gpios: GPIO line phandle to the line indicating "down"
+> +	- left-gpios: GPIO line phandle to the line indicating "left"
+> +	- right-gpios: GPIO line phandle to the line indicating "right"
+> +
+> +Optional properties:
+> +	- button-left-gpios: GPIO line handle to the left mouse button
+> +	- button-middle-gpios: GPIO line handle to the middle mouse button
+> +	- button-right-gpios: GPIO line handle to the right mouse button
+> +Example:
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +gpio-mouse {
+> +	compatible = "gpio-mouse";
+> +	scan-interval-ms = <50>;
+> +	up-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
+> +	down-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+> +	left-gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
+> +	right-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +	button-left-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
+> +	button-middle-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+> +	button-right-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+> +};
 > -- 
-> 2.7.4
+> 2.13.5
 > 
 
 -- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
