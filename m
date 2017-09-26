@@ -1,62 +1,105 @@
 From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH resend 00/12] staging: typec: tcpci: move out of staging
-Date: Tue, 26 Sep 2017 12:05:11 +0800
-Message-ID: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
+Subject: [PATCH resend 01/12] usb: typec: add API to get port type and preferred role
+Date: Tue, 26 Sep 2017 12:05:12 +0800
+Message-ID: <1506398723-19359-2-git-send-email-jun.li@nxp.com>
+References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506398723-19359-1-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set attempts to move the tcpci driver out of staging by fix
-some tcpci driver issues and verified on NXP PTN5110, which is a standard
-tcpci typec port controller device with power delivery support, tested
-power source and sink with drp config.
+This patch add 2 APIs to get port type and preferred role from firmware
+description.
 
-Li Jun (12):
-  usb: typec: add API to get port type and preferred role
-  usb: typec: add basic typec properties
-  staging: typec: tcpci: add documentation for tcpci
-  staging: typec: tcpci: support port config passed via dt
-  staging: typec: tcpci: register port before request irq
-  staging: typec: tcpci: enable vbus detection
-  typec: tcpm: add starting value for drp toggling
-  staging: typec: tcpci: correct drp toggling
-  usb: typec: tcpm: only drives the connected cc line when attached
-  staging: typec: tcpci: update set_cc for different state
-  staging: typec: tcpci: Only touch target bit when enable vconn
-  staging: typec: tcpci: move tcpci driver out of staging
+Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+---
+ drivers/usb/typec/typec.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/typec.h |  2 ++
+ 2 files changed, 47 insertions(+)
 
- .../devicetree/bindings/usb/typec-tcpci.txt        |  36 ++++
- Documentation/devicetree/bindings/usb/typec.txt    |  46 +++++
- drivers/staging/Kconfig                            |   2 -
- drivers/staging/Makefile                           |   1 -
- drivers/staging/typec/Kconfig                      |  14 --
- drivers/staging/typec/Makefile                     |   1 -
- drivers/staging/typec/TODO                         |   5 -
- drivers/usb/typec/Kconfig                          |   7 +
- drivers/usb/typec/Makefile                         |   1 +
- drivers/{staging => usb}/typec/tcpci.c             | 185 ++++++++++++++++-----
- drivers/{staging => usb}/typec/tcpci.h             |   0
- drivers/usb/typec/tcpm.c                           |  22 ++-
- drivers/usb/typec/typec.c                          |  45 +++++
- include/linux/usb/tcpm.h                           |   9 +-
- include/linux/usb/typec.h                          |   2 +
- 15 files changed, 306 insertions(+), 70 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
- create mode 100644 Documentation/devicetree/bindings/usb/typec.txt
- delete mode 100644 drivers/staging/typec/Kconfig
- delete mode 100644 drivers/staging/typec/Makefile
- delete mode 100644 drivers/staging/typec/TODO
- rename drivers/{staging => usb}/typec/tcpci.c (73%)
- rename drivers/{staging => usb}/typec/tcpci.h (100%)
-
+diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
+index 24e355b..0c77cc4 100644
+--- a/drivers/usb/typec/typec.c
++++ b/drivers/usb/typec/typec.c
+@@ -12,6 +12,7 @@
+ #include <linux/device.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/usb/typec.h>
+ 
+@@ -1249,6 +1250,50 @@ void typec_set_pwr_opmode(struct typec_port *port,
+ }
+ EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
+ 
++/**
++ * typec_get_port_type - Get the typec port type
++ * @dev: Device to get the property of
++ *
++ * This routine is used by typec hardware driver to read property port type
++ * from the device firmware description.
++ *
++ * Returns typec_port_type if success, otherwise negative error code.
++ */
++int typec_get_port_type(struct device *dev)
++{
++	const char *type_str;
++	int ret;
++
++	ret = device_property_read_string(dev, "port-type", &type_str);
++	if (ret < 0)
++		return ret;
++
++	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
++								 type_str);
++}
++EXPORT_SYMBOL_GPL(typec_get_port_type);
++
++/**
++ * typec_get_power_role - Get the typec preferred role
++ * @dev: Device to get the property of
++ *
++ * This routine is used by typec hardware driver to read property default role
++ * from the device firmware description.
++ *
++ * Returns typec_role if success, otherwise negative error code.
++ */
++int typec_get_power_role(struct device *dev)
++{
++	const char *power_str;
++	int ret;
++
++	ret = device_property_read_string(dev, "default-role", &power_str);
++	if (ret < 0)
++		return ret;
++
++	return match_string(typec_roles, ARRAY_SIZE(typec_roles), power_str);
++}
++EXPORT_SYMBOL_GPL(typec_get_power_role);
+ /* --------------------------------------- */
+ 
+ /**
+diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
+index ffe7487..bfac685 100644
+--- a/include/linux/usb/typec.h
++++ b/include/linux/usb/typec.h
+@@ -243,5 +243,7 @@ void typec_set_data_role(struct typec_port *port, enum typec_data_role role);
+ void typec_set_pwr_role(struct typec_port *port, enum typec_role role);
+ void typec_set_vconn_role(struct typec_port *port, enum typec_role role);
+ void typec_set_pwr_opmode(struct typec_port *port, enum typec_pwr_opmode mode);
++int typec_get_port_type(struct device *dev);
++int typec_get_power_role(struct device *dev);
+ 
+ #endif /* __LINUX_USB_TYPEC_H */
 -- 
 2.6.6
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
