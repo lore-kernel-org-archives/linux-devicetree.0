@@ -1,75 +1,49 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH 10/11] dt-bindings: clock: qcom: add misc resets for PCIE and NSS
-Date: Tue, 26 Sep 2017 17:54:03 +0530
-Message-ID: <1506428644-2996-11-git-send-email-absahu@codeaurora.org>
-References: <1506428644-2996-1-git-send-email-absahu@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506428644-2996-1-git-send-email-absahu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 0/2] NVIDIA Tegra20 video decoder driver
+Date: Tue, 26 Sep 2017 15:32:23 +0300
+Message-ID: <d2d4c970-d921-c282-b70e-00247c5de50f@gmail.com>
+References: <cover.1506377430.git.digetx@gmail.com>
+ <20170926065447.GC6250@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170926065447.GC6250-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PCIE and NSS has MISC reset register in which single register has
-multiple reset bit. The patch adds the DT bindings for these MISC
-resets.
+On 26.09.2017 09:54, Greg Kroah-Hartman wrote:
+> On Tue, Sep 26, 2017 at 01:15:41AM +0300, Dmitry Osipenko wrote:
+>> This driver provides accelerated video decoding to NVIDIA Tegra20 SoC's,
+>> it is a result of reverse-engineering efforts. Driver has been tested on
+>> Toshiba AC100 and Acer A500, it should work on any Tegra20 device.
+>>
+>> In userspace this driver is utilized by libvdpau-tegra [0] that implements
+>> VDPAU interface, so any video player that supports VDPAU can provide
+>> accelerated video decoding on Tegra20 on Linux.
+> 
+> Why not use the v4l2 api instead?  Doesn't that provide the same needed
+> user/kernel api here instead of creating yet-another-custom ioctl?
+> 
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
----
- include/dt-bindings/clock/qcom,gcc-ipq8074.h | 42 ++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+1) The HW doesn't generalize for the common API. Like for example, it isn't
+capable of unpacking bitstream encoded with CABAC (Context-adaptive binary
+arithmetic coding), so unpacking should be done in software and then VDE HW
+isn't capable of decoding such a stream in a fully-automated manner, software
+would have to feed engine with a chunks of macroblocks untill the whole frame is
+decoded. That lameness is partially hidden in the BLOB's firmware, that firmware
+actually is just a driver BTW.
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-index ff0b4ac..238f872 100644
---- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-+++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
-@@ -328,5 +328,47 @@
- #define GCC_APC0_VOLTAGE_DROOP_DETECTOR_BCR	86
- #define GCC_APC1_VOLTAGE_DROOP_DETECTOR_BCR	87
- #define GCC_SMMU_CATS_BCR			88
-+#define GCC_UBI0_AXI_ARES			89
-+#define GCC_UBI0_AHB_ARES			90
-+#define GCC_UBI0_NC_AXI_ARES			91
-+#define GCC_UBI0_DBG_ARES			92
-+#define GCC_UBI0_CORE_CLAMP_ENABLE		93
-+#define GCC_UBI0_CLKRST_CLAMP_ENABLE		94
-+#define GCC_UBI1_AXI_ARES			95
-+#define GCC_UBI1_AHB_ARES			96
-+#define GCC_UBI1_NC_AXI_ARES			97
-+#define GCC_UBI1_DBG_ARES			98
-+#define GCC_UBI1_CORE_CLAMP_ENABLE		99
-+#define GCC_UBI1_CLKRST_CLAMP_ENABLE		100
-+#define GCC_NSS_CFG_ARES			101
-+#define GCC_NSS_IMEM_ARES			102
-+#define GCC_NSS_NOC_ARES			103
-+#define GCC_NSS_CRYPTO_ARES			104
-+#define GCC_NSS_CSR_ARES			105
-+#define GCC_NSS_CE_APB_ARES			106
-+#define GCC_NSS_CE_AXI_ARES			107
-+#define GCC_NSSNOC_CE_APB_ARES			108
-+#define GCC_NSSNOC_CE_AXI_ARES			109
-+#define GCC_NSSNOC_UBI0_AHB_ARES		110
-+#define GCC_NSSNOC_UBI1_AHB_ARES		111
-+#define GCC_NSSNOC_SNOC_ARES			112
-+#define GCC_NSSNOC_CRYPTO_ARES			113
-+#define GCC_NSSNOC_ATB_ARES			114
-+#define GCC_NSSNOC_QOSGEN_REF_ARES		115
-+#define GCC_NSSNOC_TIMEOUT_REF_ARES		116
-+#define GCC_PCIE0_PIPE_ARES			117
-+#define GCC_PCIE0_SLEEP_ARES			118
-+#define GCC_PCIE0_CORE_STICKY_ARES		119
-+#define GCC_PCIE0_AXI_MASTER_ARES		120
-+#define GCC_PCIE0_AXI_SLAVE_ARES		121
-+#define GCC_PCIE0_AHB_ARES			122
-+#define GCC_PCIE0_AXI_MASTER_STICKY_ARES	123
-+#define GCC_PCIE1_PIPE_ARES			124
-+#define GCC_PCIE1_SLEEP_ARES			125
-+#define GCC_PCIE1_CORE_STICKY_ARES		126
-+#define GCC_PCIE1_AXI_MASTER_ARES		127
-+#define GCC_PCIE1_AXI_SLAVE_ARES		128
-+#define GCC_PCIE1_AHB_ARES			129
-+#define GCC_PCIE1_AXI_MASTER_STICKY_ARES	130
- 
- #endif
+2) We want to have decoding integrated with the presentation of the decoded
+video frame. So having v4l interface for decoding would be just an extra
+unnecessary shim, increasing CPU / memory resources usage and complexity of the
+code.
+
+3) The decoding and presentation are already implemented using VDPAU API and
+proven to work decently in that way.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Dmitry
