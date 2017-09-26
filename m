@@ -1,102 +1,59 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwmon: pmbus: Add Maxim MAX31785
- documentation
-Date: Tue, 26 Sep 2017 14:36:45 +0930
-Message-ID: <1506402405.30138.35.camel@aj.id.au>
-References: <20170908043919.6924-1-andrew@aj.id.au>
-         <20170908043919.6924-2-andrew@aj.id.au>
-         <20170918192638.4xqszyj466lrnpbz@rob-hp-laptop>
-         <20170918201528.GA27615@roeck-us.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] staging: Introduce NVIDIA Tegra20 video decoder
+ driver
+Date: Mon, 25 Sep 2017 23:11:35 -0600
+Message-ID: <52f5c05f-7060-4d0f-355f-6da372c9ded0@wwwdotorg.org>
+References: <cover.1506377430.git.digetx@gmail.com>
+ <5c8b83775b982e6ee851c127444a8e839f422ad0.1506377430.git.digetx@gmail.com>
+ <38daee0d-0595-a7e4-69bb-5a2ddbd832b5@wwwdotorg.org>
+ <d19d709b-7451-0cdc-8bd0-913dc9c0a27d@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-KAruN5h0taGOo6R+Ub+B"
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170918201528.GA27615@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, mark.rutland@arm.com, jdelvare@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, mspinler@linux.vnet.ibm.com, msbarth@linux.vnet.ibm.com, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d19d709b-7451-0cdc-8bd0-913dc9c0a27d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-GB
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/25/2017 05:45 PM, Dmitry Osipenko wrote:
+> On 26.09.2017 02:01, Stephen Warren wrote:
+>> On 09/25/2017 04:15 PM, Dmitry Osipenko wrote:
+>>> Video decoder, found on NVIDIA Tegra20 SoC, supports a standard set of
+>>> video formats like H.264 / MPEG-4 / WMV / VC1. Currently driver supports
+>>> decoding of CAVLC H.264 only.
+>>
+>> Note: I don't know anything much about video decoding on Tegra (just NV desktop
+>> GPUs, and that was a while ago), but I had a couple small comments on the DT
+>> binding:
+>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+>>> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+>>
+>>> +NVIDIA Tegra Video Decoder Engine
+>>> +
+>>> +Required properties:
+>>> +- compatible : "nvidia,tegra20-vde"
+>>> +- reg : Must contain 2 register ranges: registers and IRAM area.
+>>> +- reg-names : Must include the following entries:
+>>> +  - regs
+>>> +  - iram
+>>
+>> I think the IRAM region needs more explanation: What is the region used for and
+>> by what? Can it be moved, and if so does the move need to be co-ordinated with
+>> any other piece of SW?
+> 
+> IRAM region is used by Video Decoder HW for internal use and some of decoding
+> parameters are supplied via IRAM, like frames order list. AFAIK IRAM addresses
+> are hardwired in HW and aren't movable, it is not 100% but I'm pretty sure.
+> Should it be explained in the binding?
 
---=-KAruN5h0taGOo6R+Ub+B
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I think this should be briefly mentioned, yes. Otherwise at least people
+who don't know the VDE HW well (like me) will wonder why on earth VDE
+interacts with IRAM at all. I would have assumed all parameters were
+supplied via registers or via descriptors in DRAM.
 
-On Mon, 2017-09-18 at 13:15 -0700, Guenter Roeck wrote:
-> On Mon, Sep 18, 2017 at 02:26:38PM -0500, Rob Herring wrote:
-> > On Fri, Sep 08, 2017 at 02:39:17PM +1000, Andrew Jeffery wrote:
-> > > > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > ---
-> > > =C2=A0.../devicetree/bindings/hwmon/pmbus/max31785.txt=C2=A0=C2=A0=C2=
-=A0| 158 +++++++++++++++++++++
-> >=20
-> > I think this needs to be located by what it does (fan control), not wha=
-t=C2=A0
-> > interface it has (pmbus).
-> >=20
-> > I'm not all that happy with hwmon either because things here seem to=C2=
-=A0
-> > just be based on being Linux hwmon devices which is sometimes arbitrary=
-.=C2=A0
-> >=20
->=20
-> The chip also measures temperatures. Other PMBus chips may do fan control=
-,
-> measure temperatures, measure and/or control voltages, current, power ...
-> Strictly speaking pretty much all PMBus chips are multi-function devices.
-> I personally don't really care if the documentation is spread across
-> several directories, but even here this is already challenging.
->=20
-> Only solution I can think of would be to create separate documents for ea=
-ch
-> functionality, ie here one for the device itself, one for fan control,
-> and one for temperature control (if that needs separate bindings). That
-> would be similar to mfd. But then we would still have to sort out where
-> to store the various bindings. Like iio, in subdirectories ? Like mfd,
-> in the matching subsystems ? If so, what to do if there is no matching
-> subsystem ?
->=20
-> Lots of questions. I'll be happy to spend some time sorting it out,
-> but I would need some directions.
->=20
-
-Likewise - I'm keen to discuss and iterate on this so we get something
-satisfactory.
-
-At least I could split out the PMBus-specific bindings from the Maxim-
-specific bindings in the current document, but there's still the
-question of how to arrange it as Guenter has queried above, and also
-how much of PMBus to define bindings for. I'm hesitant to take a stab
-at describing bindings across the whole spec if I don't have useful
-driver implementations to test against. I know that the bindings
-describe the hardware and not the driver, but there are probably more
-or less clumsy ways to describe devices that could be ironed out with a
-corresponding implementation (e.g. the Aspeed PWM/Tacho...).
-
-Thoughts?
-
-Andrew
---=-KAruN5h0taGOo6R+Ub+B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJZyeBlAAoJEJ0dnzgO5LT5cNsQAJTIlYjvpwz30KYhT5UuocAo
-pJ7Pwd4i2eyPAhxcf3Y7COLo0zdxhlRI3si/zxUkJDGx/wTIrQ1jjWrtZ6VlZFIP
-VZUTWSsng0qlatB7PppeKxvaQIgI+AWw3AnrXpW3GQF3Ke+RhUdYpEjJ0oNKCOui
-Dq4ZhfUELi6pkd+5ZgvTI/OpgjlSBRLwiYc8GHrkdlExxTVRXJIbpE6qqjGBxYrL
-M/XbkHqntBq9PVu/uRRJtaSG1uol7rtMG5p4Vn3PTFOHE2s4Ke+9pLQMBFdEjaG9
-tQmN38UPZNxb7XHj+kiIqKV+v834DDjN9WkfnDAclIGSojOyTwiidHtlcmvuKdN3
-nL1aqjYU55tVe5mMK1VdPNTmeGpD9+QoPeDwb9o4WeOXBLXe45PelV0+LWLD64ha
-tkqDH4ilk4YS2sim/2aapqwoELtc6BJxf76oZcGqBAzqEAPoiWpGdn+PcGc3TErX
-hqKnMfL3p1/RgxJ6F69neZ6/OAbOYdj8H4nKNpBFVvyRpJBAicV1HkzR2av40p3w
-dhDFfazKw8rSPNUC49rZ1ZOuwJ0kIt4kRP4eB3k2ZqiAMpPjv5buT4gApHj6vRCc
-aiL4uDoO7M00r70Pm0M4zc4UA//cQ/VB/pvRlGTnEM4sk7IQvw6Vw6APEgswvG64
-N5+Xp/JKnOSAdOHvWe2R
-=quqO
------END PGP SIGNATURE-----
-
---=-KAruN5h0taGOo6R+Ub+B--
-
+Thanks.
