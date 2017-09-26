@@ -1,78 +1,59 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 00/14] ARM: dts: sunxi: Fix DT build warnings
-Date: Tue, 26 Sep 2017 09:22:20 +0200
-Message-ID: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 04/14] ARM: dts: nanopi: Fix node with unit name and no reg property
+Date: Tue, 26 Sep 2017 09:22:24 +0200
+Message-ID: <20170926072234.27481-5-clabbe.montjoie@gmail.com>
+References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello
+This patch fix the warning "xxx has a unit name, but no reg property" by
+removing "@0" from such node.
 
-The goal of this patch series is to have a clean DT build with W=1.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ arch/arm/boot/dts/sun8i-h3-nanopi.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Regards
-
-Changes since v1:
-- moved i2c2 unit address change from patch #2 in patch #1
-
-Changes since v2
-- added two patch for fixing pin names
-
-Corentin Labbe (14):
-  ARM: dts: sunxi: h3/h5: Fix simple-bus unit address format error
-  ARM: dts: sunxi: h3/h5: Fix i2c2 register address
-  ARM: dts: sunxi: h3/h5: Fix node with unit name and no reg property
-  ARM: dts: nanopi: Fix node with unit name and no reg property
-  ARM: dts: orangepi2: Fix node with unit name and no reg property
-  ARM: dts: sun8i: orangepi-lite: Fix node with unit name and no reg
-    property
-  ARM: dts: sun8i: orangepi one: Fix node with unit name and no reg
-    property
-  ARM: dts: sun8i: orangepipc: Fix node with unit name and no reg
-    property
-  ARM: dts: sun8i: orangepi-plus: Fix node with unit name and no reg
-    property
-  arm64: allwinner: a64: Fix simple-bus unit address format error
-  arm64: allwinner: a64: Fix node with unit name and no reg property
-  ARM: dts: sun8i: a83t: Fix simple-bus unit address format error
-  arm64: allwinner: a64: fix pin name
-  ARM: dts: sun8i: fix pin name
-
- arch/arm/boot/dts/sun8i-a83t.dtsi                  |  6 +-
- arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  |  8 +-
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  8 +-
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          | 10 +--
- arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts      |  4 +-
- arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           |  2 +-
- arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts      |  4 +-
- arch/arm/boot/dts/sun8i-h3-nanopi.dtsi             | 12 +--
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          | 16 ++--
- arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       | 14 ++--
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        | 10 +--
- arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts    |  2 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         | 12 +--
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  2 +-
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 88 +++++++++++-----------
- .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  2 +-
- .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   |  2 +-
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts    |  2 +-
- .../boot/dts/allwinner/sun50i-a64-orangepi-win.dts |  2 +-
- .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  2 +-
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 26 +++----
- .../dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts   |  6 +-
- .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   |  4 +-
- .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  |  6 +-
- .../dts/allwinner/sun50i-h5-orangepi-prime.dts     |  8 +-
- .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    |  4 +-
- 27 files changed, 132 insertions(+), 132 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi b/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
+index c6decee41a27..7646e331bd29 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi.dtsi
+@@ -81,7 +81,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sw_r_npi>;
+ 
+-		k1@0 {
++		k1 {
+ 			label = "k1";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+@@ -108,19 +108,19 @@
+ };
+ 
+ &pio {
+-	leds_npi: led_pins@0 {
++	leds_npi: led_pins {
+ 		pins = "PA10";
+ 		function = "gpio_out";
+ 	};
+ };
+ 
+ &r_pio {
+-	leds_r_npi: led_pins@0 {
++	leds_r_npi: led_pins {
+ 		pins = "PL10";
+ 		function = "gpio_out";
+ 	};
+ 
+-	sw_r_npi: key_pins@0 {
++	sw_r_npi: key_pins {
+ 		pins = "PL3";
+ 		function = "gpio_in";
+ 	};
 -- 
 2.13.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
