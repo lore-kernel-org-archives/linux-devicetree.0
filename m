@@ -1,126 +1,72 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
-Date: Tue, 26 Sep 2017 13:55:40 +0200
-Message-ID: <87lgl1ishv.fsf@free-electrons.com>
-References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
-        <87377fmbpw.fsf@free-electrons.com>
-        <1506289460890.34765@alliedtelesis.co.nz>
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] staging: Introduce NVIDIA Tegra20 video decoder
+ driver
+Date: Tue, 26 Sep 2017 15:02:44 +0300
+Message-ID: <113675da-6b85-ef2f-03a9-84e5cb93c31b@gmail.com>
+References: <cover.1506377430.git.digetx@gmail.com>
+ <5c8b83775b982e6ee851c127444a8e839f422ad0.1506377430.git.digetx@gmail.com>
+ <38daee0d-0595-a7e4-69bb-5a2ddbd832b5@wwwdotorg.org>
+ <d19d709b-7451-0cdc-8bd0-913dc9c0a27d@gmail.com>
+ <52f5c05f-7060-4d0f-355f-6da372c9ded0@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506289460890.34765-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Kalyan Kinthada's
-        message of "Sun, 24 Sep 2017 21:44:21 +0000")
+In-Reply-To: <52f5c05f-7060-4d0f-355f-6da372c9ded0-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalyan Kinthada <Kalyan.Kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "wsa@the-dreams.de" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "robh+dt@kernel.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll@arm.com" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland@arm.com" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak@codeaurora.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-i2c@vger.kernel.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kalyan,
-
-Please try avoid top-posting.
-
- On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
-
-> Hi Gregory,
->
-> I got this information from Armada-38x functional errata document.
-
-OK but in any case just adding a new compatible was not enough you have
-to update the driver in the same time, however for this case we won't
-need it, see below.
-
->
-> I can add the "marvell,mv78230-i2c" compatible string to the appropriate  device tree files 
-> but the i2c-mv64xxx driver enables an additional  feature (offload i2c transactions)
-> based on the compatible string "marvell,mv78230-i2c".
->
-> I am not sure if this feature (offload i2c transactions) should be enabled for Armada-38x devices.
-> That is the reason I felt for the need of a new compatible string
-> specifically for Armada-38x SoCs.
-
-Indeed the Armada-38x SoCs does not support hardware offloading (at
-least according the datasheet). But it happens that in the earlier
-version of the Armada XP the hardware offloading was buggy, so we
-introduced a compatible for this case: marvell,mv78230-a0-i2c. This
-compatible enable the errata fix but not the offloading feature. That
-means that it is exactly the compatible you need for Armada 38x (and
-Armada 39x and 375 I think).
-
-Gregory
-
->
-> Thanks,
-> Kalyan
-> ________________________________________
-> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Sent: Friday, 22 September 2017 7:30 p.m.
-> To: Kalyan Kinthada
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
-> linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Chris Packham
-> Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
->
-> Hi Kalyan,
->
->  On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
->
->> All armada-38x variants(380, 385, 388) SoCs have an issue
->> in i2c controller which violates the i2c repeated start timing.
->
->
-> Did you had an issue with one of the SoC ?
-> If yes what was your setting ?
-> On my side I never managed to have this sort of issue on Armada 38x.
->
+On 26.09.2017 08:11, Stephen Warren wrote:
+> On 09/25/2017 05:45 PM, Dmitry Osipenko wrote:
+>> On 26.09.2017 02:01, Stephen Warren wrote:
+>>> On 09/25/2017 04:15 PM, Dmitry Osipenko wrote:
+>>>> Video decoder, found on NVIDIA Tegra20 SoC, supports a standard set of
+>>>> video formats like H.264 / MPEG-4 / WMV / VC1. Currently driver supports
+>>>> decoding of CAVLC H.264 only.
+>>>
+>>> Note: I don't know anything much about video decoding on Tegra (just NV desktop
+>>> GPUs, and that was a while ago), but I had a couple small comments on the DT
+>>> binding:
+>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+>>>> b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+>>>
+>>>> +NVIDIA Tegra Video Decoder Engine
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : "nvidia,tegra20-vde"
+>>>> +- reg : Must contain 2 register ranges: registers and IRAM area.
+>>>> +- reg-names : Must include the following entries:
+>>>> +  - regs
+>>>> +  - iram
+>>>
+>>> I think the IRAM region needs more explanation: What is the region used for and
+>>> by what? Can it be moved, and if so does the move need to be co-ordinated with
+>>> any other piece of SW?
 >>
->> This errata is fixed in the i2c-mv64xxx driver but enabled
->> only for devices with compatible string "marvell,mv78230-i2c".
->
-> In this case why not just adding the "marvell,mv78230-i2c" as compatible
-> string in the appropriate device tree files ?
->
-> Gregory
->
->>
->> This patch introduces a new compatible string
->> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs
->> so that the workaound is enabled.
->
->
->>
->> Signed-off-by: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->> index 5c30026921..fc100b6bdb 100644
->> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->> @@ -14,6 +14,7 @@ Required properties :
->>                           very rare, initial version of the SoC which
->>                           had broken offload support.  Linux
->>                           auto-detects this and sets it appropriately.
->> +                     - "marvell,armada-38x-i2c"
->>   - interrupts      : The interrupt number
->>
->>  Optional properties :
->> --
->> 2.14.1
->>
->
-> --
-> Gregory Clement, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
+>> IRAM region is used by Video Decoder HW for internal use and some of decoding
+>> parameters are supplied via IRAM, like frames order list. AFAIK IRAM addresses
+>> are hardwired in HW and aren't movable, it is not 100% but I'm pretty sure.
+>> Should it be explained in the binding?
+> 
+> I think this should be briefly mentioned, yes. Otherwise at least people
+> who don't know the VDE HW well (like me) will wonder why on earth VDE
+> interacts with IRAM at all. I would have assumed all parameters were
+> supplied via registers or via descriptors in DRAM.
+> 
+> Thanks.
+> 
+
+I also forgot to mention that VDE scrubs that IRAM region on HW reset. So yeah,
+it's definitely a part of HW definition. I'll add a brief explanation to the
+binding.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
