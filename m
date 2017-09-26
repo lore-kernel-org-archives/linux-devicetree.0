@@ -1,61 +1,68 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 08/10] ARM: dts: add dtsi for AXP813 PMIC
-Date: Tue, 26 Sep 2017 15:16:09 +0200
-Message-ID: <20170926131609.zifnvdwmdjjae7dq@flea>
-References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
- <d0d72d485596fa2b6bb0000c67132c97374798ce.1506428208.git-series.quentin.schulz@free-electrons.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] MIPS: jz4780: DTS: Probe the jz4740-watchdog
+ driver from devicetree
+Date: Tue, 26 Sep 2017 18:47:14 +0530
+Message-ID: <CANc+2y6gZ4UQ7fKbJeV7HhDLLW9pbUEr0K0Tq5eBfg1ba2s_LQ@mail.gmail.com>
+References: <20170908183558.1537-3-malat@debian.org> <20170915191837.27564-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="eq6tdwfjohbgqyva"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d0d72d485596fa2b6bb0000c67132c97374798ce.1506428208.git-series.quentin.schulz@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, lee.jones@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915191837.27564-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mathieu,
 
---eq6tdwfjohbgqyva
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 16 September 2017 at 00:48, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+> The jz4740-watchdog driver supports both jz4740 & jz4780.
+>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> ---
+> Changes in v2:
+> * make the node name generic (Paul Cercueil)
+>
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index 20e37d2d6008..76055bbc823a 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -263,6 +263,11 @@
+>                 status = "disabled";
+>         };
+>
+> +       watchdog: watchdog@10002000 {
+> +               compatible = "ingenic,jz4780-watchdog";
 
-On Tue, Sep 26, 2017 at 12:17:18PM +0000, Quentin Schulz wrote:
-> From: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> The AXP813 PMIC is used with some Allwinner SoCs. Create a dtsi to
-> include in each board embedding it.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+In drivers/watchdog/jz4740_wdt.c the compatible is declared as
+"ingenic,jz4740-watchdog" while your change says
+"ingenic,jz4780-watchdog". Can you modify that?
 
-There must be my Signed-off-by here.
+> +               reg = <0x10002000 0x100>;
+> +       };
+> +
 
-Maxime
+The structures jz4740_wdt_device and jz4740_wdt_resources can be
+removed form arch/mips/jz4740/platform.c as watchdog is declared in
+device tree. For JZ4740 platform watchdog is not used so the variables
+can be removed.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Do you mind adding watchdog entry to JZ4740 device tree? Currently
+watchdog is not enabled for JZ4740 platform.
 
---eq6tdwfjohbgqyva
-Content-Type: application/pgp-signature; name="signature.asc"
+>         nemc: nemc@13410000 {
+>                 compatible = "ingenic,jz4780-nemc";
+>                 reg = <0x13410000 0x10000>;
+> --
+> 2.11.0
+>
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZylMZAAoJEBx+YmzsjxAgDEQP/0ucetkWthQpcKNhp6c19XET
-w77nPz+J5SWiITXPD/wBENkhLY+DqQ+WUDK378ce+vOLCCM8NhFZVhqtoZWGZEY1
-Wfjuj+CtChnzVZGiU9T0B+hBGOiaCaC6JoSIgElnlHOxPfA5sLM+4CLlQpu+i0wU
-VO0eirl8MV9LKWMm2uE/7foqwqeOB0B6zVM0ys14H0f5AH1B8ywtuLUyIuhhQmp9
-++27V1OfHmIJC1WbvETdh8zKv9JxVTgj3lIvjYuZvpz9V8zj8MRJJpYJoPNHGl12
-6RLnQbIFybvgsYS+uIavmrmDtaCX5MVCrIwtY5IYNGGmQw8sl0XV/3THkcjnGxli
-M9toFiuBmtUxqUM5mNL7YhDBbJTxF8PIbILnck/4y4mk3lE2OEiJ4eb6HveaKAN3
-42voAR33Dy90Ap1XD7tSL4SczpxpXLmMfqYnvcG5mxaGBNJp8r8lFbP9uEKYhTwm
-wynqnAm3bo5SDhDLcCCCyGWCft0Hak9gkRUvnu1KKTRn8XoOtgD3r11hYbjX/D5C
-sf/hcrebV4+5gqt+ebFmHCDbGX16mfp/JBLv6mGKU/Li5W7LnzysvqLdxakZtoat
-rdYeS2SHGcRR9XSBO1png8NEf/k+uXm7BIj/15eqYlwfAy/x0H77rV5YiIip5JvS
-dZ+Q7UWY+9C6qEaMvl6Q
-=o4UW
------END PGP SIGNATURE-----
-
---eq6tdwfjohbgqyva--
+Regards,
+PrasannaKumar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
