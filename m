@@ -1,79 +1,98 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 06/13] drm/sun4i: hdmi: Allow using second PLL as TMDS clk
- parent
-Date: Tue, 26 Sep 2017 14:59:12 +0800
-Message-ID: <20170926065919.24446-7-wens@csie.org>
+Subject: [PATCH v2 04/13] drm/sun4i: hdmi: Disable clks in bind function error path and unbind function
+Date: Tue, 26 Sep 2017 14:59:10 +0800
+Message-ID: <20170926065919.24446-5-wens@csie.org>
 References: <20170926065919.24446-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <20170926065919.24446-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-clk-owner@vger.kernel.org
 To: Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-QWxsd2lubmVyIFNvQ3MgdHlwaWNhbGx5IGhhdmUgdHdvIFBMTHMgcmVzZXJ2ZWQgZm9yIHZpZGVv
-IHJlbGF0ZWQgdXNhZ2UuCkF0IHRoZSBtb21lbnQgd2Ugb25seSBzdXBwb3J0IHVzaW5nIHRoZSBm
-aXJzdCBvbmUgdG8gZmVlZCB0aGUgSERNSQp0cmFuc21pdHRlciBibG9jaydzIFRNRFMgY2xvY2su
-CgpMZXQgdGhlIEhETUkgZW5jb2RlcidzIFRNRFMgY2xvY2sgZ28gdGhyb3VnaCBhbGwgb2YgaXRz
-IHBhcmVudHMgd2hlbgpjYWxjdWxhdGluZyBwb3NzaWJsZSBjbG9jayByYXRlcy4gVGhpcyBhbGxv
-d3MgdXNhZ2Ugb2YgdGhlIHNlY29uZCB2aWRlbwpQTEwgYXMgaXRzIHBhcmVudC4KCk5vdGUgdGhh
-dCB0aGlzIGRvZXMgbm90IGhhbmRsZSBjb25mbGljdGluZyBwaXhlbCBjbG9ja3MuIEl0IGlzIGVu
-dGlyZWx5CnBvc3NpYmxlIHRvIGhhdmUgYW4gTENEIHBhbmVsIHVzZSBvbmUgcGl4ZWwgY2xvY2sg
-cmF0ZSwgb25seSB0byBiZQpvdmVycmlkZGVuIGJ5IHRoZSBIRE1JIHRyYW5zbWl0dGVyJ3MgY2xv
-Y2sgcmF0ZSByZXF1ZXN0IHdoZW4gdGhlIHNlY29uZApkaXNwbGF5IHBpcGVsaW5lIGlzIGVuYWJs
-ZWQuCgpUaGlzIHNob3VsZCBiZSBoYW5kbGVkIGJ5IGhhdmluZyBhbGwgdGhlIGNsb2NrIGRyaXZl
-cnMgaG9ub3IgY2xvY2sgcmF0ZQpyYW5nZXMsIGFuZCBoYXZlIHRoZSBjb25zdW1lcnMgdXNlIGNs
-a19zZXRfcmF0ZV9taW4vY2xrX3NldF9yYXRlX21heC4KClNpZ25lZC1vZmYtYnk6IENoZW4tWXUg
-VHNhaSA8d2Vuc0Bjc2llLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfaGRt
-aV90bWRzX2Nsay5jIHwgNTMgKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0KIDEgZmlsZSBj
-aGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAyNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfaGRtaV90bWRzX2Nsay5jIGIvZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX2hkbWlfdG1kc19jbGsuYwppbmRleCA1Y2YyNTI3YmZmYzguLmU4ZDRj
-MzExYjgwZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2hkbWlfdG1k
-c19jbGsuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfaGRtaV90bWRzX2Nsay5j
-CkBAIC02NywxMSArNjcsMTEgQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgc3VuNGlfdG1kc19jYWxj
-X2RpdmlkZXIodW5zaWduZWQgbG9uZyByYXRlLAogc3RhdGljIGludCBzdW40aV90bWRzX2RldGVy
-bWluZV9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LAogCQkJCSAgICAgc3RydWN0IGNsa19yYXRlX3Jl
-cXVlc3QgKnJlcSkKIHsKLQlzdHJ1Y3QgY2xrX2h3ICpwYXJlbnQ7CisJc3RydWN0IGNsa19odyAq
-cGFyZW50ID0gTlVMTDsKIAl1bnNpZ25lZCBsb25nIGJlc3RfcGFyZW50ID0gMDsKIAl1bnNpZ25l
-ZCBsb25nIHJhdGUgPSByZXEtPnJhdGU7CiAJaW50IGJlc3RfZGl2ID0gMSwgYmVzdF9oYWxmID0g
-MTsKLQlpbnQgaSwgajsKKwlpbnQgaSwgaiwgcDsKIAogCS8qCiAJICogV2Ugb25seSBjb25zaWRl
-ciBQTEwzLCBzaW5jZSB0aGUgVENPTiBpcyB2ZXJ5IGxpa2VseSB0byBiZQpAQCAtNzksMzIgKzc5
-LDM3IEBAIHN0YXRpYyBpbnQgc3VuNGlfdG1kc19kZXRlcm1pbmVfcmF0ZShzdHJ1Y3QgY2xrX2h3
-ICpodywKIAkgKiBjbG9jaywgc28gd2Ugc2hvdWxkIG5vdCBuZWVkIHRvIGRvIGFueXRoaW5nLgog
-CSAqLwogCi0JcGFyZW50ID0gY2xrX2h3X2dldF9wYXJlbnRfYnlfaW5kZXgoaHcsIDApOwotCWlm
-ICghcGFyZW50KQotCQlyZXR1cm4gLUVJTlZBTDsKLQotCWZvciAoaSA9IDE7IGkgPCAzOyBpKysp
-IHsKLQkJZm9yIChqID0gMTsgaiA8IDE2OyBqKyspIHsKLQkJCXVuc2lnbmVkIGxvbmcgaWRlYWwg
-PSByYXRlICogaSAqIGo7Ci0JCQl1bnNpZ25lZCBsb25nIHJvdW5kZWQ7Ci0KLQkJCXJvdW5kZWQg
-PSBjbGtfaHdfcm91bmRfcmF0ZShwYXJlbnQsIGlkZWFsKTsKLQotCQkJaWYgKHJvdW5kZWQgPT0g
-aWRlYWwpIHsKLQkJCQliZXN0X3BhcmVudCA9IHJvdW5kZWQ7Ci0JCQkJYmVzdF9oYWxmID0gaTsK
-LQkJCQliZXN0X2RpdiA9IGo7Ci0JCQkJZ290byBvdXQ7Ci0JCQl9Ci0KLQkJCWlmIChhYnMocmF0
-ZSAtIHJvdW5kZWQgLyBpKSA8Ci0JCQkgICAgYWJzKHJhdGUgLSBiZXN0X3BhcmVudCAvIGJlc3Rf
-ZGl2KSkgewotCQkJCWJlc3RfcGFyZW50ID0gcm91bmRlZDsKLQkJCQliZXN0X2RpdiA9IGk7CisJ
-Zm9yIChwID0gMDsgcCA8IGNsa19od19nZXRfbnVtX3BhcmVudHMoaHcpOyBwKyspIHsKKwkJcGFy
-ZW50ID0gY2xrX2h3X2dldF9wYXJlbnRfYnlfaW5kZXgoaHcsIHApOworCQlpZiAoIXBhcmVudCkK
-KwkJCWNvbnRpbnVlOworCisJCWZvciAoaSA9IDE7IGkgPCAzOyBpKyspIHsKKwkJCWZvciAoaiA9
-IDE7IGogPCAxNjsgaisrKSB7CisJCQkJdW5zaWduZWQgbG9uZyBpZGVhbCA9IHJhdGUgKiBpICog
-ajsKKwkJCQl1bnNpZ25lZCBsb25nIHJvdW5kZWQ7CisKKwkJCQlyb3VuZGVkID0gY2xrX2h3X3Jv
-dW5kX3JhdGUocGFyZW50LCBpZGVhbCk7CisKKwkJCQlpZiAocm91bmRlZCA9PSBpZGVhbCkgewor
-CQkJCQliZXN0X3BhcmVudCA9IHJvdW5kZWQ7CisJCQkJCWJlc3RfaGFsZiA9IGk7CisJCQkJCWJl
-c3RfZGl2ID0gajsKKwkJCQkJZ290byBvdXQ7CisJCQkJfQorCisJCQkJaWYgKGFicyhyYXRlIC0g
-cm91bmRlZCAvIGkpIDwKKwkJCQkgICAgYWJzKHJhdGUgLSBiZXN0X3BhcmVudCAvIGJlc3RfZGl2
-KSkgeworCQkJCQliZXN0X3BhcmVudCA9IHJvdW5kZWQ7CisJCQkJCWJlc3RfZGl2ID0gaTsKKwkJ
-CQl9CiAJCQl9CiAJCX0KIAl9CiAKKwlpZiAoIXBhcmVudCkKKwkJcmV0dXJuIC1FSU5WQUw7CisK
-IG91dDoKIAlyZXEtPnJhdGUgPSBiZXN0X3BhcmVudCAvIGJlc3RfaGFsZiAvIGJlc3RfZGl2Owog
-CXJlcS0+YmVzdF9wYXJlbnRfcmF0ZSA9IGJlc3RfcGFyZW50OwotLSAKMi4xNC4xCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The HDMI driver enables the bus and mod clocks in the bind function, but
+does not disable them if it then bails our due to any errors. Neither
+does it disable the clocks in the unbind function.
+
+Fix this by adding a proper error path to the bind function, and
+clk_disable_unprepare calls to the unbind function.
+
+Also rename the err_cleanup_connector label to err_cleanup_encoder,
+since it is the encoder that gets cleaned up.
+
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 9ea6cd5a1370..3cf1a6932fac 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -302,26 +302,29 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	hdmi->mod_clk = devm_clk_get(dev, "mod");
+ 	if (IS_ERR(hdmi->mod_clk)) {
+ 		dev_err(dev, "Couldn't get the HDMI mod clock\n");
+-		return PTR_ERR(hdmi->mod_clk);
++		ret = PTR_ERR(hdmi->mod_clk);
++		goto err_disable_bus_clk;
+ 	}
+ 	clk_prepare_enable(hdmi->mod_clk);
+ 
+ 	hdmi->pll0_clk = devm_clk_get(dev, "pll-0");
+ 	if (IS_ERR(hdmi->pll0_clk)) {
+ 		dev_err(dev, "Couldn't get the HDMI PLL 0 clock\n");
+-		return PTR_ERR(hdmi->pll0_clk);
++		ret = PTR_ERR(hdmi->pll0_clk);
++		goto err_disable_mod_clk;
+ 	}
+ 
+ 	hdmi->pll1_clk = devm_clk_get(dev, "pll-1");
+ 	if (IS_ERR(hdmi->pll1_clk)) {
+ 		dev_err(dev, "Couldn't get the HDMI PLL 1 clock\n");
+-		return PTR_ERR(hdmi->pll1_clk);
++		ret = PTR_ERR(hdmi->pll1_clk);
++		goto err_disable_mod_clk;
+ 	}
+ 
+ 	ret = sun4i_tmds_create(hdmi);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't create the TMDS clock\n");
+-		return ret;
++		goto err_disable_mod_clk;
+ 	}
+ 
+ 	writel(SUN4I_HDMI_CTRL_ENABLE, hdmi->base + SUN4I_HDMI_CTRL_REG);
+@@ -362,7 +365,7 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	ret = sun4i_hdmi_i2c_create(dev, hdmi);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't create the HDMI I2C adapter\n");
+-		return ret;
++		goto err_disable_mod_clk;
+ 	}
+ 
+ 	drm_encoder_helper_add(&hdmi->encoder,
+@@ -422,6 +425,10 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	drm_encoder_cleanup(&hdmi->encoder);
+ err_del_i2c_adapter:
+ 	i2c_del_adapter(hdmi->i2c);
++err_disable_mod_clk:
++	clk_disable_unprepare(hdmi->mod_clk);
++err_disable_bus_clk:
++	clk_disable_unprepare(hdmi->bus_clk);
+ 	return ret;
+ }
+ 
+@@ -434,6 +441,8 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
+ 	drm_connector_cleanup(&hdmi->connector);
+ 	drm_encoder_cleanup(&hdmi->encoder);
+ 	i2c_del_adapter(hdmi->i2c);
++	clk_disable_unprepare(hdmi->mod_clk);
++	clk_disable_unprepare(hdmi->bus_clk);
+ }
+ 
+ static const struct component_ops sun4i_hdmi_ops = {
+-- 
+2.14.1
+
