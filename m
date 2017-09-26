@@ -1,93 +1,89 @@
-From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] Input: add support for the Samsung S6SY761
- touchscreen
-Date: Tue, 26 Sep 2017 14:53:39 +0900
-Message-ID: <20170926055339.GC6393@gangnam>
-References: <CGME20170926010324epcas3p3ab00a816cff8082d2f093efa82a1037e@epcas3p3.samsung.com>
-        <201709260816.p8Srr1ks%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-disposition: inline
-In-reply-to: <201709260816.p8Srr1ks%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 1/2] watchdog: dw_wdt: add stop watchdog operation
+Date: Tue, 26 Sep 2017 08:11:22 +0200
+Message-ID: <20170926061123.29614-1-o.rempel@pengutronix.de>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ops, sorry,
+The only way of stopping the watchdog is by resetting it.
+Add the watchdog op for stopping the device and reset if
+a reset line is provided.
 
-this patch must have come from the wrong branch on my PC as this
-driver has also been tested as module :/
+At same time WDOG_HW_RUNNING should be remove from dw_wdt_start.
+As commented by Guenter Roeck:
+dw_wdt sets WDOG_HW_RUNNING in its open function. Result is
+that the kref_get() in watchdog_open() won't be executed. But then
+kref_put() in close will be called since the watchdog now does stop.
+This causes the imbalance.
 
-Sorry,
-I will send the patch v4 with this fix.
+Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
 
-Andi
+changes v4:
+ - remove WDOG_HW_RUNNING from dw_wdt_start.
 
-On Tue, Sep 26, 2017 at 09:02:41AM +0800, kbuild test robot wrote:
-> Hi Andi,
-> 
-> [auto build test ERROR on input/next]
-> [also build test ERROR on v4.14-rc2 next-20170922]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Andi-Shyti/Input-add-support-for-the-Samsung-S6SY761-touchscreen/20170926-080648
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-> config: ia64-allmodconfig (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 6.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=ia64 
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/input/touchscreen/s6sy761.c:19:0:
-> >> drivers/input/touchscreen/s6sy761.c:539:26: error: 'stmfts_id' undeclared here (not in a function)
->     MODULE_DEVICE_TABLE(i2c, stmfts_id);
->                              ^
->    include/linux/module.h:212:21: note: in definition of macro 'MODULE_DEVICE_TABLE'
->     extern const typeof(name) __mod_##type##__##name##_device_table  \
->                         ^~~~
-> >> include/linux/module.h:212:27: error: '__mod_i2c__stmfts_id_device_table' aliased to undefined symbol 'stmfts_id'
->     extern const typeof(name) __mod_##type##__##name##_device_table  \
->                               ^
-> >> drivers/input/touchscreen/s6sy761.c:539:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
->     MODULE_DEVICE_TABLE(i2c, stmfts_id);
->     ^~~~~~~~~~~~~~~~~~~
-> --
->    In file included from drivers/input//touchscreen/s6sy761.c:19:0:
->    drivers/input//touchscreen/s6sy761.c:539:26: error: 'stmfts_id' undeclared here (not in a function)
->     MODULE_DEVICE_TABLE(i2c, stmfts_id);
->                              ^
->    include/linux/module.h:212:21: note: in definition of macro 'MODULE_DEVICE_TABLE'
->     extern const typeof(name) __mod_##type##__##name##_device_table  \
->                         ^~~~
-> >> include/linux/module.h:212:27: error: '__mod_i2c__stmfts_id_device_table' aliased to undefined symbol 'stmfts_id'
->     extern const typeof(name) __mod_##type##__##name##_device_table  \
->                               ^
->    drivers/input//touchscreen/s6sy761.c:539:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
->     MODULE_DEVICE_TABLE(i2c, stmfts_id);
->     ^~~~~~~~~~~~~~~~~~~
-> 
-> vim +/stmfts_id +539 drivers/input/touchscreen/s6sy761.c
-> 
->    534	
->    535	static const struct i2c_device_id s6sy761_id[] = {
->    536		{ "s6sy761", 0 },
->    537		{ },
->    538	};
->  > 539	MODULE_DEVICE_TABLE(i2c, stmfts_id);
->    540	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+changes v3:
+ - don't return error if rst is not present and set WDOG_HW_RUNNING bit
+   to notify watchdog core.
 
+changes v2:
+ - test if dw_wdt->rst is NULL instead of IS_ERR
+
+ drivers/watchdog/dw_wdt.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index 36be987ff9ef..c2f4ff516230 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -127,14 +127,27 @@ static int dw_wdt_start(struct watchdog_device *wdd)
+ 
+ 	dw_wdt_set_timeout(wdd, wdd->timeout);
+ 
+-	set_bit(WDOG_HW_RUNNING, &wdd->status);
+-
+ 	writel(WDOG_CONTROL_REG_WDT_EN_MASK,
+ 	       dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+ 
+ 	return 0;
+ }
+ 
++static int dw_wdt_stop(struct watchdog_device *wdd)
++{
++	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
++
++	if (!dw_wdt->rst) {
++		set_bit(WDOG_HW_RUNNING, &wdd->status);
++		return 0;
++	}
++
++	reset_control_assert(dw_wdt->rst);
++	reset_control_deassert(dw_wdt->rst);
++
++	return 0;
++}
++
+ static int dw_wdt_restart(struct watchdog_device *wdd,
+ 			  unsigned long action, void *data)
+ {
+@@ -173,6 +186,7 @@ static const struct watchdog_info dw_wdt_ident = {
+ static const struct watchdog_ops dw_wdt_ops = {
+ 	.owner		= THIS_MODULE,
+ 	.start		= dw_wdt_start,
++	.stop		= dw_wdt_stop,
+ 	.ping		= dw_wdt_ping,
+ 	.set_timeout	= dw_wdt_set_timeout,
+ 	.get_timeleft	= dw_wdt_get_timeleft,
+-- 
+2.11.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
