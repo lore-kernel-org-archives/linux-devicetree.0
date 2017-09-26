@@ -1,82 +1,177 @@
-From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 02/12] usb: typec: add basic typec properties
-Date: Tue, 26 Sep 2017 11:23:00 +0300
-Message-ID: <20170926082300.GC14296@kuha.fi.intel.com>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-3-git-send-email-jun.li@nxp.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v14 22/28] v4l: async: Add a convenience function for
+ registering sensors
+Date: Tue, 26 Sep 2017 10:24:20 +0200
+Message-ID: <f82b3fc9-4250-197c-9bfe-d8a712901362@xs4all.nl>
+References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+ <20170925222540.371-23-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1506386727-16370-3-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170925222540.371-23-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 08:45:17AM +0800, Li Jun wrote:
-> port-type is required for any typec port; default-role is only required
-> for drp; power source capable needs src-pdos; power sink capable needs
-> snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
+On 26/09/17 00:25, Sakari Ailus wrote:
+> Add a convenience function for parsing firmware for information on related
+> devices using v4l2_async_notifier_parse_fwnode_sensor_common() registering
+> the notifier and finally the async sub-device itself.
 > 
-> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> This should be useful for sensor drivers that do not have device specific
+> requirements related to firmware information parsing or the async
+> framework.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+Nice, makes sense.
+
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+
+Regards,
+
+	Hans
+
 > ---
->  Documentation/devicetree/bindings/usb/typec.txt | 46 +++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
+>  drivers/media/v4l2-core/v4l2-async.c  |  5 +++++
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 41 +++++++++++++++++++++++++++++++++++
+>  include/media/v4l2-async.h            | 22 +++++++++++++++++++
+>  include/media/v4l2-subdev.h           |  3 +++
+>  4 files changed, 71 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/typec.txt b/Documentation/devicetree/bindings/usb/typec.txt
-> new file mode 100644
-> index 0000000..36d4467
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/typec.txt
-> @@ -0,0 +1,46 @@
-> +Generic typec and power delivery properties
-> +-------------------------------------------
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index fe383c5d1215..f2c82f5a9747 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -580,6 +580,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
+>  {
+>  	struct v4l2_async_notifier *notifier = sd->notifier;
+>  
+> +	if (sd->subdev_notifier)
+> +		v4l2_async_notifier_unregister(sd->subdev_notifier);
+> +	v4l2_async_notifier_cleanup(sd->subdev_notifier);
+> +	kfree(sd->subdev_notifier);
 > +
-> +Required properties:
-> +- port-type:    should be one of "source", "sink" or "dual".
-> +- default-role: preferred power role if drp, should be "sink" or "source".
-> +- src-pdos:     An array of u32 with each entry providing supported power
-> +                source data object(PDO), the detailed bit definitions of
-> +                PDO can be found in "Universal Serial Bus Power Delivery
-> +                Specification" chapter 6.4.1.2 Source_Capabilities Message,
-> +                the order of each entry(PDO) should follow the PD spec chapter
-> +                6.4.1. Required only for power source and power dual role with
-> +                power delivery support.
-> +- snk-pdos:     An array of u32 with each entry providing supported power
-> +                sink data object(PDO), the detailed bit definitions of PDO
-> +                can be found in "Universal Serial Bus Power Delivery
-> +                Specification" chapter 6.4.1.3 Sink Capabilities Message,
-> +                the order of each entry(PDO) should follow the PD spec chapter
-> +                6.4.1. Required only for power sink and power dual role with
-> +                power delivery support.
+>  	if (!sd->asd) {
+>  		if (!list_empty(&sd->async_list))
+>  			v4l2_async_cleanup(sd);
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index 4976096a1d83..622bdcc2df2d 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -29,6 +29,7 @@
+>  
+>  #include <media/v4l2-async.h>
+>  #include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-subdev.h>
+>  
+>  enum v4l2_fwnode_bus_type {
+>  	V4L2_FWNODE_BUS_TYPE_GUESS = 0,
+> @@ -814,6 +815,46 @@ int v4l2_async_notifier_parse_fwnode_sensor_common(
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_sensor_common);
+>  
+> +int v4l2_async_register_subdev_sensor_common(struct v4l2_subdev *sd)
+> +{
+> +	struct v4l2_async_notifier *notifier;
+> +	int ret;
+> +
+> +	if (WARN_ON(!sd->dev))
+> +		return -ENODEV;
+> +
+> +	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
+> +	if (!notifier)
+> +		return -ENOMEM;
+> +
+> +	ret = v4l2_async_notifier_parse_fwnode_sensor_common(sd->dev,
+> +							     notifier);
+> +	if (ret < 0)
+> +		goto out_cleanup;
+> +
+> +	ret = v4l2_async_subdev_notifier_register(sd, notifier);
+> +	if (ret < 0)
+> +		goto out_cleanup;
+> +
+> +	ret = v4l2_async_register_subdev(sd);
+> +	if (ret < 0)
+> +		goto out_unregister;
+> +
+> +	sd->subdev_notifier = notifier;
+> +
+> +	return 0;
+> +
+> +out_unregister:
+> +	v4l2_async_notifier_unregister(notifier);
+> +
+> +out_cleanup:
+> +	v4l2_async_notifier_cleanup(notifier);
+> +	kfree(notifier);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_async_register_subdev_sensor_common);
+> +
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> index 479c317fab2f..74f2ea27d117 100644
+> --- a/include/media/v4l2-async.h
+> +++ b/include/media/v4l2-async.h
+> @@ -173,6 +173,28 @@ void v4l2_async_notifier_cleanup(struct v4l2_async_notifier *notifier);
+>  int v4l2_async_register_subdev(struct v4l2_subdev *sd);
+>  
+>  /**
+> + * v4l2_async_register_subdev_sensor_common - registers a sensor sub-device to
+> + *					      the asynchronous sub-device
+> + *					      framework and parse set up common
+> + *					      sensor related devices
+> + *
+> + * @sd: pointer to struct &v4l2_subdev
+> + *
+> + * This function is just like v4l2_async_register_subdev() with the exception
+> + * that calling it will also parse firmware interfaces for remote references
+> + * using v4l2_async_notifier_parse_fwnode_sensor_common() and registers the
+> + * async sub-devices. The sub-device is similarly unregistered by calling
+> + * v4l2_async_unregister_subdev().
+> + *
+> + * While registered, the subdev module is marked as in-use.
+> + *
+> + * An error is returned if the module is no longer loaded on any attempts
+> + * to register it.
+> + */
+> +int __must_check v4l2_async_register_subdev_sensor_common(
+> +	struct v4l2_subdev *sd);
+> +
+> +/**
+>   * v4l2_async_unregister_subdev - unregisters a sub-device to the asynchronous
+>   * 	subdevice framework
+>   *
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index e83872078376..ec399c770301 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -793,6 +793,8 @@ struct v4l2_subdev_platform_data {
+>   *	list.
+>   * @asd: Pointer to respective &struct v4l2_async_subdev.
+>   * @notifier: Pointer to the managing notifier.
+> + * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
+> + *		     device using v4l2_device_register_sensor_subdev().
+>   * @pdata: common part of subdevice platform data
+>   *
+>   * Each instance of a subdev driver should create this struct, either
+> @@ -823,6 +825,7 @@ struct v4l2_subdev {
+>  	struct list_head async_list;
+>  	struct v4l2_async_subdev *asd;
+>  	struct v4l2_async_notifier *notifier;
+> +	struct v4l2_async_notifier *subdev_notifier;
+>  	struct v4l2_subdev_platform_data *pdata;
+>  };
+>  
+> 
 
-Wouldn't it be better to supply a property per detail and let the
-drivers construct the pdos as needed?
-
-> +- max-snk-mv:   The max voltage the sink can support in millivoltage, required
-> +                only for power sink and power dual role with power delivery
-> +                support.
-> +- max-snk-ma:   The max current the sink can support in milliampere, required
-> +                only for power sink and power dual role with power delivery
-> +                support.
-> +- op-snk-mw:    Sink required operating power in milliwatts, if source offered
-> +                power is less then it, Capability Mismatch is set, required
-> +                only for power sink and power dual role with power delivery
-> +                support.
-
-I'm a little bit concerned about these. Has any OF/DT guys reviewed
-them?
-
-We should also keep in mind that the same properties should also be
-possible to use with ACPI. That may not be a problem as such, but we
-should consult the ACPI guys as well.
-
-
-Thanks,
-
--- 
-heikki
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
