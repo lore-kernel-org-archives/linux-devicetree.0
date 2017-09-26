@@ -1,36 +1,105 @@
-From: <dunaev-tpH+T49V+f0@public.gmane.org>
-Subject: [PATCH] Add Tecon Microprocessor Technologies, LLC vendor prefix
-Date: Tue, 26 Sep 2017 17:49:37 +0300
-Message-ID: <1506437379-20012-1-git-send-email-dunaev@tecon.ru>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 05/10] clk: bcm: Add Broadcom Hurricane 2 clock support
+Date: Tue, 26 Sep 2017 10:58:40 -0400
+Message-ID: <CAC3K-4rdV=z1TBtBmw9ngP4rNyvtTgtss23vaY3ZjbTgf8aycA@mail.gmail.com>
+References: <20170926000931.670-1-f.fainelli@gmail.com> <20170926000931.670-6-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170926000931.670-6-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dunaev-tpH+T49V+f0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Dunaev <dunaev-tpH+T49V+f0@public.gmane.org>
+On Mon, Sep 25, 2017 at 8:09 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add support for the Broadcom Hurricane 2 SoC clock controller. We can
+> re-use the existing iProc clock library since the SoC's architecture is
+> largely the same as its predecessors.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/clk/bcm/Kconfig   |  9 +++++++++
+>  drivers/clk/bcm/Makefile  |  1 +
+>  drivers/clk/bcm/clk-hr2.c | 27 +++++++++++++++++++++++++++
+>  3 files changed, 37 insertions(+)
+>  create mode 100644 drivers/clk/bcm/clk-hr2.c
+>
+> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+> index 1d9187df167b..4c4bd85f707c 100644
+> --- a/drivers/clk/bcm/Kconfig
+> +++ b/drivers/clk/bcm/Kconfig
+> @@ -30,6 +30,15 @@ config CLK_BCM_CYGNUS
+>         help
+>           Enable common clock framework support for the Broadcom Cygnus SoC
+>
+> +config CLK_BCM_HR2
+> +       bool "Broadcom Hurricane 2 clock support"
+> +       depends on ARCH_BCM_HR2 || COMPILE_TEST
+> +       select COMMON_CLK_IPROC
+> +       default ARCH_BCM_HR2
+> +       help
+> +         Enable common clock framework support for the Broadcom Hurricane 2
+> +         SoC
+> +
+>  config CLK_BCM_NSP
+>         bool "Broadcom Northstar/Northstar Plus clock support"
+>         depends on ARCH_BCM_5301X || ARCH_BCM_NSP || COMPILE_TEST
+> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+> index a0c14fa4aa1e..755144195541 100644
+> --- a/drivers/clk/bcm/Makefile
+> +++ b/drivers/clk/bcm/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_BCM2835)      += clk-bcm2835.o
+>  obj-$(CONFIG_ARCH_BCM2835)     += clk-bcm2835-aux.o
+>  obj-$(CONFIG_ARCH_BCM_53573)   += clk-bcm53573-ilp.o
+>  obj-$(CONFIG_CLK_BCM_CYGNUS)   += clk-cygnus.o
+> +obj-$(CONFIG_CLK_BCM_HR2)      += clk-hr2.o
+>  obj-$(CONFIG_CLK_BCM_NSP)      += clk-nsp.o
+>  obj-$(CONFIG_CLK_BCM_NS2)      += clk-ns2.o
+>  obj-$(CONFIG_CLK_BCM_SR)       += clk-sr.o
+> diff --git a/drivers/clk/bcm/clk-hr2.c b/drivers/clk/bcm/clk-hr2.c
+> new file mode 100644
+> index 000000000000..f7c5b7379475
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-hr2.c
+> @@ -0,0 +1,27 @@
+> +/*
+> + * Copyright (C) 2017 Broadcom
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +
+> +#include "clk-iproc.h"
+> +
+> +static void __init hr2_armpll_init(struct device_node *node)
+> +{
+> +       iproc_armpll_setup(node);
+> +}
+> +CLK_OF_DECLARE(hr2_armpll, "brcm,hr2-armpll", hr2_armpll_init);
+> --
+> 2.14.1
 
-Signed-off-by: Dmitry Dunaev <dunaev-tpH+T49V+f0@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Per our offline conversation, the LCPLL in HR2 looks to be completely
+different than anything on NS/NSP/NS2 product line.  So, that will
+need a new driver.  Given that this is sufficient to get the HR2 board
+working, then it is acceptable to me.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1afd298..1c38900 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -338,6 +338,7 @@ thine	THine Electronics, Inc.
- ti	Texas Instruments
- tianma	Tianma Micro-electronics Co., Ltd.
- tlm	Trusted Logic Mobility
-+tmt	Tecon Microprocessor Technologies, LLC.
- topeet  Topeet
- toradex	Toradex AG
- toshiba	Toshiba Corporation
--- 
-2.7.4
-
+Thanks,
+Jon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
