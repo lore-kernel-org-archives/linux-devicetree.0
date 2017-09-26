@@ -1,112 +1,101 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 10/12] staging: typec: tcpci: update set_cc for different
- state
-Date: Tue, 26 Sep 2017 06:49:30 -0700
-Message-ID: <8ef676a1-4c2b-cea7-ad79-c50fb8d091fb@roeck-us.net>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-11-git-send-email-jun.li@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 08/10] ARM: dts: add dtsi for AXP813 PMIC
+Date: Tue, 26 Sep 2017 21:53:12 +0800
+Message-ID: <CAGb2v674xOzsn5+ixZuz8-i4_FfKQ7XF9kNBX+1WPVnASJbqqA@mail.gmail.com>
+References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <d0d72d485596fa2b6bb0000c67132c97374798ce.1506428208.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506386727-16370-11-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <d0d72d485596fa2b6bb0000c67132c97374798ce.1506428208.git-series.quentin.schulz@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2017 05:45 PM, Li Jun wrote:
-> As we should keep the disconnected cc line to be open when attached,
-> so update the set_cc interface accordingly for it.
-> 
-> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+On Tue, Sep 26, 2017 at 8:17 PM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> From: Maxime Ripard <maxime.ripard@free-electrons.com>
+>
+> The AXP813 PMIC is used with some Allwinner SoCs. Create a dtsi to
+> include in each board embedding it.
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 > ---
->   drivers/staging/typec/tcpci.c | 37 +++++++++++++++++++++----------------
->   1 file changed, 21 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-> index cea67f9..c7c45da 100644
-> --- a/drivers/staging/typec/tcpci.c
-> +++ b/drivers/staging/typec/tcpci.c
-> @@ -57,10 +57,11 @@ static int tcpci_write16(struct tcpci *tcpci, unsigned int reg, u16 val)
->   	return regmap_raw_write(tcpci->regmap, reg, &val, sizeof(u16));
->   }
->   
-> -static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
-> +static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc,
-> +			bool attached, enum typec_cc_polarity polarity)
->   {
->   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> -	unsigned int reg;
-> +	unsigned int reg = 0, reg_cc1 = 0, reg_cc2 = 0;
->   	int ret;
->   
->   	switch (cc) {
-> @@ -69,26 +70,23 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
->   			(TCPC_ROLE_CTRL_CC_RA << TCPC_ROLE_CTRL_CC2_SHIFT);
->   		break;
->   	case TYPEC_CC_RD:
-> -		reg = (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT) |
-> -			(TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT);
-> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT;
-> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT;
->   		break;
->   	case TYPEC_CC_RP_DEF:
-> -		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
-> -			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
-> -			(TCPC_ROLE_CTRL_RP_VAL_DEF <<
-> -			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
-> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
-> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
-> +		reg = TCPC_ROLE_CTRL_RP_VAL_DEF << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
->   		break;
->   	case TYPEC_CC_RP_1_5:
-> -		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
-> -			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
-> -			(TCPC_ROLE_CTRL_RP_VAL_1_5 <<
-> -			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
-> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
-> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
-> +		reg = TCPC_ROLE_CTRL_RP_VAL_1_5 << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
->   		break;
->   	case TYPEC_CC_RP_3_0:
-> -		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
-> -			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
-> -			(TCPC_ROLE_CTRL_RP_VAL_3_0 <<
-> -			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
-> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
-> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
-> +		reg = TCPC_ROLE_CTRL_RP_VAL_3_0 << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
->   		break;
->   	case TYPEC_CC_OPEN:
->   	default:
-> @@ -97,6 +95,13 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
->   		break;
->   	}
->   
-> +	if (!attached)
-> +		reg |= reg_cc1 | reg_cc2;
-> +	else if (polarity == TYPEC_POLARITY_CC1)
-> +		reg |= reg_cc1;
-> +	else
-> +		reg |= reg_cc2;
+>  arch/arm/boot/dts/axp813.dtsi | 58 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/axp813.dtsi
+>
+> diff --git a/arch/arm/boot/dts/axp813.dtsi b/arch/arm/boot/dts/axp813.dtsi
+> new file mode 100644
+> index 0000000..e7f95e8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/axp813.dtsi
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Copyright 2017 Free Electrons
+> + *
+> + * Quentin Schulz <quentin.schulz@free-electrons.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
+> +/*
+> + * AXP813 Integrated Power Management Chip
+> + */
+> +
+> +&axp813 {
 
-I think this is wrong. The value of CC pins should not depend on the state of
-the state machine. What if the state machine knows the polarity but is in a
-transient state ?.
+I'd like to name the label axp81x instead. And possibly the filename as well.
 
-I am also not sure if the chip should ever set both CC lines at the same time.
+See https://github.com/wens/linux/commit/05b9ca82c795816f7f2569ce96dc35b62487f89c
 
-Guenter
+ChenYu
 
->   	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
->   	if (ret < 0)
->   		return ret;
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       interrupt-controller;
+> +       #interrupt-cells = <1>;
+> +
+> +       axp_pctl: axp_pctl {
+> +               compatible = "x-powers,axp813-pctl";
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +       };
+> +};
+> --
+> git-series 0.9.1
