@@ -1,235 +1,287 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] of: configure DMA for host1x devices
-Date: Tue, 26 Sep 2017 13:27:03 +0200
-Message-ID: <20170926112703.GE23108@ulmo>
-References: <20170924090454.28116-1-mperttunen@nvidia.com>
- <20170924090454.28116-2-mperttunen@nvidia.com>
- <20170925074448.GB12494@ulmo.fritz.box>
- <dd8e9524-1d91-2c8b-a753-086d3ad9f9c9@arm.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain
+ device / integer references
+Date: Tue, 26 Sep 2017 14:30:30 +0300
+Message-ID: <20170926113029.eh5i4sp6we6lvgow@paasikivi.fi.intel.com>
+References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+ <20170925222540.371-21-sakari.ailus@linux.intel.com>
+ <fbd2f71d-aa6d-08ef-1723-132864bde27b@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/2994txjAzEdQwm5"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <dd8e9524-1d91-2c8b-a753-086d3ad9f9c9-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+In-Reply-To: <fbd2f71d-aa6d-08ef-1723-132864bde27b-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
 
---/2994txjAzEdQwm5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review.
 
-On Mon, Sep 25, 2017 at 01:26:46PM +0100, Robin Murphy wrote:
-> On 25/09/17 08:44, Thierry Reding wrote:
-> > On Sun, Sep 24, 2017 at 12:04:54PM +0300, Mikko Perttunen wrote:
-> >> Devices in the host1x bus rely on the old behavior of of_dma_configure
-> >> to set up DMA ops. Add a check for them into of_dma_configure.
-> >>
-> >> We must do the check using a string comparison instead of using
-> >> pointers since the host1x bus can be compiled into a module.
-> >>
-> >> Fixes: 723288836628 ("of: restrict DMA configuration")
-> >> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> ---
-> >>  drivers/of/device.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> >> index 64b710265d39..12368418cd33 100644
-> >> --- a/drivers/of/device.c
-> >> +++ b/drivers/of/device.c
-> >> @@ -104,6 +104,9 @@ int of_dma_configure(struct device *dev, struct de=
-vice_node *np)
-> >>  		if (!dev_is_pci(dev) &&
-> >>  #ifdef CONFIG_ARM_AMBA
-> >>  		    dev->bus !=3D &amba_bustype &&
-> >> +#endif
-> >> +#if IS_ENABLED(CONFIG_TEGRA_HOST1X)
-> >> +		    !(dev->bus && !strcmp("host1x", dev->bus->name)) &&
-> >>  #endif
-> >>  		    dev->bus !=3D &platform_bus_type)
-> >>  			return ret =3D=3D -ENODEV ? 0 : ret;
-> >=20
-> > Maybe a slightly better solution would be to add a dev_is_host1x()
-> > function that returns dev->bus =3D=3D &host1x_bus_type if TEGRA_HOST1X =
-is
-> > enabled and returns false otherwise. That way we can have a "proper"
-> > check for the bus type and avoid the #if in this file.
-> >=20
-> > It's slightly more complicated because of the dependencies between the
-> > DT and Tegra DRM trees, but I'm sure we can get Rob to either give his
-> > Acked-by on the drivers/of/device.c change or carry the Tegra DRM patch
-> > in the DT tree.
->=20
-> Alternatively (and modulo Greg's opinion, obviously) it would arguably be
-> neatest to handle this at a slightly lower level as below - I only really
-> considered this idea after writing the existing fix, but now that I have
-> actually written it up I do rather like it.
->=20
-> Robin.
->=20
-> ----->8-----
-> From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> Date: Mon, 25 Sep 2017 12:45:58 +0100
-> Subject: [PATCH] drivers: Flag buses which demand DMA configuration
->=20
-> We do not want the common dma_configure() pathway to apply
-> indiscriminately to all devices, since there are plenty of buses which
-> do not have DMA capability, and if their child devices were used for
-> DMA API calls it would only be indicative of a driver bug. However,
-> there are a number of buses for which DMA is implicitly expected even
-> when not described by firmware, so we currently whitelist those to
-> automatically opt in to dma_configure(), assuming a 1:1 mapping between
-> the DMA address space and the physical address space.
->=20
-> Commit 723288836628 ("of: restrict DMA configuration") introduced a
-> short-term fix by comparing explicit bus types, but this approach is far
-> from pretty, doesn't scale well, and fails to cope at all with bus
-> drivers which may be built as modules. Let's refine things by making
-> that opt-in a property of the bus type, which neatly addresses those
-> problems and lets the decision of whether firmware description of DMA
-> capability should be optional or mandatory stay internal to the bus
-> drivers themselves.
->=20
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/amba/bus.c       | 1 +
->  drivers/base/platform.c  | 1 +
->  drivers/gpu/host1x/bus.c | 1 +
->  drivers/of/device.c      | 8 +-------
->  drivers/pci/pci-driver.c | 1 +
->  include/linux/device.h   | 4 ++++
->  6 files changed, 9 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index e0f74ddc22b7..594c228d2f02 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -195,6 +195,7 @@ struct bus_type amba_bustype =3D {
->  	.match		=3D amba_match,
->  	.uevent		=3D amba_uevent,
->  	.pm		=3D &amba_pm,
-> +	.force_dma	=3D true,
->  };
-> =20
->  static int __init amba_init(void)
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index d1bd99271066..9c95c8db00f8 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -1142,6 +1142,7 @@ struct bus_type platform_bus_type =3D {
->  	.match		=3D platform_match,
->  	.uevent		=3D platform_uevent,
->  	.pm		=3D &platform_dev_pm_ops,
-> +	.force_dma	=3D true,
->  };
->  EXPORT_SYMBOL_GPL(platform_bus_type);
-> =20
-> diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
-> index f9cde03030fd..ed03b3243195 100644
-> --- a/drivers/gpu/host1x/bus.c
-> +++ b/drivers/gpu/host1x/bus.c
-> @@ -320,6 +320,7 @@ struct bus_type host1x_bus_type =3D {
->  	.name =3D "host1x",
->  	.match =3D host1x_device_match,
->  	.pm =3D &host1x_device_pm_ops,
-> +	.force_dma =3D true,
->  };
-> =20
->  static void __host1x_device_del(struct host1x_device *device)
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 64b710265d39..25bddf9c9fe1 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -9,9 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/slab.h>
-> -#include <linux/pci.h>
->  #include <linux/platform_device.h>
-> -#include <linux/amba/bus.h>
-> =20
->  #include <asm/errno.h>
->  #include "of_private.h"
-> @@ -101,11 +99,7 @@ int of_dma_configure(struct device *dev, struct devic=
-e_node *np)
->  		 * DMA configuration regardless of whether "dma-ranges" is
->  		 * correctly specified or not.
->  		 */
-> -		if (!dev_is_pci(dev) &&
-> -#ifdef CONFIG_ARM_AMBA
-> -		    dev->bus !=3D &amba_bustype &&
-> -#endif
-> -		    dev->bus !=3D &platform_bus_type)
-> +		if (!dev->bus->force_dma)
->  			return ret =3D=3D -ENODEV ? 0 : ret;
-> =20
->  		dma_addr =3D offset =3D 0;
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 11bd267fc137..38bdb97b6dc6 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -1466,6 +1466,7 @@ struct bus_type pci_bus_type =3D {
->  	.drv_groups	=3D pci_drv_groups,
->  	.pm		=3D PCI_PM_OPS_PTR,
->  	.num_vf		=3D pci_bus_num_vf,
-> +	.force_dma	=3D true,
->  };
->  EXPORT_SYMBOL(pci_bus_type);
-> =20
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index c6f27207dbe8..3a1efa56e7c4 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -97,6 +97,8 @@ extern void bus_remove_file(struct bus_type *, struct b=
-us_attribute *);
->   * @p:		The private data of the driver core, only the driver core can
->   *		touch this.
->   * @lock_key:	Lock class key for use by the lock validator
-> + * @force_dma:	Assume devices on this bus should be set up by dma_config=
-ure()
-> + * 		even if DMA capability is not explicitly described by firmware.
->   *
->   * A bus is a channel between the processor and one or more devices. For=
- the
->   * purposes of the device model, all devices are connected via a bus, ev=
-en if
-> @@ -135,6 +137,8 @@ struct bus_type {
-> =20
->  	struct subsys_private *p;
->  	struct lock_class_key lock_key;
-> +
-> +	bool force_dma;
+On Tue, Sep 26, 2017 at 10:47:40AM +0200, Hans Verkuil wrote:
+> On 26/09/17 00:25, Sakari Ailus wrote:
+> > v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+> > the device's own fwnode, it will follow child fwnodes with the given
+> > property-value pair and return the resulting fwnode.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 201 insertions(+)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > index f739dfd16cf7..f93049c361e4 100644
+> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > @@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
+> >  	return ret;
+> >  }
+> >  
+> > +/*
+> > + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
+> > + *					arguments
+> > + * @dev: struct device pointer
+> > + * @notifier: notifier for @dev
+> > + * @prop: the name of the property
+> > + * @index: the index of the reference to get
+> > + * @props: the array of integer property names
+> > + * @nprops: the number of integer property names in @nprops
+> > + *
+> > + * Find fwnodes referred to by a property @prop, then under that
+> > + * iteratively, @nprops times, follow each child node which has a
+> > + * property in @props array at a given child index the value of which
+> > + * matches the integer argument at an index.
+> 
+> "at an index". Still makes no sense to me. Which index?
 
-Maybe force_dma_setup to clarify that we're not trying to force DMA
-usage, but rather setup of DMA properties.
+How about this:
 
-Either way:
+First find an fwnode referred to by the reference at @index in @prop.
 
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Then under that fwnode, @nprops times, for each property in @props,
+iteratively follow child nodes starting from fwnode such that they have the
+property in @props array at the index of the child node distance from the
+root node and the value of that property matching with the integer argument of
+the reference, at the same index.
 
---/2994txjAzEdQwm5
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > + *
+> > + * For example, if this function was called with arguments and values
+> > + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
+> > + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
+> > + * it would return the node marked with THISONE. The @dev argument in
+> > + * the ASL below.
+> 
+> I know I asked for this before, but can you change the example to one where
+> nprops = 2? I think that will help understanding this.
 
------BEGIN PGP SIGNATURE-----
+I could do that but then the example no longer corresponds to any actual
+case that exists at the moment. LED nodes will use a single integer
+argument and lens-focus nodes none.
 
-iQIyBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnKOYcACgkQ3SOs138+
-s6EK+w/4yVGK8/eXKrzC8MmeacdSggzjbgSi/0GYEk6pL/p+HatKw2h/+6WwR89B
-jvj8X9mkMsJKtXDQq7KoLwLtABqIgLVjENoBkPlZzt7rN1Bl1c3i2dbcVJj5b+Rd
-ykJWZl/lRbN4MAKxtD3MGdA0781EXMBcLp4PfEfIFPIjRgGKm32GINocEz+L3aft
-FbmNmYj3F+JgAGDoPnb3RUrjF2FXm/l0/HFacCDW2FEvKPA4dhEYqpLsG3fT9UI3
-j0NBnud/xjKm1JOCm9m7r0hvD/3CcuBfsvpVJsjA0LYkhAFsya9F/FFurRD/wog0
-0PuUkcTrE6qckCRIlh8p0SlV81h+N42QXoVnWi42cO5NmJchEmSIHLCS7Hx/F12b
-eCwTdTIJcLXPXukw42tkh+ldVq1IMVZWiE7VTeVK5i5tQpEs8MgnxP4avabwFYEu
-znPuT74H5X0JuEPaYUfsROOQqy4OvxR7gAw3apJp0PbNDZ9ToqQi4b9WoJVh9qyX
-9UYCuG4/7Pgkt2+QAFdmvpZrVKEACp1TkKmtbqQLC/IChqp1FmPinuDNWliueWjM
-Q8ISP35Cu5POt9PaAKjh4c9CPIkRMDeT2Ex+Qum2R9bhrm4H363wAQledkBTLd2W
-sw5zORK3Fj3IBSZswSScR8MUmamk56/D7/kyL332kpHhsgHL5A==
-=yNRP
------END PGP SIGNATURE-----
+> 
+> > + *
+> > + *	Device (LED)
+> > + *	{
+> > + *		Name (_DSD, Package () {
+> > + *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> > + *			Package () {
+> > + *				Package () { "led0", "LED0" },
+> > + *				Package () { "led1", "LED1" },
+> > + *			}
+> > + *		})
+> > + *		Name (LED0, Package () {
+> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > + *			Package () {
+> > + *				Package () { "led", 0 },
+> > + *			}
+> > + *		})
+> > + *		Name (LED1, Package () {
+> > + *			// THISONE
+> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > + *			Package () {
+> > + *				Package () { "led", 1 },
+> > + *			}
+> > + *		})
+> > + *	}
+> > + *
+> > + *	Device (SEN)
+> > + *	{
+> > + *		Name (_DSD, Package () {
+> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> > + *			Package () {
+> > + *				Package () {
+> > + *					"flash-leds",
+> > + *					Package () { ^LED, 0, ^LED, 1 },
+> > + *				}
+> > + *			}
+> > + *		})
+> > + *	}
+> > + *
+> > + * where
+> > + *
+> > + *	LED	LED driver device
+> > + *	LED0	First LED
+> > + *	LED1	Second LED
+> > + *	SEN	Camera sensor device (or another device the LED is
+> > + *		related to)
+> > + *
+> > + * Return: 0 on success
+> > + *	   -ENOENT if no entries (or the property itself) were found
+> > + *	   -EINVAL if property parsing otherwise failed
+> > + *	   -ENOMEM if memory allocation failed
+> > + */
+> > +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
+> > +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
+> > +	const char **props, unsigned int nprops)
+> > +{
+> > +	struct fwnode_reference_args fwnode_args;
+> > +	unsigned int *args = fwnode_args.args;
+> > +	struct fwnode_handle *child;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Obtain remote fwnode as well as the integer arguments.
+> > +	 *
+> > +	 * Note that right now both -ENODATA and -ENOENT may signal
+> > +	 * out-of-bounds access. Return -ENOENT in that case.
+> > +	 */
+> > +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
+> > +						 index, &fwnode_args);
+> > +	if (ret)
+> > +		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
+> > +
+> > +	/*
+> > +	 * Find a node in the tree under the referred fwnode corresponding the
+> 
+> corresponding -> corresponding to
 
---/2994txjAzEdQwm5--
+Fixed.
+
+> 
+> > +	 * integer arguments.
+> > +	 */
+> > +	fwnode = fwnode_args.fwnode;
+> > +	while (nprops--) {
+> > +		u32 val;
+> > +
+> > +		/* Loop over all child nodes under fwnode. */
+> > +		fwnode_for_each_child_node(fwnode, child) {
+> > +			if (fwnode_property_read_u32(child, *props, &val))
+> > +				continue;
+> > +
+> > +			/* Found property, see if its value matches. */
+> > +			if (val == *args)
+> > +				break;
+> > +		}
+> > +
+> > +		fwnode_handle_put(fwnode);
+> > +
+> > +		/* No property found; return an error here. */
+> > +		if (!child) {
+> > +			fwnode = ERR_PTR(-ENOENT);
+> > +			break;
+> > +		}
+> > +
+> > +		props++;
+> > +		args++;
+> > +		fwnode = child;
+> > +	}
+> > +
+> > +	return fwnode;
+> > +}
+> > +
+> > +/*
+> > + * v4l2_fwnode_reference_parse_int_props - parse references for async sub-devices
+> > + * @dev: struct device pointer
+> > + * @notifier: notifier for @dev
+> > + * @prop: the name of the property
+> > + * @props: the array of integer property names
+> > + * @nprops: the number of integer properties
+> > + *
+> > + * Use v4l2_fwnode_reference_get_int_prop to find fwnodes through reference in
+> > + * property @prop with integer arguments with child nodes matching in properties
+> > + * @props. Then, set up V4L2 async sub-devices for those fwnodes in the notifier
+> > + * accordingly.
+> > + *
+> > + * While it is technically possible to use this function on DT, it is only
+> > + * meaningful on ACPI. On Device tree you can refer to any node in the tree but
+> > + * on ACPI the references are limited to devices.
+> > + *
+> > + * Return: 0 on success
+> > + *	   -ENOENT if no entries (or the property itself) were found
+> > + *	   -EINVAL if property parsing otherwisefailed
+> > + *	   -ENOMEM if memory allocation failed
+> > + */
+> > +static int v4l2_fwnode_reference_parse_int_props(
+> > +	struct device *dev, struct v4l2_async_notifier *notifier,
+> > +	const char *prop, const char **props, unsigned int nprops)
+> > +{
+> > +	struct fwnode_handle *fwnode;
+> > +	unsigned int index;
+> > +	int ret;
+> > +
+> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
+> > +					 dev_fwnode(dev), prop, index, props,
+> > +					 nprops))); index++)
+> > +		fwnode_handle_put(fwnode);
+> > +
+> > +	/*
+> > +	 * Note that right now both -ENODATA and -ENOENT may signal
+> > +	 * out-of-bounds access. Return the error in cases other than that.
+> > +	 */
+> > +	if (PTR_ERR(fwnode) != -ENOENT && PTR_ERR(fwnode) != -ENODATA)
+> > +		return PTR_ERR(fwnode);
+> > +
+> > +	ret = v4l2_async_notifier_realloc(notifier,
+> > +					  notifier->num_subdevs + index);
+> > +	if (ret)
+> > +		return -ENOMEM;
+> > +
+> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
+> > +					 dev_fwnode(dev), prop, index, props,
+> > +					 nprops))); index++) {
+> > +		struct v4l2_async_subdev *asd;
+> > +
+> > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
+> > +			ret = -EINVAL;
+> > +			goto error;
+> > +		}
+> > +
+> > +		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
+> > +		if (!asd) {
+> > +			ret = -ENOMEM;
+> > +			goto error;
+> > +		}
+> > +
+> > +		notifier->subdevs[notifier->num_subdevs] = asd;
+> > +		asd->match.fwnode.fwnode = fwnode;
+> > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > +		notifier->num_subdevs++;
+> > +	}
+> > +
+> > +	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
+> > +
+> > +error:
+> > +	fwnode_handle_put(fwnode);
+> > +	return ret;
+> > +}
+> > +
+> >  MODULE_LICENSE("GPL");
+> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> > 
+> 
+> Regards,
+> 
+> 	Hans
+
+-- 
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
