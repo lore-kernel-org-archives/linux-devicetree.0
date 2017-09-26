@@ -1,286 +1,126 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain
- device / integer references
-Date: Tue, 26 Sep 2017 14:30:30 +0300
-Message-ID: <20170926113029.eh5i4sp6we6lvgow@paasikivi.fi.intel.com>
-References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-21-sakari.ailus@linux.intel.com>
- <fbd2f71d-aa6d-08ef-1723-132864bde27b@xs4all.nl>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+Date: Tue, 26 Sep 2017 13:55:40 +0200
+Message-ID: <87lgl1ishv.fsf@free-electrons.com>
+References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
+        <87377fmbpw.fsf@free-electrons.com>
+        <1506289460890.34765@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fbd2f71d-aa6d-08ef-1723-132864bde27b-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <1506289460890.34765-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Kalyan Kinthada's
+        message of "Sun, 24 Sep 2017 21:44:21 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Kalyan Kinthada <Kalyan.Kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "wsa@the-dreams.de" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "robh+dt@kernel.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll@arm.com" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland@arm.com" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak@codeaurora.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-i2c@vger.kernel.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Kalyan,
 
-Thanks for the review.
+Please try avoid top-posting.
 
-On Tue, Sep 26, 2017 at 10:47:40AM +0200, Hans Verkuil wrote:
-> On 26/09/17 00:25, Sakari Ailus wrote:
-> > v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
-> > the device's own fwnode, it will follow child fwnodes with the given
-> > property-value pair and return the resulting fwnode.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 201 insertions(+)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > index f739dfd16cf7..f93049c361e4 100644
-> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > @@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
-> >  	return ret;
-> >  }
-> >  
-> > +/*
-> > + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
-> > + *					arguments
-> > + * @dev: struct device pointer
-> > + * @notifier: notifier for @dev
-> > + * @prop: the name of the property
-> > + * @index: the index of the reference to get
-> > + * @props: the array of integer property names
-> > + * @nprops: the number of integer property names in @nprops
-> > + *
-> > + * Find fwnodes referred to by a property @prop, then under that
-> > + * iteratively, @nprops times, follow each child node which has a
-> > + * property in @props array at a given child index the value of which
-> > + * matches the integer argument at an index.
-> 
-> "at an index". Still makes no sense to me. Which index?
+ On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-How about this:
+> Hi Gregory,
+>
+> I got this information from Armada-38x functional errata document.
 
-First find an fwnode referred to by the reference at @index in @prop.
+OK but in any case just adding a new compatible was not enough you have
+to update the driver in the same time, however for this case we won't
+need it, see below.
 
-Then under that fwnode, @nprops times, for each property in @props,
-iteratively follow child nodes starting from fwnode such that they have the
-property in @props array at the index of the child node distance from the
-root node and the value of that property matching with the integer argument of
-the reference, at the same index.
+>
+> I can add the "marvell,mv78230-i2c" compatible string to the appropriate  device tree files 
+> but the i2c-mv64xxx driver enables an additional  feature (offload i2c transactions)
+> based on the compatible string "marvell,mv78230-i2c".
+>
+> I am not sure if this feature (offload i2c transactions) should be enabled for Armada-38x devices.
+> That is the reason I felt for the need of a new compatible string
+> specifically for Armada-38x SoCs.
 
-> 
-> > + *
-> > + * For example, if this function was called with arguments and values
-> > + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
-> > + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
-> > + * it would return the node marked with THISONE. The @dev argument in
-> > + * the ASL below.
-> 
-> I know I asked for this before, but can you change the example to one where
-> nprops = 2? I think that will help understanding this.
+Indeed the Armada-38x SoCs does not support hardware offloading (at
+least according the datasheet). But it happens that in the earlier
+version of the Armada XP the hardware offloading was buggy, so we
+introduced a compatible for this case: marvell,mv78230-a0-i2c. This
+compatible enable the errata fix but not the offloading feature. That
+means that it is exactly the compatible you need for Armada 38x (and
+Armada 39x and 375 I think).
 
-I could do that but then the example no longer corresponds to any actual
-case that exists at the moment. LED nodes will use a single integer
-argument and lens-focus nodes none.
+Gregory
 
-> 
-> > + *
-> > + *	Device (LED)
-> > + *	{
-> > + *		Name (_DSD, Package () {
-> > + *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> > + *			Package () {
-> > + *				Package () { "led0", "LED0" },
-> > + *				Package () { "led1", "LED1" },
-> > + *			}
-> > + *		})
-> > + *		Name (LED0, Package () {
-> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > + *			Package () {
-> > + *				Package () { "led", 0 },
-> > + *			}
-> > + *		})
-> > + *		Name (LED1, Package () {
-> > + *			// THISONE
-> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > + *			Package () {
-> > + *				Package () { "led", 1 },
-> > + *			}
-> > + *		})
-> > + *	}
-> > + *
-> > + *	Device (SEN)
-> > + *	{
-> > + *		Name (_DSD, Package () {
-> > + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> > + *			Package () {
-> > + *				Package () {
-> > + *					"flash-leds",
-> > + *					Package () { ^LED, 0, ^LED, 1 },
-> > + *				}
-> > + *			}
-> > + *		})
-> > + *	}
-> > + *
-> > + * where
-> > + *
-> > + *	LED	LED driver device
-> > + *	LED0	First LED
-> > + *	LED1	Second LED
-> > + *	SEN	Camera sensor device (or another device the LED is
-> > + *		related to)
-> > + *
-> > + * Return: 0 on success
-> > + *	   -ENOENT if no entries (or the property itself) were found
-> > + *	   -EINVAL if property parsing otherwise failed
-> > + *	   -ENOMEM if memory allocation failed
-> > + */
-> > +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
-> > +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
-> > +	const char **props, unsigned int nprops)
-> > +{
-> > +	struct fwnode_reference_args fwnode_args;
-> > +	unsigned int *args = fwnode_args.args;
-> > +	struct fwnode_handle *child;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * Obtain remote fwnode as well as the integer arguments.
-> > +	 *
-> > +	 * Note that right now both -ENODATA and -ENOENT may signal
-> > +	 * out-of-bounds access. Return -ENOENT in that case.
-> > +	 */
-> > +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
-> > +						 index, &fwnode_args);
-> > +	if (ret)
-> > +		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
-> > +
-> > +	/*
-> > +	 * Find a node in the tree under the referred fwnode corresponding the
-> 
-> corresponding -> corresponding to
-
-Fixed.
-
-> 
-> > +	 * integer arguments.
-> > +	 */
-> > +	fwnode = fwnode_args.fwnode;
-> > +	while (nprops--) {
-> > +		u32 val;
-> > +
-> > +		/* Loop over all child nodes under fwnode. */
-> > +		fwnode_for_each_child_node(fwnode, child) {
-> > +			if (fwnode_property_read_u32(child, *props, &val))
-> > +				continue;
-> > +
-> > +			/* Found property, see if its value matches. */
-> > +			if (val == *args)
-> > +				break;
-> > +		}
-> > +
-> > +		fwnode_handle_put(fwnode);
-> > +
-> > +		/* No property found; return an error here. */
-> > +		if (!child) {
-> > +			fwnode = ERR_PTR(-ENOENT);
-> > +			break;
-> > +		}
-> > +
-> > +		props++;
-> > +		args++;
-> > +		fwnode = child;
-> > +	}
-> > +
-> > +	return fwnode;
-> > +}
-> > +
-> > +/*
-> > + * v4l2_fwnode_reference_parse_int_props - parse references for async sub-devices
-> > + * @dev: struct device pointer
-> > + * @notifier: notifier for @dev
-> > + * @prop: the name of the property
-> > + * @props: the array of integer property names
-> > + * @nprops: the number of integer properties
-> > + *
-> > + * Use v4l2_fwnode_reference_get_int_prop to find fwnodes through reference in
-> > + * property @prop with integer arguments with child nodes matching in properties
-> > + * @props. Then, set up V4L2 async sub-devices for those fwnodes in the notifier
-> > + * accordingly.
-> > + *
-> > + * While it is technically possible to use this function on DT, it is only
-> > + * meaningful on ACPI. On Device tree you can refer to any node in the tree but
-> > + * on ACPI the references are limited to devices.
-> > + *
-> > + * Return: 0 on success
-> > + *	   -ENOENT if no entries (or the property itself) were found
-> > + *	   -EINVAL if property parsing otherwisefailed
-> > + *	   -ENOMEM if memory allocation failed
-> > + */
-> > +static int v4l2_fwnode_reference_parse_int_props(
-> > +	struct device *dev, struct v4l2_async_notifier *notifier,
-> > +	const char *prop, const char **props, unsigned int nprops)
-> > +{
-> > +	struct fwnode_handle *fwnode;
-> > +	unsigned int index;
-> > +	int ret;
-> > +
-> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-> > +					 dev_fwnode(dev), prop, index, props,
-> > +					 nprops))); index++)
-> > +		fwnode_handle_put(fwnode);
-> > +
-> > +	/*
-> > +	 * Note that right now both -ENODATA and -ENOENT may signal
-> > +	 * out-of-bounds access. Return the error in cases other than that.
-> > +	 */
-> > +	if (PTR_ERR(fwnode) != -ENOENT && PTR_ERR(fwnode) != -ENODATA)
-> > +		return PTR_ERR(fwnode);
-> > +
-> > +	ret = v4l2_async_notifier_realloc(notifier,
-> > +					  notifier->num_subdevs + index);
-> > +	if (ret)
-> > +		return -ENOMEM;
-> > +
-> > +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-> > +					 dev_fwnode(dev), prop, index, props,
-> > +					 nprops))); index++) {
-> > +		struct v4l2_async_subdev *asd;
-> > +
-> > +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-> > +			ret = -EINVAL;
-> > +			goto error;
-> > +		}
-> > +
-> > +		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
-> > +		if (!asd) {
-> > +			ret = -ENOMEM;
-> > +			goto error;
-> > +		}
-> > +
-> > +		notifier->subdevs[notifier->num_subdevs] = asd;
-> > +		asd->match.fwnode.fwnode = fwnode;
-> > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> > +		notifier->num_subdevs++;
-> > +	}
-> > +
-> > +	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
-> > +
-> > +error:
-> > +	fwnode_handle_put(fwnode);
-> > +	return ret;
-> > +}
-> > +
-> >  MODULE_LICENSE("GPL");
-> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
-> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-> > 
-> 
-> Regards,
-> 
-> 	Hans
+>
+> Thanks,
+> Kalyan
+> ________________________________________
+> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Sent: Friday, 22 September 2017 7:30 p.m.
+> To: Kalyan Kinthada
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org;
+> linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Chris Packham
+> Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+>
+> Hi Kalyan,
+>
+>  On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
+>
+>> All armada-38x variants(380, 385, 388) SoCs have an issue
+>> in i2c controller which violates the i2c repeated start timing.
+>
+>
+> Did you had an issue with one of the SoC ?
+> If yes what was your setting ?
+> On my side I never managed to have this sort of issue on Armada 38x.
+>
+>>
+>> This errata is fixed in the i2c-mv64xxx driver but enabled
+>> only for devices with compatible string "marvell,mv78230-i2c".
+>
+> In this case why not just adding the "marvell,mv78230-i2c" as compatible
+> string in the appropriate device tree files ?
+>
+> Gregory
+>
+>>
+>> This patch introduces a new compatible string
+>> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs
+>> so that the workaound is enabled.
+>
+>
+>>
+>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+>> index 5c30026921..fc100b6bdb 100644
+>> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+>> @@ -14,6 +14,7 @@ Required properties :
+>>                           very rare, initial version of the SoC which
+>>                           had broken offload support.  Linux
+>>                           auto-detects this and sets it appropriately.
+>> +                     - "marvell,armada-38x-i2c"
+>>   - interrupts      : The interrupt number
+>>
+>>  Optional properties :
+>> --
+>> 2.14.1
+>>
+>
+> --
+> Gregory Clement, Free Electrons
+> Kernel, drivers, real-time and embedded Linux
+> development, consulting, training and support.
+> http://free-electrons.com
 
 -- 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
