@@ -1,257 +1,75 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain
- device / integer references
-Date: Tue, 26 Sep 2017 10:47:40 +0200
-Message-ID: <fbd2f71d-aa6d-08ef-1723-132864bde27b@xs4all.nl>
-References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-21-sakari.ailus@linux.intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 00/14] ARM: dts: sunxi: Fix DT build warnings
+Date: Tue, 26 Sep 2017 10:58:55 +0200
+Message-ID: <20170926085855.7yn6zdx3sfuwwxyj@flea>
+References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
+ <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ednxqi4tbf6flagf"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170925222540.371-21-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/17 00:25, Sakari Ailus wrote:
-> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
-> the device's own fwnode, it will follow child fwnodes with the given
-> property-value pair and return the resulting fwnode.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
->  1 file changed, 201 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index f739dfd16cf7..f93049c361e4 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
->  	return ret;
->  }
->  
-> +/*
-> + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
-> + *					arguments
-> + * @dev: struct device pointer
-> + * @notifier: notifier for @dev
-> + * @prop: the name of the property
-> + * @index: the index of the reference to get
-> + * @props: the array of integer property names
-> + * @nprops: the number of integer property names in @nprops
-> + *
-> + * Find fwnodes referred to by a property @prop, then under that
-> + * iteratively, @nprops times, follow each child node which has a
-> + * property in @props array at a given child index the value of which
-> + * matches the integer argument at an index.
 
-"at an index". Still makes no sense to me. Which index?
+--ednxqi4tbf6flagf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> + *
-> + * For example, if this function was called with arguments and values
-> + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
-> + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
-> + * it would return the node marked with THISONE. The @dev argument in
-> + * the ASL below.
+On Tue, Sep 26, 2017 at 07:48:17AM +0000, Chen-Yu Tsai wrote:
+> On Tue, Sep 26, 2017 at 3:22 PM, Corentin Labbe
+> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Hello
+> >
+> > The goal of this patch series is to have a clean DT build with W=3D1.
+> >
+> > Regards
+> >
+> > Changes since v1:
+> > - moved i2c2 unit address change from patch #2 in patch #1
+> >
+> > Changes since v2
+> > - added two patch for fixing pin names
+>=20
+> The first twelve patches are good. Maxime, I think we can go ahead and
+> merge them, instead of having them resent again in v3?
 
-I know I asked for this before, but can you change the example to one where
-nprops = 2? I think that will help understanding this.
+Yep, that works for me. Can you push them?
 
-> + *
-> + *	Device (LED)
-> + *	{
-> + *		Name (_DSD, Package () {
-> + *			ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> + *			Package () {
-> + *				Package () { "led0", "LED0" },
-> + *				Package () { "led1", "LED1" },
-> + *			}
-> + *		})
-> + *		Name (LED0, Package () {
-> + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> + *			Package () {
-> + *				Package () { "led", 0 },
-> + *			}
-> + *		})
-> + *		Name (LED1, Package () {
-> + *			// THISONE
-> + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> + *			Package () {
-> + *				Package () { "led", 1 },
-> + *			}
-> + *		})
-> + *	}
-> + *
-> + *	Device (SEN)
-> + *	{
-> + *		Name (_DSD, Package () {
-> + *			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> + *			Package () {
-> + *				Package () {
-> + *					"flash-leds",
-> + *					Package () { ^LED, 0, ^LED, 1 },
-> + *				}
-> + *			}
-> + *		})
-> + *	}
-> + *
-> + * where
-> + *
-> + *	LED	LED driver device
-> + *	LED0	First LED
-> + *	LED1	Second LED
-> + *	SEN	Camera sensor device (or another device the LED is
-> + *		related to)
-> + *
-> + * Return: 0 on success
-> + *	   -ENOENT if no entries (or the property itself) were found
-> + *	   -EINVAL if property parsing otherwise failed
-> + *	   -ENOMEM if memory allocation failed
-> + */
-> +static struct fwnode_handle *v4l2_fwnode_reference_get_int_prop(
-> +	struct fwnode_handle *fwnode, const char *prop, unsigned int index,
-> +	const char **props, unsigned int nprops)
-> +{
-> +	struct fwnode_reference_args fwnode_args;
-> +	unsigned int *args = fwnode_args.args;
-> +	struct fwnode_handle *child;
-> +	int ret;
-> +
-> +	/*
-> +	 * Obtain remote fwnode as well as the integer arguments.
-> +	 *
-> +	 * Note that right now both -ENODATA and -ENOENT may signal
-> +	 * out-of-bounds access. Return -ENOENT in that case.
-> +	 */
-> +	ret = fwnode_property_get_reference_args(fwnode, prop, NULL, nprops,
-> +						 index, &fwnode_args);
-> +	if (ret)
-> +		return ERR_PTR(ret == -ENODATA ? -ENOENT : ret);
-> +
-> +	/*
-> +	 * Find a node in the tree under the referred fwnode corresponding the
+Thanks!
+Maxime
 
-corresponding -> corresponding to
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> +	 * integer arguments.
-> +	 */
-> +	fwnode = fwnode_args.fwnode;
-> +	while (nprops--) {
-> +		u32 val;
-> +
-> +		/* Loop over all child nodes under fwnode. */
-> +		fwnode_for_each_child_node(fwnode, child) {
-> +			if (fwnode_property_read_u32(child, *props, &val))
-> +				continue;
-> +
-> +			/* Found property, see if its value matches. */
-> +			if (val == *args)
-> +				break;
-> +		}
-> +
-> +		fwnode_handle_put(fwnode);
-> +
-> +		/* No property found; return an error here. */
-> +		if (!child) {
-> +			fwnode = ERR_PTR(-ENOENT);
-> +			break;
-> +		}
-> +
-> +		props++;
-> +		args++;
-> +		fwnode = child;
-> +	}
-> +
-> +	return fwnode;
-> +}
-> +
-> +/*
-> + * v4l2_fwnode_reference_parse_int_props - parse references for async sub-devices
-> + * @dev: struct device pointer
-> + * @notifier: notifier for @dev
-> + * @prop: the name of the property
-> + * @props: the array of integer property names
-> + * @nprops: the number of integer properties
-> + *
-> + * Use v4l2_fwnode_reference_get_int_prop to find fwnodes through reference in
-> + * property @prop with integer arguments with child nodes matching in properties
-> + * @props. Then, set up V4L2 async sub-devices for those fwnodes in the notifier
-> + * accordingly.
-> + *
-> + * While it is technically possible to use this function on DT, it is only
-> + * meaningful on ACPI. On Device tree you can refer to any node in the tree but
-> + * on ACPI the references are limited to devices.
-> + *
-> + * Return: 0 on success
-> + *	   -ENOENT if no entries (or the property itself) were found
-> + *	   -EINVAL if property parsing otherwisefailed
-> + *	   -ENOMEM if memory allocation failed
-> + */
-> +static int v4l2_fwnode_reference_parse_int_props(
-> +	struct device *dev, struct v4l2_async_notifier *notifier,
-> +	const char *prop, const char **props, unsigned int nprops)
-> +{
-> +	struct fwnode_handle *fwnode;
-> +	unsigned int index;
-> +	int ret;
-> +
-> +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-> +					 dev_fwnode(dev), prop, index, props,
-> +					 nprops))); index++)
-> +		fwnode_handle_put(fwnode);
-> +
-> +	/*
-> +	 * Note that right now both -ENODATA and -ENOENT may signal
-> +	 * out-of-bounds access. Return the error in cases other than that.
-> +	 */
-> +	if (PTR_ERR(fwnode) != -ENOENT && PTR_ERR(fwnode) != -ENODATA)
-> +		return PTR_ERR(fwnode);
-> +
-> +	ret = v4l2_async_notifier_realloc(notifier,
-> +					  notifier->num_subdevs + index);
-> +	if (ret)
-> +		return -ENOMEM;
-> +
-> +	for (index = 0; !IS_ERR((fwnode = v4l2_fwnode_reference_get_int_prop(
-> +					 dev_fwnode(dev), prop, index, props,
-> +					 nprops))); index++) {
-> +		struct v4l2_async_subdev *asd;
-> +
-> +		if (WARN_ON(notifier->num_subdevs >= notifier->max_subdevs)) {
-> +			ret = -EINVAL;
-> +			goto error;
-> +		}
-> +
-> +		asd = kzalloc(sizeof(struct v4l2_async_subdev), GFP_KERNEL);
-> +		if (!asd) {
-> +			ret = -ENOMEM;
-> +			goto error;
-> +		}
-> +
-> +		notifier->subdevs[notifier->num_subdevs] = asd;
-> +		asd->match.fwnode.fwnode = fwnode;
-> +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +		notifier->num_subdevs++;
-> +	}
-> +
-> +	return PTR_ERR(fwnode) == -ENOENT ? 0 : PTR_ERR(fwnode);
-> +
-> +error:
-> +	fwnode_handle_put(fwnode);
-> +	return ret;
-> +}
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
->  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-> 
+--ednxqi4tbf6flagf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
 
-	Hans
+iQIcBAEBAgAGBQJZyhbPAAoJEBx+YmzsjxAgl5cP/1x1BAwhv/bmy5CXOY2+5mPp
+XIN5fBahSFySSeCaevRV3/HnJZU82vXn2oGax7yOfvGTSBo5pVzxtoz04CFr3fVK
+BlDeNA4QIKP8SjNIXhUweAkZR+8ClT88Z/lwl6yEI7gsprJ3OWr0cy4fIAigzzBL
+vOxnI5RFg+/8lCn1qa4zrmCjSd3MP4QS1fYeu3ORvTZLzWWtlDPs9LbIy3jB8Nxu
+G8gCclS1nQvMXtj9GjALzSpN2Tvs8BJRNP77Rl9B6JEUJIVlW9hyxCPqtkJwt5po
+O3WSD9e5Um/n+Hd+Wcj249134nUNo30okW/Z0CZggxC4H3Js2GC8EHamtrmUv6vz
+BKTila7ZeVAwyHU8dayDX5a8mLJztspcAelkrMbubv2NwVEjF/B1GJ1Jtua0eS0w
+6dyCRjwxFt5FFFxaaWanUy9w21Ux36A/fFPs/uPTmOkxxUU1nt6tGizNVjBJ+ls0
+KVYnp5qU6lW0cD4AjML+veikoB3EzNFLzEI7FPSOIl+9qrTIXnr3iBDLvgbgy1KP
+KWZSJR/QIZZYcw1XHcFpe0nqgexONqeSyaZuHLazCV3mF0f3OaBWM9yWvEtZeAef
+P/eUL8TcWgt4SA1QbvcrXhwCAHU+N7GHu/ME3e0C2KHZrZMv9com7wq2CP7e5jvw
+Q06lnEHY5JOSY+Q8P9PN
+=7bEA
+-----END PGP SIGNATURE-----
+
+--ednxqi4tbf6flagf--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
