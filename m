@@ -1,105 +1,131 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 10/12] staging: typec: tcpci: update set_cc for different
- state
-Date: Tue, 26 Sep 2017 14:39:24 +0000
-Message-ID: <DB4PR04MB07682853D61796E3ABBF001D897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-11-git-send-email-jun.li@nxp.com>
- <8ef676a1-4c2b-cea7-ad79-c50fb8d091fb@roeck-us.net>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 1/5] clk: tegra: Add AHB DMA clock entry
+Date: Tue, 26 Sep 2017 17:46:01 +0300
+Message-ID: <b575c935-e928-4d51-9905-40731c1aa9c4@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <b5fd087892544cd17042a4aa9dc0289fb761352c.1506380746.git.digetx@gmail.com>
+ <20170926095611.GW6290@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8ef676a1-4c2b-cea7-ad79-c50fb8d091fb-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170926095611.GW6290@tbergstrom-lnx.Nvidia.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJvZWNr
-IFttYWlsdG86Z3JvZWNrN0BnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVudGVyIFJvZWNrDQo+
-IFNlbnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAyNiwgMjAxNyA5OjUwIFBNDQo+IFRvOiBKdW4gTGkg
-PGp1bi5saUBueHAuY29tPjsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5p
-bnRlbC5jb20NCj4gQ2M6IHl1ZXlhb0Bnb29nbGUuY29tOyBvX2xldmVxdWVAb3JhbmdlLmZyOyBQ
-ZXRlciBDaGVuDQo+IDxwZXRlci5jaGVuQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9u
-Z0BueHAuY29tPjsgbGludXgtDQo+IHVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMTAvMTJdIHN0YWdpbmc6IHR5cGVj
-OiB0Y3BjaTogdXBkYXRlIHNldF9jYyBmb3IgZGlmZmVyZW50DQo+IHN0YXRlDQo+IA0KPiBPbiAw
-OS8yNS8yMDE3IDA1OjQ1IFBNLCBMaSBKdW4gd3JvdGU6DQo+ID4gQXMgd2Ugc2hvdWxkIGtlZXAg
-dGhlIGRpc2Nvbm5lY3RlZCBjYyBsaW5lIHRvIGJlIG9wZW4gd2hlbiBhdHRhY2hlZCwNCj4gPiBz
-byB1cGRhdGUgdGhlIHNldF9jYyBpbnRlcmZhY2UgYWNjb3JkaW5nbHkgZm9yIGl0Lg0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAg
-IGRyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jIHwgMzcgKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyks
-IDE2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy90
-eXBlYy90Y3BjaS5jDQo+ID4gYi9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyBpbmRleCBj
-ZWE2N2Y5Li5jN2M0NWRhIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90
-Y3BjaS5jDQo+ID4gKysrIGIvZHJpdmVycy9zdGFnaW5nL3R5cGVjL3RjcGNpLmMNCj4gPiBAQCAt
-NTcsMTAgKzU3LDExIEBAIHN0YXRpYyBpbnQgdGNwY2lfd3JpdGUxNihzdHJ1Y3QgdGNwY2kgKnRj
-cGNpLCB1bnNpZ25lZCBpbnQNCj4gcmVnLCB1MTYgdmFsKQ0KPiA+ICAgCXJldHVybiByZWdtYXBf
-cmF3X3dyaXRlKHRjcGNpLT5yZWdtYXAsIHJlZywgJnZhbCwgc2l6ZW9mKHUxNikpOw0KPiA+ICAg
-fQ0KPiA+DQo+ID4gLXN0YXRpYyBpbnQgdGNwY2lfc2V0X2NjKHN0cnVjdCB0Y3BjX2RldiAqdGNw
-YywgZW51bSB0eXBlY19jY19zdGF0dXMNCj4gPiBjYykNCj4gPiArc3RhdGljIGludCB0Y3BjaV9z
-ZXRfY2Moc3RydWN0IHRjcGNfZGV2ICp0Y3BjLCBlbnVtIHR5cGVjX2NjX3N0YXR1cyBjYywNCj4g
-PiArCQkJYm9vbCBhdHRhY2hlZCwgZW51bSB0eXBlY19jY19wb2xhcml0eSBwb2xhcml0eSkNCj4g
-PiAgIHsNCj4gPiAgIAlzdHJ1Y3QgdGNwY2kgKnRjcGNpID0gdGNwY190b190Y3BjaSh0Y3BjKTsN
-Cj4gPiAtCXVuc2lnbmVkIGludCByZWc7DQo+ID4gKwl1bnNpZ25lZCBpbnQgcmVnID0gMCwgcmVn
-X2NjMSA9IDAsIHJlZ19jYzIgPSAwOw0KPiA+ICAgCWludCByZXQ7DQo+ID4NCj4gPiAgIAlzd2l0
-Y2ggKGNjKSB7DQo+ID4gQEAgLTY5LDI2ICs3MCwyMyBAQCBzdGF0aWMgaW50IHRjcGNpX3NldF9j
-YyhzdHJ1Y3QgdGNwY19kZXYgKnRjcGMsIGVudW0NCj4gdHlwZWNfY2Nfc3RhdHVzIGNjKQ0KPiA+
-ICAgCQkJKFRDUENfUk9MRV9DVFJMX0NDX1JBIDw8DQo+IFRDUENfUk9MRV9DVFJMX0NDMl9TSElG
-VCk7DQo+ID4gICAJCWJyZWFrOw0KPiA+ICAgCWNhc2UgVFlQRUNfQ0NfUkQ6DQo+ID4gLQkJcmVn
-ID0gKFRDUENfUk9MRV9DVFJMX0NDX1JEIDw8DQo+IFRDUENfUk9MRV9DVFJMX0NDMV9TSElGVCkg
-fA0KPiA+IC0JCQkoVENQQ19ST0xFX0NUUkxfQ0NfUkQgPDwNCj4gVENQQ19ST0xFX0NUUkxfQ0My
-X1NISUZUKTsNCj4gPiArCQlyZWdfY2MxID0gVENQQ19ST0xFX0NUUkxfQ0NfUkQgPDwNCj4gVENQ
-Q19ST0xFX0NUUkxfQ0MxX1NISUZUOw0KPiA+ICsJCXJlZ19jYzIgPSBUQ1BDX1JPTEVfQ1RSTF9D
-Q19SRCA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9DQzJfU0hJRlQ7DQo+ID4gICAJCWJyZWFrOw0KPiA+
-ICAgCWNhc2UgVFlQRUNfQ0NfUlBfREVGOg0KPiA+IC0JCXJlZyA9IChUQ1BDX1JPTEVfQ1RSTF9D
-Q19SUCA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9DQzFfU0hJRlQpIHwNCj4gPiAtCQkJKFRDUENfUk9M
-RV9DVFJMX0NDX1JQIDw8DQo+IFRDUENfUk9MRV9DVFJMX0NDMl9TSElGVCkgfA0KPiA+IC0JCQko
-VENQQ19ST0xFX0NUUkxfUlBfVkFMX0RFRiA8PA0KPiA+IC0JCQkgVENQQ19ST0xFX0NUUkxfUlBf
-VkFMX1NISUZUKTsNCj4gPiArCQlyZWdfY2MxID0gVENQQ19ST0xFX0NUUkxfQ0NfUlAgPDwNCj4g
-VENQQ19ST0xFX0NUUkxfQ0MxX1NISUZUOw0KPiA+ICsJCXJlZ19jYzIgPSBUQ1BDX1JPTEVfQ1RS
-TF9DQ19SUCA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9DQzJfU0hJRlQ7DQo+ID4gKwkJcmVnID0gVENQ
-Q19ST0xFX0NUUkxfUlBfVkFMX0RFRiA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9SUF9WQUxfU0hJRlQ7
-DQo+ID4gICAJCWJyZWFrOw0KPiA+ICAgCWNhc2UgVFlQRUNfQ0NfUlBfMV81Og0KPiA+IC0JCXJl
-ZyA9IChUQ1BDX1JPTEVfQ1RSTF9DQ19SUCA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9DQzFfU0hJRlQp
-IHwNCj4gPiAtCQkJKFRDUENfUk9MRV9DVFJMX0NDX1JQIDw8DQo+IFRDUENfUk9MRV9DVFJMX0ND
-Ml9TSElGVCkgfA0KPiA+IC0JCQkoVENQQ19ST0xFX0NUUkxfUlBfVkFMXzFfNSA8PA0KPiA+IC0J
-CQkgVENQQ19ST0xFX0NUUkxfUlBfVkFMX1NISUZUKTsNCj4gPiArCQlyZWdfY2MxID0gVENQQ19S
-T0xFX0NUUkxfQ0NfUlAgPDwNCj4gVENQQ19ST0xFX0NUUkxfQ0MxX1NISUZUOw0KPiA+ICsJCXJl
-Z19jYzIgPSBUQ1BDX1JPTEVfQ1RSTF9DQ19SUCA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9DQzJfU0hJ
-RlQ7DQo+ID4gKwkJcmVnID0gVENQQ19ST0xFX0NUUkxfUlBfVkFMXzFfNSA8PA0KPiBUQ1BDX1JP
-TEVfQ1RSTF9SUF9WQUxfU0hJRlQ7DQo+ID4gICAJCWJyZWFrOw0KPiA+ICAgCWNhc2UgVFlQRUNf
-Q0NfUlBfM18wOg0KPiA+IC0JCXJlZyA9IChUQ1BDX1JPTEVfQ1RSTF9DQ19SUCA8PA0KPiBUQ1BD
-X1JPTEVfQ1RSTF9DQzFfU0hJRlQpIHwNCj4gPiAtCQkJKFRDUENfUk9MRV9DVFJMX0NDX1JQIDw8
-DQo+IFRDUENfUk9MRV9DVFJMX0NDMl9TSElGVCkgfA0KPiA+IC0JCQkoVENQQ19ST0xFX0NUUkxf
-UlBfVkFMXzNfMCA8PA0KPiA+IC0JCQkgVENQQ19ST0xFX0NUUkxfUlBfVkFMX1NISUZUKTsNCj4g
-PiArCQlyZWdfY2MxID0gVENQQ19ST0xFX0NUUkxfQ0NfUlAgPDwNCj4gVENQQ19ST0xFX0NUUkxf
-Q0MxX1NISUZUOw0KPiA+ICsJCXJlZ19jYzIgPSBUQ1BDX1JPTEVfQ1RSTF9DQ19SUCA8PA0KPiBU
-Q1BDX1JPTEVfQ1RSTF9DQzJfU0hJRlQ7DQo+ID4gKwkJcmVnID0gVENQQ19ST0xFX0NUUkxfUlBf
-VkFMXzNfMCA8PA0KPiBUQ1BDX1JPTEVfQ1RSTF9SUF9WQUxfU0hJRlQ7DQo+ID4gICAJCWJyZWFr
-Ow0KPiA+ICAgCWNhc2UgVFlQRUNfQ0NfT1BFTjoNCj4gPiAgIAlkZWZhdWx0Og0KPiA+IEBAIC05
-Nyw2ICs5NSwxMyBAQCBzdGF0aWMgaW50IHRjcGNpX3NldF9jYyhzdHJ1Y3QgdGNwY19kZXYgKnRj
-cGMsIGVudW0NCj4gdHlwZWNfY2Nfc3RhdHVzIGNjKQ0KPiA+ICAgCQlicmVhazsNCj4gPiAgIAl9
-DQo+ID4NCj4gPiArCWlmICghYXR0YWNoZWQpDQo+ID4gKwkJcmVnIHw9IHJlZ19jYzEgfCByZWdf
-Y2MyOw0KPiA+ICsJZWxzZSBpZiAocG9sYXJpdHkgPT0gVFlQRUNfUE9MQVJJVFlfQ0MxKQ0KPiA+
-ICsJCXJlZyB8PSByZWdfY2MxOw0KPiA+ICsJZWxzZQ0KPiA+ICsJCXJlZyB8PSByZWdfY2MyOw0K
-PiA+ICsNCj4gDQo+IEkgdGhpbmsgdGhpcyBpcyB3cm9uZy4gVGhlIHZhbHVlIG9mIENDIHBpbnMg
-c2hvdWxkIG5vdCBkZXBlbmQgb24gdGhlIHN0YXRlIG9mIHRoZQ0KPiBzdGF0ZSBtYWNoaW5lLiBX
-aGF0IGlmIHRoZSBzdGF0ZSBtYWNoaW5lIGtub3dzIHRoZSBwb2xhcml0eSBidXQgaXMgaW4gYSB0
-cmFuc2llbnQNCj4gc3RhdGUgPy4NCj4gDQoNCkFncmVlIHdpdGggeW91IHRoaXMgQVBJIGNoYW5n
-ZSB3aWxsIG1ha2Ugc2V0X2NjIHNvbWVob3cgaW5kZXBlbmRlbnQuIA0KdGNwY2lfc2V0X3BvbGFy
-aXR5KCkgbWF5YmUgdGhlIHJpZ2h0IHBsYWNlIHRvIGNvdmVyIHRoaXMuDQoNCj4gSSBhbSBhbHNv
-IG5vdCBzdXJlIGlmIHRoZSBjaGlwIHNob3VsZCBldmVyIHNldCBib3RoIENDIGxpbmVzIGF0IHRo
-ZSBzYW1lIHRpbWUuDQoNClRvIGxvb2sgZm9yIGNvbm5lY3Rpb24sIGJvdGggQ0MgbGluZXMgc2hv
-dWxkIGJlIHNldCBhdCB0aGUgc2FtZSB0aW1lIGZvciBwb3NzaWJsZQ0KY29udGFjdC4NCg0KPiAN
-Cj4gR3VlbnRlcg0KPiANCj4gPiAgIAlyZXQgPSByZWdtYXBfd3JpdGUodGNwY2ktPnJlZ21hcCwg
-VENQQ19ST0xFX0NUUkwsIHJlZyk7DQo+ID4gICAJaWYgKHJldCA8IDApDQo+ID4gICAJCXJldHVy
-biByZXQ7DQo+ID4NCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 26.09.2017 12:56, Peter De Schrijver wrote:
+> On Tue, Sep 26, 2017 at 02:22:02AM +0300, Dmitry Osipenko wrote:
+>> AHB DMA presents on Tegra20/30. Add missing entries, so that driver
+>> for AHB DMA could be implemented.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/clk/tegra/clk-id.h           | 1 +
+>>  drivers/clk/tegra/clk-tegra-periph.c | 1 +
+>>  drivers/clk/tegra/clk-tegra20.c      | 6 ++++++
+>>  drivers/clk/tegra/clk-tegra30.c      | 2 ++
+>>  4 files changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
+>> index 689f344377a7..c1661b47bbda 100644
+>> --- a/drivers/clk/tegra/clk-id.h
+>> +++ b/drivers/clk/tegra/clk-id.h
+>> @@ -12,6 +12,7 @@ enum clk_id {
+>>  	tegra_clk_amx,
+>>  	tegra_clk_amx1,
+>>  	tegra_clk_apb2ape,
+>> +	tegra_clk_ahbdma,
+>>  	tegra_clk_apbdma,
+>>  	tegra_clk_apbif,
+>>  	tegra_clk_ape,
+>> diff --git a/drivers/clk/tegra/clk-tegra-periph.c b/drivers/clk/tegra/clk-tegra-periph.c
+>> index 848255cc0209..95a3d8c95f06 100644
+>> --- a/drivers/clk/tegra/clk-tegra-periph.c
+>> +++ b/drivers/clk/tegra/clk-tegra-periph.c
+>> @@ -823,6 +823,7 @@ static struct tegra_periph_init_data gate_clks[] = {
+>>  	GATE("timer", "clk_m", 5, 0, tegra_clk_timer, CLK_IS_CRITICAL),
+>>  	GATE("isp", "clk_m", 23, 0, tegra_clk_isp, 0),
+>>  	GATE("vcp", "clk_m", 29, 0, tegra_clk_vcp, 0),
+>> +	GATE("ahbdma", "clk_m", 33, 0, tegra_clk_ahbdma, 0),
+> 
+> Parent for this should be hclk on Tegra30 and later chips as well..
+> 
+
+It looks like other clocks have a wrong parent too here, aren't they? Like for
+example "apbdma" should have "pclk" as a parent, isn't it?
+
+>>  	GATE("apbdma", "clk_m", 34, 0, tegra_clk_apbdma, 0),
+>>  	GATE("kbc", "clk_32k", 36, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_kbc, 0),
+>>  	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, 0),
+>> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+>> index 837e5cbd60e9..e76c0d292ca7 100644
+>> --- a/drivers/clk/tegra/clk-tegra20.c
+>> +++ b/drivers/clk/tegra/clk-tegra20.c
+>> @@ -449,6 +449,7 @@ static struct tegra_devclk devclks[] __initdata = {
+>>  	{ .con_id = "audio", .dt_id = TEGRA20_CLK_AUDIO },
+>>  	{ .con_id = "audio_2x", .dt_id = TEGRA20_CLK_AUDIO_2X },
+>>  	{ .dev_id = "tegra20-ac97", .dt_id = TEGRA20_CLK_AC97 },
+>> +	{ .dev_id = "tegra-ahbdma", .dt_id = TEGRA20_CLK_AHBDMA },
+> 
+> This isn't needed if you use DT bindings to get the clock handle.
+> 
+
+Yes, I added it for consistency. Shouldn't we get rid of that all legacy stuff
+already?
+
+>>  	{ .dev_id = "tegra-apbdma", .dt_id = TEGRA20_CLK_APBDMA },
+>>  	{ .dev_id = "rtc-tegra", .dt_id = TEGRA20_CLK_RTC },
+>>  	{ .dev_id = "timer", .dt_id = TEGRA20_CLK_TIMER },
+>> @@ -806,6 +807,11 @@ static void __init tegra20_periph_clk_init(void)
+>>  				    clk_base, 0, 3, periph_clk_enb_refcnt);
+>>  	clks[TEGRA20_CLK_AC97] = clk;
+>>  
+>> +	/* ahbdma */
+>> +	clk = tegra_clk_register_periph_gate("ahbdma", "hclk", 0, clk_base,
+>> +				    0, 33, periph_clk_enb_refcnt);
+>> +	clks[TEGRA20_CLK_AHBDMA] = clk;
+>> +
+> 
+> You can use the generic definition here if you correct the entry above.
+> 
+
+Good point, same applies to "apbdma". Thank you for the suggestion.
+
+>>  	/* apbdma */
+>>  	clk = tegra_clk_register_periph_gate("apbdma", "pclk", 0, clk_base,
+>>  				    0, 34, periph_clk_enb_refcnt);
+>> diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+>> index a2d163f759b4..e99701557f29 100644
+>> --- a/drivers/clk/tegra/clk-tegra30.c
+>> +++ b/drivers/clk/tegra/clk-tegra30.c
+>> @@ -612,6 +612,7 @@ static struct tegra_devclk devclks[] __initdata = {
+>>  	{ .con_id = "fuse_burn", .dev_id = "fuse-tegra", .dt_id = TEGRA30_CLK_FUSE_BURN },
+>>  	{ .con_id = "apbif", .dev_id = "tegra30-ahub", .dt_id = TEGRA30_CLK_APBIF },
+>>  	{ .con_id = "hda2hdmi", .dev_id = "tegra30-hda", .dt_id = TEGRA30_CLK_HDA2HDMI },
+>> +	{ .dev_id = "tegra-ahbdma", .dt_id = TEGRA30_CLK_AHBDMA },
+> 
+> Same as for Tegra20.
+> 
+>>  	{ .dev_id = "tegra-apbdma", .dt_id = TEGRA30_CLK_APBDMA },
+>>  	{ .dev_id = "rtc-tegra", .dt_id = TEGRA30_CLK_RTC },
+>>  	{ .dev_id = "timer", .dt_id = TEGRA30_CLK_TIMER },
+>> @@ -788,6 +789,7 @@ static struct tegra_clk tegra30_clks[tegra_clk_max] __initdata = {
+>>  	[tegra_clk_extern3] = { .dt_id = TEGRA30_CLK_EXTERN3, .present = true },
+>>  	[tegra_clk_disp1] = { .dt_id = TEGRA30_CLK_DISP1, .present = true },
+>>  	[tegra_clk_disp2] = { .dt_id = TEGRA30_CLK_DISP2, .present = true },
+>> +	[tegra_clk_ahbdma] = { .dt_id = TEGRA30_CLK_AHBDMA, .present = true },
+>>  	[tegra_clk_apbdma] = { .dt_id = TEGRA30_CLK_APBDMA, .present = true },
+>>  	[tegra_clk_rtc] = { .dt_id = TEGRA30_CLK_RTC, .present = true },
+>>  	[tegra_clk_timer] = { .dt_id = TEGRA30_CLK_TIMER, .present = true },
+> 
+> Cheers,
+> 
+> Peter.
+> 
+
+
+-- 
+Dmitry
