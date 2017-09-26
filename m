@@ -1,126 +1,91 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 09/12] usb: typec: tcpm: only drives the connected cc line
- when attached
-Date: Tue, 26 Sep 2017 13:57:30 +0000
-Message-ID: <DB4PR04MB0768440D4600CDC55534F02F897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-10-git-send-email-jun.li@nxp.com>
- <9c461105-fa96-3989-5a95-b9f82b154ea2@roeck-us.net>
- <DB4PR04MB07689A95430FA6F4AA219539897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
- <e79d8143-1187-f3c4-6030-ecf28e3d2fff@roeck-us.net>
+From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] MIPS: jz4780: DTS: Probe the jz4740-watchdog
+ driver from devicetree
+Date: Tue, 26 Sep 2017 19:29:46 +0530
+Message-ID: <CANc+2y47sX0-oDiZvY0AnwHyy0v1uZM7wg-Le5Np=OVEVf0YVQ@mail.gmail.com>
+References: <20170908183558.1537-3-malat@debian.org> <20170915191837.27564-1-malat@debian.org>
+ <CANc+2y6gZ4UQ7fKbJeV7HhDLLW9pbUEr0K0Tq5eBfg1ba2s_LQ@mail.gmail.com> <CA+7wUsyrP8a96-55Zk_GPQmNzPS9MB__dhjwUds7RkQhfe=+EA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e79d8143-1187-f3c4-6030-ecf28e3d2fff-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+7wUsyrP8a96-55Zk_GPQmNzPS9MB__dhjwUds7RkQhfe=+EA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBb
-bWFpbHRvOmdyb2VjazdAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgR3VlbnRlciBSb2Vjaw0KPiBT
-ZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMjYsIDIwMTcgOToyMCBQTQ0KPiBUbzogSnVuIExpIDxq
-dW4ubGlAbnhwLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyByb2JoK2R0QGtlcm5l
-bC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBoZWlra2kua3JvZ2VydXNAbGludXguaW50
-ZWwuY29tDQo+IENjOiB5dWV5YW9AZ29vZ2xlLmNvbTsgb19sZXZlcXVlQG9yYW5nZS5mcjsgUGV0
-ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdA
-bnhwLmNvbT47IGxpbnV4LQ0KPiB1c2JAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDA5LzEyXSB1c2I6IHR5cGVjOiB0Y3Bt
-OiBvbmx5IGRyaXZlcyB0aGUgY29ubmVjdGVkIGNjIGxpbmUNCj4gd2hlbiBhdHRhY2hlZA0KPiAN
-Cj4gT24gMDkvMjYvMjAxNyAwMjo1MyBBTSwgSnVuIExpIHdyb3RlOg0KPiA+IEhpLA0KPiA+DQo+
-ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IEd1ZW50ZXIgUm9lY2sg
-W21haWx0bzpncm9lY2s3QGdtYWlsLmNvbV0gT24gQmVoYWxmIE9mIEd1ZW50ZXINCj4gPj4gUm9l
-Y2sNCj4gPj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDI2LCAyMDE3IDM6MTcgUE0NCj4gPj4g
-VG86IEp1biBMaSA8anVuLmxpQG54cC5jb20+OyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsN
-Cj4gPj4gcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPj4gaGVp
-a2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbQ0KPiA+PiBDYzogeXVleWFvQGdvb2dsZS5jb207
-IG9fbGV2ZXF1ZUBvcmFuZ2UuZnI7IFBldGVyIENoZW4NCj4gPj4gPHBldGVyLmNoZW5AbnhwLmNv
-bT47IEEucy4gRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBsaW51eC0NCj4gPj4gdXNiQHZn
-ZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPj4gU3ViamVjdDog
-UmU6IFtQQVRDSCAwOS8xMl0gdXNiOiB0eXBlYzogdGNwbTogb25seSBkcml2ZXMgdGhlDQo+ID4+
-IGNvbm5lY3RlZCBjYyBsaW5lIHdoZW4gYXR0YWNoZWQNCj4gPj4NCj4gPj4gT24gMDkvMjUvMjAx
-NyAwNTo0NSBQTSwgTGkgSnVuIHdyb3RlOg0KPiA+Pj4gQXMgd2Ugc2hvdWxkIG9ubHkgZHJpdmUg
-Y29ubmVjdGVkIGNjIGxpbmUgdG8gYmUgdGhlIHJpZ2h0IHN0YXRlIHdoZW4NCj4gPj4+IGF0dGFj
-aGVkLCBhbmQga2VlcHMgdGhlIG90aGVyIG9uZSB0byBiZSBvcGVuLCBzbyB1cGRhdGUgdGhlIHNl
-dF9jYw0KPiA+Pj4gaW50ZXJmYWNlIGZvciB0aGF0Lg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYt
-Ynk6IExpIEp1biA8anVuLmxpQG54cC5jb20+DQo+ID4+PiAtLS0NCj4gPj4+ICAgIGRyaXZlcnMv
-dXNiL3R5cGVjL3RjcG0uYyB8IDEyICsrKysrKysrKysrLQ0KPiA+Pj4gICAgaW5jbHVkZS9saW51
-eC91c2IvdGNwbS5oIHwgIDMgKystDQo+ID4+PiAgICAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2Vy
-dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvdXNiL3R5cGVjL3RjcG0uYyBiL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYw0KPiA+Pj4gaW5k
-ZXggMzhhNjIyMy4uYzk5NjZlZSAxMDA2NDQNCj4gPj4+IC0tLSBhL2RyaXZlcnMvdXNiL3R5cGVj
-L3RjcG0uYw0KPiA+Pj4gKysrIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jDQo+ID4+PiBAQCAt
-MTg1Nyw5ICsxODU3LDE1IEBAIHN0YXRpYyBib29sIHRjcG1fc3RhcnRfZHJwX3RvZ2dsaW5nKHN0
-cnVjdA0KPiA+Pj4gdGNwbV9wb3J0ICpwb3J0LA0KPiA+Pj4NCj4gPj4+ICAgIHN0YXRpYyB2b2lk
-IHRjcG1fc2V0X2NjKHN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQsIGVudW0gdHlwZWNfY2Nfc3RhdHVz
-IGNjKQ0KPiA+Pj4gICAgew0KPiA+Pj4gKwlib29sIGF0dGFjaGVkOw0KPiA+Pj4gKw0KPiA+Pj4g
-ICAgCXRjcG1fbG9nKHBvcnQsICJjYzo9JWQiLCBjYyk7DQo+ID4+PiAgICAJcG9ydC0+Y2NfcmVx
-ID0gY2M7DQo+ID4+PiAtCXBvcnQtPnRjcGMtPnNldF9jYyhwb3J0LT50Y3BjLCBjYyk7DQo+ID4+
-PiArCWlmIChwb3J0LT5zdGF0ZSA9PSBTUkNfQVRUQUNIRUQgfHwgcG9ydC0+c3RhdGUgPT0gU05L
-X0FUVEFDSEVEKQ0KPiA+Pj4gKwkJYXR0YWNoZWQgPSB0cnVlOw0KPiA+Pj4gKwllbHNlDQo+ID4+
-PiArCQlhdHRhY2hlZCA9IGZhbHNlOw0KPiA+Pj4gKwlwb3J0LT50Y3BjLT5zZXRfY2MocG9ydC0+
-dGNwYywgY2MsIGF0dGFjaGVkLCBwb3J0LT5wb2xhcml0eSk7DQo+ID4+DQo+ID4+IFBvbGFyaXR5
-IHNob3VsZCBiZSBzZXQgd2l0aCBzZXRfcG9sYXJpdHkoKS4gSXMgaXQgbmVjZXNzYXJ5IHRvIGR1
-cGxpY2F0ZSB0aGF0ID8NCj4gPg0KPiA+IEluIHRjcGNpIGNhc2UsIHNldF9wb2xhcml0eSBvbmx5
-IHNldHMgUGx1ZyBPcmllbnRhdGlvbiBiaXQ6DQo+ID4gIiAwYjogV2hlbiBWY29ubiBpcyBlbmFi
-bGVkLCBhcHBseSBpdCB0byB0aGUgQ0MyIHBpbi4gTW9uaXRvciB0aGUgQ0MxDQo+ID4gcGluIGZv
-ciBCTUMgY29tbXVuaWNhdGlvbnMgaWYgUEQgbWVzc2FnaW5nIGlzIGVuYWJsZWQuDQo+ID4gMWI6
-IFdoZW4gVmNvbm4gaXMgZW5hYmxlZCwgYXBwbHkgaXQgdG8gdGhlIENDMSBwaW4uIE1vbml0b3Ig
-dGhlIENDMg0KPiA+IHBpbiBmb3IgQk1DIGNvbW11bmljYXRpb25zIGlmIFBEIG1lc3NhZ2luZyBp
-cyBlbmFibGVkLiINCj4gPg0KPiBZZXMsIGJ1dCB0aGUgZHJpdmVyIHNob3VsZCBrbm93IGFib3V0
-IHRoZSBmbGFnIGFscmVhZHkuDQo+IA0KPiBJIGhhdmUgdHdvIG1vcmUgY29uY2VybnM6DQo+IA0K
-PiBTZXR0aW5nIENDIGlzIGxvZ2ljYWxseSBpbmRlcGVuZGVudCBmcm9tIHRoZSBzdGF0ZSBtYWNo
-aW5lICJhY3RpdmUiIHN0YXRlLg0KPiBJIGRvbid0IHJlY2FsbCB0aGF0IHRoZSBVU0IgUEQgc3Rh
-dGUgbWFjaGluZSB0YWxrcyBhYm91dCBDQyBwaW4gY2hhbmdlcyB1cG9uDQo+IGVudGVyaW5nIGFu
-ZCBleGl0aW5nIFJFQURZIHN0YXRlcy4gV2h5IGlzIGl0IG5lY2Vzc2FyeSB0byBwYXNzIHRoZSBz
-dGF0ZSB0byB0aGUNCj4gZHJpdmVyID8NCg0KSGVyZSB0aGUgQ0MgcGluIGNoYW5nZXMgb25seSBm
-b3IgdW4tdG91Y2hlZCBvbmUgYmV0d2VlbiBsb29rIGZvciBjb25uZWN0aW9uDQphbmQgYXR0YWNo
-ZWQsIHNvIHdoZW4gYXR0YWNoKGJlZm9yZSBlbnRlcmluZyBSRUFEWSksIHRoZSB1bi10b3VjaCBj
-YyBwaW4NCnNob3VsZCBiZSBjaGFuZ2VkIGZyb20gUGQvUnAgdG8gb3BlbihlLmcuIHNlZSB0eXBl
-YyBzcGVjIFRhYmxlIDQtNiBTb3VyY2UNClBlcnNwZWN0aXZlKS4gYXMgbXkgcXVlc3Rpb24gYmVs
-b3csIEkgY2FuIGFkZGluZyBpdCBpbnRvIHRjcGNpX3NldF9wb2xhcml0eSgpDQpmb3IgdGNwY2kg
-Y2FzZSBpZiBpdCdzIHJlYXNvbmFibGUsIHdpdGggdGhhdCB0Y3BtIEFQSSBkb24ndCBuZWVkIGNo
-YW5nZS4NCiAgDQo+IA0KPiBBbHNvLCB5b3VyIHBhdGNoIGNoYW5nZXMgdGhlIEFQSSwgYnV0IHlv
-dSBkb24ndCBjaGFuZ2UgdGhlIGRyaXZlciwgbWVhbmluZw0KPiB0aGVyZSBzaG91bGQgYmUgY29t
-cGlsZSBmYWlsdXJlcyBhZnRlciB0aGlzIHBhdGNoLiBZb3UgbmVlZCB0byBjaGFuZ2UgdGhlIGNh
-bGxpbmcNCj4gY29kZSBpbiB0aGUgc2FtZSBwYXRjaCB0byBrZWVwIHRoZSBidWlsZCBjbGVhbi4N
-Cg0KU29ycnksIEkgZGlkbuKAmXQgcmVhbGl6ZSB0aGVyZSBpcyBhbHJlYWR5IGEgdXNlciBvZiB0
-Y3BtLCBJIHdpbGwgdXBkYXRlIHRoZSBjYWxsaW5nDQpkcml2ZXIgYWNjb3JkaW5nbHkgZm9yIGhh
-bmdlZCB0Y3BtIEFQSSBpbiBuZXh0IHZlcnNpb24uDQoNCkxpIEp1bg0KDQo+IA0KPiBHdWVudGVy
-DQo+IA0KPiA+IFRoZXJlIGlzIG5vIGR1cGxpY2F0aW9uIGZvciB0Y3BjaSwgb3IgeW91IHRoaW5r
-IEkgc2hvdWxkIGRvIHRoaXMgaW4NCj4gPiBzZXRfcG9sYXJpdHkgb2YgdGNwY2kgZHJpdmVyIGlu
-dGVybmFsbHk/IGxvb2tzIGJldHRlciBmcm9tIG15IHBvaW50DQo+ID4gdmlldyBhcyBJIG1heSBk
-b24ndCBuZWVkIGNoYW5nZSB0Y3BtIHNldF9jYyBpbnRlcmZhY2UuDQo+ID4NCj4gPiB0aGFua3MN
-Cj4gPiBMaSBKdW4NCj4gPj4NCj4gPj4+ICAgIH0NCj4gPj4+DQo+ID4+PiAgICBzdGF0aWMgaW50
-IHRjcG1faW5pdF92YnVzKHN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQpIEBAIC0xOTEzLDYNCj4gPj4+
-ICsxOTE5LDggQEAgc3RhdGljIGludCB0Y3BtX3NyY19hdHRhY2goc3RydWN0IHRjcG1fcG9ydCAq
-cG9ydCkNCj4gPj4+ICAgIAlpZiAocmV0IDwgMCkNCj4gPj4+ICAgIAkJcmV0dXJuIHJldDsNCj4g
-Pj4+DQo+ID4+PiArCXRjcG1fc2V0X2NjKHBvcnQsIHRjcG1fcnBfY2MocG9ydCkpOw0KPiA+Pj4g
-Kw0KPiA+Pj4gICAgCXJldCA9IHRjcG1fc2V0X3JvbGVzKHBvcnQsIHRydWUsIFRZUEVDX1NPVVJD
-RSwgVFlQRUNfSE9TVCk7DQo+ID4+PiAgICAJaWYgKHJldCA8IDApDQo+ID4+PiAgICAJCXJldHVy
-biByZXQ7DQo+ID4+PiBAQCAtMjAyOCw2ICsyMDM2LDggQEAgc3RhdGljIGludCB0Y3BtX3Nua19h
-dHRhY2goc3RydWN0IHRjcG1fcG9ydA0KPiAqcG9ydCkNCj4gPj4+ICAgIAlpZiAocmV0IDwgMCkN
-Cj4gPj4+ICAgIAkJcmV0dXJuIHJldDsNCj4gPj4+DQo+ID4+PiArCXRjcG1fc2V0X2NjKHBvcnQs
-IFRZUEVDX0NDX1JEKTsNCj4gPj4+ICsNCj4gPj4+ICAgIAlyZXQgPSB0Y3BtX3NldF9yb2xlcyhw
-b3J0LCB0cnVlLCBUWVBFQ19TSU5LLCBUWVBFQ19ERVZJQ0UpOw0KPiA+Pj4gICAgCWlmIChyZXQg
-PCAwKQ0KPiA+Pj4gICAgCQlyZXR1cm4gcmV0Ow0KPiA+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
-bGludXgvdXNiL3RjcG0uaCBiL2luY2x1ZGUvbGludXgvdXNiL3RjcG0uaA0KPiA+Pj4gaW5kZXgN
-Cj4gPj4+IGE2N2NmNzcuLmEwMDdlMmExIDEwMDY0NA0KPiA+Pj4gLS0tIGEvaW5jbHVkZS9saW51
-eC91c2IvdGNwbS5oDQo+ID4+PiArKysgYi9pbmNsdWRlL2xpbnV4L3VzYi90Y3BtLmgNCj4gPj4+
-IEBAIC0xNTksNyArMTU5LDggQEAgc3RydWN0IHRjcGNfZGV2IHsNCj4gPj4+ICAgIAlpbnQgKCpp
-bml0KShzdHJ1Y3QgdGNwY19kZXYgKmRldik7DQo+ID4+PiAgICAJaW50ICgqZ2V0X3ZidXMpKHN0
-cnVjdCB0Y3BjX2RldiAqZGV2KTsNCj4gPj4+ICAgIAlpbnQgKCpnZXRfY3VycmVudF9saW1pdCko
-c3RydWN0IHRjcGNfZGV2ICpkZXYpOw0KPiA+Pj4gLQlpbnQgKCpzZXRfY2MpKHN0cnVjdCB0Y3Bj
-X2RldiAqZGV2LCBlbnVtIHR5cGVjX2NjX3N0YXR1cyBjYyk7DQo+ID4+PiArCWludCAoKnNldF9j
-Yykoc3RydWN0IHRjcGNfZGV2ICpkZXYsIGVudW0gdHlwZWNfY2Nfc3RhdHVzIGNjLA0KPiA+Pj4g
-KwkJCWJvb2wgYXR0YWNoZWQsIGVudW0gdHlwZWNfY2NfcG9sYXJpdHkgcG9sYXJpdHkpOw0KPiA+
-Pj4gICAgCWludCAoKmdldF9jYykoc3RydWN0IHRjcGNfZGV2ICpkZXYsIGVudW0gdHlwZWNfY2Nf
-c3RhdHVzICpjYzEsDQo+ID4+PiAgICAJCSAgICAgIGVudW0gdHlwZWNfY2Nfc3RhdHVzICpjYzIp
-Ow0KPiA+Pj4gICAgCWludCAoKnNldF9wb2xhcml0eSkoc3RydWN0IHRjcGNfZGV2ICpkZXYsDQo+
-ID4+Pg0KPiA+DQoNCg==
+On 26 September 2017 at 18:56, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+> Hi PrasannaKumar !
+>
+> On Tue, Sep 26, 2017 at 3:17 PM, PrasannaKumar Muralidharan
+> <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Mathieu,
+>>
+>> On 16 September 2017 at 00:48, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+>>> The jz4740-watchdog driver supports both jz4740 & jz4780.
+>>>
+>>> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>> Changes in v2:
+>>> * make the node name generic (Paul Cercueil)
+>>>
+>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>> index 20e37d2d6008..76055bbc823a 100644
+>>> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>> @@ -263,6 +263,11 @@
+>>>                 status = "disabled";
+>>>         };
+>>>
+>>> +       watchdog: watchdog@10002000 {
+>>> +               compatible = "ingenic,jz4780-watchdog";
+>>
+>> In drivers/watchdog/jz4740_wdt.c the compatible is declared as
+>> "ingenic,jz4740-watchdog" while your change says
+>> "ingenic,jz4780-watchdog". Can you modify that?
+>
+> Well in the full changeset, you'll find: [PATCH v2 4/5] watchdog:
+> jz4740: Add support for the watchdog in jz4780 SoC
+>
+> https://lkml.org/lkml/2017/9/15/451
+>
+> There has been some misunderstanding. I still believe I need a new
+> compatible string, even if currently the code is 100% identical.
+
+I missed that. Ignore this comment.
+
+>
+>>> +               reg = <0x10002000 0x100>;
+>>> +       };
+>>> +
+>>
+>> The structures jz4740_wdt_device and jz4740_wdt_resources can be
+>> removed form arch/mips/jz4740/platform.c as watchdog is declared in
+>> device tree. For JZ4740 platform watchdog is not used so the variables
+>> can be removed.
+>>
+>> Do you mind adding watchdog entry to JZ4740 device tree? Currently
+>> watchdog is not enabled for JZ4740 platform.
+>
+>
+> Will do once this series has been accepted. Thanks for the review !
+
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+>
+>>>         nemc: nemc@13410000 {
+>>>                 compatible = "ingenic,jz4780-nemc";
+>>>                 reg = <0x13410000 0x10000>;
+>>> --
+>>> 2.11.0
+>>>
+>>
+>> Regards,
+>> PrasannaKumar
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
