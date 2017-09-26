@@ -1,112 +1,97 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v1 1/5] clk: tegra: Add AHB DMA clock entry
-Date: Tue, 26 Sep 2017 12:56:11 +0300
-Message-ID: <20170926095611.GW6290@tbergstrom-lnx.Nvidia.com>
-References: <cover.1506380746.git.digetx@gmail.com>
- <b5fd087892544cd17042a4aa9dc0289fb761352c.1506380746.git.digetx@gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 06/13] drm/sun4i: hdmi: Allow using second PLL as TMDS
+ clk parent
+Date: Tue, 26 Sep 2017 11:58:38 +0200
+Message-ID: <20170926095838.vvgdnm7bdodwtjzv@flea>
+References: <20170926065919.24446-1-wens@csie.org>
+ <20170926065919.24446-7-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b5fd087892544cd17042a4aa9dc0289fb761352c.1506380746.git.digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0100707178=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170926065919.24446-7-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 02:22:02AM +0300, Dmitry Osipenko wrote:
-> AHB DMA presents on Tegra20/30. Add missing entries, so that driver
-> for AHB DMA could be implemented.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/clk/tegra/clk-id.h           | 1 +
->  drivers/clk/tegra/clk-tegra-periph.c | 1 +
->  drivers/clk/tegra/clk-tegra20.c      | 6 ++++++
->  drivers/clk/tegra/clk-tegra30.c      | 2 ++
->  4 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
-> index 689f344377a7..c1661b47bbda 100644
-> --- a/drivers/clk/tegra/clk-id.h
-> +++ b/drivers/clk/tegra/clk-id.h
-> @@ -12,6 +12,7 @@ enum clk_id {
->  	tegra_clk_amx,
->  	tegra_clk_amx1,
->  	tegra_clk_apb2ape,
-> +	tegra_clk_ahbdma,
->  	tegra_clk_apbdma,
->  	tegra_clk_apbif,
->  	tegra_clk_ape,
-> diff --git a/drivers/clk/tegra/clk-tegra-periph.c b/drivers/clk/tegra/clk-tegra-periph.c
-> index 848255cc0209..95a3d8c95f06 100644
-> --- a/drivers/clk/tegra/clk-tegra-periph.c
-> +++ b/drivers/clk/tegra/clk-tegra-periph.c
-> @@ -823,6 +823,7 @@ static struct tegra_periph_init_data gate_clks[] = {
->  	GATE("timer", "clk_m", 5, 0, tegra_clk_timer, CLK_IS_CRITICAL),
->  	GATE("isp", "clk_m", 23, 0, tegra_clk_isp, 0),
->  	GATE("vcp", "clk_m", 29, 0, tegra_clk_vcp, 0),
-> +	GATE("ahbdma", "clk_m", 33, 0, tegra_clk_ahbdma, 0),
 
-Parent for this should be hclk on Tegra30 and later chips as well..
+--===============0100707178==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qttlu3ybmjip77q3"
+Content-Disposition: inline
 
->  	GATE("apbdma", "clk_m", 34, 0, tegra_clk_apbdma, 0),
->  	GATE("kbc", "clk_32k", 36, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_kbc, 0),
->  	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, 0),
-> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
-> index 837e5cbd60e9..e76c0d292ca7 100644
-> --- a/drivers/clk/tegra/clk-tegra20.c
-> +++ b/drivers/clk/tegra/clk-tegra20.c
-> @@ -449,6 +449,7 @@ static struct tegra_devclk devclks[] __initdata = {
->  	{ .con_id = "audio", .dt_id = TEGRA20_CLK_AUDIO },
->  	{ .con_id = "audio_2x", .dt_id = TEGRA20_CLK_AUDIO_2X },
->  	{ .dev_id = "tegra20-ac97", .dt_id = TEGRA20_CLK_AC97 },
-> +	{ .dev_id = "tegra-ahbdma", .dt_id = TEGRA20_CLK_AHBDMA },
 
-This isn't needed if you use DT bindings to get the clock handle.
+--qttlu3ybmjip77q3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  	{ .dev_id = "tegra-apbdma", .dt_id = TEGRA20_CLK_APBDMA },
->  	{ .dev_id = "rtc-tegra", .dt_id = TEGRA20_CLK_RTC },
->  	{ .dev_id = "timer", .dt_id = TEGRA20_CLK_TIMER },
-> @@ -806,6 +807,11 @@ static void __init tegra20_periph_clk_init(void)
->  				    clk_base, 0, 3, periph_clk_enb_refcnt);
->  	clks[TEGRA20_CLK_AC97] = clk;
->  
-> +	/* ahbdma */
-> +	clk = tegra_clk_register_periph_gate("ahbdma", "hclk", 0, clk_base,
-> +				    0, 33, periph_clk_enb_refcnt);
-> +	clks[TEGRA20_CLK_AHBDMA] = clk;
-> +
+On Tue, Sep 26, 2017 at 06:59:12AM +0000, Chen-Yu Tsai wrote:
+> Allwinner SoCs typically have two PLLs reserved for video related usage.
+> At the moment we only support using the first one to feed the HDMI
+> transmitter block's TMDS clock.
+>=20
+> Let the HDMI encoder's TMDS clock go through all of its parents when
+> calculating possible clock rates. This allows usage of the second video
+> PLL as its parent.
+>=20
+> Note that this does not handle conflicting pixel clocks. It is entirely
+> possible to have an LCD panel use one pixel clock rate, only to be
+> overridden by the HDMI transmitter's clock rate request when the second
+> display pipeline is enabled.
+>=20
+> This should be handled by having all the clock drivers honor clock rate
+> ranges, and have the consumers use clk_set_rate_min/clk_set_rate_max.
 
-You can use the generic definition here if you correct the entry above.
+That, or relying on clk_set_rate_protect
 
->  	/* apbdma */
->  	clk = tegra_clk_register_periph_gate("apbdma", "pclk", 0, clk_base,
->  				    0, 34, periph_clk_enb_refcnt);
-> diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
-> index a2d163f759b4..e99701557f29 100644
-> --- a/drivers/clk/tegra/clk-tegra30.c
-> +++ b/drivers/clk/tegra/clk-tegra30.c
-> @@ -612,6 +612,7 @@ static struct tegra_devclk devclks[] __initdata = {
->  	{ .con_id = "fuse_burn", .dev_id = "fuse-tegra", .dt_id = TEGRA30_CLK_FUSE_BURN },
->  	{ .con_id = "apbif", .dev_id = "tegra30-ahub", .dt_id = TEGRA30_CLK_APBIF },
->  	{ .con_id = "hda2hdmi", .dev_id = "tegra30-hda", .dt_id = TEGRA30_CLK_HDA2HDMI },
-> +	{ .dev_id = "tegra-ahbdma", .dt_id = TEGRA30_CLK_AHBDMA },
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Same as for Tegra20.
+Maxime
 
->  	{ .dev_id = "tegra-apbdma", .dt_id = TEGRA30_CLK_APBDMA },
->  	{ .dev_id = "rtc-tegra", .dt_id = TEGRA30_CLK_RTC },
->  	{ .dev_id = "timer", .dt_id = TEGRA30_CLK_TIMER },
-> @@ -788,6 +789,7 @@ static struct tegra_clk tegra30_clks[tegra_clk_max] __initdata = {
->  	[tegra_clk_extern3] = { .dt_id = TEGRA30_CLK_EXTERN3, .present = true },
->  	[tegra_clk_disp1] = { .dt_id = TEGRA30_CLK_DISP1, .present = true },
->  	[tegra_clk_disp2] = { .dt_id = TEGRA30_CLK_DISP2, .present = true },
-> +	[tegra_clk_ahbdma] = { .dt_id = TEGRA30_CLK_AHBDMA, .present = true },
->  	[tegra_clk_apbdma] = { .dt_id = TEGRA30_CLK_APBDMA, .present = true },
->  	[tegra_clk_rtc] = { .dt_id = TEGRA30_CLK_RTC, .present = true },
->  	[tegra_clk_timer] = { .dt_id = TEGRA30_CLK_TIMER, .present = true },
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Cheers,
+--qttlu3ybmjip77q3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Peter.
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZyiTOAAoJEBx+YmzsjxAglWQP/izPBYzBNaNXOEgBjF1Cy4M1
+/q16lgMmGlN3ybVuwvCsGqmtLm4WPB4GWtq5d7+yeEBuc/XwAHzUZHALzKlXJfeg
+vRDU3br/GYHwmjB028IRb9Gu9tn5jLAB4HjtLzoxDqobW/HhjScRDy7YO67EmJeY
+7LIPw6ndzQRfD3C683AHUYV1bCSD4JsNENH9U19/gaLQy+Glbp7G6PmMo5tw0oJb
+CNwnsn4x8GPBD4N1uQpUFc9Yo8YwLNUJOIpsLUCeAgHHS7+uHA+WiSIlQDnait66
+0tSCabXfKkVF50POS0I4TwwwwetF18uf4ywIBIXHYrXkisu+AOrgJG5W8ZpsPlDy
+w02cd/ns4FTe3JaLY4G6kTSmWgevKf2N/1hn3Yr9HxkytnfLQQ1EAGWIxkzaAClb
+C7MXXczmKehRnSC3z+q5+hjVCUOAi/nkuqgqV42QXhYuQV6z7Clv649TB9E2SvMx
+X8awPInOLu4tSlE+hQvm5NjJ+PIMXw3nsA6oEwrBthBEEKn+pibmNoqgrb/rBZrI
+3LV8ib0FdFIU8QfiRbDc+k7NE/dPCf9Em1241iL6QgIAh4xOWzL9Waj08FCYssUN
+NZD2IAYsiDnhGw6hgtIHIcOoox8mibMCQcOKKO5xEvbdiMDGosGrcrBeoOLw95Gx
+8SimeMY+GH8mcgBsxk7d
+=cSMz
+-----END PGP SIGNATURE-----
+
+--qttlu3ybmjip77q3--
+
+--===============0100707178==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0100707178==--
