@@ -1,56 +1,157 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v1 0/2] NVIDIA Tegra20 video decoder driver
-Date: Tue, 26 Sep 2017 23:35:49 +0200
-Message-ID: <20170926213549.GE3418@kroah.com>
-References: <cover.1506377430.git.digetx@gmail.com>
- <20170926065447.GC6250@kroah.com>
- <d2d4c970-d921-c282-b70e-00247c5de50f@gmail.com>
+From: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] thermal: add brcmstb AVS TMON driver
+Date: Tue, 26 Sep 2017 14:36:58 -0700
+Message-ID: <CANEuBv6jxe1kn2ttNAVWhqszw_qi+0bEe+GA4AwaBi2dOukPOw@mail.gmail.com>
+References: <20170809220257.4234-1-code@mmayer.net> <20170809220257.4234-3-code@mmayer.net>
+ <1502777298.2591.1.camel@intel.com> <95da51df3cadbb05f721f2e5b8d59f8d@milecki.pl>
+ <1502779721.2591.4.camel@intel.com> <4ec0715e-fcd7-3aec-3589-96426575c373@gmail.com>
+ <744357E9AAD1214791ACBA4B0B9092636BE1FB55@SHSMSX101.ccr.corp.intel.com>
+ <1e23383c-7c63-04fc-0f07-21b0e418e3de@gmail.com> <744357E9AAD1214791ACBA4B0B9092636BE1FEEB@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d2d4c970-d921-c282-b70e-00247c5de50f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <744357E9AAD1214791ACBA4B0B9092636BE1FEEB-0J0gbvR4kThpB2pF5aRoyrfspsVTdybXVpNB7YpNyf8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Zhang, Rui" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rafal Milecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>Linux Kernel Mailing List <linu>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 03:32:23PM +0300, Dmitry Osipenko wrote:
-> On 26.09.2017 09:54, Greg Kroah-Hartman wrote:
-> > On Tue, Sep 26, 2017 at 01:15:41AM +0300, Dmitry Osipenko wrote:
-> >> This driver provides accelerated video decoding to NVIDIA Tegra20 SoC's,
-> >> it is a result of reverse-engineering efforts. Driver has been tested on
-> >> Toshiba AC100 and Acer A500, it should work on any Tegra20 device.
-> >>
-> >> In userspace this driver is utilized by libvdpau-tegra [0] that implements
-> >> VDPAU interface, so any video player that supports VDPAU can provide
-> >> accelerated video decoding on Tegra20 on Linux.
-> > 
-> > Why not use the v4l2 api instead?  Doesn't that provide the same needed
-> > user/kernel api here instead of creating yet-another-custom ioctl?
-> > 
-> 
-> 1) The HW doesn't generalize for the common API. Like for example, it isn't
-> capable of unpacking bitstream encoded with CABAC (Context-adaptive binary
-> arithmetic coding), so unpacking should be done in software and then VDE HW
-> isn't capable of decoding such a stream in a fully-automated manner, software
-> would have to feed engine with a chunks of macroblocks untill the whole frame is
-> decoded. That lameness is partially hidden in the BLOB's firmware, that firmware
-> actually is just a driver BTW.
-> 
-> 2) We want to have decoding integrated with the presentation of the decoded
-> video frame. So having v4l interface for decoding would be just an extra
-> unnecessary shim, increasing CPU / memory resources usage and complexity of the
-> code.
-> 
-> 3) The decoding and presentation are already implemented using VDPAU API and
-> proven to work decently in that way.
+On 25 September 2017 at 23:17, Zhang, Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi, Florian,
+>
+>> -----Original Message-----
+>> From: Florian Fainelli [mailto:f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>> Sent: Tuesday, September 26, 2017 12:14 PM
+>> To: Zhang, Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>; Rafal Milecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>; Eduardo Valentin
+>> <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
+>> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Brian
+>> Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Gregory Fong
+>> <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Catalin
+>> Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>;
+>> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>; Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>;
+>> Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>; Power
+>> Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Device Tree List
+>> <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; ARM Kernel List <linux-arm-
+>> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; Linux Kernel Mailing List <linux-
+>> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Subject: Re: [PATCH v4 2/4] thermal: add brcmstb AVS TMON driver
+>> Importance: High
+>>
+>> On 09/25/2017 08:02 PM, Zhang, Rui wrote:
+>> > Hi, Florian,
+>> >
+>> > This patch set was dropped in the last minute because of this
+>> > discussion https://patchwork.kernel.org/patch/9936325/
+>> > as I don=E2=80=99t want to rebase the patch before sending the pull re=
+quest.
+>>
+>> Ah, you wanted to squash that patch into the initial submission?
+>>
+>> >
+>> > I don=E2=80=99t think we can make it for 4.14.
+>> > Eduardo will be back and pick the soc patches for 4.15.
+>>
+>> I assume you would want to get that particular patch squashed into a cle=
+an
+>> submission targeting 4.15 now, right?
+>>
+> Yes. As the patch in this thread has not been in upstream yet, I'd prefer=
+ the
+> fix/cleanup meld into the original patch before sending upstream.
 
-This sounds like something you should be talking over with the media
-driver developers, why are they not even cc:ed on this submission?
+I sent out v5 a few minutes ago. See https://lkml.org/lkml/2017/9/26/746.
 
-I need their ack on this new api before I can take this.
+Regards,
+-Markus
 
-thanks,
-
-greg k-h
+> Thanks,
+> Rui
+>
+>> Thanks
+>>
+>> >
+>> > Thanks,
+>> > rui
+>> >
+>> >
+>> >
+>> > -----Original Message-----
+>> > From: Florian Fainelli [mailto:f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>> > Sent: Monday, September 25, 2017 5:11 AM
+>> > To: Zhang, Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>; Rafa=C5=82 Mi=C5=82ecki <rafal@m=
+ilecki.pl>
+>> > Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>; Eduardo Valentin
+>> > <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark
+>> Rutland
+>> > <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Brian
+>> Norris
+>> > <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Gregory Fong
+>> <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>;
+>> > Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Catalin Marinas
+>> > <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>; Arnd
+>> > Bergmann <arnd-r2nGTMty4D4@public.gmane.org>; Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>;
+>> Broadcom
+>> > Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>; Power
+>> Management
+>> > List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Device Tree List
+>> > <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; ARM Kernel List
+>> > <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; Linux Kernel Mailing List
+>> > <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> > Subject: Re: [PATCH v4 2/4] thermal: add brcmstb AVS TMON driver
+>> > Importance: High
+>> >
+>> > Le 08/14/17 =C3=A0 23:48, Zhang Rui a =C3=A9crit :
+>> >> On Tue, 2017-08-15 at 08:42 +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> >>> On 2017-08-15 08:08, Zhang Rui wrote:
+>> >>>>
+>> >>>>>
+>> >>>>> diff --git a/drivers/thermal/broadcom/Kconfig
+>> >>>>> b/drivers/thermal/broadcom/Kconfig
+>> >>>>> index 42c098e..c106a15 100644
+>> >>>>> --- a/drivers/thermal/broadcom/Kconfig
+>> >>>>> +++ b/drivers/thermal/broadcom/Kconfig
+>> >>>>> @@ -6,6 +6,13 @@ config BCM2835_THERMAL
+>> >>>>>         help
+>> >>>>>           Support for thermal sensors on Broadcom bcm2835 SoCs.
+>> >>>>>
+>> >>>>> +config BRCMSTB_THERMAL
+>> >>>>> +       tristate "Broadcom STB AVS TMON thermal driver"
+>> >>>>> +       depends on ARCH_BRCMSTB || COMPILE_TEST
+>> >>>>> +       help
+>> >>>>> +         Enable this driver if you have a Broadcom STB SoC and
+>> >>>>> would like
+>> >>>>> +         thermal framework support.
+>> >>>>> +
+>> >>>> I don't understand why I got the following checkpatch warning
+>> >>>>
+>> >>>> WARNING: please write a paragraph that describes the config symbol
+>> >>>> fully
+>> >>>> #73: FILE: drivers/thermal/broadcom/Kconfig:9:
+>> >>>> +config BRCMSTB_THERMAL
+>> >>>>
+>> >>>> I didn't see this for other Kconfig changes.
+>> >>> It's because your help message is only 2 lines long (instead of 3).
+>> >>>
+>> >>> Some (many?) maintainers aren't pedantic about that, a common sense
+>> >>> should be applied ;)
+>> >>
+>> >> thanks for explaining.
+>> >> Patch 1 and 2 queued for next merge window.
+>> >
+>> > Humm, I don't see this driver in your latest 4.14 pull request to Linu=
+s, so
+>> what happened here exactly? Can we expect this driver to be submitted fo=
+r
+>> 4.14 or we just happened to have missed this window now?
+>> > --
+>> > Florian
+>> >
+>>
+>> --
+>> Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
