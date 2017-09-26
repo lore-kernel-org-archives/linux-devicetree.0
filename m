@@ -1,66 +1,60 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 1/2] pinctrl: Allow a device to indicate when to force a
- state
-Date: Tue, 26 Sep 2017 15:16:28 +0100
-Message-ID: <20170926141628.h27hcrujzhxu4sph@localhost.localdomain>
-References: <20170921010421.7467-1-f.fainelli@gmail.com>
- <20170921010421.7467-2-f.fainelli@gmail.com>
- <CACRpkdbVs1b0y91xWtb+8EwcDnkeLd4jbcZnWFnzOytmCLvDXw@mail.gmail.com>
- <20170922132011.wssbhnsggteffgte@localhost.localdomain>
- <dbd6df33-0af4-7014-bc46-3378c1346726@gmail.com>
+From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 05/12] staging: typec: tcpci: register port before request
+ irq
+Date: Tue, 26 Sep 2017 14:16:30 +0000
+Message-ID: <DB4PR04MB076831D1E56442F173BA87DE897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
+References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+ <1506386727-16370-6-git-send-email-jun.li@nxp.com>
+ <da64a379-f9bc-5ad8-44a5-f61c4419e1e7@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dbd6df33-0af4-7014-bc46-3378c1346726@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, ext Tony Lindgren <tony@atomide.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Cooper <alcooperx@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <da64a379-f9bc-5ad8-44a5-f61c4419e1e7-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 09:57:22AM -0700, Florian Fainelli wrote:
-> On 09/22/2017 06:20 AM, Charles Keepax wrote:
-> > On Fri, Sep 22, 2017 at 01:55:22PM +0200, Linus Walleij wrote:
-> >> On Thu, Sep 21, 2017 at 3:04 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> > I guess in our case we didn't really consider the restore aspect
-> > because we essentially get that for free from regmap. Regmap
-> > cache's all our register state and provides a mechanism to sync
-> > that back to the hardware, so we simply invoke that on resume and
-> > all our GPIO/pinctrl state is restored.
-> 
-> As you may see, the problem in my case is that the hardware has only onw
-> pinctrl state: "default", and it loses its hardware register contents,
-> and because of early check in pinctrl_select_state(), we do nothing (the
-> state has not changed per-se), so we are left with SW thinking we
-> applied the "default" state again, while in fact we did not.
-> 
-
-That is exactly the situation we have on the CODECs when they go
-into runtime suspend, power is removed, and everything is back at
-defaults when we resume. Just in our case we re-apply the state
-as part of the CODEC resume using a regmap sync.
-
-> The approach taken here was to move this to the core pinctrl code
-> because this is not something a pinctrl consumer should be aware of,
-> when it calls pinctrl_select_state(), it should do what it asked for.
-> 
-
-Apologies if I have missed something here, but does the consumer
-not still to some extent need to be aware with this solution
-since it needs to re-request the pin state in resume?
-
-I think that is really my only reservation here, is it feels
-like this should be something that is purely implemented on the
-provider, and be invisible to the consumer, and I am not clear
-this is.
-
-> I also decided to make this a per-provider property as opposed to a
-> per-group property because chances are that the state retention is on a
-> per-controller basis, and not per-bank/group, although I may be wrong.
-> 
-
-It seems quite likely that this property would mostly be
-per-provider to me as well.
-
-Thanks,
-Charles
+SGkNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJvZWNr
+IFttYWlsdG86Z3JvZWNrN0BnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVudGVyIFJvZWNrDQo+
+IFNlbnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAyNiwgMjAxNyA5OjM0IFBNDQo+IFRvOiBKdW4gTGkg
+PGp1bi5saUBueHAuY29tPjsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgrZHRAa2Vy
+bmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGhlaWtraS5rcm9nZXJ1c0BsaW51eC5p
+bnRlbC5jb20NCj4gQ2M6IHl1ZXlhb0Bnb29nbGUuY29tOyBvX2xldmVxdWVAb3JhbmdlLmZyOyBQ
+ZXRlciBDaGVuDQo+IDxwZXRlci5jaGVuQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9u
+Z0BueHAuY29tPjsgbGludXgtDQo+IHVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMDUvMTJdIHN0YWdpbmc6IHR5cGVj
+OiB0Y3BjaTogcmVnaXN0ZXIgcG9ydCBiZWZvcmUgcmVxdWVzdCBpcnENCj4gDQo+IE9uIDA5LzI1
+LzIwMTcgMDU6NDUgUE0sIExpIEp1biB3cm90ZToNCj4gPiBXaXRoIHRoYXQgd2UgY2FuIGNsZWFy
+IGFueSBwZW5kaW5nIGV2ZW50cyBhbmQgdGhlIHBvcnQgaXMgcmVnaXN0ZXJlZA0KPiA+IHNvIGRy
+aXZlciBjYW4gYmUgcmVhZHkgdG8gaGFuZGxlIHR5cGVjIGV2ZW50cyBvbmNlIHdlIHJlcXVlc3Qg
+aXJxLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAu
+Y29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIEp1biA8anVuLmxpQG54cC5jb20+DQo+ID4gLS0t
+DQo+ID4gICBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyB8IDExICsrKysrLS0tLS0tDQo+
+ID4gICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiA+
+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jDQo+ID4gYi9k
+cml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyBpbmRleCAwMTE5NDUzLi42ZDYwOGI0IDEwMDY0
+NA0KPiA+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3BjaS5jDQo+ID4gKysrIGIvZHJp
+dmVycy9zdGFnaW5nL3R5cGVjL3RjcGNpLmMNCj4gPiBAQCAtNTUyLDE1ICs1NTIsMTQgQEAgc3Rh
+dGljIGludCB0Y3BjaV9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiA+ICAgCS8q
+IERpc2FibGUgY2hpcCBpbnRlcnJ1cHRzICovDQo+ID4gICAJdGNwY2lfd3JpdGUxNih0Y3BjaSwg
+VENQQ19BTEVSVF9NQVNLLCAwKTsNCj4gPg0KPiA+IC0JZXJyID0gZGV2bV9yZXF1ZXN0X3RocmVh
+ZGVkX2lycSh0Y3BjaS0+ZGV2LCBjbGllbnQtPmlycSwgTlVMTCwNCj4gPiArCXRjcGNpLT5wb3J0
+ID0gdGNwbV9yZWdpc3Rlcl9wb3J0KHRjcGNpLT5kZXYsICZ0Y3BjaS0+dGNwYyk7DQo+ID4gKwlp
+ZiAoSVNfRVJSKHRjcGNpLT5wb3J0KSkNCj4gPiArCQlyZXR1cm4gUFRSX0VSUih0Y3BjaS0+cG9y
+dCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEodGNwY2kt
+PmRldiwgY2xpZW50LT5pcnEsIE5VTEwsDQo+ID4gICAJCQkJCXRjcGNpX2lycSwNCj4gPiAgIAkJ
+CQkJSVJRRl9PTkVTSE9UIHwgSVJRRl9UUklHR0VSX0xPVywNCj4gPiAgIAkJCQkJZGV2X25hbWUo
+dGNwY2ktPmRldiksIHRjcGNpKTsNCj4gPiAtCWlmIChlcnIgPCAwKQ0KPiA+IC0JCXJldHVybiBl
+cnI7DQo+ID4gLQ0KPiA+IC0JdGNwY2ktPnBvcnQgPSB0Y3BtX3JlZ2lzdGVyX3BvcnQodGNwY2kt
+PmRldiwgJnRjcGNpLT50Y3BjKTsNCj4gPiAtCXJldHVybiBQVFJfRVJSX09SX1pFUk8odGNwY2kt
+PnBvcnQpOw0KPiANCj4gVGhpcyBsZWF2ZXMgdGhlIHBvcnQgcmVnaXN0ZXJlZCBpZiByZWdpc3Rl
+cmluZyB0aGUgaXJxIGZhaWxzLg0KDQpJIHdpbGwgYWRkIGFuIGVycm9yIGhhbmRsaW5nIHdpdGgg
+dGNwbV91bnJlZ2lzdGVyX3BvcnQoKS4NCg0KPiANCj4gPiAgIH0NCj4gPg0KPiA+ICAgc3RhdGlj
+IGludCB0Y3BjaV9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
