@@ -1,61 +1,112 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH] dt-bindings: RTC: Add sirf,prima2-sysrtc bindings
-Date: Tue, 26 Sep 2017 15:45:31 +0200
-Message-ID: <20170926134531.wedo4a5k6flcugtd@piout.net>
-References: <20170915002035.13284-1-alexandre.belloni@free-electrons.com>
- <20170920205216.sgxyxc3bjcw3whot@rob-hp-laptop>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 10/12] staging: typec: tcpci: update set_cc for different
+ state
+Date: Tue, 26 Sep 2017 06:49:30 -0700
+Message-ID: <8ef676a1-4c2b-cea7-ad79-c50fb8d091fb@roeck-us.net>
+References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+ <1506386727-16370-11-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170920205216.sgxyxc3bjcw3whot@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506386727-16370-11-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/09/2017 at 15:52:16 -0500, Rob Herring wrote:
-> On Fri, Sep 15, 2017 at 02:20:35AM +0200, Alexandre Belloni wrote:
-> > Add device tree bindings for the SiRFSoC Real Time Clock.
+On 09/25/2017 05:45 PM, Li Jun wrote:
+> As we should keep the disconnected cc line to be open when attached,
+> so update the set_cc interface accordingly for it.
 > 
-> Would be useful to note this is already in use and was undocumented.
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> ---
+>   drivers/staging/typec/tcpci.c | 37 +++++++++++++++++++++----------------
+>   1 file changed, 21 insertions(+), 16 deletions(-)
 > 
-> > 
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/rtc/sirf,prima2-sysrtc.txt         | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/sirf,prima2-sysrtc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/sirf,prima2-sysrtc.txt b/Documentation/devicetree/bindings/rtc/sirf,prima2-sysrtc.txt
-> > new file mode 100644
-> > index 000000000000..206a5b44af48
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/sirf,prima2-sysrtc.txt
-> > @@ -0,0 +1,14 @@
-> > +SiRFSoC Real Time Clock
-> > +
-> > +Required properties:
-> > +- compatible: must be "sirf,prima2-sysrtc"
-> > +- reg: address range of rtc register set.
-> > +- interrupts: rtc alarm interrupts.
-> > +
-> > +Example:
-> > +			sysrtc@2000 {
-> 
-> rtc@...
-> 
-> Did you want to take all these patches or I can? At least the ones 
-> touching trivial-devices.txt I'll take so I can deal with any conflicts.
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index cea67f9..c7c45da 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -57,10 +57,11 @@ static int tcpci_write16(struct tcpci *tcpci, unsigned int reg, u16 val)
+>   	return regmap_raw_write(tcpci->regmap, reg, &val, sizeof(u16));
+>   }
+>   
+> -static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+> +static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc,
+> +			bool attached, enum typec_cc_polarity polarity)
+>   {
+>   	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> -	unsigned int reg;
+> +	unsigned int reg = 0, reg_cc1 = 0, reg_cc2 = 0;
+>   	int ret;
+>   
+>   	switch (cc) {
+> @@ -69,26 +70,23 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+>   			(TCPC_ROLE_CTRL_CC_RA << TCPC_ROLE_CTRL_CC2_SHIFT);
+>   		break;
+>   	case TYPEC_CC_RD:
+> -		reg = (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT) |
+> -			(TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT);
+> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT;
+> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT;
+>   		break;
+>   	case TYPEC_CC_RP_DEF:
+> -		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
+> -			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
+> -			(TCPC_ROLE_CTRL_RP_VAL_DEF <<
+> -			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
+> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
+> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
+> +		reg = TCPC_ROLE_CTRL_RP_VAL_DEF << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
+>   		break;
+>   	case TYPEC_CC_RP_1_5:
+> -		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
+> -			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
+> -			(TCPC_ROLE_CTRL_RP_VAL_1_5 <<
+> -			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
+> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
+> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
+> +		reg = TCPC_ROLE_CTRL_RP_VAL_1_5 << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
+>   		break;
+>   	case TYPEC_CC_RP_3_0:
+> -		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
+> -			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
+> -			(TCPC_ROLE_CTRL_RP_VAL_3_0 <<
+> -			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
+> +		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
+> +		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
+> +		reg = TCPC_ROLE_CTRL_RP_VAL_3_0 << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
+>   		break;
+>   	case TYPEC_CC_OPEN:
+>   	default:
+> @@ -97,6 +95,13 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+>   		break;
+>   	}
+>   
+> +	if (!attached)
+> +		reg |= reg_cc1 | reg_cc2;
+> +	else if (polarity == TYPEC_POLARITY_CC1)
+> +		reg |= reg_cc1;
+> +	else
+> +		reg |= reg_cc2;
+> +
+
+I think this is wrong. The value of CC pins should not depend on the state of
+the state machine. What if the state machine knows the polarity but is in a
+transient state ?.
+
+I am also not sure if the chip should ever set both CC lines at the same time.
+
+Guenter
+
+>   	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
+>   	if (ret < 0)
+>   		return ret;
 > 
 
-I think you can take them through your tree as they don't touch code in
-drivers/rtc.
-
-I'll resend v2 as a proper series.
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
