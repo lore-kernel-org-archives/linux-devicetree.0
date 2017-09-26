@@ -1,35 +1,68 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] dmaengine: zynqmp_ps_pcie: Adding PS PCIe
- platform DMA driver
-Date: Tue, 26 Sep 2017 23:04:35 +0530
-Message-ID: <20170926173435.GS30097@localhost>
-References: <1504873388-29195-1-git-send-email-vjonnal@xilinx.com>
- <1504873388-29195-6-git-send-email-vjonnal@xilinx.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]"
+ to the spi tree
+Date: Tue, 26 Sep 2017 10:30:09 -0700
+Message-ID: <20170926173009.xdw6mtvcyixpenr7@sirena.org.uk>
+References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
+ <CAMuHMdVsRwW+10ERyTJAa8XhhkPMn4ruymUwPKot+kmczBwbcA@mail.gmail.com>
+ <20170925184545.5k4nke27rgud3uwp@sirena.org.uk>
+ <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="flc5unealuztpgbg"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1504873388-29195-6-git-send-email-vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ravi Shankar Jonnalagadda <venkata.ravi.jonnalagadda-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 08, 2017 at 05:53:07PM +0530, Ravi Shankar Jonnalagadda wrote:
-> Platform driver handles transactions for PCIe EP DMA and Root DMA
-> 
-> Signed-off-by: Ravi Shankar Jonnalagadda <vjonnal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: RaviKiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/dma/xilinx/ps_pcie_platform.c | 3055 +++++++++++++++++++++++++++++++++
 
-I dont want to loose my sanity trying to review a 3k patch. If you don't put
-an effort to make your code easier to review, I dont want to see this...
+--flc5unealuztpgbg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Nacked-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+On Mon, Sep 25, 2017 at 09:15:53PM +0200, Geert Uytterhoeven wrote:
 
--- 
-~Vinod
+> My rebuttal is threefold:
+>   1. Listing the fallback property is mandatory for new SoCs. We only keep
+>      the per-SoC compatible values in the driver for older SoCs that predate
+>      the introduction of fallback properties.
+
+So good practice is always good practice, but I'd argue that it's not
+bad practice to also explicitly enumerate all the documented compatibles
+in the driver.  Being liberal in what you accept and all that.
+
+>   2. Some harm is involved, in the form of increased kernel image size.
+
+Is this really a meaningful impact?
+
+>   3. When updating DT bindings for new SoCs, we usually add "No driver
+>      update is needed" to the patch description to clarify. Unfortunately
+>      that was missed here.
+
+That's basically the same good practice thing, it's just documenting
+what you're trying to do here with not putting things in code but
+writing things in changelogs doesn't make them so!
+
+--flc5unealuztpgbg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnKjp4ACgkQJNaLcl1U
+h9CyOQf+KF7TH4e1LUiEusbvfDIIFdd+l5LEKQIJqQP/5OoKznc7+7vQKftJuqqM
+Wobnz0aQOhA1AMgXh0YnKyxx8CJIiEFq3DA+W3eLt6BABkRTPTkfSGjP/kYPa31w
+Px/pPoPFiNK3ldlhKAa2HkPoYA8MjlhcrX0U+fCa129JDFm8EKEmS6e6ThEnL5bW
+E48g6EGj8uImSSYnz+vBRnZ+GxkGuMkz41h+3735uXYUqvj9om6gIGSgSetH2l1y
+Mf6YW9h4YPybdui9n1ROLjZH8ELKCtLMhexyyDWZGlgmUOMkMEfSVfpXStb1hwRh
+C0eLU6+cRxHyjbStxq+Hacz2c2W/9A==
+=2Ur+
+-----END PGP SIGNATURE-----
+
+--flc5unealuztpgbg--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
