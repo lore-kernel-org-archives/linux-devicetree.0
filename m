@@ -1,45 +1,91 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
 Subject: Re: [PATCH v2 01/10] pinctrl: move gpio-axp209 to pinctrl
-Date: Tue, 26 Sep 2017 14:55:18 +0200
-Message-ID: <20170926125518.kulkohinaojty2zl@flea>
+Date: Tue, 26 Sep 2017 14:59:38 +0200
+Message-ID: <cca522e6-1dbf-b682-b8fe-907fa293f335@free-electrons.com>
 References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
  <e193f8efe9092171ebeffb77ab77422179fd3cab.1506428208.git-series.quentin.schulz@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+ <20170926125518.kulkohinaojty2zl@flea>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="q4gppu7zyiczrz4d"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQM4VHHAKGQEW5ROFZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <e193f8efe9092171ebeffb77ab77422179fd3cab.1506428208.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="1wRK5rxTKnVOU8HPvRh5JKvR0NS4sdKt2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170926125518.kulkohinaojty2zl@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, lee.jones@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--1wRK5rxTKnVOU8HPvRh5JKvR0NS4sdKt2
+Content-Type: multipart/mixed; boundary="hB1sSdTrWHGXRvfR6jt6iIOrtbSh1anHf";
+ protected-headers="v1"
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+ wens@csie.org, linux@armlinux.org.uk, lee.jones@linaro.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com
+Message-ID: <cca522e6-1dbf-b682-b8fe-907fa293f335@free-electrons.com>
+Subject: Re: [PATCH v2 01/10] pinctrl: move gpio-axp209 to pinctrl
+References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <e193f8efe9092171ebeffb77ab77422179fd3cab.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <20170926125518.kulkohinaojty2zl@flea>
+In-Reply-To: <20170926125518.kulkohinaojty2zl@flea>
 
---q4gppu7zyiczrz4d
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+--hB1sSdTrWHGXRvfR6jt6iIOrtbSh1anHf
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 26, 2017 at 12:17:11PM +0000, Quentin Schulz wrote:
-> To prepare the driver for the upcoming pinctrl features, move the GPIO
-> driver AXP209 from GPIO to pinctrl subsystem.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Maxime,
 
-I'm not sure we actually need to do this. Can't we just keep the
-driver here?
+On 26/09/2017 14:55, Maxime Ripard wrote:
+> On Tue, Sep 26, 2017 at 12:17:11PM +0000, Quentin Schulz wrote:
+>> To prepare the driver for the upcoming pinctrl features, move the GPIO=
 
-Maxime
+>> driver AXP209 from GPIO to pinctrl subsystem.
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+>=20
+> I'm not sure we actually need to do this. Can't we just keep the
+> driver here?
+>=20
 
--- 
-Maxime Ripard, Free Electrons
+That's not what I understood from:
+https://lkml.org/lkml/2016/11/24/360 and the following answers from
+Linus on the first version.
+
+Quentin
+--=20
+Quentin Schulz, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---q4gppu7zyiczrz4d--
+
+
+--hB1sSdTrWHGXRvfR6jt6iIOrtbSh1anHf--
+
+--1wRK5rxTKnVOU8HPvRh5JKvR0NS4sdKt2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJZyk9BAAoJEIS4mnU+4PGjNzYP/3zF+TkPDVi+l7h7FXpXhExx
+VpfT0OG/loAjdc5O6LmX1b8BT8TNlu6eFq1XEUIGjepjbKrp6VMyS6iMgEp8+kKz
+uI3h6VwD3nIGhVnPIib3IJhbvrifus/XlXnI1KmNLA69vAyeD4/xKR1M0tB2oqG7
+msYUhoaLZV6kfXjwxr1fmeitNPH1nDYJPC30V+hRPBsYZaneRq8ms/pUcKsHvxYx
+MbDJCaUJMUZ5c1pDbIn+NeuWLs2nj6ZOsspziOKDCyIA066RfriqQE39hKi3xhTf
+b5Kczz2rzZ+kIYh4sYzQMpa3FrQkAA3wqln68GG0SDHDetNLGNas9qKEzt95kLDg
+doUQi4zD4+TVGsA8azTgZMnB8tCrb6vQP+NbyYAUc4gKU1bwCdkkVP0naIAD0lW/
+rSX3knL7G459skDLfMrTxMRpIWG4+s1mGWelgHEnidbJR7rTGXzWvdY+33ZBvBtz
+GA7jmWBfQTBj7pEGaTL173achyBSI4hJqKh8RwNr1I3P8xcgAva0vGDl6qxZ/Cbk
+Wd8xzxPLobJVx6vJJGMpo0kOLMJQ80BGCBaMeB8K48oFryWfJJNkHRcW7Zd846lz
+oAbOXuQGxTPg6TmS058fN/+ZCbb9L+7GVm2lTWgI8tRYUPJFXZmJMsoxzuOTUtqd
+EDCoVRVB5WHjrZ6uOSaq
+=qg0b
+-----END PGP SIGNATURE-----
+
+--1wRK5rxTKnVOU8HPvRh5JKvR0NS4sdKt2--
