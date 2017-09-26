@@ -1,59 +1,60 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 06/13] drm/sun4i: hdmi: Allow using second PLL as TMDS
- clk parent
-Date: Tue, 26 Sep 2017 11:58:38 +0200
-Message-ID: <20170926095838.vvgdnm7bdodwtjzv@flea>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 09/13] drm/sun4i: hdmi: Add support for controller
+ hardware variants
+Date: Tue, 26 Sep 2017 12:01:50 +0200
+Message-ID: <20170926100150.5rgmraenrriekhna@flea>
 References: <20170926065919.24446-1-wens@csie.org>
- <20170926065919.24446-7-wens@csie.org>
+ <20170926065919.24446-10-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0100707178=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170926065919.24446-7-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vn4jicumbtbjskss"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170926065919.24446-10-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0100707178==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qttlu3ybmjip77q3"
-Content-Disposition: inline
-
-
---qttlu3ybmjip77q3
+--vn4jicumbtbjskss
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 26, 2017 at 06:59:12AM +0000, Chen-Yu Tsai wrote:
-> Allwinner SoCs typically have two PLLs reserved for video related usage.
-> At the moment we only support using the first one to feed the HDMI
-> transmitter block's TMDS clock.
+On Tue, Sep 26, 2017 at 06:59:15AM +0000, Chen-Yu Tsai wrote:
+> The HDMI controller found in earlier Allwinner SoCs have slight
+> differences between the A10, A10s, and the A31:
 >=20
-> Let the HDMI encoder's TMDS clock go through all of its parents when
-> calculating possible clock rates. This allows usage of the second video
-> PLL as its parent.
+>   - Need different initial values for the PLL related registers
 >=20
-> Note that this does not handle conflicting pixel clocks. It is entirely
-> possible to have an LCD panel use one pixel clock rate, only to be
-> overridden by the HDMI transmitter's clock rate request when the second
-> display pipeline is enabled.
+>   - Different behavior of the DDC and TMDS clocks
 >=20
-> This should be handled by having all the clock drivers honor clock rate
-> ranges, and have the consumers use clk_set_rate_min/clk_set_rate_max.
+>   - Different register layout for the DDC portion
+>=20
+>   - Separate DDC parent clock on the A31
+>=20
+>   - Explicit reset control
+>=20
+> For the A31, the HDMI TMDS clock has a different value offset for
+> the divider. The HDMI DDC block is different from the one in the
+> other SoCs. As far as the DDC clock goes, it has no pre-divider,
+> as it is clocked from a slower parent clock, not the TMDS clock.
+> The divider offset from the register value is different. And the
+> clock control register is at a different offset.
+>=20
+> A new variant data structure is created to store pointers to the
+> above functions, structures, and the different initial values.
+> Another flag notates whether there is a separate DDC parent clock.
+> If not, the TMDS clock is passed to the DDC clock create function,
+> as before.
+>=20
+> Regmap fields are used to deal with the different register layout
+> of the DDC block.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-That, or relying on clk_set_rate_protect
-
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Maxime
 
@@ -62,36 +63,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---qttlu3ybmjip77q3
+--vn4jicumbtbjskss
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZyiTOAAoJEBx+YmzsjxAglWQP/izPBYzBNaNXOEgBjF1Cy4M1
-/q16lgMmGlN3ybVuwvCsGqmtLm4WPB4GWtq5d7+yeEBuc/XwAHzUZHALzKlXJfeg
-vRDU3br/GYHwmjB028IRb9Gu9tn5jLAB4HjtLzoxDqobW/HhjScRDy7YO67EmJeY
-7LIPw6ndzQRfD3C683AHUYV1bCSD4JsNENH9U19/gaLQy+Glbp7G6PmMo5tw0oJb
-CNwnsn4x8GPBD4N1uQpUFc9Yo8YwLNUJOIpsLUCeAgHHS7+uHA+WiSIlQDnait66
-0tSCabXfKkVF50POS0I4TwwwwetF18uf4ywIBIXHYrXkisu+AOrgJG5W8ZpsPlDy
-w02cd/ns4FTe3JaLY4G6kTSmWgevKf2N/1hn3Yr9HxkytnfLQQ1EAGWIxkzaAClb
-C7MXXczmKehRnSC3z+q5+hjVCUOAi/nkuqgqV42QXhYuQV6z7Clv649TB9E2SvMx
-X8awPInOLu4tSlE+hQvm5NjJ+PIMXw3nsA6oEwrBthBEEKn+pibmNoqgrb/rBZrI
-3LV8ib0FdFIU8QfiRbDc+k7NE/dPCf9Em1241iL6QgIAh4xOWzL9Waj08FCYssUN
-NZD2IAYsiDnhGw6hgtIHIcOoox8mibMCQcOKKO5xEvbdiMDGosGrcrBeoOLw95Gx
-8SimeMY+GH8mcgBsxk7d
-=cSMz
+iQIcBAEBAgAGBQJZyiWOAAoJEBx+YmzsjxAgPMcQAKhJka5rdrFFsuwE4TzuM/uL
+01lg0F08m96IHLjmQoZit6Wopz6E1ABGLdkjEG1TFAXZU+bvBi19xC4X6K6MUaIj
+HhR5cZOauwQBliHkOR3Z9Wzxfzu9Z7zO+c76DAqvyaWgSR3DYM3Vs/jE6hQCj5Nb
+H6G6tHV9M9Jh0holZYsewec6x87N8X3IVkqm/lF/MMN4UbJDLviu9bhcUaN4Sp73
+xfsp3cQ7E7WIQW3cQa/prQXn9IaLBoXAAblzlyxY3KZPYYyrTSPal7o4BghT7inb
+glS1evTlnXZNE0W9azkVkwnm41fXnJH/JBWa4dQtVAenzp6SlHt8lBDHk6VGcgal
+qcxLEb4CawFkmC0nQSwEoBAEmUhiReqLn9IdZ6MNQMzEL7pZPa9wnQ9676xaYHyV
+FGROBVHTOKyjpFRfbyNMp2UeRMoba4E7QNTykBuwyaRTSza1l/7dcaaKMs1cbWkH
+iHWCT9q0nNmWCjFiW2vMeOKpEy12chiDy9j0S9T4hkARnha2GEINTLy9Ly2m5b40
+nbprpEAbz6T4wdrP5KIGNmiiYU+dhCWBMxYaiYGCYM2CGdhgnGLl/OcxwKngF0ya
+yd8w/tjgydVppc9mNouf96dG/ZSdh1JHjFeCRiUN3i1HQ5qP8H44yCSEV0vcXtlS
+ZK17qJzwTsub7bSeN9Zb
+=JMgp
 -----END PGP SIGNATURE-----
 
---qttlu3ybmjip77q3--
-
---===============0100707178==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0100707178==--
+--vn4jicumbtbjskss--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
