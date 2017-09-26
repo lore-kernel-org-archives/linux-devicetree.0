@@ -1,132 +1,63 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 02/12] usb: typec: add basic typec properties
-Date: Tue, 26 Sep 2017 10:09:03 +0000
-Message-ID: <DB4PR04MB076844531E3C50924E00AF33897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-3-git-send-email-jun.li@nxp.com>
- <20170926082300.GC14296@kuha.fi.intel.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v2 05/10] arm: dts: mt7623: update pio, usb and crypto
+ nodes
+Date: Tue, 26 Sep 2017 18:17:05 +0800
+Message-ID: <1506421025.5626.6.camel@mtksdaap41>
+References: <cover.1506390597.git.ryder.lee@mediatek.com>
+         <93734b87262a8305b67e989777dfa1297d66cee4.1506390597.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170926082300.GC14296-FZxXFokcWpatqXYlAKuG4QC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <93734b87262a8305b67e989777dfa1297d66cee4.1506390597.git.ryder.lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Erin Lo <erin.lo@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 2017-09-26 at 10:02 +0800, Ryder Lee wrote:
+> This patch updates pio, usb and crypto nodes to make them be consistent
+> with the binding documents.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi | 52 ++++++++++++++++++++++---------------------
+>  1 file changed, 27 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index 381843e..9ec3767 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -226,21 +226,6 @@
+>  		#reset-cells = <1>;
+>  	};
+>  
+> -	pio: pinctrl@10005000 {
+> -		compatible = "mediatek,mt7623-pinctrl",
+> -			     "mediatek,mt2701-pinctrl";
+> -		reg = <0 0x1000b000 0 0x1000>;
+> -		mediatek,pctl-regmap = <&syscfg_pctl_a>;
+> -		pins-are-numbered;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		interrupt-controller;
+> -		interrupt-parent = <&gic>;
+> -		#interrupt-cells = <2>;
+> -		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
+> -	};
+> -
+>  	syscfg_pctl_a: syscfg@10005000 {
+>  		compatible = "mediatek,mt7623-pctl-a-syscfg", "syscon";
+>  		reg = <0 0x10005000 0 0x1000>;
 
-> -----Original Message-----
-> From: Heikki Krogerus [mailto:heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org]
-> Sent: Tuesday, September 26, 2017 4:23 PM
-> To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> mark.rutland-5wv7dgnIgG8@public.gmane.org; yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org; Peter
-> Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>; linux-
-> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH 02/12] usb: typec: add basic typec properties
->=20
-> On Tue, Sep 26, 2017 at 08:45:17AM +0800, Li Jun wrote:
-> > port-type is required for any typec port; default-role is only
-> > required for drp; power source capable needs src-pdos; power sink
-> > capable needs snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
-> >
-> > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/typec.txt | 46
-> > +++++++++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/typec.txt
-> > b/Documentation/devicetree/bindings/usb/typec.txt
-> > new file mode 100644
-> > index 0000000..36d4467
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/typec.txt
-> > @@ -0,0 +1,46 @@
-> > +Generic typec and power delivery properties
-> > +-------------------------------------------
-> > +
-> > +Required properties:
-> > +- port-type:    should be one of "source", "sink" or "dual".
-> > +- default-role: preferred power role if drp, should be "sink" or "sour=
-ce".
-> > +- src-pdos:     An array of u32 with each entry providing supported po=
-wer
-> > +                source data object(PDO), the detailed bit definitions =
-of
-> > +                PDO can be found in "Universal Serial Bus Power Delive=
-ry
-> > +                Specification" chapter 6.4.1.2 Source_Capabilities Mes=
-sage,
-> > +                the order of each entry(PDO) should follow the PD spec=
- chapter
-> > +                6.4.1. Required only for power source and power dual r=
-ole with
-> > +                power delivery support.
-> > +- snk-pdos:     An array of u32 with each entry providing supported po=
-wer
-> > +                sink data object(PDO), the detailed bit definitions of=
- PDO
-> > +                can be found in "Universal Serial Bus Power Delivery
-> > +                Specification" chapter 6.4.1.3 Sink Capabilities Messa=
-ge,
-> > +                the order of each entry(PDO) should follow the PD spec=
- chapter
-> > +                6.4.1. Required only for power sink and power dual rol=
-e with
-> > +                power delivery support.
->=20
-> Wouldn't it be better to supply a property per detail and let the drivers=
- construct
-> the pdos as needed?
 
-This is my original idea, but different kind of PDOs have so many detail at=
-tributes for
-different config, we will have a very long properties list, for simple, may=
-be it's easier
-for user to check the standard PD spec and construct it by hand in this cas=
-e.
+Hi Ryder,
 
->=20
-> > +- max-snk-mv:   The max voltage the sink can support in millivoltage, =
-required
-> > +                only for power sink and power dual role with power del=
-ivery
-> > +                support.
-> > +- max-snk-ma:   The max current the sink can support in milliampere, r=
-equired
-> > +                only for power sink and power dual role with power del=
-ivery
-> > +                support.
-> > +- op-snk-mw:    Sink required operating power in milliwatts, if source=
- offered
-> > +                power is less then it, Capability Mismatch is set, req=
-uired
-> > +                only for power sink and power dual role with power del=
-ivery
-> > +                support.
->=20
-> I'm a little bit concerned about these. Has any OF/DT guys reviewed them?
->=20
-> We should also keep in mind that the same properties should also be possi=
-ble to
-> use with ACPI. That may not be a problem as such, but we should consult t=
-he
-> ACPI guys as well.
->=20
+pio node is special, it have 2 registers space.
+The address 10005000 is for PIO, it was accesed through syscfg_pctl_a
+regmap. The other one, 0x1000b000, is for EINT.
 
-Ok, let's wait DT guys comments.
+So,I think using address @10005000 is correct.
 
-Li Jun
->=20
-> Thanks,
->=20
-> --
-> heikki
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joe.C
