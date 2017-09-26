@@ -1,68 +1,98 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH 00/10] ARM: bcm: Add support for Broadcom Hurricane 2 SoC
-Date: Tue, 26 Sep 2017 11:00:59 -0400
-Message-ID: <CAC3K-4rioegE+UGmOiTjiw=WqRPr7sYf23kap5gz=TvYKT+z5g@mail.gmail.com>
-References: <20170926000931.670-1-f.fainelli@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: dw_wdt: add stop watchdog operation
+Date: Tue, 26 Sep 2017 08:13:09 -0700
+Message-ID: <20170926151309.GA14894@roeck-us.net>
+References: <20170926061123.29614-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170926000931.670-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170926061123.29614-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 25, 2017 at 8:09 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Hi all,
->
-> This patch series adds basic (boot to prompt with essential peripherals
-> working) support for Broadcom's Hurricane 2 SoC which is found in switching
-> applications.
->
-> This is also an iProc-family chip with a number of variations, including
-> some in the clock controller that I have not been able to identify yet.
->
-> Florian Fainelli (10):
->   MAINTAINERS: Update Broadcom iProc regexp with Hurricane 2
->   dt-bindings: Add documentation for Broadcom Hurricane 2 SoCs
->   ARM: bcm: Add support for Broadcom Hurricane 2 SoC
->   dt-bindings: Document Broadcom Hurricane 2 clocks
->   clk: bcm: Add Broadcom Hurricane 2 clock support
->   ARM: dts: Add Broadcom Hurricane 2 DTS include file
->   ARM: debug: Add Hurricane 2 UART2 debug addresses
->   dt-bindings: Add Ubiquiti Networks vendor prefix
->   ARM: dts: Hurricane 2: Add basic support for Ubiquiti UniFi Switch 8
->   ARM: multi_v7_defconfig: Enable CONFIG_ARCH_BCM_HR2
->
->  .../devicetree/bindings/arm/bcm/brcm,hr2.txt       |  14 +
->  .../bindings/clock/brcm,iproc-clocks.txt           |  14 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  MAINTAINERS                                        |   1 +
->  arch/arm/Kconfig.debug                             |  10 +-
->  arch/arm/boot/dts/Makefile                         |   2 +
->  arch/arm/boot/dts/bcm-hr2.dtsi                     | 368 +++++++++++++++++++++
->  arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts  |  85 +++++
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm/mach-bcm/Kconfig                          |   9 +
->  arch/arm/mach-bcm/Makefile                         |   3 +
->  arch/arm/mach-bcm/bcm_hr2.c                        |  25 ++
->  drivers/clk/bcm/Kconfig                            |   9 +
->  drivers/clk/bcm/Makefile                           |   1 +
->  drivers/clk/bcm/clk-hr2.c                          |  27 ++
->  15 files changed, 569 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
->  create mode 100644 arch/arm/boot/dts/bcm-hr2.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
->  create mode 100644 arch/arm/mach-bcm/bcm_hr2.c
->  create mode 100644 drivers/clk/bcm/clk-hr2.c
+On Tue, Sep 26, 2017 at 08:11:22AM +0200, Oleksij Rempel wrote:
+> The only way of stopping the watchdog is by resetting it.
+> Add the watchdog op for stopping the device and reset if
+> a reset line is provided.
+> 
+> At same time WDOG_HW_RUNNING should be remove from dw_wdt_start.
+> As commented by Guenter Roeck:
+> dw_wdt sets WDOG_HW_RUNNING in its open function. Result is
+> that the kref_get() in watchdog_open() won't be executed. But then
+> kref_put() in close will be called since the watchdog now does stop.
+> This causes the imbalance.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-The series looks good to me.  Please feel free to add
-Acked-by: Jon Mason <jon.mason@broadcom.com>
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-Thanks,
-Jon
-
-
-> --
-> 2.14.1
->
+> ---
+> 
+> changes v4:
+>  - remove WDOG_HW_RUNNING from dw_wdt_start.
+> 
+> changes v3:
+>  - don't return error if rst is not present and set WDOG_HW_RUNNING bit
+>    to notify watchdog core.
+> 
+> changes v2:
+>  - test if dw_wdt->rst is NULL instead of IS_ERR
+> 
+>  drivers/watchdog/dw_wdt.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index 36be987ff9ef..c2f4ff516230 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -127,14 +127,27 @@ static int dw_wdt_start(struct watchdog_device *wdd)
+>  
+>  	dw_wdt_set_timeout(wdd, wdd->timeout);
+>  
+> -	set_bit(WDOG_HW_RUNNING, &wdd->status);
+> -
+>  	writel(WDOG_CONTROL_REG_WDT_EN_MASK,
+>  	       dw_wdt->regs + WDOG_CONTROL_REG_OFFSET);
+>  
+>  	return 0;
+>  }
+>  
+> +static int dw_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct dw_wdt *dw_wdt = to_dw_wdt(wdd);
+> +
+> +	if (!dw_wdt->rst) {
+> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +		return 0;
+> +	}
+> +
+> +	reset_control_assert(dw_wdt->rst);
+> +	reset_control_deassert(dw_wdt->rst);
+> +
+> +	return 0;
+> +}
+> +
+>  static int dw_wdt_restart(struct watchdog_device *wdd,
+>  			  unsigned long action, void *data)
+>  {
+> @@ -173,6 +186,7 @@ static const struct watchdog_info dw_wdt_ident = {
+>  static const struct watchdog_ops dw_wdt_ops = {
+>  	.owner		= THIS_MODULE,
+>  	.start		= dw_wdt_start,
+> +	.stop		= dw_wdt_stop,
+>  	.ping		= dw_wdt_ping,
+>  	.set_timeout	= dw_wdt_set_timeout,
+>  	.get_timeleft	= dw_wdt_get_timeleft,
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
