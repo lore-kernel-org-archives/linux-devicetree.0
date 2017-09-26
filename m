@@ -1,174 +1,75 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v14 22/28] v4l: fwnode: Add a convenience function for
- registering sensors
-Date: Tue, 26 Sep 2017 10:26:35 +0200
-Message-ID: <ac50fc71-c528-a703-04bb-6abc1fc7c19a@xs4all.nl>
-References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-24-sakari.ailus@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 0/7] clocksource: sh_cmt: Update driver for DT binding rework
+Date: Tue, 26 Sep 2017 11:26:43 +0300
+Message-ID: <2100093.DY5UYTmyGT@avalon>
+References: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170925222540.371-24-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <damm+renesas@opensource.se>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/17 00:25, Sakari Ailus wrote:
-> Add a convenience function for parsing firmware for information on related
-> devices using v4l2_async_notifier_parse_fwnode_sensor_common() registering
-> the notifier and finally the async sub-device itself.
+Hi Geert,
+
+Thank you for the patches.
+
+On Monday, 18 September 2017 16:46:40 EEST Geert Uytterhoeven wrote:
+> 	Hi Daniel, Thomas, Rob, Mark, Magnus,
 > 
-> This should be useful for sensor drivers that do not have device specific
-> requirements related to firmware information parsing or the async
-> framework.
+> This patch series updates the sh_cmt clocksource driver for the recent DT
+> binding rework that was merged in v4.14-rc1.
+> 
+> This series is an evolutionary improvement of Magnus Damm's series "[PATCH
+> v2 00/11] clocksource: sh_cmt: DT binding rework V2".
+> It complements Magnus' series "[PATCH v3 00/06] clocksource: sh_cmt: DT
+> binding rework V3" and "[PATCH v4 00/06] clocksource: sh_cmt: DT binding
+> rework V4", which included DT binding updates only.
+> 
+>   - Patch 1 fixes wrong vendor/soc ordering in the SoC-specific compatible
+>     values  (This issue was raised during review before, but was not
+>     addressed in later iterations of the DT binding rework.  Oh well,
+>     things like that happen when there's more than 2 years between initial
+>     submission and acceptance...),
+>   - Patches 2 to 6 implement the updated DT bindings, as already accepted
+>     upstream, and amended in patch 1.
+>   - Patch 7 is a small cleanup.
+> 
+> Changes compared to v2:
+>   - Take over from Magnus,
+>   - Drop DT binding updates that were revised and accepted upstream,
+>   - Fix SoC-specific compatible values,
+>   - Change channels_mask from "unsigned long" to "unsigned int,
+>   - Remove support for "renesas,cmt-32*",
+>   - Mark "renesas,cmt-48-gen2" deprecated,
+>   - Remove unused "renesas,channels-mask" handling,
+>   - Use of_device_get_match_data() helper.
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (5):
+>   dt-bindings: timer: renesas,cmt: Fix SoC-specific compatible values
+>   clocksource: sh_cmt: Remove support for "renesas,cmt-32*"
+>   clocksource: sh_cmt: Mark "renesas,cmt-48-gen2" deprecated
+>   clocksource: sh_cmt: Remove unused "renesas,channels-mask" handling
+>   clocksource: sh_cmt: Use of_device_get_match_data() helper
+> 
+> Magnus Damm (2):
+>   clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT case
+>   clocksource: sh_cmt: Support separate R-Car Gen2 CMT0/1
 
-I'm confused. This is a second patch 22/28 that appears to be identical to the
-previous one.
+For the whole series,
 
-I'm ignoring this one, I assume something went wrong when you mailed this series.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+>  .../devicetree/bindings/timer/renesas,cmt.txt      | 24 +++----
+>  drivers/clocksource/sh_cmt.c                       | 76 +++++++++----------
+>  2 files changed, 45 insertions(+), 55 deletions(-)
+
+-- 
 Regards,
 
-	Hans
-
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/media/v4l2-core/v4l2-async.c  |  5 +++++
->  drivers/media/v4l2-core/v4l2-fwnode.c | 41 +++++++++++++++++++++++++++++++++++
->  include/media/v4l2-async.h            | 22 +++++++++++++++++++
->  include/media/v4l2-subdev.h           |  3 +++
->  4 files changed, 71 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 470607da96b2..f388892f43ec 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -570,6 +570,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  {
->  	struct v4l2_async_notifier *notifier = sd->notifier;
->  
-> +	if (sd->subdev_notifier)
-> +		v4l2_async_notifier_unregister(sd->subdev_notifier);
-> +	v4l2_async_notifier_cleanup(sd->subdev_notifier);
-> +	kfree(sd->subdev_notifier);
-> +
->  	if (!sd->asd) {
->  		if (!list_empty(&sd->async_list))
->  			v4l2_async_cleanup(sd);
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 4976096a1d83..622bdcc2df2d 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -29,6 +29,7 @@
->  
->  #include <media/v4l2-async.h>
->  #include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-subdev.h>
->  
->  enum v4l2_fwnode_bus_type {
->  	V4L2_FWNODE_BUS_TYPE_GUESS = 0,
-> @@ -814,6 +815,46 @@ int v4l2_async_notifier_parse_fwnode_sensor_common(
->  }
->  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_sensor_common);
->  
-> +int v4l2_async_register_subdev_sensor_common(struct v4l2_subdev *sd)
-> +{
-> +	struct v4l2_async_notifier *notifier;
-> +	int ret;
-> +
-> +	if (WARN_ON(!sd->dev))
-> +		return -ENODEV;
-> +
-> +	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
-> +	if (!notifier)
-> +		return -ENOMEM;
-> +
-> +	ret = v4l2_async_notifier_parse_fwnode_sensor_common(sd->dev,
-> +							     notifier);
-> +	if (ret < 0)
-> +		goto out_cleanup;
-> +
-> +	ret = v4l2_async_subdev_notifier_register(sd, notifier);
-> +	if (ret < 0)
-> +		goto out_cleanup;
-> +
-> +	ret = v4l2_async_register_subdev(sd);
-> +	if (ret < 0)
-> +		goto out_unregister;
-> +
-> +	sd->subdev_notifier = notifier;
-> +
-> +	return 0;
-> +
-> +out_unregister:
-> +	v4l2_async_notifier_unregister(notifier);
-> +
-> +out_cleanup:
-> +	v4l2_async_notifier_cleanup(notifier);
-> +	kfree(notifier);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_async_register_subdev_sensor_common);
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
->  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
-> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> index 479c317fab2f..74f2ea27d117 100644
-> --- a/include/media/v4l2-async.h
-> +++ b/include/media/v4l2-async.h
-> @@ -173,6 +173,28 @@ void v4l2_async_notifier_cleanup(struct v4l2_async_notifier *notifier);
->  int v4l2_async_register_subdev(struct v4l2_subdev *sd);
->  
->  /**
-> + * v4l2_async_register_subdev_sensor_common - registers a sensor sub-device to
-> + *					      the asynchronous sub-device
-> + *					      framework and parse set up common
-> + *					      sensor related devices
-> + *
-> + * @sd: pointer to struct &v4l2_subdev
-> + *
-> + * This function is just like v4l2_async_register_subdev() with the exception
-> + * that calling it will also parse firmware interfaces for remote references
-> + * using v4l2_async_notifier_parse_fwnode_sensor_common() and registers the
-> + * async sub-devices. The sub-device is similarly unregistered by calling
-> + * v4l2_async_unregister_subdev().
-> + *
-> + * While registered, the subdev module is marked as in-use.
-> + *
-> + * An error is returned if the module is no longer loaded on any attempts
-> + * to register it.
-> + */
-> +int __must_check v4l2_async_register_subdev_sensor_common(
-> +	struct v4l2_subdev *sd);
-> +
-> +/**
->   * v4l2_async_unregister_subdev - unregisters a sub-device to the asynchronous
->   * 	subdevice framework
->   *
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index e83872078376..ec399c770301 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -793,6 +793,8 @@ struct v4l2_subdev_platform_data {
->   *	list.
->   * @asd: Pointer to respective &struct v4l2_async_subdev.
->   * @notifier: Pointer to the managing notifier.
-> + * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
-> + *		     device using v4l2_device_register_sensor_subdev().
->   * @pdata: common part of subdevice platform data
->   *
->   * Each instance of a subdev driver should create this struct, either
-> @@ -823,6 +825,7 @@ struct v4l2_subdev {
->  	struct list_head async_list;
->  	struct v4l2_async_subdev *asd;
->  	struct v4l2_async_notifier *notifier;
-> +	struct v4l2_async_notifier *subdev_notifier;
->  	struct v4l2_subdev_platform_data *pdata;
->  };
->  
-> 
+Laurent Pinchart
