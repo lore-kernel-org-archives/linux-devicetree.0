@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH resend 01/12] usb: typec: add API to get port type and preferred role
-Date: Tue, 26 Sep 2017 12:05:12 +0800
-Message-ID: <1506398723-19359-2-git-send-email-jun.li@nxp.com>
+Subject: [PATCH resend 02/12] usb: typec: add basic typec properties
+Date: Tue, 26 Sep 2017 12:05:13 +0800
+Message-ID: <1506398723-19359-3-git-send-email-jun.li@nxp.com>
 References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,90 +12,67 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk
 Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add 2 APIs to get port type and preferred role from firmware
-description.
+port-type is required for any typec port; default-role is only required
+for drp; power source capable needs src-pdos; power sink capable needs
+snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
 
 Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/usb/typec/typec.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/usb/typec.h |  2 ++
- 2 files changed, 47 insertions(+)
+ Documentation/devicetree/bindings/usb/typec.txt | 46 +++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
-index 24e355b..0c77cc4 100644
---- a/drivers/usb/typec/typec.c
-+++ b/drivers/usb/typec/typec.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/usb/typec.h>
- 
-@@ -1249,6 +1250,50 @@ void typec_set_pwr_opmode(struct typec_port *port,
- }
- EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
- 
-+/**
-+ * typec_get_port_type - Get the typec port type
-+ * @dev: Device to get the property of
-+ *
-+ * This routine is used by typec hardware driver to read property port type
-+ * from the device firmware description.
-+ *
-+ * Returns typec_port_type if success, otherwise negative error code.
-+ */
-+int typec_get_port_type(struct device *dev)
-+{
-+	const char *type_str;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/usb/typec.txt b/Documentation/devicetree/bindings/usb/typec.txt
+new file mode 100644
+index 0000000..36d4467
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typec.txt
+@@ -0,0 +1,46 @@
++Generic typec and power delivery properties
++-------------------------------------------
 +
-+	ret = device_property_read_string(dev, "port-type", &type_str);
-+	if (ret < 0)
-+		return ret;
++Required properties:
++- port-type:    should be one of "source", "sink" or "dual".
++- default-role: preferred power role if drp, should be "sink" or "source".
++- src-pdos:     An array of u32 with each entry providing supported power
++                source data object(PDO), the detailed bit definitions of
++                PDO can be found in "Universal Serial Bus Power Delivery
++                Specification" chapter 6.4.1.2 Source_Capabilities Message,
++                the order of each entry(PDO) should follow the PD spec chapter
++                6.4.1. Required only for power source and power dual role with
++                power delivery support.
++- snk-pdos:     An array of u32 with each entry providing supported power
++                sink data object(PDO), the detailed bit definitions of PDO
++                can be found in "Universal Serial Bus Power Delivery
++                Specification" chapter 6.4.1.3 Sink Capabilities Message,
++                the order of each entry(PDO) should follow the PD spec chapter
++                6.4.1. Required only for power sink and power dual role with
++                power delivery support.
++- max-snk-mv:   The max voltage the sink can support in millivoltage, required
++                only for power sink and power dual role with power delivery
++                support.
++- max-snk-ma:   The max current the sink can support in milliampere, required
++                only for power sink and power dual role with power delivery
++                support.
++- op-snk-mw:    Sink required operating power in milliwatts, if source offered
++                power is less then it, Capability Mismatch is set, required
++                only for power sink and power dual role with power delivery
++                support.
 +
-+	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
-+								 type_str);
-+}
-+EXPORT_SYMBOL_GPL(typec_get_port_type);
++Example:
 +
-+/**
-+ * typec_get_power_role - Get the typec preferred role
-+ * @dev: Device to get the property of
-+ *
-+ * This routine is used by typec hardware driver to read property default role
-+ * from the device firmware description.
-+ *
-+ * Returns typec_role if success, otherwise negative error code.
-+ */
-+int typec_get_power_role(struct device *dev)
-+{
-+	const char *power_str;
-+	int ret;
-+
-+	ret = device_property_read_string(dev, "default-role", &power_str);
-+	if (ret < 0)
-+		return ret;
-+
-+	return match_string(typec_roles, ARRAY_SIZE(typec_roles), power_str);
-+}
-+EXPORT_SYMBOL_GPL(typec_get_power_role);
- /* --------------------------------------- */
- 
- /**
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index ffe7487..bfac685 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -243,5 +243,7 @@ void typec_set_data_role(struct typec_port *port, enum typec_data_role role);
- void typec_set_pwr_role(struct typec_port *port, enum typec_role role);
- void typec_set_vconn_role(struct typec_port *port, enum typec_role role);
- void typec_set_pwr_opmode(struct typec_port *port, enum typec_pwr_opmode mode);
-+int typec_get_port_type(struct device *dev);
-+int typec_get_power_role(struct device *dev);
- 
- #endif /* __LINUX_USB_TYPEC_H */
++ptn5110@50 {
++	compatible = "usb,tcpci";
++	reg = <0x50>;
++	interrupt-parent = <&gpio3>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
++	port-type = "dual";
++	default-role = "sink";
++	src-pdos = <0x380190c8>;
++	snk-pdos = <0x380190c8 0x3802d0c8>;
++	max-snk-mv = <9000>;
++	max-snk-ma = <1000>;
++	op-snk-mw = <9000>;
++};
 -- 
 2.6.6
 
