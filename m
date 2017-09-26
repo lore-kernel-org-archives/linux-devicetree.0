@@ -1,69 +1,219 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]"
- to the spi tree
-Date: Tue, 26 Sep 2017 10:30:09 -0700
-Message-ID: <20170926173009.xdw6mtvcyixpenr7@sirena.org.uk>
-References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
- <CAMuHMdVsRwW+10ERyTJAa8XhhkPMn4ruymUwPKot+kmczBwbcA@mail.gmail.com>
- <20170925184545.5k4nke27rgud3uwp@sirena.org.uk>
- <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg@mail.gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
+ ECAM shift mode
+Date: Tue, 26 Sep 2017 12:32:00 -0500
+Message-ID: <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+ <20170828180437.2646-2-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="flc5unealuztpgbg"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+In-Reply-To: <20170828180437.2646-2-ard.biesheuvel@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, mw@semihalf.com, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh@kernel.org>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+[+cc Will]
 
---flc5unealuztpgbg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
+> Some implementations of the Synopsys Designware PCIe controller implement
+> a so-called ECAM shift mode, which allows a static memory window to be
+> configured that covers the configuration space of the entire bus range.
+> 
+> If the firmware performs all the low level configuration that is required
+> to expose this controller in a fully ECAM compatible manner, we can
+> simply describe it as "pci-host-ecam-generic" and be done with it.
+> However, it appears that in some cases (one of which is the Armada 80x0),
+> the IP is synthesized with an ATU window size that does not allow the
+> first bus to be mapped in a way that prevents the device on the
+> downstream port from appearing more than once.
+> 
+> So implement a driver that relies on the firmware to perform all low
+> level initialization, and drives the controller in ECAM mode, but
+> overrides the config space accessors to take the above quirk into
+> account.
+> 
+> Note that, unlike most drivers for this IP, this driver does not expose
+> a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
+> given that this is not a true bridge, and does not require any windows
+> to be configured in order for the downstream device to operate correctly.
+> Omitting it also prevents the PCI resource allocation routines from
+> handing out BAR space to it unnecessarily.
 
-On Mon, Sep 25, 2017 at 09:15:53PM +0200, Geert Uytterhoeven wrote:
+This is a tangent, but does this mean the other drivers do not need to
+expose a fake 00:00.0 device either?
 
-> My rebuttal is threefold:
->   1. Listing the fallback property is mandatory for new SoCs. We only keep
->      the per-SoC compatible values in the driver for older SoCs that predate
->      the introduction of fallback properties.
+s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
 
-So good practice is always good practice, but I'd argue that it's not
-bad practice to also explicitly enumerate all the documented compatibles
-in the driver.  Being liberal in what you accept and all that.
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Joao Pinto <Joao.Pinto@synopsys.com>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  drivers/pci/dwc/Kconfig                | 11 +++
+>  drivers/pci/dwc/Makefile               |  1 +
+>  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
 
->   2. Some harm is involved, in the form of increased kernel image size.
+This really doesn't have any DesignWare specifics in it, and it seems
+more related to drivers/pci/host/pci-host-generic.c than to anything
+in drivers/pci/dwc.  Maybe it should be
+drivers/pci/host/pci-host-generic-quirks.c or something?  That's
+unwieldy, I admit.
 
-Is this really a meaningful impact?
+Putting it in pci/dwc would make Jingoo and Joao the default
+maintainers; I don't know how they feel about that.  We would probably
+have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
 
->   3. When updating DT bindings for new SoCs, we usually add "No driver
->      update is needed" to the patch description to clarify. Unfortunately
->      that was missed here.
+Any thoughts on this, Will?
 
-That's basically the same good practice thing, it's just documenting
-what you're trying to do here with not putting things in code but
-writing things in changelogs doesn't make them so!
+>  3 files changed, 89 insertions(+)
+> 
+> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+> index d275aadc47ee..477576d07911 100644
+> --- a/drivers/pci/dwc/Kconfig
+> +++ b/drivers/pci/dwc/Kconfig
+> @@ -169,4 +169,15 @@ config PCIE_KIRIN
+>  	  Say Y here if you want PCIe controller support
+>  	  on HiSilicon Kirin series SoCs.
+>  
+> +config PCIE_DW_HOST_ECAM
+> +	bool "Synopsys DesignWare PCIe controller in ECAM mode"
+> +	depends on OF && PCI
+> +	select PCI_HOST_COMMON
+> +	select IRQ_DOMAIN
+> +	help
+> +	  Add support for Synopsys DesignWare PCIe controllers configured
+> +	  by the firmware into ECAM shift mode. In some cases, these are
+> +	  fully ECAM compliant, in which case the pci-host-generic driver
+> +	  may be used instead.
 
---flc5unealuztpgbg
-Content-Type: application/pgp-signature; name="signature.asc"
+This doesn't quite read right.  It sounds like a controller in ECAM
+shift mode might be fully ECAM compliant, but I don't think that's
+what you intended.
 
------BEGIN PGP SIGNATURE-----
+IIUC, the controller can be in either "ECAM shift mode" (where we need
+this new driver) or in a "fully ECAM compliant mode" (where we can use
+pci-host-generic).
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnKjp4ACgkQJNaLcl1U
-h9CyOQf+KF7TH4e1LUiEusbvfDIIFdd+l5LEKQIJqQP/5OoKznc7+7vQKftJuqqM
-Wobnz0aQOhA1AMgXh0YnKyxx8CJIiEFq3DA+W3eLt6BABkRTPTkfSGjP/kYPa31w
-Px/pPoPFiNK3ldlhKAa2HkPoYA8MjlhcrX0U+fCa129JDFm8EKEmS6e6ThEnL5bW
-E48g6EGj8uImSSYnz+vBRnZ+GxkGuMkz41h+3735uXYUqvj9om6gIGSgSetH2l1y
-Mf6YW9h4YPybdui9n1ROLjZH8ELKCtLMhexyyDWZGlgmUOMkMEfSVfpXStb1hwRh
-C0eLU6+cRxHyjbStxq+Hacz2c2W/9A==
-=2Ur+
------END PGP SIGNATURE-----
+>  endmenu
+> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+> index c61be9738cce..7d5a23e5b767 100644
+> --- a/drivers/pci/dwc/Makefile
+> +++ b/drivers/pci/dwc/Makefile
+> @@ -1,5 +1,6 @@
+>  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+> +obj-$(CONFIG_PCIE_DW_HOST_ECAM) += pcie-designware-ecam.o
+>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+> diff --git a/drivers/pci/dwc/pcie-designware-ecam.c b/drivers/pci/dwc/pcie-designware-ecam.c
+> new file mode 100644
+> index 000000000000..ede627d7d08b
+> --- /dev/null
+> +++ b/drivers/pci/dwc/pcie-designware-ecam.c
+> @@ -0,0 +1,77 @@
+> +/*
+> + * Driver for mostly ECAM compatible Synopsys dw PCIe controllers
+> + * configured by the firmware into RC mode
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * Copyright (C) 2014 ARM Limited
+> + * Copyright (C) 2017 Linaro Limited
+> + *
+> + * Authors: Will Deacon <will.deacon@arm.com>
+> + *          Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/pci-ecam.h>
+> +#include <linux/platform_device.h>
+> +
+> +static int pci_dw_ecam_config_read(struct pci_bus *bus, u32 devfn, int where,
+> +				   int size, u32 *val)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +
+> +	/*
+> +	 * The Synopsys dw PCIe controller in RC mode will not filter type 0
+> +	 * config TLPs sent to devices 1 and up on its downstream port,
+> +	 * resulting in devices appearing multiple times on bus 0 unless we
+> +	 * filter them here.
+> +	 */
+> +	if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0) {
 
---flc5unealuztpgbg--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Trivial, but maybe you could factor out this test?  We already have
+these functions that do basically the same thing and it'd be nice to
+use a similar pattern (altera and dw also check for the link being up,
+which seems racy and possibly bogus to me):
+
+  altera_pcie_valid_device()
+  dw_pcie_valid_device()
+  rockchip_pcie_valid_device()
+
+The fact that altera and rockchip do essentially the same thing as dw
+here suggests that this pattern is not limited to DesignWare.
+
+These other functions also do something similar, though not structured
+the same way:
+
+  hisi_pcie_rd_conf()
+  advk_pcie_rd_conf()
+  thunder_pem_bridge_read()
+  rcar_pcie_config_access()
+  gapspci_config_access()
+
+> +		*val = 0xffffffff;
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +	}
+> +	return pci_generic_config_read(bus, devfn, where, size, val);
+> +}
+> +
+> +static int pci_dw_ecam_config_write(struct pci_bus *bus, u32 devfn, int where,
+> +				    int size, u32 val)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +
+> +	if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0)
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +	return pci_generic_config_write(bus, devfn, where, size, val);
+> +}
+> +
+> +static struct pci_ecam_ops pci_dw_ecam_bus_ops = {
+> +	.pci_ops.map_bus		= pci_ecam_map_bus,
+> +	.pci_ops.read			= pci_dw_ecam_config_read,
+> +	.pci_ops.write			= pci_dw_ecam_config_write,
+> +	.bus_shift			= 20,
+> +};
+> +
+> +static const struct of_device_id pci_dw_ecam_of_match[] = {
+> +	{ .compatible = "marvell,armada8k-pcie-ecam" },
+> +	{ .compatible = "socionext,synquacer-pcie-ecam" },
+> +	{ .compatible = "snps,dw-pcie-ecam" },
+> +	{ },
+> +};
+> +
+> +static int pci_dw_ecam_probe(struct platform_device *pdev)
+> +{
+> +	return pci_host_common_probe(pdev, &pci_dw_ecam_bus_ops);
+> +}
+> +
+> +static struct platform_driver pci_dw_ecam_driver = {
+> +	.driver.name			= "pcie-designware-ecam",
+> +	.driver.of_match_table		= pci_dw_ecam_of_match,
+> +	.driver.suppress_bind_attrs	= true,
+> +	.probe				= pci_dw_ecam_probe,
+> +};
+> +builtin_platform_driver(pci_dw_ecam_driver);
+> -- 
+> 2.11.0
+> 
