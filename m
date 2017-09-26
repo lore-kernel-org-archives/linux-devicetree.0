@@ -1,7 +1,8 @@
 From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 02/10] arm: dts: mt2701: enable display pwm backlight
-Date: Tue, 26 Sep 2017 10:02:53 +0800
-Message-ID: <0f9441e9fc40e47e94927a3a4c96dd3f7f287d94.1506390597.git.ryder.lee@mediatek.com>
+Subject: [PATCH v2 06/10] arm: dts: mt7623: add subsystem clock controller
+ nodes
+Date: Tue, 26 Sep 2017 10:02:57 +0800
+Message-ID: <ea2ed1f558c5f77f533894a90cae3ca5af3df523.1506390597.git.ryder.lee@mediatek.com>
 References: <cover.1506390597.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,66 +19,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
 Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch adds missing susbsystem clock controllers nodes for MT7623.
+(e.g., mmsys, imgsys, vdecsys and bdpsys)
 
-This patch adds board related config for MT2701 pwm backlight.
-
-Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt2701-evb.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/boot/dts/mt7623.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index f484973..63af4b1 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -56,12 +56,29 @@
- 	bt_sco_codec:bt_sco_codec {
- 		compatible = "linux,bt-sco";
- 	};
-+
-+	backlight_lcd: backlight_lcd {
-+		compatible = "pwm-backlight";
-+		pwms = <&bls 0 100000>;
-+		brightness-levels = <
-+			  0  16  32  48  64  80  96 112
-+			128 144 160 176 192 208 224 240
-+			255
-+		>;
-+		default-brightness-level = <9>;
-+	};
- };
- 
- &auxadc {
- 	status = "okay";
- };
- 
-+&bls {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_bls_gpio>;
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
-@@ -111,6 +128,12 @@
- 		};
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 9ec3767..ca672bd 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -661,6 +661,30 @@
+ 		status = "disabled";
  	};
  
-+	pwm_bls_gpio: pwm_bls_gpio {
-+		pins_cmd_dat {
-+			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
-+		};
++	mmsys: syscon@14000000 {
++		compatible = "mediatek,mt7623-mmsys",
++			     "mediatek,mt2701-mmsys",
++			     "syscon";
++		reg = <0 0x14000000 0 0x1000>;
++		#clock-cells = <1>;
 +	};
 +
- 	spi_pins_a: spi0@0 {
- 		pins_spi {
- 			pinmux = <MT2701_PIN_53_SPI0_CSN__FUNC_SPI0_CS>,
++	imgsys: syscon@15000000 {
++		compatible = "mediatek,mt7623-imgsys",
++			     "mediatek,mt2701-imgsys",
++			     "syscon";
++		reg = <0 0x15000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	vdecsys: syscon@16000000 {
++		compatible = "mediatek,mt7623-vdecsys",
++			     "mediatek,mt2701-vdecsys",
++			     "syscon";
++		reg = <0 0x16000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
+ 	hifsys: syscon@1a000000 {
+ 		compatible = "mediatek,mt7623-hifsys",
+ 			     "mediatek,mt2701-hifsys",
+@@ -799,4 +823,12 @@
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+ 		status = "disabled";
+ 	};
++
++	bdpsys: syscon@1c000000 {
++		compatible = "mediatek,mt7623-bdpsys",
++			     "mediatek,mt2701-bdpsys",
++			     "syscon";
++		reg = <0 0x1c000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
+ };
 -- 
 1.9.1
