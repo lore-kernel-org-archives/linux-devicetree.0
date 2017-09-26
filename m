@@ -1,112 +1,80 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 01/12] usb: typec: add API to get port type and preferred
- role
-Date: Tue, 26 Sep 2017 06:20:52 -0700
-Message-ID: <63bf50c4-1223-e5f0-0156-d15fb651ce31@roeck-us.net>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-2-git-send-email-jun.li@nxp.com>
+From: Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v2 3/5] MIPS: jz4780: DTS: Probe the jz4740-watchdog
+ driver from devicetree
+Date: Tue, 26 Sep 2017 15:26:26 +0200
+Message-ID: <CA+7wUsyrP8a96-55Zk_GPQmNzPS9MB__dhjwUds7RkQhfe=+EA@mail.gmail.com>
+References: <20170908183558.1537-3-malat@debian.org> <20170915191837.27564-1-malat@debian.org>
+ <CANc+2y6gZ4UQ7fKbJeV7HhDLLW9pbUEr0K0Tq5eBfg1ba2s_LQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506386727-16370-2-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANc+2y6gZ4UQ7fKbJeV7HhDLLW9pbUEr0K0Tq5eBfg1ba2s_LQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Paul Cercueil <paul@crapouillou.net>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2017 05:45 PM, Li Jun wrote:
-> This patch add 2 APIs to get port type and preferred role from firmware
-> description.
-> 
-> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-> ---
->   drivers/usb/typec/typec.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
->   include/linux/usb/typec.h |  2 ++
->   2 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
-> index 24e355b..0c77cc4 100644
-> --- a/drivers/usb/typec/typec.c
-> +++ b/drivers/usb/typec/typec.c
-> @@ -12,6 +12,7 @@
->   #include <linux/device.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
-> +#include <linux/of.h>
->   #include <linux/slab.h>
->   #include <linux/usb/typec.h>
->   
-> @@ -1249,6 +1250,50 @@ void typec_set_pwr_opmode(struct typec_port *port,
->   }
->   EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
->   
-> +/**
-> + * typec_get_port_type - Get the typec port type
-> + * @dev: Device to get the property of
-> + *
-> + * This routine is used by typec hardware driver to read property port type
-> + * from the device firmware description.
-> + *
-> + * Returns typec_port_type if success, otherwise negative error code.
-> + */
-> +int typec_get_port_type(struct device *dev)
-> +{
-> +	const char *type_str;
-> +	int ret;
-> +
-> +	ret = device_property_read_string(dev, "port-type", &type_str);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
-> +								 type_str);
-> +}
-> +EXPORT_SYMBOL_GPL(typec_get_port_type);
-> +
-> +/**
-> + * typec_get_power_role - Get the typec preferred role
-> + * @dev: Device to get the property of
-> + *
-> + * This routine is used by typec hardware driver to read property default role
-> + * from the device firmware description.
-> + *
-> + * Returns typec_role if success, otherwise negative error code.
-> + */
-> +int typec_get_power_role(struct device *dev)
-> +{
-> +	const char *power_str;
-> +	int ret;
-> +
-> +	ret = device_property_read_string(dev, "default-role", &power_str);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return match_string(typec_roles, ARRAY_SIZE(typec_roles), power_str);
-> +}
-> +EXPORT_SYMBOL_GPL(typec_get_power_role);
+Hi PrasannaKumar !
 
-Add empty line
+On Tue, Sep 26, 2017 at 3:17 PM, PrasannaKumar Muralidharan
+<prasannatsmkumar@gmail.com> wrote:
+> Hi Mathieu,
+>
+> On 16 September 2017 at 00:48, Mathieu Malaterre <malat@debian.org> wrote:
+>> The jz4740-watchdog driver supports both jz4740 & jz4780.
+>>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> ---
+>> Changes in v2:
+>> * make the node name generic (Paul Cercueil)
+>>
+>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>> index 20e37d2d6008..76055bbc823a 100644
+>> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>> @@ -263,6 +263,11 @@
+>>                 status = "disabled";
+>>         };
+>>
+>> +       watchdog: watchdog@10002000 {
+>> +               compatible = "ingenic,jz4780-watchdog";
+>
+> In drivers/watchdog/jz4740_wdt.c the compatible is declared as
+> "ingenic,jz4740-watchdog" while your change says
+> "ingenic,jz4780-watchdog". Can you modify that?
 
->   /* --------------------------------------- */
->   
->   /**
-> diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-> index ffe7487..bfac685 100644
-> --- a/include/linux/usb/typec.h
-> +++ b/include/linux/usb/typec.h
-> @@ -243,5 +243,7 @@ void typec_set_data_role(struct typec_port *port, enum typec_data_role role);
->   void typec_set_pwr_role(struct typec_port *port, enum typec_role role);
->   void typec_set_vconn_role(struct typec_port *port, enum typec_role role);
->   void typec_set_pwr_opmode(struct typec_port *port, enum typec_pwr_opmode mode);
-> +int typec_get_port_type(struct device *dev);
-> +int typec_get_power_role(struct device *dev);
->   
->   #endif /* __LINUX_USB_TYPEC_H */
-> 
+Well in the full changeset, you'll find: [PATCH v2 4/5] watchdog:
+jz4740: Add support for the watchdog in jz4780 SoC
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+https://lkml.org/lkml/2017/9/15/451
+
+There has been some misunderstanding. I still believe I need a new
+compatible string, even if currently the code is 100% identical.
+
+>> +               reg = <0x10002000 0x100>;
+>> +       };
+>> +
+>
+> The structures jz4740_wdt_device and jz4740_wdt_resources can be
+> removed form arch/mips/jz4740/platform.c as watchdog is declared in
+> device tree. For JZ4740 platform watchdog is not used so the variables
+> can be removed.
+>
+> Do you mind adding watchdog entry to JZ4740 device tree? Currently
+> watchdog is not enabled for JZ4740 platform.
+
+
+Will do once this series has been accepted. Thanks for the review !
+
+>>         nemc: nemc@13410000 {
+>>                 compatible = "ingenic,jz4780-nemc";
+>>                 reg = <0x13410000 0x10000>;
+>> --
+>> 2.11.0
+>>
+>
+> Regards,
+> PrasannaKumar
