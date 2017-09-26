@@ -1,76 +1,63 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 00/14] ARM: dts: sunxi: Fix DT build warnings
-Date: Tue, 26 Sep 2017 10:58:55 +0200
-Message-ID: <20170926085855.7yn6zdx3sfuwwxyj@flea>
-References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
- <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC 0/5] Align and document return values of phandle and
+ reference parsing for OF and ACPI
+Date: Tue, 26 Sep 2017 12:02:01 +0300
+Message-ID: <20170926090201.wcpv4fty5yi5ea6z@valkosipuli.retiisi.org.uk>
+References: <20170914122914.14122-1-sakari.ailus@linux.intel.com>
+ <CAL_JsqKZVN+X0F3Z8s6Qv+ioh8LBDjNe277MAw30T3CXXTUV1Q@mail.gmail.com>
+ <20170919230125.l7fexsdrzbmwd6yp@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ednxqi4tbf6flagf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170919230125.l7fexsdrzbmwd6yp@valkosipuli.retiisi.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 20, 2017 at 02:01:25AM +0300, Sakari Ailus wrote:
+> Hi Rob,
+> 
+> Thanks for the review.
+> 
+> On Fri, Sep 15, 2017 at 02:57:35PM -0500, Rob Herring wrote:
+> > On Thu, Sep 14, 2017 at 7:29 AM, Sakari Ailus
+> > <sakari.ailus@linux.intel.com> wrote:
+> > > Hi everyone,
+> > >
+> > > I recently came across a difference in behaviour of OF phandle parsing and
+> > > ACPI reference parsing, both of which can soon be accessed using
+> > > fwnode_property_get_reference_args.
+> > >
+> > > The main change in this proposal touches OF, and specifically the change
+> > > is about using -ENODATA to tell that the phandle reference list entry that
+> > > was accessed does not exist. -ENOENT was used previously, but the same
+> > > error code was also used to tell that a phandle was empty, making it
+> > > impossible for the caller to figure out which of the two was the case.
+> > >
+> > > I'm sending the set as RFC. In my limited testing I have found no ill
+> > > effects.
+> > >
+> > > These patches are on top of linux-next.
+> > >
+> > > Comments on the approach and the changes themselves would be most welcome.
+> > 
+> > It's not really valid to both have a variable count (and hence need to
+> > retrieve it) and use blank phandle entries. The whole point of blank
+> > entries is to have a fixed length and know what each index corresponds
+> > too. Do you have an example where we hit this?
+> 
+> Well, the above is true. I think I'd still use different error codes to
+> tell about different situations.
+> 
+> The alternative is that the fwnode counterpart error codes are changed to
+> to -ENOENT.
 
---ednxqi4tbf6flagf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll post a patch implemeting switching the fwnode variant to use -ENOENT,
+cc'ing you. I think the first patch of the set is still relevant, it's
+rather a bugfix.
 
-On Tue, Sep 26, 2017 at 07:48:17AM +0000, Chen-Yu Tsai wrote:
-> On Tue, Sep 26, 2017 at 3:22 PM, Corentin Labbe
-> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hello
-> >
-> > The goal of this patch series is to have a clean DT build with W=3D1.
-> >
-> > Regards
-> >
-> > Changes since v1:
-> > - moved i2c2 unit address change from patch #2 in patch #1
-> >
-> > Changes since v2
-> > - added two patch for fixing pin names
->=20
-> The first twelve patches are good. Maxime, I think we can go ahead and
-> merge them, instead of having them resent again in v3?
-
-Yep, that works for me. Can you push them?
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ednxqi4tbf6flagf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZyhbPAAoJEBx+YmzsjxAgl5cP/1x1BAwhv/bmy5CXOY2+5mPp
-XIN5fBahSFySSeCaevRV3/HnJZU82vXn2oGax7yOfvGTSBo5pVzxtoz04CFr3fVK
-BlDeNA4QIKP8SjNIXhUweAkZR+8ClT88Z/lwl6yEI7gsprJ3OWr0cy4fIAigzzBL
-vOxnI5RFg+/8lCn1qa4zrmCjSd3MP4QS1fYeu3ORvTZLzWWtlDPs9LbIy3jB8Nxu
-G8gCclS1nQvMXtj9GjALzSpN2Tvs8BJRNP77Rl9B6JEUJIVlW9hyxCPqtkJwt5po
-O3WSD9e5Um/n+Hd+Wcj249134nUNo30okW/Z0CZggxC4H3Js2GC8EHamtrmUv6vz
-BKTila7ZeVAwyHU8dayDX5a8mLJztspcAelkrMbubv2NwVEjF/B1GJ1Jtua0eS0w
-6dyCRjwxFt5FFFxaaWanUy9w21Ux36A/fFPs/uPTmOkxxUU1nt6tGizNVjBJ+ls0
-KVYnp5qU6lW0cD4AjML+veikoB3EzNFLzEI7FPSOIl+9qrTIXnr3iBDLvgbgy1KP
-KWZSJR/QIZZYcw1XHcFpe0nqgexONqeSyaZuHLazCV3mF0f3OaBWM9yWvEtZeAef
-P/eUL8TcWgt4SA1QbvcrXhwCAHU+N7GHu/ME3e0C2KHZrZMv9com7wq2CP7e5jvw
-Q06lnEHY5JOSY+Q8P9PN
-=7bEA
------END PGP SIGNATURE-----
-
---ednxqi4tbf6flagf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
