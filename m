@@ -1,325 +1,77 @@
-From: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] ufs/phy: qcom: Refactor to use phy_init call
-Date: Tue, 26 Sep 2017 16:13:39 -0700
-Message-ID: <ae7e2eece45766f7471fc4e19a6fa264@codeaurora.org>
-References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
- <1501829332-5183-6-git-send-email-vivek.gautam@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: enable gpio for pin groups
+Date: Wed, 27 Sep 2017 01:52:45 +0200
+Message-ID: <CACRpkdZn=DogDy8-iXavmrkd1d=FoeL94jb-Sb4iPwb-s+GJjA@mail.gmail.com>
+References: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
+ <CACRpkdacz+oC_8J5VHSsKXHGqxn96ETziu+ifUp4XHHrwcqbtA@mail.gmail.com> <20170922180219.chvjuxmrharnw332@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501829332-5183-6-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170922180219.chvjuxmrharnw332@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+On Fri, Sep 22, 2017 at 8:02 PM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Fri, Sep 22, 2017 at 03:23:05PM +0200, Linus Walleij wrote:
+>> On Thu, Sep 21, 2017 at 8:28 AM, Uwe Kleine-K=C3=B6nig
+>> <u.kleine-koenig@pengutronix.de> wrote:
+>>
+>> > on an i.MX25 machine on my desk a UART RX line is guarded by a transis=
+tor
+>> > like this:
+>> >
+>> >         ,------------------------.
+>> >         | ,---------.            |
+>> >         | |  imx25  o--RX----=E2=97=81---o---
+>> >         | |         o--GPIO--'   |
+>> >         | `---------'            |
+>> >         `------------------------'
+>>
+>> This is inside the SoC, right, not outside it?
+>>
+>> In the rest of my answer I assume this.
+>
+> No, that's on the board. So your reply unfortunately doesn't match the
+> problem :-|
 
-Please find one comment inline below, rest look good.
+OK sorry for my stupid and pointless assumption about this being
+inside the SoC, I should ask before I talk.
 
-Regards,
-Subhash
+>> If this is on the board, using enable-gpios is proper.
+>
+> enable-gpios as I suggested below that is? If so I assume you will be
+> open for a generic approach to implement this?
 
-On 2017-08-03 23:48, Vivek Gautam wrote:
-> Refactor ufs_qcom_power_up_sequence() to get rid of ugly
-> exported phy APIs and use the phy_init() and phy_power_on()
-> to do the phy initialization.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-ufs-i.h        |  2 --
->  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c |  9 +++++--
->  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c |  9 +++++--
->  drivers/phy/qualcomm/phy-qcom-ufs.c          | 38 
-> ++++++++--------------------
->  drivers/scsi/ufs/ufs-qcom.c                  | 36 
-> ++++++++++----------------
->  include/linux/phy/phy-qcom-ufs.h             |  3 ---
->  6 files changed, 38 insertions(+), 59 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-ufs-i.h
-> b/drivers/phy/qualcomm/phy-qcom-ufs-i.h
-> index 94326ed107c3..495fd5941231 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-ufs-i.h
-> +++ b/drivers/phy/qualcomm/phy-qcom-ufs-i.h
-> @@ -123,7 +123,6 @@ struct ufs_qcom_phy {
->   * struct ufs_qcom_phy_specific_ops - set of pointers to functions 
-> which have a
->   * specific implementation per phy. Each UFS phy, should implement
->   * those functions according to its spec and requirements
-> - * @calibrate_phy: pointer to a function that calibrate the phy
->   * @start_serdes: pointer to a function that starts the serdes
->   * @is_physical_coding_sublayer_ready: pointer to a function that
->   * checks pcs readiness. returns 0 for success and non-zero for error.
-> @@ -132,7 +131,6 @@ struct ufs_qcom_phy {
->   * and writes to QSERDES_RX_SIGDET_CNTRL attribute
->   */
->  struct ufs_qcom_phy_specific_ops {
-> -	int (*calibrate_phy)(struct ufs_qcom_phy *phy, bool is_rate_B);
->  	void (*start_serdes)(struct ufs_qcom_phy *phy);
->  	int (*is_physical_coding_sublayer_ready)(struct ufs_qcom_phy *phy);
->  	void (*set_tx_lane_enable)(struct ufs_qcom_phy *phy, u32 val);
-> diff --git a/drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c
-> b/drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c
-> index af65785230b5..c39440b56b6d 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c
-> @@ -44,7 +44,13 @@ void ufs_qcom_phy_qmp_14nm_advertise_quirks(struct
-> ufs_qcom_phy *phy_common)
-> 
->  static int ufs_qcom_phy_qmp_14nm_init(struct phy *generic_phy)
->  {
-> -	return 0;
-> +	struct ufs_qcom_phy *phy_common = get_ufs_qcom_phy(generic_phy);
-> +	bool is_rate_B = false;
-> +
-> +	if (phy_common->mode == PHY_MODE_UFS_HS_B)
-> +		is_rate_B = true;
-> +
-> +	return ufs_qcom_phy_qmp_14nm_phy_calibrate(phy_common, is_rate_B);
->  }
-> 
->  static int ufs_qcom_phy_qmp_14nm_exit(struct phy *generic_phy)
-> @@ -120,7 +126,6 @@ static int
-> ufs_qcom_phy_qmp_14nm_is_pcs_ready(struct ufs_qcom_phy *phy_common)
->  };
-> 
->  static struct ufs_qcom_phy_specific_ops phy_14nm_ops = {
-> -	.calibrate_phy		= ufs_qcom_phy_qmp_14nm_phy_calibrate,
->  	.start_serdes		= ufs_qcom_phy_qmp_14nm_start_serdes,
->  	.is_physical_coding_sublayer_ready = 
-> ufs_qcom_phy_qmp_14nm_is_pcs_ready,
->  	.set_tx_lane_enable	= ufs_qcom_phy_qmp_14nm_set_tx_lane_enable,
-> diff --git a/drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c
-> b/drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c
-> index 5c18c41dbdb4..5705a2d4c6d2 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c
-> @@ -63,7 +63,13 @@ void ufs_qcom_phy_qmp_20nm_advertise_quirks(struct
-> ufs_qcom_phy *phy_common)
-> 
->  static int ufs_qcom_phy_qmp_20nm_init(struct phy *generic_phy)
->  {
-> -	return 0;
-> +	struct ufs_qcom_phy *phy_common = get_ufs_qcom_phy(generic_phy);
-> +	bool is_rate_B = false;
-> +
-> +	if (phy_common->mode == PHY_MODE_UFS_HS_B)
-> +		is_rate_B = true;
-> +
-> +	return ufs_qcom_phy_qmp_20nm_phy_calibrate(phy_common, is_rate_B);
->  }
-> 
->  static int ufs_qcom_phy_qmp_20nm_exit(struct phy *generic_phy)
-> @@ -178,7 +184,6 @@ static int
-> ufs_qcom_phy_qmp_20nm_is_pcs_ready(struct ufs_qcom_phy *phy_common)
->  };
-> 
->  static struct ufs_qcom_phy_specific_ops phy_20nm_ops = {
-> -	.calibrate_phy		= ufs_qcom_phy_qmp_20nm_phy_calibrate,
->  	.start_serdes		= ufs_qcom_phy_qmp_20nm_start_serdes,
->  	.is_physical_coding_sublayer_ready = 
-> ufs_qcom_phy_qmp_20nm_is_pcs_ready,
->  	.set_tx_lane_enable	= ufs_qcom_phy_qmp_20nm_set_tx_lane_enable,
-> diff --git a/drivers/phy/qualcomm/phy-qcom-ufs.c
-> b/drivers/phy/qualcomm/phy-qcom-ufs.c
-> index 43865ef340e2..1febe3294fe3 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-ufs.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-ufs.c
-> @@ -518,9 +518,8 @@ void ufs_qcom_phy_disable_iface_clk(struct
-> ufs_qcom_phy *phy)
->  	}
->  }
-> 
-> -int ufs_qcom_phy_start_serdes(struct phy *generic_phy)
-> +static int ufs_qcom_phy_start_serdes(struct ufs_qcom_phy 
-> *ufs_qcom_phy)
->  {
-> -	struct ufs_qcom_phy *ufs_qcom_phy = get_ufs_qcom_phy(generic_phy);
->  	int ret = 0;
-> 
->  	if (!ufs_qcom_phy->phy_spec_ops->start_serdes) {
-> @@ -533,7 +532,6 @@ int ufs_qcom_phy_start_serdes(struct phy 
-> *generic_phy)
-> 
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(ufs_qcom_phy_start_serdes);
-> 
->  int ufs_qcom_phy_set_tx_lane_enable(struct phy *generic_phy, u32 
-> tx_lanes)
->  {
-> @@ -564,31 +562,8 @@ void ufs_qcom_phy_save_controller_version(struct
-> phy *generic_phy,
->  }
->  EXPORT_SYMBOL_GPL(ufs_qcom_phy_save_controller_version);
-> 
-> -int ufs_qcom_phy_calibrate_phy(struct phy *generic_phy, bool 
-> is_rate_B)
-> -{
-> -	struct ufs_qcom_phy *ufs_qcom_phy = get_ufs_qcom_phy(generic_phy);
-> -	int ret = 0;
-> -
-> -	if (!ufs_qcom_phy->phy_spec_ops->calibrate_phy) {
-> -		dev_err(ufs_qcom_phy->dev, "%s: calibrate_phy() callback is not 
-> supported\n",
-> -			__func__);
-> -		ret = -ENOTSUPP;
-> -	} else {
-> -		ret = ufs_qcom_phy->phy_spec_ops->
-> -				calibrate_phy(ufs_qcom_phy, is_rate_B);
-> -		if (ret)
-> -			dev_err(ufs_qcom_phy->dev, "%s: calibrate_phy() failed %d\n",
-> -				__func__, ret);
-> -	}
-> -
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL_GPL(ufs_qcom_phy_calibrate_phy);
-> -
-> -int ufs_qcom_phy_is_pcs_ready(struct phy *generic_phy)
-> +static int ufs_qcom_phy_is_pcs_ready(struct ufs_qcom_phy 
-> *ufs_qcom_phy)
->  {
-> -	struct ufs_qcom_phy *ufs_qcom_phy = get_ufs_qcom_phy(generic_phy);
-> -
->  	if (!ufs_qcom_phy->phy_spec_ops->is_physical_coding_sublayer_ready) {
->  		dev_err(ufs_qcom_phy->dev, "%s: is_physical_coding_sublayer_ready()
-> callback is not supported\n",
->  			__func__);
-> @@ -598,7 +573,6 @@ int ufs_qcom_phy_is_pcs_ready(struct phy 
-> *generic_phy)
->  	return ufs_qcom_phy->phy_spec_ops->
->  			is_physical_coding_sublayer_ready(ufs_qcom_phy);
->  }
-> -EXPORT_SYMBOL_GPL(ufs_qcom_phy_is_pcs_ready);
-> 
->  int ufs_qcom_phy_power_on(struct phy *generic_phy)
->  {
-> @@ -609,6 +583,14 @@ int ufs_qcom_phy_power_on(struct phy *generic_phy)
->  	if (phy_common->is_powered_on)
->  		return 0;
-> 
-> +	err = ufs_qcom_phy_start_serdes(phy_common);
-> +	if (err)
-> +		return err;
-> +
-> +	err = ufs_qcom_phy_is_pcs_ready(phy_common);
-> +	if (err)
-> +		return err;
-> +
+So the enable-gpios as part of the pin control state like below:
 
-Now that we are doing serdes start (and checking the PCS ready), I am 
-not sure we can call phy_power_on() from ufs_qcom_resume(). Please 
-check.
+>> > My first idea was to make this a property of the UART and added a
+>> > enable-gpios property for it[1]. But now I wonder if this is better
+>> > abstracted as an enable-gpios property in the pinctrl node. Something
+>> > like:
+>> >
+>> >         pinctrl_uart5: uart5 {
+>> >                 fsl,pins =3D <
+>> >                         MX25_PAD_ECB__UART5_TXD                 0x0000=
+2080 /* TXD */
+>> >                         MX25_PAD_LBA__UART5_RXD                 0x0000=
+0000 /* RXD */
+>> >                         MX25_PAD_CS4__UART5_CTS                 0x0000=
+2001 /* RTS */
+>> >                         MX25_PAD_CS5__GPIO_3_21                 0x0000=
+2001 /* #RXD_EN */
+>> >                 >;
+>> >                 enable-gpios =3D <&gpio3 21 GPIO_ACTIVE_LOW>;
+>> >         };
+>> >
+>> > Would this make sense? Maybe with a more intuitive name?
 
+I would nominally make it part of the UART node and picked up by the
+UART driver. Unless there is compelling reasons to believe that this is
+something we will see a lot and not a particular oddity.
 
->  	err = ufs_qcom_phy_enable_vreg(dev, &phy_common->vdda_phy);
->  	if (err) {
->  		dev_err(dev, "%s enable vdda_phy failed, err=%d\n",
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 44c21d5818ee..890eafeb8ad4 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -281,10 +281,10 @@ static int ufs_qcom_power_up_sequence(struct 
-> ufs_hba *hba)
->  	/* provide 1ms delay to let the reset pulse propagate */
->  	usleep_range(1000, 1100);
-> 
-> -	ret = ufs_qcom_phy_calibrate_phy(phy, is_rate_B);
-> -
-> +	/* phy initialization - calibrate the phy */
-> +	ret = phy_init(phy);
->  	if (ret) {
-> -		dev_err(hba->dev, "%s: ufs_qcom_phy_calibrate_phy() failed, ret = 
-> %d\n",
-> +		dev_err(hba->dev, "%s: phy init failed, ret = %d\n",
->  			__func__, ret);
->  		goto out;
->  	}
-> @@ -297,21 +297,22 @@ static int ufs_qcom_power_up_sequence(struct 
-> ufs_hba *hba)
->  	 * voltage, current to settle down before starting serdes.
->  	 */
->  	usleep_range(1000, 1100);
-> -	ret = ufs_qcom_phy_start_serdes(phy);
-> +
-> +	/* power on phy - start serdes and phy's power and clocks */
-> +	ret = phy_power_on(phy);
->  	if (ret) {
-> -		dev_err(hba->dev, "%s: ufs_qcom_phy_start_serdes() failed, ret = 
-> %d\n",
-> +		dev_err(hba->dev, "%s: phy power on failed, ret = %d\n",
->  			__func__, ret);
-> -		goto out;
-> +		goto out_disable_phy;
->  	}
-> 
-> -	ret = ufs_qcom_phy_is_pcs_ready(phy);
-> -	if (ret)
-> -		dev_err(hba->dev,
-> -			"%s: is_physical_coding_sublayer_ready() failed, ret = %d\n",
-> -			__func__, ret);
-> -
->  	ufs_qcom_select_unipro_mode(host);
-> 
-> +	return 0;
-> +
-> +out_disable_phy:
-> +	ufs_qcom_assert_reset(hba);
-> +	phy_exit(phy);
->  out:
->  	return ret;
->  }
-> @@ -1276,14 +1277,9 @@ static int ufs_qcom_init(struct ufs_hba *hba)
->  	ufs_qcom_phy_save_controller_version(host->generic_phy,
->  		host->hw_ver.major, host->hw_ver.minor, host->hw_ver.step);
-> 
-> -	phy_init(host->generic_phy);
-> -	err = phy_power_on(host->generic_phy);
-> -	if (err)
-> -		goto out_unregister_bus;
-> -
->  	err = ufs_qcom_init_lane_clks(host);
->  	if (err)
-> -		goto out_disable_phy;
-> +		goto out_variant_clear;
-> 
->  	ufs_qcom_set_caps(hba);
->  	ufs_qcom_advertise_quirks(hba);
-> @@ -1304,10 +1300,6 @@ static int ufs_qcom_init(struct ufs_hba *hba)
-> 
->  	goto out;
-> 
-> -out_disable_phy:
-> -	phy_power_off(host->generic_phy);
-> -out_unregister_bus:
-> -	phy_exit(host->generic_phy);
->  out_variant_clear:
->  	ufshcd_set_variant(hba, NULL);
->  out:
-> diff --git a/include/linux/phy/phy-qcom-ufs.h 
-> b/include/linux/phy/phy-qcom-ufs.h
-> index 35c070ea6ea3..0a2c18a9771d 100644
-> --- a/include/linux/phy/phy-qcom-ufs.h
-> +++ b/include/linux/phy/phy-qcom-ufs.h
-> @@ -31,10 +31,7 @@
->   */
->  void ufs_qcom_phy_disable_dev_ref_clk(struct phy *phy);
-> 
-> -int ufs_qcom_phy_start_serdes(struct phy *phy);
->  int ufs_qcom_phy_set_tx_lane_enable(struct phy *phy, u32 tx_lanes);
-> -int ufs_qcom_phy_calibrate_phy(struct phy *phy, bool is_rate_B);
-> -int ufs_qcom_phy_is_pcs_ready(struct phy *phy);
->  void ufs_qcom_phy_save_controller_version(struct phy *phy,
->  			u8 major, u16 minor, u16 step);
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
