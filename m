@@ -1,51 +1,38 @@
 From: Sergey Senozhatsky <sergey.senozhatsky.work-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: do not leak console options
-Date: Tue, 26 Sep 2017 15:25:10 +0900
-Message-ID: <20170926062510.4948-1-sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH] of: do not leak console options
+Date: Tue, 26 Sep 2017 15:31:01 +0900
+Message-ID: <20170926063101.GA25762@jagdpanzerIV.localdomain>
+References: <20170825173647.1004-1-sergey.senozhatsky@gmail.com>
+ <20170825223721.hilqpt5z4urevh6b@rob-hp-laptop>
+ <20170827071910.GA581@tigerII.localdomain>
+ <20170906124033.GB3143@pathway.suse.cz>
+ <20170906132923.GA805@jagdpanzerIV.localdomain>
+ <CAL_JsqKRPGFUzLVbyU_=GZzsy87Mc6x43DtmUQ758-nrZZF_jA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKRPGFUzLVbyU_=GZzsy87Mc6x43DtmUQ758-nrZZF_jA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Do not strdup() console options. It seems that the only reason for
-it to be strdup()-ed was a compilation warning: printk, UART and
-console drivers, for some reason, expect char pointer instead of
-const char pointer. So we can just pass `of_stdout_options', but
-need to cast it to char pointer. A better fix would be to change
-printk, console drivers and UART to accept const char `options';
-but that will take time - there are lots of drivers to update.
+On (09/06/17 10:27), Rob Herring wrote:
+[..]
+> > Rob, Grant,
+> > will this dirty hack work for you? I can respin the patch.
+> 
+> Yes, as long as you intend to fix things later.
 
-The patch also fixes a possible memory leak: add_preferred_console()
-can fail, but we don't kfree() options.
+Rob, sorry for the delay, I just sent out a simple patch. It contains that
+'less-than-pretty' const cast. As of updating printk API -- I took a quick
+look... and there are quite a lot things to touch: not just printk.c, but
+also UART and all console drivers; we pass options not only to ->match()
+callback, but to ->setup() callback as well. I'm not sure I've got enough
+spare time for it right now, sorry.
 
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/base.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 260d33c0f26c..63897531cd75 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1781,8 +1781,12 @@ bool of_console_check(struct device_node *dn, char *name, int index)
- {
- 	if (!dn || dn != of_stdout || console_set_on_cmdline)
- 		return false;
--	return !add_preferred_console(name, index,
--				      kstrdup(of_stdout_options, GFP_KERNEL));
-+
-+	/*
-+	 * XXX: cast `options' to char pointer to suppress complication
-+	 * warnings: printk, UART and console drivers expect char pointer.
-+	 */
-+	return !add_preferred_console(name, index, (char *)of_stdout_options);
- }
- EXPORT_SYMBOL_GPL(of_console_check);
- 
--- 
-2.14.1
-
+	-ss
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
