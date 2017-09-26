@@ -1,61 +1,45 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 03/10] pinctrl: axp209: use drv_data of
- pinctrl_pin_desc to store pin reg
-Date: Tue, 26 Sep 2017 15:01:08 +0200
-Message-ID: <20170926130108.uibnri32b73elfy6@flea>
-References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
- <7993a30fbc2e50a2d228fa0c8fad643c4034b101.1506428208.git-series.quentin.schulz@free-electrons.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 00/14] ARM: dts: sunxi: Fix DT build warnings
+Date: Tue, 26 Sep 2017 21:01:24 +0800
+Message-ID: <CAGb2v67=VyHd3n1PgT-2_2efUNijOM8TkwDO9oAQvUd8wYH-qg@mail.gmail.com>
+References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
+ <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g@mail.gmail.com> <20170926085855.7yn6zdx3sfuwwxyj@flea>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xcnhxbzwbfsiulu2"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7993a30fbc2e50a2d228fa0c8fad643c4034b101.1506428208.git-series.quentin.schulz@free-electrons.com>
+In-Reply-To: <20170926085855.7yn6zdx3sfuwwxyj@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, lee.jones@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 26, 2017 at 4:58 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Tue, Sep 26, 2017 at 07:48:17AM +0000, Chen-Yu Tsai wrote:
+>> On Tue, Sep 26, 2017 at 3:22 PM, Corentin Labbe
+>> <clabbe.montjoie@gmail.com> wrote:
+>> > Hello
+>> >
+>> > The goal of this patch series is to have a clean DT build with W=1.
+>> >
+>> > Regards
+>> >
+>> > Changes since v1:
+>> > - moved i2c2 unit address change from patch #2 in patch #1
+>> >
+>> > Changes since v2
+>> > - added two patch for fixing pin names
+>>
+>> The first twelve patches are good. Maxime, I think we can go ahead and
+>> merge them, instead of having them resent again in v3?
+>
+> Yep, that works for me. Can you push them?
 
---xcnhxbzwbfsiulu2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Patches 1 and 12 didn't apply cleanly. I fixed them.
 
-On Tue, Sep 26, 2017 at 12:17:13PM +0000, Quentin Schulz wrote:
-> Instead of using a function to retrieve each pin's correct control
-> register, use drv_data within pinctrl_pin_desc to store the ctrl reg.
->=20
-> Remove axp20x_gpio_get_reg and replace every occurrence by a get from
-> drv_data.
+Patches 4~9 do the same type of cleanup for various h3 board dts files.
+Maybe we should just squash them together. Arnd seems to prefer squashing
+identical changes to different boards together.
 
-Why do you need to do that? This should be explained.
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---xcnhxbzwbfsiulu2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZyk+UAAoJEBx+YmzsjxAg6AwP/R4vBxjKUB+aMJfyAPv2oLoQ
-mMxZTK7syyuZ8WMNiDB0I/dPVnvR8qRqiPUDpZwO2XBJfhb2QvrKN/I2YYomdiQB
-dgWzuCkkKSKnlKiASPW86fi7M3MbT3HAr+7jOwPIiYJYYwh7xtQGEBpQMXOW1oaH
-Bhs/jxCfRK42CqF2dlaEpMCgZMNjbOREqzx5gWmCgoDs+HbwVNEVK62poI+ATRnS
-A6che+T8GRX9qbY9K/VHg81sX40x6AAOzA6Kt36Pd34/MGmATn1u/MnWluQBRzfV
-nfsx0o8pIn9d1nN5HzKYfcli16b/n3iNMRVqKl60acmLdEVCPUtlAllxgInYJec4
-PqZ7J2+6qukUBVHNr5vd2ncJscvC5UIODyUmYRQoR0Uu4ddsuSuSm5Nrk0PZ8uas
-G34/jEmUY/g2mJiG/Y8WpuiCKamoExr6IZocXmRRVApZkYPY2U919Ur0ilb6WIBN
-jOXPa4cUVS9H1QZTRXZBNRoWfcUeaT//jOQHSQRSkb+xkfVoeiDyPSkwEGQnb1cd
-2oi3IM7pJOMJxdiX2WvvdrjdarImBWozSOLY+GsGVAcQ9aJMfgvVYa1buNjGMpdb
-hgyWhkP6wlRGnpS5M3H5dl9WvXQZnlog6thTPxBJquVD6dz+iRlDo74UWeX+t5JC
-I9LrkE5iL40o8jiQ/qMk
-=JSNs
------END PGP SIGNATURE-----
-
---xcnhxbzwbfsiulu2--
+ChenYu
