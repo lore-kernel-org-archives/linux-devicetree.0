@@ -1,80 +1,61 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] mtd: spi-nor: cadence-quadspi: Add runtime PM
- support
-Date: Tue, 26 Sep 2017 01:49:46 +0200
-Message-ID: <fdfe29bf-ff46-7542-8e36-e8e45e1ca85f@gmail.com>
-References: <20170924105924.23923-1-vigneshr@ti.com>
- <20170924105924.23923-6-vigneshr@ti.com>
- <3a1160f9-a0ae-c84c-d209-af97c3c3b0f6@gmail.com>
- <4ee69ea4-14cc-4305-bf3f-8fe76d43bf6b@ti.com>
- <fa700cdf-f0b5-779b-4f38-3138a7612cc2@gmail.com>
- <038919d3-ff32-d0a7-4c0a-3be16436052d@ti.com>
- <e4ad5d80-9093-b667-f0a5-d3105be4e8cf@gmail.com>
- <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/10] ARM: bcm: Add support for Broadcom Hurricane 2 SoC
+Date: Mon, 25 Sep 2017 17:09:21 -0700
+Message-ID: <20170926000931.670-1-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2017 12:41 AM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-> 
-> 
-> On Sun, 24 Sep 2017, Marek Vasut wrote:
-> 
->> On 09/24/2017 03:27 PM, Vignesh R wrote:
->>>
->>>
->>> On 9/24/2017 6:42 PM, Marek Vasut wrote:
->>>> On 09/24/2017 03:08 PM, Vignesh R wrote:
->>>>>
->>>>>
->>>>> On 9/24/2017 5:31 PM, Marek Vasut wrote:
->>>>>> On 09/24/2017 12:59 PM, Vignesh R wrote:
->>>>>>> Add pm_runtime* calls to cadence-quadspi driver. This is required to
->>>>>>> switch on QSPI power domain on TI 66AK2G SoC during probe.
->>>>>>>
->>>>>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->>>>>>
->>>>>> Are you planning to add some more fine-grained PM control later?
->>>>>
->>>>> Yes, I will need to add fine-grained PM control at some point. But,
->>>>> for
->>>>> now SoC does not really support low power mode or runtime power saving
->>>>> option.
->>>>> The fact that driver still uses clk_prepare_*() calls to
->>>>> enable/disable
->>>>> clocks instead of pm_*() calls makes it a bit tricky though.
->>>>>
->>>>> Just figured out I forgot to add cleanup code in error handling
->>>>> path of
->>>>> probe(). Will fix that and send a v4.
->>>>
->>>> OK, fine. Cleanups are welcome. The SoCFPGA doesn't do much runtime PM
->>>> either, so it's fine for now.
->>>>
->>>
->>> Ok thanks! Do you know if pm_runtime_get_sync() can enable clocks for
->>> QSPI on SoCFPGA or if clk_prepare_enable() is needed? Just trying to see
->>> if its possible to get rid of clk_*() calls in favor of pm_*() calls.
->>
->> Not of the top of my head, sorry. +CC Matthew, he should know.
-> 
-> I am not an expert at the clock framework nor the power management, but I
-> did ask around a bit.  No one I asked was planning to change the clk_*()
-> calls to pm_*() call, but the feedback was that it would be a good idea.
+Hi all,
 
-The question is, if we do the replacement, will it break on socfpga ?
-A quick test might be useful.
+This patch series adds basic (boot to prompt with essential peripherals
+working) support for Broadcom's Hurricane 2 SoC which is found in switching
+applications.
+
+This is also an iProc-family chip with a number of variations, including
+some in the clock controller that I have not been able to identify yet.
+
+Florian Fainelli (10):
+  MAINTAINERS: Update Broadcom iProc regexp with Hurricane 2
+  dt-bindings: Add documentation for Broadcom Hurricane 2 SoCs
+  ARM: bcm: Add support for Broadcom Hurricane 2 SoC
+  dt-bindings: Document Broadcom Hurricane 2 clocks
+  clk: bcm: Add Broadcom Hurricane 2 clock support
+  ARM: dts: Add Broadcom Hurricane 2 DTS include file
+  ARM: debug: Add Hurricane 2 UART2 debug addresses
+  dt-bindings: Add Ubiquiti Networks vendor prefix
+  ARM: dts: Hurricane 2: Add basic support for Ubiquiti UniFi Switch 8
+  ARM: multi_v7_defconfig: Enable CONFIG_ARCH_BCM_HR2
+
+ .../devicetree/bindings/arm/bcm/brcm,hr2.txt       |  14 +
+ .../bindings/clock/brcm,iproc-clocks.txt           |  14 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   1 +
+ arch/arm/Kconfig.debug                             |  10 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/bcm-hr2.dtsi                     | 368 +++++++++++++++++++++
+ arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts  |  85 +++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/mach-bcm/Kconfig                          |   9 +
+ arch/arm/mach-bcm/Makefile                         |   3 +
+ arch/arm/mach-bcm/bcm_hr2.c                        |  25 ++
+ drivers/clk/bcm/Kconfig                            |   9 +
+ drivers/clk/bcm/Makefile                           |   1 +
+ drivers/clk/bcm/clk-hr2.c                          |  27 ++
+ 15 files changed, 569 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
+ create mode 100644 arch/arm/boot/dts/bcm-hr2.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
+ create mode 100644 arch/arm/mach-bcm/bcm_hr2.c
+ create mode 100644 drivers/clk/bcm/clk-hr2.c
 
 -- 
-Best regards,
-Marek Vasut
+2.14.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
