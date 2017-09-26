@@ -1,64 +1,137 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 05/13] drm/sun4i: hdmi: create a regmap for later use
-Date: Tue, 26 Sep 2017 14:59:11 +0800
-Message-ID: <20170926065919.24446-6-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 11/13] drm/sun4i: hdmi: Add support for A31's
+ HDMI controller
+Date: Tue, 26 Sep 2017 14:59:17 +0800
+Message-ID: <20170926065919.24446-12-wens@csie.org>
 References: <20170926065919.24446-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170926065919.24446-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBUPVU7HAKGQETMVSATA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170926065919.24446-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEhETUkgZHJpdmVyIGlzIHdyaXR0ZW4gd2l0aCByZWFkbC93cml0ZWwgSS9PIHRvIHRoZSBy
-ZWdpc3RlcnMuCkhvd2V2ZXIsIHRvIHN1cHBvcnQgdGhlIEEzMSB2YXJpYW50LCB3aGljaCBoYXMg
-YSBkaWZmZXJlbnQgbGF5b3V0CmZvciB0aGUgRERDIHJlZ2lzdGVycywgaXQgd2FzIHJlY29tbWVu
-ZGVkIHRvIHVzZSByZWdmaWVsZHMgdG8gaGF2ZQphIGNsZWFuZXIgaW1wbGVtZW50YXRpb24uIFRv
-IHVzZSByZWdmaWVsZHMsIHdlIG5lZWQgdG8gY3JlYXRlIGFuCnVuZGVybHlpbmcgcmVnbWFwLgoK
-VGhpcyBwYXRjaCBvbmx5IGFkZHMgdGhlIHJlZ21hcC4gSXQgZG9lcyBub3QgY29udmVydCB0aGUg
-ZXhpc3RpbmcKZHJpdmVyIGFjY2Vzc2VzIHRvIHVzZSByZWdtYXAuCgpTaWduZWQtb2ZmLWJ5OiBD
-aGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
-bjRpX2hkbWkuaCAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfaGRtaV9l
-bmMuYyB8IDE1ICsrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25z
-KCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2hkbWkuaCBiL2Ry
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9oZG1pLmgKaW5kZXggMTQ1Nzc1MDk4OGRhLi5iOTU1
-MTJlYzhlYjYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9oZG1pLmgK
-KysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2hkbWkuaApAQCAtMTYzLDYgKzE2Myw3
-IEBAIHN0cnVjdCBzdW40aV9oZG1pIHsKIAlzdHJ1Y3QgZGV2aWNlCQkqZGV2OwogCiAJdm9pZCBf
-X2lvbWVtCQkqYmFzZTsKKwlzdHJ1Y3QgcmVnbWFwCQkqcmVnbWFwOwogCiAJLyogUGFyZW50IGNs
-b2NrcyAqLwogCXN0cnVjdCBjbGsJCSpidXNfY2xrOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX2hkbWlfZW5jLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
-aGRtaV9lbmMuYwppbmRleCAzY2YxYTY5MzJmYWMuLjVhYjgxMWNkYTAwZSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2hkbWlfZW5jLmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL3N1bjRpL3N1bjRpX2hkbWlfZW5jLmMKQEAgLTIyLDYgKzIyLDcgQEAKICNpbmNsdWRlIDxs
-aW51eC9pb3BvbGwuaD4KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KICNpbmNs
-dWRlIDxsaW51eC9wbV9ydW50aW1lLmg+CisjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+CiAKICNp
-bmNsdWRlICJzdW40aV9iYWNrZW5kLmgiCiAjaW5jbHVkZSAic3VuNGlfY3J0Yy5oIgpAQCAtMjY3
-LDYgKzI2OCwxMyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNlY19waW5fb3BzIHN1bjRpX2hkbWlf
-Y2VjX3Bpbl9vcHMgPSB7CiB9OwogI2VuZGlmCiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnbWFw
-X2NvbmZpZyBzdW40aV9oZG1pX3JlZ21hcF9jb25maWcgPSB7CisJLnJlZ19iaXRzCT0gMzIsCisJ
-LnZhbF9iaXRzCT0gMzIsCisJLnJlZ19zdHJpZGUJPSA0LAorCS5tYXhfcmVnaXN0ZXIJPSAweDU4
-MCwKK307CisKIHN0YXRpYyBpbnQgc3VuNGlfaGRtaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwg
-c3RydWN0IGRldmljZSAqbWFzdGVyLAogCQkJICAgdm9pZCAqZGF0YSkKIHsKQEAgLTMyMSw2ICsz
-MjksMTMgQEAgc3RhdGljIGludCBzdW40aV9oZG1pX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBz
-dHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAJCWdvdG8gZXJyX2Rpc2FibGVfbW9kX2NsazsKIAl9CiAK
-KwloZG1pLT5yZWdtYXAgPSBkZXZtX3JlZ21hcF9pbml0X21taW8oZGV2LCBoZG1pLT5iYXNlLAor
-CQkJCQkgICAgICZzdW40aV9oZG1pX3JlZ21hcF9jb25maWcpOworCWlmIChJU19FUlIoaGRtaS0+
-cmVnbWFwKSkgeworCQlkZXZfZXJyKGRldiwgIkNvdWxkbid0IGNyZWF0ZSBIRE1JIGVuY29kZXIg
-cmVnbWFwXG4iKTsKKwkJcmV0dXJuIFBUUl9FUlIoaGRtaS0+cmVnbWFwKTsKKwl9CisKIAlyZXQg
-PSBzdW40aV90bWRzX2NyZWF0ZShoZG1pKTsKIAlpZiAocmV0KSB7CiAJCWRldl9lcnIoZGV2LCAi
-Q291bGRuJ3QgY3JlYXRlIHRoZSBUTURTIGNsb2NrXG4iKTsKLS0gCjIuMTQuMQoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The HDMI controller found in the A31 SoCs is slightly different
+from the one already supported, which is found in the A10s:
+
+  - Need different initial values for the PLL related registers
+
+  - Different behavior of the DDC and TMDS clocks
+
+  - Different register layout for the DDC portion
+
+  - Separate DDC parent clock
+
+This patch adds support for it.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  3 ++
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 58 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+index da4ea9efc6fa..186624de9b60 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+@@ -59,10 +59,13 @@
+ #define SUN4I_HDMI_PAD_CTRL0_TXEN		BIT(23)
+ 
+ #define SUN4I_HDMI_PAD_CTRL1_REG	0x204
++#define SUN4I_HDMI_PAD_CTRL1_UNKNOWN		BIT(24)	/* set on A31 */
+ #define SUN4I_HDMI_PAD_CTRL1_AMP_OPT		BIT(23)
+ #define SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT		BIT(22)
+ #define SUN4I_HDMI_PAD_CTRL1_EMP_OPT		BIT(20)
+ #define SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT		BIT(19)
++#define SUN4I_HDMI_PAD_CTRL1_PWSCK		BIT(18)
++#define SUN4I_HDMI_PAD_CTRL1_PWSDT		BIT(17)
+ #define SUN4I_HDMI_PAD_CTRL1_REG_DEN		BIT(15)
+ #define SUN4I_HDMI_PAD_CTRL1_REG_DENCK		BIT(14)
+ #define SUN4I_HDMI_PAD_CTRL1_REG_EMP(n)		(((n) & 7) << 10)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 114cbe60b3e6..027b5608dbe6 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -324,6 +324,63 @@ static const struct sun4i_hdmi_variant sun5i_variant = {
+ 	.ddc_fifo_has_dir	= true,
+ };
+ 
++static const struct sun4i_hdmi_variant sun6i_variant = {
++	.has_ddc_parent_clk	= true,
++	.has_reset_control	= true,
++	.pad_ctrl0_init_val	= 0xff |
++				  SUN4I_HDMI_PAD_CTRL0_TXEN |
++				  SUN4I_HDMI_PAD_CTRL0_CKEN |
++				  SUN4I_HDMI_PAD_CTRL0_PWENG |
++				  SUN4I_HDMI_PAD_CTRL0_PWEND |
++				  SUN4I_HDMI_PAD_CTRL0_PWENC |
++				  SUN4I_HDMI_PAD_CTRL0_LDODEN |
++				  SUN4I_HDMI_PAD_CTRL0_LDOCEN,
++	.pad_ctrl1_init_val	= SUN4I_HDMI_PAD_CTRL1_REG_AMP(6) |
++				  SUN4I_HDMI_PAD_CTRL1_REG_EMP(4) |
++				  SUN4I_HDMI_PAD_CTRL1_REG_DENCK |
++				  SUN4I_HDMI_PAD_CTRL1_REG_DEN |
++				  SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_EMP_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_PWSDT |
++				  SUN4I_HDMI_PAD_CTRL1_PWSCK |
++				  SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_AMP_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_UNKNOWN,
++	.pll_ctrl_init_val	= SUN4I_HDMI_PLL_CTRL_VCO_S(8) |
++				  SUN4I_HDMI_PLL_CTRL_CS(3) |
++				  SUN4I_HDMI_PLL_CTRL_CP_S(10) |
++				  SUN4I_HDMI_PLL_CTRL_S(4) |
++				  SUN4I_HDMI_PLL_CTRL_VCO_GAIN(4) |
++				  SUN4I_HDMI_PLL_CTRL_SDIV2 |
++				  SUN4I_HDMI_PLL_CTRL_LDO2_EN |
++				  SUN4I_HDMI_PLL_CTRL_LDO1_EN |
++				  SUN4I_HDMI_PLL_CTRL_HV_IS_33 |
++				  SUN4I_HDMI_PLL_CTRL_PLL_EN,
++
++	.ddc_clk_reg		= REG_FIELD(SUN6I_HDMI_DDC_CLK_REG, 0, 6),
++	.ddc_clk_pre_divider	= 1,
++	.ddc_clk_m_offset	= 2,
++
++	.tmds_clk_div_offset	= 1,
++
++	.field_ddc_en		= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 0, 0),
++	.field_ddc_start	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 27, 27),
++	.field_ddc_reset	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 31, 31),
++	.field_ddc_addr_reg	= REG_FIELD(SUN6I_HDMI_DDC_ADDR_REG, 1, 31),
++	.field_ddc_slave_addr	= REG_FIELD(SUN6I_HDMI_DDC_ADDR_REG, 1, 7),
++	.field_ddc_int_status	= REG_FIELD(SUN6I_HDMI_DDC_INT_STATUS_REG, 0, 8),
++	.field_ddc_fifo_clear	= REG_FIELD(SUN6I_HDMI_DDC_FIFO_CTRL_REG, 18, 18),
++	.field_ddc_fifo_rx_thres = REG_FIELD(SUN6I_HDMI_DDC_FIFO_CTRL_REG, 4, 7),
++	.field_ddc_fifo_tx_thres = REG_FIELD(SUN6I_HDMI_DDC_FIFO_CTRL_REG, 0, 3),
++	.field_ddc_byte_count	= REG_FIELD(SUN6I_HDMI_DDC_CMD_REG, 16, 25),
++	.field_ddc_cmd		= REG_FIELD(SUN6I_HDMI_DDC_CMD_REG, 0, 2),
++	.field_ddc_sda_en	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 6, 6),
++	.field_ddc_sck_en	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 4, 4),
++
++	.ddc_fifo_reg		= SUN6I_HDMI_DDC_FIFO_DATA_REG,
++	.ddc_fifo_thres_incl	= true,
++};
++
+ static const struct regmap_config sun4i_hdmi_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+@@ -551,6 +608,7 @@ static int sun4i_hdmi_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id sun4i_hdmi_of_table[] = {
+ 	{ .compatible = "allwinner,sun5i-a10s-hdmi", .data = &sun5i_variant, },
++	{ .compatible = "allwinner,sun6i-a31-hdmi", .data = &sun6i_variant, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_hdmi_of_table);
+-- 
+2.14.1
