@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 09/10] ARM: dts: Hurricane 2: Add basic support for Ubiquiti UniFi Switch 8
-Date: Mon, 25 Sep 2017 17:09:30 -0700
-Message-ID: <20170926000931.670-10-f.fainelli@gmail.com>
+Subject: [PATCH 05/10] clk: bcm: Add Broadcom Hurricane 2 clock support
+Date: Mon, 25 Sep 2017 17:09:26 -0700
+Message-ID: <20170926000931.670-6-f.fainelli@gmail.com>
 References: <20170926000931.670-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170926000931.670-1-f.fainelli@gmail.com>
@@ -12,120 +12,82 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add basic board support for the Ubiquiti UniFi Switch 8 port model. This
-is a small home and office use managed switch based on the BCM53342
-switching control SoC.
+Add support for the Broadcom Hurricane 2 SoC clock controller. We can
+re-use the existing iProc clock library since the SoC's architecture is
+largely the same as its predecessors.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/Makefile                        |  2 +
- arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts | 85 +++++++++++++++++++++++
- 2 files changed, 87 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
+ drivers/clk/bcm/Kconfig   |  9 +++++++++
+ drivers/clk/bcm/Makefile  |  1 +
+ drivers/clk/bcm/clk-hr2.c | 27 +++++++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 drivers/clk/bcm/clk-hr2.c
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faf46abaa4a2..6942c48d0d88 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -117,6 +117,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
- 	bcm911360k.dtb \
- 	bcm958300k.dtb \
- 	bcm958305k.dtb
-+dtb-$(CONFIG_ARCH_BCM_HR2) += \
-+	bcm53340-ubnt-unifi-switch8.dtb
- dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
- 	bcm28155-ap.dtb \
- 	bcm21664-garnet.dtb \
-diff --git a/arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts b/arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
+diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+index 1d9187df167b..4c4bd85f707c 100644
+--- a/drivers/clk/bcm/Kconfig
++++ b/drivers/clk/bcm/Kconfig
+@@ -30,6 +30,15 @@ config CLK_BCM_CYGNUS
+ 	help
+ 	  Enable common clock framework support for the Broadcom Cygnus SoC
+ 
++config CLK_BCM_HR2
++	bool "Broadcom Hurricane 2 clock support"
++	depends on ARCH_BCM_HR2 || COMPILE_TEST
++	select COMMON_CLK_IPROC
++	default ARCH_BCM_HR2
++	help
++	  Enable common clock framework support for the Broadcom Hurricane 2
++	  SoC
++
+ config CLK_BCM_NSP
+ 	bool "Broadcom Northstar/Northstar Plus clock support"
+ 	depends on ARCH_BCM_5301X || ARCH_BCM_NSP || COMPILE_TEST
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index a0c14fa4aa1e..755144195541 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835-aux.o
+ obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
+ obj-$(CONFIG_CLK_BCM_CYGNUS)	+= clk-cygnus.o
++obj-$(CONFIG_CLK_BCM_HR2)	+= clk-hr2.o
+ obj-$(CONFIG_CLK_BCM_NSP)	+= clk-nsp.o
+ obj-$(CONFIG_CLK_BCM_NS2)	+= clk-ns2.o
+ obj-$(CONFIG_CLK_BCM_SR)	+= clk-sr.o
+diff --git a/drivers/clk/bcm/clk-hr2.c b/drivers/clk/bcm/clk-hr2.c
 new file mode 100644
-index 000000000000..f8ac37022ebf
+index 000000000000..f7c5b7379475
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
-@@ -0,0 +1,85 @@
++++ b/drivers/clk/bcm/clk-hr2.c
+@@ -0,0 +1,27 @@
 +/*
-+ * DTS for Unifi Switch 8 port
++ * Copyright (C) 2017 Broadcom
 + *
-+ * Copyright (C) 2017 Florian Fainelli <f.fainelli@gmail.com>
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
 + *
-+ * Licensed under the GNU/GPL. See COPYING for details.
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+/dts-v1/;
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
 +
-+#include "bcm-hr2.dtsi"
++#include "clk-iproc.h"
 +
-+/ {
-+	compatible = "ubnt,unifi-switch8", "brcm,bcm53342", "brcm,hr2";
-+	model = "Ubiquiti UniFi Switch 8 (BCM53342)";
-+
-+	/* Hurricane 2 designs use the second UART */
-+	chosen {
-+		bootargs = "console=ttyS1,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		reg = <0x00000000 0x08000000>,
-+		      <0x68000000 0x08000000>;
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&qspi {
-+	status = "okay";
-+	bspi-sel = <0>;
-+
-+	flash: m25p80@0 {
-+		compatible = "m25p80";
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <12500000>;
-+		spi-cpol;
-+		spi-cpha;
-+
-+		partition@0 {
-+			label = "u-boot";
-+			reg = <0x0 0xc0000>;
-+		};
-+
-+		partition@c0000 {
-+			label = "u-boot-env";
-+			reg = <0xc0000 0x10000>;
-+		};
-+
-+		partition@d0000 {
-+			label = "shmoo";
-+			reg = <0xd0000 0x10000>;
-+		};
-+
-+		partition@e0000 {
-+			label = "kernel0";
-+			reg = <0xe0000 0xf00000>;
-+		};
-+
-+		partition@fe0000 {
-+			label = "kernel1";
-+			reg = <0xfe0000 0xf10000>;
-+		};
-+
-+		partition@1ef0000 {
-+			label = "cfg";
-+			reg = <0x1ef0000 0x100000>;
-+		};
-+
-+		partition@1ff0000 {
-+			label = "EEPROM";
-+			reg = <0x1ff0000 0x10000>;
-+		};
-+	};
-+};
-+
-+&pcie0 {
-+	/* Attaches to the internal switch */
-+	status = "okay";
-+};
++static void __init hr2_armpll_init(struct device_node *node)
++{
++	iproc_armpll_setup(node);
++}
++CLK_OF_DECLARE(hr2_armpll, "brcm,hr2-armpll", hr2_armpll_init);
 -- 
 2.14.1
