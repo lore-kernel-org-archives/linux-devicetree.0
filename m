@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 10/13] drm/sun4i: hdmi: Add A31 specific DDC
- register definitions
-Date: Tue, 26 Sep 2017 14:59:16 +0800
-Message-ID: <20170926065919.24446-11-wens@csie.org>
+Subject: [PATCH v2 03/13] drm/sun4i: tcon: Add support for
+ demuxing TCON output on A31
+Date: Tue, 26 Sep 2017 14:59:09 +0800
+Message-ID: <20170926065919.24446-4-wens@csie.org>
 References: <20170926065919.24446-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUHVU7HAKGQEUIAVR5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBUPVU7HAKGQETMVSATA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170926065919.24446-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,56 +20,102 @@ To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard 
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The DDC block for the HDMI controller is different on the A31.
+On systems with 2 TCONs such as the A31, it is possible to demux the
+output of the TCONs to one encoder.
 
-This patch adds the register definitions.
+Add support for this for the A31.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 61 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index b1124a8f9f05..da4ea9efc6fa 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -153,6 +153,37 @@
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index e853dfe51389..770b843a6fa9 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -14,9 +14,12 @@
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_crtc_helper.h>
++#include <drm/drm_encoder.h>
+ #include <drm/drm_modes.h>
+ #include <drm/drm_of.h>
  
- #define SUN4I_HDMI_DDC_FIFO_SIZE	16
++#include <uapi/drm/drm_mode.h>
++
+ #include <linux/component.h>
+ #include <linux/ioport.h>
+ #include <linux/of_address.h>
+@@ -109,11 +112,69 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
+ }
+ EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
  
-+/* A31 specific */
-+#define SUN6I_HDMI_DDC_CTRL_REG		0x500
-+#define SUN6I_HDMI_DDC_CTRL_RESET		BIT(31)
-+#define SUN6I_HDMI_DDC_CTRL_START_CMD		BIT(27)
-+#define SUN6I_HDMI_DDC_CTRL_SDA_ENABLE		BIT(6)
-+#define SUN6I_HDMI_DDC_CTRL_SCL_ENABLE		BIT(4)
-+#define SUN6I_HDMI_DDC_CTRL_ENABLE		BIT(0)
++static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
++{
++	struct sun4i_drv *drv = drm->dev_private;
++	struct sun4i_tcon *tcon;
 +
-+#define SUN6I_HDMI_DDC_CMD_REG		0x508
-+#define SUN6I_HDMI_DDC_CMD_BYTE_COUNT(count)	((count) << 16)
-+/* command types in lower 3 bits are the same as sun4i */
++	list_for_each_entry(tcon, &drv->tcon_list, list)
++		if (tcon->id == 0)
++			return tcon;
 +
-+#define SUN6I_HDMI_DDC_ADDR_REG		0x50c
-+#define SUN6I_HDMI_DDC_ADDR_SEGMENT(seg)	(((seg) & 0xff) << 24)
-+#define SUN6I_HDMI_DDC_ADDR_EDDC(addr)		(((addr) & 0xff) << 16)
-+#define SUN6I_HDMI_DDC_ADDR_OFFSET(off)		(((off) & 0xff) << 8)
-+#define SUN6I_HDMI_DDC_ADDR_SLAVE(addr)		(((addr) & 0xff) << 1)
++	dev_warn(drm->dev,
++		 "TCON0 not found, display output muxing may not work\n");
 +
-+#define SUN6I_HDMI_DDC_INT_STATUS_REG	0x514
-+#define SUN6I_HDMI_DDC_INT_STATUS_TIMEOUT	BIT(8)
-+/* lower 8 bits are the same as sun4i */
++	return tcon;
++}
 +
-+#define SUN6I_HDMI_DDC_FIFO_CTRL_REG	0x518
-+#define SUN6I_HDMI_DDC_FIFO_CTRL_CLEAR		BIT(15)
-+/* lower 9 bits are the same as sun4i */
++static int _sun6i_tcon_set_mux(struct drm_encoder *encoder)
++{
++	struct sun4i_tcon *tcon = sun4i_get_first_tcon(encoder->dev);
++	int tcon_id = drm_crtc_to_sun4i_crtc(encoder->crtc)->tcon->id;
++	u32 shift;
 +
-+#define SUN6I_HDMI_DDC_CLK_REG		0x520
-+/* DDC CLK bit fields are the same, but the formula is not */
++	DRM_DEBUG_DRIVER("Muxing encoder %s to CRTC %s (TCON %d)\n",
++			 encoder->name, encoder->crtc->name, tcon_id);
 +
-+#define SUN6I_HDMI_DDC_FIFO_DATA_REG	0x580
++	/* Only 2 TCONs */
++	if (tcon_id >= 2)
++		return -EINVAL;
 +
- enum sun4i_hdmi_pkt_type {
- 	SUN4I_HDMI_PKT_AVI = 2,
- 	SUN4I_HDMI_PKT_END = 15,
++	switch (encoder->encoder_type) {
++	case DRM_MODE_ENCODER_TMDS:
++		/* HDMI */
++		shift = 8;
++		break;
++	case DRM_MODE_ENCODER_DSI:
++		/* No MIPI DSI on A31s */
++		if (of_device_is_compatible(tcon->dev->of_node,
++					    "allwinner,sun6i-a31s-tcon"))
++			return -EINVAL;
++		shift = 0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_update_bits(tcon->regs, SUN4I_TCON_MUX_CTRL_REG,
++			   0x3 << shift, tcon_id << shift);
++
++	return 0;
++}
++
+ void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
+ 			struct drm_encoder *encoder)
+ {
++	/* Get the device node of the display engine */
++	struct device_node *node = encoder->dev->dev->of_node;
+ 	u32 val;
+ 
++	if (of_device_is_compatible(node, "allwinner,sun6i-a31-display-engine") ||
++	    of_device_is_compatible(node, "allwinner,sun6i-a31s-display-engine")) {
++		_sun6i_tcon_set_mux(encoder);
++		return;
++	}
++
+ 	if (!tcon->quirks->has_unknown_mux)
+ 		return;
+ 
 -- 
 2.14.1
