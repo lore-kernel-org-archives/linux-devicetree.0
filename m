@@ -1,204 +1,191 @@
-From: Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: Re: [PATCH 03/12] mmc: mediatek: add support of mt2701/mt2712
-Date: Tue, 26 Sep 2017 09:38:30 +0800
-Message-ID: <1506389910.8495.0.camel@mhfsdcap03>
-References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
-         <1505207272-16983-4-git-send-email-chaotian.jing@mediatek.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 1/8] extcon: gpio: Add DT bindings
+Date: Tue, 26 Sep 2017 11:02:21 +0900
+Message-ID: <59C9B52D.8050909@samsung.com>
+References: <20170924145622.4031-1-linus.walleij@linaro.org>
+        <20170924145622.4031-2-linus.walleij@linaro.org>
+        <CAL_JsqKth+EHVZEVpT1U7qVvN77i7oZjBJH5bbowXcjJxETuoA@mail.gmail.com>
+        <CGME20170926003941epcas4p2a1987500f6e213b6a2ffe973ab1db922@epcas4p2.samsung.com>
+        <CACRpkdbGA1L7YZNuad7uysf4VAT2bi+PrZyFAKpVy9WUdaj+NA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505207272-16983-4-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-reply-to: <CACRpkdbGA1L7YZNuad7uysf4VAT2bi+PrZyFAKpVy9WUdaj+NA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Rob,
 
-Sorry to disturb you, Do you have some comments of these series of
-patch ?
-Thx!
-On Tue, 2017-09-12 at 17:07 +0800, Chaotian Jing wrote:
-> mt2701/mt2712 has 12bit clock div, which is not compatible with
-> mt8135/mt8173. and, some additional features will be added in
-> mt2701/mt2712, so that need distinguish it by comatibale name.
+On 2017년 09월 26일 09:39, Linus Walleij wrote:
+> On Sun, Sep 24, 2017 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Sun, Sep 24, 2017 at 9:56 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>> Add some reasonable device tree bindings and also add the cable defines
+>>> to the extcon include in <dt-bindings/extcon/connectors.h> since
+>>> the GPIO extcon definately need to specify which cable/connector it is
+>>> detecting.
+>>>
+>>> Adding the include file makes the (as it happens) Linux numbers into an
+>>> ABI, but I do not see any better method. It is possible to define strings
+>>> for all cable types but it seems like overkill, just reusing Linux'
+>>> enumerators seems like a good idea.
+>>>
+>>> The binding supports any number of GPIOs and connectors, but the driver
+>>> currently only supports one connector on one GPIO line.
+>>
+>> My view of extcon binding is it is fundamentally broken. I've
+>> expressed this multiple times before.
 > 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  drivers/mmc/host/mtk-sd.c | 82 +++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 69 insertions(+), 13 deletions(-)
+> Sorry, I'm a newcomer in this area, so I was not aware of this.
 > 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 267f7ab..643c795 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -95,6 +95,9 @@
->  #define MSDC_CFG_CKDIV          (0xff << 8)	/* RW */
->  #define MSDC_CFG_CKMOD          (0x3 << 16)	/* RW */
->  #define MSDC_CFG_HS400_CK_MODE  (0x1 << 18)	/* RW */
-> +#define MSDC_CFG_HS400_CK_MODE_EXTRA  (0x1 << 22)	/* RW */
-> +#define MSDC_CFG_CKDIV_EXTRA    (0xfff << 8)	/* RW */
-> +#define MSDC_CFG_CKMOD_EXTRA    (0x3 << 20)	/* RW */
->  
->  /* MSDC_IOCON mask */
->  #define MSDC_IOCON_SDR104CKS    (0x1 << 0)	/* RW */
-> @@ -295,6 +298,10 @@ struct msdc_save_para {
->  	u32 emmc50_cfg0;
->  };
->  
-> +struct mtk_mmc_compatible {
-> +	u8 clk_div_bits;
-> +};
-> +
->  struct msdc_tune_para {
->  	u32 iocon;
->  	u32 pad_tune;
-> @@ -309,6 +316,7 @@ struct msdc_delay_phase {
->  
->  struct msdc_host {
->  	struct device *dev;
-> +	const struct mtk_mmc_compatible *dev_comp;
->  	struct mmc_host *mmc;	/* mmc structure */
->  	int cmd_rsp;
->  
-> @@ -350,6 +358,31 @@ struct msdc_host {
->  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
->  };
->  
-> +static const struct mtk_mmc_compatible mt8135_compat = {
-> +	.clk_div_bits = 8,
-> +};
-> +
-> +static const struct mtk_mmc_compatible mt8173_compat = {
-> +	.clk_div_bits = 8,
-> +};
-> +
-> +static const struct mtk_mmc_compatible mt2701_compat = {
-> +	.clk_div_bits = 12,
-> +};
-> +
-> +static const struct mtk_mmc_compatible mt2712_compat = {
-> +	.clk_div_bits = 12,
-> +};
-> +
-> +static const struct of_device_id msdc_of_ids[] = {
-> +	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
-> +	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
-> +	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
-> +	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, msdc_of_ids);
-> +
->  static void sdr_set_bits(void __iomem *reg, u32 bs)
->  {
->  	u32 val = readl(reg);
-> @@ -509,7 +542,12 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
->  		timeout = (ns + clk_ns - 1) / clk_ns + clks;
->  		/* in 1048576 sclk cycle unit */
->  		timeout = (timeout + (0x1 << 20) - 1) >> 20;
-> -		sdr_get_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD, &mode);
-> +		if (host->dev_comp->clk_div_bits == 8)
-> +			sdr_get_field(host->base + MSDC_CFG,
-> +				      MSDC_CFG_CKMOD, &mode);
-> +		else
-> +			sdr_get_field(host->base + MSDC_CFG,
-> +				      MSDC_CFG_CKMOD_EXTRA, &mode);
->  		/*DDR mode will double the clk cycles for data timeout */
->  		timeout = mode >= 2 ? timeout * 2 : timeout;
->  		timeout = timeout > 1 ? timeout - 1 : 0;
-> @@ -548,7 +586,11 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
->  
->  	flags = readl(host->base + MSDC_INTEN);
->  	sdr_clr_bits(host->base + MSDC_INTEN, flags);
-> -	sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
-> +	if (host->dev_comp->clk_div_bits == 8)
-> +		sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
-> +	else
-> +		sdr_clr_bits(host->base + MSDC_CFG,
-> +			     MSDC_CFG_HS400_CK_MODE_EXTRA);
->  	if (timing == MMC_TIMING_UHS_DDR50 ||
->  	    timing == MMC_TIMING_MMC_DDR52 ||
->  	    timing == MMC_TIMING_MMC_HS400) {
-> @@ -568,8 +610,12 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
->  
->  		if (timing == MMC_TIMING_MMC_HS400 &&
->  		    hz >= (host->src_clk_freq >> 1)) {
-> -			sdr_set_bits(host->base + MSDC_CFG,
-> -				     MSDC_CFG_HS400_CK_MODE);
-> +			if (host->dev_comp->clk_div_bits == 8)
-> +				sdr_set_bits(host->base + MSDC_CFG,
-> +					     MSDC_CFG_HS400_CK_MODE);
-> +			else
-> +				sdr_set_bits(host->base + MSDC_CFG,
-> +					     MSDC_CFG_HS400_CK_MODE_EXTRA);
->  			sclk = host->src_clk_freq >> 1;
->  			div = 0; /* div is ignore when bit18 is set */
->  		}
-> @@ -587,8 +633,15 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
->  			sclk = (host->src_clk_freq >> 2) / div;
->  		}
->  	}
-> -	sdr_set_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
-> -		      (mode << 8) | div);
-> +	if (host->dev_comp->clk_div_bits == 8)
-> +		sdr_set_field(host->base + MSDC_CFG,
-> +			      MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
-> +			      (mode << 8) | div);
-> +	else
-> +		sdr_set_field(host->base + MSDC_CFG,
-> +			      MSDC_CFG_CKMOD_EXTRA | MSDC_CFG_CKDIV_EXTRA,
-> +			      (mode << 12) | div);
-> +
->  	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_CKPDN);
->  	while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
->  		cpu_relax();
-> @@ -1617,12 +1670,17 @@ static int msdc_drv_probe(struct platform_device *pdev)
->  	struct mmc_host *mmc;
->  	struct msdc_host *host;
->  	struct resource *res;
-> +	const struct of_device_id *of_id;
->  	int ret;
->  
->  	if (!pdev->dev.of_node) {
->  		dev_err(&pdev->dev, "No DT found\n");
->  		return -EINVAL;
->  	}
-> +
-> +	of_id = of_match_node(msdc_of_ids, pdev->dev.of_node);
-> +	if (!of_id)
-> +		return -EINVAL;
->  	/* Allocate MMC host for this device */
->  	mmc = mmc_alloc_host(sizeof(struct msdc_host), &pdev->dev);
->  	if (!mmc)
-> @@ -1686,11 +1744,15 @@ static int msdc_drv_probe(struct platform_device *pdev)
->  	msdc_of_property_parse(pdev, host);
->  
->  	host->dev = &pdev->dev;
-> +	host->dev_comp = of_id->data;
->  	host->mmc = mmc;
->  	host->src_clk_freq = clk_get_rate(host->src_clk);
->  	/* Set host parameters to mmc */
->  	mmc->ops = &mt_msdc_ops;
-> -	mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 255);
-> +	if (host->dev_comp->clk_div_bits == 8)
-> +		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 255);
-> +	else
-> +		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 4095);
->  
->  	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
->  	/* MMC core transfer sizes tunable parameters */
-> @@ -1839,12 +1901,6 @@ static int msdc_runtime_resume(struct device *dev)
->  	SET_RUNTIME_PM_OPS(msdc_runtime_suspend, msdc_runtime_resume, NULL)
->  };
->  
-> -static const struct of_device_id msdc_of_ids[] = {
-> -	{   .compatible = "mediatek,mt8135-mmc", },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, msdc_of_ids);
-> -
->  static struct platform_driver mt_msdc_driver = {
->  	.probe = msdc_drv_probe,
->  	.remove = msdc_drv_remove,
+> Since this is a new binding consumer, is it something we can use
+> as role model to fix it?
+> 
+> If I understand correctly from reading up on the mailing list the root of the
+> problem is something like this:
+> 
+> "extcon" is a linuxism and ambiguous.
+> 
+> This driver should probe to "gpio-connector" or "gpio-switch" or something
+> like that if it should be generic. Or use very domain-specific compatible
+> strings (as you describe below), all supported maybe by the same driver
+> in the end.
+> 
+> The reason it is its own subsystem and not part of input (IIUC) is that
+> other drivers need to subscribe to events from these connectors,
+> they are not intended for userspace input such as keyboard or mice
+> or similar.
+> 
+> In the DTS file you will find stuff using extcons as resources with
+>  = <&extcon>; phandles so they can look them up and subscribe
+> to events.
+> 
+> Input has a whole slew of "events" that correspond to some of these
+> but a different usecase, but that usecase is just a linuxism in turn, there
+> is nothing saying another operating system could have a more versatile
+> defintion of "input".
+> 
+> Maybe from a hardware description PoV these should all move over
+> to devicetree/bindings/input - they all provice an input signal to the
+> system. The fact that Linux split a subset of these into "extcon"
+> is of no concern to the DT bindings.
+> 
+> Analogous with that some of the stuff in input/ should likely be
+> moved to a new output/ directory. Such as pwm-beeper,
+> pwm-vibrator etc. The fact that these are in the "input" subsystem
+> in Linux is just another linuxism.
+> 
+>> TL;DR: Anything extending the existing extcon binding will be NAKed.
+> 
+> That can be a reasonable stance.
+> 
+> I'm just trying to get this into a state where the code does not stand in
+> the way of kernel clean-up. (Especially I want to get rid of the call
+> to gpio_to_desc())
+> 
+> As stated in the cover letter the alternative will be to simply delete
+> the driver. But it's better if I can fix the situation, we can't have it
+> like this.
+> 
+>>> +External Connector Using GPIO
+>>
+>> What kind of connector? All connectors external to something... And
+>> GPIO is not a kind of connector on its own, but an implementation.
+> 
+> Yeah that is a problem with the whole subsystem I guess. Should
+> I add a paragraph describing the usecases?
+> 
+> The whole thing is a bit
+> of Androidism and is named like this because Android named it like
+> this in their kernel tree.
+> 
+>>> +Required properties:
+>>> +- compatible: should be "extcon-gpio"
+>>> +- extcon-gpios: the GPIO lines used for the external connectors
+>>
+>> This doesn't tell me what the GPIOs functions are and should. For
+>> example we have hpd-gpios for HDMI hotplug detect in HDMI connector
+>> binding.
+> 
+> The idea is that this array corresponds to the extcon-connector-types
+> right below, I'll clarify that if you think the overall idea is OK.
+> 
+>>> +  See gpio/gpio.txt
+>>> +- extcon-connector-types: set to an unsigned integer value arrat representing the types
+>>> +  of this connector, matched to the corresponding GPIO lines in the previous array.
+>>
+>> This should be determined by the compatible string.
+> 
+> So a GPIO connector is very versatile. It is "general purpose" by definition,
+> so it needs to be subclassed.
+> 
+> One possibility is to allow just one GPIO and have one comptible-string per
+> use case.
+> compatible = "gpio-usb-connector";
+> compatible = "gpio-charger-connector";
+> compatible = "gpio-headphone-connector";
+> etc etc
+> 
+> These bindings on the other hand, assume that the driver will be able
+> to handle an array of gpios with an associated array of connector types,
+> which reflects how many of the existing extcon-type driver hardware works:
+> a single PMIC providing some 5 misc extcons for example.
+> 
+> For this reason there is a generic compatible string and then the device
+> is subclassed per-gpio with the per-gpio connector type.
+> 
+>>> +/* USB external connector */
+>>> +#define EXTCON_USB             1
+>>> +#define EXTCON_USB_HOST                2
+>>> +#define EXTCON_CHG_USB_SDP     5       /* Standard Downstream Port */
+>>> +#define EXTCON_CHG_USB_DCP     6       /* Dedicated Charging Port */
+>>> +#define EXTCON_CHG_USB_CDP     7       /* Charging Downstream Port */
+>>> +#define EXTCON_CHG_USB_ACA     8       /* Accessory Charger Adapter */
+>>> +#define EXTCON_CHG_USB_FAST    9
+>>> +#define EXTCON_CHG_USB_SLOW    10
+>>> +#define EXTCON_CHG_WPT         11      /* Wireless Power Transfer */
+>>> +#define EXTCON_CHG_USB_PD      12      /* USB Power Delivery */
+>>
+>> These don't all look to be mutually exclusive.
+>>
+>> For USB PD, isn't that discoverable?
+
+Currently, EXTCON_CHG_USB_PD is not used on any extcon provider drivers.
+I think that EXTCON_CHG_USB_PD is discoverable according to the H/W design
+such as using ADC.
+
+Also, The charger connectors of extcon are related to power_supply subsystem
+because power_supply is in charge of behavior when the connector is attached/detached.
+So, the extcon defines the EXTCON_CHG_USB_PD in order to detect this type.
+
+> 
+> Someone else would have to answer, this is based on the current
+> connector types supported by the Linux kernel.
+> 
+>>> +/* Display external connector */
+>>> +#define EXTCON_DISP_HDMI       40      /* High-Definition Multimedia Interface */
+>>> +#define EXTCON_DISP_MHL                41      /* Mobile High-Definition Link */
+>>> +#define EXTCON_DISP_DVI                42      /* Digital Visual Interface */
+>>> +#define EXTCON_DISP_VGA                43      /* Video Graphics Array */
+>>> +#define EXTCON_DISP_DP         44      /* Display Port */
+>>> +#define EXTCON_DISP_HMD                45      /* Head-Mounted Display */
+>>
+>> We already have connector bindings for most of these. Use those as a
+>> model for whatever you want to do.
+> 
+> I guess they are not in Documentation/devicetree/bindings/extcon/*
+> 
+> Please point me in the right direction and I'll check it out.
+> 
+> Yours,
+> Linus Walleij
+> 
+> 
+> 
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
