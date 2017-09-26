@@ -1,55 +1,37 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
- DMA controller
-Date: Tue, 26 Sep 2017 15:50:03 +0100
-Message-ID: <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
-References: <cover.1506380746.git.digetx@gmail.com>
- <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+From: <dunaev-tpH+T49V+f0@public.gmane.org>
+Subject: [PATCH] Add Tecon Microprocessor Technologies, LLC vendor prefix
+Date: Tue, 26 Sep 2017 17:49:37 +0300
+Message-ID: <1506437379-20012-1-git-send-email-dunaev@tecon.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dunaev-tpH+T49V+f0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Dmitry Dunaev <dunaev-tpH+T49V+f0@public.gmane.org>
 
-On 26/09/17 00:22, Dmitry Osipenko wrote:
-> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
-> on Tegra20/30 SoC's.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
-> new file mode 100644
-> index 000000000000..2af9aa76ae11
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
-> @@ -0,0 +1,23 @@
-> +* NVIDIA Tegra AHB DMA controller
-> +
-> +Required properties:
-> +- compatible:	Must be "nvidia,tegra20-ahbdma"
-> +- reg:		Should contain registers base address and length.
-> +- interrupts:	Should contain one entry, DMA controller interrupt.
-> +- clocks:	Should contain one entry, DMA controller clock.
-> +- resets :	Should contain one entry, DMA controller reset.
-> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
-> +		for the peripheral. For more details consult the Tegra TRM's
-> +		documentation, in particular AHB DMA channel control register
-> +		REQ_SEL field.
+Signed-off-by: Dmitry Dunaev <dunaev-tpH+T49V+f0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-What about the TRIG_SEL field? Do we need to handle this here as well?
-
-Cheers
-Jon
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 1afd298..1c38900 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -338,6 +338,7 @@ thine	THine Electronics, Inc.
+ ti	Texas Instruments
+ tianma	Tianma Micro-electronics Co., Ltd.
+ tlm	Trusted Logic Mobility
++tmt	Tecon Microprocessor Technologies, LLC.
+ topeet  Topeet
+ toradex	Toradex AG
+ toshiba	Toshiba Corporation
 -- 
-nvpublic
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
