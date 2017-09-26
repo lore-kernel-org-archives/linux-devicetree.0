@@ -1,38 +1,64 @@
-From: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH 0/2] Implement guideline when NAND, NOR arbitration is enabled
-Date: Tue, 26 Sep 2017 17:16:58 +1300
-Message-ID: <20170926041700.22663-1-kalyan.kinthada@alliedtelesis.co.nz>
+From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 00/12] staging: typec: tcpci: move out of staging
+Date: Tue, 26 Sep 2017 08:45:15 +0800
+Message-ID: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When the arbitration between NOR and NAND flash is enabled
-the <FORCE_CSX> field bit[21] in the Data Flash Control Register
-needs to be set to 1 according to guidleine GL-5830741.
+This patch set attempts to move the tcpci driver out of staging by fix
+some tcpci driver issues and verified on NXP PTN5110, which is a standard
+tcpci typec port controller device with power delivery support, tested
+power source and sink with drp config. 
 
-This patch series contain the following patches:
-* Patch 1: "dt-bindings: mtd: pxa3xx: Add "marvell,nand-force-csx" compatible string"
-  * New binding is introduced to implement the guildeline GL-5830741 which will
-    be activated in the appropriate device tree files.
+Li Jun (12):
+  usb: typec: add API to get port type and preferred role
+  usb: typec: add basic typec properties
+  staging: typec: tcpci: add documentation for tcpci
+  staging: typec: tcpci: support port config passed via dt
+  staging: typec: tcpci: register port before request irq
+  staging: typec: tcpci: enable vbus detection
+  typec: tcpm: add starting value for drp toggling
+  staging: typec: tcpci: correct drp toggling
+  usb: typec: tcpm: only drives the connected cc line when attached
+  staging: typec: tcpci: update set_cc for different state
+  staging: typec: tcpci: Only touch target bit when enable vconn
+  staging: typec: tcpci: move tcpci driver out of staging
 
-* Patch 2: "mtd: nand: pxa3xx: Handle "marvell,nand-force-csx" compatible string"
-  * Set the FORCE_CSX bit in Data Flash Control Register if "marvell,nand-force-csx"
-    compatible string is activated in the device tree.
-
------------------
-Kalyan Kinthada (2):
-[PATCH 1/2] dt-bindings: mtd: pxa3xx: Add "marvell,nand-force-csx" compatible string
-[PATCH 2/2] mtd: nand: pxa3xx: Handle "marvell,nand-force-csx" compatible string
-
- Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt | 1 +
- drivers/mtd/nand/pxa3xx_nand.c                        | 6 ++++++
- include/linux/platform_data/mtd-nand-pxa3xx.h         | 3 +++
- 3 files changed, 10 insertions(+)
+ .../devicetree/bindings/usb/typec-tcpci.txt        |  36 ++
+ Documentation/devicetree/bindings/usb/typec.txt    |  46 ++
+ drivers/staging/Kconfig                            |   2 -
+ drivers/staging/Makefile                           |   1 -
+ drivers/staging/typec/Kconfig                      |  14 -
+ drivers/staging/typec/Makefile                     |   1 -
+ drivers/staging/typec/TODO                         |   5 -
+ drivers/staging/typec/tcpci.c                      | 526 -----------------
+ drivers/staging/typec/tcpci.h                      | 133 -----
+ drivers/usb/typec/Kconfig                          |   7 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/tcpci.c                          | 637 +++++++++++++++++++++
+ drivers/usb/typec/tcpci.h                          | 133 +++++
+ drivers/usb/typec/tcpm.c                           |  22 +-
+ drivers/usb/typec/typec.c                          |  45 ++
+ include/linux/usb/tcpm.h                           |   9 +-
+ include/linux/usb/typec.h                          |   2 +
+ 17 files changed, 928 insertions(+), 692 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/typec.txt
+ delete mode 100644 drivers/staging/typec/Kconfig
+ delete mode 100644 drivers/staging/typec/Makefile
+ delete mode 100644 drivers/staging/typec/TODO
+ delete mode 100644 drivers/staging/typec/tcpci.c
+ delete mode 100644 drivers/staging/typec/tcpci.h
+ create mode 100644 drivers/usb/typec/tcpci.c
+ create mode 100644 drivers/usb/typec/tcpci.h
 
 -- 
-2.14.1
+2.6.6
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
