@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 07/10] ARM: debug: Add Hurricane 2 UART2 debug addresses
-Date: Mon, 25 Sep 2017 17:09:28 -0700
-Message-ID: <20170926000931.670-8-f.fainelli@gmail.com>
+Subject: [PATCH 09/10] ARM: dts: Hurricane 2: Add basic support for Ubiquiti UniFi Switch 8
+Date: Mon, 25 Sep 2017 17:09:30 -0700
+Message-ID: <20170926000931.670-10-f.fainelli@gmail.com>
 References: <20170926000931.670-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170926000931.670-1-f.fainelli@gmail.com>
@@ -12,55 +12,120 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom Hurricane 2 SoCs typically use their secondary UART for
-debug/console, provide a known good location for that.
+Add basic board support for the Ubiquiti UniFi Switch 8 port model. This
+is a small home and office use managed switch based on the BCM53342
+switching control SoC.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/Kconfig.debug | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/Makefile                        |  2 +
+ arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts | 85 +++++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 6dcea8e8e941..0346805fe33c 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -169,6 +169,11 @@ choice
- 		depends on ARCH_BCM_5301X || ARCH_BCM_NSP
- 		select DEBUG_UART_8250
- 
-+	config DEBUG_BCM_HR2
-+		bool "Kernel low-level debugging on Hurricane 2 UART2"
-+		depends on ARCH_BCM_HR2
-+		select DEBUG_UART_8250
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index faf46abaa4a2..6942c48d0d88 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -117,6 +117,8 @@ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+ 	bcm911360k.dtb \
+ 	bcm958300k.dtb \
+ 	bcm958305k.dtb
++dtb-$(CONFIG_ARCH_BCM_HR2) += \
++	bcm53340-ubnt-unifi-switch8.dtb
+ dtb-$(CONFIG_ARCH_BCM_MOBILE) += \
+ 	bcm28155-ap.dtb \
+ 	bcm21664-garnet.dtb \
+diff --git a/arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts b/arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
+new file mode 100644
+index 000000000000..f8ac37022ebf
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
+@@ -0,0 +1,85 @@
++/*
++ * DTS for Unifi Switch 8 port
++ *
++ * Copyright (C) 2017 Florian Fainelli <f.fainelli@gmail.com>
++ *
++ * Licensed under the GNU/GPL. See COPYING for details.
++ */
 +
- 	config DEBUG_BCM_KONA_UART
- 		bool "Kernel low-level debugging messages via BCM KONA UART"
- 		depends on ARCH_BCM_MOBILE
-@@ -1508,6 +1513,7 @@ config DEBUG_UART_PHYS
- 	default 0x11009000 if DEBUG_MT8135_UART3
- 	default 0x16000000 if DEBUG_INTEGRATOR
- 	default 0x18000300 if DEBUG_BCM_5301X
-+	default 0x18000400 if DEBUG_BCM_HR2
- 	default 0x18010000 if DEBUG_SIRFATLAS7_UART0
- 	default 0x18020000 if DEBUG_SIRFATLAS7_UART1
- 	default 0x1c090000 if DEBUG_VEXPRESS_UART0_RS1
-@@ -1623,6 +1629,7 @@ config DEBUG_UART_VIRT
- 	default 0xf01fb000 if DEBUG_NOMADIK_UART
- 	default 0xf0201000 if DEBUG_BCM2835 || DEBUG_BCM2836
- 	default 0xf1000300 if DEBUG_BCM_5301X
-+	default 0xf1000400 if DEBUG_BCM_HR2
- 	default 0xf1002000 if DEBUG_MT8127_UART0
- 	default 0xf1006000 if DEBUG_MT6589_UART0
- 	default 0xf1009000 if DEBUG_MT8135_UART3
-@@ -1728,7 +1735,8 @@ config DEBUG_UART_8250_SHIFT
- 	int "Register offset shift for the 8250 debug UART"
- 	depends on DEBUG_LL_UART_8250 || DEBUG_UART_8250
- 	default 0 if DEBUG_FOOTBRIDGE_COM1 || ARCH_IOP32X || DEBUG_BCM_5301X || \
--		DEBUG_OMAP7XXUART1 || DEBUG_OMAP7XXUART2 || DEBUG_OMAP7XXUART3
-+		DEBUG_BCM_HR2 || DEBUG_OMAP7XXUART1 || DEBUG_OMAP7XXUART2 || \
-+		DEBUG_OMAP7XXUART3
- 	default 2
- 
- config DEBUG_UART_8250_WORD
++/dts-v1/;
++
++#include "bcm-hr2.dtsi"
++
++/ {
++	compatible = "ubnt,unifi-switch8", "brcm,bcm53342", "brcm,hr2";
++	model = "Ubiquiti UniFi Switch 8 (BCM53342)";
++
++	/* Hurricane 2 designs use the second UART */
++	chosen {
++		bootargs = "console=ttyS1,115200 earlyprintk";
++	};
++
++	memory {
++		reg = <0x00000000 0x08000000>,
++		      <0x68000000 0x08000000>;
++	};
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&qspi {
++	status = "okay";
++	bspi-sel = <0>;
++
++	flash: m25p80@0 {
++		compatible = "m25p80";
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <12500000>;
++		spi-cpol;
++		spi-cpha;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0 0xc0000>;
++		};
++
++		partition@c0000 {
++			label = "u-boot-env";
++			reg = <0xc0000 0x10000>;
++		};
++
++		partition@d0000 {
++			label = "shmoo";
++			reg = <0xd0000 0x10000>;
++		};
++
++		partition@e0000 {
++			label = "kernel0";
++			reg = <0xe0000 0xf00000>;
++		};
++
++		partition@fe0000 {
++			label = "kernel1";
++			reg = <0xfe0000 0xf10000>;
++		};
++
++		partition@1ef0000 {
++			label = "cfg";
++			reg = <0x1ef0000 0x100000>;
++		};
++
++		partition@1ff0000 {
++			label = "EEPROM";
++			reg = <0x1ff0000 0x10000>;
++		};
++	};
++};
++
++&pcie0 {
++	/* Attaches to the internal switch */
++	status = "okay";
++};
 -- 
 2.14.1
