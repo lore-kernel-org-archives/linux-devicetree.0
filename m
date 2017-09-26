@@ -1,8 +1,8 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v3 08/14] ARM: dts: sun8i: orangepipc: Fix node with unit name
- and no reg property
-Date: Tue, 26 Sep 2017 09:22:28 +0200
-Message-ID: <20170926072234.27481-9-clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 07/14] ARM: dts: sun8i: orangepi one: Fix node with unit
+ name and no reg property
+Date: Tue, 26 Sep 2017 09:22:27 +0200
+Message-ID: <20170926072234.27481-8-clabbe.montjoie@gmail.com>
 References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -28,14 +28,14 @@ removing "@0" from such node.
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 6 +++---
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index f5f0f15a2088..6d98bcfbe877 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -158,19 +158,19 @@
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+index 6880268e8b87..82e5d28cd698 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+@@ -124,19 +124,19 @@
  };
  
  &pio {
