@@ -1,7 +1,7 @@
 From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 09/12] usb: typec: tcpm: only drives the connected cc line when attached
-Date: Tue, 26 Sep 2017 08:45:24 +0800
-Message-ID: <1506386727-16370-10-git-send-email-jun.li@nxp.com>
+Subject: [PATCH 10/12] staging: typec: tcpci: update set_cc for different state
+Date: Tue, 26 Sep 2017 08:45:25 +0800
+Message-ID: <1506386727-16370-11-git-send-email-jun.li@nxp.com>
 References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,69 +12,84 @@ To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk
 Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As we should only drive connected cc line to be the right state when
-attached, and keeps the other one to be open, so update the set_cc
-interface for that.
+As we should keep the disconnected cc line to be open when attached,
+so update the set_cc interface accordingly for it.
 
 Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/usb/typec/tcpm.c | 12 +++++++++++-
- include/linux/usb/tcpm.h |  3 ++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/staging/typec/tcpci.c | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 38a6223..c9966ee 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -1857,9 +1857,15 @@ static bool tcpm_start_drp_toggling(struct tcpm_port *port,
- 
- static void tcpm_set_cc(struct tcpm_port *port, enum typec_cc_status cc)
- {
-+	bool attached;
-+
- 	tcpm_log(port, "cc:=%d", cc);
- 	port->cc_req = cc;
--	port->tcpc->set_cc(port->tcpc, cc);
-+	if (port->state == SRC_ATTACHED || port->state == SNK_ATTACHED)
-+		attached = true;
-+	else
-+		attached = false;
-+	port->tcpc->set_cc(port->tcpc, cc, attached, port->polarity);
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index cea67f9..c7c45da 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -57,10 +57,11 @@ static int tcpci_write16(struct tcpci *tcpci, unsigned int reg, u16 val)
+ 	return regmap_raw_write(tcpci->regmap, reg, &val, sizeof(u16));
  }
  
- static int tcpm_init_vbus(struct tcpm_port *port)
-@@ -1913,6 +1919,8 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 	if (ret < 0)
- 		return ret;
+-static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
++static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc,
++			bool attached, enum typec_cc_polarity polarity)
+ {
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+-	unsigned int reg;
++	unsigned int reg = 0, reg_cc1 = 0, reg_cc2 = 0;
+ 	int ret;
  
-+	tcpm_set_cc(port, tcpm_rp_cc(port));
-+
- 	ret = tcpm_set_roles(port, true, TYPEC_SOURCE, TYPEC_HOST);
- 	if (ret < 0)
- 		return ret;
-@@ -2028,6 +2036,8 @@ static int tcpm_snk_attach(struct tcpm_port *port)
- 	if (ret < 0)
- 		return ret;
+ 	switch (cc) {
+@@ -69,26 +70,23 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+ 			(TCPC_ROLE_CTRL_CC_RA << TCPC_ROLE_CTRL_CC2_SHIFT);
+ 		break;
+ 	case TYPEC_CC_RD:
+-		reg = (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT) |
+-			(TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT);
++		reg_cc1 = TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT;
++		reg_cc2 = TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT;
+ 		break;
+ 	case TYPEC_CC_RP_DEF:
+-		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
+-			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
+-			(TCPC_ROLE_CTRL_RP_VAL_DEF <<
+-			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
++		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
++		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
++		reg = TCPC_ROLE_CTRL_RP_VAL_DEF << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
+ 		break;
+ 	case TYPEC_CC_RP_1_5:
+-		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
+-			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
+-			(TCPC_ROLE_CTRL_RP_VAL_1_5 <<
+-			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
++		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
++		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
++		reg = TCPC_ROLE_CTRL_RP_VAL_1_5 << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
+ 		break;
+ 	case TYPEC_CC_RP_3_0:
+-		reg = (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
+-			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT) |
+-			(TCPC_ROLE_CTRL_RP_VAL_3_0 <<
+-			 TCPC_ROLE_CTRL_RP_VAL_SHIFT);
++		reg_cc1 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
++		reg_cc2 = TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
++		reg = TCPC_ROLE_CTRL_RP_VAL_3_0 << TCPC_ROLE_CTRL_RP_VAL_SHIFT;
+ 		break;
+ 	case TYPEC_CC_OPEN:
+ 	default:
+@@ -97,6 +95,13 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+ 		break;
+ 	}
  
-+	tcpm_set_cc(port, TYPEC_CC_RD);
++	if (!attached)
++		reg |= reg_cc1 | reg_cc2;
++	else if (polarity == TYPEC_POLARITY_CC1)
++		reg |= reg_cc1;
++	else
++		reg |= reg_cc2;
 +
- 	ret = tcpm_set_roles(port, true, TYPEC_SINK, TYPEC_DEVICE);
+ 	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
  	if (ret < 0)
  		return ret;
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index a67cf77..a007e2a1 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -159,7 +159,8 @@ struct tcpc_dev {
- 	int (*init)(struct tcpc_dev *dev);
- 	int (*get_vbus)(struct tcpc_dev *dev);
- 	int (*get_current_limit)(struct tcpc_dev *dev);
--	int (*set_cc)(struct tcpc_dev *dev, enum typec_cc_status cc);
-+	int (*set_cc)(struct tcpc_dev *dev, enum typec_cc_status cc,
-+			bool attached, enum typec_cc_polarity polarity);
- 	int (*get_cc)(struct tcpc_dev *dev, enum typec_cc_status *cc1,
- 		      enum typec_cc_status *cc2);
- 	int (*set_polarity)(struct tcpc_dev *dev,
 -- 
 2.6.6
 
