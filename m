@@ -1,75 +1,55 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 0/7] clocksource: sh_cmt: Update driver for DT binding rework
-Date: Tue, 26 Sep 2017 11:26:43 +0300
-Message-ID: <2100093.DY5UYTmyGT@avalon>
-References: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v14 24/28] smiapp: Add support for flash and lens devices
+Date: Tue, 26 Sep 2017 10:26:49 +0200
+Message-ID: <9c1d4bc0-63b1-65be-2444-0c5c8e74c7b0@xs4all.nl>
+References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+ <20170925222540.371-26-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1505742407-31576-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <damm+renesas@opensource.se>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170925222540.371-26-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for the patches.
-
-On Monday, 18 September 2017 16:46:40 EEST Geert Uytterhoeven wrote:
-> 	Hi Daniel, Thomas, Rob, Mark, Magnus,
+On 26/09/17 00:25, Sakari Ailus wrote:
+> Parse async sub-devices related to the sensor by switching the async
+> sub-device registration function.
 > 
-> This patch series updates the sh_cmt clocksource driver for the recent DT
-> binding rework that was merged in v4.14-rc1.
+> These types devices aren't directly related to the sensor, but are
+> nevertheless handled by the smiapp driver due to the relationship of these
+> component to the main part of the camera module --- the sensor.
 > 
-> This series is an evolutionary improvement of Magnus Damm's series "[PATCH
-> v2 00/11] clocksource: sh_cmt: DT binding rework V2".
-> It complements Magnus' series "[PATCH v3 00/06] clocksource: sh_cmt: DT
-> binding rework V3" and "[PATCH v4 00/06] clocksource: sh_cmt: DT binding
-> rework V4", which included DT binding updates only.
+> This does not yet address providing the user space with information on how
+> to associate the sensor or lens devices but the kernel now has the
+> necessary information to do that.
 > 
->   - Patch 1 fixes wrong vendor/soc ordering in the SoC-specific compatible
->     values  (This issue was raised during review before, but was not
->     addressed in later iterations of the DT binding rework.  Oh well,
->     things like that happen when there's more than 2 years between initial
->     submission and acceptance...),
->   - Patches 2 to 6 implement the updated DT bindings, as already accepted
->     upstream, and amended in patch 1.
->   - Patch 7 is a small cleanup.
-> 
-> Changes compared to v2:
->   - Take over from Magnus,
->   - Drop DT binding updates that were revised and accepted upstream,
->   - Fix SoC-specific compatible values,
->   - Change channels_mask from "unsigned long" to "unsigned int,
->   - Remove support for "renesas,cmt-32*",
->   - Mark "renesas,cmt-48-gen2" deprecated,
->   - Remove unused "renesas,channels-mask" handling,
->   - Use of_device_get_match_data() helper.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (5):
->   dt-bindings: timer: renesas,cmt: Fix SoC-specific compatible values
->   clocksource: sh_cmt: Remove support for "renesas,cmt-32*"
->   clocksource: sh_cmt: Mark "renesas,cmt-48-gen2" deprecated
->   clocksource: sh_cmt: Remove unused "renesas,channels-mask" handling
->   clocksource: sh_cmt: Use of_device_get_match_data() helper
-> 
-> Magnus Damm (2):
->   clocksource: sh_cmt: Use 0x3f mask for SH_CMT_48BIT case
->   clocksource: sh_cmt: Support separate R-Car Gen2 CMT0/1
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-For the whole series,
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  drivers/media/i2c/smiapp/smiapp-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+> index 700f433261d0..3d9a251ca825 100644
+> --- a/drivers/media/i2c/smiapp/smiapp-core.c
+> +++ b/drivers/media/i2c/smiapp/smiapp-core.c
+> @@ -3092,7 +3092,7 @@ static int smiapp_probe(struct i2c_client *client,
+>  	if (rval < 0)
+>  		goto out_media_entity_cleanup;
+>  
+> -	rval = v4l2_async_register_subdev(&sensor->src->sd);
+> +	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
+>  	if (rval < 0)
+>  		goto out_media_entity_cleanup;
+>  
+> 
 
->  .../devicetree/bindings/timer/renesas,cmt.txt      | 24 +++----
->  drivers/clocksource/sh_cmt.c                       | 76 +++++++++----------
->  2 files changed, 45 insertions(+), 55 deletions(-)
-
--- 
-Regards,
-
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
