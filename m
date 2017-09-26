@@ -1,138 +1,172 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 01/12] usb: typec: add API to get port type and preferred
- role
-Date: Tue, 26 Sep 2017 09:55:05 +0000
-Message-ID: <DB4PR04MB07686F2B9947D0974B2946A4897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
-References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
- <1506386727-16370-2-git-send-email-jun.li@nxp.com>
- <20170926080231.GB14296@kuha.fi.intel.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 03/13] drm/sun4i: tcon: Add support for demuxing TCON
+ output on A31
+Date: Tue, 26 Sep 2017 11:56:03 +0200
+Message-ID: <20170926095603.c67y4rytydya7kjd@flea>
+References: <20170926065919.24446-1-wens@csie.org>
+ <20170926065919.24446-4-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170926080231.GB14296-FZxXFokcWpatqXYlAKuG4QC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fwfopzxho5wg6h5l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170926065919.24446-4-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--fwfopzxho5wg6h5l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Heikki Krogerus [mailto:heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org]
-> Sent: Tuesday, September 26, 2017 4:03 PM
-> To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> mark.rutland-5wv7dgnIgG8@public.gmane.org; yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org; Peter
-> Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>; linux-
-> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH 01/12] usb: typec: add API to get port type and prefe=
-rred
-> role
->=20
-> Hi,
->=20
-> On Tue, Sep 26, 2017 at 08:45:16AM +0800, Li Jun wrote:
-> > This patch add 2 APIs to get port type and preferred role from
-> > firmware description.
-> >
-> > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  drivers/usb/typec/typec.c | 45
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/typec.h |  2 ++
-> >  2 files changed, 47 insertions(+)
-> >
-> > diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
-> > index 24e355b..0c77cc4 100644
-> > --- a/drivers/usb/typec/typec.c
-> > +++ b/drivers/usb/typec/typec.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/mutex.h>
-> > +#include <linux/of.h>
->=20
-> Not needed.
+Hi,
 
-I will change to #include <linux/property.h>
+On Tue, Sep 26, 2017 at 06:59:09AM +0000, Chen-Yu Tsai wrote:
+> On systems with 2 TCONs such as the A31, it is possible to demux the
+> output of the TCONs to one encoder.
+>=20
+> Add support for this for the A31.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 61 ++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 61 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/s=
+un4i_tcon.c
+> index e853dfe51389..770b843a6fa9 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -14,9 +14,12 @@
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_crtc.h>
+>  #include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_encoder.h>
+>  #include <drm/drm_modes.h>
+>  #include <drm/drm_of.h>
+> =20
+> +#include <uapi/drm/drm_mode.h>
+> +
+>  #include <linux/component.h>
+>  #include <linux/ioport.h>
+>  #include <linux/of_address.h>
+> @@ -109,11 +112,69 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tc=
+on, bool enable)
+>  }
+>  EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
+> =20
+> +static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
+> +{
+> +	struct sun4i_drv *drv =3D drm->dev_private;
+> +	struct sun4i_tcon *tcon;
+> +
+> +	list_for_each_entry(tcon, &drv->tcon_list, list)
+> +		if (tcon->id =3D=3D 0)
+> +			return tcon;
+> +
+> +	dev_warn(drm->dev,
+> +		 "TCON0 not found, display output muxing may not work\n");
+> +
+> +	return tcon;
+> +}
+> +
+> +static int _sun6i_tcon_set_mux(struct drm_encoder *encoder)
+> +{
+> +	struct sun4i_tcon *tcon =3D sun4i_get_first_tcon(encoder->dev);
+> +	int tcon_id =3D drm_crtc_to_sun4i_crtc(encoder->crtc)->tcon->id;
+> +	u32 shift;
+> +
+> +	DRM_DEBUG_DRIVER("Muxing encoder %s to CRTC %s (TCON %d)\n",
+> +			 encoder->name, encoder->crtc->name, tcon_id);
+> +
+> +	/* Only 2 TCONs */
+> +	if (tcon_id >=3D 2)
+> +		return -EINVAL;
+> +
+> +	switch (encoder->encoder_type) {
+> +	case DRM_MODE_ENCODER_TMDS:
+> +		/* HDMI */
+> +		shift =3D 8;
+> +		break;
+> +	case DRM_MODE_ENCODER_DSI:
+> +		/* No MIPI DSI on A31s */
+> +		if (of_device_is_compatible(tcon->dev->of_node,
+> +					    "allwinner,sun6i-a31s-tcon"))
 
->=20
-> >  #include <linux/slab.h>
-> >  #include <linux/usb/typec.h>
-> >
-> > @@ -1249,6 +1250,50 @@ void typec_set_pwr_opmode(struct typec_port
-> > *port,  }  EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
-> >
-> > +/**
-> > + * typec_get_port_type - Get the typec port type
-> > + * @dev: Device to get the property of
-> > + *
-> > + * This routine is used by typec hardware driver to read property
-> > +port type
-> > + * from the device firmware description.
-> > + *
-> > + * Returns typec_port_type if success, otherwise negative error code.
-> > + */
-> > +int typec_get_port_type(struct device *dev) {
-> > +	const char *type_str;
-> > +	int ret;
-> > +
-> > +	ret =3D device_property_read_string(dev, "port-type", &type_str);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
-> > +								 type_str);
-> > +}
-> > +EXPORT_SYMBOL_GPL(typec_get_port_type);
-> > +
-> > +/**
-> > + * typec_get_power_role - Get the typec preferred role
-> > + * @dev: Device to get the property of
-> > + *
-> > + * This routine is used by typec hardware driver to read property
-> > +default role
-> > + * from the device firmware description.
-> > + *
-> > + * Returns typec_role if success, otherwise negative error code.
-> > + */
-> > +int typec_get_power_role(struct device *dev) {
-> > +	const char *power_str;
-> > +	int ret;
-> > +
-> > +	ret =3D device_property_read_string(dev, "default-role", &power_str);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return match_string(typec_roles, ARRAY_SIZE(typec_roles),
-> > +power_str); } EXPORT_SYMBOL_GPL(typec_get_power_role);
-> >  /* --------------------------------------- */
-> >
-> >  /**
-> > diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-> > index ffe7487..bfac685 100644
-> > --- a/include/linux/usb/typec.h
-> > +++ b/include/linux/usb/typec.h
-> > @@ -243,5 +243,7 @@ void typec_set_data_role(struct typec_port *port,
-> > enum typec_data_role role);  void typec_set_pwr_role(struct typec_port
-> > *port, enum typec_role role);  void typec_set_vconn_role(struct
-> > typec_port *port, enum typec_role role);  void
-> > typec_set_pwr_opmode(struct typec_port *port, enum typec_pwr_opmode
-> > mode);
-> > +int typec_get_port_type(struct device *dev); int
-> > +typec_get_power_role(struct device *dev);
-> >
-> >  #endif /* __LINUX_USB_TYPEC_H */
-> > --
-> > 2.6.6
->=20
-> Thanks,
->=20
-> --
-> heikki
+I'm not sure that test is needed.
+
+We won't end up in that case if we don't have a connected DSI block,
+which isn't going to be the case on the A31. And I guess we can tackle
+DSI later (when I'll send my patches...).
+
+> +			return -EINVAL;
+> +		shift =3D 0;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON_MUX_CTRL_REG,
+> +			   0x3 << shift, tcon_id << shift);
+> +
+> +	return 0;
+> +}
+> +
+>  void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
+>  			struct drm_encoder *encoder)
+>  {
+> +	/* Get the device node of the display engine */
+> +	struct device_node *node =3D encoder->dev->dev->of_node;
+>  	u32 val;
+> =20
+> +	if (of_device_is_compatible(node, "allwinner,sun6i-a31-display-engine")=
+ ||
+> +	    of_device_is_compatible(node, "allwinner,sun6i-a31s-display-engine"=
+)) {
+> +		_sun6i_tcon_set_mux(encoder);
+> +		return;
+> +	}
+> +
+
+I'd really like to avoid mix and matching the structure defined
+behaviour and those of_device_is_compatible calls spread out
+everywhere.
+
+You can either add a flag or a function pointer.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--fwfopzxho5wg6h5l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZyiQzAAoJEBx+YmzsjxAgqMwP/3tZVN7F6Xj3iCLDqmrB1jUk
+hkXd4ZkpoZbU2o/HV0x4WgvkPaV4BKru89zxuefZO6OLsbK/Zt6RINy+JTL0jZss
+0LdJu3JZplnZulU4BBUMvmjIIYNdz2MupubhWYOxkYZ6DAa5UAT4z8P5PzojXOPm
+Rz+O5kQ6axk5mLE7tdYy0W2UZZX2JUnExDWqNekyxRNtLNWqAwxmOlPrsI0QmRK3
+z9AgcC3xDISn/R25dughBVUCQTMmJAAWY2lkZpjY7rehtJmrqCgGqKNxnryVGJfG
+k7RMZJYgli2tiTOTpm+J9sWLBn2G1IhOkwc6ETVmVvkocjm+AU/7fcfoCpTc0Rnm
+d7hXXE5iTgPbE7gXHD/3wm4KpF8vRvmzAx4SSqWgbp1clOWw+DuH+mwo6rVrFSo4
+kGmEGQPZCUWTYee3xBkz8mCh2ii6s+BYPdP7M8pYiqVZc6MS4P/q4cLENvF7WSdF
+5rU4VG3juMMN9kd/Lz8Excqk3O3DBKvZeg0wXIiWPsX3W+Q0XZesUcFoEdcHysBU
+ncfxxqWhBuCFBMg2kJ2OI4b+5tdLghrKSWueIWbIy28Yuh6h8hV/Ing8ISmFh6uG
+XNxXPid+Nnd8QTOuZjRByrxh9oSGa/WdYMZW9p3y7875Rnp/+BiwY8VG7eRv5NKY
+YcppixABuYLI24c/2+nD
+=P+kw
+-----END PGP SIGNATURE-----
+
+--fwfopzxho5wg6h5l--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
