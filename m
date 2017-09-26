@@ -1,71 +1,45 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 11/13] drm/sun4i: hdmi: Add support for A31's HDMI
- controller
-Date: Tue, 26 Sep 2017 12:02:40 +0200
-Message-ID: <20170926100240.es6fbqux3kfihd33@flea>
-References: <20170926065919.24446-1-wens@csie.org>
- <20170926065919.24446-12-wens@csie.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v1 2/5] clk: tegra: Bump SCLK clock rate to 216MHz on
+ Tegra20
+Date: Tue, 26 Sep 2017 13:01:09 +0300
+Message-ID: <20170926100109.GX6290@tbergstrom-lnx.Nvidia.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <aa9a9c3a1447b37c6b3b5ce9a7ce5f73473832db.1506380746.git.digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2qgxzau3dwu4ouwz"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170926065919.24446-12-wens@csie.org>
+In-Reply-To: <aa9a9c3a1447b37c6b3b5ce9a7ce5f73473832db.1506380746.git.digetx@gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Brown <broonie@kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 26, 2017 at 02:22:03AM +0300, Dmitry Osipenko wrote:
+> AHB DMA is a running on 1/2 of SCLK rate, APB on 1/4. Increasing SCLK rate
+> results in an increased DMA transfer rate.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
---2qgxzau3dwu4ouwz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
 
-On Tue, Sep 26, 2017 at 06:59:17AM +0000, Chen-Yu Tsai wrote:
-> The HDMI controller found in the A31 SoCs is slightly different
-> from the one already supported, which is found in the A10s:
->=20
->   - Need different initial values for the PLL related registers
->=20
->   - Different behavior of the DDC and TMDS clocks
->=20
->   - Different register layout for the DDC portion
->=20
->   - Separate DDC parent clock
->=20
-> This patch adds support for it.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---2qgxzau3dwu4ouwz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZyiXAAAoJEBx+YmzsjxAgeioP/iN9D2QOGK8lyvWE2COuF2qM
-INwIJPqr1YrOFdbtmtNVkySBlYzVSEcmRov0gQlkn0/j5fBERuXDWPpzqWiVIpRz
-z9QfEGDPGxjEHrCaA359dJWZBz//Sf5XQBv3C25BX/EqUDbedYnzcR6icpzyJHAY
-vXEx20xDZaaRQAARLZMUY0w6A70hHFxNGyKS5JM7EwSb4FNTfRdsBr+rowmtPuRh
-E0FsUFEvC0ITSuaKzDOYhDk6nEMqlFc9UzANoCEQksyY2KfznKuUOQchKm50S/Ob
-u/Zf1ukZFBGaC+lle4qCgFa370g95LXxzt8flL0CCuBwajmUse0xA6W0fGFyiJMI
-sAtai9lNekwgYyzNlBpc/YajECfu30G6k093a1ETuffQ7iALKc7437Z4DZG2MrCS
-261KR4N57tObbtaaHjr5ofIDoUW/oky2QZbo6VqTc0+pU7AXLus5iDQ0j/dBjKBS
-SvmL9aml+64+7AZve+rJuvg8xMDqtXea5OPSUvcCrfgiHgDITs9pIprR32IIfGaz
-CA/4NRV0Hp8laZ09DezaaQqgWj3gZFscvaF2F73T5qrhEDSc/NE/u0Ugh0+xWLgj
-nJsan6EZqQNLODTohgdTFVQ1dTEeVmFYJ7mCBu/2m6LhkahTaYUsBYF+pDNwochO
-1OLmShsU+VPBj59g99MY
-=79Tg
------END PGP SIGNATURE-----
-
---2qgxzau3dwu4ouwz--
+> ---
+>  drivers/clk/tegra/clk-tegra20.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+> index e76c0d292ca7..c511716093e2 100644
+> --- a/drivers/clk/tegra/clk-tegra20.c
+> +++ b/drivers/clk/tegra/clk-tegra20.c
+> @@ -1031,7 +1031,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+>  	{ TEGRA20_CLK_PLL_P_OUT3, TEGRA20_CLK_CLK_MAX, 72000000, 1 },
+>  	{ TEGRA20_CLK_PLL_P_OUT4, TEGRA20_CLK_CLK_MAX, 24000000, 1 },
+>  	{ TEGRA20_CLK_PLL_C, TEGRA20_CLK_CLK_MAX, 600000000, 1 },
+> -	{ TEGRA20_CLK_PLL_C_OUT1, TEGRA20_CLK_CLK_MAX, 120000000, 1 },
+> +	{ TEGRA20_CLK_PLL_C_OUT1, TEGRA20_CLK_CLK_MAX, 216000000, 1 },
+>  	{ TEGRA20_CLK_SCLK, TEGRA20_CLK_PLL_C_OUT1, 0, 1 },
+>  	{ TEGRA20_CLK_HCLK, TEGRA20_CLK_CLK_MAX, 0, 1 },
+>  	{ TEGRA20_CLK_PCLK, TEGRA20_CLK_CLK_MAX, 60000000, 1 },
+> -- 
+> 2.14.1
+> 
