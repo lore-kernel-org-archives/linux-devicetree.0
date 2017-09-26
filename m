@@ -1,65 +1,59 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 08/13] regmap: add iopoll-like polling macro for
- regmap_field
-Date: Tue, 26 Sep 2017 14:59:14 +0800
-Message-ID: <20170926065919.24446-9-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 07/13] dt-bindings: display: sun4i: Add
+ binding for A31 HDMI controller
+Date: Tue, 26 Sep 2017 14:59:13 +0800
+Message-ID: <20170926065919.24446-8-wens@csie.org>
 References: <20170926065919.24446-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170926065919.24446-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBUHVU7HAKGQEUIAVR5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170926065919.24446-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIGEgbWFjcm8gcmVnbWFwX2ZpZWxkX3JlYWRfcG9sbF90aW1lb3V0IHRo
-YXQgd29ya3MKc2ltaWxhciB0byB0aGUgcmVhZHhfcG9sbF90aW1lb3V0IGRlZmluZWQgaW4gbGlu
-dXgvaW9wb2xsLmgsIGV4Y2VwdAp0aGF0IHRoaXMgY2FuIGFsc28gcmV0dXJuIHRoZSBlcnJvciB2
-YWx1ZSByZXR1cm5lZCBieSBhIGZhaWxlZApyZWdtYXBfZmllbGRfcmVhZC4KClNpZ25lZC1vZmYt
-Ynk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KLS0tCiBpbmNsdWRlL2xpbnV4L3JlZ21h
-cC5oIHwgMzkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUg
-Y2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcmVn
-bWFwLmggYi9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oCmluZGV4IDk3OGFiZmJhYzYxNy4uOTNhNDY2
-M2Q3YWNiIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oCisrKyBiL2luY2x1ZGUv
-bGludXgvcmVnbWFwLmgKQEAgLTEzOSw2ICsxMzksNDUgQEAgc3RydWN0IHJlZ19zZXF1ZW5jZSB7
-CiAJcG9sbHJldCA/OiAoKGNvbmQpID8gMCA6IC1FVElNRURPVVQpOyBcCiB9KQogCisvKioKKyAq
-IHJlZ21hcF9maWVsZF9yZWFkX3BvbGxfdGltZW91dCAtIFBvbGwgdW50aWwgYSBjb25kaXRpb24g
-aXMgbWV0IG9yIHRpbWVvdXQKKyAqCisgKiBAZmllbGQ6IFJlZ21hcCBmaWVsZCB0byByZWFkIGZy
-b20KKyAqIEB2YWw6IFVuc2lnbmVkIGludGVnZXIgdmFyaWFibGUgdG8gcmVhZCB0aGUgdmFsdWUg
-aW50bworICogQGNvbmQ6IEJyZWFrIGNvbmRpdGlvbiAodXN1YWxseSBpbnZvbHZpbmcgQHZhbCkK
-KyAqIEBzbGVlcF91czogTWF4aW11bSB0aW1lIHRvIHNsZWVwIGJldHdlZW4gcmVhZHMgaW4gdXMg
-KDAKKyAqICAgICAgICAgICAgdGlnaHQtbG9vcHMpLiAgU2hvdWxkIGJlIGxlc3MgdGhhbiB+MjBt
-cyBzaW5jZSB1c2xlZXBfcmFuZ2UKKyAqICAgICAgICAgICAgaXMgdXNlZCAoc2VlIERvY3VtZW50
-YXRpb24vdGltZXJzL3RpbWVycy1ob3d0by50eHQpLgorICogQHRpbWVvdXRfdXM6IFRpbWVvdXQg
-aW4gdXMsIDAgbWVhbnMgbmV2ZXIgdGltZW91dAorICoKKyAqIFJldHVybnMgMCBvbiBzdWNjZXNz
-IGFuZCAtRVRJTUVET1VUIHVwb24gYSB0aW1lb3V0IG9yIHRoZSByZWdtYXBfZmllbGRfcmVhZAor
-ICogZXJyb3IgcmV0dXJuIHZhbHVlIGluIGNhc2Ugb2YgYSBlcnJvciByZWFkLiBJbiB0aGUgdHdv
-IGZvcm1lciBjYXNlcywKKyAqIHRoZSBsYXN0IHJlYWQgdmFsdWUgYXQgQGFkZHIgaXMgc3RvcmVk
-IGluIEB2YWwuIE11c3Qgbm90IGJlIGNhbGxlZAorICogZnJvbSBhdG9taWMgY29udGV4dCBpZiBz
-bGVlcF91cyBvciB0aW1lb3V0X3VzIGFyZSB1c2VkLgorICoKKyAqIFRoaXMgaXMgbW9kZWxsZWQg
-YWZ0ZXIgdGhlIHJlYWR4X3BvbGxfdGltZW91dCBtYWNyb3MgaW4gbGludXgvaW9wb2xsLmguCisg
-Ki8KKyNkZWZpbmUgcmVnbWFwX2ZpZWxkX3JlYWRfcG9sbF90aW1lb3V0KGZpZWxkLCB2YWwsIGNv
-bmQsIHNsZWVwX3VzLCB0aW1lb3V0X3VzKSBcCisoeyBcCisJa3RpbWVfdCB0aW1lb3V0ID0ga3Rp
-bWVfYWRkX3VzKGt0aW1lX2dldCgpLCB0aW1lb3V0X3VzKTsgXAorCWludCBwb2xscmV0OyBcCisJ
-bWlnaHRfc2xlZXBfaWYoc2xlZXBfdXMpOyBcCisJZm9yICg7OykgeyBcCisJCXBvbGxyZXQgPSBy
-ZWdtYXBfZmllbGRfcmVhZCgoZmllbGQpLCAmKHZhbCkpOyBcCisJCWlmIChwb2xscmV0KSBcCisJ
-CQlicmVhazsgXAorCQlpZiAoY29uZCkgXAorCQkJYnJlYWs7IFwKKwkJaWYgKHRpbWVvdXRfdXMg
-JiYga3RpbWVfY29tcGFyZShrdGltZV9nZXQoKSwgdGltZW91dCkgPiAwKSB7IFwKKwkJCXBvbGxy
-ZXQgPSByZWdtYXBfZmllbGRfcmVhZCgoZmllbGQpLCAmKHZhbCkpOyBcCisJCQlicmVhazsgXAor
-CQl9IFwKKwkJaWYgKHNsZWVwX3VzKSBcCisJCQl1c2xlZXBfcmFuZ2UoKHNsZWVwX3VzID4+IDIp
-ICsgMSwgc2xlZXBfdXMpOyBcCisJfSBcCisJcG9sbHJldCA/OiAoKGNvbmQpID8gMCA6IC1FVElN
-RURPVVQpOyBcCit9KQorCiAjaWZkZWYgQ09ORklHX1JFR01BUAogCiBlbnVtIHJlZ21hcF9lbmRp
-YW4gewotLSAKMi4xNC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+The HDMI controller in the A31 SoC is slightly different from the
+earlier version. In addition to the TMDS clock and DDC controls,
+this version now takes a second DDC clock input.
+
+Add a compatible string for it, and add the DDC clock input to the
+list of clocks required.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 92441086caba..46df3b78ae9e 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -41,14 +41,17 @@ CEC. It is one end of the pipeline.
+ Required properties:
+   - compatible: value must be one of:
+     * allwinner,sun5i-a10s-hdmi
++    * allwinner,sun6i-a31-hdmi
+   - reg: base address and size of memory-mapped region
+   - interrupts: interrupt associated to this IP
+   - clocks: phandles to the clocks feeding the HDMI encoder
+     * ahb: the HDMI interface clock
+     * mod: the HDMI module clock
++    * ddc: the HDMI ddc clock (A31 only)
+     * pll-0: the first video PLL
+     * pll-1: the second video PLL
+   - clock-names: the clock names mentioned above
++  - resets: phandle to the reset control for the HDMI encoder (A31 only)
+   - dmas: phandles to the DMA channels used by the HDMI encoder
+     * ddc-tx: The channel for DDC transmission
+     * ddc-rx: The channel for DDC reception
+-- 
+2.14.1
