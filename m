@@ -1,82 +1,68 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v5 2/2] thermal: add brcmstb AVS TMON driver
-Date: Tue, 26 Sep 2017 15:17:40 -0700
-Message-ID: <5245cf8e-d35f-c1fd-b7ea-e3a58c468688@broadcom.com>
-References: <20170926212800.4879-1-code@mmayer.net>
- <20170926212800.4879-3-code@mmayer.net>
- <4cb98266-6936-7668-fc88-199ac907b437@broadcom.com>
- <CANEuBv7pij+szVQZHZxNr4kXcCT0miTsYzG7g28zOmF9MqXKJQ@mail.gmail.com>
- <9bdd9959-da47-9adb-e550-31bf06254310@broadcom.com>
- <9587b134-9727-d7cb-7a46-6df5ee4a0494@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
+Date: Wed, 27 Sep 2017 00:33:59 +0200
+Message-ID: <CAPDyKFrUe-0hEsxVRQSZvujcXY8WrR6m-0DMW=VwDDLvz7Lexw@mail.gmail.com>
+References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+ <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
+ <20170913141026.43oh4n4foipmahsk@rob-hp-laptop> <1505355021.8308.4.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <9587b134-9727-d7cb-7a46-6df5ee4a0494@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Markus Mayer <code@mmayer.net>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1505355021.8308.4.camel@mhfsdcap03>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 17-09-26 03:14 PM, Florian Fainelli wrote:
-> On 09/26/2017 03:08 PM, Scott Branden wrote:
+On 14 September 2017 at 04:10, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> On Wed, 2017-09-13 at 09:10 -0500, Rob Herring wrote:
+>> On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
+>> > Change the comptiable for support of multi-platform
+>> > Add description for reg
+>> > Add description for source_cg
+>> > Add description for mediatek,latch-ck
 >>
->> On 17-09-26 02:38 PM, Markus Mayer wrote:
->>> On 26 September 2017 at 14:32, Scott Branden
->>> <scott.branden@broadcom.com> wrote:
->>>> Hi Markus,
->>>>
->>>>
->>>> On 17-09-26 02:27 PM, Markus Mayer wrote:
->>>>> From: Brian Norris <computersforpeace@gmail.com>
->>>>>
->>>>> The AVS TMON core provides temperature readings, a pair of configurable
->>>>> high- and low-temperature threshold interrupts, and an emergency
->>>>> over-temperature chip reset. The driver utilizes the first two to
->>>>> provide temperature readings and high-temperature notifications to
->>>>> applications. The over-temperature reset is not exposed to
->>>>> applications; this reset threshold is critical to the system and should
->>>>> be set with care within the bootloader.
->>>>>
->>>>> Applications may choose to utilize the notification mechanism, the
->>>>> temperature reading mechanism (e.g., through polling), or both.
->>>>>
->>>>> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
->>>>> Signed-off-by: Doug Berger <opendmb@gmail.com>
->>>>> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
->>>>> ---
->>>>>     drivers/thermal/Kconfig                    |   2 +-
->>>>>     drivers/thermal/broadcom/Kconfig           |   7 +
->>>>>     drivers/thermal/broadcom/Makefile          |   1 +
->>>>>     drivers/thermal/broadcom/brcmstb_thermal.c | 387
->>>>> +++++++++++++++++++++++++++++
->>>>>     4 files changed, 396 insertions(+), 1 deletion(-)
->>>>>     create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
->>>>>
->>>>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->>>>> index 07002df..96774a7 100644
->>>>> --- a/drivers/thermal/Kconfig
->>>>> +++ b/drivers/thermal/Kconfig
->>>>> @@ -408,7 +408,7 @@ config MTK_THERMAL
->>>>>             controller present in Mediatek SoCs
->>>>>       menu "Broadcom thermal drivers"
->>>>> -depends on ARCH_BCM || COMPILE_TEST
->>>>> +depends on ARCH_BCM || ARCH_BRCMSTB || COMPILE_TEST
->>>> No need for this additional depends.  ARCH_BCM is always defined before
->>>> ARCH_BRCMSTB can be selected.
->>> ARCH_BCM does not exist in arch/arm64/configs/defconfig. ARCH_BRCMSTB
->>> does. So, we do need both or the driver won't be built on ARM64.
->>> (After internal discussions we went with that approach rather than
->>> defining ARCH_BCM on ARM64.)
->> Got it.  Looking at our internal iproc tree I see we've done exactly the
->> same with ARCH_BCM_IPROC needing to be added.  We haven't upstreamed
->> the thermal driver needing it yet.
+>> This is at least the 3rd patch with exactly the same vague subject.
+>> Please make the subject somewhat unique.
 >>
->> Perhaps we should add ARCH_BCM to ARM64....
-> If it is just added to satisfy dependencies, I don't see much value in
-> doing that. It does make sense in the ARM v7 multiplatform context, but
-> outside of that, not so sur.
-OK - we'll just continue to add ARCH_BCM_IPROC || ARCH_BRCMSTB 
-everywhere as needed.
+> Thx, will change the subject at next version
+>> >
+>> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+>> >  1 file changed, 10 insertions(+), 3 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+>> > index 4182ea3..405cd06 100644
+>> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+>> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+>> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+>> >  and the properties used by the msdc driver.
+>> >
+>> >  Required properties:
+>> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+>> > +- compatible: value should be either of the following.
+>> > +   "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+>> > +   "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+>> > +   "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+>> > +   "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+>> > +- reg: physical base address of the controller and length
+>> >  - interrupts: Should contain MSDC interrupt number
+>> > -- clocks: MSDC source clock, HCLK
+>> > -- clock-names: "source", "hclk"
+>> > +- clocks: MSDC source clock, HCLK, source_cg
+>> > +- clock-names: "source", "hclk", "source_cg"
+>>
+>> All chips support source_cg? That's not backwards compatible for
+>> existing compatible strings if the driver requires it.
+> Not all chips support source_cg, for chips which do not support
+> source_cg, no need source_cg here, and the driver will parse it
+> to know if current chip support it.
+
+In such case you must not add add a required binding for it. I think
+that is what Rob is trying to point out for you.
+
+[...]
+
+Kind regards
+Uffe
