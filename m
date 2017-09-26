@@ -1,110 +1,186 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] pinctrl: axp209: add pinctrl features
-Date: Tue, 26 Sep 2017 15:27:09 +0200
-Message-ID: <20170926132709.od3myumh5xtungvs@flea>
-References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
- <6b89df1bf07dac2ab295fca5fdf0e55179c47ed6.1506428208.git-series.quentin.schulz@free-electrons.com>
- <20170926130009.r5isgrjvkwmm44nn@flea>
- <5596280a-51bb-7491-31f4-5800219888ad@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 04/12] staging: typec: tcpci: support port config passed
+ via dt
+Date: Tue, 26 Sep 2017 06:32:56 -0700
+Message-ID: <bb854ecf-fad7-2c2a-1972-5c4cabb970f2@roeck-us.net>
+References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+ <1506386727-16370-5-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oyfuwka7pc3evugi"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOFLVHHAKGQEWV3WFOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <5596280a-51bb-7491-31f4-5800219888ad-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506386727-16370-5-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---oyfuwka7pc3evugi
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Sep 26, 2017 at 01:08:21PM +0000, Quentin Schulz wrote:
-> Hi Maxime,
+On 09/25/2017 05:45 PM, Li Jun wrote:
+> User can define the typec port properties in tcpci node to setup
+> the port config.
 > 
-> On 26/09/2017 15:00, Maxime Ripard wrote:
-> > On Tue, Sep 26, 2017 at 12:17:12PM +0000, Quentin Schulz wrote:
-> >> +static const struct axp20x_desc_pin axp209_pins[] = {
-> >> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
-> >> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
-> >> +		   AXP20X_FUNCTION(0x2, "gpio_in"),
-> >> +		   AXP20X_FUNCTION(0x3, "ldo"),
-> >> +		   AXP20X_FUNCTION(0x4, "adc")),
-> >> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(1, "GPIO1"),
-> >> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
-> >> +		   AXP20X_FUNCTION(0x2, "gpio_in"),
-> >> +		   AXP20X_FUNCTION(0x3, "ldo"),
-> >> +		   AXP20X_FUNCTION(0x4, "adc")),
-> >> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(2, "GPIO2"),
-> >> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
-> >> +		   AXP20X_FUNCTION(0x2, "gpio_in")),
-> >> +};
-> > 
-> > If all the functions are the same, and at the same offset, can't we
-> > just hardcode it, instead of having (and duplicate) all the logic
-> > below?
-> > 
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> ---
+>   drivers/staging/typec/tcpci.c | 89 +++++++++++++++++++++++++++++++++++++++----
+>   include/linux/usb/tcpm.h      |  6 +--
+>   2 files changed, 85 insertions(+), 10 deletions(-)
 > 
-> AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
-> 		AXP20X_GPIO_OUT,
-> 		AXP20X_GPIO_IN,
-> 		AXP20X_LDO,
-> 		AXP20X_ADC))
+> diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+> index 4636804..0119453 100644
+> --- a/drivers/staging/typec/tcpci.c
+> +++ b/drivers/staging/typec/tcpci.c
+> @@ -425,17 +425,92 @@ static const struct regmap_config tcpci_regmap_config = {
+>   	.max_register = 0x7F, /* 0x80 .. 0xFF are vendor defined */
+>   };
+>   
+> -static const struct tcpc_config tcpci_tcpc_config = {
+> -	.type = TYPEC_PORT_DFP,
+> -	.default_role = TYPEC_SINK,
+> -};
+> -
+> +/* Populate struct tcpc_config from device-tree */
+>   static int tcpci_parse_config(struct tcpci *tcpci)
+>   {
+> +	struct tcpc_config *tcfg;
+> +	int ret = -EINVAL;
+> +
+>   	tcpci->controls_vbus = true; /* XXX */
+>   
+> -	/* TODO: Populate struct tcpc_config from ACPI/device-tree */
+> -	tcpci->tcpc.config = &tcpci_tcpc_config;
+> +	tcpci->tcpc.config = devm_kzalloc(tcpci->dev, sizeof(*tcfg),
+> +					  GFP_KERNEL);
+> +	if (!tcpci->tcpc.config)
+> +		return -ENOMEM;
+> +
+> +	tcfg = tcpci->tcpc.config;
+> +
+> +	/* Get port-type */
+> +	ret = typec_get_port_type(tcpci->dev);
+> +	if (ret < 0) {
+> +		dev_err(tcpci->dev, "typec port type is NOT correct!\n");
+
+Are all those exclamation marks necessary ?
+
+> +		return ret;
+> +	}
+> +	tcfg->type = ret;
+> +
+> +	if (tcfg->type == TYPEC_PORT_UFP)
+> +		goto sink;
+> +
+> +	/* Get source PDO */
+> +	tcfg->nr_src_pdo = device_property_read_u32_array(tcpci->dev,
+> +						"src-pdos", NULL, 0);
+
+I personally prefer continuation line alignment to '(', but that is up to Greg to decide.
+
+> +	if (tcfg->nr_src_pdo <= 0) {
+> +		dev_err(tcpci->dev, "typec source pdo is missing!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	tcfg->src_pdo = devm_kzalloc(tcpci->dev,
+> +		sizeof(*tcfg->src_pdo) * tcfg->nr_src_pdo, GFP_KERNEL);
+
+devm_kcalloc
+
+> +	if (!tcfg->src_pdo)
+> +		return -ENOMEM;
+> +
+> +	ret = device_property_read_u32_array(tcpci->dev, "src-pdos",
+> +				tcfg->src_pdo, tcfg->nr_src_pdo);
+> +	if (ret) {
+> +		dev_err(tcpci->dev, "Failed to read src pdo!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (tcfg->type == TYPEC_PORT_DFP)
+> +		return 0;
+> +
+> +	/* Get the preferred power role for drp */
+> +	ret = typec_get_power_role(tcpci->dev);
+
+Maybe this should be named typec_get_preferred_role(). The generic function
+names are a bit misleading; they suggest they would return the current role,
+and don't indicate that the data is from device properties.
+I am also not sure about the mix of using typec infra functions and
+direct device_property calls.
+
+> +	if (ret < 0) {
+> +		dev_err(tcpci->dev, "typec preferred role is wrong!\n");
+
+Wrong or missing ?
+
+> +		return ret;
+> +	}
+> +	tcfg->default_role = ret;
+> +sink:
+> +	/* Get sink power capability */
+> +	tcfg->nr_snk_pdo = device_property_read_u32_array(tcpci->dev,
+> +						"snk-pdos", NULL, 0);
+> +	if (tcfg->nr_snk_pdo <= 0) {
+> +		dev_err(tcpci->dev, "typec sink pdo is missing!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	tcfg->snk_pdo = devm_kzalloc(tcpci->dev,
+> +		sizeof(*tcfg->snk_pdo) * tcfg->nr_snk_pdo, GFP_KERNEL);
+> +	if (!tcfg->snk_pdo)
+> +		return -ENOMEM;
+> +
+> +	ret = device_property_read_u32_array(tcpci->dev, "snk-pdos",
+> +				tcfg->snk_pdo, tcfg->nr_snk_pdo);
+> +	if (ret) {
+> +		dev_err(tcpci->dev, "Failed to read sink pdo!\n");
+
+There is a mix of "Failed to read" and "missing" messages. What is the difference ?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (device_property_read_u32(tcpci->dev, "max-snk-mv",
+> +				     &tcfg->max_snk_mv) ||
+> +		device_property_read_u32(tcpci->dev, "max-snk-ma",
+> +					 &tcfg->max_snk_ma) ||
+> +		device_property_read_u32(tcpci->dev, "op-snk-mw",
+> +					 &tcfg->operating_snk_mw)) {
+> +		dev_err(tcpci->dev, "Failed to read sink capability!\n");
+> +		return -EINVAL;
+> +	}
+>   
+>   	return 0;
+>   }
+> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+> index 073197f..a67cf77 100644
+> --- a/include/linux/usb/tcpm.h
+> +++ b/include/linux/usb/tcpm.h
+> @@ -76,10 +76,10 @@ enum tcpm_transmit_type {
+>    * @alt_modes:	List of supported alternate modes
+>    */
+>   struct tcpc_config {
+> -	const u32 *src_pdo;
+> +	u32 *src_pdo;
+>   	unsigned int nr_src_pdo;
+>   
+> -	const u32 *snk_pdo;
+> +	u32 *snk_pdo;
+>   	unsigned int nr_snk_pdo;
+>   
+>   	const u32 *snk_vdo;
+> @@ -154,7 +154,7 @@ struct tcpc_mux_dev {
+>    * @mux:	Pointer to multiplexer data
+>    */
+>   struct tcpc_dev {
+> -	const struct tcpc_config *config;
+> +	struct tcpc_config *config;
+>   
+>   	int (*init)(struct tcpc_dev *dev);
+>   	int (*get_vbus)(struct tcpc_dev *dev);
 > 
-> That's what you mean?
 
-What I mean is:
-
-static int axp20x_get_func(char *func)
-{
-	if (!strcmp(func, "gpio_out"))
-		return 0;
-
-	if (!strcmp(func, "gpio_in"))
-		return 2;
- 
-	if (!strcmp(func, "ldo"))
- 		return 3;
- 
-	if (!strcmp(func, "adc"))
- 		return 4;
-
-	return -EINVAL;
-}
-
-> >> +	pctrl_desc = devm_kzalloc(&pdev->dev, sizeof(*pctrl_desc), GFP_KERNEL);
-> >> +	if (!pctrl_desc)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	pctrl_desc->name = dev_name(&pdev->dev);
-> >> +	pctrl_desc->owner = THIS_MODULE;
-> >> +	pctrl_desc->pins = pins;
-> >> +	pctrl_desc->npins = gpio->desc->npins;
-> >> +	pctrl_desc->pctlops = &axp20x_pctrl_ops;
-> >> +	pctrl_desc->pmxops = &axp20x_pmx_ops;
-> > 
-> > The strict flag needs to be set too in order to avoid concurrent uses
-> > of GPIO and other functions.
-> > 
-> 
-> Strict is a property of pinmux_ops struct (pmxops) and it is set.
-
-Ah, right, my bad.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---oyfuwka7pc3evugi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
