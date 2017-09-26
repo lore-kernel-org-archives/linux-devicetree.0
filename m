@@ -1,132 +1,161 @@
-From: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH resend 12/12] staging: typec: tcpci: move tcpci driver out of staging
-Date: Tue, 26 Sep 2017 12:05:23 +0800
-Message-ID: <1506398723-19359-13-git-send-email-jun.li@nxp.com>
-References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v14 14/28] v4l: async: Prepare for async sub-device
+ notifiers
+Date: Tue, 26 Sep 2017 10:12:50 +0200
+Message-ID: <ba80e242-a3c2-39af-01cd-6aa54649fb93@xs4all.nl>
+References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+ <20170925222540.371-15-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506398723-19359-1-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170925222540.371-15-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move TCPCI(Typec port controller interface) driver out of staging.
+On 26/09/17 00:25, Sakari Ailus wrote:
+> Refactor the V4L2 async framework a little in preparation for async
+> sub-device notifiers.
 
-Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
----
- drivers/staging/Kconfig                |  2 --
- drivers/staging/Makefile               |  1 -
- drivers/staging/typec/Kconfig          | 14 --------------
- drivers/staging/typec/Makefile         |  1 -
- drivers/staging/typec/TODO             |  5 -----
- drivers/usb/typec/Kconfig              |  7 +++++++
- drivers/usb/typec/Makefile             |  1 +
- drivers/{staging => usb}/typec/tcpci.c |  0
- drivers/{staging => usb}/typec/tcpci.h |  0
- 9 files changed, 8 insertions(+), 23 deletions(-)
+Perhaps extend this a bit to also state the reason for these changes?
 
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index 5546839..1e3d5d0 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -112,8 +112,6 @@ source "drivers/staging/vc04_services/Kconfig"
- 
- source "drivers/staging/ccree/Kconfig"
- 
--source "drivers/staging/typec/Kconfig"
--
- source "drivers/staging/vboxvideo/Kconfig"
- 
- source "drivers/staging/pi433/Kconfig"
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index 8951c37..4d1ccb4 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -1,7 +1,6 @@
- # Makefile for staging directory
- 
- obj-y				+= media/
--obj-y				+= typec/
- obj-$(CONFIG_IRDA)		+= irda/net/
- obj-$(CONFIG_IRDA)		+= irda/drivers/
- obj-$(CONFIG_PRISM2_USB)	+= wlan-ng/
-diff --git a/drivers/staging/typec/Kconfig b/drivers/staging/typec/Kconfig
-deleted file mode 100644
-index 5359f55..0000000
---- a/drivers/staging/typec/Kconfig
-+++ /dev/null
-@@ -1,14 +0,0 @@
--menu "USB Power Delivery and Type-C drivers"
--
--if TYPEC_TCPM
--
--config TYPEC_TCPCI
--	tristate "Type-C Port Controller Interface driver"
--	depends on I2C
--	select REGMAP_I2C
--	help
--	  Type-C Port Controller driver for TCPCI-compliant controller.
--
--endif
--
--endmenu
-diff --git a/drivers/staging/typec/Makefile b/drivers/staging/typec/Makefile
-deleted file mode 100644
-index 53d649a..0000000
---- a/drivers/staging/typec/Makefile
-+++ /dev/null
-@@ -1 +0,0 @@
--obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
-diff --git a/drivers/staging/typec/TODO b/drivers/staging/typec/TODO
-deleted file mode 100644
-index 53fe2f7..0000000
---- a/drivers/staging/typec/TODO
-+++ /dev/null
-@@ -1,5 +0,0 @@
--tcpci:
--- Test with real hardware
--
--Please send patches to Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> and copy
--Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>.
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index 819c0ed..33b04c4 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -14,6 +14,13 @@ config TYPEC_TCPM
- 
- if TYPEC_TCPM
- 
-+config TYPEC_TCPCI
-+	tristate "Type-C Port Controller Interface driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Type-C Port Controller driver for TCPCI-compliant controller.
-+
- source "drivers/usb/typec/fusb302/Kconfig"
- 
- endif
-diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-index b77688c..c2fbf17 100644
---- a/drivers/usb/typec/Makefile
-+++ b/drivers/usb/typec/Makefile
-@@ -3,3 +3,4 @@ obj-$(CONFIG_TYPEC_TCPM)	+= tcpm.o
- obj-y				+= fusb302/
- obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
- obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
-+obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/usb/typec/tcpci.c
-similarity index 100%
-rename from drivers/staging/typec/tcpci.c
-rename to drivers/usb/typec/tcpci.c
-diff --git a/drivers/staging/typec/tcpci.h b/drivers/usb/typec/tcpci.h
-similarity index 100%
-rename from drivers/staging/typec/tcpci.h
-rename to drivers/usb/typec/tcpci.h
--- 
-2.6.6
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+Anyway,
+
+Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c | 66 +++++++++++++++++++++++++-----------
+>  1 file changed, 47 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 77b9f851bfa9..1d4132305243 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -125,12 +125,13 @@ static struct v4l2_async_subdev *v4l2_async_find_match(
+>  }
+>  
+>  static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
+> +				   struct v4l2_device *v4l2_dev,
+>  				   struct v4l2_subdev *sd,
+>  				   struct v4l2_async_subdev *asd)
+>  {
+>  	int ret;
+>  
+> -	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
+> +	ret = v4l2_device_register_subdev(v4l2_dev, sd);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -154,6 +155,31 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
+>  	return 0;
+>  }
+>  
+> +/* Test all async sub-devices in a notifier for a match. */
+> +static int v4l2_async_notifier_try_all_subdevs(
+> +	struct v4l2_async_notifier *notifier)
+> +{
+> +	struct v4l2_device *v4l2_dev = notifier->v4l2_dev;
+> +	struct v4l2_subdev *sd, *tmp;
+> +
+> +	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
+> +		struct v4l2_async_subdev *asd;
+> +		int ret;
+> +
+> +		asd = v4l2_async_find_match(notifier, sd);
+> +		if (!asd)
+> +			continue;
+> +
+> +		ret = v4l2_async_match_notify(notifier, v4l2_dev, sd, asd);
+> +		if (ret < 0) {
+> +			mutex_unlock(&list_lock);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void v4l2_async_cleanup(struct v4l2_subdev *sd)
+>  {
+>  	v4l2_device_unregister_subdev(sd);
+> @@ -163,17 +189,15 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
+>  	sd->dev = NULL;
+>  }
+>  
+> -int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+> -				 struct v4l2_async_notifier *notifier)
+> +static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  {
+> -	struct v4l2_subdev *sd, *tmp;
+>  	struct v4l2_async_subdev *asd;
+> +	int ret;
+>  	int i;
+>  
+> -	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+> +	if (notifier->num_subdevs > V4L2_MAX_SUBDEVS)
+>  		return -EINVAL;
+>  
+> -	notifier->v4l2_dev = v4l2_dev;
+>  	INIT_LIST_HEAD(&notifier->waiting);
+>  	INIT_LIST_HEAD(&notifier->done);
+>  
+> @@ -206,18 +230,10 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+>  
+>  	mutex_lock(&list_lock);
+>  
+> -	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
+> -		int ret;
+> -
+> -		asd = v4l2_async_find_match(notifier, sd);
+> -		if (!asd)
+> -			continue;
+> -
+> -		ret = v4l2_async_match_notify(notifier, sd, asd);
+> -		if (ret < 0) {
+> -			mutex_unlock(&list_lock);
+> -			return ret;
+> -		}
+> +	ret = v4l2_async_notifier_try_all_subdevs(notifier);
+> +	if (ret) {
+> +		mutex_unlock(&list_lock);
+> +		return ret;
+>  	}
+>  
+>  	/* Keep also completed notifiers on the list */
+> @@ -227,6 +243,17 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+>  
+>  	return 0;
+>  }
+> +
+> +int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+> +				 struct v4l2_async_notifier *notifier)
+> +{
+> +	if (WARN_ON(!v4l2_dev))
+> +		return -EINVAL;
+> +
+> +	notifier->v4l2_dev = v4l2_dev;
+> +
+> +	return __v4l2_async_notifier_register(notifier);
+> +}
+>  EXPORT_SYMBOL(v4l2_async_notifier_register);
+>  
+>  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
+> @@ -303,7 +330,8 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
+>  		struct v4l2_async_subdev *asd = v4l2_async_find_match(notifier,
+>  								      sd);
+>  		if (asd) {
+> -			int ret = v4l2_async_match_notify(notifier, sd, asd);
+> +			int ret = v4l2_async_match_notify(
+> +				notifier, notifier->v4l2_dev, sd, asd);
+>  			mutex_unlock(&list_lock);
+>  			return ret;
+>  		}
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
