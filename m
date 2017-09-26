@@ -1,65 +1,53 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]" to
- the spi tree
-Date: Tue, 26 Sep 2017 12:23:21 +0000
-Message-ID: <TY1PR06MB08958955D6FE134373838397C07B0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
- <CAMuHMdVsRwW+10ERyTJAa8XhhkPMn4ruymUwPKot+kmczBwbcA@mail.gmail.com>
- <20170925184545.5k4nke27rgud3uwp@sirena.org.uk>
- <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg@mail.gmail.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: [PATCH 00/11] Add remaining clocks for QCOM IPQ8074
+Date: Tue, 26 Sep 2017 17:53:53 +0530
+Message-ID: <1506428644-2996-1-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywNCg0KSSBhbSB2ZXJ5IHNvcnJ5IGFib3V0IHRoZSBjb25mdXNpb24uIEdlZXJ0IGhh
-cyBhIGdvb2QgcG9pbnQgc28gcGxlYXNlIGRyb3AgdGhpcyBwYXRjaC4NCg0KVGhhbmtzLA0KRmFi
-cml6aW8NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBnZWVydC51eXR0
-ZXJob2V2ZW5AZ21haWwuY29tIFttYWlsdG86Z2VlcnQudXl0dGVyaG9ldmVuQGdtYWlsLmNvbV0g
-T24gQmVoYWxmIE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAyNSBTZXB0ZW1iZXIgMjAx
-NyAyMDoxNg0KPiBUbzogTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPg0KPiBDYzogRmFi
-cml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+OyBSb2IgSGVycmlu
-ZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT47DQo+IGxpbnV4LXNwaSA8bGludXgtc3BpQHZnZXIua2VybmVsLm9yZz47IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOyBMaW51eC1SZW5lc2FzIDxsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtl
-cm5lbC5vcmc+OyBDaHJpcw0KPiBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29t
-PjsgQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBTdWJqZWN0OiBSZTogQXBw
-bGllZCAic3BpOiBzaC1tc2lvZjogQWRkIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgcjhhNzc0WzM1
-XSIgdG8gdGhlIHNwaSB0cmVlDQo+DQo+IEhpIE1hcmssDQo+DQo+IE9uIE1vbiwgU2VwIDI1LCAy
-MDE3IGF0IDg6NDUgUE0sIE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz4gd3JvdGU6DQo+
-ID4gT24gTW9uLCBTZXAgMjUsIDIwMTcgYXQgMDc6NDg6NDRQTSArMDIwMCwgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiA+PiBQbGVhc2UgZHJvcCB0aGlzIHBhdGNoLCBhcyB0aGVyZSdzIG5v
-IG5lZWQgdG8gYWRkIGV4cGxpY2l0IG1hdGNoaW5nIGZvciB0aGVzZQ0KPiA+PiBjb21wYXRpYmxl
-IHZhbHVlcy4gVGhlIGZhbWlseS1zcGVjaWZpYyBjb21wYXRpYmxlIHZhbHVlcyAod2hpY2ggdGhl
-IGRyaXZlcg0KPiA+PiBhbHJlYWR5IG1hdGNoZXMgYWdhaW5zdCkgYXJlIHN1ZmZpY2llbnQuDQo+
-ID4NCj4gPiBXaGlsZSB0aGUgcGF0Y2ggaXMgbm90IG5lZWRlZCBpZiBwZW9wbGUgbGlzdCB0aGUg
-ZmFsbGJhY2sgcHJvcGVydHkgaXQNCj4gPiBhbHNvIGRvZXMgbm8gaGFybSBhbmQgcHJvdmlkZXMg
-YSBtYXJnaW5hbCBkb2N1bWVudGF0aW9uIGJlbmVmaXQgaW4NCj4gPiBzYXlpbmcgdGhhdCBzb21l
-b25lIGhhcyBjb25zaWRlcmVkIGlmIGFueSBzcGVjaWFsIGhhbmRsaW5nIGlzIHVzZWZ1bCBhbmQN
-Cj4gPiBkZWNpZGVkIHRoYXQgaXQgaXNuJ3QuDQo+DQo+IEFsbCB0cnVlLg0KPg0KPiBNeSByZWJ1
-dHRhbCBpcyB0aHJlZWZvbGQ6DQo+ICAgMS4gTGlzdGluZyB0aGUgZmFsbGJhY2sgcHJvcGVydHkg
-aXMgbWFuZGF0b3J5IGZvciBuZXcgU29Dcy4gV2Ugb25seSBrZWVwDQo+ICAgICAgdGhlIHBlci1T
-b0MgY29tcGF0aWJsZSB2YWx1ZXMgaW4gdGhlIGRyaXZlciBmb3Igb2xkZXIgU29DcyB0aGF0IHBy
-ZWRhdGUNCj4gICAgICB0aGUgaW50cm9kdWN0aW9uIG9mIGZhbGxiYWNrIHByb3BlcnRpZXMuDQo+
-ICAgMi4gU29tZSBoYXJtIGlzIGludm9sdmVkLCBpbiB0aGUgZm9ybSBvZiBpbmNyZWFzZWQga2Vy
-bmVsIGltYWdlIHNpemUuDQo+ICAgMy4gV2hlbiB1cGRhdGluZyBEVCBiaW5kaW5ncyBmb3IgbmV3
-IFNvQ3MsIHdlIHVzdWFsbHkgYWRkICJObyBkcml2ZXINCj4gICAgICB1cGRhdGUgaXMgbmVlZGVk
-IiB0byB0aGUgcGF0Y2ggZGVzY3JpcHRpb24gdG8gY2xhcmlmeS4gVW5mb3J0dW5hdGVseQ0KPiAg
-ICAgIHRoYXQgd2FzIG1pc3NlZCBoZXJlLg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9l
-dmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1t
-NjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBl
-b3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8g
-am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
-dC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
-DQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxi
-b2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdp
-c3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4N
-Cg==
+This patch series adds following IPQ8074 clocks
+
+- Remaining General PLL’s, NSS UBI PLL and NSS Crypto PLL.
+- 2 instances of PCIE, USB, SDCC.
+- 2 NSS UBI core and common NSS clocks. NSS is network.
+  switching subsystem which accelerates the ethernet traffic.
+  IPQ8074 has two UBI cores and each core uses some separate
+  core clocks and remaining common clocks.
+- NSS Crypto Engine clocks
+- NSS ethernet port clocks. IPQ8074 has 6 Ethernet ports and each
+  port uses different clocks
+- Crypto engine clocks
+- PCIE and NSS MISC resets.
+
+Abhishek Sahu (11):
+  clk: qcom: add read-only divider operations
+  clk: qcom: add parent map for regmap mux
+  clk: qcom: ipq8074: fix missing GPLL0 divider width
+  dt-bindings: clock: qcom: add remaining clocks for IPQ8074
+  clk: qcom: ipq8074: add remaining PLL’s
+  clk: qcom: ipq8074: add PCIE, USB and SDCC clocks
+  clk: qcom: ipq8074: add NSS clocks
+  clk: qcom: ipq8074: add NSS ethernet port clocks
+  clk: qcom: ipq8074: add GP and Crypto clocks
+  dt-bindings: clock: qcom: add misc resets for PCIE and NSS
+  clk: qcom: ipq8074: add misc resets for PCIE and NSS
+
+ drivers/clk/qcom/clk-rcg.h                   |   10 -
+ drivers/clk/qcom/clk-regmap-divider.c        |   29 +
+ drivers/clk/qcom/clk-regmap-divider.h        |    1 +
+ drivers/clk/qcom/clk-regmap-mux.c            |    6 +
+ drivers/clk/qcom/clk-regmap-mux.h            |    2 +
+ drivers/clk/qcom/common.h                    |   11 +-
+ drivers/clk/qcom/gcc-ipq8074.c               | 3736 ++++++++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h |  222 ++
+ 8 files changed, 4006 insertions(+), 11 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
