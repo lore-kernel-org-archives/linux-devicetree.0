@@ -1,18 +1,18 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v14 22/28] v4l: async: Add a convenience function for
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v14 22/28] v4l: fwnode: Add a convenience function for
  registering sensors
-Date: Tue, 26 Sep 2017 10:24:20 +0200
-Message-ID: <f82b3fc9-4250-197c-9bfe-d8a712901362@xs4all.nl>
+Date: Tue, 26 Sep 2017 10:26:35 +0200
+Message-ID: <ac50fc71-c528-a703-04bb-6abc1fc7c19a@xs4all.nl>
 References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-23-sakari.ailus@linux.intel.com>
+ <20170925222540.371-24-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170925222540.371-23-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170925222540.371-24-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 26/09/17 00:25, Sakari Ailus wrote:
@@ -23,17 +23,18 @@ On 26/09/17 00:25, Sakari Ailus wrote:
 > This should be useful for sensor drivers that do not have device specific
 > requirements related to firmware information parsing or the async
 > framework.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Nice, makes sense.
+I'm confused. This is a second patch 22/28 that appears to be identical to the
+previous one.
 
-Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+I'm ignoring this one, I assume something went wrong when you mailed this series.
 
 Regards,
 
 	Hans
 
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
 >  drivers/media/v4l2-core/v4l2-async.c  |  5 +++++
 >  drivers/media/v4l2-core/v4l2-fwnode.c | 41 +++++++++++++++++++++++++++++++++++
@@ -42,10 +43,10 @@ Regards,
 >  4 files changed, 71 insertions(+)
 > 
 > diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index fe383c5d1215..f2c82f5a9747 100644
+> index 470607da96b2..f388892f43ec 100644
 > --- a/drivers/media/v4l2-core/v4l2-async.c
 > +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -580,6 +580,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
+> @@ -570,6 +570,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
 >  {
 >  	struct v4l2_async_notifier *notifier = sd->notifier;
 >  
@@ -114,8 +115,8 @@ Regards,
 > +EXPORT_SYMBOL_GPL(v4l2_async_register_subdev_sensor_common);
 > +
 >  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
->  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+>  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
+>  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
 > diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
 > index 479c317fab2f..74f2ea27d117 100644
 > --- a/include/media/v4l2-async.h
@@ -171,8 +172,3 @@ Regards,
 >  };
 >  
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
