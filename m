@@ -1,49 +1,88 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 02/13] clk: sunxi-ng: sun6i: Rename HDMI
- DDC clock to avoid name collision
-Date: Tue, 26 Sep 2017 11:32:47 +0200
-Message-ID: <20170926093247.blcu52dzluqawzb5@flea>
-References: <20170926065919.24446-1-wens@csie.org>
- <20170926065919.24446-3-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 09/12] usb: typec: tcpm: only drives the connected cc line
+ when attached
+Date: Tue, 26 Sep 2017 09:53:07 +0000
+Message-ID: <DB4PR04MB07689A95430FA6F4AA219539897B0@DB4PR04MB0768.eurprd04.prod.outlook.com>
+References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+ <1506386727-16370-10-git-send-email-jun.li@nxp.com>
+ <9c461105-fa96-3989-5a95-b9f82b154ea2@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4hidansbmszwo3hv"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQF5VDHAKGQEX4HCBTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170926065919.24446-3-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9c461105-fa96-3989-5a95-b9f82b154ea2-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---4hidansbmszwo3hv
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Sep 26, 2017 at 06:59:08AM +0000, Chen-Yu Tsai wrote:
-> The HDMI DDC clock found in the CCU is the parent of the actual DDC
-> clock within the HDMI controller. That clock is also named "hdmi-ddc".
-> 
-> Rename the one in the CCU to "hdmi-ddc-parent". This makes more sense
-> than renaming the one in the HDMI controller to something else.
-> 
-> Fixes: c6e6c96d8fa6 ("clk: sunxi-ng: Add A31/A31s clocks")
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-I'd rather stick to the datasheet names. What about "DDC" ?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---4hidansbmszwo3hv--
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2Vj
+ayBbbWFpbHRvOmdyb2VjazdAZ21haWwuY29tXSBPbiBCZWhhbGYgT2YgR3VlbnRlciBSb2Vjaw0K
+PiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMjYsIDIwMTcgMzoxNyBQTQ0KPiBUbzogSnVuIExp
+IDxqdW4ubGlAbnhwLmNvbT47IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyByb2JoK2R0QGtl
+cm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBoZWlra2kua3JvZ2VydXNAbGludXgu
+aW50ZWwuY29tDQo+IENjOiB5dWV5YW9AZ29vZ2xlLmNvbTsgb19sZXZlcXVlQG9yYW5nZS5mcjsg
+UGV0ZXIgQ2hlbg0KPiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgQS5zLiBEb25nIDxhaXNoZW5nLmRv
+bmdAbnhwLmNvbT47IGxpbnV4LQ0KPiB1c2JAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDA5LzEyXSB1c2I6IHR5cGVjOiB0
+Y3BtOiBvbmx5IGRyaXZlcyB0aGUgY29ubmVjdGVkIGNjIGxpbmUNCj4gd2hlbiBhdHRhY2hlZA0K
+PiANCj4gT24gMDkvMjUvMjAxNyAwNTo0NSBQTSwgTGkgSnVuIHdyb3RlOg0KPiA+IEFzIHdlIHNo
+b3VsZCBvbmx5IGRyaXZlIGNvbm5lY3RlZCBjYyBsaW5lIHRvIGJlIHRoZSByaWdodCBzdGF0ZSB3
+aGVuDQo+ID4gYXR0YWNoZWQsIGFuZCBrZWVwcyB0aGUgb3RoZXIgb25lIHRvIGJlIG9wZW4sIHNv
+IHVwZGF0ZSB0aGUgc2V0X2NjDQo+ID4gaW50ZXJmYWNlIGZvciB0aGF0Lg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZl
+cnMvdXNiL3R5cGVjL3RjcG0uYyB8IDEyICsrKysrKysrKysrLQ0KPiA+ICAgaW5jbHVkZS9saW51
+eC91c2IvdGNwbS5oIHwgIDMgKystDQo+ID4gICAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
+dHlwZWMvdGNwbS5jIGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jIGluZGV4DQo+ID4gMzhhNjIy
+My4uYzk5NjZlZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4g
+PiArKysgYi9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4gPiBAQCAtMTg1Nyw5ICsxODU3LDE1
+IEBAIHN0YXRpYyBib29sIHRjcG1fc3RhcnRfZHJwX3RvZ2dsaW5nKHN0cnVjdA0KPiA+IHRjcG1f
+cG9ydCAqcG9ydCwNCj4gPg0KPiA+ICAgc3RhdGljIHZvaWQgdGNwbV9zZXRfY2Moc3RydWN0IHRj
+cG1fcG9ydCAqcG9ydCwgZW51bSB0eXBlY19jY19zdGF0dXMgY2MpDQo+ID4gICB7DQo+ID4gKwli
+b29sIGF0dGFjaGVkOw0KPiA+ICsNCj4gPiAgIAl0Y3BtX2xvZyhwb3J0LCAiY2M6PSVkIiwgY2Mp
+Ow0KPiA+ICAgCXBvcnQtPmNjX3JlcSA9IGNjOw0KPiA+IC0JcG9ydC0+dGNwYy0+c2V0X2NjKHBv
+cnQtPnRjcGMsIGNjKTsNCj4gPiArCWlmIChwb3J0LT5zdGF0ZSA9PSBTUkNfQVRUQUNIRUQgfHwg
+cG9ydC0+c3RhdGUgPT0gU05LX0FUVEFDSEVEKQ0KPiA+ICsJCWF0dGFjaGVkID0gdHJ1ZTsNCj4g
+PiArCWVsc2UNCj4gPiArCQlhdHRhY2hlZCA9IGZhbHNlOw0KPiA+ICsJcG9ydC0+dGNwYy0+c2V0
+X2NjKHBvcnQtPnRjcGMsIGNjLCBhdHRhY2hlZCwgcG9ydC0+cG9sYXJpdHkpOw0KPiANCj4gUG9s
+YXJpdHkgc2hvdWxkIGJlIHNldCB3aXRoIHNldF9wb2xhcml0eSgpLiBJcyBpdCBuZWNlc3Nhcnkg
+dG8gZHVwbGljYXRlIHRoYXQgPw0KDQpJbiB0Y3BjaSBjYXNlLCBzZXRfcG9sYXJpdHkgb25seSBz
+ZXRzIFBsdWcgT3JpZW50YXRpb24gYml0Og0KIiAwYjogV2hlbiBWY29ubiBpcyBlbmFibGVkLCBh
+cHBseSBpdCB0byB0aGUgQ0MyIHBpbi4gTW9uaXRvciB0aGUgQ0MxIHBpbiBmb3INCkJNQyBjb21t
+dW5pY2F0aW9ucyBpZiBQRCBtZXNzYWdpbmcgaXMgZW5hYmxlZC4NCjFiOiBXaGVuIFZjb25uIGlz
+IGVuYWJsZWQsIGFwcGx5IGl0IHRvIHRoZSBDQzEgcGluLiBNb25pdG9yIHRoZSBDQzIgcGluIGZv
+cg0KQk1DIGNvbW11bmljYXRpb25zIGlmIFBEIG1lc3NhZ2luZyBpcyBlbmFibGVkLiINCg0KVGhl
+cmUgaXMgbm8gZHVwbGljYXRpb24gZm9yIHRjcGNpLCBvciB5b3UgdGhpbmsgSSBzaG91bGQgZG8g
+dGhpcyBpbiBzZXRfcG9sYXJpdHkNCm9mIHRjcGNpIGRyaXZlciBpbnRlcm5hbGx5PyBsb29rcyBi
+ZXR0ZXIgZnJvbSBteSBwb2ludCB2aWV3IGFzIEkgbWF5IGRvbid0DQpuZWVkIGNoYW5nZSB0Y3Bt
+IHNldF9jYyBpbnRlcmZhY2UuDQoNCnRoYW5rcw0KTGkgSnVuDQo+IA0KPiA+ICAgfQ0KPiA+DQo+
+ID4gICBzdGF0aWMgaW50IHRjcG1faW5pdF92YnVzKHN0cnVjdCB0Y3BtX3BvcnQgKnBvcnQpIEBA
+IC0xOTEzLDYgKzE5MTksOA0KPiA+IEBAIHN0YXRpYyBpbnQgdGNwbV9zcmNfYXR0YWNoKHN0cnVj
+dCB0Y3BtX3BvcnQgKnBvcnQpDQo+ID4gICAJaWYgKHJldCA8IDApDQo+ID4gICAJCXJldHVybiBy
+ZXQ7DQo+ID4NCj4gPiArCXRjcG1fc2V0X2NjKHBvcnQsIHRjcG1fcnBfY2MocG9ydCkpOw0KPiA+
+ICsNCj4gPiAgIAlyZXQgPSB0Y3BtX3NldF9yb2xlcyhwb3J0LCB0cnVlLCBUWVBFQ19TT1VSQ0Us
+IFRZUEVDX0hPU1QpOw0KPiA+ICAgCWlmIChyZXQgPCAwKQ0KPiA+ICAgCQlyZXR1cm4gcmV0Ow0K
+PiA+IEBAIC0yMDI4LDYgKzIwMzYsOCBAQCBzdGF0aWMgaW50IHRjcG1fc25rX2F0dGFjaChzdHJ1
+Y3QgdGNwbV9wb3J0ICpwb3J0KQ0KPiA+ICAgCWlmIChyZXQgPCAwKQ0KPiA+ICAgCQlyZXR1cm4g
+cmV0Ow0KPiA+DQo+ID4gKwl0Y3BtX3NldF9jYyhwb3J0LCBUWVBFQ19DQ19SRCk7DQo+ID4gKw0K
+PiA+ICAgCXJldCA9IHRjcG1fc2V0X3JvbGVzKHBvcnQsIHRydWUsIFRZUEVDX1NJTkssIFRZUEVD
+X0RFVklDRSk7DQo+ID4gICAJaWYgKHJldCA8IDApDQo+ID4gICAJCXJldHVybiByZXQ7DQo+ID4g
+ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdXNiL3RjcG0uaCBiL2luY2x1ZGUvbGludXgvdXNi
+L3RjcG0uaCBpbmRleA0KPiA+IGE2N2NmNzcuLmEwMDdlMmExIDEwMDY0NA0KPiA+IC0tLSBhL2lu
+Y2x1ZGUvbGludXgvdXNiL3RjcG0uaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvdXNiL3RjcG0u
+aA0KPiA+IEBAIC0xNTksNyArMTU5LDggQEAgc3RydWN0IHRjcGNfZGV2IHsNCj4gPiAgIAlpbnQg
+KCppbml0KShzdHJ1Y3QgdGNwY19kZXYgKmRldik7DQo+ID4gICAJaW50ICgqZ2V0X3ZidXMpKHN0
+cnVjdCB0Y3BjX2RldiAqZGV2KTsNCj4gPiAgIAlpbnQgKCpnZXRfY3VycmVudF9saW1pdCkoc3Ry
+dWN0IHRjcGNfZGV2ICpkZXYpOw0KPiA+IC0JaW50ICgqc2V0X2NjKShzdHJ1Y3QgdGNwY19kZXYg
+KmRldiwgZW51bSB0eXBlY19jY19zdGF0dXMgY2MpOw0KPiA+ICsJaW50ICgqc2V0X2NjKShzdHJ1
+Y3QgdGNwY19kZXYgKmRldiwgZW51bSB0eXBlY19jY19zdGF0dXMgY2MsDQo+ID4gKwkJCWJvb2wg
+YXR0YWNoZWQsIGVudW0gdHlwZWNfY2NfcG9sYXJpdHkgcG9sYXJpdHkpOw0KPiA+ICAgCWludCAo
+KmdldF9jYykoc3RydWN0IHRjcGNfZGV2ICpkZXYsIGVudW0gdHlwZWNfY2Nfc3RhdHVzICpjYzEs
+DQo+ID4gICAJCSAgICAgIGVudW0gdHlwZWNfY2Nfc3RhdHVzICpjYzIpOw0KPiA+ICAgCWludCAo
+KnNldF9wb2xhcml0eSkoc3RydWN0IHRjcGNfZGV2ICpkZXYsDQo+ID4NCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
