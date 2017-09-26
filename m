@@ -1,30 +1,48 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v1 0/2] NVIDIA Tegra20 video decoder driver
-Date: Tue, 26 Sep 2017 08:54:47 +0200
-Message-ID: <20170926065447.GC6250@kroah.com>
-References: <cover.1506377430.git.digetx@gmail.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 12/12] staging: typec: tcpci: move tcpci driver out of
+ staging
+Date: Tue, 26 Sep 2017 08:57:49 +0200
+Message-ID: <20170926065749.GE6250@kroah.com>
+References: <1506386727-16370-1-git-send-email-jun.li@nxp.com>
+ <1506386727-16370-13-git-send-email-jun.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1506377430.git.digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1506386727-16370-13-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 01:15:41AM +0300, Dmitry Osipenko wrote:
-> This driver provides accelerated video decoding to NVIDIA Tegra20 SoC's,
-> it is a result of reverse-engineering efforts. Driver has been tested on
-> Toshiba AC100 and Acer A500, it should work on any Tegra20 device.
+On Tue, Sep 26, 2017 at 08:45:27AM +0800, Li Jun wrote:
+> Move TCPCI(Typec port controller interface) driver out of staging.
 > 
-> In userspace this driver is utilized by libvdpau-tegra [0] that implements
-> VDPAU interface, so any video player that supports VDPAU can provide
-> accelerated video decoding on Tegra20 on Linux.
+> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/staging/Kconfig        |   2 -
+>  drivers/staging/Makefile       |   1 -
+>  drivers/staging/typec/Kconfig  |  14 -
+>  drivers/staging/typec/Makefile |   1 -
+>  drivers/staging/typec/TODO     |   5 -
+>  drivers/staging/typec/tcpci.c  | 637 -----------------------------------------
+>  drivers/staging/typec/tcpci.h  | 133 ---------
+>  drivers/usb/typec/Kconfig      |   7 +
+>  drivers/usb/typec/Makefile     |   1 +
+>  drivers/usb/typec/tcpci.c      | 637 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/typec/tcpci.h      | 133 +++++++++
+>  11 files changed, 778 insertions(+), 793 deletions(-)
 
-Why not use the v4l2 api instead?  Doesn't that provide the same needed
-user/kernel api here instead of creating yet-another-custom ioctl?
+
+Creating patches like this with "-M" to git format-patch is nice, that
+way we see the rename as just a rename, and not a big delete/add patch.
+
+Can you do that instead and resend this series?
 
 thanks,
 
 greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
