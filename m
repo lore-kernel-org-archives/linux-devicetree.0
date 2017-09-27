@@ -1,47 +1,47 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/6] dt-bindings: rtc: document existing bindings
-Date: Wed, 27 Sep 2017 16:03:39 +0200
-Message-ID: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH v2 2/6] dt-bindings: rtc: add stericsson,coh901331 bindings
+Date: Wed, 27 Sep 2017 16:03:41 +0200
+Message-ID: <20170927140345.5537-3-alexandre.belloni@free-electrons.com>
+References: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rtc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Document currently undocumented bindings.
+Add device tree bindings for the ST-Ericsson COH 901 331 Real Time Clock
 
-Rob, as discussed, all of this can probably go through your tree.
-
-Changes in v2:
- - made a proper series
- - fixed sirf2 example
- - listed the ds1307 compatible that support the trickle charging properties
-
-Alexandre Belloni (6):
-  dt-bindings: trivial: Add RTCs
-  dt-bindings: rtc: add stericsson,coh901331 bindings
-  dt-bindings: rtc: Add sirf,prima2-sysrtc bindings
-  dt-bindings: rtc: DS1307 and compatibles are not trivial
-  dt-bindings: rtc: Add bindings for m41t80 and compatibles
-  dt-bindings: rtc: merge ds1339 in ds1307 documentation
-
- .../devicetree/bindings/rtc/dallas,ds1339.txt      | 18 ---------
- .../devicetree/bindings/rtc/rtc-ds1307.txt         | 44 ++++++++++++++++++++++
- .../devicetree/bindings/rtc/rtc-m41t80.txt         | 31 +++++++++++++++
- .../devicetree/bindings/rtc/sirf,prima2-sysrtc.txt | 13 +++++++
- .../bindings/rtc/stericsson,coh901331.txt          | 17 +++++++++
- .../devicetree/bindings/trivial-devices.txt        | 13 +++----
- 6 files changed, 110 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/sirf,prima2-sysrtc.txt
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+ .../devicetree/bindings/rtc/stericsson,coh901331.txt    | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt
 
+diff --git a/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt b/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt
+new file mode 100644
+index 000000000000..3ebeb311335f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt
+@@ -0,0 +1,17 @@
++ST-Ericsson COH 901 331 Real Time Clock
++
++Required properties:
++- compatible: must be "stericsson,coh901331"
++- reg: address range of rtc register set.
++- interrupt-parent: phandle for the interrupt controller.
++- interrupts: rtc alarm interrupt.
++- clocks: phandle to the rtc clock source
++
++Example:
++	rtc: rtc@c0017000 {
++		compatible = "stericsson,coh901331";
++		reg = <0xc0017000 0x1000>;
++		interrupt-parent = <&vicb>;
++		interrupts = <10>;
++		clocks = <&rtc_clk>;
++	};
 -- 
 2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
