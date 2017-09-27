@@ -1,38 +1,81 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: r8a7745: Add MSIOF[012] support
-Date: Wed, 27 Sep 2017 14:03:08 +0200
-Message-ID: <CAMuHMdU4dnWnGfMEQnCFnU-sNsU-kzJjKVYR9ysxF8Eh6N8jXQ@mail.gmail.com>
-References: <1506506225-5015-1-git-send-email-fabrizio.castro@bp.renesas.com> <1506506225-5015-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Wed, 27 Sep 2017 15:12:50 +0300
+Message-ID: <69ea8dec-db7a-fcfa-6fa7-ea70de4c9ef4@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
+ <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
+ <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506506225-5015-2-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 11:57 AM, Fabrizio Castro
-<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
-> Also, define aliases for spi[123].
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+On 27.09.2017 11:34, Jon Hunter wrote:
+> 
+> On 27/09/17 02:57, Dmitry Osipenko wrote:
+>> On 26.09.2017 17:50, Jon Hunter wrote:
+>>>
+>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
+>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>>>> on Tegra20/30 SoC's.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
+>>>>  1 file changed, 23 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>> new file mode 100644
+>>>> index 000000000000..2af9aa76ae11
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>> @@ -0,0 +1,23 @@
+>>>> +* NVIDIA Tegra AHB DMA controller
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
+>>>> +- reg:		Should contain registers base address and length.
+>>>> +- interrupts:	Should contain one entry, DMA controller interrupt.
+>>>> +- clocks:	Should contain one entry, DMA controller clock.
+>>>> +- resets :	Should contain one entry, DMA controller reset.
+>>>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
+>>>> +		for the peripheral. For more details consult the Tegra TRM's
+>>>> +		documentation, in particular AHB DMA channel control register
+>>>> +		REQ_SEL field.
+>>>
+>>> What about the TRIG_SEL field? Do we need to handle this here as well?
+>>>
+>>
+>> Actually, DMA transfer trigger isn't related a hardware description. It's up to
+>> software to decide what trigger to select. So it shouldn't be in the binding.
+> 
+> I think it could be, if say a board wanted a GPIO to trigger a transfer.
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+GPIO isn't a very good example, there is no "GPIO" trigger. To me all triggers
+are software-defined, so that software could create transfer chains.
 
-Gr{oetje,eeting}s,
+>> And I think the same applies to requester... any objections?
+> 
+> Well, the REQ_SEL should definitely be in the binding.
+> 
 
-                        Geert
+Okay.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> Laxman, Stephen, what are your thoughts on the TRIG_SEL field? Looks
+> like we never bothered with it for the APB DMA and so maybe no ones uses
+> this.
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
