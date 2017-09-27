@@ -1,65 +1,94 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v6 11/11] of: mdio: Prevent
- of_mdiobus_register from scanning mdio-mux nodes
-Date: Wed, 27 Sep 2017 16:12:13 +0200
-Message-ID: <20170927141213.GF13516@lunn.ch>
-References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
- <20170927073414.17361-12-clabbe.montjoie@gmail.com>
-Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Wed, 27 Sep 2017 17:29:19 +0300
+Message-ID: <ca7ce856-208b-2753-a8a2-411b29288306@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
+ <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
+ <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+ <69ea8dec-db7a-fcfa-6fa7-ea70de4c9ef4@gmail.com>
+ <96f28cc6-7cbf-308f-bc87-d96d3e7fe045@nvidia.com>
+ <432fff47-6750-08c4-a91d-1a5d154245bc@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJNHL5JSEOBBRXDV3HAKGQEY456UHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170927073414.17361-12-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <432fff47-6750-08c4-a91d-1a5d154245bc-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 09:34:14AM +0200, Corentin Labbe wrote:
-> Each child node of an MDIO node is scanned as a PHY when calling
-> of_mdiobus_register() givint the following result:
-> [   18.175379] mdio_bus stmmac-0: /soc/ethernet@1c30000/mdio/mdio-mux has invalid PHY address
-> [   18.175408] mdio_bus stmmac-0: scan phy mdio-mux at address 0
-> [   18.175450] mdio_bus stmmac-0: scan phy mdio-mux at address 1
-> [...]
-> [   18.176420] mdio_bus stmmac-0: scan phy mdio-mux at address 30
-> [   18.176452] mdio_bus stmmac-0: scan phy mdio-mux at address 31
+On 27.09.2017 16:46, Jon Hunter wrote:
 > 
-> Since mdio-mux nodes are not PHY, this patch a way to to not scan
-> them.
-
-Hi Corentin
-
-I still don't like this, but ...
-
+> On 27/09/17 14:44, Jon Hunter wrote:
+>>
+>> On 27/09/17 13:12, Dmitry Osipenko wrote:
+>>> On 27.09.2017 11:34, Jon Hunter wrote:
+>>>>
+>>>> On 27/09/17 02:57, Dmitry Osipenko wrote:
+>>>>> On 26.09.2017 17:50, Jon Hunter wrote:
+>>>>>>
+>>>>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
+>>>>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>>>>>>> on Tegra20/30 SoC's.
+>>>>>>>
+>>>>>>> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>> ---
+>>>>>>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
+>>>>>>>  1 file changed, 23 insertions(+)
+>>>>>>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..2af9aa76ae11
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>> @@ -0,0 +1,23 @@
+>>>>>>> +* NVIDIA Tegra AHB DMA controller
+>>>>>>> +
+>>>>>>> +Required properties:
+>>>>>>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
+>>>>>>> +- reg:		Should contain registers base address and length.
+>>>>>>> +- interrupts:	Should contain one entry, DMA controller interrupt.
+>>>>>>> +- clocks:	Should contain one entry, DMA controller clock.
+>>>>>>> +- resets :	Should contain one entry, DMA controller reset.
+>>>>>>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
+>>>>>>> +		for the peripheral. For more details consult the Tegra TRM's
+>>>>>>> +		documentation, in particular AHB DMA channel control register
+>>>>>>> +		REQ_SEL field.
+>>>>>>
+>>>>>> What about the TRIG_SEL field? Do we need to handle this here as well?
+>>>>>>
+>>>>>
+>>>>> Actually, DMA transfer trigger isn't related a hardware description. It's up to
+>>>>> software to decide what trigger to select. So it shouldn't be in the binding.
+>>>>
+>>>> I think it could be, if say a board wanted a GPIO to trigger a transfer.
+>>>>
+>>>
+>>> GPIO isn't a very good example, there is no "GPIO" trigger. To me all triggers
+>>> are software-defined, so that software could create transfer chains.
+>>
+>> TRM shows the following in the APBDMA_TRIG_REG_0 ...
+>>
+>> "XRQ_A: XRQ.A (GPIOA) (Hardware initiated DMA request)"
 > 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/of/of_mdio.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> Furthermore there are timer and hw-semaphore triggers as well.
 > 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d94dd8b77abd..d90ddb0d90f2 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -190,6 +190,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  	struct device_node *child;
->  	bool scanphys = false;
->  	int addr, rc;
-> +	static const struct of_device_id do_not_scan[] = {
-> +		{ .compatible = "mdio-mux" },
-> +		{}
-> +	};
 
-Please rename this to some less generic. What i don't want is other
-compatible strings added here. We want to make the exception for
-muxes, but nothing else. So something like compatible_muxes?
+Aha, I wasn't sure about what XRQ is. AHB DMA doesn't have XRQ.A as a trigger,
+but XRQ.C/D which I suppose corresponds to GPIO C/D.
 
-       Andrew
+Timer and hw-semaphore are more questionable, aren't semaphores software-only
+triggerable?
+
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
