@@ -1,78 +1,44 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH] dt-bindings: RTC: merge ds1339 in ds1307 documentation
-Date: Wed, 27 Sep 2017 15:58:19 +0200
-Message-ID: <20170927135819.xc2prt3jaoljjwg6@piout.net>
-References: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
- <20170915014551.22664-2-alexandre.belloni@free-electrons.com>
- <20170920205220.ykkxsqrxu5t47px5@rob-hp-laptop>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v6 05/11] dt-bindings: net: dwmac-sun8i:
+ update documentation about integrated PHY
+Date: Wed, 27 Sep 2017 16:02:10 +0200
+Message-ID: <20170927140210.GE13516@lunn.ch>
+References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+ <20170927073414.17361-6-clabbe.montjoie@gmail.com>
+Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJNHL5JSEOBB4W6V3HAKGQEGDVVHJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170920205220.ykkxsqrxu5t47px5@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170927073414.17361-6-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/09/2017 at 15:52:20 -0500, Rob Herring wrote:
-> On Fri, Sep 15, 2017 at 03:45:51AM +0200, Alexandre Belloni wrote:
-> > Now that there is documentation for the ds1307 and compatible RTCs, merge
-> > the ds1339 documentation in it.
-> > 
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ------------------
-> >  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt   |  6 ++++++
-> >  2 files changed, 6 insertions(+), 18 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> > deleted file mode 100644
-> > index 916f57601a8f..000000000000
-> > --- a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> > +++ /dev/null
-> > @@ -1,18 +0,0 @@
-> > -* Dallas DS1339		I2C Serial Real-Time Clock
-> > -
-> > -Required properties:
-> > -- compatible: Should contain "dallas,ds1339".
-> > -- reg: I2C address for chip
-> > -
-> > -Optional properties:
-> > -- trickle-resistor-ohms : Selected resistor for trickle charger
-> > -	Values usable for ds1339 are 250, 2000, 4000
-> > -	Should be given if trickle charger should be enabled
-> > -- trickle-diode-disable : Do not use internal trickle charger diode
-> > -	Should be given if internal trickle charger diode should be disabled
-> > -Example:
-> > -	ds1339: rtc@68 {
-> > -		compatible = "dallas,ds1339";
-> > -		trickle-resistor-ohms = <250>;
-> > -		reg = <0x68>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> > index d1a820e25cb9..2eacc17a9b8d 100644
-> > --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-> > @@ -26,6 +26,11 @@ Optional properties:
-> >  - clock-output-names: From common clock binding to override the default output
-> >                        clock name
-> >  - wakeup-source: Enables wake up of host system on alarm
-> > +- trickle-resistor-ohms : Selected resistor for trickle charger
-> > +	Values usable for ds1339 are 250, 2000, 4000
-> > +	Should be given if trickle charger should be enabled
-> > +- trickle-diode-disable : Do not use internal trickle charger diode
-> > +	Should be given if internal trickle charger diode should be disabled
-> 
-> Do these apply to all compatibles or just 1339?
+Hi Corentin
 
-I'll send v2 shortly that is clearer about that.
+> +Required properties for the mdio-mux node:
+> +  - compatible = "mdio-mux"
 
-> 
-> Rob
+This is too generic. Please add a more specific compatible for this
+particular mux. You can keep "mdio-mux", since that is what the MDIO
+subsystem will look for.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> +Required properties of the integrated phy node:
+>  - clocks: a phandle to the reference clock for the EPHY
+>  - resets: a phandle to the reset control for the EPHY
+> +- phy-is-integrated
+
+So the last thing you said is that the mux is not the problem
+here. Something else is locking up. Did you discover what?
+
+I really would like phy-is-integrated to go away.
+
+  Andrew
