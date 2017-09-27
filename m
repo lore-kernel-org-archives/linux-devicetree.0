@@ -1,52 +1,177 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 08/12] usb: mtu3: get optional vbus for host only mode
-Date: Wed, 27 Sep 2017 18:58:37 +0800
-Message-ID: <454a6fe891b5dae507337cdaa0c80834fcf78990.1506509659.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 07/12] usb: mtu3: add support for usb3.1 IP
+Date: Wed, 27 Sep 2017 18:58:36 +0800
+Message-ID: <f862f79fce3eb723a7d9bb6d27e60b82d031d918.1506509659.git.chunfeng.yun@mediatek.com>
 References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When dr_mode is set as USB_DR_MODE_HOST, it's better to try to
-get optional vbus, this can increase flexibility, although we
-can set vbus as always on for regulator or put it in host driver
-to turn it on.
+Support SuperSpeedPlus for usb3.1 device IP
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/mtu3/mtu3_plat.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/mtu3/mtu3.h            |    1 +
+ drivers/usb/mtu3/mtu3_core.c       |   14 +++++++++++---
+ drivers/usb/mtu3/mtu3_gadget.c     |    3 ++-
+ drivers/usb/mtu3/mtu3_gadget_ep0.c |   16 ++++++++--------
+ drivers/usb/mtu3/mtu3_hw_regs.h    |    1 +
+ 5 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index 1e473b0..7ca81f4e 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -300,10 +300,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 	of_property_read_u32(node, "mediatek,u3p-dis-msk",
- 			     &ssusb->u3p_dis_msk);
+diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
+index b0c2b5d..d80e4e8 100644
+--- a/drivers/usb/mtu3/mtu3.h
++++ b/drivers/usb/mtu3/mtu3.h
+@@ -94,6 +94,7 @@ enum mtu3_speed {
+ 	MTU3_SPEED_FULL = 1,
+ 	MTU3_SPEED_HIGH = 3,
+ 	MTU3_SPEED_SUPER = 4,
++	MTU3_SPEED_SUPER_PLUS = 5,
+ };
  
--	if (ssusb->dr_mode != USB_DR_MODE_OTG)
--		return 0;
--
--	/* if dual-role mode is supported */
- 	vbus = devm_regulator_get(&pdev->dev, "vbus");
- 	if (IS_ERR(vbus)) {
- 		dev_err(dev, "failed to get vbus\n");
-@@ -311,6 +307,10 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ /**
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index cd4528f..67f7a30 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -237,7 +237,7 @@ void mtu3_ep_stall_set(struct mtu3_ep *mep, bool set)
+ 
+ void mtu3_dev_on_off(struct mtu3 *mtu, int is_on)
+ {
+-	if (mtu->is_u3_ip && (mtu->max_speed == USB_SPEED_SUPER))
++	if (mtu->is_u3_ip && mtu->max_speed >= USB_SPEED_SUPER)
+ 		mtu3_ss_func_set(mtu, is_on);
+ 	else
+ 		mtu3_hs_softconn_set(mtu, is_on);
+@@ -547,6 +547,9 @@ static void mtu3_set_speed(struct mtu3 *mtu)
+ 		mtu3_clrbits(mbase, U3D_USB3_CONFIG, USB3_EN);
+ 		/* HS/FS detected by HW */
+ 		mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, HS_ENABLE);
++	} else if (mtu->max_speed == USB_SPEED_SUPER) {
++		mtu3_clrbits(mtu->ippc_base, SSUSB_U3_CTRL(0),
++			     SSUSB_U3_PORT_SSP_SPEED);
  	}
- 	otg_sx->vbus = vbus;
  
-+	if (ssusb->dr_mode == USB_DR_MODE_HOST)
-+		return 0;
+ 	dev_info(mtu->dev, "max_speed: %s\n",
+@@ -624,6 +627,10 @@ static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
+ 		udev_speed = USB_SPEED_SUPER;
+ 		maxpkt = 512;
+ 		break;
++	case MTU3_SPEED_SUPER_PLUS:
++		udev_speed = USB_SPEED_SUPER_PLUS;
++		maxpkt = 512;
++		break;
+ 	default:
+ 		udev_speed = USB_SPEED_UNKNOWN;
+ 		break;
+@@ -825,14 +832,15 @@ int ssusb_gadget_init(struct ssusb_mtk *ssusb)
+ 	case USB_SPEED_FULL:
+ 	case USB_SPEED_HIGH:
+ 	case USB_SPEED_SUPER:
++	case USB_SPEED_SUPER_PLUS:
+ 		break;
+ 	default:
+ 		dev_err(dev, "invalid max_speed: %s\n",
+ 			usb_speed_string(mtu->max_speed));
+ 		/* fall through */
+ 	case USB_SPEED_UNKNOWN:
+-		/* default as SS */
+-		mtu->max_speed = USB_SPEED_SUPER;
++		/* default as SSP */
++		mtu->max_speed = USB_SPEED_SUPER_PLUS;
+ 		break;
+ 	}
+ 
+diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
+index 434fca5..b495471 100644
+--- a/drivers/usb/mtu3/mtu3_gadget.c
++++ b/drivers/usb/mtu3/mtu3_gadget.c
+@@ -89,6 +89,7 @@ static int mtu3_ep_enable(struct mtu3_ep *mep)
+ 
+ 	switch (mtu->g.speed) {
+ 	case USB_SPEED_SUPER:
++	case USB_SPEED_SUPER_PLUS:
+ 		if (usb_endpoint_xfer_int(desc) ||
+ 				usb_endpoint_xfer_isoc(desc)) {
+ 			interval = desc->bInterval;
+@@ -456,7 +457,7 @@ static int mtu3_gadget_wakeup(struct usb_gadget *gadget)
+ 		return  -EOPNOTSUPP;
+ 
+ 	spin_lock_irqsave(&mtu->lock, flags);
+-	if (mtu->g.speed == USB_SPEED_SUPER) {
++	if (mtu->g.speed >= USB_SPEED_SUPER) {
+ 		mtu3_setbits(mtu->mac_base, U3D_LINK_POWER_CONTROL, UX_EXIT);
+ 	} else {
+ 		mtu3_setbits(mtu->mac_base, U3D_POWER_MANAGEMENT, RESUME);
+diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+index 958d74d..1ca77e8 100644
+--- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
++++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+@@ -212,8 +212,8 @@ static int ep0_set_sel(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
+ 	case USB_RECIP_DEVICE:
+ 		result[0] = mtu->is_self_powered << USB_DEVICE_SELF_POWERED;
+ 		result[0] |= mtu->may_wakeup << USB_DEVICE_REMOTE_WAKEUP;
+-		/* superspeed only */
+-		if (mtu->g.speed == USB_SPEED_SUPER) {
 +
-+	/* if dual-role mode is supported */
- 	otg_sx->is_u3_drd = of_property_read_bool(node, "mediatek,usb3-drd");
- 	otg_sx->manual_drd_enabled =
- 		of_property_read_bool(node, "enable-manual-drd");
++		if (mtu->g.speed >= USB_SPEED_SUPER) {
+ 			result[0] |= mtu->u1_enable << USB_DEV_STAT_U1_ENABLED;
+ 			result[0] |= mtu->u2_enable << USB_DEV_STAT_U2_ENABLED;
+ 		}
+@@ -329,8 +329,8 @@ static int ep0_handle_feature_dev(struct mtu3 *mtu,
+ 		handled = handle_test_mode(mtu, setup);
+ 		break;
+ 	case USB_DEVICE_U1_ENABLE:
+-		if (mtu->g.speed != USB_SPEED_SUPER ||
+-			mtu->g.state != USB_STATE_CONFIGURED)
++		if (mtu->g.speed <= USB_SPEED_SUPER ||
++		    mtu->g.state != USB_STATE_CONFIGURED)
+ 			break;
+ 
+ 		lpc = mtu3_readl(mbase, U3D_LINK_POWER_CONTROL);
+@@ -344,8 +344,8 @@ static int ep0_handle_feature_dev(struct mtu3 *mtu,
+ 		handled = 1;
+ 		break;
+ 	case USB_DEVICE_U2_ENABLE:
+-		if (mtu->g.speed != USB_SPEED_SUPER ||
+-			mtu->g.state != USB_STATE_CONFIGURED)
++		if (mtu->g.speed <= USB_SPEED_SUPER ||
++		    mtu->g.state != USB_STATE_CONFIGURED)
+ 			break;
+ 
+ 		lpc = mtu3_readl(mbase, U3D_LINK_POWER_CONTROL);
+@@ -384,8 +384,8 @@ static int ep0_handle_feature(struct mtu3 *mtu,
+ 		break;
+ 	case USB_RECIP_INTERFACE:
+ 		/* superspeed only */
+-		if ((value == USB_INTRF_FUNC_SUSPEND)
+-			&& (mtu->g.speed == USB_SPEED_SUPER)) {
++		if (value == USB_INTRF_FUNC_SUSPEND &&
++		    mtu->g.speed >= USB_SPEED_SUPER) {
+ 			/*
+ 			 * forward the request because function drivers
+ 			 * should handle it
+diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
+index a7e35f6..6953436 100644
+--- a/drivers/usb/mtu3/mtu3_hw_regs.h
++++ b/drivers/usb/mtu3/mtu3_hw_regs.h
+@@ -467,6 +467,7 @@
+ #define SSUSB_VBUS_CHG_INT_B_EN		BIT(6)
+ 
+ /* U3D_SSUSB_U3_CTRL_0P */
++#define SSUSB_U3_PORT_SSP_SPEED	BIT(9)
+ #define SSUSB_U3_PORT_HOST_SEL		BIT(2)
+ #define SSUSB_U3_PORT_PDN		BIT(1)
+ #define SSUSB_U3_PORT_DIS		BIT(0)
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
