@@ -1,164 +1,135 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
-Date: Wed, 27 Sep 2017 09:33:00 +0200
-Message-ID: <87efqsiok3.fsf@free-electrons.com>
-References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
-        <87377fmbpw.fsf@free-electrons.com>
-        <1506289460890.34765@alliedtelesis.co.nz>
-        <87lgl1ishv.fsf@free-electrons.com>
-        <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 00/11] net: stmmac: dwmac-sun8i: Handle
+ integrated PHY
+Date: Wed, 27 Sep 2017 09:34:03 +0200
+Message-ID: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc> (Chris
-        Packham's message of "Wed, 27 Sep 2017 01:15:12 +0000")
-Sender: linux-i2c-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBANKVXHAKGQEGWYWIGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On mer., sept. 27 2017, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+Hello
 
-> Hi Gregory,
->
-> On 27/09/17 00:56, Gregory CLEMENT wrote:
->> Hi Kalyan,
->> 
->> Please try avoid top-posting.
->> 
->>   On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz> wrote:
->> 
->>> Hi Gregory,
->>>
->>> I got this information from Armada-38x functional errata document.
->> 
->> OK but in any case just adding a new compatible was not enough you have
->> to update the driver in the same time, however for this case we won't
->> need it, see below.
->> 
->>>
->>> I can add the "marvell,mv78230-i2c" compatible string to the appropriate  device tree files
->>> but the i2c-mv64xxx driver enables an additional  feature (offload i2c transactions)
->>> based on the compatible string "marvell,mv78230-i2c".
->>>
->>> I am not sure if this feature (offload i2c transactions) should be enabled for Armada-38x devices.
->>> That is the reason I felt for the need of a new compatible string
->>> specifically for Armada-38x SoCs.
->> 
->> Indeed the Armada-38x SoCs does not support hardware offloading (at
->> least according the datasheet). But it happens that in the earlier
->> version of the Armada XP the hardware offloading was buggy, so we
->> introduced a compatible for this case: marvell,mv78230-a0-i2c. This
->> compatible enable the errata fix but not the offloading feature. That
->> means that it is exactly the compatible you need for Armada 38x (and
->> Armada 39x and 375 I think).
->
-> The "mv78230-a0-i2c" dt-binding has the following note
->
->    Note: Only use "marvell,mv78230-a0-i2c" for a
->    very rare, initial version of the SoC which
->    had broken offload support.  Linux
->    auto-detects this and sets it appropriately.
->
-> If we are going to re-use this binding for armada-38x we should probably 
-> remove this note. Personally my preference would be an armada-38x
+The current way to find if the PHY is internal is to compare DT phy-mode
+and emac_variant/internal_phy.
+But it will negate a possible future SoC where an external PHY use the
+same phy mode than the integrated one.
 
-Updating the documentation is the right thing to do yes.
+This patchs series adds a new way to find if the PHY is integrated, via
+the phy-is-integrated DT property.
 
+Since it exists both integrated and external ethernet-phy@1, they are merged in
+the final DTB and so share all properties.
+For avoiding this, and better represent the reality, we use a MDIO mux.
 
-> compatible string (or 370 if that's the common base of these SoCs). But 
-> of course we'll go with whatever your preference is as maintainer.
+The first try was to create a new MDIO mux "mdio-mux-syscon".
+mdio-mux-syscon working the same way than mdio-mux-mmioreg with the exception
+that the register is used via syscon/regmap.
+But this solution does not work for two reason:
+- changing the MDIO selection need the reset of MAC which cannot be done by the
+        mdio-mux-syscon driver
+- There were driver loading order problem:
+        - mdio-mux-syscon needing that stmmac register the parent MDIO
+        - stmmac needing that child MDIO was registered just after registering parent MDIO
 
-If the IP is compatible then there is no reason to add a new one, else
-we will end with a compatible for each SoC and the compatible property
-will just loose its meaning.
+So we cannot use any external MDIO-mux.
 
-But an other reason to reuse "marvell,mv78230-a0-i2c" is that thanks to
-this you will benefit to this even with the old kernel by just updating
-the device tree, else you will have to update both the kernel and the
-dtb.
+The final solution was to represent a mdio-mux and let the MAC handle all things.
+Note that phy-is-integrated is still needed (even if we use a MDIO mux) since
+some properties apply only on integrated PHY and we need to know the final MDIO
+bus in mdio_mux_syscon_switch_fn().
 
+Since DT bits was reverted in 4.13, this patch series include the revert of the revert.
+So
+- the first four patchs bring back DT/stmmac stuff that was in 4.13 (and reverted)
+- fifth patch document how DT MDIO mux is implemented
+- patch 6 and 7 modify DT
+- patch 8, 9, 10 Modify stmmac according to the new bindings
 
-Gregory
+I have let patch splited for easy review. (for seeing what's new)
+But the final serie could have some patch squashed if someone want.
+Like squashing patch and 2 and 5 (documentation)
 
->
->> 
->> Gregory
->> 
->>>
->>> Thanks,
->>> Kalyan
->>> ________________________________________
->>> From: Gregory CLEMENT <gregory.clement@free-electrons.com>
->>> Sent: Friday, 22 September 2017 7:30 p.m.
->>> To: Kalyan Kinthada
->>> Cc: devicetree@vger.kernel.org; wsa@the-dreams.de; robh+dt@kernel.org;
->>> pawel.moll@arm.com; mark.rutland@arm.com;
->>> ijc+devicetree@hellion.org.uk; galak@codeaurora.org;
->>> linux-i2c@vger.kernel.org; linux-kernel@vger.kernel.org; Chris Packham
->>> Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
->>>
->>> Hi Kalyan,
->>>
->>>   On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz> wrote:
->>>
->>>> All armada-38x variants(380, 385, 388) SoCs have an issue
->>>> in i2c controller which violates the i2c repeated start timing.
->>>
->>>
->>> Did you had an issue with one of the SoC ?
->>> If yes what was your setting ?
->>> On my side I never managed to have this sort of issue on Armada 38x.
->>>
->>>>
->>>> This errata is fixed in the i2c-mv64xxx driver but enabled
->>>> only for devices with compatible string "marvell,mv78230-i2c".
->>>
->>> In this case why not just adding the "marvell,mv78230-i2c" as compatible
->>> string in the appropriate device tree files ?
->>>
->>> Gregory
->>>
->>>>
->>>> This patch introduces a new compatible string
->>>> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs
->>>> so that the workaound is enabled.
->>>
->>>
->>>>
->>>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->>>> ---
->>>>   Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +
->>>>   1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->>>> index 5c30026921..fc100b6bdb 100644
->>>> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
->>>> @@ -14,6 +14,7 @@ Required properties :
->>>>                            very rare, initial version of the SoC which
->>>>                            had broken offload support.  Linux
->>>>                            auto-detects this and sets it appropriately.
->>>> +                     - "marvell,armada-38x-i2c"
->>>>    - interrupts      : The interrupt number
->>>>
->>>>   Optional properties :
->>>> --
->>>> 2.14.1
->>>>
->>>
->>> --
->>> Gregory Clement, Free Electrons
->>> Kernel, drivers, real-time and embedded Linux
->>> development, consulting, training and support.
->>> http://free-electrons.com
->> 
->
+Since DT worked well in 4.13, could it be targeted for 4.14 ?
+If necessary I could split this serie in two:
+- bring back A64/A83T (patchs 1, 2, 4, 7, 9)
+- add MXIO-mux and H3 (patchs 3, 4, 5, 6, 8, 10)
+
+Regards
+
+Changes since v5:
+- reordered patch 1 and 2
+- mdio-mux node is now a mdio's child
+- added patch 11 for removing unnecessary scan of mdio-mux
+
+Changes since v4:
+- Update documentation for new bindings
+- Added 4 patchs for bring back reverted stuff of 4.13
+- dwmac-sun8i now handle mdio-mux
+- MDIO use now compatible = "snps,dwmac-mdio";
+
+Changes since v3:
+- Added a patch for handling fixed-link
+- Updated documentation
+
+Changes since v2:
+- Add a MDIO mux for creating distinction between integrated and external MDIO.
+- phy-is-integrated is not set in dtsi.
+
+Changes since v1:
+- Dropped phy-is-integrated documentation patch since another same patch was already merged
+- Moved phy-is-integrated from SoC dtsi to final board DT.
+
+Corentin Labbe (11):
+  dt-bindings: net: Restore sun8i dwmac binding
+  arm: dts: sunxi: Restore EMAC changes
+  arm64: dts: allwinner: Restore EMAC changes
+  net: stmmac: sun8i: Restore the compatibles
+  dt-bindings: net: dwmac-sun8i: update documentation about integrated
+    PHY
+  ARM: dts: sunxi: h3/h5: represent the mdio switch used by
+    sun8i-h3-emac
+  arm64: dts: allwinner: add snps,dwmac-mdio compatible to emac/mdio
+  net: stmmac: snps,dwmac-mdio MDIOs are automatically registered
+  net: stmmac: dwmac-sun8i: choose internal PHY via phy-is-integrated
+  net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs
+  of: mdio: Prevent of_mdiobus_register from scanning mdio-mux nodes
+
+ .../devicetree/bindings/net/dwmac-sun8i.txt        | 198 +++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  |   9 +
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  19 ++
+ arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts          |   7 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts    |   5 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   8 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  22 +++
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts     |  16 ++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  45 +++++
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  16 ++
+ .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  |  15 ++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  17 ++
+ .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  16 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  21 +++
+ .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   |  17 ++
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  |  17 ++
+ .../dts/allwinner/sun50i-h5-orangepi-prime.dts     |  17 ++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 140 ++++++++++++---
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   4 -
+ drivers/of/of_mdio.c                               |  10 ++
+ 23 files changed, 611 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.13.5
