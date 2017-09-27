@@ -1,95 +1,99 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: enable gpio for pin groups
-Date: Wed, 27 Sep 2017 08:43:52 +0200
-Message-ID: <20170927064352.cscr47rzjbeshjx6@pengutronix.de>
-References: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
- <CACRpkdacz+oC_8J5VHSsKXHGqxn96ETziu+ifUp4XHHrwcqbtA@mail.gmail.com>
- <20170922180219.chvjuxmrharnw332@pengutronix.de>
- <CACRpkdZn=DogDy8-iXavmrkd1d=FoeL94jb-Sb4iPwb-s+GJjA@mail.gmail.com>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to
+ ARMADA370 variants.
+Date: Wed, 27 Sep 2017 08:53:18 +0200
+Message-ID: <20170927085318.0670a849@xps13>
+References: <20170927005516.28374-1-kalyan.kinthada@alliedtelesis.co.nz>
+        <20170927005516.28374-2-kalyan.kinthada@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZn=DogDy8-iXavmrkd1d=FoeL94jb-Sb4iPwb-s+GJjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170927005516.28374-2-kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 01:52:45AM +0200, Linus Walleij wrote:
-> On Fri, Sep 22, 2017 at 8:02 PM, Uwe Kleine-König
-> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Fri, Sep 22, 2017 at 03:23:05PM +0200, Linus Walleij wrote:
-> >> On Thu, Sep 21, 2017 at 8:28 AM, Uwe Kleine-König
-> >> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >>
-> >> > on an i.MX25 machine on my desk a UART RX line is guarded by a transistor
-> >> > like this:
-> >> >
-> >> >         ,------------------------.
-> >> >         | ,---------.            |
-> >> >         | |  imx25  o--RX----◁---o---
-> >> >         | |         o--GPIO--'   |
-> >> >         | `---------'            |
-> >> >         `------------------------'
-> >>
-> >> This is inside the SoC, right, not outside it?
-> >>
-> >> In the rest of my answer I assume this.
-> >
-> > No, that's on the board. So your reply unfortunately doesn't match the
-> > problem :-|
-> 
-> OK sorry for my stupid and pointless assumption about this being
-> inside the SoC, I should ask before I talk.
-> 
-> >> If this is on the board, using enable-gpios is proper.
-> >
-> > enable-gpios as I suggested below that is? If so I assume you will be
-> > open for a generic approach to implement this?
-> 
-> So the enable-gpios as part of the pin control state like below:
-> 
-> >> > My first idea was to make this a property of the UART and added a
-> >> > enable-gpios property for it[1]. But now I wonder if this is better
-> >> > abstracted as an enable-gpios property in the pinctrl node. Something
-> >> > like:
-> >> >
-> >> >         pinctrl_uart5: uart5 {
-> >> >                 fsl,pins = <
-> >> >                         MX25_PAD_ECB__UART5_TXD                 0x00002080 /* TXD */
-> >> >                         MX25_PAD_LBA__UART5_RXD                 0x00000000 /* RXD */
-> >> >                         MX25_PAD_CS4__UART5_CTS                 0x00002001 /* RTS */
-> >> >                         MX25_PAD_CS5__GPIO_3_21                 0x00002001 /* #RXD_EN */
-> >> >                 >;
-> >> >                 enable-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-> >> >         };
-> >> >
-> >> > Would this make sense? Maybe with a more intuitive name?
-> 
-> I would nominally make it part of the UART node and picked up by the
-> UART driver. Unless there is compelling reasons to believe that this is
-> something we will see a lot and not a particular oddity.
+Hello Kalyan,
 
-Well, I didn't see it much before, but that's also a reason to not put
-it into the UART driver. :-)
+On Wed, 27 Sep 2017 13:55:16 +1300
+Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-Conceptually the construct is there not because the pin has an UART
-function but because the pin is an output by default but should be an
-input later. This is more related to the pinctrl part of the SoC than of
-its UART IMHO. Also the GPIO is free to be activated once the pinmuxing
-is setup, so the timing depends on the pinctrl driver. (Well, ok, once
-the UART driver starts to act the pinctrl stuff is already done and so
-the timing is fine, too. That's more a conceptual argument.)
+> When the arbitration between NOR and NAND flash is enabled
+> the <FORCE_CSX> field bit[21] in the Data Flash Control Register
+> needs to be set to 1 according to guidleine GL-5830741.
+> 
+> This commit sets the FORCE_CSX bit to 1 for all
+> ARMADA370 variants as the arbitration is always enabled by default.
 
-Best regards
-Uwe
+Maybe you could mention here that this does not apply for pxa3xx
+variant as this bit does not exist/is reserved on the NFCv1.
+
+> 
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> ---
+>  drivers/mtd/nand/pxa3xx_nand.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/pxa3xx_nand.c
+> b/drivers/mtd/nand/pxa3xx_nand.c index 85cff68643e0..b2753eea567c
+> 100644 --- a/drivers/mtd/nand/pxa3xx_nand.c
+> +++ b/drivers/mtd/nand/pxa3xx_nand.c
+> @@ -68,6 +68,7 @@
+>  #define NDCR_PAGE_SZ		(0x1 << 24)
+>  #define NDCR_NCSX		(0x1 << 23)
+>  #define NDCR_ND_MODE		(0x3 << 21)
+> +#define NDCR_FORCE_CSX		(0x1 << 21)
+>  #define NDCR_NAND_MODE   	(0x0)
+
+The three lines above seems to have the same purpose.
+I had a look to the specs (pxa/370/375/xp/380/390), and I could
+not find any reference to a valid bit 22 in NDCR (it is always
+reserved). Maybe you could delete NDCR_ND_MODE and
+NDCR_NAND_MODE then ?
+
+>  #define NDCR_CLR_PG_CNT		(0x1 << 20)
+>  #define NFCV1_NDCR_ARB_CNTL	(0x1 << 19)
+> @@ -1464,6 +1465,9 @@ static int pxa3xx_nand_config_ident(struct
+> pxa3xx_nand_info *info) info->chunk_size = PAGE_CHUNK_SIZE;
+>  	info->reg_ndcr = 0x0; /* enable all interrupts */
+>  	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN :
+> 0;
+> +	/* Set FORCE_CSX bit for all ARMADAGL-5830741370 Variants.
+> Ref#: GL-5830741*/
+
+You miss a space between "GL-5830741" and "*/".
+
+> +	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
+> +		info->reg_ndcr |= NDCR_FORCE_CSX;
+>  	info->reg_ndcr |= NDCR_RD_ID_CNT(READ_ID_BYTES);
+>  	info->reg_ndcr |= NDCR_SPARE_EN;
+>  
+> @@ -1498,6 +1502,9 @@ static void pxa3xx_nand_detect_config(struct
+> pxa3xx_nand_info *info) info->reg_ndcr = ndcr &
+>  		~(NDCR_INT_MASK | NDCR_ND_ARB_EN |
+> NFCV1_NDCR_ARB_CNTL); info->reg_ndcr |= (pdata->enable_arbiter) ?
+> NDCR_ND_ARB_EN : 0;
+> +	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#:
+> GL-5830741*/
+
+Same here.
+
+> +	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
+> +		info->reg_ndcr |= NDCR_FORCE_CSX;
+>  	info->ndtr0cs0 = nand_readl(info, NDTR0CS0);
+>  	info->ndtr1cs0 = nand_readl(info, NDTR1CS0);
+>  }
+
+
+Thanks,
+Miquèl
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
