@@ -1,7 +1,7 @@
 From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: [RFC 3/4] MIPS: Ingenic: Initial X1000 SoC support
-Date: Wed, 27 Sep 2017 20:45:26 +0530
-Message-ID: <20170927151527.25570-4-prasannatsmkumar@gmail.com>
+Subject: [RFC 4/4] MIPS: Ingenic: Add Halley2 development board support
+Date: Wed, 27 Sep 2017 20:45:27 +0530
+Message-ID: <20170927151527.25570-5-prasannatsmkumar@gmail.com>
 References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
@@ -10,23 +10,37 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, mturquette@ba
 Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial Ingenic X1000 SoC support. Provide minimum necessary
-information to boot kernel to an initramfs userspace.
+Halley2 is a development board from Ingenic using X1000 SoC. It comes
+with either 32MB or 64MB of RAM. Add support for halley2 development
+board.
 
 Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- arch/mips/boot/dts/ingenic/x1000.dtsi | 93 +++++++++++++++++++++++++++++++++++
- arch/mips/jz4740/Kconfig              |  6 +++
- arch/mips/jz4740/time.c               |  2 +-
- 3 files changed, 100 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
+ arch/mips/boot/dts/ingenic/Makefile    |  1 +
+ arch/mips/boot/dts/ingenic/halley2.dts | 46 +++++++++++++++++++++++++
+ arch/mips/configs/halley2_defconfig    | 61 ++++++++++++++++++++++++++++++++++
+ arch/mips/jz4740/Kconfig               |  4 +++
+ 4 files changed, 112 insertions(+)
+ create mode 100644 arch/mips/boot/dts/ingenic/halley2.dts
+ create mode 100644 arch/mips/configs/halley2_defconfig
 
-diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
+index f2b864f..68e942c 100644
+--- a/arch/mips/boot/dts/ingenic/Makefile
++++ b/arch/mips/boot/dts/ingenic/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
+ dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
++dtb-$(CONFIG_X1000_HALLEY2)	+= halley2.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+ 
+diff --git a/arch/mips/boot/dts/ingenic/halley2.dts b/arch/mips/boot/dts/ingenic/halley2.dts
 new file mode 100644
-index 0000000..abbb9ec
+index 0000000..9b37119
 --- /dev/null
-+++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-@@ -0,0 +1,93 @@
++++ b/arch/mips/boot/dts/ingenic/halley2.dts
+@@ -0,0 +1,46 @@
 +/*
 + * Copyright (C) 2016 PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 + *
@@ -35,117 +49,125 @@ index 0000000..abbb9ec
 + * warranty of any kind, whether express or implied.
 + */
 +
-+#include <dt-bindings/clock/x1000-cgu.h>
++/dts-v1/;
++
++#include "x1000.dtsi"
 +
 +/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ingenic,x1000";
++	compatible = "ingenic,halley2", "ingenic,x1000";
 +
-+	cpuintc: interrupt-controller {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
 +	};
 +
-+	intc: interrupt-controller@10001000 {
-+		compatible = "ingenic,x1000-intc", "ingenic,jz4780-intc";
-+		reg = <0x10001000 0x50>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <2>;
++	chosen {
++		stdout-path = &uart2;
 +	};
 +
-+	ext: ext {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	rtc: rtc {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+	};
-+
-+	cgu: jz4780-cgu@10000000 {
-+		compatible = "ingenic,x1000-cgu";
-+		reg = <0x10000000 0x100>;
-+
-+		clocks = <&ext>, <&rtc>;
-+		clock-names = "ext", "rtc";
-+
-+		#clock-cells = <1>;
-+	};
-+
-+	uart0: serial@10030000 {
-+		compatible = "ingenic,x1000-uart", "ingenic,jz4780-uart";
-+		reg = <0x10030000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <51>;
-+
-+		clocks = <&ext>, <&cgu X1000_CLK_UART0>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@10031000 {
-+		compatible = "ingenic,x1000-uart", "ingenic,jz4780-uart";
-+		reg = <0x10031000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <50>;
-+
-+		clocks = <&ext>, <&cgu X1000_CLK_UART1>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@10032000 {
-+		compatible = "ingenic,x1000-uart", "ingenic,jz4780-uart";
-+		reg = <0x10032000 0x100>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <49>;
-+
-+		clocks = <&ext>, <&cgu X1000_CLK_UART2>;
-+		clock-names = "baud", "module";
-+
-+		status = "disabled";
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x2000000>;
 +	};
 +};
++
++&ext {
++	clock-frequency = <24000000>;
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
+diff --git a/arch/mips/configs/halley2_defconfig b/arch/mips/configs/halley2_defconfig
+new file mode 100644
+index 0000000..2c49fb7
+--- /dev/null
++++ b/arch/mips/configs/halley2_defconfig
+@@ -0,0 +1,61 @@
++CONFIG_MACH_INGENIC=y
++CONFIG_X1000_HALLEY2=y
++CONFIG_MACH_X1000=y
++
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_NR_UARTS=3
++CONFIG_SERIAL_8250_RUNTIME_UARTS=3
++CONFIG_SERIAL_8250_INGENIC=y
++CONFIG_SERIAL_OF_PLATFORM=y
++# CONFIG_EARLY_PRINTK is not set
++CONFIG_MEMORY=y
++
++CONFIG_PRINTK_TIME=y
++CONFIG_DEBUG_INFO=y
++CONFIG_STRIP_ASM_SYMS=y
++CONFIG_DEBUG_FS=y
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_LOCKUP_DETECTOR=y
++CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC=y
++CONFIG_BOOTPARAM_HUNG_TASK_PANIC=y
++CONFIG_PANIC_ON_OOPS=y
++CONFIG_PANIC_TIMEOUT=10
++CONFIG_STACKTRACE=y
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE="earlycon console=ttyS2,115200n8 clk_ignore_unused"
++
++CONFIG_HZ_100=y
++CONFIG_HIGHMEM=y
++CONFIG_PREEMPT=y
++CONFIG_KERNEL_XZ=y
++CONFIG_SYSVIPC=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_FHANDLE=y
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
++CONFIG_LOG_BUF_SHIFT=14
++CONFIG_CGROUPS=y
++CONFIG_MEMCG=y
++CONFIG_CGROUP_SCHED=y
++CONFIG_CGROUP_FREEZER=y
++CONFIG_CPUSETS=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_NAMESPACES=y
++CONFIG_USER_NS=y
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++CONFIG_SYSCTL_SYSCALL=y
++CONFIG_KALLSYMS_ALL=y
++CONFIG_EMBEDDED=y
++CONFIG_SLAB=y
++CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_DEVTMPFS=y
++CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_LEGACY_PTY_COUNT=2
++
++# CONFIG_SUSPEND is not set
++# CONFIG_HIBERNATION is not set
++# CONFIG_PM is not set
 diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-index 36f8201..338bc3f 100644
+index 338bc3f..7c66a4b 100644
 --- a/arch/mips/jz4740/Kconfig
 +++ b/arch/mips/jz4740/Kconfig
-@@ -22,3 +22,9 @@ config MACH_JZ4780
- 	select MIPS_CPU_SCACHE
- 	select SYS_HAS_CPU_MIPS32_R2
- 	select SYS_SUPPORTS_HIGHMEM
+@@ -11,6 +11,10 @@ config JZ4780_CI20
+ 	bool "MIPS Creator CI20"
+ 	select MACH_JZ4780
+ 
++config X1000_HALLEY2
++	bool "Ingenic X1000 Halley2 Development board"
++	select MACH_X1000
 +
-+config MACH_X1000
-+	bool
-+	select MIPS_CPU_SCACHE
-+	select SYS_HAS_CPU_MIPS32_R2
-+	select SYS_HAS_EARLY_PRINTK
-diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-index bb1ad51..e28c734 100644
---- a/arch/mips/jz4740/time.c
-+++ b/arch/mips/jz4740/time.c
-@@ -113,7 +113,7 @@ static struct clock_event_device jz4740_clockevent = {
- #ifdef CONFIG_MACH_JZ4740
- 	.irq = JZ4740_IRQ_TCU0,
- #endif
--#ifdef CONFIG_MACH_JZ4780
-+#if defined CONFIG_MACH_JZ4780 || defined CONFIG_MACH_X1000
- 	.irq = JZ4780_IRQ_TCU2,
- #endif
- };
+ endchoice
+ 
+ config MACH_JZ4740
 -- 
 2.10.0
