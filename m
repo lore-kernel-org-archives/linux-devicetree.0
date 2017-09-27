@@ -1,43 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: clock: mediatek: document clk bindings
- for MediaTek MT7622 SoC
-Date: Wed, 27 Sep 2017 16:44:29 -0500
-Message-ID: <20170927214429.2w7s3f7zpqr4kkvs@rob-hp-laptop>
-References: <cover.1505890481.git.sean.wang@mediatek.com>
- <3a6338ca5f1513b897cac2facc7c0bf796b8c64f.1505890481.git.sean.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mfd: mc13xxx: Remove obsolete property
+Date: Wed, 27 Sep 2017 16:47:01 -0500
+Message-ID: <20170927214701.sizd5wc3azou5x7c@rob-hp-laptop>
+References: <1505922711-22070-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3a6338ca5f1513b897cac2facc7c0bf796b8c64f.1505890481.git.sean.wang@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Chen Zhong <chen.zhong@mediatek.com>
+In-Reply-To: <1505922711-22070-1-git-send-email-fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 05:49:25PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Wed, Sep 20, 2017 at 12:51:51PM -0300, Fabio Estevam wrote:
+> The 'fsl,spi-num-chipselects' property is obsolete according to 
+> Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt, so remove
+> it from the example.
 > 
-> This patch adds the binding documentation for apmixedsys, ethsys, hifsys,
-> infracfg, pericfg, topckgen and audsys for MT7622.
-> 
-> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 > ---
->  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |  1 +
->  .../bindings/arm/mediatek/mediatek,audsys.txt      | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,ethsys.txt      |  1 +
->  .../bindings/arm/mediatek/mediatek,hifsys.txt      |  1 +
->  .../bindings/arm/mediatek/mediatek,infracfg.txt    |  1 +
->  .../bindings/arm/mediatek/mediatek,pciesys.txt     | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,pericfg.txt     |  1 +
->  .../bindings/arm/mediatek/mediatek,sgmiisys.txt    | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,ssusbsys.txt    | 22 ++++++++++++++++++++++
->  .../bindings/arm/mediatek/mediatek,topckgen.txt    |  1 +
->  10 files changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
+>  Documentation/devicetree/bindings/mfd/mc13xxx.txt | 1 -
+>  1 file changed, 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
