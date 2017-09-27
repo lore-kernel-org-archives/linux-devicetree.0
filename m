@@ -1,70 +1,52 @@
 From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/9] usb: xhci-mtk: use ports count from xhci in xhci_mtk_sch_init()
-Date: Wed, 27 Sep 2017 17:22:58 +0800
-Message-ID: <2a1d5bad7e63918e1bfdaa7bb328594d36567d9d.1506503879.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 3/9] usb: xhci-mtk: check clock stability of U3_MAC
+Date: Wed, 27 Sep 2017 17:22:59 +0800
+Message-ID: <afc5cff346c5a349177990999df3dd7604966de4.1506503879.git.chunfeng.yun@mediatek.com>
 References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make use of ports count from xhci but not from ippc in
-xhci_mtk_sch_init()
+This is useful to find out the root cause when the Super Speed doesn't
+work. Such as when the T-PHY is switched to PCIe or SATA, and affects
+Super Speed function, the check will fail.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/host/xhci-mtk-sch.c |    3 ++-
- drivers/usb/host/xhci-mtk.c     |    3 ---
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/usb/host/xhci-mtk.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/host/xhci-mtk-sch.c b/drivers/usb/host/xhci-mtk-sch.c
-index 6e7ddf6..bfc51bc 100644
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -287,12 +287,13 @@ static bool need_bw_sch(struct usb_host_endpoint *ep,
- 
- int xhci_mtk_sch_init(struct xhci_hcd_mtk *mtk)
- {
-+	struct xhci_hcd *xhci = hcd_to_xhci(mtk->hcd);
- 	struct mu3h_sch_bw_info *sch_array;
- 	int num_usb_bus;
- 	int i;
- 
- 	/* ss IN and OUT are separated */
--	num_usb_bus = mtk->num_u3_ports * 2 + mtk->num_u2_ports;
-+	num_usb_bus = xhci->num_usb3_ports * 2 + xhci->num_usb2_ports;
- 
- 	sch_array = kcalloc(num_usb_bus, sizeof(*sch_array), GFP_KERNEL);
- 	if (sch_array == NULL)
 diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index c197a6d..9502ca4 100644
+index 9502ca4..7a92bb7 100644
 --- a/drivers/usb/host/xhci-mtk.c
 +++ b/drivers/usb/host/xhci-mtk.c
-@@ -492,7 +492,6 @@ static void xhci_mtk_quirks(struct device *dev, struct xhci_hcd *xhci)
- /* called during probe() after chip reset completes */
- static int xhci_mtk_setup(struct usb_hcd *hcd)
- {
--	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
- 	struct xhci_hcd_mtk *mtk = hcd_to_mtk(hcd);
- 	int ret;
+@@ -43,6 +43,7 @@
  
-@@ -507,8 +506,6 @@ static int xhci_mtk_setup(struct usb_hcd *hcd)
- 		return ret;
+ /* ip_pw_sts1 register */
+ #define STS1_IP_SLEEP_STS	BIT(30)
++#define STS1_U3_MAC_RST	BIT(16)
+ #define STS1_XHCI_RST		BIT(11)
+ #define STS1_SYS125_RST	BIT(10)
+ #define STS1_REF_RST		BIT(8)
+@@ -125,6 +126,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
+ 	check_val = STS1_SYSPLL_STABLE | STS1_REF_RST |
+ 			STS1_SYS125_RST | STS1_XHCI_RST;
  
- 	if (usb_hcd_is_primary_hcd(hcd)) {
--		mtk->num_u3_ports = xhci->num_usb3_ports;
--		mtk->num_u2_ports = xhci->num_usb2_ports;
- 		ret = xhci_mtk_sch_init(mtk);
- 		if (ret)
- 			return ret;
++	if (mtk->num_u3_ports)
++		check_val |= STS1_U3_MAC_RST;
++
+ 	ret = readl_poll_timeout(&ippc->ip_pw_sts1, value,
+ 			  (check_val == (value & check_val)), 100, 20000);
+ 	if (ret) {
 -- 
 1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
