@@ -1,56 +1,52 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: [RFC 0/4] Add Ingenic X1000 SoC Support
-Date: Wed, 27 Sep 2017 20:45:23 +0530
-Message-ID: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, paul@crapouillou.net, malat@debian.org, dom.peklo@gmail.com
-Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 00/14] ARM: dts: sunxi: Fix DT build warnings
+Date: Wed, 27 Sep 2017 23:18:09 +0800
+Message-ID: <CAGb2v67=Esq3mHkRhP6sBuzFtyDWjeON4Uwx93H5z2LMQ63eJA@mail.gmail.com>
+References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
+ <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g@mail.gmail.com>
+ <20170926085855.7yn6zdx3sfuwwxyj@flea> <CAGb2v67=VyHd3n1PgT-2_2efUNijOM8TkwDO9oAQvUd8wYH-qg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67=VyHd3n1PgT-2_2efUNijOM8TkwDO9oAQvUd8wYH-qg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Ingenic X1000 SoC. This patch set provides enough bits
-to boot a kernel to an initramfs user space.
+On Tue, Sep 26, 2017 at 9:01 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Tue, Sep 26, 2017 at 4:58 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> On Tue, Sep 26, 2017 at 07:48:17AM +0000, Chen-Yu Tsai wrote:
+>>> On Tue, Sep 26, 2017 at 3:22 PM, Corentin Labbe
+>>> <clabbe.montjoie@gmail.com> wrote:
+>>> > Hello
+>>> >
+>>> > The goal of this patch series is to have a clean DT build with W=1.
+>>> >
+>>> > Regards
+>>> >
+>>> > Changes since v1:
+>>> > - moved i2c2 unit address change from patch #2 in patch #1
+>>> >
+>>> > Changes since v2
+>>> > - added two patch for fixing pin names
+>>>
+>>> The first twelve patches are good. Maxime, I think we can go ahead and
+>>> merge them, instead of having them resent again in v3?
+>>
+>> Yep, that works for me. Can you push them?
+>
+> Patches 1 and 12 didn't apply cleanly. I fixed them.
 
-I implemented this code during 2016. Boot stuck at "calibrating delay
-loop ...". Now I have fixed the issue by setting the correct irq. I do
-not have access to this device anymore so could not test the fix.
-Marking this patch series as RFC as this needs to be tested.
+Patch 10 didn't apply cleanly either. I fixed it.
 
-Test and feedback appreciated.
+> Patches 4~9 do the same type of cleanup for various h3 board dts files.
+> Maybe we should just squash them together. Arnd seems to prefer squashing
+> identical changes to different boards together.
 
-This series enables uart, timer and interrupt controller. As this is
-very minimal a static elf binary should be used as init and should be
-available in initramfs.
+Squashed them and mentioned it in the commit message.
 
-PrasannaKumar Muralidharan (4):
-  dt-bindings: Add Ingenic X1000 SoC clock define
-  clk: Add Ingenic X1000 CGU driver
-  MIPS: Ingenic: Initial X1000 SoC support
-  MIPS: Ingenic: Add Halley2 development board support
+Please check the sunxi tree on git.kernel.org if the results are correct.
 
- arch/mips/boot/dts/ingenic/Makefile    |   1 +
- arch/mips/boot/dts/ingenic/halley2.dts |  46 ++++++++
- arch/mips/boot/dts/ingenic/x1000.dtsi  |  93 +++++++++++++++
- arch/mips/configs/halley2_defconfig    |  61 ++++++++++
- arch/mips/jz4740/Kconfig               |  10 ++
- arch/mips/jz4740/time.c                |   2 +-
- drivers/clk/ingenic/Makefile           |   1 +
- drivers/clk/ingenic/x1000-cgu.c        | 203 +++++++++++++++++++++++++++++++++
- include/dt-bindings/clock/x1000-cgu.h  |  46 ++++++++
- 9 files changed, 462 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/boot/dts/ingenic/halley2.dts
- create mode 100644 arch/mips/boot/dts/ingenic/x1000.dtsi
- create mode 100644 arch/mips/configs/halley2_defconfig
- create mode 100644 drivers/clk/ingenic/x1000-cgu.c
- create mode 100644 include/dt-bindings/clock/x1000-cgu.h
-
--- 
-2.10.0
+ChenYu
