@@ -1,59 +1,164 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a77995: draak: enable
- EthernetAVB
-Date: Wed, 27 Sep 2017 09:18:49 +0200
-Message-ID: <20170927071846.GA18275@verge.net.au>
-References: <1505305119-4257-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1505305119-4257-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdX3q=foc1hkcqTc3WQYxCh1x+bc8fu9+YcqVAx9bp4qaA@mail.gmail.com>
- <TY1PR06MB0992906ACD39FA3D176CDFE6D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <20170915073501.GD3924@verge.net.au>
- <TY1PR06MB09920DE49B74D16FABE7699DD8660@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <20170925070742.GC1019@verge.net.au>
- <TY1PR06MB0992BB60AFD2AC0E24032FE2D8780@TY1PR06MB0992.apcprd06.prod.outlook.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+Date: Wed, 27 Sep 2017 09:33:00 +0200
+Message-ID: <87efqsiok3.fsf@free-electrons.com>
+References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
+        <87377fmbpw.fsf@free-electrons.com>
+        <1506289460890.34765@alliedtelesis.co.nz>
+        <87lgl1ishv.fsf@free-electrons.com>
+        <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR06MB0992BB60AFD2AC0E24032FE2D8780-/PRLmSCtZ16WJvbLRFYGcG0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc> (Chris
+        Packham's message of "Wed, 27 Sep 2017 01:15:12 +0000")
+Sender: linux-i2c-owner@vger.kernel.org
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 02:03:14AM +0000, Yoshihiro Shimoda wrote:
-> Hi Simon-san,
-> > From: Simon Horman
-> > Sent: Monday, September 25, 2017 4:08 PM
-> > On Thu, Sep 21, 2017 at 10:37:15AM +0000, Yoshihiro Shimoda wrote:
-> > > Hi Simon-san,
-> > > > From: Simon Horman
-> > > > Sent: Friday, September 15, 2017 4:35 PM
+Hi Chris,
+ 
+ On mer., sept. 27 2017, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
 
-...
+> Hi Gregory,
+>
+> On 27/09/17 00:56, Gregory CLEMENT wrote:
+>> Hi Kalyan,
+>> 
+>> Please try avoid top-posting.
+>> 
+>>   On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz> wrote:
+>> 
+>>> Hi Gregory,
+>>>
+>>> I got this information from Armada-38x functional errata document.
+>> 
+>> OK but in any case just adding a new compatible was not enough you have
+>> to update the driver in the same time, however for this case we won't
+>> need it, see below.
+>> 
+>>>
+>>> I can add the "marvell,mv78230-i2c" compatible string to the appropriate  device tree files
+>>> but the i2c-mv64xxx driver enables an additional  feature (offload i2c transactions)
+>>> based on the compatible string "marvell,mv78230-i2c".
+>>>
+>>> I am not sure if this feature (offload i2c transactions) should be enabled for Armada-38x devices.
+>>> That is the reason I felt for the need of a new compatible string
+>>> specifically for Armada-38x SoCs.
+>> 
+>> Indeed the Armada-38x SoCs does not support hardware offloading (at
+>> least according the datasheet). But it happens that in the earlier
+>> version of the Armada XP the hardware offloading was buggy, so we
+>> introduced a compatible for this case: marvell,mv78230-a0-i2c. This
+>> compatible enable the errata fix but not the offloading feature. That
+>> means that it is exactly the compatible you need for Armada 38x (and
+>> Armada 39x and 375 I think).
+>
+> The "mv78230-a0-i2c" dt-binding has the following note
+>
+>    Note: Only use "marvell,mv78230-a0-i2c" for a
+>    very rare, initial version of the SoC which
+>    had broken offload support.  Linux
+>    auto-detects this and sets it appropriately.
+>
+> If we are going to re-use this binding for armada-38x we should probably 
+> remove this note. Personally my preference would be an armada-38x
 
-> > > > Thanks. I have marked this as "Deferred" pending acceptance of the PFC
-> > > > patch. Please repost or ping me, f.e. via a reply-to-all to this email,
-> > > > once that dependency is resolved.
-> > >
-> > > Since the PFC patch is applied into renesas-drivers.git / sh-pfc-for-v4.15 branch,
-> > > I'd like to ping you :)
-> > >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=sh-pfc-for-v4.15&id=66abd968d0ef
-> > 3eb10dea45b48a31321eb29258f8
-> > >
-> > > Or, should I rebase this patch on latest devel tag?
-> > > If so, I will rebase it in next Monday because I'll take a day off tomorrow.
-> > 
-> > Thanks for pinging me. I have applied this patch.
-> > There was some fuzz when doing so. Please check that the applied
-> > patch is correct once I have pushed an updated devel branch later today.
-> 
-> Thank you for applying!
-> I checked renesas.git / renesas-devel-20170925-v4.14-rc2 tag, and it's correct.
+Updating the documentation is the right thing to do yes.
 
-Thanks for checking, much appreciated.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> compatible string (or 370 if that's the common base of these SoCs). But 
+> of course we'll go with whatever your preference is as maintainer.
+
+If the IP is compatible then there is no reason to add a new one, else
+we will end with a compatible for each SoC and the compatible property
+will just loose its meaning.
+
+But an other reason to reuse "marvell,mv78230-a0-i2c" is that thanks to
+this you will benefit to this even with the old kernel by just updating
+the device tree, else you will have to update both the kernel and the
+dtb.
+
+
+Gregory
+
+>
+>> 
+>> Gregory
+>> 
+>>>
+>>> Thanks,
+>>> Kalyan
+>>> ________________________________________
+>>> From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>>> Sent: Friday, 22 September 2017 7:30 p.m.
+>>> To: Kalyan Kinthada
+>>> Cc: devicetree@vger.kernel.org; wsa@the-dreams.de; robh+dt@kernel.org;
+>>> pawel.moll@arm.com; mark.rutland@arm.com;
+>>> ijc+devicetree@hellion.org.uk; galak@codeaurora.org;
+>>> linux-i2c@vger.kernel.org; linux-kernel@vger.kernel.org; Chris Packham
+>>> Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+>>>
+>>> Hi Kalyan,
+>>>
+>>>   On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz> wrote:
+>>>
+>>>> All armada-38x variants(380, 385, 388) SoCs have an issue
+>>>> in i2c controller which violates the i2c repeated start timing.
+>>>
+>>>
+>>> Did you had an issue with one of the SoC ?
+>>> If yes what was your setting ?
+>>> On my side I never managed to have this sort of issue on Armada 38x.
+>>>
+>>>>
+>>>> This errata is fixed in the i2c-mv64xxx driver but enabled
+>>>> only for devices with compatible string "marvell,mv78230-i2c".
+>>>
+>>> In this case why not just adding the "marvell,mv78230-i2c" as compatible
+>>> string in the appropriate device tree files ?
+>>>
+>>> Gregory
+>>>
+>>>>
+>>>> This patch introduces a new compatible string
+>>>> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs
+>>>> so that the workaound is enabled.
+>>>
+>>>
+>>>>
+>>>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +
+>>>>   1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+>>>> index 5c30026921..fc100b6bdb 100644
+>>>> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+>>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+>>>> @@ -14,6 +14,7 @@ Required properties :
+>>>>                            very rare, initial version of the SoC which
+>>>>                            had broken offload support.  Linux
+>>>>                            auto-detects this and sets it appropriately.
+>>>> +                     - "marvell,armada-38x-i2c"
+>>>>    - interrupts      : The interrupt number
+>>>>
+>>>>   Optional properties :
+>>>> --
+>>>> 2.14.1
+>>>>
+>>>
+>>> --
+>>> Gregory Clement, Free Electrons
+>>> Kernel, drivers, real-time and embedded Linux
+>>> development, consulting, training and support.
+>>> http://free-electrons.com
+>> 
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
