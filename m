@@ -1,83 +1,49 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
- DMA controller
-Date: Wed, 27 Sep 2017 14:46:11 +0100
-Message-ID: <432fff47-6750-08c4-a91d-1a5d154245bc@nvidia.com>
-References: <cover.1506380746.git.digetx@gmail.com>
- <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
- <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
- <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
- <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
- <69ea8dec-db7a-fcfa-6fa7-ea70de4c9ef4@gmail.com>
- <96f28cc6-7cbf-308f-bc87-d96d3e7fe045@nvidia.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/2 v4] PCI: v3: Update the device tree bindings
+Date: Wed, 27 Sep 2017 08:55:26 -0500
+Message-ID: <20170927135526.GA23674@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170908124503.4491-1-linus.walleij@linaro.org>
+ <20170926191639.GO15970@bhelgaas-glaptop.roam.corp.google.com>
+ <CACRpkdYeo667tTsis-5ZLz-bK-87Ygd3ziD2qH_2KXWf+Oq=mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <96f28cc6-7cbf-308f-bc87-d96d3e7fe045@nvidia.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYeo667tTsis-5ZLz-bK-87Ygd3ziD2qH_2KXWf+Oq=mA@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 27/09/17 14:44, Jon Hunter wrote:
+On Wed, Sep 27, 2017 at 03:25:53PM +0200, Linus Walleij wrote:
+> On Tue, Sep 26, 2017 at 9:16 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Sep 08, 2017 at 02:45:02PM +0200, Linus Walleij wrote:
+> >> The bindings for the V3 Semiconductor PCI bridge are a tad bit outdated
+> >> and predates the more formal format we have adopted for the bindings.
+> >>
+> >> Update them a bit so it is easier to read, and add the Integrator AP-
+> >> specific compatible so we can detect that we are running on that specific
+> >> platform.
+> >>
+> >> Add a second register bank for the configuration memory area. The
+> >> device tree specs does specify a memory range for configuration
+> >> space but it is not applicable to custom accessors like this. Instead
+> >> follow the pattern from the Versatile PCI adapter and simply add
+> >> a second register bank for this memory.
+> >>
+> >> Cc: devicetree@vger.kernel.org
+> >> Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+> >> Acked-by: Rob Herring <robh@kernel.org>
+> >> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Applied both to pci/host-v3-semi for v4.15, thanks!
 > 
-> On 27/09/17 13:12, Dmitry Osipenko wrote:
->> On 27.09.2017 11:34, Jon Hunter wrote:
->>>
->>> On 27/09/17 02:57, Dmitry Osipenko wrote:
->>>> On 26.09.2017 17:50, Jon Hunter wrote:
->>>>>
->>>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
->>>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
->>>>>> on Tegra20/30 SoC's.
->>>>>>
->>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>> ---
->>>>>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
->>>>>>  1 file changed, 23 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..2af9aa76ae11
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>> @@ -0,0 +1,23 @@
->>>>>> +* NVIDIA Tegra AHB DMA controller
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
->>>>>> +- reg:		Should contain registers base address and length.
->>>>>> +- interrupts:	Should contain one entry, DMA controller interrupt.
->>>>>> +- clocks:	Should contain one entry, DMA controller clock.
->>>>>> +- resets :	Should contain one entry, DMA controller reset.
->>>>>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
->>>>>> +		for the peripheral. For more details consult the Tegra TRM's
->>>>>> +		documentation, in particular AHB DMA channel control register
->>>>>> +		REQ_SEL field.
->>>>>
->>>>> What about the TRIG_SEL field? Do we need to handle this here as well?
->>>>>
->>>>
->>>> Actually, DMA transfer trigger isn't related a hardware description. It's up to
->>>> software to decide what trigger to select. So it shouldn't be in the binding.
->>>
->>> I think it could be, if say a board wanted a GPIO to trigger a transfer.
->>>
->>
->> GPIO isn't a very good example, there is no "GPIO" trigger. To me all triggers
->> are software-defined, so that software could create transfer chains.
+> Oh it fails to build right now (as the zeroday builder noticed)
+> since it is using Marc Gonzalez new helper for DMA ranges
+> parsing.
 > 
-> TRM shows the following in the APBDMA_TRIG_REG_0 ...
-> 
-> "XRQ_A: XRQ.A (GPIOA) (Hardware initiated DMA request)"
+> If Marc's patches are getting applied they will solve the issue
+> so I wouldn't care in that case.
 
-Furthermore there are timer and hw-semaphore triggers as well.
-
-Jon
-
--- 
-nvpublic
+I applied Marc's patches and rebased pci/host-v3-semi on top of his
+patch that adds the helper.  Sorry I didn't notice this up front!
