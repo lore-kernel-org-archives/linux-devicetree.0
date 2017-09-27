@@ -1,122 +1,117 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] pinctrl: axp209: add pinctrl features
-Date: Wed, 27 Sep 2017 11:28:15 +0200
-Message-ID: <20170927092815.4y57ej5qbilioxr5@flea>
-References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
- <6b89df1bf07dac2ab295fca5fdf0e55179c47ed6.1506428208.git-series.quentin.schulz@free-electrons.com>
- <20170926130009.r5isgrjvkwmm44nn@flea>
- <5596280a-51bb-7491-31f4-5800219888ad@free-electrons.com>
- <20170926132709.od3myumh5xtungvs@flea>
- <0bc7efe6-8d0e-ddae-617b-36e4357f76ce@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 1/5] clk: tegra: Add AHB DMA clock entry
+Date: Wed, 27 Sep 2017 12:41:55 +0300
+Message-ID: <168d1f44-21ae-86c5-7d9b-981c370d012b@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <b5fd087892544cd17042a4aa9dc0289fb761352c.1506380746.git.digetx@gmail.com>
+ <20170926095611.GW6290@tbergstrom-lnx.Nvidia.com>
+ <b575c935-e928-4d51-9905-40731c1aa9c4@gmail.com>
+ <20170927083605.GA6290@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sktdlgeaimlfa47o"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOW6VXHAKGQEZZVRACY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <0bc7efe6-8d0e-ddae-617b-36e4357f76ce-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170927083605.GA6290@tbergstrom-lnx.Nvidia.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---sktdlgeaimlfa47o
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Sep 26, 2017 at 01:37:37PM +0000, Quentin Schulz wrote:
-> On 26/09/2017 15:27, Maxime Ripard wrote:
-> > On Tue, Sep 26, 2017 at 01:08:21PM +0000, Quentin Schulz wrote:
-> >> Hi Maxime,
-> >>
-> >> On 26/09/2017 15:00, Maxime Ripard wrote:
-> >>> On Tue, Sep 26, 2017 at 12:17:12PM +0000, Quentin Schulz wrote:
-> >>>> +static const struct axp20x_desc_pin axp209_pins[] = {
-> >>>> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
-> >>>> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
-> >>>> +		   AXP20X_FUNCTION(0x2, "gpio_in"),
-> >>>> +		   AXP20X_FUNCTION(0x3, "ldo"),
-> >>>> +		   AXP20X_FUNCTION(0x4, "adc")),
-> >>>> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(1, "GPIO1"),
-> >>>> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
-> >>>> +		   AXP20X_FUNCTION(0x2, "gpio_in"),
-> >>>> +		   AXP20X_FUNCTION(0x3, "ldo"),
-> >>>> +		   AXP20X_FUNCTION(0x4, "adc")),
-> >>>> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(2, "GPIO2"),
-> >>>> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
-> >>>> +		   AXP20X_FUNCTION(0x2, "gpio_in")),
-> >>>> +};
-> >>>
-> >>> If all the functions are the same, and at the same offset, can't we
-> >>> just hardcode it, instead of having (and duplicate) all the logic
-> >>> below?
-> >>>
-> >>
-> >> AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
-> >> 		AXP20X_GPIO_OUT,
-> >> 		AXP20X_GPIO_IN,
-> >> 		AXP20X_LDO,
-> >> 		AXP20X_ADC))
-> >>
-> >> That's what you mean?
-> > 
-> > What I mean is:
-> > 
-> > static int axp20x_get_func(char *func)
-> > {
-> > 	if (!strcmp(func, "gpio_out"))
-> > 		return 0;
-> > 
-> > 	if (!strcmp(func, "gpio_in"))
-> > 		return 2;
-> >  
-> > 	if (!strcmp(func, "ldo"))
-> >  		return 3;
-> >  
-> > 	if (!strcmp(func, "adc"))
-> >  		return 4;
-> > 
-> > 	return -EINVAL;
-> > }
-> > 
+On 27.09.2017 11:36, Peter De Schrijver wrote:
+> On Tue, Sep 26, 2017 at 05:46:01PM +0300, Dmitry Osipenko wrote:
+>> On 26.09.2017 12:56, Peter De Schrijver wrote:
+>>> On Tue, Sep 26, 2017 at 02:22:02AM +0300, Dmitry Osipenko wrote:
+>>>> AHB DMA presents on Tegra20/30. Add missing entries, so that driver
+>>>> for AHB DMA could be implemented.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/clk/tegra/clk-id.h           | 1 +
+>>>>  drivers/clk/tegra/clk-tegra-periph.c | 1 +
+>>>>  drivers/clk/tegra/clk-tegra20.c      | 6 ++++++
+>>>>  drivers/clk/tegra/clk-tegra30.c      | 2 ++
+>>>>  4 files changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
+>>>> index 689f344377a7..c1661b47bbda 100644
+>>>> --- a/drivers/clk/tegra/clk-id.h
+>>>> +++ b/drivers/clk/tegra/clk-id.h
+>>>> @@ -12,6 +12,7 @@ enum clk_id {
+>>>>  	tegra_clk_amx,
+>>>>  	tegra_clk_amx1,
+>>>>  	tegra_clk_apb2ape,
+>>>> +	tegra_clk_ahbdma,
+>>>>  	tegra_clk_apbdma,
+>>>>  	tegra_clk_apbif,
+>>>>  	tegra_clk_ape,
+>>>> diff --git a/drivers/clk/tegra/clk-tegra-periph.c b/drivers/clk/tegra/clk-tegra-periph.c
+>>>> index 848255cc0209..95a3d8c95f06 100644
+>>>> --- a/drivers/clk/tegra/clk-tegra-periph.c
+>>>> +++ b/drivers/clk/tegra/clk-tegra-periph.c
+>>>> @@ -823,6 +823,7 @@ static struct tegra_periph_init_data gate_clks[] = {
+>>>>  	GATE("timer", "clk_m", 5, 0, tegra_clk_timer, CLK_IS_CRITICAL),
+>>>>  	GATE("isp", "clk_m", 23, 0, tegra_clk_isp, 0),
+>>>>  	GATE("vcp", "clk_m", 29, 0, tegra_clk_vcp, 0),
+>>>> +	GATE("ahbdma", "clk_m", 33, 0, tegra_clk_ahbdma, 0),
+>>>
+>>> Parent for this should be hclk on Tegra30 and later chips as well..
+>>>
+>>
+>> It looks like other clocks have a wrong parent too here, aren't they? Like for
+>> example "apbdma" should have "pclk" as a parent, isn't it?
+>>
 > 
-> GPIO2 on AXP209 does not support ldo nor adc.
-> GPIO1 on AXP813 does not support adc.
+> Yes. That is correct.
+> 
 
-Right, and surely that can be caught as well. This was a global
-approach. You could add a bitmap for example to encode whether ldo and
-adc are available. It takes two bytes, and two or operations.
+Okay, I'll fix it in V2.
 
-> I find it more complex to handle those two cases in a function than by
-> hardcoding it in structures like above.
+>>>>  	GATE("apbdma", "clk_m", 34, 0, tegra_clk_apbdma, 0),
+>>>>  	GATE("kbc", "clk_32k", 36, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_kbc, 0),
+>>>>  	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, 0),
+>>>> diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+>>>> index 837e5cbd60e9..e76c0d292ca7 100644
+>>>> --- a/drivers/clk/tegra/clk-tegra20.c
+>>>> +++ b/drivers/clk/tegra/clk-tegra20.c
+>>>> @@ -449,6 +449,7 @@ static struct tegra_devclk devclks[] __initdata = {
+>>>>  	{ .con_id = "audio", .dt_id = TEGRA20_CLK_AUDIO },
+>>>>  	{ .con_id = "audio_2x", .dt_id = TEGRA20_CLK_AUDIO_2X },
+>>>>  	{ .dev_id = "tegra20-ac97", .dt_id = TEGRA20_CLK_AC97 },
+>>>> +	{ .dev_id = "tegra-ahbdma", .dt_id = TEGRA20_CLK_AHBDMA },
+>>>
+>>> This isn't needed if you use DT bindings to get the clock handle.
+>>>
+>>
+>> Yes, I added it for consistency. Shouldn't we get rid of that all legacy stuff
+>> already?
+>>
+> 
+> We probably should, but we can start by not adding more :)
+> 
 
-You find more complex to add a 10 lines function than 450 lines of
-code that you ripped off from another driver, that generates 4
-structures many structures (groups, functions, pins and pins'
-functions) and will provide three different lookup methods? Really? :)
+Sure ;)
 
-It's way overkill for that driver. Most of these lists can be
-hardcoded as well.
-
-> Moreover, nothing tells us that it would be the same offset for
-> other PMICs.
-
-Again, let's worry about those PMICs when we'll need to support
-them. Unless you already have an example in mind of course. Otherwise,
-it's just building things on theories that have never been proven (and
-might never be).
-
-Maxime
+>>>>  	{ .dev_id = "tegra-apbdma", .dt_id = TEGRA20_CLK_APBDMA },
+>>>>  	{ .dev_id = "rtc-tegra", .dt_id = TEGRA20_CLK_RTC },
+>>>>  	{ .dev_id = "timer", .dt_id = TEGRA20_CLK_TIMER },
+>>>> @@ -806,6 +807,11 @@ static void __init tegra20_periph_clk_init(void)
+>>>>  				    clk_base, 0, 3, periph_clk_enb_refcnt);
+>>>>  	clks[TEGRA20_CLK_AC97] = clk;
+>>>>  
+>>>> +	/* ahbdma */
+>>>> +	clk = tegra_clk_register_periph_gate("ahbdma", "hclk", 0, clk_base,
+>>>> +				    0, 33, periph_clk_enb_refcnt);
+>>>> +	clks[TEGRA20_CLK_AHBDMA] = clk;
+>>>> +
+>>>
+>>> You can use the generic definition here if you correct the entry above.
+>>>
+>>
+>> Good point, same applies to "apbdma". Thank you for the suggestion.
+>>
+> 
+> Indeed.
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---sktdlgeaimlfa47o--
+Dmitry
