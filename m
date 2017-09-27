@@ -1,49 +1,78 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/2 v4] PCI: v3: Update the device tree bindings
-Date: Wed, 27 Sep 2017 08:55:26 -0500
-Message-ID: <20170927135526.GA23674@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170908124503.4491-1-linus.walleij@linaro.org>
- <20170926191639.GO15970@bhelgaas-glaptop.roam.corp.google.com>
- <CACRpkdYeo667tTsis-5ZLz-bK-87Ygd3ziD2qH_2KXWf+Oq=mA@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH] dt-bindings: RTC: merge ds1339 in ds1307 documentation
+Date: Wed, 27 Sep 2017 15:58:19 +0200
+Message-ID: <20170927135819.xc2prt3jaoljjwg6@piout.net>
+References: <20170915014551.22664-1-alexandre.belloni@free-electrons.com>
+ <20170915014551.22664-2-alexandre.belloni@free-electrons.com>
+ <20170920205220.ykkxsqrxu5t47px5@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYeo667tTsis-5ZLz-bK-87Ygd3ziD2qH_2KXWf+Oq=mA@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20170920205220.ykkxsqrxu5t47px5@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 03:25:53PM +0200, Linus Walleij wrote:
-> On Tue, Sep 26, 2017 at 9:16 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Sep 08, 2017 at 02:45:02PM +0200, Linus Walleij wrote:
-> >> The bindings for the V3 Semiconductor PCI bridge are a tad bit outdated
-> >> and predates the more formal format we have adopted for the bindings.
-> >>
-> >> Update them a bit so it is easier to read, and add the Integrator AP-
-> >> specific compatible so we can detect that we are running on that specific
-> >> platform.
-> >>
-> >> Add a second register bank for the configuration memory area. The
-> >> device tree specs does specify a memory range for configuration
-> >> space but it is not applicable to custom accessors like this. Instead
-> >> follow the pattern from the Versatile PCI adapter and simply add
-> >> a second register bank for this memory.
-> >>
-> >> Cc: devicetree@vger.kernel.org
-> >> Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> >> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Applied both to pci/host-v3-semi for v4.15, thanks!
+On 20/09/2017 at 15:52:20 -0500, Rob Herring wrote:
+> On Fri, Sep 15, 2017 at 03:45:51AM +0200, Alexandre Belloni wrote:
+> > Now that there is documentation for the ds1307 and compatible RTCs, merge
+> > the ds1339 documentation in it.
+> > 
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > ---
+> >  .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ------------------
+> >  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt   |  6 ++++++
+> >  2 files changed, 6 insertions(+), 18 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > deleted file mode 100644
+> > index 916f57601a8f..000000000000
+> > --- a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > +++ /dev/null
+> > @@ -1,18 +0,0 @@
+> > -* Dallas DS1339		I2C Serial Real-Time Clock
+> > -
+> > -Required properties:
+> > -- compatible: Should contain "dallas,ds1339".
+> > -- reg: I2C address for chip
+> > -
+> > -Optional properties:
+> > -- trickle-resistor-ohms : Selected resistor for trickle charger
+> > -	Values usable for ds1339 are 250, 2000, 4000
+> > -	Should be given if trickle charger should be enabled
+> > -- trickle-diode-disable : Do not use internal trickle charger diode
+> > -	Should be given if internal trickle charger diode should be disabled
+> > -Example:
+> > -	ds1339: rtc@68 {
+> > -		compatible = "dallas,ds1339";
+> > -		trickle-resistor-ohms = <250>;
+> > -		reg = <0x68>;
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> > index d1a820e25cb9..2eacc17a9b8d 100644
+> > --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> > @@ -26,6 +26,11 @@ Optional properties:
+> >  - clock-output-names: From common clock binding to override the default output
+> >                        clock name
+> >  - wakeup-source: Enables wake up of host system on alarm
+> > +- trickle-resistor-ohms : Selected resistor for trickle charger
+> > +	Values usable for ds1339 are 250, 2000, 4000
+> > +	Should be given if trickle charger should be enabled
+> > +- trickle-diode-disable : Do not use internal trickle charger diode
+> > +	Should be given if internal trickle charger diode should be disabled
 > 
-> Oh it fails to build right now (as the zeroday builder noticed)
-> since it is using Marc Gonzalez new helper for DMA ranges
-> parsing.
-> 
-> If Marc's patches are getting applied they will solve the issue
-> so I wouldn't care in that case.
+> Do these apply to all compatibles or just 1339?
 
-I applied Marc's patches and rebased pci/host-v3-semi on top of his
-patch that adds the helper.  Sorry I didn't notice this up front!
+I'll send v2 shortly that is clearer about that.
+
+> 
+> Rob
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
