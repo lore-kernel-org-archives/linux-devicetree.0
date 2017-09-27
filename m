@@ -1,81 +1,96 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v7 1/2] dt-bindings: gpio: uniphier: add UniPhier GPIO binding
-Date: Wed, 27 Sep 2017 11:45:42 +0900
-Message-ID: <1506480343-9597-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1506480343-9597-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506480343-9597-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v7 0/2] gpio: uniphier: UniPhier GPIO driver
+Date: Wed, 27 Sep 2017 11:45:41 +0900
+Message-ID: <1506480343-9597-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This GPIO controller is used on UniPhier SoC family.
 
-The vendor specific property "socionext,interrupt-ranges" is for
-specifying interrupt mapping to the parent interrupt controller
-because the mapping is not contiguous.  It works like "ranges",
-but transforms "interrupts" instead of "reg".
+This series adds UniPhier GPIO driver.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+The interrupt controller part is implemented by using hierarchy irqdomain.
+
+IMHO, the problem of the hierarchy irqdomain is that drivers must hard-code
+the fwspec of the interrupt parent.  We will never know the DT binding of
+the parent unless we parse #interrupt-cell, etc.
+
+I asked about this:
+https://lkml.org/lkml/2017/7/6/758
+
+Apparently, the current kernel does not provide a systematic way to
+describe it.
+
+In v1-v3, I hard-coded the parent hwirq numbers in the driver because
+irqchip drivers are forced to hard-code more or less about the parent.
+This was not accepted by Linus Walleij.
+
+In v4, I tried to use the new API irq_domain_push_irq().  I needed to
+change the irqdomain framework to make it work for DT, but seemed
+controversial in the irqdomain subsystem review.
+
+In v5, I tried another solution.  At first I thought it worked, but
+I found a dead-lock if an irq is disposed from the .alloc hook.
+
+After I considered more, I thought "interrupts" property does not
+make much sense here because the last cell (which usually specifies
+the trigger type) is useless for the hierarchy irqdomain.
+
+I decided to use a vendor-specific property.  This is what some drivers
+actually do.
 
 
- .../devicetree/bindings/gpio/gpio-uniphier.txt     | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Changes in v7:
+  - Rename uniphier_gpio_irq_get_hwirq()
+    (I just missed to "git commit" before "git send-email")
+
+Changes in v6:
+  - Add "socionext,interrupt-ranges"
+
+Changes in v5:
+  - Split into a separate patch for DT binding
+  - Add a new patch to export of_phandle_args_to_fwspec
+  - Split DT binding into a separate file
+  - v4 depends on some patches that change irq_domain_push_irq(), but
+    they got negative feedback in the irqdomain subsystem review.
+    Yet another approach here.  Parse "interrupts" property in
+    .alloc() hook.  If the parent IRQ is already mapped, dispose it
+    and re-alloc in irqdomain manner.
+
+Changes in v4:
+  - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
+  - Reimplement irqchip part by using irq_domain_push_irq()
+
+Changes in v3:
+  - Add .irq_set_affinity() hook
+  - Use irq_domain_create_hierarchy() instead of legacy
+    irq_domain_add_hierarchy()
+
+Changes in v2:
+  - Remove +32 offset for parent interrupts to follow the GIC
+    binding convention
+  - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
+  - Allocate gpio_chip statically because just one instance is
+    supported
+  - Fix suspend and resume hooks
+
+Masahiro Yamada (2):
+  dt-bindings: gpio: uniphier: add UniPhier GPIO binding
+  gpio: uniphier: add UniPhier GPIO controller driver
+
+ .../devicetree/bindings/gpio/gpio-uniphier.txt     |  40 ++
+ MAINTAINERS                                        |   1 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-uniphier.c                       | 507 +++++++++++++++++++++
+ include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
+ 6 files changed, 575 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ create mode 100644 drivers/gpio/gpio-uniphier.c
+ create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-new file mode 100644
-index 0000000..6d9251a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-@@ -0,0 +1,40 @@
-+UniPhier GPIO controller
-+
-+Required properties:
-+- compatible: Should be "socionext,uniphier-gpio".
-+- reg: Specifies offset and length of the register set for the device.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be 2.  The first cell is the pin number and the second
-+  cell is used to specify optional parameters.
-+- interrupt-parent: Specifies the parent interrupt controller.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
-+  The second cell bits[3:0] is used to specify trigger type as follows:
-+    1 = low-to-high edge triggered
-+    2 = high-to-low edge triggered
-+    4 = active high level-sensitive
-+    8 = active low level-sensitive
-+  Valid combinations are 1, 2, 3, 4, 8.
-+- ngpios: Specifies the number of GPIO lines.
-+- gpio-ranges: Mapping to pin controller pins (as described in gpio.txt)
-+- socionext,interrupt-ranges: Specifies an interrupt number mapping between
-+  this GPIO controller and its interrupt parent, in the form of arbitrary
-+  number of <child-interrupt-base parent-interrupt-base length> triplets.
-+
-+Optional properties:
-+- gpio-ranges-group-names: Used for named gpio ranges (as described in gpio.txt)
-+
-+Example:
-+	gpio: gpio@55000000 {
-+		compatible = "socionext,uniphier-gpio";
-+		reg = <0x55000000 0x200>;
-+		interrupt-parent = <&aidet>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&pinctrl 0 0 0>;
-+		gpio-ranges-group-names = "gpio_range";
-+		ngpios = <248>;
-+		socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
-+	};
 -- 
 2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
