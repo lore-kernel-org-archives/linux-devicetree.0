@@ -1,57 +1,99 @@
 From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 4/5] scsi/ufs: qcom: Set phy mode based on the controllers
- HS MODE
-Date: Wed, 27 Sep 2017 12:01:16 +0530
-Message-ID: <cbe08742-1e12-3cb6-ebcb-590ab6e829df@codeaurora.org>
-References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
- <1501829332-5183-5-git-send-email-vivek.gautam@codeaurora.org>
- <99fc698fc93a05fc227d24a9ae15f183@codeaurora.org>
+Subject: Re: [RFC PATCH 1/1] iommu/arm-smmu: Add support for multiple TBU
+ child devices
+Date: Wed, 27 Sep 2017 12:12:27 +0530
+Message-ID: <b148de29-be38-41f1-7eb5-1ea81c15243e@codeaurora.org>
+References: <1505217667-31184-1-git-send-email-vivek.gautam@codeaurora.org>
+ <20170919141034.ahhmuxfk6ldpegfp@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <99fc698fc93a05fc227d24a9ae15f183@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Subhash Jadavani <subhashj@codeaurora.org>
-Cc: kishon@ti.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, jejb@linux.vnet.ibm.com, vinholikatti@gmail.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170919141034.ahhmuxfk6ldpegfp@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: robin.murphy@arm.com, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, joro@8bytes.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
 
-On 09/27/2017 04:14 AM, Subhash Jadavani wrote:
-> On 2017-08-03 23:48, Vivek Gautam wrote:
->> Set the phy mode based on the UFS HS PA mode. This lets the
->> controller let phy know the mode in which the PHY Adapter is
->> running and set the phy rates accordingly.
+On 09/19/2017 07:40 PM, Rob Herring wrote:
+
+Thanks for reviewing the patch.
+
+> On Tue, Sep 12, 2017 at 05:31:07PM +0530, Vivek Gautam wrote:
+>> ARM MMU-500 implements a TBU (uTLB) for each connected master
+>> besides a single TCU which controls and manages the address
+>> translations. Each of these TBUs can either be in the same
+>> power domain as the master, or they can have a independent
+>> power switch.
+>> This design addresses the challenges to control TBU power.
+>> Adding child devices for each TBUs present in the configuration
+>> lets us control the power and clocks to TLBs having individual
+>> power domains. The device link between master devices (such as,
+>> display, and GPU) and TBU devices ensures that the master takes
+>> care of powering the smmu as long as it's available.
+>> When the master is not available, the TBUs are identified with
+>> sid and powered on.
 >>
 >> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 >> ---
->>  drivers/scsi/ufs/ufs-qcom.c | 3 +++
->>  1 file changed, 3 insertions(+)
 >>
->> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
->> index c87d770b519a..44c21d5818ee 100644
->> --- a/drivers/scsi/ufs/ufs-qcom.c
->> +++ b/drivers/scsi/ufs/ufs-qcom.c
->> @@ -273,6 +273,9 @@ static int ufs_qcom_power_up_sequence(struct 
->> ufs_hba *hba)
->>      bool is_rate_B = (UFS_QCOM_LIMIT_HS_RATE == PA_HS_MODE_B)
->>                              ? true : false;
+>>   - The idea behind this patch is to handle the distributed smmu
+>>     architectures, similar to MMU-500.
+>>   - Untested yet.
+>>   - There are still few instances where the correct tbu device has
+>>     to be referenced and thus powered on to handle TLB maintenance
+>>     operations.
 >>
->> +    if (is_rate_B)
->> +        phy_set_mode(phy, PHY_MODE_UFS_HS_B);
+>>   .../devicetree/bindings/iommu/arm,smmu.txt         |  27 +++
+>>   drivers/iommu/arm-smmu.c                           | 191 +++++++++++++++++++--
+>>   2 files changed, 205 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> index d97a6bc8e608..7cf67e75022e 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> @@ -98,6 +98,18 @@ conditions.
+>>                     accessed before master gets enabled and linked to its
+>>                     SMMU.
+>>   
+>> +- child nodes:    ARM MMU-500 implements a TBU (page table cache or TLB) for
+>> +                  each connected master besides a single TCU that controls
+>> +                  and manages the address translations.
+>> +                  Each of the child nodes represents a TBU that is attached to
+>> +                  the master. This child node will have following property:
 >> +
->>      /* Assert PHY reset and apply PHY calibration values */
->>      ufs_qcom_assert_reset(hba);
->>      /* provide 1ms delay to let the reset pulse propagate */
+>> +  - compatibe:       must be "arm,mmu-500-tbu" for TBU child nodes of arm,mmu-500
+>> +                     smmu.
+>> +  - stream-id-range: array representing the starting stream id and the number
+>> +                     of supported stream-ids. This gives information about
+>> +                     the range of stream-ids that are supported by this TBU.
+> Needs a vendor prefix.
+
+Sure will add the vendor prefix.
+This can be a generic arm-mmu500 implementation where,
+a range of stream-ids are serviced by a TBU.
+Would "arm,stream-id-range" make sense?
+
 >
-> Looks good to me.
-> Reviewed-by: Subhash Jadavani <subhashj@codeaurora.org>
+> Also need to document reg property. What does reg represent? If just an
+> index with no correlation to h/w numbering, then perhaps stream ids
+> could be put into reg instead.
 
-Thanks for reviewing Subhash.
+Okay. Stream-ids make sense, since the reg doesn't necessarily represent
+any hardware number such as channel number, etc.
 
-BRs
+Best regards
 Vivek
+
+>
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
