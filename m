@@ -1,82 +1,83 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v6 06/11] ARM: dts: sunxi: h3/h5: represent the mdio
- switch used by sun8i-h3-emac
-Date: Wed, 27 Sep 2017 15:47:09 +0200
-Message-ID: <20170927134709.GA14370@Red>
-References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
- <20170927073414.17361-7-clabbe.montjoie@gmail.com>
- <20170927101622.v7odmreccwh7ldg2@flea>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Wed, 27 Sep 2017 14:46:11 +0100
+Message-ID: <432fff47-6750-08c4-a91d-1a5d154245bc@nvidia.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
+ <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
+ <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+ <69ea8dec-db7a-fcfa-6fa7-ea70de4c9ef4@gmail.com>
+ <96f28cc6-7cbf-308f-bc87-d96d3e7fe045@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170927101622.v7odmreccwh7ldg2@flea>
-Sender: netdev-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch, f.fainelli@gmail.com, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <96f28cc6-7cbf-308f-bc87-d96d3e7fe045@nvidia.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 12:16:22PM +0200, Maxime Ripard wrote:
-> On Wed, Sep 27, 2017 at 07:34:09AM +0000, Corentin Labbe wrote:
-> > Since dwmac-sun8i could use either an integrated PHY or an external PHY
-> > (which could be at same MDIO address), we need to represent this selection
-> > by a MDIO switch.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 31 +++++++++++++++++++++++++------
-> >  1 file changed, 25 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > index 3b7d953429a6..a8e9b8f378ba 100644
-> > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> > @@ -422,14 +422,33 @@
-> >  			#size-cells = <0>;
-> >  			status = "disabled";
-> >  
-> > -			mdio: mdio {
-> > +			mdio0: mdio {
-> >  				#address-cells = <1>;
-> >  				#size-cells = <0>;
-> > -				int_mii_phy: ethernet-phy@1 {
-> > -					compatible = "ethernet-phy-ieee802.3-c22";
-> > -					reg = <1>;
-> > -					clocks = <&ccu CLK_BUS_EPHY>;
-> > -					resets = <&ccu RST_BUS_EPHY>;
-> > +				compatible = "snps,dwmac-mdio";
-> > +
-> > +				mdio-mux {
-> > +					compatible = "mdio-mux";
-> > +					#address-cells = <1>;
-> > +					#size-cells = <0>;
-> 
-> Newline
-> 
-> > +					/* Only one MDIO is usable at the time */
-> > +					internal_mdio: mdio@1 {
-> > +						reg = <1>;
-> > +						#address-cells = <1>;
-> > +						#size-cells = <0>;
-> 
-> Newline
-> 
-> > +						int_mii_phy: ethernet-phy@1 {
-> > +							compatible = "ethernet-phy-ieee802.3-c22";
-> > +							reg = <1>;
-> > +							clocks = <&ccu CLK_BUS_EPHY>;
-> > +							resets = <&ccu RST_BUS_EPHY>;
-> > +							phy-is-integrated;
-> > +						};
-> > +					};
-> 
-> Newline
-> 
-> > +					mdio: mdio@2 {
-> 
-> This is quite confusing. Why not call the label external_mdio?
-> 
 
-I will do it. (at origin I was not changing it for limiting changes on board with external PHY, but now all DT are reverted, it will be easy)
+On 27/09/17 14:44, Jon Hunter wrote:
+> 
+> On 27/09/17 13:12, Dmitry Osipenko wrote:
+>> On 27.09.2017 11:34, Jon Hunter wrote:
+>>>
+>>> On 27/09/17 02:57, Dmitry Osipenko wrote:
+>>>> On 26.09.2017 17:50, Jon Hunter wrote:
+>>>>>
+>>>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
+>>>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>>>>>> on Tegra20/30 SoC's.
+>>>>>>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>>>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
+>>>>>>  1 file changed, 23 insertions(+)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..2af9aa76ae11
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>> @@ -0,0 +1,23 @@
+>>>>>> +* NVIDIA Tegra AHB DMA controller
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
+>>>>>> +- reg:		Should contain registers base address and length.
+>>>>>> +- interrupts:	Should contain one entry, DMA controller interrupt.
+>>>>>> +- clocks:	Should contain one entry, DMA controller clock.
+>>>>>> +- resets :	Should contain one entry, DMA controller reset.
+>>>>>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
+>>>>>> +		for the peripheral. For more details consult the Tegra TRM's
+>>>>>> +		documentation, in particular AHB DMA channel control register
+>>>>>> +		REQ_SEL field.
+>>>>>
+>>>>> What about the TRIG_SEL field? Do we need to handle this here as well?
+>>>>>
+>>>>
+>>>> Actually, DMA transfer trigger isn't related a hardware description. It's up to
+>>>> software to decide what trigger to select. So it shouldn't be in the binding.
+>>>
+>>> I think it could be, if say a board wanted a GPIO to trigger a transfer.
+>>>
+>>
+>> GPIO isn't a very good example, there is no "GPIO" trigger. To me all triggers
+>> are software-defined, so that software could create transfer chains.
+> 
+> TRM shows the following in the APBDMA_TRIG_REG_0 ...
+> 
+> "XRQ_A: XRQ.A (GPIOA) (Hardware initiated DMA request)"
 
-Regards
+Furthermore there are timer and hw-semaphore triggers as well.
+
+Jon
+
+-- 
+nvpublic
