@@ -1,81 +1,40 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
- DMA controller
-Date: Wed, 27 Sep 2017 15:12:50 +0300
-Message-ID: <69ea8dec-db7a-fcfa-6fa7-ea70de4c9ef4@gmail.com>
-References: <cover.1506380746.git.digetx@gmail.com>
- <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
- <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
- <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
- <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+From: Oleg <balbes-150@yandex.ru>
+Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add Vega S96 board
+Date: Wed, 27 Sep 2017 15:30:54 +0300
+Message-ID: <077178e6-a9a0-355d-3ca5-563e98db98ea@yandex.ru>
+References: <1505822748-23431-1-git-send-email-narmstrong@baylibre.com>
+ <1505822748-23431-2-git-send-email-narmstrong@baylibre.com>
+ <1505833280.2703.83.camel@baylibre.com>
+ <a79c801a-c6bc-87d6-34f5-1a52f77704c6@yandex.ru>
+ <a342b95d-0300-f408-266f-e48deb1f72d7@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+In-Reply-To: <a342b95d-0300-f408-266f-e48deb1f72d7@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, support@tronsmart.com
 List-Id: devicetree@vger.kernel.org
 
-On 27.09.2017 11:34, Jon Hunter wrote:
-> 
-> On 27/09/17 02:57, Dmitry Osipenko wrote:
->> On 26.09.2017 17:50, Jon Hunter wrote:
+
+>>>> +        reg = <0>;
+>>>> +        max-speed = <1000>;
+>>> I don't think this max-speed property is necessary
 >>>
->>> On 26/09/17 00:22, Dmitry Osipenko wrote:
->>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
->>>> on Tegra20/30 SoC's.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
->>>>  1 file changed, 23 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>> new file mode 100644
->>>> index 000000000000..2af9aa76ae11
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>> @@ -0,0 +1,23 @@
->>>> +* NVIDIA Tegra AHB DMA controller
->>>> +
->>>> +Required properties:
->>>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
->>>> +- reg:		Should contain registers base address and length.
->>>> +- interrupts:	Should contain one entry, DMA controller interrupt.
->>>> +- clocks:	Should contain one entry, DMA controller clock.
->>>> +- resets :	Should contain one entry, DMA controller reset.
->>>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
->>>> +		for the peripheral. For more details consult the Tegra TRM's
->>>> +		documentation, in particular AHB DMA channel control register
->>>> +		REQ_SEL field.
->>>
->>> What about the TRIG_SEL field? Do we need to handle this here as well?
->>>
->>
->> Actually, DMA transfer trigger isn't related a hardware description. It's up to
->> software to decide what trigger to select. So it shouldn't be in the binding.
-> 
-> I think it could be, if say a board wanted a GPIO to trigger a transfer.
-> 
+>>>> +    };
+>>>> +};
+>> I will try to test and write the result.
+> Great, thanks !
+>
+> Neil
+I removed two strings and checked on Vega s96,
+the wired network works fine.
 
-GPIO isn't a very good example, there is no "GPIO" trigger. To me all triggers
-are software-defined, so that software could create transfer chains.
-
->> And I think the same applies to requester... any objections?
-> 
-> Well, the REQ_SEL should definitely be in the binding.
-> 
-
-Okay.
-
-> Laxman, Stephen, what are your thoughts on the TRIG_SEL field? Looks
-> like we never bothered with it for the APB DMA and so maybe no ones uses
-> this.
-> 
-
--- 
-Dmitry
++&external_mdio {
++	external_phy: ethernet-phy@0 {
++		/* Realtek RTL8211F (0x001cc916) */
++		reg = <0>;
++	};
++};
