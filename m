@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 7/9] usb: host: modify description for MTK xHCI config
-Date: Wed, 27 Sep 2017 17:23:03 +0800
-Message-ID: <37153cd259af6e1fc34b32a2e0dd1a15b8214579.1506503879.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 9/9] dt-bindings: usb: mtk-xhci: remove dummy clocks and add optional ones
+Date: Wed, 27 Sep 2017 17:23:05 +0800
+Message-ID: <95192dfda40c60cbe24b0f1e0bd6c82d318aa4ed.1506503880.git.chunfeng.yun@mediatek.com>
 References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,56 @@ To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfou
 Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Due to all MediaTek SoCs with xHCI host controller use this
-driver, remove limitation for specific SoCs
+Remove dummy clocks for usb wakeup and add optional ones for
+MCU_BUS_CK and DMA_BUS_CK.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/host/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |   18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index fa5692d..bc09a2e 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -45,12 +45,12 @@ config USB_XHCI_PLATFORM
- 	  If unsure, say N.
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+index 2d9b459..3059596 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+@@ -26,10 +26,11 @@ Required properties:
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+  - clock-names : must contain
+-	"sys_ck": for clock of xHCI MAC
+-	"ref_ck": for reference clock of xHCI MAC
+-	"wakeup_deb_p0": for USB wakeup debounce clock of port0
+-	"wakeup_deb_p1": for USB wakeup debounce clock of port1
++	"sys_ck": controller clock used by normal mode,
++	the following ones are optional:
++	"ref_ck": reference clock used by low power mode etc,
++	"mcu_ck": mcu_bus clock for register access,
++	"dma_ck": dma_bus clock for data transfer by DMA
  
- config USB_XHCI_MTK
--	tristate "xHCI support for Mediatek MT65xx/MT7621"
-+	tristate "xHCI support for MediaTek SoCs"
- 	select MFD_SYSCON
- 	depends on (MIPS && SOC_MT7621) || ARCH_MEDIATEK || COMPILE_TEST
- 	---help---
- 	  Say 'Y' to enable the support for the xHCI host controller
--	  found in Mediatek MT65xx SoCs.
-+	  found in MediaTek SoCs.
- 	  If unsure, say N.
+  - phys : a list of phandle + phy specifier pairs
  
- config USB_XHCI_MVEBU
+@@ -57,9 +58,7 @@ usb30: usb@11270000 {
+ 	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
+ 		 <&pericfg CLK_PERI_USB0>,
+ 		 <&pericfg CLK_PERI_USB1>;
+-	clock-names = "sys_ck", "ref_ck",
+-		      "wakeup_deb_p0",
+-		      "wakeup_deb_p1";
++	clock-names = "sys_ck", "ref_ck";
+ 	phys = <&phy_port0 PHY_TYPE_USB3>,
+ 	       <&phy_port1 PHY_TYPE_USB2>;
+ 	vusb33-supply = <&mt6397_vusb_reg>;
+@@ -91,9 +90,8 @@ Required properties:
+ 
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+- - clock-names : must be
+-	"sys_ck": for clock of xHCI MAC
+-	"ref_ck": for reference clock of xHCI MAC
++ - clock-names : must contain "sys_ck", and the following ones are optional:
++	"ref_ck", "mcu_ck" and "dma_ck"
+ 
+ Optional properties:
+  - vbus-supply : reference to the VBUS regulator;
 -- 
 1.7.9.5
