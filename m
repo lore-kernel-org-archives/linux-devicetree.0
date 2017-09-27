@@ -1,107 +1,122 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 5/9] usb: xhci-mtk: remove dummy wakeup debounce clocks
-Date: Wed, 27 Sep 2017 17:23:01 +0800
-Message-ID: <ff9ee49a872084b4fc8c7fbabddc820058acb9b7.1506503879.git.chunfeng.yun@mediatek.com>
-References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] pinctrl: axp209: add pinctrl features
+Date: Wed, 27 Sep 2017 11:28:15 +0200
+Message-ID: <20170927092815.4y57ej5qbilioxr5@flea>
+References: <cover.1c314f4154a6d27354625f03d0a5269eee55a9c5.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <6b89df1bf07dac2ab295fca5fdf0e55179c47ed6.1506428208.git-series.quentin.schulz@free-electrons.com>
+ <20170926130009.r5isgrjvkwmm44nn@flea>
+ <5596280a-51bb-7491-31f4-5800219888ad@free-electrons.com>
+ <20170926132709.od3myumh5xtungvs@flea>
+ <0bc7efe6-8d0e-ddae-617b-36e4357f76ce@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sktdlgeaimlfa47o"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOW6VXHAKGQEZZVRACY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <0bc7efe6-8d0e-ddae-617b-36e4357f76ce-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The wakeup debounce clocks for each ports in fact are not
-needed, so remove them.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/usb/host/xhci-mtk.c |   33 ---------------------------------
- drivers/usb/host/xhci-mtk.h |    2 --
- 2 files changed, 35 deletions(-)
+--sktdlgeaimlfa47o
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 97ba51e..d60463c 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -237,25 +237,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
- 		goto sys_clk_err;
- 	}
- 
--	if (mtk->wakeup_src) {
--		ret = clk_prepare_enable(mtk->wk_deb_p0);
--		if (ret) {
--			dev_err(mtk->dev, "failed to enable wk_deb_p0\n");
--			goto usb_p0_err;
--		}
--
--		ret = clk_prepare_enable(mtk->wk_deb_p1);
--		if (ret) {
--			dev_err(mtk->dev, "failed to enable wk_deb_p1\n");
--			goto usb_p1_err;
--		}
--	}
- 	return 0;
- 
--usb_p1_err:
--	clk_disable_unprepare(mtk->wk_deb_p0);
--usb_p0_err:
--	clk_disable_unprepare(mtk->sys_clk);
- sys_clk_err:
- 	clk_disable_unprepare(mtk->ref_clk);
- ref_clk_err:
-@@ -264,10 +247,6 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
- 
- static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
- {
--	if (mtk->wakeup_src) {
--		clk_disable_unprepare(mtk->wk_deb_p1);
--		clk_disable_unprepare(mtk->wk_deb_p0);
--	}
- 	clk_disable_unprepare(mtk->sys_clk);
- 	clk_disable_unprepare(mtk->ref_clk);
- }
-@@ -371,18 +350,6 @@ static int usb_wakeup_of_property_parse(struct xhci_hcd_mtk *mtk,
- 	if (!mtk->wakeup_src)
- 		return 0;
- 
--	mtk->wk_deb_p0 = devm_clk_get(dev, "wakeup_deb_p0");
--	if (IS_ERR(mtk->wk_deb_p0)) {
--		dev_err(dev, "fail to get wakeup_deb_p0\n");
--		return PTR_ERR(mtk->wk_deb_p0);
--	}
--
--	mtk->wk_deb_p1 = devm_clk_get(dev, "wakeup_deb_p1");
--	if (IS_ERR(mtk->wk_deb_p1)) {
--		dev_err(dev, "fail to get wakeup_deb_p1\n");
--		return PTR_ERR(mtk->wk_deb_p1);
--	}
--
- 	mtk->pericfg = syscon_regmap_lookup_by_phandle(dn,
- 						"mediatek,syscon-wakeup");
- 	if (IS_ERR(mtk->pericfg)) {
-diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
-index db55a12..67783a7 100644
---- a/drivers/usb/host/xhci-mtk.h
-+++ b/drivers/usb/host/xhci-mtk.h
-@@ -126,8 +126,6 @@ struct xhci_hcd_mtk {
- 	struct regulator *vbus;
- 	struct clk *sys_clk;	/* sys and mac clock */
- 	struct clk *ref_clk;
--	struct clk *wk_deb_p0;	/* port0's wakeup debounce clock */
--	struct clk *wk_deb_p1;
- 	struct regmap *pericfg;
- 	struct phy **phys;
- 	int num_phys;
+On Tue, Sep 26, 2017 at 01:37:37PM +0000, Quentin Schulz wrote:
+> On 26/09/2017 15:27, Maxime Ripard wrote:
+> > On Tue, Sep 26, 2017 at 01:08:21PM +0000, Quentin Schulz wrote:
+> >> Hi Maxime,
+> >>
+> >> On 26/09/2017 15:00, Maxime Ripard wrote:
+> >>> On Tue, Sep 26, 2017 at 12:17:12PM +0000, Quentin Schulz wrote:
+> >>>> +static const struct axp20x_desc_pin axp209_pins[] = {
+> >>>> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
+> >>>> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
+> >>>> +		   AXP20X_FUNCTION(0x2, "gpio_in"),
+> >>>> +		   AXP20X_FUNCTION(0x3, "ldo"),
+> >>>> +		   AXP20X_FUNCTION(0x4, "adc")),
+> >>>> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(1, "GPIO1"),
+> >>>> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
+> >>>> +		   AXP20X_FUNCTION(0x2, "gpio_in"),
+> >>>> +		   AXP20X_FUNCTION(0x3, "ldo"),
+> >>>> +		   AXP20X_FUNCTION(0x4, "adc")),
+> >>>> +	AXP20X_PIN(AXP20X_PINCTRL_PIN(2, "GPIO2"),
+> >>>> +		   AXP20X_FUNCTION(0x0, "gpio_out"),
+> >>>> +		   AXP20X_FUNCTION(0x2, "gpio_in")),
+> >>>> +};
+> >>>
+> >>> If all the functions are the same, and at the same offset, can't we
+> >>> just hardcode it, instead of having (and duplicate) all the logic
+> >>> below?
+> >>>
+> >>
+> >> AXP20X_PIN(AXP20X_PINCTRL_PIN(0, "GPIO0"),
+> >> 		AXP20X_GPIO_OUT,
+> >> 		AXP20X_GPIO_IN,
+> >> 		AXP20X_LDO,
+> >> 		AXP20X_ADC))
+> >>
+> >> That's what you mean?
+> > 
+> > What I mean is:
+> > 
+> > static int axp20x_get_func(char *func)
+> > {
+> > 	if (!strcmp(func, "gpio_out"))
+> > 		return 0;
+> > 
+> > 	if (!strcmp(func, "gpio_in"))
+> > 		return 2;
+> >  
+> > 	if (!strcmp(func, "ldo"))
+> >  		return 3;
+> >  
+> > 	if (!strcmp(func, "adc"))
+> >  		return 4;
+> > 
+> > 	return -EINVAL;
+> > }
+> > 
+> 
+> GPIO2 on AXP209 does not support ldo nor adc.
+> GPIO1 on AXP813 does not support adc.
+
+Right, and surely that can be caught as well. This was a global
+approach. You could add a bitmap for example to encode whether ldo and
+adc are available. It takes two bytes, and two or operations.
+
+> I find it more complex to handle those two cases in a function than by
+> hardcoding it in structures like above.
+
+You find more complex to add a 10 lines function than 450 lines of
+code that you ripped off from another driver, that generates 4
+structures many structures (groups, functions, pins and pins'
+functions) and will provide three different lookup methods? Really? :)
+
+It's way overkill for that driver. Most of these lists can be
+hardcoded as well.
+
+> Moreover, nothing tells us that it would be the same offset for
+> other PMICs.
+
+Again, let's worry about those PMICs when we'll need to support
+them. Unless you already have an example in mind of course. Otherwise,
+it's just building things on theories that have never been proven (and
+might never be).
+
+Maxime
+
 -- 
-1.7.9.5
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--sktdlgeaimlfa47o--
