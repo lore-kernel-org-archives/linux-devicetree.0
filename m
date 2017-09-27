@@ -1,129 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2
- receiver
-Date: Wed, 27 Sep 2017 16:51:24 -0500
-Message-ID: <20170927215124.6k3j54qf2qscnzc2@rob-hp-laptop>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
- <1814950930.414004.1506062733728@email.1und1.de>
- <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mtd: Altera ASMI Parallel II IP Core
+Date: Wed, 27 Sep 2017 16:52:26 -0500
+Message-ID: <20170927215226.ogcewa22dqc2jf3f@rob-hp-laptop>
+References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1505932139-2905-2-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1505932139-2905-2-git-send-email-matthew.gerlach@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: matthew.gerlach@linux.intel.com
+Cc: vndao@altera.com, boris.brezillon@free-electrons.com, mchehab@kernel.org, devicetree@vger.kernel.org, hean.loong.ong@intel.com, richard@nod.at, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, marek.vasut@gmail.com, gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, computersforpeace@gmail.com, dwmw2@infradead.org, davem@davemloft.net, tien.hock.loh@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 05:07:22PM +0100, Dave Stevenson wrote:
-> Hi Stefan
+On Wed, Sep 20, 2017 at 11:28:57AM -0700, matthew.gerlach@linux.intel.com wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > 
-> On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> > Hi Dave,
-> >
-> >> Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 20. September 2017 um 18:07 geschrieben:
-> >>
-> >>
-> >> Document the DT bindings for the CSI2/CCP2 receiver peripheral
-> >> (known as Unicam) on BCM283x SoCs.
-> >>
-> >> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-> >> ---
-> >>
-> >> Changes since v2
-> >> - Removed all references to Linux drivers.
-> >> - Reworded section about disabling the firmware driver.
-> >> - Renamed clock from "lp_clock" to "lp" in description and example.
-> >> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
-> >>   and data-lanes.
-> >> - Corrected typo in example from csi to csi1.
-> >> - Removed unnecessary #address-cells and #size-cells in example.
-> >> - Removed setting of status from the example.
-> >>
-> >>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
-> >>  1 file changed, 85 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> new file mode 100644
-> >> index 0000000..7714fb3
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> @@ -0,0 +1,85 @@
-> >> +Broadcom BCM283x Camera Interface (Unicam)
-> >> +------------------------------------------
-> >> +
-> >> +The Unicam block on BCM283x SoCs is the receiver for either
-> >> +CSI-2 or CCP2 data from image sensors or similar devices.
-> >> +
-> >> +The main platform using this SoC is the Raspberry Pi family of boards.
-> >> +On the Pi the VideoCore firmware can also control this hardware block,
-> >> +and driving it from two different processors will cause issues.
-> >> +To avoid this, the firmware checks the device tree configuration
-> >> +during boot. If it finds device tree nodes called csi0 or csi1 then
-> >> +it will stop the firmware accessing the block, and it can then
-> >> +safely be used via the device tree binding.
-> >> +
-> >> +Required properties:
-> >> +===================
-> >> +- compatible : must be "brcm,bcm2835-unicam".
-> >> +- reg                : physical base address and length of the register sets for the
-> >> +               device.
-> >> +- interrupts : should contain the IRQ line for this Unicam instance.
-> >> +- clocks     : list of clock specifiers, corresponding to entries in
-> >> +               clock-names property.
-> >> +- clock-names        : must contain an "lp" entry, matching entries in the
-> >> +               clocks property.
-> >> +
-> >> +Unicam supports a single port node. It should contain one 'port' child node
-> >> +with child 'endpoint' node. Please refer to the bindings defined in
-> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >> +
-> >> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
-> >> +are mandatory.
-> >> +Data lane reordering is not supported so the data lanes must be in order,
-> >> +starting at 1. The number of data lanes should represent the number of
-> >> +usable lanes for the hardware block. That may be limited by either the SoC or
-> >> +how the platform presents the interface, and the lower value must be used.
-> >> +
-> >> +Lane reordering is not supported on the clock lane either, so the optional
-> >> +property "clock-lane" will implicitly be <0>.
-> >> +Similarly lane inversion is not supported, therefore "lane-polarities" will
-> >> +implicitly be <0 0 0 0 0>.
-> >> +Neither of these values will be checked.
-> >> +
-> >> +Example:
-> >> +     csi1: csi1@7e801000 {
-> >> +             compatible = "brcm,bcm2835-unicam";
-> >> +             reg = <0x7e801000 0x800>,
-> >> +                   <0x7e802004 0x4>;
-> >
-> > sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
+> Device Tree bindings for Altera ASMI Parallel II IP Core
+> connected to a flash chip.
 > 
-> CMI (Clock Manager Image) consists of a total of 4 registers.
-> 0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
-> inversion of the clock and data lanes (2 data lanes available on
-> CAM0).
-> 0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
-> inversion of the clock and data lanes (4 data lanes available on
-> CAM1).
-> 0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
-> 0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
-> default value is the required value. Nothing touches it that I can
-> find.
-> 
-> The range listed only covers the one register associated with that
-> Unicam instance, so no other users. The other two aren't touched.
-> Do 16 active register bits solely for camera clock gating really
-> warrant a full clock driver?
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+> v2:
+>     Made substitutions suggested by Rob Herring.
+>     Emphasize driver expects controller is connected to spi-nor flash.
+> ---
+>  Documentation/devicetree/bindings/mtd/altera-asmip2.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
 
-You should describe all the registers in DT, not just what the driver 
-(currently) uses.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
