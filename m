@@ -1,148 +1,75 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
-Date: Wed, 27 Sep 2017 01:15:12 +0000
-Message-ID: <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc>
-References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
- <87377fmbpw.fsf@free-electrons.com> <1506289460890.34765@alliedtelesis.co.nz>
- <87lgl1ishv.fsf@free-electrons.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
+Date: Wed, 27 Sep 2017 09:18:20 +0800
+Message-ID: <1506475100.19851.9.camel@mhfsdcap03>
+References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+         <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
+         <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
+         <1505355021.8308.4.camel@mhfsdcap03>
+         <CAPDyKFrUe-0hEsxVRQSZvujcXY8WrR6m-0DMW=VwDDLvz7Lexw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrUe-0hEsxVRQSZvujcXY8WrR6m-0DMW=VwDDLvz7Lexw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,=0A=
-=0A=
-On 27/09/17 00:56, Gregory CLEMENT wrote:=0A=
-> Hi Kalyan,=0A=
-> =0A=
-> Please try avoid top-posting.=0A=
-> =0A=
->   On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.=
-co.nz> wrote:=0A=
-> =0A=
->> Hi Gregory,=0A=
->>=0A=
->> I got this information from Armada-38x functional errata document.=0A=
-> =0A=
-> OK but in any case just adding a new compatible was not enough you have=
-=0A=
-> to update the driver in the same time, however for this case we won't=0A=
-> need it, see below.=0A=
-> =0A=
->>=0A=
->> I can add the "marvell,mv78230-i2c" compatible string to the appropriate=
-  device tree files=0A=
->> but the i2c-mv64xxx driver enables an additional  feature (offload i2c t=
-ransactions)=0A=
->> based on the compatible string "marvell,mv78230-i2c".=0A=
->>=0A=
->> I am not sure if this feature (offload i2c transactions) should be enabl=
-ed for Armada-38x devices.=0A=
->> That is the reason I felt for the need of a new compatible string=0A=
->> specifically for Armada-38x SoCs.=0A=
-> =0A=
-> Indeed the Armada-38x SoCs does not support hardware offloading (at=0A=
-> least according the datasheet). But it happens that in the earlier=0A=
-> version of the Armada XP the hardware offloading was buggy, so we=0A=
-> introduced a compatible for this case: marvell,mv78230-a0-i2c. This=0A=
-> compatible enable the errata fix but not the offloading feature. That=0A=
-> means that it is exactly the compatible you need for Armada 38x (and=0A=
-> Armada 39x and 375 I think).=0A=
-=0A=
-The "mv78230-a0-i2c" dt-binding has the following note=0A=
-=0A=
-   Note: Only use "marvell,mv78230-a0-i2c" for a=0A=
-   very rare, initial version of the SoC which=0A=
-   had broken offload support.  Linux=0A=
-   auto-detects this and sets it appropriately.=0A=
-=0A=
-If we are going to re-use this binding for armada-38x we should probably =
-=0A=
-remove this note. Personally my preference would be an armada-38x =0A=
-compatible string (or 370 if that's the common base of these SoCs). But =0A=
-of course we'll go with whatever your preference is as maintainer.=0A=
-=0A=
-> =0A=
-> Gregory=0A=
-> =0A=
->>=0A=
->> Thanks,=0A=
->> Kalyan=0A=
->> ________________________________________=0A=
->> From: Gregory CLEMENT <gregory.clement@free-electrons.com>=0A=
->> Sent: Friday, 22 September 2017 7:30 p.m.=0A=
->> To: Kalyan Kinthada=0A=
->> Cc: devicetree@vger.kernel.org; wsa@the-dreams.de; robh+dt@kernel.org;=
-=0A=
->> pawel.moll@arm.com; mark.rutland@arm.com;=0A=
->> ijc+devicetree@hellion.org.uk; galak@codeaurora.org;=0A=
->> linux-i2c@vger.kernel.org; linux-kernel@vger.kernel.org; Chris Packham=
-=0A=
->> Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding=0A=
->>=0A=
->> Hi Kalyan,=0A=
->>=0A=
->>   On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis=
-.co.nz> wrote:=0A=
->>=0A=
->>> All armada-38x variants(380, 385, 388) SoCs have an issue=0A=
->>> in i2c controller which violates the i2c repeated start timing.=0A=
->>=0A=
->>=0A=
->> Did you had an issue with one of the SoC ?=0A=
->> If yes what was your setting ?=0A=
->> On my side I never managed to have this sort of issue on Armada 38x.=0A=
->>=0A=
->>>=0A=
->>> This errata is fixed in the i2c-mv64xxx driver but enabled=0A=
->>> only for devices with compatible string "marvell,mv78230-i2c".=0A=
->>=0A=
->> In this case why not just adding the "marvell,mv78230-i2c" as compatible=
-=0A=
->> string in the appropriate device tree files ?=0A=
->>=0A=
->> Gregory=0A=
->>=0A=
->>>=0A=
->>> This patch introduces a new compatible string=0A=
->>> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs=0A=
->>> so that the workaound is enabled.=0A=
->>=0A=
->>=0A=
->>>=0A=
->>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>=0A=
->>> ---=0A=
->>>   Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +=0A=
->>>   1 file changed, 1 insertion(+)=0A=
->>>=0A=
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Do=
-cumentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
->>> index 5c30026921..fc100b6bdb 100644=0A=
->>> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
->>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
->>> @@ -14,6 +14,7 @@ Required properties :=0A=
->>>                            very rare, initial version of the SoC which=
-=0A=
->>>                            had broken offload support.  Linux=0A=
->>>                            auto-detects this and sets it appropriately.=
-=0A=
->>> +                     - "marvell,armada-38x-i2c"=0A=
->>>    - interrupts      : The interrupt number=0A=
->>>=0A=
->>>   Optional properties :=0A=
->>> --=0A=
->>> 2.14.1=0A=
->>>=0A=
->>=0A=
->> --=0A=
->> Gregory Clement, Free Electrons=0A=
->> Kernel, drivers, real-time and embedded Linux=0A=
->> development, consulting, training and support.=0A=
->> http://free-electrons.com=0A=
-> =0A=
-=0A=
+On Wed, 2017-09-27 at 00:33 +0200, Ulf Hansson wrote:
+> On 14 September 2017 at 04:10, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> > On Wed, 2017-09-13 at 09:10 -0500, Rob Herring wrote:
+> >> On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
+> >> > Change the comptiable for support of multi-platform
+> >> > Add description for reg
+> >> > Add description for source_cg
+> >> > Add description for mediatek,latch-ck
+> >>
+> >> This is at least the 3rd patch with exactly the same vague subject.
+> >> Please make the subject somewhat unique.
+> >>
+> > Thx, will change the subject at next version
+> >> >
+> >> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+> >> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> >> > index 4182ea3..405cd06 100644
+> >> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> >> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> >> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+> >> >  and the properties used by the msdc driver.
+> >> >
+> >> >  Required properties:
+> >> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+> >> > +- compatible: value should be either of the following.
+> >> > +   "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+> >> > +   "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> >> > +   "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> >> > +   "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> >> > +- reg: physical base address of the controller and length
+> >> >  - interrupts: Should contain MSDC interrupt number
+> >> > -- clocks: MSDC source clock, HCLK
+> >> > -- clock-names: "source", "hclk"
+> >> > +- clocks: MSDC source clock, HCLK, source_cg
+> >> > +- clock-names: "source", "hclk", "source_cg"
+> >>
+> >> All chips support source_cg? That's not backwards compatible for
+> >> existing compatible strings if the driver requires it.
+> > Not all chips support source_cg, for chips which do not support
+> > source_cg, no need source_cg here, and the driver will parse it
+> > to know if current chip support it.
+> 
+> In such case you must not add add a required binding for it. I think
+> that is what Rob is trying to point out for you.
+> 
+> [...]
+> 
+> Kind regards
+> Uffe
+The source_cg is required(MUST) at MT2712 and future SoCs, but not
+required(do not have it) at previous SoCs, so that put it at required
+properties, let the driver to handle it.
