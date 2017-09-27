@@ -1,96 +1,65 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v2 4/6] dt-bindings: rtc: DS1307 and compatibles are not trivial
-Date: Wed, 27 Sep 2017 16:03:43 +0200
-Message-ID: <20170927140345.5537-5-alexandre.belloni@free-electrons.com>
-References: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rtc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v6 11/11] of: mdio: Prevent
+ of_mdiobus_register from scanning mdio-mux nodes
+Date: Wed, 27 Sep 2017 16:12:13 +0200
+Message-ID: <20170927141213.GF13516@lunn.ch>
+References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+ <20170927073414.17361-12-clabbe.montjoie@gmail.com>
+Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJNHL5JSEOBBRXDV3HAKGQEY456UHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170927073414.17361-12-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document optional properties for ds1307 and compatible RTCs
+On Wed, Sep 27, 2017 at 09:34:14AM +0200, Corentin Labbe wrote:
+> Each child node of an MDIO node is scanned as a PHY when calling
+> of_mdiobus_register() givint the following result:
+> [   18.175379] mdio_bus stmmac-0: /soc/ethernet@1c30000/mdio/mdio-mux has invalid PHY address
+> [   18.175408] mdio_bus stmmac-0: scan phy mdio-mux at address 0
+> [   18.175450] mdio_bus stmmac-0: scan phy mdio-mux at address 1
+> [...]
+> [   18.176420] mdio_bus stmmac-0: scan phy mdio-mux at address 30
+> [   18.176452] mdio_bus stmmac-0: scan phy mdio-mux at address 31
+> 
+> Since mdio-mux nodes are not PHY, this patch a way to to not scan
+> them.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- .../devicetree/bindings/rtc/rtc-ds1307.txt         | 36 ++++++++++++++++++++++
- .../devicetree/bindings/trivial-devices.txt        |  6 ----
- 2 files changed, 36 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+Hi Corentin
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-new file mode 100644
-index 000000000000..c010f18a85a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
-@@ -0,0 +1,36 @@
-+Dallas DS1307 and compatible RTC
-+
-+Required properties:
-+- compatible: should be one of:
-+	"dallas,ds1307",
-+	"dallas,ds1308",
-+	"dallas,ds1337",
-+	"dallas,ds1338",
-+	"dallas,ds1339",
-+	"dallas,ds1388",
-+	"dallas,ds1340",
-+	"dallas,ds1341",
-+	"maxim,ds3231",
-+	"st,m41t0",
-+	"st,m41t00",
-+	"microchip,mcp7940x",
-+	"microchip,mcp7941x",
-+	"pericom,pt7c4338",
-+	"epson,rx8025",
-+	"isil,isl12057"
-+- reg: I2C bus address of the device
-+
-+Optional properties:
-+- interrupt-parent: phandle for the interrupt controller.
-+- interrupts: rtc alarm interrupt.
-+- clock-output-names: From common clock binding to override the default output
-+                      clock name
-+- wakeup-source: Enables wake up of host system on alarm
-+
-+Example:
-+	rtc1: ds1339@68 {
-+		compatible = "dallas,ds1339";
-+		reg = <0x68>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <20 0>;
-+	};
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index d0666acdec66..db7dc1edd4a2 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -36,9 +36,6 @@ atmel,at97sc3204t	i2c trusted platform module (TPM)
- capella,cm32181		CM32181: Ambient Light Sensor
- capella,cm3232		CM3232: Ambient Light Sensor
- cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
--dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
--dallas,ds1338		I2C RTC with 56-Byte NV RAM
--dallas,ds1340		I2C RTC with Trickle Charger
- dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
- dallas,ds1631		High-Precision Digital Thermometer
- dallas,ds1672		Dallas DS1672 Real-time Clock
-@@ -55,7 +52,6 @@ dlg,da9063		DA9063: system PMIC for quad-core application processors
- domintech,dmard09	DMARD09: 3-axis Accelerometer
- domintech,dmard10	DMARD10: 3-axis Accelerometer
- epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
--epson,rx8025		High-Stability. I2C-Bus INTERFACE REAL TIME CLOCK MODULE
- epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- emmicro,em3027		EM Microelectronic EM3027 Real-time Clock
- fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
-@@ -179,8 +175,6 @@ sii,s35390a		2-wire CMOS real-time clock
- silabs,si7020		Relative Humidity and Temperature Sensors
- skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st,24c256		i2c serial eeprom  (24cxx)
--st,m41t0		Serial real-time clock (RTC)
--st,m41t00		Serial real-time clock (RTC)
- st,m41t62		Serial real-time clock (RTC) with alarm
- st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
- taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
--- 
-2.14.2
+I still don't like this, but ...
+
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/of_mdio.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index d94dd8b77abd..d90ddb0d90f2 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -190,6 +190,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  	struct device_node *child;
+>  	bool scanphys = false;
+>  	int addr, rc;
+> +	static const struct of_device_id do_not_scan[] = {
+> +		{ .compatible = "mdio-mux" },
+> +		{}
+> +	};
+
+Please rename this to some less generic. What i don't want is other
+compatible strings added here. We want to make the exception for
+muxes, but nothing else. So something like compatible_muxes?
+
+       Andrew
