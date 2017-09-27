@@ -1,52 +1,151 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/9] usb: xhci-mtk: check clock stability of U3_MAC
-Date: Wed, 27 Sep 2017 17:22:59 +0800
-Message-ID: <afc5cff346c5a349177990999df3dd7604966de4.1506503879.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 6/9] usb: xhci-mtk: add optional mcu and dma bus clocks
+Date: Wed, 27 Sep 2017 17:23:02 +0800
+Message-ID: <3f81e076f513ef7d3e3e20ba2f752ed5bd48c9a2.1506503879.git.chunfeng.yun@mediatek.com>
 References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is useful to find out the root cause when the Super Speed doesn't
-work. Such as when the T-PHY is switched to PCIe or SATA, and affects
-Super Speed function, the check will fail.
+There are mcu_bus and dma_bus clocks needed to be controlled by
+driver on some SoCs, so add them as optional ones
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/host/xhci-mtk.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/host/xhci-mtk.c |   79 ++++++++++++++++++++++++++++++++-----------
+ drivers/usb/host/xhci-mtk.h |    2 ++
+ 2 files changed, 62 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 9502ca4..7a92bb7 100644
+index d60463c..e5caabe 100644
 --- a/drivers/usb/host/xhci-mtk.c
 +++ b/drivers/usb/host/xhci-mtk.c
-@@ -43,6 +43,7 @@
+@@ -221,6 +221,44 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+ 	return xhci_mtk_host_enable(mtk);
+ }
  
- /* ip_pw_sts1 register */
- #define STS1_IP_SLEEP_STS	BIT(30)
-+#define STS1_U3_MAC_RST	BIT(16)
- #define STS1_XHCI_RST		BIT(11)
- #define STS1_SYS125_RST	BIT(10)
- #define STS1_REF_RST		BIT(8)
-@@ -125,6 +126,9 @@ static int xhci_mtk_host_enable(struct xhci_hcd_mtk *mtk)
- 	check_val = STS1_SYSPLL_STABLE | STS1_REF_RST |
- 			STS1_SYS125_RST | STS1_XHCI_RST;
- 
-+	if (mtk->num_u3_ports)
-+		check_val |= STS1_U3_MAC_RST;
++/* ignore the error if the clock does not exist */
++static struct clk *optional_clk_get(struct device *dev, const char *id)
++{
++	struct clk *opt_clk;
 +
- 	ret = readl_poll_timeout(&ippc->ip_pw_sts1, value,
- 			  (check_val == (value & check_val)), 100, 20000);
- 	if (ret) {
++	opt_clk = devm_clk_get(dev, id);
++	/* ignore error number except EPROBE_DEFER */
++	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
++		opt_clk = NULL;
++
++	return opt_clk;
++}
++
++static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
++{
++	struct device *dev = mtk->dev;
++
++	mtk->sys_clk = devm_clk_get(dev, "sys_ck");
++	if (IS_ERR(mtk->sys_clk)) {
++		dev_err(dev, "fail to get sys_ck\n");
++		return PTR_ERR(mtk->sys_clk);
++	}
++
++	mtk->ref_clk = optional_clk_get(dev, "ref_ck");
++	if (IS_ERR(mtk->ref_clk))
++		return PTR_ERR(mtk->ref_clk);
++
++	mtk->mcu_clk = optional_clk_get(dev, "mcu_ck");
++	if (IS_ERR(mtk->mcu_clk))
++		return PTR_ERR(mtk->mcu_clk);
++
++	mtk->dma_clk = optional_clk_get(dev, "dma_ck");
++	if (IS_ERR(mtk->dma_clk))
++		return PTR_ERR(mtk->dma_clk);
++
++	return 0;
++}
++
+ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+ {
+ 	int ret;
+@@ -237,16 +275,34 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+ 		goto sys_clk_err;
+ 	}
+ 
++	ret = clk_prepare_enable(mtk->mcu_clk);
++	if (ret) {
++		dev_err(mtk->dev, "failed to enable mcu_clk\n");
++		goto mcu_clk_err;
++	}
++
++	ret = clk_prepare_enable(mtk->dma_clk);
++	if (ret) {
++		dev_err(mtk->dev, "failed to enable dma_clk\n");
++		goto dma_clk_err;
++	}
++
+ 	return 0;
+ 
++dma_clk_err:
++	clk_disable_unprepare(mtk->mcu_clk);
++mcu_clk_err:
++	clk_disable_unprepare(mtk->sys_clk);
+ sys_clk_err:
+ 	clk_disable_unprepare(mtk->ref_clk);
+ ref_clk_err:
+-	return -EINVAL;
++	return ret;
+ }
+ 
+ static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
+ {
++	clk_disable_unprepare(mtk->dma_clk);
++	clk_disable_unprepare(mtk->mcu_clk);
+ 	clk_disable_unprepare(mtk->sys_clk);
+ 	clk_disable_unprepare(mtk->ref_clk);
+ }
+@@ -529,24 +585,9 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(mtk->vusb33);
+ 	}
+ 
+-	mtk->sys_clk = devm_clk_get(dev, "sys_ck");
+-	if (IS_ERR(mtk->sys_clk)) {
+-		dev_err(dev, "fail to get sys_ck\n");
+-		return PTR_ERR(mtk->sys_clk);
+-	}
+-
+-	/*
+-	 * reference clock is usually a "fixed-clock", make it optional
+-	 * for backward compatibility and ignore the error if it does
+-	 * not exist.
+-	 */
+-	mtk->ref_clk = devm_clk_get(dev, "ref_ck");
+-	if (IS_ERR(mtk->ref_clk)) {
+-		if (PTR_ERR(mtk->ref_clk) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		mtk->ref_clk = NULL;
+-	}
++	ret = xhci_mtk_clks_get(mtk);
++	if (ret)
++		return ret;
+ 
+ 	mtk->lpm_support = of_property_read_bool(node, "usb3-lpm-capable");
+ 	/* optional property, ignore the error if it does not exist */
+diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
+index 67783a7..45ff5c6 100644
+--- a/drivers/usb/host/xhci-mtk.h
++++ b/drivers/usb/host/xhci-mtk.h
+@@ -126,6 +126,8 @@ struct xhci_hcd_mtk {
+ 	struct regulator *vbus;
+ 	struct clk *sys_clk;	/* sys and mac clock */
+ 	struct clk *ref_clk;
++	struct clk *mcu_clk;
++	struct clk *dma_clk;
+ 	struct regmap *pericfg;
+ 	struct phy **phys;
+ 	int num_phys;
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
