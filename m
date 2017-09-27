@@ -1,94 +1,63 @@
-From: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
-Subject: Re: [PATCH 2/2] mtd: nand: pxa3xx: Handle "marvell, nand-force-csx"
- compatible string
-Date: Wed, 27 Sep 2017 00:54:05 +0000
-Message-ID: <7493494e-23f6-feed-73e7-59d6819d98db@alliedtelesis.co.nz>
-References: <20170926041700.22663-1-kalyan.kinthada@alliedtelesis.co.nz>
- <20170926041700.22663-3-kalyan.kinthada@alliedtelesis.co.nz>
- <20170926091852.196f647d@xps13>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170926091852.196f647d@xps13>
-Content-Language: en-US
-Content-ID: <0EAFB8CA9420604E849428CD69FC511A@atlnz.lc>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH v2 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370 variants.
+Date: Wed, 27 Sep 2017 13:55:16 +1300
+Message-ID: <20170927005516.28374-2-kalyan.kinthada@alliedtelesis.co.nz>
+References: <20170927005516.28374-1-kalyan.kinthada@alliedtelesis.co.nz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170927005516.28374-1-kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYvMDkvMTcgMjA6MTgsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+IEhpIEthbHlhbiwNCj4N
-Cj4gT24gVHVlLCAyNiBTZXAgMjAxNyAxNzoxNzowMCArMTMwMA0KPiBLYWx5YW4gS2ludGhhZGEg
-PGthbHlhbi5raW50aGFkYUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4NCj4+IFdoZW4g
-dGhlIGFyYml0cmF0aW9uIGJldHdlZW4gTk9SIGFuZCBOQU5EIGZsYXNoIGlzIGVuYWJsZWQNCj4+
-IHRoZSA8Rk9SQ0VfQ1NYPiBmaWVsZCBiaXRbMjFdIGluIHRoZSBEYXRhIEZsYXNoIENvbnRyb2wg
-UmVnaXN0ZXINCj4+IG5lZWRzIHRvIGJlIHNldCB0byAxIGFjY29yZGluZyB0byBndWlkbGVpbmUg
-R0wtNTgzMDc0MS4NCj4gSSBkbyBhZ3JlZSwgdGhlIGRyaXZlciBsYWNrcyB0aGUgc3VwcG9ydCBv
-ZiB0aGlzIGJpdCwgd2hpY2gNCj4gbG9va3MgaW1wb3J0YW50IHdoZW4geW91IGVmZmVjdGl2ZWx5
-IHVzZSB0aGUgYXJiaXRlci4NCj4gTmV2ZXJ0aGVsZXNzOg0KPg0KPiAtIE9uIFBYQSAobWFydmVs
-bCxweGEzeHgtbmFuZCBjb21wYXRpYmxlKSwgdGhlcmUgaXMgYSBORF9BUkJfRU4gYml0IHRvDQo+
-ICAgIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBhcmJpdGVyLCBidXQgdGhlcmUgaXMgbm8gRk9SQ0Vf
-Q1NYIGJpdCAoYml0IDIxDQo+ICAgIG9mIE5EQ1IsIHRoZSBzbyBjYWxsZWQgQ29udHJvbCBSZWdp
-c3RlciwgaXMgcmVzZXJ2ZWQpLg0KPiAtIE9uIEFybWFkYSAobWFydmVsbCxhcm1hZGEzNzAtbmFu
-ZCksIHRoZXJlIGlzIGEgRk9SQ0VfQ1NYIGJpdCwgYnV0DQo+ICAgIHRoZXJlIGlzIG5vIE5EX0FS
-Ql9FTiBiaXQgaW4gdGhlIE5EQ1IgKG1vdmVkIHRvIHN5c3RlbSByZWdpc3RlcnMpIGFuZA0KPiAg
-ICB0aGUgYXJiaXRyYXRpb24gaXMgYWx3YXlzIGVuYWJsZWQgYnkgZGVmYXVsdC4NCj4NCj4gSSBn
-dWVzcyB5b3Ugc2hvdWxkIGFsd2F5cyBzZXQgdGhlIEZPUkNFX0NTWCBiaXQgd2hlbiB1c2luZyB0
-aGUgYXJtYWRhDQo+IGNvbXBhdGlibGUsIGJlY2F1c2UgaXQgaXMgaGFybWxlc3MsIHJpZ2h0PyBU
-aHVzLCB5b3UgY291bGQgZ2V0IHJpZA0KPiBvZiB0aGUgbmV3IERUIHByb3BlcnR5Lg0KT2suIEkg
-d2lsbCBtYWtlIGNoYW5nZXMgdG8gdGhlIGRyaXZlciB0byBzZXQgRk9SQ0VfQ1NYIGJpdCBmb3Ig
-YWxsDQp2YXJpYW50cyBvZiBBUk1BREEzNzAgdmFyaWFudHMgaW5zdGVhZCBvZiBjcmVhdGluZyBh
-IG5ldyBjb21wYXRpYmxlDQpzdHJpbmcuDQoNCkkgd2lsbCBzZW5kIGEgbmV3IHBhdGNoLiBLaW5k
-bHkgaWdub3JlIHRoZXNlIGNoYW5nZXMuDQpUaGFua3MgZm9yIHlvdXIgdGltZSBNaXF1ZWwuDQoN
-ClRoYW5rIFlvdSwNCkthbHlhbg0KPg0KPiBUaGFuayB5b3UsDQo+IE1pcXXDqGwNCj4NCj4+IFRo
-aXMgY29tbWl0IHNldHMgdGhlIEZPUkNFX0NTWCBiaXQgdG8gMSBpZiB0aGUgY29tcGF0aWJsZQ0K
-Pj4gc3RyaW5nICJtYXJ2ZWxsLG5hbmQtZm9yY2UtY3N4IiBpcyBlbmFibGVkIGluIHRoZSBkZXZp
-Y2UgdHJlZQ0KPj4gb2YgdGhlIGNvcnJlc3BvbmRpbmcgYm9hcmRzLg0KPj4NCj4+IFNpZ25lZC1v
-ZmYtYnk6IEthbHlhbiBLaW50aGFkYSA8a2FseWFuLmtpbnRoYWRhQGFsbGllZHRlbGVzaXMuY28u
-bno+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5jICAgICAgICAg
-ICAgICAgIHwgNiArKysrKysNCj4+ICAgaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210ZC1u
-YW5kLXB4YTN4eC5oIHwgMyArKysNCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMo
-KykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5jDQo+
-PiBiL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQuYyBpbmRleCA4NWNmZjY4NjQzZTAuLjRh
-ZDFmMDYwMTkzMA0KPj4gMTAwNjQ0IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQu
-Yw0KPj4gKysrIGIvZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5jDQo+PiBAQCAtNjgsNiAr
-NjgsNyBAQA0KPj4gICAjZGVmaW5lIE5EQ1JfUEFHRV9TWgkJKDB4MSA8PCAyNCkNCj4+ICAgI2Rl
-ZmluZSBORENSX05DU1gJCSgweDEgPDwgMjMpDQo+PiAgICNkZWZpbmUgTkRDUl9ORF9NT0RFCQko
-MHgzIDw8IDIxKQ0KPj4gKyNkZWZpbmUgTkRDUl9GT1JDRV9DU1gJCSgweDEgPDwgMjEpDQo+PiAg
-ICNkZWZpbmUgTkRDUl9OQU5EX01PREUgICAJKDB4MCkNCj4+ICAgI2RlZmluZSBORENSX0NMUl9Q
-R19DTlQJCSgweDEgPDwgMjApDQo+PiAgICNkZWZpbmUgTkZDVjFfTkRDUl9BUkJfQ05UTAkoMHgx
-IDw8IDE5KQ0KPj4gQEAgLTE0NjQsNiArMTQ2NSw3IEBAIHN0YXRpYyBpbnQgcHhhM3h4X25hbmRf
-Y29uZmlnX2lkZW50KHN0cnVjdA0KPj4gcHhhM3h4X25hbmRfaW5mbyAqaW5mbykgaW5mby0+Y2h1
-bmtfc2l6ZSA9IFBBR0VfQ0hVTktfU0laRTsNCj4+ICAgCWluZm8tPnJlZ19uZGNyID0gMHgwOyAv
-KiBlbmFibGUgYWxsIGludGVycnVwdHMgKi8NCj4+ICAgCWluZm8tPnJlZ19uZGNyIHw9IChwZGF0
-YS0+ZW5hYmxlX2FyYml0ZXIpID8gTkRDUl9ORF9BUkJfRU4gOg0KPj4gMDsNCj4+ICsJaW5mby0+
-cmVnX25kY3IgfD0gKHBkYXRhLT5mb3JjZV9jc3gpID8gTkRDUl9GT1JDRV9DU1ggOiAwOw0KPj4g
-ICAJaW5mby0+cmVnX25kY3IgfD0gTkRDUl9SRF9JRF9DTlQoUkVBRF9JRF9CWVRFUyk7DQo+PiAg
-IAlpbmZvLT5yZWdfbmRjciB8PSBORENSX1NQQVJFX0VOOw0KPj4gICANCj4+IEBAIC0xNDk4LDYg
-KzE1MDAsNyBAQCBzdGF0aWMgdm9pZCBweGEzeHhfbmFuZF9kZXRlY3RfY29uZmlnKHN0cnVjdA0K
-Pj4gcHhhM3h4X25hbmRfaW5mbyAqaW5mbykgaW5mby0+cmVnX25kY3IgPSBuZGNyICYNCj4+ICAg
-CQl+KE5EQ1JfSU5UX01BU0sgfCBORENSX05EX0FSQl9FTiB8DQo+PiBORkNWMV9ORENSX0FSQl9D
-TlRMKTsgaW5mby0+cmVnX25kY3IgfD0gKHBkYXRhLT5lbmFibGVfYXJiaXRlcikgPw0KPj4gTkRD
-Ul9ORF9BUkJfRU4gOiAwOw0KPj4gKwlpbmZvLT5yZWdfbmRjciB8PSAocGRhdGEtPmZvcmNlX2Nz
-eCkgPyBORENSX0ZPUkNFX0NTWCA6IDA7DQo+PiAgIAlpbmZvLT5uZHRyMGNzMCA9IG5hbmRfcmVh
-ZGwoaW5mbywgTkRUUjBDUzApOw0KPj4gICAJaW5mby0+bmR0cjFjczAgPSBuYW5kX3JlYWRsKGlu
-Zm8sIE5EVFIxQ1MwKTsNCj4+ICAgfQ0KPj4gQEAgLTE5MzYsNiArMTkzOSw5IEBAIHN0YXRpYyBp
-bnQgcHhhM3h4X25hbmRfcHJvYmVfZHQoc3RydWN0DQo+PiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-IHBkYXRhLT5lbmFibGVfYXJiaXRlciA9IDE7DQo+PiAgIAlpZiAob2ZfZ2V0X3Byb3BlcnR5KG5w
-LCAibWFydmVsbCxuYW5kLWtlZXAtY29uZmlnIiwgTlVMTCkpDQo+PiAgIAkJcGRhdGEtPmtlZXBf
-Y29uZmlnID0gMTsNCj4+ICsJaWYgKG9mX2dldF9wcm9wZXJ0eShucCwgIm1hcnZlbGwsbmFuZC1m
-b3JjZS1jc3giLCBOVUxMKSkNCj4+ICsJCS8qIFJlZiM6IEdMLTU4MzA3NDEgKi8NCj4+ICsJCXBk
-YXRhLT5mb3JjZV9jc3ggPSAxOw0KPj4gICAJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJudW0t
-Y3MiLCAmcGRhdGEtPm51bV9jcyk7DQo+PiAgIA0KPj4gICAJcGRldi0+ZGV2LnBsYXRmb3JtX2Rh
-dGEgPSBwZGF0YTsNCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEv
-bXRkLW5hbmQtcHhhM3h4LmgNCj4+IGIvaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210ZC1u
-YW5kLXB4YTN4eC5oIGluZGV4DQo+PiAzOTRkMTU1OTdkYzcuLmU3ZjJjODY0N2MwZSAxMDA2NDQg
-LS0tDQo+PiBhL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9tdGQtbmFuZC1weGEzeHguaCAr
-KysNCj4+IGIvaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210ZC1uYW5kLXB4YTN4eC5oIEBA
-IC0yOCw2ICsyOCw5IEBADQo+PiBzdHJ1Y3QgcHhhM3h4X25hbmRfcGxhdGZvcm1fZGF0YSB7IC8q
-IGFsbG93IHBsYXRmb3JtIGNvZGUgdG8ga2VlcA0KPj4gT0JNL2Jvb3Rsb2FkZXIgZGVmaW5lZCBO
-RkMgY29uZmlnICovIGludAlrZWVwX2NvbmZpZzsNCj4+ICAgDQo+PiArCS8qIEZvcmNlIGNoaXAg
-c2VsZWN0IGZhbHNlIG9uIGJ1c3kgKi8NCj4+ICsJaW50CWZvcmNlX2NzeDsNCj4+ICsNCj4+ICAg
-CS8qIGluZGljYXRlIGhvdyBtYW55IGNoaXAgc2VsZWN0cyB3aWxsIGJlIHVzZWQgKi8NCj4+ICAg
-CWludAludW1fY3M7DQo+PiAgIA0KPg0KPg0K
+When the arbitration between NOR and NAND flash is enabled
+the <FORCE_CSX> field bit[21] in the Data Flash Control Register
+needs to be set to 1 according to guidleine GL-5830741.
+
+This commit sets the FORCE_CSX bit to 1 for all
+ARMADA370 variants as the arbitration is always enabled by default.
+
+Signed-off-by: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+---
+ drivers/mtd/nand/pxa3xx_nand.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
+index 85cff68643e0..b2753eea567c 100644
+--- a/drivers/mtd/nand/pxa3xx_nand.c
++++ b/drivers/mtd/nand/pxa3xx_nand.c
+@@ -68,6 +68,7 @@
+ #define NDCR_PAGE_SZ		(0x1 << 24)
+ #define NDCR_NCSX		(0x1 << 23)
+ #define NDCR_ND_MODE		(0x3 << 21)
++#define NDCR_FORCE_CSX		(0x1 << 21)
+ #define NDCR_NAND_MODE   	(0x0)
+ #define NDCR_CLR_PG_CNT		(0x1 << 20)
+ #define NFCV1_NDCR_ARB_CNTL	(0x1 << 19)
+@@ -1464,6 +1465,9 @@ static int pxa3xx_nand_config_ident(struct pxa3xx_nand_info *info)
+ 	info->chunk_size = PAGE_CHUNK_SIZE;
+ 	info->reg_ndcr = 0x0; /* enable all interrupts */
+ 	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN : 0;
++	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#: GL-5830741*/
++	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
++		info->reg_ndcr |= NDCR_FORCE_CSX;
+ 	info->reg_ndcr |= NDCR_RD_ID_CNT(READ_ID_BYTES);
+ 	info->reg_ndcr |= NDCR_SPARE_EN;
+ 
+@@ -1498,6 +1502,9 @@ static void pxa3xx_nand_detect_config(struct pxa3xx_nand_info *info)
+ 	info->reg_ndcr = ndcr &
+ 		~(NDCR_INT_MASK | NDCR_ND_ARB_EN | NFCV1_NDCR_ARB_CNTL);
+ 	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN : 0;
++	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#: GL-5830741*/
++	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
++		info->reg_ndcr |= NDCR_FORCE_CSX;
+ 	info->ndtr0cs0 = nand_readl(info, NDTR0CS0);
+ 	info->ndtr1cs0 = nand_readl(info, NDTR1CS0);
+ }
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
