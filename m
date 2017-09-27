@@ -1,89 +1,68 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v3] ARC: [plat-hsdk]: Add reset controller node to manage
- ethernet reset
-Date: Wed, 27 Sep 2017 10:40:20 -0700
-Message-ID: <85347975-edd9-7658-e2cd-7fe1436c77bb@synopsys.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3] ARC: [plat-hsdk]: Add reset controller node to
+ manage ethernet reset
+Date: Wed, 27 Sep 2017 18:55:01 +0000
+Message-ID: <1506538500.30546.46.camel@synopsys.com>
 References: <20170922164911.1125-1-Eugeniy.Paltsev@synopsys.com>
+         <85347975-edd9-7658-e2cd-7fe1436c77bb@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170922164911.1125-1-Eugeniy.Paltsev@synopsys.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <85347975-edd9-7658-e2cd-7fe1436c77bb-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-ID: <BF9F0C6546B144458496C8787A2694CF-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2017 09:49 AM, Eugeniy Paltsev wrote:
-> DW ethernet controller on HSDK hangs sometimes after SW reset, so
-> add reset node to make possible to reset DW ethernet controller HW.
->
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
-> Changes v2 -> v3:
->    * Remove v1 suffix as we finaly got rid of v1 suffix in reset
->      driver and docs.
->    * Rename reset node to "reset-controller" for consistency with
->      the other bindings.
->
-> Changes v1 -> v2:
->    * Enable HSDK reset driver in hsdk_defconfig
->
->   arch/arc/boot/dts/hsdk.dts      | 9 +++++++++
->   arch/arc/configs/hsdk_defconfig | 1 +
->   2 files changed, 10 insertions(+)
->
-> diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-> index b922f3f..8adde1b 100644
-> --- a/arch/arc/boot/dts/hsdk.dts
-> +++ b/arch/arc/boot/dts/hsdk.dts
-> @@ -12,6 +12,7 @@
->   /dts-v1/;
->   
->   #include <dt-bindings/net/ti-dp83867.h>
-> +#include <dt-bindings/reset/snps,hsdk-reset.h>
->   
->   / {
->   	model = "snps,hsdk";
-> @@ -102,6 +103,12 @@
->   
->   		ranges = <0x00000000 0xf0000000 0x10000000>;
->   
-> +		cgu_rst: reset-controller@8a0 {
-> +			compatible = "snps,hsdk-reset";
-> +			#reset-cells = <1>;
-> +			reg = <0x8A0 0x4>, <0xFF0 0x4>;
-> +		};
-> +
->   		core_clk: core-clk@0 {
->   			compatible = "snps,hsdk-core-pll-clock";
->   			reg = <0x00 0x10>, <0x14B8 0x4>;
-> @@ -158,6 +165,8 @@
->   			clocks = <&gmacclk>;
->   			clock-names = "stmmaceth";
->   			phy-handle = <&phy0>;
-> +			resets = <&cgu_rst HSDK_ETH_RESET>;
-> +			reset-names = "stmmaceth";
->   
->   			mdio {
->   				#address-cells = <1>;
-> diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-> index 7b8f8fa..15f0f6b 100644
-> --- a/arch/arc/configs/hsdk_defconfig
-> +++ b/arch/arc/configs/hsdk_defconfig
-> @@ -63,6 +63,7 @@ CONFIG_MMC_SDHCI=y
->   CONFIG_MMC_SDHCI_PLTFM=y
->   CONFIG_MMC_DW=y
->   # CONFIG_IOMMU_SUPPORT is not set
-> +CONFIG_RESET_HSDK=y
-
-Since we need this feature for our platform, better to just select it in Kconfig.
-
-I can fix it up here if you agree !
-
--Vineet
-
->   CONFIG_EXT3_FS=y
->   CONFIG_VFAT_FS=y
->   CONFIG_TMPFS=y
+T24gV2VkLCAyMDE3LTA5LTI3IGF0IDEwOjQwIC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+
+IE9uIDA5LzIyLzIwMTcgMDk6NDkgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4gPiBEVyBl
+dGhlcm5ldCBjb250cm9sbGVyIG9uIEhTREsgaGFuZ3Mgc29tZXRpbWVzIGFmdGVyIFNXIHJlc2V0
+LCBzbw0KPiA+IGFkZCByZXNldCBub2RlIHRvIG1ha2UgcG9zc2libGUgdG8gcmVzZXQgRFcgZXRo
+ZXJuZXQgY29udHJvbGxlciBIVy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5IFBh
+bHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+ID4gLS0tDQo+ID4gQ2hhbmdl
+cyB2MiAtPiB2MzoNCj4gPiDCoMKgwqAqIFJlbW92ZSB2MSBzdWZmaXggYXMgd2UgZmluYWx5IGdv
+dCByaWQgb2YgdjEgc3VmZml4IGluIHJlc2V0DQo+ID4gwqDCoMKgwqDCoGRyaXZlciBhbmQgZG9j
+cy4NCj4gPiDCoMKgwqAqIFJlbmFtZSByZXNldCBub2RlIHRvICJyZXNldC1jb250cm9sbGVyIiBm
+b3IgY29uc2lzdGVuY3kgd2l0aA0KPiA+IMKgwqDCoMKgwqB0aGUgb3RoZXIgYmluZGluZ3MuDQo+
+ID4gDQo+ID4gQ2hhbmdlcyB2MSAtPiB2MjoNCj4gPiDCoMKgwqAqIEVuYWJsZSBIU0RLIHJlc2V0
+IGRyaXZlciBpbiBoc2RrX2RlZmNvbmZpZw0KPiA+IA0KPiA+IMKgIGFyY2gvYXJjL2Jvb3QvZHRz
+L2hzZGsuZHRzwqDCoMKgwqDCoMKgfCA5ICsrKysrKysrKw0KPiA+IMKgIGFyY2gvYXJjL2NvbmZp
+Z3MvaHNka19kZWZjb25maWcgfCAxICsNCj4gPiDCoCAyIGZpbGVzIGNoYW5nZWQsIDEwIGluc2Vy
+dGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5k
+dHMgYi9hcmNoL2FyYy9ib290L2R0cy9oc2RrLmR0cw0KPiA+IGluZGV4IGI5MjJmM2YuLjhhZGRl
+MWIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMNCj4gPiArKysg
+Yi9hcmNoL2FyYy9ib290L2R0cy9oc2RrLmR0cw0KPiA+IEBAIC0xMiw2ICsxMiw3IEBADQo+ID4g
+wqAgL2R0cy12MS87DQo+ID4gwqDCoA0KPiA+IMKgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9uZXQv
+dGktZHA4Mzg2Ny5oPg0KPiA+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVzZXQvc25wcyxoc2Rr
+LXJlc2V0Lmg+DQo+ID4gwqDCoA0KPiA+IMKgIC8gew0KPiA+IMKgwqAJbW9kZWwgPSAic25wcyxo
+c2RrIjsNCj4gPiBAQCAtMTAyLDYgKzEwMywxMiBAQA0KPiA+IMKgwqANCj4gPiDCoMKgCQlyYW5n
+ZXMgPSA8MHgwMDAwMDAwMCAweGYwMDAwMDAwIDB4MTAwMDAwMDA+Ow0KPiA+IMKgwqANCj4gPiAr
+CQljZ3VfcnN0OiByZXNldC1jb250cm9sbGVyQDhhMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
+c25wcyxoc2RrLXJlc2V0IjsNCj4gPiArCQkJI3Jlc2V0LWNlbGxzID0gPDE+Ow0KPiA+ICsJCQly
+ZWcgPSA8MHg4QTAgMHg0PiwgPDB4RkYwIDB4ND47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gwqDC
+oAkJY29yZV9jbGs6IGNvcmUtY2xrQDAgew0KPiA+IMKgwqAJCQljb21wYXRpYmxlID0gInNucHMs
+aHNkay1jb3JlLXBsbC1jbG9jayI7DQo+ID4gwqDCoAkJCXJlZyA9IDwweDAwIDB4MTA+LCA8MHgx
+NEI4IDB4ND47DQo+ID4gQEAgLTE1OCw2ICsxNjUsOCBAQA0KPiA+IMKgwqAJCQljbG9ja3MgPSA8
+JmdtYWNjbGs+Ow0KPiA+IMKgwqAJCQljbG9jay1uYW1lcyA9ICJzdG1tYWNldGgiOw0KPiA+IMKg
+wqAJCQlwaHktaGFuZGxlID0gPCZwaHkwPjsNCj4gPiArCQkJcmVzZXRzID0gPCZjZ3VfcnN0IEhT
+REtfRVRIX1JFU0VUPjsNCj4gPiArCQkJcmVzZXQtbmFtZXMgPSAic3RtbWFjZXRoIjsNCj4gPiDC
+oMKgDQo+ID4gwqDCoAkJCW1kaW8gew0KPiA+IMKgwqAJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJjL2NvbmZpZ3MvaHNka19kZWZjb25maWcgYi9hcmNo
+L2FyYy9jb25maWdzL2hzZGtfZGVmY29uZmlnDQo+ID4gaW5kZXggN2I4ZjhmYS4uMTVmMGY2YiAx
+MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FyYy9jb25maWdzL2hzZGtfZGVmY29uZmlnDQo+ID4gKysr
+IGIvYXJjaC9hcmMvY29uZmlncy9oc2RrX2RlZmNvbmZpZw0KPiA+IEBAIC02Myw2ICs2Myw3IEBA
+IENPTkZJR19NTUNfU0RIQ0k9eQ0KPiA+IMKgIENPTkZJR19NTUNfU0RIQ0lfUExURk09eQ0KPiA+
+IMKgIENPTkZJR19NTUNfRFc9eQ0KPiA+IMKgICMgQ09ORklHX0lPTU1VX1NVUFBPUlQgaXMgbm90
+IHNldA0KPiA+ICtDT05GSUdfUkVTRVRfSFNESz15DQo+IA0KPiBTaW5jZSB3ZSBuZWVkIHRoaXMg
+ZmVhdHVyZSBmb3Igb3VyIHBsYXRmb3JtLCBiZXR0ZXIgdG8ganVzdCBzZWxlY3QgaXQgaW4gS2Nv
+bmZpZy4NCj4gSSBjYW4gZml4IGl0IHVwIGhlcmUgaWYgeW91IGFncmVlICENCg0KU3VyZSwgSSdt
+IGZpbmUgd2l0aCBpdC4NCg0KPiANCj4gLVZpbmVldA0KPiANCj4gPiDCoCBDT05GSUdfRVhUM19G
+Uz15DQo+ID4gwqAgQ09ORklHX1ZGQVRfRlM9eQ0KPiA+IMKgIENPTkZJR19UTVBGUz15DQo+IA0K
+PiANCi0tIA0KwqBFdWdlbml5IFBhbHRzZXY=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
