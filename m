@@ -1,76 +1,58 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] ARM: dts: stm32: Add MDMA support for STM32H743
- SoC
-Date: Wed, 27 Sep 2017 09:14:25 +0200
-Message-ID: <f41aee87-fb1f-396b-e6c4-df14c614ee00@st.com>
-References: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
- <1503671466-32029-4-git-send-email-pierre-yves.mordret@st.com>
- <20170926174442.GU30097@localhost>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a77995: draak: enable
+ EthernetAVB
+Date: Wed, 27 Sep 2017 09:18:49 +0200
+Message-ID: <20170927071846.GA18275@verge.net.au>
+References: <1505305119-4257-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1505305119-4257-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdX3q=foc1hkcqTc3WQYxCh1x+bc8fu9+YcqVAx9bp4qaA@mail.gmail.com>
+ <TY1PR06MB0992906ACD39FA3D176CDFE6D86E0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+ <20170915073501.GD3924@verge.net.au>
+ <TY1PR06MB09920DE49B74D16FABE7699DD8660@TY1PR06MB0992.apcprd06.prod.outlook.com>
+ <20170925070742.GC1019@verge.net.au>
+ <TY1PR06MB0992BB60AFD2AC0E24032FE2D8780@TY1PR06MB0992.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170926174442.GU30097@localhost>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB0992BB60AFD2AC0E24032FE2D8780-/PRLmSCtZ16WJvbLRFYGcG0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod
+On Wed, Sep 27, 2017 at 02:03:14AM +0000, Yoshihiro Shimoda wrote:
+> Hi Simon-san,
+> > From: Simon Horman
+> > Sent: Monday, September 25, 2017 4:08 PM
+> > On Thu, Sep 21, 2017 at 10:37:15AM +0000, Yoshihiro Shimoda wrote:
+> > > Hi Simon-san,
+> > > > From: Simon Horman
+> > > > Sent: Friday, September 15, 2017 4:35 PM
 
-On 09/26/2017 07:44 PM, Vinod Koul wrote:
-> On Fri, Aug 25, 2017 at 04:31:05PM +0200, Pierre-Yves MORDRET wrote:
->> This patch adds MDMA support for STM32H743 SoC.
+...
+
+> > > > Thanks. I have marked this as "Deferred" pending acceptance of the PFC
+> > > > patch. Please repost or ping me, f.e. via a reply-to-all to this email,
+> > > > once that dependency is resolved.
+> > >
+> > > Since the PFC patch is applied into renesas-drivers.git / sh-pfc-for-v4.15 branch,
+> > > I'd like to ping you :)
+> > >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=sh-pfc-for-v4.15&id=66abd968d0ef
+> > 3eb10dea45b48a31321eb29258f8
+> > >
+> > > Or, should I rebase this patch on latest devel tag?
+> > > If so, I will rebase it in next Monday because I'll take a day off tomorrow.
+> > 
+> > Thanks for pinging me. I have applied this patch.
+> > There was some fuzz when doing so. Please check that the applied
+> > patch is correct once I have pushed an updated devel branch later today.
 > 
-> Need ACK from ARM folks
+> Thank you for applying!
+> I checked renesas.git / renesas-devel-20170925-v4.14-rc2 tag, and it's correct.
 
-I will take ARM patches (config + DT) in my pull request for 4.15 (if 
-you plan to take driver part in your PR for 4.15)
-
-Regards
-Alex
-
-> 
->>
->> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
->> ---
->>   Version history:
->>      v4:
->>      v3:
->>          * None
->>      v2:
->>          * Add MDMA support in DT for H7
->> ---
->> ---
->>   arch/arm/boot/dts/stm32h743.dtsi | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
->> index 36a99db..af44eae 100644
->> --- a/arch/arm/boot/dts/stm32h743.dtsi
->> +++ b/arch/arm/boot/dts/stm32h743.dtsi
->> @@ -82,6 +82,16 @@
->>   			interrupts = <50>;
->>   			clocks = <&timer_clk>;
->>   		};
->> +
->> +		mdma1: dma@52000000 {
->> +			compatible = "st,stm32h7-mdma";
->> +			reg = <0x52000000 0x1000>;
->> +			interrupts = <122>;
->> +			clocks = <&timer_clk>;
->> +			#dma-cells = <5>;
->> +			dma-channels = <16>;
->> +			dma-requests = <32>;
->> +		};
->>   	};
->>   };
->>   
->> -- 
->> 2.7.4
->>
-> 
+Thanks for checking, much appreciated.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
