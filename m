@@ -1,192 +1,62 @@
-From: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] RM64: dts: ls208xa: Add iommu-map property for pci
-Date: Wed, 27 Sep 2017 10:40:57 +0000
-Message-ID: <AM5PR0401MB2545F32CF49FB1CDAAA997AC9A780@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-References: <1504171424-15536-1-git-send-email-Bharat.Bhushan@nxp.com>
- <06c57ca4-edaa-df26-b1d9-1906141c5065@arm.com>
- <AM5PR0401MB2545B7C55F634D7B9CABAE629A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <10be1849-8071-64fc-5ee2-b6e429c64b9e@arm.com>
- <AM5PR0401MB2545043022CAE0CDECA6267E9A9D0@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <AM5PR0401MB2545BB069D90520FFE9CD3499A920@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <901dee07-d1ee-63cc-59a0-bdf37cd7d937@arm.com>
- <AM5PR0401MB2545129D07EE9263BA4D16DA9A970@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+From: Chen Zhong <chen.zhong@mediatek.com>
+Subject: [PATCH v5 0/6] Add MediaTek PMIC keys support
+Date: Wed, 27 Sep 2017 18:44:02 +0800
+Message-ID: <1506509048-19032-1-git-send-email-chen.zhong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM5PR0401MB2545129D07EE9263BA4D16DA9A970-oQ3wXcTHOqrg6d/1FbYcvI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bharat Bhushan <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Gang Liu <gang.liu-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Linus Walleij <linus.walleij@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Chen Zhong <chen.zhong@mediatek.com>, Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgt
-a2VybmVsLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LWtlcm5lbC0NCj4gb3du
-ZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgQmhhcmF0IEJodXNoYW4NCj4gU2VudDog
-V2VkbmVzZGF5LCBTZXB0ZW1iZXIgMDYsIDIwMTcgMTI6NDcgUE0NCj4gVG86IFJvYmluIE11cnBo
-eSA8cm9iaW4ubXVycGh5QGFybS5jb20+OyBNYXJjIFp5bmdpZXINCj4gPG1hcmMuenluZ2llckBh
-cm0uY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFu
-ZEBhcm0uY29tPjsgd2lsbC5kZWFjb25AYXJtLmNvbTsgb3NzQGJ1c2Vycm9yLm5ldDsgR2FuZw0K
-PiBMaXUgPGdhbmcubGl1QG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb20NCj4gU3ViamVjdDogUkU6IFtQ
-QVRDSF0gUk02NDogZHRzOiBsczIwOHhhOiBBZGQgaW9tbXUtbWFwIHByb3BlcnR5IGZvciBwY2kN
-Cj4gDQo+IEhpIFJvYmluLA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
-IEZyb206IFJvYmluIE11cnBoeSBbbWFpbHRvOnJvYmluLm11cnBoeUBhcm0uY29tXQ0KPiA+IFNl
-bnQ6IEZyaWRheSwgU2VwdGVtYmVyIDAxLCAyMDE3IDQ6MjkgUE0NCj4gPiBUbzogQmhhcmF0IEJo
-dXNoYW4gPGJoYXJhdC5iaHVzaGFuQG54cC5jb20+OyBNYXJjIFp5bmdpZXINCj4gPiA8bWFyYy56
-eW5naWVyQGFybS5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IE1hcmsgUnV0bGFuZA0KPiA+IDxt
-YXJrLnJ1dGxhbmRAYXJtLmNvbT47IHdpbGwuZGVhY29uQGFybS5jb207IG9zc0BidXNlcnJvci5u
-ZXQ7DQo+IEdhbmcNCj4gPiBMaXUgPGdhbmcubGl1QG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gUk02NDogZHRzOiBsczIwOHhhOiBBZGQgaW9tbXUt
-bWFwIHByb3BlcnR5IGZvcg0KPiA+IHBjaQ0KPiA+DQo+ID4gT24gMDEvMDkvMTcgMTE6MTMsIEJo
-YXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4NCj4gPiA+DQo+ID4gPj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0gRnJvbTogbGludXgta2VybmVsLW93bmVyQHZnZXIua2VybmVsLm9yZw0KPiA+
-ID4+IFttYWlsdG86bGludXgta2VybmVsLSBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFs
-ZiBPZiBCaGFyYXQNCj4gPiA+PiBCaHVzaGFuIFNlbnQ6IFRodXJzZGF5LCBBdWd1c3QgMzEsIDIw
-MTcgNDo1MyBQTSBUbzogTWFyYyBaeW5naWVyDQo+ID4gPj4gPG1hcmMuenluZ2llckBhcm0uY29t
-Pjsgcm9iaCtkdEBrZXJuZWwub3JnOyBNYXJrIFJ1dGxhbmQNCj4gPiA+PiA8bWFyay5ydXRsYW5k
-QGFybS5jb20+OyB3aWxsLmRlYWNvbkBhcm0uY29tOyBvc3NAYnVzZXJyb3IubmV0Ow0KPiA+IEdh
-bmcNCj4gPiA+PiBMaXUgPGdhbmcubGl1QG54cC5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsNCj4gPiA+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4
-LQ0KPiA+ID4+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29t
-IFN1YmplY3Q6IFJFOg0KPiA+ID4+IFtQQVRDSF0gUk02NDogZHRzOiBsczIwOHhhOiBBZGQgaW9t
-bXUtbWFwIHByb3BlcnR5IGZvciBwY2kNCj4gPiA+Pg0KPiA+ID4+DQo+ID4gPj4NCj4gPiA+Pj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0gRnJvbTogTWFyYyBaeW5naWVyDQo+ID4gPj4+IFtt
-YWlsdG86bWFyYy56eW5naWVyQGFybS5jb21dIFNlbnQ6IFRodXJzZGF5LCBBdWd1c3QgMzEsIDIw
-MTcNCj4gPiA+Pj4gNDoyMCBQTSBUbzogQmhhcmF0IEJodXNoYW4gPGJoYXJhdC5iaHVzaGFuQG54
-cC5jb20+Ow0KPiA+ID4+PiByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID4gPj4gTWFyaw0KPiA+ID4+
-PiBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IHdpbGwuZGVhY29uQGFybS5jb207DQo+
-ID4gPj4gb3NzQGJ1c2Vycm9yLm5ldDsNCj4gPiA+Pj4gR2FuZyBMaXUgPGdhbmcubGl1QG54cC5j
-b20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+Pj4gbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4gPiA+Pj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb20gU3ViamVjdDogUmU6DQo+ID4gPj4+IFtQQVRD
-SF0gUk02NDogZHRzOiBsczIwOHhhOiBBZGQgaW9tbXUtbWFwIHByb3BlcnR5IGZvciBwY2kNCj4g
-PiA+Pj4NCj4gPiA+Pj4gW0ZpeGluZyBNYXJrJ3MgYWRkcmVzcy4uLl0NCj4gPiA+Pj4NCj4gPiA+
-Pj4gT24gMzEvMDgvMTcgMTE6NDEsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4+Pj4NCj4g
-PiA+Pj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLSBGcm9tOiBNYXJjIFp5bmdpZXINCj4g
-PiA+Pj4+PiBbbWFpbHRvOm1hcmMuenluZ2llckBhcm0uY29tXSBTZW50OiBUaHVyc2RheSwgQXVn
-dXN0IDMxLCAyMDE3DQo+ID4gPj4+Pj4gMzowMiBQTSBUbzogQmhhcmF0IEJodXNoYW4gPGJoYXJh
-dC5iaHVzaGFuQG54cC5jb20+Ow0KPiA+ID4+Pj4+IHJvYmgrZHRAa2VybmVsLm9yZzsgYXJrLnJ1
-dGxhbmRAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gPiA+Pj4+PiBvc3NAYnVzZXJy
-b3IubmV0OyBHYW5nDQo+ID4gPj4+IExpdQ0KPiA+ID4+Pj4+IDxnYW5nLmxpdUBueHAuY29tPjsg
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4gPiA+Pj4+PiBrZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+
-Pj4+PiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbSBTdWJqZWN0OiBSZTogW1BBVENIXSBSTTY0OiBk
-dHM6DQo+ID4gPj4+Pj4gbHMyMDh4YTogQWRkIGlvbW11LW1hcCBwcm9wZXJ0eSBmb3IgcGNpDQo+
-ID4gPj4+Pj4NCj4gPiA+Pj4+PiBPbiAzMS8wOC8xNyAxMDoyMywgQmhhcmF0IEJodXNoYW4gd3Jv
-dGU6DQo+ID4gPj4+Pj4+IFRoaXMgcGF0Y2ggYWRkcyBpb21tdS1tYXAgcHJvcGVydHkgZm9yIFBD
-SWUsIHdoaWNoIGVuYWJsZXMNCj4gPiBTTU1VDQo+ID4gPj4+Pj4+IGZvciB0aGVzZSBkZXZpY2Vz
-IG9uIExTMjA4eEEgZGV2aWNlcy4NCj4gPiA+Pj4+Pj4NCj4gPiA+Pj4+Pj4gU2lnbmVkLW9mZi1i
-eTogQmhhcmF0IEJodXNoYW4gPEJoYXJhdC5CaHVzaGFuQG54cC5jb20+IC0tLQ0KPiA+ID4+Pj4+
-PiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpIHwgNCArKysr
-IDEgZmlsZQ0KPiA+ID4+Pj4+PiBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gPiA+Pj4+Pj4N
-Cj4gPiA+Pj4+Pj4gZGlmZiAtLWdpdA0KPiA+ID4+Pj4+PiBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2ZzbC1sczIwOHhhLmR0c2kNCj4gPiA+Pj4+Pj4gYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDh4YS5kdHNpIGluZGV4DQo+ID4gPj4+Pj4+IDk0Y2RkMzAu
-LjY3Y2Y2MDUgMTAwNjQ0IC0tLQ0KPiA+ID4+Pj4+PiBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2ZzbC1sczIwOHhhLmR0c2kgKysrDQo+ID4gPj4+Pj4+IGIvYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4eGEuZHRzaSBAQCAtNjA2LDYNCj4gPiA+Pj4+Pj4gKzYw
-Niw3IEBAIG51bS1sYW5lcyA9IDw0PjsgYnVzLXJhbmdlID0gPDB4MCAweGZmPjsNCj4gPiA+Pj4+
-Pj4gbXNpLXBhcmVudCA9IDwmaXRzPjsgKwkJCWlvbW11LW1hcCA9IDwwDQo+ICZzbW11IDANCj4g
-PiAxPjsJLyogVGhpcw0KPiA+ID4+Pj4+PiBpcyBmaXhlZC11cCBieQ0KPiA+ID4+Pj4+IHUtYm9v
-dCAqLw0KPiA+ID4+Pj4+DQo+ID4gPj4+Pj4gV2hhdCBkb2VzIHRoaXMgZG8gd2hlbiB5b3VyIHZl
-cnNpb24gb2YgdS1ib290IGRvZXNuJ3QgZmlsbCB0aGlzDQo+ID4gPj4+Pj4gaW4gZm9yDQo+ID4g
-Pj4geW91Pw0KPiA+ID4+Pj4NCj4gPiA+Pj4+IEdvb2QgcXVlc3Rpb24sIGZyYW5rbHkgSSBoYXZl
-IG5vdCB0aG91Z2h0IG9mIHRoaXMgY2FzZSBiZWZvcmUuDQo+ID4gPj4+PiBCdXQgaWYgd2UgcGFz
-cyBsZW5ndGggPSAwIGluIGFib3ZlIHByb3BlcnR5IHRoZW4gbm8gZml4dXAgaGFwcGVuDQo+ID4g
-Pj4+PiB3aXRoIGhhcHBlbiB3aXRoIG9sZGVyIHUtYm9vdC4gSW4gdGhpcyBjYXNlDQo+ID4gPj4+
-PiBvZl9pb21tdV9jb25maWd1cmUoKSB3aWxsIHJldHVybiBOVUxMIGlvbW11LW9wcyBhbmQgaXQg
-c3dpdGNoIHRvDQo+ID4gPj4+PiBzd2lvLXRsYi4gV2lsbCB0aGF0IHdvcms/DQo+ID4gPj4+IEkg
-cmVhbGx5IGRvbid0IGxpa2UgdGhpcy4gWW91IHJlbHkgb24gaGF2aW5nIGludmFsaWQgZGF0YSBp
-biB0aGUNCj4gPiA+Pj4gRFQsIGFuZCB0aGF0IHNlZW1zIGp1c3Qgd3JvbmcuDQo+ID4gPj4+DQo+
-ID4gPj4+IFdoeSBjYW4ndCB1LWJvb3QganVzdCBnZW5lcmF0ZSB0aGF0IHByb3BlcnR5LCBhbmQg
-d2UgbGVhdmUgdGhlIERUDQo+ID4gPj4+IGFsb25lPw0KPiA+ID4+DQo+ID4gPj4gV2UgZG8gbm90
-IGhhdmUgc21tdSBwaGFuZGxlIGFsbG93aW5nIHVib290IHRvIGdlbmVyYXRlIHRoaXMuDQo+ID4g
-Pj4NCj4gPiA+Pj4gT3IgZXZlbiBiZXR0ZXIsIHlvdSBwcm92aWRlIHRoZSByaWdodCBpbmZvcm1h
-dGlvbiBmb3IgdGhlIGZldw0KPiA+ID4+PiBib2FyZHMgdGhhdCBhcmUgYmFzZWQgb24gdGhpcyBT
-b0MsIG5vdCByZWx5aW5nIG9uIHUtYm9vdCBmb3INCj4gPiA+Pj4gYW55dGhpbmcgdGhhdCBpcyBp
-biB0aGUga2VybmVsIHRyZWU/DQo+ID4gPj4NCj4gPiA+PiBPbiBvdXIgcGxhdGZvcm1zIHdlIGhh
-dmUgYSBoL3cgdGFibGUgd2hpY2ggY29udmVydHMgUklELT5EZXZpY2UtSWQuDQo+ID4gPj4gSSB3
-aWxsIGNoZWNrIHdoYXQgd2lsbCBoYXBwZW4gaWYgdGhhdCB0YWJsZSBpcyBub3QgaW5pdGlhbGl6
-ZWQsIGNhbg0KPiA+ID4+IFJJRCBiZSBlcXVhbCB0byBkZXZpY2UtaWQgaXMgdGhhdCBjYXNlLiBJ
-ZiB0aGF0IHdpbGwgYmUgYWxsb3dlZA0KPiA+ID4+IHRoYW4gd2UgY2FuIGdpdmUgcmlnaHQgaW5m
-b3JtYXRpb24gdGhhdCB3aWxsIHdvcmsgd2l0aCB1LWJvb3Qgbm90DQo+ID4gPj4gdXBkYXRpbmcg
-dGhpcyBwcm9wZXJ0eS4NCj4gPiA+DQo+ID4gPiBVLWJvb3QgdXNlcyBhIHN0cmVhbS1pZCBhbGxv
-Y2F0b3IgYW5kIHByb2dyYW1zIHRoZSBoL3cgbWFwcGluZyB0YWJsZQ0KPiA+ID4gKHJpZCB0byBz
-aWQgbWFwcGluZyB0YWJsZSkuIEFsc28gaXQgdXBkYXRlcyBpb21tdS1tYXAgcHJvcGVydHkNCj4g
-PiA+IGFjY29yZGluZ2x5LiBCdXQgSWYgdS1ib290IGRvZXMgbm90IHVwZGF0ZSBpb21tdS1tYXAg
-dGhhbiB3ZSBjYW5ub3QNCj4gPiA+IGhhdmUgYSB2YWxpZCBmdWxsIHByb29mIHNvbHV0aW9uIGFz
-IHN0cmVhbS1pZCBhbGxvY2F0aW9uIGNhbiBjaGFuZ2UNCj4gPiA+IGluIHUtYm9vdC4NCj4gPiA+
-DQo+ID4gPiBTbyB0aGUgb3RoZXIgb3B0aW9uIG9mIHUtYm9vdCBnZW5lcmF0aW5nIHRoaXMgZW50
-cnkgc2VlbXMgY29ycmVjdA0KPiA+ID4gc29sdXRpb24uIFRoaXMgcmVxdWlyZXMgdS1ib290IHRv
-IGtub3cgaW9tbXUtcGhhbmRsZSwgc29tZXRoaW5nDQo+ID4gPiBzaW1pbGFyIHRvICJtc2ktcGFy
-ZW50IiB1c2VkIGZvciAibXNpLW1hcCIgRGV2aWNlLXRyZWUgYmluZGluZyBuZWVkDQo+ID4gPiBj
-aGFuZ2UgdG8gYWRkIGlvbW11LXBoYW5kbGUvaW9tbXUtcGFyZW50IGZvciB0aGlzLg0KPiA+DQo+
-ID4gRnJvbSB3aGF0IEkga25vdyBvZiB0aGlzIGhhcmR3YXJlLCBpdCdzIGdvaW5nIHRvIGJlIHJh
-dGhlciBkaWZmaWN1bHQNCj4gPiB0byBjb25jb2N0IGEgRFQgd2hpY2ggcmVmbGVjdHMgdGhlIGlu
-aXRpYWwgaGFyZHdhcmUgc3RhdGUgYWNjdXJhdGVseQ0KPiA+ICphbmQqIHdvcmtzIGNvcnJlY3Rs
-eSB3aXRob3V0IHVwZGF0aW5nIHUtYm9vdCBpbiBsb2Nrc3RlcC4gSUlSQywgSQ0KPiA+IGJlbGll
-dmUgdGhlIGFjY3VyYXRlIGRlc2NyaXB0aW9uIGZvciBhbiB1bnByb2dyYW1tZWQgTFVUIHdvdWxk
-IGJlDQo+ID4gImV2ZXJ5dGhpbmcgY29tZXMgb3V0IG9uIHRoZSBkZWZhdWx0IElELCB3aGljaCBk
-ZWZhdWx0cyB0byAwIiwgaS5lLjoNCj4gPg0KPiA+IAlpb21tdS1tYXAtbWFzayA9IDwweDA+Ow0K
-PiA+IAlpb21tdS1tYXAgPSA8MHgwICZzbW11IDB4MCAweDE+Ow0KPiANCj4gVGhlc2UgY2hhbmdl
-cyBhcmUgbm90IGVub3VnaCB0byBtYWtlIFBDSSBkZXZpc2Ugd29ya2luZyB3aXRoIExVVA0KPiBk
-aXNhYmxlZCwgYWxzbyBuZWVkZWQgbXNpLW1hcCBtYXBzIGFsbCByZXF1ZXN0ZXItaWQgdG8gIjAi
-LCB1c2luZyAibXNpLW1hcC0NCj4gbWFzayA9IDB4MCIuDQo+IA0KPiBXaHkgd2UgYXNzdW1lIHRo
-YXQgbm8gIm1zaS1tYXAiIHByb3BlcnR5IG1lYW5zIHVudHJhbnNsYXRlZCByZXF1ZXN0ZWQtDQo+
-IGlkLCB3aHkgbm90IGNvbnNpZGVyIHRoYXQgdHJhbnNsYXRlZCB0byAiMCIuDQo+IA0KPiA+DQo+
-ID4gKGFzc3VtaW5nIHRoZSBTTU1VIGhhcyBzdHJlYW0taWQtbWFzayBzZXQgYXBwcm9wcmlhdGVs
-eSB0b28pDQo+ID4NCj4gPiBUaGF0J3MgT0sgZXhjZXB0IGlmIHUtYm9vdCB1cGRhdGVzIHRoZSBt
-YXAgd2l0aG91dCByZW1vdmluZyB0aGUgbWFzaywNCj4gPiB3aGVyZXVwb24gdGhpbmdzIHdpbGwg
-Z28gd3JvbmcsIGFuZCBJIGd1ZXNzIHRoYXQgd291bGQgYmUgdGhlIGNhc2UNCj4gPiB3aXRoIGN1
-cnJlbnQgdS1ib290IDooDQo+ID4NCj4gPiBIb3dldmVyLCB0aGUgZXhpc3RpbmcgTVNJIGRlc2Ny
-aXB0aW9uIGlzIGFscmVhZHkgYm9ndXMgLSBpZiB1LWJvb3QNCj4gPiBkaWRuJ3QgcHJvZ3JhbSB0
-aGUgTFVULCB0aGUgSVRTIGRyaXZlciB3b3VsZCB0cmVhdCB0aGUgaW52YWxpZA0KPiA+ICJtc2kt
-cGFyZW50IiBwcm9wZXJ0eSBhcyB0aGlzOg0KPiA+DQo+ID4gCW1zaS1tYXAgPSA8MHgwICZpdHMg
-MHgwIDB4ZmZmZj47DQo+ID4NCj4gPiB3aGljaCBtZWFucyB0aGF0IG5vYm9keSBvdGhlciB0aGFu
-IDA6MC4wIGhhcyB3b3JraW5nIE1TSXMgYW55d2F5Lg0KPiANCj4gV2UgY2FuIGhhdmUgZm9sbG93
-aW5nIHZlcnNpb24gb2YgdS1ib290Og0KPiAgMSkgTm8gTFVUIHNldHVwLCBkb2VzIG5vdCBnZW5l
-cmF0ZSBtc2ktbWFwIGFuZCBkb2VzIG5vdCB1cGRhdGUvZ2VuZXJhdGUNCj4gaW9tbXUtbWFwIChv
-bGRlciB1LWJvb3QpDQo+IA0KPiAgICAgIEZvciB0aGlzIGNhc2UgdGhlIHdvcmtpbmcgZGV2aWNl
-IHRyZWUgY2hhbmdlcyBjYW4gYmU6DQo+ICAgICAgICAgICAgICAgICAgICAgICAgaW9tbXUtbWFw
-LW1hc2sgPSA8MD47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgaW9tbXUtbWFwID0gPDB4MCAm
-c21tdSAwIDB4MT47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgbXNpLW1hcC1tYXNrID0gPDB4
-MD47DQo+ICAgICAgICAgICAgICAgICAgICAgICAgbXNpLW1hcCA9IDwweDAgJml0cyAwIDB4MT47
-DQo+IA0KPiAgICAgIEJ1dCB0aGVzZSBjaGFuZ2VzIHdpbGwgbm90IHdvcmsgd2l0aCBjdXJyZW50
-IHZlcnNpb24gb2YgdS1ib290IChiZWxvdyAoMikpDQo+IA0KPiAyKSBMVVQgc2V0dXAgYW5kIG1z
-aS1tYXAgZ2VuZXJhdGVkIGJ1dCBubyBpb21tdS1tYXAgZ2VuZXJhdGVkIChjdXJyZW50DQo+IGNh
-c2UpDQo+IA0KPiAgICAgSSBkbyBub3Qgc2VlIHdlIGNhbiBoYXZlIGEgd29ya2luZyBkZXZpY2Ug
-dHJlZSBmb3IgdGhpcy4NCj4gICAgIFByb2JhYmx5IGdlbmVyYXRpbmcgaW9tbXUtbWFwIGluIHUt
-Ym9vdCBpcyBiZXR0ZXIsIHdpdGggdGhhdCBtc2ktbWFwIGFuZA0KPiBpb21tdS1tYXAgd2lsbCBi
-ZSBjb25zaXN0ZW50IChiZWxvdyAoNCkpDQo+IA0KPiAzKSBMVVQgc2V0dXAsICJtc2ktbWFwIiBn
-ZW5lcmF0ZWQgYW5kIGlvbW11LW1hcCB1cGRhdGVkDQo+IA0KPiAgICAgICBXZSBjYW4gaGF2ZSBi
-ZWxvdyBjaGFuZ2UgaXMgZGV2aWNlIHRyZWUuDQo+ICAgICAgICAJICAgICAgICAgaW9tbXUtbWFw
-ID0gPDB4MCAmc21tdSAwIDB4MT47DQo+IA0KPiAgICAgICAgQnV0IHRoaXMgY2hhbmdlIHdpbGwg
-bm90IHdvcmsgd2l0aCAoMSkgYW5kICgyKSBhYm92ZS4NCj4gDQo+IDQpIExVVCBzZXR1cCwgIm1z
-aS1tYXAiIGdlbmVyYXRlZCBhbmQgaW9tbXUtbWFwIGFsc28gZ2VuZXJhdGVkIGJ5IHUtDQo+IGJv
-b3QuDQo+ICAgICBUaGVyZSBpcyBubyBpb21tdS1tYXAgZW50cnkgbmVlZGVkIGluIGRldmljZSB0
-cmVlIGJ1dCB1LWJvb3QgbmVlZCB0bw0KPiBrbm93IGlvbW11IHBoYW5kbGUuDQo+ICAgICBXaGls
-ZSBpb21tdXMgaXMgc3VwcG9zZWQgdG8gYmUgdXNlZCBpbiBpb21tdS1ub2RlIGFuZCBub3QgaW4g
-cGNpIG5vZGUuDQo+IA0KPiBMb29raW5nIGZvciBzdWdnZXN0aW9uDQoNCkJlbG93IHByb3BlcnRp
-ZXMgYXMgc3VnZ2VzdGVkIGJ5IHlvdSBhcmUgY29ycmVjdCBmcm9tIGgvdyBiZWhhdmlvciBwZXJz
-cGVjdGl2ZQ0KDQogICAgICAgICAgICAgICAgICAgICAgICBpb21tdS1tYXAtbWFzayA9IDwwPjsN
-CiAgICAgICAgICAgICAgICAgICAgICAgIGlvbW11LW1hcCA9IDwweDAgJnNtbXUgMCAweDE+Ow0K
-DQpBcmUgeW91IG9rIHdpdGggdGhlc2UgY2hhbmdlcz8NCg0KVGhhbmtzDQotQmhhcmF0DQoNCj4g
-DQo+IFRoYW5rcw0KPiAtQmhhcmF0DQo+IA0KPiA+DQo+ID4gSWYgeW91IHdhbnQgYW4gb2J2aW91
-c2x5LWludmFsaWQgcGxhY2Vob2xkZXIgZXF1aXZhbGVudCB0byB0aGUgdXNlIG9mDQo+ID4gIm1z
-aS0gcGFyZW50IiB0aGVuIEknZCBzdWdnZXN0IGp1c3Q6DQo+ID4NCj4gPiAJaW9tbXVzID0gPCZz
-bW11PjsNCj4gPg0KPiA+IHdoaWNoIHdvdWxkIGJlIGlnbm9yZWQgYnkgTGludXggZm9yIFBDSSBk
-ZXZpY2VzLCBzbyBwcm92aWRlZCB5b3UNCj4gPiBkaWRuJ3QgZGlzYWJsZSBieXBhc3MgYXQgdGhl
-IFNNTVUgdGhpbmdzIG1pZ2h0IGluIHRoZW9yeSBzdGlsbCB3b3JrIGluDQo+ID4gdGhlICJ1LWJv
-b3QgZG9lcyBub3RoaW5nIiBjYXNlLiBPdGhlcndpc2UsIHRoZSBpbXBsaWVkIGlkZW50aXR5IG1h
-cCBpcw0KPiA+IHByb2JhYmx5IHNsaWdodGx5IHByZWZlcmFibGUgdG8gdGhlIHVuaXQtbGVuZ3Ro
-IG1hcCwgaS5lLjoNCj4gPg0KPiA+IAlpb21tdS1tYXAgPSA8MHgwICZzbW11IDB4MCAweGZmZmY+
-Ow0KPiA+DQo+ID4gd2hpY2ggaXMgYXQgbGVhc3QgZXF1YWxseSBicm9rZW4gYXMgTVNJcyBpbiB0
-aGUgc2FtZSBzaXR1YXRpb24uDQo+ID4NCj4gPiBSb2Jpbi4NCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v4:
+- rebase to Linux 4.14-rc1
+- add a common keyboard binding document
+- use child device tree node to define each key
+
+Changes since v3:
+- make the naming to be consistent as mtk_pmic or MTK_PMIC
+- add suspend/resume functions to enable/disable irq
+- change binding properties to define wakeup sources
+
+Changes since v2:
+- use standard properties for keycodes and debounce time
+- change to use platform_get_irq in leaf drivers
+- use better ways to define IRQ resources
+
+Changes since v1:
+- create irq mappings in mfd core driver instead of leaf drivers
+- remove some unused parts in mtk-pmic-keys driver
+
+MediaTek PMIC are multi-function devices that can handle key interrupts,
+typically there are two keys attached to PMIC, which called pwrkey
+and homekey. PWRKEY usually used to wake up system from sleep. Homekey
+can used as volume down key due to board design. Long press keys can
+shutdown PMIC, the mode can be choose to be one key only or two keys
+together.
+This series add support for key functions for MediaTek PMIC MT6397/MT6323.
+
+Chen Zhong (6):
+  mfd: mt6397: create irq mappings in mfd core driver
+  dt-bindings: input: Add common keyboard document bindings
+  dt-bindings: input: Add document bindings for mtk-pmic-keys
+  dt-bindings: mfd: Add bindings for the keys as subnode of PMIC
+  input: Add MediaTek PMIC keys support
+  mfd: mt6397: Add PMIC keys support to MT6397 driver
+
+ Documentation/devicetree/bindings/input/keys.txt   |   8 +
+ .../devicetree/bindings/input/mtk-pmic-keys.txt    |  43 +++
+ Documentation/devicetree/bindings/mfd/mt6397.txt   |   6 +
+ drivers/input/keyboard/Kconfig                     |   9 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/mtk-pmic-keys.c             | 341 +++++++++++++++++++++
+ drivers/mfd/mt6397-core.c                          |  26 +-
+ drivers/rtc/rtc-mt6397.c                           |   7 +-
+ 8 files changed, 434 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/keys.txt
+ create mode 100644 Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+ create mode 100644 drivers/input/keyboard/mtk-pmic-keys.c
+
+-- 
+1.9.1
