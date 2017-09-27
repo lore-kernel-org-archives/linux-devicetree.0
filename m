@@ -1,52 +1,70 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 00/14] ARM: dts: sunxi: Fix DT build warnings
-Date: Wed, 27 Sep 2017 23:18:09 +0800
-Message-ID: <CAGb2v67=Esq3mHkRhP6sBuzFtyDWjeON4Uwx93H5z2LMQ63eJA@mail.gmail.com>
-References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
- <CAGb2v64AK-xifjcowUk1mp4TRwHFPOqjZR58Bd5w7Bei52T06g@mail.gmail.com>
- <20170926085855.7yn6zdx3sfuwwxyj@flea> <CAGb2v67=VyHd3n1PgT-2_2efUNijOM8TkwDO9oAQvUd8wYH-qg@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/3] firmware: of: populate /firmware/ node during init
+Date: Wed, 27 Sep 2017 17:54:01 +0100
+Message-ID: <af1836ea-d00b-fced-8665-27ba889e7a4e@arm.com>
+References: <1502458237-1683-1-git-send-email-sudeep.holla@arm.com>
+ <1502458237-1683-2-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a1p8xS4u5EQ9auqgcmhXaybhDdsa6ah3G-7TeEf+ko9kA@mail.gmail.com>
+ <CABGGisyQKfre_qMqnngOiKbqUaHF0KWKtZyYPJ47iPwgL5t6xw@mail.gmail.com>
+ <CAK8P3a3=8D5Mz54TYbfyrPC7yyKY-m7=H1OfS9JVKTdC0h-tHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v67=VyHd3n1PgT-2_2efUNijOM8TkwDO9oAQvUd8wYH-qg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3=8D5Mz54TYbfyrPC7yyKY-m7=H1OfS9JVKTdC0h-tHw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 9:01 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> On Tue, Sep 26, 2017 at 4:58 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> On Tue, Sep 26, 2017 at 07:48:17AM +0000, Chen-Yu Tsai wrote:
->>> On Tue, Sep 26, 2017 at 3:22 PM, Corentin Labbe
->>> <clabbe.montjoie@gmail.com> wrote:
->>> > Hello
->>> >
->>> > The goal of this patch series is to have a clean DT build with W=1.
->>> >
->>> > Regards
->>> >
->>> > Changes since v1:
->>> > - moved i2c2 unit address change from patch #2 in patch #1
->>> >
->>> > Changes since v2
->>> > - added two patch for fixing pin names
+(sorry for replying on old thread)
+
+On 11/08/17 16:54, Arnd Bergmann wrote:
+> On Fri, Aug 11, 2017 at 5:05 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Aug 11, 2017 at 9:37 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> On Fri, Aug 11, 2017 at 3:30 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>>> Since "/firmware" does not have its own "compatible" property as it's
+>>>> just collection of nodes representing firmware interface, it's sub-nodes
+>>>> are not populated during system initialization.
+>>>>
+>>>> Currently different firmware drivers search the /firmware/ node and
+>>>> populate the sub-node devices selectively. Instead we can populate
+>>>> the /firmware/ node during init to avoid more drivers continuing to
+>>>> populate the devices selectively.
+>>>>
+>>>> This patch adds initcall to achieve the same.
 >>>
->>> The first twelve patches are good. Maxime, I think we can go ahead and
->>> merge them, instead of having them resent again in v3?
+>>> Hmm, I'm a bit skeptical whether representing anything under /firmware
+>>> as a platform device is a good idea. Having a more structured way to
+>>> probe those seems like a good idea, but maybe a different subsystem
+>>> would be more appropriate.
+>>>
+>>> I do realize that a 'platform_device' has become a rather generic abstraction
+>>> for almost anything, but at some point we might want to draw the line
+>>> of what is a platform_device.
 >>
->> Yep, that works for me. Can you push them?
->
-> Patches 1 and 12 didn't apply cleanly. I fixed them.
+>> I guess the question how are they different? Most of what's under
+>> drivers/firmware/ are platform drivers. I think they are mostly either
+>> smc calls or mailbox interfaces. Would there be any advantage to
+>> creating an smc bus or mailbox bus?
+> 
+> I guess one difference I see is between things that are purely software
+> based (smc, efi runtime, rtas,  ...) and those that talk to some
+> hardware other than the CPU running some firmware.
+> 
+> The first category seems like a good fit for /firmware in DT and
+> for /sys/firmware in sysfs, while the second category would be
+> represented elsewhere in both DT and sysfs.
+> 
 
-Patch 10 didn't apply cleanly either. I fixed it.
+After some thoughts and looking around I see examples of lots of drivers
+using platform device for firmware interface including rtc-efi.
 
-> Patches 4~9 do the same type of cleanup for various h3 board dts files.
-> Maybe we should just squash them together. Arnd seems to prefer squashing
-> identical changes to different boards together.
+So IIUC, anything exposed to userspace about sch firmware interface must
+be in "/sys/firmware", but I don't see any issue with kernel handling
+them as platform device/driver internally.
 
-Squashed them and mentioned it in the commit message.
-
-Please check the sunxi tree on git.kernel.org if the results are correct.
-
-ChenYu
+-- 
+Regards,
+Sudeep
