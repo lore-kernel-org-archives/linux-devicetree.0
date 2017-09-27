@@ -1,63 +1,94 @@
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 0/2] memory: Introduce ti-emif-sram driver
-Date: Tue, 26 Sep 2017 19:03:53 -0500
-Message-ID: <20170927000355.30597-1-d-gerlach@ti.com>
+From: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
+Subject: Re: [PATCH 2/2] mtd: nand: pxa3xx: Handle "marvell, nand-force-csx"
+ compatible string
+Date: Wed, 27 Sep 2017 00:54:05 +0000
+Message-ID: <7493494e-23f6-feed-73e7-59d6819d98db@alliedtelesis.co.nz>
+References: <20170926041700.22663-1-kalyan.kinthada@alliedtelesis.co.nz>
+ <20170926041700.22663-3-kalyan.kinthada@alliedtelesis.co.nz>
+ <20170926091852.196f647d@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170926091852.196f647d@xps13>
+Content-Language: en-US
+Content-ID: <0EAFB8CA9420604E849428CD69FC511A@atlnz.lc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This is v4 of the series introduces a ti-emif-sram driver to be used on
-am335x and am437x, based on v4.14-rc1. This version addresses some
-comments from Russell King and Johan Hovold in v3 found here [1].
-
-The main change in this version is dropping the additions to the
-arch/arm/kernel/asm-offsets.c file and instead generating our own local
-"emif-asm-offsets.h" using the same strategy in the drivers/memory Makefile.
-This keeps our driver changes out of the arch or platform code and is a
-cleaner implementation. Otherwise some small fixups based on comments from
-Johan in v3 were done.
-
-This code is required for low-power modes to work on AM335x and AM437x and a
-forthcoming PM series for those platforms will depend on this series. After
-both this and the PM series are reviewed I will send the necessary device tree
-changes for both, but in the meantime all remaining patches for am335x and
-am437x PM can be found here [2].
-
-Regards,
-Dave
-
-[1] https://www.spinics.net/lists/linux-omap/msg138314.html
-[2] https://github.com/dgerlach/linux-pm/tree/upstream/v4.14/amx3-suspend-v4
-
-Dave Gerlach (2):
-  Documentation: dt: Update ti,emif bindings
-  memory: ti-emif-sram: introduce relocatable suspend/resume handlers
-
- .../bindings/memory-controllers/ti/emif.txt        |  18 +-
- drivers/memory/.gitignore                          |   1 +
- drivers/memory/Kconfig                             |  10 +
- drivers/memory/Makefile                            |  20 ++
- drivers/memory/emif-asm-offsets.c                  |  22 ++
- drivers/memory/emif.h                              |  17 ++
- drivers/memory/ti-emif-pm.c                        | 339 +++++++++++++++++++++
- drivers/memory/ti-emif-sram-pm.S                   | 334 ++++++++++++++++++++
- include/linux/ti-emif-sram.h                       | 148 +++++++++
- 9 files changed, 908 insertions(+), 1 deletion(-)
- create mode 100644 drivers/memory/.gitignore
- create mode 100644 drivers/memory/emif-asm-offsets.c
- create mode 100644 drivers/memory/ti-emif-pm.c
- create mode 100644 drivers/memory/ti-emif-sram-pm.S
- create mode 100644 include/linux/ti-emif-sram.h
-
--- 
-2.13.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjYvMDkvMTcgMjA6MTgsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+IEhpIEthbHlhbiwNCj4N
+Cj4gT24gVHVlLCAyNiBTZXAgMjAxNyAxNzoxNzowMCArMTMwMA0KPiBLYWx5YW4gS2ludGhhZGEg
+PGthbHlhbi5raW50aGFkYUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4NCj4+IFdoZW4g
+dGhlIGFyYml0cmF0aW9uIGJldHdlZW4gTk9SIGFuZCBOQU5EIGZsYXNoIGlzIGVuYWJsZWQNCj4+
+IHRoZSA8Rk9SQ0VfQ1NYPiBmaWVsZCBiaXRbMjFdIGluIHRoZSBEYXRhIEZsYXNoIENvbnRyb2wg
+UmVnaXN0ZXINCj4+IG5lZWRzIHRvIGJlIHNldCB0byAxIGFjY29yZGluZyB0byBndWlkbGVpbmUg
+R0wtNTgzMDc0MS4NCj4gSSBkbyBhZ3JlZSwgdGhlIGRyaXZlciBsYWNrcyB0aGUgc3VwcG9ydCBv
+ZiB0aGlzIGJpdCwgd2hpY2gNCj4gbG9va3MgaW1wb3J0YW50IHdoZW4geW91IGVmZmVjdGl2ZWx5
+IHVzZSB0aGUgYXJiaXRlci4NCj4gTmV2ZXJ0aGVsZXNzOg0KPg0KPiAtIE9uIFBYQSAobWFydmVs
+bCxweGEzeHgtbmFuZCBjb21wYXRpYmxlKSwgdGhlcmUgaXMgYSBORF9BUkJfRU4gYml0IHRvDQo+
+ICAgIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBhcmJpdGVyLCBidXQgdGhlcmUgaXMgbm8gRk9SQ0Vf
+Q1NYIGJpdCAoYml0IDIxDQo+ICAgIG9mIE5EQ1IsIHRoZSBzbyBjYWxsZWQgQ29udHJvbCBSZWdp
+c3RlciwgaXMgcmVzZXJ2ZWQpLg0KPiAtIE9uIEFybWFkYSAobWFydmVsbCxhcm1hZGEzNzAtbmFu
+ZCksIHRoZXJlIGlzIGEgRk9SQ0VfQ1NYIGJpdCwgYnV0DQo+ICAgIHRoZXJlIGlzIG5vIE5EX0FS
+Ql9FTiBiaXQgaW4gdGhlIE5EQ1IgKG1vdmVkIHRvIHN5c3RlbSByZWdpc3RlcnMpIGFuZA0KPiAg
+ICB0aGUgYXJiaXRyYXRpb24gaXMgYWx3YXlzIGVuYWJsZWQgYnkgZGVmYXVsdC4NCj4NCj4gSSBn
+dWVzcyB5b3Ugc2hvdWxkIGFsd2F5cyBzZXQgdGhlIEZPUkNFX0NTWCBiaXQgd2hlbiB1c2luZyB0
+aGUgYXJtYWRhDQo+IGNvbXBhdGlibGUsIGJlY2F1c2UgaXQgaXMgaGFybWxlc3MsIHJpZ2h0PyBU
+aHVzLCB5b3UgY291bGQgZ2V0IHJpZA0KPiBvZiB0aGUgbmV3IERUIHByb3BlcnR5Lg0KT2suIEkg
+d2lsbCBtYWtlIGNoYW5nZXMgdG8gdGhlIGRyaXZlciB0byBzZXQgRk9SQ0VfQ1NYIGJpdCBmb3Ig
+YWxsDQp2YXJpYW50cyBvZiBBUk1BREEzNzAgdmFyaWFudHMgaW5zdGVhZCBvZiBjcmVhdGluZyBh
+IG5ldyBjb21wYXRpYmxlDQpzdHJpbmcuDQoNCkkgd2lsbCBzZW5kIGEgbmV3IHBhdGNoLiBLaW5k
+bHkgaWdub3JlIHRoZXNlIGNoYW5nZXMuDQpUaGFua3MgZm9yIHlvdXIgdGltZSBNaXF1ZWwuDQoN
+ClRoYW5rIFlvdSwNCkthbHlhbg0KPg0KPiBUaGFuayB5b3UsDQo+IE1pcXXDqGwNCj4NCj4+IFRo
+aXMgY29tbWl0IHNldHMgdGhlIEZPUkNFX0NTWCBiaXQgdG8gMSBpZiB0aGUgY29tcGF0aWJsZQ0K
+Pj4gc3RyaW5nICJtYXJ2ZWxsLG5hbmQtZm9yY2UtY3N4IiBpcyBlbmFibGVkIGluIHRoZSBkZXZp
+Y2UgdHJlZQ0KPj4gb2YgdGhlIGNvcnJlc3BvbmRpbmcgYm9hcmRzLg0KPj4NCj4+IFNpZ25lZC1v
+ZmYtYnk6IEthbHlhbiBLaW50aGFkYSA8a2FseWFuLmtpbnRoYWRhQGFsbGllZHRlbGVzaXMuY28u
+bno+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5jICAgICAgICAg
+ICAgICAgIHwgNiArKysrKysNCj4+ICAgaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210ZC1u
+YW5kLXB4YTN4eC5oIHwgMyArKysNCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMo
+KykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5jDQo+
+PiBiL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQuYyBpbmRleCA4NWNmZjY4NjQzZTAuLjRh
+ZDFmMDYwMTkzMA0KPj4gMTAwNjQ0IC0tLSBhL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQu
+Yw0KPj4gKysrIGIvZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5jDQo+PiBAQCAtNjgsNiAr
+NjgsNyBAQA0KPj4gICAjZGVmaW5lIE5EQ1JfUEFHRV9TWgkJKDB4MSA8PCAyNCkNCj4+ICAgI2Rl
+ZmluZSBORENSX05DU1gJCSgweDEgPDwgMjMpDQo+PiAgICNkZWZpbmUgTkRDUl9ORF9NT0RFCQko
+MHgzIDw8IDIxKQ0KPj4gKyNkZWZpbmUgTkRDUl9GT1JDRV9DU1gJCSgweDEgPDwgMjEpDQo+PiAg
+ICNkZWZpbmUgTkRDUl9OQU5EX01PREUgICAJKDB4MCkNCj4+ICAgI2RlZmluZSBORENSX0NMUl9Q
+R19DTlQJCSgweDEgPDwgMjApDQo+PiAgICNkZWZpbmUgTkZDVjFfTkRDUl9BUkJfQ05UTAkoMHgx
+IDw8IDE5KQ0KPj4gQEAgLTE0NjQsNiArMTQ2NSw3IEBAIHN0YXRpYyBpbnQgcHhhM3h4X25hbmRf
+Y29uZmlnX2lkZW50KHN0cnVjdA0KPj4gcHhhM3h4X25hbmRfaW5mbyAqaW5mbykgaW5mby0+Y2h1
+bmtfc2l6ZSA9IFBBR0VfQ0hVTktfU0laRTsNCj4+ICAgCWluZm8tPnJlZ19uZGNyID0gMHgwOyAv
+KiBlbmFibGUgYWxsIGludGVycnVwdHMgKi8NCj4+ICAgCWluZm8tPnJlZ19uZGNyIHw9IChwZGF0
+YS0+ZW5hYmxlX2FyYml0ZXIpID8gTkRDUl9ORF9BUkJfRU4gOg0KPj4gMDsNCj4+ICsJaW5mby0+
+cmVnX25kY3IgfD0gKHBkYXRhLT5mb3JjZV9jc3gpID8gTkRDUl9GT1JDRV9DU1ggOiAwOw0KPj4g
+ICAJaW5mby0+cmVnX25kY3IgfD0gTkRDUl9SRF9JRF9DTlQoUkVBRF9JRF9CWVRFUyk7DQo+PiAg
+IAlpbmZvLT5yZWdfbmRjciB8PSBORENSX1NQQVJFX0VOOw0KPj4gICANCj4+IEBAIC0xNDk4LDYg
+KzE1MDAsNyBAQCBzdGF0aWMgdm9pZCBweGEzeHhfbmFuZF9kZXRlY3RfY29uZmlnKHN0cnVjdA0K
+Pj4gcHhhM3h4X25hbmRfaW5mbyAqaW5mbykgaW5mby0+cmVnX25kY3IgPSBuZGNyICYNCj4+ICAg
+CQl+KE5EQ1JfSU5UX01BU0sgfCBORENSX05EX0FSQl9FTiB8DQo+PiBORkNWMV9ORENSX0FSQl9D
+TlRMKTsgaW5mby0+cmVnX25kY3IgfD0gKHBkYXRhLT5lbmFibGVfYXJiaXRlcikgPw0KPj4gTkRD
+Ul9ORF9BUkJfRU4gOiAwOw0KPj4gKwlpbmZvLT5yZWdfbmRjciB8PSAocGRhdGEtPmZvcmNlX2Nz
+eCkgPyBORENSX0ZPUkNFX0NTWCA6IDA7DQo+PiAgIAlpbmZvLT5uZHRyMGNzMCA9IG5hbmRfcmVh
+ZGwoaW5mbywgTkRUUjBDUzApOw0KPj4gICAJaW5mby0+bmR0cjFjczAgPSBuYW5kX3JlYWRsKGlu
+Zm8sIE5EVFIxQ1MwKTsNCj4+ICAgfQ0KPj4gQEAgLTE5MzYsNiArMTkzOSw5IEBAIHN0YXRpYyBp
+bnQgcHhhM3h4X25hbmRfcHJvYmVfZHQoc3RydWN0DQo+PiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
+IHBkYXRhLT5lbmFibGVfYXJiaXRlciA9IDE7DQo+PiAgIAlpZiAob2ZfZ2V0X3Byb3BlcnR5KG5w
+LCAibWFydmVsbCxuYW5kLWtlZXAtY29uZmlnIiwgTlVMTCkpDQo+PiAgIAkJcGRhdGEtPmtlZXBf
+Y29uZmlnID0gMTsNCj4+ICsJaWYgKG9mX2dldF9wcm9wZXJ0eShucCwgIm1hcnZlbGwsbmFuZC1m
+b3JjZS1jc3giLCBOVUxMKSkNCj4+ICsJCS8qIFJlZiM6IEdMLTU4MzA3NDEgKi8NCj4+ICsJCXBk
+YXRhLT5mb3JjZV9jc3ggPSAxOw0KPj4gICAJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJudW0t
+Y3MiLCAmcGRhdGEtPm51bV9jcyk7DQo+PiAgIA0KPj4gICAJcGRldi0+ZGV2LnBsYXRmb3JtX2Rh
+dGEgPSBwZGF0YTsNCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEv
+bXRkLW5hbmQtcHhhM3h4LmgNCj4+IGIvaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210ZC1u
+YW5kLXB4YTN4eC5oIGluZGV4DQo+PiAzOTRkMTU1OTdkYzcuLmU3ZjJjODY0N2MwZSAxMDA2NDQg
+LS0tDQo+PiBhL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9tdGQtbmFuZC1weGEzeHguaCAr
+KysNCj4+IGIvaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL210ZC1uYW5kLXB4YTN4eC5oIEBA
+IC0yOCw2ICsyOCw5IEBADQo+PiBzdHJ1Y3QgcHhhM3h4X25hbmRfcGxhdGZvcm1fZGF0YSB7IC8q
+IGFsbG93IHBsYXRmb3JtIGNvZGUgdG8ga2VlcA0KPj4gT0JNL2Jvb3Rsb2FkZXIgZGVmaW5lZCBO
+RkMgY29uZmlnICovIGludAlrZWVwX2NvbmZpZzsNCj4+ICAgDQo+PiArCS8qIEZvcmNlIGNoaXAg
+c2VsZWN0IGZhbHNlIG9uIGJ1c3kgKi8NCj4+ICsJaW50CWZvcmNlX2NzeDsNCj4+ICsNCj4+ICAg
+CS8qIGluZGljYXRlIGhvdyBtYW55IGNoaXAgc2VsZWN0cyB3aWxsIGJlIHVzZWQgKi8NCj4+ICAg
+CWludAludW1fY3M7DQo+PiAgIA0KPg0KPg0K
