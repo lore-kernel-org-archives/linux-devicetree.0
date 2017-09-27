@@ -1,91 +1,148 @@
-From: Chaotian Jing <chaotian.jing@mediatek.com>
-Subject: Re: [PATCH 02/12] arm64: dts: mt8173: remove "mediatek,mt8135-mmc"
- from mmc nodes
-Date: Wed, 27 Sep 2017 09:14:45 +0800
-Message-ID: <1506474885.19851.5.camel@mhfsdcap03>
-References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
-         <1505207272-16983-3-git-send-email-chaotian.jing@mediatek.com>
-         <CAPDyKFo7rC5UVWw9VyJ7ws1wW4kCvSW7Jcsgqd6gY_nifB6fTw@mail.gmail.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+Date: Wed, 27 Sep 2017 01:15:12 +0000
+Message-ID: <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc>
+References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
+ <87377fmbpw.fsf@free-electrons.com> <1506289460890.34765@alliedtelesis.co.nz>
+ <87lgl1ishv.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFo7rC5UVWw9VyJ7ws1wW4kCvSW7Jcsgqd6gY_nifB6fTw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-09-27 at 00:37 +0200, Ulf Hansson wrote:
-> On 12 September 2017 at 11:07, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> > devicetree bindings has been updated to support multi-platforms,
-> > so that each platform has its owns compatible name.
-> > And, this compatible name may used in driver to distinguish with
-> > other platform.
-> 
-> This does not seems to be DT backwards compatible.
-> 
-> If the driver starts interpreting the "mt8135-mmc" differently,
-> wouldn't that lead to old DTBs to become broken?
-> 
-> Kind regards
-> Uffe
-At patch 03/12, it shows that no difference between "mt8135-mmc" and
-"mt8173-mmc", and following changes will make difference between these
-two.
-but, the user should update DTS & driver together,then will do not have
-compatible issue.
-> 
-> >
-> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++--------
-> >  1 file changed, 4 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > index b99a273..26396ef 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -682,8 +682,7 @@
-> >                 };
-> >
-> >                 mmc0: mmc@11230000 {
-> > -                       compatible = "mediatek,mt8173-mmc",
-> > -                                    "mediatek,mt8135-mmc";
-> > +                       compatible = "mediatek,mt8173-mmc";
-> >                         reg = <0 0x11230000 0 0x1000>;
-> >                         interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_LOW>;
-> >                         clocks = <&pericfg CLK_PERI_MSDC30_0>,
-> > @@ -693,8 +692,7 @@
-> >                 };
-> >
-> >                 mmc1: mmc@11240000 {
-> > -                       compatible = "mediatek,mt8173-mmc",
-> > -                                    "mediatek,mt8135-mmc";
-> > +                       compatible = "mediatek,mt8173-mmc";
-> >                         reg = <0 0x11240000 0 0x1000>;
-> >                         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-> >                         clocks = <&pericfg CLK_PERI_MSDC30_1>,
-> > @@ -704,8 +702,7 @@
-> >                 };
-> >
-> >                 mmc2: mmc@11250000 {
-> > -                       compatible = "mediatek,mt8173-mmc",
-> > -                                    "mediatek,mt8135-mmc";
-> > +                       compatible = "mediatek,mt8173-mmc";
-> >                         reg = <0 0x11250000 0 0x1000>;
-> >                         interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
-> >                         clocks = <&pericfg CLK_PERI_MSDC30_2>,
-> > @@ -715,8 +712,7 @@
-> >                 };
-> >
-> >                 mmc3: mmc@11260000 {
-> > -                       compatible = "mediatek,mt8173-mmc",
-> > -                                    "mediatek,mt8135-mmc";
-> > +                       compatible = "mediatek,mt8173-mmc";
-> >                         reg = <0 0x11260000 0 0x1000>;
-> >                         interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
-> >                         clocks = <&pericfg CLK_PERI_MSDC30_3>,
-> > --
-> > 1.8.1.1.dirty
-> >
+Hi Gregory,=0A=
+=0A=
+On 27/09/17 00:56, Gregory CLEMENT wrote:=0A=
+> Hi Kalyan,=0A=
+> =0A=
+> Please try avoid top-posting.=0A=
+> =0A=
+>   On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.=
+co.nz> wrote:=0A=
+> =0A=
+>> Hi Gregory,=0A=
+>>=0A=
+>> I got this information from Armada-38x functional errata document.=0A=
+> =0A=
+> OK but in any case just adding a new compatible was not enough you have=
+=0A=
+> to update the driver in the same time, however for this case we won't=0A=
+> need it, see below.=0A=
+> =0A=
+>>=0A=
+>> I can add the "marvell,mv78230-i2c" compatible string to the appropriate=
+  device tree files=0A=
+>> but the i2c-mv64xxx driver enables an additional  feature (offload i2c t=
+ransactions)=0A=
+>> based on the compatible string "marvell,mv78230-i2c".=0A=
+>>=0A=
+>> I am not sure if this feature (offload i2c transactions) should be enabl=
+ed for Armada-38x devices.=0A=
+>> That is the reason I felt for the need of a new compatible string=0A=
+>> specifically for Armada-38x SoCs.=0A=
+> =0A=
+> Indeed the Armada-38x SoCs does not support hardware offloading (at=0A=
+> least according the datasheet). But it happens that in the earlier=0A=
+> version of the Armada XP the hardware offloading was buggy, so we=0A=
+> introduced a compatible for this case: marvell,mv78230-a0-i2c. This=0A=
+> compatible enable the errata fix but not the offloading feature. That=0A=
+> means that it is exactly the compatible you need for Armada 38x (and=0A=
+> Armada 39x and 375 I think).=0A=
+=0A=
+The "mv78230-a0-i2c" dt-binding has the following note=0A=
+=0A=
+   Note: Only use "marvell,mv78230-a0-i2c" for a=0A=
+   very rare, initial version of the SoC which=0A=
+   had broken offload support.  Linux=0A=
+   auto-detects this and sets it appropriately.=0A=
+=0A=
+If we are going to re-use this binding for armada-38x we should probably =
+=0A=
+remove this note. Personally my preference would be an armada-38x =0A=
+compatible string (or 370 if that's the common base of these SoCs). But =0A=
+of course we'll go with whatever your preference is as maintainer.=0A=
+=0A=
+> =0A=
+> Gregory=0A=
+> =0A=
+>>=0A=
+>> Thanks,=0A=
+>> Kalyan=0A=
+>> ________________________________________=0A=
+>> From: Gregory CLEMENT <gregory.clement@free-electrons.com>=0A=
+>> Sent: Friday, 22 September 2017 7:30 p.m.=0A=
+>> To: Kalyan Kinthada=0A=
+>> Cc: devicetree@vger.kernel.org; wsa@the-dreams.de; robh+dt@kernel.org;=
+=0A=
+>> pawel.moll@arm.com; mark.rutland@arm.com;=0A=
+>> ijc+devicetree@hellion.org.uk; galak@codeaurora.org;=0A=
+>> linux-i2c@vger.kernel.org; linux-kernel@vger.kernel.org; Chris Packham=
+=0A=
+>> Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding=0A=
+>>=0A=
+>> Hi Kalyan,=0A=
+>>=0A=
+>>   On ven., sept. 22 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis=
+.co.nz> wrote:=0A=
+>>=0A=
+>>> All armada-38x variants(380, 385, 388) SoCs have an issue=0A=
+>>> in i2c controller which violates the i2c repeated start timing.=0A=
+>>=0A=
+>>=0A=
+>> Did you had an issue with one of the SoC ?=0A=
+>> If yes what was your setting ?=0A=
+>> On my side I never managed to have this sort of issue on Armada 38x.=0A=
+>>=0A=
+>>>=0A=
+>>> This errata is fixed in the i2c-mv64xxx driver but enabled=0A=
+>>> only for devices with compatible string "marvell,mv78230-i2c".=0A=
+>>=0A=
+>> In this case why not just adding the "marvell,mv78230-i2c" as compatible=
+=0A=
+>> string in the appropriate device tree files ?=0A=
+>>=0A=
+>> Gregory=0A=
+>>=0A=
+>>>=0A=
+>>> This patch introduces a new compatible string=0A=
+>>> "marvell,armada-38x-i2c" for the i2c controller on armada-38x SoCs=0A=
+>>> so that the workaound is enabled.=0A=
+>>=0A=
+>>=0A=
+>>>=0A=
+>>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>=0A=
+>>> ---=0A=
+>>>   Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 1 +=0A=
+>>>   1 file changed, 1 insertion(+)=0A=
+>>>=0A=
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Do=
+cumentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
+>>> index 5c30026921..fc100b6bdb 100644=0A=
+>>> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt=0A=
+>>> @@ -14,6 +14,7 @@ Required properties :=0A=
+>>>                            very rare, initial version of the SoC which=
+=0A=
+>>>                            had broken offload support.  Linux=0A=
+>>>                            auto-detects this and sets it appropriately.=
+=0A=
+>>> +                     - "marvell,armada-38x-i2c"=0A=
+>>>    - interrupts      : The interrupt number=0A=
+>>>=0A=
+>>>   Optional properties :=0A=
+>>> --=0A=
+>>> 2.14.1=0A=
+>>>=0A=
+>>=0A=
+>> --=0A=
+>> Gregory Clement, Free Electrons=0A=
+>> Kernel, drivers, real-time and embedded Linux=0A=
+>> development, consulting, training and support.=0A=
+>> http://free-electrons.com=0A=
+> =0A=
+=0A=
