@@ -1,38 +1,98 @@
-From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt-bindings: bus: Minimal TI sysc interconnect
- target module binding
-Date: Wed, 27 Sep 2017 11:56:46 +0200
-Message-ID: <20170927095646.fi4l7jbbvrubfe25@squirrel.local>
-References: <20170920224621.16236-1-tony@atomide.com>
- <20170920224621.16236-2-tony@atomide.com>
- <20170925063545.nn3gr5drea6o2g6m@squirrel.local>
- <20170925142520.GE4394@atomide.com>
- <20170925172120.xu6k3leg4ac6mjya@squirrel.local>
- <20170925174413.GH4394@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170925174413.GH4394-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] ARM: dts: r8a7743: Add MSIOF[012] support
+Date: Wed, 27 Sep 2017 10:57:04 +0100
+Message-ID: <1506506225-5015-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Chris Paterson <chris.paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 25, 2017 at 10:44:14AM -0700, Tony Lindgren wrote:
-> * Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170925 10:22]:
-> > Ah... three "foreign" modules with an idlemode carelessly thrown into a
-> > register without care for existing layouts.  I think these are more just
-> > exceptional cases which happen to agree by coincidence since they all
-> > just added idlemode in the simplest way possible, but I can understand
-> > how it came to be viewed as a standard type.
-> 
-> So we shall then name this fine centauroid sysc ti,81xx-sysc?
+Add the DT nodes needed by MSIOF[012] interfaces to the SoC dtsi.
+Also, define aliases for spi[123].
 
-There's nothing centauroid specific about this, mcasp on omap4 has it too.
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
 
-Matthijs
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch depends on the corresponding dt-bindings patch:
+* spi: sh-msiof: Add r8a774[35] to the compatible list
+which has been applied to linux-next already.
+
+Best regards,
+Fabrizio
+
+ arch/arm/boot/dts/r8a7743.dtsi | 51 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 454f980..d541fd9 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -29,6 +29,9 @@
+ 		i2c7 = &iic1;
+ 		i2c8 = &iic3;
+ 		spi0 = &qspi;
++		spi1 = &msiof0;
++		spi2 = &msiof1;
++		spi3 = &msiof2;
+ 	};
+ 
+ 	cpus {
+@@ -852,6 +855,54 @@
+ 			status = "disabled";
+ 		};
+ 
++		msiof0: spi@e6e20000 {
++			compatible = "renesas,msiof-r8a7743",
++				     "renesas,rcar-gen2-msiof";
++			reg = <0 0xe6e20000 0 0x0064>;
++			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 000>;
++			dmas = <&dmac0 0x51>, <&dmac0 0x52>,
++			       <&dmac1 0x51>, <&dmac1 0x52>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 000>;
++			status = "disabled";
++		};
++
++		msiof1: spi@e6e10000 {
++			compatible = "renesas,msiof-r8a7743",
++				     "renesas,rcar-gen2-msiof";
++			reg = <0 0xe6e10000 0 0x0064>;
++			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 208>;
++			dmas = <&dmac0 0x55>, <&dmac0 0x56>,
++			       <&dmac1 0x55>, <&dmac1 0x56>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 208>;
++			status = "disabled";
++		};
++
++		msiof2: spi@e6e00000 {
++			compatible = "renesas,msiof-r8a7743",
++				     "renesas,rcar-gen2-msiof";
++			reg = <0 0xe6e00000 0 0x0064>;
++			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 205>;
++			dmas = <&dmac0 0x41>, <&dmac0 0x42>,
++			       <&dmac1 0x41>, <&dmac1 0x42>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			resets = <&cpg 205>;
++			status = "disabled";
++		};
++
+ 		sdhi0: sd@ee100000 {
+ 			compatible = "renesas,sdhi-r8a7743";
+ 			reg = <0 0xee100000 0 0x328>;
+-- 
+2.7.4
