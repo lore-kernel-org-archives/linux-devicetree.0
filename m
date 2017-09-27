@@ -1,100 +1,96 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [RFC PATCH 1/1] iommu/arm-smmu: Add support for multiple TBU
- child devices
-Date: Wed, 27 Sep 2017 12:12:27 +0530
-Message-ID: <b148de29-be38-41f1-7eb5-1ea81c15243e@codeaurora.org>
-References: <1505217667-31184-1-git-send-email-vivek.gautam@codeaurora.org>
- <20170919141034.ahhmuxfk6ldpegfp@rob-hp-laptop>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: enable gpio for pin groups
+Date: Wed, 27 Sep 2017 08:43:52 +0200
+Message-ID: <20170927064352.cscr47rzjbeshjx6@pengutronix.de>
+References: <20170921062808.fde5bpvn3wfau67h@pengutronix.de>
+ <CACRpkdacz+oC_8J5VHSsKXHGqxn96ETziu+ifUp4XHHrwcqbtA@mail.gmail.com>
+ <20170922180219.chvjuxmrharnw332@pengutronix.de>
+ <CACRpkdZn=DogDy8-iXavmrkd1d=FoeL94jb-Sb4iPwb-s+GJjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170919141034.ahhmuxfk6ldpegfp@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: robin.murphy@arm.com, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, joro@8bytes.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZn=DogDy8-iXavmrkd1d=FoeL94jb-Sb4iPwb-s+GJjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Sep 27, 2017 at 01:52:45AM +0200, Linus Walleij wrote:
+> On Fri, Sep 22, 2017 at 8:02 PM, Uwe Kleine-König
+> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > On Fri, Sep 22, 2017 at 03:23:05PM +0200, Linus Walleij wrote:
+> >> On Thu, Sep 21, 2017 at 8:28 AM, Uwe Kleine-König
+> >> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> >>
+> >> > on an i.MX25 machine on my desk a UART RX line is guarded by a transistor
+> >> > like this:
+> >> >
+> >> >         ,------------------------.
+> >> >         | ,---------.            |
+> >> >         | |  imx25  o--RX----◁---o---
+> >> >         | |         o--GPIO--'   |
+> >> >         | `---------'            |
+> >> >         `------------------------'
+> >>
+> >> This is inside the SoC, right, not outside it?
+> >>
+> >> In the rest of my answer I assume this.
+> >
+> > No, that's on the board. So your reply unfortunately doesn't match the
+> > problem :-|
+> 
+> OK sorry for my stupid and pointless assumption about this being
+> inside the SoC, I should ask before I talk.
+> 
+> >> If this is on the board, using enable-gpios is proper.
+> >
+> > enable-gpios as I suggested below that is? If so I assume you will be
+> > open for a generic approach to implement this?
+> 
+> So the enable-gpios as part of the pin control state like below:
+> 
+> >> > My first idea was to make this a property of the UART and added a
+> >> > enable-gpios property for it[1]. But now I wonder if this is better
+> >> > abstracted as an enable-gpios property in the pinctrl node. Something
+> >> > like:
+> >> >
+> >> >         pinctrl_uart5: uart5 {
+> >> >                 fsl,pins = <
+> >> >                         MX25_PAD_ECB__UART5_TXD                 0x00002080 /* TXD */
+> >> >                         MX25_PAD_LBA__UART5_RXD                 0x00000000 /* RXD */
+> >> >                         MX25_PAD_CS4__UART5_CTS                 0x00002001 /* RTS */
+> >> >                         MX25_PAD_CS5__GPIO_3_21                 0x00002001 /* #RXD_EN */
+> >> >                 >;
+> >> >                 enable-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
+> >> >         };
+> >> >
+> >> > Would this make sense? Maybe with a more intuitive name?
+> 
+> I would nominally make it part of the UART node and picked up by the
+> UART driver. Unless there is compelling reasons to believe that this is
+> something we will see a lot and not a particular oddity.
 
+Well, I didn't see it much before, but that's also a reason to not put
+it into the UART driver. :-)
 
-On 09/19/2017 07:40 PM, Rob Herring wrote:
-
-Thanks for reviewing the patch.
-
-> On Tue, Sep 12, 2017 at 05:31:07PM +0530, Vivek Gautam wrote:
->> ARM MMU-500 implements a TBU (uTLB) for each connected master
->> besides a single TCU which controls and manages the address
->> translations. Each of these TBUs can either be in the same
->> power domain as the master, or they can have a independent
->> power switch.
->> This design addresses the challenges to control TBU power.
->> Adding child devices for each TBUs present in the configuration
->> lets us control the power and clocks to TLBs having individual
->> power domains. The device link between master devices (such as,
->> display, and GPU) and TBU devices ensures that the master takes
->> care of powering the smmu as long as it's available.
->> When the master is not available, the TBUs are identified with
->> sid and powered on.
->>
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> ---
->>
->>   - The idea behind this patch is to handle the distributed smmu
->>     architectures, similar to MMU-500.
->>   - Untested yet.
->>   - There are still few instances where the correct tbu device has
->>     to be referenced and thus powered on to handle TLB maintenance
->>     operations.
->>
->>   .../devicetree/bindings/iommu/arm,smmu.txt         |  27 +++
->>   drivers/iommu/arm-smmu.c                           | 191 +++++++++++++++++++--
->>   2 files changed, 205 insertions(+), 13 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> index d97a6bc8e608..7cf67e75022e 100644
->> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> @@ -98,6 +98,18 @@ conditions.
->>                     accessed before master gets enabled and linked to its
->>                     SMMU.
->>   
->> +- child nodes:    ARM MMU-500 implements a TBU (page table cache or TLB) for
->> +                  each connected master besides a single TCU that controls
->> +                  and manages the address translations.
->> +                  Each of the child nodes represents a TBU that is attached to
->> +                  the master. This child node will have following property:
->> +
->> +  - compatibe:       must be "arm,mmu-500-tbu" for TBU child nodes of arm,mmu-500
->> +                     smmu.
->> +  - stream-id-range: array representing the starting stream id and the number
->> +                     of supported stream-ids. This gives information about
->> +                     the range of stream-ids that are supported by this TBU.
-> Needs a vendor prefix.
-
-Sure will add the vendor prefix.
-This can be a generic arm-mmu500 implementation where,
-a range of stream-ids are serviced by a TBU.
-Would "arm,stream-id-range" make sense?
-
->
-> Also need to document reg property. What does reg represent? If just an
-> index with no correlation to h/w numbering, then perhaps stream ids
-> could be put into reg instead.
-
-Okay. Stream-ids make sense, since the reg doesn't necessarily represent
-any hardware number such as channel number, etc.
+Conceptually the construct is there not because the pin has an UART
+function but because the pin is an output by default but should be an
+input later. This is more related to the pinctrl part of the SoC than of
+its UART IMHO. Also the GPIO is free to be activated once the pinmuxing
+is setup, so the timing depends on the pinctrl driver. (Well, ok, once
+the UART driver starts to act the pinctrl stuff is already done and so
+the timing is fine, too. That's more a conceptual argument.)
 
 Best regards
-Vivek
-
->
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Uwe
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
