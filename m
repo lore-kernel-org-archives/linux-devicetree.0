@@ -1,62 +1,35 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: Applied "spi: sh-msiof: Add compatible strings for r8a774[35]" to
- the spi tree
-Date: Wed, 27 Sep 2017 14:36:01 +0900
-Message-ID: <CANqRtoQjvkm4rMXt6jEaVWBeieEzqzT-yw_oARV7sj-SpTxB6g@mail.gmail.com>
-References: <1506329660-4064-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <20170925161637.D7471440058@finisterre.ee.mobilebroadband>
- <CAMuHMdVsRwW+10ERyTJAa8XhhkPMn4ruymUwPKot+kmczBwbcA@mail.gmail.com>
- <20170925184545.5k4nke27rgud3uwp@sirena.org.uk> <CAMuHMdUv-5COUuzJOWx=BTb5oJ7tFOi1BpocuJ7+VuCZ3fEuPg@mail.gmail.com>
- <20170926173009.xdw6mtvcyixpenr7@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: RISC-V Linux Port v9
+Date: Tue, 26 Sep 2017 23:08:02 -0700
+Message-ID: <CAK8P3a1ROLHHY9HE0LtPywhTMqBaHjp8kd4ZVBr3iWTyveBh9A@mail.gmail.com>
+References: <20170927015638.19443-1-palmer@dabbelt.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170926173009.xdw6mtvcyixpenr7@sirena.org.uk>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170927015638.19443-1-palmer@dabbelt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches@groups.riscv.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, albert@sifive.com, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>, Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark, Geert, everyone,
+On Tue, Sep 26, 2017 at 6:56 PM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> As per suggestions on our v8 patch set, I've split the core architecture code
+> out from our drivers and would like to submit this patch set to be included
+> into linux-next, with the goal being to be merged in during the next merge
+> window.  This patch set is based on 4.14-rc2, but if it's better to have it
+> based on something else then I can change it around.
 
-On Wed, Sep 27, 2017 at 2:30 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Sep 25, 2017 at 09:15:53PM +0200, Geert Uytterhoeven wrote:
->
->> My rebuttal is threefold:
->>   1. Listing the fallback property is mandatory for new SoCs. We only keep
->>      the per-SoC compatible values in the driver for older SoCs that predate
->>      the introduction of fallback properties.
->
-> So good practice is always good practice, but I'd argue that it's not
-> bad practice to also explicitly enumerate all the documented compatibles
-> in the driver.  Being liberal in what you accept and all that.
->
->>   2. Some harm is involved, in the form of increased kernel image size.
->
-> Is this really a meaningful impact?
->
->>   3. When updating DT bindings for new SoCs, we usually add "No driver
->>      update is needed" to the patch description to clarify. Unfortunately
->>      that was missed here.
->
-> That's basically the same good practice thing, it's just documenting
-> what you're trying to do here with not putting things in code but
-> writing things in changelogs doesn't make them so!
+-rc2 is good, just don't rebase it any more. I'd suggest that at the point this
+becomes part of linux-next, you stop modifying the patches further and
+move to adding any additional changes as patches on top.
 
-My opinion that good practice is to document the per-driver supported
-hardware by explicitly listing the per-SoC compat strings in the DT
-binding document.
+>  * I cleaned up the defconfigs -- there's actually now just one, and it's
+>    empty.  For now I think we're OK with what the kernel sets as defaults, but
+>    I anticipate we'll begin to expand this as people start to use the port
+>    more.
 
-Then exactly which compat strings the driver matches on is really part
-of the software implementation and it will most likely vary over time.
+The kernel defaults are not really as sensible as one would hope. Maybe
+go through your previous defconfig once more and pick up the items that
+made sense.
 
-So my view is that only updating the DT binding document should be
-enough in most cases when fall-back compat strings are used. I guess
-other people see it differently?
-
-Is it too much detail to let the MAINTAINERS file point out both
-driver files and the DT binding files?
-
-Cheers,
-
-/ magnus
+         Arnd
