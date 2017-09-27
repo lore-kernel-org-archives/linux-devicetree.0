@@ -1,240 +1,67 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 04/12] usb: mtu3: add optional mcu and dma bus clocks
-Date: Wed, 27 Sep 2017 18:58:33 +0800
-Message-ID: <ed894dac25c1895f43e82d52eee7bbe7fbc04b6b.1506509658.git.chunfeng.yun@mediatek.com>
-References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 0/2] Input: Add Cypress Gen5 Touchscreen driver
+Date: Wed, 27 Sep 2017 13:37:45 +0200
+Message-ID: <20170927113747.2770-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are mcu_bus and dma_bus clocks needed to be turned on/off by
-driver on some SoCs, so add them as optional ones
+Hi everyone,
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/mtu3/mtu3.h      |    5 ++
- drivers/usb/mtu3/mtu3_plat.c |  121 ++++++++++++++++++++++++++++--------------
- 2 files changed, 86 insertions(+), 40 deletions(-)
+Here is a V3 serie to add the driver of the touchscreen Cypress,
+TrueTouch Generation 5.
+Based on last master branch of "input" kernel's tree, last commit 8d25fee28450.
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index 6d3278e..2795294 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -206,6 +206,9 @@ struct otg_switch_mtk {
-  * @ippc_base: register base address of IP Power and Clock interface (IPPC)
-  * @vusb33: usb3.3V shared by device/host IP
-  * @sys_clk: system clock of mtu3, shared by device/host IP
-+ * @ref_clk: reference clock
-+ * @mcu_clk: mcu_bus_ck clock for AHB bus etc
-+ * @dma_clk: dma_bus_ck clock for AXI bus etc
-  * @dr_mode: works in which mode:
-  *		host only, device only or dual-role mode
-  * @u2_ports: number of usb2.0 host ports
-@@ -226,6 +229,8 @@ struct ssusb_mtk {
- 	struct regulator *vusb33;
- 	struct clk *sys_clk;
- 	struct clk *ref_clk;
-+	struct clk *mcu_clk;
-+	struct clk *dma_clk;
- 	/* otg */
- 	struct otg_switch_mtk otg_switch;
- 	enum usb_dr_mode dr_mode;
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index 9edad30..fb89920 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -110,15 +110,9 @@ static void ssusb_phy_power_off(struct ssusb_mtk *ssusb)
- 		phy_power_off(ssusb->phys[i]);
- }
- 
--static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
-+static int ssusb_clks_enable(struct ssusb_mtk *ssusb)
- {
--	int ret = 0;
--
--	ret = regulator_enable(ssusb->vusb33);
--	if (ret) {
--		dev_err(ssusb->dev, "failed to enable vusb33\n");
--		goto vusb33_err;
--	}
-+	int ret;
- 
- 	ret = clk_prepare_enable(ssusb->sys_clk);
- 	if (ret) {
-@@ -132,6 +126,52 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
- 		goto ref_clk_err;
- 	}
- 
-+	ret = clk_prepare_enable(ssusb->mcu_clk);
-+	if (ret) {
-+		dev_err(ssusb->dev, "failed to enable mcu_clk\n");
-+		goto mcu_clk_err;
-+	}
-+
-+	ret = clk_prepare_enable(ssusb->dma_clk);
-+	if (ret) {
-+		dev_err(ssusb->dev, "failed to enable dma_clk\n");
-+		goto dma_clk_err;
-+	}
-+
-+	return 0;
-+
-+dma_clk_err:
-+	clk_disable_unprepare(ssusb->mcu_clk);
-+mcu_clk_err:
-+	clk_disable_unprepare(ssusb->ref_clk);
-+ref_clk_err:
-+	clk_disable_unprepare(ssusb->sys_clk);
-+sys_clk_err:
-+	return ret;
-+}
-+
-+static void ssusb_clks_disable(struct ssusb_mtk *ssusb)
-+{
-+	clk_disable_unprepare(ssusb->dma_clk);
-+	clk_disable_unprepare(ssusb->mcu_clk);
-+	clk_disable_unprepare(ssusb->ref_clk);
-+	clk_disable_unprepare(ssusb->sys_clk);
-+}
-+
-+static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
-+{
-+	int ret = 0;
-+
-+	ret = regulator_enable(ssusb->vusb33);
-+	if (ret) {
-+		dev_err(ssusb->dev, "failed to enable vusb33\n");
-+		goto vusb33_err;
-+	}
-+
-+	ret = ssusb_clks_enable(ssusb);
-+	if (ret)
-+		goto clks_err;
-+
- 	ret = ssusb_phy_init(ssusb);
- 	if (ret) {
- 		dev_err(ssusb->dev, "failed to init phy\n");
-@@ -149,20 +189,16 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
- phy_err:
- 	ssusb_phy_exit(ssusb);
- phy_init_err:
--	clk_disable_unprepare(ssusb->ref_clk);
--ref_clk_err:
--	clk_disable_unprepare(ssusb->sys_clk);
--sys_clk_err:
-+	ssusb_clks_disable(ssusb);
-+clks_err:
- 	regulator_disable(ssusb->vusb33);
- vusb33_err:
--
- 	return ret;
- }
- 
- static void ssusb_rscs_exit(struct ssusb_mtk *ssusb)
- {
--	clk_disable_unprepare(ssusb->sys_clk);
--	clk_disable_unprepare(ssusb->ref_clk);
-+	ssusb_clks_disable(ssusb);
- 	regulator_disable(ssusb->vusb33);
- 	ssusb_phy_power_off(ssusb);
- 	ssusb_phy_exit(ssusb);
-@@ -203,6 +239,19 @@ static int get_iddig_pinctrl(struct ssusb_mtk *ssusb)
- 	return 0;
- }
- 
-+/* ignore the error if the clock does not exist */
-+static struct clk *get_optional_clk(struct device *dev, const char *id)
-+{
-+	struct clk *opt_clk;
-+
-+	opt_clk = devm_clk_get(dev, id);
-+	/* ignore error number except EPROBE_DEFER */
-+	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
-+		opt_clk = NULL;
-+
-+	return opt_clk;
-+}
-+
- static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- {
- 	struct device_node *node = pdev->dev.of_node;
-@@ -225,18 +274,17 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 		return PTR_ERR(ssusb->sys_clk);
- 	}
- 
--	/*
--	 * reference clock is usually a "fixed-clock", make it optional
--	 * for backward compatibility and ignore the error if it does
--	 * not exist.
--	 */
--	ssusb->ref_clk = devm_clk_get(dev, "ref_ck");
--	if (IS_ERR(ssusb->ref_clk)) {
--		if (PTR_ERR(ssusb->ref_clk) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
-+	ssusb->ref_clk = get_optional_clk(dev, "ref_ck");
-+	if (IS_ERR(ssusb->ref_clk))
-+		return PTR_ERR(ssusb->ref_clk);
- 
--		ssusb->ref_clk = NULL;
--	}
-+	ssusb->mcu_clk = get_optional_clk(dev, "mcu_ck");
-+	if (IS_ERR(ssusb->mcu_clk))
-+		return PTR_ERR(ssusb->mcu_clk);
-+
-+	ssusb->dma_clk = get_optional_clk(dev, "dma_ck");
-+	if (IS_ERR(ssusb->dma_clk))
-+		return PTR_ERR(ssusb->dma_clk);
- 
- 	ssusb->num_phys = of_count_phandle_with_args(node,
- 			"phys", "#phy-cells");
-@@ -451,8 +499,7 @@ static int __maybe_unused mtu3_suspend(struct device *dev)
- 
- 	ssusb_host_disable(ssusb, true);
- 	ssusb_phy_power_off(ssusb);
--	clk_disable_unprepare(ssusb->sys_clk);
--	clk_disable_unprepare(ssusb->ref_clk);
-+	ssusb_clks_disable(ssusb);
- 	ssusb_wakeup_enable(ssusb);
- 
- 	return 0;
-@@ -470,27 +517,21 @@ static int __maybe_unused mtu3_resume(struct device *dev)
- 		return 0;
- 
- 	ssusb_wakeup_disable(ssusb);
--	ret = clk_prepare_enable(ssusb->sys_clk);
--	if (ret)
--		goto err_sys_clk;
--
--	ret = clk_prepare_enable(ssusb->ref_clk);
-+	ret = ssusb_clks_enable(ssusb);
- 	if (ret)
--		goto err_ref_clk;
-+		goto clks_err;
- 
- 	ret = ssusb_phy_power_on(ssusb);
- 	if (ret)
--		goto err_power_on;
-+		goto phy_err;
- 
- 	ssusb_host_enable(ssusb);
- 
- 	return 0;
- 
--err_power_on:
--	clk_disable_unprepare(ssusb->ref_clk);
--err_ref_clk:
--	clk_disable_unprepare(ssusb->sys_clk);
--err_sys_clk:
-+phy_err:
-+	ssusb_clks_disable(ssusb);
-+clks_err:
- 	return ret;
- }
- 
+This touchscreen is similar to Cypress generation 4 but the
+registers are different.
+
+This driver uses regmap as it is possible to use I2C or SPI
+busses. Currently, only the I2C support are available in the driver.
+This touchscreen can handle some multitouch event as buttons using
+some defined zone. That is why the driver handles buttons and
+multitouch events.
+
+Changes since v2:
+   - Removed pinctrl in dt-binding example which is uncessecary.
+   - Added Acked-by and Reviewd-by received.
+Changes since v1:
+   - Updated the driver according to reviews. Most important modifications:
+   removed unnecessary mutex, updated dev_err output, handled return cases
+   in a better way, created a HID_ENUM, removed magic value, used an
+   existing CRC table and used "linux-keycodes" instead of sub-nodes.
+   - Updated the dt-bindings to use linux-keycodes and removed properties'
+   description that comes from touchscreen's binding.
+
+Patch 01: Add the basis of the driver for Cypress Gen5 Touchscreen.
+Patch 02: Add the binding documentation for this driver.
+
+If you have any remarks, let me know.
+
+Thank you in advance,
+Mylène
+
+Mylène Josserand (2):
+  Input: Add driver for Cypress Generation 5 touchscreen
+  dt-bindings: input: Add documentation for cyttsp5
+
+ .../bindings/input/touchscreen/cypress,cyttsp5.txt |   39 +
+ drivers/input/touchscreen/Kconfig                  |   15 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/cyttsp5.c                | 1110 ++++++++++++++++++++
+ 4 files changed, 1165 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cyttsp5.txt
+ create mode 100644 drivers/input/touchscreen/cyttsp5.c
+
 -- 
-1.7.9.5
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
