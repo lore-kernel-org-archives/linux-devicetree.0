@@ -1,41 +1,91 @@
-From: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH v2 0/1] Set FORCE_CSX bit when arbitration between NAND and NOR is enabled.
-Date: Wed, 27 Sep 2017 13:55:15 +1300
-Message-ID: <20170927005516.28374-1-kalyan.kinthada@alliedtelesis.co.nz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: Re: [PATCH 02/12] arm64: dts: mt8173: remove "mediatek,mt8135-mmc"
+ from mmc nodes
+Date: Wed, 27 Sep 2017 09:14:45 +0800
+Message-ID: <1506474885.19851.5.camel@mhfsdcap03>
+References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+         <1505207272-16983-3-git-send-email-chaotian.jing@mediatek.com>
+         <CAPDyKFo7rC5UVWw9VyJ7ws1wW4kCvSW7Jcsgqd6gY_nifB6fTw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo7rC5UVWw9VyJ7ws1wW4kCvSW7Jcsgqd6gY_nifB6fTw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-When the arbitration between NOR and NAND flash is enabled
-the <FORCE_CSX> field bit[21] in the Data Flash Control Register
-needs to be set to 1 according to guidleine GL-5830741.
-
-Set the FORCE_CSX bit in NDCR for ARMADA370 variants as the arbitration
-is always enabled by default.
-
-Changes since v1:
-
-Thanks Miquel RAYNAL for the suggestion.
-* Deleted: "dt-bindings: mtd: pxa3xx: Add "marvell,nand-force-csx" compatible string"
-  Not necessary to create a new compatible string.
-
-* "mtd-nand-pxa3xx-Set-FORCE_CSX-bit-to-ARMADA370-variants" 
-  Modified commit message.
-  This commit sets the FORCE_CSX bit for all ARMADA370 variants.
-
-----
-Kalyan Kinthada (1):
-  mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370 variants.
-
- drivers/mtd/nand/pxa3xx_nand.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, 2017-09-27 at 00:37 +0200, Ulf Hansson wrote:
+> On 12 September 2017 at 11:07, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> > devicetree bindings has been updated to support multi-platforms,
+> > so that each platform has its owns compatible name.
+> > And, this compatible name may used in driver to distinguish with
+> > other platform.
+> 
+> This does not seems to be DT backwards compatible.
+> 
+> If the driver starts interpreting the "mt8135-mmc" differently,
+> wouldn't that lead to old DTBs to become broken?
+> 
+> Kind regards
+> Uffe
+At patch 03/12, it shows that no difference between "mt8135-mmc" and
+"mt8173-mmc", and following changes will make difference between these
+two.
+but, the user should update DTS & driver together,then will do not have
+compatible issue.
+> 
+> >
+> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++--------
+> >  1 file changed, 4 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index b99a273..26396ef 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -682,8 +682,7 @@
+> >                 };
+> >
+> >                 mmc0: mmc@11230000 {
+> > -                       compatible = "mediatek,mt8173-mmc",
+> > -                                    "mediatek,mt8135-mmc";
+> > +                       compatible = "mediatek,mt8173-mmc";
+> >                         reg = <0 0x11230000 0 0x1000>;
+> >                         interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_LOW>;
+> >                         clocks = <&pericfg CLK_PERI_MSDC30_0>,
+> > @@ -693,8 +692,7 @@
+> >                 };
+> >
+> >                 mmc1: mmc@11240000 {
+> > -                       compatible = "mediatek,mt8173-mmc",
+> > -                                    "mediatek,mt8135-mmc";
+> > +                       compatible = "mediatek,mt8173-mmc";
+> >                         reg = <0 0x11240000 0 0x1000>;
+> >                         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
+> >                         clocks = <&pericfg CLK_PERI_MSDC30_1>,
+> > @@ -704,8 +702,7 @@
+> >                 };
+> >
+> >                 mmc2: mmc@11250000 {
+> > -                       compatible = "mediatek,mt8173-mmc",
+> > -                                    "mediatek,mt8135-mmc";
+> > +                       compatible = "mediatek,mt8173-mmc";
+> >                         reg = <0 0x11250000 0 0x1000>;
+> >                         interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
+> >                         clocks = <&pericfg CLK_PERI_MSDC30_2>,
+> > @@ -715,8 +712,7 @@
+> >                 };
+> >
+> >                 mmc3: mmc@11260000 {
+> > -                       compatible = "mediatek,mt8173-mmc",
+> > -                                    "mediatek,mt8135-mmc";
+> > +                       compatible = "mediatek,mt8173-mmc";
+> >                         reg = <0 0x11260000 0 0x1000>;
+> >                         interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
+> >                         clocks = <&pericfg CLK_PERI_MSDC30_3>,
+> > --
+> > 1.8.1.1.dirty
+> >
