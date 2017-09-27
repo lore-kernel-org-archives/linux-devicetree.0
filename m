@@ -1,98 +1,44 @@
-From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v8 4/5] iommu/dma: Add a helper function to reserve HW MSI address regions for IOMMU drivers
-Date: Wed, 27 Sep 2017 14:32:40 +0100
-Message-ID: <20170927133241.21036-5-shameerali.kolothum.thodi@huawei.com>
-References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 1/2] dt-bindings: gpio: uniphier: add UniPhier GPIO binding
+Date: Wed, 27 Sep 2017 15:42:05 +0200
+Message-ID: <CACRpkdYJSXH+94QScrpSPdfy8ULa6dV2q0qRjsfKAAWSRuKTKQ@mail.gmail.com>
+References: <1506480343-9597-1-git-send-email-yamada.masahiro@socionext.com> <1506480343-9597-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, sudeep.holla@arm.com, will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org, mark.rutland@arm.com, robh@kernel.org
-Cc: gabriele.paoloni@huawei.com, john.garry@huawei.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, devel@acpica.org, linuxarm@huawei.com, wangzhou1@hisilicon.com, guohanjun@huawei.com, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1506480343-9597-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-IOMMU drivers can use this to implement their .get_resv_regions callback
-for HW MSI specific reservations(e.g. ARM GICv3 ITS MSI region).
+On Wed, Sep 27, 2017 at 4:45 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-[John: added DT support]
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
- include/linux/dma-iommu.h |  7 +++++++
- 2 files changed, 26 insertions(+)
+> This GPIO controller is used on UniPhier SoC family.
+>
+> The vendor specific property "socionext,interrupt-ranges" is for
+> specifying interrupt mapping to the parent interrupt controller
+> because the mapping is not contiguous.  It works like "ranges",
+> but transforms "interrupts" instead of "reg".
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 9d1cebe..f8709a2 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -19,6 +19,7 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/acpi_iort.h>
- #include <linux/device.h>
- #include <linux/dma-iommu.h>
- #include <linux/gfp.h>
-@@ -27,6 +28,7 @@
- #include <linux/iova.h>
- #include <linux/irq.h>
- #include <linux/mm.h>
-+#include <linux/of_iommu.h>
- #include <linux/pci.h>
- #include <linux/scatterlist.h>
- #include <linux/vmalloc.h>
-@@ -198,6 +200,23 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
- }
- EXPORT_SYMBOL(iommu_dma_get_resv_regions);
- 
-+/**
-+ * iommu_dma_get_msi_resv_regions - Reserved region driver helper
-+ * @dev: Device from iommu_get_resv_regions()
-+ * @list: Reserved region list from iommu_get_resv_regions()
-+ *
-+ * IOMMU drivers can use this to implement their .get_resv_regions
-+ * callback for HW MSI specific reservations.
-+ */
-+int iommu_dma_get_msi_resv_regions(struct device *dev, struct list_head *list)
-+{
-+	if (is_of_node(dev->iommu_fwspec->iommu_fwnode))
-+		return of_iommu_msi_get_resv_regions(dev, list);
-+
-+	return iort_iommu_msi_get_resv_regions(dev, list);
-+}
-+EXPORT_SYMBOL(iommu_dma_get_msi_resv_regions);
-+
- static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
- 		phys_addr_t start, phys_addr_t end)
- {
-diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
-index 92f2083..6062ef0 100644
---- a/include/linux/dma-iommu.h
-+++ b/include/linux/dma-iommu.h
-@@ -74,6 +74,8 @@ void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
- void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);
- void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list);
- 
-+int iommu_dma_get_msi_resv_regions(struct device *dev, struct list_head *list);
-+
- #else
- 
- struct iommu_domain;
-@@ -107,6 +109,11 @@ static inline void iommu_dma_get_resv_regions(struct device *dev, struct list_he
- {
- }
- 
-+static inline int iommu_dma_get_msi_resv_regions(struct device *dev, struct list_head *list)
-+{
-+	return -ENODEV;
-+}
-+
- #endif	/* CONFIG_IOMMU_DMA */
- #endif	/* __KERNEL__ */
- #endif	/* __DMA_IOMMU_H */
--- 
-1.9.1
+I don't think Rob has seen the new interrupt range thing?
+(It's not a big deal. Things like these are a bit fuzzy.)
 
+> +               socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
 
+If it is as you say, that other SoCs are doing the same, we should
+think about creating a generic property for this. Like
+hierarchy-interrupt-ranges or so.
+
+I kind of liked the old patch where it was just "interrupts" and
+then you looked it up from the irq subsystem. (tglx even ACKed
+the patch).
+
+But I want the DT people to say something here.
+
+Yours,
+Linus Walleij
