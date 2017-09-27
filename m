@@ -1,34 +1,97 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 02/13] clk: sunxi-ng: sun6i: Rename HDMI DDC clock to
- avoid name collision
-Date: Wed, 27 Sep 2017 11:45:02 +0800
-Message-ID: <CAGb2v67dTG536S00nNCg_D1aNPkxTsGAF3c20x7fN-LqCjhNzA@mail.gmail.com>
-References: <20170926065919.24446-1-wens@csie.org> <20170926065919.24446-3-wens@csie.org>
- <20170926093247.blcu52dzluqawzb5@flea>
+Subject: Re: [PATCH v2 03/13] drm/sun4i: tcon: Add support for demuxing TCON
+ output on A31
+Date: Wed, 27 Sep 2017 12:03:25 +0800
+Message-ID: <CAGb2v640Oy+DUF6w9DjJN9gAULFL44Xoq32vUiJb9yGi4pJEJw@mail.gmail.com>
+References: <20170926065919.24446-1-wens@csie.org>
+ <20170926065919.24446-4-wens@csie.org>
+ <20170926095603.c67y4rytydya7kjd@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170926093247.blcu52dzluqawzb5@flea>
-Sender: linux-clk-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170926095603.c67y4rytydya7kjd@flea>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 5:32 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Tue, Sep 26, 2017 at 06:59:08AM +0000, Chen-Yu Tsai wrote:
->> The HDMI DDC clock found in the CCU is the parent of the actual DDC
->> clock within the HDMI controller. That clock is also named "hdmi-ddc".
->>
->> Rename the one in the CCU to "hdmi-ddc-parent". This makes more sense
->> than renaming the one in the HDMI controller to something else.
->>
->> Fixes: c6e6c96d8fa6 ("clk: sunxi-ng: Add A31/A31s clocks")
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->
-> I'd rather stick to the datasheet names. What about "DDC" ?
-
-Works for me.
-
-Thanks
-ChenYu
+T24gVHVlLCBTZXAgMjYsIDIwMTcgYXQgNTo1NiBQTSwgTWF4aW1lIFJpcGFyZAo8bWF4aW1lLnJp
+cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+IEhpLAo+Cj4gT24gVHVlLCBTZXAgMjYs
+IDIwMTcgYXQgMDY6NTk6MDlBTSArMDAwMCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgo+PiBPbiBzeXN0
+ZW1zIHdpdGggMiBUQ09OcyBzdWNoIGFzIHRoZSBBMzEsIGl0IGlzIHBvc3NpYmxlIHRvIGRlbXV4
+IHRoZQo+PiBvdXRwdXQgb2YgdGhlIFRDT05zIHRvIG9uZSBlbmNvZGVyLgo+Pgo+PiBBZGQgc3Vw
+cG9ydCBmb3IgdGhpcyBmb3IgdGhlIEEzMS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBU
+c2FpIDx3ZW5zQGNzaWUub3JnPgo+PiAtLS0KPj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40
+aV90Y29uLmMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAg
+MSBmaWxlIGNoYW5nZWQsIDYxIGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NGlfdGNvbi5jCj4+IGluZGV4IGU4NTNkZmU1MTM4OS4uNzcwYjg0M2E2ZmE5IDEwMDY0NAo+PiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCj4+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKPj4gQEAgLTE0LDkgKzE0LDEyIEBACj4+ICAjaW5j
+bHVkZSA8ZHJtL2RybV9hdG9taWNfaGVscGVyLmg+Cj4+ICAjaW5jbHVkZSA8ZHJtL2RybV9jcnRj
+Lmg+Cj4+ICAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgo+PiArI2luY2x1ZGUgPGRy
+bS9kcm1fZW5jb2Rlci5oPgo+PiAgI2luY2x1ZGUgPGRybS9kcm1fbW9kZXMuaD4KPj4gICNpbmNs
+dWRlIDxkcm0vZHJtX29mLmg+Cj4+Cj4+ICsjaW5jbHVkZSA8dWFwaS9kcm0vZHJtX21vZGUuaD4K
+Pj4gKwo+PiAgI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+PiAgI2luY2x1ZGUgPGxpbnV4
+L2lvcG9ydC5oPgo+PiAgI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KPj4gQEAgLTEwOSwx
+MSArMTEyLDY5IEBAIHZvaWQgc3VuNGlfdGNvbl9lbmFibGVfdmJsYW5rKHN0cnVjdCBzdW40aV90
+Y29uICp0Y29uLCBib29sIGVuYWJsZSkKPj4gIH0KPj4gIEVYUE9SVF9TWU1CT0woc3VuNGlfdGNv
+bl9lbmFibGVfdmJsYW5rKTsKPj4KPj4gK3N0YXRpYyBzdHJ1Y3Qgc3VuNGlfdGNvbiAqc3VuNGlf
+Z2V0X2ZpcnN0X3Rjb24oc3RydWN0IGRybV9kZXZpY2UgKmRybSkKPj4gK3sKPj4gKyAgICAgc3Ry
+dWN0IHN1bjRpX2RydiAqZHJ2ID0gZHJtLT5kZXZfcHJpdmF0ZTsKPj4gKyAgICAgc3RydWN0IHN1
+bjRpX3Rjb24gKnRjb247Cj4+ICsKPj4gKyAgICAgbGlzdF9mb3JfZWFjaF9lbnRyeSh0Y29uLCAm
+ZHJ2LT50Y29uX2xpc3QsIGxpc3QpCj4+ICsgICAgICAgICAgICAgaWYgKHRjb24tPmlkID09IDAp
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICByZXR1cm4gdGNvbjsKPj4gKwo+PiArICAgICBkZXZf
+d2Fybihkcm0tPmRldiwKPj4gKyAgICAgICAgICAgICAgIlRDT04wIG5vdCBmb3VuZCwgZGlzcGxh
+eSBvdXRwdXQgbXV4aW5nIG1heSBub3Qgd29ya1xuIik7Cj4+ICsKPj4gKyAgICAgcmV0dXJuIHRj
+b247Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgX3N1bjZpX3Rjb25fc2V0X211eChzdHJ1Y3Qg
+ZHJtX2VuY29kZXIgKmVuY29kZXIpCj4+ICt7Cj4+ICsgICAgIHN0cnVjdCBzdW40aV90Y29uICp0
+Y29uID0gc3VuNGlfZ2V0X2ZpcnN0X3Rjb24oZW5jb2Rlci0+ZGV2KTsKPj4gKyAgICAgaW50IHRj
+b25faWQgPSBkcm1fY3J0Y190b19zdW40aV9jcnRjKGVuY29kZXItPmNydGMpLT50Y29uLT5pZDsK
+Pj4gKyAgICAgdTMyIHNoaWZ0Owo+PiArCj4+ICsgICAgIERSTV9ERUJVR19EUklWRVIoIk11eGlu
+ZyBlbmNvZGVyICVzIHRvIENSVEMgJXMgKFRDT04gJWQpXG4iLAo+PiArICAgICAgICAgICAgICAg
+ICAgICAgIGVuY29kZXItPm5hbWUsIGVuY29kZXItPmNydGMtPm5hbWUsIHRjb25faWQpOwo+PiAr
+Cj4+ICsgICAgIC8qIE9ubHkgMiBUQ09OcyAqLwo+PiArICAgICBpZiAodGNvbl9pZCA+PSAyKQo+
+PiArICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+PiArCj4+ICsgICAgIHN3aXRjaCAoZW5j
+b2Rlci0+ZW5jb2Rlcl90eXBlKSB7Cj4+ICsgICAgIGNhc2UgRFJNX01PREVfRU5DT0RFUl9UTURT
+Ogo+PiArICAgICAgICAgICAgIC8qIEhETUkgKi8KPj4gKyAgICAgICAgICAgICBzaGlmdCA9IDg7
+Cj4+ICsgICAgICAgICAgICAgYnJlYWs7Cj4+ICsgICAgIGNhc2UgRFJNX01PREVfRU5DT0RFUl9E
+U0k6Cj4+ICsgICAgICAgICAgICAgLyogTm8gTUlQSSBEU0kgb24gQTMxcyAqLwo+PiArICAgICAg
+ICAgICAgIGlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZSh0Y29uLT5kZXYtPm9mX25vZGUsCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhbGx3aW5uZXIsc3Vu
+NmktYTMxcy10Y29uIikpCj4KPiBJJ20gbm90IHN1cmUgdGhhdCB0ZXN0IGlzIG5lZWRlZC4KPgo+
+IFdlIHdvbid0IGVuZCB1cCBpbiB0aGF0IGNhc2UgaWYgd2UgZG9uJ3QgaGF2ZSBhIGNvbm5lY3Rl
+ZCBEU0kgYmxvY2ssCj4gd2hpY2ggaXNuJ3QgZ29pbmcgdG8gYmUgdGhlIGNhc2Ugb24gdGhlIEEz
+MS4gQW5kIEkgZ3Vlc3Mgd2UgY2FuIHRhY2tsZQo+IERTSSBsYXRlciAod2hlbiBJJ2xsIHNlbmQg
+bXkgcGF0Y2hlcy4uLikuCgpPSy4gSSdsbCBsZWF2ZSBhIGNvbW1lbnQgaW5zdGVhZC4KCj4KPj4g
+KyAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOwo+PiArICAgICAgICAgICAgIHNo
+aWZ0ID0gMDsKPj4gKyAgICAgICAgICAgICBicmVhazsKPj4gKyAgICAgZGVmYXVsdDoKPj4gKyAg
+ICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPj4gKyAgICAgfQo+PiArCj4+ICsgICAgIHJlZ21h
+cF91cGRhdGVfYml0cyh0Y29uLT5yZWdzLCBTVU40SV9UQ09OX01VWF9DVFJMX1JFRywKPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgIDB4MyA8PCBzaGlmdCwgdGNvbl9pZCA8PCBzaGlmdCk7Cj4+
+ICsKPj4gKyAgICAgcmV0dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gIHZvaWQgc3VuNGlfdGNvbl9zZXRf
+bXV4KHN0cnVjdCBzdW40aV90Y29uICp0Y29uLCBpbnQgY2hhbm5lbCwKPj4gICAgICAgICAgICAg
+ICAgICAgICAgIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPj4gIHsKPj4gKyAgICAgLyog
+R2V0IHRoZSBkZXZpY2Ugbm9kZSBvZiB0aGUgZGlzcGxheSBlbmdpbmUgKi8KPj4gKyAgICAgc3Ry
+dWN0IGRldmljZV9ub2RlICpub2RlID0gZW5jb2Rlci0+ZGV2LT5kZXYtPm9mX25vZGU7Cj4+ICAg
+ICAgIHUzMiB2YWw7Cj4+Cj4+ICsgICAgIGlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShub2Rl
+LCAiYWxsd2lubmVyLHN1bjZpLWEzMS1kaXNwbGF5LWVuZ2luZSIpIHx8Cj4+ICsgICAgICAgICBv
+Zl9kZXZpY2VfaXNfY29tcGF0aWJsZShub2RlLCAiYWxsd2lubmVyLHN1bjZpLWEzMXMtZGlzcGxh
+eS1lbmdpbmUiKSkgewo+PiArICAgICAgICAgICAgIF9zdW42aV90Y29uX3NldF9tdXgoZW5jb2Rl
+cik7Cj4+ICsgICAgICAgICAgICAgcmV0dXJuOwo+PiArICAgICB9Cj4+ICsKPgo+IEknZCByZWFs
+bHkgbGlrZSB0byBhdm9pZCBtaXggYW5kIG1hdGNoaW5nIHRoZSBzdHJ1Y3R1cmUgZGVmaW5lZAo+
+IGJlaGF2aW91ciBhbmQgdGhvc2Ugb2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUgY2FsbHMgc3ByZWFk
+IG91dAo+IGV2ZXJ5d2hlcmUuCj4KPiBZb3UgY2FuIGVpdGhlciBhZGQgYSBmbGFnIG9yIGEgZnVu
+Y3Rpb24gcG9pbnRlci4KCkZ1bmN0aW9uIHBvaW50ZXIgaXQgaXMhCgpDaGVuWXUKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
