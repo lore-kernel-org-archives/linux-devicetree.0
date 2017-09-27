@@ -1,7 +1,7 @@
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: [PATCH v9 08/12] RISC-V: Task implementation
-Date: Tue, 26 Sep 2017 18:56:34 -0700
-Message-ID: <20170927015638.19443-9-palmer@dabbelt.com>
+Subject: [PATCH v9 04/12] RISC-V: Init and Halt Code
+Date: Tue, 26 Sep 2017 18:56:30 -0700
+Message-ID: <20170927015638.19443-5-palmer@dabbelt.com>
 References: <20170927015638.19443-1-palmer@dabbelt.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170927015638.19443-1-palmer@dabbelt.com>
@@ -10,49 +10,52 @@ To: Arnd Bergmann <arnd@arndb.de>, sfr@canb.auug.org.au, Olof Johansson <olof@li
 Cc: linux-kernel@vger.kernel.org, patches@groups.riscv.org, robh+dt@kernel.org, mark.rutland@arm.com, albert@sifive.com, yamada.masahiro@socionext.com, mmarek@suse.com, will.deacon@arm.com, peterz@infradead.org, boqun.feng@gmail.com, oleg@redhat.com, mingo@redhat.com, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch contains the implementation of tasks on RISC-V, most of which
-is involved in task switching.
+This contains the various __init C functions, the initial assembly
+kernel entry point, and the code to reset the system.  When a file was
+init-related this patch contains the entire file.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
 ---
- arch/riscv/include/asm/asm-offsets.h |   1 +
- arch/riscv/include/asm/current.h     |  45 ++++
- arch/riscv/include/asm/kprobes.h     |  22 ++
- arch/riscv/include/asm/processor.h   |  97 ++++++++
- arch/riscv/include/asm/switch_to.h   |  69 ++++++
- arch/riscv/include/asm/thread_info.h |  94 +++++++
- arch/riscv/kernel/asm-offsets.c      | 322 ++++++++++++++++++++++++
- arch/riscv/kernel/entry.S            | 464 +++++++++++++++++++++++++++++++++++
- arch/riscv/kernel/process.c          | 129 ++++++++++
- 9 files changed, 1243 insertions(+)
- create mode 100644 arch/riscv/include/asm/asm-offsets.h
- create mode 100644 arch/riscv/include/asm/current.h
- create mode 100644 arch/riscv/include/asm/kprobes.h
- create mode 100644 arch/riscv/include/asm/processor.h
- create mode 100644 arch/riscv/include/asm/switch_to.h
- create mode 100644 arch/riscv/include/asm/thread_info.h
- create mode 100644 arch/riscv/kernel/asm-offsets.c
- create mode 100644 arch/riscv/kernel/entry.S
- create mode 100644 arch/riscv/kernel/process.c
+ arch/riscv/include/asm/bug.h   |  88 ++++++++++++++
+ arch/riscv/include/asm/cache.h |  22 ++++
+ arch/riscv/include/asm/smp.h   |  52 +++++++++
+ arch/riscv/kernel/cacheinfo.c  | 105 +++++++++++++++++
+ arch/riscv/kernel/cpu.c        | 108 +++++++++++++++++
+ arch/riscv/kernel/head.S       | 157 +++++++++++++++++++++++++
+ arch/riscv/kernel/irq.c        |  39 +++++++
+ arch/riscv/kernel/reset.c      |  36 ++++++
+ arch/riscv/kernel/setup.c      | 257 +++++++++++++++++++++++++++++++++++++++++
+ arch/riscv/kernel/smp.c        | 110 ++++++++++++++++++
+ arch/riscv/kernel/smpboot.c    | 114 ++++++++++++++++++
+ arch/riscv/kernel/time.c       |  61 ++++++++++
+ arch/riscv/kernel/traps.c      | 180 +++++++++++++++++++++++++++++
+ arch/riscv/kernel/vdso.c       | 125 ++++++++++++++++++++
+ arch/riscv/mm/init.c           |  70 +++++++++++
+ 15 files changed, 1524 insertions(+)
+ create mode 100644 arch/riscv/include/asm/bug.h
+ create mode 100644 arch/riscv/include/asm/cache.h
+ create mode 100644 arch/riscv/include/asm/smp.h
+ create mode 100644 arch/riscv/kernel/cacheinfo.c
+ create mode 100644 arch/riscv/kernel/cpu.c
+ create mode 100644 arch/riscv/kernel/head.S
+ create mode 100644 arch/riscv/kernel/irq.c
+ create mode 100644 arch/riscv/kernel/reset.c
+ create mode 100644 arch/riscv/kernel/setup.c
+ create mode 100644 arch/riscv/kernel/smp.c
+ create mode 100644 arch/riscv/kernel/smpboot.c
+ create mode 100644 arch/riscv/kernel/time.c
+ create mode 100644 arch/riscv/kernel/traps.c
+ create mode 100644 arch/riscv/kernel/vdso.c
+ create mode 100644 arch/riscv/mm/init.c
 
-diff --git a/arch/riscv/include/asm/asm-offsets.h b/arch/riscv/include/asm/asm-offsets.h
+diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
 new file mode 100644
-index 000000000000..d370ee36a182
+index 000000000000..c3e13764a943
 --- /dev/null
-+++ b/arch/riscv/include/asm/asm-offsets.h
-@@ -0,0 +1 @@
-+#include <generated/asm-offsets.h>
-diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
-new file mode 100644
-index 000000000000..2cf6336ef600
---- /dev/null
-+++ b/arch/riscv/include/asm/current.h
-@@ -0,0 +1,45 @@
++++ b/arch/riscv/include/asm/bug.h
+@@ -0,0 +1,88 @@
 +/*
-+ * Based on arm/arm64/include/asm/current.h
-+ *
-+ * Copyright (C) 2016 ARM
-+ * Copyright (C) 2017 SiFive
++ * Copyright (C) 2012 Regents of the University of California
 + *
 + *   This program is free software; you can redistribute it and/or
 + *   modify it under the terms of the GNU General Public License
@@ -64,349 +67,174 @@ index 000000000000..2cf6336ef600
 + *   GNU General Public License for more details.
 + */
 +
++#ifndef _ASM_RISCV_BUG_H
++#define _ASM_RISCV_BUG_H
 +
-+#ifndef __ASM_CURRENT_H
-+#define __ASM_CURRENT_H
-+
-+#include <linux/bug.h>
 +#include <linux/compiler.h>
-+
-+#ifndef __ASSEMBLY__
-+
-+struct task_struct;
-+
-+/*
-+ * This only works because "struct thread_info" is at offset 0 from "struct
-+ * task_struct".  This constraint seems to be necessary on other architectures
-+ * as well, but __switch_to enforces it.  We can't check TASK_TI here because
-+ * <asm/asm-offsets.h> includes this, and I can't get the definition of "struct
-+ * task_struct" here due to some header ordering problems.
-+ */
-+static __always_inline struct task_struct *get_current(void)
-+{
-+	register struct task_struct *tp __asm__("tp");
-+	return tp;
-+}
-+
-+#define current get_current()
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* __ASM_CURRENT_H */
-diff --git a/arch/riscv/include/asm/kprobes.h b/arch/riscv/include/asm/kprobes.h
-new file mode 100644
-index 000000000000..c7eb010d1528
---- /dev/null
-+++ b/arch/riscv/include/asm/kprobes.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copied from arch/arm64/include/asm/kprobes.h
-+ *
-+ * Copyright (C) 2013 Linaro Limited
-+ * Copyright (C) 2017 SiFive
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#ifndef _RISCV_KPROBES_H
-+#define _RISCV_KPROBES_H
-+
-+#include <asm-generic/kprobes.h>
-+
-+#endif /* _RISCV_KPROBES_H */
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-new file mode 100644
-index 000000000000..3fe4af8147d2
---- /dev/null
-+++ b/arch/riscv/include/asm/processor.h
-@@ -0,0 +1,97 @@
-+/*
-+ * Copyright (C) 2012 Regents of the University of California
-+ *
-+ *   This program is free software; you can redistribute it and/or
-+ *   modify it under the terms of the GNU General Public License
-+ *   as published by the Free Software Foundation, version 2.
-+ *
-+ *   This program is distributed in the hope that it will be useful,
-+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *   GNU General Public License for more details.
-+ */
-+
-+#ifndef _ASM_RISCV_PROCESSOR_H
-+#define _ASM_RISCV_PROCESSOR_H
-+
 +#include <linux/const.h>
++#include <linux/types.h>
 +
-+#include <asm/ptrace.h>
++#include <asm/asm.h>
 +
-+/*
-+ * This decides where the kernel will search for a free chunk of vm
-+ * space during mmap's.
-+ */
-+#define TASK_UNMAPPED_BASE	PAGE_ALIGN(TASK_SIZE >> 1)
-+
-+#define STACK_TOP		TASK_SIZE
-+#define STACK_TOP_MAX		STACK_TOP
-+#define STACK_ALIGN		16
++#ifdef CONFIG_GENERIC_BUG
++#define __BUG_INSN	_AC(0x00100073, UL) /* ebreak */
 +
 +#ifndef __ASSEMBLY__
++typedef u32 bug_insn_t;
 +
-+struct task_struct;
-+struct pt_regs;
-+
-+/*
-+ * Default implementation of macro that returns current
-+ * instruction pointer ("program counter").
-+ */
-+#define current_text_addr()	({ __label__ _l; _l: &&_l; })
-+
-+/* CPU-specific state of a task */
-+struct thread_struct {
-+	/* Callee-saved registers */
-+	unsigned long ra;
-+	unsigned long sp;	/* Kernel mode stack */
-+	unsigned long s[12];	/* s[0]: frame pointer */
-+	struct __riscv_d_ext_state fstate;
-+};
-+
-+#define INIT_THREAD {					\
-+	.sp = sizeof(init_stack) + (long)&init_stack,	\
-+}
-+
-+#define task_pt_regs(tsk)						\
-+	((struct pt_regs *)(task_stack_page(tsk) + THREAD_SIZE		\
-+			    - ALIGN(sizeof(struct pt_regs), STACK_ALIGN)))
-+
-+#define KSTK_EIP(tsk)		(task_pt_regs(tsk)->sepc)
-+#define KSTK_ESP(tsk)		(task_pt_regs(tsk)->sp)
-+
-+
-+/* Do necessary setup to start up a newly executed thread. */
-+extern void start_thread(struct pt_regs *regs,
-+			unsigned long pc, unsigned long sp);
-+
-+/* Free all resources held by a thread. */
-+static inline void release_thread(struct task_struct *dead_task)
-+{
-+}
-+
-+extern unsigned long get_wchan(struct task_struct *p);
-+
-+
-+static inline void cpu_relax(void)
-+{
-+#ifdef __riscv_muldiv
-+	int dummy;
-+	/* In lieu of a halt instruction, induce a long-latency stall. */
-+	__asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
++#ifdef CONFIG_GENERIC_BUG_RELATIVE_POINTERS
++#define __BUG_ENTRY_ADDR	INT " 1b - 2b"
++#define __BUG_ENTRY_FILE	INT " %0 - 2b"
++#else
++#define __BUG_ENTRY_ADDR	RISCV_PTR " 1b"
++#define __BUG_ENTRY_FILE	RISCV_PTR " %0"
 +#endif
-+	barrier();
-+}
 +
-+static inline void wait_for_interrupt(void)
-+{
-+	__asm__ __volatile__ ("wfi");
-+}
++#ifdef CONFIG_DEBUG_BUGVERBOSE
++#define __BUG_ENTRY			\
++	__BUG_ENTRY_ADDR "\n\t"		\
++	__BUG_ENTRY_FILE "\n\t"		\
++	SHORT " %1"
++#else
++#define __BUG_ENTRY			\
++	__BUG_ENTRY_ADDR
++#endif
 +
-+struct device_node;
-+extern int riscv_of_processor_hart(struct device_node *node);
-+
-+extern void riscv_fill_hwcap(void);
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* _ASM_RISCV_PROCESSOR_H */
-diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
-new file mode 100644
-index 000000000000..dd6b05bff75b
---- /dev/null
-+++ b/arch/riscv/include/asm/switch_to.h
-@@ -0,0 +1,69 @@
-+/*
-+ * Copyright (C) 2012 Regents of the University of California
-+ *
-+ *   This program is free software; you can redistribute it and/or
-+ *   modify it under the terms of the GNU General Public License
-+ *   as published by the Free Software Foundation, version 2.
-+ *
-+ *   This program is distributed in the hope that it will be useful,
-+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *   GNU General Public License for more details.
-+ */
-+
-+#ifndef _ASM_RISCV_SWITCH_TO_H
-+#define _ASM_RISCV_SWITCH_TO_H
-+
-+#include <asm/processor.h>
-+#include <asm/ptrace.h>
-+#include <asm/csr.h>
-+
-+extern void __fstate_save(struct task_struct *save_to);
-+extern void __fstate_restore(struct task_struct *restore_from);
-+
-+static inline void __fstate_clean(struct pt_regs *regs)
-+{
-+	regs->sstatus |= (regs->sstatus & ~(SR_FS)) | SR_FS_CLEAN;
-+}
-+
-+static inline void fstate_save(struct task_struct *task,
-+			       struct pt_regs *regs)
-+{
-+	if ((regs->sstatus & SR_FS) == SR_FS_DIRTY) {
-+		__fstate_save(task);
-+		__fstate_clean(regs);
-+	}
-+}
-+
-+static inline void fstate_restore(struct task_struct *task,
-+				  struct pt_regs *regs)
-+{
-+	if ((regs->sstatus & SR_FS) != SR_FS_OFF) {
-+		__fstate_restore(task);
-+		__fstate_clean(regs);
-+	}
-+}
-+
-+static inline void __switch_to_aux(struct task_struct *prev,
-+				   struct task_struct *next)
-+{
-+	struct pt_regs *regs;
-+
-+	regs = task_pt_regs(prev);
-+	if (unlikely(regs->sstatus & SR_SD))
-+		fstate_save(prev, regs);
-+	fstate_restore(next, task_pt_regs(next));
-+}
-+
-+extern struct task_struct *__switch_to(struct task_struct *,
-+				       struct task_struct *);
-+
-+#define switch_to(prev, next, last)			\
-+do {							\
-+	struct task_struct *__prev = (prev);		\
-+	struct task_struct *__next = (next);		\
-+	__switch_to_aux(__prev, __next);		\
-+	((last) = __switch_to(__prev, __next));		\
++#define BUG()							\
++do {								\
++	__asm__ __volatile__ (					\
++		"1:\n\t"					\
++			"ebreak\n"				\
++			".pushsection __bug_table,\"a\"\n\t"	\
++		"2:\n\t"					\
++			__BUG_ENTRY "\n\t"			\
++			".org 2b + %2\n\t"			\
++			".popsection"				\
++		:						\
++		: "i" (__FILE__), "i" (__LINE__),		\
++		  "i" (sizeof(struct bug_entry)));		\
++	unreachable();						\
 +} while (0)
++#endif /* !__ASSEMBLY__ */
++#else /* CONFIG_GENERIC_BUG */
++#ifndef __ASSEMBLY__
++#define BUG()							\
++do {								\
++	__asm__ __volatile__ ("ebreak\n");			\
++	unreachable();						\
++} while (0)
++#endif /* !__ASSEMBLY__ */
++#endif /* CONFIG_GENERIC_BUG */
 +
-+#endif /* _ASM_RISCV_SWITCH_TO_H */
-diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
-new file mode 100644
-index 000000000000..22c3536ed281
---- /dev/null
-+++ b/arch/riscv/include/asm/thread_info.h
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (C) 2009 Chen Liqin <liqin.chen@sunplusct.com>
-+ * Copyright (C) 2012 Regents of the University of California
-+ * Copyright (C) 2017 SiFive
-+ *
-+ *   This program is free software; you can redistribute it and/or
-+ *   modify it under the terms of the GNU General Public License
-+ *   as published by the Free Software Foundation, version 2.
-+ *
-+ *   This program is distributed in the hope that it will be useful,
-+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *   GNU General Public License for more details.
-+ */
++#define HAVE_ARCH_BUG
 +
-+#ifndef _ASM_RISCV_THREAD_INFO_H
-+#define _ASM_RISCV_THREAD_INFO_H
-+
-+#include <asm/page.h>
-+#include <linux/const.h>
-+
-+/* thread information allocation */
-+#define THREAD_SIZE_ORDER	(1)
-+#define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
++#include <asm-generic/bug.h>
 +
 +#ifndef __ASSEMBLY__
 +
-+#include <asm/processor.h>
-+#include <asm/csr.h>
++struct pt_regs;
++struct task_struct;
 +
-+typedef unsigned long mm_segment_t;
-+
-+/*
-+ * low level task data that entry.S needs immediate access to
-+ * - this struct should fit entirely inside of one cache line
-+ * - if the members of this struct changes, the assembly constants
-+ *   in asm-offsets.c must be updated accordingly
-+ * - thread_info is included in task_struct at an offset of 0.  This means that
-+ *   tp points to both thread_info and task_struct.
-+ */
-+struct thread_info {
-+	unsigned long		flags;		/* low level flags */
-+	int                     preempt_count;  /* 0=>preemptible, <0=>BUG */
-+	mm_segment_t		addr_limit;
-+	/*
-+	 * These stack pointers are overwritten on every system call or
-+	 * exception.  SP is also saved to the stack it can be recovered when
-+	 * overwritten.
-+	 */
-+	long			kernel_sp;	/* Kernel stack pointer */
-+	long			user_sp;	/* User stack pointer */
-+	int			cpu;
-+};
-+
-+/*
-+ * macros/functions for gaining access to the thread information structure
-+ *
-+ * preempt_count needs to be 1 initially, until the scheduler is functional.
-+ */
-+#define INIT_THREAD_INFO(tsk)			\
-+{						\
-+	.flags		= 0,			\
-+	.preempt_count	= INIT_PREEMPT_COUNT,	\
-+	.addr_limit	= KERNEL_DS,		\
-+}
-+
-+#define init_stack		(init_thread_union.stack)
++extern void die(struct pt_regs *regs, const char *str);
++extern void do_trap(struct pt_regs *regs, int signo, int code,
++	unsigned long addr, struct task_struct *tsk);
 +
 +#endif /* !__ASSEMBLY__ */
 +
-+/*
-+ * thread information flags
-+ * - these are process state flags that various assembly files may need to
-+ *   access
-+ * - pending work-to-be-done flags are in lowest half-word
-+ * - other flags in upper half-word(s)
-+ */
-+#define TIF_SYSCALL_TRACE	0	/* syscall trace active */
-+#define TIF_NOTIFY_RESUME	1	/* callback before returning to user */
-+#define TIF_SIGPENDING		2	/* signal pending */
-+#define TIF_NEED_RESCHED	3	/* rescheduling necessary */
-+#define TIF_RESTORE_SIGMASK	4	/* restore signal mask in do_signal() */
-+#define TIF_MEMDIE		5	/* is terminating due to OOM killer */
-+#define TIF_SYSCALL_TRACEPOINT  6       /* syscall tracepoint instrumentation */
-+
-+#define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
-+#define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
-+#define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
-+#define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
-+
-+#define _TIF_WORK_MASK \
-+	(_TIF_NOTIFY_RESUME | _TIF_SIGPENDING | _TIF_NEED_RESCHED)
-+
-+#endif /* _ASM_RISCV_THREAD_INFO_H */
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
++#endif /* _ASM_RISCV_BUG_H */
+diff --git a/arch/riscv/include/asm/cache.h b/arch/riscv/include/asm/cache.h
 new file mode 100644
-index 000000000000..6a92a2fe198e
+index 000000000000..e8f0d1110d74
 --- /dev/null
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -0,0 +1,322 @@
++++ b/arch/riscv/include/asm/cache.h
+@@ -0,0 +1,22 @@
++/*
++ * Copyright (C) 2017 Chen Liqin <liqin.chen@sunplusct.com>
++ * Copyright (C) 2012 Regents of the University of California
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#ifndef _ASM_RISCV_CACHE_H
++#define _ASM_RISCV_CACHE_H
++
++#define L1_CACHE_SHIFT		6
++
++#define L1_CACHE_BYTES		(1 << L1_CACHE_SHIFT)
++
++#endif /* _ASM_RISCV_CACHE_H */
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+new file mode 100644
+index 000000000000..85e4220839b0
+--- /dev/null
++++ b/arch/riscv/include/asm/smp.h
+@@ -0,0 +1,52 @@
 +/*
 + * Copyright (C) 2012 Regents of the University of California
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#ifndef _ASM_RISCV_SMP_H
++#define _ASM_RISCV_SMP_H
++
++/* This both needs asm-offsets.h and is used when generating it. */
++#ifndef GENERATING_ASM_OFFSETS
++#include <asm/asm-offsets.h>
++#endif
++
++#include <linux/cpumask.h>
++#include <linux/irqreturn.h>
++
++#ifdef CONFIG_SMP
++
++/* SMP initialization hook for setup_arch */
++void __init init_clockevent(void);
++
++/* SMP initialization hook for setup_arch */
++void __init setup_smp(void);
++
++/* Hook for the generic smp_call_function_many() routine. */
++void arch_send_call_function_ipi_mask(struct cpumask *mask);
++
++/* Hook for the generic smp_call_function_single() routine. */
++void arch_send_call_function_single_ipi(int cpu);
++
++/*
++ * This is particularly ugly: it appears we can't actually get the definition
++ * of task_struct here, but we need access to the CPU this task is running on.
++ * Instead of using C we're using asm-offsets.h to get the current processor
++ * ID.
++ */
++#define raw_smp_processor_id() (*((int*)((char*)get_current() + TASK_TI_CPU)))
++
++/* Interprocessor interrupt handler */
++irqreturn_t handle_ipi(void);
++
++#endif /* CONFIG_SMP */
++
++#endif /* _ASM_RISCV_SMP_H */
+diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+new file mode 100644
+index 000000000000..10ed2749e246
+--- /dev/null
++++ b/arch/riscv/kernel/cacheinfo.c
+@@ -0,0 +1,105 @@
++/*
 + * Copyright (C) 2017 SiFive
 + *
 + *   This program is free software; you can redistribute it and/or
@@ -419,323 +247,106 @@ index 000000000000..6a92a2fe198e
 + *   GNU General Public License for more details.
 + */
 +
-+#define GENERATING_ASM_OFFSETS
++#include <linux/cacheinfo.h>
++#include <linux/cpu.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
 +
-+#include <linux/kbuild.h>
-+#include <linux/sched.h>
-+#include <asm/thread_info.h>
-+#include <asm/ptrace.h>
-+
-+void asm_offsets(void)
++static void ci_leaf_init(struct cacheinfo *this_leaf,
++			 struct device_node *node,
++			 enum cache_type type, unsigned int level)
 +{
-+	OFFSET(TASK_THREAD_RA, task_struct, thread.ra);
-+	OFFSET(TASK_THREAD_SP, task_struct, thread.sp);
-+	OFFSET(TASK_THREAD_S0, task_struct, thread.s[0]);
-+	OFFSET(TASK_THREAD_S1, task_struct, thread.s[1]);
-+	OFFSET(TASK_THREAD_S2, task_struct, thread.s[2]);
-+	OFFSET(TASK_THREAD_S3, task_struct, thread.s[3]);
-+	OFFSET(TASK_THREAD_S4, task_struct, thread.s[4]);
-+	OFFSET(TASK_THREAD_S5, task_struct, thread.s[5]);
-+	OFFSET(TASK_THREAD_S6, task_struct, thread.s[6]);
-+	OFFSET(TASK_THREAD_S7, task_struct, thread.s[7]);
-+	OFFSET(TASK_THREAD_S8, task_struct, thread.s[8]);
-+	OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
-+	OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
-+	OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
-+	OFFSET(TASK_THREAD_SP, task_struct, thread.sp);
-+	OFFSET(TASK_STACK, task_struct, stack);
-+	OFFSET(TASK_TI, task_struct, thread_info);
-+	OFFSET(TASK_TI_FLAGS, task_struct, thread_info.flags);
-+	OFFSET(TASK_TI_KERNEL_SP, task_struct, thread_info.kernel_sp);
-+	OFFSET(TASK_TI_USER_SP, task_struct, thread_info.user_sp);
-+	OFFSET(TASK_TI_CPU, task_struct, thread_info.cpu);
-+
-+	OFFSET(TASK_THREAD_F0,  task_struct, thread.fstate.f[0]);
-+	OFFSET(TASK_THREAD_F1,  task_struct, thread.fstate.f[1]);
-+	OFFSET(TASK_THREAD_F2,  task_struct, thread.fstate.f[2]);
-+	OFFSET(TASK_THREAD_F3,  task_struct, thread.fstate.f[3]);
-+	OFFSET(TASK_THREAD_F4,  task_struct, thread.fstate.f[4]);
-+	OFFSET(TASK_THREAD_F5,  task_struct, thread.fstate.f[5]);
-+	OFFSET(TASK_THREAD_F6,  task_struct, thread.fstate.f[6]);
-+	OFFSET(TASK_THREAD_F7,  task_struct, thread.fstate.f[7]);
-+	OFFSET(TASK_THREAD_F8,  task_struct, thread.fstate.f[8]);
-+	OFFSET(TASK_THREAD_F9,  task_struct, thread.fstate.f[9]);
-+	OFFSET(TASK_THREAD_F10, task_struct, thread.fstate.f[10]);
-+	OFFSET(TASK_THREAD_F11, task_struct, thread.fstate.f[11]);
-+	OFFSET(TASK_THREAD_F12, task_struct, thread.fstate.f[12]);
-+	OFFSET(TASK_THREAD_F13, task_struct, thread.fstate.f[13]);
-+	OFFSET(TASK_THREAD_F14, task_struct, thread.fstate.f[14]);
-+	OFFSET(TASK_THREAD_F15, task_struct, thread.fstate.f[15]);
-+	OFFSET(TASK_THREAD_F16, task_struct, thread.fstate.f[16]);
-+	OFFSET(TASK_THREAD_F17, task_struct, thread.fstate.f[17]);
-+	OFFSET(TASK_THREAD_F18, task_struct, thread.fstate.f[18]);
-+	OFFSET(TASK_THREAD_F19, task_struct, thread.fstate.f[19]);
-+	OFFSET(TASK_THREAD_F20, task_struct, thread.fstate.f[20]);
-+	OFFSET(TASK_THREAD_F21, task_struct, thread.fstate.f[21]);
-+	OFFSET(TASK_THREAD_F22, task_struct, thread.fstate.f[22]);
-+	OFFSET(TASK_THREAD_F23, task_struct, thread.fstate.f[23]);
-+	OFFSET(TASK_THREAD_F24, task_struct, thread.fstate.f[24]);
-+	OFFSET(TASK_THREAD_F25, task_struct, thread.fstate.f[25]);
-+	OFFSET(TASK_THREAD_F26, task_struct, thread.fstate.f[26]);
-+	OFFSET(TASK_THREAD_F27, task_struct, thread.fstate.f[27]);
-+	OFFSET(TASK_THREAD_F28, task_struct, thread.fstate.f[28]);
-+	OFFSET(TASK_THREAD_F29, task_struct, thread.fstate.f[29]);
-+	OFFSET(TASK_THREAD_F30, task_struct, thread.fstate.f[30]);
-+	OFFSET(TASK_THREAD_F31, task_struct, thread.fstate.f[31]);
-+	OFFSET(TASK_THREAD_FCSR, task_struct, thread.fstate.fcsr);
-+
-+	DEFINE(PT_SIZE, sizeof(struct pt_regs));
-+	OFFSET(PT_SEPC, pt_regs, sepc);
-+	OFFSET(PT_RA, pt_regs, ra);
-+	OFFSET(PT_FP, pt_regs, s0);
-+	OFFSET(PT_S0, pt_regs, s0);
-+	OFFSET(PT_S1, pt_regs, s1);
-+	OFFSET(PT_S2, pt_regs, s2);
-+	OFFSET(PT_S3, pt_regs, s3);
-+	OFFSET(PT_S4, pt_regs, s4);
-+	OFFSET(PT_S5, pt_regs, s5);
-+	OFFSET(PT_S6, pt_regs, s6);
-+	OFFSET(PT_S7, pt_regs, s7);
-+	OFFSET(PT_S8, pt_regs, s8);
-+	OFFSET(PT_S9, pt_regs, s9);
-+	OFFSET(PT_S10, pt_regs, s10);
-+	OFFSET(PT_S11, pt_regs, s11);
-+	OFFSET(PT_SP, pt_regs, sp);
-+	OFFSET(PT_TP, pt_regs, tp);
-+	OFFSET(PT_A0, pt_regs, a0);
-+	OFFSET(PT_A1, pt_regs, a1);
-+	OFFSET(PT_A2, pt_regs, a2);
-+	OFFSET(PT_A3, pt_regs, a3);
-+	OFFSET(PT_A4, pt_regs, a4);
-+	OFFSET(PT_A5, pt_regs, a5);
-+	OFFSET(PT_A6, pt_regs, a6);
-+	OFFSET(PT_A7, pt_regs, a7);
-+	OFFSET(PT_T0, pt_regs, t0);
-+	OFFSET(PT_T1, pt_regs, t1);
-+	OFFSET(PT_T2, pt_regs, t2);
-+	OFFSET(PT_T3, pt_regs, t3);
-+	OFFSET(PT_T4, pt_regs, t4);
-+	OFFSET(PT_T5, pt_regs, t5);
-+	OFFSET(PT_T6, pt_regs, t6);
-+	OFFSET(PT_GP, pt_regs, gp);
-+	OFFSET(PT_ORIG_A0, pt_regs, orig_a0);
-+	OFFSET(PT_SSTATUS, pt_regs, sstatus);
-+	OFFSET(PT_SBADADDR, pt_regs, sbadaddr);
-+	OFFSET(PT_SCAUSE, pt_regs, scause);
-+
-+	/*
-+	 * THREAD_{F,X}* might be larger than a S-type offset can handle, but
-+	 * these are used in performance-sensitive assembly so we can't resort
-+	 * to loading the long immediate every time.
-+	 */
-+	DEFINE(TASK_THREAD_RA_RA,
-+		  offsetof(struct task_struct, thread.ra)
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_SP_RA,
-+		  offsetof(struct task_struct, thread.sp)
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S0_RA,
-+		  offsetof(struct task_struct, thread.s[0])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S1_RA,
-+		  offsetof(struct task_struct, thread.s[1])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S2_RA,
-+		  offsetof(struct task_struct, thread.s[2])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S3_RA,
-+		  offsetof(struct task_struct, thread.s[3])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S4_RA,
-+		  offsetof(struct task_struct, thread.s[4])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S5_RA,
-+		  offsetof(struct task_struct, thread.s[5])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S6_RA,
-+		  offsetof(struct task_struct, thread.s[6])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S7_RA,
-+		  offsetof(struct task_struct, thread.s[7])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S8_RA,
-+		  offsetof(struct task_struct, thread.s[8])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S9_RA,
-+		  offsetof(struct task_struct, thread.s[9])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S10_RA,
-+		  offsetof(struct task_struct, thread.s[10])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+	DEFINE(TASK_THREAD_S11_RA,
-+		  offsetof(struct task_struct, thread.s[11])
-+		- offsetof(struct task_struct, thread.ra)
-+	);
-+
-+	DEFINE(TASK_THREAD_F0_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[0])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F1_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[1])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F2_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[2])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F3_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[3])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F4_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[4])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F5_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[5])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F6_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[6])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F7_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[7])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F8_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[8])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F9_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[9])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F10_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[10])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F11_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[11])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F12_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[12])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F13_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[13])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F14_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[14])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F15_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[15])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F16_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[16])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F17_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[17])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F18_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[18])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F19_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[19])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F20_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[20])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F21_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[21])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F22_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[22])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F23_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[23])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F24_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[24])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F25_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[25])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F26_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[26])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F27_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[27])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F28_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[28])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F29_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[29])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F30_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[30])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_F31_F0,
-+		  offsetof(struct task_struct, thread.fstate.f[31])
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+	DEFINE(TASK_THREAD_FCSR_F0,
-+		  offsetof(struct task_struct, thread.fstate.fcsr)
-+		- offsetof(struct task_struct, thread.fstate.f[0])
-+	);
-+
-+	/* The assembler needs access to THREAD_SIZE as well. */
-+	DEFINE(ASM_THREAD_SIZE, THREAD_SIZE);
-+
-+	/*
-+	 * We allocate a pt_regs on the stack when entering the kernel.  This
-+	 * ensures the alignment is sane.
-+	 */
-+	DEFINE(PT_SIZE_ON_STACK, ALIGN(sizeof(struct pt_regs), STACK_ALIGN));
++	this_leaf->of_node = node;
++	this_leaf->level = level;
++	this_leaf->type = type;
++	/* not a sector cache */
++	this_leaf->physical_line_partition = 1;
++	/* TODO: Add to DTS */
++	this_leaf->attributes =
++		CACHE_WRITE_BACK
++		| CACHE_READ_ALLOCATE
++		| CACHE_WRITE_ALLOCATE;
 +}
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
++
++static int __init_cache_level(unsigned int cpu)
++{
++	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
++	struct device_node *np = of_cpu_device_node_get(cpu);
++	int levels = 0, leaves = 0, level;
++
++	if (of_property_read_bool(np, "cache-size"))
++		++leaves;
++	if (of_property_read_bool(np, "i-cache-size"))
++		++leaves;
++	if (of_property_read_bool(np, "d-cache-size"))
++		++leaves;
++	if (leaves > 0)
++		levels = 1;
++
++	while ((np = of_find_next_cache_node(np))) {
++		if (!of_device_is_compatible(np, "cache"))
++			break;
++		if (of_property_read_u32(np, "cache-level", &level))
++			break;
++		if (level <= levels)
++			break;
++		if (of_property_read_bool(np, "cache-size"))
++			++leaves;
++		if (of_property_read_bool(np, "i-cache-size"))
++			++leaves;
++		if (of_property_read_bool(np, "d-cache-size"))
++			++leaves;
++		levels = level;
++	}
++
++	this_cpu_ci->num_levels = levels;
++	this_cpu_ci->num_leaves = leaves;
++	return 0;
++}
++
++static int __populate_cache_leaves(unsigned int cpu)
++{
++	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
++	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
++	struct device_node *np = of_cpu_device_node_get(cpu);
++	int levels = 1, level = 1;
++
++	if (of_property_read_bool(np, "cache-size"))
++		ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
++	if (of_property_read_bool(np, "i-cache-size"))
++		ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
++	if (of_property_read_bool(np, "d-cache-size"))
++		ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
++
++	while ((np = of_find_next_cache_node(np))) {
++		if (!of_device_is_compatible(np, "cache"))
++			break;
++		if (of_property_read_u32(np, "cache-level", &level))
++			break;
++		if (level <= levels)
++			break;
++		if (of_property_read_bool(np, "cache-size"))
++			ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
++		if (of_property_read_bool(np, "i-cache-size"))
++			ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
++		if (of_property_read_bool(np, "d-cache-size"))
++			ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
++		levels = level;
++	}
++
++	return 0;
++}
++
++DEFINE_SMP_CALL_CACHE_FUNCTION(init_cache_level)
++DEFINE_SMP_CALL_CACHE_FUNCTION(populate_cache_leaves)
+diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
 new file mode 100644
-index 000000000000..20ee86f782a9
+index 000000000000..ca6c81e54e37
 --- /dev/null
-+++ b/arch/riscv/kernel/entry.S
-@@ -0,0 +1,464 @@
++++ b/arch/riscv/kernel/cpu.c
+@@ -0,0 +1,108 @@
 +/*
 + * Copyright (C) 2012 Regents of the University of California
-+ * Copyright (C) 2017 SiFive
 + *
 + *   This program is free software; you can redistribute it and/or
 + *   modify it under the terms of the GNU General Public License
@@ -748,142 +359,132 @@ index 000000000000..20ee86f782a9
 + */
 +
 +#include <linux/init.h>
-+#include <linux/linkage.h>
++#include <linux/seq_file.h>
++#include <linux/of.h>
 +
-+#include <asm/asm.h>
-+#include <asm/csr.h>
-+#include <asm/unistd.h>
++/* Return -1 if not a valid hart */
++int riscv_of_processor_hart(struct device_node *node)
++{
++	const char *isa, *status;
++	u32 hart;
++
++	if (!of_device_is_compatible(node, "riscv")) {
++		pr_warn("Found incompatible CPU\n");
++		return -(ENODEV);
++	}
++
++	if (of_property_read_u32(node, "reg", &hart)) {
++		pr_warn("Found CPU without hart ID\n");
++		return -(ENODEV);
++	}
++	if (hart >= NR_CPUS) {
++		pr_info("Found hart ID %d, which is above NR_CPUs.  Disabling this hart\n", hart);
++		return -(ENODEV);
++	}
++
++	if (of_property_read_string(node, "status", &status)) {
++		pr_warn("CPU with hartid=%d has no \"status\" property\n", hart);
++		return -(ENODEV);
++	}
++	if (strcmp(status, "okay")) {
++		pr_info("CPU with hartid=%d has a non-okay status of \"%s\"\n", hart, status);
++		return -(ENODEV);
++	}
++
++	if (of_property_read_string(node, "riscv,isa", &isa)) {
++		pr_warn("CPU with hartid=%d has no \"riscv,isa\" property\n", hart);
++		return -(ENODEV);
++	}
++	if (isa[0] != 'r' || isa[1] != 'v') {
++		pr_warn("CPU with hartid=%d has an invalid ISA of \"%s\"\n", hart, isa);
++		return -(ENODEV);
++	}
++
++	return hart;
++}
++
++#ifdef CONFIG_PROC_FS
++
++static void *c_start(struct seq_file *m, loff_t *pos)
++{
++	*pos = cpumask_next(*pos - 1, cpu_online_mask);
++	if ((*pos) < nr_cpu_ids)
++		return (void *)(uintptr_t)(1 + *pos);
++	return NULL;
++}
++
++static void *c_next(struct seq_file *m, void *v, loff_t *pos)
++{
++	(*pos)++;
++	return c_start(m, pos);
++}
++
++static void c_stop(struct seq_file *m, void *v)
++{
++}
++
++static int c_show(struct seq_file *m, void *v)
++{
++	unsigned long hart_id = (unsigned long)v - 1;
++	struct device_node *node = of_get_cpu_node(hart_id, NULL);
++	const char *compat, *isa, *mmu;
++
++	seq_printf(m, "hart\t: %lu\n", hart_id);
++	if (!of_property_read_string(node, "riscv,isa", &isa)
++	    && isa[0] == 'r'
++	    && isa[1] == 'v')
++		seq_printf(m, "isa\t: %s\n", isa);
++	if (!of_property_read_string(node, "mmu-type", &mmu)
++	    && !strncmp(mmu, "riscv,", 6))
++		seq_printf(m, "mmu\t: %s\n", mmu+6);
++	if (!of_property_read_string(node, "compatible", &compat)
++	    && strcmp(compat, "riscv"))
++		seq_printf(m, "uarch\t: %s\n", compat);
++	seq_puts(m, "\n");
++
++	return 0;
++}
++
++const struct seq_operations cpuinfo_op = {
++	.start	= c_start,
++	.next	= c_next,
++	.stop	= c_stop,
++	.show	= c_show
++};
++
++#endif /* CONFIG_PROC_FS */
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+new file mode 100644
+index 000000000000..76af908f87c1
+--- /dev/null
++++ b/arch/riscv/kernel/head.S
+@@ -0,0 +1,157 @@
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
 +#include <asm/thread_info.h>
 +#include <asm/asm-offsets.h>
++#include <asm/asm.h>
++#include <linux/init.h>
++#include <linux/linkage.h>
++#include <asm/thread_info.h>
++#include <asm/page.h>
++#include <asm/csr.h>
 +
-+	.text
-+	.altmacro
-+
-+/*
-+ * Prepares to enter a system call or exception by saving all registers to the
-+ * stack.
-+ */
-+	.macro SAVE_ALL
-+	LOCAL _restore_kernel_tpsp
-+	LOCAL _save_context
-+
-+	/*
-+	 * If coming from userspace, preserve the user thread pointer and load
-+	 * the kernel thread pointer.  If we came from the kernel, sscratch
-+	 * will contain 0, and we should continue on the current TP.
-+	 */
-+	csrrw tp, sscratch, tp
-+	bnez tp, _save_context
-+
-+_restore_kernel_tpsp:
-+	csrr tp, sscratch
-+	REG_S sp, TASK_TI_KERNEL_SP(tp)
-+_save_context:
-+	REG_S sp, TASK_TI_USER_SP(tp)
-+	REG_L sp, TASK_TI_KERNEL_SP(tp)
-+	addi sp, sp, -(PT_SIZE_ON_STACK)
-+	REG_S x1,  PT_RA(sp)
-+	REG_S x3,  PT_GP(sp)
-+	REG_S x5,  PT_T0(sp)
-+	REG_S x6,  PT_T1(sp)
-+	REG_S x7,  PT_T2(sp)
-+	REG_S x8,  PT_S0(sp)
-+	REG_S x9,  PT_S1(sp)
-+	REG_S x10, PT_A0(sp)
-+	REG_S x11, PT_A1(sp)
-+	REG_S x12, PT_A2(sp)
-+	REG_S x13, PT_A3(sp)
-+	REG_S x14, PT_A4(sp)
-+	REG_S x15, PT_A5(sp)
-+	REG_S x16, PT_A6(sp)
-+	REG_S x17, PT_A7(sp)
-+	REG_S x18, PT_S2(sp)
-+	REG_S x19, PT_S3(sp)
-+	REG_S x20, PT_S4(sp)
-+	REG_S x21, PT_S5(sp)
-+	REG_S x22, PT_S6(sp)
-+	REG_S x23, PT_S7(sp)
-+	REG_S x24, PT_S8(sp)
-+	REG_S x25, PT_S9(sp)
-+	REG_S x26, PT_S10(sp)
-+	REG_S x27, PT_S11(sp)
-+	REG_S x28, PT_T3(sp)
-+	REG_S x29, PT_T4(sp)
-+	REG_S x30, PT_T5(sp)
-+	REG_S x31, PT_T6(sp)
-+
-+	/*
-+	 * Disable FPU to detect illegal usage of
-+	 * floating point in kernel space
-+	 */
-+	li t0, SR_FS
-+
-+	REG_L s0, TASK_TI_USER_SP(tp)
-+	csrrc s1, sstatus, t0
-+	csrr s2, sepc
-+	csrr s3, sbadaddr
-+	csrr s4, scause
-+	csrr s5, sscratch
-+	REG_S s0, PT_SP(sp)
-+	REG_S s1, PT_SSTATUS(sp)
-+	REG_S s2, PT_SEPC(sp)
-+	REG_S s3, PT_SBADADDR(sp)
-+	REG_S s4, PT_SCAUSE(sp)
-+	REG_S s5, PT_TP(sp)
-+	.endm
-+
-+/*
-+ * Prepares to return from a system call or exception by restoring all
-+ * registers from the stack.
-+ */
-+	.macro RESTORE_ALL
-+	REG_L a0, PT_SSTATUS(sp)
-+	REG_L a2, PT_SEPC(sp)
-+	csrw sstatus, a0
-+	csrw sepc, a2
-+
-+	REG_L x1,  PT_RA(sp)
-+	REG_L x3,  PT_GP(sp)
-+	REG_L x4,  PT_TP(sp)
-+	REG_L x5,  PT_T0(sp)
-+	REG_L x6,  PT_T1(sp)
-+	REG_L x7,  PT_T2(sp)
-+	REG_L x8,  PT_S0(sp)
-+	REG_L x9,  PT_S1(sp)
-+	REG_L x10, PT_A0(sp)
-+	REG_L x11, PT_A1(sp)
-+	REG_L x12, PT_A2(sp)
-+	REG_L x13, PT_A3(sp)
-+	REG_L x14, PT_A4(sp)
-+	REG_L x15, PT_A5(sp)
-+	REG_L x16, PT_A6(sp)
-+	REG_L x17, PT_A7(sp)
-+	REG_L x18, PT_S2(sp)
-+	REG_L x19, PT_S3(sp)
-+	REG_L x20, PT_S4(sp)
-+	REG_L x21, PT_S5(sp)
-+	REG_L x22, PT_S6(sp)
-+	REG_L x23, PT_S7(sp)
-+	REG_L x24, PT_S8(sp)
-+	REG_L x25, PT_S9(sp)
-+	REG_L x26, PT_S10(sp)
-+	REG_L x27, PT_S11(sp)
-+	REG_L x28, PT_T3(sp)
-+	REG_L x29, PT_T4(sp)
-+	REG_L x30, PT_T5(sp)
-+	REG_L x31, PT_T6(sp)
-+
-+	REG_L x2,  PT_SP(sp)
-+	.endm
-+
-+ENTRY(handle_exception)
-+	SAVE_ALL
-+
-+	/*
-+	 * Set sscratch register to 0, so that if a recursive exception
-+	 * occurs, the exception vector knows it came from the kernel
-+	 */
-+	csrw sscratch, x0
++__INIT
++ENTRY(_start)
++	/* Mask all interrupts */
++	csrw sie, zero
 +
 +	/* Load the global pointer */
 +.option push
@@ -891,324 +492,228 @@ index 000000000000..20ee86f782a9
 +	la gp, __global_pointer$
 +.option pop
 +
-+	la ra, ret_from_exception
 +	/*
-+	 * MSB of cause differentiates between
-+	 * interrupts and exceptions
++	 * Disable FPU to detect illegal usage of
++	 * floating point in kernel space
 +	 */
-+	bge s4, zero, 1f
++	li t0, SR_FS
++	csrc sstatus, t0
 +
-+	/* Handle interrupts */
-+	slli a0, s4, 1
-+	srli a0, a0, 1
-+	move a1, sp /* pt_regs */
-+	tail do_IRQ
-+1:
-+	/* Handle syscalls */
-+	li t0, EXC_SYSCALL
-+	beq s4, t0, handle_syscall
++	/* Pick one hart to run the main boot sequence */
++	la a3, hart_lottery
++	li a2, 1
++	amoadd.w a3, a2, (a3)
++	bnez a3, .Lsecondary_start
 +
-+	/* Handle other exceptions */
-+	slli t0, s4, RISCV_LGPTR
-+	la t1, excp_vect_table
-+	la t2, excp_vect_table_end
-+	move a0, sp /* pt_regs */
-+	add t0, t1, t0
-+	/* Check if exception code lies within bounds */
-+	bgeu t0, t2, 1f
-+	REG_L t0, 0(t0)
-+	jr t0
-+1:
-+	tail do_trap_unknown
++	/* Save hart ID and DTB physical address */
++	mv s0, a0
++	mv s1, a1
 +
-+handle_syscall:
-+	 /* save the initial A0 value (needed in signal handlers) */
-+	REG_S a0, PT_ORIG_A0(sp)
-+	/*
-+	 * Advance SEPC to avoid executing the original
-+	 * scall instruction on sret
-+	 */
-+	addi s2, s2, 0x4
-+	REG_S s2, PT_SEPC(sp)
-+	/* System calls run with interrupts enabled */
-+	csrs sstatus, SR_IE
-+	/* Trace syscalls, but only if requested by the user. */
-+	REG_L t0, TASK_TI_FLAGS(tp)
-+	andi t0, t0, _TIF_SYSCALL_TRACE
-+	bnez t0, handle_syscall_trace_enter
-+check_syscall_nr:
-+	/* Check to make sure we don't jump to a bogus syscall number. */
-+	li t0, __NR_syscalls
-+	la s0, sys_ni_syscall
-+	/* Syscall number held in a7 */
-+	bgeu a7, t0, 1f
-+	la s0, sys_call_table
-+	slli t0, a7, RISCV_LGPTR
-+	add s0, s0, t0
-+	REG_L s0, 0(s0)
-+1:
-+	jalr s0
++	/* Initialize page tables and relocate to virtual addresses */
++	la sp, init_thread_union + THREAD_SIZE
++	call setup_vm
++	call relocate
 +
-+ret_from_syscall:
-+	/* Set user a0 to kernel a0 */
-+	REG_S a0, PT_A0(sp)
-+	/* Trace syscalls, but only if requested by the user. */
-+	REG_L t0, TASK_TI_FLAGS(tp)
-+	andi t0, t0, _TIF_SYSCALL_TRACE
-+	bnez t0, handle_syscall_trace_exit
++	/* Restore C environment */
++	la tp, init_task
++	sw s0, TASK_TI_CPU(tp)
 +
-+ret_from_exception:
-+	REG_L s0, PT_SSTATUS(sp)
-+	csrc sstatus, SR_IE
-+	andi s0, s0, SR_PS
-+	bnez s0, restore_all
++	la sp, init_thread_union
++	li a0, ASM_THREAD_SIZE
++	add sp, sp, a0
 +
-+resume_userspace:
-+	/* Interrupts must be disabled here so flags are checked atomically */
-+	REG_L s0, TASK_TI_FLAGS(tp) /* current_thread_info->flags */
-+	andi s1, s0, _TIF_WORK_MASK
-+	bnez s1, work_pending
++	/* Start the kernel */
++	mv a0, s0
++	mv a1, s1
++	call sbi_save
++	tail start_kernel
 +
-+	/* Save unwound kernel stack pointer in thread_info */
-+	addi s0, sp, PT_SIZE_ON_STACK
-+	REG_S s0, TASK_TI_KERNEL_SP(tp)
++relocate:
++	/* Relocate return address */
++	li a1, PAGE_OFFSET
++	la a0, _start
++	sub a1, a1, a0
++	add ra, ra, a1
++
++	/* Point stvec to virtual address of intruction after sptbr write */
++	la a0, 1f
++	add a0, a0, a1
++	csrw stvec, a0
++
++	/* Compute sptbr for kernel page tables, but don't load it yet */
++	la a2, swapper_pg_dir
++	srl a2, a2, PAGE_SHIFT
++	li a1, SPTBR_MODE
++	or a2, a2, a1
 +
 +	/*
-+	 * Save TP into sscratch, so we can find the kernel data structures
-+	 * again.
++	 * Load trampoline page directory, which will cause us to trap to
++	 * stvec if VA != PA, or simply fall through if VA == PA
 +	 */
-+	csrw sscratch, tp
++	la a0, trampoline_pg_dir
++	srl a0, a0, PAGE_SHIFT
++	or a0, a0, a1
++	sfence.vma
++	csrw sptbr, a0
++1:
++	/* Set trap vector to spin forever to help debug */
++	la a0, .Lsecondary_park
++	csrw stvec, a0
 +
-+restore_all:
-+	RESTORE_ALL
-+	sret
++	/* Reload the global pointer */
++.option push
++.option norelax
++	la gp, __global_pointer$
++.option pop
 +
-+work_pending:
-+	/* Enter slow path for supplementary processing */
-+	la ra, ret_from_exception
-+	andi s1, s0, _TIF_NEED_RESCHED
-+	bnez s1, work_resched
-+work_notifysig:
-+	/* Handle pending signals and notify-resume requests */
-+	csrs sstatus, SR_IE /* Enable interrupts for do_notify_resume() */
-+	move a0, sp /* pt_regs */
-+	move a1, s0 /* current_thread_info->flags */
-+	tail do_notify_resume
-+work_resched:
-+	tail schedule
++	/* Switch to kernel page tables */
++	csrw sptbr, a2
 +
-+/* Slow paths for ptrace. */
-+handle_syscall_trace_enter:
-+	move a0, sp
-+	call do_syscall_trace_enter
-+	REG_L a0, PT_A0(sp)
-+	REG_L a1, PT_A1(sp)
-+	REG_L a2, PT_A2(sp)
-+	REG_L a3, PT_A3(sp)
-+	REG_L a4, PT_A4(sp)
-+	REG_L a5, PT_A5(sp)
-+	REG_L a6, PT_A6(sp)
-+	REG_L a7, PT_A7(sp)
-+	j check_syscall_nr
-+handle_syscall_trace_exit:
-+	move a0, sp
-+	call do_syscall_trace_exit
-+	j ret_from_exception
++	ret
 +
-+END(handle_exception)
++.Lsecondary_start:
++#ifdef CONFIG_SMP
++	li a1, CONFIG_NR_CPUS
++	bgeu a0, a1, .Lsecondary_park
 +
-+ENTRY(ret_from_fork)
-+	la ra, ret_from_exception
-+	tail schedule_tail
-+ENDPROC(ret_from_fork)
++	/* Set trap vector to spin forever to help debug */
++	la a3, .Lsecondary_park
++	csrw stvec, a3
 +
-+ENTRY(ret_from_kernel_thread)
-+	call schedule_tail
-+	/* Call fn(arg) */
-+	la ra, ret_from_exception
-+	move a0, s1
-+	jr s0
-+ENDPROC(ret_from_kernel_thread)
++	slli a3, a0, LGREG
++	la a1, __cpu_up_stack_pointer
++	la a2, __cpu_up_task_pointer
++	add a1, a3, a1
++	add a2, a3, a2
 +
++	/*
++	 * This hart didn't win the lottery, so we wait for the winning hart to
++	 * get far enough along the boot process that it should continue.
++	 */
++.Lwait_for_cpu_up:
++	/* FIXME: We should WFI to save some energy here. */
++	REG_L sp, (a1)
++	REG_L tp, (a2)
++	beqz sp, .Lwait_for_cpu_up
++	beqz tp, .Lwait_for_cpu_up
++	fence
 +
-+/*
-+ * Integer register context switch
-+ * The callee-saved registers must be saved and restored.
-+ *
-+ *   a0: previous task_struct (must be preserved across the switch)
-+ *   a1: next task_struct
-+ *
-+ * The value of a0 and a1 must be preserved by this function, as that's how
-+ * arguments are passed to schedule_tail.
-+ */
-+ENTRY(__switch_to)
-+	/* Save context into prev->thread */
-+	li    a4,  TASK_THREAD_RA
-+	add   a3, a0, a4
-+	add   a4, a1, a4
-+	REG_S ra,  TASK_THREAD_RA_RA(a3)
-+	REG_S sp,  TASK_THREAD_SP_RA(a3)
-+	REG_S s0,  TASK_THREAD_S0_RA(a3)
-+	REG_S s1,  TASK_THREAD_S1_RA(a3)
-+	REG_S s2,  TASK_THREAD_S2_RA(a3)
-+	REG_S s3,  TASK_THREAD_S3_RA(a3)
-+	REG_S s4,  TASK_THREAD_S4_RA(a3)
-+	REG_S s5,  TASK_THREAD_S5_RA(a3)
-+	REG_S s6,  TASK_THREAD_S6_RA(a3)
-+	REG_S s7,  TASK_THREAD_S7_RA(a3)
-+	REG_S s8,  TASK_THREAD_S8_RA(a3)
-+	REG_S s9,  TASK_THREAD_S9_RA(a3)
-+	REG_S s10, TASK_THREAD_S10_RA(a3)
-+	REG_S s11, TASK_THREAD_S11_RA(a3)
-+	/* Restore context from next->thread */
-+	REG_L ra,  TASK_THREAD_RA_RA(a4)
-+	REG_L sp,  TASK_THREAD_SP_RA(a4)
-+	REG_L s0,  TASK_THREAD_S0_RA(a4)
-+	REG_L s1,  TASK_THREAD_S1_RA(a4)
-+	REG_L s2,  TASK_THREAD_S2_RA(a4)
-+	REG_L s3,  TASK_THREAD_S3_RA(a4)
-+	REG_L s4,  TASK_THREAD_S4_RA(a4)
-+	REG_L s5,  TASK_THREAD_S5_RA(a4)
-+	REG_L s6,  TASK_THREAD_S6_RA(a4)
-+	REG_L s7,  TASK_THREAD_S7_RA(a4)
-+	REG_L s8,  TASK_THREAD_S8_RA(a4)
-+	REG_L s9,  TASK_THREAD_S9_RA(a4)
-+	REG_L s10, TASK_THREAD_S10_RA(a4)
-+	REG_L s11, TASK_THREAD_S11_RA(a4)
-+	/* Swap the CPU entry around. */
-+	lw a3, TASK_TI_CPU(a0)
-+	lw a4, TASK_TI_CPU(a1)
-+	sw a3, TASK_TI_CPU(a1)
-+	sw a4, TASK_TI_CPU(a0)
-+#if TASK_TI != 0
-+#error "TASK_TI != 0: tp will contain a 'struct thread_info', not a 'struct task_struct' so get_current() won't work."
-+	addi tp, a1, TASK_TI
-+#else
-+	move tp, a1
++	/* Enable virtual memory and relocate to virtual address */
++	call relocate
++
++	tail smp_callin
 +#endif
-+	ret
-+ENDPROC(__switch_to)
 +
-+ENTRY(__fstate_save)
-+	li  a2,  TASK_THREAD_F0
-+	add a0, a0, a2
-+	li t1, SR_FS
-+	csrs sstatus, t1
-+	frcsr t0
-+	fsd f0,  TASK_THREAD_F0_F0(a0)
-+	fsd f1,  TASK_THREAD_F1_F0(a0)
-+	fsd f2,  TASK_THREAD_F2_F0(a0)
-+	fsd f3,  TASK_THREAD_F3_F0(a0)
-+	fsd f4,  TASK_THREAD_F4_F0(a0)
-+	fsd f5,  TASK_THREAD_F5_F0(a0)
-+	fsd f6,  TASK_THREAD_F6_F0(a0)
-+	fsd f7,  TASK_THREAD_F7_F0(a0)
-+	fsd f8,  TASK_THREAD_F8_F0(a0)
-+	fsd f9,  TASK_THREAD_F9_F0(a0)
-+	fsd f10, TASK_THREAD_F10_F0(a0)
-+	fsd f11, TASK_THREAD_F11_F0(a0)
-+	fsd f12, TASK_THREAD_F12_F0(a0)
-+	fsd f13, TASK_THREAD_F13_F0(a0)
-+	fsd f14, TASK_THREAD_F14_F0(a0)
-+	fsd f15, TASK_THREAD_F15_F0(a0)
-+	fsd f16, TASK_THREAD_F16_F0(a0)
-+	fsd f17, TASK_THREAD_F17_F0(a0)
-+	fsd f18, TASK_THREAD_F18_F0(a0)
-+	fsd f19, TASK_THREAD_F19_F0(a0)
-+	fsd f20, TASK_THREAD_F20_F0(a0)
-+	fsd f21, TASK_THREAD_F21_F0(a0)
-+	fsd f22, TASK_THREAD_F22_F0(a0)
-+	fsd f23, TASK_THREAD_F23_F0(a0)
-+	fsd f24, TASK_THREAD_F24_F0(a0)
-+	fsd f25, TASK_THREAD_F25_F0(a0)
-+	fsd f26, TASK_THREAD_F26_F0(a0)
-+	fsd f27, TASK_THREAD_F27_F0(a0)
-+	fsd f28, TASK_THREAD_F28_F0(a0)
-+	fsd f29, TASK_THREAD_F29_F0(a0)
-+	fsd f30, TASK_THREAD_F30_F0(a0)
-+	fsd f31, TASK_THREAD_F31_F0(a0)
-+	sw t0, TASK_THREAD_FCSR_F0(a0)
-+	csrc sstatus, t1
-+	ret
-+ENDPROC(__fstate_save)
++.Lsecondary_park:
++	/* We lack SMP support or have too many harts, so park this hart */
++	wfi
++	j .Lsecondary_park
++END(_start)
 +
-+ENTRY(__fstate_restore)
-+	li  a2,  TASK_THREAD_F0
-+	add a0, a0, a2
-+	li t1, SR_FS
-+	lw t0, TASK_THREAD_FCSR_F0(a0)
-+	csrs sstatus, t1
-+	fld f0,  TASK_THREAD_F0_F0(a0)
-+	fld f1,  TASK_THREAD_F1_F0(a0)
-+	fld f2,  TASK_THREAD_F2_F0(a0)
-+	fld f3,  TASK_THREAD_F3_F0(a0)
-+	fld f4,  TASK_THREAD_F4_F0(a0)
-+	fld f5,  TASK_THREAD_F5_F0(a0)
-+	fld f6,  TASK_THREAD_F6_F0(a0)
-+	fld f7,  TASK_THREAD_F7_F0(a0)
-+	fld f8,  TASK_THREAD_F8_F0(a0)
-+	fld f9,  TASK_THREAD_F9_F0(a0)
-+	fld f10, TASK_THREAD_F10_F0(a0)
-+	fld f11, TASK_THREAD_F11_F0(a0)
-+	fld f12, TASK_THREAD_F12_F0(a0)
-+	fld f13, TASK_THREAD_F13_F0(a0)
-+	fld f14, TASK_THREAD_F14_F0(a0)
-+	fld f15, TASK_THREAD_F15_F0(a0)
-+	fld f16, TASK_THREAD_F16_F0(a0)
-+	fld f17, TASK_THREAD_F17_F0(a0)
-+	fld f18, TASK_THREAD_F18_F0(a0)
-+	fld f19, TASK_THREAD_F19_F0(a0)
-+	fld f20, TASK_THREAD_F20_F0(a0)
-+	fld f21, TASK_THREAD_F21_F0(a0)
-+	fld f22, TASK_THREAD_F22_F0(a0)
-+	fld f23, TASK_THREAD_F23_F0(a0)
-+	fld f24, TASK_THREAD_F24_F0(a0)
-+	fld f25, TASK_THREAD_F25_F0(a0)
-+	fld f26, TASK_THREAD_F26_F0(a0)
-+	fld f27, TASK_THREAD_F27_F0(a0)
-+	fld f28, TASK_THREAD_F28_F0(a0)
-+	fld f29, TASK_THREAD_F29_F0(a0)
-+	fld f30, TASK_THREAD_F30_F0(a0)
-+	fld f31, TASK_THREAD_F31_F0(a0)
-+	fscsr t0
-+	csrc sstatus, t1
-+	ret
-+ENDPROC(__fstate_restore)
-+
-+
-+	.section ".rodata"
-+	/* Exception vector table */
-+ENTRY(excp_vect_table)
-+	RISCV_PTR do_trap_insn_misaligned
-+	RISCV_PTR do_trap_insn_fault
-+	RISCV_PTR do_trap_insn_illegal
-+	RISCV_PTR do_trap_break
-+	RISCV_PTR do_trap_load_misaligned
-+	RISCV_PTR do_trap_load_fault
-+	RISCV_PTR do_trap_store_misaligned
-+	RISCV_PTR do_trap_store_fault
-+	RISCV_PTR do_trap_ecall_u /* system call, gets intercepted */
-+	RISCV_PTR do_trap_ecall_s
-+	RISCV_PTR do_trap_unknown
-+	RISCV_PTR do_trap_ecall_m
-+	RISCV_PTR do_page_fault   /* instruction page fault */
-+	RISCV_PTR do_page_fault   /* load page fault */
-+	RISCV_PTR do_trap_unknown
-+	RISCV_PTR do_page_fault   /* store page fault */
-+excp_vect_table_end:
-+END(excp_vect_table)
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
++__PAGE_ALIGNED_BSS
++	/* Empty zero page */
++	.balign PAGE_SIZE
++ENTRY(empty_zero_page)
++	.fill (empty_zero_page + PAGE_SIZE) - ., 1, 0x00
++END(empty_zero_page)
+diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
 new file mode 100644
-index 000000000000..0d90dcc1fbd3
+index 000000000000..328718e8026e
 --- /dev/null
-+++ b/arch/riscv/kernel/process.c
-@@ -0,0 +1,129 @@
++++ b/arch/riscv/kernel/irq.c
+@@ -0,0 +1,39 @@
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ * Copyright (C) 2017 SiFive
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#include <linux/interrupt.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++
++#ifdef CONFIG_RISCV_INTC
++#include <linux/irqchip/irq-riscv-intc.h>
++#endif
++
++void __init init_IRQ(void)
++{
++	irqchip_init();
++}
++
++asmlinkage void __irq_entry do_IRQ(unsigned int cause, struct pt_regs *regs)
++{
++#ifdef CONFIG_RISCV_INTC
++	/*
++	 * FIXME: We don't want a direct call to riscv_intc_irq here.  The plan
++	 * is to put an IRQ domain here and let the interrupt controller
++	 * register with that, but I poked around the arm64 code a bit and
++	 * there might be a better way to do it (ie, something fully generic).
++	 */
++	riscv_intc_irq(cause, regs);
++#endif
++}
+diff --git a/arch/riscv/kernel/reset.c b/arch/riscv/kernel/reset.c
+new file mode 100644
+index 000000000000..2a53d26ffdd6
+--- /dev/null
++++ b/arch/riscv/kernel/reset.c
+@@ -0,0 +1,36 @@
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#include <linux/reboot.h>
++#include <linux/export.h>
++#include <asm/sbi.h>
++
++void (*pm_power_off)(void) = machine_power_off;
++EXPORT_SYMBOL(pm_power_off);
++
++void machine_restart(char *cmd)
++{
++	do_kernel_restart(cmd);
++	while (1);
++}
++
++void machine_halt(void)
++{
++	machine_power_off();
++}
++
++void machine_power_off(void)
++{
++	sbi_shutdown();
++	while (1);
++}
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+new file mode 100644
+index 000000000000..de7db114c315
+--- /dev/null
++++ b/arch/riscv/kernel/setup.c
+@@ -0,0 +1,257 @@
 +/*
 + * Copyright (C) 2009 Sunplus Core Technology Co., Ltd.
 + *  Chen Liqin <liqin.chen@sunplusct.com>
 + *  Lennox Wu <lennox.wu@sunplusct.com>
 + * Copyright (C) 2012 Regents of the University of California
-+ * Copyright (C) 2017 SiFive
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -1225,112 +730,937 @@ index 000000000000..0d90dcc1fbd3
 + * to the Free Software Foundation, Inc.,
 + */
 +
-+#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/mm.h>
++#include <linux/memblock.h>
 +#include <linux/sched.h>
++#include <linux/initrd.h>
++#include <linux/console.h>
++#include <linux/screen_info.h>
++#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
++#include <linux/sched/task.h>
++
++#include <asm/setup.h>
++#include <asm/sections.h>
++#include <asm/pgtable.h>
++#include <asm/smp.h>
++#include <asm/sbi.h>
++#include <asm/tlbflush.h>
++#include <asm/thread_info.h>
++
++#ifdef CONFIG_HVC_RISCV_SBI
++#include <asm/hvc_riscv_sbi.h>
++#endif
++
++#ifdef CONFIG_DUMMY_CONSOLE
++struct screen_info screen_info = {
++	.orig_video_lines	= 30,
++	.orig_video_cols	= 80,
++	.orig_video_mode	= 0,
++	.orig_video_ega_bx	= 0,
++	.orig_video_isVGA	= 1,
++	.orig_video_points	= 8
++};
++#endif
++
++#ifdef CONFIG_CMDLINE_BOOL
++static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
++#endif /* CONFIG_CMDLINE_BOOL */
++
++unsigned long va_pa_offset;
++unsigned long pfn_base;
++
++/* The lucky hart to first increment this variable will boot the other cores */
++atomic_t hart_lottery;
++
++#ifdef CONFIG_BLK_DEV_INITRD
++static void __init setup_initrd(void)
++{
++	extern char __initramfs_start[];
++	extern unsigned long __initramfs_size;
++	unsigned long size;
++
++	if (__initramfs_size > 0) {
++		initrd_start = (unsigned long)(&__initramfs_start);
++		initrd_end = initrd_start + __initramfs_size;
++	}
++
++	if (initrd_start >= initrd_end) {
++		printk(KERN_INFO "initrd not found or empty");
++		goto disable;
++	}
++	if (__pa(initrd_end) > PFN_PHYS(max_low_pfn)) {
++		printk(KERN_ERR "initrd extends beyond end of memory");
++		goto disable;
++	}
++
++	size =  initrd_end - initrd_start;
++	memblock_reserve(__pa(initrd_start), size);
++	initrd_below_start_ok = 1;
++
++	printk(KERN_INFO "Initial ramdisk at: 0x%p (%lu bytes)\n",
++		(void *)(initrd_start), size);
++	return;
++disable:
++	pr_cont(" - disabling initrd\n");
++	initrd_start = 0;
++	initrd_end = 0;
++}
++#endif /* CONFIG_BLK_DEV_INITRD */
++
++pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
++pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
++
++#ifndef __PAGETABLE_PMD_FOLDED
++#define NUM_SWAPPER_PMDS ((uintptr_t)-PAGE_OFFSET >> PGDIR_SHIFT)
++pmd_t swapper_pmd[PTRS_PER_PMD*((-PAGE_OFFSET)/PGDIR_SIZE)] __page_aligned_bss;
++pmd_t trampoline_pmd[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
++#endif
++
++asmlinkage void __init setup_vm(void)
++{
++	extern char _start;
++	uintptr_t i;
++	uintptr_t pa = (uintptr_t) &_start;
++	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
++
++	va_pa_offset = PAGE_OFFSET - pa;
++	pfn_base = PFN_DOWN(pa);
++
++	/* Sanity check alignment and size */
++	BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
++	BUG_ON((pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
++
++#ifndef __PAGETABLE_PMD_FOLDED
++	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
++		pfn_pgd(PFN_DOWN((uintptr_t)trampoline_pmd),
++			__pgprot(_PAGE_TABLE));
++	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(pa), prot);
++
++	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
++		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
++		swapper_pg_dir[o] =
++			pfn_pgd(PFN_DOWN((uintptr_t)swapper_pmd) + i,
++				__pgprot(_PAGE_TABLE));
++	}
++	for (i = 0; i < ARRAY_SIZE(swapper_pmd); i++)
++		swapper_pmd[i] = pfn_pmd(PFN_DOWN(pa + i * PMD_SIZE), prot);
++#else
++	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
++		pfn_pgd(PFN_DOWN(pa), prot);
++
++	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
++		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
++		swapper_pg_dir[o] =
++			pfn_pgd(PFN_DOWN(pa + i * PGDIR_SIZE), prot);
++	}
++#endif
++}
++
++void __init sbi_save(unsigned int hartid, void *dtb)
++{
++	early_init_dt_scan(__va(dtb));
++}
++
++/*
++ * Allow the user to manually add a memory region (in case DTS is broken);
++ * "mem_end=nn[KkMmGg]"
++ */
++static int __init mem_end_override(char *p)
++{
++	resource_size_t base, end;
++
++	if (!p)
++		return -EINVAL;
++	base = (uintptr_t) __pa(PAGE_OFFSET);
++	end = memparse(p, &p) & PMD_MASK;
++	if (end == 0)
++		return -EINVAL;
++	memblock_add(base, end - base);
++	return 0;
++}
++early_param("mem_end", mem_end_override);
++
++static void __init setup_bootmem(void)
++{
++	struct memblock_region *reg;
++	phys_addr_t mem_size = 0;
++
++	/* Find the memory region containing the kernel */
++	for_each_memblock(memory, reg) {
++		phys_addr_t vmlinux_end = __pa(_end);
++		phys_addr_t end = reg->base + reg->size;
++
++		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
++			/*
++			 * Reserve from the start of the region to the end of
++			 * the kernel
++			 */
++			memblock_reserve(reg->base, vmlinux_end - reg->base);
++			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
++		}
++	}
++	BUG_ON(mem_size == 0);
++
++	set_max_mapnr(PFN_DOWN(mem_size));
++	max_low_pfn = pfn_base + PFN_DOWN(mem_size);
++
++#ifdef CONFIG_BLK_DEV_INITRD
++	setup_initrd();
++#endif /* CONFIG_BLK_DEV_INITRD */
++
++	early_init_fdt_reserve_self();
++	early_init_fdt_scan_reserved_mem();
++	memblock_allow_resize();
++	memblock_dump_all();
++}
++
++void __init setup_arch(char **cmdline_p)
++{
++#if defined(CONFIG_HVC_RISCV_SBI)
++	if (likely(early_console == NULL)) {
++		early_console = &riscv_sbi_early_console_dev;
++		register_console(early_console);
++	}
++#endif
++
++#ifdef CONFIG_CMDLINE_BOOL
++#ifdef CONFIG_CMDLINE_OVERRIDE
++	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
++#else
++	if (builtin_cmdline[0] != '\0') {
++		/* Append bootloader command line to built-in */
++		strlcat(builtin_cmdline, " ", COMMAND_LINE_SIZE);
++		strlcat(builtin_cmdline, boot_command_line, COMMAND_LINE_SIZE);
++		strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
++	}
++#endif /* CONFIG_CMDLINE_OVERRIDE */
++#endif /* CONFIG_CMDLINE_BOOL */
++	*cmdline_p = boot_command_line;
++
++	parse_early_param();
++
++	init_mm.start_code = (unsigned long) _stext;
++	init_mm.end_code   = (unsigned long) _etext;
++	init_mm.end_data   = (unsigned long) _edata;
++	init_mm.brk        = (unsigned long) _end;
++
++	setup_bootmem();
++	paging_init();
++	unflatten_device_tree();
++
++#ifdef CONFIG_SMP
++	setup_smp();
++#endif
++
++#ifdef CONFIG_DUMMY_CONSOLE
++	conswitchp = &dummy_con;
++#endif
++
++	riscv_fill_hwcap();
++}
++
++static int __init riscv_device_init(void)
++{
++	return of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++}
++subsys_initcall_sync(riscv_device_init);
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+new file mode 100644
+index 000000000000..b4a71ec5906f
+--- /dev/null
++++ b/arch/riscv/kernel/smp.c
+@@ -0,0 +1,110 @@
++/*
++ * SMP initialisation and IPI support
++ * Based on arch/arm64/kernel/smp.c
++ *
++ * Copyright (C) 2012 ARM Ltd.
++ * Copyright (C) 2015 Regents of the University of California
++ * Copyright (C) 2017 SiFive
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/interrupt.h>
++#include <linux/smp.h>
++#include <linux/sched.h>
++
++#include <asm/sbi.h>
++#include <asm/tlbflush.h>
++#include <asm/cacheflush.h>
++
++/* A collection of single bit ipi messages.  */
++static struct {
++	unsigned long bits ____cacheline_aligned;
++} ipi_data[NR_CPUS] __cacheline_aligned;
++
++enum ipi_message_type {
++	IPI_RESCHEDULE,
++	IPI_CALL_FUNC,
++	IPI_MAX
++};
++
++irqreturn_t handle_ipi(void)
++{
++	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
++
++	/* Clear pending IPI */
++	csr_clear(sip, SIE_SSIE);
++
++	while (true) {
++		unsigned long ops;
++
++		/* Order bit clearing and data access. */
++		mb();
++
++		ops = xchg(pending_ipis, 0);
++		if (ops == 0)
++			return IRQ_HANDLED;
++
++		if (ops & (1 << IPI_RESCHEDULE))
++			scheduler_ipi();
++
++		if (ops & (1 << IPI_CALL_FUNC))
++			generic_smp_call_function_interrupt();
++
++		BUG_ON((ops >> IPI_MAX) != 0);
++
++		/* Order data access and bit testing. */
++		mb();
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void
++send_ipi_message(const struct cpumask *to_whom, enum ipi_message_type operation)
++{
++	int i;
++
++	mb();
++	for_each_cpu(i, to_whom)
++		set_bit(operation, &ipi_data[i].bits);
++
++	mb();
++	sbi_send_ipi(cpumask_bits(to_whom));
++}
++
++void arch_send_call_function_ipi_mask(struct cpumask *mask)
++{
++	send_ipi_message(mask, IPI_CALL_FUNC);
++}
++
++void arch_send_call_function_single_ipi(int cpu)
++{
++	send_ipi_message(cpumask_of(cpu), IPI_CALL_FUNC);
++}
++
++static void ipi_stop(void *unused)
++{
++	while (1)
++		wait_for_interrupt();
++}
++
++void smp_send_stop(void)
++{
++	on_each_cpu(ipi_stop, NULL, 1);
++}
++
++void smp_send_reschedule(int cpu)
++{
++	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
++}
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+new file mode 100644
+index 000000000000..f741458c5a3f
+--- /dev/null
++++ b/arch/riscv/kernel/smpboot.c
+@@ -0,0 +1,114 @@
++/*
++ * SMP initialisation and IPI support
++ * Based on arch/arm64/kernel/smp.c
++ *
++ * Copyright (C) 2012 ARM Ltd.
++ * Copyright (C) 2015 Regents of the University of California
++ * Copyright (C) 2017 SiFive
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mm.h>
++#include <linux/sched.h>
++#include <linux/kernel_stat.h>
++#include <linux/notifier.h>
++#include <linux/cpu.h>
++#include <linux/percpu.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/irq.h>
++#include <linux/of.h>
 +#include <linux/sched/task_stack.h>
-+#include <linux/tick.h>
-+#include <linux/ptrace.h>
++#include <asm/irq.h>
++#include <asm/mmu_context.h>
++#include <asm/tlbflush.h>
++#include <asm/sections.h>
++#include <asm/sbi.h>
 +
-+#include <asm/unistd.h>
-+#include <asm/uaccess.h>
-+#include <asm/processor.h>
-+#include <asm/csr.h>
-+#include <asm/string.h>
-+#include <asm/switch_to.h>
++void *__cpu_up_stack_pointer[NR_CPUS];
++void *__cpu_up_task_pointer[NR_CPUS];
 +
-+extern asmlinkage void ret_from_fork(void);
-+extern asmlinkage void ret_from_kernel_thread(void);
-+
-+void arch_cpu_idle(void)
++void __init smp_prepare_boot_cpu(void)
 +{
-+	wait_for_interrupt();
++}
++
++void __init smp_prepare_cpus(unsigned int max_cpus)
++{
++}
++
++void __init setup_smp(void)
++{
++	struct device_node *dn = NULL;
++	int hart, im_okay_therefore_i_am = 0;
++
++	while ((dn = of_find_node_by_type(dn, "cpu"))) {
++		hart = riscv_of_processor_hart(dn);
++		if (hart >= 0) {
++			set_cpu_possible(hart, true);
++			set_cpu_present(hart, true);
++			if (hart == smp_processor_id()) {
++				BUG_ON(im_okay_therefore_i_am);
++				im_okay_therefore_i_am = 1;
++			}
++		}
++	}
++
++	BUG_ON(!im_okay_therefore_i_am);
++}
++
++int __cpu_up(unsigned int cpu, struct task_struct *tidle)
++{
++	tidle->thread_info.cpu = cpu;
++
++	/*
++	 * On RISC-V systems, all harts boot on their own accord.  Our _start
++	 * selects the first hart to boot the kernel and causes the remainder
++	 * of the harts to spin in a loop waiting for their stack pointer to be
++	 * setup by that main hart.  Writing __cpu_up_stack_pointer signals to
++	 * the spinning harts that they can continue the boot process.
++	 */
++	smp_mb();
++	__cpu_up_stack_pointer[cpu] = task_stack_page(tidle) + THREAD_SIZE;
++	__cpu_up_task_pointer[cpu] = tidle;
++
++	while (!cpu_online(cpu))
++		cpu_relax();
++
++	return 0;
++}
++
++void __init smp_cpus_done(unsigned int max_cpus)
++{
++}
++
++/*
++ * C entry point for a secondary processor.
++ */
++asmlinkage void __init smp_callin(void)
++{
++	struct mm_struct *mm = &init_mm;
++
++	/* All kernel threads share the same mm context.  */
++	atomic_inc(&mm->mm_count);
++	current->active_mm = mm;
++
++	trap_init();
++	init_clockevent();
++	notify_cpu_starting(smp_processor_id());
++	set_cpu_online(smp_processor_id(), 1);
++	local_flush_tlb_all();
 +	local_irq_enable();
++	preempt_disable();
++	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
 +}
+diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+new file mode 100644
+index 000000000000..2463fcca719e
+--- /dev/null
++++ b/arch/riscv/kernel/time.c
+@@ -0,0 +1,61 @@
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ * Copyright (C) 2017 SiFive
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
 +
-+void show_regs(struct pt_regs *regs)
++#include <linux/clocksource.h>
++#include <linux/clockchips.h>
++#include <linux/delay.h>
++
++#ifdef CONFIG_RISCV_TIMER
++#include <linux/timer_riscv.h>
++#endif
++
++#include <asm/sbi.h>
++
++unsigned long riscv_timebase;
++
++DECLARE_PER_CPU(struct clock_event_device, riscv_clock_event);
++
++void riscv_timer_interrupt(void)
 +{
-+	show_regs_print_info(KERN_DEFAULT);
++#ifdef CONFIG_RISCV_TIMER
++	/*
++	 * FIXME: This needs to be cleaned up along with the rest of the IRQ
++	 * handling cleanup.  See irq.c for more details.
++	 */
++	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
 +
-+	pr_cont("sepc: " REG_FMT " ra : " REG_FMT " sp : " REG_FMT "\n",
-+		regs->sepc, regs->ra, regs->sp);
-+	pr_cont(" gp : " REG_FMT " tp : " REG_FMT " t0 : " REG_FMT "\n",
-+		regs->gp, regs->tp, regs->t0);
-+	pr_cont(" t1 : " REG_FMT " t2 : " REG_FMT " s0 : " REG_FMT "\n",
-+		regs->t1, regs->t2, regs->s0);
-+	pr_cont(" s1 : " REG_FMT " a0 : " REG_FMT " a1 : " REG_FMT "\n",
-+		regs->s1, regs->a0, regs->a1);
-+	pr_cont(" a2 : " REG_FMT " a3 : " REG_FMT " a4 : " REG_FMT "\n",
-+		regs->a2, regs->a3, regs->a4);
-+	pr_cont(" a5 : " REG_FMT " a6 : " REG_FMT " a7 : " REG_FMT "\n",
-+		regs->a5, regs->a6, regs->a7);
-+	pr_cont(" s2 : " REG_FMT " s3 : " REG_FMT " s4 : " REG_FMT "\n",
-+		regs->s2, regs->s3, regs->s4);
-+	pr_cont(" s5 : " REG_FMT " s6 : " REG_FMT " s7 : " REG_FMT "\n",
-+		regs->s5, regs->s6, regs->s7);
-+	pr_cont(" s8 : " REG_FMT " s9 : " REG_FMT " s10: " REG_FMT "\n",
-+		regs->s8, regs->s9, regs->s10);
-+	pr_cont(" s11: " REG_FMT " t3 : " REG_FMT " t4 : " REG_FMT "\n",
-+		regs->s11, regs->t3, regs->t4);
-+	pr_cont(" t5 : " REG_FMT " t6 : " REG_FMT "\n",
-+		regs->t5, regs->t6);
-+
-+	pr_cont("sstatus: " REG_FMT " sbadaddr: " REG_FMT " scause: " REG_FMT "\n",
-+		regs->sstatus, regs->sbadaddr, regs->scause);
++	evdev->event_handler(evdev);
++#endif
 +}
 +
-+void start_thread(struct pt_regs *regs, unsigned long pc,
-+	unsigned long sp)
++void __init init_clockevent(void)
 +{
-+	regs->sstatus = SR_PIE /* User mode, irqs on */ | SR_FS_INITIAL;
-+	regs->sepc = pc;
-+	regs->sp = sp;
-+	set_fs(USER_DS);
++	timer_probe();
++	csr_set(sie, SIE_STIE);
 +}
 +
-+void flush_thread(void)
++void __init time_init(void)
++{
++	struct device_node *cpu;
++	u32 prop;
++
++	cpu = of_find_node_by_path("/cpus");
++	if (!cpu || of_property_read_u32(cpu, "timebase-frequency", &prop))
++		panic(KERN_WARNING "RISC-V system with no 'timebase-frequency' in DTS\n");
++	riscv_timebase = prop;
++
++	lpj_fine = riscv_timebase / HZ;
++
++	init_clockevent();
++}
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+new file mode 100644
+index 000000000000..93132cb59184
+--- /dev/null
++++ b/arch/riscv/kernel/traps.c
+@@ -0,0 +1,180 @@
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/sched.h>
++#include <linux/sched/debug.h>
++#include <linux/sched/signal.h>
++#include <linux/signal.h>
++#include <linux/kdebug.h>
++#include <linux/uaccess.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/irq.h>
++
++#include <asm/processor.h>
++#include <asm/ptrace.h>
++#include <asm/csr.h>
++
++int show_unhandled_signals = 1;
++
++extern asmlinkage void handle_exception(void);
++
++static DEFINE_SPINLOCK(die_lock);
++
++void die(struct pt_regs *regs, const char *str)
++{
++	static int die_counter;
++	int ret;
++
++	oops_enter();
++
++	spin_lock_irq(&die_lock);
++	console_verbose();
++	bust_spinlocks(1);
++
++	pr_emerg("%s [#%d]\n", str, ++die_counter);
++	print_modules();
++	show_regs(regs);
++
++	ret = notify_die(DIE_OOPS, str, regs, 0, regs->scause, SIGSEGV);
++
++	bust_spinlocks(0);
++	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
++	spin_unlock_irq(&die_lock);
++	oops_exit();
++
++	if (in_interrupt())
++		panic("Fatal exception in interrupt");
++	if (panic_on_oops)
++		panic("Fatal exception");
++	if (ret != NOTIFY_STOP)
++		do_exit(SIGSEGV);
++}
++
++static inline void do_trap_siginfo(int signo, int code,
++	unsigned long addr, struct task_struct *tsk)
++{
++	siginfo_t info;
++
++	info.si_signo = signo;
++	info.si_errno = 0;
++	info.si_code = code;
++	info.si_addr = (void __user *)addr;
++	force_sig_info(signo, &info, tsk);
++}
++
++void do_trap(struct pt_regs *regs, int signo, int code,
++	unsigned long addr, struct task_struct *tsk)
++{
++	if (show_unhandled_signals && unhandled_signal(tsk, signo)
++	    && printk_ratelimit()) {
++		pr_info("%s[%d]: unhandled signal %d code 0x%x at 0x" REG_FMT,
++			tsk->comm, task_pid_nr(tsk), signo, code, addr);
++		print_vma_addr(KERN_CONT " in ", GET_IP(regs));
++		pr_cont("\n");
++		show_regs(regs);
++	}
++
++	do_trap_siginfo(signo, code, addr, tsk);
++}
++
++static void do_trap_error(struct pt_regs *regs, int signo, int code,
++	unsigned long addr, const char *str)
++{
++	if (user_mode(regs)) {
++		do_trap(regs, signo, code, addr, current);
++	} else {
++		if (!fixup_exception(regs))
++			die(regs, str);
++	}
++}
++
++#define DO_ERROR_INFO(name, signo, code, str)				\
++asmlinkage void name(struct pt_regs *regs)				\
++{									\
++	do_trap_error(regs, signo, code, regs->sepc, "Oops - " str);	\
++}
++
++DO_ERROR_INFO(do_trap_unknown,
++	SIGILL, ILL_ILLTRP, "unknown exception");
++DO_ERROR_INFO(do_trap_insn_misaligned,
++	SIGBUS, BUS_ADRALN, "instruction address misaligned");
++DO_ERROR_INFO(do_trap_insn_fault,
++	SIGSEGV, SEGV_ACCERR, "instruction access fault");
++DO_ERROR_INFO(do_trap_insn_illegal,
++	SIGILL, ILL_ILLOPC, "illegal instruction");
++DO_ERROR_INFO(do_trap_load_misaligned,
++	SIGBUS, BUS_ADRALN, "load address misaligned");
++DO_ERROR_INFO(do_trap_load_fault,
++	SIGSEGV, SEGV_ACCERR, "load access fault");
++DO_ERROR_INFO(do_trap_store_misaligned,
++	SIGBUS, BUS_ADRALN, "store (or AMO) address misaligned");
++DO_ERROR_INFO(do_trap_store_fault,
++	SIGSEGV, SEGV_ACCERR, "store (or AMO) access fault");
++DO_ERROR_INFO(do_trap_ecall_u,
++	SIGILL, ILL_ILLTRP, "environment call from U-mode");
++DO_ERROR_INFO(do_trap_ecall_s,
++	SIGILL, ILL_ILLTRP, "environment call from S-mode");
++DO_ERROR_INFO(do_trap_ecall_m,
++	SIGILL, ILL_ILLTRP, "environment call from M-mode");
++
++asmlinkage void do_trap_break(struct pt_regs *regs)
++{
++#ifdef CONFIG_GENERIC_BUG
++	if (!user_mode(regs)) {
++		enum bug_trap_type type;
++
++		type = report_bug(regs->sepc, regs);
++		switch (type) {
++		case BUG_TRAP_TYPE_NONE:
++			break;
++		case BUG_TRAP_TYPE_WARN:
++			regs->sepc += sizeof(bug_insn_t);
++			return;
++		case BUG_TRAP_TYPE_BUG:
++			die(regs, "Kernel BUG");
++		}
++	}
++#endif /* CONFIG_GENERIC_BUG */
++
++	do_trap_siginfo(SIGTRAP, TRAP_BRKPT, regs->sepc, current);
++	regs->sepc += 0x4;
++}
++
++#ifdef CONFIG_GENERIC_BUG
++int is_valid_bugaddr(unsigned long pc)
++{
++	bug_insn_t insn;
++
++	if (pc < PAGE_OFFSET)
++		return 0;
++	if (probe_kernel_address((bug_insn_t __user *)pc, insn))
++		return 0;
++	return (insn == __BUG_INSN);
++}
++#endif /* CONFIG_GENERIC_BUG */
++
++void __init trap_init(void)
 +{
 +	/*
-+	 * Reset FPU context
-+	 *	frm: round to nearest, ties to even (IEEE default)
-+	 *	fflags: accrued exceptions cleared
++	 * Set sup0 scratch register to 0, indicating to exception vector
++	 * that we are presently executing in the kernel
 +	 */
-+	memset(&current->thread.fstate, 0, sizeof(current->thread.fstate));
++	csr_write(sscratch, 0);
++	/* Set the exception vector address */
++	csr_write(stvec, &handle_exception);
++	/* Enable all interrupts */
++	csr_write(sie, -1);
 +}
+diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+new file mode 100644
+index 000000000000..e8a178df8144
+--- /dev/null
++++ b/arch/riscv/kernel/vdso.c
+@@ -0,0 +1,125 @@
++/*
++ * Copyright (C) 2004 Benjamin Herrenschmidt, IBM Corp.
++ *                    <benh@kernel.crashing.org>
++ * Copyright (C) 2012 ARM Limited
++ * Copyright (C) 2015 Regents of the University of California
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
 +
-+int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/binfmts.h>
++#include <linux/err.h>
++
++#include <asm/vdso.h>
++
++extern char vdso_start[], vdso_end[];
++
++static unsigned int vdso_pages;
++static struct page **vdso_pagelist;
++
++/*
++ * The vDSO data page.
++ */
++static union {
++	struct vdso_data	data;
++	u8			page[PAGE_SIZE];
++} vdso_data_store __page_aligned_data;
++struct vdso_data *vdso_data = &vdso_data_store.data;
++
++static int __init vdso_init(void)
 +{
-+	fstate_save(src, task_pt_regs(src));
-+	*dst = *src;
-+	return 0;
-+}
++	unsigned int i;
 +
-+int copy_thread(unsigned long clone_flags, unsigned long usp,
-+	unsigned long arg, struct task_struct *p)
-+{
-+	struct pt_regs *childregs = task_pt_regs(p);
-+
-+	/* p->thread holds context to be restored by __switch_to() */
-+	if (unlikely(p->flags & PF_KTHREAD)) {
-+		/* Kernel thread */
-+		const register unsigned long gp __asm__ ("gp");
-+		memset(childregs, 0, sizeof(struct pt_regs));
-+		childregs->gp = gp;
-+		childregs->sstatus = SR_PS | SR_PIE; /* Supervisor, irqs on */
-+
-+		p->thread.ra = (unsigned long)ret_from_kernel_thread;
-+		p->thread.s[0] = usp; /* fn */
-+		p->thread.s[1] = arg;
-+	} else {
-+		*childregs = *(current_pt_regs());
-+		if (usp) /* User fork */
-+			childregs->sp = usp;
-+		if (clone_flags & CLONE_SETTLS)
-+			childregs->tp = childregs->a5;
-+		childregs->a0 = 0; /* Return value of fork() */
-+		p->thread.ra = (unsigned long)ret_from_fork;
++	vdso_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
++	vdso_pagelist =
++		kcalloc(vdso_pages + 1, sizeof(struct page *), GFP_KERNEL);
++	if (unlikely(vdso_pagelist == NULL)) {
++		pr_err("vdso: pagelist allocation failed\n");
++		return -ENOMEM;
 +	}
-+	p->thread.sp = (unsigned long)childregs; /* kernel sp */
++
++	for (i = 0; i < vdso_pages; i++) {
++		struct page *pg;
++
++		pg = virt_to_page(vdso_start + (i << PAGE_SHIFT));
++		ClearPageReserved(pg);
++		vdso_pagelist[i] = pg;
++	}
++	vdso_pagelist[i] = virt_to_page(vdso_data);
++
 +	return 0;
 +}
++arch_initcall(vdso_init);
++
++int arch_setup_additional_pages(struct linux_binprm *bprm,
++	int uses_interp)
++{
++	struct mm_struct *mm = current->mm;
++	unsigned long vdso_base, vdso_len;
++	int ret;
++
++	vdso_len = (vdso_pages + 1) << PAGE_SHIFT;
++
++	down_write(&mm->mmap_sem);
++	vdso_base = get_unmapped_area(NULL, 0, vdso_len, 0, 0);
++	if (unlikely(IS_ERR_VALUE(vdso_base))) {
++		ret = vdso_base;
++		goto end;
++	}
++
++	/*
++	 * Put vDSO base into mm struct. We need to do this before calling
++	 * install_special_mapping or the perf counter mmap tracking code
++	 * will fail to recognise it as a vDSO (since arch_vma_name fails).
++	 */
++	mm->context.vdso = (void *)vdso_base;
++
++	ret = install_special_mapping(mm, vdso_base, vdso_len,
++		(VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC),
++		vdso_pagelist);
++
++	if (unlikely(ret))
++		mm->context.vdso = NULL;
++
++end:
++	up_write(&mm->mmap_sem);
++	return ret;
++}
++
++const char *arch_vma_name(struct vm_area_struct *vma)
++{
++	if (vma->vm_mm && (vma->vm_start == (long)vma->vm_mm->context.vdso))
++		return "[vdso]";
++	return NULL;
++}
++
++/*
++ * Function stubs to prevent linker errors when AT_SYSINFO_EHDR is defined
++ */
++
++int in_gate_area_no_mm(unsigned long addr)
++{
++	return 0;
++}
++
++int in_gate_area(struct mm_struct *mm, unsigned long addr)
++{
++	return 0;
++}
++
++struct vm_area_struct *get_gate_vma(struct mm_struct *mm)
++{
++	return NULL;
++}
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+new file mode 100644
+index 000000000000..9f4bee5e51fd
+--- /dev/null
++++ b/arch/riscv/mm/init.c
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ *
++ *   This program is free software; you can redistribute it and/or
++ *   modify it under the terms of the GNU General Public License
++ *   as published by the Free Software Foundation, version 2.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ */
++
++#include <linux/init.h>
++#include <linux/mm.h>
++#include <linux/bootmem.h>
++#include <linux/initrd.h>
++#include <linux/memblock.h>
++#include <linux/swap.h>
++
++#include <asm/tlbflush.h>
++#include <asm/sections.h>
++#include <asm/pgtable.h>
++#include <asm/io.h>
++
++static void __init zone_sizes_init(void)
++{
++	unsigned long zones_size[MAX_NR_ZONES];
++
++	memset(zones_size, 0, sizeof(zones_size));
++	zones_size[ZONE_NORMAL] = max_mapnr;
++	free_area_init_node(0, zones_size, pfn_base, NULL);
++}
++
++void setup_zero_page(void)
++{
++	memset((void *)empty_zero_page, 0, PAGE_SIZE);
++}
++
++void __init paging_init(void)
++{
++	init_mm.pgd = (pgd_t *)pfn_to_virt(csr_read(sptbr));
++
++	setup_zero_page();
++	local_flush_tlb_all();
++	zone_sizes_init();
++}
++
++void __init mem_init(void)
++{
++#ifdef CONFIG_FLATMEM
++	BUG_ON(!mem_map);
++#endif /* CONFIG_FLATMEM */
++
++	high_memory = (void *)(__va(PFN_PHYS(max_low_pfn)));
++	free_all_bootmem();
++
++	mem_init_print_info(NULL);
++}
++
++void free_initmem(void)
++{
++	free_initmem_default(0);
++}
++
++#ifdef CONFIG_BLK_DEV_INITRD
++void free_initrd_mem(unsigned long start, unsigned long end)
++{
++}
++#endif /* CONFIG_BLK_DEV_INITRD */
 -- 
 2.13.5
