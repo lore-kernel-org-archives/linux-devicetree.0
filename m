@@ -1,32 +1,107 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v1 0/5] NVIDIA Tegra AHB DMA controller driver
-Date: Thu, 28 Sep 2017 15:01:04 +0530
-Message-ID: <20170928093104.GC30097@localhost>
-References: <cover.1506380746.git.digetx@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] clk: sunxi-ng: add mux and pll
+ notifiers for A64 CPU clock
+Date: Thu, 28 Sep 2017 12:27:52 +0200
+Message-ID: <20170928102752.ceo54qccqakb4xyx@flea>
+References: <20170923001531.14285-1-icenowy@aosc.io>
+ <20170923001531.14285-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fyb5mloqkdqrtwkq"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBM45WPHAKGQEORRWUUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <cover.1506380746.git.digetx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170923001531.14285-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 02:22:01AM +0300, Dmitry Osipenko wrote:
-> NVIDIA Tegra20/30 SoC's have AHB DMA controller. It has 4 DMA channels,
-> supports AHB <-> Memory and Memory <-> Memory transfers, slave / master
-> modes. This driver is primarily supposed to be used by gpu/host1x in a
-> master mode, performing 3D HW context stores.
-> 
-> Dmitry Osipenko (5):
->   clk: tegra: Add AHB DMA clock entry
->   clk: tegra: Bump SCLK clock rate to 216MHz on Tegra20
->   dt-bindings: Add DT bindings for NVIDIA Tegra AHB DMA controller
->   dmaengine: Add driver for NVIDIA Tegra AHB DMA controller
->   ARM: dts: tegra: Add AHB DMA controller nodes
 
-I don't think they are dependent, so consider sending them separately
+--fyb5mloqkdqrtwkq
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Sat, Sep 23, 2017 at 12:15:29AM +0000, Icenowy Zheng wrote:
+> The A64 PLL_CPU clock has the same instability if some factor changed
+> without the PLL gated like other SoCs with sun6i-style CCU, e.g. A33,
+> H3.
+> 
+> Add the mux and pll notifiers for A64 CPU clock to workaround the
+> problem.
+> 
+> Fixes: c6a0637460c2 ("clk: sunxi-ng: Add A64 clocks")
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+> index 2bb4cabf802f..b55fa69dd0c1 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
+> @@ -879,11 +879,26 @@ static const struct sunxi_ccu_desc sun50i_a64_ccu_desc = {
+>  	.num_resets	= ARRAY_SIZE(sun50i_a64_ccu_resets),
+>  };
+>  
+> +static struct ccu_pll_nb sun50i_a64_pll_cpu_nb = {
+> +	.common	= &pll_cpux_clk.common,
+> +	/* copy from pll_cpux_clk */
+> +	.enable	= BIT(31),
+> +	.lock	= BIT(28),
+> +};
+> +
+> +static struct ccu_mux_nb sun50i_a64_cpu_nb = {
+> +	.common		= &cpux_clk.common,
+> +	.cm		= &cpux_clk.mux,
+> +	.delay_us	= 1, /* > 8 clock cycles at 24 MHz */
+> +	.bypass_index	= 1, /* index of 24 MHz oscillator */
+> +};
+> +
+>
+>  static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+>  {
+>  	struct resource *res;
+>  	void __iomem *reg;
+>  	u32 val;
+> +	int ret;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	reg = devm_ioremap_resource(&pdev->dev, res);
+> @@ -897,7 +912,18 @@ static int sun50i_a64_ccu_probe(struct platform_device *pdev)
+>  
+>  	writel(0x515, reg + SUN50I_A64_PLL_MIPI_REG);
+>  
+> -	return sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
+> +	ret = sunxi_ccu_probe(pdev->dev.of_node, reg, &sun50i_a64_ccu_desc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Gate then ungate PLL CPU after any rate changes */
+> +	ccu_pll_notifier_register(&sun50i_a64_pll_cpu_nb);
+> +
+> +	/* Reparent CPU during PLL CPU rate changes */
+> +	ccu_mux_notifier_register(pll_cpux_clk.common.hw.clk,
+> +				  &sun50i_a64_cpu_nb);
+> +
+> +	return 0;
+
+So this is the fourth user of the exact same code, can you turn that
+into a shared function?
+
+Thanks!
+Maxime
 
 -- 
-~Vinod
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--fyb5mloqkdqrtwkq--
