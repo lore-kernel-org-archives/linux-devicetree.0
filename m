@@ -1,67 +1,90 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/4] ravb: Add optional PHY reset during system resume
-Date: Thu, 28 Sep 2017 17:53:32 +0200
-Message-ID: <1506614014-4398-3-git-send-email-geert+renesas@glider.be>
-References: <1506614014-4398-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506614014-4398-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
+ ECAM shift mode
+Date: Thu, 28 Sep 2017 08:57:28 -0700
+Message-ID: <CAKv+Gu-7OWG0=7VcWxaVqtAYoWrmNd1xhweS+EhSZES3cNJ+Kw@mail.gmail.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+ <20170828180437.2646-2-ard.biesheuvel@linaro.org> <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
+ <20170928090339.GA21499@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170928090339.GA21499@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If the optional "reset-gpios" property is specified in DT, the generic
-MDIO bus code takes care of resetting the PHY during device probe.
-However, the PHY may still have to be reset explicitly after system
-resume.
+On 28 September 2017 at 02:03, Will Deacon <will.deacon@arm.com> wrote:
+> On Tue, Sep 26, 2017 at 12:32:00PM -0500, Bjorn Helgaas wrote:
+>> [+cc Will]
+>>
+>> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
+>> > Some implementations of the Synopsys Designware PCIe controller implement
+>> > a so-called ECAM shift mode, which allows a static memory window to be
+>> > configured that covers the configuration space of the entire bus range.
+>> >
+>> > If the firmware performs all the low level configuration that is required
+>> > to expose this controller in a fully ECAM compatible manner, we can
+>> > simply describe it as "pci-host-ecam-generic" and be done with it.
+>> > However, it appears that in some cases (one of which is the Armada 80x0),
+>> > the IP is synthesized with an ATU window size that does not allow the
+>> > first bus to be mapped in a way that prevents the device on the
+>> > downstream port from appearing more than once.
+>> >
+>> > So implement a driver that relies on the firmware to perform all low
+>> > level initialization, and drives the controller in ECAM mode, but
+>> > overrides the config space accessors to take the above quirk into
+>> > account.
+>> >
+>> > Note that, unlike most drivers for this IP, this driver does not expose
+>> > a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
+>> > given that this is not a true bridge, and does not require any windows
+>> > to be configured in order for the downstream device to operate correctly.
+>> > Omitting it also prevents the PCI resource allocation routines from
+>> > handing out BAR space to it unnecessarily.
+>>
+>> This is a tangent, but does this mean the other drivers do not need to
+>> expose a fake 00:00.0 device either?
+>>
+>> s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
+>>
+>> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> > Cc: Jingoo Han <jingoohan1@gmail.com>
+>> > Cc: Joao Pinto <Joao.Pinto@synopsys.com>
+>> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> > ---
+>> >  drivers/pci/dwc/Kconfig                | 11 +++
+>> >  drivers/pci/dwc/Makefile               |  1 +
+>> >  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
+>>
+>> This really doesn't have any DesignWare specifics in it, and it seems
+>> more related to drivers/pci/host/pci-host-generic.c than to anything
+>> in drivers/pci/dwc.  Maybe it should be
+>> drivers/pci/host/pci-host-generic-quirks.c or something?  That's
+>> unwieldy, I admit.
+>>
+>> Putting it in pci/dwc would make Jingoo and Joao the default
+>> maintainers; I don't know how they feel about that.  We would probably
+>> have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
+>>
+>> Any thoughts on this, Will?
+>
+> The idea of a "generic quirk" makes me smile, I must admit :)
+>
+> I think there are two options:
+>
+>   1. Use the full DWC driver, and don't rely on firmware
+> -or-
+>   2. Rely on firmware, but teach pci-host-generic to deal with the funny
+>      config space
+>
+> For (2), we probably want to describe this as generically as possible
+> in case some other SoCs run into the same problem.
+>
 
-This allows to restore Ethernet operation after resume from s2ram on
-Salvator-XS, where the enable pin of the regulator providing PHY power
-is connected to PRESETn, and PSCI suspend powers down the SoC.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- drivers/net/ethernet/renesas/ravb_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index fdf30bfa403bf416..96d1d48e302f8c9a 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -19,6 +19,7 @@
- #include <linux/etherdevice.h>
- #include <linux/ethtool.h>
- #include <linux/if_vlan.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/module.h>
-@@ -2268,6 +2269,7 @@ static int __maybe_unused ravb_resume(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct ravb_private *priv = netdev_priv(ndev);
-+	struct mii_bus *bus = priv->mii_bus;
- 	int ret = 0;
- 
- 	if (priv->wol_enabled) {
-@@ -2302,6 +2304,13 @@ static int __maybe_unused ravb_resume(struct device *dev)
- 	 * reopen device if it was running before system suspended.
- 	 */
- 
-+	/* PHY reset */
-+	if (bus->reset_gpiod) {
-+		gpiod_set_value_cansleep(bus->reset_gpiod, 1);
-+		udelay(bus->reset_delay_us);
-+		gpiod_set_value_cansleep(bus->reset_gpiod, 0);
-+	}
-+
- 	/* Set AVB config mode */
- 	ravb_set_config_mode(ndev);
- 
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I take it this implies a DT property. I could add one that consists of
+an array of val/mask tuples or base/size tuples that allow us to
+disable arbitrary subregions of the config space. I could also add a
+simple boolean property that implements this exact quirk. Do you have
+any preference?
