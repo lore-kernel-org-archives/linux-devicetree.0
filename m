@@ -1,65 +1,44 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 2/4] dmaengine: Add STM32 MDMA driver
-Date: Thu, 28 Sep 2017 13:43:11 +0530
-Message-ID: <20170928081310.GA30097@localhost>
-References: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
- <1503671466-32029-3-git-send-email-pierre-yves.mordret@st.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS
+ sensor
+Date: Thu, 28 Sep 2017 11:10:41 +0300
+Message-ID: <20170928081041.vygfd5l2igz5ewhe@valkosipuli.retiisi.org.uk>
+References: <20170924075329.9927-1-leonl@leopardimaging.com>
+ <20170924075329.9927-2-leonl@leopardimaging.com>
+ <20170927214005.adcj4jrw74abt2j6@valkosipuli.retiisi.org.uk>
+ <CADu3m9zgmdP+hP_Es5gEbNyais-aBS+i-_EZdaZ-B1FKEGY92Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1503671466-32029-3-git-send-email-pierre-yves.mordret@st.com>
+In-Reply-To: <CADu3m9zgmdP+hP_Es5gEbNyais-aBS+i-_EZdaZ-B1FKEGY92Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Leon Luo <leonl@leopardimaging.com>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 25, 2017 at 04:31:04PM +0200, Pierre-Yves MORDRET wrote:
-> +static int stm32_mdma_probe(struct platform_device *pdev)
-> +{
+Hi Leon,
 
-[snip]
+On Wed, Sep 27, 2017 at 11:48:21PM -0700, Leon Luo wrote:
+> Hi Sakari,
+> 
+> Thanks for your comments.
+> 
+> Regarding imx274_tp_regs[], the first value is the test pattern mode, which
+> will be updated according to the input value before writing the register.
+> So it can't be a const.
 
-> +	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
-> +			      GFP_KERNEL);
-> +	if (!dmadev)
-> +		return -ENOMEM;
-> +
-> +	dmadev->nr_channels = nr_channels;
-> +	dmadev->nr_requests = nr_requests;
-> +	device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
-> +				       dmadev->ahb_addr_masks,
-> +				       count);
-> +	dmadev->nr_ahb_addr_masks = count;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(dmadev->base))
-> +		return PTR_ERR(dmadev->base);
-> +
-> +	dmadev->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(dmadev->clk)) {
-> +		dev_err(&pdev->dev, "Error: Missing controller clock\n");
-> +		return PTR_ERR(dmadev->clk);
-> +	}
+In that case you'll need to explicitly write that register; this is
+specific to a device whereas the static variable is the same for all
+devices.
 
-I am assuming if clk is not availble at this point of time you return clk
-error which maybe defer probe, right?
+> 
+> I will use __v4l2_ctrl_s_ctrl instead of v4l2_ctrl_s_ctrl to keep the
+> lock/unlock mutex clean. I am traveling right now, will test it and send a
+> new patch this weekend.
 
-> +static struct platform_driver stm32_mdma_driver = {
-> +	.driver = {
-> +		.name = "stm32-mdma",
-> +		.of_match_table = stm32_mdma_of_match,
-> +	},
-> +};
-> +
-> +static int __init stm32_mdma_init(void)
-> +{
-> +	return platform_driver_probe(&stm32_mdma_driver, stm32_mdma_probe);
-
-and you register platform_driver_probe() which per
-drivers/base/platform.c:760 is incompatible with defer probing.
-So this need a fix
+Ack.
 
 -- 
-~Vinod
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
