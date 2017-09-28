@@ -1,14 +1,16 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v4 00/11] dmaengine: sun6i: Fixes for H3/A83T,
- enable A64
-Date: Thu, 28 Sep 2017 03:49:17 +0200
-Message-ID: <3c78e966-2ece-4e67-94de-801aa569089f@rwthex-w2-a.rwth-ad.de>
+Subject: [PATCH v4 02/11] dmaengine: sun6i: Correct burst length
+ field offsets for H3
+Date: Thu, 28 Sep 2017 03:49:19 +0200
+Message-ID: <8bff4e60-f464-4b96-874b-f8a610b5a2ef@rwthex-w2-a.rwth-ad.de>
+References: <20170928014928.2272-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-sunxi+bncBDIYL7P2SAMRBN5KWHHAKGQE6ZPZ26Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170928014928.2272-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -16,99 +18,159 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 3a03ea763a67 ("dmaengine: sun6i: Add support for Allwinner A83T
-(sun8i) variant") and commit f008db8c00c1 ("dmaengine: sun6i: Add support f=
-or
-Allwinner H3 (sun8i) variant") added support for the A83T resp. H3, but mis=
-sed
-some differences between the original A31 and A83T/H3.
+For the H3, the burst lengths field offsets in the channel configuration
+register differs from earlier SoC generations.
 
-The first patch adds a callback to the controller config to set the clock
-autogating register of different SoC generations, i.e. A31, A23+A83T, H3+la=
-ter,
-and uses it to for the correct clock autogating setting.
+Using the A31 register macros actually configured the H3 controller
+do to bursts of length 1 always, which although working leads to higher
+bus utilisation.
 
-The second patch adds a callback for the burst length setting in the channe=
-l
-config register, which has different field offsets and new burst widths/len=
-gths,
-which differs between H3 and earlier generations
+Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-The third patch restructures some code required for the fourth patch and ad=
-ds the
-burst lengths to the controller config.
-
-The fourth patch adds the burst widths to the config and adds the handling =
-of the
-H3 specific burst widths.
-
-Patch 5 restructures the code to decouple some controller details (e.g. cha=
-nnel
-count) from the compatible string/the config.
-
-Patches 6, 7 and 8 introduce and use the "dma-chans" property for the A64. =
-Although
-register compatible to the H3, the channel count differs and thus it requir=
-es a
-new compatible. To avoid introduction of new compatibles for each minor var=
-iation,
-anything but the register model is moved to devicetree properties. There
-is at least one SoC (R40) which can then reuse the A64 compatible, the same
-would have worked for A83T+V3s.
-
-Patches 9 and 10 add the DMA controller node to the devicetree and add the =
-DMA
-controller reference to the SPI nodes.
-
-Patch 11 fixes a small error in the devicetree binding example.
+---
 
 Changes in v4:
-- Correct callback function signature, pass pointer to controller
-- sun6i_dma_dev refers to sun6i_dma_config and vice versa, add forward decl=
-aration
 - Pass reference to config instead of config itself
 - Fix config initialization
-- remove range checks for dma-channels/dma-requests DT properties
-- Split minor fix in devicetree example from patch 6/10
 
-Changes in v3:
-- Check for callback instead of using a no-op callback
-- Drop leading 0 from unit name in DT example
-- Omit default values from sun50i_a64_dma_cfg definition
-- Drop leading 0 from dma controller unit name
-
+Changes in v3: None
 Changes in v2:
-- Use callback for autogating instead of variable for different SoC generat=
-ions
 - Use controller specific callback for burst length setting
-- Store burst lengths in config instead of device structure
-- Store burst widths in config
-- Set default number of dma-request if not provided in config or devicetree
 
-Stefan Br=C3=BCns (11):
-  dmaengine: sun6i: Correct setting of clock autogating register for
-    A83T/H3
-  dmaengine: sun6i: Correct burst length field offsets for H3
-  dmaengine: sun6i: Restructure code to allow extension for new SoCs
-  dmaengine: sun6i: Enable additional burst lengths/widths on H3
-  dmaengine: sun6i: Move number of pchans/vchans/request to device
-    struct
-  arm64: allwinner: a64: Add devicetree binding for DMA controller
-  dmaengine: sun6i: Retrieve channel count/max request from devicetree
-  dmaengine: sun6i: Add support for Allwinner A64 and compatibles
-  arm64: allwinner: a64: Add device node for DMA controller
-  arm64: allwinner: a64: add dma controller references to spi nodes
-  arm: allwinner: Correct unit name in devicetree binding example
+ drivers/dma/sun6i-dma.c | 34 +++++++++++++++++++++++++++-------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
- .../devicetree/bindings/dma/sun6i-dma.txt          |  28 ++-
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  15 ++
- drivers/dma/sun6i-dma.c                            | 251 ++++++++++++++++-=
-----
- 3 files changed, 235 insertions(+), 59 deletions(-)
-
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 6f9d7c4ac7c0..48b3701c9aa1 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -68,13 +68,15 @@
+ #define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
+ #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
+ #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
+-#define DMA_CHAN_CFG_SRC_BURST(x)	(((x) & 0x3) << 7)
++#define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
++#define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
+ #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
+=20
+ #define DMA_CHAN_CFG_DST_DRQ(x)		(DMA_CHAN_CFG_SRC_DRQ(x) << 16)
+ #define DMA_CHAN_CFG_DST_IO_MODE	(DMA_CHAN_CFG_SRC_IO_MODE << 16)
+ #define DMA_CHAN_CFG_DST_LINEAR_MODE	(DMA_CHAN_CFG_SRC_LINEAR_MODE << 16)
+-#define DMA_CHAN_CFG_DST_BURST(x)	(DMA_CHAN_CFG_SRC_BURST(x) << 16)
++#define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16=
+)
++#define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
+ #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
+=20
+ #define DMA_CHAN_CUR_SRC	0x10
+@@ -118,6 +120,7 @@ struct sun6i_dma_config {
+ 	 * BSP kernel source code.
+ 	 */
+ 	void (*clock_autogate_enable)(struct sun6i_dma_dev *);
++	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
+ };
+=20
+ /*
+@@ -283,6 +286,18 @@ static void sun6i_enable_clock_autogate_h3(struct sun6=
+i_dma_dev *sdev)
+ 	writel(SUNXI_H3_DMA_GATE_ENABLE, sdev->base + SUNXI_H3_DMA_GATE);
+ }
+=20
++static void sun6i_set_burst_length_a31(u32 *p_cfg, s8 src_burst, s8 dst_bu=
+rst)
++{
++	*p_cfg |=3D DMA_CHAN_CFG_SRC_BURST_A31(src_burst) |
++		  DMA_CHAN_CFG_DST_BURST_A31(dst_burst);
++}
++
++static void sun6i_set_burst_length_h3(u32 *p_cfg, s8 src_burst, s8 dst_bur=
+st)
++{
++	*p_cfg |=3D DMA_CHAN_CFG_SRC_BURST_H3(src_burst) |
++		  DMA_CHAN_CFG_DST_BURST_H3(dst_burst);
++}
++
+ static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+ {
+ 	struct sun6i_desc *txd =3D pchan->desc;
+@@ -562,11 +577,11 @@ static int set_config(struct sun6i_dma_dev *sdev,
+ 	if (dst_width < 0)
+ 		return dst_width;
+=20
+-	*p_cfg =3D DMA_CHAN_CFG_SRC_BURST(src_burst) |
+-		DMA_CHAN_CFG_SRC_WIDTH(src_width) |
+-		DMA_CHAN_CFG_DST_BURST(dst_burst) |
++	*p_cfg =3D DMA_CHAN_CFG_SRC_WIDTH(src_width) |
+ 		DMA_CHAN_CFG_DST_WIDTH(dst_width);
+=20
++	sdev->cfg->set_burst_length(p_cfg, src_burst, dst_burst);
++
+ 	return 0;
+ }
+=20
+@@ -609,11 +624,11 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep=
+_dma_memcpy(
+ 		DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
+ 		DMA_CHAN_CFG_DST_LINEAR_MODE |
+ 		DMA_CHAN_CFG_SRC_LINEAR_MODE |
+-		DMA_CHAN_CFG_SRC_BURST(burst) |
+ 		DMA_CHAN_CFG_SRC_WIDTH(width) |
+-		DMA_CHAN_CFG_DST_BURST(burst) |
+ 		DMA_CHAN_CFG_DST_WIDTH(width);
+=20
++	sdev->cfg->set_burst_length(&v_lli->cfg, burst, burst);
++
+ 	sun6i_dma_lli_add(NULL, v_lli, p_lli, txd);
+=20
+ 	sun6i_dma_dump_lli(vchan, v_lli);
+@@ -1025,6 +1040,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D =
+{
+ 	.nr_max_channels =3D 16,
+ 	.nr_max_requests =3D 30,
+ 	.nr_max_vchans   =3D 53,
++	.set_burst_length =3D sun6i_set_burst_length_a31,
+ };
+=20
+ /*
+@@ -1037,6 +1053,7 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =3D =
+{
+ 	.nr_max_requests =3D 24,
+ 	.nr_max_vchans   =3D 37,
+ 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
++	.set_burst_length =3D sun6i_set_burst_length_a31,
+ };
+=20
+ static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
+@@ -1044,6 +1061,7 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D=
+ {
+ 	.nr_max_requests =3D 28,
+ 	.nr_max_vchans   =3D 39,
+ 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
++	.set_burst_length =3D sun6i_set_burst_length_a31,
+ };
+=20
+ /*
+@@ -1056,6 +1074,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
+ 	.nr_max_requests =3D 27,
+ 	.nr_max_vchans   =3D 34,
+ 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
++	.set_burst_length =3D sun6i_set_burst_length_h3,
+ };
+=20
+ /*
+@@ -1068,6 +1087,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D =
+{
+ 	.nr_max_requests =3D 23,
+ 	.nr_max_vchans   =3D 24,
+ 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
++	.set_burst_length =3D sun6i_set_burst_length_a31,
+ };
+=20
+ static const struct of_device_id sun6i_dma_match[] =3D {
 --=20
 2.14.1
 
