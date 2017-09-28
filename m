@@ -1,176 +1,177 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
-Date: Thu, 28 Sep 2017 14:11:40 +0100
-Message-ID: <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v3 14/22] firmware: arm_scmi: add per-protocol channels support using idr objects
+Date: Thu, 28 Sep 2017 14:11:38 +0100
+Message-ID: <1506604306-20739-15-git-send-email-sudeep.holla@arm.com>
 References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506604306-20739-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds ARM MHU specific mailbox interface for SCMI.
+In order to maintain the channel information per protocol, we need
+some sort of list or hashtable to hold all this information. IDR
+provides sparse array mapping of small integer ID numbers onto arbitrary
+pointers. In this case the arbitrary pointers can be pointers to the
+channel information.
 
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+This patch adds support for per-protocol channels using those idr
+objects.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/Makefile     |   1 +
- drivers/firmware/arm_scmi/arm_mhu_if.c | 106 +++++++++++++++++++++++++++++++++
- drivers/firmware/arm_scmi/driver.c     |   3 +
- drivers/firmware/arm_scmi/mbox_if.h    |   3 +
- 4 files changed, 113 insertions(+)
- create mode 100644 drivers/firmware/arm_scmi/arm_mhu_if.c
+ drivers/firmware/arm_scmi/driver.c | 47 +++++++++++++++++++++++++++++---------
+ 1 file changed, 36 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 733157c5b4e2..7fb026c71833 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
- arm_scmi-y = base.o clock.o driver.o mbox_if.o perf.o power.o sensors.o
-+arm_scmi-$(CONFIG_ARM_MHU) += arm_mhu_if.o
-diff --git a/drivers/firmware/arm_scmi/arm_mhu_if.c b/drivers/firmware/arm_scmi/arm_mhu_if.c
-new file mode 100644
-index 000000000000..2271a4811378
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/arm_mhu_if.c
-@@ -0,0 +1,106 @@
-+/*
-+ * System Control and Management Interface (SCMI) MHU mailbox interface
-+ *
-+ * Copyright (C) 2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "common.h"
-+#include "mbox_if.h"
-+
-+union mhu_data {
-+	void *ptr;
-+	u32 val;
-+};
-+
-+static void mhu_tx_prepare(struct mbox_client *cl, void *m)
-+{
-+	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-+	union mhu_data tmp;
-+
-+	scmi_generic_tx_prepare(cinfo, m);
-+
-+	/* clear only the relavant bit */
-+	tmp.ptr = cinfo->priv;
-+	*(u32 *)m &= tmp.val;
-+}
-+
-+static void mhu_rx_callback(struct mbox_client *cl, void *m)
-+{
-+	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-+
-+	scmi_generic_rx_callback(cinfo);
-+}
-+
-+static int mhu_mbox_request_channel(struct scmi_chan_info *cinfo, int index)
-+{
-+	int ret = 0;
-+	struct mbox_client *cl = &cinfo->cl;
-+	struct device_node *np = cl->dev->of_node;
-+	union mhu_data tmp = {0};
-+
-+	if (index != 0 && index != 1) /* Tx = 0, Rx =1 */
-+		return -EINVAL;
-+
-+	cl->rx_callback = mhu_rx_callback;
-+	cl->tx_prepare = mhu_tx_prepare;
-+
-+	ret = of_property_read_u32_index(np, "mbox-data", index, &tmp.val);
-+	if (ret)
-+		return ret;
-+
-+	cinfo->chan = mbox_request_channel(cl, index);
-+	if (IS_ERR(cinfo->chan))
-+		ret = PTR_ERR(cinfo->chan);
-+
-+	cinfo->priv = tmp.ptr;
-+
-+	return ret;
-+}
-+
-+static int mhu_mbox_send_message(struct scmi_chan_info *cinfo, void *msg)
-+{
-+	struct scmi_xfer *t = msg;
-+
-+	t->con_priv = cinfo->priv;
-+
-+	return mbox_send_message(cinfo->chan, msg);
-+}
-+
-+static void mhu_mbox_client_txdone(struct scmi_chan_info *cinfo, int r)
-+{
-+	mbox_client_txdone(cinfo->chan, r);
-+}
-+
-+static void mhu_mbox_free_channel(struct scmi_chan_info *cinfo)
-+{
-+	mbox_free_channel(cinfo->chan);
-+}
-+
-+static struct scmi_mbox_ops arm_mhu_mbox_ops = {
-+	.request_channel = mhu_mbox_request_channel,
-+	.send_message = mhu_mbox_send_message,
-+	.client_txdone = mhu_mbox_client_txdone,
-+	.free_channel = mhu_mbox_free_channel,
-+};
-+
-+const struct scmi_desc mhu_scmi_desc = {
-+	.max_rx_timeout_ms = 30,
-+	.max_msg = 20,
-+	.max_msg_size = 128,
-+	.mbox_ops = &arm_mhu_mbox_ops,
-+};
 diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 97285a22dfaa..bdc9c566e6c1 100644
+index 93b3bd8d437f..92ef21d6aa5a 100644
 --- a/drivers/firmware/arm_scmi/driver.c
 +++ b/drivers/firmware/arm_scmi/driver.c
-@@ -648,6 +648,9 @@ EXPORT_SYMBOL_GPL(devm_scmi_handle_get);
- /* Each compatible listed below must have descriptor associated with it */
- static const struct of_device_id scmi_of_match[] = {
- 	{ .compatible = "arm,scmi", .data = &scmi_generic_desc },
-+#if IS_REACHABLE(CONFIG_ARM_MHU)
-+	{ .compatible = "arm,mhu-scmi", .data = &mhu_scmi_desc },
-+#endif
- 	{ /* Sentinel */ },
- };
+@@ -128,7 +128,7 @@ struct scmi_chan_info {
+  * @version: SCMI revision information containing protocol version,
+  *	implementation version and (sub-)vendor identification.
+  * @minfo: Message info
+- * @tx_cinfo: Reference to SCMI channel information
++ * @tx_idr: IDR object to map protocol id to channel info pointer
+  * @protocols_imp: list of protocols implemented, currently maximum of
+  *	MAX_PROTOCOLS_IMP elements allocated by the base protocol
+  * @node: list head
+@@ -140,7 +140,7 @@ struct scmi_info {
+ 	struct scmi_revision_info version;
+ 	struct scmi_handle handle;
+ 	struct scmi_xfers_info minfo;
+-	struct scmi_chan_info *tx_cinfo;
++	struct idr tx_idr;
+ 	u8 *protocols_imp;
+ 	struct list_head node;
+ 	int users;
+@@ -413,7 +413,11 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	int timeout;
+ 	struct scmi_info *info = handle_to_scmi_info(handle);
+ 	struct device *dev = info->dev;
+-	struct scmi_chan_info *cinfo = info->tx_cinfo;
++	struct scmi_chan_info *cinfo;
++
++	cinfo = idr_find(&info->tx_idr, xfer->hdr.protocol_id);
++	if (unlikely(!cinfo))
++		return -EINVAL;
  
-diff --git a/drivers/firmware/arm_scmi/mbox_if.h b/drivers/firmware/arm_scmi/mbox_if.h
-index 02baa73e8613..a23fc6d7a91f 100644
---- a/drivers/firmware/arm_scmi/mbox_if.h
-+++ b/drivers/firmware/arm_scmi/mbox_if.h
-@@ -66,3 +66,6 @@ void scmi_generic_rx_callback(struct scmi_chan_info *cinfo);
- void scmi_generic_tx_prepare(struct scmi_chan_info *cinfo, void *m);
+ 	ret = mbox_send_message(cinfo->chan, xfer);
+ 	if (ret < 0) {
+@@ -771,13 +775,18 @@ static int scmi_mailbox_check(struct device_node *np)
+ 	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
+ }
  
- extern const struct scmi_desc scmi_generic_desc;
-+#if IS_REACHABLE(CONFIG_ARM_MHU)
-+extern const struct scmi_desc mhu_scmi_desc;
-+#endif
+-static int scmi_mbox_free_channel(struct scmi_chan_info *cinfo)
++static int scmi_mbox_free_channel(int id, void *p, void *data)
+ {
++	struct scmi_chan_info *cinfo = p;
++	struct idr *idr = data;
++
+ 	if (!IS_ERR_OR_NULL(cinfo->chan)) {
+ 		mbox_free_channel(cinfo->chan);
+ 		cinfo->chan = NULL;
+ 	}
+ 
++	idr_remove(idr, id);
++
+ 	return 0;
+ }
+ 
+@@ -785,6 +794,7 @@ static int scmi_remove(struct platform_device *pdev)
+ {
+ 	int ret = 0;
+ 	struct scmi_info *info = platform_get_drvdata(pdev);
++	struct idr *idr = &info->tx_idr;
+ 
+ 	of_platform_depopulate(&pdev->dev);
+ 
+@@ -795,28 +805,34 @@ static int scmi_remove(struct platform_device *pdev)
+ 		list_del(&info->node);
+ 	mutex_unlock(&scmi_list_mutex);
+ 
+-	if (!ret)
++	if (!ret) {
+ 		/* Safe to free channels since no more users */
+-		return scmi_mbox_free_channel(info->tx_cinfo);
++		ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
++		idr_destroy(&info->tx_idr);
++	}
+ 
+ 	return ret;
+ }
+ 
+-static inline int scmi_mbox_chan_setup(struct scmi_info *info)
++static inline int
++scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
+ {
+ 	int ret;
+ 	struct resource res;
+ 	resource_size_t size;
+-	struct device *dev = info->dev;
+ 	struct device_node *shmem, *np = dev->of_node;
+ 	struct scmi_chan_info *cinfo;
+ 	struct mbox_client *cl;
+ 
++	if (scmi_mailbox_check(np)) {
++		cinfo = idr_find(&info->tx_idr, SCMI_PROTOCOL_BASE);
++		goto idr_alloc;
++	}
++
+ 	cinfo = devm_kzalloc(info->dev, sizeof(*cinfo), GFP_KERNEL);
+ 	if (!cinfo)
+ 		return -ENOMEM;
+ 
+-	info->tx_cinfo = cinfo;
+ 	cinfo->dev = dev;
+ 
+ 	cl = &cinfo->cl;
+@@ -850,6 +866,13 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
+ 		return ret;
+ 	}
+ 
++idr_alloc:
++	ret = idr_alloc(&info->tx_idr, cinfo, prot_id, prot_id + 1, GFP_KERNEL);
++	if (ret != prot_id) {
++		dev_err(dev, "unable to allocate SCMI idr slot err %d\n", ret);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -868,6 +891,8 @@ scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
+ 
+ 	platform_set_drvdata(cdev, info);
+ 
++	scmi_mbox_chan_setup(info, &cdev->dev, match->protocol_id);
++
+ 	init_ret = match->fn(&info->handle);
+ 	if (init_ret) {
+ 		dev_err(info->dev, "SCMI protocol %d init error %d\n",
+@@ -906,19 +931,19 @@ static int scmi_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	platform_set_drvdata(pdev, info);
++	idr_init(&info->tx_idr);
+ 
+ 	handle = &info->handle;
+ 	handle->dev = info->dev;
+ 	handle->version = &info->version;
+ 
+-	ret = scmi_mbox_chan_setup(info);
++	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE);
+ 	if (ret)
+ 		return ret;
+ 
+ 	ret = scmi_base_protocol_init(handle);
+ 	if (ret) {
+ 		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
+-		scmi_mbox_free_channel(info->tx_cinfo);
+ 		return ret;
+ 	}
+ 
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
