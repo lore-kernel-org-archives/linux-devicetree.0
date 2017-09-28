@@ -1,71 +1,160 @@
-From: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH v3 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370 variants.
-Date: Thu, 28 Sep 2017 13:57:56 +1300
-Message-ID: <20170928005756.3938-2-kalyan.kinthada@alliedtelesis.co.nz>
-References: <20170928005756.3938-1-kalyan.kinthada@alliedtelesis.co.nz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170928005756.3938-1-kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH v4 01/11] dmaengine: sun6i: Correct setting of
+ clock autogating register for A83T/H3
+Date: Thu, 28 Sep 2017 03:49:18 +0200
+Message-ID: <19ee2f2f-a829-44f8-ae3b-2903b13537c2@rwthex-w2-a.rwth-ad.de>
+References: <20170928014928.2272-1-stefan.bruens@rwth-aachen.de>
+Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBN5KWHHAKGQE6ZPZ26Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170928014928.2272-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When the arbitration between NOR and NAND flash is enabled
-the <FORCE_CSX> field bit[21] in the Data Flash Control Register
-needs to be set to 1 according to guidleine GL-5830741 mentioned
-in Marvell Errata document MV-S501377-00, Rev. D.
+The H83T uses a compatible string different from the A23, but requires
+the same clock autogating register setting.
 
-This commit sets the FORCE_CSX bit to 1 for all
-ARMADA370 variants as the arbitration is always enabled by default.
-This change does not apply for pxa3xx variants because the FORCE_CSX
-bit does not exist/reserved on the NFCv1.
+The H3 also requires setting the clock autogating register, but has
+the register at a different offset.
 
-The NDCR_ND_MODE conflicts with the new NDCR_FORCE_CSX but is unused so
-remove it along with NDCR_NAND_MODE.
+Add three suitable callbacks for the existing controller generations
+and set it in the controller config structure.
 
-Signed-off-by: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
 ---
- drivers/mtd/nand/pxa3xx_nand.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
-index 85cff68643e0..a6a7a5af7bed 100644
---- a/drivers/mtd/nand/pxa3xx_nand.c
-+++ b/drivers/mtd/nand/pxa3xx_nand.c
-@@ -67,8 +67,7 @@
- #define NDCR_DWIDTH_M		(0x1 << 26)
- #define NDCR_PAGE_SZ		(0x1 << 24)
- #define NDCR_NCSX		(0x1 << 23)
--#define NDCR_ND_MODE		(0x3 << 21)
--#define NDCR_NAND_MODE   	(0x0)
-+#define NDCR_FORCE_CSX		(0x1 << 21)
- #define NDCR_CLR_PG_CNT		(0x1 << 20)
- #define NFCV1_NDCR_ARB_CNTL	(0x1 << 19)
- #define NFCV2_NDCR_STOP_ON_UNCOR	(0x1 << 19)
-@@ -1464,6 +1463,9 @@ static int pxa3xx_nand_config_ident(struct pxa3xx_nand_info *info)
- 	info->chunk_size = PAGE_CHUNK_SIZE;
- 	info->reg_ndcr = 0x0; /* enable all interrupts */
- 	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN : 0;
-+	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#: GL-5830741 */
-+	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
-+		info->reg_ndcr |= NDCR_FORCE_CSX;
- 	info->reg_ndcr |= NDCR_RD_ID_CNT(READ_ID_BYTES);
- 	info->reg_ndcr |= NDCR_SPARE_EN;
- 
-@@ -1498,6 +1500,9 @@ static void pxa3xx_nand_detect_config(struct pxa3xx_nand_info *info)
- 	info->reg_ndcr = ndcr &
- 		~(NDCR_INT_MASK | NDCR_ND_ARB_EN | NFCV1_NDCR_ARB_CNTL);
- 	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN : 0;
-+	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#: GL-5830741 */
-+	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
-+		info->reg_ndcr |= NDCR_FORCE_CSX;
- 	info->ndtr0cs0 = nand_readl(info, NDTR0CS0);
- 	info->ndtr1cs0 = nand_readl(info, NDTR1CS0);
+Changes in v4:
+- Correct callback function signature, pass pointer to controller
+- sun6i_dma_dev refers to sun6i_dma_config and vice versa, add forward decl=
+aration
+- Fix config initialization
+
+Changes in v3:
+- Check for callback instead of using a no-op callback
+
+Changes in v2:
+- Use callback for autogating instead of variable for different SoC generat=
+ions
+
+ drivers/dma/sun6i-dma.c | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index bcd496edc70f..6f9d7c4ac7c0 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -48,6 +48,9 @@
+ #define SUN8I_DMA_GATE		0x20
+ #define SUN8I_DMA_GATE_ENABLE	0x4
+=20
++#define SUNXI_H3_SECURE_REG		0x20
++#define SUNXI_H3_DMA_GATE		0x28
++#define SUNXI_H3_DMA_GATE_ENABLE	0x4
+ /*
+  * Channels specific registers
+  */
+@@ -90,6 +93,9 @@
+ #define NORMAL_WAIT	8
+ #define DRQ_SDRAM	1
+=20
++/* forward declaration */
++struct sun6i_dma_dev;
++
+ /*
+  * Hardware channels / ports representation
+  *
+@@ -111,7 +117,7 @@ struct sun6i_dma_config {
+ 	 * however these SoCs really have and need this bit, as seen in the
+ 	 * BSP kernel source code.
+ 	 */
+-	bool gate_needed;
++	void (*clock_autogate_enable)(struct sun6i_dma_dev *);
+ };
+=20
+ /*
+@@ -267,6 +273,16 @@ static inline s8 convert_buswidth(enum dma_slave_buswi=
+dth addr_width)
+ 	return addr_width >> 1;
  }
--- 
+=20
++static void sun6i_enable_clock_autogate_a23(struct sun6i_dma_dev *sdev)
++{
++	writel(SUN8I_DMA_GATE_ENABLE, sdev->base + SUN8I_DMA_GATE);
++}
++
++static void sun6i_enable_clock_autogate_h3(struct sun6i_dma_dev *sdev)
++{
++	writel(SUNXI_H3_DMA_GATE_ENABLE, sdev->base + SUNXI_H3_DMA_GATE);
++}
++
+ static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+ {
+ 	struct sun6i_desc *txd =3D pchan->desc;
+@@ -1020,13 +1036,14 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =
+=3D {
+ 	.nr_max_channels =3D 8,
+ 	.nr_max_requests =3D 24,
+ 	.nr_max_vchans   =3D 37,
+-	.gate_needed	 =3D true,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
+ };
+=20
+ static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
+ 	.nr_max_channels =3D 8,
+ 	.nr_max_requests =3D 28,
+ 	.nr_max_vchans   =3D 39,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
+ };
+=20
+ /*
+@@ -1038,6 +1055,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
+ 	.nr_max_channels =3D 12,
+ 	.nr_max_requests =3D 27,
+ 	.nr_max_vchans   =3D 34,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
+ };
+=20
+ /*
+@@ -1049,7 +1067,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D =
+{
+ 	.nr_max_channels =3D 8,
+ 	.nr_max_requests =3D 23,
+ 	.nr_max_vchans   =3D 24,
+-	.gate_needed	 =3D true,
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
+ };
+=20
+ static const struct of_device_id sun6i_dma_match[] =3D {
+@@ -1199,8 +1217,8 @@ static int sun6i_dma_probe(struct platform_device *pd=
+ev)
+ 		goto err_dma_unregister;
+ 	}
+=20
+-	if (sdc->cfg->gate_needed)
+-		writel(SUN8I_DMA_GATE_ENABLE, sdc->base + SUN8I_DMA_GATE);
++	if (sdc->cfg->clock_autogate_enable)
++		sdc->cfg->clock_autogate_enable(sdc);
+=20
+ 	return 0;
+=20
+--=20
 2.14.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
