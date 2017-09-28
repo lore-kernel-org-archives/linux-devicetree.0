@@ -1,191 +1,80 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 8/8] ARM: dts: aspeed: Clean up UART nodes
-Date: Thu, 28 Sep 2017 17:21:49 +0930
-Message-ID: <20170928075149.8154-9-joel@jms.id.au>
-References: <20170928075149.8154-1-joel@jms.id.au>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 2/2] dt-bindings: i2c: Update documentation for "mv78230-a0-i2c"
+Date: Thu, 28 Sep 2017 09:56:38 +0200
+Message-ID: <87wp4jgssp.fsf@free-electrons.com>
+References: <20170928040407.8933-1-kalyan.kinthada@alliedtelesis.co.nz>
+        <20170928040407.8933-3-kalyan.kinthada@alliedtelesis.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170928075149.8154-1-joel@jms.id.au>
+In-Reply-To: <20170928040407.8933-3-kalyan.kinthada@alliedtelesis.co.nz>
+        (Kalyan Kinthada's message of "Thu, 28 Sep 2017 17:04:07 +1300")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Rick Altherr <raltherr@google.com>, Brendan Higgins <brendanhiggins@google.com>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-aspeed@lists.ozlabs.org
+To: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+Cc: jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
- - Shorten size of reg property so it covers only the implemented
- registers
+Hi Kalyan,
+ 
+ On jeu., sept. 28 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz> wrote:
 
- - Add VUART compatible
+> This commit modifies the documentation for
+> "marvell,mv78230-a0-i2c" compatible string.
+>
+> The "marvell,mv78230-a0-i2c" compatible string enables the workaround
+> for an i2c repeated start timing violation, but unlike
+> "marvell,mv78230-i2c" it disables the i2c offload support. This is
+> applicable to a number of SoCs such as early revisions of the Armada XP
+> and the Armada 38x.
+>
+> Deleted the special note for "marvell,mv78230-a0-i2c" as it can
+> be used by other SoCs as well.
+>
+> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> index 5c30026921ae..37c00ad1c0bb 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> @@ -10,10 +10,6 @@ Required properties :
+>                       - "marvell,mv64xxx-i2c"
+>                       - "marvell,mv78230-i2c"
+>                       - "marvell,mv78230-a0-i2c"
+> -                       * Note: Only use "marvell,mv78230-a0-i2c" for a
+> -                         very rare, initial version of the SoC which
+> -                         had broken offload support.  Linux
+> -                         auto-detects this and sets it appropriately.
 
- - Move stray uart1 in g5 definition
+I think here we should pour more details like what you wrote in the
+commit log. Maybe something like:
 
- - Remove outdated current-speed property. Different bootloaders use
- different speeds, so this is no longer helpful
+                        - "marvell,mv78230-a0-i2c": for controller which
+                          do not support offload but still have the i2c
+                          repeated start timing violation issue, such as
+                          the ones found in the Armada XP A0 and the
+                          Armada 38x SoCs.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- arch/arm/boot/dts/aspeed-g4.dtsi | 17 +++++++++--------
- arch/arm/boot/dts/aspeed-g5.dtsi | 36 ++++++++++++++++++------------------
- 2 files changed, 27 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 191c33d18122..7a4a53666d70 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -27,6 +27,7 @@
- 		serial2 = &uart3;
- 		serial3 = &uart4;
- 		serial4 = &uart5;
-+		serial5 = &vuart;
- 	};
- 
- 	cpus {
-@@ -199,7 +200,7 @@
- 
- 			uart1: serial@1e783000 {
- 				compatible = "ns16550a";
--				reg = <0x1e783000 0x1000>;
-+				reg = <0x1e783000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <9>;
- 				clocks = <&clk_uart>;
-@@ -209,7 +210,7 @@
- 
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
--				reg = <0x1e78d000 0x1000>;
-+				reg = <0x1e78d000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <32>;
- 				clocks = <&clk_uart>;
-@@ -219,7 +220,7 @@
- 
- 			uart3: serial@1e78e000 {
- 				compatible = "ns16550a";
--				reg = <0x1e78e000 0x1000>;
-+				reg = <0x1e78e000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <33>;
- 				clocks = <&clk_uart>;
-@@ -229,7 +230,7 @@
- 
- 			uart4: serial@1e78f000 {
- 				compatible = "ns16550a";
--				reg = <0x1e78f000 0x1000>;
-+				reg = <0x1e78f000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <34>;
- 				clocks = <&clk_uart>;
-@@ -239,7 +240,7 @@
- 
- 			uart5: serial@1e784000 {
- 				compatible = "ns16550a";
--				reg = <0x1e784000 0x1000>;
-+				reg = <0x1e784000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <10>;
- 				clocks = <&clk_uart>;
-@@ -248,9 +249,9 @@
- 				status = "disabled";
- 			};
- 
--			uart6: serial@1e787000 {
--				compatible = "ns16550a";
--				reg = <0x1e787000 0x1000>;
-+			vuart: vuart@1e787000 {
-+				compatible = "aspeed,ast2400-vuart";
-+				reg = <0x1e787000 0x40>;
- 				reg-shift = <2>;
- 				interrupts = <10>;
- 				clocks = <&clk_uart>;
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 251fc9f4637e..0b793305120a 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -27,6 +27,7 @@
- 		serial2 = &uart3;
- 		serial3 = &uart4;
- 		serial4 = &uart5;
-+		serial5 = &vuart;
- 	};
- 
- 	cpus {
-@@ -247,16 +248,6 @@
- 				status = "disabled";
- 			};
- 
--			uart1: serial@1e783000 {
--				compatible = "ns16550a";
--				reg = <0x1e783000 0x1000>;
--				reg-shift = <2>;
--				interrupts = <9>;
--				clocks = <&clk_uart>;
--				no-loopback-test;
--				status = "disabled";
--			};
--
- 			lpc: lpc@1e789000 {
- 				compatible = "aspeed,ast2500-lpc", "simple-mfd";
- 				reg = <0x1e789000 0x1000>;
-@@ -287,9 +278,19 @@
- 				};
- 			};
- 
-+			uart1: serial@1e783000 {
-+				compatible = "ns16550a";
-+				reg = <0x1e783000 0x20>;
-+				reg-shift = <2>;
-+				interrupts = <9>;
-+				clocks = <&clk_uart>;
-+				no-loopback-test;
-+				status = "disabled";
-+			};
-+
- 			uart2: serial@1e78d000 {
- 				compatible = "ns16550a";
--				reg = <0x1e78d000 0x1000>;
-+				reg = <0x1e78d000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <32>;
- 				clocks = <&clk_uart>;
-@@ -299,7 +300,7 @@
- 
- 			uart3: serial@1e78e000 {
- 				compatible = "ns16550a";
--				reg = <0x1e78e000 0x1000>;
-+				reg = <0x1e78e000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <33>;
- 				clocks = <&clk_uart>;
-@@ -309,7 +310,7 @@
- 
- 			uart4: serial@1e78f000 {
- 				compatible = "ns16550a";
--				reg = <0x1e78f000 0x1000>;
-+				reg = <0x1e78f000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <34>;
- 				clocks = <&clk_uart>;
-@@ -319,18 +320,17 @@
- 
- 			uart5: serial@1e784000 {
- 				compatible = "ns16550a";
--				reg = <0x1e784000 0x1000>;
-+				reg = <0x1e784000 0x20>;
- 				reg-shift = <2>;
- 				interrupts = <10>;
- 				clocks = <&clk_uart>;
--				current-speed = <38400>;
- 				no-loopback-test;
- 				status = "disabled";
- 			};
- 
--			uart6: serial@1e787000 {
--				compatible = "ns16550a";
--				reg = <0x1e787000 0x1000>;
-+			vuart: vuart@1e787000 {
-+				compatible = "aspeed,ast2500-vuart";
-+				reg = <0x1e787000 0x40>;
- 				reg-shift = <2>;
- 				interrupts = <10>;
- 				clocks = <&clk_uart>;
+And I still have to check it for Armada 375 and Armada 39x, but of
+course it is not preventing merging your patches.
+
+Gregory
+
+
+
+
+>   - interrupts      : The interrupt number
+>  
+>  Optional properties :
+> -- 
+> 2.14.1
+>
+
 -- 
-2.14.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
