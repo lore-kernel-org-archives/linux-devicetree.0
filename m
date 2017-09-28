@@ -1,50 +1,93 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 4/5] dmaengine: Add driver for NVIDIA Tegra AHB DMA
- controller
-Date: Thu, 28 Sep 2017 17:35:59 +0300
-Message-ID: <260fa409-0d07-ec9e-9e3b-fb08255026d8@gmail.com>
-References: <cover.1506380746.git.digetx@gmail.com>
- <0a45e058baba72124b91c663ce1d908d275f4044.1506380746.git.digetx@gmail.com>
- <20170928092949.GB30097@localhost>
- <b601b829-d87f-99e0-dcf9-ad3f9a7195df@gmail.com>
+From: matthew.gerlach@linux.intel.com
+Subject: Re: [PATCH v3 5/5] mtd: spi-nor: cadence-quadspi: Add runtime PM
+ support
+Date: Thu, 28 Sep 2017 08:01:36 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1709280757230.2488@mgerlach-VirtualBox>
+References: <20170924105924.23923-1-vigneshr@ti.com> <20170924105924.23923-6-vigneshr@ti.com> <3a1160f9-a0ae-c84c-d209-af97c3c3b0f6@gmail.com> <4ee69ea4-14cc-4305-bf3f-8fe76d43bf6b@ti.com> <fa700cdf-f0b5-779b-4f38-3138a7612cc2@gmail.com>
+ <038919d3-ff32-d0a7-4c0a-3be16436052d@ti.com> <e4ad5d80-9093-b667-f0a5-d3105be4e8cf@gmail.com> <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox> <fdfe29bf-ff46-7542-8e36-e8e45e1ca85f@gmail.com> <7237fa9e-4d3a-8a82-10c6-76737c23ed6f@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323329-1557128041-1506610898=:2488"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b601b829-d87f-99e0-dcf9-ad3f9a7195df@gmail.com>
-Content-Language: en-US
+In-Reply-To: <7237fa9e-4d3a-8a82-10c6-76737c23ed6f@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28.09.2017 17:06, Dmitry Osipenko wrote:
-> On 28.09.2017 12:29, Vinod Koul wrote:
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	ahb_seq  = burst << TEGRA_AHBDMA_CHANNEL_AHB_BURST_SHIFT;
->>> +	ahb_seq |= TEGRA_AHBDMA_CHANNEL_ADDR_WRAP;
->>> +	ahb_seq |= TEGRA_AHBDMA_CHANNEL_INTR_ENB;
->>> +
->>> +	writel_relaxed(ahb_seq,
->>> +		       ahbdma_chan->regs + TEGRA_AHBDMA_CHANNEL_AHB_SEQ);
->>> +
->>> +	writel_relaxed(ahb_addr,
->>> +		       ahbdma_chan->regs + TEGRA_AHBDMA_CHANNEL_AHB_PTR);
->>
->> oh no, you don't write to HW here. This can be called anytime when you have
->> txn running! You should save these and use them in prep_ calls.
->>
-> 
-> BTW, some of the DMA drivers have exactly the same problem. I now see that it is
-> actually documented explicitly in provider.txt, but that's inconsistent across
-> the actual drivers.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Also, shouldn't prep_ and dma_slave_config be protected with locking? I don't
-see DMA core doing any locking and seems none of the drivers too.
+--8323329-1557128041-1506610898=:2488
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
--- 
-Dmitry
+
+Hi Vignesh,
+
+I tried this patch on an Arria10 SOCFPGA devkit against the 4.1.33-ltsi 
+kernel, and it did not go well.  Commands to the flash chip timedout 
+resulting in the probe function failing.  I ran into other problems, not 
+related to cadence-quadspi, that prevented me from testing against 4.9 and 
+4.12 kernels, but I suspect similar behavior.
+
+Matthew Gerlach
+
+On Wed, 27 Sep 2017, Vignesh R wrote:
+
+> Hi Matthew,
+>
+> On Tuesday 26 September 2017 05:19 AM, Marek Vasut wrote:
+> [...]
+>>>>> Ok thanks! Do you know if pm_runtime_get_sync() can enable clocks for
+>>>>> QSPI on SoCFPGA or if clk_prepare_enable() is needed? Just trying to see
+>>>>> if its possible to get rid of clk_*() calls in favor of pm_*() calls.
+>>>>
+>>>> Not of the top of my head, sorry. +CC Matthew, he should know.
+>>>
+>>> I am not an expert at the clock framework nor the power management, but I
+>>> did ask around a bit.  No one I asked was planning to change the clk_*()
+>>> calls to pm_*() call, but the feedback was that it would be a good idea.
+>>
+>> The question is, if we do the replacement, will it break on socfpga ?
+>> A quick test might be useful.
+>>
+>
+> yes, a quick qspi test with clk_prepare_enable() replaced by pm_*() calls
+> like below patch would be helpful:
+>
+>
+> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+> index 53c7d8e0327a..7ad3e176cc88 100644
+> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+> @@ -34,6 +34,7 @@
+> #include <linux/sched.h>
+> #include <linux/spi/spi.h>
+> #include <linux/timer.h>
+> +#include <linux/pm_runtime.h>
+>
+> #define CQSPI_NAME                     "cadence-qspi"
+> #define CQSPI_MAX_CHIPSELECT           16
+> @@ -1206,11 +1207,8 @@ static int cqspi_probe(struct platform_device *pdev)
+>                return -ENXIO;
+>        }
+>
+> -       ret = clk_prepare_enable(cqspi->clk);
+> -       if (ret) {
+> -               dev_err(dev, "Cannot enable QSPI clock.\n");
+> -               return ret;
+> -       }
+> +       pm_runtime_enable(dev);
+> +       pm_runtime_get_sync(dev);
+>
+>        cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+>
+>
+>
+>
+>
+> -- 
+> Regards
+> Vignesh
+>
+--8323329-1557128041-1506610898=:2488--
