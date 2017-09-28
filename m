@@ -1,51 +1,79 @@
-From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-Subject: [PATCH 1/2] ARM: dts: Fix I2C repeated start issue on Armada-38x
-Date: Thu, 28 Sep 2017 17:04:06 +1300
-Message-ID: <20170928040407.8933-2-kalyan.kinthada@alliedtelesis.co.nz>
-References: <20170928040407.8933-1-kalyan.kinthada@alliedtelesis.co.nz>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170928040407.8933-1-kalyan.kinthada@alliedtelesis.co.nz>
-Sender: linux-i2c-owner@vger.kernel.org
-To: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@free-electrons.com, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wsa@the-dreams.de, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 11/11] of: mdio: Prevent of_mdiobus_register from
+ scanning mdio-mux nodes
+Date: Wed, 27 Sep 2017 21:50:46 -0700
+Message-ID: <c8697b60-294f-7cc1-8425-aa5b837fcca0@gmail.com>
+References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+ <20170927073414.17361-12-clabbe.montjoie@gmail.com>
+ <20170927141213.GF13516@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170927141213.GF13516-g2DYL2Zd6BY@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-All the Armada 38x(380, 385, 388) have a silicon issue in
-the I2C controller which violates the I2C repeated start timing
-(errata FE-8471889).
 
-i2c-mv64xxx driver handles this errata based on the compatible string
-"marvell,mv78230-a0-i2c".
 
-This patch activates the "marvell,mv78230-a0-i2c" compatible string
-for the I2C controller on armada-38x SoC based devices.
+On 09/27/2017 07:12 AM, Andrew Lunn wrote:
+> On Wed, Sep 27, 2017 at 09:34:14AM +0200, Corentin Labbe wrote:
+>> Each child node of an MDIO node is scanned as a PHY when calling
+>> of_mdiobus_register() givint the following result:
+>> [   18.175379] mdio_bus stmmac-0: /soc/ethernet@1c30000/mdio/mdio-mux has invalid PHY address
+>> [   18.175408] mdio_bus stmmac-0: scan phy mdio-mux at address 0
+>> [   18.175450] mdio_bus stmmac-0: scan phy mdio-mux at address 1
+>> [...]
+>> [   18.176420] mdio_bus stmmac-0: scan phy mdio-mux at address 30
+>> [   18.176452] mdio_bus stmmac-0: scan phy mdio-mux at address 31
+>>
+>> Since mdio-mux nodes are not PHY, this patch a way to to not scan
+>> them.
+> 
+> Hi Corentin
+> 
+> I still don't like this, but ...
 
-Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Me neither, even more so as I don't understand the reasoning behind
+putting the mux as a child node of the MDIO bus controller in the first
+place.
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 7ff0811e61db..4960722aab32 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -178,7 +178,7 @@
- 			};
- 
- 			i2c0: i2c@11000 {
--				compatible = "marvell,mv64xxx-i2c";
-+				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
- 				reg = <0x11000 0x20>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -189,7 +189,7 @@
- 			};
- 
- 			i2c1: i2c@11100 {
--				compatible = "marvell,mv64xxx-i2c";
-+				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
- 				reg = <0x11100 0x20>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+Also, you need to re-order patches such that this patch comes before the
+DTS changes.
+
+> 
+>>
+>> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/of/of_mdio.c | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+>> index d94dd8b77abd..d90ddb0d90f2 100644
+>> --- a/drivers/of/of_mdio.c
+>> +++ b/drivers/of/of_mdio.c
+>> @@ -190,6 +190,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>>  	struct device_node *child;
+>>  	bool scanphys = false;
+>>  	int addr, rc;
+>> +	static const struct of_device_id do_not_scan[] = {
+>> +		{ .compatible = "mdio-mux" },
+>> +		{}
+>> +	};
+> 
+> Please rename this to some less generic. What i don't want is other
+> compatible strings added here. We want to make the exception for
+> muxes, but nothing else. So something like compatible_muxes?
+> 
+>        Andrew
+> 
+
 -- 
-2.14.1
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
