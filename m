@@ -1,52 +1,28 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH 3/8] ARM: dts: aspeed: Add I2C buses
-Date: Thu, 28 Sep 2017 11:35:33 -0700
-Message-ID: <CAFd5g46LrdCkPq-dZyrA3Nnw28=r-sCsPvp5bWngYUF=3RmDYA@mail.gmail.com>
-References: <20170928075149.8154-1-joel@jms.id.au> <20170928075149.8154-4-joel@jms.id.au>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: dts: aspeed-romulus: Add I2C devices
+Date: Thu, 28 Sep 2017 11:36:24 -0700
+Message-ID: <CAFd5g46bGnA4dkOc3-VNzRwt36wp2Er7OeVPeNbqHBBVBgmxaw@mail.gmail.com>
+References: <20170928075149.8154-1-joel@jms.id.au> <20170928075149.8154-5-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170928075149.8154-4-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Rick Altherr <raltherr@google.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, linux-aspeed@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170928075149.8154-5-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 12:51 AM, Joel Stanley <joel@jms.id.au> wrote:
-> Now with an upstream i2c bus driver, we can add  the 14 i2c buses that
-> exist in ASPEED G4 and G5 generation SoCs.
+On Thu, Sep 28, 2017 at 12:51 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> Enable the buses that are in use and the devices that are attached.
+> Currently that is just the battery backed RTC.
 >
-> It also adds aliases for the 14 built-in I2C busses to ensure userspace
-> sees the numbering staring from zero and counting up.
+> Some of these buses are for hotplugged cards, such as PCIe cards. Others
+> do not yet have upstream drivers, so there are no devices attached.
 >
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-
-nit: can we make the i2c labels and the pinctrl labels match?
-
-For example:
-
-> +
-> +       i2c13: i2c-bus@480 {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               #interrupt-cells = <1>;
-> +
-> +               reg = <0x480 0x40>;
-> +               compatible = "aspeed,ast2500-i2c-bus";
-> +               clocks = <&clk_apb>;
-> +               bus-frequency = <100000>;
-> +               interrupts = <13>;
-> +               interrupt-parent = <&i2c_ic>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_i2c14_default>;
-> +               status = "disabled";
-> +       };
-
-"i2c13" has a pinctrl-0 of "pinctrl_i2c14_default"
-
-I know that pinctrl_i2c14_default is consistent with the function and
-groups it uses, but I would like to see them all be consistent at some
-point in the future.
+Reviewed-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
