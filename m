@@ -1,32 +1,52 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
- DMA controller
-Date: Wed, 27 Sep 2017 16:32:40 -0700
-Message-ID: <20170927233240.GI457@codeaurora.org>
-References: <cover.1506380746.git.digetx@gmail.com>
- <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
- <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
- <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
- <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 11/12] dt-bindings: usb: mtu3: remove dummy clocks and add optional ones
+Date: Thu, 28 Sep 2017 08:17:19 +0800
+Message-ID: <a3918b553f483fd1a519fe09a3e5df48c5375b60.1506509659.git.chunfeng.yun@mediatek.com>
+References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+In-Reply-To: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/27, Jon Hunter wrote:
-> 
-> 
-> Well, the REQ_SEL should definitely be in the binding.
-> 
-> Laxman, Stephen, what are your thoughts on the TRIG_SEL field? Looks
+Remove dummy clocks for usb wakeup and add optional ones for
+mcu_bus and dma_bus bus.
 
-Wrong Stephen?
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ .../devicetree/bindings/usb/mediatek,mtu3.txt      |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+index 7c611d1..49c982b 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+@@ -14,9 +14,9 @@ Required properties:
+  - vusb33-supply : regulator of USB avdd3.3v
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+- - clock-names : must contain "sys_ck" and "ref_ck" for clock of controller;
+-	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
+-	depends on "mediatek,enable-wakeup"
++ - clock-names : must contain "sys_ck" for clock of controller,
++	the following clocks are optional:
++	"ref_ck", "mcu_ck" and "dam_ck";
+  - phys : a list of phandle + phy specifier pairs
+  - dr_mode : should be one of "host", "peripheral" or "otg",
+ 	refer to usb/generic.txt
+@@ -65,9 +65,7 @@ ssusb: usb@11271000 {
+ 	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
+ 		 <&pericfg CLK_PERI_USB0>,
+ 		 <&pericfg CLK_PERI_USB1>;
+-	clock-names = "sys_ck", "ref_ck",
+-		      "wakeup_deb_p0",
+-		      "wakeup_deb_p1";
++	clock-names = "sys_ck", "ref_ck";
+ 	vusb33-supply = <&mt6397_vusb_reg>;
+ 	vbus-supply = <&usb_p0_vbus>;
+ 	extcon = <&extcon_usb>;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.9.5
