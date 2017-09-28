@@ -1,65 +1,61 @@
-From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: Add max-expected-current properties for
- ina231 in Odroid XU3
-Date: Thu, 28 Sep 2017 14:50:15 +0200
-Message-ID: <1506603015-27202-5-git-send-email-m.purski@samsung.com>
-References: <1506603015-27202-1-git-send-email-m.purski@samsung.com>
-        <CGME20170928125109eucas1p1287998eb55b09d5eba9dc929f7dcb284@eucas1p1.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1506603015-27202-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [RFC PATCH 2/4] arm64: dts: exynos: add micro-USB connector node to
+ TM2 platforms
+Date: Thu, 28 Sep 2017 15:07:28 +0200
+Message-ID: <20170928130730.8747-3-a.hajda@samsung.com>
+References: <20170928130730.8747-1-a.hajda@samsung.com>
+ <CGME20170928130735eucas1p1298c683dcd7ab5f3ae7a5e19295d2a03@eucas1p1.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20170928130730.8747-1-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Set max-expected-current to values required by the documentation,
-in order to achieve desired precision.
-
-Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos5422-odroidxu3.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-index 9ed6564..aa19374 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-@@ -28,6 +28,7 @@
- 		compatible = "ti,ina231";
- 		reg = <0x40>;
- 		shunt-resistor = <10000>;
-+		max-expected-current = <9000>;
- 	};
- 
- 	/* memory: VDD_MEM */
-@@ -35,6 +36,7 @@
- 		compatible = "ti,ina231";
- 		reg = <0x41>;
- 		shunt-resistor = <10000>;
-+		max-expected-current = <3000>;
- 	};
- 
- 	/* GPU: VDD_G3D */
-@@ -42,6 +44,7 @@
- 		compatible = "ti,ina231";
- 		reg = <0x44>;
- 		shunt-resistor = <10000>;
-+		max-expected-current = <5000>;
- 	};
- 
- 	/* A7 cluster: VDD_KFC */
-@@ -49,6 +52,7 @@
- 		compatible = "ti,ina231";
- 		reg = <0x45>;
- 		shunt-resistor = <10000>;
-+		max-expected-current = <2000>;
- 	};
- };
- 
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+U2luY2UgVVNCIGNvbm5lY3RvciBiaW5kaW5ncyBhcmUgYXZhaWxhYmxlIHdlIGNhbiBkZXNjcmli
+ZSBpdCBvbiBUTTIoZSkuCgpTaWduZWQtb2ZmLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNh
+bXN1bmcuY29tPgotLS0KIC4uLi9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTItY29tbW9u
+LmR0c2kgICAgIHwgNDcgKysrKysrKysrKysrKysrKysrKystLQogMSBmaWxlIGNoYW5nZWQsIDQ0
+IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9i
+b290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTItY29tbW9uLmR0c2kgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi1jb21tb24uZHRzaQppbmRleCBlMzBiYWU0Y2Y4
+NzguLjM5YjFjYTBlZjRjZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3Mv
+ZXh5bm9zNTQzMy10bTItY29tbW9uLmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9leHlu
+b3MvZXh5bm9zNTQzMy10bTItY29tbW9uLmR0c2kKQEAgLTEzNSw2ICsxMzUsMjggQEAKIAkJCSJS
+Q1YiLCAiSFBPVVQzUiI7CiAJCXN0YXR1cyA9ICJva2F5IjsKIAl9OworCisJbXVzYl9jb246IG11
+c2JfY29ubmVjdG9yIHsKKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHVzYi1jb25uZWN0b3ItMTFw
+aW4iLCAidXNiLWNvbm5lY3RvciI7CisJCWxhYmVsID0gIm1pY3JvLXVzYiI7CisJCXR5cGUgPSAi
+YiI7CisJCXNpemUgPSAibWljcm8iOworCQltYXgtbW9kZSA9ICJocyI7CisKKwkJcG9ydCB7CisJ
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNlbGxzID0gPDA+OworCisJCQltdXNi
+X2Nvbl90b19tdWljOiBlbmRwb2ludEAwIHsKKwkJCQlyZWcgPSA8MD47CisJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZtdWljX3RvX211c2JfY29uPjsKKwkJCX07CisJCQltdXNiX2Nvbl90b19taGw6
+IGVuZHBvaW50QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm1o
+bF90b19tdXNiX2Nvbj47CisJCQl9OworCQl9OworCX07CiB9OwogCiAmYWRjIHsKQEAgLTc2OCw5
+ICs3OTAsMjIgQEAKIAkJY2xvY2tzID0gPCZwbXVfc3lzdGVtX2NvbnRyb2xsZXIgMD47CiAJCWNs
+b2NrLW5hbWVzID0gInh0YWwiOwogCi0JCXBvcnQgewotCQkJbWhsX3RvX2hkbWk6IGVuZHBvaW50
+IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdG9fbWhsPjsKKwkJcG9ydHMgeworCQkJ
+I2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJcG9ydEAw
+IHsKKwkJCQlyZWcgPSA8MD47CisJCQkJbWhsX3RvX2hkbWk6IGVuZHBvaW50IHsKKwkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZoZG1pX3RvX21obD47CisJCQkJfTsKKwkJCX07CisKKwkJCXBvcnRA
+MSB7CisJCQkJcmVnID0gPDE+OworCQkJCW1obF90b19tdXNiX2NvbjogZW5kcG9pbnQgeworCQkJ
+CQlyZW1vdGUtZW5kcG9pbnQgPSA8Jm11c2JfY29uX3RvX21obD47CisJCQkJfTsKIAkJCX07CiAJ
+CX07CiAJfTsKQEAgLTc4Nyw2ICs4MjIsMTIgQEAKIAogCQltdWljOiBtYXg3Nzg0My1tdWljIHsK
+IAkJCWNvbXBhdGlibGUgPSAibWF4aW0sbWF4Nzc4NDMtbXVpYyI7CisKKwkJCXBvcnQgeworCQkJ
+CW11aWNfdG9fbXVzYl9jb246IGVuZHBvaW50QDAgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8
+Jm11c2JfY29uX3RvX211aWM+OworCQkJCX07CisJCQl9OwogCQl9OwogCiAJCXJlZ3VsYXRvcnMg
+ewotLSAKMi4xNC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
