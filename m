@@ -1,42 +1,57 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v1 1/2] staging: Introduce NVIDIA Tegra20 video decoder
- driver
-Date: Thu, 28 Sep 2017 10:23:08 +0300
-Message-ID: <20170928072308.s7npizjfnhkxh6zb@mwanda>
-References: <cover.1506377430.git.digetx@gmail.com>
- <5c8b83775b982e6ee851c127444a8e839f422ad0.1506377430.git.digetx@gmail.com>
- <20170927094557.yr2fl5arodjnh637@mwanda>
- <2b77bfa7-1272-3d11-9190-326fa0f85f22@gmail.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 05/11] dt-bindings: net: dwmac-sun8i:
+ update documentation about integrated PHY
+Date: Thu, 28 Sep 2017 09:37:08 +0200
+Message-ID: <20170928073708.GB32676@Red>
+References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+ <20170927073414.17361-6-clabbe.montjoie@gmail.com>
+ <20170927140210.GE13516@lunn.ch>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBK6NWLHAKGQE6JKCFIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <2b77bfa7-1272-3d11-9190-326fa0f85f22@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170927140210.GE13516-g2DYL2Zd6BY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 02:28:04AM +0300, Dmitry Osipenko wrote:
-> >> +	if (is_baseline_profile)
-> >> +		frame->aux_paddr = 0xF4DEAD00;
-> > 
-> > The handling of is_baseline_profile is strange to me.  It feels like we
-> > should always check it before we use ->aux_paddr but we don't ever do
-> > that.
-> > 
+On Wed, Sep 27, 2017 at 04:02:10PM +0200, Andrew Lunn wrote:
+> Hi Corentin
 > 
-> In a case of baseline profile, aux buffer isn't needed, HW should't use it. Aux
-> phys address is set to a predefined and invalid address, so that in a case of
-> VDE trying to use it, its invalid memory accesses would be reported in KMSG by
-> memory controller driver and the reported invalid addresses would be known to be
-> associated with the aux buffer. I'm not sure what you are meaning.
+> > +Required properties for the mdio-mux node:
+> > +  - compatible = "mdio-mux"
+> 
+> This is too generic. Please add a more specific compatible for this
+> particular mux. You can keep "mdio-mux", since that is what the MDIO
+> subsystem will look for.
+> 
 
-It's not used perhaps, but we do write it to the hardware, right?
+I will add allwinner,sun8i-h3-mdio-mux
 
-	tegra_vde_write_iram_entry(iram_tables, 0, i, value, aux_paddr);
+> > +Required properties of the integrated phy node:
+> >  - clocks: a phandle to the reference clock for the EPHY
+> >  - resets: a phandle to the reset control for the EPHY
+> > +- phy-is-integrated
+> 
+> So the last thing you said is that the mux is not the problem
+> here. Something else is locking up. Did you discover what?
+> 
+> I really would like phy-is-integrated to go away.
+> 
 
-It's just strange.
+I have found the problem: by enabling ephy clk/reset the timeout does not occur anymore.
+So we could remove phy-is-integrated by:
+Moving internal phy clk/reset handling in mdio_mux_syscon_switch_fn()
+But this means:
+- getting internalphy node always by manually get internal_mdio/internal_phy (and not by the given phyhandle)
+- doing some unnecessary tasks (enable/scan/disable) when external_phy is needed
 
-regards,
-dan carpenter
+Regards
