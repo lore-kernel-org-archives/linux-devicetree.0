@@ -1,86 +1,72 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [RFC PATCH 3/4] extcon: add possibility to get extcon device by of
- node
-Date: Thu, 28 Sep 2017 15:07:29 +0200
-Message-ID: <20170928130730.8747-4-a.hajda@samsung.com>
-References: <20170928130730.8747-1-a.hajda@samsung.com>
- <CGME20170928130736eucas1p250bb9d854204ea142a2160cd9ab56194@eucas1p2.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20170928130730.8747-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v3 01/22] dt-bindings: mailbox: add support for mailbox client shared memory
+Date: Thu, 28 Sep 2017 14:11:25 +0100
+Message-ID: <1506604306-20739-2-git-send-email-sudeep.holla@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-U2luY2UgZXh0Y29uIHByb3BlcnR5IGlzIG5vdCBhbGxvd2VkIGluIERULCBleHRjb24gc3Vic3lz
-dGVtIHJlcXVpcmVzCmFub3RoZXIgd2F5IHRvIGdldCBleHRjb24gZGV2aWNlLiBMZXRzIHRyeSB0
-aGUgc2ltcGxlc3QgYXBwcm9hY2ggLSBnZXQKZWRldiBieSBvZl9ub2RlLgoKU2lnbmVkLW9mZi1i
-eTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tCiBkcml2ZXJzL2V4dGNv
-bi9leHRjb24uYyB8IDQ0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tCiBpbmNsdWRlL2xpbnV4L2V4dGNvbi5oICB8ICA2ICsrKysrKwogMiBmaWxlcyBjaGFuZ2Vk
-LCA0MCBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L2V4dGNvbi9leHRjb24uYyBiL2RyaXZlcnMvZXh0Y29uL2V4dGNvbi5jCmluZGV4IGNiMzhjMjc0
-NzY4NC4uZmRiOGMxZDc2N2MxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2V4dGNvbi9leHRjb24uYwor
-KysgYi9kcml2ZXJzL2V4dGNvbi9leHRjb24uYwpAQCAtMTMzNiw2ICsxMzM2LDI4IEBAIHZvaWQg
-ZXh0Y29uX2Rldl91bnJlZ2lzdGVyKHN0cnVjdCBleHRjb25fZGV2ICplZGV2KQogRVhQT1JUX1NZ
-TUJPTF9HUEwoZXh0Y29uX2Rldl91bnJlZ2lzdGVyKTsKIAogI2lmZGVmIENPTkZJR19PRgorCisv
-KgorICogZXh0Y29uX2dldF9lZGV2X2J5X29mX25vZGUgLSBHZXQgdGhlIGV4dGNvbiBkZXZpY2Ug
-ZnJvbSBkZXZpY2V0cmVlLgorICogQG5vZGUJOiBPRiBub2RlIGlkZW50eWZ5aW5nIGVkZXYKKyAq
-CisgKiBSZXR1cm4gdGhlIHBvaW50ZXIgb2YgZXh0Y29uIGRldmljZSBpZiBzdWNjZXNzIG9yIEVS
-Ul9QVFIoZXJyKSBpZiBmYWlsLgorICovCitzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uX2dldF9l
-ZGV2X2J5X29mX25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQoreworCXN0cnVjdCBleHRj
-b25fZGV2ICplZGV2OworCisJbXV0ZXhfbG9jaygmZXh0Y29uX2Rldl9saXN0X2xvY2spOworCWxp
-c3RfZm9yX2VhY2hfZW50cnkoZWRldiwgJmV4dGNvbl9kZXZfbGlzdCwgZW50cnkpCisJCWlmIChl
-ZGV2LT5kZXYucGFyZW50ICYmIGVkZXYtPmRldi5wYXJlbnQtPm9mX25vZGUgPT0gbm9kZSkKKwkJ
-CWdvdG8gZW5kOworCWVkZXYgPSBFUlJfUFRSKC1FUFJPQkVfREVGRVIpOworZW5kOgorCW11dGV4
-X3VubG9jaygmZXh0Y29uX2Rldl9saXN0X2xvY2spOworCisJcmV0dXJuIGVkZXY7Cit9CisKIC8q
-CiAgKiBleHRjb25fZ2V0X2VkZXZfYnlfcGhhbmRsZSAtIEdldCB0aGUgZXh0Y29uIGRldmljZSBm
-cm9tIGRldmljZXRyZWUuCiAgKiBAZGV2CQk6IHRoZSBpbnN0YW5jZSB0byB0aGUgZ2l2ZW4gZGV2
-aWNlCkBAIC0xMzYzLDI1ICsxMzg1LDI3IEBAIHN0cnVjdCBleHRjb25fZGV2ICpleHRjb25fZ2V0
-X2VkZXZfYnlfcGhhbmRsZShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpbmRleCkKIAkJcmV0dXJu
-IEVSUl9QVFIoLUVOT0RFVik7CiAJfQogCi0JbXV0ZXhfbG9jaygmZXh0Y29uX2Rldl9saXN0X2xv
-Y2spOwotCWxpc3RfZm9yX2VhY2hfZW50cnkoZWRldiwgJmV4dGNvbl9kZXZfbGlzdCwgZW50cnkp
-IHsKLQkJaWYgKGVkZXYtPmRldi5wYXJlbnQgJiYgZWRldi0+ZGV2LnBhcmVudC0+b2Zfbm9kZSA9
-PSBub2RlKSB7Ci0JCQltdXRleF91bmxvY2soJmV4dGNvbl9kZXZfbGlzdF9sb2NrKTsKLQkJCW9m
-X25vZGVfcHV0KG5vZGUpOwotCQkJcmV0dXJuIGVkZXY7Ci0JCX0KLQl9Ci0JbXV0ZXhfdW5sb2Nr
-KCZleHRjb25fZGV2X2xpc3RfbG9jayk7CisJZWRldiA9IGV4dGNvbl9nZXRfZWRldl9ieV9vZl9u
-b2RlKG5vZGUpOwogCW9mX25vZGVfcHV0KG5vZGUpOwogCi0JcmV0dXJuIEVSUl9QVFIoLUVQUk9C
-RV9ERUZFUik7CisJcmV0dXJuIGVkZXY7CiB9CisKICNlbHNlCisKK3N0cnVjdCBleHRjb25fZGV2
-ICpleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZShzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUpCit7
-CisJcmV0dXJuIEVSUl9QVFIoLUVOT1NZUyk7Cit9CisKIHN0cnVjdCBleHRjb25fZGV2ICpleHRj
-b25fZ2V0X2VkZXZfYnlfcGhhbmRsZShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpbmRleCkKIHsK
-IAlyZXR1cm4gRVJSX1BUUigtRU5PU1lTKTsKIH0KKwogI2VuZGlmIC8qIENPTkZJR19PRiAqLwor
-CitFWFBPUlRfU1lNQk9MX0dQTChleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZSk7CiBFWFBPUlRf
-U1lNQk9MX0dQTChleHRjb25fZ2V0X2VkZXZfYnlfcGhhbmRsZSk7CiAKIC8qKgpkaWZmIC0tZ2l0
-IGEvaW5jbHVkZS9saW51eC9leHRjb24uaCBiL2luY2x1ZGUvbGludXgvZXh0Y29uLmgKaW5kZXgg
-NzQ0ZDYwY2E4MGMzLi4yZjg4ZTc0OTE2NzIgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvZXh0
-Y29uLmgKKysrIGIvaW5jbHVkZS9saW51eC9leHRjb24uaApAQCAtMjYxLDYgKzI2MSw3IEBAIGV4
-dGVybiB2b2lkIGRldm1fZXh0Y29uX3VucmVnaXN0ZXJfbm90aWZpZXJfYWxsKHN0cnVjdCBkZXZp
-Y2UgKmRldiwKICAqIEZvbGxvd2luZyBBUElzIGdldCB0aGUgZXh0Y29uX2RldiBmcm9tIGRldmlj
-ZXRyZWUgb3IgYnkgdGhyb3VnaCBleHRjb24gbmFtZS4KICAqLwogZXh0ZXJuIHN0cnVjdCBleHRj
-b25fZGV2ICpleHRjb25fZ2V0X2V4dGNvbl9kZXYoY29uc3QgY2hhciAqZXh0Y29uX25hbWUpOwor
-ZXh0ZXJuIHN0cnVjdCBleHRjb25fZGV2ICpleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZShzdHJ1
-Y3QgZGV2aWNlX25vZGUgKm5vZGUpOwogZXh0ZXJuIHN0cnVjdCBleHRjb25fZGV2ICpleHRjb25f
-Z2V0X2VkZXZfYnlfcGhhbmRsZShzdHJ1Y3QgZGV2aWNlICpkZXYsCiAJCQkJCQkgICAgIGludCBp
-bmRleCk7CiAKQEAgLTM4Miw2ICszODMsMTEgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgZXh0Y29u
-X2RldiAqZXh0Y29uX2dldF9leHRjb25fZGV2KGNvbnN0IGNoYXIgKmV4dGNvbl9uYW1lKQogCXJl
-dHVybiBFUlJfUFRSKC1FTk9ERVYpOwogfQogCitzdGF0aWMgaW5saW5lIHN0cnVjdCBleHRjb25f
-ZGV2ICpleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZShzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUp
-Cit7CisJcmV0dXJuIEVSUl9QVFIoLUVOT0RFVik7Cit9CisKIHN0YXRpYyBpbmxpbmUgc3RydWN0
-IGV4dGNvbl9kZXYgKmV4dGNvbl9nZXRfZWRldl9ieV9waGFuZGxlKHN0cnVjdCBkZXZpY2UgKmRl
-diwKIAkJCQlpbnQgaW5kZXgpCiB7Ci0tIAoyLjE0LjEKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Many users of the mailbox controllers depend on the shared memory
+between the two end points to exchange the main data while using simple
+doorbell mechanism to alert the end points of the presence of a message.
+
+This patch defines device tree bindings to represent such shared memory
+in a generic way.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ .../devicetree/bindings/mailbox/mailbox.txt        | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
+index be05b9746c69..af8ecee2ac68 100644
+--- a/Documentation/devicetree/bindings/mailbox/mailbox.txt
++++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
+@@ -23,6 +23,11 @@ assign appropriate mailbox channel to client drivers.
+ 
+ Optional property:
+ - mbox-names: List of identifier strings for each mailbox channel.
++- shmem : List of phandle pointing to the shared memory(SHM) area between the
++	  users of these mailboxes for IPC, one for each mailbox. This shared
++	  memory can be part of any memory reserved for the purpose of this
++	  communication between the mailbox client and the remote.
++
+ 
+ Example:
+ 	pwr_cntrl: power {
+@@ -30,3 +35,26 @@ assign appropriate mailbox channel to client drivers.
+ 		mbox-names = "pwr-ctrl", "rpc";
+ 		mboxes = <&mailbox 0 &mailbox 1>;
+ 	};
++
++Example with shared memory(shmem):
++
++	sram: sram@50000000 {
++		compatible = "mmio-sram";
++		reg = <0x50000000 0x10000>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x50000000 0x10000>;
++
++		cl_shmem: shmem@0 {
++			compatible = "client-shmem";
++			reg = <0x0 0x200>;
++		};
++	};
++
++	client@2e000000 {
++		...
++		mboxes = <&mailbox 0>;
++		shmem = <&cl_shmem>;
++		..
++	};
+-- 
+2.7.4
