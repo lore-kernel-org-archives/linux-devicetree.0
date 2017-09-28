@@ -1,35 +1,45 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Thu, 28 Sep 2017 22:58:56 +0300
-Message-ID: <1506628736.28192.9.camel@hp800z>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/4] dt-bindings: net: ravb: Document optional reset-gpios
+ property
+Date: Thu, 28 Sep 2017 23:07:38 +0300
+Message-ID: <fefd2be3-d47a-f035-5078-090df0fc6318@cogentembedded.com>
+References: <1506614014-4398-1-git-send-email-geert+renesas@glider.be>
+ <1506614014-4398-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1506614014-4398-2-git-send-email-geert+renesas@glider.be>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, "David S . Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello again,
+Hello!
 
-Significant progress has been made on yamldt and is now capable of
-not only generating yaml from DTS source but also compiling DTS sources
-and being almost fully compatible with DTC.
+On 09/28/2017 06:53 PM, Geert Uytterhoeven wrote:
 
-Compiling the kernel's DTBs using yamldt is as simple as using a
-DTC=yamldt.
+> The optional "reset-gpios" property (part of the generic MDIO bus
+> properties) lets us describe the GPIO used for resetting the Ethernet
+> PHY.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>   Documentation/devicetree/bindings/net/renesas,ravb.txt | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index c902261893b913f5..4a6ec1ba32d0bf16 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -52,6 +52,7 @@ Optional properties:
+>   			 AVB_LINK signal.
+>   - renesas,ether-link-active-low: boolean, specify when the AVB_LINK signal is
+>   				 active-low instead of normal active-high.
+> +- reset-gpios: see mdio.txt in the same directory.
 
-Error reporting is accurate and validation against a YAML based schema
-works as well. In a short while I will begin posting patches with
-fixes on bindings and DTS files in the kernel.
+    Sigh, I can only repeat that was a terrible prop name choice -- when 
+applied to a MAC node... what reset does it mean? MAC?
 
-Please try it on your platform and report if you encounter any problems.
-
-https://github.com/pantoniou/yamldt
-
-I am eagerly awaiting for your comments.
-
-Regards
-
--- Pantelis
+MBR, Sergei
