@@ -1,36 +1,58 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 10/12] dt-bindings: usb: mtu3: add a optional property to disable u3ports
-Date: Thu, 28 Sep 2017 08:17:18 +0800
-Message-ID: <fd4890851d8233635b334a0fad7742a58e53bc7a.1506509659.git.chunfeng.yun@mediatek.com>
-References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+From: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH v3 0/1] Set FORCE_CSX bit when arbitration between NAND and NOR is enabled.
+Date: Thu, 28 Sep 2017 13:57:55 +1300
+Message-ID: <20170928005756.3938-1-kalyan.kinthada@alliedtelesis.co.nz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a new optional property to disable u3ports
+When the arbitration between NOR and NAND flash is enabled
+the <FORCE_CSX> field bit[21] in the Data Flash Control Register
+needs to be set to 1 according to guidleine GL-5830741
+mentioned in Marvell Errata document MV-S501377-00, Rev. D.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- .../devicetree/bindings/usb/mediatek,mtu3.txt      |    2 ++
- 1 file changed, 2 insertions(+)
+Set the FORCE_CSX bit in NDCR for ARMADA370 variants as the arbitration
+is always enabled by default. This change does not apply for pxa3xx
+variants because FORCE_CSX bit does not exist/reserved on the NFCv1.
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 49f5476..7c611d1 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -44,6 +44,8 @@ Optional properties:
-  - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
-  - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
- 	control register, it depends on "mediatek,enable-wakeup".
-+ - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
-+	bit1 for u3port1, ... etc;
- 
- Sub-nodes:
- The xhci should be added as subnode to mtu3 as shown in the following example
+Ran the "flash_speed" tool on NAND flash on a board with
+Armada-xp based SoC which uses only one NAND chip and not using
+the arbiter. There is no regression or speed penalty
+introduced due to this change.
+
+Changes since v2:
+Thanks Miquel RAYNAL for the suggestion.
+
+* "mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370 variants."
+  Modified commit message to mention that this change does not apply
+  for pxa3xx variants.
+  Fixed the missing space in comments.
+  Removed unused macros "NDCR_ND_MODE" and "NDCR_NAND_MODE".
+
+Changes since v1:
+Thanks Miquel RAYNAL for the suggestion.
+
+* Deleted: "dt-bindings: mtd: pxa3xx: Add "marvell,nand-force-csx" compatible string"
+  Not necessary to create a new compatible string.
+
+* "mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370 variants."
+  Modified commit message.
+  This commit sets the FORCE_CSX bit for all ARMADA370 variants.
+
+-----
+
+Kalyan Kinthada (1):
+  mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370 variants.
+
+ drivers/mtd/nand/pxa3xx_nand.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
 -- 
-1.7.9.5
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
