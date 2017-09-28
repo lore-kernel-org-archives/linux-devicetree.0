@@ -1,44 +1,63 @@
-From: Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH v2 0/2] Fix I2C repeated start timing violation on Armada-38x.
-Date: Fri, 29 Sep 2017 10:36:03 +1300
-Message-ID: <20170928213605.22874-1-kalyan.kinthada@alliedtelesis.co.nz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 00/10] ARM: bcm: Add support for Broadcom Hurricane 2 SoC
+Date: Thu, 28 Sep 2017 16:14:52 -0700
+Message-ID: <20170928231502.27069-1-f.fainelli@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-All the Armada 38x(380, 385, 388) have a silicon issue in
-the I2C controller which violates the I2C repeated start timing
-(errata FE-8471889).
+Hi all,
 
-Activate the compatible string "marvell,mv78230-a0-i2c" in the
-device tree file of Armada-38x to fx this errata (FE-8471889).
+This patch series adds basic (boot to prompt with essential peripherals
+working) support for Broadcom's Hurricane 2 SoC which is found in switching
+applications.
 
-Updated the Documentation for the compatible string
-"marvell,mv78230-a0-i2c".
+This is also an iProc-family chip with a number of variations, including
+some in the clock controller that I have not been able to identify yet.
 
-Thank You Gregory Clement for suggesting to reuse the
-"marvell,mv78230-a0-i2c" compatible string on Armada-38x SoCs.
+Changes in v2:
 
-Changes since v1:
-* "dt-bindings: i2c: Update documentation for "mv78230-a0-i2c""
-   Modified commit message.
-   Added details describing the compatible string "mv78230-a0-i2c"
+- fixed DTC warnings spotted with make dtbs W=1
+- added Jon's ack
 
--------
-Kalyan Kinthada (2):
-  ARM: dts: Fix I2C repeated start issue on Armada-38x
-  dt-bindings: i2c: Update documentation for "mv78230-a0-i2c"
+Florian Fainelli (10):
+  MAINTAINERS: Update Broadcom iProc regexp with Hurricane 2
+  dt-bindings: Add documentation for Broadcom Hurricane 2 SoCs
+  ARM: bcm: Add support for Broadcom Hurricane 2 SoC
+  dt-bindings: Document Broadcom Hurricane 2 clocks
+  clk: bcm: Add Broadcom Hurricane 2 clock support
+  ARM: dts: Add Broadcom Hurricane 2 DTS include file
+  ARM: debug: Add Hurricane 2 UART2 debug addresses
+  dt-bindings: Add Ubiquiti Networks vendor prefix
+  ARM: dts: Hurricane 2: Add basic support for Ubiquiti UniFi Switch 8
+  ARM: multi_v7_defconfig: Enable CONFIG_ARCH_BCM_HR2
 
- Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 10 ++++++----
- arch/arm/boot/dts/armada-38x.dtsi                     |  4 ++--
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/arm/bcm/brcm,hr2.txt       |  14 +
+ .../bindings/clock/brcm,iproc-clocks.txt           |  14 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   1 +
+ arch/arm/Kconfig.debug                             |  10 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/bcm-hr2.dtsi                     | 368 +++++++++++++++++++++
+ arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts  |  85 +++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/mach-bcm/Kconfig                          |   9 +
+ arch/arm/mach-bcm/Makefile                         |   3 +
+ arch/arm/mach-bcm/bcm_hr2.c                        |  25 ++
+ drivers/clk/bcm/Kconfig                            |   9 +
+ drivers/clk/bcm/Makefile                           |   1 +
+ drivers/clk/bcm/clk-hr2.c                          |  27 ++
+ 15 files changed, 569 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
+ create mode 100644 arch/arm/boot/dts/bcm-hr2.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dts
+ create mode 100644 arch/arm/mach-bcm/bcm_hr2.c
+ create mode 100644 drivers/clk/bcm/clk-hr2.c
 
 -- 
 2.14.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
