@@ -1,250 +1,58 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
- ECAM shift mode
-Date: Thu, 28 Sep 2017 08:51:43 -0700
-Message-ID: <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA@mail.gmail.com>
-References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
- <20170828180437.2646-2-ard.biesheuvel@linaro.org> <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170926173200.GL15970-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/4] ravb: Add PHY reset support
+Date: Thu, 28 Sep 2017 17:53:30 +0200
+Message-ID: <1506614014-4398-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: "David S . Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 26 September 2017 at 10:32, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> [+cc Will]
->
-> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
->> Some implementations of the Synopsys Designware PCIe controller implement
->> a so-called ECAM shift mode, which allows a static memory window to be
->> configured that covers the configuration space of the entire bus range.
->>
->> If the firmware performs all the low level configuration that is required
->> to expose this controller in a fully ECAM compatible manner, we can
->> simply describe it as "pci-host-ecam-generic" and be done with it.
->> However, it appears that in some cases (one of which is the Armada 80x0),
->> the IP is synthesized with an ATU window size that does not allow the
->> first bus to be mapped in a way that prevents the device on the
->> downstream port from appearing more than once.
->>
->> So implement a driver that relies on the firmware to perform all low
->> level initialization, and drives the controller in ECAM mode, but
->> overrides the config space accessors to take the above quirk into
->> account.
->>
->> Note that, unlike most drivers for this IP, this driver does not expose
->> a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
->> given that this is not a true bridge, and does not require any windows
->> to be configured in order for the downstream device to operate correctly.
->> Omitting it also prevents the PCI resource allocation routines from
->> handing out BAR space to it unnecessarily.
->
-> This is a tangent, but does this mean the other drivers do not need to
-> expose a fake 00:00.0 device either?
->
+	Hi all,
 
-To be honest, I am not so sure anymore. I am seeing some issues in
-ASPM code making the assumption that any device which is not a root
-port has a parent. If this is mandated by the spec, I guess there
-isn't a whole lot we can do except expose a fake root port on b/d/f
-0/0/0. This used to work fine, though, and I have to confirm whether
-the issues I am seeing currently are due to different hardware or
-changes in the software.
+This patch series adds optional PHY reset support during EthernetAVB driver
+probe and system resume on the Renesas Salvator-X/XS development boards.
 
-> s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
->
+The rationale behind this is twofold:
+  1. On Salvator-XS, the enable pin of the regulator providing PHY power
+     is connected to PRESETn, and PSCI powers down the SoC during system
+     suspend.  Hence a PHY reset is needed to restore network functionality
+     after resume.
+  2. Linux should not rely on the boot loader having reset the PHY, but
+     should reset the PHY during driver probe.
 
-OK
+The first two patches are destined for David's net-next tree. They update
+the EthernetAVB DT bindings, and add support for resetting the PHY during
+system resume.
 
->> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  drivers/pci/dwc/Kconfig                | 11 +++
->>  drivers/pci/dwc/Makefile               |  1 +
->>  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
->
-> This really doesn't have any DesignWare specifics in it, and it seems
-> more related to drivers/pci/host/pci-host-generic.c than to anything
-> in drivers/pci/dwc.  Maybe it should be
-> drivers/pci/host/pci-host-generic-quirks.c or something?  That's
-> unwieldy, I admit.
->
+The last two patches are destined for Simon's renesas tree.  They add
+properties to describe the EthernetAVB PHY reset topology to the common
+Salvator-X/XS and ULCB DTS files.
 
-I don't care where we put it, and I am fine with owning it if you prefer.
+Thanks!
 
-> Putting it in pci/dwc would make Jingoo and Joao the default
-> maintainers; I don't know how they feel about that.  We would probably
-> have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
->
-> Any thoughts on this, Will?
->
->>  3 files changed, 89 insertions(+)
->>
->> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
->> index d275aadc47ee..477576d07911 100644
->> --- a/drivers/pci/dwc/Kconfig
->> +++ b/drivers/pci/dwc/Kconfig
->> @@ -169,4 +169,15 @@ config PCIE_KIRIN
->>         Say Y here if you want PCIe controller support
->>         on HiSilicon Kirin series SoCs.
->>
->> +config PCIE_DW_HOST_ECAM
->> +     bool "Synopsys DesignWare PCIe controller in ECAM mode"
->> +     depends on OF && PCI
->> +     select PCI_HOST_COMMON
->> +     select IRQ_DOMAIN
->> +     help
->> +       Add support for Synopsys DesignWare PCIe controllers configured
->> +       by the firmware into ECAM shift mode. In some cases, these are
->> +       fully ECAM compliant, in which case the pci-host-generic driver
->> +       may be used instead.
->
-> This doesn't quite read right.  It sounds like a controller in ECAM
-> shift mode might be fully ECAM compliant, but I don't think that's
-> what you intended.
->
+Geert Uytterhoeven (4):
+  dt-bindings: net: ravb: Document optional reset-gpios property
+  ravb: Add optional PHY reset during system resume
+  arm64: dts: renesas: salvator-common: Add EthernetAVB PHY reset
+  arm64: dts: renesas: ulcb: Add EthernetAVB PHY reset
 
-Yes, that is what I mean. ECAM shift mode results in a fully compliant
-ECAM config space iff the IP was synthesized with a 32 KB granularity
-for the iATU windows. The default is 64 KB, though, in which case you
-need this driver.
+ Documentation/devicetree/bindings/net/renesas,ravb.txt | 2 ++
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi       | 1 +
+ arch/arm64/boot/dts/renesas/ulcb.dtsi                  | 1 +
+ drivers/net/ethernet/renesas/ravb_main.c               | 9 +++++++++
+ 4 files changed, 13 insertions(+)
 
-> IIUC, the controller can be in either "ECAM shift mode" (where we need
-> this new driver) or in a "fully ECAM compliant mode" (where we can use
-> pci-host-generic).
->
+-- 
+2.7.4
 
-No, this is not the case
+Gr{oetje,eeting}s,
 
->>  endmenu
->> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
->> index c61be9738cce..7d5a23e5b767 100644
->> --- a/drivers/pci/dwc/Makefile
->> +++ b/drivers/pci/dwc/Makefile
->> @@ -1,5 +1,6 @@
->>  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->> +obj-$(CONFIG_PCIE_DW_HOST_ECAM) += pcie-designware-ecam.o
->>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->> diff --git a/drivers/pci/dwc/pcie-designware-ecam.c b/drivers/pci/dwc/pcie-designware-ecam.c
->> new file mode 100644
->> index 000000000000..ede627d7d08b
->> --- /dev/null
->> +++ b/drivers/pci/dwc/pcie-designware-ecam.c
->> @@ -0,0 +1,77 @@
->> +/*
->> + * Driver for mostly ECAM compatible Synopsys dw PCIe controllers
->> + * configured by the firmware into RC mode
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * Copyright (C) 2014 ARM Limited
->> + * Copyright (C) 2017 Linaro Limited
->> + *
->> + * Authors: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> + *          Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/init.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/pci-ecam.h>
->> +#include <linux/platform_device.h>
->> +
->> +static int pci_dw_ecam_config_read(struct pci_bus *bus, u32 devfn, int where,
->> +                                int size, u32 *val)
->> +{
->> +     struct pci_config_window *cfg = bus->sysdata;
->> +
->> +     /*
->> +      * The Synopsys dw PCIe controller in RC mode will not filter type 0
->> +      * config TLPs sent to devices 1 and up on its downstream port,
->> +      * resulting in devices appearing multiple times on bus 0 unless we
->> +      * filter them here.
->> +      */
->> +     if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0) {
->
-> Trivial, but maybe you could factor out this test?  We already have
-> these functions that do basically the same thing and it'd be nice to
-> use a similar pattern (altera and dw also check for the link being up,
-> which seems racy and possibly bogus to me):
->
->   altera_pcie_valid_device()
->   dw_pcie_valid_device()
->   rockchip_pcie_valid_device()
->
-> The fact that altera and rockchip do essentially the same thing as dw
-> here suggests that this pattern is not limited to DesignWare.
->
-> These other functions also do something similar, though not structured
-> the same way:
->
->   hisi_pcie_rd_conf()
->   advk_pcie_rd_conf()
->   thunder_pem_bridge_read()
->   rcar_pcie_config_access()
->   gapspci_config_access()
->
+						Geert
 
-I can look into that.
-
->> +             *val = 0xffffffff;
->> +             return PCIBIOS_DEVICE_NOT_FOUND;
->> +     }
->> +     return pci_generic_config_read(bus, devfn, where, size, val);
->> +}
->> +
->> +static int pci_dw_ecam_config_write(struct pci_bus *bus, u32 devfn, int where,
->> +                                 int size, u32 val)
->> +{
->> +     struct pci_config_window *cfg = bus->sysdata;
->> +
->> +     if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0)
->> +             return PCIBIOS_DEVICE_NOT_FOUND;
->> +
->> +     return pci_generic_config_write(bus, devfn, where, size, val);
->> +}
->> +
->> +static struct pci_ecam_ops pci_dw_ecam_bus_ops = {
->> +     .pci_ops.map_bus                = pci_ecam_map_bus,
->> +     .pci_ops.read                   = pci_dw_ecam_config_read,
->> +     .pci_ops.write                  = pci_dw_ecam_config_write,
->> +     .bus_shift                      = 20,
->> +};
->> +
->> +static const struct of_device_id pci_dw_ecam_of_match[] = {
->> +     { .compatible = "marvell,armada8k-pcie-ecam" },
->> +     { .compatible = "socionext,synquacer-pcie-ecam" },
->> +     { .compatible = "snps,dw-pcie-ecam" },
->> +     { },
->> +};
->> +
->> +static int pci_dw_ecam_probe(struct platform_device *pdev)
->> +{
->> +     return pci_host_common_probe(pdev, &pci_dw_ecam_bus_ops);
->> +}
->> +
->> +static struct platform_driver pci_dw_ecam_driver = {
->> +     .driver.name                    = "pcie-designware-ecam",
->> +     .driver.of_match_table          = pci_dw_ecam_of_match,
->> +     .driver.suppress_bind_attrs     = true,
->> +     .probe                          = pci_dw_ecam_probe,
->> +};
->> +builtin_platform_driver(pci_dw_ecam_driver);
->> --
->> 2.11.0
->>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
