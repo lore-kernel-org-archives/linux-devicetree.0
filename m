@@ -1,56 +1,77 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific mailbox client bindings
-Date: Thu, 28 Sep 2017 14:11:27 +0100
-Message-ID: <1506604306-20739-4-git-send-email-sudeep.holla@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506604306-20739-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v4 2/4] dmaengine: Add STM32 MDMA driver
+Date: Thu, 28 Sep 2017 15:17:49 +0200
+Message-ID: <1a869018-31e7-9fd4-2017-9c8cdd8c7d88@st.com>
+References: <1503671466-32029-1-git-send-email-pierre-yves.mordret@st.com>
+ <1503671466-32029-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170928081310.GA30097@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170928081310.GA30097@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds ARM MHU specific mailbox client bindings to support
-SCMI. Since SCMI specification just requires doorbell mechanism from
-mailbox controllers, we add mailbox data to specify the doorbell bit(s).
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- .../devicetree/bindings/arm/arm,mhu-scmi.txt          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
-new file mode 100644
-index 000000000000..8c106f1cdeb8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
-@@ -0,0 +1,19 @@
-+ARM MHU mailbox client bindings for SCMI Message Protocol
-+----------------------------------------------------------
-+
-+This binding is intended to define the ARM MHU specific extensions to
-+the generic SCMI bindings[2].
-+
-+Required properties:
-+
-+The scmi node with the following properties shall be under the /firmware/ node.
-+
-+- compatible : shall be "arm,scmi" and "arm,mhu-scmi"
-+- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
-+	      data as expected by the mailbox controller
-+
-+See [1] for details on all other required/optional properties of the generic
-+mailbox controller and [2] for generic SCMI bindings.
-+
-+[1] Documentation/devicetree/bindings/mailbox/mailbox.txt
-+[2] Documentation/devicetree/bindings/arm/arm,scmi.txt
--- 
-2.7.4
+On 09/28/2017 10:13 AM, Vinod Koul wrote:
+> On Fri, Aug 25, 2017 at 04:31:04PM +0200, Pierre-Yves MORDRET wrote:
+>> +static int stm32_mdma_probe(struct platform_device *pdev)
+>> +{
+> 
+> [snip]
+> 
+>> +	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
+>> +			      GFP_KERNEL);
+>> +	if (!dmadev)
+>> +		return -ENOMEM;
+>> +
+>> +	dmadev->nr_channels = nr_channels;
+>> +	dmadev->nr_requests = nr_requests;
+>> +	device_property_read_u32_array(&pdev->dev, "st,ahb-addr-masks",
+>> +				       dmadev->ahb_addr_masks,
+>> +				       count);
+>> +	dmadev->nr_ahb_addr_masks = count;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(dmadev->base))
+>> +		return PTR_ERR(dmadev->base);
+>> +
+>> +	dmadev->clk = devm_clk_get(&pdev->dev, NULL);
+>> +	if (IS_ERR(dmadev->clk)) {
+>> +		dev_err(&pdev->dev, "Error: Missing controller clock\n");
+>> +		return PTR_ERR(dmadev->clk);
+>> +	}
+> 
+> I am assuming if clk is not availble at this point of time you return clk
+> error which maybe defer probe, right?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes. So I will add an "if" statement as I did for DMAMUX
+if (ret == -EPROBE_DEFER)
+   dev_info .... (instead of dev_err)
+
+> 
+>> +static struct platform_driver stm32_mdma_driver = {
+>> +	.driver = {
+>> +		.name = "stm32-mdma",
+>> +		.of_match_table = stm32_mdma_of_match,
+>> +	},
+>> +};
+>> +
+>> +static int __init stm32_mdma_init(void)
+>> +{
+>> +	return platform_driver_probe(&stm32_mdma_driver, stm32_mdma_probe);
+> 
+> and you register platform_driver_probe() which per
+> drivers/base/platform.c:760 is incompatible with defer probing.
+> So this need a fix
+> 
+
+Will change to platform_driver_register
+
+Thanks and regards
