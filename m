@@ -1,93 +1,68 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH v3 5/5] mtd: spi-nor: cadence-quadspi: Add runtime PM
- support
-Date: Thu, 28 Sep 2017 08:01:36 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1709280757230.2488@mgerlach-VirtualBox>
-References: <20170924105924.23923-1-vigneshr@ti.com> <20170924105924.23923-6-vigneshr@ti.com> <3a1160f9-a0ae-c84c-d209-af97c3c3b0f6@gmail.com> <4ee69ea4-14cc-4305-bf3f-8fe76d43bf6b@ti.com> <fa700cdf-f0b5-779b-4f38-3138a7612cc2@gmail.com>
- <038919d3-ff32-d0a7-4c0a-3be16436052d@ti.com> <e4ad5d80-9093-b667-f0a5-d3105be4e8cf@gmail.com> <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox> <fdfe29bf-ff46-7542-8e36-e8e45e1ca85f@gmail.com> <7237fa9e-4d3a-8a82-10c6-76737c23ed6f@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: sun8i: Add basic dtsi file
+ for Allwinner R40
+Date: Thu, 28 Sep 2017 17:11:03 +0200
+Message-ID: <20170928151103.ov3o5pn5h7inzzan@flea>
+References: <20170928092543.45648-1-icenowy@aosc.io>
+ <20170928092543.45648-2-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1557128041-1506610898=:2488"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7237fa9e-4d3a-8a82-10c6-76737c23ed6f@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i2udpxaukzgohm6x"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEVCWTHAKGQEXNJEX6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170928092543.45648-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1557128041-1506610898=:2488
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+--i2udpxaukzgohm6x
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
+Hi,
 
-Hi Vignesh,
+On Thu, Sep 28, 2017 at 09:25:41AM +0000, Icenowy Zheng wrote:
+> +		/*
+> +		 * The max-frequency properties in all MMC controller nodes
+> +		 * are conservative values proven to work on Banana Pi M2
+> +		 * Ultra (the first community available R40 board).
+> +		 * As the board doesn't wire MMC3 out, the property is not
+> +		 * set in MMC3.
+> +		 * TODO: measure the accurate max frequency of the controllers.
+> +		 */
+> +		mmc0: mmc@1c0f000 {
+> +			compatible = "allwinner,sun8i-r40-mmc",
+> +				     "allwinner,sun50i-a64-mmc";
+> +			reg = <0x01c0f000 0x1000>;
+> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
+> +			clock-names = "ahb", "mmc";
+> +			resets = <&ccu RST_BUS_MMC0>;
+> +			reset-names = "ahb";
+> +			pinctrl-0 = <&mmc0_pins>;
+> +			pinctrl-names = "default";
+> +			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <25000000>;
+> +			status = "disabled";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
 
-I tried this patch on an Arria10 SOCFPGA devkit against the 4.1.33-ltsi 
-kernel, and it did not go well.  Commands to the flash chip timedout 
-resulting in the probe function failing.  I ran into other problems, not 
-related to cadence-quadspi, that prevented me from testing against 4.9 and 
-4.12 kernels, but I suspect similar behavior.
+Sorry if it wasn't really clear, but my point was more than you should
+just drop the max-frequency property
 
-Matthew Gerlach
+Maxime
 
-On Wed, 27 Sep 2017, Vignesh R wrote:
-
-> Hi Matthew,
->
-> On Tuesday 26 September 2017 05:19 AM, Marek Vasut wrote:
-> [...]
->>>>> Ok thanks! Do you know if pm_runtime_get_sync() can enable clocks for
->>>>> QSPI on SoCFPGA or if clk_prepare_enable() is needed? Just trying to see
->>>>> if its possible to get rid of clk_*() calls in favor of pm_*() calls.
->>>>
->>>> Not of the top of my head, sorry. +CC Matthew, he should know.
->>>
->>> I am not an expert at the clock framework nor the power management, but I
->>> did ask around a bit.  No one I asked was planning to change the clk_*()
->>> calls to pm_*() call, but the feedback was that it would be a good idea.
->>
->> The question is, if we do the replacement, will it break on socfpga ?
->> A quick test might be useful.
->>
->
-> yes, a quick qspi test with clk_prepare_enable() replaced by pm_*() calls
-> like below patch would be helpful:
->
->
-> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-> index 53c7d8e0327a..7ad3e176cc88 100644
-> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
-> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-> @@ -34,6 +34,7 @@
-> #include <linux/sched.h>
-> #include <linux/spi/spi.h>
-> #include <linux/timer.h>
-> +#include <linux/pm_runtime.h>
->
-> #define CQSPI_NAME                     "cadence-qspi"
-> #define CQSPI_MAX_CHIPSELECT           16
-> @@ -1206,11 +1207,8 @@ static int cqspi_probe(struct platform_device *pdev)
->                return -ENXIO;
->        }
->
-> -       ret = clk_prepare_enable(cqspi->clk);
-> -       if (ret) {
-> -               dev_err(dev, "Cannot enable QSPI clock.\n");
-> -               return ret;
-> -       }
-> +       pm_runtime_enable(dev);
-> +       pm_runtime_get_sync(dev);
->
->        cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->
->
->
->
->
-> -- 
-> Regards
-> Vignesh
->
---8323329-1557128041-1506610898=:2488--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--i2udpxaukzgohm6x--
