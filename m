@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v4 06/11] arm64: allwinner: a64: Add devicetree
- binding for DMA controller
-Date: Thu, 28 Sep 2017 03:49:23 +0200
-Message-ID: <b8a9df1a-f1ae-4b27-9ee7-73ffef00c654@rwthex-w2-a.rwth-ad.de>
+Subject: [PATCH v4 08/11] dmaengine: sun6i: Add support for
+ Allwinner A64 and compatibles
+Date: Thu, 28 Sep 2017 03:49:25 +0200
+Message-ID: <ce3032c7-3f36-47c8-b71d-604664089ed9@rwthex-w2-a.rwth-ad.de>
 References: <20170928014928.2272-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRBPFKWHHAKGQE6TQ3OWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBQNKWHHAKGQEBQG2P3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170928014928.2272-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,74 +18,74 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A64 is register compatible with the H3, but has a different number
-of dma channels and request ports.
-
-Attach additional properties to the node to allow future reuse of the
-compatible for controllers with different number of channels/requests.
-
-If dma-requests is not specified, the register layout defined maximum
-of 32 is used.
+The A64 SoC has the same dma engine as the H3 (sun8i), with a
+reduced amount of physical channels. To allow future reuse of the
+compatible, leave the channel count etc. in the config data blank
+and retrieve it from the devicetree.
 
 Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 ---
 
-Changes in v4: None
+Changes in v4:
+- Fix config initialization
+
 Changes in v3:
-- Drop leading 0 from unit name in DT example
+- Omit default values from sun50i_a64_dma_cfg definition
 
 Changes in v2: None
 
- .../devicetree/bindings/dma/sun6i-dma.txt          | 26 ++++++++++++++++++=
-++++
- 1 file changed, 26 insertions(+)
+ drivers/dma/sun6i-dma.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Document=
-ation/devicetree/bindings/dma/sun6i-dma.txt
-index 98fbe1a5c6dd..9700b1d00fed 100644
---- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-@@ -27,6 +27,32 @@ Example:
- 		#dma-cells =3D <1>;
- 	};
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index b5906da2a975..945436e477d7 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -1125,6 +1125,25 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D =
+{
+ 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
+ };
 =20
-+--------------------------------------------------------------------------=
-----
-+For A64 DMA controller:
++/*
++ * The A64 binding uses the number of dma channels from the
++ * device tree node.
++ */
++static struct sun6i_dma_config sun50i_a64_dma_cfg =3D {
++	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
++	.set_burst_length =3D sun6i_set_burst_length_h3,
++	.src_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
++	.dst_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
++};
 +
-+Required properties:
-+- compatible:	"allwinner,sun50i-a64-dma"
-+- dma-channels: Number of DMA channels supported by the controller.
-+		Refer to Documentation/devicetree/bindings/dma/dma.txt
-+- all properties above, i.e. reg, interrupts, clocks, resets and #dma-cell=
-s
-+
-+Optional properties:
-+- dma-requests: Number of DMA request signals supported by the controller.
-+		Refer to Documentation/devicetree/bindings/dma/dma.txt
-+
-+Example:
-+	dma: dma-controller@1c02000 {
-+		compatible =3D "allwinner,sun50i-a64-dma";
-+		reg =3D <0x01c02000 0x1000>;
-+		interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks =3D <&ccu CLK_BUS_DMA>;
-+		dma-channels =3D <8>;
-+		dma-requests =3D <27>;
-+		resets =3D <&ccu RST_BUS_DMA>;
-+		#dma-cells =3D <1>;
-+	};
-+--------------------------------------------------------------------------=
-----
-+
- Clients:
-=20
- DMA clients connected to the A31 DMA controller must use the format
+ /*
+  * The V3s have only 8 physical channels, a maximum DRQ port id of 23,
+  * and a total of 24 usable source and destination endpoints.
+@@ -1152,6 +1171,7 @@ static const struct of_device_id sun6i_dma_match[] =
+=3D {
+ 	{ .compatible =3D "allwinner,sun8i-a83t-dma", .data =3D &sun8i_a83t_dma_c=
+fg },
+ 	{ .compatible =3D "allwinner,sun8i-h3-dma", .data =3D &sun8i_h3_dma_cfg }=
+,
+ 	{ .compatible =3D "allwinner,sun8i-v3s-dma", .data =3D &sun8i_v3s_dma_cfg=
+ },
++	{ .compatible =3D "allwinner,sun50i-a64-dma", .data =3D &sun50i_a64_dma_c=
+fg },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sun6i_dma_match);
 --=20
 2.14.1
 
