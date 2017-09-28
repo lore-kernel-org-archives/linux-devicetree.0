@@ -1,74 +1,61 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [RESEND][PATCH 4/4] firmware: meson-sm: rework meson_sm_init to use module_platform_driver_probe
-Date: Thu, 28 Sep 2017 11:46:02 +0100
-Message-ID: <1506595562-10592-5-git-send-email-sudeep.holla@arm.com>
+Subject: [RESEND][PATCH 2/4] firmware: qcom_scm: drop redandant of_platform_populate
+Date: Thu, 28 Sep 2017 11:46:00 +0100
+Message-ID: <1506595562-10592-3-git-send-email-sudeep.holla@arm.com>
 References: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that of_platform_default_populate_init() takes care of populating
-all the devices under the /firmware/ node, this patch reworks
-meson_sm_init in favour of module_platform_driver_probe.
+all the devices under the /firmware/ node, this patch removes the
+redandant call to of_platform_populate here.
 
-Cc: Carlo Caione <carlo@caione.org>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/meson/meson_sm.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/firmware/qcom_scm.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-index ff204421117b..ccd61be0dd49 100644
---- a/drivers/firmware/meson/meson_sm.c
-+++ b/drivers/firmware/meson/meson_sm.c
-@@ -17,8 +17,10 @@
- #include <linux/arm-smccc.h>
- #include <linux/bug.h>
- #include <linux/io.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/platform_device.h>
- #include <linux/printk.h>
- #include <linux/types.h>
- #include <linux/sizes.h>
-@@ -217,17 +219,11 @@ static const struct of_device_id meson_sm_ids[] = {
- 	{ /* sentinel */ },
- };
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index bb16510d75ba..a11e06e5cdb0 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -440,30 +440,6 @@ static struct platform_driver qcom_scm_driver = {
  
--int __init meson_sm_init(void)
-+static int __init meson_sm_probe(struct platform_device *pdev)
+ static int __init qcom_scm_init(void)
  {
- 	const struct meson_sm_chip *chip;
--	const struct of_device_id *matched_np;
--	struct device_node *np;
- 
--	np = of_find_matching_node_and_match(NULL, meson_sm_ids, &matched_np);
--	if (!np)
+-	struct device_node *np, *fw_np;
+-	int ret;
+-
+-	fw_np = of_find_node_by_name(NULL, "firmware");
+-
+-	if (!fw_np)
 -		return -ENODEV;
 -
--	chip = matched_np->data;
-+	chip = of_match_device(meson_sm_ids, &pdev->dev)->data;
- 	if (!chip) {
- 		pr_err("unable to setup secure-monitor data\n");
- 		goto out;
-@@ -257,4 +253,11 @@ int __init meson_sm_init(void)
- out:
- 	return -EINVAL;
+-	np = of_find_matching_node(fw_np, qcom_scm_dt_match);
+-
+-	if (!np) {
+-		of_node_put(fw_np);
+-		return -ENODEV;
+-	}
+-
+-	of_node_put(np);
+-
+-	ret = of_platform_populate(fw_np, qcom_scm_dt_match, NULL, NULL);
+-
+-	of_node_put(fw_np);
+-
+-	if (ret)
+-		return ret;
+-
+ 	return platform_driver_register(&qcom_scm_driver);
  }
--device_initcall(meson_sm_init);
-+
-+static struct platform_driver meson_sm_driver = {
-+	.driver = {
-+		.name = "meson-sm",
-+		.of_match_table = of_match_ptr(meson_sm_ids),
-+	},
-+};
-+module_platform_driver_probe(meson_sm_driver, meson_sm_probe);
+ subsys_initcall(qcom_scm_init);
 -- 
 2.7.4
