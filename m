@@ -1,55 +1,36 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 04/10] dt-bindings: Document Broadcom Hurricane 2 clocks
-Date: Thu, 28 Sep 2017 16:14:56 -0700
-Message-ID: <20170928231502.27069-5-f.fainelli@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 08/10] dt-bindings: Add Ubiquiti Networks vendor prefix
+Date: Thu, 28 Sep 2017 16:15:00 -0700
+Message-ID: <20170928231502.27069-9-f.fainelli@gmail.com>
 References: <20170928231502.27069-1-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170928231502.27069-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "maintainer:BROADCOM IPROC ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170928231502.27069-1-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a Device Tree binding document for the Broadcom Hurricane 2 SoC
-which is an iProc based system.
+Use the stock ticker: UBNT as the vendor prefix for Ubiquiti Networks.
 
-Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Jon Mason <jon.mason@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../devicetree/bindings/clock/brcm,iproc-clocks.txt        | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-index f2c5f0e4a363..f8e4a93466cb 100644
---- a/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-+++ b/Documentation/devicetree/bindings/clock/brcm,iproc-clocks.txt
-@@ -137,6 +137,20 @@ These clock IDs are defined in:
-     ch1_audio  audiopll         2       BCM_CYGNUS_AUDIOPLL_CH1
-     ch2_audio  audiopll         3       BCM_CYGNUS_AUDIOPLL_CH2
- 
-+Hurricane 2
-+------
-+PLL and leaf clock compatible strings for Hurricane 2 are:
-+ "brcm,hr2-armpll"
-+
-+The following table defines the set of PLL/clock for Hurricane 2:
-+
-+    Clock	Source		Index	ID
-+    ---		-----		-----	---------
-+    crystal	N/A		N/A	N/A
-+
-+    armpll	crystal		N/A	N/A
-+
-+
- Northstar and Northstar Plus
- ------
- PLL and leaf clock compatible strings for Northstar and Northstar Plus are:
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 1afd298eddd7..f08678fe96d9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -351,6 +351,7 @@ truly	Truly Semiconductors Limited
+ tsd	Theobroma Systems Design und Consulting GmbH
+ tyan	Tyan Computer Corporation
+ ucrobotics	uCRobotics
++ubnt	Ubiquiti Networks
+ udoo	Udoo
+ uniwest	United Western Technologies Corp (UniWest)
+ upisemi	uPI Semiconductor Corp.
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
