@@ -1,100 +1,215 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v10 20/24] dt: bindings: smiapp: Document lens-focus and
- flash properties
-Date: Fri, 29 Sep 2017 00:02:15 +0300
-Message-ID: <20170928210215.bgtsjdj6fgcrce36@kekkonen.localdomain>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
- <20170911080008.21208-21-sakari.ailus@linux.intel.com>
- <20170918210028.67sbpuetdh5j7wpf@rob-hp-laptop>
- <ef8edab3-5b55-c298-2a40-72b5e22586ea@linux.intel.com>
- <CAL_Jsq+YKSDn7Hoq-2wRsGyGRbQvNPEVXrj13bSNCqQpKE2CvQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 17/22] firmware: arm_scmi: add device power domain
+ support using genpd
+Date: Thu, 28 Sep 2017 23:18:55 +0200
+Message-ID: <CAPDyKFo0oFrtGgb9REX-y3mAgQ7pTFnyD6ZcqwhEZ7oSRfV4oA@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com> <1506604306-20739-18-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+YKSDn7Hoq-2wRsGyGRbQvNPEVXrj13bSNCqQpKE2CvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506604306-20739-18-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 28 September 2017 at 15:11, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> This patch hooks up the support for device power domain provided by
+> SCMI using the Linux generic power domain infrastructure.
+>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/Kconfig                   |  13 +++
+>  drivers/firmware/arm_scmi/Makefile         |   1 +
+>  drivers/firmware/arm_scmi/scmi_pm_domain.c | 134 +++++++++++++++++++++++++++++
+>  3 files changed, 148 insertions(+)
+>  create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+>
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index c3d1a12763ce..a4462bc661c8 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
+>           This protocol library provides interface for all the client drivers
+>           making use of the features offered by the SCMI.
+>
+> +config ARM_SCMI_POWER_DOMAIN
+> +       tristate "SCMI power domain driver"
+> +       depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> +       default y
+> +       select PM_GENERIC_DOMAINS if PM
+> +       help
+> +         This enables support for the SCMI power domains which can be
+> +         enabled or disabled via the SCP firmware
+> +
+> +         This driver can also be built as a module.  If so, the module
+> +         will be called scmi_pm_domain. Note this may needed early in boot
+> +         before rootfs may be available.
+> +
+>  config ARM_SCPI_PROTOCOL
+>         tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+>         depends on ARM || ARM64 || COMPILE_TEST
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index 7fb026c71833..289e9e5a4764 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL)        = arm_scmi.o
+>  arm_scmi-y = base.o clock.o driver.o mbox_if.o perf.o power.o sensors.o
+>  arm_scmi-$(CONFIG_ARM_MHU) += arm_mhu_if.o
+> +obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+> diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> new file mode 100644
+> index 000000000000..e53aa9d0af6e
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> @@ -0,0 +1,134 @@
+> +/*
+> + * SCMI Generic power domain support.
+> + *
+> + * Copyright (C) 2017 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/scmi_protocol.h>
+> +
+> +struct scmi_pm_domain {
+> +       struct generic_pm_domain genpd;
+> +       const struct scmi_handle *handle;
+> +       const char *name;
+> +       u32 domain;
+> +};
+> +
+> +#define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
+> +
+> +static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
+> +{
+> +       int ret;
+> +       u32 state, ret_state;
+> +       struct scmi_pm_domain *pd = to_scmi_pd(domain);
+> +       const struct scmi_power_ops *ops = pd->handle->power_ops;
+> +
+> +       if (power_on)
+> +               state = SCMI_POWER_STATE_GENERIC_ON;
+> +       else
+> +               state = SCMI_POWER_STATE_GENERIC_OFF;
+> +
+> +       ret = ops->state_set(pd->handle, pd->domain, state);
+> +       if (!ret)
+> +               ret = ops->state_get(pd->handle, pd->domain, &ret_state);
+> +       if (!ret && state != ret_state)
+> +               return -EIO;
+> +
+> +       return ret;
+> +}
+> +
+> +static int scmi_pd_power_on(struct generic_pm_domain *domain)
+> +{
+> +       return scmi_pd_power(domain, true);
+> +}
+> +
+> +static int scmi_pd_power_off(struct generic_pm_domain *domain)
+> +{
+> +       return scmi_pd_power(domain, false);
+> +}
+> +
+> +static int scmi_pm_domain_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *np = dev->of_node;
+> +       struct scmi_pm_domain *scmi_pd;
+> +       struct genpd_onecell_data *scmi_pd_data;
+> +       struct generic_pm_domain **domains;
+> +       int num_domains, i;
+> +       const struct scmi_handle *handle = devm_scmi_handle_get(dev);
+> +
+> +       if (IS_ERR_OR_NULL(handle) || !handle->power_ops)
+> +               return -EPROBE_DEFER;
+> +
+> +       num_domains = handle->power_ops->num_domains_get(handle);
+> +       if (num_domains < 0) {
+> +               dev_err(dev, "number of domains not found\n");
+> +               return num_domains;
+> +       }
+> +
+> +       scmi_pd = devm_kcalloc(dev, num_domains, sizeof(*scmi_pd), GFP_KERNEL);
+> +       if (!scmi_pd)
+> +               return -ENOMEM;
+> +
+> +       scmi_pd_data = devm_kzalloc(dev, sizeof(*scmi_pd_data), GFP_KERNEL);
+> +       if (!scmi_pd_data)
+> +               return -ENOMEM;
+> +
+> +       domains = devm_kcalloc(dev, num_domains, sizeof(*domains), GFP_KERNEL);
+> +       if (!domains)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < num_domains; i++, scmi_pd++) {
+> +               domains[i] = &scmi_pd->genpd;
+> +
+> +               scmi_pd->domain = i;
+> +               scmi_pd->handle = handle;
+> +               scmi_pd->name = handle->power_ops->name_get(handle, i);
+> +               scmi_pd->genpd.name = scmi_pd->name;
+> +               scmi_pd->genpd.power_off = scmi_pd_power_off;
+> +               scmi_pd->genpd.power_on = scmi_pd_power_on;
+> +
+> +               /*
+> +                * Treat all power domains as off at boot.
+> +                *
+> +                * The SCP firmware itself may have switched on some domains,
+> +                * but for reference counting purpose, keep it this way.
+> +                */
 
-On Tue, Sep 19, 2017 at 03:00:11PM -0500, Rob Herring wrote:
-> On Mon, Sep 18, 2017 at 4:56 PM, Sakari Ailus
-> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> > Hi Rob,
-> >
-> >
-> > Rob Herring wrote:
-> >>
-> >> On Mon, Sep 11, 2017 at 11:00:04AM +0300, Sakari Ailus wrote:
-> >>>
-> >>> Document optional lens-focus and flash properties for the smiapp driver.
-> >>>
-> >>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/media/i2c/nokia,smia.txt | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>
-> >>
-> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >
-> >
-> > Thanks for the ack. There have been since a few iterations of the set, and
-> > the corresponding patch in v13 has minor changes to this:
-> 
-> My review script can't deal with subject changes...
-> 
-> > <URL:http://www.spinics.net/lists/linux-media/msg121929.html>
-> >
-> > Essentially "flash" was renamed to "flash-leds" as the current flash devices
-> > we have are all LEDs and the referencing assumes LED framework's ways to
-> > describe LEDs. The same change is present in the patch adding the property
-> 
-> So we're kind of creating a binding that mirrors the gpio bindings
-> (*-gpios) which is a bit of an oddball as all other bindings have gone
-> with a fixed property name and then a *-names property to name them.
+I think it would be better to give the correct information about the
+state of the PM domain. Otherwise genpd may end up thinking a PM
+domain is off, while in fact it's on - thus wasting power.
 
-It could be that "flash-leds" will remain the only one. Depending on
-whether anyone would ever want to support a Xenon flash in which case we
-could add a property for "flash-xenon" or such. Quite possibly not; LEDs
-have improved in luminosity a lot over the recent years and aren't that far
-from tiny Xenon flash devices. I don't remember seeing a mobile phone less
-than five years or so with a Xenon flash.
+> +               pm_genpd_init(&scmi_pd->genpd, NULL, true);
+> +       }
+> +
+> +       scmi_pd_data->domains = domains;
+> +       scmi_pd_data->num_domains = num_domains;
+> +
+> +       of_genpd_add_provider_onecell(np, scmi_pd_data);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver scmi_power_domain_driver = {
+> +       .driver = {
+> +               .name = "scmi-power-domain",
+> +       },
+> +       .probe = scmi_pm_domain_probe,
+> +};
+> +module_platform_driver(scmi_power_domain_driver);
+> +
+> +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
+> +MODULE_DESCRIPTION("ARM SCMI power domain driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
 
-> The main downside to this form is a prefixed property name is harder
-> to parse and validate. So perhaps we should follow the more common
-> pattern, but we're not really describing a h/w connection just an
-> association. And now we also have the trigger source binding to
-> associate LEDs with device nodes, so perhaps that should be used here.
-> We shouldn't really have 2 ways to associate things in DT even if how
-> that gets handled in the kernel is different.
+Otherwise this looks good to me.
 
-trigger-sources is not really the same thing: it's present in the LED node,
-not in the sensor to start with. The LED driver has no knowledge of the
-Media device --- the sensor driver gains this information through the
-endpoints. The sensor driver would need to find the node which contains a
-phandle back to the sensor node.
-
-Having this property in the sensor gives the association information
-between the sensor and the LED. It could be present elsewhere, e.g. the
-master device with DMA engines if there's no association with a sensor.
-
-Some sensors do support strobing the flash, too. The flash type (Xenon or
-LED) needs to be known to the strobe source (sensor).
-
-The strobe wiring may not be there: the module vendors often omit that. Or
-it could be omitted on the board. That's the case with LED flashes; they
-can mostly be triggered using I²C as well albeit less precisely.
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
