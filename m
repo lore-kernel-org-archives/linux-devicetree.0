@@ -1,56 +1,96 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 02/10] dt-bindings: Add documentation for Broadcom
- Hurricane 2 SoCs
-Date: Thu, 28 Sep 2017 16:14:54 -0700
-Message-ID: <20170928231502.27069-3-f.fainelli@gmail.com>
+Subject: [PATCH v2 05/10] clk: bcm: Add Broadcom Hurricane 2 clock support
+Date: Thu, 28 Sep 2017 16:14:57 -0700
+Message-ID: <20170928231502.27069-6-f.fainelli@gmail.com>
 References: <20170928231502.27069-1-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <20170928231502.27069-1-f.fainelli@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-clk-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Olof Johansson <olof@lixom.net>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the Broadcom Hurricane 2 SoCs used in
-switching control planes.
+Add support for the Broadcom Hurricane 2 SoC clock controller. We can
+re-use the existing iProc clock library since the SoC's architecture is
+largely the same as its predecessors. For now, we just initialize the
+iProc ARM PLL.
 
 Acked-by: Jon Mason <jon.mason@broadcom.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
+ drivers/clk/bcm/Kconfig   |  9 +++++++++
+ drivers/clk/bcm/Makefile  |  1 +
+ drivers/clk/bcm/clk-hr2.c | 27 +++++++++++++++++++++++++++
+ 3 files changed, 37 insertions(+)
+ create mode 100644 drivers/clk/bcm/clk-hr2.c
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
+diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+index 1d9187df167b..4c4bd85f707c 100644
+--- a/drivers/clk/bcm/Kconfig
++++ b/drivers/clk/bcm/Kconfig
+@@ -30,6 +30,15 @@ config CLK_BCM_CYGNUS
+ 	help
+ 	  Enable common clock framework support for the Broadcom Cygnus SoC
+ 
++config CLK_BCM_HR2
++	bool "Broadcom Hurricane 2 clock support"
++	depends on ARCH_BCM_HR2 || COMPILE_TEST
++	select COMMON_CLK_IPROC
++	default ARCH_BCM_HR2
++	help
++	  Enable common clock framework support for the Broadcom Hurricane 2
++	  SoC
++
+ config CLK_BCM_NSP
+ 	bool "Broadcom Northstar/Northstar Plus clock support"
+ 	depends on ARCH_BCM_5301X || ARCH_BCM_NSP || COMPILE_TEST
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index a0c14fa4aa1e..755144195541 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835-aux.o
+ obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
+ obj-$(CONFIG_CLK_BCM_CYGNUS)	+= clk-cygnus.o
++obj-$(CONFIG_CLK_BCM_HR2)	+= clk-hr2.o
+ obj-$(CONFIG_CLK_BCM_NSP)	+= clk-nsp.o
+ obj-$(CONFIG_CLK_BCM_NS2)	+= clk-ns2.o
+ obj-$(CONFIG_CLK_BCM_SR)	+= clk-sr.o
+diff --git a/drivers/clk/bcm/clk-hr2.c b/drivers/clk/bcm/clk-hr2.c
 new file mode 100644
-index 000000000000..a124c7fc4dcd
+index 000000000000..f7c5b7379475
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,hr2.txt
-@@ -0,0 +1,14 @@
-+Broadcom Hurricane 2 device tree bindings
-+---------------------------------------
++++ b/drivers/clk/bcm/clk-hr2.c
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (C) 2017 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+Broadcom Hurricane 2 family of SoCs are used for switching control. These SoCs
-+are based on Broadcom's iProc SoC architecture and feature a single core Cortex
-+A9 ARM CPUs, DDR2/DDR3 memory, PCIe GEN-2, USB 2.0 and USB 3.0, serial and NAND
-+flash and a PCIe attached integrated switching engine.
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
 +
-+Boards with Hurricane SoCs shall have the following properties:
++#include "clk-iproc.h"
 +
-+Required root node property:
-+
-+BCM53342
-+compatible = "brcm,bcm53342", "brcm,hr2";
++static void __init hr2_armpll_init(struct device_node *node)
++{
++	iproc_armpll_setup(node);
++}
++CLK_OF_DECLARE(hr2_armpll, "brcm,hr2-armpll", hr2_armpll_init);
 -- 
 2.14.1
+
