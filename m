@@ -1,89 +1,214 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
- ECAM shift mode
-Date: Thu, 28 Sep 2017 10:03:39 +0100
-Message-ID: <20170928090339.GA21499@arm.com>
-References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
- <20170828180437.2646-2-ard.biesheuvel@linaro.org>
- <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v1 4/5] dmaengine: Add driver for NVIDIA Tegra AHB DMA
+ controller
+Date: Thu, 28 Sep 2017 14:59:49 +0530
+Message-ID: <20170928092949.GB30097@localhost>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <0a45e058baba72124b91c663ce1d908d275f4044.1506380746.git.digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170926173200.GL15970-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <0a45e058baba72124b91c663ce1d908d275f4044.1506380746.git.digetx@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 12:32:00PM -0500, Bjorn Helgaas wrote:
-> [+cc Will]
-> 
-> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
-> > Some implementations of the Synopsys Designware PCIe controller implement
-> > a so-called ECAM shift mode, which allows a static memory window to be
-> > configured that covers the configuration space of the entire bus range.
-> > 
-> > If the firmware performs all the low level configuration that is required
-> > to expose this controller in a fully ECAM compatible manner, we can
-> > simply describe it as "pci-host-ecam-generic" and be done with it.
-> > However, it appears that in some cases (one of which is the Armada 80x0),
-> > the IP is synthesized with an ATU window size that does not allow the
-> > first bus to be mapped in a way that prevents the device on the
-> > downstream port from appearing more than once.
-> > 
-> > So implement a driver that relies on the firmware to perform all low
-> > level initialization, and drives the controller in ECAM mode, but
-> > overrides the config space accessors to take the above quirk into
-> > account.
-> > 
-> > Note that, unlike most drivers for this IP, this driver does not expose
-> > a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
-> > given that this is not a true bridge, and does not require any windows
-> > to be configured in order for the downstream device to operate correctly.
-> > Omitting it also prevents the PCI resource allocation routines from
-> > handing out BAR space to it unnecessarily.
-> 
-> This is a tangent, but does this mean the other drivers do not need to
-> expose a fake 00:00.0 device either?
-> 
-> s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
-> 
-> > Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> > Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/pci/dwc/Kconfig                | 11 +++
-> >  drivers/pci/dwc/Makefile               |  1 +
-> >  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
-> 
-> This really doesn't have any DesignWare specifics in it, and it seems
-> more related to drivers/pci/host/pci-host-generic.c than to anything
-> in drivers/pci/dwc.  Maybe it should be
-> drivers/pci/host/pci-host-generic-quirks.c or something?  That's
-> unwieldy, I admit.
-> 
-> Putting it in pci/dwc would make Jingoo and Joao the default
-> maintainers; I don't know how they feel about that.  We would probably
-> have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
-> 
-> Any thoughts on this, Will?
+On Tue, Sep 26, 2017 at 02:22:05AM +0300, Dmitry Osipenko wrote:
 
-The idea of a "generic quirk" makes me smile, I must admit :)
+> +config TEGRA20_AHB_DMA
+> +	tristate "NVIDIA Tegra20 AHB DMA support"
+> +	depends on ARCH_TEGRA
 
-I think there are two options:
+Can we add COMPILE_TEST, helps me compile drivers
 
-  1. Use the full DWC driver, and don't rely on firmware
--or-
-  2. Rely on firmware, but teach pci-host-generic to deal with the funny
-     config space
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
 
-For (2), we probably want to describe this as generically as possible
-in case some other SoCs run into the same problem.
+no vchan.h, so i presume we are not using that here, any reason why?
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +#include "dmaengine.h"
+> +
+> +#define TEGRA_AHBDMA_CMD			0x0
+> +#define TEGRA_AHBDMA_CMD_ENABLE			BIT(31)
+> +
+> +#define TEGRA_AHBDMA_IRQ_ENB_MASK		0x20
+> +#define TEGRA_AHBDMA_IRQ_ENB_CH(ch)		BIT(ch)
+> +
+> +#define TEGRA_AHBDMA_CHANNEL_BASE(ch)		(0x1000 + (ch) * 0x20)
+> +
+> +#define TEGRA_AHBDMA_CHANNEL_CSR		0x0
+> +#define TEGRA_AHBDMA_CHANNEL_ADDR_WRAP		BIT(18)
+> +#define TEGRA_AHBDMA_CHANNEL_FLOW		BIT(24)
+> +#define TEGRA_AHBDMA_CHANNEL_ONCE		BIT(26)
+> +#define TEGRA_AHBDMA_CHANNEL_DIR_TO_XMB		BIT(27)
+> +#define TEGRA_AHBDMA_CHANNEL_IE_EOC		BIT(30)
+> +#define TEGRA_AHBDMA_CHANNEL_ENABLE		BIT(31)
+> +#define TEGRA_AHBDMA_CHANNEL_REQ_SEL_SHIFT	16
+> +#define TEGRA_AHBDMA_CHANNEL_WCOUNT_MASK	0xFFFC
+
+GENMASK() ?
+
+> +static void tegra_ahbdma_tasklet(unsigned long data)
+> +{
+> +	struct tegra_ahbdma_tx_desc *tx = (struct tegra_ahbdma_tx_desc *)data;
+> +	struct dma_async_tx_descriptor *desc = &tx->desc;
+> +
+> +	dmaengine_desc_get_callback_invoke(desc, NULL);
+> +
+> +	if (!tx->cyclic && !dmaengine_desc_test_reuse(desc))
+> +		kfree(tx);
+
+lot of code here can be reduced if we use vchan
+
+> +static struct dma_async_tx_descriptor *tegra_ahbdma_prep_dma_cyclic(
+> +					struct dma_chan *chan,
+> +					dma_addr_t buf_addr,
+> +					size_t buf_len,
+> +					size_t period_len,
+> +					enum dma_transfer_direction dir,
+> +					unsigned long flags)
+> +{
+> +	struct tegra_ahbdma_tx_desc *tx;
+> +
+> +	/* unimplemented */
+> +	if (buf_len != period_len || buf_len > SZ_64K)
+> +		return NULL;
+> +
+> +	tx = kzalloc(sizeof(*tx), GFP_KERNEL);
+> +	if (!tx)
+> +		return NULL;
+> +
+> +	dma_async_tx_descriptor_init(&tx->desc, chan);
+> +
+> +	tx->desc.tx_submit	= tegra_ahbdma_tx_submit;
+> +	tx->mem_paddr		= buf_addr;
+> +	tx->size		= buf_len;
+> +	tx->flags		= flags;
+> +	tx->cyclic		= true;
+> +	tx->dir			= dir;
+> +
+> +	tasklet_init(&tx->tasklet, tegra_ahbdma_tasklet, (unsigned long)tx);
+
+why not precalulcate the register settings here. While submitting you are in
+hot path keeping dmaengine idle so faster you can submit, better the perf
+
+> +static void tegra_ahbdma_issue_pending(struct dma_chan *chan)
+> +{
+> +	struct tegra_ahbdma_chan *ahbdma_chan = to_ahbdma_chan(chan);
+> +	struct tegra_ahbdma_tx_desc *tx;
+> +	struct list_head *entry, *tmp;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&ahbdma_chan->lock, flags);
+> +
+> +	list_for_each_safe(entry, tmp, &ahbdma_chan->pending_list)
+> +		list_move_tail(entry, &ahbdma_chan->active_list);
+> +
+> +	if (completion_done(&ahbdma_chan->idling)) {
+> +		tx = list_first_entry_or_null(&ahbdma_chan->active_list,
+> +					      struct tegra_ahbdma_tx_desc,
+> +					      node);
+> +		if (tx) {
+> +			tegra_ahbdma_submit_tx(ahbdma_chan, tx);
+
+what is chan is already running?
+
+> +			reinit_completion(&ahbdma_chan->idling);
+> +		}
+> +	}
+> +
+> +	spin_unlock_irqrestore(&ahbdma_chan->lock, flags);
+> +}
+> +
+> +static enum dma_status tegra_ahbdma_tx_status(struct dma_chan *chan,
+> +					      dma_cookie_t cookie,
+> +					      struct dma_tx_state *state)
+> +{
+> +	struct tegra_ahbdma_chan *ahbdma_chan = to_ahbdma_chan(chan);
+> +	struct tegra_ahbdma_tx_desc *tx;
+> +	enum dma_status cookie_status;
+> +	unsigned long flags;
+> +	size_t residual;
+> +	u32 status;
+> +
+> +	spin_lock_irqsave(&ahbdma_chan->lock, flags);
+> +
+> +	cookie_status = dma_cookie_status(chan, cookie, state);
+> +	if (cookie_status != DMA_COMPLETE) {
+
+residue can be NULL so check it before proceeding ahead
+
+> +static int tegra_ahbdma_config(struct dma_chan *chan,
+> +			       struct dma_slave_config *sconfig)
+> +{
+> +	struct tegra_ahbdma_chan *ahbdma_chan = to_ahbdma_chan(chan);
+> +	enum dma_transfer_direction dir = sconfig->direction;
+> +	u32 burst, ahb_seq, ahb_addr;
+> +
+> +	if (sconfig->src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES ||
+> +	    sconfig->dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+> +		return -EINVAL;
+> +
+> +	if (dir == DMA_DEV_TO_MEM) {
+> +		burst    = sconfig->src_maxburst;
+> +		ahb_addr = sconfig->src_addr;
+> +	} else {
+> +		burst    = sconfig->dst_maxburst;
+> +		ahb_addr = sconfig->dst_addr;
+> +	}
+> +
+> +	switch (burst) {
+> +	case 1: burst = TEGRA_AHBDMA_CHANNEL_AHB_BURST_1; break;
+> +	case 4: burst = TEGRA_AHBDMA_CHANNEL_AHB_BURST_4; break;
+> +	case 8: burst = TEGRA_AHBDMA_CHANNEL_AHB_BURST_8; break;
+
+pls make this statement and break on subsequent lines, readablity matters
+
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ahb_seq  = burst << TEGRA_AHBDMA_CHANNEL_AHB_BURST_SHIFT;
+> +	ahb_seq |= TEGRA_AHBDMA_CHANNEL_ADDR_WRAP;
+> +	ahb_seq |= TEGRA_AHBDMA_CHANNEL_INTR_ENB;
+> +
+> +	writel_relaxed(ahb_seq,
+> +		       ahbdma_chan->regs + TEGRA_AHBDMA_CHANNEL_AHB_SEQ);
+> +
+> +	writel_relaxed(ahb_addr,
+> +		       ahbdma_chan->regs + TEGRA_AHBDMA_CHANNEL_AHB_PTR);
+
+oh no, you don't write to HW here. This can be called anytime when you have
+txn running! You should save these and use them in prep_ calls.
+
+> +static int tegra_ahbdma_remove(struct platform_device *pdev)
+> +{
+> +	struct tegra_ahbdma *tdma = platform_get_drvdata(pdev);
+> +
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +	dma_async_device_unregister(&tdma->dma_dev);
+> +	clk_disable_unprepare(tdma->clk);
+
+not ensuring tasklets are killed and irq is freed so no more tasklets can
+run? I think that needs to be done...
+
+> +MODULE_DESCRIPTION("NVIDIA Tegra AHB DMA Controller driver");
+> +MODULE_AUTHOR("Dmitry Osipenko <digetx@gmail.com>");
+> +MODULE_LICENSE("GPL");
+
+MODULE_ALIAS?
+
+-- 
+~Vinod
