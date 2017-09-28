@@ -1,14 +1,14 @@
 From: =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH v4 02/11] dmaengine: sun6i: Correct burst length
- field offsets for H3
-Date: Thu, 28 Sep 2017 03:49:19 +0200
-Message-ID: <8bff4e60-f464-4b96-874b-f8a610b5a2ef@rwthex-w2-a.rwth-ad.de>
+Subject: [PATCH v4 04/11] dmaengine: sun6i: Enable additional
+ burst lengths/widths on H3
+Date: Thu, 28 Sep 2017 03:49:21 +0200
+Message-ID: <fa51787d-9b5e-4905-bacb-34ec4f4d00a8@rwthex-w2-a.rwth-ad.de>
 References: <20170928014928.2272-1-stefan.bruens@rwth-aachen.de>
 Reply-To: stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDIYL7P2SAMRBN5KWHHAKGQE6ZPZ26Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDIYL7P2SAMRBPFKWHHAKGQE6TQ3OWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170928014928.2272-1-stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,12 +21,11 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For the H3, the burst lengths field offsets in the channel configuration
-register differs from earlier SoC generations.
+The H3 supports bursts lengths of 1, 4, 8 and 16 transfers, each with
+a width of 1, 2, 4 or 8 bytes.
 
-Using the A31 register macros actually configured the H3 controller
-do to bursts of length 1 always, which although working leads to higher
-bus utilisation.
+The register value for the the width is log2-encoded, change the
+conversion function to provide the correct value for width =3D=3D 8.
 
 Signed-off-by: Stefan Br=C3=BCns <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -34,143 +33,150 @@ Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.g
 ---
 
 Changes in v4:
-- Pass reference to config instead of config itself
 - Fix config initialization
 
 Changes in v3: None
 Changes in v2:
-- Use controller specific callback for burst length setting
+- Store burst widths in config
 
- drivers/dma/sun6i-dma.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ drivers/dma/sun6i-dma.c | 54 ++++++++++++++++++++++++++++++++++++++++-----=
+----
+ 1 file changed, 45 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 6f9d7c4ac7c0..48b3701c9aa1 100644
+index 24dc7fac7447..eb45ab39eddd 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -68,13 +68,15 @@
- #define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & 0x1f)
- #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
- #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
--#define DMA_CHAN_CFG_SRC_BURST(x)	(((x) & 0x3) << 7)
-+#define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
-+#define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
- #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
-=20
- #define DMA_CHAN_CFG_DST_DRQ(x)		(DMA_CHAN_CFG_SRC_DRQ(x) << 16)
- #define DMA_CHAN_CFG_DST_IO_MODE	(DMA_CHAN_CFG_SRC_IO_MODE << 16)
- #define DMA_CHAN_CFG_DST_LINEAR_MODE	(DMA_CHAN_CFG_SRC_LINEAR_MODE << 16)
--#define DMA_CHAN_CFG_DST_BURST(x)	(DMA_CHAN_CFG_SRC_BURST(x) << 16)
-+#define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16=
-)
-+#define DMA_CHAN_CFG_DST_BURST_H3(x)	(DMA_CHAN_CFG_SRC_BURST_H3(x) << 16)
- #define DMA_CHAN_CFG_DST_WIDTH(x)	(DMA_CHAN_CFG_SRC_WIDTH(x) << 16)
-=20
- #define DMA_CHAN_CUR_SRC	0x10
-@@ -118,6 +120,7 @@ struct sun6i_dma_config {
- 	 * BSP kernel source code.
- 	 */
- 	void (*clock_autogate_enable)(struct sun6i_dma_dev *);
-+	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
+@@ -123,6 +123,8 @@ struct sun6i_dma_config {
+ 	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
+ 	u32 src_burst_lengths;
+ 	u32 dst_burst_lengths;
++	u32 src_addr_widths;
++	u32 dst_addr_widths;
  };
 =20
  /*
-@@ -283,6 +286,18 @@ static void sun6i_enable_clock_autogate_h3(struct sun6=
-i_dma_dev *sdev)
- 	writel(SUNXI_H3_DMA_GATE_ENABLE, sdev->base + SUNXI_H3_DMA_GATE);
- }
+@@ -262,8 +264,12 @@ static inline s8 convert_burst(u32 maxburst)
+ 	switch (maxburst) {
+ 	case 1:
+ 		return 0;
++	case 4:
++		return 1;
+ 	case 8:
+ 		return 2;
++	case 16:
++		return 3;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -271,7 +277,7 @@ static inline s8 convert_burst(u32 maxburst)
 =20
-+static void sun6i_set_burst_length_a31(u32 *p_cfg, s8 src_burst, s8 dst_bu=
-rst)
-+{
-+	*p_cfg |=3D DMA_CHAN_CFG_SRC_BURST_A31(src_burst) |
-+		  DMA_CHAN_CFG_DST_BURST_A31(dst_burst);
-+}
-+
-+static void sun6i_set_burst_length_h3(u32 *p_cfg, s8 src_burst, s8 dst_bur=
-st)
-+{
-+	*p_cfg |=3D DMA_CHAN_CFG_SRC_BURST_H3(src_burst) |
-+		  DMA_CHAN_CFG_DST_BURST_H3(dst_burst);
-+}
-+
- static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+ static inline s8 convert_buswidth(enum dma_slave_buswidth addr_width)
  {
- 	struct sun6i_desc *txd =3D pchan->desc;
-@@ -562,11 +577,11 @@ static int set_config(struct sun6i_dma_dev *sdev,
- 	if (dst_width < 0)
- 		return dst_width;
-=20
--	*p_cfg =3D DMA_CHAN_CFG_SRC_BURST(src_burst) |
--		DMA_CHAN_CFG_SRC_WIDTH(src_width) |
--		DMA_CHAN_CFG_DST_BURST(dst_burst) |
-+	*p_cfg =3D DMA_CHAN_CFG_SRC_WIDTH(src_width) |
- 		DMA_CHAN_CFG_DST_WIDTH(dst_width);
-=20
-+	sdev->cfg->set_burst_length(p_cfg, src_burst, dst_burst);
-+
- 	return 0;
+-	return addr_width >> 1;
++	return ilog2(addr_width);
  }
 =20
-@@ -609,11 +624,11 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep=
-_dma_memcpy(
- 		DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
- 		DMA_CHAN_CFG_DST_LINEAR_MODE |
- 		DMA_CHAN_CFG_SRC_LINEAR_MODE |
--		DMA_CHAN_CFG_SRC_BURST(burst) |
- 		DMA_CHAN_CFG_SRC_WIDTH(width) |
--		DMA_CHAN_CFG_DST_BURST(burst) |
- 		DMA_CHAN_CFG_DST_WIDTH(width);
-=20
-+	sdev->cfg->set_burst_length(&v_lli->cfg, burst, burst);
-+
- 	sun6i_dma_lli_add(NULL, v_lli, p_lli, txd);
-=20
- 	sun6i_dma_dump_lli(vchan, v_lli);
-@@ -1025,6 +1040,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D =
-{
- 	.nr_max_channels =3D 16,
- 	.nr_max_requests =3D 30,
- 	.nr_max_vchans   =3D 53,
-+	.set_burst_length =3D sun6i_set_burst_length_a31,
+ static void sun6i_enable_clock_autogate_a23(struct sun6i_dma_dev *sdev)
+@@ -1043,6 +1049,12 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D=
+ {
+ 	.set_burst_length =3D sun6i_set_burst_length_a31,
+ 	.src_burst_lengths =3D BIT(1) | BIT(8),
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8),
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
  };
 =20
  /*
-@@ -1037,6 +1053,7 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =3D =
-{
- 	.nr_max_requests =3D 24,
- 	.nr_max_vchans   =3D 37,
- 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
-+	.set_burst_length =3D sun6i_set_burst_length_a31,
+@@ -1058,6 +1070,12 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =3D=
+ {
+ 	.set_burst_length =3D sun6i_set_burst_length_a31,
+ 	.src_burst_lengths =3D BIT(1) | BIT(8),
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8),
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
  };
 =20
  static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
-@@ -1044,6 +1061,7 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D=
- {
- 	.nr_max_requests =3D 28,
- 	.nr_max_vchans   =3D 39,
- 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
-+	.set_burst_length =3D sun6i_set_burst_length_a31,
+@@ -1068,11 +1086,19 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg =
+=3D {
+ 	.set_burst_length =3D sun6i_set_burst_length_a31,
+ 	.src_burst_lengths =3D BIT(1) | BIT(8),
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8),
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
  };
 =20
  /*
-@@ -1056,6 +1074,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
- 	.nr_max_requests =3D 27,
+  * The H3 has 12 physical channels, a maximum DRQ port id of 27,
+  * and a total of 34 usable source and destination endpoints.
++ * It also supports additional burst lengths and bus widths,
++ * and the burst length fields have different offsets.
+  */
+=20
+ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D {
+@@ -1081,8 +1107,16 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =3D =
+{
  	.nr_max_vchans   =3D 34,
  	.clock_autogate_enable =3D sun6i_enable_clock_autogate_h3,
-+	.set_burst_length =3D sun6i_set_burst_length_h3,
+ 	.set_burst_length =3D sun6i_set_burst_length_h3,
+-	.src_burst_lengths =3D BIT(1) | BIT(8),
+-	.dst_burst_lengths =3D BIT(1) | BIT(8),
++	.src_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
++	.dst_burst_lengths =3D BIT(1) | BIT(4) | BIT(8) | BIT(16),
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
  };
 =20
  /*
-@@ -1068,6 +1087,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D =
-{
- 	.nr_max_requests =3D 23,
- 	.nr_max_vchans   =3D 24,
- 	.clock_autogate_enable =3D sun6i_enable_clock_autogate_a23,
-+	.set_burst_length =3D sun6i_set_burst_length_a31,
+@@ -1098,6 +1132,12 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D=
+ {
+ 	.set_burst_length =3D sun6i_set_burst_length_a31,
+ 	.src_burst_lengths =3D BIT(1) | BIT(8),
+ 	.dst_burst_lengths =3D BIT(1) | BIT(8),
++	.src_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
++	.dst_addr_widths   =3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES),
  };
 =20
  static const struct of_device_id sun6i_dma_match[] =3D {
+@@ -1177,12 +1217,8 @@ static int sun6i_dma_probe(struct platform_device *p=
+dev)
+ 	sdc->slave.device_pause			=3D sun6i_dma_pause;
+ 	sdc->slave.device_resume		=3D sun6i_dma_resume;
+ 	sdc->slave.device_terminate_all		=3D sun6i_dma_terminate_all;
+-	sdc->slave.src_addr_widths		=3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+-	sdc->slave.dst_addr_widths		=3D BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+-						  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	sdc->slave.src_addr_widths		=3D sdc->cfg->src_addr_widths;
++	sdc->slave.dst_addr_widths		=3D sdc->cfg->dst_addr_widths;
+ 	sdc->slave.directions			=3D BIT(DMA_DEV_TO_MEM) |
+ 						  BIT(DMA_MEM_TO_DEV);
+ 	sdc->slave.residue_granularity		=3D DMA_RESIDUE_GRANULARITY_BURST;
 --=20
 2.14.1
 
