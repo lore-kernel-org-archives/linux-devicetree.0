@@ -1,72 +1,89 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [patch v9 0/4] JTAG driver introduction
-Date: Thu, 28 Sep 2017 11:02:10 +0200
-Message-ID: <CAMuHMdX1HNym4n67y2VbZqFDLHFGunfRp-LPn0g2K4qhya_w9g@mail.gmail.com>
-References: <1505985932-27568-1-git-send-email-oleksandrs@mellanox.com>
- <CAMuHMdWfoYzWPJYaGOhF8qshKhvngwFKs=kvuH62PYif9q9+0g@mail.gmail.com> <AM4PR0501MB2194D67623C640E20B3A7FABB1790@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
+ ECAM shift mode
+Date: Thu, 28 Sep 2017 10:03:39 +0100
+Message-ID: <20170928090339.GA21499@arm.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+ <20170828180437.2646-2-ard.biesheuvel@linaro.org>
+ <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM4PR0501MB2194D67623C640E20B3A7FABB1790@AM4PR0501MB2194.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, Jiri Pirko <jiri@resnulli.us>, Tobias Klauser <tklauser@distanz.ch>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "mec@shout.net" <mec@shout.net>, Vadim Pasternak <vadimp@mellanox.com>, system-sw-low-level <system-sw-low-level@mellanox.com>, Rob Herring <robh+dt@kernel.org>, "openocd-devel-owner@lists.sourceforge.net" <openocd-devel-owner@lists.sourceforge.net>, linux-api@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170926173200.GL15970-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksandr,
+On Tue, Sep 26, 2017 at 12:32:00PM -0500, Bjorn Helgaas wrote:
+> [+cc Will]
+> 
+> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
+> > Some implementations of the Synopsys Designware PCIe controller implement
+> > a so-called ECAM shift mode, which allows a static memory window to be
+> > configured that covers the configuration space of the entire bus range.
+> > 
+> > If the firmware performs all the low level configuration that is required
+> > to expose this controller in a fully ECAM compatible manner, we can
+> > simply describe it as "pci-host-ecam-generic" and be done with it.
+> > However, it appears that in some cases (one of which is the Armada 80x0),
+> > the IP is synthesized with an ATU window size that does not allow the
+> > first bus to be mapped in a way that prevents the device on the
+> > downstream port from appearing more than once.
+> > 
+> > So implement a driver that relies on the firmware to perform all low
+> > level initialization, and drives the controller in ECAM mode, but
+> > overrides the config space accessors to take the above quirk into
+> > account.
+> > 
+> > Note that, unlike most drivers for this IP, this driver does not expose
+> > a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
+> > given that this is not a true bridge, and does not require any windows
+> > to be configured in order for the downstream device to operate correctly.
+> > Omitting it also prevents the PCI resource allocation routines from
+> > handing out BAR space to it unnecessarily.
+> 
+> This is a tangent, but does this mean the other drivers do not need to
+> expose a fake 00:00.0 device either?
+> 
+> s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
+> 
+> > Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> > Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/pci/dwc/Kconfig                | 11 +++
+> >  drivers/pci/dwc/Makefile               |  1 +
+> >  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
+> 
+> This really doesn't have any DesignWare specifics in it, and it seems
+> more related to drivers/pci/host/pci-host-generic.c than to anything
+> in drivers/pci/dwc.  Maybe it should be
+> drivers/pci/host/pci-host-generic-quirks.c or something?  That's
+> unwieldy, I admit.
+> 
+> Putting it in pci/dwc would make Jingoo and Joao the default
+> maintainers; I don't know how they feel about that.  We would probably
+> have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
+> 
+> Any thoughts on this, Will?
 
-On Thu, Sep 28, 2017 at 10:53 AM, Oleksandr Shamray
-<oleksandrs@mellanox.com> wrote:
->> [My attention was drawn by
->> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flwn.net
->> %2FArticles%2F734440%2F&data=02%7C01%7Coleksandrs%40mellanox.com%7
->> C97b8ba88686a42daaace08d5064b92eb%7Ca652971c7d2e4d9ba6a4d149256f
->> 461b%7C0%7C0%7C636421844026854216&sdata=TeHD4a3%2FBN6a5XG3Jizf5
->> pmsyJHJjzkEzkpnqsXC6S0%3D&reserved=0]
->> [CC linux-spi, which was never included, while linux-serial was]
->>
->> On Thu, Sep 21, 2017 at 11:25 AM, Oleksandr Shamray
->> <oleksandrs@mellanox.com> wrote:
->> > When a need raise up to use JTAG interface for system's devices
->> > programming or CPU debugging, usually the user layer application
->> > implements jtag protocol by bit-bang or using a proprietary connection
->> > to vendor hardware.
->> > This method can be slow and not generic.
->> >
->
->
-> [..]
->
->> >
->> > Initial version provides the system calls set for:
->> > - SIR (Scan Instruction Register, IEEE 1149.1 Data Register scan);
->> > - SDR (Scan Data Register, IEEE 1149.1 Instruction Register scan);
->> > - RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
->> >   number of clocks.
->> >
->> > SoC which are not equipped with JTAG master interface, can be built on
->> > top of JTAG core driver infrastructure, by applying bit-banging of
->> > TDI, TDO, TCK and TMS pins within the hardware specific driver.
->>
->> Or by using an SPI master?
->>
->
-> I think it depends on how flexible the SPI interface is. If you can set it to transfer
-> from 1 to n bits at a time, and you control the TMS line in software, you should
-> be able to use it. If the SPI interface can only transfer a multiple of 8 bits
-> at a time, then in general it would not be suitable for JTAG.
+The idea of a "generic quirk" makes me smile, I must admit :)
 
-Sure, that depends on the actual SPI master interface.
-But I guess you can write a generic JTAG-over-SPI driver, and use a tms-gpios
-property in DT to specify how to control TMS.
+I think there are two options:
 
-Gr{oetje,eeting}s,
+  1. Use the full DWC driver, and don't rely on firmware
+-or-
+  2. Rely on firmware, but teach pci-host-generic to deal with the funny
+     config space
 
-                        Geert
+For (2), we probably want to describe this as generically as possible
+in case some other SoCs run into the same problem.
 
+Will
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
