@@ -1,50 +1,84 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: Re: [PATCH] usb: dwc3: workaround: disable device-initiated U1/U2
-Date: Fri, 29 Sep 2017 10:56:34 +0300
-Message-ID: <87h8vmj5u5.fsf@linux.intel.com>
-References: <87o9puj66s.fsf@linux.intel.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 09/14] regmap: add iopoll-like polling macro
+ for regmap_field
+Date: Fri, 29 Sep 2017 16:23:01 +0800
+Message-ID: <20170929082306.16193-10-wens@csie.org>
+References: <20170929082306.16193-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87o9puj66s.fsf@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6MFXDHAKGQETNOODXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170929082306.16193-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This patch adds a macro regmap_field_read_poll_timeout that works
+similar to the readx_poll_timeout defined in linux/iopoll.h, except
+that this can also return the error value returned by a failed
+regmap_field_read.
 
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ include/linux/regmap.h | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-Hi,
-
-Felipe Balbi <felipe.balbi@linux.intel.com> writes:
-> (first things first: use get-maintainer.pl. You should have Cc:ed linux-u=
-sb)
-
-apologies. Just now I noticed that you did Cc linux-usb.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlnN/LIACgkQzL64meEa
-mQYxIhAAk8n8lurbUUy7zVKosJQnfNAuxhLo/QJwUO/6BjBGwO//byvXFX+yd8Kl
-8m4bLVUBB+ANT9IHKmor240w0VooS5GjWjaitCjekRDxnDqb/3Cp4zN9XGEfGVAn
-BEGetSnEGkLPQR545OADDh70GyDMABwI8PESXBVSo973zSkfqyr/ggcfaTWx1bos
-ST4Nk3G9xgM6wElU4U+EI0isAVglvJEcqE/KSVFBUWnmGNg2luG11d2C6MLKNoSw
-Pz1b4NAmuLWLkcDEWvIJZfEbc5tGfX2QQKOn/OpT5W3KA31dPmq/jbPcuSsRFz9T
-HRyZvWe2Spw8XVPWMi8fFMdJx3hTehjyXUB4MYpmXnYf351nM4efcZ3jlnisaGvf
-N2GkTJN4ab1f1H5V8879PnW93KUZmuoshT3/+p1mQngnpqlYPiJNpzXSFL8QtBUe
-hvAIxaaF56T0SNDO08ZuIVP1EowsfykplBSDxEn7XDOGuffZPcdARWe5J+J2awmf
-PpbSUE6M8B2qRQ4Vmjm6EK8IUtsh6vvGxQ0AnWSNN0wCT/Y/yJ2Q8oHCVKTLhigt
-7KMLMSeP/L1b6TtwlpibdpbwS18u9+fK/wqXOCW97TqXHtryRk59U2bnJ1qVidah
-uK30armCrsqgb3+SrJTSo7uEGnEy++LPjbPr8wVbAHKdaMMMwv0=
-=pjZl
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index 978abfbac617..93a4663d7acb 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -139,6 +139,45 @@ struct reg_sequence {
+ 	pollret ?: ((cond) ? 0 : -ETIMEDOUT); \
+ })
+ 
++/**
++ * regmap_field_read_poll_timeout - Poll until a condition is met or timeout
++ *
++ * @field: Regmap field to read from
++ * @val: Unsigned integer variable to read the value into
++ * @cond: Break condition (usually involving @val)
++ * @sleep_us: Maximum time to sleep between reads in us (0
++ *            tight-loops).  Should be less than ~20ms since usleep_range
++ *            is used (see Documentation/timers/timers-howto.txt).
++ * @timeout_us: Timeout in us, 0 means never timeout
++ *
++ * Returns 0 on success and -ETIMEDOUT upon a timeout or the regmap_field_read
++ * error return value in case of a error read. In the two former cases,
++ * the last read value at @addr is stored in @val. Must not be called
++ * from atomic context if sleep_us or timeout_us are used.
++ *
++ * This is modelled after the readx_poll_timeout macros in linux/iopoll.h.
++ */
++#define regmap_field_read_poll_timeout(field, val, cond, sleep_us, timeout_us) \
++({ \
++	ktime_t timeout = ktime_add_us(ktime_get(), timeout_us); \
++	int pollret; \
++	might_sleep_if(sleep_us); \
++	for (;;) { \
++		pollret = regmap_field_read((field), &(val)); \
++		if (pollret) \
++			break; \
++		if (cond) \
++			break; \
++		if (timeout_us && ktime_compare(ktime_get(), timeout) > 0) { \
++			pollret = regmap_field_read((field), &(val)); \
++			break; \
++		} \
++		if (sleep_us) \
++			usleep_range((sleep_us >> 2) + 1, sleep_us); \
++	} \
++	pollret ?: ((cond) ? 0 : -ETIMEDOUT); \
++})
++
+ #ifdef CONFIG_REGMAP
+ 
+ enum regmap_endian {
+-- 
+2.14.2
