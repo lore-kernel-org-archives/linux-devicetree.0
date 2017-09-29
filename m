@@ -1,167 +1,201 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] pinctrl: axp209: add pinctrl
- features (fwd)
-Date: Fri, 29 Sep 2017 14:50:34 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1709291449460.2863@hadrien>
-References: <alpine.DEB.2.20.1709291413090.2776@hadrien> <21b7da6c-1d93-c7a1-65b6-80a59d8c982e@free-electrons.com>
-Reply-To: julia.lawall-L2FTfq7BK8M@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDZJXP7F6YLRBHMDXHHAKGQERCAPX7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <21b7da6c-1d93-c7a1-65b6-80a59d8c982e-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] mmc: sdhci-xenon: Fix clock resource by adding an optional bus clock
+Date: Fri, 29 Sep 2017 15:04:35 +0200
+Message-ID: <20170929130435.6805-1-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Armada 7K/8K we need to explicitly enable the bus clock. The bus clock
+is optional because not all the SoCs need them but at least for Armada
+7K/8K it is actually mandatory.
 
+The binding documentation is updating accordingly.
 
-On Fri, 29 Sep 2017, Quentin Schulz wrote:
+Without this patch the kernel hand during boot if the mvpp2.2 network
+driver was not present in the kernel. Indeed the clock needed by the
+xenon controller was set by the network driver.
 
-> Hi Julia,
->
-> On 29/09/2017 14:15, Julia Lawall wrote:
-> > I'm not sure that it is allowed to do krealloc on devm allocated data.
-> > See lins 468 and 485.
-> >
->
-> Indeed, from a glance at the code, it does not look like it is a good idea.
->
-> For v3, this piece of code will be deleted anyway so it won't be a
-> problem anymore.
->
-> However, this logic is used in drivers/pinctrl/sunxi/pinctrl-sunxi.c[1][2]
->
-> @Maxime, @Chen-Yu:
-> We should check more thoroughly than what I did but I think Julia is right.
->
-> The following is my understanding from a very quick look at the code.
->
-> devm_kzalloc will register gpio->functions as a res of the device.
->
-> However it's possible that the pointer is different after krealloc. In
-> that case, krealloc will free the "old" gpio->functions[3] which is
-> managed by devres.
->
-> 1) We might be exposed to a free of a NULL pointer when devres takes
-> care of unregistering the device.
+Fixes: 3a3748dba881 ("mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+functionality)"
+CC: Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+Hi Ulf and Adrian,
 
-I guess it would be a double free?  krealloc won't update the devres view
-of the pointer.
+This patch should be merged in 4.14-rc, as it fixes real issues.
 
-> 2) The "new" gpio->functions would never be freed.
+This patch maye looks like just as a nice clean-up but it is not. On
+the earlier version of the series adding the support for the xenon
+controller there was already this axi bus clock. But at this moment
+the documentation for the clock on the Armada 7K/8K was missing and
+there was no driver for it, so we just use the clock set by the
+bootloader and never change them that's why it worked without any
+visible problem.
 
-That too.
+Then as explained in the commit log the network driver enabled the
+clock for us, and it happened that it was setup before the xenon
+driver. It is only thanks the new information we received on the
+clocks of the Sov and with more exhaustive testes that we found this
+issue and the fix for it.
 
-julia
+Thanks,
 
->
-> Is that correct? If so, we should get rid of devm_kzalloc in favor of a
-> simple kzalloc and free the pointer in the remove function of the driver.
->
-> [1]
-> http://elixir.free-electrons.com/linux/latest/source/drivers/pinctrl/sunxi/pinctrl-sunxi.c#L1078
-> [2]
-> http://elixir.free-electrons.com/linux/latest/source/drivers/pinctrl/sunxi/pinctrl-sunxi.c#L1107
-> [3]
-> http://elixir.free-electrons.com/linux/latest/source/mm/slab_common.c#L1414
->
-> Thanks,
-> Quentin
->
-> > julia
-> >
-> > ---------- Forwarded message ----------
-> > Date: Fri, 29 Sep 2017 20:00:03 +0800
-> > From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> > To: kbuild-JC7UmRfGjtg@public.gmane.org
-> > Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-> > Subject: Re: [PATCH v2 02/10] pinctrl: axp209: add pinctrl features
-> >
-> > Hi Quentin,
-> >
-> > [auto build test WARNING on ]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Quentin-Schulz/add-pinmuxing-support-for-pins-in-AXP209-and-AXP813-PMICs/20170929-162846
-> > base:
-> > :::::: branch date: 4 hours ago
-> > :::::: commit date: 4 hours ago
-> >
-> >>> drivers/pinctrl/pinctrl-axp209.c:485:19-27: WARNING: invalid free of devm_ allocated data
-> >
-> > # https://github.com/0day-ci/linux/commit/1e016076fb841f90f047d2b001c9f8d9fd5e2953
-> > git remote add linux-review https://github.com/0day-ci/linux
-> > git remote update linux-review
-> > git checkout 1e016076fb841f90f047d2b001c9f8d9fd5e2953
-> > vim +485 drivers/pinctrl/pinctrl-axp209.c
-> >
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  446
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  447  static int axp20x_build_state(struct platform_device *pdev)
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  448  {
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  449  	struct axp20x_gpio *gpio = platform_get_drvdata(pdev);
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  450  	unsigned int npins = gpio->desc->npins;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  451  	const struct axp20x_desc_pin *pin;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  452  	struct axp20x_desc_function *func;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  453  	int i, ret;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  454
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  455  	gpio->ngroups = npins;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  456  	gpio->groups = devm_kzalloc(&pdev->dev,
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  457  				    gpio->ngroups * sizeof(*gpio->groups),
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  458  				    GFP_KERNEL);
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  459  	if (!gpio->groups)
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  460  		return -ENOMEM;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  461
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  462  	for (i = 0; i < npins; i++) {
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  463  		gpio->groups[i].name = gpio->desc->pins[i].pin.name;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  464  		gpio->groups[i].pin = gpio->desc->pins[i].pin.number;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  465  	}
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  466
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  467  	/* We assume 4 functions per pin should be enough as a default max */
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  468  	gpio->functions = devm_kzalloc(&pdev->dev,
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  469  				       npins * 4 * sizeof(*gpio->functions),
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  470  				       GFP_KERNEL);
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  471  	if (!gpio->functions)
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  472  		return -ENOMEM;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  473
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  474  	/* Create a list of uniquely named functions */
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  475  	for (i = 0; i < npins; i++) {
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  476  		pin = &gpio->desc->pins[i];
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  477  		func = pin->functions;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  478
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  479  		while (func->name) {
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  480  			axp20x_pinctrl_add_function(gpio, func->name);
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  481  			func++;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  482  		}
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  483  	}
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  484
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26 @485  	gpio->functions = krealloc(gpio->functions,
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  486  				   gpio->nfunctions * sizeof(*gpio->functions),
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  487  				   GFP_KERNEL);
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  488
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  489  	for (i = 0; i < npins; i++) {
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  490  		pin = &gpio->desc->pins[i];
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  491  		ret = axp20x_attach_group_function(pdev, pin);
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  492  		if (ret)
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  493  			return ret;
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  494  	}
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  495
-> > 1e016076fb drivers/pinctrl/pinctrl-axp209.c Quentin Schulz 2017-09-26  496  	return 0;
-> > f72f4b44df drivers/gpio/gpio-axp209.c       Maxime Ripard  2016-07-20  497  }
-> > f72f4b44df drivers/gpio/gpio-axp209.c       Maxime Ripard  2016-07-20  498
-> >
-> > ---
-> > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> >
->
-> --
-> Quentin Schulz, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
->
+Gregory
+
+Changelog:
+v1->v2:
+ - manage the -EPROBE_DEFER case
+ - remove warning message when axi clock is not present
+ - remove useless test before clk_disable_unprepare()
+
+ .../bindings/mmc/marvell,xenon-sdhci.txt           | 12 ++++++-----
+ drivers/mmc/host/sdhci-xenon.c                     | 25 ++++++++++++++++++----
+ drivers/mmc/host/sdhci-xenon.h                     |  1 +
+ 3 files changed, 29 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+index b878a1e305af..ed1456f5c94d 100644
+--- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+@@ -16,11 +16,13 @@ Required Properties:
+ 
+ - clocks:
+   Array of clocks required for SDHC.
+-  Require at least input clock for Xenon IP core.
++  Require at least input clock for Xenon IP core. For Armada AP806 and
++  CP110, the AXI clock is also mandatory.
+ 
+ - clock-names:
+   Array of names corresponding to clocks property.
+   The input clock for Xenon IP core should be named as "core".
++  The input clock for the AXI bus must be named as "axi".
+ 
+ - reg:
+   * For "marvell,armada-3700-sdhci", two register areas.
+@@ -106,8 +108,8 @@ Example:
+ 		compatible = "marvell,armada-ap806-sdhci";
+ 		reg = <0xaa0000 0x1000>;
+ 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
+-		clocks = <&emmc_clk>;
+-		clock-names = "core";
++		clocks = <&emmc_clk>, <&axi_clk>;
++		clock-names = "core", "axi";
+ 		bus-width = <4>;
+ 		marvell,xenon-phy-slow-mode;
+ 		marvell,xenon-tun-count = <11>;
+@@ -126,8 +128,8 @@ Example:
+ 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
+ 		vqmmc-supply = <&sd_vqmmc_regulator>;
+ 		vmmc-supply = <&sd_vmmc_regulator>;
+-		clocks = <&sdclk>;
+-		clock-names = "core";
++		clocks = <&sdclk>, <&axi_clk>;
++		clock-names = "core", "axi";
+ 		bus-width = <4>;
+ 		marvell,xenon-tun-count = <9>;
+ 	};
+diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+index 2eec2e652c53..15f912d08a4c 100644
+--- a/drivers/mmc/host/sdhci-xenon.c
++++ b/drivers/mmc/host/sdhci-xenon.c
+@@ -466,6 +466,7 @@ static int xenon_probe(struct platform_device *pdev)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host;
+ 	struct sdhci_host *host;
++	struct xenon_priv *priv;
+ 	int err;
+ 
+ 	host = sdhci_pltfm_init(pdev, &sdhci_xenon_pdata,
+@@ -474,6 +475,7 @@ static int xenon_probe(struct platform_device *pdev)
+ 		return PTR_ERR(host);
+ 
+ 	pltfm_host = sdhci_priv(host);
++	priv = sdhci_pltfm_priv(pltfm_host);
+ 
+ 	/*
+ 	 * Link Xenon specific mmc_host_ops function,
+@@ -491,9 +493,21 @@ static int xenon_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto free_pltfm;
+ 
++	priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
++	if (IS_ERR(priv->axi_clk)) {
++		err = PTR_ERR(priv->axi_clk);
++		if (err == -EPROBE_DEFER)
++			goto err_clk;
++		priv->axi_clk = NULL;
++	} else {
++		err = clk_prepare_enable(priv->axi_clk);
++		if (err)
++			goto err_clk;
++	}
++
+ 	err = mmc_of_parse(host->mmc);
+ 	if (err)
+-		goto err_clk;
++		goto err_clk_axi;
+ 
+ 	sdhci_get_of_property(pdev);
+ 
+@@ -502,11 +516,11 @@ static int xenon_probe(struct platform_device *pdev)
+ 	/* Xenon specific dt parse */
+ 	err = xenon_probe_dt(pdev);
+ 	if (err)
+-		goto err_clk;
++		goto err_clk_axi;
+ 
+ 	err = xenon_sdhc_prepare(host);
+ 	if (err)
+-		goto err_clk;
++		goto err_clk_axi;
+ 
+ 	pm_runtime_get_noresume(&pdev->dev);
+ 	pm_runtime_set_active(&pdev->dev);
+@@ -527,6 +541,8 @@ static int xenon_probe(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	xenon_sdhc_unprepare(host);
++err_clk_axi:
++	clk_disable_unprepare(priv->axi_clk);
+ err_clk:
+ 	clk_disable_unprepare(pltfm_host->clk);
+ free_pltfm:
+@@ -538,6 +554,7 @@ static int xenon_remove(struct platform_device *pdev)
+ {
+ 	struct sdhci_host *host = platform_get_drvdata(pdev);
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+@@ -546,7 +563,7 @@ static int xenon_remove(struct platform_device *pdev)
+ 	sdhci_remove_host(host, 0);
+ 
+ 	xenon_sdhc_unprepare(host);
+-
++	clk_disable_unprepare(priv->axi_clk);
+ 	clk_disable_unprepare(pltfm_host->clk);
+ 
+ 	sdhci_pltfm_free(pdev);
+diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
+index 2bc0510c0769..9994995c7c56 100644
+--- a/drivers/mmc/host/sdhci-xenon.h
++++ b/drivers/mmc/host/sdhci-xenon.h
+@@ -83,6 +83,7 @@ struct xenon_priv {
+ 	unsigned char	bus_width;
+ 	unsigned char	timing;
+ 	unsigned int	clock;
++	struct clk      *axi_clk;
+ 
+ 	int		phy_type;
+ 	/*
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
