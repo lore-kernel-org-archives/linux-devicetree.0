@@ -1,69 +1,74 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 1/3] ARM: dts: sun8i: Add basic dtsi
- file for Allwinner R40
-Date: Fri, 29 Sep 2017 18:31:53 +0800
-Message-ID: <CAGb2v647i7uecshOO=1Pr8U97duSwL_V92GhS3S4J4+0GEkjYw@mail.gmail.com>
-References: <20170928092543.45648-1-icenowy@aosc.io> <20170928092543.45648-2-icenowy@aosc.io>
- <20170928151103.ov3o5pn5h7inzzan@flea> <7F10060D-6A37-4417-9E24-1BB007580126@aosc.io>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3] mmc: dt-bindings: Add reg/source_cg/latch-ck for
+ Mediatek MMC bindings
+Date: Fri, 29 Sep 2017 13:11:49 +0200
+Message-ID: <f5ef95bf-a085-194b-4412-c72a7813ac08@gmail.com>
+References: <1506081829-29296-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7F10060D-6A37-4417-9E24-1BB007580126-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506081829-29296-1-git-send-email-chaotian.jing@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 29, 2017 at 6:25 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
-> 于 2017年9月28日 GMT+08:00 下午11:11:03, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 写到:
->>Hi,
->>
->>On Thu, Sep 28, 2017 at 09:25:41AM +0000, Icenowy Zheng wrote:
->>> +            /*
->>> +             * The max-frequency properties in all MMC controller nodes
->>> +             * are conservative values proven to work on Banana Pi M2
->>> +             * Ultra (the first community available R40 board).
->>> +             * As the board doesn't wire MMC3 out, the property is not
->>> +             * set in MMC3.
->>> +             * TODO: measure the accurate max frequency of the controllers.
->>> +             */
->>> +            mmc0: mmc@1c0f000 {
->>> +                    compatible = "allwinner,sun8i-r40-mmc",
->>> +                                 "allwinner,sun50i-a64-mmc";
->>> +                    reg = <0x01c0f000 0x1000>;
->>> +                    clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
->>> +                    clock-names = "ahb", "mmc";
->>> +                    resets = <&ccu RST_BUS_MMC0>;
->>> +                    reset-names = "ahb";
->>> +                    pinctrl-0 = <&mmc0_pins>;
->>> +                    pinctrl-names = "default";
->>> +                    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->>> +                    max-frequency = <25000000>;
->>> +                    status = "disabled";
->>> +                    #address-cells = <1>;
->>> +                    #size-cells = <0>;
->>> +            };
->>
->>Sorry if it wasn't really clear, but my point was more than you should
->>just drop the max-frequency property
->
-> Then set it in the boards' DTS?
-
-Why do you need to set them in the first place? The higher speeds need
-voltage control, and the lack of said control means the system won't
-use them anyway.
-
-max-frequency would apply better in situations where the board layout
-can't guarantee proper signal propagation or timing beyond a certain
-frequency. Or if that particular controller instance is flawed or
-restricted in some way.
 
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 09/22/2017 02:03 PM, Chaotian Jing wrote:
+> Change the comptiable for support of multi-platform
+> Add description for reg
+> Add description for source_cg
+> Add description for mediatek,latch-ck
+> Note that source_cg and mediatek,latch-ck are optional for some projects,
+> eg, MT2701 do not have source_cg, and MT2712 do not need
+> mediatek,latch-ck
+> 
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> ---
+>   Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+>   1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> index 4182ea3..b934a29 100644
+> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+>   and the properties used by the msdc driver.
+>   
+>   Required properties:
+> -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+> +- compatible: value should be either of the following.
+> +	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+> +	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> +	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+
+NAK, this has to be:
+You have to add the fallback comatible ("mediatek,mt8135-mmc") to the binding 
+description as otherwise the driver does not get probed.
+
+Regards,
+Matthias
+
+> +- reg: physical base address of the controller and length
+>   - interrupts: Should contain MSDC interrupt number
+> -- clocks: MSDC source clock, HCLK
+> -- clock-names: "source", "hclk"
+> +- clocks: MSDC source clock, HCLK, source_cg
+> +- clock-names: "source", "hclk", "source_cg"
+>   - pinctrl-names: should be "default", "state_uhs"
+>   - pinctrl-0: should contain default/high speed pin ctrl
+>   - pinctrl-1: should contain uhs mode pin ctrl
+> @@ -30,6 +35,8 @@ Optional properties:
+>   - mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
+>   				       If present,HS400 command responses are sampled on rising edges.
+>   				       If not present,HS400 command responses are sampled on falling edges.
+> +- mediatek,latch-ck: Some SoCs do not support enhance_rx, need set correct latch-ck to avoid data crc
+> +		     error caused by stop clock(fifo full)
+>   
+>   Examples:
+>   mmc0: mmc@11230000 {
+> 
