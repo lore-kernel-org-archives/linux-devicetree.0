@@ -1,182 +1,87 @@
-From: Vikas Manocha <vikas.manocha@st.com>
-Subject: [PATCH 2/3] Arm: dts: stm32: remove extra compatible string from DT & driver
-Date: Thu, 28 Sep 2017 15:51:25 -0700
-Message-ID: <1506639114-16913-3-git-send-email-vikas.manocha@st.com>
-References: <1506639114-16913-1-git-send-email-vikas.manocha@st.com>
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
+Date: Fri, 29 Sep 2017 09:56:02 +0800
+Message-ID: <1506650162.19851.12.camel@mhfsdcap03>
+References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+         <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
+         <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
+         <1505355021.8308.4.camel@mhfsdcap03>
+         <CAPDyKFrUe-0hEsxVRQSZvujcXY8WrR6m-0DMW=VwDDLvz7Lexw@mail.gmail.com>
+         <1506475100.19851.9.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506639114-16913-1-git-send-email-vikas.manocha@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Vikas Manocha <vikas.manocha@st.com>, alexandre.torgue@st.com, patrice.chotard@st.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506475100.19851.9.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch remove the extra compatibility string "st,stm32-usart" from
-driver & device tree.
+On Wed, 2017-09-27 at 09:18 +0800, Chaotian Jing wrote:
+> On Wed, 2017-09-27 at 00:33 +0200, Ulf Hansson wrote:
+> > On 14 September 2017 at 04:10, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > On Wed, 2017-09-13 at 09:10 -0500, Rob Herring wrote:
+> > >> On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
+> > >> > Change the comptiable for support of multi-platform
+> > >> > Add description for reg
+> > >> > Add description for source_cg
+> > >> > Add description for mediatek,latch-ck
+> > >>
+> > >> This is at least the 3rd patch with exactly the same vague subject.
+> > >> Please make the subject somewhat unique.
+> > >>
+> > > Thx, will change the subject at next version
+> > >> >
+> > >> > Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > >> > ---
+> > >> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+> > >> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > >> >
+> > >> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > >> > index 4182ea3..405cd06 100644
+> > >> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > >> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > >> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+> > >> >  and the properties used by the msdc driver.
+> > >> >
+> > >> >  Required properties:
+> > >> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+> > >> > +- compatible: value should be either of the following.
+> > >> > +   "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+> > >> > +   "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> > >> > +   "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> > >> > +   "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> > >> > +- reg: physical base address of the controller and length
+> > >> >  - interrupts: Should contain MSDC interrupt number
+> > >> > -- clocks: MSDC source clock, HCLK
+> > >> > -- clock-names: "source", "hclk"
+> > >> > +- clocks: MSDC source clock, HCLK, source_cg
+> > >> > +- clock-names: "source", "hclk", "source_cg"
+> > >>
+> > >> All chips support source_cg? That's not backwards compatible for
+> > >> existing compatible strings if the driver requires it.
+> > > Not all chips support source_cg, for chips which do not support
+> > > source_cg, no need source_cg here, and the driver will parse it
+> > > to know if current chip support it.
+> > 
+> > In such case you must not add add a required binding for it. I think
+> > that is what Rob is trying to point out for you.
+> > 
+> > [...]
+> > 
+> > Kind regards
+> > Uffe
+> The source_cg is required(MUST) at MT2712 and future SoCs, but not
+> required(do not have it) at previous SoCs, so that put it at required
+> properties, let the driver to handle it.
 
-Signed-off-by: Vikas Manocha <vikas.manocha@st.com>
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 12 ++++++------
- arch/arm/boot/dts/stm32f746.dtsi | 12 ++++++------
- arch/arm/boot/dts/stm32h743.dtsi |  4 ++--
- drivers/tty/serial/stm32-usart.c |  3 ---
- 4 files changed, 14 insertions(+), 17 deletions(-)
+Any other comments about it ? still must not add a required binding for
+it ? if add a optional binding for it, how to add it ? as cannot
+duplicate "clocks" & "clock-names" in one node.
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index dd7e99b..5d6bfdf 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -315,7 +315,7 @@
- 		};
- 
- 		usart2: serial@40004400 {
--			compatible = "st,stm32-usart", "st,stm32-uart";
-+			compatible = "st,stm32-uart";
- 			reg = <0x40004400 0x400>;
- 			interrupts = <38>;
- 			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART2)>;
-@@ -323,7 +323,7 @@
- 		};
- 
- 		usart3: serial@40004800 {
--			compatible = "st,stm32-usart", "st,stm32-uart";
-+			compatible = "st,stm32-uart";
- 			reg = <0x40004800 0x400>;
- 			interrupts = <39>;
- 			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART3)>;
-@@ -387,7 +387,7 @@
- 		};
- 
- 		usart7: serial@40007800 {
--			compatible = "st,stm32-usart", "st,stm32-uart";
-+			compatible = "st,stm32-uart";
- 			reg = <0x40007800 0x400>;
- 			interrupts = <82>;
- 			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART7)>;
-@@ -395,7 +395,7 @@
- 		};
- 
- 		usart8: serial@40007c00 {
--			compatible = "st,stm32-usart", "st,stm32-uart";
-+			compatible = "st,stm32-uart";
- 			reg = <0x40007c00 0x400>;
- 			interrupts = <83>;
- 			clocks = <&rcc 0 STM32F4_APB1_CLOCK(UART8)>;
-@@ -445,7 +445,7 @@
- 		};
- 
- 		usart1: serial@40011000 {
--			compatible = "st,stm32-usart", "st,stm32-uart";
-+			compatible = "st,stm32-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <37>;
- 			clocks = <&rcc 0 STM32F4_APB2_CLOCK(USART1)>;
-@@ -456,7 +456,7 @@
- 		};
- 
- 		usart6: serial@40011400 {
--			compatible = "st,stm32-usart", "st,stm32-uart";
-+			compatible = "st,stm32-uart";
- 			reg = <0x40011400 0x400>;
- 			interrupts = <71>;
- 			clocks = <&rcc 0 STM32F4_APB2_CLOCK(USART6)>;
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 5633860..5f94178 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -136,7 +136,7 @@
- 		};
- 
- 		usart2: serial@40004400 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40004400 0x400>;
- 			interrupts = <38>;
- 			clocks = <&rcc 1 CLK_USART2>;
-@@ -144,7 +144,7 @@
- 		};
- 
- 		usart3: serial@40004800 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40004800 0x400>;
- 			interrupts = <39>;
- 			clocks = <&rcc 1 CLK_USART3>;
-@@ -177,7 +177,7 @@
- 		};
- 
- 		usart7: serial@40007800 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40007800 0x400>;
- 			interrupts = <82>;
- 			clocks = <&rcc 1 CLK_UART7>;
-@@ -185,7 +185,7 @@
- 		};
- 
- 		usart8: serial@40007c00 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40007c00 0x400>;
- 			interrupts = <83>;
- 			clocks = <&rcc 1 CLK_UART8>;
-@@ -193,7 +193,7 @@
- 		};
- 
- 		usart1: serial@40011000 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <37>;
- 			clocks = <&rcc 1 CLK_USART1>;
-@@ -201,7 +201,7 @@
- 		};
- 
- 		usart6: serial@40011400 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40011400 0x400>;
- 			interrupts = <71>;
- 			clocks = <&rcc 1 CLK_USART6>;
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-index 58ec227..26de315 100644
---- a/arch/arm/boot/dts/stm32h743.dtsi
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -67,7 +67,7 @@
- 		};
- 
- 		usart2: serial@40004400 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40004400 0x400>;
- 			interrupts = <38>;
- 			status = "disabled";
-@@ -99,7 +99,7 @@
- 		};
- 
- 		usart1: serial@40011000 {
--			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			compatible = "st,stm32f7-uart";
- 			reg = <0x40011000 0x400>;
- 			interrupts = <37>;
- 			status = "disabled";
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 03a58326..46a1f86 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -736,11 +736,8 @@ static struct stm32_port *stm32_of_get_stm32_port(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static const struct of_device_id stm32_match[] = {
--	{ .compatible = "st,stm32-usart", .data = &stm32f4_info},
- 	{ .compatible = "st,stm32-uart", .data = &stm32f4_info},
--	{ .compatible = "st,stm32f7-usart", .data = &stm32f7_info},
- 	{ .compatible = "st,stm32f7-uart", .data = &stm32f7_info},
--	{ .compatible = "st,stm32h7-usart", .data = &stm32h7_info},
- 	{ .compatible = "st,stm32h7-uart", .data = &stm32h7_info},
- 	{},
- };
--- 
-1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
