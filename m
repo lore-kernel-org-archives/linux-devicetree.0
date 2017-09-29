@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 7/7] ARM: dts: sun8i: a83t: allwinner-h8homlet-v2:
- Add AXP818 regulator nodes
-Date: Fri, 29 Sep 2017 11:25:14 +0800
-Message-ID: <20170929032514.31727-8-wens@csie.org>
+Subject: [PATCH 5/7] ARM: dts: sun8i: a83t: cubietruck-plus: Add
+ AXP818 regulator nodes
+Date: Fri, 29 Sep 2017 11:25:12 +0800
+Message-ID: <20170929032514.31727-6-wens@csie.org>
 References: <20170929032514.31727-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -21,47 +21,46 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJ
 List-Id: devicetree@vger.kernel.org
 
 This patch adds device nodes for all the regulators of the AXP818 PMIC.
-References to the 3V dummy regulator are replaced, and it is disabled.
-The 3.3V and 5V are also disabled.
+References to the 3.3V dummy regulator are replaced, and it is disabled.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 126 ++++++++++++++++++++-
- 1 file changed, 124 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 150 ++++++++++++++++++++++-
+ 1 file changed, 148 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-index 1f0d60afb25b..1c7371d6bbb2 100644
---- a/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts
-@@ -65,7 +65,7 @@
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index 716a205c6dbb..7e1b1f6ca5f4 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -127,7 +127,7 @@
  &mmc0 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&mmc0_pins>;
--	vmmc-supply = <&reg_vcc3v0>;
+-	vmmc-supply = <&reg_vcc3v3>;
 +	vmmc-supply = <&reg_dcdc1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
  	bus-width = <4>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
  	cd-inverted;
-@@ -75,7 +75,8 @@
+@@ -137,7 +137,7 @@
  &mmc2 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&mmc2_8bit_emmc_pins>;
--	vmmc-supply = <&reg_vcc3v0>;
+-	vmmc-supply = <&reg_vcc3v3>;
 +	vmmc-supply = <&reg_dcdc1>;
-+	vqmmc-supply = <&reg_dcdc1>;
  	bus-width = <8>;
  	non-removable;
  	cap-mmc-hw-reset;
-@@ -104,6 +105,8 @@
+@@ -152,6 +152,9 @@
  		reg = <0x3a3>;
  		interrupt-parent = <&r_intc>;
  		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
 +		eldoin-supply = <&reg_dcdc1>;
 +		swin-supply = <&reg_dcdc1>;
++		x-powers,drive-vbus-en;
  	};
  
  	ac100: codec@e89 {
-@@ -131,6 +134,125 @@
+@@ -179,6 +182,145 @@
  	};
  };
  
@@ -71,7 +70,7 @@ index 1f0d60afb25b..1c7371d6bbb2 100644
 +	regulator-always-on;
 +	regulator-min-microvolt = <1800000>;
 +	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc18-csi2-dsi-efuse-hdmi";
++	regulator-name = "vcc18-csi2-dsi-efuse-hdmi-d4dp";
 +};
 +
 +&reg_aldo2 {
@@ -89,10 +88,16 @@ index 1f0d60afb25b..1c7371d6bbb2 100644
 +};
 +
 +&reg_dcdc1 {
++	/*
++	 * The schematics say this should be 3.3V, but the FEX file says
++	 * it should be 3V. The latter makes sense, as the WiFi module's
++	 * I/O is indirectly powered from DCDC1, through SW. It is rated
++	 * at 2.98V maximum.
++	 */
 +	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "vcc-3v";
 +};
 +
 +&reg_dcdc2 {
@@ -132,7 +137,14 @@ index 1f0d60afb25b..1c7371d6bbb2 100644
 +&reg_dldo2 {
 +	regulator-min-microvolt = <3300000>;
 +	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-mipi-3v3";
++	regulator-name = "vcc-mipi-3v3-d4dpio";
++};
++
++&reg_dldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <2500000>;
++	regulator-max-microvolt = <2500000>;
++	regulator-name = "vcc-pd-vdd25-ephy";
 +};
 +
 +&reg_dldo4 {
@@ -144,10 +156,29 @@ index 1f0d60afb25b..1c7371d6bbb2 100644
 +	regulator-enable-ramp-delay = <100000>;
 +	regulator-min-microvolt = <3300000>;
 +	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vdd33-pd-ave-ephy";
++	regulator-name = "vdd33-ephy";
++};
++
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
++&reg_eldo1 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vdd12-d4dp-1";
++};
++
++&reg_eldo2 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "vdd12-d4dp-2";
 +};
 +
 +&reg_fldo1 {
++	/* TODO should be handled by USB PHY */
++	regulator-always-on;
 +	regulator-min-microvolt = <1080000>;
 +	regulator-max-microvolt = <1320000>;
 +	regulator-name = "vdd12-hsic";
@@ -169,23 +200,22 @@ index 1f0d60afb25b..1c7371d6bbb2 100644
 +};
 +
 +&reg_sw {
-+	regulator-name = "vcc-wifi";
++	regulator-name = "vcc-wifi-io";
 +};
 +
-+&reg_vcc3v0 {
-+	status = "disabled";
-+};
-+
+ &reg_usb1_vbus {
+ 	gpio = <&pio 3 29 GPIO_ACTIVE_HIGH>; /* PD29 */
+ 	status = "okay";
+@@ -193,6 +335,10 @@
+ 	status = "disabled";
+ };
+ 
 +&reg_vcc3v3 {
 +	status = "disabled";
 +};
 +
-+&reg_vcc5v0 {
-+	status = "disabled";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+ &reg_vcc5v0 {
+ 	status = "disabled";
+ };
 -- 
 2.14.2
