@@ -1,143 +1,93 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] usb: gadget: udc: renesas_usb3: add support for generic phy
-Date: Fri, 29 Sep 2017 20:45:01 +0900
-Message-ID: <1506685501-24988-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1506685501-24988-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: Re: [PATCH v3] mmc: dt-bindings: Add reg/source_cg/latch-ck for
+ Mediatek MMC bindings
+Date: Fri, 29 Sep 2017 19:50:37 +0800
+Message-ID: <1506685837.5896.5.camel@mhfsdcap03>
+References: <1506081829-29296-1-git-send-email-chaotian.jing@mediatek.com>
+ <f5ef95bf-a085-194b-4412-c72a7813ac08@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506685501-24988-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f5ef95bf-a085-194b-4412-c72a7813ac08@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, yong mao <yong.mao@mediatek.com>, Phong LE <ple@baylibre.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for generic phy as an optional. If you want
-to use a generic phy (e.g. phy-rcar-gen3-usb3 driver) on this driver,
-you have to do "insmod phy-rcar-gen3-usb3.ko" first for now.
+On Fri, 2017-09-29 at 13:11 +0200, Matthias Brugger wrote:
+> 
+> On 09/22/2017 02:03 PM, Chaotian Jing wrote:
+> > Change the comptiable for support of multi-platform
+> > Add description for reg
+> > Add description for source_cg
+> > Add description for mediatek,latch-ck
+> > Note that source_cg and mediatek,latch-ck are optional for some projects,
+> > eg, MT2701 do not have source_cg, and MT2712 do not need
+> > mediatek,latch-ck
+> > 
+> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> > ---
+> >   Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+> >   1 file changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > index 4182ea3..b934a29 100644
+> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+> >   and the properties used by the msdc driver.
+> >   
+> >   Required properties:
+> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+> > +- compatible: value should be either of the following.
+> > +	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+> > +	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> > +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> > +	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> 
+> NAK, this has to be:
+> You have to add the fallback compatible ("mediatek,mt8135-mmc") to the binding 
+> description as otherwise the driver does not get probed.
+> 
+> Regards,
+> Matthias
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/usb/renesas_usb3.txt       |  4 ++++
- drivers/usb/gadget/udc/renesas_usb3.c              | 26 ++++++++++++++++++++--
- 2 files changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index e280258..87a45e2 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -15,6 +15,10 @@ Required properties:
-   - interrupts: Interrupt specifier for the USB3.0 Peripheral
-   - clocks: clock phandle and specifier pair
- 
-+Optional properties:
-+  - phys: phandle + phy specifier pair
-+  - phy-names: must be "usb"
-+
- Example of R-Car H3 ES1.x:
- 	usb3_peri0: usb@ee020000 {
- 		compatible = "renesas,r8a7795-usb3-peri",
-diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index d55a06b..3ea4e91 100644
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -1,7 +1,7 @@
- /*
-  * Renesas USB3.0 Peripheral driver (USB gadget)
-  *
-- * Copyright (C) 2015  Renesas Electronics Corporation
-+ * Copyright (C) 2015-2017  Renesas Electronics Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -17,6 +17,7 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/sizes.h>
-@@ -334,6 +335,7 @@ struct renesas_usb3 {
- 	struct usb_gadget_driver *driver;
- 	struct extcon_dev *extcon;
- 	struct work_struct extcon_work;
-+	struct phy *phy;
- 
- 	struct renesas_usb3_ep *usb3_ep;
- 	int num_usb3_eps;
-@@ -2228,6 +2230,9 @@ static int renesas_usb3_start(struct usb_gadget *gadget,
- 	/* hook up the driver */
- 	usb3->driver = driver;
- 
-+	if (usb3->phy)
-+		phy_init(usb3->phy);
-+
- 	pm_runtime_get_sync(usb3_to_dev(usb3));
- 
- 	renesas_usb3_init_controller(usb3);
-@@ -2244,6 +2249,9 @@ static int renesas_usb3_stop(struct usb_gadget *gadget)
- 	usb3->driver = NULL;
- 	renesas_usb3_stop_controller(usb3);
- 
-+	if (usb3->phy)
-+		phy_exit(usb3->phy);
-+
- 	pm_runtime_put(usb3_to_dev(usb3));
- 
- 	return 0;
-@@ -2392,6 +2400,8 @@ static int renesas_usb3_remove(struct platform_device *pdev)
- 	renesas_usb3_dma_free_prd(usb3, &pdev->dev);
- 
- 	__renesas_usb3_ep_free_request(usb3->ep0_req);
-+	if (usb3->phy)
-+		phy_put(usb3->phy);
- 	pm_runtime_disable(usb3_to_dev(usb3));
- 
- 	return 0;
-@@ -2623,11 +2633,19 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_dev_create;
- 
-+	/*
-+	 * This is an optional. So, if this driver cannot get a phy,
-+	 * this driver will not handle a phy anymore.
-+	 */
-+	usb3->phy = devm_phy_get(&pdev->dev, "usb");
-+	if (IS_ERR(usb3->phy))
-+		usb3->phy = NULL;
-+
- 	usb3->workaround_for_vbus = priv->workaround_for_vbus;
- 
- 	renesas_usb3_debugfs_init(usb3, &pdev->dev);
- 
--	dev_info(&pdev->dev, "probed\n");
-+	dev_info(&pdev->dev, "probed%s\n", usb3->phy ? " with phy" : "");
- 	pm_runtime_enable(usb3_to_dev(usb3));
- 
- 	return 0;
-@@ -2654,6 +2672,8 @@ static int renesas_usb3_suspend(struct device *dev)
- 		return 0;
- 
- 	renesas_usb3_stop_controller(usb3);
-+	if (usb3->phy)
-+		phy_exit(usb3->phy);
- 	pm_runtime_put(dev);
- 
- 	return 0;
-@@ -2667,6 +2687,8 @@ static int renesas_usb3_resume(struct device *dev)
- 	if (!usb3->driver)
- 		return 0;
- 
-+	if (usb3->phy)
-+		phy_init(usb3->phy);
- 	pm_runtime_get_sync(dev);
- 	renesas_usb3_init_controller(usb3);
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for your comments, will add the fallback compatible
+("mediatek,mt8135-mmc") to the binding in this patch.
+but, is possible to remove the fallback compatible at next patch ?
+eg, following patches will modify the driver like below:
+static const struct of_device_id msdc_of_ids[] = {
+        { .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+        { .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+};
+then, there is no probe issue and remove the fallback compatible.
+Thx!
+> 
+> > +- reg: physical base address of the controller and length
+> >   - interrupts: Should contain MSDC interrupt number
+> > -- clocks: MSDC source clock, HCLK
+> > -- clock-names: "source", "hclk"
+> > +- clocks: MSDC source clock, HCLK, source_cg
+> > +- clock-names: "source", "hclk", "source_cg"
+> >   - pinctrl-names: should be "default", "state_uhs"
+> >   - pinctrl-0: should contain default/high speed pin ctrl
+> >   - pinctrl-1: should contain uhs mode pin ctrl
+> > @@ -30,6 +35,8 @@ Optional properties:
+> >   - mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
+> >   				       If present,HS400 command responses are sampled on rising edges.
+> >   				       If not present,HS400 command responses are sampled on falling edges.
+> > +- mediatek,latch-ck: Some SoCs do not support enhance_rx, need set correct latch-ck to avoid data crc
+> > +		     error caused by stop clock(fifo full)
+> >   
+> >   Examples:
+> >   mmc0: mmc@11230000 {
+> > 
