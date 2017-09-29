@@ -1,575 +1,217 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-Date: Fri, 29 Sep 2017 13:21:25 -0500
-Message-ID: <20170929182125.GB3163@ti.com>
-References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
- <20170922114703.30511-3-maxime.ripard@free-electrons.com>
+From: zhoujie wu <zhoujiewu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mmc: sdhci-xenon: Fix clock resource by adding an
+ optional bus clock
+Date: Fri, 29 Sep 2017 11:42:14 -0700
+Message-ID: <CAAXpJNvQOFZXDhQ__tEnzo2e=f3bueDRn_i7jOaSugAF-rNAwg@mail.gmail.com>
+References: <20170929130435.6805-1-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170922114703.30511-3-maxime.ripard@free-electrons.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170929130435.6805-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marc
 List-Id: devicetree@vger.kernel.org
 
-Maxime,
+Hi Gregory,
+I tested this v2 patch on my armada3700 board.
 
-Thank you for the patch.
+Tested-by: Zhoujie Wu <zjwu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Fri [2017-Sep-22 13:47:03 +0200]:
-> The Cadence MIPI-CSI2 TX controller is an hardware block meant to be used
-> as a bridge between pixel interfaces and a CSI-2 bus.
-> 
-> It supports operating with an internal or external D-PHY, with up to 4
-> lanes, or without any D-PHY. The current code only supports the former
-> case.
-> 
-> While the virtual channel input on the pixel interface can be directly
-> mapped to CSI2, the datatype input is actually a selection signal (3-bits)
-> mapping to a table of up to 8 preconfigured datatypes/formats (programmed
-> at start-up)
-> 
-> The block supports up to 8 input datatypes.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+On Fri, Sep 29, 2017 at 6:04 AM, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Armada 7K/8K we need to explicitly enable the bus clock. The bus clock
+> is optional because not all the SoCs need them but at least for Armada
+> 7K/8K it is actually mandatory.
+>
+> The binding documentation is updating accordingly.
+>
+> Without this patch the kernel hand during boot if the mvpp2.2 network
+> driver was not present in the kernel. Indeed the clock needed by the
+> xenon controller was set by the network driver.
+>
+> Fixes: 3a3748dba881 ("mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+> functionality)"
+> CC: Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  drivers/media/platform/cadence/Kconfig       |   6 +
->  drivers/media/platform/cadence/Makefile      |   1 +
->  drivers/media/platform/cadence/cdns-csi2tx.c | 479 +++++++++++++++++++++++++++
->  3 files changed, 486 insertions(+)
->  create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-> 
-> diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
-> index d1b6bbb6a0eb..db49328ee8b2 100644
-> --- a/drivers/media/platform/cadence/Kconfig
-> +++ b/drivers/media/platform/cadence/Kconfig
-> @@ -9,4 +9,10 @@ config VIDEO_CADENCE_CSI2RX
->  	depends on VIDEO_V4L2_SUBDEV_API
->  	select V4L2_FWNODE
->  
-> +config VIDEO_CADENCE_CSI2TX
-> +	tristate "Cadence MIPI-CSI2 TX Controller"
-> +	depends on MEDIA_CONTROLLER
-> +	depends on VIDEO_V4L2_SUBDEV_API
-> +	select V4L2_FWNODE
-> +
->  endif
-> diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
-> index 99a4086b7448..7fe992273162 100644
-> --- a/drivers/media/platform/cadence/Makefile
-> +++ b/drivers/media/platform/cadence/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
-> +obj-$(CONFIG_VIDEO_CADENCE_CSI2TX)	+= cdns-csi2tx.o
-> diff --git a/drivers/media/platform/cadence/cdns-csi2tx.c b/drivers/media/platform/cadence/cdns-csi2tx.c
-> new file mode 100644
-> index 000000000000..859bbce8772b
-> --- /dev/null
-> +++ b/drivers/media/platform/cadence/cdns-csi2tx.c
-> @@ -0,0 +1,479 @@
-> +/*
-> + * Driver for Cadence MIPI-CSI2 TX Controller
-> + *
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + */
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_graph.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-subdev.h>
-> +
-> +#define CSI2TX_DEVICE_CONFIG_REG	0x00
-> +
-> +#define CSI2TX_CONFIG_REG		0x20
-> +#define CSI2TX_CONFIG_CFG_REQ			BIT(2)
-> +#define CSI2TX_CONFIG_SRST_REQ			BIT(1)
-> +
-> +#define CSI2TX_DPHY_CFG_REG		0x28
-> +#define CSI2TX_DPHY_CFG_CLK_RESET		BIT(16)
-> +#define CSI2TX_DPHY_CFG_LANE_RESET(n)		BIT((n) + 12)
-> +#define CSI2TX_DPHY_CFG_MODE_MASK		GENMASK(9, 8)
-> +#define CSI2TX_DPHY_CFG_MODE_LPDT		(2 << 8)
-> +#define CSI2TX_DPHY_CFG_MODE_HS			(1 << 8)
-> +#define CSI2TX_DPHY_CFG_MODE_ULPS		(0 << 8)
-> +#define CSI2TX_DPHY_CFG_CLK_ENABLE		BIT(4)
-> +#define CSI2TX_DPHY_CFG_LANE_ENABLE(n)		BIT(n)
-> +
-> +#define CSI2TX_DPHY_CLK_WAKEUP_REG	0x2c
-> +#define CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(n)	((n) & 0xffff)
-> +
-> +#define CSI2TX_DT_CFG_REG(n)		(0x80 + (n) * 8)
-> +#define CSI2TX_DT_CFG_DT(n)			(((n) & 0x3f) << 2)
-> +
-> +#define CSI2TX_DT_FORMAT_REG(n)		(0x84 + (n) * 8)
-> +#define CSI2TX_DT_FORMAT_BYTES_PER_LINE(n)	(((n) & 0xffff) << 16)
-> +#define CSI2TX_DT_FORMAT_MAX_LINE_NUM(n)	((n) & 0xffff)
-> +
-> +#define CSI2TX_STREAM_IF_CFG_REG(n)	(0x100 + (n) * 4)
-> +#define CSI2TX_STREAM_IF_CFG_FILL_LEVEL(n)	((n) & 0x1f)
-> +
-> +#define CSI2TX_STREAMS_MAX	4
-> +
-> +enum csi2tx_pads {
-> +	CSI2TX_PAD_SOURCE,
-> +	CSI2TX_PAD_SINK_STREAM0,
-> +	CSI2TX_PAD_SINK_STREAM1,
-> +	CSI2TX_PAD_SINK_STREAM2,
-> +	CSI2TX_PAD_SINK_STREAM3,
-> +	CSI2TX_PAD_MAX,
-> +};
-> +
-> +struct csi2tx_fmt {
-> +	u32	mbus;
-> +	u32	dt;
-> +	u32	bpp;
-> +};
-> +
-> +struct csi2tx_priv {
-> +	struct device			*dev;
-> +	atomic_t			count;
-> +
-> +	void __iomem			*base;
-> +
-> +	struct clk			*esc_clk;
-> +	struct clk			*p_clk;
-> +	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
-> +
-> +	struct v4l2_subdev		subdev;
-> +	struct media_pad		pads[CSI2TX_PAD_MAX];
-> +	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
-> +
-> +	bool				has_internal_dphy;
-
-I assume dphy support is for a subsequent revision?
-
-> +	unsigned int			lanes;
-> +	unsigned int			max_lanes;
-> +	unsigned int			max_streams;
-> +};
-> +
-> +static struct csi2tx_fmt csi2tx_formats[] = {
-> +	{
-> +		.mbus	= MEDIA_BUS_FMT_UYVY8_1X16,
-> +		.bpp	= 2,
-> +		.dt	= 0x1e,
-> +	},
-> +	{
-> +		.mbus	= MEDIA_BUS_FMT_RGB888_1X24,
-> +		.bpp	= 3,
-> +		.dt	= 0x24,
-> +	},
-> +};
-> +
-> +static inline
-> +struct csi2tx_priv *v4l2_subdev_to_csi2tx(struct v4l2_subdev *subdev)
-> +{
-> +	return container_of(subdev, struct csi2tx_priv, subdev);
-> +}
-> +
-> +static void csi2tx_reset(struct csi2tx_priv *csi2tx)
-> +{
-> +	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	usleep_range(10, 20);
-> +}
-> +
-> +static struct csi2tx_fmt *csitx_get_fmt_from_mbus(struct v4l2_mbus_framefmt *mfmt)
-> +{
-> +	int i;
-> +
-> +	if (!mfmt)
-> +		return NULL;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(csi2tx_formats); i++)
-> +		if (csi2tx_formats[i].mbus == mfmt->code)
-> +			return &csi2tx_formats[i];
-> +
-> +	return NULL;
-> +}
-> +
-> +static int csi2tx_enum_mbus_code(struct v4l2_subdev *subdev,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_mbus_code_enum *code)
-> +{
-> +	if (code->pad || code->index >= ARRAY_SIZE(csi2tx_formats))
-> +		return -EINVAL;
-> +
-> +	code->code = csi2tx_formats[code->index].mbus;
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_get_pad_format(struct v4l2_subdev *subdev,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_format *fmt)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +
-> +	fmt->format = csi2tx->pad_fmts[fmt->pad];
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_format *fmt)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +
-> +	csi2tx->pad_fmts[fmt->pad] = fmt->format;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_subdev_pad_ops csi2tx_pad_ops = {
-> +	.enum_mbus_code	= csi2tx_enum_mbus_code,
-> +	.get_fmt	= csi2tx_get_pad_format,
-> +	.set_fmt	= csi2tx_set_pad_format,
-> +};
-> +
-> +static int csi2tx_start(struct csi2tx_priv *csi2tx)
-> +{
-> +	u32 reg;
-> +	int i;
-> +
-> +	/*
-> +	 * We're not the first users, there's no need to enable the
-> +	 * whole controller.
-> +	 */
-> +	if (atomic_inc_return(&csi2tx->count) > 1)
-> +		return 0;
-> +
-> +	csi2tx_reset(csi2tx);
-> +
-> +	writel(CSI2TX_CONFIG_CFG_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
-> +	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
-> +
-> +	/* Put our lanes (clock and data) out of reset */
-> +	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
-> +	for (i = 0; i < csi2tx->lanes; i++)
-> +		reg |= CSI2TX_DPHY_CFG_LANE_RESET(i);
-> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	/* Enable our (clock and data) lanes */
-> +	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
-> +	for (i = 0; i < csi2tx->lanes; i++)
-> +		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(i);
-> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	/* Switch to HS mode */
-> +	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
-> +	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
-> +	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
-> +
-> +	usleep_range(10, 20);
-> +
-> +	/*
-> +	 * Create a static mapping between the CSI virtual channels
-> +	 * and the input streams.
-> +	 *
-> +	 * This should be enhanced, but v4l2 lacks the support for
-> +	 * changing that mapping dynamically.
-> +	 */
-> +	for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++) {
-> +		struct v4l2_mbus_framefmt *mfmt = &csi2tx->pad_fmts[i];
-> +		struct csi2tx_fmt *fmt = csitx_get_fmt_from_mbus(mfmt);
-> +		int stream = i - CSI2TX_PAD_SINK_STREAM0;
-> +
-> +		/*
-> +		 * If no-one set a format, we consider this pad
-> +		 * disabled and just skip it.
-> +		 */
-> +		if (!fmt)
-> +			continue;
-> +
-
-As Sakari already pointed out setting a valid default is the
-usual practice.
-
-> +		/*
-> +		 * We use the stream ID there, but it's wrong.
-> +		 *
-> +		 * A stream could very well send a data type that is
-> +		 * not equal to its stream ID. We need to find a
-> +		 * proper way to address it.
-> +		 */
-
-I don't quite get the above comment, from the code below it looks like
-you are using the current fmt as a source to provide the correct DT.
-Am I missing soemthing?
-
-> +		writel(CSI2TX_DT_CFG_DT(fmt->dt),
-> +		       csi2tx->base + CSI2TX_DT_CFG_REG(stream));
-> +
-> +		writel(CSI2TX_DT_FORMAT_BYTES_PER_LINE(mfmt->width * fmt->bpp) |
-> +		       CSI2TX_DT_FORMAT_MAX_LINE_NUM(mfmt->height + 1),
-> +		       csi2tx->base + CSI2TX_DT_FORMAT_REG(stream));
-> +
-> +		/*
-> +		 * TODO: This needs to be calculated based on the
-> +		 * clock rate.
-> +		 */
-> +		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
-> +		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
-> +	}
-> +
-> +	/* Disable the configuration mode */
-> +	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_stop(struct csi2tx_priv *csi2tx)
-> +{
-> +	/*
-> +	 * Let the last user turn off the lights
-> +	 */
-> +	if (!atomic_dec_and_test(&csi2tx->count))
-> +		return 0;
-> +
-> +	/* FIXME: Disable the IP here */
-> +
-> +	return 0;
-> +}
-
-At this point both _start() and _stop() only return 0.
-Are there any cases where any of these might fail to "start" or "stop"?
-
-> +
-> +static int csi2tx_s_stream(struct v4l2_subdev *subdev, int enable)
-> +{
-> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
-> +	int ret;
-> +
-> +	if (enable)
-> +		ret = csi2tx_start(csi2tx);
-> +	else
-> +		ret = csi2tx_stop(csi2tx);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct v4l2_subdev_video_ops csi2tx_video_ops = {
-> +	.s_stream	= csi2tx_s_stream,
-> +};
-> +
-> +static struct v4l2_subdev_ops csi2tx_subdev_ops = {
-> +	.pad		= &csi2tx_pad_ops,
-> +	.video		= &csi2tx_video_ops,
-> +};
-> +
-> +static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
-> +				struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	u32 reg;
-> +	int i;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	csi2tx->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(csi2tx->base)) {
-> +		dev_err(&pdev->dev, "Couldn't map our registers\n");
-> +		return PTR_ERR(csi2tx->base);
-> +	}
-> +
-> +	csi2tx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
-> +	if (IS_ERR(csi2tx->p_clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get p_clk\n");
-> +		return PTR_ERR(csi2tx->p_clk);
-> +	}
-> +
-> +	csi2tx->esc_clk = devm_clk_get(&pdev->dev, "esc_clk");
-> +	if (IS_ERR(csi2tx->esc_clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get the esc_clk\n");
-> +		return PTR_ERR(csi2tx->esc_clk);
-> +	}
-> +
-> +	clk_prepare_enable(csi2tx->p_clk);
-> +	reg = readl(csi2tx->base + CSI2TX_DEVICE_CONFIG_REG);
-> +	clk_disable_unprepare(csi2tx->p_clk);
-> +
-> +	csi2tx->max_lanes = (reg & 7);
-> +	if (csi2tx->max_lanes > 4) {
-> +		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
-> +			csi2tx->max_lanes);
-> +		return -EINVAL;
-> +	}
-> +
-> +	csi2tx->max_streams = ((reg >> 4) & 7);
-> +	if (csi2tx->max_streams > CSI2TX_STREAMS_MAX) {
-> +		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
-> +			csi2tx->max_streams);
-> +		return -EINVAL;
-> +	}
-> +
-> +	csi2tx->has_internal_dphy = (reg & BIT(3)) ? true : false;
-> +
-> +	for (i = 0; i < csi2tx->max_streams; i++) {
-> +		char clk_name[16];
-> +
-> +		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
-> +		csi2tx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
-> +		if (IS_ERR(csi2tx->pixel_clk[i])) {
-> +			dev_err(&pdev->dev, "Couldn't get clock %s\n",
-> +				clk_name);
-> +			return PTR_ERR(csi2tx->pixel_clk[i]);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2tx_get_num_lanes(struct device *dev)
-> +{
-> +	struct v4l2_fwnode_endpoint v4l2_ep;
-> +	struct device_node *ep, *np = dev->of_node;
-> +	int ret = 0;
-> +
-> +	ep = of_graph_get_endpoint_by_regs(np, 0, 0);
-> +	if (!ep)
-> +		return -EINVAL;
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
-> +	if (ret) {
-> +		dev_err(dev, "Could not parse v4l2 endpoint\n");
-> +		goto out;
-> +	}
-> +
-> +	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
-> +		dev_err(dev, "Unsupported media bus type: 0x%x\n",
-> +			v4l2_ep.bus_type);
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	ret = v4l2_ep.bus.mipi_csi2.num_data_lanes;
-> +
-> +out:
-> +	of_node_put(ep);
-> +	return ret;
-> +}
-> +
-> +static int csi2tx_probe(struct platform_device *pdev)
-> +{
-> +	struct csi2tx_priv *csi2tx;
-> +	int i, ret;
-> +
-> +	csi2tx = kzalloc(sizeof(*csi2tx), GFP_KERNEL);
-> +	if (!csi2tx)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, csi2tx);
-> +	csi2tx->dev = &pdev->dev;
-> +
-> +	ret = csi2tx_get_resources(csi2tx, pdev);
-> +	if (ret)
-> +		goto err_free_priv;
-> +
-> +	v4l2_subdev_init(&csi2tx->subdev, &csi2tx_subdev_ops);
-> +	csi2tx->subdev.owner = THIS_MODULE;
-> +	csi2tx->subdev.dev = &pdev->dev;
-> +	csi2tx->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	v4l2_set_subdevdata(&csi2tx->subdev, &pdev->dev);
-> +	snprintf(csi2tx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
-> +		 KBUILD_MODNAME, dev_name(&pdev->dev));
-> +
-> +	csi2tx->lanes = csi2tx_get_num_lanes(&pdev->dev);
-> +	if (csi2tx->lanes < 0) {
-> +		dev_err(&pdev->dev, "Invalid number of lanes, bailing out.\n");
-> +		ret = csi2tx->lanes;
-> +		goto err_free_priv;
-> +	}
-
-csi2tx->lanes is unsigned so it will never be negative.
-
-> +
-> +	if (csi2tx->lanes > csi2tx->max_lanes) {
-> +		dev_err(&pdev->dev,
-> +			"Current configuration uses more lanes than supported\n");
-> +		ret = -EINVAL;
-> +		goto err_free_priv;
-> +	}
-> +
-> +	/* Create our media pads */
-> +	csi2tx->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
-> +	csi2tx->pads[CSI2TX_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
-> +	for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++)
-> +		csi2tx->pads[i].flags = MEDIA_PAD_FL_SINK;
-> +
-> +	ret = media_entity_pads_init(&csi2tx->subdev.entity, CSI2TX_PAD_MAX,
-> +				     csi2tx->pads);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = v4l2_async_register_subdev(&csi2tx->subdev);
-> +	if (ret < 0)
-> +		goto err_free_priv;
-> +
-> +	dev_info(&pdev->dev,
-> +		 "Probed CSI2TX with %u/%u lanes, %u streams, %s D-PHY\n",
-> +		 csi2tx->lanes, csi2tx->max_lanes, csi2tx->max_streams,
-> +		 csi2tx->has_internal_dphy ? "internal" : "no");
-> +
-> +	return 0;
-> +
-> +err_free_priv:
-> +	kfree(csi2tx);
-> +	return ret;
-> +}
-> +
-> +static int csi2tx_remove(struct platform_device *pdev)
-> +{
-> +	struct csi2tx_priv *csi2tx = platform_get_drvdata(pdev);
-> +
-> +	v4l2_async_unregister_subdev(&csi2tx->subdev);
-> +	kfree(csi2tx);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id csi2tx_of_table[] = {
-> +	{ .compatible = "cdns,csi2tx" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, csi2tx_of_table);
-> +
-> +static struct platform_driver csi2tx_driver = {
-> +	.probe	= csi2tx_probe,
-> +	.remove	= csi2tx_remove,
-> +
-> +	.driver	= {
-> +		.name		= "cdns-csi2tx",
-> +		.of_match_table	= csi2tx_of_table,
-> +	},
-> +};
-> +module_platform_driver(csi2tx_driver);
-> -- 
-> 2.13.5
-> 
-
-Regards,
-Benoit
+> Hi Ulf and Adrian,
+>
+> This patch should be merged in 4.14-rc, as it fixes real issues.
+>
+> This patch maye looks like just as a nice clean-up but it is not. On
+> the earlier version of the series adding the support for the xenon
+> controller there was already this axi bus clock. But at this moment
+> the documentation for the clock on the Armada 7K/8K was missing and
+> there was no driver for it, so we just use the clock set by the
+> bootloader and never change them that's why it worked without any
+> visible problem.
+>
+> Then as explained in the commit log the network driver enabled the
+> clock for us, and it happened that it was setup before the xenon
+> driver. It is only thanks the new information we received on the
+> clocks of the Sov and with more exhaustive testes that we found this
+> issue and the fix for it.
+>
+> Thanks,
+>
+> Gregory
+>
+> Changelog:
+> v1->v2:
+>  - manage the -EPROBE_DEFER case
+>  - remove warning message when axi clock is not present
+>  - remove useless test before clk_disable_unprepare()
+>
+>  .../bindings/mmc/marvell,xenon-sdhci.txt           | 12 ++++++-----
+>  drivers/mmc/host/sdhci-xenon.c                     | 25 ++++++++++++++++++----
+>  drivers/mmc/host/sdhci-xenon.h                     |  1 +
+>  3 files changed, 29 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+> index b878a1e305af..ed1456f5c94d 100644
+> --- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
+> @@ -16,11 +16,13 @@ Required Properties:
+>
+>  - clocks:
+>    Array of clocks required for SDHC.
+> -  Require at least input clock for Xenon IP core.
+> +  Require at least input clock for Xenon IP core. For Armada AP806 and
+> +  CP110, the AXI clock is also mandatory.
+>
+>  - clock-names:
+>    Array of names corresponding to clocks property.
+>    The input clock for Xenon IP core should be named as "core".
+> +  The input clock for the AXI bus must be named as "axi".
+>
+>  - reg:
+>    * For "marvell,armada-3700-sdhci", two register areas.
+> @@ -106,8 +108,8 @@ Example:
+>                 compatible = "marvell,armada-ap806-sdhci";
+>                 reg = <0xaa0000 0x1000>;
+>                 interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
+> -               clocks = <&emmc_clk>;
+> -               clock-names = "core";
+> +               clocks = <&emmc_clk>, <&axi_clk>;
+> +               clock-names = "core", "axi";
+>                 bus-width = <4>;
+>                 marvell,xenon-phy-slow-mode;
+>                 marvell,xenon-tun-count = <11>;
+> @@ -126,8 +128,8 @@ Example:
+>                 interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
+>                 vqmmc-supply = <&sd_vqmmc_regulator>;
+>                 vmmc-supply = <&sd_vmmc_regulator>;
+> -               clocks = <&sdclk>;
+> -               clock-names = "core";
+> +               clocks = <&sdclk>, <&axi_clk>;
+> +               clock-names = "core", "axi";
+>                 bus-width = <4>;
+>                 marvell,xenon-tun-count = <9>;
+>         };
+> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+> index 2eec2e652c53..15f912d08a4c 100644
+> --- a/drivers/mmc/host/sdhci-xenon.c
+> +++ b/drivers/mmc/host/sdhci-xenon.c
+> @@ -466,6 +466,7 @@ static int xenon_probe(struct platform_device *pdev)
+>  {
+>         struct sdhci_pltfm_host *pltfm_host;
+>         struct sdhci_host *host;
+> +       struct xenon_priv *priv;
+>         int err;
+>
+>         host = sdhci_pltfm_init(pdev, &sdhci_xenon_pdata,
+> @@ -474,6 +475,7 @@ static int xenon_probe(struct platform_device *pdev)
+>                 return PTR_ERR(host);
+>
+>         pltfm_host = sdhci_priv(host);
+> +       priv = sdhci_pltfm_priv(pltfm_host);
+>
+>         /*
+>          * Link Xenon specific mmc_host_ops function,
+> @@ -491,9 +493,21 @@ static int xenon_probe(struct platform_device *pdev)
+>         if (err)
+>                 goto free_pltfm;
+>
+> +       priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
+> +       if (IS_ERR(priv->axi_clk)) {
+> +               err = PTR_ERR(priv->axi_clk);
+> +               if (err == -EPROBE_DEFER)
+> +                       goto err_clk;
+> +               priv->axi_clk = NULL;
+> +       } else {
+> +               err = clk_prepare_enable(priv->axi_clk);
+> +               if (err)
+> +                       goto err_clk;
+> +       }
+> +
+>         err = mmc_of_parse(host->mmc);
+>         if (err)
+> -               goto err_clk;
+> +               goto err_clk_axi;
+>
+>         sdhci_get_of_property(pdev);
+>
+> @@ -502,11 +516,11 @@ static int xenon_probe(struct platform_device *pdev)
+>         /* Xenon specific dt parse */
+>         err = xenon_probe_dt(pdev);
+>         if (err)
+> -               goto err_clk;
+> +               goto err_clk_axi;
+>
+>         err = xenon_sdhc_prepare(host);
+>         if (err)
+> -               goto err_clk;
+> +               goto err_clk_axi;
+>
+>         pm_runtime_get_noresume(&pdev->dev);
+>         pm_runtime_set_active(&pdev->dev);
+> @@ -527,6 +541,8 @@ static int xenon_probe(struct platform_device *pdev)
+>         pm_runtime_disable(&pdev->dev);
+>         pm_runtime_put_noidle(&pdev->dev);
+>         xenon_sdhc_unprepare(host);
+> +err_clk_axi:
+> +       clk_disable_unprepare(priv->axi_clk);
+>  err_clk:
+>         clk_disable_unprepare(pltfm_host->clk);
+>  free_pltfm:
+> @@ -538,6 +554,7 @@ static int xenon_remove(struct platform_device *pdev)
+>  {
+>         struct sdhci_host *host = platform_get_drvdata(pdev);
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+>
+>         pm_runtime_get_sync(&pdev->dev);
+>         pm_runtime_disable(&pdev->dev);
+> @@ -546,7 +563,7 @@ static int xenon_remove(struct platform_device *pdev)
+>         sdhci_remove_host(host, 0);
+>
+>         xenon_sdhc_unprepare(host);
+> -
+> +       clk_disable_unprepare(priv->axi_clk);
+>         clk_disable_unprepare(pltfm_host->clk);
+>
+>         sdhci_pltfm_free(pdev);
+> diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
+> index 2bc0510c0769..9994995c7c56 100644
+> --- a/drivers/mmc/host/sdhci-xenon.h
+> +++ b/drivers/mmc/host/sdhci-xenon.h
+> @@ -83,6 +83,7 @@ struct xenon_priv {
+>         unsigned char   bus_width;
+>         unsigned char   timing;
+>         unsigned int    clock;
+> +       struct clk      *axi_clk;
+>
+>         int             phy_type;
+>         /*
+> --
+> 2.14.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
