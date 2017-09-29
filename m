@@ -1,71 +1,69 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCHv2 2/7] usb: dwc2: add support for STM32F7 USB OTG HS
-Date: Fri, 29 Sep 2017 14:20:54 +0000
-Message-ID: <a0f2971e-d41a-01bb-88e1-8ffed786e954@st.com>
-References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
- <1503930018-536-3-git-send-email-amelie.delaunay@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1503930018-536-3-git-send-email-amelie.delaunay@st.com>
-Content-Language: en-US
-Content-ID: <C08638F0FE0E2B4890335F33A489D638@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, John Youn <johnyoun@synopsys.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: [PATCH] ARM64: dts: meson-gxbb-nexbox-a95x: Enable USB Nodes
+Date: Fri, 29 Sep 2017 17:52:56 +0200
+Message-ID: <20170929155256.7080-1-peter@korsgaard.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Enable both gxbb USB controllers and add a 5V regulator for the OTG port
+VBUS, similar to p20x.
 
-Gentle ping for driver review submitted on August 28th.
+Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+---
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Thanks,
-Amelie
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 38dfdde5c147..60cd9c3b11c8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -88,6 +88,18 @@
+ 		};
+ 	};
+ 
++	usb_pwr: regulator-usb-pwrs {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_PWR";
++
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	vddio_card: gpio-regulator {
+ 		compatible = "regulator-gpio";
+ 
+@@ -294,3 +306,20 @@
+ 	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+ };
++
++&usb0_phy {
++	status = "okay";
++	phy-supply = <&usb_pwr>;
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
+-- 
+2.11.0
 
-On 08/28/2017 04:20 PM, Amelie Delaunay wrote:
-> This patch adds the dwc2_set_params function for STM32F7 USB OTG HS.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->   drivers/usb/dwc2/params.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> index a3ffe97..d5b672d 100644
-> --- a/drivers/usb/dwc2/params.c
-> +++ b/drivers/usb/dwc2/params.c
-> @@ -136,6 +136,15 @@ static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
->   	p->activate_stm_fs_transceiver = true;
->   }
->   
-> +static void dwc2_set_stm32f7_hsotg_params(struct dwc2_hsotg *hsotg)
-> +{
-> +	struct dwc2_core_params *p = &hsotg->params;
-> +
-> +	p->host_rx_fifo_size = 622;
-> +	p->host_nperio_tx_fifo_size = 128;
-> +	p->host_perio_tx_fifo_size = 256;
-> +}
-> +
->   const struct of_device_id dwc2_of_match_table[] = {
->   	{ .compatible = "brcm,bcm2835-usb", .data = dwc2_set_bcm_params },
->   	{ .compatible = "hisilicon,hi6220-usb", .data = dwc2_set_his_params  },
-> @@ -154,6 +163,8 @@ const struct of_device_id dwc2_of_match_table[] = {
->   	{ .compatible = "st,stm32f4x9-fsotg",
->   	  .data = dwc2_set_stm32f4x9_fsotg_params },
->   	{ .compatible = "st,stm32f4x9-hsotg" },
-> +	{ .compatible = "st,stm32f7-hsotg",
-> +	  .data = dwc2_set_stm32f7_hsotg_params },
->   	{},
->   };
->   MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
