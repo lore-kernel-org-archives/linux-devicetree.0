@@ -1,13 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 00/14] drm/sun4i: hdmi: Support HDMI
- controller on A31
-Date: Fri, 29 Sep 2017 16:22:52 +0800
-Message-ID: <20170929082306.16193-1-wens@csie.org>
+Subject: [PATCH v3 12/14] drm/sun4i: hdmi: Add support for A31's
+ HDMI controller
+Date: Fri, 29 Sep 2017 16:23:04 +0800
+Message-ID: <20170929082306.16193-13-wens@csie.org>
+References: <20170929082306.16193-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB54FXDHAKGQEAM2HUKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6MFXDHAKGQETNOODXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170929082306.16193-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,147 +20,119 @@ To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard 
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The HDMI controller found in the A31 SoCs is slightly different
+from the one already supported, which is found in the A10s:
 
-This is v3 of my A31 HDMI support series.
+  - Need different initial values for the PLL related registers
 
-Changes since v2:
+  - Different behavior of the DDC and TMDS clocks
 
-    - TCON muxing moved into functions for each platform, with pointers
-      to them in the TCON quirks structure.
+  - Different register layout for the DDC portion
 
-    - CCU "hdmi-ddc" clock renamed to "ddc".
+  - Separate DDC parent clock
 
-    - Added Maxime's acks.
+This patch adds support for it.
 
-Changes since v1:
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  3 ++
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 58 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
 
-    - Core changes to sun4i-drm to support two display pipelines
-      have been merged into drm-misc and thus dropped from this
-      version
-
-    - Reworked DDC variant support onto new exposed I2C interface bits.
-
-    - Reworked DDC variant support to use regmap_fields.
-
-    - Patches to add variant support to various (TMDS, DDC, HDMI
-      controller) sub-blocks have been merged into one patch.
-
-This series adds support for the HDMI controller found on Allwinner
-A31/A31s SoCs. It builds upon Maxime's work that added support for
-the HDMI controller on the Allwinner A10s SoC.
-
-The HDMI controllers in the older generation Allwinner SoCs is very
-similar. The A10/A10s/A20 all have the same hardware block, with the
-A10 having slightly different initial configuration values. The A31's
-variant splits out the DDC parent clock, has different formulas for
-the DDC and TMDS clocks, and a different register layout for the DDC
-block. Also, it does not expose the CEC pins outside of the SoC, which
-is unfortunate.
-
-Patch 1 exports the 2x outputs of the two video PLLs. These feed the
-TMDS clock directly.
-
-Patch 2 renames the A31 CCU's DDC clock, so that it doesn't conflict
-with the DDC clock in the HDMI block.
-
-Patch 3 moves the existing TCON muxing code for the A13 into a separate
-function, pointed to by by function pointer in the quirks structure.
-The existing sun4i_tcon_set_mux() function calls the function pointer
-if it is set.
-
-Patch 4 adds support for the TCON demuxing feature on the A31. This is
-needed if the user wants to output through HDMI from the second display
-pipeline.
-
-Patch 5 adds proper error path cleanup to the HDMI driver.
-
-Patch 6 adds a regmap for the HDMI driver, to be used in a subsequent
-patch.
-
-Patch 7 allows the HDMI TMDS clock to use the second PLL as its parent,
-in case the first PLL is driving an incompatible dot clock.
-
-Patch 8 adds the A31 HDMI controller variant to the device tree binding.
-
-Patch 9 adds an iopoll-like polling macro for regmap_field. This is used
-in the next patch within the DDC part to poll for reset and I/O
-completion.
-
-Patch 10 adds support for different variants of the HDMI controller
-hardware, with the differences mentioned in the beginning of this
-letter.
-
-Patch 11 adds defines for the A31 specific DDC register offsets.
-
-Patch 12 adds support for the A31's HDMI controller variant.
-
-Patch 13 adds a device node for the HDMI controller on the A31.
-
-Patch 14 enable HDMI video output on three boards that I have.
-
-
-I also had simultaneous output on both display pipelines on the SinA31s,
-one with an LCD panel and the other using HDMI. After boot, both screens
-showed a proper console. The HDMI screen had higher resolution, so the
-console was limited to the upper left corner.
-
-Note that this series does not deal with conflicting pixel clocks.
-
-Assuming everyone is happy with the patches, I propose the following:
-
-    1. We sunxi maintainers will take the clk and dts patches through
-       our tree with minimal but proper cross references.
-
-    2. Mark can either take the regmap patch on an immutable branch,
-       which we then merge into drm-misc before applying the drm/sun4i
-       patches, or give his Ack for us to merge that patch through
-       drm-misc.
-
-As I still don't have a freedesktop.org account [1] to access drm-misc,
-Maxime will have to apply the patches for me.
-
-
-Regards
-ChenYu
-
-
-[1] https://bugs.freedesktop.org/show_bug.cgi?id=102920
-
-Chen-Yu Tsai (14):
-  clk: sunxi-ng: sun6i: Export video PLLs
-  clk: sunxi-ng: sun6i: Rename HDMI DDC clock to avoid name collision
-  drm/sun4i: tcon: Add variant callback for TCON output muxing
-  drm/sun4i: tcon: Add support for demuxing TCON output on A31
-  drm/sun4i: hdmi: Disable clks in bind function error path and unbind
-    function
-  drm/sun4i: hdmi: create a regmap for later use
-  drm/sun4i: hdmi: Allow using second PLL as TMDS clk parent
-  dt-bindings: display: sun4i: Add binding for A31 HDMI controller
-  regmap: add iopoll-like polling macro for regmap_field
-  drm/sun4i: hdmi: Add support for controller hardware variants
-  drm/sun4i: hdmi: Add A31 specific DDC register definitions
-  drm/sun4i: hdmi: Add support for A31's HDMI controller
-  ARM: dts: sun6i: Add device node for HDMI controller
-  ARM: dts: sun6i: Enable HDMI support on some A31/A31s devices
-
- .../bindings/display/sunxi/sun4i-drm.txt           |   3 +
- arch/arm/boot/dts/sun6i-a31-hummingbird.dts        |  21 ++
- arch/arm/boot/dts/sun6i-a31.dtsi                   |  55 +++++
- arch/arm/boot/dts/sun6i-a31s-primo81.dts           |  25 +++
- arch/arm/boot/dts/sun6i-a31s-sina31s.dts           |  25 +++
- drivers/clk/sunxi-ng/ccu-sun6i-a31.c               |   2 +-
- drivers/clk/sunxi-ng/ccu-sun6i-a31.h               |   8 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi.h                 | 107 ++++++++++
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c         |  38 +++-
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             | 204 +++++++++++++++---
- drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c             | 227 +++++++++++++++------
- drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c        |  68 +++---
- drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  83 ++++++--
- drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   5 +
- include/dt-bindings/clock/sun6i-a31-ccu.h          |   4 +
- include/linux/regmap.h                             |  39 ++++
- 16 files changed, 769 insertions(+), 145 deletions(-)
-
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+index da4ea9efc6fa..186624de9b60 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+@@ -59,10 +59,13 @@
+ #define SUN4I_HDMI_PAD_CTRL0_TXEN		BIT(23)
+ 
+ #define SUN4I_HDMI_PAD_CTRL1_REG	0x204
++#define SUN4I_HDMI_PAD_CTRL1_UNKNOWN		BIT(24)	/* set on A31 */
+ #define SUN4I_HDMI_PAD_CTRL1_AMP_OPT		BIT(23)
+ #define SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT		BIT(22)
+ #define SUN4I_HDMI_PAD_CTRL1_EMP_OPT		BIT(20)
+ #define SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT		BIT(19)
++#define SUN4I_HDMI_PAD_CTRL1_PWSCK		BIT(18)
++#define SUN4I_HDMI_PAD_CTRL1_PWSDT		BIT(17)
+ #define SUN4I_HDMI_PAD_CTRL1_REG_DEN		BIT(15)
+ #define SUN4I_HDMI_PAD_CTRL1_REG_DENCK		BIT(14)
+ #define SUN4I_HDMI_PAD_CTRL1_REG_EMP(n)		(((n) & 7) << 10)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 114cbe60b3e6..027b5608dbe6 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -324,6 +324,63 @@ static const struct sun4i_hdmi_variant sun5i_variant = {
+ 	.ddc_fifo_has_dir	= true,
+ };
+ 
++static const struct sun4i_hdmi_variant sun6i_variant = {
++	.has_ddc_parent_clk	= true,
++	.has_reset_control	= true,
++	.pad_ctrl0_init_val	= 0xff |
++				  SUN4I_HDMI_PAD_CTRL0_TXEN |
++				  SUN4I_HDMI_PAD_CTRL0_CKEN |
++				  SUN4I_HDMI_PAD_CTRL0_PWENG |
++				  SUN4I_HDMI_PAD_CTRL0_PWEND |
++				  SUN4I_HDMI_PAD_CTRL0_PWENC |
++				  SUN4I_HDMI_PAD_CTRL0_LDODEN |
++				  SUN4I_HDMI_PAD_CTRL0_LDOCEN,
++	.pad_ctrl1_init_val	= SUN4I_HDMI_PAD_CTRL1_REG_AMP(6) |
++				  SUN4I_HDMI_PAD_CTRL1_REG_EMP(4) |
++				  SUN4I_HDMI_PAD_CTRL1_REG_DENCK |
++				  SUN4I_HDMI_PAD_CTRL1_REG_DEN |
++				  SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_EMP_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_PWSDT |
++				  SUN4I_HDMI_PAD_CTRL1_PWSCK |
++				  SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_AMP_OPT |
++				  SUN4I_HDMI_PAD_CTRL1_UNKNOWN,
++	.pll_ctrl_init_val	= SUN4I_HDMI_PLL_CTRL_VCO_S(8) |
++				  SUN4I_HDMI_PLL_CTRL_CS(3) |
++				  SUN4I_HDMI_PLL_CTRL_CP_S(10) |
++				  SUN4I_HDMI_PLL_CTRL_S(4) |
++				  SUN4I_HDMI_PLL_CTRL_VCO_GAIN(4) |
++				  SUN4I_HDMI_PLL_CTRL_SDIV2 |
++				  SUN4I_HDMI_PLL_CTRL_LDO2_EN |
++				  SUN4I_HDMI_PLL_CTRL_LDO1_EN |
++				  SUN4I_HDMI_PLL_CTRL_HV_IS_33 |
++				  SUN4I_HDMI_PLL_CTRL_PLL_EN,
++
++	.ddc_clk_reg		= REG_FIELD(SUN6I_HDMI_DDC_CLK_REG, 0, 6),
++	.ddc_clk_pre_divider	= 1,
++	.ddc_clk_m_offset	= 2,
++
++	.tmds_clk_div_offset	= 1,
++
++	.field_ddc_en		= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 0, 0),
++	.field_ddc_start	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 27, 27),
++	.field_ddc_reset	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 31, 31),
++	.field_ddc_addr_reg	= REG_FIELD(SUN6I_HDMI_DDC_ADDR_REG, 1, 31),
++	.field_ddc_slave_addr	= REG_FIELD(SUN6I_HDMI_DDC_ADDR_REG, 1, 7),
++	.field_ddc_int_status	= REG_FIELD(SUN6I_HDMI_DDC_INT_STATUS_REG, 0, 8),
++	.field_ddc_fifo_clear	= REG_FIELD(SUN6I_HDMI_DDC_FIFO_CTRL_REG, 18, 18),
++	.field_ddc_fifo_rx_thres = REG_FIELD(SUN6I_HDMI_DDC_FIFO_CTRL_REG, 4, 7),
++	.field_ddc_fifo_tx_thres = REG_FIELD(SUN6I_HDMI_DDC_FIFO_CTRL_REG, 0, 3),
++	.field_ddc_byte_count	= REG_FIELD(SUN6I_HDMI_DDC_CMD_REG, 16, 25),
++	.field_ddc_cmd		= REG_FIELD(SUN6I_HDMI_DDC_CMD_REG, 0, 2),
++	.field_ddc_sda_en	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 6, 6),
++	.field_ddc_sck_en	= REG_FIELD(SUN6I_HDMI_DDC_CTRL_REG, 4, 4),
++
++	.ddc_fifo_reg		= SUN6I_HDMI_DDC_FIFO_DATA_REG,
++	.ddc_fifo_thres_incl	= true,
++};
++
+ static const struct regmap_config sun4i_hdmi_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+@@ -551,6 +608,7 @@ static int sun4i_hdmi_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id sun4i_hdmi_of_table[] = {
+ 	{ .compatible = "allwinner,sun5i-a10s-hdmi", .data = &sun5i_variant, },
++	{ .compatible = "allwinner,sun6i-a31-hdmi", .data = &sun6i_variant, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_hdmi_of_table);
 -- 
 2.14.2
