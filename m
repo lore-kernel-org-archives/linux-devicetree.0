@@ -1,66 +1,80 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 03/14] drm/sun4i: tcon: Add variant callback for TCON
- output muxing
-Date: Fri, 29 Sep 2017 12:19:18 +0200
-Message-ID: <20170929101918.h7lfefk3bjj2lf74@flea>
+Subject: Re: [PATCH v3 04/14] drm/sun4i: tcon: Add support for demuxing TCON
+ output on A31
+Date: Fri, 29 Sep 2017 12:20:06 +0200
+Message-ID: <20170929102006.2wz7wrkpplxwynoh@flea>
 References: <20170929082306.16193-1-wens@csie.org>
- <20170929082306.16193-4-wens@csie.org>
+ <20170929082306.16193-5-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rnbhxdod6u7v4b3i"
+        protocol="application/pgp-signature"; boundary="4aqpdm4bouj2waid"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170929082306.16193-4-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20170929082306.16193-5-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---rnbhxdod6u7v4b3i
+--4aqpdm4bouj2waid
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 29, 2017 at 08:22:55AM +0000, Chen-Yu Tsai wrote:
->  static const struct sun4i_tcon_quirks sun5i_a13_quirks =3D {
-> -	.has_unknown_mux =3D true,
-> -	.has_channel_1	=3D true,
-> +	.has_unknown_mux	=3D true,
-> +	.has_channel_1		=3D true,
-> +	.set_mux		=3D sun5i_a13_tcon_set_mux,
+On Fri, Sep 29, 2017 at 08:22:56AM +0000, Chen-Yu Tsai wrote:
+> On systems with 2 TCONs such as the A31, it is possible to demux the
+> output of the TCONs to one encoder.
+>=20
+> Add support for this for the A31.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 38 ++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 38 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/s=
+un4i_tcon.c
+> index 7bf51abaee97..c949309d4285 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -112,6 +112,21 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tco=
+n, bool enable)
+>  }
+>  EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
+> =20
+> +static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
 
-I guess we could even retire has_unknown_mux now, since it provides
-the same information than if set_mux is set or to NULL.
-
-Maxime
+Would that make sense to make it a bit more generic, and pass the id
+to look for as an argument?
 
 --=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---rnbhxdod6u7v4b3i
+--4aqpdm4bouj2waid
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZzh4mAAoJEBx+YmzsjxAgwWYP/Rporx0Mcrqx2I//WLihReUe
-aumbEsSpNLO7iq4NWXzbkZ2by+qRJAJNqZfQ1h6S05Judyz2ZyXs4IKzTb3VX3yn
-Hs5So/H+fX8GtacxpqjpInNc/ewbQS2/fbrQwWnIFpnU91cRbtqVQcjuCbKcXFMI
-tNfkDcz2WHsGaG0vPb6/DBMYhMrPnNvNP8NoWqD2WAiqeTn4u8gExO0xuVauXx3t
-CbFMq0cIZP1UWnYBEyAzV6BxMwPjMuMboGTEgiE6OfwjYY42ShlLaNRVMRc8fGPC
-tHZFWxXRSJTWgf9Ylf/ZiPUjofG72GfCqWKatXs5h4nsIjVkfIn/s+vTsxQb3vTU
-caOUzQkV+jRlowPy1OG9A15vTVC4E/HqK4rwT+61UPsFCGH9MPRByoAneE07v1/S
-Fp3L+qLxFTWftmv+ArEDCDoi0j20K6bQyz3JHFD+QDMLnbZ1UZhiB5kVXTL2bbOz
-WFrMUSGXDoSQLq4Z6K2F2DiZcA8cb0cwKYxE30rmfDsbS3rSRAK8YTbReA22R2vf
-DnaAvTM1jibuQ6cEycvbfLbQLEHKl7cThsfscnw/LI8gAQe5kyjGdbxEsxPltu6E
-5eY5/cEJ/rigcXvxH9v/pmSkylpSf5uYlC5+5Vr0JrNgyofMeIEGziS6+tj4xsJ/
-oSTYMD5Zok+kxSRAqXML
-=EIN/
+iQIcBAEBAgAGBQJZzh5WAAoJEBx+YmzsjxAgLJ0QAMBRHHiy8jOUQGPgKU+JinBs
+u2rxDfuS/XBFHB2FjH+ya/blQkirAgW1o2R7YbD8hUh/I410qKDJ19qFsqIRvVcr
+F1miAL8p/mCHH4KscvRLDXJzVc20Y3EmI9ApE8ymzVkNtPJ06vTNhRm4KjGvVMOX
+ociqYb4s6Bov4yJZwEqy5B+FoUrcYKSUuVZ0V1B9qCqcDypMpsRfUlwh6oMbKP4h
+DY2niH/rBxn70E3VjMaL8MQp4fmynJ3jEiSrWx6S9gQzhPWBo7QpMnsLatfNaeVc
+ive2NVaXDHxGoaKKmfdn2BUuTwuiCP3Y8oJek5dQRtbNRL1kjR/gRfevNYrFyghG
+qBalx4u3UicezKArb7bCb9ihg1UrxY+7EUcpmn96hhgb227Pzb1lYZc7qAUmPBxa
+zjnZxCGJgq1NX+5ITSL4X7jQYm+ulSDbGDVDnvMo/30vyU0iZ2h/7mSnNdtEnboW
+j20hceoFwBAw/Zi7rKs/21h9WnquqMRwOipNmqKhOnGq0XtZIVx/6ezj3Iouw1DY
+ZHVzn5t+CRiGfuO6k0Z0Glu9Mbfw8KcjU9QF3yLr5lwkIDd7RlrPn1Zm3CRK9MpE
+NxeZDlzqo2tukQQ3owhZvb4KmGwGlgK4YtVvNdMb79ZIaBBFNND8fDdkSGToSgEu
+trapbhPgNPidIJFYqANl
+=/1Is
 -----END PGP SIGNATURE-----
 
---rnbhxdod6u7v4b3i--
+--4aqpdm4bouj2waid--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
