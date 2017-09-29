@@ -1,143 +1,43 @@
-From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Fri, 29 Sep 2017 12:27:09 -0500
-Message-ID: <20170929172709.GA3163@ti.com>
-References: <20170922100823.18184-1-maxime.ripard@free-electrons.com>
- <20170922100823.18184-3-maxime.ripard@free-electrons.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 01/10] dt-bindings: bus: Minimal TI sysc interconnect
+ target module binding
+Date: Fri, 29 Sep 2017 10:51:54 -0700
+Message-ID: <20170929175153.GJ4394@atomide.com>
+References: <20170920224621.16236-1-tony@atomide.com>
+ <20170920224621.16236-2-tony@atomide.com>
+ <20170925063545.nn3gr5drea6o2g6m@squirrel.local>
+ <20170925142520.GE4394@atomide.com>
+ <20170925172120.xu6k3leg4ac6mjya@squirrel.local>
+ <20170925174413.GH4394@atomide.com>
+ <20170927095646.fi4l7jbbvrubfe25@squirrel.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170922100823.18184-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170927095646.fi4l7jbbvrubfe25-2pNSKKP3PSK44ywRPIzf9A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote on Fri [2017-Sep-22 12:08:23 +0200]:
-> The Cadence CSI-2 RX Controller is an hardware block meant to be used as a
-> bridge between a CSI-2 bus and pixel grabbers.
+* Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170927 02:57]:
+> On Mon, Sep 25, 2017 at 10:44:14AM -0700, Tony Lindgren wrote:
+> > * Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170925 10:22]:
+> > > Ah... three "foreign" modules with an idlemode carelessly thrown into a
+> > > register without care for existing layouts.  I think these are more just
+> > > exceptional cases which happen to agree by coincidence since they all
+> > > just added idlemode in the simplest way possible, but I can understand
+> > > how it came to be viewed as a standard type.
+> > 
+> > So we shall then name this fine centauroid sysc ti,81xx-sysc?
 > 
-> It supports operating with internal or external D-PHY, with up to 4 lanes,
-> or without any D-PHY. The current code only supports the former case.
-> 
-> It also support dynamic mapping of the CSI-2 virtual channels to the
-> associated pixel grabbers, but that isn't allowed at the moment either.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/media/platform/Kconfig               |   1 +
->  drivers/media/platform/Makefile              |   2 +
->  drivers/media/platform/cadence/Kconfig       |  12 +
->  drivers/media/platform/cadence/Makefile      |   1 +
->  drivers/media/platform/cadence/cdns-csi2rx.c | 486 +++++++++++++++++++++++++++
->  5 files changed, 502 insertions(+)
->  create mode 100644 drivers/media/platform/cadence/Kconfig
->  create mode 100644 drivers/media/platform/cadence/Makefile
->  create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
-> 
+> There's nothing centauroid specific about this, mcasp on omap4 has it too.
 
-<snip>
-
-> +static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
-> +				struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	unsigned char i;
-> +	u32 reg;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(csi2rx->base))
-> +		return PTR_ERR(csi2rx->base);
-> +
-> +	csi2rx->sys_clk = devm_clk_get(&pdev->dev, "sys_clk");
-> +	if (IS_ERR(csi2rx->sys_clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get sys clock\n");
-> +		return PTR_ERR(csi2rx->sys_clk);
-> +	}
-> +
-> +	csi2rx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
-> +	if (IS_ERR(csi2rx->p_clk)) {
-> +		dev_err(&pdev->dev, "Couldn't get P clock\n");
-> +		return PTR_ERR(csi2rx->p_clk);
-> +	}
-> +
-> +	csi2rx->dphy = devm_phy_optional_get(&pdev->dev, "dphy");
-> +	if (IS_ERR(csi2rx->dphy)) {
-> +		dev_err(&pdev->dev, "Couldn't get external D-PHY\n");
-> +		return PTR_ERR(csi2rx->dphy);
-> +	}
-> +
-> +	/*
-> +	 * FIXME: Once we'll have external D-PHY support, the check
-> +	 * will need to be removed.
-> +	 */
-> +	if (csi2rx->dphy) {
-> +		dev_err(&pdev->dev, "External D-PHY not supported yet\n");
-> +		return -EINVAL;
-> +	}
-
-I understand that in your current environment you do not have a
-DPHY. But I am wondering in a real setup where you will have either
-an internal or an external DPHY, how are they going to interact with
-this driver or vice-versa?
-
-> +
-> +	clk_prepare_enable(csi2rx->p_clk);
-> +	reg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
-> +	clk_disable_unprepare(csi2rx->p_clk);
-> +
-> +	csi2rx->max_lanes = (reg & 7);
-> +	if (csi2rx->max_lanes > CSI2RX_LANES_MAX) {
-> +		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
-> +			csi2rx->max_lanes);
-> +		return -EINVAL;
-> +	}
-> +
-> +	csi2rx->max_streams = ((reg >> 4) & 7);
-> +	if (csi2rx->max_streams > CSI2RX_STREAMS_MAX) {
-> +		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
-> +			csi2rx->max_streams);
-> +		return -EINVAL;
-> +	}
-> +
-> +	csi2rx->has_internal_dphy = (reg & BIT(3)) ? true : false;
-> +
-> +	/*
-> +	 * FIXME: Once we'll have internal D-PHY support, the check
-> +	 * will need to be removed.
-> +	 */
-> +	if (csi2rx->has_internal_dphy) {
-> +		dev_err(&pdev->dev, "Internal D-PHY not supported yet\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i < csi2rx->max_streams; i++) {
-> +		char clk_name[16];
-> +
-> +		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
-> +		csi2rx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
-> +		if (IS_ERR(csi2rx->pixel_clk[i])) {
-> +			dev_err(&pdev->dev, "Couldn't get clock %s\n", clk_name);
-> +			return PTR_ERR(csi2rx->pixel_clk[i]);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
-> +{
-> +	struct v4l2_fwnode_endpoint v4l2_ep;
-> +	struct device_node *ep, *remote;
-
-*remote is now unused.
+OK and for that we have ti,sysc-mcasp. We can call the generic one
+ti,sysc-omap4-simple.
 
 Regards,
-Benoit
 
-<snip>
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
