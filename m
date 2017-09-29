@@ -1,17 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 01/14] clk: sunxi-ng: sun6i: Export video PLLs
-Date: Fri, 29 Sep 2017 10:46:58 +0200
-Message-ID: <20170929084658.la46onmwcibicd4b@flea>
+Subject: Re: [PATCH v3 02/14] clk: sunxi-ng: sun6i: Rename HDMI
+ DDC clock to avoid name collision
+Date: Fri, 29 Sep 2017 10:47:55 +0200
+Message-ID: <20170929084755.vsbqn4bq6z2n7c64@flea>
 References: <20170929082306.16193-1-wens@csie.org>
- <20170929082306.16193-2-wens@csie.org>
+ <20170929082306.16193-3-wens@csie.org>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pxhgzwx355vzrns3"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDMRXDHAKGQEEDGF6RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="xy6qbslaheqpye3t"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSMRXDHAKGQEH6G4J7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170929082306.16193-2-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20170929082306.16193-3-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,19 +24,19 @@ Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <
 List-Id: devicetree@vger.kernel.org
 
 
---pxhgzwx355vzrns3
+--xy6qbslaheqpye3t
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, Sep 29, 2017 at 08:22:53AM +0000, Chen-Yu Tsai wrote:
-> The 2x outputs of the 2 video PLL clocks are directly used by the
-> HDMI controller block.
+On Fri, Sep 29, 2017 at 08:22:54AM +0000, Chen-Yu Tsai wrote:
+> The HDMI DDC clock found in the CCU is the parent of the actual DDC
+> clock within the HDMI controller. That clock is also named "hdmi-ddc".
 > 
-> Export them so they can be referenced in the device tree.
+> Rename the one in the CCU to "ddc". This makes more sense than renaming
+> the one in the HDMI controller to something else.
 > 
 > Fixes: c6e6c96d8fa6 ("clk: sunxi-ng: Add A31/A31s clocks")
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Applied, thanks!
 Maxime
@@ -44,4 +45,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---pxhgzwx355vzrns3--
+--xy6qbslaheqpye3t--
