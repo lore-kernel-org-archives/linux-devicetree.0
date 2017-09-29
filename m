@@ -1,112 +1,137 @@
-From: "Jingoo Han" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in ECAM shift mode
-Date: Thu, 28 Sep 2017 23:29:31 -0400
-Message-ID: <000101d338d3$2aa0c2f0$7fe248d0$@gmail.com>
-References: <20170828180437.2646-1-ard.biesheuvel@linaro.org> <20170828180437.2646-2-ard.biesheuvel@linaro.org> <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com> <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA@mail.gmail.com> <20170928174847.GW15970@bhelgaas-glaptop.roam.corp.google.com>
+From: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] usb: dwc3: workaround: disable device-initiated U1/U2
+Date: Fri, 29 Sep 2017 12:45:05 +0800
+Message-ID: <20170929044505.3410-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170928174847.GW15970-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-us
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Bjorn Helgaas' <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Ard Biesheuvel' <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: 'linux-pci' <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Marcin Wojtas' <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, 'Leif Lindholm' <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Graeme Gregory' <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Joao Pinto' <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Will Deacon' <will.deacon-5wv7dgnIgG8@public.gmane.org>
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, September 28, 2017 1:49 PM, Bjorn Helgaas wrote:
-> On Thu, Sep 28, 2017 at 08:51:43AM -0700, Ard Biesheuvel wrote:
-> > On 26 September 2017 at 10:32, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > > On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
-> > >> Some implementations of the Synopsys Designware PCIe controller
-> implement
-> > >> a so-called ECAM shift mode, which allows a static memory window to
-> be
-> > >> configured that covers the configuration space of the entire bus
-> range.
-> 
-> > >> Note that, unlike most drivers for this IP, this driver does not
-> expose
-> > >> a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
-> > >> given that this is not a true bridge, and does not require any
-> windows
-> > >> to be configured in order for the downstream device to operate
-> correctly.
-> > >> Omitting it also prevents the PCI resource allocation routines from
-> > >> handing out BAR space to it unnecessarily.
-> > >
-> > > This is a tangent, but does this mean the other drivers do not need to
-> > > expose a fake 00:00.0 device either?
-> >
-> > To be honest, I am not so sure anymore. I am seeing some issues in
-> > ASPM code making the assumption that any device which is not a root
-> > port has a parent. If this is mandated by the spec, I guess there
-> > isn't a whole lot we can do except expose a fake root port on b/d/f
-> > 0/0/0. This used to work fine, though, and I have to confirm whether
-> > the issues I am seeing currently are due to different hardware or
-> > changes in the software.
-> 
-> I agree that our ASPM code had some assumptions that any non-root port
-> device should have a parent.  I think the spec also makes that
-> assumption, but I haven't found an explicit mandate.  And there *are*
-> systems lacking root ports:
-> 
-> http://lkml.kernel.org/r/1439808478-23253-1-git-send-email-
-> wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-> 
-> We fixed one such assumption in that thread, but I wouldn't be
-> surprised if more remain.  If there are, I think we should fix the
-> code to remove the assumption.
-> 
-> > > This really doesn't have any DesignWare specifics in it, and it seems
-> > > more related to drivers/pci/host/pci-host-generic.c than to anything
-> > > in drivers/pci/dwc.  Maybe it should be
-> > > drivers/pci/host/pci-host-generic-quirks.c or something?  That's
-> > > unwieldy, I admit.
-> >
-> > I don't care where we put it, and I am fine with owning it if you
-prefer.
-> 
-> I think Will's idea of teaching pci-host-generic to deal with this is
-> perfect.
+Issue: When the USB controller is configured as a USB device
+mode, the device initiates low power when an ACK is pending for a
+data packet (DP). When operating in SuperSpeed mode and when the
+internal condition for low power (u1/u2) is satisfied, the device
+initiates u1/u2 even though it has just received a DPH of the DP
+header (DPH). This causes the link to enter and exit low power before
+the device sends an ACK for the DP. This behavior can cause a
+transaction timeout on the host for the DP. Impact: Depending on the
+host transaction timeout value, the host may timeout on the
+transaction and the host retries the transfer. If the same issue
+happens again, this could result in the host resetting the device and
+re-enumerating.
 
-I agree. I cannot find any reason to create new dwc-specific file.
-Reusing 'pci-host-generic.c' looks better.
-Maybe 'pci-host-generic.c with quirks' will be good.
+Workaround: Disable USB_DCTL (InitU1Ena, InitU2Ena) bits. As a
+result,the device does not initiate lowpower requests; however,
+it can still accept low-power requests from the host/hub and enter
+low power.
 
-Best regards,
-Jingoo Han
+Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+ drivers/usb/dwc3/core.c                        | 2 ++
+ drivers/usb/dwc3/core.h                        | 2 ++
+ drivers/usb/dwc3/ep0.c                         | 4 ++--
+ drivers/usb/dwc3/gadget.c                      | 7 +++++++
+ 5 files changed, 15 insertions(+), 2 deletions(-)
 
-> 
-> > >> +config PCIE_DW_HOST_ECAM
-> > >> +     bool "Synopsys DesignWare PCIe controller in ECAM mode"
-> > >> +     depends on OF && PCI
-> > >> +     select PCI_HOST_COMMON
-> > >> +     select IRQ_DOMAIN
-> > >> +     help
-> > >> +       Add support for Synopsys DesignWare PCIe controllers
-> configured
-> > >> +       by the firmware into ECAM shift mode. In some cases, these
-are
-> > >> +       fully ECAM compliant, in which case the pci-host-generic
-> driver
-> > >> +       may be used instead.
-> > >
-> > > This doesn't quite read right.  It sounds like a controller in ECAM
-> > > shift mode might be fully ECAM compliant, but I don't think that's
-> > > what you intended.
-> >
-> > Yes, that is what I mean. ECAM shift mode results in a fully compliant
-> > ECAM config space iff the IP was synthesized with a 32 KB granularity
-> > for the iATU windows. The default is 64 KB, though, in which case you
-> > need this driver.
-> 
-> OK.  I'm trying to figure out how I as a user would know whether to
-> select this option.  Maybe the config option will go away if you add
-> the smarts to pci-host-generic?
-> 
-> Bjorn
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 7d4f90c16cd4..9afa8e95831e 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -47,6 +47,8 @@ Optional properties:
+ 			from P0 to P1/P2/P3 without delay.
+  - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
+ 			during HS transmit.
++ - snps,disable_devinit_u1u2: when set, disable device-initiated U1/U2
++			LPM request in USB device mode.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+ 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+  - snps,hird-threshold: HIRD threshold
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index f13096b0900e..63d599872a43 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1143,6 +1143,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 
+ 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+ 				"snps,tx_de_emphasis_quirk");
++	dwc->disable_devinit_u1u2_quirk = device_property_read_bool(dev,
++				"snps,disable_devinit_u1u2");
+ 	device_property_read_u8(dev, "snps,tx_de_emphasis",
+ 				&tx_de_emphasis);
+ 	device_property_read_string(dev, "snps,hsphy_interface",
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 7c2f84dc218a..2be63c1a6ab6 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -896,6 +896,7 @@ struct dwc3_scratchpad_array {
+  * 	1	- -3.5dB de-emphasis
+  * 	2	- No de-emphasis
+  * 	3	- Reserved
++ * @disable_devinit_u1u2_quirk: disable device-initiated U1/U2 request.
+  * @imod_interval: set the interrupt moderation interval in 250ns
+  *                 increments or 0 to disable.
+  */
+@@ -1057,6 +1058,7 @@ struct dwc3 {
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
++	unsigned		disable_devinit_u1u2_quirk:1;
+ 
+ 	u16			imod_interval;
+ };
+diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+index 827e376bfa97..bbbf46f031e2 100644
+--- a/drivers/usb/dwc3/ep0.c
++++ b/drivers/usb/dwc3/ep0.c
+@@ -391,7 +391,7 @@ static int dwc3_ep0_handle_u1(struct dwc3 *dwc, enum usb_device_state state,
+ 		return -EINVAL;
+ 
+ 	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+-	if (set)
++	if (set && !dwc->disable_devinit_u1u2_quirk)
+ 		reg |= DWC3_DCTL_INITU1ENA;
+ 	else
+ 		reg &= ~DWC3_DCTL_INITU1ENA;
+@@ -413,7 +413,7 @@ static int dwc3_ep0_handle_u2(struct dwc3 *dwc, enum usb_device_state state,
+ 		return -EINVAL;
+ 
+ 	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
+-	if (set)
++	if (set && !dwc->disable_devinit_u1u2_quirk)
+ 		reg |= DWC3_DCTL_INITU2ENA;
+ 	else
+ 		reg &= ~DWC3_DCTL_INITU2ENA;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index f064f1549333..61141c6350dc 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3199,6 +3199,7 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ {
+ 	int ret;
+ 	int irq;
++	u32	reg;
+ 
+ 	irq = dwc3_gadget_get_irq(dwc);
+ 	if (irq < 0) {
+@@ -3275,6 +3276,12 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 		goto err4;
+ 	}
+ 
++	if (dwc->disable_devinit_u1u2_quirk) {
++		reg = dwc3_readl(dwc->regs, DWC3_DCTL);
++		reg &= ~(DWC3_DCTL_INITU1ENA | DWC3_DCTL_INITU2ENA);
++		dwc3_writel(dwc->regs, DWC3_DCTL, reg);
++	}
++
+ 	return 0;
+ 
+ err4:
+-- 
+2.14.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
