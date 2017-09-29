@@ -1,79 +1,179 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v2] pinctrl: intel: merrifield: Introduce OF device table
-Date: Fri, 29 Sep 2017 16:55:39 +0300
-Message-ID: <20170929135539.4046-1-andriy.shevchenko@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-gpio @ vger . kernel . org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 07/12] usb: mtu3: add support for usb3.1 IP
+Date: Fri, 29 Sep 2017 22:11:41 +0800
+Message-ID: <1506694301.17567.26.camel@mhfsdcap03>
+References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
+         <f862f79fce3eb723a7d9bb6d27e60b82d031d918.1506509659.git.chunfeng.yun@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f862f79fce3eb723a7d9bb6d27e60b82d031d918.1506509659.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Intel Merrifield the pin control device is a separate IP block
-without any PCI or ACPI ID assigned. We need some means to allow the
-device be enumerated in ACPI environment (*).
+On Thu, 2017-09-28 at 08:17 +0800, Chunfeng Yun wrote:
+> Support SuperSpeedPlus for usb3.1 device IP
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  drivers/usb/mtu3/mtu3.h            |    1 +
+>  drivers/usb/mtu3/mtu3_core.c       |   14 +++++++++++---
+>  drivers/usb/mtu3/mtu3_gadget.c     |    3 ++-
+>  drivers/usb/mtu3/mtu3_gadget_ep0.c |   16 ++++++++--------
+>  drivers/usb/mtu3/mtu3_hw_regs.h    |    1 +
+>  5 files changed, 23 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
+> index b0c2b5d..d80e4e8 100644
+> --- a/drivers/usb/mtu3/mtu3.h
+> +++ b/drivers/usb/mtu3/mtu3.h
+> @@ -94,6 +94,7 @@ enum mtu3_speed {
+>  	MTU3_SPEED_FULL = 1,
+>  	MTU3_SPEED_HIGH = 3,
+>  	MTU3_SPEED_SUPER = 4,
+> +	MTU3_SPEED_SUPER_PLUS = 5,
+>  };
+>  
+>  /**
+> diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+> index cd4528f..67f7a30 100644
+> --- a/drivers/usb/mtu3/mtu3_core.c
+> +++ b/drivers/usb/mtu3/mtu3_core.c
+> @@ -237,7 +237,7 @@ void mtu3_ep_stall_set(struct mtu3_ep *mep, bool set)
+>  
+>  void mtu3_dev_on_off(struct mtu3 *mtu, int is_on)
+>  {
+> -	if (mtu->is_u3_ip && (mtu->max_speed == USB_SPEED_SUPER))
+> +	if (mtu->is_u3_ip && mtu->max_speed >= USB_SPEED_SUPER)
+>  		mtu3_ss_func_set(mtu, is_on);
+>  	else
+>  		mtu3_hs_softconn_set(mtu, is_on);
+> @@ -547,6 +547,9 @@ static void mtu3_set_speed(struct mtu3 *mtu)
+>  		mtu3_clrbits(mbase, U3D_USB3_CONFIG, USB3_EN);
+>  		/* HS/FS detected by HW */
+>  		mtu3_setbits(mbase, U3D_POWER_MANAGEMENT, HS_ENABLE);
+> +	} else if (mtu->max_speed == USB_SPEED_SUPER) {
+> +		mtu3_clrbits(mtu->ippc_base, SSUSB_U3_CTRL(0),
+> +			     SSUSB_U3_PORT_SSP_SPEED);
+>  	}
+>  
+>  	dev_info(mtu->dev, "max_speed: %s\n",
+> @@ -624,6 +627,10 @@ static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
+>  		udev_speed = USB_SPEED_SUPER;
+>  		maxpkt = 512;
+>  		break;
+> +	case MTU3_SPEED_SUPER_PLUS:
+> +		udev_speed = USB_SPEED_SUPER_PLUS;
+> +		maxpkt = 512;
+> +		break;
+>  	default:
+>  		udev_speed = USB_SPEED_UNKNOWN;
+>  		break;
+> @@ -825,14 +832,15 @@ int ssusb_gadget_init(struct ssusb_mtk *ssusb)
+>  	case USB_SPEED_FULL:
+>  	case USB_SPEED_HIGH:
+>  	case USB_SPEED_SUPER:
+> +	case USB_SPEED_SUPER_PLUS:
+>  		break;
+>  	default:
+>  		dev_err(dev, "invalid max_speed: %s\n",
+>  			usb_speed_string(mtu->max_speed));
+>  		/* fall through */
+>  	case USB_SPEED_UNKNOWN:
+> -		/* default as SS */
+> -		mtu->max_speed = USB_SPEED_SUPER;
+> +		/* default as SSP */
+> +		mtu->max_speed = USB_SPEED_SUPER_PLUS;
+>  		break;
+>  	}
+>  
+> diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
+> index 434fca5..b495471 100644
+> --- a/drivers/usb/mtu3/mtu3_gadget.c
+> +++ b/drivers/usb/mtu3/mtu3_gadget.c
+> @@ -89,6 +89,7 @@ static int mtu3_ep_enable(struct mtu3_ep *mep)
+>  
+>  	switch (mtu->g.speed) {
+>  	case USB_SPEED_SUPER:
+> +	case USB_SPEED_SUPER_PLUS:
+>  		if (usb_endpoint_xfer_int(desc) ||
+>  				usb_endpoint_xfer_isoc(desc)) {
+>  			interval = desc->bInterval;
+> @@ -456,7 +457,7 @@ static int mtu3_gadget_wakeup(struct usb_gadget *gadget)
+>  		return  -EOPNOTSUPP;
+>  
+>  	spin_lock_irqsave(&mtu->lock, flags);
+> -	if (mtu->g.speed == USB_SPEED_SUPER) {
+> +	if (mtu->g.speed >= USB_SPEED_SUPER) {
+>  		mtu3_setbits(mtu->mac_base, U3D_LINK_POWER_CONTROL, UX_EXIT);
+>  	} else {
+>  		mtu3_setbits(mtu->mac_base, U3D_POWER_MANAGEMENT, RESUME);
+> diff --git a/drivers/usb/mtu3/mtu3_gadget_ep0.c b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+> index 958d74d..1ca77e8 100644
+> --- a/drivers/usb/mtu3/mtu3_gadget_ep0.c
+> +++ b/drivers/usb/mtu3/mtu3_gadget_ep0.c
+> @@ -212,8 +212,8 @@ static int ep0_set_sel(struct mtu3 *mtu, struct usb_ctrlrequest *setup)
+>  	case USB_RECIP_DEVICE:
+>  		result[0] = mtu->is_self_powered << USB_DEVICE_SELF_POWERED;
+>  		result[0] |= mtu->may_wakeup << USB_DEVICE_REMOTE_WAKEUP;
+> -		/* superspeed only */
+> -		if (mtu->g.speed == USB_SPEED_SUPER) {
+> +
+> +		if (mtu->g.speed >= USB_SPEED_SUPER) {
+>  			result[0] |= mtu->u1_enable << USB_DEV_STAT_U1_ENABLED;
+>  			result[0] |= mtu->u2_enable << USB_DEV_STAT_U2_ENABLED;
+>  		}
+> @@ -329,8 +329,8 @@ static int ep0_handle_feature_dev(struct mtu3 *mtu,
+>  		handled = handle_test_mode(mtu, setup);
+>  		break;
+>  	case USB_DEVICE_U1_ENABLE:
+> -		if (mtu->g.speed != USB_SPEED_SUPER ||
+> -			mtu->g.state != USB_STATE_CONFIGURED)
+> +		if (mtu->g.speed <= USB_SPEED_SUPER ||
+Here is wrong, I'll fix it up in next version.
 
-To achieve this without allocation special ACPI ID, which is really long
-and pretty much unachievable procedure, we just re-use special ACPI ID
-and standard compatible string.
+> +		    mtu->g.state != USB_STATE_CONFIGURED)
+>  			break;
+>  
+>  		lpc = mtu3_readl(mbase, U3D_LINK_POWER_CONTROL);
+> @@ -344,8 +344,8 @@ static int ep0_handle_feature_dev(struct mtu3 *mtu,
+>  		handled = 1;
+>  		break;
+>  	case USB_DEVICE_U2_ENABLE:
+> -		if (mtu->g.speed != USB_SPEED_SUPER ||
+> -			mtu->g.state != USB_STATE_CONFIGURED)
+> +		if (mtu->g.speed <= USB_SPEED_SUPER ||
+It's also wrong.
 
-(*) ACPI is enabled via second bootloader, i.e. U-Boot,
-    firmware is still left untouched and being SFI enabled.
+Sorry
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
-In v2:
-- add DT binding
-- we asked internally for ACPI ID about month ago with full silence in response
- .../devicetree/bindings/pinctrl/intel,FLIS-pinctrl.txt      | 13 +++++++++++++
- drivers/pinctrl/intel/pinctrl-merrifield.c                  |  7 +++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,FLIS-pinctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/intel,FLIS-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/intel,FLIS-pinctrl.txt
-new file mode 100644
-index 000000000000..8f5a32b2333b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/intel,FLIS-pinctrl.txt
-@@ -0,0 +1,13 @@
-+Intel Corporation, Family-Level Interface Shim (FLIS) pin controller
-+
-+FLIS pin controller is a separate IP block on non-ACPI enabled Intel
-+platforms, such as Intel Merrifield. Very known board based on it is
-+Intel Edison.
-+
-+There is an ongoing effort to emulate ACPI on that kind of boards
-+and, since it is near to impossible to allocate an ACPI ID for the
-+such controller, the compatible string may be used along with special
-+PRP0001 ACPI ID.
-+
-+Required properties for FLIS pin controller:
-+- compatible: "intel,merrifield-pinctrl"
-diff --git a/drivers/pinctrl/intel/pinctrl-merrifield.c b/drivers/pinctrl/intel/pinctrl-merrifield.c
-index 86c4b3fab7b0..46fe30702a79 100644
---- a/drivers/pinctrl/intel/pinctrl-merrifield.c
-+++ b/drivers/pinctrl/intel/pinctrl-merrifield.c
-@@ -931,10 +931,17 @@ static int mrfld_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id mrfld_of_table[] = {
-+	{ .compatible = "intel,merrifield-pinctrl" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mrfld_of_table);
-+
- static struct platform_driver mrfld_pinctrl_driver = {
- 	.probe = mrfld_pinctrl_probe,
- 	.driver = {
- 		.name = "pinctrl-merrifield",
-+		.of_match_table = mrfld_of_table,
- 	},
- };
- 
--- 
-2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		    mtu->g.state != USB_STATE_CONFIGURED)
+>  			break;
+>  
+>  		lpc = mtu3_readl(mbase, U3D_LINK_POWER_CONTROL);
+> @@ -384,8 +384,8 @@ static int ep0_handle_feature(struct mtu3 *mtu,
+>  		break;
+>  	case USB_RECIP_INTERFACE:
+>  		/* superspeed only */
+> -		if ((value == USB_INTRF_FUNC_SUSPEND)
+> -			&& (mtu->g.speed == USB_SPEED_SUPER)) {
+> +		if (value == USB_INTRF_FUNC_SUSPEND &&
+> +		    mtu->g.speed >= USB_SPEED_SUPER) {
+>  			/*
+>  			 * forward the request because function drivers
+>  			 * should handle it
+> diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
+> index a7e35f6..6953436 100644
+> --- a/drivers/usb/mtu3/mtu3_hw_regs.h
+> +++ b/drivers/usb/mtu3/mtu3_hw_regs.h
+> @@ -467,6 +467,7 @@
+>  #define SSUSB_VBUS_CHG_INT_B_EN		BIT(6)
+>  
+>  /* U3D_SSUSB_U3_CTRL_0P */
+> +#define SSUSB_U3_PORT_SSP_SPEED	BIT(9)
+>  #define SSUSB_U3_PORT_HOST_SEL		BIT(2)
+>  #define SSUSB_U3_PORT_PDN		BIT(1)
+>  #define SSUSB_U3_PORT_DIS		BIT(0)
