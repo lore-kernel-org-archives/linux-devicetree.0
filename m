@@ -1,64 +1,75 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] mmc: sdhci-xenon: Fix clock resource by adding an optional bus clock
-Date: Fri, 29 Sep 2017 11:22:05 +0200
-Message-ID: <87bmlthnb6.fsf@free-electrons.com>
-References: <20170928150520.27616-1-gregory.clement@free-electrons.com>
-        <20170929103943.3a6f2509@xhacker.debian>
-        <87fub5hnqb.fsf@free-electrons.com>
-        <20170929111550.065e7948@windsurf.lan>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: sun8i: Add board dts file for Banana Pi
+ M2 Ultra
+Date: Fri, 29 Sep 2017 12:17:40 +0200
+Message-ID: <20170929101740.reahjw7wjaspwjld@flea>
+References: <20170928092543.45648-1-icenowy@aosc.io>
+ <20170928092543.45648-3-icenowy@aosc.io>
+ <20170928151225.n4pyvn65u6hvpjd7@flea>
+ <FCCC8A9F-4818-4CE3-A7E8-62ED9A864F92@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170929111550.065e7948-dFHcqWZE4nf+AlalS6MPSg@public.gmane.org> (Thomas Petazzoni's
-        message of "Fri, 29 Sep 2017 11:15:50 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jisheng Zhang <Jisheng.Zhang-Gq53QDLGkWKakBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastia>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3l4qncgm5xe7fica"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <FCCC8A9F-4818-4CE3-A7E8-62ED9A864F92@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
- 
- On ven., sept. 29 2017, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> Hello,
->
-> On Fri, 29 Sep 2017 11:13:00 +0200, Gregory CLEMENT wrote:
->
->> >>  - clock-names:
->> >>    Array of names corresponding to clocks property.
->> >>    The input clock for Xenon IP core should be named as "core".
->> >> +  The input clock for the AXI bus must be named as "axi".  
->> >
->> > Is "bus" more suitable?  
->> 
->> I find bus too vague.
->
-> Actually no, I believe "bus" is more common. Indeed, you could have the
-> same IP, attached to a different interconnect I guess.
->
->> >>  	/*
->> >>  	 * Link Xenon specific mmc_host_ops function,
->> >> @@ -491,9 +493,20 @@ static int xenon_probe(struct platform_device *pdev)
->> >>  	if (err)
->> >>  		goto free_pltfm;
->> >>  
->> >> +	priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
->> >> +	if (IS_ERR(priv->axi_clk)) {
->
-> -EPROBE_DEFER handling ?
+--3l4qncgm5xe7fica
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 28, 2017 at 03:38:59PM +0000, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2017=E5=B9=B49=E6=9C=8828=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+11:12:25, Maxime Ripard <maxime.ripard@free-electrons.com> =E5=86=99=E5=88=
+=B0:
+> >On Thu, Sep 28, 2017 at 09:25:42AM +0000, Icenowy Zheng wrote:
+> >> +&mmc2 {
+> >> +	vmmc-supply =3D <&reg_dcdc1>;
+> >> +	bus-width =3D <8>;
+> >> +	non-removable;
+> >> +	status =3D "okay";
+> >> +};
+> >
+> >I guess it's an emmc, it doesn't have a vqmmmc regulator?
+>=20
+> vqmmc is also 3v3.
 
-See
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-September/533510.html
+You should still put it.
 
-Gregory
+Thanks!
+Maxime
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--3l4qncgm5xe7fica
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZzh3EAAoJEBx+YmzsjxAgH/sP/2m3V/G07wxFYEyLCbDpyTAr
+LeNTmNiOmBkScjz64riGfr7G4ZBUMJ4noBS7sD0/aCljEjuBD0fdHIBgm1NmbWoF
+dbtAo/2tkK8W8EORjw6Ka8FAyDaquHJMZBgTSOhk9LzcZUzBAnEc3rbzGqH4XELL
+hLOr/S7P/UcmCVzQmkY0yeyuqQI0ElDFzCmq+yyyr2qp6vveVUcZPikBaAZLmSKJ
+Y97Xa7PTbQTNnmUKxIThqgcxcGl6+pQBLu4n7bi/QX0W4CYF9Z0vxjLfV+Z3AjUT
+CboMdiAFn1hTkVgdMVCV6/xb0YUopB+s1WcVcbmiJrR7CBzHlw0vYng6H845HjFR
+Cb0EW2dlGUDTA6ZDeskSE85c7ZErpvAdckItN+77stD8/6ZylOPer8f37loMuXWR
+2VkagLsyeX7dMsXS/66fK4ySkEE8vVu2EZORRiZvK76abq0al9oX19mukCKUwGIs
+XHHdP0VjYQYzb+3n2WLoTq3iFCGeVYCt6R63KvFpQKyr/NPIQ+2RQTUxE5uPi3nL
+BYnj4hdTtfrNExdZ28Xhf6m7EkUe7Dc/rme59xuQ+4OsRlRQDC5saPiaGkIQDRYX
+6P4PaUjJA2Jm6/yQjc9TM7JTgVrvY/XrdvqwxCXrNZ2xJBIxPtmiofHaIJ359ZqY
+P3v5OY/2a0U9Qs9GbvGF
+=329P
+-----END PGP SIGNATURE-----
+
+--3l4qncgm5xe7fica--
