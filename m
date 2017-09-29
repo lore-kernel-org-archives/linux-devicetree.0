@@ -1,200 +1,69 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2] mmc: sdhci-xenon: Fix clock resource by adding an optional bus clock
-Date: Fri, 29 Sep 2017 15:04:35 +0200
-Message-ID: <20170929130435.6805-1-gregory.clement@free-electrons.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 17/22] firmware: arm_scmi: add device power domain
+ support using genpd
+Date: Fri, 29 Sep 2017 14:40:49 +0100
+Message-ID: <68c18868-99c5-20e0-d65e-6ad1afdedde5@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-18-git-send-email-sudeep.holla@arm.com>
+ <CAPDyKFo0oFrtGgb9REX-y3mAgQ7pTFnyD6ZcqwhEZ7oSRfV4oA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFo0oFrtGgb9REX-y3mAgQ7pTFnyD6ZcqwhEZ7oSRfV4oA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Igal Liberman <igall-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Armada 7K/8K we need to explicitly enable the bus clock. The bus clock
-is optional because not all the SoCs need them but at least for Armada
-7K/8K it is actually mandatory.
 
-The binding documentation is updating accordingly.
 
-Without this patch the kernel hand during boot if the mvpp2.2 network
-driver was not present in the kernel. Indeed the clock needed by the
-xenon controller was set by the network driver.
+On 28/09/17 22:18, Ulf Hansson wrote:
+> On 28 September 2017 at 15:11, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> This patch hooks up the support for device power domain provided by
+>> SCMI using the Linux generic power domain infrastructure.
+>>
+>> Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/firmware/Kconfig                   |  13 +++
+>>  drivers/firmware/arm_scmi/Makefile         |   1 +
+>>  drivers/firmware/arm_scmi/scmi_pm_domain.c | 134 +++++++++++++++++++++++++++++
+>>  3 files changed, 148 insertions(+)
+>>  create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+>>
 
-Fixes: 3a3748dba881 ("mmc: sdhci-xenon: Add Marvell Xenon SDHC core
-functionality)"
-CC: Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Hi Ulf and Adrian,
+[...]
 
-This patch should be merged in 4.14-rc, as it fixes real issues.
+>> +       for (i = 0; i < num_domains; i++, scmi_pd++) {
+>> +               domains[i] = &scmi_pd->genpd;
+>> +
+>> +               scmi_pd->domain = i;
+>> +               scmi_pd->handle = handle;
+>> +               scmi_pd->name = handle->power_ops->name_get(handle, i);
+>> +               scmi_pd->genpd.name = scmi_pd->name;
+>> +               scmi_pd->genpd.power_off = scmi_pd_power_off;
+>> +               scmi_pd->genpd.power_on = scmi_pd_power_on;
+>> +
+>> +               /*
+>> +                * Treat all power domains as off at boot.
+>> +                *
+>> +                * The SCP firmware itself may have switched on some domains,
+>> +                * but for reference counting purpose, keep it this way.
+>> +                */
+> 
+> I think it would be better to give the correct information about the
+> state of the PM domain. Otherwise genpd may end up thinking a PM
+> domain is off, while in fact it's on - thus wasting power.
+> 
 
-This patch maye looks like just as a nice clean-up but it is not. On
-the earlier version of the series adding the support for the xenon
-controller there was already this axi bus clock. But at this moment
-the documentation for the clock on the Armada 7K/8K was missing and
-there was no driver for it, so we just use the clock set by the
-bootloader and never change them that's why it worked without any
-visible problem.
+Agreed, I missed to notice that. I will fixup and send the update.
 
-Then as explained in the commit log the network driver enabled the
-clock for us, and it happened that it was setup before the xenon
-driver. It is only thanks the new information we received on the
-clocks of the Sov and with more exhaustive testes that we found this
-issue and the fix for it.
-
-Thanks,
-
-Gregory
-
-Changelog:
-v1->v2:
- - manage the -EPROBE_DEFER case
- - remove warning message when axi clock is not present
- - remove useless test before clk_disable_unprepare()
-
- .../bindings/mmc/marvell,xenon-sdhci.txt           | 12 ++++++-----
- drivers/mmc/host/sdhci-xenon.c                     | 25 ++++++++++++++++++----
- drivers/mmc/host/sdhci-xenon.h                     |  1 +
- 3 files changed, 29 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-index b878a1e305af..ed1456f5c94d 100644
---- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-@@ -16,11 +16,13 @@ Required Properties:
- 
- - clocks:
-   Array of clocks required for SDHC.
--  Require at least input clock for Xenon IP core.
-+  Require at least input clock for Xenon IP core. For Armada AP806 and
-+  CP110, the AXI clock is also mandatory.
- 
- - clock-names:
-   Array of names corresponding to clocks property.
-   The input clock for Xenon IP core should be named as "core".
-+  The input clock for the AXI bus must be named as "axi".
- 
- - reg:
-   * For "marvell,armada-3700-sdhci", two register areas.
-@@ -106,8 +108,8 @@ Example:
- 		compatible = "marvell,armada-ap806-sdhci";
- 		reg = <0xaa0000 0x1000>;
- 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
--		clocks = <&emmc_clk>;
--		clock-names = "core";
-+		clocks = <&emmc_clk>, <&axi_clk>;
-+		clock-names = "core", "axi";
- 		bus-width = <4>;
- 		marvell,xenon-phy-slow-mode;
- 		marvell,xenon-tun-count = <11>;
-@@ -126,8 +128,8 @@ Example:
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
- 		vqmmc-supply = <&sd_vqmmc_regulator>;
- 		vmmc-supply = <&sd_vmmc_regulator>;
--		clocks = <&sdclk>;
--		clock-names = "core";
-+		clocks = <&sdclk>, <&axi_clk>;
-+		clock-names = "core", "axi";
- 		bus-width = <4>;
- 		marvell,xenon-tun-count = <9>;
- 	};
-diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-index 2eec2e652c53..15f912d08a4c 100644
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -466,6 +466,7 @@ static int xenon_probe(struct platform_device *pdev)
- {
- 	struct sdhci_pltfm_host *pltfm_host;
- 	struct sdhci_host *host;
-+	struct xenon_priv *priv;
- 	int err;
- 
- 	host = sdhci_pltfm_init(pdev, &sdhci_xenon_pdata,
-@@ -474,6 +475,7 @@ static int xenon_probe(struct platform_device *pdev)
- 		return PTR_ERR(host);
- 
- 	pltfm_host = sdhci_priv(host);
-+	priv = sdhci_pltfm_priv(pltfm_host);
- 
- 	/*
- 	 * Link Xenon specific mmc_host_ops function,
-@@ -491,9 +493,21 @@ static int xenon_probe(struct platform_device *pdev)
- 	if (err)
- 		goto free_pltfm;
- 
-+	priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
-+	if (IS_ERR(priv->axi_clk)) {
-+		err = PTR_ERR(priv->axi_clk);
-+		if (err == -EPROBE_DEFER)
-+			goto err_clk;
-+		priv->axi_clk = NULL;
-+	} else {
-+		err = clk_prepare_enable(priv->axi_clk);
-+		if (err)
-+			goto err_clk;
-+	}
-+
- 	err = mmc_of_parse(host->mmc);
- 	if (err)
--		goto err_clk;
-+		goto err_clk_axi;
- 
- 	sdhci_get_of_property(pdev);
- 
-@@ -502,11 +516,11 @@ static int xenon_probe(struct platform_device *pdev)
- 	/* Xenon specific dt parse */
- 	err = xenon_probe_dt(pdev);
- 	if (err)
--		goto err_clk;
-+		goto err_clk_axi;
- 
- 	err = xenon_sdhc_prepare(host);
- 	if (err)
--		goto err_clk;
-+		goto err_clk_axi;
- 
- 	pm_runtime_get_noresume(&pdev->dev);
- 	pm_runtime_set_active(&pdev->dev);
-@@ -527,6 +541,8 @@ static int xenon_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
- 	xenon_sdhc_unprepare(host);
-+err_clk_axi:
-+	clk_disable_unprepare(priv->axi_clk);
- err_clk:
- 	clk_disable_unprepare(pltfm_host->clk);
- free_pltfm:
-@@ -538,6 +554,7 @@ static int xenon_remove(struct platform_device *pdev)
- {
- 	struct sdhci_host *host = platform_get_drvdata(pdev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-@@ -546,7 +563,7 @@ static int xenon_remove(struct platform_device *pdev)
- 	sdhci_remove_host(host, 0);
- 
- 	xenon_sdhc_unprepare(host);
--
-+	clk_disable_unprepare(priv->axi_clk);
- 	clk_disable_unprepare(pltfm_host->clk);
- 
- 	sdhci_pltfm_free(pdev);
-diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
-index 2bc0510c0769..9994995c7c56 100644
---- a/drivers/mmc/host/sdhci-xenon.h
-+++ b/drivers/mmc/host/sdhci-xenon.h
-@@ -83,6 +83,7 @@ struct xenon_priv {
- 	unsigned char	bus_width;
- 	unsigned char	timing;
- 	unsigned int	clock;
-+	struct clk      *axi_clk;
- 
- 	int		phy_type;
- 	/*
 -- 
-2.14.1
-
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
