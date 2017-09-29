@@ -1,74 +1,47 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3] mmc: dt-bindings: Add reg/source_cg/latch-ck for
- Mediatek MMC bindings
-Date: Fri, 29 Sep 2017 13:11:49 +0200
-Message-ID: <f5ef95bf-a085-194b-4412-c72a7813ac08@gmail.com>
-References: <1506081829-29296-1-git-send-email-chaotian.jing@mediatek.com>
+From: Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>
+Subject: Re: [PATCH v7 6/6] ARM: dts: meson8b: add support for booting the
+ secondary CPU cores
+Date: Fri, 29 Sep 2017 13:29:59 +0200
+Message-ID: <20170929112959.GM6726@otheros>
+References: <20170917164523.6970-7-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506081829-29296-1-git-send-email-chaotian.jing@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170917164523.6970-7-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, arnd@arndb.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, khilman@baylibre.com, linux@armlinux.org.uk, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/22/2017 02:03 PM, Chaotian Jing wrote:
-> Change the comptiable for support of multi-platform
-> Add description for reg
-> Add description for source_cg
-> Add description for mediatek,latch-ck
-> Note that source_cg and mediatek,latch-ck are optional for some projects,
-> eg, MT2701 do not have source_cg, and MT2712 do not need
-> mediatek,latch-ck
-> 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->   Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
->   1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 4182ea3..b934a29 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
->   and the properties used by the msdc driver.
->   
->   Required properties:
-> -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
-> +- compatible: value should be either of the following.
-> +	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
-> +	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
-> +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
-> +	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-
-NAK, this has to be:
-You have to add the fallback comatible ("mediatek,mt8135-mmc") to the binding 
-description as otherwise the driver does not get probed.
-
-Regards,
-Matthias
-
-> +- reg: physical base address of the controller and length
->   - interrupts: Should contain MSDC interrupt number
-> -- clocks: MSDC source clock, HCLK
-> -- clock-names: "source", "hclk"
-> +- clocks: MSDC source clock, HCLK, source_cg
-> +- clock-names: "source", "hclk", "source_cg"
->   - pinctrl-names: should be "default", "state_uhs"
->   - pinctrl-0: should contain default/high speed pin ctrl
->   - pinctrl-1: should contain uhs mode pin ctrl
-> @@ -30,6 +35,8 @@ Optional properties:
->   - mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
->   				       If present,HS400 command responses are sampled on rising edges.
->   				       If not present,HS400 command responses are sampled on falling edges.
-> +- mediatek,latch-ck: Some SoCs do not support enhance_rx, need set correct latch-ck to avoid data crc
-> +		     error caused by stop clock(fifo full)
->   
->   Examples:
->   mmc0: mmc@11230000 {
-> 
+QSBmaXZlIGhvdXJzIHRlc3QgcnVuIHdpdGggdGhlIHN0cmVzcy1uZyB0b29sIHdvcmtlZCBmaW5l
+IGZvciB0aGlzCnBhdGNoc2V0IGZvciBtZS4KCnN0cmVzcy1uZyBjb21tYW5kOgokIHN0cmVzcy1u
+ZyAtdiAtLXNlcXVlbnRpYWwgMCAtdCAxMjBzIC0tZXhjbHVkZSBzeXNmcyxvcGNvZGUgLS1tZXRy
+aWNzCgpMb2dmaWxlICg2LjNNQik6Cmh0dHA6Ly9tZXRhbWV1dGUuZGUvfnR1eC9saW51eC9hbWxv
+Z2ljL3N0cmVzcy1uZy1vZHJvaWRjMSUyYi13aXRoLXJlc21lbSUyYnNtcC1sb2cudHh0CgpUZXN0
+ZWQgZGV2aWNlOgotIE9kcm9pZCBDMSsKClRlc3RlZCBPUzoKLSBEZWJpYW4gc3RhYmxlIChzdHJl
+c3MtbmcgMC4wNy4xNikKClRlc3RlZCBrZXJuZWw6IHY0LjE0LXJjMSBwbHVzIHRoaXMgcGF0Y2hz
+ZXQgcGx1czoKLSAiQVJNOiBkdHM6IG1lc29uOiBmaXhpbmcgVVNCIHN1cHBvcnQgb24gTWVzb242
+LCBNZXNvbjggYW5kIE1lc29uOGIiCiAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
+aC85OTY1ODcxLwotICJBUk06IGR0czogbWVzb246IGVuYWJsaW5nIHRoZSBVU0IgSG9zdCBjb250
+cm9sbGVyIG9uIE9kcm9pZC1DMS9DMSsgYm9hcmQiCiAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC85OTYxNTY1LwotICJbUkZDXSBBUk06IGR0czogbWVzb244YjogYWRkIHJlc2Vy
+dmVkIG1lbW9yeSB6b25lcyIKICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk5
+Nzc0NzkvCgpUZXN0ZWQga2VybmVsIGNvbmZpZzoKLSBtdWx0aV92N19kZWZjb25maWcsIGV4Y2Vw
+dCBDT05GSUdfRFJNX1RFR1JBPW4gKGJ1aWxkIGVycm9yIG90aGVyd2lzZSkKCiAKSSBoYWQgdG8g
+ZXhjbHVkZSB0aGUgc3lzZnMgYW5kIG9wY29kZSB0ZXN0cyB0aG91Z2guIFRoZSBmb3JtZXIKY3Jl
+YXRlZCBhbiB1bmhhbmRsZWQga2VybmVsIHBhZ2luZyByZXF1ZXN0LiBBbmQgdGhlIGxhdHRlciBh
+CnNpbGVudCBmcmVlemUgYWZ0ZXIgc29tZSBzZWNvbmRzLgoKVGhvc2UgdHdvIGlzc3VlcyBzZWVt
+IHVucmVsYXRlZCB0byB0aGlzIHBhdGNoc2V0IHRob3VnaCwKdGhlcmVmb3JlCgpUZXN0ZWQtYnk6
+IExpbnVzIEzDvHNzaW5nIDxsaW51cy5sdWVzc2luZ0BjMGQzLmJsdWU+CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
