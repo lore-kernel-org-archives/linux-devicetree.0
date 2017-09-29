@@ -1,67 +1,61 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: [PATCH] ARM64: dts: meson-gxbb-nexbox-a95x: Enable USB Nodes
-Date: Fri, 29 Sep 2017 17:52:56 +0200
-Message-ID: <20170929155256.7080-1-peter@korsgaard.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 06/11] ARM: dts: am43xx-epos-evm: Add sleep pinmux for pixcir_ts
+Date: Fri, 29 Sep 2017 11:44:24 -0500
+Message-ID: <20170929164429.780-7-afd@ti.com>
+References: <20170929164429.780-1-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170929164429.780-1-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable both gxbb USB controllers and add a 5V regulator for the OTG port
-VBUS, similar to p20x.
-
-Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
 ---
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/arm/boot/dts/am43x-epos-evm.dts | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 38dfdde5c147..60cd9c3b11c8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -88,6 +88,18 @@
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 822e54cffd29..9c4ac6f715ec 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -323,12 +323,18 @@
+ 			>;
  		};
- 	};
  
-+	usb_pwr: regulator-usb-pwrs {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "USB_PWR";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- 	vddio_card: gpio-regulator {
- 		compatible = "regulator-gpio";
+-		pixcir_ts_pins: pixcir_ts_pins {
++		pixcir_ts_pins_default: pixcir_ts_pins_default {
+ 			pinctrl-single,pins = <
+ 				AM4372_IOPAD(0x844, PIN_INPUT_PULLUP | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
+ 			>;
+ 		};
  
-@@ -294,3 +306,20 @@
- 	pinctrl-0 = <&uart_ao_a_pins>;
- 	pinctrl-names = "default";
- };
++		pixcir_ts_pins_sleep: pixcir_ts_pins_sleep {
++			pinctrl-single,pins = <
++				AM4372_IOPAD(0x844, DS0_PIN_OUTPUT_PULLUP | PIN_OUTPUT_PULLUP | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
++			>;
++		};
 +
-+&usb0_phy {
-+	status = "okay";
-+	phy-supply = <&usb_pwr>;
-+};
+ 		hdq_pins: pinmux_hdq_pins {
+ 			pinctrl-single,pins = <
+ 				AM4372_IOPAD(0xa34, PIN_INPUT_PULLUP | MUX_MODE1)    /* cam1_wen.hdq_gpio */
+@@ -538,8 +544,10 @@
+ 
+ 	pixcir_ts@5c {
+ 		compatible = "pixcir,pixcir_tangoc";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pixcir_ts_pins>;
++		pinctrl-names = "default", "sleep";
++		pinctrl-0 = <&pixcir_ts_pins_default>;
++		pinctrl-1 = <&pixcir_ts_pins_sleep>;
 +
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
+ 		reg = <0x5c>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
 -- 
-2.11.0
+2.14.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
