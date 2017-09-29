@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 13/14] ARM: dts: sun6i: Add device node for
- HDMI controller
-Date: Fri, 29 Sep 2017 16:23:05 +0800
-Message-ID: <20170929082306.16193-14-wens@csie.org>
+Subject: [PATCH v3 06/14] drm/sun4i: hdmi: create a regmap for
+ later use
+Date: Fri, 29 Sep 2017 16:22:58 +0800
+Message-ID: <20170929082306.16193-7-wens@csie.org>
 References: <20170929082306.16193-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,96 +20,73 @@ To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard 
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we support the HDMI controller on the A31 SoC, we can add it
-to the device tree.
+The HDMI driver is written with readl/writel I/O to the registers.
+However, to support the A31 variant, which has a different layout
+for the DDC registers, it was recommended to use regfields to have
+a cleaner implementation. To use regfields, we need to create an
+underlying regmap.
 
-This adds a device node for the HDMI controller, and the of_graph nodes
-connecting it to the 2 TCONs.
+This patch only adds the regmap. It does not convert the existing
+driver accesses to use regmap.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 93209cda28db..48b2382a18a9 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -289,6 +289,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon0_out_hdmi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&hdmi_in_tcon0>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -331,6 +337,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon1_out_hdmi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&hdmi_in_tcon1>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -411,6 +423,49 @@
- 			#size-cells = <0>;
- 		};
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+index 1457750988da..b95512ec8eb6 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+@@ -163,6 +163,7 @@ struct sun4i_hdmi {
+ 	struct device		*dev;
  
-+		hdmi: hdmi@01c16000 {
-+			compatible = "allwinner,sun6i-a31-hdmi";
-+			reg = <0x01c16000 0x1000>;
-+			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_AHB1_HDMI>, <&ccu CLK_HDMI>,
-+				 <&ccu CLK_HDMI_DDC>,
-+				 <&ccu CLK_PLL_VIDEO0_2X>,
-+				 <&ccu CLK_PLL_VIDEO1_2X>;
-+			clock-names = "ahb", "mod", "ddc", "pll-0", "pll-1";
-+			resets = <&ccu RST_AHB1_HDMI>;
-+			reset-names = "ahb";
-+			dma-names = "ddc-tx", "ddc-rx", "audio-tx";
-+			dmas = <&dma 13>, <&dma 13>, <&dma 14>;
-+			status = "disabled";
+ 	void __iomem		*base;
++	struct regmap		*regmap;
+ 
+ 	/* Parent clocks */
+ 	struct clk		*bus_clk;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 3cf1a6932fac..5ab811cda00e 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -22,6 +22,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regmap.h>
+ 
+ #include "sun4i_backend.h"
+ #include "sun4i_crtc.h"
+@@ -267,6 +268,13 @@ static const struct cec_pin_ops sun4i_hdmi_cec_pin_ops = {
+ };
+ #endif
+ 
++static const struct regmap_config sun4i_hdmi_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= 0x580,
++};
 +
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
+ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 			   void *data)
+ {
+@@ -321,6 +329,13 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 		goto err_disable_mod_clk;
+ 	}
+ 
++	hdmi->regmap = devm_regmap_init_mmio(dev, hdmi->base,
++					     &sun4i_hdmi_regmap_config);
++	if (IS_ERR(hdmi->regmap)) {
++		dev_err(dev, "Couldn't create HDMI encoder regmap\n");
++		return PTR_ERR(hdmi->regmap);
++	}
 +
-+				hdmi_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+
-+					hdmi_in_tcon0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon0_out_hdmi>;
-+					};
-+
-+					hdmi_in_tcon1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&tcon1_out_hdmi>;
-+					};
-+				};
-+
-+				hdmi_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+				};
-+			};
-+		};
-+
- 		usb_otg: usb@01c19000 {
- 			compatible = "allwinner,sun6i-a31-musb";
- 			reg = <0x01c19000 0x0400>;
+ 	ret = sun4i_tmds_create(hdmi);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't create the TMDS clock\n");
 -- 
 2.14.2
