@@ -1,72 +1,28 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 6/7] ARM: dts: Configure SmartReflex only to idle the interconnect target module
-Date: Fri, 29 Sep 2017 15:34:10 -0700
-Message-ID: <20170929223411.9691-7-tony@atomide.com>
-References: <20170929223411.9691-1-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170929223411.9691-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: Re: [PATCH v2] mmc: sdhci-xenon: Fix clock resource by adding an
+ optional bus clock
+Date: Sat, 30 Sep 2017 10:32:21 +0800
+Message-ID: <20170930103221.6775fd87@xhacker.debian>
+References: <20170929130435.6805-1-gregory.clement@free-electrons.com>
+        <CAAXpJNvQOFZXDhQ__tEnzo2e=f3bueDRn_i7jOaSugAF-rNAwg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAAXpJNvQOFZXDhQ__tEnzo2e=f3bueDRn_i7jOaSugAF-rNAwg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: zhoujie wu <zhoujiewu@gmail.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@free-electrons.com>, Omri Itach <omrii@marvell.com>, linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Stable <stable@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Shadi Ammouri <shadi@marvell.com>, Igal Liberman <igall@marvell.com>, =?UTF-8?B?TWlxdcOobA==?= Raynal <miquel.raynal@free-electrons.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-
 List-Id: devicetree@vger.kernel.org
 
-The TRM has marked dra7 SmartReflex as reserved and we should not
-touch those registers as pointed out by Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>.
-We do still want to idle the related interconnect target modules on
-init though.
+Hi Zhoujie,
 
-Let's do this by only configuring the generic interconnect target modules
-and not add the child SmartReflex devices.
+On Fri, 29 Sep 2017 11:42:14 -0700 zhoujie wu <zhoujiewu@gmail.com> wrote:
 
-Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/dra7.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+> Hi Gregory,
+> I tested this v2 patch on my armada3700 board.
+> 
+> Tested-by: Zhoujie Wu <zjwu@marvell.com>
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1497,6 +1497,32 @@
- 			};
- 		};
- 
-+		target-module@4a0dd000 {
-+			compatible = "ti,sysc-omap4-sr";
-+			ti,hwmods = "smartreflex_core";
-+			reg = <0x4a0dd000 0x4>,
-+			      <0x4a0dd008 0x4>;
-+			reg-names = "rev", "sysc";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x4a0dd000 0x001000>;
-+
-+			/* SmartReflex child device marked reserved in TRM */
-+		};
-+
-+		target-module@4a0d9000 {
-+			compatible = "ti,sysc-omap4-sr";
-+			ti,hwmods = "smartreflex_mpu";
-+			reg = <0x4a0d9000 0x4>,
-+			      <0x4a0d9008 0x4>;
-+			reg-names = "rev", "sysc";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x4a0d9000 0x001000>;
-+
-+			/* SmartReflex child device marked reserved in TRM */
-+		};
-+
- 		omap_dwc3_1: omap_dwc3_1@48880000 {
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss1";
--- 
-2.14.2
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Soft remind: The linux kernel community doesn't like top post.
+
