@@ -1,12 +1,12 @@
 From: Kevin Hilman <khilman@baylibre.com>
 Subject: Re: [PATCH 0/8] pinctrl: meson: clean pin offsets
-Date: Sat, 30 Sep 2017 22:35:25 +0200
-Message-ID: <7hk20fexgy.fsf@baylibre.com>
+Date: Sat, 30 Sep 2017 22:33:59 +0200
+Message-ID: <7hmv5cdiyw.fsf@baylibre.com>
 References: <20170920133927.17390-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jerome Brunet <jbrunet@baylibre.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Carlo Caione <carlo@caione.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
