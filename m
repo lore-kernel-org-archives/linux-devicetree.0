@@ -1,42 +1,63 @@
-From: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH 1/1] arm64: dts: rockchip: default serial for Firefly-RK3399
-Date: Sat, 30 Sep 2017 06:06:40 +0200
-Message-ID: <20170930040640.25526-1-xypron.glpk@gmx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+From: Julian Calaby <julian.calaby@gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 04/14] drm/sun4i: tcon: Add support
+ for demuxing TCON output on A31
+Date: Sat, 30 Sep 2017 15:35:59 +1000
+Message-ID: <CAGRGNgUmo6ZztajhG=uZrXGsC9pxySswxLd4P-gk6xdknLX-NQ@mail.gmail.com>
+References: <20170929082306.16193-1-wens@csie.org> <20170929082306.16193-5-wens@csie.org>
+ <20170929102006.2wz7wrkpplxwynoh@flea> <CAGb2v65VhtEckRCXi4X5AjmC-5CSHavATu8fKyEHOivmYqZkww@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v65VhtEckRCXi4X5AjmC-5CSHavATu8fKyEHOivmYqZkww@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-The Firefly-RK3399 uses serial2 with 1,500,000 baud by default
-for communication in U-Boot and in the vendor provided distros.
+Hi Chen-Yu,
 
-So let us set the same default in the Linux kernel.
+On Fri, Sep 29, 2017 at 8:22 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Fri, Sep 29, 2017 at 6:20 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> On Fri, Sep 29, 2017 at 08:22:56AM +0000, Chen-Yu Tsai wrote:
+>>> On systems with 2 TCONs such as the A31, it is possible to demux the
+>>> output of the TCONs to one encoder.
+>>>
+>>> Add support for this for the A31.
+>>>
+>>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>>> ---
+>>>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 38 ++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 38 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+>>> index 7bf51abaee97..c949309d4285 100644
+>>> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+>>> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+>>> @@ -112,6 +112,21 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
+>>>  }
+>>>  EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
+>>>
+>>> +static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
+>>
+>> Would that make sense to make it a bit more generic, and pass the id
+>> to look for as an argument?
+>
+> The reason to look for TCON0 explicitly is to access the muxing registers, which
+> are only available in TCON0. Other than that, there's nothing else
+> shared between
+> the two TCONs. So there's no particular reason to look for TCON1 explicitly.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+In that case: in the bizarre case where we're trying to use this mux
+type and there is no TCON0, shouldn't we fail?
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-index 7fd4bfcaa38e..3bc2863583ce 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-@@ -49,6 +49,10 @@
- 	model = "Firefly-RK3399 Board";
- 	compatible = "firefly,firefly-rk3399", "rockchip,rk3399";
- 
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
+(Also, the code doesn't make sense if we have some TCON1 and TCON2 in
+that order as it'll return TCON2)
+
+Thanks,
+
 -- 
-2.14.2
+Julian Calaby
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
