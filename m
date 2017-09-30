@@ -1,49 +1,83 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH v2] mmc: sdhci-xenon: Fix clock resource by adding an
- optional bus clock
-Date: Sat, 30 Sep 2017 14:17:53 +0800
-Message-ID: <20170930141753.7c4e34ea@xhacker.debian>
-References: <20170929130435.6805-1-gregory.clement@free-electrons.com>
-        <20170930104109.60853202@xhacker.debian>
-        <20170930080710.119c0258@windsurf>
+From: Julian Calaby <julian.calaby@gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 04/14] drm/sun4i: tcon: Add support
+ for demuxing TCON output on A31
+Date: Sat, 30 Sep 2017 16:26:32 +1000
+Message-ID: <CAGRGNgUFAmoBH4OFi+DUW6JU0tOPAZbS_9Dq7tKA+m8UT7vhnw@mail.gmail.com>
+References: <20170929082306.16193-1-wens@csie.org> <20170929082306.16193-5-wens@csie.org>
+ <20170929102006.2wz7wrkpplxwynoh@flea> <CAGb2v65VhtEckRCXi4X5AjmC-5CSHavATu8fKyEHOivmYqZkww@mail.gmail.com>
+ <CAGRGNgUmo6ZztajhG=uZrXGsC9pxySswxLd4P-gk6xdknLX-NQ@mail.gmail.com> <CAGb2v66epS9OLAQthYOrn7B48E80jsfy9dhyLPHyo4NmAOTCbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20170930080710.119c0258@windsurf>
-Sender: stable-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?B?TWlxdcOo?= =?UTF-8?B?bA==?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Omri Itach <omrii@marvell.com>, Hanna Hawa <hannah@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin Wojtas <mw@semihal>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v66epS9OLAQthYOrn7B48E80jsfy9dhyLPHyo4NmAOTCbg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Hi Chen-Yu,
 
-On Sat, 30 Sep 2017 08:07:10 +0200 Thomas Petazzoni wrote:
+On Sat, Sep 30, 2017 at 3:58 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Sat, Sep 30, 2017 at 1:35 PM, Julian Calaby <julian.calaby@gmail.com> wrote:
+>> Hi Chen-Yu,
+>>
+>> On Fri, Sep 29, 2017 at 8:22 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>>> On Fri, Sep 29, 2017 at 6:20 PM, Maxime Ripard
+>>> <maxime.ripard@free-electrons.com> wrote:
+>>>> On Fri, Sep 29, 2017 at 08:22:56AM +0000, Chen-Yu Tsai wrote:
+>>>>> On systems with 2 TCONs such as the A31, it is possible to demux the
+>>>>> output of the TCONs to one encoder.
+>>>>>
+>>>>> Add support for this for the A31.
+>>>>>
+>>>>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>>>>> ---
+>>>>>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 38 ++++++++++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 38 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+>>>>> index 7bf51abaee97..c949309d4285 100644
+>>>>> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+>>>>> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+>>>>> @@ -112,6 +112,21 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
+>>>>>  }
+>>>>>  EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
+>>>>>
+>>>>> +static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
+>>>>
+>>>> Would that make sense to make it a bit more generic, and pass the id
+>>>> to look for as an argument?
+>>>
+>>> The reason to look for TCON0 explicitly is to access the muxing registers, which
+>>> are only available in TCON0. Other than that, there's nothing else
+>>> shared between
+>>> the two TCONs. So there's no particular reason to look for TCON1 explicitly.
+>>
+>> In that case: in the bizarre case where we're trying to use this mux
+>> type and there is no TCON0, shouldn't we fail?
+>
+> It gives out a big warning, indicating something is wrong. If TCON0 is not found
+> it is most likely your device tree is broken. There's nothing more the
+> driver can do.
+> Are you suggesting to return NULL in this case, and also do error
+> handling in the
+> callers?
 
-> Hello,
-> 
-> On Sat, 30 Sep 2017 10:41:09 +0800, Jisheng Zhang wrote:
-> 
-> > > +	priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
-> > > +	if (IS_ERR(priv->axi_clk)) {
-> > > +		err = PTR_ERR(priv->axi_clk);
-> > > +		if (err == -EPROBE_DEFER)
-> > > +			goto err_clk;
-> > > +		priv->axi_clk = NULL;    
-> > 
-> > IMHO, this assignment could be removed. What do you think?  
-> 
-> No, because if the clock is not present in the Device Tree,
-> priv->axi_clk will contain an error code encoded as a pointer, so
-> priv->axi_clk will not be NULL. Hence the rest of the code that will
+You're already returning -EINVAL for other failure cases, so a lack of
+TCON0 might as well do the same.
 
-FWICT, the clk_disable_unprepare() could also check whether the clk
-is err, am I wrong?
+>> (Also, the code doesn't make sense if we have some TCON1 and TCON2 in
+>> that order as it'll return TCON2)
+>
+> I'm guessing you want it to return NULL.
 
-> operate on this clock will believe there is a valid clock pointed by
-> priv->axi_clk. So we really want to reset it to NULL when there was an
-> error getting the clock.
-> 
-> Best regards,
-> 
-> Thomas
+I'm just pointing out the mismatch between getting the "first" TCON
+and the actual behaviour.
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
