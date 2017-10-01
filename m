@@ -1,76 +1,95 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] dt-bindings: bus: Minimal TI sysc interconnect
- target module binding
-Date: Sun, 1 Oct 2017 10:14:07 -0700
-Message-ID: <20171001171406.GL4394@atomide.com>
-References: <20170929223411.9691-1-tony@atomide.com>
- <20170929223411.9691-2-tony@atomide.com>
- <20171001131151.loanjnvarkihbhik@earth>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] initialize (multiple) PHYs in xhci-plat
+Date: Sun, 1 Oct 2017 22:32:06 +0200
+Message-ID: <CAFBinCAweHXFbWrF9gW5f_+NeC9jChU1EkRsiLzkaKtOZkEREQ@mail.gmail.com>
+References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
+ <CAFBinCCRM1e08styDV8uodkhonTUPyZrQAdYRz_bfUMe-YP1Rg@mail.gmail.com> <20170918084943.GA19123@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171001131151.loanjnvarkihbhik@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170918084943.GA19123-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org> [171001 06:12]:
-> On Fri, Sep 29, 2017 at 03:34:05PM -0700, Tony Lindgren wrote:
-> > Note that additional properties for sysc capabilities will be added
-> > later on. For now, we can already use this binding for interconnect
-> > target modules that do not have any child device drivers available.
-> > This allows us to idle the unused interconnect target modules during
-> > init without the need for legacy hwmod platform data for doing it.
-> 
-> DT backwards compatibility is about booting an old DT file with a
-> newer kernel. Since old DT file does not contain a "ti,sysc-omap*"
-> node you don't need to add "ti,hwmod = *" support to it. Instead a
-> DT file, that uses ti,hwmod in the device node and does not have a
-> "ti,sysc-omap*" at all should still work.
+Hello Greg, Hello Mathias,
 
-Not sure if I parse that right, but I'm assuming you suggest leaving
-out ti,hwmod to start with. Well I considered that, but it causes
-the "waiting for a magical flip issue". So initially we need to use
-both ti,sysc and ti,hwmod until ti,sysc alone has the equal
-functionality. That's because then we can do the following steps:
+On Mon, Sep 18, 2017 at 10:49 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Sun, Sep 17, 2017 at 10:51:31PM +0200, Martin Blumenstingl wrote:
+>> Hello Mathias, Hello Greg,
+>>
+>> On Sun, Sep 3, 2017 at 11:38 PM, Martin Blumenstingl
+>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> > This series is the outcome of a discussion with Felipe Balbi,
+>> > see [0] and [1].
+>> > The quick-summary of this is:
+>> > - dwc3 already takes one USB2 and one USB3 PHY and initializes these
+>> >   correct
+>> > - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
+>> >   ohci-platform.c) do not have a limitation on the number of PHYs - they
+>> >   support one PHY per actual host port
+>> > - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
+>> >   or three USB2 ports enabled on the internal root-hub. The SoCs also
+>> >   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
+>> >   internally "connected" to the dwc3 roothub) need to be powered on,
+>> >   otherwise USB devices cannot be enumerated (even if just one PHY is
+>> >   disabled and if the device is plugged into another, enabled port)
+>> >
+>> > In my first attempt to get USB supported on the GXL and GXM SoCs I tried
+>> > to work-around the problem that I could not pass multiple PHYs to the
+>> > dwc3 controller.
+>> > This was rejected by Rob Herring (which was definitely the thing to do in
+>> > my opinion), see [2]
+>> >
+>> > This series adds a new "platform-roothub". This can be configured through
+>> > devicetree by passing a child-node with "reg = <0>" to the USB
+>> > controller. Additionally there has to be a child-node for each port on
+>> > the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
+>> > property. This allows modeling the root-hub in devicetree similar to the
+>> > USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
+>> > This avoids and backwards-compatibility problems (which was a concern
+>> > regardless of the solution, see [3]) since the binding for the root-hub
+>> > was previously not specified (and we're not using the "phys" property of
+>> > the controller, which might have served different purposes before,
+>> > depending on the drivers).
+>> >
+>> > Additionally this integrates the new platform-roothub into xhci-plat.c
+>> > which automatically enables it for the dwc3 driver (in host-mode).
+>> >
+>> >
+>> > Changes since RFCv3 at [6]:
+>> > - moved the DT binding change from patch #3 to patch #1 as suggested
+>> >   by Rob Herring (and slightly adjusted the commit message to account
+>> >   for that)
+>> > - added Tested-by from Chunfeng Yun (who confirmed that the whole
+>> >   concept and implementation works fine on Mediatek SoCs - many thanks
+>> >   again!) to patch #2
+>> > - added Rob Herring's ACK to patches 1 and 3
+>> > - dropped RFC status (RFCv3 -> PATCH v4)
+>> I just wanted to rebase this to v4.14-rc1 (now that this is out) -
+>> however I noticed that v4 still applies to v4.14-rc1 cleanly (the
+>> patches are still identical to v4 after rebasing).
+>>
+>> we have an ACK from the devicetree maintainers and a "Tested-by" for a
+>> Mediatek (= non-Amlogic) SoC.
+>> I already have patches for the Amlogic GXL/GXM platforms queued, those
+>> are just waiting on this series.
+>>
+>> what is still missing to get this series into v4.15?
+>
+> Well, we couldn't do anything until 4.14-rc1 is out, now that it is, let
+> us catch up on patch review please...
+OK, I understand that.
+please let me know once you've caught up with the review backlog - as
+I said I would like to get this into 4.15 if nothing else comes up
+during the code-review
 
-1. We want to add compatible = ti,sysc so we can define the
-   nodes and get the parent-children hierarhcy right. We can
-   already use the parent-child features even with ti,hwmods
-   before we have complete dts based data. We are currently
-   missing that capability without doing device specific parent
-   drivers like we do with drivers/usb/musb/musb_am335x.c. Note
-   that in this step we are moving the ti,hwmod to the parent
-   node
 
-2. When ti,sysc can configure things based on dts data alone the
-   same way as the legacy platform data, we can just drop the
-   ti,hwmod property. We also want to be able to test one driver
-   at a time between ti,sysc + ti,hwmod vs ti,sysc only
-
-3. Once ti,hwmod properties have been removed from the mainline
-   kernel, we can add a warning about ti,hwmod properties being
-   deprecated
-
-4. Then later on, we can also drop the hwmod platform data and
-   continue produce warnings if ti,hwmod is seen
-
-> IMHO we should break DT ABI for OMAP at some point, so that we can
-> get rid of the hwmod database. My suggestion would be, that
-> simple-bus checks if any child device is != "ti,omap-sysc*" and
-> does panic("please update DT!").
-
-Yes we can eventually drop the static data and ti,hwmod while
-providing helpful information to the users.
-
+Thank you!
 Regards,
-
-Tony
-
+Martin
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
