@@ -1,321 +1,109 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v3,20/22] hwmon: add support for sensors exported via ARM SCMI
-Date: Sun, 1 Oct 2017 07:26:05 -0700
-Message-ID: <20171001142605.GA340@roeck-us.net>
-References: <1506604306-20739-21-git-send-email-sudeep.holla@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] drm/panel: Add DT bindings for Ilitek ILI9322
+Date: Sun, 1 Oct 2017 10:15:00 -0500
+Message-ID: <CAL_JsqLdq5zp3SWDe180KbsvBUCwvqCXEoY+rgG_c62HGb25ig@mail.gmail.com>
+References: <20170813114448.20179-1-linus.walleij@linaro.org>
+ <20170813114448.20179-2-linus.walleij@linaro.org> <20170817204424.e2wdkmyp4vyx2qj3@rob-hp-laptop>
+ <CACRpkdZgaKUDhVZ4spMsK_pG+LWOAkSWKrQTAbbXOFpUEk4rLQ@mail.gmail.com>
+ <CACRpkdY2bo0EBp+d16ksrjwsVTLp2BzV7=XS0vWxno5EHWoFig@mail.gmail.com>
+ <CAL_JsqKNprVAW_5XBGjwm3EzqVh=xP1Q9gQ8n_taWFDzzcz2Aw@mail.gmail.com> <CACRpkdaP42pRR=M-QPQr5k-KDau-5zkA0UVY8O9DYf8czcY3Rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1506604306-20739-21-git-send-email-sudeep.holla@arm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Sudeep Holla <Sudeep.Holla@arm.com>
-Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaP42pRR=M-QPQr5k-KDau-5zkA0UVY8O9DYf8czcY3Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 02:11:44PM +0100, Sudeep Holla wrote:
-> Create a driver to add support for SoC sensors exported by the System
-> Control Processor (SCP) via the System Control and Management Interface
-> (SCMI). The supported sensor types is one of voltage, temperature,
-> current, and power.
-> 
-> The sensor labels and values provided by the SCP are exported via the
-> hwmon sysfs interface.
-> 
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+On Sat, Sep 30, 2017 at 6:42 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Sep 24, 2017 at 10:36 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Sep 20, 2017 at 6:56 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On Sat, Sep 2, 2017 at 11:17 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>>>>> Normally, we the physical panel is described which would imply all these
+>>>>> settings. Are there lots of panels with this controller that would
+>>>>> justify all these settings?
+>>>>
+>>>> The datasheet for the ili9322 just says it "drives panels" essentially.
+>>>> Googling around gives at hand that it is used pretty frequently in
+>>>> Shenzhen China for adapting different off-the-shelf panels to
+>>>> different inputs.
+>>>>
+>>>> I can't really answer how many of these products that run one or
+>>>> another OS using device tree to describe the configuration. It feels more
+>>>> like I'm paving the road for others to travel.
+>>
+>> Not really a road I want to pave and encourage others.
+>
+> It's good when maintainers say "no"! :)
 
-Couple of minor comments. With those addressed,
+Only other maintainers think so. :)
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-> ---
->  drivers/hwmon/Kconfig      |  12 +++
->  drivers/hwmon/Makefile     |   1 +
->  drivers/hwmon/scmi-hwmon.c | 235 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 248 insertions(+)
->  create mode 100644 drivers/hwmon/scmi-hwmon.c
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index d65431417b17..0b75e9a89463 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -321,6 +321,18 @@ config SENSORS_APPLESMC
->  	  Say Y here if you have an applicable laptop and want to experience
->  	  the awesome power of applesmc.
->  
-> +config SENSORS_ARM_SCMI
-> +	tristate "ARM SCMI Sensors"
-> +	depends on ARM_SCMI_PROTOCOL
-> +	depends on THERMAL || !THERMAL_OF
-> +	help
-> +	  This driver provides support for temperature, voltage, current
-> +	  and power sensors available on SCMI based platforms. The actual
-> +	  number and type of sensors exported depend on the platform.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called scmi-hwmon.
-> +
->  config SENSORS_ARM_SCPI
->  	tristate "ARM SCPI Sensors"
->  	depends on ARM_SCPI_PROTOCOL
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index c84d9784be98..a51c2dcef11c 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -44,6 +44,7 @@ obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
->  obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
->  obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
->  obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
-> +obj-$(CONFIG_SENSORS_ARM_SCMI)	+= scmi-hwmon.o
->  obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
->  obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
->  obj-$(CONFIG_SENSORS_ASPEED)	+= aspeed-pwm-tacho.o
-> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
-> new file mode 100644
-> index 000000000000..0a8c0e8dc5d1
-> --- /dev/null
-> +++ b/drivers/hwmon/scmi-hwmon.c
-> @@ -0,0 +1,235 @@
-> +/*
-> + * System Control and Management Interface(SCMI) based hwmon sensor driver
-> + *
-> + * Copyright (C) 2017 ARM Ltd.
-> + * Sudeep Holla <sudeep.holla@arm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/scmi_protocol.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/thermal.h>
-> +
-> +struct scmi_sensors {
-> +	const struct scmi_handle *handle;
-> +	const struct scmi_sensor_info **info[hwmon_max];
-> +};
-> +
-> +static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			   u32 attr, int channel, long *val)
-> +{
-> +	int ret;
-> +	u64 value;
-> +	const struct scmi_sensor_info *sensor;
-> +	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
-> +	const struct scmi_handle *h = scmi_sensors->handle;
-> +
-> +	sensor = *(scmi_sensors->info[type] + channel);
-> +	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
-> +	if (!ret)
-> +		*val = value;
-> +
-> +	return ret;
-> +}
-> +
-> +static int
-> +scmi_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-> +		       u32 attr, int channel, const char **str)
-> +{
-> +	const struct scmi_sensor_info *sensor;
-> +	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
-> +
-> +	sensor = *(scmi_sensors->info[type] + channel);
-> +	*str = sensor->name;
-> +
-> +	return 0;
-> +}
-> +
-> +static umode_t
-> +scmi_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-> +		      u32 attr, int channel)
-> +{
-> +	const struct scmi_sensor_info *sensor;
-> +	const struct scmi_sensors *scmi_sensors = drvdata;
-> +
-> +	sensor = *(scmi_sensors->info[type] + channel);
-> +	if (sensor && sensor->name)
-> +		return S_IRUGO;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops scmi_hwmon_ops = {
-> +	.is_visible = scmi_hwmon_is_visible,
-> +	.read = scmi_hwmon_read,
-> +	.read_string = scmi_hwmon_read_string,
-> +};
-> +
-> +static struct hwmon_chip_info scmi_chip_info = {
-> +	.ops = &scmi_hwmon_ops,
-> +	.info = NULL,
-> +};
-> +
-> +static int scmi_hwmon_add_chan_info(struct hwmon_channel_info *scmi_hwmon_chan,
-> +				    struct device *dev, int num,
-> +				    enum hwmon_sensor_types type, u32 config)
-> +{
-> +	int i;
-> +	u32 *cfg = devm_kcalloc(dev, num + 1, sizeof(*cfg), GFP_KERNEL);
-> +
-> +	if (!cfg)
-> +		return -ENOMEM;
-> +
-> +	scmi_hwmon_chan->type = type;
-> +	scmi_hwmon_chan->config = cfg;
-> +	for (i = 0; i < num; i++, cfg++)
-> +		*cfg = config;
-> +
-> +	return 0;
-> +}
-> +
-> +static enum hwmon_sensor_types scmi_types[] = {
-> +	[TEMPERATURE_C] = hwmon_temp,
-> +	[VOLTAGE] = hwmon_in,
-> +	[CURRENT] = hwmon_curr,
-> +	[POWER] = hwmon_power,
-> +	[ENERGY] = hwmon_energy,
-> +};
-> +
-> +static u32 hwmon_attributes[] = {
-> +	[hwmon_chip] = HWMON_C_REGISTER_TZ,
-> +	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
-> +	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
-> +	[hwmon_curr] = HWMON_C_INPUT | HWMON_C_LABEL,
-> +	[hwmon_power] = HWMON_P_INPUT | HWMON_P_LABEL,
-> +	[hwmon_energy] = HWMON_E_INPUT | HWMON_E_LABEL,
-> +};
-> +
-> +static int scmi_hwmon_probe(struct platform_device *pdev)
-> +{
-> +	int i, idx;
-> +	u16 nr_sensors;
-> +	enum hwmon_sensor_types type;
-> +	struct scmi_sensors *scmi_sensors;
-> +	const struct scmi_sensor_info *sensor;
-> +	int nr_count[hwmon_max] = {0}, nr_types = 0;
-> +	const struct hwmon_chip_info *chip_info;
-> +	struct device *hwdev, *dev = &pdev->dev;
-> +	struct hwmon_channel_info *scmi_hwmon_chan;
-> +	const struct hwmon_channel_info **ptr_scmi_ci;
-> +	const struct scmi_handle *handle = devm_scmi_handle_get(dev);
-> +
-> +	if (IS_ERR_OR_NULL(handle) || !handle->sensor_ops)
-> +		return -EPROBE_DEFER;
-> +
-> +	nr_sensors = handle->sensor_ops->count_get(handle);
-> +	if (!nr_sensors)
-> +		return -EIO;
-> +
-> +	scmi_sensors = devm_kzalloc(dev, sizeof(*scmi_sensors), GFP_KERNEL);
-> +	if (!scmi_sensors)
-> +		return -ENOMEM;
-> +
-> +	scmi_sensors->handle = handle;
-> +
-> +	for (i = 0; i < nr_sensors; i++) {
-> +		sensor = handle->sensor_ops->info_get(handle, i);
-> +		if (!sensor)
-> +			return PTR_ERR(sensor);
-> +
-> +		switch (sensor->type) {
-> +		case TEMPERATURE_C:
-> +		case VOLTAGE:
-> +		case CURRENT:
-> +		case POWER:
-> +		case ENERGY:
-> +			type = scmi_types[sensor->type];
-> +			if (!nr_count[type])
-> +				nr_types++;
-> +			nr_count[type]++;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (nr_count[hwmon_temp])
-> +		nr_count[hwmon_chip]++, nr_types++;
-> +
-> +	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
-> +				       GFP_KERNEL);
-> +	if (!scmi_hwmon_chan)
-> +		return -ENOMEM;
-> +
-> +	ptr_scmi_ci = devm_kcalloc(dev, nr_types + 1, sizeof(*ptr_scmi_ci),
-> +				   GFP_KERNEL);
-> +	if (!ptr_scmi_ci)
-> +		return -ENOMEM;
-> +
-> +	scmi_chip_info.info = ptr_scmi_ci;
-> +	chip_info = &scmi_chip_info;
-> +
-> +	for (type = 0; type < hwmon_max && nr_count[type]; type++) {
-> +		scmi_hwmon_add_chan_info(scmi_hwmon_chan, dev, nr_count[type],
-> +					 type, hwmon_attributes[type]);
-> +		*ptr_scmi_ci++ = scmi_hwmon_chan++;
-> +
-> +		scmi_sensors->info[type] =
-> +			devm_kcalloc(dev, nr_count[type],
-> +				     sizeof(*scmi_sensors->info), GFP_KERNEL);
-> +		if (!scmi_sensors->info[type])
-> +			return -ENOMEM;
-> +	}
-> +
-> +	*ptr_scmi_ci = NULL;
+>>>>>> +  - ilitek,entry-mode: the panel can be connected to various input streams
+>>>>>> +    and four of them can be selected by electronic straps on the display.
+>>>>>> +    However it is possible to select another mode or override the
+>>>>>> +    electronic default with this property. Valid values:
+>>>>>> +    0: 8 bit serial RGB through
+>>>>>> +    1: 8 bit serial RGB aligned
+>>>>>> +    2: 8 bit serial RGB dummy 320x240
+>>>>>> +    3: 8 bit serial RGB dummy 360x240
+>>>>>> +    4: disabled
+>>>>>> +    5: 24 bit parallel RGB through
+>>>>>> +    6: 24 bit parallel RGB aligned
+>>>>>> +    7: 24 bit YUV 640Y 320CbCr
+>>>>>> +    8: 24 bit YUV 720Y 360CbCr
+>>>>>> +    9: disabled
+>>>>>> +    10: 8 bit ITU-R BT.656 720Y 360CbCr
+>>>>>> +    11: 8 bit ITU-R BT.656 640Y 320CbCr
+>>>>>
+>>>>> To some extent, we have some standard bindings to describe this.
+>>>>
+>>>> I don't find any. Maybe I'm looking in the wrong places :(
+>>
+>> I guess bus-width is all we have. Normally, this is all implied by the
+>> compatible strings of either the controller, panel or both.
+>>
+>> Another way to look at it is, we already have support for lots of
+>> panels and controllers. If those haven't needed to specify this
+>> information, then why do you?
+>
+> It's a question about devicetree vs driver configuration data altogether.
+> An intuitive thing, gray area. Your intuition is likely better.
+>
+> I feel the same about the people who push too much pin control
+> data into the device tree instead of the driver so I understand the
+> issue. (If it is that.)
 
-Unnecessary; devm_kcalloc() clears out the allocated memory.
+Yes, that's it. We don't want bindings that try to parameterize
+*everything* in "generic" bindings.
 
-> +	platform_set_drvdata(pdev, scmi_sensors);
-> +
-> +	for (i = nr_sensors - 1; i >= 0 ; i--) {
-> +		sensor = handle->sensor_ops->info_get(handle, i);
-> +		if (!sensor)
-> +			continue;
-> +
-> +		switch (sensor->type) {
-> +		case TEMPERATURE_C:
-> +		case VOLTAGE:
-> +		case CURRENT:
-> +		case POWER:
-> +		case ENERGY:
-> +			type = scmi_types[sensor->type];
-> +			idx = --nr_count[type];
-> +			*(scmi_sensors->info[type] + idx) = sensor;
-> +			break;
-> +		}
-> +	}
-> +
-> +	hwdev = devm_hwmon_device_register_with_info(dev, "scmi_sensors",
-> +						     scmi_sensors, chip_info,
-> +						     NULL);
-> +
-> +	if (IS_ERR(hwdev))
-> +		return PTR_ERR(hwdev);
-> +
-> +	return 0;
+>>>> Also the input modes of ili9322 is coupled with resolution so
+>>>> it would need two more cells or so for resolution so I feel
+>>>> it would over-complicate things for these 12 enumerators.
+>>>
+>>> Can we proceed with these patches?
+>>>
+>>> Any opinion from DT or panel maintainers?
+>>
+>> You have my opinion. I don't think Thierry's will be different.
+>>
+>> My suggestion is to move the settings you need into the panel driver
+>> and out of DT. We can always move things to DT later if it makes
+>> sense.
+>
+> Sure thing. I will take the approach of compatible string like this:
+>
+> compatible = "ilitek,ili9322", "dlink,dir685-panel";
+>
+> And use the latter compatible to set up all the stuff in the panel
+> driver, what about that?
 
-	return PTR_ERR_OR_ZERO(hwdev);
+Sounds good, but you need to reverse the order here. Most specific first.
 
-> +}
-> +
-> +static struct platform_driver scmi_hwmon_platdrv = {
-> +	.driver = {
-> +		.name	= "scmi-hwmon",
-> +	},
-> +	.probe		= scmi_hwmon_probe,
-> +};
-> +module_platform_driver(scmi_hwmon_platdrv);
-> +
-> +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
-> +MODULE_DESCRIPTION("ARM SCMI HWMON interface driver");
-> +MODULE_LICENSE("GPL v2");
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
