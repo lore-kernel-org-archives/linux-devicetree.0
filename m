@@ -1,84 +1,156 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] dt-bindings: hwmon: Add max-expected-current
- property to ina2xx
-Date: Sun, 1 Oct 2017 11:31:45 +0100
-Message-ID: <20171001113145.2e839bc1@archlinux>
-References: <1506603015-27202-1-git-send-email-m.purski@samsung.com>
-        <CGME20170928125104eucas1p20a3ead82624005331e36b8ebeca46815@eucas1p2.samsung.com>
-        <1506603015-27202-4-git-send-email-m.purski@samsung.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] SMP and CPU hotplug support for Meson8/Meson8b
+Date: Sun, 1 Oct 2017 14:19:11 +0200
+Message-ID: <CAFBinCCdj8LwXvUSoCPeVfPUTaLVFFyvKZcNceLGvj26Z740DQ@mail.gmail.com>
+References: <20170917164523.6970-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506603015-27202-4-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170917164523.6970-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Sep 2017 14:50:14 +0200
-Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+Hello Russel, Hi Kevin,
 
-> Add optional max expected current property which allows calibrating
-> the ina sensor in order to achieve requested precision. Document
-> the changes in Documentation/hwmon/ina2xx.
-> 
+On Sun, Sep 17, 2017 at 6:45 PM, Martin Blumenstingl
+<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> This patchset adds support for booting the secondary CPU cores (and
+> taking them offline again) on Amlogic Meson8 and Meson8b SoCs.
+> It is based on an earlier version from Carlo Caione - this helped me
+> a lot to get a better understanding of how SMP/CPU hotplug works
+> (compared to the code found in Amlogic's GPL kernel sources from
+> year 2015).
+>
+> Changes since v6 from [6]:
+> - rebased on top of v4.14-rc1 (which only corrected some line
+>   numbers in the SCU patches)
+it's been two weeks since v6 and since then Linus L=C3=BCssing has
+confirmed that this works fine on his Odroid-C1 as well (many thanks
+for testing!): [7]
 
-This is introducing new generic devicetree bindings..  
-I'm not totally sure we want to do this rather than having a
-manufacturer specific binding...  I don't have a good feeling for
-how common this will be in other devices.
+> Changes since v5 from [5]:
+> - dropped dependency on another patch series (for the clock
+>   controller's embedded reset controller, which is needed to boot
+>   the secondary CPUs) from the cover-letter as that series is now
+>   merged
+> - fix incorrect documentation of scu_cpu_power_enable (thanks to
+>   Russell King for spotting these). removed the paragraph about
+>   preemption, cache coherency and interrupts as we're powering on
+>   a CPU core (the text was copied from the original scu_power_mode
+>   but simply not adjusted). also changed "Set the executing CPUs"
+>   to "Set the given (logical) CPU's" as we're not modifying the
+>   current CPU. this affects only patch #2
+> - extended the commit message of patch #3 with a short sentence
+>   about why SCU_CPU_STATUS_MASK was introduced
+>
+> Changes since v4 from [4]:
+> - use __pa_symbol(secondary_startup) instead of
+>   virt_to_phys(secondary_startup) as suggested by Florian Fainelli
+>   (affects patch #4)
+> - (cover-letter) removed dependency on my other patch
+>   "ARM: dts: meson: add a node which describes the SRAM" [2] as that
+>   was merged into Kevin's Amlogic repo today
+> - dropped patch #5 ("clk: meson: meson8b: export the CPU soft reset
+>   lines") again because the reset controller series exposes the
+>   preprocessor macros now directly, see [1]
+> - refreshed the .dts patches so they now include the new header for
+>   the reset line preprocessor macros
+>
+> Changes since v3 from [3]:
+> - added Rob's ACK to patch #1
+> - replaced a msleep(10) with usleep_range(10000, 15000) in patch #4
+> - removed all "pen" code from patch #4 as that code was not needed
+>   at all (it was left-over while trying to fix Meson8 secondary CPU
+>   boot - which turned out to have nothing to do with this "pen" code)
+> - removed all memory barrier operations as they were added based on
+>   the code in the Amlogic GPL kernel tree (while trying to fix the
+>   Meson8 secondary CPU boot - just like the "pen" code). Everything
+>   still works fine with these on my Meson8m2 and Meson8b boards.
+> - added PATCH #5 as we now have to export the reset identifiers
+>   (just like we do it with the clock identifiers / preprocessor
+>   macros) - this is the result of a change in the reset controller
+>   patch in version 2, see [1]
+> - use the reset line preprocessor macros (from patch #5) in patches
+>   #6 and #7
+>
+> Changes since v2 from [0]:
+> - added support for Meson8 (which requires a slightly different
+>   enable-method)
+> - implemented CPU hotplug support which allows taking a CPU core
+>   offline for both, Meson8 and Meson8b
+> - add a function to smp_scu.c which allows enabling a CPU core from
+>   a different CPU (previously only the power mode for the current CPU
+>   could be changed). Without this the CPU cores on Meson8 won't come
+>   up (Amlogic's vendor GPL kernel sources also enable power through
+>   SCU as very first step for Meson8b as well)
+> - add a function to smp_scu.c to get the power status of a CPU core
+>   (which is needed because the code in .cpu_kill needs to wait until
+>   the core is actually powered off)
+> - dropped patch "ARM: DTS: meson8b: Extend L2 cache controller node"
+>   as it is already applied (for both, Meson8 and Meson8b)
+> - dropped the patches which implement the reset controller which is
+>   built into the clock-controller, these are a separate series: [1]
+> - moved the enable-method property to each CPU node
+>
+>
+> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/3=
+90355.html
+> [1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004456.h=
+tml
+> [2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004282.h=
+tml
+> [3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004297.h=
+tml
+> [4] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004354.h=
+tml
+> [5] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004460.h=
+tml
+> [6] http://lists.infradead.org/pipermail/linux-amlogic/2017-August/004588=
+.html
+>
+> Carlo Caione (2):
+>   dt-bindings: Amlogic: Add Meson8 and Meson8b SMP related documentation
+>   ARM: dts: meson8b: add support for booting the secondary CPU cores
+>
+> Martin Blumenstingl (4):
+>   ARM: smp_scu: add a helper for powering on a specific CPU
+>   ARM: smp_scu: allow the platform code to read the SCU CPU status
+>   ARM: meson: Add SMP bringup code for Meson8 and Meson8b
+>   ARM: dts: meson8: add support for booting the secondary CPU cores
+@Russel: should Kevin take all patches including the two smp_scu ones?
+or do you want to take them through your own tree?
 
-If it's generic, then this isn't necessarily the place to define it.
+>  .../devicetree/bindings/arm/amlogic/pmu.txt        |  18 +
+>  .../devicetree/bindings/arm/amlogic/smp-sram.txt   |  32 ++
+>  Documentation/devicetree/bindings/arm/cpus.txt     |   2 +
+>  arch/arm/Makefile                                  |   1 +
+>  arch/arm/boot/dts/meson8.dtsi                      |  21 +
+>  arch/arm/boot/dts/meson8b.dtsi                     |  21 +
+>  arch/arm/include/asm/smp_scu.h                     |  12 +
+>  arch/arm/kernel/smp_scu.c                          |  43 +-
+>  arch/arm/mach-meson/Kconfig                        |   1 +
+>  arch/arm/mach-meson/Makefile                       |   1 +
+>  arch/arm/mach-meson/platsmp.c                      | 440 +++++++++++++++=
+++++++
+>  11 files changed, 586 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sra=
+m.txt
+>  create mode 100644 arch/arm/mach-meson/platsmp.c
+>
+> --
+> 2.14.1
+>
 
-Jonathan
+Regards,
+Martin
 
-> Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 4 +++-
->  Documentation/hwmon/ina2xx                         | 9 +++++----
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> index 02af0d9..25ba372 100644
-> --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> @@ -14,11 +14,13 @@ Optional properties:
->  
->  - shunt-resistor
->  	Shunt resistor value in micro-Ohm
-> -
-> +- max-expected-current
-> +	Max expected current value in mA
->  Example:
->  
->  ina220@44 {
->  	compatible = "ti,ina220";
->  	reg = <0x44>;
->  	shunt-resistor = <1000>;
-> +	max-expected-current = <3000>;
->  };
-> diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
-> index cfd31d9..e9ca838 100644
-> --- a/Documentation/hwmon/ina2xx
-> +++ b/Documentation/hwmon/ina2xx
-> @@ -51,10 +51,11 @@ INA230 and INA231 are high or low side current shunt and power monitors
->  with an I2C interface. The chips monitor both a shunt voltage drop and
->  bus supply voltage.
->  
-> -The shunt value in micro-ohms can be set via platform data or device tree at
-> -compile-time or via the shunt_resistor attribute in sysfs at run-time. Please
-> -refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
-> -if the device tree is used.
-> +The shunt value in micro-ohms and max expected current in mA can be set
-> +via platform data or device tree at compile-time or via the shunt_resistor
-> +and max_expected_current attributes in sysfs at run-time. Please refer to the
-> +Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings if the
-> +device tree is used.
->  
->  Additionally ina226 supports update_interval attribute as described in
->  Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
 
+[7] http://lists.infradead.org/pipermail/linux-amlogic/2017-September/00481=
+3.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
