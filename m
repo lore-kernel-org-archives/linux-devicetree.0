@@ -1,79 +1,54 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Add support to LIS2DW12 accel sensor
-Date: Sun, 1 Oct 2017 15:15:26 +0200
-Message-ID: <CAA2SeNKaUhLvLV6iUoirotMtz+nitW5LzLS0una3=BH9v7=0qA@mail.gmail.com>
-References: <20170830115043.3738-1-lorenzo.bianconi@st.com> <20170903175210.231b90a8@archlinux>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [1/2] dt-bindings: hwmon: add compatible for max1619
+Date: Sun, 1 Oct 2017 07:11:40 -0700
+Message-ID: <20171001141140.GA31645@roeck-us.net>
+References: <20170911191649.3344-1-atull@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170903175210.231b90a8@archlinux>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170911191649.3344-1-atull@kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Alan Tull <atull@kernel.org>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, 30 Aug 2017 13:50:38 +0200
-> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Modify management of drdy line and status register in order to support
->> LIS2DW12 device
->>
->> Changes since v2:
->> - swap status register patch (3rd in v2) with irq{1,2} definition one
->>   (1st in v2)
->> - patchset rebased onto 'fix drdy line configuration for LIS3MDL' patch
->> Changes since v1:
->> - remove drdy_irq parameter from LPS001WP settings since the sensor
->> does not support data-ready interrupts
->>
->> Lorenzo Bianconi (5):
->>   iio: st_sensors: add register mask for status register
->>   iio: st_sensors: decouple irq1 configuration parameters from the irq2
->>     ones
->>   iio: st_sensors: do not always write enable_axis register
->>   iio: accel: add support to LIS2DW12
->>   dt-bindings: iio: accel: add LIS2DW12 sensor device binding
->>
->>  .../devicetree/bindings/iio/st-sensors.txt         |   1 +
->>  drivers/iio/accel/st_accel.h                       |   2 +
->>  drivers/iio/accel/st_accel_core.c                  | 180 +++++++++++++++++----
->>  drivers/iio/accel/st_accel_i2c.c                   |   5 +
->>  drivers/iio/accel/st_accel_spi.c                   |   5 +
->>  drivers/iio/common/st_sensors/st_sensors_core.c    |  35 ++--
->>  drivers/iio/common/st_sensors/st_sensors_trigger.c |  16 +-
->>  drivers/iio/gyro/st_gyro_core.c                    |  33 ++--
->>  drivers/iio/magnetometer/st_magn_core.c            |  16 +-
->>  drivers/iio/pressure/st_pressure_core.c            |  46 ++++--
->>  include/linux/iio/common/st_sensors.h              |  23 ++-
->>  11 files changed, 270 insertions(+), 92 deletions(-)
->>
->
-> I'm happy with the whole series, however it doesn't currently apply
-> due to various fixes working their way through the fixes branches
-> of the iio git tree.  I'll try to pick it up once those have unwound.
-> There is too much going on with this code at the moment to do this
-> cleanly now.
->
-> Give me a bump if I look like I have forgotten it once it will
-> apply cleanly to the togreg branch of iio.git.
->
-> If I was being really fussy  this should have had a dependency list
-> for everything it was dependant on that wasn't currently in mainline.
->
-> Jonathan
+On Mon, Sep 11, 2017 at 02:16:48PM -0500, Alan Tull wrote:
+> Add new device tree bindings document for max1619 device
+> including a new compatible string.
+> 
+> Signed-off-by: Alan Tull <atull@kernel.org>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Hi Jonathan,
+Applied to hwmon-next.
 
-what about that patchset?
-Regards,
+Thanks,
+Guenter
 
-Lorenzo
-
--- 
-UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
-unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
-umount; make clean; sleep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  Documentation/devicetree/bindings/hwmon/max1619.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max1619.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/max1619.txt b/Documentation/devicetree/bindings/hwmon/max1619.txt
+> new file mode 100644
+> index 0000000..c70dbbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/max1619.txt
+> @@ -0,0 +1,12 @@
+> +Bindings for MAX1619 Temperature Sensor
+> +
+> +Required properties:
+> +- compatible : "maxim,max1619"
+> +- reg        : I2C address, one of 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b, 0x4c, or
+> +               0x4d, 0x4e
+> +
+> +Example:
+> +	temp@4c {
+> +		compatible = "maxim,max1619";
+> +		reg = <0x4c>;
+> +	};
