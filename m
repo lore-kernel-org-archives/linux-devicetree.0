@@ -1,108 +1,173 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] drm/panel: Add DT bindings for Ilitek ILI9322
-Date: Sun, 1 Oct 2017 10:15:00 -0500
-Message-ID: <CAL_JsqLdq5zp3SWDe180KbsvBUCwvqCXEoY+rgG_c62HGb25ig@mail.gmail.com>
-References: <20170813114448.20179-1-linus.walleij@linaro.org>
- <20170813114448.20179-2-linus.walleij@linaro.org> <20170817204424.e2wdkmyp4vyx2qj3@rob-hp-laptop>
- <CACRpkdZgaKUDhVZ4spMsK_pG+LWOAkSWKrQTAbbXOFpUEk4rLQ@mail.gmail.com>
- <CACRpkdY2bo0EBp+d16ksrjwsVTLp2BzV7=XS0vWxno5EHWoFig@mail.gmail.com>
- <CAL_JsqKNprVAW_5XBGjwm3EzqVh=xP1Q9gQ8n_taWFDzzcz2Aw@mail.gmail.com> <CACRpkdaP42pRR=M-QPQr5k-KDau-5zkA0UVY8O9DYf8czcY3Rg@mail.gmail.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/17] ARM: dts: Add missing hsi node for omap4
+Date: Sun, 1 Oct 2017 17:25:14 +0200
+Message-ID: <20171001152514.hjoa5osvadfpnkim@earth>
+References: <20170830151953.30856-1-tony@atomide.com>
+ <20170830151953.30856-9-tony@atomide.com>
+ <20170830193745.ygotb3nuyfmdlaaf@earth>
+ <20170830202519.GI6008@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="q5p4z63maywwxm6i"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdaP42pRR=M-QPQr5k-KDau-5zkA0UVY8O9DYf8czcY3Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170830202519.GI6008-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 30, 2017 at 6:42 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Sep 24, 2017 at 10:36 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Sep 20, 2017 at 6:56 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Sat, Sep 2, 2017 at 11:17 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->>>>> Normally, we the physical panel is described which would imply all these
->>>>> settings. Are there lots of panels with this controller that would
->>>>> justify all these settings?
->>>>
->>>> The datasheet for the ili9322 just says it "drives panels" essentially.
->>>> Googling around gives at hand that it is used pretty frequently in
->>>> Shenzhen China for adapting different off-the-shelf panels to
->>>> different inputs.
->>>>
->>>> I can't really answer how many of these products that run one or
->>>> another OS using device tree to describe the configuration. It feels more
->>>> like I'm paving the road for others to travel.
->>
->> Not really a road I want to pave and encourage others.
->
-> It's good when maintainers say "no"! :)
 
-Only other maintainers think so. :)
+--q5p4z63maywwxm6i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
->>>>>> +  - ilitek,entry-mode: the panel can be connected to various input streams
->>>>>> +    and four of them can be selected by electronic straps on the display.
->>>>>> +    However it is possible to select another mode or override the
->>>>>> +    electronic default with this property. Valid values:
->>>>>> +    0: 8 bit serial RGB through
->>>>>> +    1: 8 bit serial RGB aligned
->>>>>> +    2: 8 bit serial RGB dummy 320x240
->>>>>> +    3: 8 bit serial RGB dummy 360x240
->>>>>> +    4: disabled
->>>>>> +    5: 24 bit parallel RGB through
->>>>>> +    6: 24 bit parallel RGB aligned
->>>>>> +    7: 24 bit YUV 640Y 320CbCr
->>>>>> +    8: 24 bit YUV 720Y 360CbCr
->>>>>> +    9: disabled
->>>>>> +    10: 8 bit ITU-R BT.656 720Y 360CbCr
->>>>>> +    11: 8 bit ITU-R BT.656 640Y 320CbCr
->>>>>
->>>>> To some extent, we have some standard bindings to describe this.
->>>>
->>>> I don't find any. Maybe I'm looking in the wrong places :(
->>
->> I guess bus-width is all we have. Normally, this is all implied by the
->> compatible strings of either the controller, panel or both.
->>
->> Another way to look at it is, we already have support for lots of
->> panels and controllers. If those haven't needed to specify this
->> information, then why do you?
->
-> It's a question about devicetree vs driver configuration data altogether.
-> An intuitive thing, gray area. Your intuition is likely better.
->
-> I feel the same about the people who push too much pin control
-> data into the device tree instead of the driver so I understand the
-> issue. (If it is that.)
+On Wed, Aug 30, 2017 at 01:25:20PM -0700, Tony Lindgren wrote:
+> Thanks, updated patch below.
 
-Yes, that's it. We don't want bindings that try to parameterize
-*everything* in "generic" bindings.
+Thanks, I applied the DT binding part to the HSI subsystem:
 
->>>> Also the input modes of ili9322 is coupled with resolution so
->>>> it would need two more cells or so for resolution so I feel
->>>> it would over-complicate things for these 12 enumerators.
->>>
->>> Can we proceed with these patches?
->>>
->>> Any opinion from DT or panel maintainers?
->>
->> You have my opinion. I don't think Thierry's will be different.
->>
->> My suggestion is to move the settings you need into the panel driver
->> and out of DT. We can always move things to DT later if it makes
->> sense.
->
-> Sure thing. I will take the approach of compatible string like this:
->
-> compatible = "ilitek,ili9322", "dlink,dir685-panel";
->
-> And use the latter compatible to set up all the stuff in the panel
-> driver, what about that?
+https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git/commit/?h=
+=3Dfor-next&id=3D8635d6b3afe68cdde2f646c2a3bbd8149c031e8c
 
-Sounds good, but you need to reverse the order here. Most specific first.
+-- Sebastian
 
-Rob
+> 8< --------------------
+> From tony Mon Sep 17 00:00:00 2001
+> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Date: Wed, 30 Aug 2017 08:07:51 -0700
+> Subject: [PATCH] ARM: dts: Add missing hsi node for omap4
+>=20
+> On omap4 we're missing the hsi node with it's related "ti,hwmods"
+> property that the SoC interconnect code needs.
+>=20
+> Note that this will only show up as a bug with "doesn't have
+> mpu register target base" boot errors when the legacy platform
+> data is removed.
+>=20
+> Let's also update the binding accrodingly while at it.
+>=20
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/hsi/omap-ssi.txt | 13 +++++++--
+>  arch/arm/boot/dts/omap4.dtsi                       | 34 ++++++++++++++++=
+++++++
+>  2 files changed, 44 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/hsi/omap-ssi.txt b/Documen=
+tation/devicetree/bindings/hsi/omap-ssi.txt
+> --- a/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> +++ b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> @@ -1,10 +1,12 @@
+>  OMAP SSI controller bindings
+> =20
+> -OMAP Synchronous Serial Interface (SSI) controller implements a legacy
+> -variant of MIPI's High Speed Synchronous Serial Interface (HSI).
+> +OMAP3's Synchronous Serial Interface (SSI) controller implements a
+> +legacy variant of MIPI's High Speed Synchronous Serial Interface (HSI),
+> +while the controller found inside OMAP4 is supposed to be fully compliant
+> +with the HSI standard.
+> =20
+>  Required properties:
+> -- compatible:		Should include "ti,omap3-ssi".
+> +- compatible:		Should include "ti,omap3-ssi" or "ti,omap4-hsi"
+>  - reg-names:		Contains the values "sys" and "gdd" (in this order).
+>  - reg:			Contains a matching register specifier for each entry
+>  			in reg-names.
+> @@ -27,6 +29,7 @@ Each port is represented as a sub-node of the ti,omap3-=
+ssi device.
+>  Required Port sub-node properties:
+>  - compatible:		Should be set to the following value
+>  			ti,omap3-ssi-port (applicable to OMAP34xx devices)
+> +			ti,omap4-hsi-port (applicable to OMAP44xx devices)
+>  - reg-names:		Contains the values "tx" and "rx" (in this order).
+>  - reg:			Contains a matching register specifier for each entry
+>  			in reg-names.
+> @@ -38,6 +41,10 @@ Required Port sub-node properties:
+>  			property. If it's missing the port will not be
+>  			enabled.
+> =20
+> +Optional properties:
+> +- ti,hwmods:		Shall contain TI interconnect module name if needed
+> +			by the SoC
+> +
+>  Example for Nokia N900:
+> =20
+>  ssi-controller@48058000 {
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -632,6 +632,40 @@
+>  			dma-names =3D "tx", "rx";
+>  		};
+> =20
+> +		hsi: hsi@4a058000 {
+> +			compatible =3D "ti,omap4-hsi";
+> +			reg =3D <0x4a058000 0x4000>,
+> +			      <0x4a05c000 0x1000>;
+> +			reg-names =3D "sys", "gdd";
+> +			ti,hwmods =3D "hsi";
+> +
+> +			clocks =3D <&hsi_fck>;
+> +			clock-names =3D "hsi_fck";
+> +
+> +			interrupts =3D <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names =3D "gdd_mpu";
+> +
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <1>;
+> +			ranges =3D <0 0x4a058000 0x4000>;
+> +
+> +			hsi_port1: hsi-port@2000 {
+> +				compatible =3D "ti,omap4-hsi-port";
+> +				reg =3D <0x2000 0x800>,
+> +				      <0x2800 0x800>;
+> +				reg-names =3D "tx", "rx";
+> +				interrupts =3D <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			hsi_port2: hsi-port@3000 {
+> +				compatible =3D "ti,omap4-hsi-port";
+> +				reg =3D <0x3000 0x800>,
+> +				      <0x3800 0x800>;
+> +				reg-names =3D "tx", "rx";
+> +				interrupts =3D <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+>  		mmu_dsp: mmu@4a066000 {
+>  			compatible =3D "ti,omap4-iommu";
+>  			reg =3D <0x4a066000 0x100>;
+> --=20
+> 2.14.1
+
+--q5p4z63maywwxm6i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnRCNcACgkQ2O7X88g7
++prr3A//UdLyAPwsQ9cVux6NXo8KorWoJCCpDawluiALZBIU8MR+RVjrNJMvwa1Q
+TtM6jk4HYUcgFV/v9iXzcRm3iSfkPy6TmsxCgO9Fx6tvuyFqEfdfMxW8R2qrMICX
+TXrCrp/sT2zH4Bgt2Qvla3SDsDNI5SOhS53tBZhXzIcL0WZjstop0tj9HNPDnpVM
+h/SeUGksPRsV31q82qmzYRVoLVTnZ6TaRH9ea9LqxW/R+YpokVeW7NK9zZdZ/Ou9
+970WoCqLnI6iazXb+RHtJMW0Sw8kjTe7C0UEivOCxNSuJlGHy2jWe3+bUkh+8nff
+9HdSzfhQtK2hoKDwgFO9qt3uckwKKbS0CGdsKe8X5F4s6hf19BeAfuVvVFtLLAQH
+5T9Jnld6PUJFVza/6JRA0uUvhVSGKxqsyt/6bEan5nr5P5SZXNrZCK/Dajx74yei
+fbbRzNymgG5BAS0N0QiM1bkHc1kgkjwrOOzP595nYqVPYYhpVu8L2/X2wCokDIy4
++GMk3+P7k/ig+k1ScLiX8pk0WPw9GNGUfi37f14HBaTzV2NzvXRE4tmJnaV5/RUX
+WsuvCM207VkCok+Z36ajUoBVyy5i6yz6qTVkz3EDX7sKDdUOxJxbr7P211CBXXzw
+G3Isb70xZNYrtOR88W7b1ZEvZJVA0i2QI9UlXMXmHuMfoXE8EM4=
+=RLdi
+-----END PGP SIGNATURE-----
+
+--q5p4z63maywwxm6i--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
