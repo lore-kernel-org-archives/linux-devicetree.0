@@ -1,39 +1,53 @@
-From: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 0/2] clocksource: npcm: add NPCM7xx timer driver
-Date: Sun,  1 Oct 2017 12:11:36 +0300
-Message-ID: <1506849098-18290-1-git-send-email-tmaimon77@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 2/2] dt-binding: timer: document NPCM7xx timer DT bindings
+Date: Sun,  1 Oct 2017 12:11:38 +0300
+Message-ID: <1506849098-18290-3-git-send-email-tmaimon77@gmail.com>
+References: <1506849098-18290-1-git-send-email-tmaimon77@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506849098-18290-1-git-send-email-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, raltherr@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds clocksource support for the Nuvoton NPCM7xx Baseboard
-Management Controller (BMC).
+Added device tree binding documentation for Nuvoton NPCM7xx timer.
 
-The clocksource Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx BMC,
-while TIMER0 serves as clockevent and TIMER1 serves as clocksource.
-
-clocksource patch set depand on approval of basic support for Nuvoton BMCs
-and Nuvoton NPCM750 device tree patches.
-https://patchwork.kernel.org/bundle/brendanhiggins/arm:%20npcm:%20add%20basic%20support%20for%20Nuvoton%20BMCs/
-
-Tomer Maimon (2):
-  clocksource: npcm: add NPCM7xx timer driver
-  dt-binding: timer: document NPCM7xx timer DT bindings
-
- .../bindings/timer/nuvoton,npcm7xx-timer.txt       |  25 +++
- drivers/clocksource/Kconfig                        |   9 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/npcm7xx_timer.c                | 205 +++++++++++++++++++++
- 4 files changed, 240 insertions(+)
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
- create mode 100644 drivers/clocksource/npcm7xx_timer.c
 
+diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+new file mode 100644
+index 000000000000..d1beea901509
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+@@ -0,0 +1,25 @@
++Nuvoton NPCM7xx timer
++
++Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
++timer counters.
++
++Required properties:
++- compatible      : "nuvoton,npcm7xx-timer" for Poleg NPCM7xx.
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the timer interrupt with flags for
++                    falling edge.
++
++Required clocking property, have to be one of:
++- clocks          : phandle of timer reference clock.
++- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
++                    timer (usually 25000000).
++
++Example:
++
++timer@f0008000 {
++    compatible = "nuvoton,npcm7xx-timer";
++    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++    reg = <0xf0008000 0x1000>;
++    clocks = <&clk NPCM7XX_CLK_TIMER>;
++};
++
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
