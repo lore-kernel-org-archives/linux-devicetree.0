@@ -1,122 +1,79 @@
-From: Sebastian Reichel <sre@ring0.de>
-Subject: Re: [PATCH 1/7] dt-bindings: bus: Minimal TI sysc interconnect
- target module binding
-Date: Sun, 1 Oct 2017 15:11:52 +0200
-Message-ID: <20171001131151.loanjnvarkihbhik@earth>
-References: <20170929223411.9691-1-tony@atomide.com>
- <20170929223411.9691-2-tony@atomide.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add support to LIS2DW12 accel sensor
+Date: Sun, 1 Oct 2017 15:15:26 +0200
+Message-ID: <CAA2SeNKaUhLvLV6iUoirotMtz+nitW5LzLS0una3=BH9v7=0qA@mail.gmail.com>
+References: <20170830115043.3738-1-lorenzo.bianconi@st.com> <20170903175210.231b90a8@archlinux>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2133110773349224471=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170929223411.9691-2-tony@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Matthijs van Duin <matthijsvanduin@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903175210.231b90a8@archlinux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> On Wed, 30 Aug 2017 13:50:38 +0200
+> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> Modify management of drdy line and status register in order to support
+>> LIS2DW12 device
+>>
+>> Changes since v2:
+>> - swap status register patch (3rd in v2) with irq{1,2} definition one
+>>   (1st in v2)
+>> - patchset rebased onto 'fix drdy line configuration for LIS3MDL' patch
+>> Changes since v1:
+>> - remove drdy_irq parameter from LPS001WP settings since the sensor
+>> does not support data-ready interrupts
+>>
+>> Lorenzo Bianconi (5):
+>>   iio: st_sensors: add register mask for status register
+>>   iio: st_sensors: decouple irq1 configuration parameters from the irq2
+>>     ones
+>>   iio: st_sensors: do not always write enable_axis register
+>>   iio: accel: add support to LIS2DW12
+>>   dt-bindings: iio: accel: add LIS2DW12 sensor device binding
+>>
+>>  .../devicetree/bindings/iio/st-sensors.txt         |   1 +
+>>  drivers/iio/accel/st_accel.h                       |   2 +
+>>  drivers/iio/accel/st_accel_core.c                  | 180 +++++++++++++++++----
+>>  drivers/iio/accel/st_accel_i2c.c                   |   5 +
+>>  drivers/iio/accel/st_accel_spi.c                   |   5 +
+>>  drivers/iio/common/st_sensors/st_sensors_core.c    |  35 ++--
+>>  drivers/iio/common/st_sensors/st_sensors_trigger.c |  16 +-
+>>  drivers/iio/gyro/st_gyro_core.c                    |  33 ++--
+>>  drivers/iio/magnetometer/st_magn_core.c            |  16 +-
+>>  drivers/iio/pressure/st_pressure_core.c            |  46 ++++--
+>>  include/linux/iio/common/st_sensors.h              |  23 ++-
+>>  11 files changed, 270 insertions(+), 92 deletions(-)
+>>
+>
+> I'm happy with the whole series, however it doesn't currently apply
+> due to various fixes working their way through the fixes branches
+> of the iio git tree.  I'll try to pick it up once those have unwound.
+> There is too much going on with this code at the moment to do this
+> cleanly now.
+>
+> Give me a bump if I look like I have forgotten it once it will
+> apply cleanly to the togreg branch of iio.git.
+>
+> If I was being really fussy  this should have had a dependency list
+> for everything it was dependant on that wasn't currently in mainline.
+>
+> Jonathan
 
---===============2133110773349224471==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hgrfrvn44kd4ggkr"
-Content-Disposition: inline
+Hi Jonathan,
 
+what about that patchset?
+Regards,
 
---hgrfrvn44kd4ggkr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Lorenzo
 
-Hi,
-
-On Fri, Sep 29, 2017 at 03:34:05PM -0700, Tony Lindgren wrote:
-> With the recently introduced omap clkctrl module binding, we can start
-> moving omap hwmod data to device tree and drivers from arch/arm/mach-omap=
-2.
->=20
-> To start doing this, let's introduce a device tree binding for TI
-> sysc interconnect target module hardware. The sysc manages module clocks,
-> idlemodes and interconnect level resets. Each interconnect target module
-> can have one or more child devices connected to it.
->=20
-> TI sysc interconnect target module hardware is independent of the
-> interconnect. It is used at least with TI L3 interconnect (Arteris NoC)
-> and TI L4 interconnect (Sonics s3220). The sysc is mostly used for
-> interaction between module and PRCM. It participates in the OCP Disconnect
-> Protocol but other than that is mostly indepenent of the interconnect.
->=20
-> As all the features may not be supported for a given sysc module, we
-> need to use device tree configuration for the revision of the interconnect
-> target module.
->=20
-> Note that the interconnect target module control registers are always
-> sprinked at varying locations in the unused address space of the first
-> child device IP block. To avoid device tree reg conflicts, the sysc device
-> provides ranges for it's children.
->=20
-> For a non-intrusive transition from static hwmod data to using device
-> tree defined TI interconnect target module binding, we can keep things
-> working with static hwmod data if device tree property "ti,hwmods" is
-> specified for the the interconnect target module.
->=20
-> Note that additional properties for sysc capabilities will be added
-> later on. For now, we can already use this binding for interconnect
-> target modules that do not have any child device drivers available.
-> This allows us to idle the unused interconnect target modules during
-> init without the need for legacy hwmod platform data for doing it.
-
-DT backwards compatibility is about booting an old DT file with a
-newer kernel. Since old DT file does not contain a "ti,sysc-omap*"
-node you don't need to add "ti,hwmod =3D *" support to it. Instead a
-DT file, that uses ti,hwmod in the device node and does not have a
-"ti,sysc-omap*" at all should still work.
-
-IMHO we should break DT ABI for OMAP at some point, so that we can
-get rid of the hwmod database. My suggestion would be, that
-simple-bus checks if any child device is !=3D "ti,omap-sysc*" and
-does panic("please update DT!").
-
--- Sebastian
-
---hgrfrvn44kd4ggkr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnQ6ZQACgkQ2O7X88g7
-+prHiw//YSsx0mNysbLBMjTXKRwW27pjGwb5fI1qAcYVArG8nBw26M2Wc9UH3G0l
-+XWsSQpNMwaZD7t2Z/AuiyG+E5LoN8vqsikFDXSU0CDVVMovZga/FMtFGUZejt/G
-SBd3ofW+Ti8WCUjKCKQ8PwTskXrsKezusx5J3EEf5+xnmgqqSKzdup7PJN7UkTR1
-uTcd6SzrHuDiApWk8rVkN92bkTQvNpBOFhQNZx1Vp7mHqAuSyspqpG48/ReLjFPC
-O82GCztCBl+AQGfBR++xTkVctpz4ADKGJItoKHIqDKiPX2nnYBdlMERvolIAtFZj
-CyWdN2MMBJ3yeVWMPhOH5Utm+Ax2Y7PSdYfw1jiO8PIg0FEAdA91oJbdhJwACZiz
-jc0jCo0LCYj3UR+u/HUHJnE673DAkTyx+ccN7bZbMX8+q70ZcHNN1CPZB2hRzmgJ
-Nl69xze8zkfsb+K2OO9aZjJOzeNDn0QvpdUxfrC7ZbJWKKEs5j+iCoi3zm1AOL9c
-gF1LzzQZ6d3M0Q2PNFYQb45cm17b6SQwF4KSUECbA9OsgB5UHQ25nvnnAslU7U4/
-vw/ENSDGoqsvwRcS0ovtxlmRL4nLX+O4XEVPdNFsW7u1BAtP9HrfdTWUF77fwwNM
-x3EONwg/1OaskBMITmpodmCl+WriZcd0p+tqhkYcHcavyBga25E=
-=2qMU
------END PGP SIGNATURE-----
-
---hgrfrvn44kd4ggkr--
-
-
---===============2133110773349224471==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2133110773349224471==--
+-- 
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
