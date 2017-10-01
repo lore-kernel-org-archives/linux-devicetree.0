@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 4/4] ARM: dts: meson: add the efuse node
-Date: Sun,  1 Oct 2017 14:57:00 +0200
-Message-ID: <20171001125700.1520-5-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/4] dt-bindings: nvmem: Describe the Amlogic Meson6/Meson8/Meson8b efuse
+Date: Sun,  1 Oct 2017 14:56:57 +0200
+Message-ID: <20171001125700.1520-2-martin.blumenstingl@googlemail.com>
 References: <20171001125700.1520-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171001125700.1520-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,96 +10,47 @@ To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+A
 Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Meson6, Meson8 and Meson8b use a similar IP block which has access to
-512 bytes of efuse data.
-During SoC manufacturing some calibration settings for the CVBS
-connector and the internal temperature sensor are written to this efuse.
-On some boards it additionally stores for example the MAC addresses.
+Amlogic Meson6, Meson8 and Meson8b SoCs have an efuse which contains
+calibration data from the factory (for the internal temperature sensor
+and some CVBS connector settings). Some manufacturers also store the MAC
+address or serial number in the efuse.
 
-The efuse is enabled on Meson8 and Meson8b but kept disabled on Meson6
-since we do not have a clock driver there (which is required to read
-data from the efuse).
+This documents the devicetree bindings for the efuse on these SoCs.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- arch/arm/boot/dts/meson.dtsi   | 13 +++++++++++++
- arch/arm/boot/dts/meson6.dtsi  |  3 +++
- arch/arm/boot/dts/meson8.dtsi  |  6 ++++++
- arch/arm/boot/dts/meson8b.dtsi |  7 +++++++
- 4 files changed, 29 insertions(+)
+ .../bindings/nvmem/amlogic-meson-mx-efuse.txt      | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/amlogic-meson-mx-efuse.txt
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index 163dac42bf2e..9c1b21be94f4 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -262,5 +262,18 @@
- 			compatible = "amlogic,meson-mx-bootrom", "syscon";
- 			reg = <0xd9040000 0x10000>;
- 		};
+diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-meson-mx-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-meson-mx-efuse.txt
+new file mode 100644
+index 000000000000..a3c63954a1a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/amlogic-meson-mx-efuse.txt
+@@ -0,0 +1,22 @@
++Amlogic Meson6/Meson8/Meson8b efuse
 +
-+		secbus: secbus@da000000 {
-+			compatible = "simple-bus";
-+			reg = <0xda000000 0x6000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xda000000 0x6000>;
++Required Properties:
++- compatible: depending on the SoC this should be one of:
++	- "amlogic,meson6-efuse"
++	- "amlogic,meson8-efuse"
++	- "amlogic,meson8b-efuse"
++- reg: base address and size of the efuse registers
++- clocks: a reference to the efuse core gate clock
++- clock-names: must be "core"
 +
-+			efuse: nvmem@0 {
-+				compatible = "amlogic,meson6-efuse";
-+				reg = <0x0 0x2000>;
-+			};
-+		};
- 	};
- }; /* end of / */
-diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
-index ef281d290052..9b463211339f 100644
---- a/arch/arm/boot/dts/meson6.dtsi
-+++ b/arch/arm/boot/dts/meson6.dtsi
-@@ -84,6 +84,9 @@
- 	};
- }; /* end of / */
- 
-+&efuse {
-+	status = "disabled";
-+};
- 
- &uart_AO {
- 	clocks = <&xtal>, <&clk81>, <&clk81>;
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 2095a002ea8d..dad8b234c172 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -275,6 +275,12 @@
- 	};
- };
- 
-+&efuse {
-+	compatible = "amlogic,meson8-efuse";
-+	clocks = <&clkc CLKID_EFUSE>;
-+	clock-names = "core";
-+};
++All properties and sub-nodes as well as the consumer bindings
++defined in nvmem.txt in this directory are also supported.
 +
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>;
- 	clock-names = "stmmaceth";
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 111e01809ad7..4f8fc01ee0f0 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -183,6 +183,13 @@
- 	};
- };
- 
 +
-+&efuse {
-+	compatible = "amlogic,meson8b-efuse";
-+	clocks = <&clkc CLKID_EFUSE>;
-+	clock-names = "core";
-+};
-+
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>;
- 	clock-names = "stmmaceth";
++Example:
++	efuse: nvmem@0 {
++		compatible = "amlogic,meson8-efuse";
++		reg = <0x0 0x2000>;
++		clocks = <&clkc CLKID_EFUSE>;
++		clock-names = "core";
++	};
 -- 
 2.14.2
 
