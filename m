@@ -1,62 +1,45 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [2/2] hwmon: add dt binding for max1619
-Date: Sun, 1 Oct 2017 07:13:01 -0700
-Message-ID: <20171001141301.GA31794@roeck-us.net>
-References: <20170911191649.3344-2-atull@kernel.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3, 19/22] hwmon: (core) Add hwmon_max to hwmon_sensor_types
+ enumeration
+Date: Sun, 1 Oct 2017 07:21:11 -0700
+Message-ID: <20171001142111.GA32735@roeck-us.net>
+References: <1506604306-20739-20-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170911191649.3344-2-atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1506604306-20739-20-git-send-email-sudeep.holla@arm.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Sudeep Holla <Sudeep.Holla@arm.com>
+Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 11, 2017 at 02:16:49PM -0500, Alan Tull wrote:
-> Add new device tree binding for max1619.
+On Thu, Sep 28, 2017 at 02:11:43PM +0100, Sudeep Holla wrote:
+> It's useful to know the maximum types of sensor supported by hwmon
+> framework. It can be used to allocate some data structures when sorting
+> the monitors based on their type.
 > 
-> Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> This will be used by scmi hwmon support.
+> 
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Applied to hwmon-next.
-
-Thanks,
-Guenter
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
->  drivers/hwmon/max1619.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  include/linux/hwmon.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/hwmon/max1619.c b/drivers/hwmon/max1619.c
-> index a182789..76d9669 100644
-> --- a/drivers/hwmon/max1619.c
-> +++ b/drivers/hwmon/max1619.c
-> @@ -303,10 +303,20 @@ static const struct i2c_device_id max1619_id[] = {
+> diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
+> index ceb751987c40..e5fd2707b6df 100644
+> --- a/include/linux/hwmon.h
+> +++ b/include/linux/hwmon.h
+> @@ -29,6 +29,7 @@ enum hwmon_sensor_types {
+>  	hwmon_humidity,
+>  	hwmon_fan,
+>  	hwmon_pwm,
+> +	hwmon_max,
 >  };
->  MODULE_DEVICE_TABLE(i2c, max1619_id);
 >  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id max1619_of_match[] = {
-> +	{ .compatible = "maxim,max1619", },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, max1619_of_match);
-> +#endif
-> +
->  static struct i2c_driver max1619_driver = {
->  	.class		= I2C_CLASS_HWMON,
->  	.driver = {
->  		.name	= "max1619",
-> +		.of_match_table = of_match_ptr(max1619_of_match),
->  	},
->  	.probe		= max1619_probe,
->  	.id_table	= max1619_id,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  enum hwmon_chip_attributes {
