@@ -1,267 +1,301 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 1/2] clocksource: npcm: add NPCM7xx timer driver
-Date: Sun,  1 Oct 2017 12:11:37 +0300
-Message-ID: <1506849098-18290-2-git-send-email-tmaimon77@gmail.com>
-References: <1506849098-18290-1-git-send-email-tmaimon77@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506849098-18290-1-git-send-email-tmaimon77@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, raltherr@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/4] iio: adc: ina2xx: Make max expected current
+ configurable
+Date: Sun, 1 Oct 2017 11:29:34 +0100
+Message-ID: <20171001112934.360c840b@archlinux>
+References: <1506603015-27202-1-git-send-email-m.purski@samsung.com>
+        <CGME20170928125053eucas1p19e757ac5c3774f54c7cd0ee4525decbe@eucas1p1.samsung.com>
+        <1506603015-27202-2-git-send-email-m.purski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1506603015-27202-2-git-send-email-m.purski@samsung.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Nuvoton BMC NPCM7xx timer driver.
+On Thu, 28 Sep 2017 14:50:12 +0200
+Maciej Purski <m.purski@samsung.com> wrote:
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/clocksource/Kconfig         |   9 ++
- drivers/clocksource/Makefile        |   1 +
- drivers/clocksource/npcm7xx_timer.c | 205 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 215 insertions(+)
- create mode 100644 drivers/clocksource/npcm7xx_timer.c
+> Max expected current is used for calculating calibration register value,
+> Current LSB and Power LSB according to equations found in ina datasheet.
+> Max expected current is now implicitly set to default value,
+> which is 2^15, thanks to which Current LSB is equal to 1 mA and
+> Power LSB is equal to 20000 uW or 25000 uW depending on ina model.
+> 
+> Make max expected current configurable, just like it's already done
+> with shunt resistance: from device tree, platform_data or later
+> from sysfs. On each max_expected_current change, calculate new values
+> for Current LSB and Power LSB. According to datasheet Current LSB should
+> be calculated by dividing max expected current by 2^15, as values read
+> from device registers are in this case 16-bit integers. Power LSB
+> is calculated by multiplying Current LSB by a factor, which is defined
+> in ina documentation.
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index cc6062049170..e26a203ce4ab 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -140,6 +140,15 @@ config VT8500_TIMER
- 	help
- 	  Enables support for the VT8500 driver.
- 
-+config NPCM7XX_TIMER
-+	bool "NPCM7xx timer driver" if (COMPILE_TEST || ARCH_NPCM7XX)
-+	depends on GENERIC_CLOCKEVENTS
-+	depends on HAS_IOMEM
-+	select CLKSRC_MMIO
-+	help
-+	  Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx arcithcture,
-+	  While TIMER0 serves as clockevent and TIMER1 serves as clocksource.
-+
- config CADENCE_TTC_TIMER
- 	bool "Cadence TTC timer driver" if COMPILE_TEST
- 	depends on COMMON_CLK
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index dbc1ad14515e..fd3a1c33364b 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -53,6 +53,7 @@ obj-$(CONFIG_CLKSRC_TI_32K)	+= timer-ti-32k.o
- obj-$(CONFIG_CLKSRC_NPS)	+= timer-nps.o
- obj-$(CONFIG_OXNAS_RPS_TIMER)	+= timer-oxnas-rps.o
- obj-$(CONFIG_OWL_TIMER)		+= owl-timer.o
-+obj-$(CONFIG_NPCM7XX_TIMER)	+= npcm7xx_timer.o
- 
- obj-$(CONFIG_ARC_TIMERS)		+= arc_timer.o
- obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
-diff --git a/drivers/clocksource/npcm7xx_timer.c b/drivers/clocksource/npcm7xx_timer.c
-new file mode 100644
-index 000000000000..6da77202a22d
---- /dev/null
-+++ b/drivers/clocksource/npcm7xx_timer.c
-@@ -0,0 +1,205 @@
-+/*
-+ * Copyright (c) 2017 Nuvoton Technology corporation.
-+ * Copyright 2017 Google, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation;version 2 of the License.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/err.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/clockchips.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+
-+struct npcm7xx_clockevent_data {
-+	struct clock_event_device cvd;
-+	void __iomem *timer_base;
-+	unsigned int rate;
-+};
-+
-+/* Timers registers */
-+#define REG_TCSR0	0x0 /* Timer 0 Control and Status Register */
-+#define REG_TICR0	0x8 /* Timer 0 Initial Count Register */
-+#define REG_TCSR1	0x4 /* Timer 1 Control and Status Register */
-+#define REG_TICR1	0xc /* Timer 1 Initial Count Register */
-+#define REG_TDR1	0x14 /* Timer 1 Data Register */
-+#define REG_TISR	0x18 /* Timer Interrupt Status Register */
-+
-+#define RESETINT	0x1f
-+#define PERIOD		BIT(27)
-+#define INTEN		BIT(29)
-+#define COUNTEN		BIT(30)
-+#define ONESHOT		0x0
-+#define TIMER_OPER	GENMASK(3, 27)
-+#define MIN_PRESCALE	0x1 /* minimal timer prescale */
-+#define	TDR_MASK_BITS	24
-+#define MAX_TIMER_CNT	0xFFFFFF
-+#define CLR_TIMER0_INT	0x1
-+#define CLR_TIMER_CSR	0x0
-+
-+
-+static int npcm7xx_timer_oneshot(struct clock_event_device *evt)
-+{
-+	u32 val;
-+	struct npcm7xx_clockevent_data *cevtd =
-+	 container_of(evt, struct npcm7xx_clockevent_data, cvd);
-+
-+	val = readl(cevtd->timer_base + REG_TCSR0);
-+	val &= ~TIMER_OPER;
-+
-+	val = readl(cevtd->timer_base + REG_TCSR0);
-+	val |= (ONESHOT | COUNTEN | INTEN | MIN_PRESCALE);
-+	writel(val, cevtd->timer_base + REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int npcm7xx_timer_periodic(struct clock_event_device *evt)
-+{
-+	struct npcm7xx_clockevent_data *cevtd =
-+		container_of(evt, struct npcm7xx_clockevent_data, cvd);
-+	u32 val;
-+
-+	val = readl(cevtd->timer_base + REG_TCSR0);
-+	val &= ~TIMER_OPER;
-+
-+	writel((cevtd->rate / HZ), cevtd->timer_base + REG_TICR0);
-+	val |= (PERIOD | COUNTEN | INTEN | MIN_PRESCALE);
-+
-+	writel(val, cevtd->timer_base + REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static int npcm7xx_clockevent_setnextevent(unsigned long evt,
-+		struct clock_event_device *clk)
-+{
-+	struct npcm7xx_clockevent_data *cevtd =
-+		container_of(clk, struct npcm7xx_clockevent_data, cvd);
-+	u32 val;
-+
-+	writel(evt, cevtd->timer_base + REG_TICR0);
-+	val = readl(cevtd->timer_base + REG_TCSR0);
-+	val |= (COUNTEN | INTEN | MIN_PRESCALE);
-+	writel(val, cevtd->timer_base + REG_TCSR0);
-+
-+	return 0;
-+}
-+
-+static struct npcm7xx_clockevent_data npcm7xx_clockevent_data = {
-+	.cvd = {
-+		.name		    = "npcm7xx-timer0",
-+		.features	    = CLOCK_EVT_FEAT_PERIODIC |
-+				      CLOCK_EVT_FEAT_ONESHOT,
-+		.set_next_event	    = npcm7xx_clockevent_setnextevent,
-+		.set_state_shutdown = npcm7xx_timer_oneshot,
-+		.set_state_periodic = npcm7xx_timer_periodic,
-+		.set_state_oneshot  = npcm7xx_timer_oneshot,
-+		.tick_resume	    = npcm7xx_timer_oneshot,
-+		.rating		    = 300
-+	},
-+};
-+
-+static irqreturn_t npcm7xx_timer0_interrupt(int irq, void *dev_id)
-+{
-+	struct npcm7xx_clockevent_data *cevtd = dev_id;
-+	struct clock_event_device *evt = &cevtd->cvd;
-+
-+	writel(CLR_TIMER0_INT, cevtd->timer_base + REG_TISR);
-+
-+	if (evt->event_handler)
-+		evt->event_handler(evt);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irqaction npcm7xx_timer0_irq = {
-+	.name		= "npcm7xx-timer0",
-+	.flags		= IRQF_TIMER | IRQF_IRQPOLL,
-+	.handler	= npcm7xx_timer0_interrupt,
-+	.dev_id		= &npcm7xx_clockevent_data,
-+};
-+
-+static void __init npcm7xx_clockevents_init(int irq, u32 rate)
-+{
-+	writel(CLR_TIMER_CSR, npcm7xx_clockevent_data.timer_base + REG_TCSR0);
-+
-+	writel(RESETINT, npcm7xx_clockevent_data.timer_base + REG_TISR);
-+	setup_irq(irq, &npcm7xx_timer0_irq);
-+	npcm7xx_clockevent_data.cvd.cpumask = cpumask_of(0);
-+
-+	clockevents_config_and_register(&npcm7xx_clockevent_data.cvd, rate,
-+					0x1, MAX_TIMER_CNT);
-+}
-+
-+static void __init npcm7xx_clocksource_init(u32 rate)
-+{
-+	u32 val;
-+
-+	writel(CLR_TIMER_CSR, npcm7xx_clockevent_data.timer_base + REG_TCSR1);
-+	writel(MAX_TIMER_CNT, npcm7xx_clockevent_data.timer_base + REG_TICR1);
-+
-+	val = readl(npcm7xx_clockevent_data.timer_base + REG_TCSR1);
-+	val |= (COUNTEN | PERIOD | MIN_PRESCALE);
-+	writel(val, npcm7xx_clockevent_data.timer_base + REG_TCSR1);
-+
-+	clocksource_mmio_init(npcm7xx_clockevent_data.timer_base + REG_TDR1,
-+				"npcm7xx-timer1", rate,
-+				300, (unsigned int)TDR_MASK_BITS,
-+				clocksource_mmio_readl_down);
-+}
-+
-+static int __init npcm7xx_timer_init(struct device_node *np)
-+{
-+	struct clk *clk;
-+	int irq, ret;
-+	u32 rate;
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (!irq)
-+		return -EINVAL;
-+
-+	npcm7xx_clockevent_data.timer_base = of_iomap(np, 0);
-+	if (!npcm7xx_clockevent_data.timer_base)
-+		return -ENXIO;
-+
-+	clk = of_clk_get(np, 0);
-+
-+	if (IS_ERR(clk)) {
-+		ret = of_property_read_u32(np, "clock-frequency", &rate);
-+		if (ret)
-+			goto err_iounmap;
-+	} else {
-+		clk_prepare_enable(clk);
-+		rate = clk_get_rate(clk);
-+	}
-+
-+	/* Clock input is divided by PRESCALE + 1 before it is fed */
-+	/* to the counter */
-+	rate = rate / (MIN_PRESCALE + 1);
-+
-+	npcm7xx_clockevent_data.rate = rate;
-+
-+	npcm7xx_clocksource_init(rate);
-+	npcm7xx_clockevents_init(irq, rate);
-+
-+	pr_info("Enabling NPCM7xx clocksource timer base: %p, IRQ: %u\n",
-+		npcm7xx_clockevent_data.timer_base, irq);
-+
-+	return 0;
-+
-+err_iounmap:
-+	iounmap(npcm7xx_clockevent_data.timer_base);
-+	return ret;
-+
-+}
-+
-+TIMER_OF_DECLARE(npcm7xx, "nuvoton,npcm7xx-timer", npcm7xx_timer_init);
-+
--- 
-2.14.1
+One odd bit of casting inline.  Also this is new userspace ABI.
+It needs documenting in 
+
+Documentation/ABI/testing/sysfs-bus-iio* as appropriate.
+I'm also unclear on one element about this - is it a value used only
+for calibration or are we talking about the actual 'range' of the device?
+
+The interpretation of this value isn't clear against the more general
+ABI.
+
+In particular it is it in raw units (adc counts) or mA?  Docs say
+that but the naming of the attribute doesn't make this clear.
+
+Also I'm unconvinced this isn't better represented using the
+range specifications available for any IIO attribute on the raw
+value in combination with adjusting the scale value.
+Note not many drivers yet provide ranges on their raw outputs
+but we do have core support for it.  I've been meaning to start
+pushing this out into drivers, but been busy since we introduced
+the core support.  The dpot-dac driver does use it for examplel
+
+This moves the burden of calculating the 1lsb value to userspace,
+but importantly it would give us a consistent ABI where this fits
+in with existing elements (largely buy not introducing any new
+ones :).
+
+Thanks,
+
+Jonathan
+> 
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> ---
+>  drivers/iio/adc/ina2xx-adc.c         | 110 ++++++++++++++++++++++++++++++-----
+>  include/linux/platform_data/ina2xx.h |   2 +
+>  2 files changed, 98 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
+> index f387b97..883fede 100644
+> --- a/drivers/iio/adc/ina2xx-adc.c
+> +++ b/drivers/iio/adc/ina2xx-adc.c
+> @@ -56,6 +56,7 @@
+>  #define INA226_DEFAULT_IT		1110
+>  
+>  #define INA2XX_RSHUNT_DEFAULT           10000
+> +#define INA2XX_MAX_EXPECTED_A_DEFAULT	(1 << 15)	/* current_lsb = 1 mA */
+>  
+>  /*
+>   * bit masks for reading the settings in the configuration register
+> @@ -114,7 +115,7 @@ struct ina2xx_config {
+>  	int shunt_div;
+>  	int bus_voltage_shift;
+>  	int bus_voltage_lsb;	/* uV */
+> -	int power_lsb;		/* uW */
+> +	int power_lsb_factor;
+>  	enum ina2xx_ids chip_id;
+>  };
+>  
+> @@ -123,7 +124,10 @@ struct ina2xx_chip_info {
+>  	struct task_struct *task;
+>  	const struct ina2xx_config *config;
+>  	struct mutex state_lock;
+> -	unsigned int shunt_resistor;
+> +	unsigned int shunt_resistor;		/* uOhms */
+> +	unsigned int max_expected_current;	/* mA */
+> +	int current_lsb;			/* uA */
+> +	int power_lsb;				/* uW */
+>  	int avg;
+>  	int int_time_vbus; /* Bus voltage integration time uS */
+>  	int int_time_vshunt; /* Shunt voltage integration time uS */
+> @@ -137,7 +141,7 @@ static const struct ina2xx_config ina2xx_config[] = {
+>  		.shunt_div = 100,
+>  		.bus_voltage_shift = 3,
+>  		.bus_voltage_lsb = 4000,
+> -		.power_lsb = 20000,
+> +		.power_lsb_factor = 20,
+>  		.chip_id = ina219,
+>  	},
+>  	[ina226] = {
+> @@ -146,7 +150,7 @@ static const struct ina2xx_config ina2xx_config[] = {
+>  		.shunt_div = 400,
+>  		.bus_voltage_shift = 0,
+>  		.bus_voltage_lsb = 1250,
+> -		.power_lsb = 25000,
+> +		.power_lsb_factor = 25,
+>  		.chip_id = ina226,
+>  	},
+>  };
+> @@ -210,14 +214,15 @@ static int ina2xx_read_raw(struct iio_dev *indio_dev,
+>  
+>  		case INA2XX_POWER:
+>  			/* processed (mW) = raw*lsb (uW) / 1000 */
+> -			*val = chip->config->power_lsb;
+> +			*val = chip->power_lsb;
+>  			*val2 = 1000;
+>  			return IIO_VAL_FRACTIONAL;
+>  
+>  		case INA2XX_CURRENT:
+> -			/* processed (mA) = raw (mA) */
+> -			*val = 1;
+> -			return IIO_VAL_INT;
+> +			/* processed (mA) = raw*lsb (uA) / 1000 */
+> +			*val = chip->current_lsb;
+> +			*val2 = 1000;
+> +			return IIO_VAL_FRACTIONAL;
+>  		}
+>  	}
+>  
+> @@ -434,24 +439,47 @@ static ssize_t ina2xx_allow_async_readout_store(struct device *dev,
+>  }
+>  
+>  /*
+> - * Set current LSB to 1mA, shunt is in uOhms
+> - * (equation 13 in datasheet). We hardcode a Current_LSB
+> - * of 1.0 x10-6. The only remaining parameter is RShunt.
+> + * Calculate calibration value according to equation 1 in ina226 datasheet
+> + * http://www.ti.com/lit/ds/symlink/ina226.pdf.
+> + * Current LSB is in uA and RShunt is in uOhms, so RShunt should be
+> + * converted to mOhms in order to keep the scale.
+>   * There is no need to expose the CALIBRATION register
+>   * to the user for now. But we need to reset this register
+> - * if the user updates RShunt after driver init, e.g upon
+> - * reading an EEPROM/Probe-type value.
+> + * if the user updates RShunt or max expected current after driver
+> + * init, e.g upon reading an EEPROM/Probe-type value.
+>   */
+>  static int ina2xx_set_calibration(struct ina2xx_chip_info *chip)
+>  {
+> +	unsigned int rshunt = DIV_ROUND_CLOSEST(chip->shunt_resistor, 1000);
+>  	u16 regval = DIV_ROUND_CLOSEST(chip->config->calibration_factor,
+> -				   chip->shunt_resistor);
+> +				     chip->current_lsb * rshunt);
+>  
+>  	return regmap_write(chip->regmap, INA2XX_CALIBRATION, regval);
+>  }
+>  
+> +/*
+> + * Set max_expected_current (mA) and calculate current_lsb (uA),
+> + * according to equation 2 in ina226 datasheet. Power LSB is calculated
+> + * by multiplying Current LSB by a given factor, which may vary depending
+> + * on ina version.
+> + */
+> +static int set_max_expected_current(struct ina2xx_chip_info *chip,
+> +				    unsigned int val)
+> +{
+> +	if (val <= 0 || val > chip->config->calibration_factor)
+> +		return -EINVAL;
+> +
+> +	chip->max_expected_current = val;
+> +	chip->current_lsb = DIV_ROUND_CLOSEST(chip->max_expected_current * 1000,
+> +					      1 << 15);
+> +	chip->power_lsb = chip->current_lsb * chip->config->power_lsb_factor;
+> +
+> +	return 0;
+> +}
+> +
+>  static int set_shunt_resistor(struct ina2xx_chip_info *chip, unsigned int val)
+>  {
+> +
+>  	if (val <= 0 || val > chip->config->calibration_factor)
+>  		return -EINVAL;
+>  
+> @@ -493,6 +521,39 @@ static ssize_t ina2xx_shunt_resistor_store(struct device *dev,
+>  	return len;
+>  }
+>  
+> +static ssize_t ina2xx_max_expected_current_show(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  char *buf)
+> +{
+> +	struct ina2xx_chip_info *chip = iio_priv(dev_to_iio_dev(dev));
+> +
+> +	return sprintf(buf, "%d\n", chip->max_expected_current);
+> +}
+> +
+> +static ssize_t ina2xx_max_expected_current_store(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   const char *buf, size_t len)
+> +{
+> +	struct ina2xx_chip_info *chip = iio_priv(dev_to_iio_dev(dev));
+> +	unsigned long val;
+> +	int ret;
+> +
+> +	ret = kstrtoul((const char *) buf, 10, &val);
+
+Odd bit of casting given that's what it already is...
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = set_max_expected_current(chip, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Update the Calibration register */
+> +	ret = ina2xx_set_calibration(chip);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return len;
+> +}
+> +
+>  #define INA219_CHAN(_type, _index, _address) { \
+>  	.type = (_type), \
+>  	.address = (_address), \
+> @@ -755,10 +816,15 @@ static IIO_DEVICE_ATTR(in_shunt_resistor, S_IRUGO | S_IWUSR,
+>  		       ina2xx_shunt_resistor_show,
+>  		       ina2xx_shunt_resistor_store, 0);
+>  
+> +static IIO_DEVICE_ATTR(in_max_expected_current, S_IRUGO | S_IWUSR,
+> +		       ina2xx_max_expected_current_show,
+> +		       ina2xx_max_expected_current_store, 0);
+> +
+>  static struct attribute *ina219_attributes[] = {
+>  	&iio_dev_attr_in_allow_async_readout.dev_attr.attr,
+>  	&iio_const_attr_ina219_integration_time_available.dev_attr.attr,
+>  	&iio_dev_attr_in_shunt_resistor.dev_attr.attr,
+> +	&iio_dev_attr_in_max_expected_current.dev_attr.attr,
+>  	NULL,
+>  };
+>  
+> @@ -766,6 +832,7 @@ static struct attribute *ina226_attributes[] = {
+>  	&iio_dev_attr_in_allow_async_readout.dev_attr.attr,
+>  	&iio_const_attr_ina226_integration_time_available.dev_attr.attr,
+>  	&iio_dev_attr_in_shunt_resistor.dev_attr.attr,
+> +	&iio_dev_attr_in_max_expected_current.dev_attr.attr,
+>  	NULL,
+>  };
+>  
+> @@ -851,6 +918,21 @@ static int ina2xx_probe(struct i2c_client *client,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (of_property_read_u32(client->dev.of_node,
+> +				  "max-expected-current", &val) < 0) {
+> +		struct ina2xx_platform_data *pdata =
+> +		    dev_get_platdata(&client->dev);
+> +
+> +		if (pdata && pdata->max_mA != 0)
+> +			val = pdata->max_mA;
+> +		else
+> +			val = INA2XX_MAX_EXPECTED_A_DEFAULT;
+> +	}
+> +
+> +	ret = set_max_expected_current(chip, val);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Patch the current config register with default. */
+>  	val = chip->config->config_default;
+>  
+> diff --git a/include/linux/platform_data/ina2xx.h b/include/linux/platform_data/ina2xx.h
+> index 9abc0ca..f02b1d8 100644
+> --- a/include/linux/platform_data/ina2xx.h
+> +++ b/include/linux/platform_data/ina2xx.h
+> @@ -13,7 +13,9 @@
+>  /**
+>   * struct ina2xx_platform_data - ina2xx info
+>   * @shunt_uohms		shunt resistance in microohms
+> + * @max_mA		max expected current in mA
+>   */
+>  struct ina2xx_platform_data {
+>  	long shunt_uohms;
+> +	int max_mA;
+>  };
+
