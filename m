@@ -1,112 +1,149 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] initialize (multiple) PHYs in xhci-plat
-Date: Mon, 2 Oct 2017 14:44:21 +0200
-Message-ID: <20171002124421.GA2324@kroah.com>
-References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
- <CAFBinCCRM1e08styDV8uodkhonTUPyZrQAdYRz_bfUMe-YP1Rg@mail.gmail.com>
- <20170918084943.GA19123@kroah.com>
- <CAFBinCAweHXFbWrF9gW5f_+NeC9jChU1EkRsiLzkaKtOZkEREQ@mail.gmail.com>
- <1506947708.17300.21.camel@baylibre.com>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] mtd: spi-nor: cadence-quadspi: add a delay in
+ write sequence
+Date: Mon, 2 Oct 2017 18:16:40 +0530
+Message-ID: <07137a92-244b-e009-54ae-71f733860f28@ti.com>
+References: <20170924105924.23923-1-vigneshr@ti.com>
+ <20170924105924.23923-3-vigneshr@ti.com>
+ <94313cae-4805-0b13-a469-72aa7556b685@gmail.com>
+ <8990b971-91d5-747f-905b-5e24743e090d@ti.com>
+ <d35d0891-71b9-12df-9689-dc77f56453ab@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1506947708.17300.21.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <d35d0891-71b9-12df-9689-dc77f56453ab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 02, 2017 at 02:35:08PM +0200, Jerome Brunet wrote:
-> On Sun, 2017-10-01 at 22:32 +0200, Martin Blumenstingl wrote:
-> > Hello Greg, Hello Mathias,
-> > 
-> > On Mon, Sep 18, 2017 at 10:49 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> > > On Sun, Sep 17, 2017 at 10:51:31PM +0200, Martin Blumenstingl wrote:
-> > > > Hello Mathias, Hello Greg,
-> > > > 
-> > > > On Sun, Sep 3, 2017 at 11:38 PM, Martin Blumenstingl
-> > > > <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> > > > > This series is the outcome of a discussion with Felipe Balbi,
-> > > > > see [0] and [1].
-> > > > > The quick-summary of this is:
-> > > > > - dwc3 already takes one USB2 and one USB3 PHY and initializes these
-> > > > >   correct
-> > > > > - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
-> > > > >   ohci-platform.c) do not have a limitation on the number of PHYs - they
-> > > > >   support one PHY per actual host port
-> > > > > - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
-> > > > >   or three USB2 ports enabled on the internal root-hub. The SoCs also
-> > > > >   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
-> > > > >   internally "connected" to the dwc3 roothub) need to be powered on,
-> > > > >   otherwise USB devices cannot be enumerated (even if just one PHY is
-> > > > >   disabled and if the device is plugged into another, enabled port)
-> > > > > 
-> > > > > In my first attempt to get USB supported on the GXL and GXM SoCs I tried
-> > > > > to work-around the problem that I could not pass multiple PHYs to the
-> > > > > dwc3 controller.
-> > > > > This was rejected by Rob Herring (which was definitely the thing to do
-> > > > > in
-> > > > > my opinion), see [2]
-> > > > > 
-> > > > > This series adds a new "platform-roothub". This can be configured
-> > > > > through
-> > > > > devicetree by passing a child-node with "reg = <0>" to the USB
-> > > > > controller. Additionally there has to be a child-node for each port on
-> > > > > the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
-> > > > > property. This allows modeling the root-hub in devicetree similar to the
-> > > > > USB device binding (documented in devicetree/bindings/usb/usb-
-> > > > > device.txt)
-> > > > > This avoids and backwards-compatibility problems (which was a concern
-> > > > > regardless of the solution, see [3]) since the binding for the root-hub
-> > > > > was previously not specified (and we're not using the "phys" property of
-> > > > > the controller, which might have served different purposes before,
-> > > > > depending on the drivers).
-> > > > > 
-> > > > > Additionally this integrates the new platform-roothub into xhci-plat.c
-> > > > > which automatically enables it for the dwc3 driver (in host-mode).
-> > > > > 
-> > > > > 
-> > > > > Changes since RFCv3 at [6]:
-> > > > > - moved the DT binding change from patch #3 to patch #1 as suggested
-> > > > >   by Rob Herring (and slightly adjusted the commit message to account
-> > > > >   for that)
-> > > > > - added Tested-by from Chunfeng Yun (who confirmed that the whole
-> > > > >   concept and implementation works fine on Mediatek SoCs - many thanks
-> > > > >   again!) to patch #2
-> > > > > - added Rob Herring's ACK to patches 1 and 3
-> > > > > - dropped RFC status (RFCv3 -> PATCH v4)
-> > > > 
-> > > > I just wanted to rebase this to v4.14-rc1 (now that this is out) -
-> > > > however I noticed that v4 still applies to v4.14-rc1 cleanly (the
-> > > > patches are still identical to v4 after rebasing).
-> > > > 
-> > > > we have an ACK from the devicetree maintainers and a "Tested-by" for a
-> > > > Mediatek (= non-Amlogic) SoC.
-> > > > I already have patches for the Amlogic GXL/GXM platforms queued, those
-> > > > are just waiting on this series.
-> > > > 
-> > > > what is still missing to get this series into v4.15?
-> > > 
-> > > Well, we couldn't do anything until 4.14-rc1 is out, now that it is, let
-> > > us catch up on patch review please...
-> > 
-> > OK, I understand that.
-> > please let me know once you've caught up with the review backlog - as
-> > I said I would like to get this into 4.15 if nothing else comes up
-> > during the code-review
+
+
+On 9/24/2017 6:43 PM, Marek Vasut wrote:
+> On 09/24/2017 02:33 PM, Vignesh R wrote:
+>>
+>>
+>> On 9/24/2017 5:29 PM, Marek Vasut wrote:
+>>> On 09/24/2017 12:59 PM, Vignesh R wrote:
+>>>> As per 66AK2G02 TRM[1] SPRUHY8F section 11.15.5.3 Indirect Access
+>>>> Controller programming sequence, a delay equal to couple of QSPI master
+>>>> clock(~5ns) is required after setting CQSPI_REG_INDIRECTWR_START bit and
+>>>> writing data to the flash. Introduce a quirk flag CQSPI_NEEDS_WR_DELAY
+>>>> to handle this and set this flag for TI 66AK2G SoC.
+>>>>
+>>>> [1]http://www.ti.com/lit/ug/spruhy8f/spruhy8f.pdf
+>>>>
+>>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+>>>
+>>> Is this TI specific or is this controller property ? I wouldn't be
+>>> surprised of the later ...
+>>
+>> I am not sure, there is no generic public documentation by cadence for
+>> this IP. TI TRM clearly states this delay is required and I have
+>> verified it practically that this delay is indeed needed.
+>> But current user of this IP, socfpga does not seem to mention anything
+>> about it. So, I guess its TI specific quirk.
 > 
-> This series works well on the libretech-cc (le potato)
-> For the series:
+> OK, let's go with that then. I didn't observe any stability issues with
+> SoCFPGA, but I didn't run the flash at 100s of MHz either. At what kind
+> of frequencies does the quirk become relevant ?
 > 
-> Tested-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Hey, I have one of those boards now, was just about to try to get it to
-work.  Is this series necessary for it to run properly on 4.14-rc?
+Actually, delay is tied to QSPI master clk rate(not SPI bus clk rate).
+It runs at 384MHz. Changing SPI bus rate has no effect.
 
-thanks,
+Regards
+Vignesh
 
-greg k-h
+>>>
+>>>> ---
+>>>>
+>>>> v3:
+>>>> Fix build warnings reported by kbuild test bot.
+>>>>
+>>>>  drivers/mtd/spi-nor/cadence-quadspi.c | 27 ++++++++++++++++++++++++++-
+>>>>  1 file changed, 26 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+>>>> index 53c7d8e0327a..5cd5d6f7303f 100644
+>>>> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+>>>> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+>>>> @@ -38,6 +38,9 @@
+>>>>  #define CQSPI_NAME			"cadence-qspi"
+>>>>  #define CQSPI_MAX_CHIPSELECT		16
+>>>>  
+>>>> +/* Quirks */
+>>>> +#define CQSPI_NEEDS_WR_DELAY		BIT(0)
+>>>> +
+>>>>  struct cqspi_st;
+>>>>  
+>>>>  struct cqspi_flash_pdata {
+>>>> @@ -76,6 +79,7 @@ struct cqspi_st {
+>>>>  	u32			fifo_depth;
+>>>>  	u32			fifo_width;
+>>>>  	u32			trigger_address;
+>>>> +	u32			wr_delay;
+>>>>  	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+>>>>  };
+>>>>  
+>>>> @@ -608,6 +612,15 @@ static int cqspi_indirect_write_execute(struct spi_nor *nor,
+>>>>  	reinit_completion(&cqspi->transfer_complete);
+>>>>  	writel(CQSPI_REG_INDIRECTWR_START_MASK,
+>>>>  	       reg_base + CQSPI_REG_INDIRECTWR);
+>>>> +	/*
+>>>> +	 * As per 66AK2G02 TRM SPRUHY8F section 11.15.5.3 Indirect Access
+>>>> +	 * Controller programming sequence, couple of cycles of
+>>>> +	 * QSPI_REF_CLK delay is required for the above bit to
+>>>> +	 * be internally synchronized by the QSPI module. Provide 5
+>>>> +	 * cycles of delay.
+>>>> +	 */
+>>>> +	if (cqspi->wr_delay)
+>>>> +		ndelay(cqspi->wr_delay);
+>>>>  
+>>>>  	while (remaining > 0) {
+>>>>  		write_bytes = remaining > page_size ? page_size : remaining;
+>>>> @@ -1156,6 +1169,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>>>>  	struct cqspi_st *cqspi;
+>>>>  	struct resource *res;
+>>>>  	struct resource *res_ahb;
+>>>> +	unsigned long data;
+>>>>  	int ret;
+>>>>  	int irq;
+>>>>  
+>>>> @@ -1213,6 +1227,10 @@ static int cqspi_probe(struct platform_device *pdev)
+>>>>  	}
+>>>>  
+>>>>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+>>>> +	data  = (unsigned long)of_device_get_match_data(dev);
+>>>> +	if (data & CQSPI_NEEDS_WR_DELAY)
+>>>> +		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+>>>> +						   cqspi->master_ref_clk_hz);
+>>>>  
+>>>>  	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
+>>>>  			       pdev->name, cqspi);
+>>>> @@ -1284,7 +1302,14 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
+>>>>  #endif
+>>>>  
+>>>>  static const struct of_device_id cqspi_dt_ids[] = {
+>>>> -	{.compatible = "cdns,qspi-nor",},
+>>>> +	{
+>>>> +		.compatible = "cdns,qspi-nor",
+>>>> +		.data = (void *)0,
+>>>> +	},
+>>>> +	{
+>>>> +		.compatible = "ti,k2g-qspi",
+>>>> +		.data = (void *)CQSPI_NEEDS_WR_DELAY,
+>>>> +	},
+>>>>  	{ /* end of table */ }
+>>>>  };
+>>>>  
+>>>>
+>>>
+>>>
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
