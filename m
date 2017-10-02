@@ -1,107 +1,106 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/7] ARM: dts: sun8i: a83t: cubietruck-plus: Add AXP818
- regulator nodes
-Date: Mon, 2 Oct 2017 18:24:05 +0200
-Message-ID: <20171002162405.jndvig3fxuj6d3ce@flea>
-References: <20170929032514.31727-1-wens@csie.org>
- <20170929032514.31727-6-wens@csie.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Mon, 2 Oct 2017 11:05:11 -0600
+Message-ID: <788f73dc-e011-aa9d-8850-f01ab9459c91@wwwdotorg.org>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
+ <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
+ <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+ <9e4e3dc1-85cd-2096-118c-7d0c929b9246@wwwdotorg.org>
+ <5a5ce745-750f-9c8f-5129-c9b0f7aee614@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vuqobhb44zje7puz"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170929032514.31727-6-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5a5ce745-750f-9c8f-5129-c9b0f7aee614@gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/29/2017 09:11 PM, Dmitry Osipenko wrote:
+> On 29.09.2017 22:30, Stephen Warren wrote:
+>> On 09/27/2017 02:34 AM, Jon Hunter wrote:
+>>>
+>>> On 27/09/17 02:57, Dmitry Osipenko wrote:
+>>>> On 26.09.2017 17:50, Jon Hunter wrote:
+>>>>>
+>>>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
+>>>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>>>>>> on Tegra20/30 SoC's.
+>>>>>>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>>>>    .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23
+>>>>>> ++++++++++++++++++++++
+>>>>>>    1 file changed, 23 insertions(+)
+>>>>>>    create mode 100644
+>>>>>> Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>> b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..2af9aa76ae11
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>> @@ -0,0 +1,23 @@
+>>>>>> +* NVIDIA Tegra AHB DMA controller
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible:    Must be "nvidia,tegra20-ahbdma"
+>>>>>> +- reg:        Should contain registers base address and length.
+>>>>>> +- interrupts:    Should contain one entry, DMA controller interrupt.
+>>>>>> +- clocks:    Should contain one entry, DMA controller clock.
+>>>>>> +- resets :    Should contain one entry, DMA controller reset.
+>>>>>> +- #dma-cells:    Should be <1>. The cell represents DMA request select value
+>>>>>> +        for the peripheral. For more details consult the Tegra TRM's
+>>>>>> +        documentation, in particular AHB DMA channel control register
+>>>>>> +        REQ_SEL field.
+>>>>>
+>>>>> What about the TRIG_SEL field? Do we need to handle this here as well?
+>>>>>
+>>>>
+>>>> Actually, DMA transfer trigger isn't related a hardware description. It's up to
+>>>> software to decide what trigger to select. So it shouldn't be in the binding.
+>>>
+>>> I think it could be, if say a board wanted a GPIO to trigger a transfer.
+>>>
+>>>> And I think the same applies to requester... any objections?
+>>>
+>>> Well, the REQ_SEL should definitely be in the binding.
+>>>
+>>> Laxman, Stephen, what are your thoughts on the TRIG_SEL field? Looks
+>>> like we never bothered with it for the APB DMA and so maybe no ones uses
+>>> this.
+>>
+>> I don't think TRIG_SEL should be in the binding, at least at present. While
+>> TRIG_SEL certainly is something used to configure the transfer, I believe the
+>> semantics of the current DMA binding only cover DMA transfers that are initiated
+>> when SW desires, rather than being a combination of after SW programs the
+>> transfer plus some other HW event. So, we always use a default/hard-coded
+>> TRIG_SEL value. As such, there's no need for a TRIG_SEL value in DT. There's
+>> certainly no known use-case that requires a non-default TRIG_SEL value at
+>> present. We could add an extra #dma-cells value later if we find a use for it,
+>> and the semantics of that use-case make sense to add it to the DMA specifier,
+>> rather than some other separate higher-level property/driver/...
+> 
+> Thank you for the comment. If we'd want to extend the binding further with the
+> trigger, how to differentiate trigger from the requester in a case of a single
+> #data-cell?
+> 
+> Of course realistically a chance that the further extension would be needed is
+> very-very low, so we may defer the efforts to solve that question and for now
+> make driver aware of the potential #dma-cells extension.
 
---vuqobhb44zje7puz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The request selector cell isn't optional, so is always present. If we 
+later add an optional trig_sel cell, we'll either have:
 
-Hi,
+#dma-cells=<1>: req_sel
 
-On Fri, Sep 29, 2017 at 03:25:12AM +0000, Chen-Yu Tsai wrote:
-> +#include "axp81x.dtsi"
-> +
-> +&reg_aldo1 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt =3D <1800000>;
-> +	regulator-max-microvolt =3D <1800000>;
-> +	regulator-name =3D "vcc18-csi2-dsi-efuse-hdmi-d4dp";
-> +};
+or:
 
-I'm not really fond of these names. It's easy to miss some components
-(especially since we most of the time don't have the schematics), and
-if it's not complete, the obscure name isn't worth it either.
-
-What about vcc-1.8 for this one ?
-
-> +&reg_aldo2 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt =3D <1800000>;
-> +	regulator-max-microvolt =3D <1800000>;
-> +	regulator-name =3D "vdd-drampll-vcc18-pll-adc-cpvdd-ldoin";
-> +};
-
-dram-pll?
-
-> +&reg_aldo3 {
-> +	regulator-always-on;
-> +	regulator-min-microvolt =3D <3000000>;
-> +	regulator-max-microvolt =3D <3000000>;
-> +	regulator-name =3D "vcc-pl-avcc";
-> +};
-
-avcc?
-
-etc..
-
->  	status =3D "disabled";
->  };
-> =20
-> +&reg_vcc3v3 {
-> +	status =3D "disabled";
-> +};
-> +
->  &reg_vcc5v0 {
->  	status =3D "disabled";
->  };
-
-Why not simply remove the DTSI then?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---vuqobhb44zje7puz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ0mglAAoJEBx+YmzsjxAgX7gQALPm1HSkqxE3dZbziH48L1Om
-nBNBGSoXHgy+++W0E6jNBFnlXgrmKK8zewN1g8xlqAzAkMrTRDyag4WUOxK6I/tn
-EYGT5HGblJO9cSz5wmh7728sE2t48iNdF5FtPNy13jEkxAAAq9ePFn0zuADrpc1x
-cqTFZxcgpuFgSGWckgVHuLtswaUFXBR77/INf/Fs87q7N9vNgoQTsv9SuGPmXrkT
-qxgrbkzeYXVDi9IKA+nQHRmnGuph2ymukF65UTedYF8b++n7Gnh1baaOZH7hUlZs
-oP2qeAimzRDdwpsYotstrYYeWoLVh1aJ2n8ftjojYwQHKRp2HyHC6YCJpI3nI3Te
-nF4DRzdi+bQfOeH23MfI4XgH43LRapUfj+F28CuFxjKD/5bZZ5VtlTA2YiQZYhgS
-voq0Edg9Bkk89kjOtFFxZ5pqmObbMqEf2l5xNxLjkhZGchTMVtlHv9oWkfU90nJT
-dpqen89JT2K281CnArkFzNnbSbzUWtkGBFwNg8HoDUMLEYONk1u9vowUiRxxjQFu
-O8LJHWqhChAhpbFcEPGnZ5AlKYqQ+iI7xhAwteT+RD/POkruyszU7b6EM4LdpnQ5
-UT8grPCkE4UvDhL3cMi/fGbCuEJ2vRcPbbaznp1+q3d9XuDQvMPXRBYb6NefDzS8
-6cYYkYVZx/ueuBd2Z6R9
-=g6dE
------END PGP SIGNATURE-----
-
---vuqobhb44zje7puz--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+#dma-cells=<2>: req_sel, trig_sel
