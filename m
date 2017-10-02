@@ -1,100 +1,52 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 01/12] pinctrl: move gpio-axp209 to pinctrl
-Date: Mon,  2 Oct 2017 14:08:43 +0200
-Message-ID: <20171002120854.5212-2-quentin.schulz@free-electrons.com>
+Subject: [PATCH v3 07/12] ARM: dts: sun8i: a711: include axp81x dtsi
+Date: Mon,  2 Oct 2017 14:08:49 +0200
+Message-ID: <20171002120854.5212-8-quentin.schulz@free-electrons.com>
 References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBHGZZDHAKGQEAG5TMDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171002120854.5212-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To prepare the driver for the upcoming pinctrl features, move the GPIO
-driver AXP209 from GPIO to pinctrl subsystem.
+This board has an AXP813 PMIC so let's include its dtsi.
 
 Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../bindings/{gpio/gpio-axp209.txt => pinctrl/pinctrl-axp209.txt}   | 0
- drivers/gpio/Kconfig                                                | 6 ------
- drivers/gpio/Makefile                                               | 1 -
- drivers/pinctrl/Kconfig                                             | 6 ++++++
- drivers/pinctrl/Makefile                                            | 1 +
- drivers/{gpio/gpio-axp209.c => pinctrl/pinctrl-axp209.c}            | 0
- 6 files changed, 7 insertions(+), 7 deletions(-)
- rename Documentation/devicetree/bindings/{gpio/gpio-axp209.txt => pinctrl/pinctrl-axp209.txt} (100%)
- rename drivers/{gpio/gpio-axp209.c => pinctrl/pinctrl-axp209.c} (100%)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-axp209.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-rename to Documentation/devicetree/bindings/pinctrl/pinctrl-axp209.txt
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 796b11c489ae..aae33f7d82ef 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -122,12 +122,6 @@ config GPIO_ATH79
- 	  Select this option to enable GPIO driver for
- 	  Atheros AR71XX/AR724X/AR913X SoC devices.
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 723641f56a74..4f4db07ca19f 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -146,7 +146,7 @@
+ &r_rsb {
+ 	status = "okay";
  
--config GPIO_AXP209
--	tristate "X-Powers AXP209 PMIC GPIO Support"
--	depends on MFD_AXP20X
--	help
--	  Say yes to enable GPIO support for the AXP209 PMIC
--
- config GPIO_BCM_KONA
- 	bool "Broadcom Kona GPIO"
- 	depends on OF_GPIO && (ARCH_BCM_MOBILE || COMPILE_TEST)
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index aeb70e9de6f2..f63631a63b09 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -31,7 +31,6 @@ obj-$(CONFIG_GPIO_AMDPT)	+= gpio-amdpt.o
- obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
- obj-$(CONFIG_GPIO_ATH79)	+= gpio-ath79.o
- obj-$(CONFIG_GPIO_ASPEED)	+= gpio-aspeed.o
--obj-$(CONFIG_GPIO_AXP209)	+= gpio-axp209.o
- obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BD9571MWV)	+= gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 82cd8b08d71f..acda2e29167c 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -63,6 +63,12 @@ config PINCTRL_AS3722
- 	  open drain configuration for the GPIO pins of AS3722 devices. It also
- 	  supports the GPIO functionality through gpiolib.
+-	axp813: pmic@3a3 {
++	axp81x: pmic@3a3 {
+ 		compatible = "x-powers,axp813";
+ 		reg = <0x3a3>;
+ 		interrupt-parent = <&r_intc>;
+@@ -179,6 +179,8 @@
  
-+config PINCTRL_AXP209
-+	tristate "X-Powers AXP209 PMIC pinctrl and GPIO Support"
-+	depends on MFD_AXP20X
-+	help
-+	  Say yes to enable pinctrl and GPIO support for the AXP209 PMIC
+ };
+ 
++#include "axp81x.dtsi"
 +
- config PINCTRL_BF54x
- 	def_bool y if BF54x
- 	select PINCTRL_ADI2
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index c16e27900dbb..9f621e542f59 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_GENERIC_PINCONF)	+= pinconf-generic.o
- obj-$(CONFIG_PINCTRL_ADI2)	+= pinctrl-adi2.o
- obj-$(CONFIG_PINCTRL_ARTPEC6)	+= pinctrl-artpec6.o
- obj-$(CONFIG_PINCTRL_AS3722)	+= pinctrl-as3722.o
-+obj-$(CONFIG_PINCTRL_AXP209)	+= pinctrl-axp209.o
- obj-$(CONFIG_PINCTRL_BF54x)	+= pinctrl-adi2-bf54x.o
- obj-$(CONFIG_PINCTRL_BF60x)	+= pinctrl-adi2-bf60x.o
- obj-$(CONFIG_PINCTRL_AT91)	+= pinctrl-at91.o
-diff --git a/drivers/gpio/gpio-axp209.c b/drivers/pinctrl/pinctrl-axp209.c
-similarity index 100%
-rename from drivers/gpio/gpio-axp209.c
-rename to drivers/pinctrl/pinctrl-axp209.c
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
