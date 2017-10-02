@@ -1,234 +1,75 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 3/4] nvmem: add a driver for the Amlogic
- Meson6/Meson8/Meson8b SoCs
-Date: Mon, 2 Oct 2017 20:38:44 +0200
-Message-ID: <CAFBinCAi7K+o-iksO1jLUx0wKT=TaaOzXC0QP0EgC=63vh23Uw@mail.gmail.com>
-References: <20171001125700.1520-1-martin.blumenstingl@googlemail.com>
- <20171001125700.1520-4-martin.blumenstingl@googlemail.com> <8f1f5a45-951c-7434-44d5-4ef2a61ec038@linaro.org>
+Subject: Re: [PATCH] ARM: dts: meson8b: add reserved memory zone to fix silent freezes
+Date: Mon, 2 Oct 2017 20:39:30 +0200
+Message-ID: <CAFBinCCde249b0o9aKMErEbKznM7UQrg1FzhLQ2whej0x_XLAg@mail.gmail.com>
+References: <20171002155903.19511-1-linus.luessing@c0d3.blue>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8f1f5a45-951c-7434-44d5-4ef2a61ec038-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20171002155903.19511-1-linus.luessing-djzkFPsfvsizQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Linus_L=C3=BCssing?= <linus.luessing-djzkFPsfvsizQB+pC5nmwQ@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 2, 2017 at 5:28 PM, Srinivas Kandagatla
-<srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Minor comments!!
-that was a VERY quick code review (and by this I mean the time between
-sending the patch and getting valuable feedback) - many thanks for
-this!
+On Mon, Oct 2, 2017 at 5:59 PM, Linus L=C3=BCssing <linus.luessing-djzkFPsfvsg@public.gmane.org=
+e> wrote:
+> So far, the stress-ng tool for instance quickly resulted in a silent
+> freeze of the system with no prior notice on a serial console when
+> running its filesystem or memory stressor classes.
+>
+> Even with a panic-on-OOM and reboot-on-panic (vm.panic_on_oom=3D1,
+> kernel.panic=3D10) configured, the system would neither reboot nor
+> would the OOM killer get any chance to otherwise do its job.
+>
+> The Amlogic reference source code uses a 2MB PHYS_OFFSET. With these 2MB
+> reserved via DT, stress-ng was able to run on an Odroid C1+ just fine for
+> several hours, the OOM killer was able to kill processes again and if
+> configured would successfully trigger a reboot of the system.
+>
+> Fixes: 4a69fcd3a108 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ bo=
+ards")
+> Signed-off-by: Linus L=C3=BCssing <linus.luessing-djzkFPsfvsizQB+pC5nmwQ@public.gmane.org>
+Acked-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
 >
-> On 01/10/17 13:56, Martin Blumenstingl wrote:
->>
->> This adds a driver to access the efuse on Amlogic Meson6, Meson8 and
->> Meson8b SoCs.
->> These SoCs are accessing the efuse IP block directly through the
->> registers in the "secbus" region. This makes it different from the Meson
->> GX efuse driver which uses the "secure monitor" firmware to access the
->> efuse.
->>
->> The efuse on Meson6 can only read one byte at a time, while the efuse on
->> Meson8 and Meson8b always reads 4 bytes at a time. The new driver
->> supports both, but due to lack of hardware Meson6 support was not tested.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> ---
->>   drivers/nvmem/Kconfig          |  10 ++
->>   drivers/nvmem/Makefile         |   2 +
->>   drivers/nvmem/meson-mx-efuse.c | 272
->> +++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 284 insertions(+)
->>   create mode 100644 drivers/nvmem/meson-mx-efuse.c
->>
->> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
->> +
->> +
->> +static void meson_mx_efuse_mask_bits(struct meson_mx_efuse *efuse, u32
->> reg,
->> +                                    u32 mask, u32 set)
->> +{
->> +       u32 data;
->> +
->> +       data = readl(efuse->base + reg);
->> +       data &= ~mask;
->> +       data |= (set & mask);
->> +
->> +       writel(data, efuse->base + reg);
->> +}
->> +
->> +static int meson_mx_efuse_hw_enable(struct meson_mx_efuse *efuse)
->> +{
->> +       int err;
->> +
->> +       err = clk_prepare_enable(efuse->core_clk);
->> +       if (err)
->> +               return err;
->> +
->> +       /* power up the efuse */
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_PD_ENABLE, 0);
->> +
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL4,
->> +                                MESON_MX_EFUSE_CNTL4_ENCRYPT_ENABLE, 0);
->> +
->> +       return 0;
->> +}
->> +
->> +static void meson_mx_efuse_hw_disable(struct meson_mx_efuse *efuse)
->> +{
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_PD_ENABLE,
->> +                                MESON_MX_EFUSE_CNTL1_PD_ENABLE);
->> +
->> +       clk_disable_unprepare(efuse->core_clk);
->> +}
->> +
->> +static int meson_mx_efuse_read_addr(struct meson_mx_efuse *efuse,
->> +                                   unsigned int addr, u32 *value)
->> +{
->> +       int err;
->> +       u32 regval;
->> +
->> +       /* write the address to read */
->> +       regval = FIELD_PREP(MESON_MX_EFUSE_CNTL1_BYTE_ADDR_MASK, addr);
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_BYTE_ADDR_MASK,
->> regval);
->> +
->> +       /* inform the hardware that we changed the address */
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_BYTE_ADDR_SET,
->> +                                MESON_MX_EFUSE_CNTL1_BYTE_ADDR_SET);
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_BYTE_ADDR_SET, 0);
->> +
->> +       /* start the read process */
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_AUTO_RD_START,
->> +                                MESON_MX_EFUSE_CNTL1_AUTO_RD_START);
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_AUTO_RD_START, 0);
->> +
->> +       /*
->> +        * perform a dummy read to ensure that the HW has the RD_BUSY bit
->> set
->> +        * when polling for the status below.
->> +        */
->> +       readl(efuse->base + MESON_MX_EFUSE_CNTL1);
->> +
->> +       err = readl_poll_timeout_atomic(efuse->base +
->> MESON_MX_EFUSE_CNTL1,
->> +                       regval,
->> +                       (!(regval & MESON_MX_EFUSE_CNTL1_AUTO_RD_BUSY)),
->> +                       1, 1000);
->> +       if (err) {
->> +               dev_err(efuse->config.dev,
->> +                       "Timeout while reading efuse address %u\n", addr);
->> +               return err;
->> +       }
->> +
->> +       *value = readl(efuse->base + MESON_MX_EFUSE_CNTL2);
->> +
->> +       return 0;
->> +}
->> +
->> +static int meson_mx_efuse_read(void *context, unsigned int offset,
->> +                              void *buf, size_t bytes)
->> +{
->> +       struct meson_mx_efuse *efuse = context;
->> +       u32 tmp;
->> +       int err, i, addr;
->> +
->> +       err = meson_mx_efuse_hw_enable(efuse);
->> +       if (err)
->> +               return err;
->> +
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE,
->> +                                MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE);
->> +
->> +       for (i = offset; i < offset + bytes; i += efuse->config.word_size)
->> {
->> +               addr = i / efuse->config.word_size;
->> +
->> +               err = meson_mx_efuse_read_addr(efuse, addr, &tmp);
->> +               if (err)
->> +                       break;
->> +
->> +               memcpy(buf + i, &tmp, efuse->config.word_size);
->> +       }
->> +
->> +       meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
->> +                                MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE, 0);
->> +
->> +       meson_mx_efuse_hw_disable(efuse);
->> +
->> +       return err;
->> +}
+> ---
+> The following stress-ng command worked fine now:
+> $ stress-ng -v --sequential 0 -t 120s --exclude sysfs,opcode --metrics
+> (5 hours runtime, tested on an Odroid C1+ with an 4.14-rc1 kernel + SMP
+> + USB DTS patches)
+> ---
+>  arch/arm/boot/dts/meson8b.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 >
-> ...
->>
->> +
->> +static int meson_mx_efuse_probe(struct platform_device *pdev)
->> +{
->> +       const struct meson_mx_efuse_platform_data *drvdata;
->> +       struct meson_mx_efuse *efuse;
->> +       struct resource *res;
->> +
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.d=
+tsi
+> index bc278da..d75a5b5 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -83,6 +83,18 @@
+>                 };
+>         };
 >
+> +       reserved-memory {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               ranges;
+> +
+> +               /* 2 MiB reserved for Hardware ROM Firmware? */
+> +               hwrom@0 {
+> +                       reg =3D <0x0 0x200000>;
+> +                       no-map;
+> +               };
+> +       };
+> +
+>         scu@c4300000 {
+>                 compatible =3D "arm,cortex-a5-scu";
+>                 reg =3D <0xc4300000 0x100>;
+> --
+> 2.1.4
 >
-> ...
->
->> +
->> +       efuse->core_clk = devm_clk_get(&pdev->dev, "core");
->> +       if (IS_ERR(efuse->core_clk)) {
->> +               dev_err(&pdev->dev, "Failed to get core clock\n");
->> +               return PTR_ERR(efuse->core_clk);
->> +       }
->> +
->> +       efuse->nvmem = nvmem_register(&efuse->config);
->> +       if (IS_ERR(efuse->nvmem)) {
->> +               clk_unprepare(efuse->core_clk);
->
->
-> Do you need this???
-oh, this is a left-over from an earlier version where I only enabled
-the clock in .probe (and disabled it again in .remove)
-however, this could break during suspend and it keeps the clock
-unnecessarily enabled when it's not needed
-
->
->> +               return PTR_ERR(efuse->nvmem);
->> +       }
->> +
->> +       platform_set_drvdata(pdev, efuse);
->> +
->> +       return 0;
->> +}
->> +
->> +static int meson_mx_efuse_remove(struct platform_device *pdev)
->> +{
->> +       struct meson_mx_efuse *efuse = platform_get_drvdata(pdev);
->> +       int err;
->> +
->> +       err = nvmem_unregister(efuse->nvmem);
->> +
->> +       clk_unprepare(efuse->core_clk);
->
->
-> Do you need this disable here? AFAIU, this driver would never leave the clk
-> prepared unless we are in the middle of read.
-yes, good catch here as well - this clk_unprepare call has to be removed
-
->
->> +
->> +       return err;
->> +}
->> +
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
