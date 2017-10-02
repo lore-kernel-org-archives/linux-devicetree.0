@@ -1,178 +1,56 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 2/2] mmc: meson-mx-sdio: Add a driver for the Amlogic
- Meson8 and Meson8b SoCs
-Date: Mon, 2 Oct 2017 10:08:09 +0200
-Message-ID: <CAPDyKFqj1CkhHO4SvUySEV4OnKcTeHRu6YAfBPSN4hvkQpHKfA@mail.gmail.com>
-References: <20170924190528.21841-1-martin.blumenstingl@googlemail.com> <20170924190528.21841-3-martin.blumenstingl@googlemail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
+ USB2.0 phy channel 3
+Date: Mon, 2 Oct 2017 10:20:03 +0200
+Message-ID: <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
+References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170924190528.21841-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kieran Bingham <kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[...]
+Hi Shimoda-san,
 
-> +#define MESON_MX_SDIO_MAX_SLOTS                                        3
-> +
-> +struct meson_mx_mmc_slot {
-> +       struct device                   *dev;
-> +       struct mmc_host                 *mmc;
-> +       struct meson_mx_mmc_host        *host;
-> +
-> +       struct mmc_request              *mrq;
-> +       struct mmc_command              *cmd;
-> +       int                             error;
-> +
-> +       unsigned int                    id;
-> +};
+On Mon, Oct 2, 2017 at 8:29 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch enables the USB2.0 phy channel 3. R-Car H3 ES2.0 has
+> this channel and we can use it on the Salvator-XS.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-If I recall correctly, we agreed on postponing the multiple slot
-support for now as to start simple.
-Therefore, can you please remove all that code, and instead only use
-the struct meson_mx_mmc_host for the data needed.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Just to be clear, I am fine having using the mmc slot bindings, as we
-agreed. However as only one slot is supported in this stage, we don't
-need a separate struct for that.
+> --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+> @@ -99,6 +99,11 @@
+>                 groups = "usb2";
+>                 function = "usb2";
+>         };
+> +
+> +       usb2_ch3_pins: usb2_ch3 {
+> +               groups = "usb2_ch3";
+> +               function = "usb2_ch3";
+> +       };
+>  };
 
-> +
-> +struct meson_mx_mmc_host {
-> +       struct device                   *dev;
-> +
-> +       struct clk                      *parent_clk;
-> +       struct clk                      *core_clk;
-> +       struct clk_divider              cfg_div;
-> +       struct clk                      *cfg_div_clk;
-> +       struct clk_fixed_factor         fixed_factor;
-> +       struct clk                      *fixed_factor_clk;
-> +
-> +       void __iomem                    *base;
-> +       int                             irq;
-> +       spinlock_t                      irq_lock;
-> +
-> +       struct timer_list               cmd_timeout;
-> +
-> +       struct meson_mx_mmc_slot        *slot;
-> +};
-> +
+Using these pins requires changing SW31, disabling the interrupt capabilities
+of the ADV7482? Does the ADV7482 still work after that?
 
-[...]
+Gr{oetje,eeting}s,
 
-> +static int meson_mx_mmc_slot_probe(struct device *slot_dev,
-> +                                  struct meson_mx_mmc_host *host)
-> +{
-> +       struct meson_mx_mmc_slot *slot;
-> +       struct mmc_host *mmc;
-> +       unsigned int id;
-> +       int ret;
-> +
-> +       if (of_property_read_u32(slot_dev->of_node, "reg", &id)) {
-> +               dev_err(slot_dev, "missing 'reg' property\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (id >= MESON_MX_SDIO_MAX_SLOTS) {
-> +               dev_err(slot_dev, "invalid 'reg' property value %d\n", id);
-> +               return -EINVAL;
-> +       }
-> +
-> +       mmc = mmc_alloc_host(sizeof(*slot), slot_dev);
-> +       if (!mmc)
-> +               return -ENOMEM;
-> +
-> +       slot = mmc_priv(mmc);
-> +       slot->dev = slot_dev;
-> +       slot->mmc = mmc;
-> +       slot->id = id;
-> +       slot->host = host;
-> +
-> +       host->slot = slot;
-> +
-> +       /* Get regulators and the supported OCR mask */
-> +       ret = mmc_regulator_get_supply(mmc);
-> +       if (ret == -EPROBE_DEFER)
-> +               goto error_free_host;
-> +
-> +       mmc->max_req_size = MESON_MX_SDIO_BOUNCE_REQ_SIZE;
-> +       mmc->max_seg_size = mmc->max_req_size;
-> +       mmc->max_blk_count =
-> +               FIELD_GET(MESON_MX_SDIO_SEND_REPEAT_PACKAGE_TIMES_MASK,
-> +                         0xffffffff);
-> +       mmc->max_blk_size = FIELD_GET(MESON_MX_SDIO_EXT_DATA_RW_NUMBER_MASK,
-> +                                     0xffffffff);
-> +       mmc->max_blk_size -= (4 * MESON_MX_SDIO_RESPONSE_CRC16_BITS);
-> +       mmc->max_blk_size /= BITS_PER_BYTE;
-> +
-> +       /* Get the min and max supported clock rates */
-> +       mmc->f_min = clk_round_rate(host->cfg_div_clk, 1);
-> +       mmc->f_max = clk_round_rate(host->cfg_div_clk,
-> +                                   clk_get_rate(host->parent_clk));
-> +
-> +       mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
-> +       mmc->ops = &meson_mx_mmc_ops;
-> +
-> +       ret = mmc_of_parse(mmc);
-> +       if (ret)
-> +               goto error_free_host;
-> +
-> +       ret = mmc_add_host(mmc);
-> +       if (ret)
-> +               goto error_free_host;
-> +
-> +       return 0;
-> +
-> +error_free_host:
-> +       mmc_free_host(mmc);
-> +       return ret;
-> +}
-> +
-> +static int meson_mx_mmc_probe_slots(struct meson_mx_mmc_host *host)
-> +{
-> +       struct device_node *slot_node;
-> +       struct platform_device *slot_pdev;
-> +       int ret;
-> +
-> +       for_each_child_of_node(host->dev->of_node, slot_node) {
-> +               if (!of_device_is_compatible(slot_node, "mmc-slot"))
-> +                       continue;
-> +
-> +               /*
-> +                * TODO: the MMC core framework currently does not support
-> +                * controllers with multiple slots properly.
-> +                */
-> +               if (host->slot) {
-> +                       dev_warn(host->dev,
-> +                                "skipping slot other than the first\n");
-> +                       continue;
-> +               }
-> +
-> +               slot_pdev = of_platform_device_create(slot_node, NULL,
-> +                                                     host->dev);
-> +               if (!slot_pdev)
-> +                       continue;
-> +
-> +               ret = meson_mx_mmc_slot_probe(&slot_pdev->dev, host);
-> +               if (ret) {
-> +                       of_platform_device_destroy(&slot_pdev->dev, NULL);
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
+                        Geert
 
-For the above two functions, please simplify the code by limiting them
-to deal with only one valid mmc-slot.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-[...]
-
-Besides the comments on the multiple slot support, this looks good to me.
-
-Kind regards
-Uffe
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
