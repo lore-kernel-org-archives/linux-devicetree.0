@@ -1,53 +1,52 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v3 00/10] update MT7623 and MT2701 dts
-Date: Mon, 2 Oct 2017 09:54:50 +0800
-Message-ID: <cover.1506908511.git.ryder.lee@mediatek.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 01/10] arm: dts: mt2701: add pwm backlight device node
+Date: Mon, 2 Oct 2017 09:54:51 +0800
+Message-ID: <144f5d526d15cbf3ada220765c609eb2b59c240a.1506908511.git.ryder.lee@mediatek.com>
+References: <cover.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1506908511.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-This patch series adds/corrects some device nodes for both MT7623 and MT2701.
+This patch adds the device node for MT2701 pwm backlight.
 
-changes since v3:
-- revert PIO register space.
+Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/mt2701.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-changes since v2:
-- move non-common part and non-display related nodes to different patches.
-- remove unused wdma node.
-- add display related nodes for MT2701.
-
-changes since v1:
-- rebase to v4.14.
-- sort nodes in alphabetical order
-
-Ryder Lee (7):
-  arm: dts: mediatek: update audio node for mt2701 and mt7623
-  arm: dts: mt7623: update pio, usb and crypto nodes
-  arm: dts: mt7623: add subsystem clock controller nodes
-  arm: dts: mt7623: add iommu and jpecdec nodes
-  arm: dts: mt7623: add display subsystem related nodes
-  arm: dts: mt7623: enable bananapi-r2 display function
-  arm: dts: mt7623: add PCIe related nodes
-
-Weiqing Kong (2):
-  arm: dts: mt2701: add pwm backlight device node
-  arm: dts: mt2701: enable display pwm backlight
-
-YT Shen (1):
-  arm: dts: mt2701: add display subsystem related nodes
-
- arch/arm/boot/dts/mt2701-evb.dts              |  23 ++
- arch/arm/boot/dts/mt2701.dtsi                 |  88 ++++++-
- arch/arm/boot/dts/mt7623.dtsi                 | 338 +++++++++++++++++++++++++-
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  71 +++++-
- include/dt-bindings/pinctrl/mt7623-pinfunc.h  |  12 +
- 5 files changed, 516 insertions(+), 16 deletions(-)
-
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index afe12e5..3c85879 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -530,6 +530,15 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
++	bls: pwm@1400a000 {
++		compatible = "mediatek,mt2701-disp-pwm";
++		reg = <0 0x1400a000 0 0x1000>;
++		#pwm-cells = <2>;
++		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
++		clock-names = "main", "mm";
++		status = "disabled";
++	};
++
+ 	larb0: larb@14010000 {
+ 		compatible = "mediatek,mt2701-smi-larb";
+ 		reg = <0 0x14010000 0 0x1000>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
