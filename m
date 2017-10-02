@@ -1,12 +1,12 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 07/12] ARM: dts: sun8i: a711: include axp81x dtsi
-Date: Mon,  2 Oct 2017 14:08:49 +0200
-Message-ID: <20171002120854.5212-8-quentin.schulz@free-electrons.com>
+Subject: [PATCH v3 11/12] ARM: dtsi: axp81x: add GPIO DT node
+Date: Mon,  2 Oct 2017 14:08:53 +0200
+Message-ID: <20171002120854.5212-12-quentin.schulz@free-electrons.com>
 References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
 Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBHGZZDHAKGQEAG5TMDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBHWZZDHAKGQELG3OGAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171002120854.5212-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,34 +19,29 @@ To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdn
 Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This board has an AXP813 PMIC so let's include its dtsi.
+This adds DT node for the GPIO/pinctrl part present in AXP813/AXP818.
 
 Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/axp81x.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 723641f56a74..4f4db07ca19f 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -146,7 +146,7 @@
- &r_rsb {
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+index 73b761f850c5..f90f257130d5 100644
+--- a/arch/arm/boot/dts/axp81x.dtsi
++++ b/arch/arm/boot/dts/axp81x.dtsi
+@@ -48,6 +48,12 @@
+ 	interrupt-controller;
+ 	#interrupt-cells = <1>;
  
--	axp813: pmic@3a3 {
-+	axp81x: pmic@3a3 {
- 		compatible = "x-powers,axp813";
- 		reg = <0x3a3>;
- 		interrupt-parent = <&r_intc>;
-@@ -179,6 +179,8 @@
- 
- };
- 
-+#include "axp81x.dtsi"
++	axp_gpio: axp_gpio {
++		compatible = "x-powers,axp813-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+ 	regulators {
+ 		/* Default work frequency for buck regulators */
+ 		x-powers,dcdc-freq = <3000>;
 -- 
 2.11.0
