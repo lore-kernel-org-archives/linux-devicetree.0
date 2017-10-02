@@ -1,58 +1,72 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 9/9] arm64: dts: register Hi3660's thermal sensor
-Date: Mon, 2 Oct 2017 21:06:00 +0200
-Message-ID: <f83a0936-23cc-0f5e-b6a3-c3adf1a0d7a0@linaro.org>
-References: <1506073332-92438-1-git-send-email-kevin.wangtao@hisilicon.com>
- <1506073332-92438-10-git-send-email-kevin.wangtao@hisilicon.com>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: split devicetree repository to be rebased/rewritten after
+ v4.14-rcFINAL
+Date: Mon, 02 Oct 2017 19:53:33 +0100
+Message-ID: <1506970413.4619.53.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1506073332-92438-10-git-send-email-kevin.wangtao@hisilicon.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Tao Wang <kevin.wangtao@hisilicon.com>, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: leo.yan@linaro.org, lonela.Voinescu@arm.com, Valentin.Schneider@arm.com, vincent.guittot@linaro.org, sunzhaosheng@hisilicon.com, gengyanping@hisilicon.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Wangtao <kevin.wangtao@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/09/2017 11:42, Tao Wang wrote:
-> From: Kevin Wangtao <kevin.wangtao@linaro.org>
-> 
-> add binding for tsensor on H3660, this tsensor is used for
-> SoC thermal control, it supports alarm interrupt.
-> 
-> Signed-off-by: Kevin Wangtao <kevin.wangtao@linaro.org>
+TL;DR: The tree[DT-R] at
 
-I'm not able to apply this patch. Does it rely on another patch?
+  https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
 
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index b7a90d6..ae90991 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -978,5 +978,13 @@
->  			clocks = <&crg_ctrl HI3660_OSC32K>;
->  			clock-names = "apb_pclk";
->  		};
-> +
-> +		tsensor: tsensor@fff30000 {
-> +			compatible = "hisilicon,hi3660-tsensor";
-> +			reg = <0x0 0xfff30000 0x0 0x1000>;
-> +			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-> +			#thermal-sensor-cells = <1>;
-> +		};
-> +
->  	};
->  };
-> 
+will be force pushed when v4.14 is released. This means a complete new
+history and tags for this tree. The original tree will remain
+available at [V1] but will not receive updates after v4.14-rcFINAL.
 
+I'm not sure how widely used this tree is but I have made some changes
+to the scripting which improves things in various ways:
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+ - The main change is that uninteresting merges (those which don't
+   involve any files present in the output) are now removed, resulting
+   in a _much_ cleaner history.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+ - I've taken the chance to fix the dates on the vX.Y-dts tags so they
+   reflect the date of the original vX.Y tag from Linus rather than
+   whenever the conversion happened. Likewise the underlying merge
+   commits now take their dates from the commit which Linus tagged.
+
+ - I've also now upstreamed my changes to git filter-branch, which
+   have been merged into git.git#master post v2.14.2. For now I am
+   running v2.14.0 with the patches I sent upstream, but will switch
+   to a real release with those changes ASAP. The switch to mainline
+   git filter-branch has resulted in some irrelevant secondary roots
+   (such as the one from the btrfs merge) being omitted, as they
+   should have been all along. It's also nice to be using upstream!
+
+ - Lastly I've improved the conversion scripting in various ways (unlike
+   the others these do not change the output, but it is ~10-13x faster now
+   for example).
+
+As above the original tree will remain available at [V1] but will not
+receive updates after v4.14-rcFINAL. The conversion state repo for
+this tree will remain at [STATE-V1].
+
+The new tree and its conversion state will be mirrored respectively at
+[V2] and [STATE-V2]. These trees are already active if you want a
+glimpse into the future. It's also not entirely too late to point out
+issues with the new tree as there is still a chance to rewrite from
+scratch (which takes around 3 days) before v4.14.
+
+The spurious/empty/irrelevant merges have bugged me from day 1 of this
+tree so I am glad to have had a chance to fix them. I'm not aware of
+any other reason why the tree would need rebasing again, although for
+now I am going to reserve the right to do so.
+
+Cheers,
+Ian.
+
+[DT-R] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+[V1] https://github.com/ijc/devicetree-rebasing-v1
+[V2] https://github.com/ijc/devicetree-rebasing-v2
+[STATE-V1] https://github.com/ijc/devicetree-conversion-state-v1
+[STATE-V2] https://github.com/ijc/devicetree-conversion-state-v2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
