@@ -1,12 +1,13 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 06/12] mfd: axp20x: add pinctrl cell for AXP813
-Date: Mon,  2 Oct 2017 14:08:48 +0200
-Message-ID: <20171002120854.5212-7-quentin.schulz@free-electrons.com>
+Subject: [PATCH v3 08/12] ARM: dts: sun8i: bananapi-m3: include
+ axp81x dtsi
+Date: Mon,  2 Oct 2017 14:08:50 +0200
+Message-ID: <20171002120854.5212-9-quentin.schulz@free-electrons.com>
 References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
 Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBHGZZDHAKGQEAG5TMDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBHWZZDHAKGQELG3OGAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171002120854.5212-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,26 +20,25 @@ To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdn
 Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As GPIO/pinctrl driver now supports AXP813, add a cell for it.
+This board has an AXP813 PMIC so let's include its dtsi.
 
 Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/mfd/axp20x.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 2468b431bb22..d8c92fbbd170 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -878,6 +878,9 @@ static struct mfd_cell axp813_cells[] = {
- 		.resources		= axp803_pek_resources,
- 	}, {
- 		.name			= "axp20x-regulator",
-+	}, {
-+		.name			= "axp20x-gpio",
-+		.of_compatible		= "x-powers,axp813-gpio",
- 	}
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+index 2bafd7e99ef7..bf8f3b9a65dd 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -123,6 +123,8 @@
+ 	};
  };
  
++#include "axp81x.dtsi"
++
+ &reg_usb1_vbus {
+ 	gpio = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
+ 	status = "okay";
 -- 
 2.11.0
