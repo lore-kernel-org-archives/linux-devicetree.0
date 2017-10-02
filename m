@@ -1,52 +1,129 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 01/10] arm: dts: mt2701: add pwm backlight device node
-Date: Mon, 2 Oct 2017 09:54:51 +0800
-Message-ID: <144f5d526d15cbf3ada220765c609eb2b59c240a.1506908511.git.ryder.lee@mediatek.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v3 09/10] arm: dts: mt7623: enable bananapi-r2 display function
+Date: Mon, 2 Oct 2017 09:54:59 +0800
+Message-ID: <766824a45d7170c0b2cbb36a5423821a68afa3a0.1506908511.git.ryder.lee@mediatek.com>
 References: <cover.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1506908511.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1506908511.git.ryder.lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch adds missing MIPI pin macros in mt7623-pinfunc.h and
+enables pwm backlight support for bananapi-r2.
 
-This patch adds the device node for MT2701 pwm backlight.
-
-Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/mt2701.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 41 +++++++++++++++++++++++++--
+ include/dt-bindings/pinctrl/mt7623-pinfunc.h  | 12 ++++++++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index afe12e5..3c85879 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -530,6 +530,15 @@
- 		#clock-cells = <1>;
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 688a863..267a05a 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -17,6 +17,17 @@
+ 		serial2 = &uart2;
  	};
  
-+	bls: pwm@1400a000 {
-+		compatible = "mediatek,mt2701-disp-pwm";
-+		reg = <0 0x1400a000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
-+		clock-names = "main", "mm";
-+		status = "disabled";
++	backlight_lcd: backlight_lcd {
++		compatible = "pwm-backlight";
++		pwms = <&bls 0 100000>;
++		brightness-levels = <
++			  0  16  32  48  64  80  96 112
++			128 144 160 176 192 208 224 240
++			255
++		>;
++		default-brightness-level = <9>;
 +	};
 +
- 	larb0: larb@14010000 {
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x14010000 0 0x1000>;
+ 	chosen {
+ 		stdout-path = "serial2:115200n8";
+ 	};
+@@ -86,6 +97,12 @@
+ 	};
+ };
+ 
++&bls {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&bls_pins_a>;
++};
++
+ &cir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cir_pins_a>;
+@@ -210,6 +227,12 @@
+ };
+ 
+ &pio {
++	bls_pins_a: bls@0 {
++		pins_cmd_dat {
++			pinmux = <MT7623_PIN_203_PWM0_FUNC_DISP_PWM>;
++		};
++	};
++
+ 	cir_pins_a:cir@0 {
+ 		pins_cir {
+ 			pinmux = <MT7623_PIN_46_IR_FUNC_IR>;
+@@ -273,6 +296,21 @@
+ 		};
+ 	};
+ 
++	mipi_dsi_pin: mipi_dsi_pin {
++		pins_cmd_dat {
++			pinmux = <MT7623_PIN_100_MIPI_TDP0_FUNC_TDP0>,
++				 <MT7623_PIN_99_MIPI_TDN0_FUNC_TDN0>,
++				 <MT7623_PIN_98_MIPI_TDP1_FUNC_TDP1>,
++				 <MT7623_PIN_97_MIPI_TDN1_FUNC_TDN1>,
++				 <MT7623_PIN_96_MIPI_TCP_FUNC_TCP>,
++				 <MT7623_PIN_95_MIPI_TCN_FUNC_TCN>,
++				 <MT7623_PIN_94_MIPI_TDP2_FUNC_TDP2>,
++				 <MT7623_PIN_93_MIPI_TDN2_FUNC_TDN2>,
++				 <MT7623_PIN_92_MIPI_TDP3_FUNC_TDP3>,
++				 <MT7623_PIN_91_MIPI_TDN3_FUNC_TDN3>;
++		};
++	};
++
+ 	mmc0_pins_default: mmc0default {
+ 		pins_cmd_dat {
+ 			pinmux = <MT7623_PIN_111_MSDC0_DAT7_FUNC_MSDC0_DAT7>,
+@@ -378,8 +416,7 @@
+ 
+ 	pwm_pins_a: pwm@0 {
+ 		pins_pwm {
+-			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
+-				 <MT7623_PIN_204_PWM1_FUNC_PWM1>,
++			pinmux = <MT7623_PIN_204_PWM1_FUNC_PWM1>,
+ 				 <MT7623_PIN_205_PWM2_FUNC_PWM2>,
+ 				 <MT7623_PIN_206_PWM3_FUNC_PWM3>,
+ 				 <MT7623_PIN_207_PWM4_FUNC_PWM4>;
+diff --git a/include/dt-bindings/pinctrl/mt7623-pinfunc.h b/include/dt-bindings/pinctrl/mt7623-pinfunc.h
+index 436a87b..72bed67 100644
+--- a/include/dt-bindings/pinctrl/mt7623-pinfunc.h
++++ b/include/dt-bindings/pinctrl/mt7623-pinfunc.h
+@@ -272,6 +272,18 @@
+ #define MT7623_PIN_84_DSI_TE_FUNC_GPIO84 (MTK_PIN_NO(84) | 0)
+ #define MT7623_PIN_84_DSI_TE_FUNC_DSI_TE (MTK_PIN_NO(84) | 1)
+ 
++#define MT7623_PIN_91_MIPI_TDN3_FUNC_GPIO91 (MTK_PIN_NO(91) | 0)
++#define MT7623_PIN_91_MIPI_TDN3_FUNC_TDN3 (MTK_PIN_NO(91) | 1)
++
++#define MT7623_PIN_92_MIPI_TDP3_FUNC_GPIO92 (MTK_PIN_NO(92) | 0)
++#define MT7623_PIN_92_MIPI_TDP3_FUNC_TDP3 (MTK_PIN_NO(92) | 1)
++
++#define MT7623_PIN_93_MIPI_TDN2_FUNC_GPIO93 (MTK_PIN_NO(93) | 0)
++#define MT7623_PIN_93_MIPI_TDN2_FUNC_TDN2 (MTK_PIN_NO(93) | 1)
++
++#define MT7623_PIN_94_MIPI_TDP2_FUNC_GPIO94 (MTK_PIN_NO(94) | 0)
++#define MT7623_PIN_94_MIPI_TDP2_FUNC_TDP2 (MTK_PIN_NO(94) | 1)
++
+ #define MT7623_PIN_95_MIPI_TCN_FUNC_GPIO95 (MTK_PIN_NO(95) | 0)
+ #define MT7623_PIN_95_MIPI_TCN_FUNC_TCN (MTK_PIN_NO(95) | 1)
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
