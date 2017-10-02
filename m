@@ -1,45 +1,67 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [v3,20/22] hwmon: add support for sensors exported via ARM SCMI
-Date: Mon, 2 Oct 2017 10:25:24 +0100
-Message-ID: <7bd07042-895b-a4c2-ec58-f941f07883f0@arm.com>
-References: <1506604306-20739-21-git-send-email-sudeep.holla@arm.com>
- <20171001142605.GA340@roeck-us.net>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
+ USB2.0 phy channel 3
+Date: Mon, 2 Oct 2017 10:01:20 +0000
+Message-ID: <TY1PR06MB0992C8E958992FC5D109594AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
+ <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
+ <TY1PR06MB09920BDFB00D2BDA4840877AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+ <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20171001142605.GA340@roeck-us.net>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran@ksquared.org.uk>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/10/17 15:26, Guenter Roeck wrote:
-> On Thu, Sep 28, 2017 at 02:11:44PM +0100, Sudeep Holla wrote:
->> Create a driver to add support for SoC sensors exported by the System
->> Control Processor (SCP) via the System Control and Management Interface
->> (SCMI). The supported sensor types is one of voltage, temperature,
->> current, and power.
->>
->> The sensor labels and values provided by the SCP are exported via the
->> hwmon sysfs interface.
->>
->> Cc: Guenter Roeck <linux@roeck-us.net>
->> Cc: linux-hwmon@vger.kernel.org
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> Couple of minor comments. With those addressed,
-> 
-
-Yes, I have fixed them locally now.
-
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-Thanks.
-
--- 
-Regards,
-Sudeep
+SGkgR2VlcnQtc2FuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdl
+ZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMiwgMjAxNyA2OjIwIFBN
+DQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IE9uIE1vbiwgT2N0IDIsIDIwMTcgYXQgMTE6
+MTQgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2Fz
+LmNvbT4gd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206
+IEtpZXJhbiBCaW5naGFtDQo+ID4+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAyLCAyMDE3IDU6NDUg
+UE0NCj4gPj4gT24gMDIvMTAvMTcgMDk6MjAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4g
+Pj4gPiBPbiBNb24sIE9jdCAyLCAyMDE3IGF0IDg6MjkgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+
+ID4+ID4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCjxzbmlwPg0K
+PiA+PiBUaGUgQURWNzQ4MiBpcyBjdXJyZW50bHkgd29ya2luZyB3aXRob3V0IGludGVycnVwdHMg
+YXQgdGhlIG1vbWVudC4gSG93ZXZlciwgSSBkbw0KPiA+PiBoYXZlIGhvdHBsdWcgYW5kIGludGVy
+cnVwdCBoYW5kbGluZyBvbiBteSB0b2RvIGxpc3QsIGFuZCBpbmZhY3QgSSBoYXZlIGFscmVhZHkN
+Cj4gPj4gc3RhcnRlZCBhIHBhdGNoIGFkZGluZyBpbnRlcnJ1cHQgc3VwcG9ydC4NCj4gPj4NCj4g
+Pj4NCj4gPj4gVGhlIERUIGN1cnJlbnRseSBzcGVjaWZpZXMgdGhlIGZvbGxvd2luZyBpbnRlcnJ1
+cHRzIGZvciB0aGUgQURWNzQ4MiwNCj4gPj4NCj4gPj4gKyAgICAgdmlkZW8tcmVjZWl2ZXJANzAg
+ew0KPiA+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkdjc0ODIiOw0KPiA+PiAr
+ICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmdwaW82PjsNCj4gPj4gKyAgICAgICAg
+ICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAiaW50cnExIiwgImludHJxMiI7DQo+ID4+ICsgICAgICAg
+ICAgICAgaW50ZXJydXB0cyA9IDwzMCBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICA8MzEgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPg0KPiA+IEl0
+IHNlZW1zIEtpZXJhbi1zYW4gaXMgdXNpbmcgbm9uLWNvbmZsaWN0IHBpbnMgd2l0aCB1c2IyLjAg
+Y2gzIDopDQo+ID4gQWNjb3JkaW5nIHRvIHRoZSBib2FyZCBkYXRhc2hlZXQsIEdQNl8zMCBhbmQg
+R1A2XzMxIGFyZSBpbml0aWFsIHNldHRpbmcgZm9yIEFEVjc0ODIgYW5kDQo+ID4gaXQgZG9lc24n
+dCBjb25mbGljdCB3aXRoIFVTQiAyLjAgY2gzIChVU0IyLjAgY2gzIHBpbnMgYXJlIEdQNl8wNCBh
+bmQgR1A2XzIxKS4NCj4gDQo+IENhbiB0aGUgVVNCMi4wIGRyaXZlciB1c2UgR1BJT3MgZm9yIFBX
+RU4gYW5kIE9WQz8NCg0KTm8sIHRoZSBkcml2ZXIgY2Fubm90IHVzZSBHUElPcy4gVGhlc2UgcGlu
+cyBjb250cm9sIGJ5IGEgdXNiIHNwZWNpZmljIHJlZ2lzdGVyDQooZS5nLiBpbiBFSENJLCBiaXQg
+MTQgb2YgUE9SVFNDWzFdIGZvciBQV0VOIGFuZCBiaXQgNCBvZiBQT1JUU0NbMV0gZm9yIE9WQyks
+DQpTbywgSSB0aGluayB3ZSBoYXZlIG5vIGNoYW5nZSB0byB1c2UgR1BJT3MuDQoNCj4gPiBTbywg
+SSB0aGluayB3ZSBjYW4gdXNlIGJvdGggdXNiIDIuMCBjaDMgYW5kIEFEVjc0ODIgaWYgd2UgZG9u
+J3QgY2hhbmdlIHRoZSBTVzMxIGZyb20gaW5pdGlhbCBzZXR0aW5nLg0KPiANCj4gT0suIEJ1dCBp
+biB0aGF0IGNhc2UsIERUIHNob3VsZCBub3QgY29uZmlndXJlIHBpbmN0cmwgZm9yICJ1c2IyX2No
+MyIsDQo+IGJ1dCBpbnN0ZWFkDQo+IGRlc2NyaWJlIHRoYXQgaXQgdXNlcyBHUDZfMDQgYW5kIEdQ
+Nl8yMS4NCg0KSSBnb3QgaXQuIEkgd2lsbCBtb2RpZnkgaXQuDQoNCj4gPiBIb3dldmVyLCB0byBh
+dm9pZCBhbnkgdHJvdWJsZSwgc2hvdWxkIHdlIGV4cGxhaW4gdGhpcyBTVzMxIHNldHRpbmcgaW4g
+dGhlIGR0cyBmaWxlPw0KPiANCj4gWWVzLCBpdCB3b3VsZCBiZSBnb29kIHRvIGRvY3VtZW50IHRo
+YXQuDQoNCkkgZ290IGl0LiBJIHdpbGwgYWRkIGl0Lg0KSSB3aWxsIHN1Ym1pdCB2MiBwYXRjaCB0
+b21vcnJvdyAob3IgbGF0ZXIpLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0K
+DQo+IFRoYW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVy
+ZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4g
+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNh
+bGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0
+cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
