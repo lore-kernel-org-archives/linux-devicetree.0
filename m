@@ -1,72 +1,68 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v4 2/4] clocksource: stm32: only use 32 bits timers
-Date: Mon,  2 Oct 2017 17:51:51 +0200
-Message-ID: <1506959513-16851-3-git-send-email-benjamin.gaignard@linaro.org>
-References: <1506959513-16851-1-git-send-email-benjamin.gaignard@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506959513-16851-1-git-send-email-benjamin.gaignard@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de, ludovic.barre@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+From: =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing-djzkFPsfvsizQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: meson8b: add reserved memory zone to fix silent freezes
+Date: Mon,  2 Oct 2017 17:59:03 +0200
+Message-ID: <20171002155903.19511-1-linus.luessing@c0d3.blue>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing-djzkFPsfvsizQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-16 bits hardware are not enough accure to be used.
-Do no allow them to be probed by tested max counter value.
+So far, the stress-ng tool for instance quickly resulted in a silent
+freeze of the system with no prior notice on a serial console when
+running its filesystem or memory stressor classes.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Even with a panic-on-OOM and reboot-on-panic (vm.panic_on_oom=1,
+kernel.panic=10) configured, the system would neither reboot nor
+would the OOM killer get any chance to otherwise do its job.
+
+The Amlogic reference source code uses a 2MB PHYS_OFFSET. With these 2MB
+reserved via DT, stress-ng was able to run on an Odroid C1+ just fine for
+several hours, the OOM killer was able to kill processes again and if
+configured would successfully trigger a reboot of the system.
+
+Fixes: 4a69fcd3a108 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ boards")
+Signed-off-by: Linus Lüssing <linus.luessing-djzkFPsfvsizQB+pC5nmwQ@public.gmane.org>
+
 ---
- drivers/clocksource/timer-stm32.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+The following stress-ng command worked fine now:
+$ stress-ng -v --sequential 0 -t 120s --exclude sysfs,opcode --metrics
+(5 hours runtime, tested on an Odroid C1+ with an 4.14-rc1 kernel + SMP
++ USB DTS patches)
+---
+ arch/arm/boot/dts/meson8b.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
-index abff21c..f7e4eec 100644
---- a/drivers/clocksource/timer-stm32.c
-+++ b/drivers/clocksource/timer-stm32.c
-@@ -81,9 +81,9 @@ static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
- static int __init stm32_clockevent_init(struct device_node *node)
- {
- 	struct reset_control *rstc;
--	unsigned long max_delta;
--	int ret, bits, prescaler = 1;
-+	unsigned long max_arr;
- 	struct timer_of *to;
-+	int ret;
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index bc278da..d75a5b5 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -83,6 +83,18 @@
+ 		};
+ 	};
  
- 	to = kzalloc(sizeof(*to), GFP_KERNEL);
- 	if (!to)
-@@ -113,26 +113,21 @@ static int __init stm32_clockevent_init(struct device_node *node)
- 
- 	/* Detect whether the timer is 16 or 32 bits */
- 	writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
--	max_delta = readl_relaxed(timer_of_base(to) + TIM_ARR);
--	if (max_delta == ~0U) {
--		prescaler = 1;
--		bits = 32;
--	} else {
--		prescaler = 1024;
--		bits = 16;
-+	max_arr = readl_relaxed(timer_of_base(to) + TIM_ARR);
-+	if (max_arr != ~0U) {
-+		pr_err("32 bits timer is needed\n");
-+		return -EINVAL;
- 	}
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- 	writel_relaxed(0, timer_of_base(to) + TIM_ARR);
- 
--	writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
-+	writel_relaxed(0, timer_of_base(to) + TIM_PSC);
- 	writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
- 	writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
- 	writel_relaxed(0, timer_of_base(to) + TIM_SR);
- 
- 	clockevents_config_and_register(&to->clkevt,
--					timer_of_period(to), 0x60, max_delta);
--
--	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
--			node, bits);
-+					timer_of_period(to), 0x60, ~0U);
- 
- 	return 0;
- }
++		/* 2 MiB reserved for Hardware ROM Firmware? */
++		hwrom@0 {
++			reg = <0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ 	scu@c4300000 {
+ 		compatible = "arm,cortex-a5-scu";
+ 		reg = <0xc4300000 0x100>;
 -- 
-2.7.4
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
