@@ -1,129 +1,325 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: foundation-v8: Enable PSCI mode
-Date: Mon, 2 Oct 2017 18:26:04 +0100
-Message-ID: <e49177f9-a9a8-e322-3743-5c58277c46ea@arm.com>
-References: <20170918153832.16356-1-daniel.thompson@linaro.org>
- <20170919183204.12751-1-daniel.thompson@linaro.org>
- <da8a0cf5-3c1e-1398-b5c3-ac489ae955fa@arm.com>
- <9a542b9a-3c37-ed8a-04e6-de41493f4b0d@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/4] clk: samsung: Add a separate driver for Exynos4412
+ ISP clocks
+Date: Mon, 2 Oct 2017 20:00:07 +0200
+Message-ID: <20171002180007.asan73h53nfot6nr@kozik-lap>
+References: <20171002104759.25944-1-m.szyprowski@samsung.com>
+ <CGME20171002104825eucas1p1fc099af751d832f4fb1b040a2eaa1c52@eucas1p1.samsung.com>
+ <20171002104759.25944-3-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9a542b9a-3c37-ed8a-04e6-de41493f4b0d-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171002104759.25944-3-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry for late response, I thought I had sent this mail out long back
-but was sitting in my draft :(
-
-On 20/09/17 12:17, Daniel Thompson wrote:
-> On 20/09/17 10:42, Sudeep Holla wrote:
->>
->>
->> On 19/09/17 19:32, Daniel Thompson wrote:
->>> Currently if the Foundation model is running ARM Trusted Firmware then
->>> the kernel, which is configured to use spin tables, cannot start
->>> secondary
->>> processors or "power off" the simulation.
->>>
->>> After adding a couple of labels to the include file and splitting out
->>> the
->>> spin-table configuration into a header, we add a couple of new headers
->>> together with two new DTs (GICv2+PSCI and GICv3+PSCI).
->>>
->>> The new GICv3+PSCI DT has been boot tested, the remaining three (two of
->>> which existed prior to this patch) have been "tested" by decompiling the
->>> blobs and comparing them against a reference.
->>>
->>
->> How different are these from the ones hosted in [1] ?
+On Mon, Oct 02, 2017 at 12:47:57PM +0200, Marek Szyprowski wrote:
+> Some registers for the Exynos 4412 ISP (Camera subsystem) clocks are
+> partially located in the SOC area, which belongs to ISP power domain.
+> Because those registers are also located in a different memory region
+> than the main clock controller, support for them can be provided by
+> a separate clock controller. This in turn allows to almost seamlessly
+> make it aware of the power domain using recently introduced runtime
+> PM support for clocks.
 > 
-> They look like they were either independently written or diverged a long
-> time ago. The existing kernel DTs describe hardware absent from the ARM
-> TF ones and vice versa.
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  .../devicetree/bindings/clock/exynos4-clock.txt    |  27 ++++
+>  drivers/clk/samsung/Makefile                       |   1 +
+>  drivers/clk/samsung/clk-exynos4412-isp.c           | 179 +++++++++++++++++++++
+>  include/dt-bindings/clock/exynos4.h                |  35 ++++
+>  4 files changed, 242 insertions(+)
+>  create mode 100644 drivers/clk/samsung/clk-exynos4412-isp.c
 > 
+> diff --git a/Documentation/devicetree/bindings/clock/exynos4-clock.txt b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+> index f5a5b19ed3b2..9b260e0d1e66 100644
+> --- a/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+> @@ -41,3 +41,30 @@ Example 2: UART controller node that consumes the clock generated by the clock
+>  		clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
+>  		clock-names = "uart", "clk_uart_baud0";
+>  	};
+> +
+> +Exynos4412 SoC contains some additional clocks for FIMC-ISP (Camera ISP)
+> +subsystem. Registers for those clocks are partially located in the SOC area,
+> +which belongs to ISP power domain. Because those registers are also located
+> +in a different memory region than the main clock controller, a separate clock
+> +controller has to be defined for handling them. The compatible string to such
+> +controller is "samsung,exynos4412-isp-clock". It also has two input clocks
+> +from the main Exynos4412 clock controller: "aclk200" and "aclk400_mcuisp".
+> +The ISP clock controller has to be linked with respective ISP power domain
+> +(for more information, see Samsung Exynos power domains bindings).
+> +
+> +Example 3: An example of a clock controllers for Exynos4412 SoCs.
+> +
+> +	clock: clock-controller@10030000 {
+> +		compatible = "samsung,exynos4412-clock";
+> +		reg = <0x10030000 0x18000>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	isp_clock: clock-controller@10048000 {
+> +		compatible = "samsung,exynos4412-isp-clock";
+> +		reg = <0x10048000 0x1000>;
+> +		#clock-cells = <1>;
+> +		power-domains = <&pd_isp>;
+> +		clocks = <&clock CLK_ACLK200>, <&clock CLK_ACLK400_MCUISP>;
+> +		clock-names = "aclk200", "aclk400_mcuisp";
+> +	};
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> index 7afc21dc374e..8a67a3bb6803 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -5,6 +5,7 @@
+>  obj-$(CONFIG_COMMON_CLK)	+= clk.o clk-pll.o clk-cpu.o
+>  obj-$(CONFIG_SOC_EXYNOS3250)	+= clk-exynos3250.o
+>  obj-$(CONFIG_ARCH_EXYNOS4)	+= clk-exynos4.o
+> +obj-$(CONFIG_ARCH_EXYNOS4)	+= clk-exynos4412-isp.o
+>  obj-$(CONFIG_SOC_EXYNOS5250)	+= clk-exynos5250.o
+>  obj-$(CONFIG_SOC_EXYNOS5260)	+= clk-exynos5260.o
+>  obj-$(CONFIG_SOC_EXYNOS5410)	+= clk-exynos5410.o
+> diff --git a/drivers/clk/samsung/clk-exynos4412-isp.c b/drivers/clk/samsung/clk-exynos4412-isp.c
+> new file mode 100644
+> index 000000000000..6712db52e047
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-exynos4412-isp.c
+> @@ -0,0 +1,179 @@
+> +/*
+> + * Copyright (c) 2017 Samsung Electronics Co., Ltd.
+> + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * Common Clock Framework support for Exynos4412 ISP module.
+> +*/
+> +
+> +#include <dt-bindings/clock/exynos4.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include "clk.h"
+> +
+> +/* Exynos4x12 specific registers, which belong to ISP power domain */
+> +#define E4X12_DIV_ISP0		0x0300
+> +#define E4X12_DIV_ISP1		0x0304
+> +#define E4X12_GATE_ISP0		0x0800
+> +#define E4X12_GATE_ISP1		0x0804
+> +
+> +/*
+> + * Support for CMU save/restore across system suspends
+> + */
+> +static struct samsung_clk_reg_dump *exynos4x12_save_isp;
+> +
+> +static const unsigned long exynos4x12_clk_isp_save[] __initconst = {
+> +	E4X12_DIV_ISP0,
+> +	E4X12_DIV_ISP1,
+> +	E4X12_GATE_ISP0,
+> +	E4X12_GATE_ISP1,
+> +};
+> +
+> +PNAME(mout_user_aclk400_mcuisp_p4x12) = {"fin_pll", "div_aclk400_mcuisp", };
 
-OK.
+                                            ^^ one space here, before quote
 
-> With specific reference to PSCI it looks like my patches could perhaps
-> be improved by adding idle-state support.
+> +
+> +static struct samsung_div_clock exynos4x12_isp_div_clks[] = {
+> +	DIV(CLK_ISP_DIV_ISP0, "div_isp0", "aclk200", E4X12_DIV_ISP0, 0, 3),
+> +	DIV(CLK_ISP_DIV_ISP1, "div_isp1", "aclk200", E4X12_DIV_ISP0, 4, 3),
+> +	DIV(CLK_ISP_DIV_MCUISP0, "div_mcuisp0", "aclk400_mcuisp",
+> +	    E4X12_DIV_ISP1, 4, 3),
+> +	DIV(CLK_ISP_DIV_MCUISP1, "div_mcuisp1", "div_mcuisp0",
+> +	    E4X12_DIV_ISP1, 8, 3),
+> +	DIV(0, "div_mpwm", "div_isp1", E4X12_DIV_ISP1, 0, 3),
+> +};
+> +
+> +static struct samsung_gate_clock exynos4x12_isp_gate_clks[] = {
+> +	GATE(CLK_ISP_FIMC_ISP, "isp", "aclk200", E4X12_GATE_ISP0, 0, 0, 0),
+> +	GATE(CLK_ISP_FIMC_DRC, "drc", "aclk200", E4X12_GATE_ISP0, 1, 0, 0),
+> +	GATE(CLK_ISP_FIMC_FD, "fd", "aclk200", E4X12_GATE_ISP0, 2, 0, 0),
+> +	GATE(CLK_ISP_FIMC_LITE0, "lite0", "aclk200", E4X12_GATE_ISP0, 3, 0, 0),
+> +	GATE(CLK_ISP_FIMC_LITE1, "lite1", "aclk200", E4X12_GATE_ISP0, 4, 0, 0),
+> +	GATE(CLK_ISP_MCUISP, "mcuisp", "aclk200", E4X12_GATE_ISP0, 5, 0, 0),
+> +	GATE(CLK_ISP_GICISP, "gicisp", "aclk200", E4X12_GATE_ISP0, 7, 0, 0),
+> +	GATE(CLK_ISP_SMMU_ISP, "smmu_isp", "aclk200", E4X12_GATE_ISP0, 8, 0, 0),
+> +	GATE(CLK_ISP_SMMU_DRC, "smmu_drc", "aclk200", E4X12_GATE_ISP0, 9, 0, 0),
+> +	GATE(CLK_ISP_SMMU_FD, "smmu_fd", "aclk200", E4X12_GATE_ISP0, 10, 0, 0),
+> +	GATE(CLK_ISP_SMMU_LITE0, "smmu_lite0", "aclk200", E4X12_GATE_ISP0, 11,
+> +	     0, 0),
+> +	GATE(CLK_ISP_SMMU_LITE1, "smmu_lite1", "aclk200", E4X12_GATE_ISP0, 12,
+> +	     0, 0),
+> +	GATE(CLK_ISP_PPMUISPMX, "ppmuispmx", "aclk200", E4X12_GATE_ISP0, 20,
+> +	     0, 0),
+> +	GATE(CLK_ISP_PPMUISPX, "ppmuispx", "aclk200", E4X12_GATE_ISP0, 21,
+> +	     0, 0),
+> +	GATE(CLK_ISP_MCUCTL_ISP, "mcuctl_isp", "aclk200", E4X12_GATE_ISP0, 23,
+> +	     0, 0),
+> +	GATE(CLK_ISP_MPWM_ISP, "mpwm_isp", "aclk200", E4X12_GATE_ISP0, 24,
+> +	     0, 0),
+> +	GATE(CLK_ISP_I2C0_ISP, "i2c0_isp", "aclk200", E4X12_GATE_ISP0, 25,
+> +	     0, 0),
+> +	GATE(CLK_ISP_I2C1_ISP, "i2c1_isp", "aclk200", E4X12_GATE_ISP0, 26,
+> +	     0, 0),
+> +	GATE(CLK_ISP_MTCADC_ISP, "mtcadc_isp", "aclk200", E4X12_GATE_ISP0, 27,
+> +	     0, 0),
+> +	GATE(CLK_ISP_PWM_ISP, "pwm_isp", "aclk200", E4X12_GATE_ISP0, 28, 0, 0),
+> +	GATE(CLK_ISP_WDT_ISP, "wdt_isp", "aclk200", E4X12_GATE_ISP0, 30, 0, 0),
+> +	GATE(CLK_ISP_UART_ISP, "uart_isp", "aclk200", E4X12_GATE_ISP0, 31,
+> +	     0, 0),
+> +	GATE(CLK_ISP_ASYNCAXIM, "asyncaxim", "aclk200", E4X12_GATE_ISP1, 0,
+> +	     0, 0),
+> +	GATE(CLK_ISP_SMMU_ISPCX, "smmu_ispcx", "aclk200", E4X12_GATE_ISP1, 4,
+> +	     0, 0),
+> +	GATE(CLK_ISP_SPI0_ISP, "spi0_isp", "aclk200", E4X12_GATE_ISP1, 12,
+> +	     0, 0),
+> +	GATE(CLK_ISP_SPI1_ISP, "spi1_isp", "aclk200", E4X12_GATE_ISP1, 13,
+> +	     0, 0),
+> +};
+> +
+> +static int __maybe_unused exynos4x12_isp_clk_suspend(struct device *dev)
+> +{
+> +	struct samsung_clk_provider *ctx = dev_get_drvdata(dev);
+> +
+> +	samsung_clk_save(ctx->reg_base, exynos4x12_save_isp,
+> +			 ARRAY_SIZE(exynos4x12_clk_isp_save));
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused exynos4x12_isp_clk_resume(struct device *dev)
+> +{
+> +	struct samsung_clk_provider *ctx = dev_get_drvdata(dev);
+> +
+> +	samsung_clk_restore(ctx->reg_base, exynos4x12_save_isp,
+> +			    ARRAY_SIZE(exynos4x12_clk_isp_save));
+> +	return 0;
+> +}
+> +
+> +static int __init exynos4x12_isp_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct samsung_clk_provider *ctx;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct resource *res;
+> +	void __iomem *reg_base;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(reg_base)) {
+> +		dev_err(dev, "failed to map registers\n");
+> +		return PTR_ERR(reg_base);
+> +	}
+> +
+> +	exynos4x12_save_isp = samsung_clk_alloc_reg_dump(exynos4x12_clk_isp_save,
+> +					ARRAY_SIZE(exynos4x12_clk_isp_save));
+> +	if (!exynos4x12_save_isp)
+> +		return -ENOMEM;
+> +
+> +	ctx = samsung_clk_init(np, reg_base, CLK_NR_ISP_CLKS);
+> +	ctx->dev = dev;
+> +
+> +	platform_set_drvdata(pdev, ctx);
+> +
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	pm_runtime_get_sync(dev);
+> +
+> +	samsung_clk_register_div(ctx, exynos4x12_isp_div_clks,
+> +				 ARRAY_SIZE(exynos4x12_isp_div_clks));
+> +	samsung_clk_register_gate(ctx, exynos4x12_isp_gate_clks,
+> +				  ARRAY_SIZE(exynos4x12_isp_gate_clks));
+> +
+> +	samsung_clk_of_add_provider(np, ctx);
+> +	pm_runtime_put(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id exynos4x12_isp_clk_of_match[] = {
+> +	{ .compatible = "samsung,exynos4412-isp-clock", },
+> +	{ },
+> +};
+> +
+> +static const struct dev_pm_ops exynos4x12_isp_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(exynos4x12_isp_clk_suspend,
+> +			   exynos4x12_isp_clk_resume, NULL)
+> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				     pm_runtime_force_resume)
+> +};
+> +
+> +static struct platform_driver exynos4x12_isp_clk_driver __refdata = {
+> +	.driver	= {
+> +		.name = "exynos4x12-isp-clk",
+> +		.of_match_table = exynos4x12_isp_clk_of_match,
+> +		.suppress_bind_attrs = true,
+> +		.pm = &exynos4x12_isp_pm_ops,
+> +	},
+> +	.probe = exynos4x12_isp_clk_probe,
+> +};
+> +
+> +static int __init exynos4x12_isp_clk_init(void)
+> +{
+> +	return platform_driver_register(&exynos4x12_isp_clk_driver);
+> +}
+> +core_initcall(exynos4x12_isp_clk_init);
+> diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
+> index c40111f36d5e..bf44a7c5eccc 100644
+> --- a/include/dt-bindings/clock/exynos4.h
+> +++ b/include/dt-bindings/clock/exynos4.h
+> @@ -272,4 +272,39 @@
+>  /* must be greater than maximal clock id */
+>  #define CLK_NR_CLKS		461
+>  
+> +/* Exynos4x12 ISP clocks */
+> +#define CLK_ISP_FIMC_ISP		 1
+> +#define CLK_ISP_FIMC_DRC		 2
+> +#define CLK_ISP_FIMC_FD			 3
+> +#define CLK_ISP_FIMC_LITE0		 4
+> +#define CLK_ISP_FIMC_LITE1		 5
+> +#define CLK_ISP_MCUISP			 6
+> +#define CLK_ISP_GICISP			 7
+> +#define CLK_ISP_SMMU_ISP		 8
+> +#define CLK_ISP_SMMU_DRC		 9
+> +#define CLK_ISP_SMMU_FD			10
+> +#define CLK_ISP_SMMU_LITE0		11
+> +#define CLK_ISP_SMMU_LITE1		12
+> +#define CLK_ISP_PPMUISPMX		13
+> +#define CLK_ISP_PPMUISPX		14
+> +#define CLK_ISP_MCUCTL_ISP		15
+> +#define CLK_ISP_MPWM_ISP		16
+> +#define CLK_ISP_I2C0_ISP		17
+> +#define CLK_ISP_I2C1_ISP		18
+> +#define CLK_ISP_MTCADC_ISP		19
+> +#define CLK_ISP_PWM_ISP			20
+> +#define CLK_ISP_WDT_ISP			21
+> +#define CLK_ISP_UART_ISP		22
+> +#define CLK_ISP_ASYNCAXIM		23
+> +#define CLK_ISP_SMMU_ISPCX		24
+> +#define CLK_ISP_SPI0_ISP		25
+> +#define CLK_ISP_SPI1_ISP		26
+> +
+
+Do you expect here more clocks?
+
+Best regards,
+Krzysztof
+
+
+> +#define CLK_ISP_DIV_ISP0		30
+> +#define CLK_ISP_DIV_ISP1		31
+> +#define CLK_ISP_DIV_MCUISP0		32
+> +#define CLK_ISP_DIV_MCUISP1		33
+> +
+> +#define CLK_NR_ISP_CLKS			34
+> +
+>  #endif /* _DT_BINDINGS_CLOCK_EXYNOS_4_H */
+> -- 
+> 2.14.2
 > 
-> 
-
-Yes I know.
-
->> On argument is that we want to take the DTS out of device tree as
->> firmware is responsible for generating them. Alternatively, we may be
->> duplicating resulting in discrepancies over time by coping it into
->> kernel.
-> 
-> The general problem is copying from where?
-> 
-> The kernel DTs are a well maintained centralized repository which is
-> *really* useful. git grep across the kernel DTs is a hugely powerful
-> tool when trying to better understand an ecosystem as sprawling and
-> diverse as ARMs. In fact I've even seen those sort of searchs used as a
-> basis to clean up unused code. Seeing that centralized repository
-> splinter into separate per-vendor silos would be a huge loss for kernel
-> developers.
-> 
-
-Agreed. But models are configurable and last time this discussion came
-up, some argued that the DTs must be modified based on the configuration
-automatically by models or some external scripts.
-> 
->> Since users of ARM TF must be able to access these, I am not sure if it
->> makes sense to merge these. Or we remove it from ARM TF to avoid any
->> conflicts/discrepancies. >
->> Thoughts ?
-> 
-> I kind of agree that maintaining DTs and DT documentation in the kernel
-> is a little odd given that the kernel is not the only player here
-> (FreeBSD, u-boot, etc). However it is sufficiently well maintained that
-> projects are content(ish) to regard the kernel as the canonical source
-> for these things (u-boot, for example, seeks to shadow kernel DTs
-> without modifying them).
-> 
-
-No argument there.
-
-> However regardless of the above I'd say they should be removed from ARM
-> TF. ARM TF does not use, modify, pass on or in any way consume DT... it
-> has no skin in the game here. Why does it want to own a few of blobs for
-> a small subset of the platforms it supports? I'm afraid that makes no
-> sense to me, to the extent that it didn't even occur to me to *look* in
-> the ARM TF sources to find any DTs for FVP until you pointed them out.
-> 
-
-Agreed, I can talk to TF guys if required.
-
-> In other words, whilst people could discuss alternative ways to manage
-> DTs[1], I can't see any universe where ARM TF would be a logical place
-> to keep them.
-> 
-> [1] ... and I'd further suggest that only perhaps people who are
->     prepared to put resources into fixing it should convene such a
->     discussion.
-
-While I agree with you, I am worried on the scalability. Models provide
-tons of options(may not be foundation platform but for sure the base AEM
-ones). It may so get unmanageable if we keep adding one DTS per
-configuration.
-
-If we are OK restricting the set of configurations to what you have
-proposed, then it seems fine.
-
-I will try to push this for v4.15, but I still want to hear more
-opinions on the scalability part here.
-
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
