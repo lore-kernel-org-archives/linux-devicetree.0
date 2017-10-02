@@ -1,310 +1,102 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 2/4] clk: samsung: Add a separate driver for Exynos4412 ISP
- clocks
-Date: Mon, 02 Oct 2017 12:47:57 +0200
-Message-ID: <20171002104759.25944-3-m.szyprowski@samsung.com>
-References: <20171002104759.25944-1-m.szyprowski@samsung.com>
-        <CGME20171002104825eucas1p1fc099af751d832f4fb1b040a2eaa1c52@eucas1p1.samsung.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-reply-to: <20171002104759.25944-1-m.szyprowski@samsung.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
+Date: Mon, 2 Oct 2017 18:49:09 +0800
+Message-ID: <1506941349.24270.1.camel@mtksdaap41>
+References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
+         <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
+         <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
+         <1505355021.8308.4.camel@mhfsdcap03>
+         <CAPDyKFrUe-0hEsxVRQSZvujcXY8WrR6m-0DMW=VwDDLvz7Lexw@mail.gmail.com>
+         <1506475100.19851.9.camel@mhfsdcap03>
+         <1506650162.19851.12.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1506650162.19851.12.camel@mhfsdcap03>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yong mao <yong.mao@mediatek.com>, Phong LE <ple@baylibre.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some registers for the Exynos 4412 ISP (Camera subsystem) clocks are
-partially located in the SOC area, which belongs to ISP power domain.
-Because those registers are also located in a different memory region
-than the main clock controller, support for them can be provided by
-a separate clock controller. This in turn allows to almost seamlessly
-make it aware of the power domain using recently introduced runtime
-PM support for clocks.
+On Fri, 2017-09-29 at 09:56 +0800, Chaotian Jing wrote:
+> On Wed, 2017-09-27 at 09:18 +0800, Chaotian Jing wrote:
+> > On Wed, 2017-09-27 at 00:33 +0200, Ulf Hansson wrote:
+> > > On 14 September 2017 at 04:10, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+> > > > On Wed, 2017-09-13 at 09:10 -0500, Rob Herring wrote:
+> > > >> On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
+> > > >> > Change the comptiable for support of multi-platform
+> > > >> > Add description for reg
+> > > >> > Add description for source_cg
+> > > >> > Add description for mediatek,latch-ck
+> > > >>
+> > > >> This is at least the 3rd patch with exactly the same vague subject.
+> > > >> Please make the subject somewhat unique.
+> > > >>
+> > > > Thx, will change the subject at next version
+> > > >> >
+> > > >> > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> > > >> > ---
+> > > >> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
+> > > >> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > > >> >
+> > > >> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > > >> > index 4182ea3..405cd06 100644
+> > > >> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > > >> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > > >> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
+> > > >> >  and the properties used by the msdc driver.
+> > > >> >
+> > > >> >  Required properties:
+> > > >> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
+> > > >> > +- compatible: value should be either of the following.
+> > > >> > +   "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+> > > >> > +   "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> > > >> > +   "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> > > >> > +   "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> > > >> > +- reg: physical base address of the controller and length
+> > > >> >  - interrupts: Should contain MSDC interrupt number
+> > > >> > -- clocks: MSDC source clock, HCLK
+> > > >> > -- clock-names: "source", "hclk"
+> > > >> > +- clocks: MSDC source clock, HCLK, source_cg
+> > > >> > +- clock-names: "source", "hclk", "source_cg"
+> > > >>
+> > > >> All chips support source_cg? That's not backwards compatible for
+> > > >> existing compatible strings if the driver requires it.
+> > > > Not all chips support source_cg, for chips which do not support
+> > > > source_cg, no need source_cg here, and the driver will parse it
+> > > > to know if current chip support it.
+> > > 
+> > > In such case you must not add add a required binding for it. I think
+> > > that is what Rob is trying to point out for you.
+> > > 
+> > > [...]
+> > > 
+> > > Kind regards
+> > > Uffe
+> > The source_cg is required(MUST) at MT2712 and future SoCs, but not
+> > required(do not have it) at previous SoCs, so that put it at required
+> > properties, let the driver to handle it.
+> 
+> Any other comments about it ? still must not add a required binding for
+> it ? if add a optional binding for it, how to add it ? as cannot
+> duplicate "clocks" & "clock-names" in one node.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- .../devicetree/bindings/clock/exynos4-clock.txt    |  27 ++++
- drivers/clk/samsung/Makefile                       |   1 +
- drivers/clk/samsung/clk-exynos4412-isp.c           | 179 +++++++++++++++++++++
- include/dt-bindings/clock/exynos4.h                |  35 ++++
- 4 files changed, 242 insertions(+)
- create mode 100644 drivers/clk/samsung/clk-exynos4412-isp.c
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos4-clock.txt b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
-index f5a5b19ed3b2..9b260e0d1e66 100644
---- a/Documentation/devicetree/bindings/clock/exynos4-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
-@@ -41,3 +41,30 @@ Example 2: UART controller node that consumes the clock generated by the clock
- 		clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
- 		clock-names = "uart", "clk_uart_baud0";
- 	};
-+
-+Exynos4412 SoC contains some additional clocks for FIMC-ISP (Camera ISP)
-+subsystem. Registers for those clocks are partially located in the SOC area,
-+which belongs to ISP power domain. Because those registers are also located
-+in a different memory region than the main clock controller, a separate clock
-+controller has to be defined for handling them. The compatible string to such
-+controller is "samsung,exynos4412-isp-clock". It also has two input clocks
-+from the main Exynos4412 clock controller: "aclk200" and "aclk400_mcuisp".
-+The ISP clock controller has to be linked with respective ISP power domain
-+(for more information, see Samsung Exynos power domains bindings).
-+
-+Example 3: An example of a clock controllers for Exynos4412 SoCs.
-+
-+	clock: clock-controller@10030000 {
-+		compatible = "samsung,exynos4412-clock";
-+		reg = <0x10030000 0x18000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	isp_clock: clock-controller@10048000 {
-+		compatible = "samsung,exynos4412-isp-clock";
-+		reg = <0x10048000 0x1000>;
-+		#clock-cells = <1>;
-+		power-domains = <&pd_isp>;
-+		clocks = <&clock CLK_ACLK200>, <&clock CLK_ACLK400_MCUISP>;
-+		clock-names = "aclk200", "aclk400_mcuisp";
-+	};
-diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
-index 7afc21dc374e..8a67a3bb6803 100644
---- a/drivers/clk/samsung/Makefile
-+++ b/drivers/clk/samsung/Makefile
-@@ -5,6 +5,7 @@
- obj-$(CONFIG_COMMON_CLK)	+= clk.o clk-pll.o clk-cpu.o
- obj-$(CONFIG_SOC_EXYNOS3250)	+= clk-exynos3250.o
- obj-$(CONFIG_ARCH_EXYNOS4)	+= clk-exynos4.o
-+obj-$(CONFIG_ARCH_EXYNOS4)	+= clk-exynos4412-isp.o
- obj-$(CONFIG_SOC_EXYNOS5250)	+= clk-exynos5250.o
- obj-$(CONFIG_SOC_EXYNOS5260)	+= clk-exynos5260.o
- obj-$(CONFIG_SOC_EXYNOS5410)	+= clk-exynos5410.o
-diff --git a/drivers/clk/samsung/clk-exynos4412-isp.c b/drivers/clk/samsung/clk-exynos4412-isp.c
-new file mode 100644
-index 000000000000..6712db52e047
---- /dev/null
-+++ b/drivers/clk/samsung/clk-exynos4412-isp.c
-@@ -0,0 +1,179 @@
-+/*
-+ * Copyright (c) 2017 Samsung Electronics Co., Ltd.
-+ * Author: Marek Szyprowski <m.szyprowski@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Common Clock Framework support for Exynos4412 ISP module.
-+*/
-+
-+#include <dt-bindings/clock/exynos4.h>
-+#include <linux/slab.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "clk.h"
-+
-+/* Exynos4x12 specific registers, which belong to ISP power domain */
-+#define E4X12_DIV_ISP0		0x0300
-+#define E4X12_DIV_ISP1		0x0304
-+#define E4X12_GATE_ISP0		0x0800
-+#define E4X12_GATE_ISP1		0x0804
-+
-+/*
-+ * Support for CMU save/restore across system suspends
-+ */
-+static struct samsung_clk_reg_dump *exynos4x12_save_isp;
-+
-+static const unsigned long exynos4x12_clk_isp_save[] __initconst = {
-+	E4X12_DIV_ISP0,
-+	E4X12_DIV_ISP1,
-+	E4X12_GATE_ISP0,
-+	E4X12_GATE_ISP1,
-+};
-+
-+PNAME(mout_user_aclk400_mcuisp_p4x12) = {"fin_pll", "div_aclk400_mcuisp", };
-+
-+static struct samsung_div_clock exynos4x12_isp_div_clks[] = {
-+	DIV(CLK_ISP_DIV_ISP0, "div_isp0", "aclk200", E4X12_DIV_ISP0, 0, 3),
-+	DIV(CLK_ISP_DIV_ISP1, "div_isp1", "aclk200", E4X12_DIV_ISP0, 4, 3),
-+	DIV(CLK_ISP_DIV_MCUISP0, "div_mcuisp0", "aclk400_mcuisp",
-+	    E4X12_DIV_ISP1, 4, 3),
-+	DIV(CLK_ISP_DIV_MCUISP1, "div_mcuisp1", "div_mcuisp0",
-+	    E4X12_DIV_ISP1, 8, 3),
-+	DIV(0, "div_mpwm", "div_isp1", E4X12_DIV_ISP1, 0, 3),
-+};
-+
-+static struct samsung_gate_clock exynos4x12_isp_gate_clks[] = {
-+	GATE(CLK_ISP_FIMC_ISP, "isp", "aclk200", E4X12_GATE_ISP0, 0, 0, 0),
-+	GATE(CLK_ISP_FIMC_DRC, "drc", "aclk200", E4X12_GATE_ISP0, 1, 0, 0),
-+	GATE(CLK_ISP_FIMC_FD, "fd", "aclk200", E4X12_GATE_ISP0, 2, 0, 0),
-+	GATE(CLK_ISP_FIMC_LITE0, "lite0", "aclk200", E4X12_GATE_ISP0, 3, 0, 0),
-+	GATE(CLK_ISP_FIMC_LITE1, "lite1", "aclk200", E4X12_GATE_ISP0, 4, 0, 0),
-+	GATE(CLK_ISP_MCUISP, "mcuisp", "aclk200", E4X12_GATE_ISP0, 5, 0, 0),
-+	GATE(CLK_ISP_GICISP, "gicisp", "aclk200", E4X12_GATE_ISP0, 7, 0, 0),
-+	GATE(CLK_ISP_SMMU_ISP, "smmu_isp", "aclk200", E4X12_GATE_ISP0, 8, 0, 0),
-+	GATE(CLK_ISP_SMMU_DRC, "smmu_drc", "aclk200", E4X12_GATE_ISP0, 9, 0, 0),
-+	GATE(CLK_ISP_SMMU_FD, "smmu_fd", "aclk200", E4X12_GATE_ISP0, 10, 0, 0),
-+	GATE(CLK_ISP_SMMU_LITE0, "smmu_lite0", "aclk200", E4X12_GATE_ISP0, 11,
-+	     0, 0),
-+	GATE(CLK_ISP_SMMU_LITE1, "smmu_lite1", "aclk200", E4X12_GATE_ISP0, 12,
-+	     0, 0),
-+	GATE(CLK_ISP_PPMUISPMX, "ppmuispmx", "aclk200", E4X12_GATE_ISP0, 20,
-+	     0, 0),
-+	GATE(CLK_ISP_PPMUISPX, "ppmuispx", "aclk200", E4X12_GATE_ISP0, 21,
-+	     0, 0),
-+	GATE(CLK_ISP_MCUCTL_ISP, "mcuctl_isp", "aclk200", E4X12_GATE_ISP0, 23,
-+	     0, 0),
-+	GATE(CLK_ISP_MPWM_ISP, "mpwm_isp", "aclk200", E4X12_GATE_ISP0, 24,
-+	     0, 0),
-+	GATE(CLK_ISP_I2C0_ISP, "i2c0_isp", "aclk200", E4X12_GATE_ISP0, 25,
-+	     0, 0),
-+	GATE(CLK_ISP_I2C1_ISP, "i2c1_isp", "aclk200", E4X12_GATE_ISP0, 26,
-+	     0, 0),
-+	GATE(CLK_ISP_MTCADC_ISP, "mtcadc_isp", "aclk200", E4X12_GATE_ISP0, 27,
-+	     0, 0),
-+	GATE(CLK_ISP_PWM_ISP, "pwm_isp", "aclk200", E4X12_GATE_ISP0, 28, 0, 0),
-+	GATE(CLK_ISP_WDT_ISP, "wdt_isp", "aclk200", E4X12_GATE_ISP0, 30, 0, 0),
-+	GATE(CLK_ISP_UART_ISP, "uart_isp", "aclk200", E4X12_GATE_ISP0, 31,
-+	     0, 0),
-+	GATE(CLK_ISP_ASYNCAXIM, "asyncaxim", "aclk200", E4X12_GATE_ISP1, 0,
-+	     0, 0),
-+	GATE(CLK_ISP_SMMU_ISPCX, "smmu_ispcx", "aclk200", E4X12_GATE_ISP1, 4,
-+	     0, 0),
-+	GATE(CLK_ISP_SPI0_ISP, "spi0_isp", "aclk200", E4X12_GATE_ISP1, 12,
-+	     0, 0),
-+	GATE(CLK_ISP_SPI1_ISP, "spi1_isp", "aclk200", E4X12_GATE_ISP1, 13,
-+	     0, 0),
-+};
-+
-+static int __maybe_unused exynos4x12_isp_clk_suspend(struct device *dev)
-+{
-+	struct samsung_clk_provider *ctx = dev_get_drvdata(dev);
-+
-+	samsung_clk_save(ctx->reg_base, exynos4x12_save_isp,
-+			 ARRAY_SIZE(exynos4x12_clk_isp_save));
-+	return 0;
-+}
-+
-+static int __maybe_unused exynos4x12_isp_clk_resume(struct device *dev)
-+{
-+	struct samsung_clk_provider *ctx = dev_get_drvdata(dev);
-+
-+	samsung_clk_restore(ctx->reg_base, exynos4x12_save_isp,
-+			    ARRAY_SIZE(exynos4x12_clk_isp_save));
-+	return 0;
-+}
-+
-+static int __init exynos4x12_isp_clk_probe(struct platform_device *pdev)
-+{
-+	struct samsung_clk_provider *ctx;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct resource *res;
-+	void __iomem *reg_base;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reg_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(reg_base)) {
-+		dev_err(dev, "failed to map registers\n");
-+		return PTR_ERR(reg_base);
-+	}
-+
-+	exynos4x12_save_isp = samsung_clk_alloc_reg_dump(exynos4x12_clk_isp_save,
-+					ARRAY_SIZE(exynos4x12_clk_isp_save));
-+	if (!exynos4x12_save_isp)
-+		return -ENOMEM;
-+
-+	ctx = samsung_clk_init(np, reg_base, CLK_NR_ISP_CLKS);
-+	ctx->dev = dev;
-+
-+	platform_set_drvdata(pdev, ctx);
-+
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_sync(dev);
-+
-+	samsung_clk_register_div(ctx, exynos4x12_isp_div_clks,
-+				 ARRAY_SIZE(exynos4x12_isp_div_clks));
-+	samsung_clk_register_gate(ctx, exynos4x12_isp_gate_clks,
-+				  ARRAY_SIZE(exynos4x12_isp_gate_clks));
-+
-+	samsung_clk_of_add_provider(np, ctx);
-+	pm_runtime_put(dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id exynos4x12_isp_clk_of_match[] = {
-+	{ .compatible = "samsung,exynos4412-isp-clock", },
-+	{ },
-+};
-+
-+static const struct dev_pm_ops exynos4x12_isp_pm_ops = {
-+	SET_RUNTIME_PM_OPS(exynos4x12_isp_clk_suspend,
-+			   exynos4x12_isp_clk_resume, NULL)
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				     pm_runtime_force_resume)
-+};
-+
-+static struct platform_driver exynos4x12_isp_clk_driver __refdata = {
-+	.driver	= {
-+		.name = "exynos4x12-isp-clk",
-+		.of_match_table = exynos4x12_isp_clk_of_match,
-+		.suppress_bind_attrs = true,
-+		.pm = &exynos4x12_isp_pm_ops,
-+	},
-+	.probe = exynos4x12_isp_clk_probe,
-+};
-+
-+static int __init exynos4x12_isp_clk_init(void)
-+{
-+	return platform_driver_register(&exynos4x12_isp_clk_driver);
-+}
-+core_initcall(exynos4x12_isp_clk_init);
-diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
-index c40111f36d5e..bf44a7c5eccc 100644
---- a/include/dt-bindings/clock/exynos4.h
-+++ b/include/dt-bindings/clock/exynos4.h
-@@ -272,4 +272,39 @@
- /* must be greater than maximal clock id */
- #define CLK_NR_CLKS		461
- 
-+/* Exynos4x12 ISP clocks */
-+#define CLK_ISP_FIMC_ISP		 1
-+#define CLK_ISP_FIMC_DRC		 2
-+#define CLK_ISP_FIMC_FD			 3
-+#define CLK_ISP_FIMC_LITE0		 4
-+#define CLK_ISP_FIMC_LITE1		 5
-+#define CLK_ISP_MCUISP			 6
-+#define CLK_ISP_GICISP			 7
-+#define CLK_ISP_SMMU_ISP		 8
-+#define CLK_ISP_SMMU_DRC		 9
-+#define CLK_ISP_SMMU_FD			10
-+#define CLK_ISP_SMMU_LITE0		11
-+#define CLK_ISP_SMMU_LITE1		12
-+#define CLK_ISP_PPMUISPMX		13
-+#define CLK_ISP_PPMUISPX		14
-+#define CLK_ISP_MCUCTL_ISP		15
-+#define CLK_ISP_MPWM_ISP		16
-+#define CLK_ISP_I2C0_ISP		17
-+#define CLK_ISP_I2C1_ISP		18
-+#define CLK_ISP_MTCADC_ISP		19
-+#define CLK_ISP_PWM_ISP			20
-+#define CLK_ISP_WDT_ISP			21
-+#define CLK_ISP_UART_ISP		22
-+#define CLK_ISP_ASYNCAXIM		23
-+#define CLK_ISP_SMMU_ISPCX		24
-+#define CLK_ISP_SPI0_ISP		25
-+#define CLK_ISP_SPI1_ISP		26
-+
-+#define CLK_ISP_DIV_ISP0		30
-+#define CLK_ISP_DIV_ISP1		31
-+#define CLK_ISP_DIV_MCUISP0		32
-+#define CLK_ISP_DIV_MCUISP1		33
-+
-+#define CLK_NR_ISP_CLKS			34
-+
- #endif /* _DT_BINDINGS_CLOCK_EXYNOS_4_H */
--- 
-2.14.2
+Chaotian,
+
+You can follow examples of scpsys [1]:
+
+- clock, clock-names: clocks according to the common clock binding.
+                      These are clocks which hardware needs to be
+                      enabled before enabling certain power domains.
+	Required clocks for MT2701: "mm", "mfg", "ethif"
+	Required clocks for MT6797: "mm", "mfg", "vdec"
+	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
+
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/tree/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt?h=v4.13.4
+
+Joe.C
+
 
