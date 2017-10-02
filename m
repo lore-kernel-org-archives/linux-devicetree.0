@@ -1,17 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 06/12] mfd: axp20x: add pinctrl cell for AXP813
-Date: Mon, 2 Oct 2017 22:39:11 +0200
-Message-ID: <20171002203911.okuubxjb6mag3oym@flea>
+Subject: Re: [PATCH v3 07/12] ARM: dts: sun8i: a711: include
+ axp81x dtsi
+Date: Mon, 2 Oct 2017 22:40:16 +0200
+Message-ID: <20171002204016.ogaoesvz263leoj6@flea>
 References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
- <20171002120854.5212-7-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-8-quentin.schulz@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yyi5vlmikg7lu7rs"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6WHZLHAKGQEJVBKSHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="vdvm4lma4j363ewl"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBO6IZLHAKGQEWL6W2VQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171002120854.5212-7-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20171002120854.5212-8-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,22 +24,35 @@ Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdn
 List-Id: devicetree@vger.kernel.org
 
 
---yyi5vlmikg7lu7rs
+--vdvm4lma4j363ewl
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Oct 02, 2017 at 12:08:48PM +0000, Quentin Schulz wrote:
-> As GPIO/pinctrl driver now supports AXP813, add a cell for it.
+On Mon, Oct 02, 2017 at 12:08:49PM +0000, Quentin Schulz wrote:
+> This board has an AXP813 PMIC so let's include its dtsi.
 > 
 > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> index 723641f56a74..4f4db07ca19f 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+> @@ -146,7 +146,7 @@
+>  &r_rsb {
+>  	status = "okay";
+>  
+> -	axp813: pmic@3a3 {
+> +	axp81x: pmic@3a3 {
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Aren't we going to have an axp813 DTSI? What's your plan here
 
-Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---yyi5vlmikg7lu7rs--
+--vdvm4lma4j363ewl--
