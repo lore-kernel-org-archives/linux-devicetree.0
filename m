@@ -1,73 +1,33 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: Fix I2C repeated start issue on Armada-38x
-Date: Mon, 02 Oct 2017 16:21:19 +0200
-Message-ID: <87o9ppmy00.fsf@free-electrons.com>
-References: <20170928213605.22874-1-kalyan.kinthada@alliedtelesis.co.nz>
-        <20170928213605.22874-2-kalyan.kinthada@alliedtelesis.co.nz>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] dt-bindings: fsl-imx-drm: Remove incorrect "@di0" usage
+Date: Mon, 02 Oct 2017 16:22:26 +0200
+Message-ID: <1506954146.9752.6.camel@pengutronix.de>
+References: <1506951930-4881-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170928213605.22874-2-kalyan.kinthada@alliedtelesis.co.nz>
-        (Kalyan Kinthada's message of "Fri, 29 Sep 2017 10:36:04 +1300")
-Sender: linux-i2c-owner@vger.kernel.org
-To: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-Cc: jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1506951930-4881-1-git-send-email-marco.franchi@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marco Franchi <marco.franchi@nxp.com>
+Cc: devicetree@vger.kernel.org, marcofrk@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kalyan,
- 
- On ven., sept. 29 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz> wrote:
-
-> All the Armada 38x(380, 385, 388) have a silicon issue in
-> the I2C controller which violates the I2C repeated start timing
-> (errata FE-8471889).
->
-> i2c-mv64xxx driver handles this errata based on the compatible string
-> "marvell,mv78230-a0-i2c".
->
-> This patch activates the "marvell,mv78230-a0-i2c" compatible string
-> for the I2C controller on armada-38x SoC based devices.
->
-> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-
-Applied on mvebu/fixes
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 7ff0811e61db..4960722aab32 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -178,7 +178,7 @@
->  			};
->  
->  			i2c0: i2c@11000 {
-> -				compatible = "marvell,mv64xxx-i2c";
-> +				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
->  				reg = <0x11000 0x20>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -189,7 +189,7 @@
->  			};
->  
->  			i2c1: i2c@11100 {
-> -				compatible = "marvell,mv64xxx-i2c";
-> +				compatible = "marvell,mv78230-a0-i2c", "marvell,mv64xxx-i2c";
->  				reg = <0x11100 0x20>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> -- 
-> 2.14.1
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+SGkgTWFyY28sCgpPbiBNb24sIDIwMTctMTAtMDIgYXQgMTA6NDUgLTAzMDAsIE1hcmNvIEZyYW5j
+aGkgd3JvdGU6Cj4gSW1wcm92ZSB0aGUgYmluZGluZyBleGFtcGxlIGJ5IHJlbW92aW5nIHRoZSAn
+QGRpMCcgbm90YXRpb24sIHdoaWNoCj4gZml4ZXMgdGhlIGZvbGxvd2luZyBidWlsZCB3YXJuaW5n
+Ogo+IAo+IFdhcm5pbmcgKHVuaXRfYWRkcmVzc192c19yZWcpOiBOb2RlIC9kaXNwbGF5QGRpMCBo
+YXMgYSB1bml0IG5hbWUsIGJ1dMKgCj4gbm8gcmVnIHByb3BlcnR5Cj4gCj4gU2lnbmVkLW9mZi1i
+eTogTWFyY28gRnJhbmNoaSA8bWFyY28uZnJhbmNoaUBueHAuY29tPgoKVGhhbmsgeW91LCBJJ3Zl
+IGFwcGxpZWQgdGhpcyBwYXRjaCB0byB0aGUgaW14LWRybS9uZXh0IGJyYW5jaC4KCnJlZ2FyZHMK
+UGhpbGlwcApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
