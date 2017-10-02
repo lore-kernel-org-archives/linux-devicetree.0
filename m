@@ -1,201 +1,212 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3] mmc: sdhci-xenon: Fix clock resource by adding an optional bus clock
-Date: Mon,  2 Oct 2017 16:58:52 +0200
-Message-ID: <20171002145852.24729-1-gregory.clement@free-electrons.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Omri Itach <omrii@marvell.com>, Hanna Hawa <hannah@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Stable <stable@vge>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] nvmem: add a driver for the Amlogic
+ Meson6/Meson8/Meson8b SoCs
+Date: Mon, 2 Oct 2017 16:28:38 +0100
+Message-ID: <8f1f5a45-951c-7434-44d5-4ef2a61ec038@linaro.org>
+References: <20171001125700.1520-1-martin.blumenstingl@googlemail.com>
+ <20171001125700.1520-4-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171001125700.1520-4-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Armada 7K/8K we need to explicitly enable the bus clock. The bus clock
-is optional because not all the SoCs need them but at least for Armada
-7K/8K it is actually mandatory.
+Minor comments!!
 
-The binding documentation is updating accordingly.
+On 01/10/17 13:56, Martin Blumenstingl wrote:
+> This adds a driver to access the efuse on Amlogic Meson6, Meson8 and
+> Meson8b SoCs.
+> These SoCs are accessing the efuse IP block directly through the
+> registers in the "secbus" region. This makes it different from the Meson
+> GX efuse driver which uses the "secure monitor" firmware to access the
+> efuse.
+> 
+> The efuse on Meson6 can only read one byte at a time, while the efuse on
+> Meson8 and Meson8b always reads 4 bytes at a time. The new driver
+> supports both, but due to lack of hardware Meson6 support was not tested.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>   drivers/nvmem/Kconfig          |  10 ++
+>   drivers/nvmem/Makefile         |   2 +
+>   drivers/nvmem/meson-mx-efuse.c | 272 +++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 284 insertions(+)
+>   create mode 100644 drivers/nvmem/meson-mx-efuse.c
+> 
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> +	
+> +
+> +static void meson_mx_efuse_mask_bits(struct meson_mx_efuse *efuse, u32 reg,
+> +				     u32 mask, u32 set)
+> +{
+> +	u32 data;
+> +
+> +	data = readl(efuse->base + reg);
+> +	data &= ~mask;
+> +	data |= (set & mask);
+> +
+> +	writel(data, efuse->base + reg);
+> +}
+> +
+> +static int meson_mx_efuse_hw_enable(struct meson_mx_efuse *efuse)
+> +{
+> +	int err;
+> +
+> +	err = clk_prepare_enable(efuse->core_clk);
+> +	if (err)
+> +		return err;
+> +
+> +	/* power up the efuse */
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_PD_ENABLE, 0);
+> +
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL4,
+> +				 MESON_MX_EFUSE_CNTL4_ENCRYPT_ENABLE, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static void meson_mx_efuse_hw_disable(struct meson_mx_efuse *efuse)
+> +{
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_PD_ENABLE,
+> +				 MESON_MX_EFUSE_CNTL1_PD_ENABLE);
+> +
+> +	clk_disable_unprepare(efuse->core_clk);
+> +}
+> +
+> +static int meson_mx_efuse_read_addr(struct meson_mx_efuse *efuse,
+> +				    unsigned int addr, u32 *value)
+> +{
+> +	int err;
+> +	u32 regval;
+> +
+> +	/* write the address to read */
+> +	regval = FIELD_PREP(MESON_MX_EFUSE_CNTL1_BYTE_ADDR_MASK, addr);
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_BYTE_ADDR_MASK, regval);
+> +
+> +	/* inform the hardware that we changed the address */
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_BYTE_ADDR_SET,
+> +				 MESON_MX_EFUSE_CNTL1_BYTE_ADDR_SET);
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_BYTE_ADDR_SET, 0);
+> +
+> +	/* start the read process */
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_START,
+> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_START);
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_START, 0);
+> +
+> +	/*
+> +	 * perform a dummy read to ensure that the HW has the RD_BUSY bit set
+> +	 * when polling for the status below.
+> +	 */
+> +	readl(efuse->base + MESON_MX_EFUSE_CNTL1);
+> +
+> +	err = readl_poll_timeout_atomic(efuse->base + MESON_MX_EFUSE_CNTL1,
+> +			regval,
+> +			(!(regval & MESON_MX_EFUSE_CNTL1_AUTO_RD_BUSY)),
+> +			1, 1000);
+> +	if (err) {
+> +		dev_err(efuse->config.dev,
+> +			"Timeout while reading efuse address %u\n", addr);
+> +		return err;
+> +	}
+> +
+> +	*value = readl(efuse->base + MESON_MX_EFUSE_CNTL2);
+> +
+> +	return 0;
+> +}
+> +
+> +static int meson_mx_efuse_read(void *context, unsigned int offset,
+> +			       void *buf, size_t bytes)
+> +{
+> +	struct meson_mx_efuse *efuse = context;
+> +	u32 tmp;
+> +	int err, i, addr;
+> +
+> +	err = meson_mx_efuse_hw_enable(efuse);
+> +	if (err)
+> +		return err;
+> +
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE,
+> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE);
+> +
+> +	for (i = offset; i < offset + bytes; i += efuse->config.word_size) {
+> +		addr = i / efuse->config.word_size;
+> +
+> +		err = meson_mx_efuse_read_addr(efuse, addr, &tmp);
+> +		if (err)
+> +			break;
+> +
+> +		memcpy(buf + i, &tmp, efuse->config.word_size);
+> +	}
+> +
+> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
+> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE, 0);
+> +
+> +	meson_mx_efuse_hw_disable(efuse);
+> +
+> +	return err;
+> +}
+...
+> +
+> +static int meson_mx_efuse_probe(struct platform_device *pdev)
+> +{
+> +	const struct meson_mx_efuse_platform_data *drvdata;
+> +	struct meson_mx_efuse *efuse;
+> +	struct resource *res;
+> +
 
-Without this patch the kernel hand during boot if the mvpp2.2 network
-driver was not present in the kernel. Indeed the clock needed by the
-xenon controller was set by the network driver.
+...
 
-Fixes: 3a3748dba881 ("mmc: sdhci-xenon: Add Marvell Xenon SDHC core
-functionality)"
-CC: Stable <stable@vger.kernel.org>
-Tested-by: Zhoujie Wu <zjwu@marvell.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
-Hi Ulf and Adrian,
+> +
+> +	efuse->core_clk = devm_clk_get(&pdev->dev, "core");
+> +	if (IS_ERR(efuse->core_clk)) {
+> +		dev_err(&pdev->dev, "Failed to get core clock\n");
+> +		return PTR_ERR(efuse->core_clk);
+> +	}
+> +
+> +	efuse->nvmem = nvmem_register(&efuse->config);
+> +	if (IS_ERR(efuse->nvmem)) {
+> +		clk_unprepare(efuse->core_clk);
 
-This patch should be merged in 4.14-rc, as it fixes real issues.
+Do you need this???
 
-This patch may looks like just as a nice clean-up but it is not. On
-the earlier version of the series adding the support for the xenon
-controller there was already this axi bus clock. But at this moment
-the documentation for the clock on the Armada 7K/8K was missing and
-there was no driver for it, so we just use the clock set by the
-bootloader and never change them that's why it worked without any
-visible problem.
+> +		return PTR_ERR(efuse->nvmem);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, efuse);
+> +
+> +	return 0;
+> +}
+> +
+> +static int meson_mx_efuse_remove(struct platform_device *pdev)
+> +{
+> +	struct meson_mx_efuse *efuse = platform_get_drvdata(pdev);
+> +	int err;
+> +
+> +	err = nvmem_unregister(efuse->nvmem);
+> +
+> +	clk_unprepare(efuse->core_clk);
 
-Then as explained in the commit log the network driver enabled the
-clock for us, and it happened that it was setup before the xenon
-driver. It is only thanks the new information we received on the
-clocks of the SoC and with more exhaustive testes that we found this
-issue and the fix for it.
+Do you need this disable here? AFAIU, this driver would never leave the 
+clk prepared unless we are in the middle of read.
 
-Thanks,
-
-Gregory
-
-Changelog:
-v2->v3:
- - remove useless test on clk pointer
- - added tested-by from  Zhoujie Wu
-
-v1->v2:
- - manage the -EPROBE_DEFER case
- - remove warning message when axi clock is not present
- - remove useless test before clk_disable_unprepare()
-
- .../bindings/mmc/marvell,xenon-sdhci.txt           | 12 ++++++-----
- drivers/mmc/host/sdhci-xenon.c                     | 24 ++++++++++++++++++----
- drivers/mmc/host/sdhci-xenon.h                     |  1 +
- 3 files changed, 28 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-index b878a1e305af..ed1456f5c94d 100644
---- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.txt
-@@ -16,11 +16,13 @@ Required Properties:
- 
- - clocks:
-   Array of clocks required for SDHC.
--  Require at least input clock for Xenon IP core.
-+  Require at least input clock for Xenon IP core. For Armada AP806 and
-+  CP110, the AXI clock is also mandatory.
- 
- - clock-names:
-   Array of names corresponding to clocks property.
-   The input clock for Xenon IP core should be named as "core".
-+  The input clock for the AXI bus must be named as "axi".
- 
- - reg:
-   * For "marvell,armada-3700-sdhci", two register areas.
-@@ -106,8 +108,8 @@ Example:
- 		compatible = "marvell,armada-ap806-sdhci";
- 		reg = <0xaa0000 0x1000>;
- 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>
--		clocks = <&emmc_clk>;
--		clock-names = "core";
-+		clocks = <&emmc_clk>,<&axi_clk>;
-+		clock-names = "core", "axi";
- 		bus-width = <4>;
- 		marvell,xenon-phy-slow-mode;
- 		marvell,xenon-tun-count = <11>;
-@@ -126,8 +128,8 @@ Example:
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>
- 		vqmmc-supply = <&sd_vqmmc_regulator>;
- 		vmmc-supply = <&sd_vmmc_regulator>;
--		clocks = <&sdclk>;
--		clock-names = "core";
-+		clocks = <&sdclk>, <&axi_clk>;
-+		clock-names = "core", "axi";
- 		bus-width = <4>;
- 		marvell,xenon-tun-count = <9>;
- 	};
-diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-index 2eec2e652c53..0842bbc2d7ad 100644
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -466,6 +466,7 @@ static int xenon_probe(struct platform_device *pdev)
- {
- 	struct sdhci_pltfm_host *pltfm_host;
- 	struct sdhci_host *host;
-+	struct xenon_priv *priv;
- 	int err;
- 
- 	host = sdhci_pltfm_init(pdev, &sdhci_xenon_pdata,
-@@ -474,6 +475,7 @@ static int xenon_probe(struct platform_device *pdev)
- 		return PTR_ERR(host);
- 
- 	pltfm_host = sdhci_priv(host);
-+	priv = sdhci_pltfm_priv(pltfm_host);
- 
- 	/*
- 	 * Link Xenon specific mmc_host_ops function,
-@@ -491,9 +493,20 @@ static int xenon_probe(struct platform_device *pdev)
- 	if (err)
- 		goto free_pltfm;
- 
-+	priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
-+	if (IS_ERR(priv->axi_clk)) {
-+		err = PTR_ERR(priv->axi_clk);
-+		if (err == -EPROBE_DEFER)
-+			goto err_clk;
-+	} else {
-+		err = clk_prepare_enable(priv->axi_clk);
-+		if (err)
-+			goto err_clk;
-+	}
-+
- 	err = mmc_of_parse(host->mmc);
- 	if (err)
--		goto err_clk;
-+		goto err_clk_axi;
- 
- 	sdhci_get_of_property(pdev);
- 
-@@ -502,11 +515,11 @@ static int xenon_probe(struct platform_device *pdev)
- 	/* Xenon specific dt parse */
- 	err = xenon_probe_dt(pdev);
- 	if (err)
--		goto err_clk;
-+		goto err_clk_axi;
- 
- 	err = xenon_sdhc_prepare(host);
- 	if (err)
--		goto err_clk;
-+		goto err_clk_axi;
- 
- 	pm_runtime_get_noresume(&pdev->dev);
- 	pm_runtime_set_active(&pdev->dev);
-@@ -527,6 +540,8 @@ static int xenon_probe(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	pm_runtime_put_noidle(&pdev->dev);
- 	xenon_sdhc_unprepare(host);
-+err_clk_axi:
-+	clk_disable_unprepare(priv->axi_clk);
- err_clk:
- 	clk_disable_unprepare(pltfm_host->clk);
- free_pltfm:
-@@ -538,6 +553,7 @@ static int xenon_remove(struct platform_device *pdev)
- {
- 	struct sdhci_host *host = platform_get_drvdata(pdev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
- 
- 	pm_runtime_get_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-@@ -546,7 +562,7 @@ static int xenon_remove(struct platform_device *pdev)
- 	sdhci_remove_host(host, 0);
- 
- 	xenon_sdhc_unprepare(host);
--
-+	clk_disable_unprepare(priv->axi_clk);
- 	clk_disable_unprepare(pltfm_host->clk);
- 
- 	sdhci_pltfm_free(pdev);
-diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
-index 2bc0510c0769..9994995c7c56 100644
---- a/drivers/mmc/host/sdhci-xenon.h
-+++ b/drivers/mmc/host/sdhci-xenon.h
-@@ -83,6 +83,7 @@ struct xenon_priv {
- 	unsigned char	bus_width;
- 	unsigned char	timing;
- 	unsigned int	clock;
-+	struct clk      *axi_clk;
- 
- 	int		phy_type;
- 	/*
--- 
-2.14.1
-
+> +
+> +	return err;
+> +}
+> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
