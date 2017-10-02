@@ -1,149 +1,35 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] mtd: spi-nor: cadence-quadspi: add a delay in
- write sequence
-Date: Mon, 2 Oct 2017 18:16:40 +0530
-Message-ID: <07137a92-244b-e009-54ae-71f733860f28@ti.com>
-References: <20170924105924.23923-1-vigneshr@ti.com>
- <20170924105924.23923-3-vigneshr@ti.com>
- <94313cae-4805-0b13-a469-72aa7556b685@gmail.com>
- <8990b971-91d5-747f-905b-5e24743e090d@ti.com>
- <d35d0891-71b9-12df-9689-dc77f56453ab@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 03/14] drm/sun4i: tcon: Add variant callback for TCON
+ output muxing
+Date: Mon, 2 Oct 2017 21:03:06 +0800
+Message-ID: <CAGb2v67V-5vxoa1H7FtOYO7kfnuiN+kXeCZEK=E-uLQkJR+wvg@mail.gmail.com>
+References: <20170929082306.16193-1-wens@csie.org> <20170929082306.16193-4-wens@csie.org>
+ <20170929101918.h7lfefk3bjj2lf74@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d35d0891-71b9-12df-9689-dc77f56453ab-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170929101918.h7lfefk3bjj2lf74@flea>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 29, 2017 at 6:19 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, Sep 29, 2017 at 08:22:55AM +0000, Chen-Yu Tsai wrote:
+>>  static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
+>> -     .has_unknown_mux = true,
+>> -     .has_channel_1  = true,
+>> +     .has_unknown_mux        = true,
+>> +     .has_channel_1          = true,
+>> +     .set_mux                = sun5i_a13_tcon_set_mux,
+>
+> I guess we could even retire has_unknown_mux now, since it provides
+> the same information than if set_mux is set or to NULL.
 
+I'll drop them in the same patch in v4.
 
-On 9/24/2017 6:43 PM, Marek Vasut wrote:
-> On 09/24/2017 02:33 PM, Vignesh R wrote:
->>
->>
->> On 9/24/2017 5:29 PM, Marek Vasut wrote:
->>> On 09/24/2017 12:59 PM, Vignesh R wrote:
->>>> As per 66AK2G02 TRM[1] SPRUHY8F section 11.15.5.3 Indirect Access
->>>> Controller programming sequence, a delay equal to couple of QSPI master
->>>> clock(~5ns) is required after setting CQSPI_REG_INDIRECTWR_START bit and
->>>> writing data to the flash. Introduce a quirk flag CQSPI_NEEDS_WR_DELAY
->>>> to handle this and set this flag for TI 66AK2G SoC.
->>>>
->>>> [1]http://www.ti.com/lit/ug/spruhy8f/spruhy8f.pdf
->>>>
->>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->>>
->>> Is this TI specific or is this controller property ? I wouldn't be
->>> surprised of the later ...
->>
->> I am not sure, there is no generic public documentation by cadence for
->> this IP. TI TRM clearly states this delay is required and I have
->> verified it practically that this delay is indeed needed.
->> But current user of this IP, socfpga does not seem to mention anything
->> about it. So, I guess its TI specific quirk.
-> 
-> OK, let's go with that then. I didn't observe any stability issues with
-> SoCFPGA, but I didn't run the flash at 100s of MHz either. At what kind
-> of frequencies does the quirk become relevant ?
-> 
-
-Actually, delay is tied to QSPI master clk rate(not SPI bus clk rate).
-It runs at 384MHz. Changing SPI bus rate has no effect.
-
-Regards
-Vignesh
-
->>>
->>>> ---
->>>>
->>>> v3:
->>>> Fix build warnings reported by kbuild test bot.
->>>>
->>>>  drivers/mtd/spi-nor/cadence-quadspi.c | 27 ++++++++++++++++++++++++++-
->>>>  1 file changed, 26 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
->>>> index 53c7d8e0327a..5cd5d6f7303f 100644
->>>> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->>>> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->>>> @@ -38,6 +38,9 @@
->>>>  #define CQSPI_NAME			"cadence-qspi"
->>>>  #define CQSPI_MAX_CHIPSELECT		16
->>>>  
->>>> +/* Quirks */
->>>> +#define CQSPI_NEEDS_WR_DELAY		BIT(0)
->>>> +
->>>>  struct cqspi_st;
->>>>  
->>>>  struct cqspi_flash_pdata {
->>>> @@ -76,6 +79,7 @@ struct cqspi_st {
->>>>  	u32			fifo_depth;
->>>>  	u32			fifo_width;
->>>>  	u32			trigger_address;
->>>> +	u32			wr_delay;
->>>>  	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
->>>>  };
->>>>  
->>>> @@ -608,6 +612,15 @@ static int cqspi_indirect_write_execute(struct spi_nor *nor,
->>>>  	reinit_completion(&cqspi->transfer_complete);
->>>>  	writel(CQSPI_REG_INDIRECTWR_START_MASK,
->>>>  	       reg_base + CQSPI_REG_INDIRECTWR);
->>>> +	/*
->>>> +	 * As per 66AK2G02 TRM SPRUHY8F section 11.15.5.3 Indirect Access
->>>> +	 * Controller programming sequence, couple of cycles of
->>>> +	 * QSPI_REF_CLK delay is required for the above bit to
->>>> +	 * be internally synchronized by the QSPI module. Provide 5
->>>> +	 * cycles of delay.
->>>> +	 */
->>>> +	if (cqspi->wr_delay)
->>>> +		ndelay(cqspi->wr_delay);
->>>>  
->>>>  	while (remaining > 0) {
->>>>  		write_bytes = remaining > page_size ? page_size : remaining;
->>>> @@ -1156,6 +1169,7 @@ static int cqspi_probe(struct platform_device *pdev)
->>>>  	struct cqspi_st *cqspi;
->>>>  	struct resource *res;
->>>>  	struct resource *res_ahb;
->>>> +	unsigned long data;
->>>>  	int ret;
->>>>  	int irq;
->>>>  
->>>> @@ -1213,6 +1227,10 @@ static int cqspi_probe(struct platform_device *pdev)
->>>>  	}
->>>>  
->>>>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->>>> +	data  = (unsigned long)of_device_get_match_data(dev);
->>>> +	if (data & CQSPI_NEEDS_WR_DELAY)
->>>> +		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
->>>> +						   cqspi->master_ref_clk_hz);
->>>>  
->>>>  	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
->>>>  			       pdev->name, cqspi);
->>>> @@ -1284,7 +1302,14 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
->>>>  #endif
->>>>  
->>>>  static const struct of_device_id cqspi_dt_ids[] = {
->>>> -	{.compatible = "cdns,qspi-nor",},
->>>> +	{
->>>> +		.compatible = "cdns,qspi-nor",
->>>> +		.data = (void *)0,
->>>> +	},
->>>> +	{
->>>> +		.compatible = "ti,k2g-qspi",
->>>> +		.data = (void *)CQSPI_NEEDS_WR_DELAY,
->>>> +	},
->>>>  	{ /* end of table */ }
->>>>  };
->>>>  
->>>>
->>>
->>>
-> 
-> 
+ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
