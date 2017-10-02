@@ -1,85 +1,72 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
- used as LDOs
-Date: Mon, 2 Oct 2017 22:42:35 +0200
-Message-ID: <20171002204235.25d4437a2p5qzrrj@flea>
-References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
- <20171002120854.5212-13-quentin.schulz@free-electrons.com>
+From: Josh Poimboeuf <jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: 4879b7ae05 ("Merge tag 'dmaengine-4.12-rc1' of .."): WARNING:
+ kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value
+ 000001be
+Date: Mon, 2 Oct 2017 16:26:54 -0500
+Message-ID: <20171002212654.rsm4uj3hfioddldd@treble>
+References: <59d177a7.vsiddgOxdHRIlRvy%fengguang.wu@intel.com>
+ <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wqqx2x777ffcgx3o"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171002120854.5212-13-quentin.schulz@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, lee.jones@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, linux-sunxi@googlegroups.com
+In-Reply-To: <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dma <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 02, 2017 at 01:09:31PM -0700, Linus Torvalds wrote:
+> Bringing in Josh on this, because the merge commit gets fingered
+> because it seems to be an interaction between the new code from the
+> merge and the ORC unwinder changes. It's probably some almost trivial
+> code difference that just causes some code generation to change.
+> 
+> And because Josh wasn't implicated in the merge, he didn't get cc'd by
+> the kernel test robot.
+> 
+> Of course, the stack trace itself seems to be pretty useless, since
+> that randconfig doesn't have KALLSYMS enabled, so it's just random hex
+> numbers.
+> 
+> Josh, original email on lkml and a few other mailing lists, see for example:
+> 
+>     https://www.spinics.net/lists/devicetree/msg196692.html
+> 
+> Any ideas?
 
---wqqx2x777ffcgx3o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The bisect is pointing to a commit which is almost 5 months old, so this
+is pre-ORC.  Kallsyms *is* enabled, but the unwinder dump isn't smart
+enough to realize it's dumping misaligned stack addresses:
 
-On Mon, Oct 02, 2017 at 12:08:54PM +0000, Quentin Schulz wrote:
-> On AXP813/818, GPIO0 and GPIO1 can be used as LDO as (respectively)
-> ldo_io0 and ldo_io1.
->=20
-> Let's add the pinctrl properties to the said regulators.
->=20
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->  arch/arm/boot/dts/axp81x.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-> index f90f257130d5..099b0ddc1bbb 100644
-> --- a/arch/arm/boot/dts/axp81x.dtsi
-> +++ b/arch/arm/boot/dts/axp81x.dtsi
-> @@ -52,6 +52,16 @@
->  		compatible =3D "x-powers,axp813-gpio";
->  		gpio-controller;
->  		#gpio-cells =3D <2>;
-> +
-> +		gpio0_ldo: gpio0_ldo {
-> +			pins =3D "GPIO0";
-> +			function =3D "ldo";
-> +		};
-> +
-> +		gpio1_ldo: gpio1_ldo {
-> +			pins =3D "GPIO1";
-> +			function =3D "ldo";
-> +		};
+[  110.399425] WARNING: kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value 000001be
+[  110.399428] unwind stack type:0 next_sp:  (null) mask:0x2 graph_idx:0
+[  110.399431] bd92bc2e: 92bc7f00 (0x92bc7f00)
+[  110.399433] bd92bc32: c27041bd (0xc27041bd)
 
-The node names are not supposed to contain any hyphens.
+So kallsyms doesn't help if I'm dumping bad data.  Oops.
 
-Thanks!
-Maxime
+I tried to recreate it with the reproducer script and a similar GCC
+version, but no luck.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Fengguang, assuming it's reliably recreatable, any chance you could
+recreate with the following patch?
 
---wqqx2x777ffcgx3o
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ0qS7AAoJEBx+YmzsjxAgUkAQAIhv7hYV4R0prgkHdoQoO+Xu
-akcFEGWnDusYy3UFbQ92ePsI5mFHX6PJZNPDZDGL4GAUwunZk3m8X/tKfniye+uc
-O/MDjyFsS6lJ0WCuC+dN3os20KtokiImM4DW68zzJSMHVzN37HSLPRatspq1heTS
-82QrYa74Xl9UzhUFQf0eFrmniyP3u/ucGFoh0GFmP6GgGkI6xKn52qG/rpy8hbgd
-gtkWz/4/MO9mYWYavVdF9w/P2Tbq+NATsQTZkbchSlPU74fFViP7EHDYD5OLeR7H
-OftC+WIks1Nhl+vQgRXttzX3iaFATddUDwcCR9yX4P/D1kUTFeJNnowXyOojMSMf
-tOfzAYhHVDejwRaBFP7adV6y/DYYJMOwapblZBe2ump2WDO75+F3clCfH+SCD1LU
-de1xca2Go8QF/Amx1KxBEIEIimuvNu1bLak+gbXU58r1iBKI6lImzdfPz7fHlKgN
-IOwqjJi6oN8wbwmteOuOgKF1QgCkBG+6u9YvvTVE3q9AsehDQG9vgSmFY7NoOpyD
-fPSTkuY6VkzES0DSgtsBDIiiKL70vj6W7Y3OvN5KcYdBt9/UsTzI+/MvdqDeFdfE
-HdA0eBp6lqvZ6Mp9+7DdiXqTDE335ycOFaPaD1clrlXsooP4yFyCVEHuajGypCc9
-GMRgjoBhuwXi8V2sd0O9
-=tQBn
------END PGP SIGNATURE-----
-
---wqqx2x777ffcgx3o--
+diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+index 82c6d7f1fd73..64282ec73eb8 100644
+--- a/arch/x86/kernel/unwind_frame.c
++++ b/arch/x86/kernel/unwind_frame.c
+@@ -42,7 +42,7 @@ static void unwind_dump(struct unwind_state *state)
+ 			state->stack_info.type, state->stack_info.next_sp,
+ 			state->stack_mask, state->graph_idx);
+ 
+-	for (sp = state->orig_sp; sp; sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
++	for (sp = PTR_ALIGN(state->orig_sp); sp; sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
+ 		if (get_stack_info(sp, state->task, &stack_info, &visit_mask))
+ 			break;
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
