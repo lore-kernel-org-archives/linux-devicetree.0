@@ -1,67 +1,82 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
- USB2.0 phy channel 3
-Date: Mon, 2 Oct 2017 10:01:20 +0000
-Message-ID: <TY1PR06MB0992C8E958992FC5D109594AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
- <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
- <TY1PR06MB09920BDFB00D2BDA4840877AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add support to LIS2DW12 accel sensor
+Date: Mon, 2 Oct 2017 11:33:12 +0100
+Message-ID: <20171002113312.00000064@huawei.com>
+References: <20170830115043.3738-1-lorenzo.bianconi@st.com>
+        <20170903175210.231b90a8@archlinux>
+        <CAA2SeNKaUhLvLV6iUoirotMtz+nitW5LzLS0una3=BH9v7=0qA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran@ksquared.org.uk>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeNKaUhLvLV6iUoirotMtz+nitW5LzLS0una3=BH9v7=0qA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdl
-ZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMiwgMjAxNyA2OjIwIFBN
-DQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IE9uIE1vbiwgT2N0IDIsIDIwMTcgYXQgMTE6
-MTQgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2Fz
-LmNvbT4gd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206
-IEtpZXJhbiBCaW5naGFtDQo+ID4+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAyLCAyMDE3IDU6NDUg
-UE0NCj4gPj4gT24gMDIvMTAvMTcgMDk6MjAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4g
-Pj4gPiBPbiBNb24sIE9jdCAyLCAyMDE3IGF0IDg6MjkgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+
-ID4+ID4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCjxzbmlwPg0K
-PiA+PiBUaGUgQURWNzQ4MiBpcyBjdXJyZW50bHkgd29ya2luZyB3aXRob3V0IGludGVycnVwdHMg
-YXQgdGhlIG1vbWVudC4gSG93ZXZlciwgSSBkbw0KPiA+PiBoYXZlIGhvdHBsdWcgYW5kIGludGVy
-cnVwdCBoYW5kbGluZyBvbiBteSB0b2RvIGxpc3QsIGFuZCBpbmZhY3QgSSBoYXZlIGFscmVhZHkN
-Cj4gPj4gc3RhcnRlZCBhIHBhdGNoIGFkZGluZyBpbnRlcnJ1cHQgc3VwcG9ydC4NCj4gPj4NCj4g
-Pj4NCj4gPj4gVGhlIERUIGN1cnJlbnRseSBzcGVjaWZpZXMgdGhlIGZvbGxvd2luZyBpbnRlcnJ1
-cHRzIGZvciB0aGUgQURWNzQ4MiwNCj4gPj4NCj4gPj4gKyAgICAgdmlkZW8tcmVjZWl2ZXJANzAg
-ew0KPiA+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkdjc0ODIiOw0KPiA+PiAr
-ICAgICAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmdwaW82PjsNCj4gPj4gKyAgICAgICAg
-ICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAiaW50cnExIiwgImludHJxMiI7DQo+ID4+ICsgICAgICAg
-ICAgICAgaW50ZXJydXB0cyA9IDwzMCBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICA8MzEgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPg0KPiA+IEl0
-IHNlZW1zIEtpZXJhbi1zYW4gaXMgdXNpbmcgbm9uLWNvbmZsaWN0IHBpbnMgd2l0aCB1c2IyLjAg
-Y2gzIDopDQo+ID4gQWNjb3JkaW5nIHRvIHRoZSBib2FyZCBkYXRhc2hlZXQsIEdQNl8zMCBhbmQg
-R1A2XzMxIGFyZSBpbml0aWFsIHNldHRpbmcgZm9yIEFEVjc0ODIgYW5kDQo+ID4gaXQgZG9lc24n
-dCBjb25mbGljdCB3aXRoIFVTQiAyLjAgY2gzIChVU0IyLjAgY2gzIHBpbnMgYXJlIEdQNl8wNCBh
-bmQgR1A2XzIxKS4NCj4gDQo+IENhbiB0aGUgVVNCMi4wIGRyaXZlciB1c2UgR1BJT3MgZm9yIFBX
-RU4gYW5kIE9WQz8NCg0KTm8sIHRoZSBkcml2ZXIgY2Fubm90IHVzZSBHUElPcy4gVGhlc2UgcGlu
-cyBjb250cm9sIGJ5IGEgdXNiIHNwZWNpZmljIHJlZ2lzdGVyDQooZS5nLiBpbiBFSENJLCBiaXQg
-MTQgb2YgUE9SVFNDWzFdIGZvciBQV0VOIGFuZCBiaXQgNCBvZiBQT1JUU0NbMV0gZm9yIE9WQyks
-DQpTbywgSSB0aGluayB3ZSBoYXZlIG5vIGNoYW5nZSB0byB1c2UgR1BJT3MuDQoNCj4gPiBTbywg
-SSB0aGluayB3ZSBjYW4gdXNlIGJvdGggdXNiIDIuMCBjaDMgYW5kIEFEVjc0ODIgaWYgd2UgZG9u
-J3QgY2hhbmdlIHRoZSBTVzMxIGZyb20gaW5pdGlhbCBzZXR0aW5nLg0KPiANCj4gT0suIEJ1dCBp
-biB0aGF0IGNhc2UsIERUIHNob3VsZCBub3QgY29uZmlndXJlIHBpbmN0cmwgZm9yICJ1c2IyX2No
-MyIsDQo+IGJ1dCBpbnN0ZWFkDQo+IGRlc2NyaWJlIHRoYXQgaXQgdXNlcyBHUDZfMDQgYW5kIEdQ
-Nl8yMS4NCg0KSSBnb3QgaXQuIEkgd2lsbCBtb2RpZnkgaXQuDQoNCj4gPiBIb3dldmVyLCB0byBh
-dm9pZCBhbnkgdHJvdWJsZSwgc2hvdWxkIHdlIGV4cGxhaW4gdGhpcyBTVzMxIHNldHRpbmcgaW4g
-dGhlIGR0cyBmaWxlPw0KPiANCj4gWWVzLCBpdCB3b3VsZCBiZSBnb29kIHRvIGRvY3VtZW50IHRo
-YXQuDQoNCkkgZ290IGl0LiBJIHdpbGwgYWRkIGl0Lg0KSSB3aWxsIHN1Ym1pdCB2MiBwYXRjaCB0
-b21vcnJvdyAob3IgbGF0ZXIpLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0K
-DQo+IFRoYW5rcyENCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAg
-ICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVy
-ZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4g
-DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNh
-bGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0
-cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
+On Sun, 1 Oct 2017 15:15:26 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> > On Wed, 30 Aug 2017 13:50:38 +0200
+> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  
+> >> Modify management of drdy line and status register in order to support
+> >> LIS2DW12 device
+> >>
+> >> Changes since v2:
+> >> - swap status register patch (3rd in v2) with irq{1,2} definition one
+> >>   (1st in v2)
+> >> - patchset rebased onto 'fix drdy line configuration for LIS3MDL' patch
+> >> Changes since v1:
+> >> - remove drdy_irq parameter from LPS001WP settings since the sensor
+> >> does not support data-ready interrupts
+> >>
+> >> Lorenzo Bianconi (5):
+> >>   iio: st_sensors: add register mask for status register
+> >>   iio: st_sensors: decouple irq1 configuration parameters from the irq2
+> >>     ones
+> >>   iio: st_sensors: do not always write enable_axis register
+> >>   iio: accel: add support to LIS2DW12
+> >>   dt-bindings: iio: accel: add LIS2DW12 sensor device binding
+> >>
+> >>  .../devicetree/bindings/iio/st-sensors.txt         |   1 +
+> >>  drivers/iio/accel/st_accel.h                       |   2 +
+> >>  drivers/iio/accel/st_accel_core.c                  | 180 +++++++++++++++++----
+> >>  drivers/iio/accel/st_accel_i2c.c                   |   5 +
+> >>  drivers/iio/accel/st_accel_spi.c                   |   5 +
+> >>  drivers/iio/common/st_sensors/st_sensors_core.c    |  35 ++--
+> >>  drivers/iio/common/st_sensors/st_sensors_trigger.c |  16 +-
+> >>  drivers/iio/gyro/st_gyro_core.c                    |  33 ++--
+> >>  drivers/iio/magnetometer/st_magn_core.c            |  16 +-
+> >>  drivers/iio/pressure/st_pressure_core.c            |  46 ++++--
+> >>  include/linux/iio/common/st_sensors.h              |  23 ++-
+> >>  11 files changed, 270 insertions(+), 92 deletions(-)
+> >>  
+> >
+> > I'm happy with the whole series, however it doesn't currently apply
+> > due to various fixes working their way through the fixes branches
+> > of the iio git tree.  I'll try to pick it up once those have unwound.
+> > There is too much going on with this code at the moment to do this
+> > cleanly now.
+> >
+> > Give me a bump if I look like I have forgotten it once it will
+> > apply cleanly to the togreg branch of iio.git.
+> >
+> > If I was being really fussy  this should have had a dependency list
+> > for everything it was dependant on that wasn't currently in mainline.
+> >
+> > Jonathan  
+> 
+> Hi Jonathan,
+> 
+> what about that patchset?
+> Regards,
+> 
+> Lorenzo
+> 
+
+I think I'm still waiting for the fixes to get back round via mainline
+to our upstream tree...   Will check again later this week.
+
+Jonathan
