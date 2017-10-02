@@ -1,18 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] pinctrl: axp209: add support for
- AXP813 GPIOs
-Date: Mon, 2 Oct 2017 22:38:53 +0200
-Message-ID: <20171002203853.ofvrds47il5d6ca6@flea>
+Subject: Re: [PATCH v3 06/12] mfd: axp20x: add pinctrl cell for AXP813
+Date: Mon, 2 Oct 2017 22:39:11 +0200
+Message-ID: <20171002203911.okuubxjb6mag3oym@flea>
 References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
- <20171002120854.5212-6-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-7-quentin.schulz@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="honurdbxvyx4cjfl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4WHZLHAKGQELOT575Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="yyi5vlmikg7lu7rs"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6WHZLHAKGQEJVBKSHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171002120854.5212-6-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20171002120854.5212-7-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,26 +23,22 @@ Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdn
 List-Id: devicetree@vger.kernel.org
 
 
---honurdbxvyx4cjfl
+--yyi5vlmikg7lu7rs
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Oct 02, 2017 at 12:08:47PM +0000, Quentin Schulz wrote:
-> The AXP813 has only two GPIOs. GPIO0 can either be used as a GPIO, an
-> LDO regulator or an ADC. GPIO1 can be used either as a GPIO or an LDO
-> regulator.
-> 
-> Moreover, the status bit of the GPIOs when in input mode is not offset
-> by 4 unlike the AXP209.
+On Mon, Oct 02, 2017 at 12:08:48PM +0000, Quentin Schulz wrote:
+> As GPIO/pinctrl driver now supports AXP813, add a cell for it.
 > 
 > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
+Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---honurdbxvyx4cjfl--
+--yyi5vlmikg7lu7rs--
