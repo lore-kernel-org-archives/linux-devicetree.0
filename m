@@ -1,66 +1,68 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [2/2] hwmon: add dt binding for max1619
-Date: Mon, 2 Oct 2017 09:30:04 -0500
-Message-ID: <CANk1AXQWnmdZADNasZiKJwNtLS0C2yGQbvxitgg-5uKWREZ_dw@mail.gmail.com>
-References: <20170911191649.3344-2-atull@kernel.org> <20171001141301.GA31794@roeck-us.net>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2] mmc: sdhci-xenon: Fix clock resource by adding an optional bus clock
+Date: Mon, 02 Oct 2017 16:32:23 +0200
+Message-ID: <87fub1mxhk.fsf@free-electrons.com>
+References: <20170929130435.6805-1-gregory.clement@free-electrons.com>
+        <20170930104109.60853202@xhacker.debian>
+        <20170930080710.119c0258@windsurf>
+        <20170930141753.7c4e34ea@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171001141301.GA31794-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Linux HWMON List <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20170930141753.7c4e34ea@xhacker.debian> (Jisheng Zhang's message
+        of "Sat, 30 Sep 2017 14:17:53 +0800")
+Sender: stable-owner@vger.kernel.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Omri Itach <omrii@marvell.com>, Hanna Hawa <hannah@marvell.com>, Igal Liberman <igall@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Stabl
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 1, 2017 at 9:13 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On Mon, Sep 11, 2017 at 02:16:49PM -0500, Alan Tull wrote:
->> Add new device tree binding for max1619.
->>
->> Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
->> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->
-> Applied to hwmon-next.
+Hi Jisheng,
+ 
+ On sam., sept. 30 2017, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 
-Thanks!
-Alan
+> Hi Thomas,
+>
+> On Sat, 30 Sep 2017 08:07:10 +0200 Thomas Petazzoni wrote:
+>
+>> Hello,
+>> 
+>> On Sat, 30 Sep 2017 10:41:09 +0800, Jisheng Zhang wrote:
+>> 
+>> > > +	priv->axi_clk = devm_clk_get(&pdev->dev, "axi");
+>> > > +	if (IS_ERR(priv->axi_clk)) {
+>> > > +		err = PTR_ERR(priv->axi_clk);
+>> > > +		if (err == -EPROBE_DEFER)
+>> > > +			goto err_clk;
+>> > > +		priv->axi_clk = NULL;    
+>> > 
+>> > IMHO, this assignment could be removed. What do you think?  
+>> 
+>> No, because if the clock is not present in the Device Tree,
+>> priv->axi_clk will contain an error code encoded as a pointer, so
+>> priv->axi_clk will not be NULL. Hence the rest of the code that will
+>
+> FWICT, the clk_disable_unprepare() could also check whether the clk
+> is err, am I wrong?
+
+You're right, I've jsut checked it.
+So I will remove it to have a smaller fix.
+
+Thanks,
+
+Gregory
 
 >
-> Thanks,
-> Guenter
+>> operate on this clock will believe there is a valid clock pointed by
+>> priv->axi_clk. So we really want to reset it to NULL when there was an
+>> error getting the clock.
+>> 
+>> Best regards,
+>> 
+>> Thomas
 >
->> ---
->>  drivers/hwmon/max1619.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/hwmon/max1619.c b/drivers/hwmon/max1619.c
->> index a182789..76d9669 100644
->> --- a/drivers/hwmon/max1619.c
->> +++ b/drivers/hwmon/max1619.c
->> @@ -303,10 +303,20 @@ static const struct i2c_device_id max1619_id[] = {
->>  };
->>  MODULE_DEVICE_TABLE(i2c, max1619_id);
->>
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id max1619_of_match[] = {
->> +     { .compatible = "maxim,max1619", },
->> +     {},
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, max1619_of_match);
->> +#endif
->> +
->>  static struct i2c_driver max1619_driver = {
->>       .class          = I2C_CLASS_HWMON,
->>       .driver = {
->>               .name   = "max1619",
->> +             .of_match_table = of_match_ptr(max1619_of_match),
->>       },
->>       .probe          = max1619_probe,
->>       .id_table       = max1619_id,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
