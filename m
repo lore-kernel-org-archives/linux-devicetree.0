@@ -1,108 +1,116 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] mtd: spi-nor: cadence-quadspi: Add runtime PM
- support
-Date: Mon, 2 Oct 2017 17:58:55 +0530
-Message-ID: <5bc42364-21e1-56b6-788c-2848b8faa50f@ti.com>
-References: <20170924105924.23923-1-vigneshr@ti.com>
- <20170924105924.23923-6-vigneshr@ti.com>
- <3a1160f9-a0ae-c84c-d209-af97c3c3b0f6@gmail.com>
- <4ee69ea4-14cc-4305-bf3f-8fe76d43bf6b@ti.com>
- <fa700cdf-f0b5-779b-4f38-3138a7612cc2@gmail.com>
- <038919d3-ff32-d0a7-4c0a-3be16436052d@ti.com>
- <e4ad5d80-9093-b667-f0a5-d3105be4e8cf@gmail.com>
- <alpine.DEB.2.20.1709251538420.2472@mgerlach-VirtualBox>
- <fdfe29bf-ff46-7542-8e36-e8e45e1ca85f@gmail.com>
- <7237fa9e-4d3a-8a82-10c6-76737c23ed6f@ti.com>
- <alpine.DEB.2.20.1709280757230.2488@mgerlach-VirtualBox>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] initialize (multiple) PHYs in xhci-plat
+Date: Mon, 02 Oct 2017 14:35:08 +0200
+Message-ID: <1506947708.17300.21.camel@baylibre.com>
+References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
+         <CAFBinCCRM1e08styDV8uodkhonTUPyZrQAdYRz_bfUMe-YP1Rg@mail.gmail.com>
+         <20170918084943.GA19123@kroah.com>
+         <CAFBinCAweHXFbWrF9gW5f_+NeC9jChU1EkRsiLzkaKtOZkEREQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1709280757230.2488@mgerlach-VirtualBox>
-Content-Language: en-US
+In-Reply-To: <CAFBinCAweHXFbWrF9gW5f_+NeC9jChU1EkRsiLzkaKtOZkEREQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, 2017-10-01 at 22:32 +0200, Martin Blumenstingl wrote:
+> Hello Greg, Hello Mathias,
+> 
+> On Mon, Sep 18, 2017 at 10:49 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> > On Sun, Sep 17, 2017 at 10:51:31PM +0200, Martin Blumenstingl wrote:
+> > > Hello Mathias, Hello Greg,
+> > > 
+> > > On Sun, Sep 3, 2017 at 11:38 PM, Martin Blumenstingl
+> > > <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> > > > This series is the outcome of a discussion with Felipe Balbi,
+> > > > see [0] and [1].
+> > > > The quick-summary of this is:
+> > > > - dwc3 already takes one USB2 and one USB3 PHY and initializes these
+> > > >   correct
+> > > > - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
+> > > >   ohci-platform.c) do not have a limitation on the number of PHYs - they
+> > > >   support one PHY per actual host port
+> > > > - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
+> > > >   or three USB2 ports enabled on the internal root-hub. The SoCs also
+> > > >   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
+> > > >   internally "connected" to the dwc3 roothub) need to be powered on,
+> > > >   otherwise USB devices cannot be enumerated (even if just one PHY is
+> > > >   disabled and if the device is plugged into another, enabled port)
+> > > > 
+> > > > In my first attempt to get USB supported on the GXL and GXM SoCs I tried
+> > > > to work-around the problem that I could not pass multiple PHYs to the
+> > > > dwc3 controller.
+> > > > This was rejected by Rob Herring (which was definitely the thing to do
+> > > > in
+> > > > my opinion), see [2]
+> > > > 
+> > > > This series adds a new "platform-roothub". This can be configured
+> > > > through
+> > > > devicetree by passing a child-node with "reg = <0>" to the USB
+> > > > controller. Additionally there has to be a child-node for each port on
+> > > > the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
+> > > > property. This allows modeling the root-hub in devicetree similar to the
+> > > > USB device binding (documented in devicetree/bindings/usb/usb-
+> > > > device.txt)
+> > > > This avoids and backwards-compatibility problems (which was a concern
+> > > > regardless of the solution, see [3]) since the binding for the root-hub
+> > > > was previously not specified (and we're not using the "phys" property of
+> > > > the controller, which might have served different purposes before,
+> > > > depending on the drivers).
+> > > > 
+> > > > Additionally this integrates the new platform-roothub into xhci-plat.c
+> > > > which automatically enables it for the dwc3 driver (in host-mode).
+> > > > 
+> > > > 
+> > > > Changes since RFCv3 at [6]:
+> > > > - moved the DT binding change from patch #3 to patch #1 as suggested
+> > > >   by Rob Herring (and slightly adjusted the commit message to account
+> > > >   for that)
+> > > > - added Tested-by from Chunfeng Yun (who confirmed that the whole
+> > > >   concept and implementation works fine on Mediatek SoCs - many thanks
+> > > >   again!) to patch #2
+> > > > - added Rob Herring's ACK to patches 1 and 3
+> > > > - dropped RFC status (RFCv3 -> PATCH v4)
+> > > 
+> > > I just wanted to rebase this to v4.14-rc1 (now that this is out) -
+> > > however I noticed that v4 still applies to v4.14-rc1 cleanly (the
+> > > patches are still identical to v4 after rebasing).
+> > > 
+> > > we have an ACK from the devicetree maintainers and a "Tested-by" for a
+> > > Mediatek (= non-Amlogic) SoC.
+> > > I already have patches for the Amlogic GXL/GXM platforms queued, those
+> > > are just waiting on this series.
+> > > 
+> > > what is still missing to get this series into v4.15?
+> > 
+> > Well, we couldn't do anything until 4.14-rc1 is out, now that it is, let
+> > us catch up on patch review please...
+> 
+> OK, I understand that.
+> please let me know once you've caught up with the review backlog - as
+> I said I would like to get this into 4.15 if nothing else comes up
+> during the code-review
 
-On 9/28/2017 8:31 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-> 
-> Hi Vignesh,
-> 
-> I tried this patch on an Arria10 SOCFPGA devkit against the 4.1.33-ltsi 
-> kernel, and it did not go well.  Commands to the flash chip timedout 
-> resulting in the probe function failing.  I ran into other problems, not 
-> related to cadence-quadspi, that prevented me from testing against 4.9 and 
-> 4.12 kernels, but I suspect similar behavior.
-> 
+This series works well on the libretech-cc (le potato)
+For the series:
 
-Ok, thanks! I will keep the clk_*() calls for now.
+Tested-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Regards
-Vignesh
-> Matthew Gerlach
+
 > 
-> On Wed, 27 Sep 2017, Vignesh R wrote:
 > 
->> Hi Matthew,
->>
->> On Tuesday 26 September 2017 05:19 AM, Marek Vasut wrote:
->> [...]
->>>>>> Ok thanks! Do you know if pm_runtime_get_sync() can enable clocks for
->>>>>> QSPI on SoCFPGA or if clk_prepare_enable() is needed? Just trying to see
->>>>>> if its possible to get rid of clk_*() calls in favor of pm_*() calls.
->>>>>
->>>>> Not of the top of my head, sorry. +CC Matthew, he should know.
->>>>
->>>> I am not an expert at the clock framework nor the power management, but I
->>>> did ask around a bit.  No one I asked was planning to change the clk_*()
->>>> calls to pm_*() call, but the feedback was that it would be a good idea.
->>>
->>> The question is, if we do the replacement, will it break on socfpga ?
->>> A quick test might be useful.
->>>
->>
->> yes, a quick qspi test with clk_prepare_enable() replaced by pm_*() calls
->> like below patch would be helpful:
->>
->>
->> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
->> index 53c7d8e0327a..7ad3e176cc88 100644
->> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->> @@ -34,6 +34,7 @@
->> #include <linux/sched.h>
->> #include <linux/spi/spi.h>
->> #include <linux/timer.h>
->> +#include <linux/pm_runtime.h>
->>
->> #define CQSPI_NAME                     "cadence-qspi"
->> #define CQSPI_MAX_CHIPSELECT           16
->> @@ -1206,11 +1207,8 @@ static int cqspi_probe(struct platform_device *pdev)
->>                return -ENXIO;
->>        }
->>
->> -       ret = clk_prepare_enable(cqspi->clk);
->> -       if (ret) {
->> -               dev_err(dev, "Cannot enable QSPI clock.\n");
->> -               return ret;
->> -       }
->> +       pm_runtime_enable(dev);
->> +       pm_runtime_get_sync(dev);
->>
->>        cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->>
->>
->>
->>
->>
->> -- 
->> Regards
->> Vignesh
->>
+> Thank you!
+> Regards,
+> Martin
 > 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
