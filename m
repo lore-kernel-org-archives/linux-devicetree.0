@@ -1,92 +1,80 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
  USB2.0 phy channel 3
-Date: Mon, 2 Oct 2017 09:45:07 +0100
-Message-ID: <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
+Date: Mon, 2 Oct 2017 09:14:12 +0000
+Message-ID: <TY1PR06MB09920BDFB00D2BDA4840877AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
 References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
  <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
+ <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
+Content-Language: ja-JP
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran@ksquared.org.uk>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran@ksquared.org.uk>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert, Shimoda-san,
-
-On 02/10/17 09:20, Geert Uytterhoeven wrote:
-> Hi Shimoda-san,
-> 
-> On Mon, Oct 2, 2017 at 8:29 AM, Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com> wrote:
->> This patch enables the USB2.0 phy channel 3. R-Car H3 ES2.0 has
->> this channel and we can use it on the Salvator-XS.
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
->> --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
->> +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
->> @@ -99,6 +99,11 @@
->>                 groups = "usb2";
->>                 function = "usb2";
->>         };
->> +
->> +       usb2_ch3_pins: usb2_ch3 {
->> +               groups = "usb2_ch3";
->> +               function = "usb2_ch3";
->> +       };
->>  };
-> 
-> Using these pins requires changing SW31, disabling the interrupt capabilities
-> of the ADV7482? Does the ADV7482 still work after that?
-
-The ADV7482 is currently working without interrupts at the moment. However, I do
-have hotplug and interrupt handling on my todo list, and infact I have already
-started a patch adding interrupt support.
-
-
-The DT currently specifies the following interrupts for the ADV7482,
-
-+	video-receiver@70 {
-+		compatible = "adi,adv7482";
-+		interrupt-parent = <&gpio6>;
-+		interrupt-names = "intrq1", "intrq2";
-+		interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
-+			     <31 IRQ_TYPE_LEVEL_LOW>;
-
-And the start of interrupt handling looks like: (this is not integrated, nor
-finished):
-
-https://git.kernel.org/pub/scm/linux/kernel/git/kbingham/rcar.git/commit/?h=adv748x/dev&id=82c7d0100edd28fa429c3811c575bad7a4d92cfd
-
-This purely registers the interrupts currently; so if I need to do anything
-differently to handle the USB2 conflict, please let me know.
-
-As for going forwards, I believe that the ADV7482 can actually configure what
-interrupts are triggered on either interrupt source, (INTRQ1/INTRQ2) and
-therefore we could potentially get by with only INTRQ1, (INT 30) if we needed
-to; however it would be good to handle this conflict in a generic way.
-
-
-Regards
-
-Kieran
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+SGkgR2VlcnQtc2FuLCBLaWVyYW4tc2FuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+IEZyb206IEtpZXJhbiBCaW5naGFtDQo+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAyLCAyMDE3
+IDU6NDUgUE0NCj4gDQo+IEhpIEdlZXJ0LCBTaGltb2RhLXNhbiwNCj4gDQo+IE9uIDAyLzEwLzE3
+IDA5OjIwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4gSGkgU2hpbW9kYS1zYW4sDQo+
+ID4NCj4gPiBPbiBNb24sIE9jdCAyLCAyMDE3IGF0IDg6MjkgQU0sIFlvc2hpaGlybyBTaGltb2Rh
+DQo+ID4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPj4gVGhp
+cyBwYXRjaCBlbmFibGVzIHRoZSBVU0IyLjAgcGh5IGNoYW5uZWwgMy4gUi1DYXIgSDMgRVMyLjAg
+aGFzDQo+ID4+IHRoaXMgY2hhbm5lbCBhbmQgd2UgY2FuIHVzZSBpdCBvbiB0aGUgU2FsdmF0b3It
+WFMuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhp
+cm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPg0KPiA+IFJldmlld2VkLWJ5OiBHZWVydCBV
+eXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPiA+DQo+ID4+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk1LXNhbHZhdG9yLXhzLmR0cw0KPiA+PiAr
+KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5NS1zYWx2YXRvci14cy5kdHMN
+Cj4gPj4gQEAgLTk5LDYgKzk5LDExIEBADQo+ID4+ICAgICAgICAgICAgICAgICBncm91cHMgPSAi
+dXNiMiI7DQo+ID4+ICAgICAgICAgICAgICAgICBmdW5jdGlvbiA9ICJ1c2IyIjsNCj4gPj4gICAg
+ICAgICB9Ow0KPiA+PiArDQo+ID4+ICsgICAgICAgdXNiMl9jaDNfcGluczogdXNiMl9jaDMgew0K
+PiA+PiArICAgICAgICAgICAgICAgZ3JvdXBzID0gInVzYjJfY2gzIjsNCj4gPj4gKyAgICAgICAg
+ICAgICAgIGZ1bmN0aW9uID0gInVzYjJfY2gzIjsNCj4gPj4gKyAgICAgICB9Ow0KPiA+PiAgfTsN
+Cj4gPg0KPiA+IFVzaW5nIHRoZXNlIHBpbnMgcmVxdWlyZXMgY2hhbmdpbmcgU1czMSwgZGlzYWJs
+aW5nIHRoZSBpbnRlcnJ1cHQgY2FwYWJpbGl0aWVzDQo+ID4gb2YgdGhlIEFEVjc0ODI/IERvZXMg
+dGhlIEFEVjc0ODIgc3RpbGwgd29yayBhZnRlciB0aGF0Pw0KDQpPb3BzLCBJIG1pc3NlZCB0aGUg
+dXNiMi4wIHBpbnMgYXJlIGNvbm5lY3RlZCB0byBBRFY3NDgyJ3MgaW50ZXJydXB0aW9uIHBpbnMu
+DQpCdXQsDQoNCj4gVGhlIEFEVjc0ODIgaXMgY3VycmVudGx5IHdvcmtpbmcgd2l0aG91dCBpbnRl
+cnJ1cHRzIGF0IHRoZSBtb21lbnQuIEhvd2V2ZXIsIEkgZG8NCj4gaGF2ZSBob3RwbHVnIGFuZCBp
+bnRlcnJ1cHQgaGFuZGxpbmcgb24gbXkgdG9kbyBsaXN0LCBhbmQgaW5mYWN0IEkgaGF2ZSBhbHJl
+YWR5DQo+IHN0YXJ0ZWQgYSBwYXRjaCBhZGRpbmcgaW50ZXJydXB0IHN1cHBvcnQuDQo+IA0KPiAN
+Cj4gVGhlIERUIGN1cnJlbnRseSBzcGVjaWZpZXMgdGhlIGZvbGxvd2luZyBpbnRlcnJ1cHRzIGZv
+ciB0aGUgQURWNzQ4MiwNCj4gDQo+ICsJdmlkZW8tcmVjZWl2ZXJANzAgew0KPiArCQljb21wYXRp
+YmxlID0gImFkaSxhZHY3NDgyIjsNCj4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzY+Ow0K
+PiArCQlpbnRlcnJ1cHQtbmFtZXMgPSAiaW50cnExIiwgImludHJxMiI7DQo+ICsJCWludGVycnVw
+dHMgPSA8MzAgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gKwkJCSAgICAgPDMxIElSUV9UWVBFX0xF
+VkVMX0xPVz47DQoNCkl0IHNlZW1zIEtpZXJhbi1zYW4gaXMgdXNpbmcgbm9uLWNvbmZsaWN0IHBp
+bnMgd2l0aCB1c2IyLjAgY2gzIDopDQpBY2NvcmRpbmcgdG8gdGhlIGJvYXJkIGRhdGFzaGVldCwg
+R1A2XzMwIGFuZCBHUDZfMzEgYXJlIGluaXRpYWwgc2V0dGluZyBmb3IgQURWNzQ4MiBhbmQNCml0
+IGRvZXNuJ3QgY29uZmxpY3Qgd2l0aCBVU0IgMi4wIGNoMyAoVVNCMi4wIGNoMyBwaW5zIGFyZSBH
+UDZfMDQgYW5kIEdQNl8yMSkuDQpTbywgSSB0aGluayB3ZSBjYW4gdXNlIGJvdGggdXNiIDIuMCBj
+aDMgYW5kIEFEVjc0ODIgaWYgd2UgZG9uJ3QgY2hhbmdlIHRoZSBTVzMxIGZyb20gaW5pdGlhbCBz
+ZXR0aW5nLg0KSG93ZXZlciwgdG8gYXZvaWQgYW55IHRyb3VibGUsIHNob3VsZCB3ZSBleHBsYWlu
+IHRoaXMgU1czMSBzZXR0aW5nIGluIHRoZSBkdHMgZmlsZT8NCg0KQmVzdCByZWdhcmRzLA0KWW9z
+aGloaXJvIFNoaW1vZGENCg0KPiBBbmQgdGhlIHN0YXJ0IG9mIGludGVycnVwdCBoYW5kbGluZyBs
+b29rcyBsaWtlOiAodGhpcyBpcyBub3QgaW50ZWdyYXRlZCwgbm9yDQo+IGZpbmlzaGVkKToNCj4g
+DQo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2tiaW5n
+aGFtL3JjYXIuZ2l0L2NvbW1pdC8/aD1hZHY3NDh4L2RldiZpZD04MmM3ZDAxMDBlZGQyOGZhNDI5
+YzM4MTFjDQo+IDU3NWJhZDdhNGQ5MmNmZA0KPiANCj4gVGhpcyBwdXJlbHkgcmVnaXN0ZXJzIHRo
+ZSBpbnRlcnJ1cHRzIGN1cnJlbnRseTsgc28gaWYgSSBuZWVkIHRvIGRvIGFueXRoaW5nDQo+IGRp
+ZmZlcmVudGx5IHRvIGhhbmRsZSB0aGUgVVNCMiBjb25mbGljdCwgcGxlYXNlIGxldCBtZSBrbm93
+Lg0KDQoNCj4gQXMgZm9yIGdvaW5nIGZvcndhcmRzLCBJIGJlbGlldmUgdGhhdCB0aGUgQURWNzQ4
+MiBjYW4gYWN0dWFsbHkgY29uZmlndXJlIHdoYXQNCj4gaW50ZXJydXB0cyBhcmUgdHJpZ2dlcmVk
+IG9uIGVpdGhlciBpbnRlcnJ1cHQgc291cmNlLCAoSU5UUlExL0lOVFJRMikgYW5kDQo+IHRoZXJl
+Zm9yZSB3ZSBjb3VsZCBwb3RlbnRpYWxseSBnZXQgYnkgd2l0aCBvbmx5IElOVFJRMSwgKElOVCAz
+MCkgaWYgd2UgbmVlZGVkDQo+IHRvOyBob3dldmVyIGl0IHdvdWxkIGJlIGdvb2QgdG8gaGFuZGxl
+IHRoaXMgY29uZmxpY3QgaW4gYSBnZW5lcmljIHdheS4NCj4gDQo+IA0KPiBSZWdhcmRzDQo+IA0K
+PiBLaWVyYW4NCj4gDQo+ID4gR3J7b2V0amUsZWV0aW5nfXMsDQo+ID4NCj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICBHZWVydA0KPiA+DQo+ID4gLS0NCj4gPiBHZWVydCBVeXR0ZXJob2V2ZW4g
+LS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsu
+b3JnDQo+ID4NCj4gPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBl
+b3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+ID4gd2hlbiBJJ20gdGFsa2luZyB0
+byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0
+aGF0Lg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFs
+ZHMNCj4gPg0K
