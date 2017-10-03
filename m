@@ -1,48 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/2] of/fdt: skip unflattening of disabled nodes
-Date: Tue,  3 Oct 2017 11:18:15 -0500
-Message-ID: <20171003161815.25999-2-robh@kernel.org>
-References: <20171003161815.25999-1-robh@kernel.org>
+Subject: [PATCH 1/2] of/fdt: add of_fdt_device_is_available function
+Date: Tue,  3 Oct 2017 11:18:14 -0500
+Message-ID: <20171003161815.25999-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171003161815.25999-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nicolas.pitre@linaro.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-For static DT usecases, we don't need the disabled nodes and can skip
-unflattening. This saves a significant amount of RAM in memory constrained
-cases. In one example on STM32F469, the RAM usage goes from 118K to 26K.
-
-There are a few cases in the kernel that modify the status property
-dynamically. These all are changes from enabled to disabled, depend on
-OF_DYNAMIC or are not FDT based (PDT based).
+Add an equivalent function to of_device_is_available for flattened DT, and
+convert the one existing open coded occurrence.
 
 Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
 Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-For more background, see this presentation from Nico:
-
-https://connect.linaro.org/resource/sfo17/sfo17-100/
-
- drivers/of/fdt.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/of/fdt.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index f8c39705418b..efe91c6856a0 100644
+index 27c535af0be8..f8c39705418b 100644
 --- a/drivers/of/fdt.c
 +++ b/drivers/of/fdt.c
-@@ -396,6 +396,10 @@ static int unflatten_dt_nodes(const void *blob,
- 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
- 			continue;
+@@ -132,6 +132,19 @@ bool of_fdt_is_big_endian(const void *blob, unsigned long node)
+ 	return false;
+ }
  
-+		if (!IS_ENABLED(CONFIG_OF_DYNAMIC) &&
-+		    !of_fdt_device_is_available(blob, offset))
-+			continue;
++static bool of_fdt_device_is_available(const void *blob, unsigned long node)
++{
++	const char *status = fdt_getprop(blob, node, "status", NULL);
 +
- 		if (!populate_node(blob, offset, &mem, nps[depth],
- 				   &nps[depth+1], dryrun))
- 			return mem - base;
++	if (!status)
++		return true;
++
++	if (!strcmp(status, "ok") || !strcmp(status, "okay"))
++		return true;
++
++	return false;
++}
++
+ /**
+  * of_fdt_match - Return true if node matches a list of compatible values
+  */
+@@ -605,7 +618,6 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+ 					  int depth, void *data)
+ {
+ 	static int found;
+-	const char *status;
+ 	int err;
+ 
+ 	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
+@@ -625,8 +637,7 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+ 		return 1;
+ 	}
+ 
+-	status = of_get_flat_dt_prop(node, "status", NULL);
+-	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
++	if (!of_fdt_device_is_available(initial_boot_params, node))
+ 		return 0;
+ 
+ 	err = __reserved_mem_reserve_reg(node, uname);
 -- 
 2.11.0
