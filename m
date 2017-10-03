@@ -1,140 +1,145 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 0/2] Add support for Meson MX "SDIO" MMC controller
-Date: Tue,  3 Oct 2017 13:24:15 +0200
-Message-ID: <20171003112417.31860-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Tue, 3 Oct 2017 15:07:17 +0300
+Message-ID: <d2ae09b5-7645-c79c-efcf-69b26adbfc19@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
+ <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
+ <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
+ <9e4e3dc1-85cd-2096-118c-7d0c929b9246@wwwdotorg.org>
+ <5a5ce745-750f-9c8f-5129-c9b0f7aee614@gmail.com>
+ <788f73dc-e011-aa9d-8850-f01ab9459c91@wwwdotorg.org>
+ <795e4b19-b747-74c1-6f92-b961ab4bf822@gmail.com>
+ <4443a8fb-7a4d-922b-2dd3-53236d39a050@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4443a8fb-7a4d-922b-2dd3-53236d39a050-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is the successor to Carlo Caione's "Add support for Amlogic Meson
-MMC driver" series (v5) from [0].
-This new driver is for the "SDIO" controller found in Amlogic Meson6,
-Meson8 and Meson8b SoCs and supports an internal mux to allow connecting
-three cards to it.
+On 03.10.2017 13:32, Jon Hunter wrote:
+> 
+> 
+> On 03/10/17 00:02, Dmitry Osipenko wrote:
+>> On 02.10.2017 20:05, Stephen Warren wrote:
+>>> On 09/29/2017 09:11 PM, Dmitry Osipenko wrote:
+>>>> On 29.09.2017 22:30, Stephen Warren wrote:
+>>>>> On 09/27/2017 02:34 AM, Jon Hunter wrote:
+>>>>>>
+>>>>>> On 27/09/17 02:57, Dmitry Osipenko wrote:
+>>>>>>> On 26.09.2017 17:50, Jon Hunter wrote:
+>>>>>>>>
+>>>>>>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
+>>>>>>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>>>>>>>>> on Tegra20/30 SoC's.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>>>> ---
+>>>>>>>>>    .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23
+>>>>>>>>> ++++++++++++++++++++++
+>>>>>>>>>    1 file changed, 23 insertions(+)
+>>>>>>>>>    create mode 100644
+>>>>>>>>> Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>>>>
+>>>>>>>>> diff --git
+>>>>>>>>> a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>>>> b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>>>> new file mode 100644
+>>>>>>>>> index 000000000000..2af9aa76ae11
+>>>>>>>>> --- /dev/null
+>>>>>>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>>>>>>>> @@ -0,0 +1,23 @@
+>>>>>>>>> +* NVIDIA Tegra AHB DMA controller
+>>>>>>>>> +
+>>>>>>>>> +Required properties:
+>>>>>>>>> +- compatible:    Must be "nvidia,tegra20-ahbdma"
+>>>>>>>>> +- reg:        Should contain registers base address and length.
+>>>>>>>>> +- interrupts:    Should contain one entry, DMA controller interrupt.
+>>>>>>>>> +- clocks:    Should contain one entry, DMA controller clock.
+>>>>>>>>> +- resets :    Should contain one entry, DMA controller reset.
+>>>>>>>>> +- #dma-cells:    Should be <1>. The cell represents DMA request select
+>>>>>>>>> value
+>>>>>>>>> +        for the peripheral. For more details consult the Tegra TRM's
+>>>>>>>>> +        documentation, in particular AHB DMA channel control register
+>>>>>>>>> +        REQ_SEL field.
+>>>>>>>>
+>>>>>>>> What about the TRIG_SEL field? Do we need to handle this here as well?
+>>>>>>>>
+>>>>>>>
+>>>>>>> Actually, DMA transfer trigger isn't related a hardware description. It's
+>>>>>>> up to
+>>>>>>> software to decide what trigger to select. So it shouldn't be in the binding.
+>>>>>>
+>>>>>> I think it could be, if say a board wanted a GPIO to trigger a transfer.
+>>>>>>
+>>>>>>> And I think the same applies to requester... any objections?
+>>>>>>
+>>>>>> Well, the REQ_SEL should definitely be in the binding.
+>>>>>>
+>>>>>> Laxman, Stephen, what are your thoughts on the TRIG_SEL field? Looks
+>>>>>> like we never bothered with it for the APB DMA and so maybe no ones uses
+>>>>>> this.
+>>>>>
+>>>>> I don't think TRIG_SEL should be in the binding, at least at present. While
+>>>>> TRIG_SEL certainly is something used to configure the transfer, I believe the
+>>>>> semantics of the current DMA binding only cover DMA transfers that are initiated
+>>>>> when SW desires, rather than being a combination of after SW programs the
+>>>>> transfer plus some other HW event. So, we always use a default/hard-coded
+>>>>> TRIG_SEL value. As such, there's no need for a TRIG_SEL value in DT. There's
+>>>>> certainly no known use-case that requires a non-default TRIG_SEL value at
+>>>>> present. We could add an extra #dma-cells value later if we find a use for it,
+>>>>> and the semantics of that use-case make sense to add it to the DMA specifier,
+>>>>> rather than some other separate higher-level property/driver/...
+>>>>
+>>>> Thank you for the comment. If we'd want to extend the binding further with the
+>>>> trigger, how to differentiate trigger from the requester in a case of a single
+>>>> #data-cell?
+>>>>
+>>>> Of course realistically a chance that the further extension would be needed is
+>>>> very-very low, so we may defer the efforts to solve that question and for now
+>>>> make driver aware of the potential #dma-cells extension.
+>>>
+>>> The request selector cell isn't optional, so is always present. If we later add
+>>> an optional trig_sel cell, we'll either have:
+>>>
+>>> #dma-cells=<1>: req_sel
+>>>
+>>> or:
+>>>
+>>> #dma-cells=<2>: req_sel, trig_sel
+>>
+>> Why request sel. couldn't be optional? Could you please elaborate a bit more?
+>>
+>> I think possible options are:
+>>
+>> #dma-cells=<1>: req_sel
+>> #dma-cells=<1>: trig_sel
+> 
+> With the above, how would you know that it is the req_sel or trig_sel
+> that is specified?
+> 
+>> #dma-cells=<2>: req_sel, trig_sel
+>>
+>> The only difference between request and trigger is that trigger issues the whole
+>> transfer, while request only a single burst. Isn't it possible to have a case in
+>> HW for the "trigger-only" option? If not or it's a rareness, then I agree that
+>> REQ_SEL must be mandatory.
+> 
+> I think that what Stephen is proposing is that for now we go with
+> '#dma-cells=<1>' and if we ever need to support the trigger cell we
+> could add support for '#dma-cells=<2>'. So with this proposal the
+> 'req_sel' would always be required for both '#dma-cells=<1>' and
+> '#dma-cells=<2>'. Even if the req_sel is not actually used but the
+> 'trig_sel' is, the user would have to set 'req_sel' to some pre-defined
+> value (eg. -1) where we know to ignore it.
+> 
 
-There are devices out there which actually need the mux feature of this
-HW, one example is the Endless Mini (EC-100):
-(the Meson8b SoC itself has only two MMC controllers)
-- an eMMC module (connected to a yet unsupported MMC controller)
-- an internal SD card (connected to the SDIO controller from this
-  series)
-- a RTL8723BS wifi SDIO card (also connected to the SDIO controller
-  from this series)
-
-
-changes since RFC v2 at [2]:
-- removed struct meson_mx_mmc_slot and merged it's members into
-  meson_mx_mmc_host. I could *not* remove the platform_device_create()
-  (which registers a sub-device for the slot) because without that
-  we cannot get mmc_of_parse() to parse the slot's node instead of the
-  parent (= controller's) node.
-  This also required some small restructuring of the probe related code
-  by using the "mmc-slot" node detection and mmc_alloc_host() earlier
-  in .probe()
-- added Rob's ACK to the dt-binding patch
-- added a note to the dt-binding doc that there is currently a driver
-  limitation and only one slot is supported
-- added reference to a board which actually needs the MMC mux support
-  (information only, just in case someone wants to know why it's
-  needed at all)
-- dropped RFC status of the patches
-
-changes since RFC v1 at [1]:
-- added COMMON_CLK dependency as reported by the kbuild test robot
-- use of_platform_device_{create,destroy} instead of open-coding it's
-  logic
-- moved struct device (which was an array) from meson_mx_mmc_host to
-  the corresponding meson_mx_mmc_slot
-- use struct mmc_command's busy_timeout instead of hard-coding the
-  timeout values in meson_mx_mmc_start_cmd()
-- don't use arrays with only one element for the clock parents in
-  meson_mx_mmc_register_clks()
-- removed the wrapper functions meson_mx_mmc_readl() meson_mx_mmc_writel()
-- allow setting the MMC clock to 0 for UHS speed mode (the actual
-  hardware clock cannot be gated as far as I know, so instead the
-  lowest supported rate is chosen)
-- remove unused #include <linux/init.h>
-- add MMC_CAP_ERASE
-- removed multiple slot support after discussing this with Ulf
-  (this is a feature that needs to be part of the MMC core before drivers
-  can use it)
-- removed SDIO interrupt support (as I currently don't have a way to
-  test it)
-- merge meson_mx_mmc_apply_ios into meson_mx_mmc_set_ios (as that's
-  the only place where it's needed after removing multiple slot support)
-- updated the commit message of the driver patch to indicate the
-  difference between the meson-mx-sdio.c and meson-gx.c (and the "still
-  missing SDHC") driver
-- NOTE: I did not add Rob's ACK on the dt-bindings patch because I
-  introduced the "mmc-slot" compatible for the child nodes as suggested
-  by Ulf (and I want confirmation from the DT maintainers that I did this
-  correctly)
-
-
-(notable) changes since Carlo's latest from [0] version are:
-- renamed the driver to meson-mx-sdio (Amlogic's reference kernel calls
-  the driver "aml_sdio" as there is a second MMC controller in these SoCs
-  which they call the "SDHC controller"). do the same with our driver to
-  avoid confusion once we add support for the second controller (which uses
-  a completely different register layout)
-- add support for the internal "mux" in this MMC controller (which allows
-  connecting up to three devices to the the controller - at the cost of
-  performance though since the controller can only process one request at
-  a time). The driver registers a new device for each sub-node, which is
-  then fed into the MMC framework to allow per-slot configuration using
-  devicetree (see the example in the documentation)
-- use the common clock framework internally for managing the MMC clock
-  (there is a fixed-factor clock in the controller which takes clk81 as
-   input and divides it's clock by two and a divider clock which takes
-   the result from the fixed-factor clock as input)
-- support the regulators provided by the MMC framework
-- support for GPIO-based card-detection and read-only-detection through
-  the MMC framework
-- use of the <linux/bitfield.h> FIELD_PREP and FIELD_GET macros where it
-  make sense (and thus the code easier to read)
-- re-worked locking (based on the locking in dw_mmc as that also provides
-  multiple "MMC slots")
-
-
-tests done so far (use-cases which involve two cards were done only with
-RFC v1):
-- reading an OLD 256MiB SD card (which uses only a 1-bit bus) works fine
-  (sha1sum of the whole device matches with what I get on my PC's
-  card-reader)
-- reading a somewhat more modern class 10 SD card and putting Arch Linux
-  ARM on it (and using that as root file system)
-- it successfully detects the RTL8723BS SDIO wifi chip in my device (even
-  if the SD card is also enabled)
-- reading a 128MiB file from the SD card while scanning wifi networks on
-  the RTL8723BS card does not seem to result in any corruption (sha1sum
-  of the read file seems to match)
-- read speed of my class 10 SD card: ~15MiB/s
-- (unfortunately I could NOT test downloading a file over wifi to the SD
-  card because the RTL8723BS driver refuses to see any wifi networks, but
-  that might be a problem on the RTL8723BS driver side since I don't get
-  any error and the driver has just landed a few weeks ago in staging)
-
-
-[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/412136.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-May/003466.html
-[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-September/004778.html
-
-Carlo Caione (2):
-  dt-bindings: mmc: Document the Amlogic Meson8 and Meson8b SDIO
-    bindings
-  mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b
-    SoCs
-
- .../bindings/mmc/amlogic,meson-mx-sdio.txt         |  54 ++
- drivers/mmc/host/Kconfig                           |  13 +
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/meson-mx-sdio.c                   | 769 +++++++++++++++++++++
- 4 files changed, 837 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.txt
- create mode 100644 drivers/mmc/host/meson-mx-sdio.c
-
--- 
-2.14.2
-
+Okay, I see now. Thank you for the clarification, but then we should have that
+pre-defined value declared in the binding?
