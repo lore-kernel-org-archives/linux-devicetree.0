@@ -1,42 +1,37 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Tue, 3 Oct 2017 09:17:31 +0200
-Message-ID: <CAMuHMdUNrAv4oYk1kwikGwKBXLBHO7p=CrHK4w0-BSQ2gQNx3g@mail.gmail.com>
-References: <1506628736.28192.9.camel@hp800z> <CAL_Jsq+Hxjf8PecU+ZpCoFqbKAYJtzHpFco2Wsi_KT499fb-=g@mail.gmail.com>
- <1506973580.17981.5.camel@hp800z>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH] of: do not leak console options
+Date: Tue, 3 Oct 2017 09:20:07 +0200
+Message-ID: <20171003072007.GB9706@pathway.suse.cz>
+References: <20170926062510.4948-1-sergey.senozhatsky@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506973580.17981.5.camel@hp800z>
+Content-Disposition: inline
+In-Reply-To: <20170926062510.4948-1-sergey.senozhatsky@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robherring2@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, David Gibson <david@gibson.dropbear.id.au>, Tom Rini <trini@konsulko.com>, Franklin S Cooper Jr <fcooper@ti.com>, Matt Porter <mporter@konsulko.com>, Simon Glass <sjg@chromium.org>, Phil Elwell <philip.j.elwell@gmail.com>, Marek Vasut <marex@denx.de>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pantelis,
+On Tue 2017-09-26 15:25:10, Sergey Senozhatsky wrote:
+> Do not strdup() console options. It seems that the only reason for
+> it to be strdup()-ed was a compilation warning: printk, UART and
+> console drivers, for some reason, expect char pointer instead of
+> const char pointer. So we can just pass `of_stdout_options', but
+> need to cast it to char pointer. A better fix would be to change
+> printk, console drivers and UART to accept const char `options';
+> but that will take time - there are lots of drivers to update.
+> 
+> The patch also fixes a possible memory leak: add_preferred_console()
+> can fail, but we don't kfree() options.
+> 
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-On Mon, Oct 2, 2017 at 9:46 PM, Pantelis Antoniou
-<pantelis.antoniou@konsulko.com> wrote:
->     # Note that the YAML example must be validated against this binding
->     # to be an accepted entry
+Of course, it would be better to change add_preferred_console().
+But it would trigger many other changes. This alternative
+"temporary" change looks safe to me. Feel free to use
 
-Indeed ;-)
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
->       yaml: |
->         sk11@0:
->           compatible: "skel,sk11"
->           reg: 0
->           sip-max-frequency: 1000000
-
-s/sip-max-frequency/spi-max-frequency/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best Regards,
+Petr
