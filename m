@@ -1,55 +1,80 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v10 00/24] Unified fwnode endpoint parser, async
- sub-device notifier support, N9 flash DTS
-Date: Tue, 3 Oct 2017 02:04:50 +0200
-Message-ID: <CAJZ5v0g4MUx8xaZjBwfVtYnad2+-ftkjk6Y51VRxS86YZar3oQ@mail.gmail.com>
-References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: 4879b7ae05 ("Merge tag 'dmaengine-4.12-rc1' of .."): WARNING:
+ kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value
+ 000001be
+Date: Mon, 2 Oct 2017 20:17:17 -0500
+Message-ID: <20171003011717.gl6sbyoykb3lzhed@treble>
+References: <59d177a7.vsiddgOxdHRIlRvy%fengguang.wu@intel.com>
+ <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw@mail.gmail.com>
+ <20171002212654.rsm4uj3hfioddldd@treble>
+ <CA+55aFwo4U3vHFtKyCrGaumcfCMszfS48QSxNfEC3pD5wLxQnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, Rob Herring <robh@kernel.org>, hverkuil@xs4all.nl, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Mika Westerberg <mika.westerberg@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+55aFwo4U3vHFtKyCrGaumcfCMszfS48QSxNfEC3pD5wLxQnA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <fengguang.wu@intel.com>, LKP <lkp@01.org>, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dma <dmaengine@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, LKML <linux-kernel@vger.kernel.org>, wfg@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Oct 02, 2017 at 02:58:08PM -0700, Linus Torvalds wrote:
+> On Mon, Oct 2, 2017 at 2:26 PM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > The bisect is pointing to a commit which is almost 5 months old, so this
+> > is pre-ORC.  Kallsyms *is* enabled, but the unwinder dump isn't smart
+> > enough to realize it's dumping misaligned stack addresses:
+> 
+> Ahh, I didn't pick up on that "esp isn't aligned" part.
+> 
+> That said, if %esp gets unaligned at some point, it's not clear
+> exactly when we should align it. An unaligned stack pointer will
+> continue to _work_ just potentially perform fairly badly.
 
-On Mon, Sep 11, 2017 at 9:59 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> Hi folks,
->
-> We have a large influx of new, unmerged, drivers that are now parsing
-> fwnode endpoints and each one of them is doing this a little bit
-> differently. The needs are still exactly the same for the graph data
-> structure is device independent. This is still a non-trivial task and the
-> majority of the driver implementations are buggy, just buggy in different
-> ways.
->
-> Facilitate parsing endpoints by adding a convenience function for parsing
-> the endpoints, and make the omap3isp and rcar-vin drivers use them as an
-> example.
->
-> To show where we're getting with this, I've added support for async
-> sub-device notifier support that is notifiers that can be registered by
-> sub-device drivers as well as V4L2 fwnode improvements to make use of them
-> and the DTS changes for the Nokia N9. Some of these patches I've posted
-> previously in this set here:
->
-> <URL:http://www.spinics.net/lists/linux-media/msg118764.html>
->
-> Since that, the complete callback of the master notifier registering the
-> V4L2 device is only called once all sub-notifiers have been completed as
-> well. This way the device node creation can be postponed until all devices
-> have been successfully initialised.
->
-> With this, the as3645a driver successfully registers a sub-device to the
-> media device created by the omap3isp driver. The kernel also has the
-> information it's related to the sensor driven by the smiapp driver but we
-> don't have a way to expose that information yet.
+True, but unaligned stacks seem to be very rare, and I don't remember
+ever seeing one with frame pointers enabled.  I think the call return
+addresses will always be aligned, so I think it makes sense to align the
+starting address before dumping.
 
-I don't see core changes in this set, so I'm assuming it to be
-targeted at the users of endpoints etc.
+> But more likely, we picked the wrong frame value to begin with.
 
-Thanks,
-Rafael
+Agreed.
+
+> For example, maybe that decode_frame_pointer() logic really should
+> check not that the low bit in bp is set, but instead check that it's a
+> valid "unsigned long *" that has the low bit set.
+> 
+> IOW, the difference would be that instead of checking
+> 
+>         if (!(regs & 0x1))
+>                 return NULL;
+> 
+> if would check
+> 
+>         if ((regs & (sizeof(unsigned long)-1)) != 1)
+>                 return NULL;
+
+Yeah, that would be an improvement.
+
+> but also maybe add logic to simply not trust a next frame pointer that
+> isn't appropriately aligned.
+
+Also a good idea.
+
+> So I think adding PTR_ALIGN() there in the unwind dumper might be a
+> bit late. By that time it has already accepted what looks like a
+> garbage frame. No?
+
+Yeah, maybe.  I guess it really depends on what exactly the root cause
+is.  It got a bad frame pointer somehow, but maybe not *too* bad because
+it still ended up in the task stack somehow.  It's not clear how that
+happened, but it's possible the task stack had some clues about what led
+up to it.
+
+I'll implement your suggestions in addition to the patch to align sp in
+the dump code.  Having all of them together would hopefully enable the
+unwinder to detect a bad condition as early as possible and also do a
+better job at dumping it.
+
+-- 
+Josh
