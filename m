@@ -1,75 +1,60 @@
-From: Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: 4879b7ae05 ("Merge tag 'dmaengine-4.12-rc1' of .."): WARNING:
- kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value
- 000001be
-Date: Tue, 3 Oct 2017 11:45:38 +0800
-Message-ID: <20171003034538.ntvuwtm2uha6wt6h@wfg-t540p.sh.intel.com>
-References: <59d177a7.vsiddgOxdHRIlRvy%fengguang.wu@intel.com>
- <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw@mail.gmail.com>
- <20171002212654.rsm4uj3hfioddldd@treble>
- <20171002213109.5n3skzy76edhwkvf@treble>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171002213109.5n3skzy76edhwkvf@treble>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dma <dmaengine@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, LKML <linux-kernel@vger.kernel.org>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 00/12] of: overlay: clean up device tree overlay code
+Date: Mon,  2 Oct 2017 20:53:34 -0700
+Message-ID: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-On Mon, Oct 02, 2017 at 04:31:09PM -0500, Josh Poimboeuf wrote:
->On Mon, Oct 02, 2017 at 04:26:54PM -0500, Josh Poimboeuf wrote:
->> Fengguang, assuming it's reliably recreatable, any chance you could
->> recreate with the following patch?
+I have found the device tree overlay code to be difficult to read and
+maintain.  This patch series attempts to improve that situation.
 
-Sure, I'll try your patch on v4.14-rc3 since it looks the most
-reproducible kernel. For the bisected 4879b7ae05, the warning only
-shows up once out of 909 boots according to the below stats. So I'm
-not sure whether it's the _first_ bad commit. To double confirm, I
-just queued 5000 more boot tests for each of its parent commits.
+The cleanup includes some changes visible to users of overlays.  The
+only in kernel user of overlays is fixed up for those changes.  The
+in kernel user is:
 
-> ecc721a72c  Merge tag 'pwm/for-4.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm
-> be13ec668d  Merge branch 'topic/pl330' into for-linus
-> 4879b7ae05  Merge tag 'dmaengine-4.12-rc1' of git://git.infradead.org/users/vkoul/slave-dma
-> 9e66317d3c  Linux 4.14-rc3
-> 1418b85217  Add linux-next specific files for 20170929
-> +-------------------------------------------------------+------------+------------+------------+-----------+---------------+
-> |                                                       | ecc721a72c | be13ec668d | 4879b7ae05 | v4.14-rc3 | next-20170929 |
-> +-------------------------------------------------------+------------+------------+------------+-----------+---------------+
-> | boot_successes                                        | 1009       | 1009       | 909        | 5         | 510           |
-> | boot_failures                                         | 0          | 0          | 1          | 4         | 153           |
-> | WARNING:kernel_stack                                  | 0          | 0          | 1          | 3         | 111           |
-> | BUG:unable_to_handle_kernel                           | 0          | 0          | 0          | 3         | 48            |
-> | Oops:#[##]                                            | 0          | 0          | 0          | 3         | 48            |
-> | EIP:update_stack_state                                | 0          | 0          | 0          | 3         | 48            |
-> | Kernel_panic-not_syncing:Fatal_exception_in_interrupt | 0          | 0          | 0          | 3         | 48            |
-> | invoked_oom-killer:gfp_mask=0x                        | 0          | 0          | 0          | 1         | 16            |
-> | Mem-Info                                              | 0          | 0          | 0          | 1         | 16            |
-> | EIP:clear_user                                        | 0          | 0          | 0          | 0         | 2             |
-> | EIP:copy_page_to_iter                                 | 0          | 0          | 0          | 0         | 1             |
-> +-------------------------------------------------------+------------+------------+------------+-----------+---------------+
+   drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
 
->Sorry, here's a version which actually compiles.
+Following the cleanup patches are a set of patches to fix various
+issues.
 
-OK.
+The first five patches are intended to not make any functional
+changes, and are segrated to ease review.
 
-Thanks,
-Fengguang
+Frank Rowand (12):
+  of: overlay.c: Remove comments that state the obvious, to reduce
+    clutter
+  of: overlay.c: Convert comparisons to zero or NULL to logical
+    expressions
+  of: overlay: rename identifiers to more reflect what they do
+  of: overlay: rename identifiers in dup_and_fixup_symbol_prop()
+  of: overlay: minor restructuring
+  of: overlay: detect cases where device tree may become corrupt
+  of: overlay: expand check of whether overlay changeset can be removed
+  of: overlay: loosen overly strict phandle clash check
+  of: overlay: avoid race condition between applying multiple overlays
+  of: overlay: simplify applying symbols from an overlay
+  of: overlay: remove a dependency on device node full_name
+  of: overlay: remove unneeded check for NULL kbasename()
 
->diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
->index d145a0b1f529..00234fa5a33a 100644
->--- a/arch/x86/kernel/unwind_frame.c
->+++ b/arch/x86/kernel/unwind_frame.c
->@@ -44,7 +44,8 @@ static void unwind_dump(struct unwind_state *state)
-> 			state->stack_info.type, state->stack_info.next_sp,
-> 			state->stack_mask, state->graph_idx);
->
->-	for (sp = state->orig_sp; sp; sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
->+	for (sp = PTR_ALIGN(state->orig_sp, sizeof(long)); sp;
->+	     sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
-> 		if (get_stack_info(sp, state->task, &stack_info, &visit_mask))
-> 			break;
->
+ Documentation/devicetree/overlay-notes.txt   |   12 +-
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |   15 +-
+ drivers/of/base.c                            |    2 +-
+ drivers/of/dynamic.c                         |  137 +++-
+ drivers/of/of_private.h                      |   10 +-
+ drivers/of/overlay.c                         | 1024 ++++++++++++++++----------
+ drivers/of/unittest.c                        |   80 +-
+ include/linux/of.h                           |   33 +-
+ 8 files changed, 871 insertions(+), 442 deletions(-)
+
+-- 
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
