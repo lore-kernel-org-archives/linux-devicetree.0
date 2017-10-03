@@ -1,74 +1,27 @@
-From: Chris Moore <moore-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 3/4] nvmem: add a driver for the Amlogic
- Meson6/Meson8/Meson8b SoCs
-Date: Tue, 3 Oct 2017 06:48:25 +0200
-Message-ID: <cd1e7f9c-5aff-8f4c-82b0-c58c2de4c253@free.fr>
-References: <20171001125700.1520-1-martin.blumenstingl@googlemail.com>
- <20171001125700.1520-4-martin.blumenstingl@googlemail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/3] arm64: dts: renesas: fix avb_pins on some boards
+Date: Tue,  3 Oct 2017 13:57:10 +0900
+Message-ID: <1507006633-28258-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171001125700.1520-4-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch set is based on the renesas.git /
+renesas-devel-20171002-v4.14-rc3 tag.
 
-Sorry in advance if I am being extremely stupid here.
+Yoshihiro Shimoda (3):
+  arm64: dts: renesas: salvator-common: drop "avb_phy_int" from avb_pins
+  arm64: dts: renesas: ulcb: drop "avb_phy_int" from avb_pins
+  arm64: dts: renesas: r8a77995: draak: drop "avb_phy_int" from avb_pins
 
-Le 01/10/2017 à 14:56, Martin Blumenstingl a écrit :
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts   | 3 +--
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi | 3 +--
+ arch/arm64/boot/dts/renesas/ulcb.dtsi            | 3 +--
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
-[snip]
-
-> +static int meson_mx_efuse_read(void *context, unsigned int offset,
-> +			       void *buf, size_t bytes)
-> +{
-> +	struct meson_mx_efuse *efuse = context;
-> +	u32 tmp;
-> +	int err, i, addr;
-> +
-> +	err = meson_mx_efuse_hw_enable(efuse);
-> +	if (err)
-> +		return err;
-> +
-> +	meson_mx_efuse_mask_bits(efuse, MESON_MX_EFUSE_CNTL1,
-> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE,
-> +				 MESON_MX_EFUSE_CNTL1_AUTO_RD_ENABLE);
-> +
-> +	for (i = offset; i < offset + bytes; i += efuse->config.word_size) {
-> +		addr = i / efuse->config.word_size;
-> +
-> +		err = meson_mx_efuse_read_addr(efuse, addr, &tmp);
-> +		if (err)
-> +			break;
-> +
-> +		memcpy(buf + i, &tmp, efuse->config.word_size);
-> +	}
-
-This will not give the expected result if offset is not a multiple of 
-efuse->config.word_size.
-This will cause buffer overflow if bytes is not a multiple of 
-efuse->config.word_size.
-Shouldn't there at least be some sort of test on offset and bytes?
-
-Also this doesn't look endian-safe, but maybe it is.
-
-Old-timer remarks:
-- I try to avoid divisions where possible but I suppose they are very 
-low-cost on recent hardware.
-- I don't like arithmetic on void pointers but I know it is supported by 
-gcc (and possibly by recent C standards too).
-
-Sorry again for the noise if I am being stupid.
-
-Cheers,
-Chris
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
