@@ -1,135 +1,62 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
- DMA controller
-Date: Tue, 3 Oct 2017 09:38:07 -0600
-Message-ID: <ecf50d7b-59d2-7b98-5d45-e95922e495bf@wwwdotorg.org>
-References: <cover.1506380746.git.digetx@gmail.com>
- <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
- <bee2a524-0891-01e1-4e03-f6cf6a89e6b1@nvidia.com>
- <96bfdacb-3d2d-66b6-70f7-a87664b1afc7@gmail.com>
- <0fd316e9-3584-e9bd-2a8b-e73eaa6a9a48@nvidia.com>
- <9e4e3dc1-85cd-2096-118c-7d0c929b9246@wwwdotorg.org>
- <5a5ce745-750f-9c8f-5129-c9b0f7aee614@gmail.com>
- <788f73dc-e011-aa9d-8850-f01ab9459c91@wwwdotorg.org>
- <795e4b19-b747-74c1-6f92-b961ab4bf822@gmail.com>
- <4443a8fb-7a4d-922b-2dd3-53236d39a050@nvidia.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 1/2] pinctrl: rza1: add support for RZ/A1L
+Date: Tue, 3 Oct 2017 15:40:51 +0000
+Message-ID: <SG2PR06MB1165669027CDC7F76808EADB8A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20171003073334.18917-1-chris.brandt@renesas.com>
+ <20171003073334.18917-2-chris.brandt@renesas.com>
+ <20171003083148.GG4037@w540>
+ <SG2PR06MB1165EE1D21AFC1D3005308538A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20171003150412.GI4037@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <4443a8fb-7a4d-922b-2dd3-53236d39a050@nvidia.com>
-Content-Language: en-GB
-Sender: linux-clk-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171003150412.GI4037@w540>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2017 04:32 AM, Jon Hunter wrote:
-> 
-> 
-> On 03/10/17 00:02, Dmitry Osipenko wrote:
->> On 02.10.2017 20:05, Stephen Warren wrote:
->>> On 09/29/2017 09:11 PM, Dmitry Osipenko wrote:
->>>> On 29.09.2017 22:30, Stephen Warren wrote:
->>>>> On 09/27/2017 02:34 AM, Jon Hunter wrote:
->>>>>>
->>>>>> On 27/09/17 02:57, Dmitry Osipenko wrote:
->>>>>>> On 26.09.2017 17:50, Jon Hunter wrote:
->>>>>>>>
->>>>>>>> On 26/09/17 00:22, Dmitry Osipenko wrote:
->>>>>>>>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
->>>>>>>>> on Tegra20/30 SoC's.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>> ---
->>>>>>>>>     .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23
->>>>>>>>> ++++++++++++++++++++++
->>>>>>>>>     1 file changed, 23 insertions(+)
->>>>>>>>>     create mode 100644
->>>>>>>>> Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>>>>>
->>>>>>>>> diff --git
->>>>>>>>> a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>>>>> b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>>>>> new file mode 100644
->>>>>>>>> index 000000000000..2af9aa76ae11
->>>>>>>>> --- /dev/null
->>>>>>>>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>>>>>>>> @@ -0,0 +1,23 @@
->>>>>>>>> +* NVIDIA Tegra AHB DMA controller
->>>>>>>>> +
->>>>>>>>> +Required properties:
->>>>>>>>> +- compatible:    Must be "nvidia,tegra20-ahbdma"
->>>>>>>>> +- reg:        Should contain registers base address and length.
->>>>>>>>> +- interrupts:    Should contain one entry, DMA controller interrupt.
->>>>>>>>> +- clocks:    Should contain one entry, DMA controller clock.
->>>>>>>>> +- resets :    Should contain one entry, DMA controller reset.
->>>>>>>>> +- #dma-cells:    Should be <1>. The cell represents DMA request select
->>>>>>>>> value
->>>>>>>>> +        for the peripheral. For more details consult the Tegra TRM's
->>>>>>>>> +        documentation, in particular AHB DMA channel control register
->>>>>>>>> +        REQ_SEL field.
->>>>>>>>
->>>>>>>> What about the TRIG_SEL field? Do we need to handle this here as well?
->>>>>>>>
->>>>>>>
->>>>>>> Actually, DMA transfer trigger isn't related a hardware description. It's
->>>>>>> up to
->>>>>>> software to decide what trigger to select. So it shouldn't be in the binding.
->>>>>>
->>>>>> I think it could be, if say a board wanted a GPIO to trigger a transfer.
->>>>>>
->>>>>>> And I think the same applies to requester... any objections?
->>>>>>
->>>>>> Well, the REQ_SEL should definitely be in the binding.
->>>>>>
->>>>>> Laxman, Stephen, what are your thoughts on the TRIG_SEL field? Looks
->>>>>> like we never bothered with it for the APB DMA and so maybe no ones uses
->>>>>> this.
->>>>>
->>>>> I don't think TRIG_SEL should be in the binding, at least at present. While
->>>>> TRIG_SEL certainly is something used to configure the transfer, I believe the
->>>>> semantics of the current DMA binding only cover DMA transfers that are initiated
->>>>> when SW desires, rather than being a combination of after SW programs the
->>>>> transfer plus some other HW event. So, we always use a default/hard-coded
->>>>> TRIG_SEL value. As such, there's no need for a TRIG_SEL value in DT. There's
->>>>> certainly no known use-case that requires a non-default TRIG_SEL value at
->>>>> present. We could add an extra #dma-cells value later if we find a use for it,
->>>>> and the semantics of that use-case make sense to add it to the DMA specifier,
->>>>> rather than some other separate higher-level property/driver/...
->>>>
->>>> Thank you for the comment. If we'd want to extend the binding further with the
->>>> trigger, how to differentiate trigger from the requester in a case of a single
->>>> #data-cell?
->>>>
->>>> Of course realistically a chance that the further extension would be needed is
->>>> very-very low, so we may defer the efforts to solve that question and for now
->>>> make driver aware of the potential #dma-cells extension.
->>>
->>> The request selector cell isn't optional, so is always present. If we later add
->>> an optional trig_sel cell, we'll either have:
->>>
->>> #dma-cells=<1>: req_sel
->>>
->>> or:
->>>
->>> #dma-cells=<2>: req_sel, trig_sel
->>
->> Why request sel. couldn't be optional? Could you please elaborate a bit more?
-
-The documentation currently says it's mandatory, and DT bindings must be 
-evolved in a backwards-compatible fashion.
-
->> I think possible options are:
->>
->> #dma-cells=<1>: req_sel
->> #dma-cells=<1>: trig_sel
-> 
-> With the above, how would you know that it is the req_sel or trig_sel
-> that is specified?
-
-Also, if req_sel were optional, then it'd be impossible to distinguish 
-between those cases, so we can't design a binding like that. In general, 
-when adding extra optional cells to an #xxx-cells style binding, then 
-whenever cell N is present, all cells before cell N must be present even 
-if optional.
+SGkgSmFjb3BvLA0KDQpPbiBUdWVzZGF5LCBPY3RvYmVyIDAzLCAyMDE3IDEsIGphY29wbyBtb25k
+aSB3cm90ZToNCj4gPiBBcyBmb3IgU1NJLCB0aGUgbWFudWFsIHNheXMgb25seSB0aGUgU1NJVHgg
+cGlucyBuZWVkIGJpLWRpciwgbm90IHRoZQ0KPiA+IFNTSVJ4IHBpbnMuDQo+IA0KPiBMb29raW5n
+IGF0IFJaL0ExSCB0YWJsZXMgeW91J3JlIHJpZ2h0LiBJIHdvbmRlciB3aHkgaW4gUlovQTFMIFNT
+SSBwaW5zDQo+IGFyZSBsaXN0ZWQgYXMgYmlkaXIgYW5kIGluIFJaL0ExSCB0aGV5J3JlIG5vdC4N
+Cg0KU29ycnksIHRvIGJlIGNsZWFyLCBTU0lUeCBwaW5zIGhhdmUgbm90aGluZyB0byBkbyB3aXRo
+ICJiaS1kaXIiLg0KDQpUaG9zZSB3ZXJlIHBpbnMgdGhhdCB5b3UgaGF2ZSB0byBhZGQgdG8gdGhl
+IHJ6YTFsX3N3aW9fcGluc1tdIGFycmF5IA0KYmVjYXVzZSB0aGV5IG11c3QgaGF2ZSB0byBoYXZl
+IGJvdGggUElQQ24uUElQQyBhbmQgUE0gYml0cyBzZXQgdG8gJzAnIChpZSwgDQpmb3JjZWQgdG8g
+b3V0cHV0KS4NCg0KSG93ZXZlciwgdGhlcmUgaXMgbm8gU1NJVHhENSBwaW4gaW4gUlovQTFMLg0K
+DQogIFJaL0ExSDogU1NJVHhEMCwgU1NJVHhEMSwgU1NJVHhEMywgU1NJVHhENQ0KICBSWi9BMUw6
+IFNTSVR4RDAsIFNTSVR4RDEsIFNTSVR4RDMNCg0KDQoNCj4gPiBJIHRob3VnaHQgd2Ugc2FpZCBU
+SU9DIGRpZG4ndCBuZWVkIHRvIGJlIGluIGEgdGFibGUgYmVjYXVzZSB0aGUgdXNlciBoYXMNCj4g
+PiB0byBzcGVjaWZ5IHRoZW0gYW55d2F5IGJlY2F1c2UgdGhlIHVzZXIgaGFzIHRvIGNob29zZSBp
+ZiBoZSB3YW50cyB0aGVtDQo+ID4gYXMgaW5wdXQgb3Igb3V0cHV0LCBzbyBpZiBoZSBkb2VzIHRo
+YXQsIHRoZW4gd2UgYXV0b21hdGljYWxseSBrbm93IGl0J3MNCj4gPiBhIHN3aW8gcGluLiBIbW0s
+IG1heWJlIEkgaGF2ZSB0byBnbyBiYWNrIGFuZCBsb29rIGF0IHdoYXQgdGhlIGRyaXZlcg0KPiA+
+IGVuZGVkIHVwIGltcGxlbWVudGluZy4NCj4gPg0KPiANCj4gQ2FuIGNvbmZpcm0gVElPQyBwaW5z
+IGFyZSBub3QgbGlzdGVkIGluIFNXSU8gdGFibGUgaW4gUlovQTFILg0KDQpZZXMsIHRoYXQgJ2Fy
+ZScgbGlzdGVkIGluIHRoZSB0YWJsZS4gQnV0IGZvciBhIGdvb2QgcmVhc29uLg0KDQpUaGUgVElP
+QyBwaW5zIGNhbiBiZSB1c2VzIGFzIGFuIG91dHB1dCAoUFdNIGZvciBleGFtcGxlKSBvciBhcyBh
+IGlucHV0IA0KKGlucHV0IGNhcHR1cmUgZm9yIGV4YW1wbGUpLCBzbyB0aGV5IGFyZSBub3QgcmVh
+bGx5IGEgZml4ZWQgZGlyZWN0aW9uLiANClRoYXQgaXMgd2h5IHRoZSB1c2VyIG5lZWRzIHRvIHNw
+ZWNpZnkgaG93IHRoZXkgcGxhbiB0byB1c2UgdGhlbSBpbiB0aGUgRFQuDQpBbmQuLi50aGF0J3Mg
+YWxzbyB3aHkgaXQgZG9lc24ndCBtYWtlIHNlbnNlIHRvIHB1dCB0aGVtIGluIHRoZSANCnJ6YTFs
+X3N3aW9fcGluc1tdIGFycmF5ICh3ZSBoYXZlIG5vIGlkZWEgaG93IHRoZXkgd2FudCB0byB1c2Ug
+dGhlbSkuDQoNClNvLCB0aGUgaGFyZHdhcmUgbWFudWFsIGhhcyB0aGUgVElPQyBwaW5zIGluIHRo
+ZSBTV0lPIHRhYmxlIHRvIHRlbGwgdGhlIA0KdXNlciAnaGV5LCB5b3UgaGF2ZSB0byBtYW51YWxs
+eSBzZXQgdGhlc2UgcGlucyB0byBlaXRoZXIgaW5wdXQgb3Igb3V0cHV0DQp5b3Vyc2VsZiBiZWNh
+dXNlIHdlIGNhbid0IG1hZ2ljYWxseSBrbm93IHdoYXQgeW91IHdhbnQgdG8gdXNlIHRoZW0gZm9y
+Lg0KDQpCdXQuLi4NClRoZSByZWFzb24gZm9yIHRoZSByemExbF9zd2lvX3BpbnNbXSBhcnJheSBp
+cyBmb3Igd2VpcmQgcGluIA0KY29uZmlndXJhdGlvbnMgdGhhdCBhcmUgZml4ZWQgKGxpa2UgTENE
+IExWRFMgb3V0cHV0IHBpbnMgbmVlZCB0byBiZSBjb25maWd1cmVkIGFzIA0KaW5wdXRzKS4NCg0K
+DQo+IFRoYW5rcyBmb3IgZG91YmxlIGNoZWNraW5nLiBZb3VyIHNvdXJjZSBmcm9tIEphcGFuIGlz
+IG1vcmUNCj4gYXV0aG9yaXRhdGl2ZSB0aGFuIG1hbnVhbHMgYW5kIGRlZmludGVseSBtb3JlIGFj
+Y3VyYXRlIHRoYW4gbWUgOykNCg0KU28sIGFmdGVyIGFsbCB0aGF0LCBJIGRvbid0IHRoaW5rIHdl
+IGZvdW5kIGFueSBpc3N1ZXMgd2l0aCBteSBwYXRjaC4NCkNvcnJlY3Q/Pz8NCg0KDQpUaGFua3Mh
+DQoNCkNocmlzDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
