@@ -1,80 +1,32 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] of/fdt: skip unflattening of disabled nodes
-Date: Tue, 3 Oct 2017 14:58:43 -0700
-Message-ID: <59D40813.4020009@gmail.com>
-References: <20171003161815.25999-1-robh@kernel.org>
- <20171003161815.25999-2-robh@kernel.org>
- <nycvar.YSQ.7.76.1710031444060.5407@knanqh.ubzr>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/9] dt-bindings: Document the hi3660 thermal sensor
+ binding
+Date: Tue, 3 Oct 2017 16:59:06 -0500
+Message-ID: <20171003215906.aokygmdsftqkkogs@rob-hp-laptop>
+References: <1506073332-92438-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1506073332-92438-8-git-send-email-kevin.wangtao@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <nycvar.YSQ.7.76.1710031444060.5407-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1506073332-92438-8-git-send-email-kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tao Wang <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lonela.Voinescu-5wv7dgnIgG8@public.gmane.org, Valentin.Schneider-5wv7dgnIgG8@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gengyanping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kevin Wangtao <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 11:46, Nicolas Pitre wrote:
-> On Tue, 3 Oct 2017, Rob Herring wrote:
+On Fri, Sep 22, 2017 at 05:42:10PM +0800, Tao Wang wrote:
+> From: Kevin Wangtao <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
->> For static DT usecases, we don't need the disabled nodes and can skip
->> unflattening. This saves a significant amount of RAM in memory constrained
->> cases. In one example on STM32F469, the RAM usage goes from 118K to 26K.
->>
->> There are a few cases in the kernel that modify the status property
->> dynamically. These all are changes from enabled to disabled, depend on
->> OF_DYNAMIC or are not FDT based (PDT based).
->>
->> Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> This adds documentation of device tree bindings for the
+> thermal sensor controller of hi3660 SoC.
 > 
-> Tested-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
->> ---
->> For more background, see this presentation from Nico:
->>
->> https://connect.linaro.org/resource/sfo17/sfo17-100/
-> 
-> Oh my ... this is horrible ...
+> Signed-off-by: Kevin Wangtao <kevin.wangtao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-I found the presentation to be quite good and useful.
-The Linaro site does not have the slides, could you please send
-me a copy?
-
-Thanks,
-
-Frank
-
-> 
-> /me hides in shame
-> 
->>
->>  drivers/of/fdt.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index f8c39705418b..efe91c6856a0 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -396,6 +396,10 @@ static int unflatten_dt_nodes(const void *blob,
->>  		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
->>  			continue;
->>  
->> +		if (!IS_ENABLED(CONFIG_OF_DYNAMIC) &&
->> +		    !of_fdt_device_is_available(blob, offset))
->> +			continue;
->> +
->>  		if (!populate_node(blob, offset, &mem, nps[depth],
->>  				   &nps[depth+1], dryrun))
->>  			return mem - base;
->> -- 
->> 2.11.0
->>
->>
-> 
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
