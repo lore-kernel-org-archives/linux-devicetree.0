@@ -1,38 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] uio: dt-bindings: document binding for
- uio-pdrv-genirq
-Date: Tue, 3 Oct 2017 16:37:55 -0500
-Message-ID: <20171003213755.df4s35xdni6ywxwg@rob-hp-laptop>
-References: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
- <20170921154814.7510-2-chris.packham@alliedtelesis.co.nz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 6/7] dt-bindings: clock: Document qcom,apcs binding
+Date: Tue, 3 Oct 2017 16:41:07 -0500
+Message-ID: <20171003214107.4xvk5motoedpnjbr@rob-hp-laptop>
+References: <20170921164940.20343-1-georgi.djakov@linaro.org>
+ <20170921164940.20343-7-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170921154814.7510-2-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170921164940.20343-7-georgi.djakov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 03:48:13AM +1200, Chris Packham wrote:
-> Document the device tree bindings for the uio-prv-genirq driver. Provide
-> some examples on how it can be used.
+On Thu, Sep 21, 2017 at 07:49:39PM +0300, Georgi Djakov wrote:
+> Add device-tree binding documentation for the Qualcom APCS clock
+> controller. This clock controller is a mux and half-integer divider
+> and provides the clock for the application CPU.
 > 
-> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  .../bindings/uio/linux,uio-pdrv-genirq.txt         | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/uio/linux,uio-pdrv-genirq.txt
+>  .../devicetree/bindings/clock/qcom,apcs.txt        | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,apcs.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,apcs.txt b/Documentation/devicetree/bindings/clock/qcom,apcs.txt
+> new file mode 100644
+> index 000000000000..8083bcc33ebe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,apcs.txt
+> @@ -0,0 +1,27 @@
+> +Qualcomm APCS Clock Controller Binding
+> +--------------------------------------
+> +The APCS hardware block provides a combined mux and half-integer divider
+> +functionality. It is used for a main CPU clock mux on MSM8916 platforms.
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +
+> +		"qcom,msm8916-apcs-clk"
+> +
+> +- clocks : shall be the phandle to the main input CPU PLL clock
+> +
+> +- #clock-cells : must be set to <0>
+> +
+> +Example:
+> +
+> +	apcs: mailbox@b011000 {
+> +		compatible = "qcom,msm8916-apcs-kpss-global";
+> +		reg = <0xb011000 0x1000>;
+> +		#mbox-cells = <1>;
+> +
+> +		apcs_clk: apcs_clk {
 
-NAK.
+Don't use '_' in node names. This can be just "clock".
 
-I'm sure this has come up before but if you want to map a device to a 
-uio driver, then add its compatible string to the driver. Bindings 
-describe h/w devices.
+Otherwise,
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +			compatible = "qcom,msm8916-apcs-clk";
+> +			clocks = <&a53pll>;
+> +			#clock-cells = <0>;
+> +		};
+> +	};
