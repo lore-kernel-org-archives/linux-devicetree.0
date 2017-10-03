@@ -1,57 +1,40 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 0/6] K2G: Add QSPI support
-Date: Tue, 3 Oct 2017 10:49:19 +0530
-Message-ID: <20171003051925.8821-1-vigneshr@ti.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v4 1/6] mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
+Date: Tue, 3 Oct 2017 10:49:20 +0530
+Message-ID: <20171003051925.8821-2-vigneshr@ti.com>
+References: <20171003051925.8821-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171003051925.8821-1-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Update binding documentation to add a new compatible for TI 66AK2G SoC,
+to handle TI SoC specific quirks in the driver.
 
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
-The patches enhance the existing cadence-quadspi driver to support
-loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
-
-Change log:
-
-v4:
-* New patch to fix error handling sequence in probe.
-
-v3:
-* Fix build warnings reported by kbuild test bot.
-
-Resend:
-* Rebase to latest linux-next.
-* Collect Acked-bys
-
-v2:
-* Drop DT patches. Will be sent as separate series as requested by
- maintainer.
-* Split binding docs into separate patches.
-* Address comments by Rob Herring.
-
-Vignesh R (6):
-  mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
-  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
-  mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back
-    circuit
-  mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock
-    circuit
-  mtd: spi-nor: cadence-quadspi: Fix error path in probe
-  mtd: spi-nor: cadence-quadspi: Add runtime PM support
-
- .../devicetree/bindings/mtd/cadence-quadspi.txt    |  7 ++-
- drivers/mtd/spi-nor/cadence-quadspi.c              | 55 +++++++++++++++++++---
- 2 files changed, 55 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+index f248056da24c..7dbe3bd9ac56 100644
+--- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+@@ -1,7 +1,9 @@
+ * Cadence Quad SPI controller
+ 
+ Required properties:
+-- compatible : Should be "cdns,qspi-nor".
++- compatible : should be one of the following:
++	Generic default - "cdns,qspi-nor".
++	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+ - reg : Contains two entries, each of which is a tuple consisting of a
+ 	physical address and length. The first entry is the address and
+ 	length of the controller register set. The second entry is the
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
