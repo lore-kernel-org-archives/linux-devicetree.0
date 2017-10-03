@@ -1,243 +1,216 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 10/12] of: overlay: simplify applying symbols from an overlay
-Date: Mon,  2 Oct 2017 20:53:44 -0700
-Message-ID: <1507002826-16393-11-git-send-email-frowand.list@gmail.com>
+From: frowand.list@gmail.com
+Subject: [PATCH 11/12] of: overlay: remove a dependency on device node full_name
+Date: Mon,  2 Oct 2017 20:53:45 -0700
+Message-ID: <1507002826-16393-12-git-send-email-frowand.list@gmail.com>
 References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507002826-16393-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+From: Frank Rowand <frank.rowand@sony.com>
 
-The code to apply symbols from an overlay to the live device tree
-was implemented with the intent to be minimally intrusive on the
-existing code.  After recent restructuring of the overlay apply
-code, it is easier to disintangle the code that applies the
-symbols, and to make the overlay changeset creation code more
-straight forward and understandable.
+The "%pOF" printf format was recently added to print the
+full name of a device tree node, with the intent of changing
+the node full_name field to contain only the node name instead
+of the full path of the node.
 
-Remove the extra complexity, and make the code more obvious.
+dup_and_fixup_symbol_prop() duplicates a property from the
+"/__symbols__" node of an overlay device tree.  The value
+of each duplicated property must be fixed up to include
+the full path of a node in the live device tree.  The
+current code uses the node's full_name for that purpose.
+Update the code to use the "%pOF" printf format to
+determine the node's full path.
 
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 91 +++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 65 insertions(+), 26 deletions(-)
+ drivers/of/base.c       |  2 +-
+ drivers/of/of_private.h |  2 ++
+ drivers/of/overlay.c    | 90 ++++++++++++++++++++++++++++++-------------------
+ 3 files changed, 59 insertions(+), 35 deletions(-)
 
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 260d33c0f26c..6f91fa67e5bb 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -760,7 +760,7 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
+ }
+ EXPORT_SYMBOL(of_get_child_by_name);
+ 
+-static struct device_node *__of_find_node_by_path(struct device_node *parent,
++struct device_node *__of_find_node_by_path(struct device_node *parent,
+ 						const char *path)
+ {
+ 	struct device_node *child;
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index b66e8a812147..0c9e473801f2 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -81,6 +81,8 @@ extern void *__unflatten_device_tree(const void *blob,
+ struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags);
+ __printf(2, 3) struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...);
+ 
++struct device_node *__of_find_node_by_path(struct device_node *parent,
++						const char *path);
+ struct device_node *__of_find_node_by_full_path(struct device_node *node,
+ 						const char *path);
+ 
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 4ed372af6ce7..172807d3f375 100644
+index 172807d3f375..81881e45f273 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -32,21 +32,22 @@
- struct fragment {
- 	struct device_node *target;
- 	struct device_node *overlay;
--	bool is_symbols_node;
- };
- 
+@@ -37,6 +37,7 @@ struct fragment {
  /**
   * struct overlay_changeset
-- * @ovcs_list:	list on which we are located
-- * @count:	count of @fragments structures
-- * @fragments:	info about fragment nodes in overlay expanded device tree
-- * @cset:	changeset to apply fragments to live device tree
-+ * @ovcs_list:		list on which we are located
-+ * @count:		count of fragment structures
-+ * @fragments:		fragment nodes in the overlay expanded device tree
-+ * @symbols_fragment:	last element of @fragments[] is the  __symbols__ node
-+ * @cset:		changeset to apply fragments to live device tree
-  */
+  * @ovcs_list:		list on which we are located
++ * @overlay_tree:	expanded device tree that contains the fragment nodes
+  * @count:		count of fragment structures
+  * @fragments:		fragment nodes in the overlay expanded device tree
+  * @symbols_fragment:	last element of @fragments[] is the  __symbols__ node
+@@ -45,6 +46,7 @@ struct fragment {
  struct overlay_changeset {
  	int id;
  	struct list_head ovcs_list;
++	struct device_node *overlay_tree;
  	int count;
  	struct fragment *fragments;
-+	bool symbols_fragment;
- 	struct of_changeset cset;
- };
- 
-@@ -68,8 +69,7 @@ static int devicetree_corrupt(void)
- 
- static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 		struct device_node *target_node,
--		const struct device_node *overlay_node,
--		bool is_symbols_node);
-+		const struct device_node *overlay_node);
- 
- /*
-  * of_resolve_phandles() finds the largest phandle in the live tree.
-@@ -221,7 +221,7 @@ static struct property *dup_and_fixup_symbol_prop(
-  * @ovcs:		overlay changeset
-  * @target_node:	where to place @overlay_prop in live tree
-  * @overlay_prop:	property to add or update, from overlay tree
-- * is_symbols_node:	1 if @target_node is "/__symbols__"
-+ * @is_symbols_prop:	1 if @overlay_prop is from node "/__symbols__"
-  *
-  * If @overlay_prop does not already exist in @target_node, add changeset entry
-  * to add @overlay_prop in @target_node, else add changeset entry to update
-@@ -237,7 +237,7 @@ static struct property *dup_and_fixup_symbol_prop(
- static int add_changeset_property(struct overlay_changeset *ovcs,
- 		struct device_node *target_node,
- 		struct property *overlay_prop,
--		bool is_symbols_node)
-+		bool is_symbols_prop)
- {
- 	struct property *new_prop = NULL, *prop;
- 
-@@ -248,7 +248,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
- 	    !of_prop_cmp(overlay_prop->name, "linux,phandle"))
- 		return 0;
- 
--	if (is_symbols_node) {
-+	if (is_symbols_prop) {
- 		if (prop)
- 			return -EINVAL;
- 		new_prop = dup_and_fixup_symbol_prop(ovcs, overlay_prop);
-@@ -321,13 +321,13 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 		if (ret)
- 			return ret;
- 
--		return build_changeset_next_level(ovcs, tchild, node, 0);
-+		return build_changeset_next_level(ovcs, tchild, node);
- 	}
- 
- 	if (node->phandle && tchild->phandle)
- 		ret = -EINVAL;
- 	else
--		ret = build_changeset_next_level(ovcs, tchild, node, 0);
-+		ret = build_changeset_next_level(ovcs, tchild, node);
- 	of_node_put(tchild);
- 
- 	return ret;
-@@ -338,7 +338,6 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
-  * @ovcs:		overlay changeset
-  * @target_node:	where to place @overlay_node in live tree
-  * @overlay_node:	node from within an overlay device tree fragment
-- * @is_symbols_node:	@overlay_node is node "/__symbols__"
-  *
-  * Add the properties (if any) and nodes (if any) from @overlay_node to the
-  * @ovcs->cset changeset.  If an added node has child nodes, they will
-@@ -351,16 +350,14 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
-  */
- static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 		struct device_node *target_node,
--		const struct device_node *overlay_node,
--		bool is_symbols_node)
-+		const struct device_node *overlay_node)
- {
- 	struct device_node *child;
- 	struct property *prop;
- 	int ret;
- 
- 	for_each_property_of_node(overlay_node, prop) {
--		ret = add_changeset_property(ovcs, target_node, prop,
--					     is_symbols_node);
-+		ret = add_changeset_property(ovcs, target_node, prop, 0);
- 		if (ret) {
- 			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
- 				 target_node, prop->name, ret);
-@@ -368,9 +365,6 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 		}
- 	}
- 
--	if (is_symbols_node)
--		return 0;
--
- 	for_each_child_of_node(overlay_node, child) {
- 		ret = add_changeset_node(ovcs, target_node, child);
- 		if (ret) {
-@@ -384,6 +378,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 	return 0;
+ 	bool symbols_fragment;
+@@ -145,12 +147,13 @@ static int overlay_notify(struct overlay_changeset *ovcs,
  }
  
-+/*
-+ * Add the properties from __overlay__ node to the @ovcs->cset changeset.
-+ */
-+static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
-+		struct device_node *target_node,
-+		const struct device_node *overlay_symbols_node)
-+{
-+	struct property *prop;
-+	int ret;
-+
-+	for_each_property_of_node(overlay_symbols_node, prop) {
-+		ret = add_changeset_property(ovcs, target_node, prop, 1);
-+		if (ret) {
-+			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
-+				 target_node, prop->name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * build_changeset() - populate overlay changeset in @ovcs from @ovcs->fragments
-  * @ovcs:	Overlay changeset
-@@ -398,14 +414,33 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
-  */
- static int build_changeset(struct overlay_changeset *ovcs)
+ /*
+- * The properties in the "/__symbols__" node are "symbols".
++ * The values of properties in the "/__symbols__" node are paths in
++ * the ovcs->overlay_tree.  When duplicating the properties, the paths
++ * need to be adjusted to be the correct path for the live device tree.
+  *
+- * The value of properties in the "/__symbols__" node is the path of a
+- * node in the subtree of a fragment node's "__overlay__" node, for
+- * example "/fragment@0/__overlay__/symbol_path_tail".  Symbol_path_tail
+- * can be a single node or it may be a multi-node path.
++ * The paths refer to a node in the subtree of a fragment node's "__overlay__"
++ * node, for example "/fragment@0/__overlay__/symbol_path_tail",
++ * where symbol_path_tail can be a single node or it may be a multi-node path.
+  *
+  * The duplicated property value will be modified by replacing the
+  * "/fragment_name/__overlay/" portion of the value  with the target
+@@ -160,59 +163,76 @@ static struct property *dup_and_fixup_symbol_prop(
+ 		struct overlay_changeset *ovcs, const struct property *prop)
  {
--	int i, ret;
-+	struct fragment *fragment;
-+	int fragments_count, i, ret;
+ 	struct fragment *fragment;
+-	struct property *new;
+-	const char *overlay_name;
+-	char *symbol_path_tail;
+-	char *symbol_path;
++	struct property *new_prop;
++	struct device_node *fragment_node;
++	struct device_node *overlay_node;
++	const char *path;
++	const char *path_tail;
+ 	const char *target_path;
+ 	int k;
+-	int symbol_path_tail_len;
+ 	int overlay_name_len;
++	int path_len;
++	int path_tail_len;
+ 	int target_path_len;
  
--	for (i = 0; i < ovcs->count; i++) {
--		struct fragment *fragment = &ovcs->fragments[i];
-+	/*
-+	 * if there is a symbols fragment in ovcs->fragments[i] it is
-+	 * the final element in the array
-+	 */
-+	if (ovcs->symbols_fragment)
-+		fragments_count = ovcs->count - 1;
-+	else
-+		fragments_count = ovcs->count;
-+
-+	for (i = 0; i < fragments_count; i++) {
-+		fragment = &ovcs->fragments[i];
+ 	if (!prop->value)
+ 		return NULL;
+-	symbol_path = prop->value;
++	if (strnlen(prop->value, prop->length) >= prop->length)
++		return NULL;
++	path = prop->value;
++	path_len = strlen(path);
  
- 		ret = build_changeset_next_level(ovcs, fragment->target,
--					       fragment->overlay,
--					       fragment->is_symbols_node);
-+						 fragment->overlay);
-+		if (ret) {
-+			pr_debug("apply failed '%pOF'\n", fragment->target);
-+			return ret;
-+		}
-+	}
-+
-+	if (ovcs->symbols_fragment) {
-+		fragment = &ovcs->fragments[ovcs->count - 1];
-+		ret = build_changeset_symbols_node(ovcs, fragment->target,
-+						   fragment->overlay);
- 		if (ret) {
- 			pr_debug("apply failed '%pOF'\n", fragment->target);
- 			return ret;
-@@ -522,12 +557,16 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
- 		}
+-	new = kzalloc(sizeof(*new), GFP_KERNEL);
+-	if (!new)
++	if (path_len < 1)
+ 		return NULL;
++	fragment_node = __of_find_node_by_path(ovcs->overlay_tree, path + 1);
++	overlay_node = __of_find_node_by_path(fragment_node, "__overlay__/");
++	of_node_put(fragment_node);
++	of_node_put(overlay_node);
+ 
+ 	for (k = 0; k < ovcs->count; k++) {
+ 		fragment = &ovcs->fragments[k];
+-		overlay_name = fragment->overlay->full_name;
+-		overlay_name_len = strlen(overlay_name);
+-		if (!strncasecmp(symbol_path, overlay_name, overlay_name_len))
++		if (fragment->overlay == overlay_node)
+ 			break;
  	}
+-
+ 	if (k >= ovcs->count)
+-		goto err_free;
++		return NULL;
++
++	overlay_name_len = snprintf(NULL, 0, "%pOF", fragment->overlay);
  
-+	/*
-+	 * if there is a symbols fragment in ovcs->fragments[i] it is
-+	 * the final element in the array
-+	 */
- 	node = of_get_child_by_name(tree, "__symbols__");
- 	if (node) {
-+		ovcs->symbols_fragment = 1;
- 		fragment = &fragments[cnt];
- 		fragment->overlay = node;
- 		fragment->target = of_find_node_by_path("/__symbols__");
--		fragment->is_symbols_node = 1;
+-	target_path = fragment->target->full_name;
++	if (overlay_name_len > path_len)
++		return NULL;
++	path_tail = path + overlay_name_len;
++	path_tail_len = strlen(path_tail);
++
++	target_path = kasprintf(GFP_KERNEL, "%pOF", fragment->target);
++	if (!target_path)
++		return NULL;
+ 	target_path_len = strlen(target_path);
  
- 		if (!fragment->target) {
- 			pr_err("no symbols in root of device tree.\n");
+-	symbol_path_tail = symbol_path + overlay_name_len;
+-	symbol_path_tail_len = strlen(symbol_path_tail);
++	new_prop = kzalloc(sizeof(*new_prop), GFP_KERNEL);
++	if (!new_prop)
++		goto err_free_target_path;
+ 
+-	new->name = kstrdup(prop->name, GFP_KERNEL);
+-	new->length = target_path_len + symbol_path_tail_len + 1;
+-	new->value = kzalloc(new->length, GFP_KERNEL);
++	new_prop->name = kstrdup(prop->name, GFP_KERNEL);
++	new_prop->length = target_path_len + path_tail_len + 1;
++	new_prop->value = kzalloc(new_prop->length, GFP_KERNEL);
++	if (!new_prop->name || !new_prop->value)
++		goto err_free_new_prop;
+ 
+-	if (!new->name || !new->value)
+-		goto err_free;
++	strcpy(new_prop->value, target_path);
++	strcpy(new_prop->value + target_path_len, path_tail);
+ 
+-	strcpy(new->value, target_path);
+-	strcpy(new->value + target_path_len, symbol_path_tail);
++	of_property_set_flag(new_prop, OF_DYNAMIC);
+ 
+-	of_property_set_flag(new, OF_DYNAMIC);
++	return new_prop;
+ 
+-	return new;
++err_free_new_prop:
++	kfree(new_prop->name);
++	kfree(new_prop->value);
++	kfree(new_prop);
++err_free_target_path:
++	kfree(target_path);
+ 
+- err_free:
+-	kfree(new->name);
+-	kfree(new->value);
+-	kfree(new);
+ 	return NULL;
+ }
+ 
+@@ -510,6 +530,8 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
+ 	if (!of_node_is_root(tree))
+ 		pr_debug("%s() tree is not root\n", __func__);
+ 
++	ovcs->overlay_tree = tree;
++
+ 	INIT_LIST_HEAD(&ovcs->ovcs_list);
+ 
+ 	of_changeset_init(&ovcs->cset);
 -- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Frank Rowand <frank.rowand@sony.com>
