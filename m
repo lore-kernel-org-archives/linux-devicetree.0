@@ -1,95 +1,69 @@
-From: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv2 1/2] drivers: phy: add calibrate method
-Date: Tue, 03 Oct 2017 14:59:37 +0200
-Message-ID: <1507035578-24945-2-git-send-email-andrzej.p@samsung.com>
-References: <ba580a0c-36c3-b227-61ee-97637532823e@ti.com>
-        <1507035578-24945-1-git-send-email-andrzej.p@samsung.com>
-        <CGME20171003125945eucas1p24d49f5c51ea9acd59a76314158b69352@eucas1p2.samsung.com>
+From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] arm64: dts: update the DPAA QBMan nodes
+Date: Tue, 3 Oct 2017 16:04:15 +0300
+Message-ID: <1507035855-23068-1-git-send-email-madalin.bucur@nxp.com>
+Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1507035578-24945-1-git-send-email-andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some quirky UDCs (like dwc3 on exynos) need to have heir phys calibrated
-e.g. for using super speed.
+Use constants in the interrupt description.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 ---
- drivers/phy/phy-core.c  | 14 ++++++++++++++
- include/linux/phy/phy.h | 10 ++++++++++
- 2 files changed, 24 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index a268f4d..fdf343a 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -372,6 +372,20 @@ int phy_reset(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(phy_reset);
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index d16b9cc..0f5e9fe 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -376,14 +376,14 @@
+ 		qman: qman@1880000 {
+ 			compatible = "fsl,qman";
+ 			reg = <0x0 0x1880000 0x0 0x10000>;
+-			interrupts = <0 45 0x4>;
++			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			memory-region = <&qman_fqd &qman_pfdr>;
+ 		};
  
-+int phy_calibrate(struct phy *phy)
-+{
-+	int ret;
-+
-+	if (!phy || !phy->ops->calibrate)
-+		return 0;
-+
-+	mutex_lock(&phy->mutex);
-+	ret = phy->ops->calibrate(phy);
-+	mutex_unlock(&phy->mutex);
-+
-+	return ret;
-+}
-+
- /**
-  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
-  * @np: device_node for which to get the phy
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index e694d40..87580c8 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -39,6 +39,7 @@ enum phy_mode {
-  * @power_off: powering off the phy
-  * @set_mode: set the mode of the phy
-  * @reset: resetting the phy
-+ * @calibrate: calibrate the phy
-  * @owner: the module owner containing the ops
-  */
- struct phy_ops {
-@@ -48,6 +49,7 @@ struct phy_ops {
- 	int	(*power_off)(struct phy *phy);
- 	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
- 	int	(*reset)(struct phy *phy);
-+	int	(*calibrate)(struct phy *phy);
- 	struct module *owner;
- };
+ 		bman: bman@1890000 {
+ 			compatible = "fsl,bman";
+ 			reg = <0x0 0x1890000 0x0 0x10000>;
+-			interrupts = <0 45 0x4>;
++			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			memory-region = <&bman_fbpr>;
+ 		};
  
-@@ -141,6 +143,7 @@ static inline void *phy_get_drvdata(struct phy *phy)
- int phy_power_off(struct phy *phy);
- int phy_set_mode(struct phy *phy, enum phy_mode mode);
- int phy_reset(struct phy *phy);
-+int phy_calibrate(struct phy *phy);
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return phy->attrs.bus_width;
-@@ -262,6 +265,13 @@ static inline int phy_reset(struct phy *phy)
- 	return -ENOSYS;
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index c8ff0ba..eddee02 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -281,7 +281,7 @@
+ 		qman: qman@1880000 {
+ 			compatible = "fsl,qman";
+ 			reg = <0x0 0x1880000 0x0 0x10000>;
+-			interrupts = <0 45 0x4>;
++			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			memory-region = <&qman_fqd &qman_pfdr>;
  
-+static inline int phy_calibrate(struct phy *phy)
-+{
-+	if (!phy)
-+		return 0;
-+	return -ENOSYS;
-+}
-+
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return -ENOSYS;
+ 		};
+@@ -289,7 +289,7 @@
+ 		bman: bman@1890000 {
+ 			compatible = "fsl,bman";
+ 			reg = <0x0 0x1890000 0x0 0x10000>;
+-			interrupts = <0 45 0x4>;
++			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			memory-region = <&bman_fbpr>;
+ 
+ 		};
 -- 
-1.9.1
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
