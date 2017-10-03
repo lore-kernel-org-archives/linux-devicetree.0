@@ -1,90 +1,75 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
- USB2.0 phy channel 3
-Date: Tue, 3 Oct 2017 03:13:06 +0000
-Message-ID: <TY1PR06MB09920874E5560AE204941018D8720@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
- <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
- <TY1PR06MB09920BDFB00D2BDA4840877AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
+From: Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: 4879b7ae05 ("Merge tag 'dmaengine-4.12-rc1' of .."): WARNING:
+ kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value
+ 000001be
+Date: Tue, 3 Oct 2017 11:45:38 +0800
+Message-ID: <20171003034538.ntvuwtm2uha6wt6h@wfg-t540p.sh.intel.com>
+References: <59d177a7.vsiddgOxdHRIlRvy%fengguang.wu@intel.com>
+ <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw@mail.gmail.com>
+ <20171002212654.rsm4uj3hfioddldd@treble>
+ <20171002213109.5n3skzy76edhwkvf@treble>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran@ksquared.org.uk>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171002213109.5n3skzy76edhwkvf@treble>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dma <dmaengine@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdl
-ZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBNb25kYXksIE9jdG9iZXIgMiwgMjAxNyA2OjIwIFBN
-DQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+IE9uIE1vbiwgT2N0IDIsIDIwMTcgYXQgMTE6
-MTQgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2Fz
-LmNvbT4gd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206
-IEtpZXJhbiBCaW5naGFtDQo+ID4+IFNlbnQ6IE1vbmRheSwgT2N0b2JlciAyLCAyMDE3IDU6NDUg
-UE0NCj4gPj4gT24gMDIvMTAvMTcgMDk6MjAsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4g
-Pj4gPiBPbiBNb24sIE9jdCAyLCAyMDE3IGF0IDg6MjkgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+
-ID4+ID4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPj4gPj4g
-VGhpcyBwYXRjaCBlbmFibGVzIHRoZSBVU0IyLjAgcGh5IGNoYW5uZWwgMy4gUi1DYXIgSDMgRVMy
-LjAgaGFzDQo+ID4+ID4+IHRoaXMgY2hhbm5lbCBhbmQgd2UgY2FuIHVzZSBpdCBvbiB0aGUgU2Fs
-dmF0b3ItWFMuDQo+ID4+ID4+DQo+ID4+ID4+IFNpZ25lZC1vZmYtYnk6IFlvc2hpaGlybyBTaGlt
-b2RhIDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPj4gPg0KPiA+PiA+IFJl
-dmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0K
-PiA+PiA+DQo+ID4+ID4+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk1
-LXNhbHZhdG9yLXhzLmR0cw0KPiA+PiA+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVz
-YXMvcjhhNzc5NS1zYWx2YXRvci14cy5kdHMNCj4gPj4gPj4gQEAgLTk5LDYgKzk5LDExIEBADQo+
-ID4+ID4+ICAgICAgICAgICAgICAgICBncm91cHMgPSAidXNiMiI7DQo+ID4+ID4+ICAgICAgICAg
-ICAgICAgICBmdW5jdGlvbiA9ICJ1c2IyIjsNCj4gPj4gPj4gICAgICAgICB9Ow0KPiA+PiA+PiAr
-DQo+ID4+ID4+ICsgICAgICAgdXNiMl9jaDNfcGluczogdXNiMl9jaDMgew0KPiA+PiA+PiArICAg
-ICAgICAgICAgICAgZ3JvdXBzID0gInVzYjJfY2gzIjsNCj4gPj4gPj4gKyAgICAgICAgICAgICAg
-IGZ1bmN0aW9uID0gInVzYjJfY2gzIjsNCj4gPj4gPj4gKyAgICAgICB9Ow0KPiA+PiA+PiAgfTsN
-Cj4gPj4gPg0KPiA+PiA+IFVzaW5nIHRoZXNlIHBpbnMgcmVxdWlyZXMgY2hhbmdpbmcgU1czMSwg
-ZGlzYWJsaW5nIHRoZSBpbnRlcnJ1cHQgY2FwYWJpbGl0aWVzDQo+ID4+ID4gb2YgdGhlIEFEVjc0
-ODI/IERvZXMgdGhlIEFEVjc0ODIgc3RpbGwgd29yayBhZnRlciB0aGF0Pw0KPiA+DQo+ID4gT29w
-cywgSSBtaXNzZWQgdGhlIHVzYjIuMCBwaW5zIGFyZSBjb25uZWN0ZWQgdG8gQURWNzQ4MidzIGlu
-dGVycnVwdGlvbiBwaW5zLg0KPiA+IEJ1dCwNCj4gPg0KPiA+PiBUaGUgQURWNzQ4MiBpcyBjdXJy
-ZW50bHkgd29ya2luZyB3aXRob3V0IGludGVycnVwdHMgYXQgdGhlIG1vbWVudC4gSG93ZXZlciwg
-SSBkbw0KPiA+PiBoYXZlIGhvdHBsdWcgYW5kIGludGVycnVwdCBoYW5kbGluZyBvbiBteSB0b2Rv
-IGxpc3QsIGFuZCBpbmZhY3QgSSBoYXZlIGFscmVhZHkNCj4gPj4gc3RhcnRlZCBhIHBhdGNoIGFk
-ZGluZyBpbnRlcnJ1cHQgc3VwcG9ydC4NCj4gPj4NCj4gPj4NCj4gPj4gVGhlIERUIGN1cnJlbnRs
-eSBzcGVjaWZpZXMgdGhlIGZvbGxvd2luZyBpbnRlcnJ1cHRzIGZvciB0aGUgQURWNzQ4MiwNCj4g
-Pj4NCj4gPj4gKyAgICAgdmlkZW8tcmVjZWl2ZXJANzAgew0KPiA+PiArICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAiYWRpLGFkdjc0ODIiOw0KPiA+PiArICAgICAgICAgICAgIGludGVycnVwdC1w
-YXJlbnQgPSA8JmdwaW82PjsNCj4gPj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFtZXMgPSAi
-aW50cnExIiwgImludHJxMiI7DQo+ID4+ICsgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwzMCBJ
-UlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgICA8MzEg
-SVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPg0KPiA+IEl0IHNlZW1zIEtpZXJhbi1zYW4gaXMgdXNp
-bmcgbm9uLWNvbmZsaWN0IHBpbnMgd2l0aCB1c2IyLjAgY2gzIDopDQo+ID4gQWNjb3JkaW5nIHRv
-IHRoZSBib2FyZCBkYXRhc2hlZXQsIEdQNl8zMCBhbmQgR1A2XzMxIGFyZSBpbml0aWFsIHNldHRp
-bmcgZm9yIEFEVjc0ODIgYW5kDQo+ID4gaXQgZG9lc24ndCBjb25mbGljdCB3aXRoIFVTQiAyLjAg
-Y2gzIChVU0IyLjAgY2gzIHBpbnMgYXJlIEdQNl8wNCBhbmQgR1A2XzIxKS4NCj4gDQo+IENhbiB0
-aGUgVVNCMi4wIGRyaXZlciB1c2UgR1BJT3MgZm9yIFBXRU4gYW5kIE9WQz8NCj4gDQo+ID4gU28s
-IEkgdGhpbmsgd2UgY2FuIHVzZSBib3RoIHVzYiAyLjAgY2gzIGFuZCBBRFY3NDgyIGlmIHdlIGRv
-bid0IGNoYW5nZSB0aGUgU1czMSBmcm9tIGluaXRpYWwgc2V0dGluZy4NCj4gDQo+IE9LLiBCdXQg
-aW4gdGhhdCBjYXNlLCBEVCBzaG91bGQgbm90IGNvbmZpZ3VyZSBwaW5jdHJsIGZvciAidXNiMl9j
-aDMiLA0KPiBidXQgaW5zdGVhZA0KPiBkZXNjcmliZSB0aGF0IGl0IHVzZXMgR1A2XzA0IGFuZCBH
-UDZfMjEuDQoNCkknbSBhZnJhaWQgYnV0IEkgY29tcGxldGVseSBtaXN1bmRlcnN0b29kIHRoZSBw
-aW4gY29uZmlndXJhdGlvbnMgb24gdGhlIFNhbHZhdG9yLVhTLg0KSSB3cm90ZSByaWdodCB0aGlu
-Z3MgYmVsb3c6DQotIFVTQjIuMCBjaDMgcGlucyBhcmUgR1A2XzMwIGFuZCBHUDZfMzEuDQogLSBT
-bywgaW5pdGlhbCBzZXR0aW5nIG9mIHRoZSBib2FyZCB3aWxsIGJlIGNvbmZsaWN0IHdpdGggdGhl
-IGFkdjc0ODIncyBpbnRlcnJ1cHQgcGlucy4NCi0gSWYgd2UgY2hhbmdlIHRoZSBTVzMxIGFzIGFs
-dGVybmF0aXZlIHNldHRpbmcgZm9yIHVzYiwgdGhlIGFkdjc0ODIncyBpbnRlcnJ1cHQgcGlucyBj
-b25uZWN0DQogIHRvIEdQNl8wNCBhbmQgR1A2XzIxLg0KDQpBbmQsIEkgd3JvdGUgbXkgb3Bpbmlv
-bnMgYmVsb3c6DQotIFRoZSBhZHY3NDgyIHBvaW50IG9mIHZpZXc6DQogLSBPbiBib3RoIFNhbHZh
-dG9yLVggYW5kIFNhbHZhdG9yLVhTLCBhZHY3NDgyJ3MgaW50ZXJydXB0IHBpbnMgY29ubmVjdGVk
-IHRvIEdQNl8zMCBhbmQgR1A2XzMxLg0KICAtIE9uIFNhbHZhdG9yLVhTLCBhZHY3NDgyJ3MgaW50
-ZXJydXB0IHBpbnMgY2FuIGJlIGNoYW5nZWQgYnkgU1czMSBhbmQgdGhleSBjb25uZWN0ZWQgdG8g
-R1A2XzA0IGFuZCBHUDZfMjEuDQotIFRoZSB1c2IyIGNoMyBwb2ludCBvZiB2aWV3Og0KIC0gSXQg
-Y2FuIGJlIHVzZWQgb24gSDMgRVMyLjAgb25seS4gKEluIG90aGVyIHdvcmRzLCBNMyBjYW5ub3Qg
-dXNlIHRoZSB1c2IyIGNoMy4pDQotIFN1bW1hcnkNCiAtIFdlIGRlc2NyaWJlIHRoZSBhZHY3NDgy
-J3MgaW50ZXJydXB0IHBpbnMgaW50byBib3RoIHNhbHZhdG9yLXguZHRzaSBhbmQgc2FsdmF0b3It
-eHMuZHRzaS4NCiAgLSBJbiBzYWx2YXRvci14LmR0c2ksIGFkdjc0ODIgbm9kZSB1c2VzIEdQNl8z
-MCBhbmQgR1A2XzMxLg0KICAtIEluIHNhbHZhdG9yLXhzLmR0c2ksIGFkdjc0ODIgbm9kZSB1c2Vz
-IEdQNl8wNCBhbmQgR1A2XzIxLg0KIC0gV2UgZGVzY3JpYmUgdGhlIHVzYjIgY2gzIHBmYyBub2Rl
-IGludG8gcjhhNzc5NS1zYWx2YXRvci14cy5kdHNpIHdpdGggInVzYjJfY2gzIiBncm91cHMvZnVu
-Y3Rpb24gYW5kDQogICAgZGVzY3JpYmUgdGhlIFNXMzEgY29uZmlndXJhdGlvbi4NCg0KV2hhdCBk
-byB5b3UgdGhpbms/DQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
+Hi Josh,
+
+On Mon, Oct 02, 2017 at 04:31:09PM -0500, Josh Poimboeuf wrote:
+>On Mon, Oct 02, 2017 at 04:26:54PM -0500, Josh Poimboeuf wrote:
+>> Fengguang, assuming it's reliably recreatable, any chance you could
+>> recreate with the following patch?
+
+Sure, I'll try your patch on v4.14-rc3 since it looks the most
+reproducible kernel. For the bisected 4879b7ae05, the warning only
+shows up once out of 909 boots according to the below stats. So I'm
+not sure whether it's the _first_ bad commit. To double confirm, I
+just queued 5000 more boot tests for each of its parent commits.
+
+> ecc721a72c  Merge tag 'pwm/for-4.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm
+> be13ec668d  Merge branch 'topic/pl330' into for-linus
+> 4879b7ae05  Merge tag 'dmaengine-4.12-rc1' of git://git.infradead.org/users/vkoul/slave-dma
+> 9e66317d3c  Linux 4.14-rc3
+> 1418b85217  Add linux-next specific files for 20170929
+> +-------------------------------------------------------+------------+------------+------------+-----------+---------------+
+> |                                                       | ecc721a72c | be13ec668d | 4879b7ae05 | v4.14-rc3 | next-20170929 |
+> +-------------------------------------------------------+------------+------------+------------+-----------+---------------+
+> | boot_successes                                        | 1009       | 1009       | 909        | 5         | 510           |
+> | boot_failures                                         | 0          | 0          | 1          | 4         | 153           |
+> | WARNING:kernel_stack                                  | 0          | 0          | 1          | 3         | 111           |
+> | BUG:unable_to_handle_kernel                           | 0          | 0          | 0          | 3         | 48            |
+> | Oops:#[##]                                            | 0          | 0          | 0          | 3         | 48            |
+> | EIP:update_stack_state                                | 0          | 0          | 0          | 3         | 48            |
+> | Kernel_panic-not_syncing:Fatal_exception_in_interrupt | 0          | 0          | 0          | 3         | 48            |
+> | invoked_oom-killer:gfp_mask=0x                        | 0          | 0          | 0          | 1         | 16            |
+> | Mem-Info                                              | 0          | 0          | 0          | 1         | 16            |
+> | EIP:clear_user                                        | 0          | 0          | 0          | 0         | 2             |
+> | EIP:copy_page_to_iter                                 | 0          | 0          | 0          | 0         | 1             |
+> +-------------------------------------------------------+------------+------------+------------+-----------+---------------+
+
+>Sorry, here's a version which actually compiles.
+
+OK.
+
+Thanks,
+Fengguang
+
+>diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+>index d145a0b1f529..00234fa5a33a 100644
+>--- a/arch/x86/kernel/unwind_frame.c
+>+++ b/arch/x86/kernel/unwind_frame.c
+>@@ -44,7 +44,8 @@ static void unwind_dump(struct unwind_state *state)
+> 			state->stack_info.type, state->stack_info.next_sp,
+> 			state->stack_mask, state->graph_idx);
+>
+>-	for (sp = state->orig_sp; sp; sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
+>+	for (sp = PTR_ALIGN(state->orig_sp, sizeof(long)); sp;
+>+	     sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
+> 		if (get_stack_info(sp, state->task, &stack_info, &visit_mask))
+> 			break;
+>
