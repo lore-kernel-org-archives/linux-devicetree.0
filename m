@@ -1,44 +1,55 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: renesas: r8a77995: draak: drop "avb_phy_int" from avb_pins
-Date: Tue,  3 Oct 2017 13:57:13 +0900
-Message-ID: <1507006633-28258-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1507006633-28258-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 0/6] K2G: Add QSPI support
+Date: Tue, 3 Oct 2017 10:49:19 +0530
+Message-ID: <20171003051925.8821-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507006633-28258-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since the Ethernet AVB driver doesn't support AVB_PHY_INT handling
-and it will be handled by a phy driver as a gpio pin, this patch
-removes the "avb_phy_int" from the avb_pins node.
 
-Reported-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Fixes: 4503b50eac08 ("arm64: dts: renesas: r8a77995: draak: enable EthernetAVB")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 96b7ff5..fac58be 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -41,8 +41,7 @@
- &pfc {
- 	avb0_pins: avb {
- 		mux {
--			groups = "avb0_link", "avb0_phy_int", "avb0_mdc",
--				 "avb0_mii";
-+			groups = "avb0_link", "avb0_mdc", "avb0_mii";
- 			function = "avb0";
- 		};
- 	};
+This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
+The patches enhance the existing cadence-quadspi driver to support
+loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
+
+Change log:
+
+v4:
+* New patch to fix error handling sequence in probe.
+
+v3:
+* Fix build warnings reported by kbuild test bot.
+
+Resend:
+* Rebase to latest linux-next.
+* Collect Acked-bys
+
+v2:
+* Drop DT patches. Will be sent as separate series as requested by
+ maintainer.
+* Split binding docs into separate patches.
+* Address comments by Rob Herring.
+
+Vignesh R (6):
+  mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
+  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+  mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back
+    circuit
+  mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock
+    circuit
+  mtd: spi-nor: cadence-quadspi: Fix error path in probe
+  mtd: spi-nor: cadence-quadspi: Add runtime PM support
+
+ .../devicetree/bindings/mtd/cadence-quadspi.txt    |  7 ++-
+ drivers/mtd/spi-nor/cadence-quadspi.c              | 55 +++++++++++++++++++---
+ 2 files changed, 55 insertions(+), 7 deletions(-)
+
 -- 
-1.9.1
+2.14.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
