@@ -1,77 +1,55 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 2/4] nvmem: meson-efuse: indicate that this driver is only for Meson GX SoCs
-Date: Tue,  3 Oct 2017 01:28:02 +0200
-Message-ID: <20171002232804.20042-3-martin.blumenstingl@googlemail.com>
-References: <20171002232804.20042-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171002232804.20042-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v10 00/24] Unified fwnode endpoint parser, async
+ sub-device notifier support, N9 flash DTS
+Date: Tue, 3 Oct 2017 02:04:50 +0200
+Message-ID: <CAJZ5v0g4MUx8xaZjBwfVtYnad2+-ftkjk6Y51VRxS86YZar3oQ@mail.gmail.com>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, Rob Herring <robh@kernel.org>, hverkuil@xs4all.nl, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Mika Westerberg <mika.westerberg@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The current Amlogic Meson eFuse driver only supports the 64-bit SoCs
-(GXBB and newer). Older SoCs cannot be supported by the same driver
-because they do not use the meson secure monitor firmware to access the
-hardware.
+Hi,
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 2 +-
- drivers/nvmem/Kconfig                                     | 4 ++--
- drivers/nvmem/meson-efuse.c                               | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+On Mon, Sep 11, 2017 at 9:59 AM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> Hi folks,
+>
+> We have a large influx of new, unmerged, drivers that are now parsing
+> fwnode endpoints and each one of them is doing this a little bit
+> differently. The needs are still exactly the same for the graph data
+> structure is device independent. This is still a non-trivial task and the
+> majority of the driver implementations are buggy, just buggy in different
+> ways.
+>
+> Facilitate parsing endpoints by adding a convenience function for parsing
+> the endpoints, and make the omap3isp and rcar-vin drivers use them as an
+> example.
+>
+> To show where we're getting with this, I've added support for async
+> sub-device notifier support that is notifiers that can be registered by
+> sub-device drivers as well as V4L2 fwnode improvements to make use of them
+> and the DTS changes for the Nokia N9. Some of these patches I've posted
+> previously in this set here:
+>
+> <URL:http://www.spinics.net/lists/linux-media/msg118764.html>
+>
+> Since that, the complete callback of the master notifier registering the
+> V4L2 device is only called once all sub-notifiers have been completed as
+> well. This way the device node creation can be postponed until all devices
+> have been successfully initialised.
+>
+> With this, the as3645a driver successfully registers a sub-device to the
+> media device created by the omap3isp driver. The kernel also has the
+> information it's related to the sensor driven by the smiapp driver but we
+> don't have a way to expose that information yet.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-index fafd85bd67a6..e3298e18de26 100644
---- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-+++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-@@ -1,4 +1,4 @@
--= Amlogic eFuse device tree bindings =
-+= Amlogic Meson GX eFuse device tree bindings =
- 
- Required properties:
- - compatible: should be "amlogic,meson-gxbb-efuse"
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 101ced4c84be..a21a781f587d 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -135,11 +135,11 @@ config NVMEM_VF610_OCOTP
- 	  be called nvmem-vf610-ocotp.
- 
- config MESON_EFUSE
--	tristate "Amlogic eFuse Support"
-+	tristate "Amlogic Meson GX eFuse Support"
- 	depends on (ARCH_MESON || COMPILE_TEST) && MESON_SM
- 	help
- 	  This is a driver to retrieve specific values from the eFuse found on
--	  the Amlogic Meson SoCs.
-+	  the Amlogic Meson GX SoCs.
- 
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem_meson_efuse.
-diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-index 70bfc9839bb2..1ea3cd24a508 100644
---- a/drivers/nvmem/meson-efuse.c
-+++ b/drivers/nvmem/meson-efuse.c
-@@ -1,5 +1,5 @@
- /*
-- * Amlogic eFuse Driver
-+ * Amlogic Meson GX eFuse Driver
-  *
-  * Copyright (c) 2016 Endless Computers, Inc.
-  * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-@@ -89,5 +89,5 @@ static struct platform_driver meson_efuse_driver = {
- module_platform_driver(meson_efuse_driver);
- 
- MODULE_AUTHOR("Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>");
--MODULE_DESCRIPTION("Amlogic Meson NVMEM driver");
-+MODULE_DESCRIPTION("Amlogic Meson GX NVMEM driver");
- MODULE_LICENSE("GPL v2");
--- 
-2.14.2
+I don't see core changes in this set, so I'm assuming it to be
+targeted at the users of endpoints etc.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Rafael
