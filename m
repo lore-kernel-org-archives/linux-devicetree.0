@@ -1,77 +1,45 @@
 From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v10 0/4] Add Rockchip RGA V4l2 support
-Date: Tue,  3 Oct 2017 17:28:35 +0800
-Message-ID: <20171003092839.26236-1-jacob-chen@iotwrt.com>
+Subject: [PATCH v10 3/4] arm64: dts: rockchip: add RGA device node for RK3399
+Date: Tue,  3 Oct 2017 17:28:38 +0800
+Message-ID: <20171003092839.26236-4-jacob-chen@iotwrt.com>
+References: <20171003092839.26236-1-jacob-chen@iotwrt.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171003092839.26236-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series add a v4l2 m2m drvier for rockchip RGA direct rendering based 2d graphics acceleration module.
+This patch add the RGA dt config of RK3399 SoC.
 
-change in V10:
-- move to rockchip/rga
-- changes according to comments
-- some style changes
+Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-change in V9:
-- remove protduff things
-- test with the latest v4l2-compliance
-
-change in V8:
-- remove protduff things
-
-change in V6,V7:
-- correct warning in checkpatch.pl
-
-change in V5:
-- v4l2-compliance: handle invalid pxielformat
-- v4l2-compliance: add subscribe_event
-- add colorspace support
-
-change in V4:
-- document the controls.
-- change according to Hans's comments
-
-change in V3:
-- rename the controls.
-- add pm_runtime support.
-- enable node by default.
-- correct spelling in documents.
-
-change in V2:
-- generalize the controls.
-- map buffers (10-50 us) in every cmd-run rather than in buffer-import to avoid get_free_pages failed on
-actively used systems.
-- remove status in dt-bindings examples.
-
-Jacob Chen (4):
-  rockchip/rga: v4l2 m2m support
-  ARM: dts: rockchip: add RGA device node for RK3288
-  arm64: dts: rockchip: add RGA device node for RK3399
-  dt-bindings: Document the Rockchip RGA bindings
-
- .../devicetree/bindings/media/rockchip-rga.txt     |   33 +
- arch/arm/boot/dts/rk3288.dtsi                      |   11 +
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   11 +
- drivers/media/platform/Kconfig                     |   15 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/rockchip/rga/Makefile       |    3 +
- drivers/media/platform/rockchip/rga/rga-buf.c      |  154 +++
- drivers/media/platform/rockchip/rga/rga-hw.c       |  421 ++++++++
- drivers/media/platform/rockchip/rga/rga-hw.h       |  437 +++++++++
- drivers/media/platform/rockchip/rga/rga.c          | 1012 ++++++++++++++++++++
- drivers/media/platform/rockchip/rga/rga.h          |  123 +++
- 11 files changed, 2222 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
- create mode 100644 drivers/media/platform/rockchip/rga/Makefile
- create mode 100644 drivers/media/platform/rockchip/rga/rga-buf.c
- create mode 100644 drivers/media/platform/rockchip/rga/rga-hw.c
- create mode 100644 drivers/media/platform/rockchip/rga/rga-hw.h
- create mode 100644 drivers/media/platform/rockchip/rga/rga.c
- create mode 100644 drivers/media/platform/rockchip/rga/rga.h
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index d79e9b3265b9..a3fab6af5a17 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1204,6 +1204,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	rga: rga@ff680000 {
++		compatible = "rockchip,rk3399-rga";
++		reg = <0x0 0xff680000 0x0 0x10000>;
++		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
++		clock-names = "aclk", "hclk", "sclk";
++		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
++		reset-names = "core", "axi", "ahb";
++		power-domains = <&power RK3399_PD_RGA>;
++	};
++
+ 	efuse0: efuse@ff690000 {
+ 		compatible = "rockchip,rk3399-efuse";
+ 		reg = <0x0 0xff690000 0x0 0x80>;
 -- 
 2.14.1
 
