@@ -1,30 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: rtc: mediatek: add bindings for
- MediaTek SoC based RTC
-Date: Tue, 3 Oct 2017 16:58:01 -0500
-Message-ID: <20171003215801.b5cupghaamlid66y@rob-hp-laptop>
-References: <cover.1506049341.git.sean.wang@mediatek.com>
- <1357cb02adb88a8a2d7c2268b8573c0a9b6f8d0c.1506049341.git.sean.wang@mediatek.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/fdt: skip unflattening of disabled nodes
+Date: Tue, 3 Oct 2017 14:58:43 -0700
+Message-ID: <59D40813.4020009@gmail.com>
+References: <20171003161815.25999-1-robh@kernel.org>
+ <20171003161815.25999-2-robh@kernel.org>
+ <nycvar.YSQ.7.76.1710031444060.5407@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1357cb02adb88a8a2d7c2268b8573c0a9b6f8d0c.1506049341.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <nycvar.YSQ.7.76.1710031444060.5407-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 11:33:14AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On 10/03/17 11:46, Nicolas Pitre wrote:
+> On Tue, 3 Oct 2017, Rob Herring wrote:
 > 
-> Add device-tree binding for MediaTek SoC based RTC
+>> For static DT usecases, we don't need the disabled nodes and can skip
+>> unflattening. This saves a significant amount of RAM in memory constrained
+>> cases. In one example on STM32F469, the RAM usage goes from 118K to 26K.
+>>
+>> There are a few cases in the kernel that modify the status property
+>> dynamically. These all are changes from enabled to disabled, depend on
+>> OF_DYNAMIC or are not FDT based (PDT based).
+>>
+>> Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->  .../devicetree/bindings/rtc/rtc-mediatek.txt        | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+> Tested-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+>> ---
+>> For more background, see this presentation from Nico:
+>>
+>> https://connect.linaro.org/resource/sfo17/sfo17-100/
+> 
+> Oh my ... this is horrible ...
 
-Acked-by: Rob Herring <robh@kernel.org>
+I found the presentation to be quite good and useful.
+The Linaro site does not have the slides, could you please send
+me a copy?
+
+Thanks,
+
+Frank
+
+> 
+> /me hides in shame
+> 
+>>
+>>  drivers/of/fdt.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index f8c39705418b..efe91c6856a0 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -396,6 +396,10 @@ static int unflatten_dt_nodes(const void *blob,
+>>  		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+>>  			continue;
+>>  
+>> +		if (!IS_ENABLED(CONFIG_OF_DYNAMIC) &&
+>> +		    !of_fdt_device_is_available(blob, offset))
+>> +			continue;
+>> +
+>>  		if (!populate_node(blob, offset, &mem, nps[depth],
+>>  				   &nps[depth+1], dryrun))
+>>  			return mem - base;
+>> -- 
+>> 2.11.0
+>>
+>>
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
