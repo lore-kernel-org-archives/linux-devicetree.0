@@ -1,62 +1,69 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 1/2] pinctrl: rza1: add support for RZ/A1L
-Date: Tue, 3 Oct 2017 15:40:51 +0000
-Message-ID: <SG2PR06MB1165669027CDC7F76808EADB8A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20171003073334.18917-1-chris.brandt@renesas.com>
- <20171003073334.18917-2-chris.brandt@renesas.com>
- <20171003083148.GG4037@w540>
- <SG2PR06MB1165EE1D21AFC1D3005308538A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20171003150412.GI4037@w540>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 0/2] ARM64: meson-gxm: Add support for Khadas VIM2
+Date: Tue, 03 Oct 2017 17:46:03 +0200
+Message-ID: <1507045563.17300.180.camel@baylibre.com>
+References: <1507044283-18476-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171003150412.GI4037@w540>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507044283-18476-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, carlo@caione.org
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLA0KDQpPbiBUdWVzZGF5LCBPY3RvYmVyIDAzLCAyMDE3IDEsIGphY29wbyBtb25k
-aSB3cm90ZToNCj4gPiBBcyBmb3IgU1NJLCB0aGUgbWFudWFsIHNheXMgb25seSB0aGUgU1NJVHgg
-cGlucyBuZWVkIGJpLWRpciwgbm90IHRoZQ0KPiA+IFNTSVJ4IHBpbnMuDQo+IA0KPiBMb29raW5n
-IGF0IFJaL0ExSCB0YWJsZXMgeW91J3JlIHJpZ2h0LiBJIHdvbmRlciB3aHkgaW4gUlovQTFMIFNT
-SSBwaW5zDQo+IGFyZSBsaXN0ZWQgYXMgYmlkaXIgYW5kIGluIFJaL0ExSCB0aGV5J3JlIG5vdC4N
-Cg0KU29ycnksIHRvIGJlIGNsZWFyLCBTU0lUeCBwaW5zIGhhdmUgbm90aGluZyB0byBkbyB3aXRo
-ICJiaS1kaXIiLg0KDQpUaG9zZSB3ZXJlIHBpbnMgdGhhdCB5b3UgaGF2ZSB0byBhZGQgdG8gdGhl
-IHJ6YTFsX3N3aW9fcGluc1tdIGFycmF5IA0KYmVjYXVzZSB0aGV5IG11c3QgaGF2ZSB0byBoYXZl
-IGJvdGggUElQQ24uUElQQyBhbmQgUE0gYml0cyBzZXQgdG8gJzAnIChpZSwgDQpmb3JjZWQgdG8g
-b3V0cHV0KS4NCg0KSG93ZXZlciwgdGhlcmUgaXMgbm8gU1NJVHhENSBwaW4gaW4gUlovQTFMLg0K
-DQogIFJaL0ExSDogU1NJVHhEMCwgU1NJVHhEMSwgU1NJVHhEMywgU1NJVHhENQ0KICBSWi9BMUw6
-IFNTSVR4RDAsIFNTSVR4RDEsIFNTSVR4RDMNCg0KDQoNCj4gPiBJIHRob3VnaHQgd2Ugc2FpZCBU
-SU9DIGRpZG4ndCBuZWVkIHRvIGJlIGluIGEgdGFibGUgYmVjYXVzZSB0aGUgdXNlciBoYXMNCj4g
-PiB0byBzcGVjaWZ5IHRoZW0gYW55d2F5IGJlY2F1c2UgdGhlIHVzZXIgaGFzIHRvIGNob29zZSBp
-ZiBoZSB3YW50cyB0aGVtDQo+ID4gYXMgaW5wdXQgb3Igb3V0cHV0LCBzbyBpZiBoZSBkb2VzIHRo
-YXQsIHRoZW4gd2UgYXV0b21hdGljYWxseSBrbm93IGl0J3MNCj4gPiBhIHN3aW8gcGluLiBIbW0s
-IG1heWJlIEkgaGF2ZSB0byBnbyBiYWNrIGFuZCBsb29rIGF0IHdoYXQgdGhlIGRyaXZlcg0KPiA+
-IGVuZGVkIHVwIGltcGxlbWVudGluZy4NCj4gPg0KPiANCj4gQ2FuIGNvbmZpcm0gVElPQyBwaW5z
-IGFyZSBub3QgbGlzdGVkIGluIFNXSU8gdGFibGUgaW4gUlovQTFILg0KDQpZZXMsIHRoYXQgJ2Fy
-ZScgbGlzdGVkIGluIHRoZSB0YWJsZS4gQnV0IGZvciBhIGdvb2QgcmVhc29uLg0KDQpUaGUgVElP
-QyBwaW5zIGNhbiBiZSB1c2VzIGFzIGFuIG91dHB1dCAoUFdNIGZvciBleGFtcGxlKSBvciBhcyBh
-IGlucHV0IA0KKGlucHV0IGNhcHR1cmUgZm9yIGV4YW1wbGUpLCBzbyB0aGV5IGFyZSBub3QgcmVh
-bGx5IGEgZml4ZWQgZGlyZWN0aW9uLiANClRoYXQgaXMgd2h5IHRoZSB1c2VyIG5lZWRzIHRvIHNw
-ZWNpZnkgaG93IHRoZXkgcGxhbiB0byB1c2UgdGhlbSBpbiB0aGUgRFQuDQpBbmQuLi50aGF0J3Mg
-YWxzbyB3aHkgaXQgZG9lc24ndCBtYWtlIHNlbnNlIHRvIHB1dCB0aGVtIGluIHRoZSANCnJ6YTFs
-X3N3aW9fcGluc1tdIGFycmF5ICh3ZSBoYXZlIG5vIGlkZWEgaG93IHRoZXkgd2FudCB0byB1c2Ug
-dGhlbSkuDQoNClNvLCB0aGUgaGFyZHdhcmUgbWFudWFsIGhhcyB0aGUgVElPQyBwaW5zIGluIHRo
-ZSBTV0lPIHRhYmxlIHRvIHRlbGwgdGhlIA0KdXNlciAnaGV5LCB5b3UgaGF2ZSB0byBtYW51YWxs
-eSBzZXQgdGhlc2UgcGlucyB0byBlaXRoZXIgaW5wdXQgb3Igb3V0cHV0DQp5b3Vyc2VsZiBiZWNh
-dXNlIHdlIGNhbid0IG1hZ2ljYWxseSBrbm93IHdoYXQgeW91IHdhbnQgdG8gdXNlIHRoZW0gZm9y
-Lg0KDQpCdXQuLi4NClRoZSByZWFzb24gZm9yIHRoZSByemExbF9zd2lvX3BpbnNbXSBhcnJheSBp
-cyBmb3Igd2VpcmQgcGluIA0KY29uZmlndXJhdGlvbnMgdGhhdCBhcmUgZml4ZWQgKGxpa2UgTENE
-IExWRFMgb3V0cHV0IHBpbnMgbmVlZCB0byBiZSBjb25maWd1cmVkIGFzIA0KaW5wdXRzKS4NCg0K
-DQo+IFRoYW5rcyBmb3IgZG91YmxlIGNoZWNraW5nLiBZb3VyIHNvdXJjZSBmcm9tIEphcGFuIGlz
-IG1vcmUNCj4gYXV0aG9yaXRhdGl2ZSB0aGFuIG1hbnVhbHMgYW5kIGRlZmludGVseSBtb3JlIGFj
-Y3VyYXRlIHRoYW4gbWUgOykNCg0KU28sIGFmdGVyIGFsbCB0aGF0LCBJIGRvbid0IHRoaW5rIHdl
-IGZvdW5kIGFueSBpc3N1ZXMgd2l0aCBteSBwYXRjaC4NCkNvcnJlY3Q/Pz8NCg0KDQpUaGFua3Mh
-DQoNCkNocmlzDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, 2017-10-03 at 17:24 +0200, Neil Armstrong wrote:
+> The Khadas VIM2 is a Single Board Computer, respin of the origin
+> Khadas VIM board, using an Amlogic S912 SoC and more server oriented.
+>     
+> It provides the same external connectors and header pinout, plus a SPI
+> NOR Flash, a reprogrammable STM8S003 MCU, FPC Connector, Cooling FAN header
+> and Pogo Pads Arrays.
+> 
+> To eventually provide access to the SPI NOR flash, the eMMC DS pin must be
+> configured as a different pincrl node to disable it's access from the MMC
+> Controller. This first patch splits this emmc pins entry for GXBB and GXL.
+> 
+> Depends on eMMC ARM64 DT patches from Jerome Brunet at [2]
+> 
+> Changes since v1 at [1] :
+>  - Add acks from Martin and Rob
+>  - Cleanup external_phy node
+>  - Cleanup sd_emmc_a node
+>  - Rebased with eMMC ARM64 DT patches from Jerome Brunet at [2]
+> 
+> [1] https://lkml.kernel.org/r/1505832820-3517-1-git-send-email-narmstrong@bayl
+> ibre.com
+> [2] https://lkml.kernel.org/r/20170831135226.19784-1-jbrunet@baylibre.com
+> 
+> Neil Armstrong (2):
+>   ARM64: dts: meson-gxl: Take eMMC data strobe out of eMMC pins
+>   ARM64: dts: meson-gxm: Add support for Khadas VIM2
+
+For the series:
+
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+
+> 
+>  Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+>  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+>  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |   2 +-
+>  .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      |   2 +-
+>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |   2 +-
+>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |   2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |   2 +-
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |   2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  10 +-
+>  .../dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts |   2 +-
+>  .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   |   2 +-
+>  .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    |   2 +-
+>  .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     |   2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  10 +-
+>  .../boot/dts/amlogic/meson-gxm-khadas-vim2.dts     | 399
+> +++++++++++++++++++++
+>  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |   2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts |   2 +-
+>  17 files changed, 429 insertions(+), 16 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> 
