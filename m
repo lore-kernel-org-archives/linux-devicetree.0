@@ -1,71 +1,101 @@
-From: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
-Date: Tue, 3 Oct 2017 17:23:50 +0300
-Message-ID: <20171003142349.6uxwfime32dwzxwk@valkosipuli.retiisi.org.uk>
-References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
- <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
- <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
- <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
- <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for
+ GPIO0/1 when used as LDOs
+Date: Tue, 3 Oct 2017 16:43:28 +0200
+Message-ID: <20171003144328.wgk57lmda52djcl5@flea>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-13-quentin.schulz@free-electrons.com>
+ <20171002204235.25d4437a2p5qzrrj@flea>
+ <CAGb2v67ZV0oZ41WS1Borrz0fDYiXV5B1DTKnPzRQVcodMOOLzQ@mail.gmail.com>
+ <20171003091837.GK20805@n2100.armlinux.org.uk>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b25ylnst75befymh"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE6EZ3HAKGQEMSB7N4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "Mohandass, Divagar" <divagar.mohandass@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mika.westerberg@linux.intel.com, linux-pm@vger.kernel.org
+In-Reply-To: <20171003091837.GK20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 20, 2017 at 11:45:20AM +0300, sakari.ailus@iki.fi wrote:
-> > >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client *client, const
-> > >> struct i2c_device_id *id)
+
+--b25ylnst75befymh
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Oct 03, 2017 at 09:18:37AM +0000, Russell King - ARM Linux wrote:
+> On Tue, Oct 03, 2017 at 10:06:29AM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Oct 3, 2017 at 4:42 AM, Maxime Ripard
+> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > On Mon, Oct 02, 2017 at 12:08:54PM +0000, Quentin Schulz wrote:
+> > >> On AXP813/818, GPIO0 and GPIO1 can be used as LDO as (respectively)
+> > >> ldo_io0 and ldo_io1.
 > > >>
-> > >>       i2c_set_clientdata(client, at24);
+> > >> Let's add the pinctrl properties to the said regulators.
 > > >>
-> > >> +     /* enable runtime pm */
-> > >> +     pm_runtime_get_noresume(&client->dev);
-> > >> +     pm_runtime_set_active(&client->dev);
-> > >> +     pm_runtime_enable(&client->dev);
+> > >> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > >> ---
+> > >>  arch/arm/boot/dts/axp81x.dtsi | 14 ++++++++++++++
+> > >>  1 file changed, 14 insertions(+)
+> > >>
+> > >> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+> > >> index f90f257130d5..099b0ddc1bbb 100644
+> > >> --- a/arch/arm/boot/dts/axp81x.dtsi
+> > >> +++ b/arch/arm/boot/dts/axp81x.dtsi
+> > >> @@ -52,6 +52,16 @@
+> > >>               compatible = "x-powers,axp813-gpio";
+> > >>               gpio-controller;
+> > >>               #gpio-cells = <2>;
+> > >> +
+> > >> +             gpio0_ldo: gpio0_ldo {
+> > >> +                     pins = "GPIO0";
+> > >> +                     function = "ldo";
+> > >> +             };
+> > >> +
+> > >> +             gpio1_ldo: gpio1_ldo {
+> > >> +                     pins = "GPIO1";
+> > >> +                     function = "ldo";
+> > >> +             };
+> > >
+> > > The node names are not supposed to contain any hyphens.
 > > 
-> > Do we need this get_noresume/set_active dance? I remember it was for
-> > some reason needed for PCI devices, but I don't see why for I2C
-> > anything else than just pm_runtime_enable() would be necessary.
+> > Hmm, I was under the impression that hyphens were preferred in
+> > node names, and a warning would be added to dtc later on.
+> > I might be wrong though.
 > 
-> You specifically do not need (all) this for PCI devices, but AFAIU for I²C
-> devices you do. The runtime PM status of a device is disabled by default
-> and the use count is zero, but on ACPI based systems the device is still
-> powered on.
+> I think there's a terminology issue here.
 > 
-> > 
-> > Also, we enable runtime PM, but we don't provide any callbacks. If
-> > there is no callback in any level of the hierarchy, NULL would be
-> > returned in [3], making [2] return -ENOSYS and [1] fail. The behavior
-> > depends on subsystem and whether the device is attached to a
-> > pm_domain. In our particular case I'd guess the device would be in an
-> > ACPI pm_domain and that would work, but the driver is generic and must
-> > work in any cases.
+> "-" is a hyphen or minus sign.
+> "_" is an underscore.
 > 
-> Agreed.
+> Underscores are not supposed to be used for node names, instead hyphens
+> are preferred.  I think Maxime means "underscore".
+> 
+> Here's the list from dtc/checks.c:
+> 
+> #define LOWERCASE       "abcdefghijklmnopqrstuvwxyz"
+> #define UPPERCASE       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+> #define DIGITS          "0123456789"
+> #define PROPNODECHARS   LOWERCASE UPPERCASE DIGITS ",._+*#?-"
+> #define PROPNODECHARSSTRICT     LOWERCASE UPPERCASE DIGITS ",-"
+> 
+> If strict mode is enabled, use of any of "._+#?" in the node name will
+> produce a warning.
 
-I looked at the code and what actually happens here is the runtime_suspend
-and runtime_resume callbacks aren't set is that the first pm_runtime_put()
-call itself succeeds because checking the the runtime_suspend callback will
-be done in the work queue function. This leaves the device in RPM_ACTIVE
-state, which I don't think is a problem since the driver did not have
-explicit functions to control the device power state.
+Right, sorry, I meant underscores..
 
-Further pm_runtime_put() and pm_runtime_get() calls will succeed because
-the device is in RPM_ACTIVE state.
-
-So I see no reason to set the callbacks if they would not actually control
-regulators, clocks or GPIOs required by the device.
-
-Cc linux-pm.
+Maxime
 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--b25ylnst75befymh--
