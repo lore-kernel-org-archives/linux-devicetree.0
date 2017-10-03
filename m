@@ -1,81 +1,145 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
- used as LDOs
-Date: Tue, 3 Oct 2017 10:18:37 +0100
-Message-ID: <20171003091837.GK20805@n2100.armlinux.org.uk>
-References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
- <20171002120854.5212-13-quentin.schulz@free-electrons.com>
- <20171002204235.25d4437a2p5qzrrj@flea>
- <CAGb2v67ZV0oZ41WS1Borrz0fDYiXV5B1DTKnPzRQVcodMOOLzQ@mail.gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 4/5] powerpc: pseries: only store the device node
+ basename in full_name
+Date: Tue, 03 Oct 2017 20:26:16 +1100
+Message-ID: <87tvzgd1l3.fsf@concordia.ellerman.id.au>
+References: <20170821151651.25096-1-robh@kernel.org>
+ <20170821151651.25096-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67ZV0oZ41WS1Borrz0fDYiXV5B1DTKnPzRQVcodMOOLzQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20170821151651.25096-5-robh@kernel.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, David Laight <David.Laight@aculab.com>, Paul Mackerras <paulus@samba.org>, tyreld@linux.vnet.ibm.com, nfont@linux.vnet.ibm.com, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 03, 2017 at 10:06:29AM +0800, Chen-Yu Tsai wrote:
-> On Tue, Oct 3, 2017 at 4:42 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Mon, Oct 02, 2017 at 12:08:54PM +0000, Quentin Schulz wrote:
-> >> On AXP813/818, GPIO0 and GPIO1 can be used as LDO as (respectively)
-> >> ldo_io0 and ldo_io1.
-> >>
-> >> Let's add the pinctrl properties to the said regulators.
-> >>
-> >> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> >> ---
-> >>  arch/arm/boot/dts/axp81x.dtsi | 14 ++++++++++++++
-> >>  1 file changed, 14 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-> >> index f90f257130d5..099b0ddc1bbb 100644
-> >> --- a/arch/arm/boot/dts/axp81x.dtsi
-> >> +++ b/arch/arm/boot/dts/axp81x.dtsi
-> >> @@ -52,6 +52,16 @@
-> >>               compatible = "x-powers,axp813-gpio";
-> >>               gpio-controller;
-> >>               #gpio-cells = <2>;
-> >> +
-> >> +             gpio0_ldo: gpio0_ldo {
-> >> +                     pins = "GPIO0";
-> >> +                     function = "ldo";
-> >> +             };
-> >> +
-> >> +             gpio1_ldo: gpio1_ldo {
-> >> +                     pins = "GPIO1";
-> >> +                     function = "ldo";
-> >> +             };
-> >
-> > The node names are not supposed to contain any hyphens.
-> 
-> Hmm, I was under the impression that hyphens were preferred in
-> node names, and a warning would be added to dtc later on.
-> I might be wrong though.
+Hi Rob,
 
-I think there's a terminology issue here.
+Unfortunately this one has a bug, which only showed up after some stress
+testing.
 
-"-" is a hyphen or minus sign.
-"_" is an underscore.
+Rob Herring <robh@kernel.org> writes:
+> With dependencies on full_name containing the entire device node path
+> removed, stop storing the full_name in nodes created by
+> dlpar_configure_connector() and pSeries_reconfig_add_node().
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+> v2:
+> - Rework dlpar_parse_cc_node() to a single allocation and strcpy instead
+>   of kasprintf
+>   
+>  arch/powerpc/platforms/pseries/dlpar.c    | 30 +++++++-----------------------
+>  arch/powerpc/platforms/pseries/reconfig.c |  2 +-
+>  2 files changed, 8 insertions(+), 24 deletions(-)
+>
+> diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+> index 783f36364690..31a0615aeea1 100644
+> --- a/arch/powerpc/platforms/pseries/dlpar.c
+> +++ b/arch/powerpc/platforms/pseries/dlpar.c
+> @@ -75,28 +75,17 @@ static struct property *dlpar_parse_cc_property(struct cc_workarea *ccwa)
+>  	return prop;
+>  }
+>  
+> -static struct device_node *dlpar_parse_cc_node(struct cc_workarea *ccwa,
+> -					       const char *path)
+> +static struct device_node *(dlpar_parse_cc_node)(struct cc_workarea *ccwa)
+>  {
+>  	struct device_node *dn;
+> -	char *name;
+> -
+> -	/* If parent node path is "/" advance path to NULL terminator to
+> -	 * prevent double leading slashs in full_name.
+> -	 */
+> -	if (!path[1])
+> -		path++;
+> +	const char *name = (const char *)ccwa + be32_to_cpu(ccwa->name_offset);
+>  
+> -	dn = kzalloc(sizeof(*dn), GFP_KERNEL);
+> +	dn = kzalloc(sizeof(*dn) + strlen(name) + 1, GFP_KERNEL);
+>  	if (!dn)
+>  		return NULL;
+>  
+> -	name = (char *)ccwa + be32_to_cpu(ccwa->name_offset);
+> -	dn->full_name = kasprintf(GFP_KERNEL, "%s/%s", path, name);
+> -	if (!dn->full_name) {
+> -		kfree(dn);
+> -		return NULL;
+> -	}
+> +	dn->full_name = (char *)(dn + 1);
+> +	strcpy((char *)dn->full_name, name);
 
-Underscores are not supposed to be used for node names, instead hyphens
-are preferred.  I think Maxime means "underscore".
+Allocating the full_name on the tail of the struct this way breaks the
+call to kfree(node->full_name) in of_node_release().
 
-Here's the list from dtc/checks.c:
+eg:
 
-#define LOWERCASE       "abcdefghijklmnopqrstuvwxyz"
-#define UPPERCASE       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-#define DIGITS          "0123456789"
-#define PROPNODECHARS   LOWERCASE UPPERCASE DIGITS ",._+*#?-"
-#define PROPNODECHARSSTRICT     LOWERCASE UPPERCASE DIGITS ",-"
 
-If strict mode is enabled, use of any of "._+#?" in the node name will
-produce a warning.
+[  322.543581] Freeing node->full_name c0000007f4ed4090
+[  322.543583] =============================================================================
+[  322.543586] BUG kmalloc-192 (Tainted: G    B          ): Invalid object pointer 0xc0000007f4ed4090
+[  322.543588] -----------------------------------------------------------------------------
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+[  322.543592] INFO: Slab 0xf000000001fd3b40 objects=292 used=72 fp=0xc0000007f4ed41a8 flags=0x13ffff800000101
+[  322.543595] CPU: 40 PID: 5 Comm: kworker/u192:0 Tainted: G    B           4.14.0-rc2-gcc-6.3.1-next-20170929-dirty #429
+[  322.543600] Workqueue: pseries hotplug workque pseries_hp_work_fn
+[  322.543602] Call Trace:
+[  322.543605] [c0000003f769f660] [c000000000a6b710] dump_stack+0xb0/0xf0 (unreliable)
+[  322.543609] [c0000003f769f6a0] [c00000000032cd5c] slab_err+0x9c/0xc0
+[  322.543612] [c0000003f769f790] [c00000000033440c] free_debug_processing+0x19c/0x490
+[  322.543615] [c0000003f769f860] [c0000000003349fc] __slab_free+0x2fc/0x4b0
+[  322.543619] [c0000003f769f960] [c0000000008f2484] of_node_release+0xe4/0x1a0
+[  322.543622] [c0000003f769fa00] [c000000000a71c04] kobject_put+0xd4/0x160
+[  322.543625] [c0000003f769fa80] [c0000000008f10c4] of_node_put+0x34/0x50
+[  322.543628] [c0000003f769fab0] [c0000000000c0248] dlpar_cpu_remove_by_index+0x108/0x130
+[  322.543631] [c0000003f769fb40] [c0000000000c166c] dlpar_cpu+0x27c/0x510
+[  322.543634] [c0000003f769fbf0] [c0000000000bb2d0] handle_dlpar_errorlog+0xc0/0x160
+[  322.543638] [c0000003f769fc60] [c0000000000bb3ac] pseries_hp_work_fn+0x3c/0xa0
+[  322.543641] [c0000003f769fc90] [c00000000012200c] process_one_work+0x2bc/0x560
+[  322.543645] [c0000003f769fd20] [c000000000122348] worker_thread+0x98/0x5d0
+[  322.543648] [c0000003f769fdc0] [c00000000012b4e4] kthread+0x164/0x1b0
+[  322.543651] [c0000003f769fe30] [c00000000000bae0] ret_from_kernel_thread+0x5c/0x7c
+
+
+The obvious fix is just to allocate it separately as before, eg ~=:
+
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index 267b01e30ac0..8617d7e28bf7 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -80,11 +80,16 @@ static struct device_node *dlpar_parse_cc_node(struct cc_workarea *ccwa)
+ 	struct device_node *dn;
+ 	const char *name = (const char *)ccwa + be32_to_cpu(ccwa->name_offset);
+ 
+-	dn = kzalloc(sizeof(*dn) + strlen(name) + 1, GFP_KERNEL);
++	dn = kzalloc(sizeof(*dn), GFP_KERNEL);
+ 	if (!dn)
+ 		return NULL;
+ 
+-	dn->full_name = (char *)(dn + 1);
++	dn->full_name = kzalloc(strlen(name) + 1, GFP_KERNEL);
++	if (!dn->full_name) {
++		kfree(dn);
++		return NULL;
++	}
++
+ 	strcpy((char *)dn->full_name, name);
+ 
+ 	of_node_set_flag(dn, OF_DYNAMIC);
+
+
+cheers
