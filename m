@@ -1,39 +1,39 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm64: dts: renesas: fix avb_pins on some boards
-Date: Tue, 3 Oct 2017 09:32:01 +0200
-Message-ID: <CAMuHMdUvv9VXoYisjz+N3J2ra86N1ko6Cj6ze1T+mwz+mn83xg@mail.gmail.com>
-References: <1507006633-28258-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] pinctrl: rza1: add support for RZ/A1L
+Date: Tue,  3 Oct 2017 02:33:32 -0500
+Message-ID: <20171003073334.18917-1-chris.brandt@renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507006633-28258-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+The RZ/A series has 3 main device: RZ/A1L, RZ/A1M, RZ/A1H.
 
-On Tue, Oct 3, 2017 at 6:57 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch set is based on the renesas.git /
-> renesas-devel-20171002-v4.14-rc3 tag.
+In terms of pinctrl, RZ/A1H and RZ/A1M are exactly the same.
 
-Thank you!
+Aspects like the number of ports and the location where peripherals are
+brought out differ between the RZ/A1H and RZ/A1L.
 
-For the whole series:
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Basically this series adds a new set of tables for RZ/A1L and a new
+compatible "renesas,r7s72102-ports"
 
-Gr{oetje,eeting}s,
+This was tested on a Renesas Stream it board which contains an RZ/A1L and
+external SDRAM.
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Chris Brandt (2):
+  pinctrl: rza1: add support for RZ/A1L
+  dt-bindings: pinctrl: add support for RZ/A1L
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ .../bindings/pinctrl/renesas,rza1-pinctrl.txt      |   3 +-
+ drivers/pinctrl/pinctrl-rza1.c                     | 134 +++++++++++++++++++++
+ 2 files changed, 136 insertions(+), 1 deletion(-)
+
+-- 
+2.14.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
