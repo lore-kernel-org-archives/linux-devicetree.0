@@ -1,80 +1,62 @@
-From: Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: 4879b7ae05 ("Merge tag 'dmaengine-4.12-rc1' of .."): WARNING:
- kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value
- 000001be
-Date: Mon, 2 Oct 2017 20:17:17 -0500
-Message-ID: <20171003011717.gl6sbyoykb3lzhed@treble>
-References: <59d177a7.vsiddgOxdHRIlRvy%fengguang.wu@intel.com>
- <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw@mail.gmail.com>
- <20171002212654.rsm4uj3hfioddldd@treble>
- <CA+55aFwo4U3vHFtKyCrGaumcfCMszfS48QSxNfEC3pD5wLxQnA@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for
+ GPIO0/1 when used as LDOs
+Date: Tue, 3 Oct 2017 10:06:29 +0800
+Message-ID: <CAGb2v67ZV0oZ41WS1Borrz0fDYiXV5B1DTKnPzRQVcodMOOLzQ@mail.gmail.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-13-quentin.schulz@free-electrons.com> <20171002204235.25d4437a2p5qzrrj@flea>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+55aFwo4U3vHFtKyCrGaumcfCMszfS48QSxNfEC3pD5wLxQnA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <fengguang.wu@intel.com>, LKP <lkp@01.org>, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dma <dmaengine@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, LKML <linux-kernel@vger.kernel.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBP7BZPHAKGQEQYQ7FRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171002204235.25d4437a2p5qzrrj@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 02, 2017 at 02:58:08PM -0700, Linus Torvalds wrote:
-> On Mon, Oct 2, 2017 at 2:26 PM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > The bisect is pointing to a commit which is almost 5 months old, so this
-> > is pre-ORC.  Kallsyms *is* enabled, but the unwinder dump isn't smart
-> > enough to realize it's dumping misaligned stack addresses:
-> 
-> Ahh, I didn't pick up on that "esp isn't aligned" part.
-> 
-> That said, if %esp gets unaligned at some point, it's not clear
-> exactly when we should align it. An unaligned stack pointer will
-> continue to _work_ just potentially perform fairly badly.
+On Tue, Oct 3, 2017 at 4:42 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Oct 02, 2017 at 12:08:54PM +0000, Quentin Schulz wrote:
+>> On AXP813/818, GPIO0 and GPIO1 can be used as LDO as (respectively)
+>> ldo_io0 and ldo_io1.
+>>
+>> Let's add the pinctrl properties to the said regulators.
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/axp81x.dtsi | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+>> index f90f257130d5..099b0ddc1bbb 100644
+>> --- a/arch/arm/boot/dts/axp81x.dtsi
+>> +++ b/arch/arm/boot/dts/axp81x.dtsi
+>> @@ -52,6 +52,16 @@
+>>               compatible = "x-powers,axp813-gpio";
+>>               gpio-controller;
+>>               #gpio-cells = <2>;
+>> +
+>> +             gpio0_ldo: gpio0_ldo {
+>> +                     pins = "GPIO0";
+>> +                     function = "ldo";
+>> +             };
+>> +
+>> +             gpio1_ldo: gpio1_ldo {
+>> +                     pins = "GPIO1";
+>> +                     function = "ldo";
+>> +             };
+>
+> The node names are not supposed to contain any hyphens.
 
-True, but unaligned stacks seem to be very rare, and I don't remember
-ever seeing one with frame pointers enabled.  I think the call return
-addresses will always be aligned, so I think it makes sense to align the
-starting address before dumping.
+Hmm, I was under the impression that hyphens were preferred in
+node names, and a warning would be added to dtc later on.
+I might be wrong though.
 
-> But more likely, we picked the wrong frame value to begin with.
-
-Agreed.
-
-> For example, maybe that decode_frame_pointer() logic really should
-> check not that the low bit in bp is set, but instead check that it's a
-> valid "unsigned long *" that has the low bit set.
-> 
-> IOW, the difference would be that instead of checking
-> 
->         if (!(regs & 0x1))
->                 return NULL;
-> 
-> if would check
-> 
->         if ((regs & (sizeof(unsigned long)-1)) != 1)
->                 return NULL;
-
-Yeah, that would be an improvement.
-
-> but also maybe add logic to simply not trust a next frame pointer that
-> isn't appropriately aligned.
-
-Also a good idea.
-
-> So I think adding PTR_ALIGN() there in the unwind dumper might be a
-> bit late. By that time it has already accepted what looks like a
-> garbage frame. No?
-
-Yeah, maybe.  I guess it really depends on what exactly the root cause
-is.  It got a bad frame pointer somehow, but maybe not *too* bad because
-it still ended up in the task stack somehow.  It's not clear how that
-happened, but it's possible the task stack had some clues about what led
-up to it.
-
-I'll implement your suggestions in addition to the patch to align sp in
-the dump code.  Having all of them together would hopefully enable the
-unwinder to detect a bad condition as early as possible and also do a
-better job at dumping it.
-
--- 
-Josh
+ChenYu
