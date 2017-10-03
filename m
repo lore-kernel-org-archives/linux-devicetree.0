@@ -1,234 +1,462 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/2] ARM64: dts: meson-gxl: Take eMMC data strobe out of eMMC pins
-Date: Tue,  3 Oct 2017 17:24:42 +0200
-Message-ID: <1507044283-18476-2-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v2 2/2] ARM64: dts: meson-gxm: Add support for Khadas VIM2
+Date: Tue,  3 Oct 2017 17:24:43 +0200
+Message-ID: <1507044283-18476-3-git-send-email-narmstrong@baylibre.com>
 References: <1507044283-18476-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1507044283-18476-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gouwa <gouwa-GEqbEQZgqepWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since the Data Strobe pin is optional, take it out of the default
-eMMC pins and add a separate entry.
+The Khadas VIM2 is a Single Board Computer, respin of the origin
+Khadas VIM board, using an Amlogic S912 SoC and more server oriented.
 
+It provides the same external connectors and header pinout, plus a SPI
+NOR Flash, a reprogrammable STM8S003 MCU, FPC Connector, Cooling FAN header
+and Pogo Pads Arrays.
+
+Cc: Gouwa <gouwa-GEqbEQZgqepWk0Htik3J/w@public.gmane.org>
+Acked-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi            |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts           |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts         |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts            |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi               |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi           |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                    | 10 ++++++++--
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts   |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi          |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi                     | 10 ++++++++--
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts            |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts             |  2 +-
- 14 files changed, 28 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxm-khadas-vim2.dts     | 399 +++++++++++++++++++++
+ 3 files changed, 401 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index 4157987..7d4b95e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -213,7 +213,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 4e4bc0b..a445997 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -71,6 +71,7 @@ Board compatible values (alphabetically, grouped by SoC):
  
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index 4b17a76..a42c8f4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -302,7 +302,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "disabled";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
+   - "amlogic,q200" (Meson gxm s912)
+   - "amlogic,q201" (Meson gxm s912)
++  - "khadas,vim2" (Meson gxm s912)
+   - "kingnovel,r-box-pro" (Meson gxm S912)
+   - "nexbox,a1" (Meson gxm s912)
  
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 38dfdde..9a77323 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -272,7 +272,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 1ffa1c2..0b97d9f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -271,7 +271,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 23c08c3..932158a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -242,7 +242,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index f2bc6de..1fe8e24 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -199,7 +199,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index af834cd..3d96a68 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -386,8 +386,14 @@
- 			mux {
- 				groups = "emmc_nand_d07",
- 				       "emmc_cmd",
--				       "emmc_clk",
--				       "emmc_ds";
-+				       "emmc_clk";
-+				function = "emmc";
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index 7a9f48c..70246e3 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -15,6 +15,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxm-khadas-vim2.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+new file mode 100644
+index 0000000..32c138e
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -0,0 +1,399 @@
++/*
++ * Copyright (c) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>.
++ * Copyright (c) 2017 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/thermal/thermal.h>
++
++#include "meson-gxm.dtsi"
++
++/ {
++	compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
++	model = "Khadas VIM2";
++
++	aliases {
++		serial0 = &uart_AO;
++		serial1 = &uart_A;
++		serial2 = &uart_AO_B;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 0>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1710000>;
++
++		button-function {
++			label = "Function";
++			linux,code = <KEY_FN>;
++			press-threshold-microvolt = <10000>;
++		};
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	gpio_fan: gpio-fan {
++		compatible = "gpio-fan";
++		gpios = <&gpio GPIODV_14 GPIO_ACTIVE_HIGH
++			 &gpio GPIODV_15 GPIO_ACTIVE_HIGH>;
++		/* Dummy RPM values since fan is optional */
++		gpio-fan,speed-map = <0 0
++				      1 1
++				      2 2
++				      3 3>;
++		cooling-min-level = <0>;
++		cooling-max-level = <3>;
++		#cooling-cells = <2>;
++	};
++
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		poll-interval = <100>;
++
++		button@0 {
++			label = "power";
++			linux,code = <KEY_POWER>;
++			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
 +			};
 +		};
++	};
 +
-+		emmc_ds_pins: emmc-ds {
-+			mux {
-+				groups = "emmc_ds";
- 				function = "emmc";
- 			};
- 		};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-index 977b424..e825825 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-@@ -141,7 +141,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 64c54c9..baaa03b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -221,7 +221,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-index 1b8f328..271f142 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-@@ -229,7 +229,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-index 129af90..ff09df1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-@@ -135,7 +135,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index d8dd329..2e06397 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -275,8 +275,14 @@
- 			mux {
- 				groups = "emmc_nand_d07",
- 				       "emmc_cmd",
--				       "emmc_clk",
--				       "emmc_ds";
-+				       "emmc_clk";
-+				function = "emmc";
++	pwmleds {
++		compatible = "pwm-leds";
++
++		power {
++			label = "vim:red:power";
++			pwms = <&pwm_AO_ab 1 7812500 0>;
++			max-brightness = <255>;
++			linux,default-trigger = "default-on";
++		};
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	thermal-zones {
++		cpu-thermal {
++			polling-delay-passive = <250>; /* milliseconds */
++			polling-delay = <1000>; /* milliseconds */
++
++			thermal-sensors = <&scpi_sensors 0>;
++
++			trips {
++				cpu_alert0: cpu-alert0 {
++					temperature = <70000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "active";
++				};
++
++				cpu_alert1: cpu-alert1 {
++					temperature = <80000>; /* millicelsius */
++					hysteresis = <2000>; /* millicelsius */
++					type = "passive";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert0>;
++					cooling-device = <&gpio_fan THERMAL_NO_LIMIT 1>;
++				};
++
++				map1 {
++					trip = <&cpu_alert1>;
++					cooling-device = <&gpio_fan 2 THERMAL_NO_LIMIT>;
++				};
++
++				map2 {
++					trip = <&cpu_alert1>;
++					cooling-device =
++						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++
++				map3 {
++					trip = <&cpu_alert1>;
++					cooling-device =
++						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
 +			};
 +		};
++	};
 +
-+		emmc_ds_pins: emmc-ds {
-+			mux {
-+				groups = "emmc_ds";
- 				function = "emmc";
- 			};
- 		};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index 22c6977..e7a228f6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -193,7 +193,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vddio_ao18: regulator-vddio_ao18 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO18";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++};
++
++&cec_AO {
++	status = "okay";
++	pinctrl-0 = <&ao_cec_pins>;
++	pinctrl-names = "default";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&cpu0 {
++	cooling-min-level = <0>;
++	cooling-max-level = <6>;
++	#cooling-cells = <2>;
++};
++
++&cpu4 {
++	cooling-min-level = <0>;
++	cooling-max-level = <4>;
++	#cooling-cells = <2>;
++};
++
++&ethmac {
++	pinctrl-0 = <&eth_pins>;
++	pinctrl-names = "default";
++
++	/* Select external PHY by default */
++	phy-handle = <&external_phy>;
++
++	amlogic,tx-delay-ns = <2>;
++
++	/* External PHY reset is shared with internal PHY Led signals */
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	/* External PHY is in RGMII */
++	phy-mode = "rgmii";
++
++	status = "okay";
++};
++
++&external_mdio {
++	external_phy: ethernet-phy@0 {
++		/* Realtek RTL8211F (0x001cc916) */
++		reg = <0>;
++	};
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
++&i2c_A {
++	status = "okay";
++	pinctrl-0 = <&i2c_a_pins>;
++	pinctrl-names = "default";
++};
++
++&i2c_B {
++	status = "okay";
++	pinctrl-0 = <&i2c_b_pins>;
++	pinctrl-names = "default";
++
++	rtc: rtc@51 {
++		/* has to be enabled manually when a battery is connected: */
++		status = "disabled";
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "xin32k";
++	};
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++	linux,rc-map-name = "rc-geekbox";
++};
++
++&pwm_AO_ab {
++	status = "okay";
++	pinctrl-0 = <&pwm_ao_a_3_pins>, <&pwm_ao_b_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>, <&pwm_f_clk_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-names = "default";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	max-frequency = <100000000>;
++
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
 +	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-1 = <&emmc_clk_gate_pins>;
- 	pinctrl-names = "default", "clk-gate";
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-index 470f72b..a5e9b95 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-@@ -216,7 +216,7 @@
- /* eMMC */
- &sd_emmc_c {
- 	status = "okay";
--	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-sd-highspeed;
++	cap-mmc-highspeed;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++/*
++ * EMMC_DS pin is shared between SPI NOR CS and eMMC Data Strobe
++ * Remove emmc_ds_pins from sd_emmc_c pinctrl-0 then spifc can be enabled
++ */
++&spifc {
++	status = "disabled";
++	pinctrl-0 = <&nor_pins>;
++	pinctrl-names = "default";
++
++	w25q32: spi-flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "winbond,w25q16", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <3000000>;
++	};
++};
++
++/* This one is connected to the Bluetooth module */
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>;
++	pinctrl-names = "default";
++};
++
++/* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++/* This is brought out on the UART_RX_AO_B (15) and UART_TX_AO_B (16) pins: */
++&uart_AO_B {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_b_pins>;
++	pinctrl-names = "default";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vddio_ao18>;
++};
 -- 
 2.7.4
 
