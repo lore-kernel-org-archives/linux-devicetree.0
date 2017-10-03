@@ -1,68 +1,30 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
- USB2.0 phy channel 3
-Date: Tue, 3 Oct 2017 07:50:59 +0000
-Message-ID: <TY1PR06MB0992F61BCBF0D233D39F11D3D8720@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1506925789-19392-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdUGU-6c=QoekksFfpoP1x15vUmFu272wd5YqqnQe-RwmA@mail.gmail.com>
- <8642690f-a37b-2de3-7f59-9f0be99ef170@ideasonboard.com>
- <TY1PR06MB09920BDFB00D2BDA4840877AD87D0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdVJ1Z8mn14Q5j=2iG1w9b267YS_8EV5QuTmBMcog2-8Ww@mail.gmail.com>
- <TY1PR06MB09920874E5560AE204941018D8720@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdWJ67rMF5_O4o2EPORQFdWYsW8Mc0eVcnH6a-v8UnaU8Q@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] arm64: dts: renesas: fix avb_pins on some boards
+Date: Tue, 3 Oct 2017 09:51:57 +0200
+Message-ID: <20171003075155.GB29129@verge.net.au>
+References: <1507006633-28258-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUvv9VXoYisjz+N3J2ra86N1ko6Cj6ze1T+mwz+mn83xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWJ67rMF5_O4o2EPORQFdWYsW8Mc0eVcnH6a-v8UnaU8Q@mail.gmail.com>
-Content-Language: ja-JP
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUvv9VXoYisjz+N3J2ra86N1ko6Cj6ze1T+mwz+mn83xg@mail.gmail.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran@ksquared.org.uk>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdl
-ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVHVlc2RheSwgT2N0b2JlciAzLCAyMDE3IDQ6MTMgUE0N
-Cj4gDQo+IEhpIFNoaW1vZGEtc2FuLA0KPiANCj4gT24gVHVlLCBPY3QgMywgMjAxNyBhdCA1OjEz
-IEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5j
-b20+IHdyb3RlOg0KPHNuaXA+DQo+ID4gSSdtIGFmcmFpZCBidXQgSSBjb21wbGV0ZWx5IG1pc3Vu
-ZGVyc3Rvb2QgdGhlIHBpbiBjb25maWd1cmF0aW9ucyBvbiB0aGUgU2FsdmF0b3ItWFMuDQo+ID4g
-SSB3cm90ZSByaWdodCB0aGluZ3MgYmVsb3c6DQo+ID4gLSBVU0IyLjAgY2gzIHBpbnMgYXJlIEdQ
-Nl8zMCBhbmQgR1A2XzMxLg0KPiANCj4gT0suDQo+IA0KPiA+ICAtIFNvLCBpbml0aWFsIHNldHRp
-bmcgb2YgdGhlIGJvYXJkIHdpbGwgYmUgY29uZmxpY3Qgd2l0aCB0aGUgYWR2NzQ4MidzIGludGVy
-cnVwdCBwaW5zLg0KPiANCj4gSW5pdGlhbCBzZXR0aW5nIG9mIFNXMzEgaXMgT04tT04tT0ZGLU9G
-Ri1PRkYtT0ZGLCBjZnIuIFNlY3Rpb24gMi4xLjIyDQo+ICgiU1czMSAoU2VsZWN0cyBHUElPL1VT
-QiBDb25uZWN0aW9uKSBTcGVjaWZpY2F0aW9ucyIpIG9mIHRoZQ0KPiBTYWx2YXRvci1YUyBzZXR1
-cCBtYW51YWwsDQo+IHdoaWNoIGlzIG1lYW50IHRvIGFjY29tbW9kYXRlIHRoZSBBRFY3NDgyIG9u
-IGJvdGggSDMgYW5kIE0zLVcsIGxpa2UNCj4gd2FzIGRvbmUgb24gU2FsdmF0b3ItWC4NCg0KWWVz
-Lg0KDQo8c25pcD4NCj4gPiAtIFN1bW1hcnkNCj4gPiAgLSBXZSBkZXNjcmliZSB0aGUgYWR2NzQ4
-MidzIGludGVycnVwdCBwaW5zIGludG8gYm90aCBzYWx2YXRvci14LmR0c2kgYW5kIHNhbHZhdG9y
-LXhzLmR0c2kuDQo+ID4gICAtIEluIHNhbHZhdG9yLXguZHRzaSwgYWR2NzQ4MiBub2RlIHVzZXMg
-R1A2XzMwIGFuZCBHUDZfMzEuDQo+ID4gICAtIEluIHNhbHZhdG9yLXhzLmR0c2ksIGFkdjc0ODIg
-bm9kZSB1c2VzIEdQNl8wNCBhbmQgR1A2XzIxLg0KPiANCj4gV2hpbGUgeW91IGNvdWxkIGRvIHRo
-aXMgaW4gc2FsdmF0b3IteHMuZHRzaSwgZG9pbmcgc28gd291bGQgbWVhbiB1c2VycyBvZg0KPiBT
-YWx2YXRvci1YIHdpdGggTTMtVyBoYXZlIHRvIGNoYW5nZSBTVzMxIGZyb20gdGhlIGRlZmF1bHQg
-Y29uZmlndXJhdGlvbiB0bw0KPiBPRkYtT0ZGLU9GRi1PRkYtT04tT04gKE5vdGU6IHdlIGRvbid0
-IGhhdmUgcjhhNzc5Ni1zYWx2YXRvci14cy5kdHMgaW4NCj4gbWFpbmxpbmUgeWV0KS4NCg0KWWVz
-Lg0KDQo+ID4gIC0gV2UgZGVzY3JpYmUgdGhlIHVzYjIgY2gzIHBmYyBub2RlIGludG8gcjhhNzc5
-NS1zYWx2YXRvci14cy5kdHNpIHdpdGggInVzYjJfY2gzIiBncm91cHMvZnVuY3Rpb24gYW5kDQo+
-ID4gICAgIGRlc2NyaWJlIHRoZSBTVzMxIGNvbmZpZ3VyYXRpb24uDQo+ID4NCj4gPiBXaGF0IGRv
-IHlvdSB0aGluaz8NCj4gDQo+IEkgd291bGQga2VlcCB0aGUgQURWNzQ4MiBpbiBzYWx2YXRvci1j
-b21tb24uZHRzaSB1c2luZyB0aGUgR1A2XzNbMDFdDQo+IGludGVycnVwdHMsIGxpa2UgaXMgZG9u
-ZSBub3cuDQo+IA0KPiBJbiByOGE3Nzk1LXNhbHZhdG9yLXhzLmR0c2ksIHlvdSBjYW4gb3ZlcnJp
-ZGUgdGhlIGludGVycnVwdHMgcHJvcGVydHkgdG8NCj4gR1A2X3swNCwyMX0sIHdpdGggYSBjb21t
-ZW50IHNheWluZzoNCj4gICAxLiBUaGlzIGlzIGRvbmUgdG8gc3VwcG9ydCB0aGUgInVzYjJfY2gz
-IiBwaW4gZ3JvdXAsIGFuZCwNCj4gICAyLiBUaGlzIHJlcXVpcmVzIGNoYW5naW5nIFNXMzEgdG8g
-T0ZGLU9GRi1PTi1PTi1PTi1PTi4NCj4gDQo+IFVzZXJzIG9mIFNhbHZhdG9yLVhTIHdpdGggTTMt
-VyBkb24ndCBoYXZlIHRvIGNoYW5nZSBhbnl0aGluZy4NCj4gDQo+IERvZXMgdGhpcyBzb3VuZCBP
-Sz8NCg0KSXQgc291bmRzIGdvb2QgdG8gbWUhIEkgZ3Vlc3MgS2llcmFuLXNhbiB3aWxsIGRvIHRo
-ZSAib3ZlcnJpZGUgdGhlIGludGVycnVwdCBwcm9wZXJ0eSINCndoZW4gaGUgc3VwcG9ydHMgQURW
-NzQ4MiA6KQ0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IFNpbW9uPw0K
-PiANCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBH
-ZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBM
-aW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29u
-YWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBo
-YWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkg
-InByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
+On Tue, Oct 03, 2017 at 09:32:01AM +0200, Geert Uytterhoeven wrote:
+> Hi Shimoda-san,
+> 
+> On Tue, Oct 3, 2017 at 6:57 AM, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > This patch set is based on the renesas.git /
+> > renesas-devel-20171002-v4.14-rc3 tag.
+> 
+> Thank you!
+> 
+> For the whole series:
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Thanks, applied.
