@@ -1,216 +1,33 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 1/2] pinctrl: rza1: add support for RZ/A1L
-Date: Tue, 3 Oct 2017 10:31:48 +0200
-Message-ID: <20171003083148.GG4037@w540>
-References: <20171003073334.18917-1-chris.brandt@renesas.com>
- <20171003073334.18917-2-chris.brandt@renesas.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 01/12] pinctrl: move gpio-axp209 to pinctrl
+Date: Tue, 3 Oct 2017 17:01:04 +0800
+Message-ID: <CAGb2v67VCWkJ73r2CQ7ThL1F=iGK=K+YAVD-R8AhEDXGduSCFA@mail.gmail.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-2-quentin.schulz@free-electrons.com> <20171002201823.s5o6mtwbszypjqcb@flea>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171003073334.18917-2-chris.brandt@renesas.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2VDZXHAKGQE3WA2ENA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171002201823.s5o6mtwbszypjqcb@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-   thanks for the patches
-
-On Tue, Oct 03, 2017 at 02:33:33AM -0500, Chris Brandt wrote:
-> Aspects like the number of ports and the location where peripherals are
-> brought out differ between the RZ/A1H and RZ/A1L.
+On Tue, Oct 3, 2017 at 4:18 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Oct 02, 2017 at 12:08:43PM +0000, Quentin Schulz wrote:
+>> To prepare the driver for the upcoming pinctrl features, move the GPIO
+>> driver AXP209 from GPIO to pinctrl subsystem.
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  drivers/pinctrl/pinctrl-rza1.c | 134 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 134 insertions(+)
->
-> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-> index 04d058706b80..717c0f4449a0 100644
-> --- a/drivers/pinctrl/pinctrl-rza1.c
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
-> @@ -302,6 +302,134 @@ static const struct rza1_pinmux_conf rza1h_pmx_conf = {
->  	.swio_entries	= rza1h_swio_entries,
->  };
->
-> +/* ----------------------------------------------------------------------------
-> + * RZ/A1L (r7s72102) pinmux flags
-> + */
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Do you have other authoritative sources for pin's bidir settings?
-According to the publicly available manual, there are other pins that
-needs bidir not listed here.
-As the same happened with RZ/A1H I'm not too concerned, but I'm
-listing some of there here nonetheless
-
-> +
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p1[] = {
-> +	{ .pin = 0, .func = 1 },
-> +	{ .pin = 1, .func = 1 },
-> +	{ .pin = 2, .func = 1 },
-> +	{ .pin = 3, .func = 1 },
-> +	{ .pin = 4, .func = 1 },
-> +	{ .pin = 5, .func = 1 },
-> +	{ .pin = 6, .func = 1 },
-> +	{ .pin = 7, .func = 1 },
-> +};
-> +
-
-P2 has several TIOC pins in mode 4 and SSI in mode 2
-
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p3[] = {
-> +	{ .pin = 0, .func = 2 },
-> +	{ .pin = 1, .func = 2 },
-> +	{ .pin = 2, .func = 2 },
-> +	{ .pin = 4, .func = 2 },
-> +	{ .pin = 5, .func = 2 },
-> +	{ .pin = 10, .func = 2 },
-> +	{ .pin = 11, .func = 2 },
-> +	{ .pin = 12, .func = 2 },
-> +	{ .pin = 13, .func = 2 },
-> +};
-
-TIOC in mode3, SKC3 and SCK1 in mode 5
-> +
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p4[] = {
-> +	{ .pin = 1, .func = 4 },
-> +	{ .pin = 2, .func = 2 },
-> +	{ .pin = 3, .func = 2 },
-> +	{ .pin = 6, .func = 2 },
-> +	{ .pin = 7, .func = 2 },
-> +};
-
-Confused, you're here listing TIOC2B pin (pin 1 mode #4) but not TIOC1B (pin 0 mode #4)
-ET_MDIO in mode 4, which we list as bidir in RZ/A1H
-
-> +
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p5[] = {
-> +	{ .pin = 0, .func = 1 },
-> +	{ .pin = 1, .func = 1 },
-> +	{ .pin = 2, .func = 1 },
-> +	{ .pin = 3, .func = 1 },
-> +	{ .pin = 4, .func = 1 },
-> +	{ .pin = 5, .func = 1 },
-> +	{ .pin = 6, .func = 1 },
-> +	{ .pin = 7, .func = 1 },
-> +	{ .pin = 8, .func = 1 },
-> +	{ .pin = 9, .func = 1 },
-> +	{ .pin = 10, .func = 1 },
-> +	{ .pin = 11, .func = 1 },
-> +	{ .pin = 12, .func = 1 },
-> +	{ .pin = 13, .func = 1 },
-> +	{ .pin = 14, .func = 1 },
-> +	{ .pin = 15, .func = 1 },
-> +	{ .pin = 0, .func = 2 },
-> +	{ .pin = 1, .func = 2 },
-> +	{ .pin = 2, .func = 2 },
-> +	{ .pin = 3, .func = 2 },
-> +};
-
-I'll stop here with bidir as I guess we're following different documents, as
-it happened for RZ/A1H you may have another source of informations
-
-> +
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p6[] = {
-> +	{ .pin = 0, .func = 1 },
-> +	{ .pin = 1, .func = 1 },
-> +	{ .pin = 2, .func = 1 },
-> +	{ .pin = 3, .func = 1 },
-> +	{ .pin = 4, .func = 1 },
-> +	{ .pin = 5, .func = 1 },
-> +	{ .pin = 6, .func = 1 },
-> +	{ .pin = 7, .func = 1 },
-> +	{ .pin = 8, .func = 1 },
-> +	{ .pin = 9, .func = 1 },
-> +	{ .pin = 10, .func = 1 },
-> +	{ .pin = 11, .func = 1 },
-> +	{ .pin = 12, .func = 1 },
-> +	{ .pin = 13, .func = 1 },
-> +	{ .pin = 14, .func = 1 },
-> +	{ .pin = 15, .func = 1 },
-> +};
-> +
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p7[] = {
-> +	{ .pin = 2, .func = 2 },
-> +	{ .pin = 3, .func = 2 },
-> +	{ .pin = 5, .func = 2 },
-> +	{ .pin = 6, .func = 2 },
-> +	{ .pin = 7, .func = 2 },
-> +	{ .pin = 2, .func = 3 },
-> +	{ .pin = 3, .func = 3 },
-> +	{ .pin = 5, .func = 3 },
-> +	{ .pin = 6, .func = 3 },
-> +	{ .pin = 7, .func = 3 },
-> +};
-> +
-> +static const struct rza1_bidir_pin rza1l_bidir_pins_p9[] = {
-> +	{ .pin = 1, .func = 2 },
-> +	{ .pin = 0, .func = 3 },
-> +	{ .pin = 1, .func = 3 },
-> +	{ .pin = 3, .func = 3 },
-> +	{ .pin = 4, .func = 3 },
-> +	{ .pin = 5, .func = 3 },
-> +};
-> +
-> +static const struct rza1_swio_pin rza1l_swio_pins[] = {
-> +	{ .port = 2, .pin = 8, .func = 2, .input = 0 },
-> +	{ .port = 5, .pin = 6, .func = 3, .input = 0 },
-> +	{ .port = 6, .pin = 6, .func = 3, .input = 0 },
-> +	{ .port = 6, .pin = 10, .func = 3, .input = 0 },
-> +	{ .port = 7, .pin = 10, .func = 2, .input = 0 },
-> +	{ .port = 8, .pin = 2, .func = 3, .input = 0 },
-> +};
-
-I count 20 SWIO pins
-
-TIOC[0-4][A-D]
-SSITx[0-3]
-WDTOVF
-
-Thanks
-   j
-> +
-> +static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
-> +	[1] = { ARRAY_SIZE(rza1l_bidir_pins_p1), rza1l_bidir_pins_p1 },
-> +	[3] = { ARRAY_SIZE(rza1l_bidir_pins_p3), rza1l_bidir_pins_p3 },
-> +	[4] = { ARRAY_SIZE(rza1l_bidir_pins_p4), rza1l_bidir_pins_p4 },
-> +	[5] = { ARRAY_SIZE(rza1l_bidir_pins_p4), rza1l_bidir_pins_p5 },
-> +	[6] = { ARRAY_SIZE(rza1l_bidir_pins_p6), rza1l_bidir_pins_p6 },
-> +	[7] = { ARRAY_SIZE(rza1l_bidir_pins_p7), rza1l_bidir_pins_p7 },
-> +	[9] = { ARRAY_SIZE(rza1l_bidir_pins_p9), rza1l_bidir_pins_p9 },
-> +};
-> +
-> +static const struct rza1_swio_entry rza1l_swio_entries[] = {
-> +	[0] = { ARRAY_SIZE(rza1h_swio_pins), rza1h_swio_pins },
-> +};
-> +
-> +/* RZ/A1L (r7s72102x) pinmux flags table */
-> +static const struct rza1_pinmux_conf rza1l_pmx_conf = {
-> +	.bidir_entries	= rza1l_bidir_entries,
-> +	.swio_entries	= rza1l_swio_entries,
-> +};
-> +
->  /* ----------------------------------------------------------------------------
->   * RZ/A1 types
->   */
-> @@ -1283,9 +1411,15 @@ static int rza1_pinctrl_probe(struct platform_device *pdev)
->
->  static const struct of_device_id rza1_pinctrl_of_match[] = {
->  	{
-> +		/* RZ/A1H, RZ/A1M */
->  		.compatible	= "renesas,r7s72100-ports",
->  		.data		= &rza1h_pmx_conf,
->  	},
-> +	{
-> +		/* RZ/A1L */
-> +		.compatible	= "renesas,r7s72102-ports",
-> +		.data		= &rza1l_pmx_conf,
-> +	},
->  	{ }
->  };
->
-> --
-> 2.14.1
->
->
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
