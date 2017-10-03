@@ -1,162 +1,216 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] initialize (multiple) PHYs in xhci-plat
-Date: Tue, 03 Oct 2017 10:15:44 +0200
-Message-ID: <1507018544.17300.116.camel@baylibre.com>
-References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
-         <CAFBinCCRM1e08styDV8uodkhonTUPyZrQAdYRz_bfUMe-YP1Rg@mail.gmail.com>
-         <20170918084943.GA19123@kroah.com>
-         <CAFBinCAweHXFbWrF9gW5f_+NeC9jChU1EkRsiLzkaKtOZkEREQ@mail.gmail.com>
-         <1506947708.17300.21.camel@baylibre.com> <20171002124421.GA2324@kroah.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 1/2] pinctrl: rza1: add support for RZ/A1L
+Date: Tue, 3 Oct 2017 10:31:48 +0200
+Message-ID: <20171003083148.GG4037@w540>
+References: <20171003073334.18917-1-chris.brandt@renesas.com>
+ <20171003073334.18917-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171002124421.GA2324-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171003073334.18917-2-chris.brandt@renesas.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-10-02 at 14:44 +0200, Greg KH wrote:
-> On Mon, Oct 02, 2017 at 02:35:08PM +0200, Jerome Brunet wrote:
-> > On Sun, 2017-10-01 at 22:32 +0200, Martin Blumenstingl wrote:
-> > > Hello Greg, Hello Mathias,
-> > > 
-> > > On Mon, Sep 18, 2017 at 10:49 AM, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > > wrote:
-> > > > On Sun, Sep 17, 2017 at 10:51:31PM +0200, Martin Blumenstingl wrote:
-> > > > > Hello Mathias, Hello Greg,
-> > > > > 
-> > > > > On Sun, Sep 3, 2017 at 11:38 PM, Martin Blumenstingl
-> > > > > <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> > > > > > This series is the outcome of a discussion with Felipe Balbi,
-> > > > > > see [0] and [1].
-> > > > > > The quick-summary of this is:
-> > > > > > - dwc3 already takes one USB2 and one USB3 PHY and initializes these
-> > > > > >   correct
-> > > > > > - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c
-> > > > > > and
-> > > > > >   ohci-platform.c) do not have a limitation on the number of PHYs -
-> > > > > > they
-> > > > > >   support one PHY per actual host port
-> > > > > > - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has
-> > > > > > two
-> > > > > >   or three USB2 ports enabled on the internal root-hub. The SoCs
-> > > > > > also
-> > > > > >   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
-> > > > > >   internally "connected" to the dwc3 roothub) need to be powered on,
-> > > > > >   otherwise USB devices cannot be enumerated (even if just one PHY
-> > > > > > is
-> > > > > >   disabled and if the device is plugged into another, enabled port)
-> > > > > > 
-> > > > > > In my first attempt to get USB supported on the GXL and GXM SoCs I
-> > > > > > tried
-> > > > > > to work-around the problem that I could not pass multiple PHYs to
-> > > > > > the
-> > > > > > dwc3 controller.
-> > > > > > This was rejected by Rob Herring (which was definitely the thing to
-> > > > > > do
-> > > > > > in
-> > > > > > my opinion), see [2]
-> > > > > > 
-> > > > > > This series adds a new "platform-roothub". This can be configured
-> > > > > > through
-> > > > > > devicetree by passing a child-node with "reg = <0>" to the USB
-> > > > > > controller. Additionally there has to be a child-node for each port
-> > > > > > on
-> > > > > > the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
-> > > > > > property. This allows modeling the root-hub in devicetree similar to
-> > > > > > the
-> > > > > > USB device binding (documented in devicetree/bindings/usb/usb-
-> > > > > > device.txt)
-> > > > > > This avoids and backwards-compatibility problems (which was a
-> > > > > > concern
-> > > > > > regardless of the solution, see [3]) since the binding for the root-
-> > > > > > hub
-> > > > > > was previously not specified (and we're not using the "phys"
-> > > > > > property of
-> > > > > > the controller, which might have served different purposes before,
-> > > > > > depending on the drivers).
-> > > > > > 
-> > > > > > Additionally this integrates the new platform-roothub into xhci-
-> > > > > > plat.c
-> > > > > > which automatically enables it for the dwc3 driver (in host-mode).
-> > > > > > 
-> > > > > > 
-> > > > > > Changes since RFCv3 at [6]:
-> > > > > > - moved the DT binding change from patch #3 to patch #1 as suggested
-> > > > > >   by Rob Herring (and slightly adjusted the commit message to
-> > > > > > account
-> > > > > >   for that)
-> > > > > > - added Tested-by from Chunfeng Yun (who confirmed that the whole
-> > > > > >   concept and implementation works fine on Mediatek SoCs - many
-> > > > > > thanks
-> > > > > >   again!) to patch #2
-> > > > > > - added Rob Herring's ACK to patches 1 and 3
-> > > > > > - dropped RFC status (RFCv3 -> PATCH v4)
-> > > > > 
-> > > > > I just wanted to rebase this to v4.14-rc1 (now that this is out) -
-> > > > > however I noticed that v4 still applies to v4.14-rc1 cleanly (the
-> > > > > patches are still identical to v4 after rebasing).
-> > > > > 
-> > > > > we have an ACK from the devicetree maintainers and a "Tested-by" for a
-> > > > > Mediatek (= non-Amlogic) SoC.
-> > > > > I already have patches for the Amlogic GXL/GXM platforms queued, those
-> > > > > are just waiting on this series.
-> > > > > 
-> > > > > what is still missing to get this series into v4.15?
-> > > > 
-> > > > Well, we couldn't do anything until 4.14-rc1 is out, now that it is, let
-> > > > us catch up on patch review please...
-> > > 
-> > > OK, I understand that.
-> > > please let me know once you've caught up with the review backlog - as
-> > > I said I would like to get this into 4.15 if nothing else comes up
-> > > during the code-review
-> > 
-> > This series works well on the libretech-cc (le potato)
-> > For the series:
-> > 
-> > Tested-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> 
-> Hey, I have one of those boards now, was just about to try to get it to
-> work.  Is this series necessary for it to run properly on 4.14-rc?
+Hi Chris,
+   thanks for the patches
 
-To run w/o usb, no. It should already be decent on 4.14-rc.
-To run with usb, you need this series and:
+On Tue, Oct 03, 2017 at 02:33:33AM -0500, Chris Brandt wrote:
+> Aspects like the number of ports and the location where peripherals are
+> brought out differ between the RZ/A1H and RZ/A1L.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  drivers/pinctrl/pinctrl-rza1.c | 134 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+>
+> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+> index 04d058706b80..717c0f4449a0 100644
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -302,6 +302,134 @@ static const struct rza1_pinmux_conf rza1h_pmx_conf = {
+>  	.swio_entries	= rza1h_swio_entries,
+>  };
+>
+> +/* ----------------------------------------------------------------------------
+> + * RZ/A1L (r7s72102) pinmux flags
+> + */
 
-* the usb3 phy driver sent but (I believe) not yet merged [0]
-* A few DT changes enable the whole thing.
+Do you have other authoritative sources for pin's bidir settings?
+According to the publicly available manual, there are other pins that
+needs bidir not listed here.
+As the same happened with RZ/A1H I'm not too concerned, but I'm
+listing some of there here nonetheless
 
-The whole thing is available here [1]
+> +
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p1[] = {
+> +	{ .pin = 0, .func = 1 },
+> +	{ .pin = 1, .func = 1 },
+> +	{ .pin = 2, .func = 1 },
+> +	{ .pin = 3, .func = 1 },
+> +	{ .pin = 4, .func = 1 },
+> +	{ .pin = 5, .func = 1 },
+> +	{ .pin = 6, .func = 1 },
+> +	{ .pin = 7, .func = 1 },
+> +};
+> +
 
-However, while you were at KR2017, we found an unrelated, yet very annoying,
-issue which may trigger "Synchronous External Aborts" ... The whole story is
-available here [2] and the work around patch is available here [3].
+P2 has several TIOC pins in mode 4 and SSI in mode 2
 
-If you have downloaded your image from here [4], the kernel is a v4.13 plus
-* few changes already merged in next or under review (cec, mmc, usb, ...)
-* Overlay support 
-* WIP for the hdmi audio.
-Sources are here [5]
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p3[] = {
+> +	{ .pin = 0, .func = 2 },
+> +	{ .pin = 1, .func = 2 },
+> +	{ .pin = 2, .func = 2 },
+> +	{ .pin = 4, .func = 2 },
+> +	{ .pin = 5, .func = 2 },
+> +	{ .pin = 10, .func = 2 },
+> +	{ .pin = 11, .func = 2 },
+> +	{ .pin = 12, .func = 2 },
+> +	{ .pin = 13, .func = 2 },
+> +};
 
-[0]: https://lkml.kernel.org/r/20170924195000.13276-1-martin.blumenstingl@google
-mail.com
-[1]: https://github.com/libre-computer-project/libretech-linux/commits/linux-4.1
-3/usb
-[2]: https://lkml.kernel.org/r/1507017860.17300.106.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-[3]: https://github.com/libre-computer-project/libretech-linux/commit/0f71f762a9
-c37ab423e0c9e0498081a9a17f2b8a
-[4]: http://baylibre.com/kernel-recipes-mainline-aml-s905x-cc-le-potato/
-[5]: https://github.com/libre-computer-project/libretech-linux/commits/linux-4.1
-3/libretech-cc-overlays
+TIOC in mode3, SKC3 and SCK1 in mode 5
+> +
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p4[] = {
+> +	{ .pin = 1, .func = 4 },
+> +	{ .pin = 2, .func = 2 },
+> +	{ .pin = 3, .func = 2 },
+> +	{ .pin = 6, .func = 2 },
+> +	{ .pin = 7, .func = 2 },
+> +};
 
-> 
-> thanks,
-> 
-> greg k-h
+Confused, you're here listing TIOC2B pin (pin 1 mode #4) but not TIOC1B (pin 0 mode #4)
+ET_MDIO in mode 4, which we list as bidir in RZ/A1H
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p5[] = {
+> +	{ .pin = 0, .func = 1 },
+> +	{ .pin = 1, .func = 1 },
+> +	{ .pin = 2, .func = 1 },
+> +	{ .pin = 3, .func = 1 },
+> +	{ .pin = 4, .func = 1 },
+> +	{ .pin = 5, .func = 1 },
+> +	{ .pin = 6, .func = 1 },
+> +	{ .pin = 7, .func = 1 },
+> +	{ .pin = 8, .func = 1 },
+> +	{ .pin = 9, .func = 1 },
+> +	{ .pin = 10, .func = 1 },
+> +	{ .pin = 11, .func = 1 },
+> +	{ .pin = 12, .func = 1 },
+> +	{ .pin = 13, .func = 1 },
+> +	{ .pin = 14, .func = 1 },
+> +	{ .pin = 15, .func = 1 },
+> +	{ .pin = 0, .func = 2 },
+> +	{ .pin = 1, .func = 2 },
+> +	{ .pin = 2, .func = 2 },
+> +	{ .pin = 3, .func = 2 },
+> +};
+
+I'll stop here with bidir as I guess we're following different documents, as
+it happened for RZ/A1H you may have another source of informations
+
+> +
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p6[] = {
+> +	{ .pin = 0, .func = 1 },
+> +	{ .pin = 1, .func = 1 },
+> +	{ .pin = 2, .func = 1 },
+> +	{ .pin = 3, .func = 1 },
+> +	{ .pin = 4, .func = 1 },
+> +	{ .pin = 5, .func = 1 },
+> +	{ .pin = 6, .func = 1 },
+> +	{ .pin = 7, .func = 1 },
+> +	{ .pin = 8, .func = 1 },
+> +	{ .pin = 9, .func = 1 },
+> +	{ .pin = 10, .func = 1 },
+> +	{ .pin = 11, .func = 1 },
+> +	{ .pin = 12, .func = 1 },
+> +	{ .pin = 13, .func = 1 },
+> +	{ .pin = 14, .func = 1 },
+> +	{ .pin = 15, .func = 1 },
+> +};
+> +
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p7[] = {
+> +	{ .pin = 2, .func = 2 },
+> +	{ .pin = 3, .func = 2 },
+> +	{ .pin = 5, .func = 2 },
+> +	{ .pin = 6, .func = 2 },
+> +	{ .pin = 7, .func = 2 },
+> +	{ .pin = 2, .func = 3 },
+> +	{ .pin = 3, .func = 3 },
+> +	{ .pin = 5, .func = 3 },
+> +	{ .pin = 6, .func = 3 },
+> +	{ .pin = 7, .func = 3 },
+> +};
+> +
+> +static const struct rza1_bidir_pin rza1l_bidir_pins_p9[] = {
+> +	{ .pin = 1, .func = 2 },
+> +	{ .pin = 0, .func = 3 },
+> +	{ .pin = 1, .func = 3 },
+> +	{ .pin = 3, .func = 3 },
+> +	{ .pin = 4, .func = 3 },
+> +	{ .pin = 5, .func = 3 },
+> +};
+> +
+> +static const struct rza1_swio_pin rza1l_swio_pins[] = {
+> +	{ .port = 2, .pin = 8, .func = 2, .input = 0 },
+> +	{ .port = 5, .pin = 6, .func = 3, .input = 0 },
+> +	{ .port = 6, .pin = 6, .func = 3, .input = 0 },
+> +	{ .port = 6, .pin = 10, .func = 3, .input = 0 },
+> +	{ .port = 7, .pin = 10, .func = 2, .input = 0 },
+> +	{ .port = 8, .pin = 2, .func = 3, .input = 0 },
+> +};
+
+I count 20 SWIO pins
+
+TIOC[0-4][A-D]
+SSITx[0-3]
+WDTOVF
+
+Thanks
+   j
+> +
+> +static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
+> +	[1] = { ARRAY_SIZE(rza1l_bidir_pins_p1), rza1l_bidir_pins_p1 },
+> +	[3] = { ARRAY_SIZE(rza1l_bidir_pins_p3), rza1l_bidir_pins_p3 },
+> +	[4] = { ARRAY_SIZE(rza1l_bidir_pins_p4), rza1l_bidir_pins_p4 },
+> +	[5] = { ARRAY_SIZE(rza1l_bidir_pins_p4), rza1l_bidir_pins_p5 },
+> +	[6] = { ARRAY_SIZE(rza1l_bidir_pins_p6), rza1l_bidir_pins_p6 },
+> +	[7] = { ARRAY_SIZE(rza1l_bidir_pins_p7), rza1l_bidir_pins_p7 },
+> +	[9] = { ARRAY_SIZE(rza1l_bidir_pins_p9), rza1l_bidir_pins_p9 },
+> +};
+> +
+> +static const struct rza1_swio_entry rza1l_swio_entries[] = {
+> +	[0] = { ARRAY_SIZE(rza1h_swio_pins), rza1h_swio_pins },
+> +};
+> +
+> +/* RZ/A1L (r7s72102x) pinmux flags table */
+> +static const struct rza1_pinmux_conf rza1l_pmx_conf = {
+> +	.bidir_entries	= rza1l_bidir_entries,
+> +	.swio_entries	= rza1l_swio_entries,
+> +};
+> +
+>  /* ----------------------------------------------------------------------------
+>   * RZ/A1 types
+>   */
+> @@ -1283,9 +1411,15 @@ static int rza1_pinctrl_probe(struct platform_device *pdev)
+>
+>  static const struct of_device_id rza1_pinctrl_of_match[] = {
+>  	{
+> +		/* RZ/A1H, RZ/A1M */
+>  		.compatible	= "renesas,r7s72100-ports",
+>  		.data		= &rza1h_pmx_conf,
+>  	},
+> +	{
+> +		/* RZ/A1L */
+> +		.compatible	= "renesas,r7s72102-ports",
+> +		.data		= &rza1l_pmx_conf,
+> +	},
+>  	{ }
+>  };
+>
+> --
+> 2.14.1
+>
+>
