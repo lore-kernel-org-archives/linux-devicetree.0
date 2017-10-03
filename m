@@ -1,83 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: ARM: new DT warnings
-Date: Tue, 3 Oct 2017 13:36:30 -0500
-Message-ID: <CAL_JsqLrF8=4FOfR1PRRk_akQ0btTyaTKP=WHpWm1bPzk1AhSw@mail.gmail.com>
-References: <20170814223843.oyezospd5knk62cl@rob-hp-laptop>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] of/fdt: add of_fdt_device_is_available function
+Date: Tue, 3 Oct 2017 14:43:53 -0400 (EDT)
+Message-ID: <nycvar.YSQ.7.76.1710031443230.5407@knanqh.ubzr>
+References: <20171003161815.25999-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170814223843.oyezospd5knk62cl@rob-hp-laptop>
+In-Reply-To: <20171003161815.25999-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 5:38 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> I'm working on some new dtc checks that check common binding phandle
-> lookups and cell sizes.
+On Tue, 3 Oct 2017, Rob Herring wrote:
 
-Unless someone yells, I plan to push out a dtc update to -next that's
-going to enable these warnings (errors really) and they are on by
-default. Some have been fixed I think, but most still remain.
+> Add an equivalent function to of_device_is_available for flattened DT, and
+> convert the one existing open coded occurrence.
+> 
+> Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob
+Tested-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
->
-> These are the new warnings produced. I haven't checked them all, but I
-> believe these are all actual errors from the ones I checked. This is a
-> trimmed list removing duplicates that get repeated for each board.
->
-> arch/arm/boot/dts/am335x-baltos-ir2110.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /ocp/usb@47400000/usb-phy@47401300 for /ocp/usb@47400000/usb@47401000
-> arch/arm/boot/dts/am335x-baltos-ir2110.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /ocp/usb@47400000/usb-phy@47401b00 for /ocp/usb@47400000/usb@47401800
-> arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /ocp@44000000/mcasp@48038000
-> arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /ocp@44000000/mcasp@4803C000
-> arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (provider_cells_property): Missing #mbox-cells in provider /ocp@44000000/mailbox@480C8000/wkup_m3 for /ocp@44000000/l4_wkup@44c00000/scm@210000/wkup_m3_ipc@1324
-> arch/arm/boot/dts/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> arch/arm/boot/dts/at91-sama5d2_xplained.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/flexcom@fc018000/i2c@600:dmas
-> arch/arm/boot/dts/at91-sama5d3_xplained.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/i2c@f801c000:dmas
-> arch/arm/boot/dts/at91-tse850-3.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/serial@ffffee00:dmas
-> arch/arm/boot/dts/bcm2835-rpi-a.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /phy for /soc/usb@7e980000
-> arch/arm/boot/dts/dm8148-evm.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /ocp/l4ls@48000000/control@140000/usb-phy@1b00 for /ocp/usb@47400000/usb@47401800
-> arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/system-controller@10040000
-> arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard-cmo-qvga.dtb: Warning (gpio_cells_property): cd-gpios property size (8) too small for cell size 2 in /soc/aips@53f00000/esdhc@53fb4000
-> arch/arm/boot/dts/imx50-evk.dtb: Warning (provider_cells_property): Missing #dma-cells in provider /soc/aips@60000000/sdma@63fb0000 for /soc/aips@50000000/spba@50000000/ssi@50014000
-> arch/arm/boot/dts/imx50-evk.dtb: Warning (provider_cells_property): Missing #dma-cells in provider /soc/aips@60000000/sdma@63fb0000 for /soc/aips@60000000/ssi@63fcc000
-> arch/arm/boot/dts/imx53-tx53-x03x.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 8 in /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
-> arch/arm/boot/dts/imx6ul-pico-hobbit.dtb: Warning (interrupts_property): interrupts size is (12), expected multiple of 8 in /soc/aips-bus@02000000/ethernet@020b4000/mdio/ethernet-phy@1
-> arch/arm/boot/dts/lpc3250-ea3250.dtb: Warning (gpio_cells_property): power-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-> arch/arm/boot/dts/omap3-cm-t3517.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /hsusb1_phy for /ocp@68000000/usbhshost@48064000/ehci@48064800
-> arch/arm/boot/dts/omap4-droid4-xt894.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 12 in /ocp/elm@48078000
-> arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /paxi/dmac@40000
-> arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /paxi/dmac@50000
-> arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /paxi/gem@30000
-> arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dtb: Warning (interrupts_property): Missing interrupt-parent for /rwid-axi/axi2pico@c0000000
-> arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /soc/dsi-phy@4700200 for /soc/mdss_dsi@4700000
-> arch/arm/boot/dts/qcom-apq8064-arrow-sd-600eval.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /soc/hdmi-phy@4a00400 for /soc/hdmi-tx@4a00000
-> arch/arm/boot/dts/s5pv210-aquila.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-> arch/arm/boot/dts/sama5d31ek.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/serial@f0020000:dmas
-> arch/arm/boot/dts/sama5d31ek.dtb: Warning (provider_cells_property): Missing phandles in /ahb/apb/spi@f0004000:dmas
-> arch/arm/boot/dts/spear320-hmi.dtb: Warning (gpio_cells_property): Missing phandles in /ahb/apb/i2c@d0180000/stmpe811@41:irq-over-gpio
-> arch/arm/boot/dts/spear600-evb.dtb: Warning (interrupts_property): Missing interrupt-parent for /ahb/apb/rtc@fc900000
-> arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (gpio_cells_property): hdmi,hpd-gpio property size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
-> arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-> arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-> arch/arm/boot/dts/tango4-vantage-1172.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/interrupt-controller@6e000
-> arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu
-> arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb: Warning (provider_cells_property): Missing #phy-cells in provider /phy for /soc/usb@7e980000
-> arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (provider_cells_property): Missing #cooling-cells in provider /cpus/cpu@0 for /thermal-zones/cpu_thermal/cooling-maps/map@0
-> arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (provider_cells_property): Missing #cooling-cells in provider /cpus/cpu@100 for /thermal-zones/cpu_thermal/cooling-maps/map@1
-> arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dtb: Warning (provider_cells_property): Missing #power-domain-cells in provider /bpmp for /gpu@17000000
->
-> The updated dtc is here[1]. Adding "DTC=path/to/dtc" will use external
-> dtc in the kernel build.
->
-> Once the changes are in dtc upstream, I plan to sync kernel's copy. For
-> these, I don't plan to turn off by default (i.e. w/o W=1).
->
-> Thanks,
-> Rob
->
-> [1] https://github.com/robherring/dtc.git checks
+
+> ---
+>  drivers/of/fdt.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 27c535af0be8..f8c39705418b 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -132,6 +132,19 @@ bool of_fdt_is_big_endian(const void *blob, unsigned long node)
+>  	return false;
+>  }
+>  
+> +static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+> +{
+> +	const char *status = fdt_getprop(blob, node, "status", NULL);
+> +
+> +	if (!status)
+> +		return true;
+> +
+> +	if (!strcmp(status, "ok") || !strcmp(status, "okay"))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  /**
+>   * of_fdt_match - Return true if node matches a list of compatible values
+>   */
+> @@ -605,7 +618,6 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+>  					  int depth, void *data)
+>  {
+>  	static int found;
+> -	const char *status;
+>  	int err;
+>  
+>  	if (!found && depth == 1 && strcmp(uname, "reserved-memory") == 0) {
+> @@ -625,8 +637,7 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
+>  		return 1;
+>  	}
+>  
+> -	status = of_get_flat_dt_prop(node, "status", NULL);
+> -	if (status && strcmp(status, "okay") != 0 && strcmp(status, "ok") != 0)
+> +	if (!of_fdt_device_is_available(initial_boot_params, node))
+>  		return 0;
+>  
+>  	err = __reserved_mem_reserve_reg(node, uname);
+> -- 
+> 2.11.0
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
