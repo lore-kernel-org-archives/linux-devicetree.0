@@ -1,63 +1,144 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 1/2] pinctrl: rza1: add support for RZ/A1L
-Date: Tue, 3 Oct 2017 13:36:57 +0000
-Message-ID: <SG2PR06MB1165EE1D21AFC1D3005308538A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20171003073334.18917-1-chris.brandt@renesas.com>
- <20171003073334.18917-2-chris.brandt@renesas.com>
- <20171003083148.GG4037@w540>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] device property: preserve usecount for node passed to of_fwnode_graph_get_port_parent()
+Date: Tue, 3 Oct 2017 08:40:10 -0500
+Message-ID: <CAL_JsqLoROoJYB38Hx76yFrPd8J=6+KOr6EgzMd-g5yLYi8Okw@mail.gmail.com>
+References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
+ <CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
+ <20170822150050.GD14873@bigcity.dyn.berto.se> <CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
+ <20170827224033.2ubrkzp33g5supab@kekkonen.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171003083148.GG4037@w540>
-Content-Language: en-US
+In-Reply-To: <20170827224033.2ubrkzp33g5supab@kekkonen.localdomain>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLA0KDQpPbiBUdWVzZGF5LCBPY3RvYmVyIDAzLCAyMDE3LCBqYWNvcG8gbW9uZGkg
-d3JvdGU6DQo+IERvIHlvdSBoYXZlIG90aGVyIGF1dGhvcml0YXRpdmUgc291cmNlcyBmb3IgcGlu
-J3MgYmlkaXIgc2V0dGluZ3M/DQo+IEFjY29yZGluZyB0byB0aGUgcHVibGljbHkgYXZhaWxhYmxl
-IG1hbnVhbCwgdGhlcmUgYXJlIG90aGVyIHBpbnMgdGhhdA0KPiBuZWVkcyBiaWRpciBub3QgbGlz
-dGVkIGhlcmUuDQo+IEFzIHRoZSBzYW1lIGhhcHBlbmVkIHdpdGggUlovQTFIIEknbSBub3QgdG9v
-IGNvbmNlcm5lZCwgYnV0IEknbQ0KPiBsaXN0aW5nIHNvbWUgb2YgdGhlcmUgaGVyZSBub25ldGhl
-bGVzcw0KDQpCYWNrIHdoZW4geW91IHdlcmUgd29ya2luZyBvbiB0aGlzLCBJIGRpc2N1c3NlZCB3
-aXRoIHRoZSBndXlzIGJhY2sgaW4gDQpKYXBhbi4gV2hpbGUgaW4gdGhlIHRhYmxlIHRoZXJlIGFy
-ZSBtdWx0aXBsZSBwaW5zIHRoYXQgc2hvdyANCidiaS1kaXJlY3Rpb25hbCBjYXBhYmxlJywgdGhl
-eSBkb24ndCBhbGwgbmVlZCB0aGUgYmktZGlyIGJpdCBzZXQuIFRoaXMgd2FzIHRoZSBsaXN0IG9m
-DQpwZXJpcGhlcmFsOg0KIEkyQywgTURJTyAoRVRIKSwgTU1DLCBTREhJLCBRU1BJLCBEYXRhIChE
-MC1EMzEpDQoNCg0KPiBQMiBoYXMgc2V2ZXJhbCBUSU9DIHBpbnMgaW4gbW9kZSA0IGFuZCBTU0kg
-aW4gbW9kZSAyDQoNClBvcnQgMj8/Pw0KUG9ydCAyLCBtb2RlIDQgaW4gdGhlIFJaL0ExTCBtYW51
-YWwgb25seSBoYXMgSVJRNyw2LDUsMiwxDQoNCg0KSSB0aG91Z2h0IHdlIGRlY2lkZWQgb24gdGhh
-dCBUSU9DIHBpbnMgYXJlIG9uZXMgdGhhdCBhcmUgbWFudWFsbHkgc2V0IHRvDQplaXRoZXIgaW5w
-dXQgKGlucHV0LWVuYWJsZSwgb3V0cHV0LWVuYWJsZSkgYnkgdGhlIHVzZXJzIERldmljZSBUcmVl
-LCBzbw0KdGhleSBkb24ndCBuZWVkIHRvIGJlIHB1dCBpbnRvIGEgdGFibGUuIElmIGlucHV0LWVu
-YWJsZSBvciANCm91dHB1dC1lbmFibGUgaXMgc3BlY2lmaWVkLCB0aGVuIHlvdSBtYW51YWxseSBz
-ZXQgaXQgdG8gdGhhdCBkaXJlY3Rpb24uDQoNCkFzIGZvciBTU0ksIHRoZSBtYW51YWwgc2F5cyBv
-bmx5IHRoZSBTU0lUeCBwaW5zIG5lZWQgYmktZGlyLCBub3QgdGhlIA0KU1NJUnggcGlucy4NCg0K
-DQo+IFRJT0MgaW4gbW9kZTMsIFNLQzMgYW5kIFNDSzEgaW4gbW9kZSA1DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IHJ6YTFfYmlkaXJfcGluIHJ6YTFsX2JpZGlyX3BpbnNfcDRbXSA9
-IHsNCj4gPiArCXsgLnBpbiA9IDEsIC5mdW5jID0gNCB9LA0KPiA+ICsJeyAucGluID0gMiwgLmZ1
-bmMgPSAyIH0sDQo+ID4gKwl7IC5waW4gPSAzLCAuZnVuYyA9IDIgfSwNCj4gPiArCXsgLnBpbiA9
-IDYsIC5mdW5jID0gMiB9LA0KPiA+ICsJeyAucGluID0gNywgLmZ1bmMgPSAyIH0sDQo+ID4gK307
-DQo+IA0KPiBDb25mdXNlZCwgeW91J3JlIGhlcmUgbGlzdGluZyBUSU9DMkIgcGluIChwaW4gMSBt
-b2RlICM0KSBidXQgbm90IFRJT0MxQg0KPiAocGluIDAgbW9kZSAjNCkNCj4gRVRfTURJTyBpbiBt
-b2RlIDQsIHdoaWNoIHdlIGxpc3QgYXMgYmlkaXIgaW4gUlovQTFIDQoNClA0XzEgbW9kZSA0IGlz
-IEVUX01ESU8uDQoNClRJT0MxQiBpcyBQNF8wIG1vZGUgMy4NClRJT0MyQiBpcyBQNF8xIE1vZGUg
-Mw0KDQpBcmUgeW91IGxvb2tpbmcgYXQgVGFibGUgNDEuMTkgaW4gdGhlIFJldi4zLjAwIHZlcnNp
-b24gb2YgdGhlIFJaL0ExTCANCkhhcmR3YXJlIE1hbnVhbD8NCg0KPiA+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IHJ6YTFfc3dpb19waW4gcnphMWxfc3dpb19waW5zW10gPSB7DQo+ID4gKwl7IC5wb3J0
-ID0gMiwgLnBpbiA9IDgsIC5mdW5jID0gMiwgLmlucHV0ID0gMCB9LA0KPiA+ICsJeyAucG9ydCA9
-IDUsIC5waW4gPSA2LCAuZnVuYyA9IDMsIC5pbnB1dCA9IDAgfSwNCj4gPiArCXsgLnBvcnQgPSA2
-LCAucGluID0gNiwgLmZ1bmMgPSAzLCAuaW5wdXQgPSAwIH0sDQo+ID4gKwl7IC5wb3J0ID0gNiwg
-LnBpbiA9IDEwLCAuZnVuYyA9IDMsIC5pbnB1dCA9IDAgfSwNCj4gPiArCXsgLnBvcnQgPSA3LCAu
-cGluID0gMTAsIC5mdW5jID0gMiwgLmlucHV0ID0gMCB9LA0KPiA+ICsJeyAucG9ydCA9IDgsIC5w
-aW4gPSAyLCAuZnVuYyA9IDMsIC5pbnB1dCA9IDAgfSwNCj4gPiArfTsNCj4gDQo+IEkgY291bnQg
-MjAgU1dJTyBwaW5zDQo+IA0KPiBUSU9DWzAtNF1bQS1EXQ0KPiBTU0lUeFswLTNdDQo+IFdEVE9W
-Rg0KDQpJIHRob3VnaHQgd2Ugc2FpZCBUSU9DIGRpZG4ndCBuZWVkIHRvIGJlIGluIGEgdGFibGUg
-YmVjYXVzZSB0aGUgdXNlciBoYXMNCnRvIHNwZWNpZnkgdGhlbSBhbnl3YXkgYmVjYXVzZSB0aGUg
-dXNlciBoYXMgdG8gY2hvb3NlIGlmIGhlIHdhbnRzIHRoZW0gDQphcyBpbnB1dCBvciBvdXRwdXQs
-IHNvIGlmIGhlIGRvZXMgdGhhdCwgdGhlbiB3ZSBhdXRvbWF0aWNhbGx5IGtub3cgaXQncyANCmEg
-c3dpbyBwaW4uIEhtbSwgbWF5YmUgSSBoYXZlIHRvIGdvIGJhY2sgYW5kIGxvb2sgYXQgd2hhdCB0
-aGUgZHJpdmVyIA0KZW5kZWQgdXAgaW1wbGVtZW50aW5nLg0KDQoNCkNocmlzDQo=
+On Sun, Aug 27, 2017 at 5:40 PM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> Hi Rob,
+>
+> On Tue, Aug 22, 2017 at 02:42:10PM -0500, Rob Herring wrote:
+>> On Tue, Aug 22, 2017 at 10:00 AM, Niklas Söderlund
+>> <niklas.soderlund@ragnatech.se> wrote:
+>> > Hi Rob,
+>> >
+>> > On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
+>> >> On Mon, Aug 21, 2017 at 7:19 PM, Niklas Söderlund
+>> >> <niklas.soderlund+renesas@ragnatech.se> wrote:
+>> >> > Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
+>> >> > node being passed to of_fwnode_graph_get_port_parent(). Preserve the
+>> >> > usecount by using of_get_parent() instead of of_get_next_parent() which
+>> >> > don't decrement the usecount of the node passed to it.
+>> >> >
+>> >> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
+>> >> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+>> >> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> >> > ---
+>> >> >  drivers/of/property.c | 2 +-
+>> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >>
+>> >> Isn't this already fixed with this fix:
+>> >>
+>> >> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
+>> >> Author: Tony Lindgren <tony@atomide.com>
+>> >> Date:   Fri Jul 28 01:23:15 2017 -0700
+>> >>
+>> >> device property: Fix usecount for of_graph_get_port_parent()
+>> >
+>> > No, that commit fixes it for of_graph_get_port_parent() while this
+>> > commit fixes it for of_fwnode_graph_get_port_parent(). But in essence it
+>> > is the same issue but needs two separate fixes.
+>>
+>> Ah, because one takes the port node and one takes the endpoint node.
+>> That won't confuse anyone.
+>
+> Yes, I think we've had this for some time in naming of a few graph
+> functions and increasingly so lately. It began with
+> of_graph_get_remote_port_parent(), which likely was named so to avoid the
+> name getting really long. The function itself gets a remove of the endpoint
+> given as an argument, then the port related to the entpoint and finally the
+> parent node of the port node (which is not the "ports" node). That's a lot
+> of work for a single interface function.
+
+That's because returning the "ports" node would be pointless. The
+remote device could have:
+
+ports {
+    port {
+        endpoint {
+        };
+    };
+};
+
+Or no ports node. Both are valid and should be treated equivalently.
+
+>
+> What comes to of_fwnode_graph_get_port_parent() --- it's the OF callback
+> function for the fwnode graph API that, as the name suggests, gets the
+> parent of the port node, no more, no less. The function is used in the
+> fwnode graph API implementation and is not available in the API as such.
+
+If this operates on the local node, then you should already have the
+relevant parent. If you are walking the remote node, then the exact
+port structure should be opaque. If you need the remote endpoint and
+its properties, that's fine. Otherwise, you should really only need
+the remote parent device because the remote's graph structure is
+specific to the remote device and any parsing should be done within
+the remote's driver.
+
+> The fwnode graph API itself only implements functionality already available
+> in the OF graph API under the corresponding name.
+
+There are graph APIs I want to get rid of, but since there are still
+users I haven't. Adding those APIs to the fwnode API will just make it
+harder.
+
+>> Can we please align this mess. I've tried to make the graph parsing
+>> not a free for all, open coded mess. There's no reason to have the
+>> port node handle and then need the parent device. Either you started
+>> with the parent device to parse local ports and endpoints or you got
+>> the remote endpoint with .graph_get_remote_endpoint(). Most of the
+>> time you don't even need the endpoint node handles. You really just
+>> need to know what is the remote device connected to port X, endpoint Y
+>> of my local device.
+>
+> Perhaps most of the time, yes. V4L2 devices store bus (e.g. MIPI CSI-2)
+> specific information in the endpoint nodes.
+>
+> The current OF graph API is geared towards providing convenience functions
+> to the extent that a single function performs actions a driver would
+> typically need. More recently functions implementing a single operation has
+> been added; the primitives that just perform a single operation would
+> likely be easier to manage.
+
+Then we have each driver open coding walking the graph.
+
+> The convenience functions have been, well, convenient as getting and
+> putting nodes could have been somewhat ignored in drivers. If the OF graph
+> API usage can be moved out of the drivers we'll likely have way fewer users
+> and thus there's no real need for convenience functions. That has other
+> benefits, too, such as parsing the graph correctly: most V4L2 drivers have
+> issues in this area.
+>
+> The OF graph API (or the fwnode equivalent) is used effectively in all V4L2
+> drivers that support OF (there are about 20 of them); we're moving these to
+> the V4L2 framework but it'll take some time. That should make it easier for
+> cleaning things up. Based on a quick look V4L2 and V4L2 drivers together
+> represent a large proportion of all users in the kernel.
+
+I certainly will care less when there's only subsystems using the API
+versus each driver.
+
+I'd guess it is more equal because most of the DRM drivers are
+converted to not use the graph API directly.
+
+>
+> What do you think?
+
+I'll apply this fix, but please keep the above in mind when reworking
+the V4L2 drivers.
+
+Rob
