@@ -1,7 +1,7 @@
 From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 6/6] mtd: spi-nor: cadence-quadspi: Add runtime PM support
-Date: Tue, 3 Oct 2017 10:49:25 +0530
-Message-ID: <20171003051925.8821-7-vigneshr@ti.com>
+Subject: [PATCH v4 3/6] mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back circuit
+Date: Tue, 3 Oct 2017 10:49:22 +0530
+Message-ID: <20171003051925.8821-4-vigneshr@ti.com>
 References: <20171003051925.8821-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,67 +12,36 @@ To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille P
 Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pm_runtime* calls to cadence-quadspi driver. This is required to
-switch on QSPI power domain on TI 66AK2G SoC during probe.
+Cadence QSPI IP has a adapted loop-back circuit which can be enabled by
+setting BYPASS field to 0 in READCAPTURE register. It enables use of
+QSPI return clock to latch the data rather than the internal QSPI
+reference clock. For high speed operations, adapted loop-back circuit
+using QSPI return clock helps to increase data valid window.
+
+Add DT parameter cdns,rclk-en to help enable adapted loop-back circuit
+for boards which do have QSPI return clock provided. Update binding
+documentation for the same.
 
 Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-v4: Disable pm in error path.
+ Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
- drivers/mtd/spi-nor/cadence-quadspi.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-index 60b557e00cfb..75a2bc447a99 100644
---- a/drivers/mtd/spi-nor/cadence-quadspi.c
-+++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-@@ -31,6 +31,7 @@
- #include <linux/of_device.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/sched.h>
- #include <linux/spi/spi.h>
- #include <linux/timer.h>
-@@ -1224,10 +1225,17 @@ static int cqspi_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+index 7dbe3bd9ac56..bb2075df9b38 100644
+--- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+@@ -16,6 +16,9 @@ Required properties:
  
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
-+		return ret;
-+	}
-+
- 	ret = clk_prepare_enable(cqspi->clk);
- 	if (ret) {
- 		dev_err(dev, "Cannot enable QSPI clock.\n");
--		return ret;
-+		goto probe_clk_failed;
- 	}
+ Optional properties:
+ - cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
++- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
++  the read data rather than the QSPI clock. Make sure that QSPI return
++  clock is populated on the board before using this property.
  
- 	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
-@@ -1259,6 +1267,9 @@ static int cqspi_probe(struct platform_device *pdev)
- 	cqspi_controller_enable(cqspi, 0);
- probe_irq_failed:
- 	clk_disable_unprepare(cqspi->clk);
-+probe_clk_failed:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 	return ret;
- }
- 
-@@ -1275,6 +1286,9 @@ static int cqspi_remove(struct platform_device *pdev)
- 
- 	clk_disable_unprepare(cqspi->clk);
- 
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
- 	return 0;
- }
- 
+ Optional subnodes:
+ Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
 -- 
 2.14.1
 
