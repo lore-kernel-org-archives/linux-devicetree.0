@@ -1,82 +1,31 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 1/2] ARM64: dts: meson-gxm: Add Vega S96 board
-Date: Tue,  3 Oct 2017 17:29:44 +0200
-Message-ID: <1507044585-20117-2-git-send-email-narmstrong@baylibre.com>
-References: <1507044585-20117-1-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v2 0/2] ARM64: Add Vega S96 board support
+Date: Tue,  3 Oct 2017 17:29:43 +0200
+Message-ID: <1507044585-20117-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507044585-20117-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbes-150@yandex.ru, support@tronsmart.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbes-150@yandex.ru
 List-Id: devicetree@vger.kernel.org
 
-The Tronsmart Vega S96 is a TV box derived from Amlogic q200 reference design.
+This patchset adds support for the Tronsmart Vega S96 TV Box based
+on the Q200 Amlogic Reference design.
 
-Cc: support@tronsmart.com
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Oleg Ivanov <balbes-150@yandex.ru>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
+Changes since v1 at [1] :
+ - Add acks
+ - Cleanup external_phy node
+
+[1]  https://lkml.kernel.org/r/1505822748-23431-1-git-send-email-narmstrong@baylibre.com
+
+Neil Armstrong (2):
+  ARM64: dts: meson-gxm: Add Vega S96 board
+  dt-bindings: arm: amlogic: Add Tronsmart Vega S96 binding
+
+ Documentation/devicetree/bindings/arm/amlogic.txt  |  1 +
  arch/arm64/boot/dts/amlogic/Makefile               |  1 +
  arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts | 38 ++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+ 3 files changed, 40 insertions(+)
  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 7a9f48c..a6c4a06 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-new file mode 100644
-index 0000000..dc37eec
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dts
-@@ -0,0 +1,38 @@
-+/*
-+ * Copyright (c) 2017 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ * Copyright (c) 2017 Oleg <balbes-150@yandex.ru>
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxm.dtsi"
-+#include "meson-gx-p23x-q20x.dtsi"
-+
-+/ {
-+	compatible = "tronsmart,vega-s96", "amlogic,s912", "amlogic,meson-gxm";
-+	model = "Tronsmart Vega S96";
-+
-+};
-+
-+&ethmac {
-+	pinctrl-0 = <&eth_pins>;
-+	pinctrl-names = "default";
-+
-+	/* Select external PHY by default */
-+	phy-handle = <&external_phy>;
-+
-+	amlogic,tx-delay-ns = <2>;
-+
-+	/* External PHY is in RGMII */
-+	phy-mode = "rgmii";
-+};
-+
-+&external_mdio {
-+	external_phy: ethernet-phy@0 {
-+		/* Realtek RTL8211F (0x001cc916) */
-+		reg = <0>;
-+	};
-+};
 -- 
 2.7.4
