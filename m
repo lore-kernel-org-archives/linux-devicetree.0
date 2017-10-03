@@ -1,68 +1,82 @@
-From: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
-Date: Tue, 3 Oct 2017 16:51:09 +0300
-Message-ID: <20171003135109.v7ch7oc4fvjwzl7w@valkosipuli.retiisi.org.uk>
-References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
- <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
- <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
- <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
- <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
- <CAAFQd5B65bJHsZkMgtjGgyd3btuoWzJwYQRQb5j2kSaefxCZ7Q@mail.gmail.com>
- <20170920093222.yzfw2ctrupep5iqx@valkosipuli.retiisi.org.uk>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: foundation-v8: Enable PSCI mode
+Date: Tue, 3 Oct 2017 15:09:35 +0100
+Message-ID: <521d6f60-ee90-bc96-97a7-1da33170a9c4@arm.com>
+References: <20170918153832.16356-1-daniel.thompson@linaro.org>
+ <20170919183204.12751-1-daniel.thompson@linaro.org>
+ <da8a0cf5-3c1e-1398-b5c3-ac489ae955fa@arm.com>
+ <9a542b9a-3c37-ed8a-04e6-de41493f4b0d@linaro.org>
+ <e49177f9-a9a8-e322-3743-5c58277c46ea@arm.com>
+ <8c4a4114-b7f7-301e-20b8-960e6234b661@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170920093222.yzfw2ctrupep5iqx@valkosipuli.retiisi.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "Mohandass, Divagar" <divagar.mohandass@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mika.westerberg@linux.intel.com, linux-pm@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8c4a4114-b7f7-301e-20b8-960e6234b661-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
 
-On Wed, Sep 20, 2017 at 12:32:22PM +0300, sakari.ailus@iki.fi wrote:
-> > >> >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client *client, const
-> > >> >> struct i2c_device_id *id)
-> > >> >>
-> > >> >>       i2c_set_clientdata(client, at24);
-> > >> >>
-> > >> >> +     /* enable runtime pm */
-> > >> >> +     pm_runtime_get_noresume(&client->dev);
-> > >> >> +     pm_runtime_set_active(&client->dev);
-> > >> >> +     pm_runtime_enable(&client->dev);
-> > >>
-> > >> Do we need this get_noresume/set_active dance? I remember it was for
-> > >> some reason needed for PCI devices, but I don't see why for I2C
-> > >> anything else than just pm_runtime_enable() would be necessary.
-> > >
-> > > You specifically do not need (all) this for PCI devices, but AFAIU for I涎
-> > > devices you do. The runtime PM status of a device is disabled by default
-> > > and the use count is zero, but on ACPI based systems the device is still
-> > > powered on.
-> > 
-> > Okay, so _get_noresume() and _set_active() would do the thing for ACPI
-> > indeed, but not sure about other platforms. Perhaps _enable(),
-> > _get_sync() would be more general?
+
+On 03/10/17 10:12, Daniel Thompson wrote:
+> On 02/10/17 18:26, Sudeep Holla wrote:
+>> Sorry for late response, I thought I had sent this mail out long back
+>> but was sitting in my draft :(
 > 
-> What I ended up doing in e.g. the smiapp driver was to explicitly power the
-> device on first and then enable runtime PM. (See
-> drivers/media/i2c/smiapp/smiapp-core.c .) This approach works even if
-> CONFIG_PM is disabled, both on DT and ACPI.
+> No worries. I've been at Linaro connect this last week anyway.
+> 
+> 
+>> On 20/09/17 12:17, Daniel Thompson wrote:
+>>> On 20/09/17 10:42, Sudeep Holla wrote:
+>>>>
+>>>>
+>>>> On 19/09/17 19:32, Daniel Thompson wrote:
+>>>>> Currently if the Foundation model is running ARM Trusted Firmware then
+>>>>> the kernel, which is configured to use spin tables, cannot start
+>>>>> secondary
+>>>>> processors or "power off" the simulation.
+>>>>>
+>>>>> After adding a couple of labels to the include file and splitting out
+>>>>> the
+>>>>> spin-table configuration into a header, we add a couple of new headers
+>>>>> together with two new DTs (GICv2+PSCI and GICv3+PSCI).
+>>>>>
+>>>>> The new GICv3+PSCI DT has been boot tested, the remaining three
+>>>>> (two of
+>>>>> which existed prior to this patch) have been "tested" by
+>>>>> decompiling the
+>>>>> blobs and comparing them against a reference.
+>>>>>
+>>>>
+>>>> How different are these from the ones hosted in [1] ?
+>>>
+>>> They look like they were either independently written or diverged a long
+>>> time ago. The existing kernel DTs describe hardware absent from the ARM
+>>> TF ones and vice versa.
+>>>
+>>
+>> OK.
+>>
+>>> With specific reference to PSCI it looks like my patches could perhaps
+>>> be improved by adding idle-state support.
+>>
+>> Yes I know.
+> 
+> You want a v3 with it added?
+> 
 
-pm_runtime_get_noresume() + pm_runtime_put() can be replaced by a single
-pm_runtime_idle() call (where pm_runtime_put() was). pm_runtime_enable() is
-required to enable runtime PM for a device.
+No, that's fine. I have pushed this already [1] with Mark's ack for now.
+We can add it later after some testing, not urgent.
 
-pm_runtime_allow() may be omitted but then to make the runtime PM framework
-to make the power state transitions this needs to be configured from the
-user space --- which I don't think is intended.
-
-Cc linux-pm, too.
-
--- 
+--
 Regards,
+Sudeep
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+[1] https://git.kernel.org/sudeep.holla/linux/h/for-next/juno
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
