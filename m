@@ -1,41 +1,51 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: pinctrl: add support for RZ/A1L
-Date: Tue,  3 Oct 2017 02:33:34 -0500
-Message-ID: <20171003073334.18917-3-chris.brandt@renesas.com>
-References: <20171003073334.18917-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171003073334.18917-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
+Date: Tue, 03 Oct 2017 10:33:52 +0300
+Message-ID: <1507016032.17981.7.camel@hp800z>
+References: <1506628736.28192.9.camel@hp800z>
+         <CAL_Jsq+Hxjf8PecU+ZpCoFqbKAYJtzHpFco2Wsi_KT499fb-=g@mail.gmail.com>
+         <1506973580.17981.5.camel@hp800z>
+         <CAMuHMdUNrAv4oYk1kwikGwKBXLBHO7p=CrHK4w0-BSQ2gQNx3g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUNrAv4oYk1kwikGwKBXLBHO7p=CrHK4w0-BSQ2gQNx3g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robherring2@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, David Gibson <david@gibson.dropbear.id.au>, Tom Rini <trini@konsulko.com>, Franklin S Cooper Jr <fcooper@ti.com>, Matt Porter <mporter@konsulko.com>, Simon Glass <sjg@chromium.org>, Phil Elwell <philip.j.elwell@gmail.com>, Marek Vasut <marex@denx.de>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Compatible "r7s72102-ports" was added for RZ/A1L devices
+Hi Geert,
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Tue, 2017-10-03 at 09:17 +0200, Geert Uytterhoeven wrote:
+> Hi Pantelis,
+> 
+> On Mon, Oct 2, 2017 at 9:46 PM, Pantelis Antoniou
+> <pantelis.antoniou@konsulko.com> wrote:
+> >     # Note that the YAML example must be validated against this binding
+> >     # to be an accepted entry
+> 
+> Indeed ;-)
+> 
+> >       yaml: |
+> >         sk11@0:
+> >           compatible: "skel,sk11"
+> >           reg: 0
+> >           sip-max-frequency: 1000000
+> 
+> s/sip-max-frequency/spi-max-frequency/
+> 
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-index 43e21474528a..2a3366cee848 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-@@ -13,7 +13,8 @@ Pin controller node
- 
- Required properties:
-   - compatible
--    this shall be "renesas,r7s72100-ports".
-+    this shall be "renesas,r7s72100-ports" for RZ/A1H and RZ/A1M or
-+    "renesas,r7s72102-ports" for RZ/A1L
- 
-   - reg
-     address base and length of the memory area where the pin controller
--- 
-2.14.1
+Heh, obviously the auto-check of binding examples is not working yet :)
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
