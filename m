@@ -1,74 +1,63 @@
-From: Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: 4879b7ae05 ("Merge tag 'dmaengine-4.12-rc1' of .."): WARNING:
- kernel stack regs at bd92bc2e in 01-cpu-hotplug:3811 has bad 'bp' value
- 000001be
-Date: Tue, 3 Oct 2017 08:21:25 -0500
-Message-ID: <20171003132125.ulj3nnmiimamsm6w@treble>
-References: <59d177a7.vsiddgOxdHRIlRvy%fengguang.wu@intel.com>
- <CA+55aFz_ijfUxyk2kdLhfzfS1z0_uRBw6eQb9UxFvh=5zOzzaw@mail.gmail.com>
- <20171002212654.rsm4uj3hfioddldd@treble>
- <20171002213109.5n3skzy76edhwkvf@treble>
- <20171003034538.ntvuwtm2uha6wt6h@wfg-t540p.sh.intel.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 1/2] pinctrl: rza1: add support for RZ/A1L
+Date: Tue, 3 Oct 2017 13:36:57 +0000
+Message-ID: <SG2PR06MB1165EE1D21AFC1D3005308538A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20171003073334.18917-1-chris.brandt@renesas.com>
+ <20171003073334.18917-2-chris.brandt@renesas.com>
+ <20171003083148.GG4037@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171003034538.ntvuwtm2uha6wt6h@wfg-t540p.sh.intel.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dma <dmaengine@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171003083148.GG4037@w540>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 03, 2017 at 11:45:38AM +0800, Fengguang Wu wrote:
-> Hi Josh,
-> 
-> On Mon, Oct 02, 2017 at 04:31:09PM -0500, Josh Poimboeuf wrote:
-> > On Mon, Oct 02, 2017 at 04:26:54PM -0500, Josh Poimboeuf wrote:
-> > > Fengguang, assuming it's reliably recreatable, any chance you could
-> > > recreate with the following patch?
-> 
-> Sure, I'll try your patch on v4.14-rc3 since it looks the most
-> reproducible kernel. For the bisected 4879b7ae05, the warning only
-> shows up once out of 909 boots according to the below stats. So I'm
-> not sure whether it's the _first_ bad commit. To double confirm, I
-> just queued 5000 more boot tests for each of its parent commits.
-
-Fengguang, here's an improved version of the patch based on Linus'
-suggestions.  If you can use it instead, that would be helpful because
-it has a better chance of dumping useful data.  Thanks!
-
-
-diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
-index d145a0b1f529..191012762aa0 100644
---- a/arch/x86/kernel/unwind_frame.c
-+++ b/arch/x86/kernel/unwind_frame.c
-@@ -44,7 +44,8 @@ static void unwind_dump(struct unwind_state *state)
- 			state->stack_info.type, state->stack_info.next_sp,
- 			state->stack_mask, state->graph_idx);
- 
--	for (sp = state->orig_sp; sp; sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
-+	for (sp = PTR_ALIGN(state->orig_sp, sizeof(long)); sp;
-+	     sp = PTR_ALIGN(stack_info.next_sp, sizeof(long))) {
- 		if (get_stack_info(sp, state->task, &stack_info, &visit_mask))
- 			break;
- 
-@@ -178,7 +179,7 @@ static struct pt_regs *decode_frame_pointer(unsigned long *bp)
- {
- 	unsigned long regs = (unsigned long)bp;
- 
--	if (!(regs & 0x1))
-+	if ((regs & (sizeof(long)-1)) != 1)
- 		return NULL;
- 
- 	return (struct pt_regs *)(regs & ~0x1);
-@@ -221,6 +222,10 @@ static bool update_stack_state(struct unwind_state *state,
- 				   &state->stack_mask))
- 			return false;
- 
-+	/* Make sure the frame pointer is properly aligned: */
-+	if ((unsigned long)frame & (sizeof(long)-1))
-+		return false;
-+
- 	/* Make sure it only unwinds up and doesn't overlap the prev frame: */
- 	if (state->orig_sp && state->stack_info.type == prev_type &&
- 	    frame < prev_frame_end)
+SGkgSmFjb3BvLA0KDQpPbiBUdWVzZGF5LCBPY3RvYmVyIDAzLCAyMDE3LCBqYWNvcG8gbW9uZGkg
+d3JvdGU6DQo+IERvIHlvdSBoYXZlIG90aGVyIGF1dGhvcml0YXRpdmUgc291cmNlcyBmb3IgcGlu
+J3MgYmlkaXIgc2V0dGluZ3M/DQo+IEFjY29yZGluZyB0byB0aGUgcHVibGljbHkgYXZhaWxhYmxl
+IG1hbnVhbCwgdGhlcmUgYXJlIG90aGVyIHBpbnMgdGhhdA0KPiBuZWVkcyBiaWRpciBub3QgbGlz
+dGVkIGhlcmUuDQo+IEFzIHRoZSBzYW1lIGhhcHBlbmVkIHdpdGggUlovQTFIIEknbSBub3QgdG9v
+IGNvbmNlcm5lZCwgYnV0IEknbQ0KPiBsaXN0aW5nIHNvbWUgb2YgdGhlcmUgaGVyZSBub25ldGhl
+bGVzcw0KDQpCYWNrIHdoZW4geW91IHdlcmUgd29ya2luZyBvbiB0aGlzLCBJIGRpc2N1c3NlZCB3
+aXRoIHRoZSBndXlzIGJhY2sgaW4gDQpKYXBhbi4gV2hpbGUgaW4gdGhlIHRhYmxlIHRoZXJlIGFy
+ZSBtdWx0aXBsZSBwaW5zIHRoYXQgc2hvdyANCidiaS1kaXJlY3Rpb25hbCBjYXBhYmxlJywgdGhl
+eSBkb24ndCBhbGwgbmVlZCB0aGUgYmktZGlyIGJpdCBzZXQuIFRoaXMgd2FzIHRoZSBsaXN0IG9m
+DQpwZXJpcGhlcmFsOg0KIEkyQywgTURJTyAoRVRIKSwgTU1DLCBTREhJLCBRU1BJLCBEYXRhIChE
+MC1EMzEpDQoNCg0KPiBQMiBoYXMgc2V2ZXJhbCBUSU9DIHBpbnMgaW4gbW9kZSA0IGFuZCBTU0kg
+aW4gbW9kZSAyDQoNClBvcnQgMj8/Pw0KUG9ydCAyLCBtb2RlIDQgaW4gdGhlIFJaL0ExTCBtYW51
+YWwgb25seSBoYXMgSVJRNyw2LDUsMiwxDQoNCg0KSSB0aG91Z2h0IHdlIGRlY2lkZWQgb24gdGhh
+dCBUSU9DIHBpbnMgYXJlIG9uZXMgdGhhdCBhcmUgbWFudWFsbHkgc2V0IHRvDQplaXRoZXIgaW5w
+dXQgKGlucHV0LWVuYWJsZSwgb3V0cHV0LWVuYWJsZSkgYnkgdGhlIHVzZXJzIERldmljZSBUcmVl
+LCBzbw0KdGhleSBkb24ndCBuZWVkIHRvIGJlIHB1dCBpbnRvIGEgdGFibGUuIElmIGlucHV0LWVu
+YWJsZSBvciANCm91dHB1dC1lbmFibGUgaXMgc3BlY2lmaWVkLCB0aGVuIHlvdSBtYW51YWxseSBz
+ZXQgaXQgdG8gdGhhdCBkaXJlY3Rpb24uDQoNCkFzIGZvciBTU0ksIHRoZSBtYW51YWwgc2F5cyBv
+bmx5IHRoZSBTU0lUeCBwaW5zIG5lZWQgYmktZGlyLCBub3QgdGhlIA0KU1NJUnggcGlucy4NCg0K
+DQo+IFRJT0MgaW4gbW9kZTMsIFNLQzMgYW5kIFNDSzEgaW4gbW9kZSA1DQo+ID4gKw0KPiA+ICtz
+dGF0aWMgY29uc3Qgc3RydWN0IHJ6YTFfYmlkaXJfcGluIHJ6YTFsX2JpZGlyX3BpbnNfcDRbXSA9
+IHsNCj4gPiArCXsgLnBpbiA9IDEsIC5mdW5jID0gNCB9LA0KPiA+ICsJeyAucGluID0gMiwgLmZ1
+bmMgPSAyIH0sDQo+ID4gKwl7IC5waW4gPSAzLCAuZnVuYyA9IDIgfSwNCj4gPiArCXsgLnBpbiA9
+IDYsIC5mdW5jID0gMiB9LA0KPiA+ICsJeyAucGluID0gNywgLmZ1bmMgPSAyIH0sDQo+ID4gK307
+DQo+IA0KPiBDb25mdXNlZCwgeW91J3JlIGhlcmUgbGlzdGluZyBUSU9DMkIgcGluIChwaW4gMSBt
+b2RlICM0KSBidXQgbm90IFRJT0MxQg0KPiAocGluIDAgbW9kZSAjNCkNCj4gRVRfTURJTyBpbiBt
+b2RlIDQsIHdoaWNoIHdlIGxpc3QgYXMgYmlkaXIgaW4gUlovQTFIDQoNClA0XzEgbW9kZSA0IGlz
+IEVUX01ESU8uDQoNClRJT0MxQiBpcyBQNF8wIG1vZGUgMy4NClRJT0MyQiBpcyBQNF8xIE1vZGUg
+Mw0KDQpBcmUgeW91IGxvb2tpbmcgYXQgVGFibGUgNDEuMTkgaW4gdGhlIFJldi4zLjAwIHZlcnNp
+b24gb2YgdGhlIFJaL0ExTCANCkhhcmR3YXJlIE1hbnVhbD8NCg0KPiA+ICtzdGF0aWMgY29uc3Qg
+c3RydWN0IHJ6YTFfc3dpb19waW4gcnphMWxfc3dpb19waW5zW10gPSB7DQo+ID4gKwl7IC5wb3J0
+ID0gMiwgLnBpbiA9IDgsIC5mdW5jID0gMiwgLmlucHV0ID0gMCB9LA0KPiA+ICsJeyAucG9ydCA9
+IDUsIC5waW4gPSA2LCAuZnVuYyA9IDMsIC5pbnB1dCA9IDAgfSwNCj4gPiArCXsgLnBvcnQgPSA2
+LCAucGluID0gNiwgLmZ1bmMgPSAzLCAuaW5wdXQgPSAwIH0sDQo+ID4gKwl7IC5wb3J0ID0gNiwg
+LnBpbiA9IDEwLCAuZnVuYyA9IDMsIC5pbnB1dCA9IDAgfSwNCj4gPiArCXsgLnBvcnQgPSA3LCAu
+cGluID0gMTAsIC5mdW5jID0gMiwgLmlucHV0ID0gMCB9LA0KPiA+ICsJeyAucG9ydCA9IDgsIC5w
+aW4gPSAyLCAuZnVuYyA9IDMsIC5pbnB1dCA9IDAgfSwNCj4gPiArfTsNCj4gDQo+IEkgY291bnQg
+MjAgU1dJTyBwaW5zDQo+IA0KPiBUSU9DWzAtNF1bQS1EXQ0KPiBTU0lUeFswLTNdDQo+IFdEVE9W
+Rg0KDQpJIHRob3VnaHQgd2Ugc2FpZCBUSU9DIGRpZG4ndCBuZWVkIHRvIGJlIGluIGEgdGFibGUg
+YmVjYXVzZSB0aGUgdXNlciBoYXMNCnRvIHNwZWNpZnkgdGhlbSBhbnl3YXkgYmVjYXVzZSB0aGUg
+dXNlciBoYXMgdG8gY2hvb3NlIGlmIGhlIHdhbnRzIHRoZW0gDQphcyBpbnB1dCBvciBvdXRwdXQs
+IHNvIGlmIGhlIGRvZXMgdGhhdCwgdGhlbiB3ZSBhdXRvbWF0aWNhbGx5IGtub3cgaXQncyANCmEg
+c3dpbyBwaW4uIEhtbSwgbWF5YmUgSSBoYXZlIHRvIGdvIGJhY2sgYW5kIGxvb2sgYXQgd2hhdCB0
+aGUgZHJpdmVyIA0KZW5kZWQgdXAgaW1wbGVtZW50aW5nLg0KDQoNCkNocmlzDQo=
