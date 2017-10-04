@@ -1,35 +1,125 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
- USB2.0 host channel 3
-Date: Wed, 4 Oct 2017 09:28:46 +0200
-Message-ID: <20171004072846.GD28959@verge.net.au>
-References: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
+ used as LDOs
+Date: Wed, 4 Oct 2017 09:35:06 +0200
+Message-ID: <8be22e47-8071-be4c-0bd4-38fa51cbe3ff@free-electrons.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-13-quentin.schulz@free-electrons.com>
+ <CACRpkdZYcSuhvn0b0qa0k1PQHoyXjNyjoyhR2sPme_t1pF12Dg@mail.gmail.com>
+ <20171003144737.rhgtp3uwckhvoqdw@flea>
+ <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1506925789-19392-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 02, 2017 at 03:29:46PM +0900, Yoshihiro Shimoda wrote:
-> This patch set is based on the latest renesas.git /
-> renesas-devel-20170928-v4.14-rc2 tag.
+Hi Chen-Yu, Linus,
+
+On 03/10/2017 17:08, Chen-Yu Tsai wrote:
+> On Tue, Oct 3, 2017 at 10:47 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> Hi Linus,
+>>
+>> On Tue, Oct 03, 2017 at 09:27:17AM +0000, Linus Walleij wrote:
+>>> On Mon, Oct 2, 2017 at 2:08 PM, Quentin Schulz
+>>> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>
+>>>> On AXP813/818, GPIO0 and GPIO1 can be used as LDO as (respectively)
+>>>> ldo_io0 and ldo_io1.
+>>> (...)
+>>>> +               gpio0_ldo: gpio0_ldo {
+>>>> +                       pins = "GPIO0";
+>>>> +                       function = "ldo";
+>>>> +               };
+>>> (...)
+>>>> +                       pinctrl-names = "default";
+>>>> +                       pinctrl-0 = <&gpio0_ldo>;
+>>>>                         /* Disable by default to avoid conflicts with GPIO */
+>>>>                         status = "disabled";
+>>>
+>>> So this is still by default disabled, but you make the default
+>>> mode something called "ldo".
+>>>
+>>> And I think that is to be understood as a low-dropout regulator?
+>>>
+>>> So is the idea that this should be represented as a regulator
+>>> in the end?
+>>>
+>>> Then I think the state name should not be "default" rather
+>>> something like "regulator" and "default" should be the GPIO
+>>> mode, as I guess something like that exists.
+>>>
+>>> Activating a regulator using pin control "default" mode is
+>>> not very pretty. It would probably be unintuitive and end
+>>> up wasting power because people will get confused about
+>>> what is going on.
+>>
+>> That's not really it. The PMIC has pins that can be muxed either to
+>> (regular) GPIOs, an ADC or to an LDO regulator.
+>>
+>> This is just muxing, the regulator will be enabled and disabled
+>> separately through another register. If it wasn't the case, it would
+>> indeed be very messy.
 > 
-> Yoshihiro Shimoda (3):
->   arm64: dts: renesas: r8a7795: salvator-xs: enable USB2.0 phy channel 3
->   arm64: dts: renesas: r8a7795: salvator-xs: enable USB2.0 Host channel
->     3
->   arm64: dts: renesas: r8a7795: salvator-xs: enable HS-USB channel 3
+> No. Actually they are controlled in the same register, so it is
+> very messy. The muxing options are:
 > 
->  .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 24 ++++++++++++++++++++++
+>     - 0: drive low
+>     - 1: drive high
+>     - 2: input with interrupt triggering
+>     - 3: LDO on
+>     - 4: LDO off
+>     - 5~7: floating (or ADC)
+> 
 
-Hi Shimoda-san,
+Just to be a little more precise,
+     - 0: drive low
+     - 1: drive high
+     - 2: input with interrupt triggering
+     - 3: LDO on
+     - 4: LDO off
+     - 5~7: floating (or ADC)
 
-there was some discussion of patch 1/3.
-At this point I'm waiting for a repost of the patchset with
-a revised patch 1/3.
+for AXP813, and
+     - 0: drive low
+     - 1: drive high
+     - 2: input with interrupt triggering
+     - 3: LDO on
+     - 4: ADC
+     - 5~7: floating
 
-Thanks
+for AXP209.
+
+So I think what you suggested Linus is not really relevant here as the
+regulator framework will take care of disabling the regulator when
+needed (for AXP813 via the ldo_off "muxing" selected by the regulator
+framework).
+
+However, there is no LDO off bit for AXP209 and the LDO can't be set to
+0V in any other register. What's done now in the regulator driver for
+AXP209 is to select the floating "muxing" for the pin when wanting to
+disable the regulator. So I guess that's a way to handle it. Should we
+do it another way?
+
+Thanks for raising the issue, I frankly haven't thought about that at all.
+
+I have to send a v4 to update the support for AXP813 (basically setting
+ADC muxing to 0x5 instead of 0x4, for AXP813) as I misread the muxing
+register description when adding support for it.
+
+Thanks,
+Quentin
+-- 
+Quentin Schulz, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
