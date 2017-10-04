@@ -1,150 +1,36 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Wed, 4 Oct 2017 14:53:24 +0100
-Message-ID: <69fc9095-6961-b861-d2e0-afb58de11d59@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-3-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
- <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com>
- <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: salvator-common: add pfc node for
+ USB3.0 channel 0
+Date: Wed, 4 Oct 2017 15:53:36 +0200
+Message-ID: <CAMuHMdUz78BmySULe_wizFEhFAtiBiQLZ9Ov++S94+yb4YpxDg@mail.gmail.com>
+References: <1507017672-21493-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507017672-21493-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/10/17 13:35, Arnd Bergmann wrote:
-> On Wed, Oct 4, 2017 at 1:07 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi Arnd,
->>
->> Thanks for taking a look at this.
->>
->> On 04/10/17 11:50, Arnd Bergmann wrote:
->>> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>> +
->>>> +The SCMI is intended to allow agents such as OSPM to manage various functions
->>>> +that are provided by the hardware platform it is running on, including power
->>>> +and performance functions.
->>>> +
->>>> +This binding is intended to define the interface the firmware implementing
->>>> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
->>>> +and Management Interface Platform Design Document")[0] provide for OSPM in
->>>> +the device tree.
->>>> +
->>>> +Required properties:
->>>> +
->>>> +The scmi node with the following properties shall be under the /firmware/ node.
->>>> +
->>>> +- compatible : shall be "arm,scmi"
->>>> +- mboxes: List of phandle and mailbox channel specifiers. It should contain
->>>> +         exactly one or two mailboxes, one for transmitting messages("tx")
->>>> +         and another optional for receiving the notifications("rx") if
->>>> +         supported.
->>>> +- mbox-names: shall be "tx" or "rx"
->>>
->>> The example below does not have the mbox-names property. If you require
->>> exactly two mailboxes, why do you need the names anyway?
->>>
->>
->> Good question. I can drop it, but would like to keep in case we need to
->> extend it in future. We can always use then to identify.
-> 
-> I don't think it's necessary, as long you always need to have the first two,
-> but it doesn't hurt either.
+On Tue, Oct 3, 2017 at 10:01 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Since a R-Car Gen3 bootloader enables the PFC of USB3.0 channel 0,
+> the USB3.0 host controller works without this setting on the kernel.
+> But, this setting should have salvator-common.dtsi. So, this patch
+> adds the pfc node for USB3.0 channel 0.
 >
-> Just make the description match the example.
-> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Sure.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->>> However, your example does have a #addresss-cells/#size-cells
->>> property that are not documented here. Please add them here as either
->>> optional or required, and describe what the permitted values are and
->>> how the address is interpreted.
->>>
->>
->> Ah right, I didn't notice that. I will add it. It was added to provide
->> the protocol number in "reg" property.
-> ...
->>> How does the OS identify the fact that a subnode uses the clock binding?
->>> Do you need to look for the #clock-cells property, or is this based on the
->>> unit address?
->>>
->>
->> Yes it depends on #clock-cells property. That's the main reason for
->> adding #clock-cells
-> 
-> I'm still unclear on this. Do you mean we look for a subnode with
-> reg=<0x14> and then assume it's a clock node and require the
->  #clock-cells to be there, 
+Gr{oetje,eeting}s,
 
-Yes that's how it's used. Presence of subnode with reg=0x14 indicates
-clock protocol and #clock-cells to indicate that it's clock provider
-expecting 1 parameter from consumer which is the clock identifier.
+                        Geert
 
-or do we look through the sub-nodes to
-> find one with the #clock-cells property and then look up the 'reg'
-> property to find out which protocol number to use?
-> 
-
-Not this way. Do you see any issues ?
-
->>>> +- shmem : List of phandle pointing to the shared memory(SHM) area as per
->>>> +         generic mailbox client binding.
->>>> +
->>>> +See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
->>>> +about the generic mailbox controller and client driver bindings.
->>>> +
->>>> +The mailbox is the only permitted method of calling the SCMI firmware.
->>>> +Mailbox doorbell is used as a mechanism to alert the presence of a
->>>> +messages and/or notification.
->>>
->>> This looks odd: why not make the message itself part of the mailbox
->>> protocol here, and leave the shmem as a implementation detail of the
->>> mailbox driver?
->>>
->>
->> I am not sure if I follow you here. But generally shmem can be memory
->> carved out of anything in the system and it's dependent on the protocol
->> and the remote firmware rather than the mailbox hardware itself.
-> 
-> I think the problem is the way we use the mailbox API in Linux, which
-> is completely abstract at the moment: it could be a pure doorbell, a
-> single-register for a data, some structured memory, or a
-> variable-length message. The assumption today is that the mailbox
-> user and the mailbox driver agree on the interpretation of that
-> void pointer.
-> 
-
-Unfortunately true.
-
-> This breaks down here, as you require the message to be a
-> variable-length message in a fixed physical location, but assume that
-> the mailbox serves only as a doorbell.
-> 
-
-Yes.
-
-> The solution might be to extend the mailbox API slightly, to
-> have explicit support for variable-length messages, and implement
-> support for that in either mailbox drivers or as an abstraction
-> on top of doorbell-type mailboxes.
-> 
-I got the concept. But are you also suggesting that in bindings it shmem
-should be associated with mailbox controller rather than client ?
-
--- 
-Regards,
-Sudeep
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
