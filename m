@@ -1,50 +1,41 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 3/4] dt-bindings: gpio: max3191x: Document new driver
-Date: Wed, 4 Oct 2017 21:31:53 +0200
-Message-ID: <20171004193153.GA9195@wunner.de>
-References: <cover.1503319573.git.lukas@wunner.de>
- <7fe7636eecba238d57ab6178cfa3f6b7deca98f1.1503319573.git.lukas@wunner.de>
- <20170823004847.jmkb53xtdmmn6vtf@rob-hp-laptop>
- <20170905081624.GA15374@wunner.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] iio:dac: Add DT binding documentation for ds4424
+Date: Wed, 4 Oct 2017 15:25:59 -0500
+Message-ID: <20171004202559.dza4ztwmq6smnuvv@rob-hp-laptop>
+References: <20170922201226.23721-1-Ismail.Kose@maximintegrated.com>
+ <20170922201226.23721-2-Ismail.Kose@maximintegrated.com>
+ <20170930181841.63b07a12@archlinux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170905081624.GA15374@wunner.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20170930181841.63b07a12@archlinux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Ismail H. Kose" <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>, ihkose-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Roussin-Belanger <maxime.roussinbelanger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jean-Francois Dagenais <jeff.dagenais-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sat, Sep 30, 2017 at 06:18:41PM +0100, Jonathan Cameron wrote:
+> On Fri, 22 Sep 2017 13:12:09 -0700
+> "Ismail H. Kose" <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org> wrote:
+> 
+> > Signed-off-by: Ismail H. Kose <ihkose-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Ismail H. Kose <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+> 
+> Direct at Rob Herring...
+> 
+> Rob, this is now a very standard binding so I'm going to
+> take it into my testing tree.  If you have a chance to take a last
+> look at it though that would be great.
 
-gentle ping on this question:
+No problem. I don't mind you taking things before I get to them because 
+I know you actually look at them and will wait if there's something 
+non-standard unlike some maintainers.
 
-On Tue, Sep 05, 2017 at 10:16:24AM +0200, Lukas Wunner wrote:
-> Hi Rob,
-> 
-> sorry to bother you again, one more question popped up regarding the
-> MAX3191x DT bindings:
-> 
-> On Tue, Aug 22, 2017 at 07:48:47PM -0500, Rob Herring wrote:
-> > On Mon, Aug 21, 2017 at 03:12:00PM +0200, Lukas Wunner wrote:
-> > > Add device tree bindings for Maxim MAX3191x industrial serializer.
-> [snip]
-> > > +Optional properties:
-> > > + - maxim,nchips:	Number of chips in the daisy-chain (default is 1).
-> 
-> Many I/O chips are daisy-chainable, so I've been wondering if a
-> common property should be introduced?
-> 
-> The existing gpio-74x164.c uses "registers-number" to convey the number
-> of chips in the daisy chain.  (Sans vendor prefix, multiple vendors sell
-> compatible versions of this chip.)
-> 
-> gpio-pisosr.c takes a different approach and calculates the number of
-> chips in the daisy-chain by taking the common "ngpios" property
-> (Documentation/devicetree/bindings/gpio/gpio.txt) and dividing it by 8
-> (which assumes that each chip has 8 inputs).
-> 
-> Thanks,
-> 
-> Lukas
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
