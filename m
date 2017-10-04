@@ -1,41 +1,121 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] iio:dac: Add DT binding documentation for ds4424
-Date: Wed, 4 Oct 2017 15:25:59 -0500
-Message-ID: <20171004202559.dza4ztwmq6smnuvv@rob-hp-laptop>
-References: <20170922201226.23721-1-Ismail.Kose@maximintegrated.com>
- <20170922201226.23721-2-Ismail.Kose@maximintegrated.com>
- <20170930181841.63b07a12@archlinux>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC] gpio: of: document gpio-init nodes
+Date: Wed, 4 Oct 2017 15:53:06 -0500
+Message-ID: <20171004205306.wzvxmstcberpws25@rob-hp-laptop>
+References: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170930181841.63b07a12@archlinux>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Ismail H. Kose" <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>, ihkose-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Roussin-Belanger <maxime.roussinbelanger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Jean-Francois Dagenais <jeff.dagenais-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 30, 2017 at 06:18:41PM +0100, Jonathan Cameron wrote:
-> On Fri, 22 Sep 2017 13:12:09 -0700
-> "Ismail H. Kose" <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org> wrote:
+On Fri, Sep 22, 2017 at 10:41:38PM +0200, Uwe Kleine-König wrote:
+> Sometimes it is desirable to define a "safe" configuration for a GPIO in
+> the device tree but let the operating system later still make use of
+> this pin.
 > 
-> > Signed-off-by: Ismail H. Kose <ihkose-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Ismail H. Kose <Ismail.Kose-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+> This might for example be useful to initially configure a debug pin that
+> is usually unconnected as output to prevent floating until it is used
+> later.
 > 
-> Direct at Rob Herring...
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
 > 
-> Rob, this is now a very standard binding so I'm going to
-> take it into my testing tree.  If you have a chance to take a last
-> look at it though that would be great.
+> this picks up a discussion that pops up now and then with our customers.
+> 
+> Last time I discussed this topic with Linus Walleij my suggestion was to
+> merge this usecase with gpio-hogs, but he wasn't happy with it because
+> hogging implies that the pin is not free for other usage and he
+> suggested to use "gpio-init" instead.
+> 
+> Maybe it's arguable if this "initial configuration" belongs into the
+> device tree, but IMHO defining a "safe configuration" should have a
+> place and the requirements are identical. This isn't implied by the name
+> however, but I don't have a better idea for a different name.
 
-No problem. I don't mind you taking things before I get to them because 
-I know you actually look at them and will wait if there's something 
-non-standard unlike some maintainers.
+It can be argued that by the time the kernel boots, it is way to late to 
+configure pins to a safe state. Of course, even secure world reads the 
+DT these days (or are at least talking about doing so). Still any s/w 
+handling this could be too slow to get to a safe state.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Maybe "optimal default" state would be more accurate. 
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thinking further (which was also discussed last time) it would also be
+> nice to restrict usage. For example that a given pin that has
+> "output-low" as its safe setting might be configured later als high
+> output but not as input. Maybe:
+
+I can't imagine that an output can't be an input. Regardless, what 
+you're describing is constraints and that seems like a whole other 
+problem than default/initial state.
+
+Plus, for constraints I'd think we want this done at the pin level, not 
+GPIO. And we kind of already have that with pin states.
+
+> 	companion-reset {
+> 		gpio-somethingwithsafe;
+> 		gpios = <12 0>;
+
+"gpios" is already a defined property with a type (phandle + args). dtc 
+checks for this now though gpio-hogs is already one exception, and I 
+don't want to add another. Maybe it could be generalized to be allowed 
+when the parent is a gpio-controller, but really I'd like to avoid this 
+pattern from spreading.
+
+> 		output-low;
+> 		fixed-direction;
+> 	};
+> 
+> (Conceptually we would have a hog then when also adding "fixed-value".)
+> 
+> I'm not sure the early configuration should be implemented in Linux. I'd
+> target the bootloader for that instead, still having the blessing of a
+> binding document would be great.
+> 
+> I look forward to your comments and ideas.
+> 
+> Best regards
+> Uwe
+> 
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 802402f6cc5d..849d620cee4d 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -207,6 +207,11 @@ configuration.
+>  Optional properties:
+>  - line-name:  The GPIO label name. If not present the node name is used.
+>  
+> +Similar to hogging above GPIOs can be initialized to a certain configuration
+> +only which compared to hogs doesn't prevent the operating system to change the
+> +pin later. The syntax is similar to hog definitons, the difference is only that
+> +the identifying property is "gpio-init" instead of "gpio-hog".
+> +
+>  Example of two SOC GPIO banks defined as gpio-controller nodes:
+>  
+>  	qe_pio_a: gpio-controller@1400 {
+> @@ -221,6 +226,12 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
+>  			output-low;
+>  			line-name = "foo-bar-gpio";
+>  		};
+> +
+> +		companion-reset {
+> +			gpio-init;
+> +			gpios = <12 0>;
+> +			output-low;
+> +		};
+>  	};
+>  
+>  	qe_pio_e: gpio-controller@1460 {
+> -- 
+> 2.11.0
+> 
