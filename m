@@ -1,58 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] dt-bindings: fsi: Add OCC documentation
-Date: Wed, 4 Oct 2017 15:59:49 -0500
-Message-ID: <20171004205949.ja5ninrjh2g5tem5@rob-hp-laptop>
-References: <1506114362-492-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1506114362-492-5-git-send-email-eajames@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/2] pinctrl: rza1: add support for RZ/A1L
+Date: Wed,  4 Oct 2017 16:07:22 -0500
+Message-ID: <20171004210724.59797-1-chris.brandt@renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1506114362-492-5-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 04:06:00PM -0500, Eddie James wrote:
-> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> 
-> Document the bindings for the P9 OCC device. OCC devices are accessed
-> through the SBEFIFO.
-> 
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> new file mode 100644
-> index 0000000..bcaefc9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> @@ -0,0 +1,15 @@
-> +Device-tree bindings for P9 On-Chip Controller
-> +----------------------------------------------
-> +
-> +Required properties:
-> + - compatible = "ibm,p9-occ";
-> +
-> +Optional properties:
-> + - reg = <processor index>;	: Index for the processor this OCC is on.
+The RZ/A series has 3 main device: RZ/A1L, RZ/A1M, RZ/A1H.
 
-Need to say what this must be a child of.
+In terms of pinctrl, RZ/A1H and RZ/A1M are exactly the same.
 
-> +
-> +Examples:
-> +
-> +    occ@1 {
-> +        compatible = "ibm,p9-occ";
-> +        reg = <1>;
-> +    };
-> -- 
-> 1.8.3.1
-> 
+Aspects like the number of ports and the location where peripherals are
+brought out differ between the RZ/A1H and RZ/A1L.
+
+Basically this series adds a new set of tables for RZ/A1L and a new
+compatible "renesas,r7s72102-ports"
+
+This was tested on a Renesas Stream it board which contains an RZ/A1L and
+external SDRAM.
+
+v3:
+ * rewored DT documentation
+ * Added Reviewed-by for renesas,rza1-pinctrl.txt
+v2:
+ * Added RZ/A1M to DT documentation
+ * Added Reviewed-by for pinctrl-rza1.c
+
+Chris Brandt (2):
+  pinctrl: rza1: add support for RZ/A1L
+  dt-bindings: pinctrl: add support for RZ/A1M and RZ/A1L
+
+ .../bindings/pinctrl/renesas,rza1-pinctrl.txt      |   6 +-
+ drivers/pinctrl/pinctrl-rza1.c                     | 134 +++++++++++++++++++++
+ 2 files changed, 138 insertions(+), 2 deletions(-)
+
+-- 
+2.14.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
