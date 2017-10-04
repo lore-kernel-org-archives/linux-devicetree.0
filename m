@@ -1,70 +1,148 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH 1/8] ARM: dts: aspeed: Move pinctrl subnodes to improve
- readability
-Date: Wed, 04 Oct 2017 14:00:22 +1030
-Message-ID: <1507087822.5452.1.camel@aj.id.au>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: Re: [PATCH 2/8] ARM: dts: aspeed: Reorder ADC node
+Date: Wed, 04 Oct 2017 14:05:59 +1030
+Message-ID: <1507088159.5452.3.camel@aj.id.au>
 References: <20170928075149.8154-1-joel@jms.id.au>
-         <20170928075149.8154-2-joel@jms.id.au>
+         <20170928075149.8154-3-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-NOye16VdEtBp6zZ3Ctex"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170928075149.8154-2-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rick Altherr <raltherr@google.com>, Brendan Higgins <brendanhiggins@google.com>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, linux-aspeed@lists.ozlabs.org
+        protocol="application/pgp-signature"; boundary="=-75AtwNxlYxnC1tzum8ve"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170928075149.8154-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-NOye16VdEtBp6zZ3Ctex
+--=-75AtwNxlYxnC1tzum8ve
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2017-09-28 at 17:21 +0930, Joel Stanley wrote:
-> > From: Andrew Jeffery <andrew@aj.id.au>
->=20
-> Moving the subnodes out of the pinctrl node declaration to a reference
-> allows easier access to the remaining parts of the devicetree.
->=20
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > Reviewed-by: Xo Wang <xow@google.com>
-> > Signed-off-by: Joel Stanley <joel@jms.id.au>
+> We try to keep the nodes in address order. The ADC node was out of
+> place.
+>=C2=A0
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 > ---
-> =C2=A0arch/arm/boot/dts/aspeed-g4.dtsi | 1483 ++++++++++++++++++---------=
----------
-> =C2=A0arch/arm/boot/dts/aspeed-g5.dtsi | 1549 +++++++++++++++++++--------=
------------
-> =C2=A02 files changed, 1518 insertions(+), 1514 deletions(-)
+> =C2=A0arch/arm/boot/dts/aspeed-g4.dtsi | 16 ++++++++--------
+> =C2=A0arch/arm/boot/dts/aspeed-g5.dtsi | 16 ++++++++--------
+> =C2=A02 files changed, 16 insertions(+), 16 deletions(-)
+>=C2=A0
+> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-=
+g4.dtsi
+> index 1edd0cee6221..a4579498fc25 100644
+> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+> @@ -129,6 +129,14 @@
+> =C2=A0				};
+> =C2=A0			};
+> =C2=A0
+> +			adc: adc@1e6e9000 {
+> +				compatible =3D "aspeed,ast2400-adc";
+> +				reg =3D <0x1e6e9000 0xb0>;
+> +				clocks =3D <&syscon ASPEED_CLK_APB>;
 
-I hate the way the diff came out for the g5, it's almost impossible to
-read. Also not sure how useful it is to ack my own patch, but given the
-rebasing it has suffered:
+We can't do this yet as the clk driver isn't yet merged, and it breaks from=
+ the
+"just move the node" description in the commit message.
 
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
+> +				#io-channel-cells =3D <1>;
+> +				status =3D "disabled";
+> +			};
+> +
+> =C2=A0			sram@1e720000 {
+> =C2=A0				compatible =3D "mmio-sram";
+> =C2=A0				reg =3D <0x1e720000 0x8000>;	// 32K
+> @@ -227,14 +235,6 @@
+> =C2=A0				no-loopback-test;
+> =C2=A0				status =3D "disabled";
+> =C2=A0			};
+> -
+> -			adc: adc@1e6e9000 {
+> -				compatible =3D "aspeed,ast2400-adc";
+> -				reg =3D <0x1e6e9000 0xb0>;
+> -				clocks =3D <&clk_apb>;
+> -				#io-channel-cells =3D <1>;
+> -				status =3D "disabled";
+> -			};
+> =C2=A0		};
+> =C2=A0	};
+> =C2=A0};
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-=
+g5.dtsi
+> index f56dd67efa50..f6430b313f90 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -173,6 +173,14 @@
+> =C2=A0				reg-io-width =3D <4>;
+> =C2=A0			};
+> =C2=A0
+> +			adc: adc@1e6e9000 {
+> +				compatible =3D "aspeed,ast2500-adc";
+> +				reg =3D <0x1e6e9000 0xb0>;
+
+Did you intend to change the size cell value here? It now matches the g4, b=
+ut
+there was an explicit comment about the size for some reason in the -hunk
+below. It's probably worth an explicit call-out if we're going to change it=
+.=C2=A0
+
+> +				clocks =3D <&syscon ASPEED_CLK_APB>;
+
+See the clk comment on the g4 diff.
 
 Cheers,
 
 Andrew
---=-NOye16VdEtBp6zZ3Ctex
+
+> +				#io-channel-cells =3D <1>;
+> +				status =3D "disabled";
+> +			};
+> +
+> =C2=A0			sram@1e720000 {
+> =C2=A0				compatible =3D "mmio-sram";
+> =C2=A0				reg =3D <0x1e720000 0x9000>;	// 36K
+> @@ -307,14 +315,6 @@
+> =C2=A0				no-loopback-test;
+> =C2=A0				status =3D "disabled";
+> =C2=A0			};
+> -
+> -			adc: adc@1e6e9000 {
+> -				compatible =3D "aspeed,ast2500-adc";
+> -				reg =3D <0x1e6e9000 0xb0>;
+> -				clocks =3D <&clk_apb>;
+> -				#io-channel-cells =3D <1>;
+> -				status =3D "disabled";
+> -			};
+> =C2=A0		};
+> =C2=A0	};
+> =C2=A0};
+--=-75AtwNxlYxnC1tzum8ve
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCgAGBQJZ1FXOAAoJEJ0dnzgO5LT5vccP/jyEjsye7Y9FXfEE4ThAhCMM
-TinaPzEuk62IzMVBkqJT+oxPRQDTj+dLFe6+1W9OhDKunHYUarCmnEvJciXF5IFx
-i0q4+7Wi07oip5in615H8nlpswJSUY9t6yjLgi+6Rrjr7cRcqvGiySpmbPOQd0Qx
-RS25yuodmJHFAAZN5nxzTWGcNrFCVOd4uZUaY7rhmeBY1Am0Pu6OfYY1uIszTZnP
-0z2OxMpHDcOp7BuoB+jRhg3nJgC0rysMHwREe+mjuakhjkAXz3z6BvFuN3vmEJiB
-Dxjjc0QpoTpH5zajRHLLcznmlA56klxuYkFT5ksT8EO/ppPWI5FIIC1cOZla5W9g
-T6KtzZzxDwEZepwLeCFrjwfHRgW/YTeLB7kJAOYp7jJm38nQ+H/9maNt6ybM8XqA
-7GWkI7+5hmbeayJpSVA7Sn/tNmLgZQPD1phBNUuQpX+P+g7vObxkmbsXXwSzOaPD
-qHGbLkZjm4Dg1eCc8dT+XkQeNni5DXnDpRW4Ass5vdKWezaS+KJMQv30086olFzG
-EXORGSKtIiYv+QG+EYCdQzoDMYVtSbbXYcAkHM22ixlVsFhb+6p6In0yl8nz1hR4
-USwtjtZdWM9bAyJSoXGKTGwdXRCbdWdJXPEfBvu/62KNm6oPH0XwTB6zJ/uxT0mN
-WM8BheczGHqkHP1HieNV
-=kwPr
+iQIcBAABCgAGBQJZ1FcfAAoJEJ0dnzgO5LT56D0QAKBIiiWefjEIJBx3XbhChtEP
+hDdd8MhJ6s3pf/3Pv+kI2xq4huvmDMQ9L01YfpGN3TguqmHA+0LHLpR6VtrsjUBO
+NNi2AXb/GNXB+eB7bqcXN6POd3K7DAW7k3M/MCh2oMZU9Vet2Jn1R1FTw3F5s8zR
+wA7GViE6L1kLsSgHsK8RlwfLeBhgwpoZWw6KmaKas473EZ1n9WjVZQQ/jBXlktWd
+crjDEcpawj0dLrFpsKXgdSm7nxqvODLp9opas2vnEkLySRtoCetB9umrEv0f/P6s
+wOF3Frx6GYoFrr+nkpX+G+0jwoTpwXCbSR0b0mCmtW12oA2M/kSx4feG77ZMiyeg
+Mm+jdehsuHUAlJXUCsEQBQ+UIGn6irfTZGgXBnmFsjv6E7S6E9zieyfYPdARRpMA
+no3sD3nXYGdTjB1GPU3o+JA3ti+SUZkPY7FJXG+SjOMLauifG+P5j3tfcHKxHT3P
+SURxB+wB3jR8pfUG9aCyhxkSeJDPGgjKwXVkIi5K7TuiY7JlVL7/u+Dl5u5e6mRy
+5Fav9scaz93pDk13RwIYyZ0JOAko75hcBEM5eQD6VhO3jdtcknP0BozxWO6OSNM4
+eNxpdSUGj2oWhyIhpkzshJORq/M4fv2wuDQY/bb4eoSiaO3HBUy7WYI18JTCr4zd
+cgt1nEA9DbNmAhKIYG7N
+=EK27
 -----END PGP SIGNATURE-----
 
---=-NOye16VdEtBp6zZ3Ctex--
+--=-75AtwNxlYxnC1tzum8ve--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
