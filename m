@@ -1,37 +1,72 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 2/2] dt-bindings: pinctrl: add support for RZ/A1L
-Date: Wed, 4 Oct 2017 14:57:24 +0000
-Message-ID: <SG2PR06MB1165BA780786B3142D4C847F8A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20171003073334.18917-1-chris.brandt@renesas.com>
- <20171003073334.18917-3-chris.brandt@renesas.com>
- <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
- <SG2PR06MB1165B7C76F5E5528FDF7B7408A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdUh05qyi3eoao0KbahGD1NfEnGm03JpcZuFHVrEBSBU1Q@mail.gmail.com>
- <SG2PR06MB1165243813B8D662AE93911E8A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdVmFNyE0QfdWZ5X6fRp4xJy9k+uN7h+zi5_WAG1dcJV5g@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 21/22] cpufreq: add support for CPU DVFS based on SCMI
+ message protocol
+Date: Wed, 4 Oct 2017 16:01:13 +0100
+Message-ID: <5efbd0a7-8b62-5b30-98e6-dfaff64e2628@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-22-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a3pAFKM+Dq_yb7KYhB+xeneVuODBq_4nacEuw9creT6Yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVmFNyE0QfdWZ5X6fRp4xJy9k+uN7h+zi5_WAG1dcJV5g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3pAFKM+Dq_yb7KYhB+xeneVuODBq_4nacEuw9creT6Yw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgT2N0b2JlciAwNCwgMjAxNyAxLCBHZWVydCBVeXR0
-ZXJob2V2ZW4gd3JvdGU6DQo+ID4gSSB3aWxsIHN1Ym1pdCBhIHYyIHdpdGg6DQo+ID4NCj4gPiBb
-IHJlbmVzYXMscnphMS1waW5jdHJsLnR4dCBdDQo+ID4NCj4gPiBSZXF1aXJlZCBwcm9wZXJ0aWVz
-Og0KPiA+ICAgLSBjb21wYXRpYmxlDQo+ID4gICAgIHRoaXMgc2hhbGwgYmUgInJlbmVzYXMscjdz
-NzIxMDAtcG9ydHMiIGZvciBSWi9BMUgsDQo+ID4gICAgICJyZW5lc2FzLHI3czcyMTAxLXBvcnRz
-IiBmb3IgUlovTSBvcg0KPiANCj4gLi4uIHdpdGggYSBmYWxsYmFjayBmb3IgInJlbmVzYXMscjdz
-NzIxMDAtcG9ydHMsIGFzIFJaL0ExTSBpcyBjb21wYXRpYmxlDQo+IHdpdGggUlovQTFIIChhbmQg
-SSBhc3N1bWUgUlovQTFIIGlzIHRoZSBwcmVkZWNlc3Nvcj8pLg0KDQpPSy4NCg0KKGFuZCB5ZXMs
-IFJaL0ExSCB3YXMgdGhlIHByZWRlY2Vzc29yIG9mIFJaL0ExTSkNCg0KDQo+ID4gICAgICJyZW5l
-c2FzLHI3czcyMTAyLXBvcnRzIiBmb3IgUlovQTFMDQo+ID4NCj4gPg0KPiA+IFsgcjdzNzIxMDAu
-ZHRzaSBdDQo+ID4gICAgICAgICBwaW5jdHJsOiBwaW4tY29udHJvbGxlckBmY2ZlMzAwMCB7DQo+
-ID4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyN3M3MjEwMS1wb3J0cyIs
-DQo+ICJyZW5lc2FzLHI3czcyMTAwLXBvcnRzIjsNCj4gDQo+IEkgbWVhbnQgaW4gcjdzNzIxMDEu
-ZHRzaSAod2hpY2ggd2UgZG9uJ3QgaGF2ZSEpLg0KDQpPaGhoaGgsIEkgc2VlICA6KQ0KDQoNClRo
-YW5rIHlvdS4NCg0KQ2hyaXMNCg0K
+
+
+On 04/10/17 12:30, Arnd Bergmann wrote:
+>> +static int scmi_cpufreq_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret;
+>> +
+>> +       handle = devm_scmi_handle_get(&pdev->dev);
+>> +
+>> +       if (IS_ERR_OR_NULL(handle) || !handle->perf_ops)
+>> +               return -EPROBE_DEFER;
+> 
+> As mentioned before, never create an interface that needs to use
+> IS_ERR_OR_NULL(), make it return either NULL on error, or always
+> have an error code.
+> 
+
+Agreed.
+
+>> +
+>> +static struct platform_driver scmi_cpufreq_platdrv = {
+>> +       .driver = {
+>> +               .name   = "scmi-cpufreq",
+>> +       },
+>> +       .probe          = scmi_cpufreq_probe,
+>> +       .remove         = scmi_cpufreq_remove,
+>> +};
+> 
+> You appear to have split this driver into the 'cpufreq' side and
+> the 'protocol' handler in a different file. I already commented that
+> the way the main scmi driver knows about all the protocols looks
+> bad, here we can see another aspect of the same problem.
+> 
+> Rather than manually register a platform_device for the purpose
+> of connecting it to the cpufreq driver, there should be a way
+> to dynamically register the protocol from the cpufreq driver
+> and then have both in the same file.
+> 
+
+I agree that should be possible. I took this approach for 2 reasons:
+
+1. to avoid all sorts of probe ordering issues
+2. we may have system with multiple instances of SCMI. E.g. a system
+   may have multiple remote processors, each controlling dvfs/power mgmt
+   of a subset of CPUs/devices controller in OS.
+
+I have to admit that I haven't thought too much in details yet. That's
+the main idea behind scmi_handle and restricting access to that only to
+sub-nodes in it. I am open to suggestions.
+
+-- 
+Regards,
+Sudeep
