@@ -1,68 +1,86 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: cygnus: Add EXPORT_SYMBOL for helper function" to the asoc tree
-Date: Wed, 04 Oct 2017 12:27:56 +0100
-Message-ID: <E1dzhqG-0004Fb-As@debutante>
-References: <1502748417-26417-9-git-send-email-lori.hikichi@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502748417-26417-9-git-send-email-lori.hikichi@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lori Hikichi <lori.hikichi@broadcom.com>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+Subject: Applied "regmap: add iopoll-like polling macro for regmap_field" to
+ the regmap tree
+Date: Wed, 04 Oct 2017 12:28:57 +0100
+Message-ID: <E1dzhrF-0004Tf-A0@debutante>
+References: <20170926065919.24446-9-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170926065919.24446-9-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-sunxi@googlegroups.com, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: cygnus: Add EXPORT_SYMBOL for helper function
-
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From d8302aa6b53acbe421fe615b9d704fd813623e96 Mon Sep 17 00:00:00 2001
-From: Lori Hikichi <lori.hikichi@broadcom.com>
-Date: Thu, 28 Sep 2017 15:29:32 -0700
-Subject: [PATCH] ASoC: cygnus: Add EXPORT_SYMBOL for helper function
-
-The helper function cygnus_ssp_set_custom_fsync_width() is intended
-to be called from an ASoC machine driver, need to export symbol
-if using modules.
-
-Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/bcm/cygnus-ssp.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/bcm/cygnus-ssp.c b/sound/soc/bcm/cygnus-ssp.c
-index 15c438f0f22d..e9c73a451cf6 100644
---- a/sound/soc/bcm/cygnus-ssp.c
-+++ b/sound/soc/bcm/cygnus-ssp.c
-@@ -842,6 +842,7 @@ int cygnus_ssp_set_custom_fsync_width(struct snd_soc_dai *cpu_dai, int len)
- 		return -EINVAL;
- 	}
- }
-+EXPORT_SYMBOL_GPL(cygnus_ssp_set_custom_fsync_width);
- 
- static int cygnus_ssp_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- {
--- 
-2.14.1
+VGhlIHBhdGNoCgogICByZWdtYXA6IGFkZCBpb3BvbGwtbGlrZSBwb2xsaW5nIG1hY3JvIGZvciBy
+ZWdtYXBfZmllbGQKCmhhcyBiZWVuIGFwcGxpZWQgdG8gdGhlIHJlZ21hcCB0cmVlIGF0CgogICBn
+aXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvYnJvb25pZS9yZWdt
+YXAuZ2l0IAoKQWxsIGJlaW5nIHdlbGwgdGhpcyBtZWFucyB0aGF0IGl0IHdpbGwgYmUgaW50ZWdy
+YXRlZCBpbnRvIHRoZSBsaW51eC1uZXh0CnRyZWUgKHVzdWFsbHkgc29tZXRpbWUgaW4gdGhlIG5l
+eHQgMjQgaG91cnMpIGFuZCBzZW50IHRvIExpbnVzIGR1cmluZwp0aGUgbmV4dCBtZXJnZSB3aW5k
+b3cgKG9yIHNvb25lciBpZiBpdCBpcyBhIGJ1ZyBmaXgpLCBob3dldmVyIGlmCnByb2JsZW1zIGFy
+ZSBkaXNjb3ZlcmVkIHRoZW4gdGhlIHBhdGNoIG1heSBiZSBkcm9wcGVkIG9yIHJldmVydGVkLiAg
+CgpZb3UgbWF5IGdldCBmdXJ0aGVyIGUtbWFpbHMgcmVzdWx0aW5nIGZyb20gYXV0b21hdGVkIG9y
+IG1hbnVhbCB0ZXN0aW5nCmFuZCByZXZpZXcgb2YgdGhlIHRyZWUsIHBsZWFzZSBlbmdhZ2Ugd2l0
+aCBwZW9wbGUgcmVwb3J0aW5nIHByb2JsZW1zIGFuZApzZW5kIGZvbGxvd3VwIHBhdGNoZXMgYWRk
+cmVzc2luZyBhbnkgaXNzdWVzIHRoYXQgYXJlIHJlcG9ydGVkIGlmIG5lZWRlZC4KCklmIGFueSB1
+cGRhdGVzIGFyZSByZXF1aXJlZCBvciB5b3UgYXJlIHN1Ym1pdHRpbmcgZnVydGhlciBjaGFuZ2Vz
+IHRoZXkKc2hvdWxkIGJlIHNlbnQgYXMgaW5jcmVtZW50YWwgdXBkYXRlcyBhZ2FpbnN0IGN1cnJl
+bnQgZ2l0LCBleGlzdGluZwpwYXRjaGVzIHdpbGwgbm90IGJlIHJlcGxhY2VkLgoKUGxlYXNlIGFk
+ZCBhbnkgcmVsZXZhbnQgbGlzdHMgYW5kIG1haW50YWluZXJzIHRvIHRoZSBDQ3Mgd2hlbiByZXBs
+eWluZwp0byB0aGlzIG1haWwuCgpUaGFua3MsCk1hcmsKCkZyb20gNjY3MDYzYWNiODE5MzFlMmY4
+ZmQwY2I5MWRmOWZjY2NhZDEzMWQ5YSBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEKRnJvbTogQ2hl
+bi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgpEYXRlOiBGcmksIDI5IFNlcCAyMDE3IDE2OjIzOjAx
+ICswODAwClN1YmplY3Q6IFtQQVRDSF0gcmVnbWFwOiBhZGQgaW9wb2xsLWxpa2UgcG9sbGluZyBt
+YWNybyBmb3IgcmVnbWFwX2ZpZWxkCgpUaGlzIHBhdGNoIGFkZHMgYSBtYWNybyByZWdtYXBfZmll
+bGRfcmVhZF9wb2xsX3RpbWVvdXQgdGhhdCB3b3JrcwpzaW1pbGFyIHRvIHRoZSByZWFkeF9wb2xs
+X3RpbWVvdXQgZGVmaW5lZCBpbiBsaW51eC9pb3BvbGwuaCwgZXhjZXB0CnRoYXQgdGhpcyBjYW4g
+YWxzbyByZXR1cm4gdGhlIGVycm9yIHZhbHVlIHJldHVybmVkIGJ5IGEgZmFpbGVkCnJlZ21hcF9m
+aWVsZF9yZWFkLgoKU2lnbmVkLW9mZi1ieTogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgpT
+aWduZWQtb2ZmLWJ5OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Ci0tLQogaW5jbHVk
+ZS9saW51eC9yZWdtYXAuaCB8IDM5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKwogMSBmaWxlIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9pbmNs
+dWRlL2xpbnV4L3JlZ21hcC5oIGIvaW5jbHVkZS9saW51eC9yZWdtYXAuaAppbmRleCA5NzhhYmZi
+YWM2MTcuLjkzYTQ2NjNkN2FjYiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9yZWdtYXAuaAor
+KysgYi9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oCkBAIC0xMzksNiArMTM5LDQ1IEBAIHN0cnVjdCBy
+ZWdfc2VxdWVuY2UgewogCXBvbGxyZXQgPzogKChjb25kKSA/IDAgOiAtRVRJTUVET1VUKTsgXAog
+fSkKIAorLyoqCisgKiByZWdtYXBfZmllbGRfcmVhZF9wb2xsX3RpbWVvdXQgLSBQb2xsIHVudGls
+IGEgY29uZGl0aW9uIGlzIG1ldCBvciB0aW1lb3V0CisgKgorICogQGZpZWxkOiBSZWdtYXAgZmll
+bGQgdG8gcmVhZCBmcm9tCisgKiBAdmFsOiBVbnNpZ25lZCBpbnRlZ2VyIHZhcmlhYmxlIHRvIHJl
+YWQgdGhlIHZhbHVlIGludG8KKyAqIEBjb25kOiBCcmVhayBjb25kaXRpb24gKHVzdWFsbHkgaW52
+b2x2aW5nIEB2YWwpCisgKiBAc2xlZXBfdXM6IE1heGltdW0gdGltZSB0byBzbGVlcCBiZXR3ZWVu
+IHJlYWRzIGluIHVzICgwCisgKiAgICAgICAgICAgIHRpZ2h0LWxvb3BzKS4gIFNob3VsZCBiZSBs
+ZXNzIHRoYW4gfjIwbXMgc2luY2UgdXNsZWVwX3JhbmdlCisgKiAgICAgICAgICAgIGlzIHVzZWQg
+KHNlZSBEb2N1bWVudGF0aW9uL3RpbWVycy90aW1lcnMtaG93dG8udHh0KS4KKyAqIEB0aW1lb3V0
+X3VzOiBUaW1lb3V0IGluIHVzLCAwIG1lYW5zIG5ldmVyIHRpbWVvdXQKKyAqCisgKiBSZXR1cm5z
+IDAgb24gc3VjY2VzcyBhbmQgLUVUSU1FRE9VVCB1cG9uIGEgdGltZW91dCBvciB0aGUgcmVnbWFw
+X2ZpZWxkX3JlYWQKKyAqIGVycm9yIHJldHVybiB2YWx1ZSBpbiBjYXNlIG9mIGEgZXJyb3IgcmVh
+ZC4gSW4gdGhlIHR3byBmb3JtZXIgY2FzZXMsCisgKiB0aGUgbGFzdCByZWFkIHZhbHVlIGF0IEBh
+ZGRyIGlzIHN0b3JlZCBpbiBAdmFsLiBNdXN0IG5vdCBiZSBjYWxsZWQKKyAqIGZyb20gYXRvbWlj
+IGNvbnRleHQgaWYgc2xlZXBfdXMgb3IgdGltZW91dF91cyBhcmUgdXNlZC4KKyAqCisgKiBUaGlz
+IGlzIG1vZGVsbGVkIGFmdGVyIHRoZSByZWFkeF9wb2xsX3RpbWVvdXQgbWFjcm9zIGluIGxpbnV4
+L2lvcG9sbC5oLgorICovCisjZGVmaW5lIHJlZ21hcF9maWVsZF9yZWFkX3BvbGxfdGltZW91dChm
+aWVsZCwgdmFsLCBjb25kLCBzbGVlcF91cywgdGltZW91dF91cykgXAorKHsgXAorCWt0aW1lX3Qg
+dGltZW91dCA9IGt0aW1lX2FkZF91cyhrdGltZV9nZXQoKSwgdGltZW91dF91cyk7IFwKKwlpbnQg
+cG9sbHJldDsgXAorCW1pZ2h0X3NsZWVwX2lmKHNsZWVwX3VzKTsgXAorCWZvciAoOzspIHsgXAor
+CQlwb2xscmV0ID0gcmVnbWFwX2ZpZWxkX3JlYWQoKGZpZWxkKSwgJih2YWwpKTsgXAorCQlpZiAo
+cG9sbHJldCkgXAorCQkJYnJlYWs7IFwKKwkJaWYgKGNvbmQpIFwKKwkJCWJyZWFrOyBcCisJCWlm
+ICh0aW1lb3V0X3VzICYmIGt0aW1lX2NvbXBhcmUoa3RpbWVfZ2V0KCksIHRpbWVvdXQpID4gMCkg
+eyBcCisJCQlwb2xscmV0ID0gcmVnbWFwX2ZpZWxkX3JlYWQoKGZpZWxkKSwgJih2YWwpKTsgXAor
+CQkJYnJlYWs7IFwKKwkJfSBcCisJCWlmIChzbGVlcF91cykgXAorCQkJdXNsZWVwX3JhbmdlKChz
+bGVlcF91cyA+PiAyKSArIDEsIHNsZWVwX3VzKTsgXAorCX0gXAorCXBvbGxyZXQgPzogKChjb25k
+KSA/IDAgOiAtRVRJTUVET1VUKTsgXAorfSkKKwogI2lmZGVmIENPTkZJR19SRUdNQVAKIAogZW51
+bSByZWdtYXBfZW5kaWFuIHsKLS0gCjIuMTQuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
