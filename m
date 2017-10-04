@@ -1,41 +1,41 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH 3/9 v2] usb: usb251xb: Add 5,6,7 ports mapping def setting
-Date: Wed, 4 Oct 2017 09:51:01 +0200
-Message-ID: <2ad7bb5b-d8cb-65f3-7b03-be5972d7acd3@skidata.com>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com>
- <20170916104220.3742-4-fancer.lancer@gmail.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: arm: amlogic: Add Tronsmart Vega S96
+ binding
+Date: Wed, 4 Oct 2017 09:53:32 +0200
+Message-ID: <ee06206b-83c2-32e8-dfbe-fb4895b9aa91@baylibre.com>
+References: <1507044585-20117-1-git-send-email-narmstrong@baylibre.com>
+ <1507044585-20117-3-git-send-email-narmstrong@baylibre.com>
+ <20171003213002.64dj4prex63ax5mn@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170916104220.3742-4-fancer.lancer@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171003213002.64dj4prex63ax5mn@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Leitner <richard.leitner@skidata.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org, support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 09/16/2017 12:42 PM, Serge Semin wrote:
-> USB2517 got three additionl downstream ports, which can
-> as well be mapped to another logical ports. USB2551xb driver
-
-typo in "USB251xb"
-
-> currently doesn't fully support such setting configuration
-> from dts file. This patch doesn't change this, but adds
-> usb2517 spcific ports default liner mapping.
+On 03/10/2017 23:30, Rob Herring wrote:
+> On Tue, Oct 03, 2017 at 05:29:45PM +0200, Neil Armstrong wrote:
+>> Cc: support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
+>> Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Oleg Ivanov <balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
+>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
+>>  1 file changed, 1 insertion(+)
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
->  drivers/usb/misc/usb251xb.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+> I acked v1. Please add acks when posting new versions.
 > 
 
-Code itself looks good to me, therefore feel free to add:
+Sorry, I misses it.
 
-Acked-by: Richard Leitner <richard.leitner@skidata.com>
+Kevin, can you add the missing ack when applying ?
 
-regards,
-Richard.L
+Neil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
