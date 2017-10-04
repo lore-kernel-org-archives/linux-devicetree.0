@@ -1,44 +1,108 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 2/2] dt-bindings: pinctrl: add support for RZ/A1L
-Date: Wed, 4 Oct 2017 14:16:25 +0000
-Message-ID: <SG2PR06MB1165B7C76F5E5528FDF7B7408A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20171003073334.18917-1-chris.brandt@renesas.com>
- <20171003073334.18917-3-chris.brandt@renesas.com>
- <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
+ Control and Management Interface(SCMI) protocol
+Date: Wed, 4 Oct 2017 16:17:39 +0200
+Message-ID: <CAK8P3a3C-xyE-mkj8ERDZHtWbpcOx3Z-gPgHrQHxNVi_3AmAZA@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-3-git-send-email-sudeep.holla@arm.com> <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
+ <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com> <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
+ <69fc9095-6961-b861-d2e0-afb58de11d59@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <69fc9095-6961-b861-d2e0-afb58de11d59-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgT2N0b2JlciAwNCwgMjAxNywgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgIC0gY29tcGF0
-aWJsZQ0KPiA+IC0gICAgdGhpcyBzaGFsbCBiZSAicmVuZXNhcyxyN3M3MjEwMC1wb3J0cyIuDQo+
-ID4gKyAgICB0aGlzIHNoYWxsIGJlICJyZW5lc2FzLHI3czcyMTAwLXBvcnRzIiBmb3IgUlovQTFI
-IGFuZCBSWi9BMU0gb3INCj4gPiArICAgICJyZW5lc2FzLHI3czcyMTAyLXBvcnRzIiBmb3IgUlov
-QTFMDQo+IA0KPiBTaG91bGRuJ3QgeW91IGFsc28gZG9jdW1lbnQgInJlbmVzYXMscjdzNzIxMDEt
-cG9ydHMiIGZvciBSWi9BMU0/DQoNCkkgd2FzIHdvbmRlcmluZyBpZiB5b3Ugd2VyZSBnb2luZyB0
-byBhc2sgZm9yIHRoYXQuDQoNCkkgcHV0ICJmb3IgUlovQTFIIGFuZCBSWi9BMU0iIGluIHRoZSBE
-VCBkb2N1bWVudGF0aW9uLCBidXQgaWYgeW91IA0KcHJlZmVyLCBJIGNhbiBhbHNvIGp1c3QgYWRk
-IHRvIHBpbmN0cmwtcnphMS5jOg0KDQpzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBy
-emExX3BpbmN0cmxfb2ZfbWF0Y2hbXSA9IHsNCgl7DQoJCS8qIFJaL0ExSCAqLw0KCQkuY29tcGF0
-aWJsZQk9ICJyZW5lc2FzLHI3czcyMTAwLXBvcnRzIiwNCgkJLmRhdGEJCT0gJnJ6YTFoX3BteF9j
-b25mLA0KCX0sDQorCXsNCisJCS8qIFJaL0ExTSAqLw0KKwkJLmNvbXBhdGlibGUJPSAicmVuZXNh
-cyxyN3M3MjEwMS1wb3J0cyIsDQorCQkuZGF0YQkJPSAmcnphMWhfcG14X2NvbmYsDQorCX0sCXsN
-CgkJLyogUlovQTFMICovDQoJCS5jb21wYXRpYmxlCT0gInJlbmVzYXMscjdzNzIxMDItcG9ydHMi
-LA0KCQkuZGF0YQkJPSAmcnphMWxfcG14X2NvbmYsDQoJfSwNCgl7IH0NCn07DQoNCg0KDQo+IFlv
-dSBjb3VsZCB1c2UgInJlbmVzYXMscjdzNzIxMDAtcG9ydHMiIGFzIGEgZmFsbGJhY2sgcHJvcGVy
-dHkgZm9yIFJaL0ExTSwNCj4gdGhvdWdoLg0KDQpEbyB5b3UgbWVhbiBpbiB0aGUgRFQ/IE9yIGlu
-IHBpbmN0cmwtcnphMS5jPw0KDQo+IEJUVywgaXMgdGhlcmUgYSB3YXkgdG8gZGlzdGluZ3Vpc2gg
-dGhlIHZhcmlvdXMgUlovQTEgU29DcyBhdCBydW50aW1lPw0KDQpTYWRseSB0aGVyZSBpcyBub3Qu
-DQoNClRoZXJlIGlzIGEgdW5pcXVlIElEIG51bWJlciwgYnV0IGl0IGlzIG9ubHkgYWNjZXNzaWJs
-ZSB2aWEgSlRBRyANCmV4dGVybmFsbHkuDQoNCkludGVybmFsbHksIHlvdSB3b3VsZCBoYXZlIHRv
-IGxvb2sgZm9yIHJlZ2lzdGVycyB0aGF0IGRvbid0IGV4aXN0IChmb3IgDQp0aGUgUlovQTFMKS4g
-QnV0IGZvciBSWi9BMUggdnMgUlovQTFNLCB0aGUgb25seSBhY3R1YWwgZGlmZmVyZW5jZSBpcyB0
-aGUgDQphbW91bnQgb2YgUkFNLCBzbyB5b3Ugd291bGQgaGF2ZSB0byBkbyBhIHNldC1hbmQtdGVz
-dCBtZXRob2Qgb24gUkFNLg0KDQoNCkNocmlzDQoNCg==
+On Wed, Oct 4, 2017 at 3:53 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 04/10/17 13:35, Arnd Bergmann wrote:
+>> On Wed, Oct 4, 2017 at 1:07 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+
+>>>
+>>> Yes it depends on #clock-cells property. That's the main reason for
+>>> adding #clock-cells
+>>
+>> I'm still unclear on this. Do you mean we look for a subnode with
+>> reg=<0x14> and then assume it's a clock node and require the
+>>  #clock-cells to be there,
+>
+> Yes that's how it's used. Presence of subnode with reg=0x14 indicates
+> clock protocol and #clock-cells to indicate that it's clock provider
+> expecting 1 parameter from consumer which is the clock identifier.
+>
+> or do we look through the sub-nodes to
+>> find one with the #clock-cells property and then look up the 'reg'
+>> property to find out which protocol number to use?
+>>
+>
+> Not this way. Do you see any issues ?
+
+We normally don't assume that a particular unit address implies
+a specific function. Conventionally that would be done by matching
+the "compatible" property instead.
+
+What you do clearly works, but it's surprising to the reader.
+
+
+>> I think the problem is the way we use the mailbox API in Linux, which
+>> is completely abstract at the moment: it could be a pure doorbell, a
+>> single-register for a data, some structured memory, or a
+>> variable-length message. The assumption today is that the mailbox
+>> user and the mailbox driver agree on the interpretation of that
+>> void pointer.
+>>
+>
+> Unfortunately true.
+>
+>> This breaks down here, as you require the message to be a
+>> variable-length message in a fixed physical location, but assume that
+>> the mailbox serves only as a doorbell.
+>>
+>
+> Yes.
+>
+>> The solution might be to extend the mailbox API slightly, to
+>> have explicit support for variable-length messages, and implement
+>> support for that in either mailbox drivers or as an abstraction
+>> on top of doorbell-type mailboxes.
+>>
+> I got the concept. But are you also suggesting that in bindings it shmem
+> should be associated with mailbox controller rather than client ?
+
+There are probably several ways of doing this better, we should see
+what the best is we can come up with.
+
+I think generally speaking we need a way for a mailbox user to
+know what it should use as the mailbox data here, so it is
+able to talk to different incompatible mailbox providers.
+
+One idea I had is to use a nested mailbox driver, that turns
+a doorbell or single-register styled mailbox into a variable-length
+mailbox by adding a memory region, like
+
+    mailbox@1233000 {
+        compatible = "vendor-hardware-specifc-id";
+        interrupts = <34>;
+        reg = <0x1233000 0x100>;
+        #mbox-cells = <1>;
+    };
+
+    mailbox {
+           compatible = "shmem-mailbox";
+           mboxes = <&/mailbox@1233000  25>;
+           #mbox-cells = <1>;
+           shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
+    };
+
+This would create one mailbox that only takes a register argument,
+and another one that can take longer messages based on the first.
+In your driver, you then refer to the second one and pass the
+variable-length data into that directly.
+
+        Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
