@@ -1,87 +1,115 @@
 From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH 6/8] ARM: dts: aspeed-ast2500: Add I2C devices
-Date: Wed, 04 Oct 2017 15:42:08 +1030
-Message-ID: <1507093928.5452.15.camel@aj.id.au>
+Subject: Re: [PATCH 7/8] ARM: dts: aspeed: Add aliases for UARTs
+Date: Wed, 04 Oct 2017 15:43:19 +1030
+Message-ID: <1507093999.5452.16.camel@aj.id.au>
 References: <20170928075149.8154-1-joel@jms.id.au>
-         <20170928075149.8154-7-joel@jms.id.au>
+         <20170928075149.8154-8-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-TTWSZwwPiUzWBYNSs96W"
+        protocol="application/pgp-signature"; boundary="=-oZEm4benk0uYV4kEaiSn"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170928075149.8154-7-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20170928075149.8154-8-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-TTWSZwwPiUzWBYNSs96W
+--=-oZEm4benk0uYV4kEaiSn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, 2017-09-28 at 17:21 +0930, Joel Stanley wrote:
-> Enable the buses that are in use and the devices that are attached.
-> Currently that includes temperature measurement and EEPROM.
+> Existing userspace expects the console (UART5) to be at /dev/ttyS4.=C2=A0=
+=C2=A0To
+> ensure the UARTs show up where users expect them, we give them fixed
+> aliases starting at 0.
 >=C2=A0
 > Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 
 Reviewed-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 
 > ---
-> =C2=A0arch/arm/boot/dts/aspeed-ast2500-evb.dts | 19 +++++++++++++++++++
-> =C2=A01 file changed, 19 insertions(+)
+> =C2=A0arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 4 ----
+> =C2=A0arch/arm/boot/dts/aspeed-g4.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 5 +++++
+> =C2=A0arch/arm/boot/dts/aspeed-g5.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 5 +++++
+> =C2=A03 files changed, 10 insertions(+), 4 deletions(-)
 >=C2=A0
-> diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts=
-/aspeed-ast2500-evb.dts
-> index 7c90dac99822..dc7d73b02b76 100644
-> --- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> +++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> @@ -59,3 +59,22 @@
-> =C2=A0	pinctrl-names =3D "default";
-> =C2=A0	pinctrl-0 =3D <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-> =C2=A0};
-> +
-> +&i2c3 {
-> +	status =3D "okay";
-> +
-> +	eeprom@50 {
-> +		compatible =3D "atmel,24c08";
-> +		reg =3D <0x50>;
-> +		pagesize =3D <16>;
-> +	};
-> +};
-> +
-> +&i2c7 {
-> +	status =3D "okay";
-> +
-> +	lm75@4d {
-> +		compatible =3D "national,lm75";
-> +		reg =3D <0x4d>;
-> +	};
-> +};
---=-TTWSZwwPiUzWBYNSs96W
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boo=
+t/dts/aspeed-bmc-opp-palmetto.dts
+> index e387c80b7f4f..be51be5a5f39 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> @@ -6,10 +6,6 @@
+> =C2=A0	model =3D "Palmetto BMC";
+> =C2=A0	compatible =3D "tyan,palmetto-bmc", "aspeed,ast2400";
+> =C2=A0
+> -	aliases {
+> -		serial4 =3D &uart5;
+> -	};
+> -
+> =C2=A0	chosen {
+> =C2=A0		stdout-path =3D &uart5;
+> =C2=A0		bootargs =3D "console=3DttyS4,115200 earlyprintk";
+> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-=
+g4.dtsi
+> index f8611d5a6465..191c33d18122 100644
+> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+> @@ -22,6 +22,11 @@
+> =C2=A0		i2c11 =3D &i2c11;
+> =C2=A0		i2c12 =3D &i2c12;
+> =C2=A0		i2c13 =3D &i2c13;
+> +		serial0 =3D &uart1;
+> +		serial1 =3D &uart2;
+> +		serial2 =3D &uart3;
+> +		serial3 =3D &uart4;
+> +		serial4 =3D &uart5;
+> =C2=A0	};
+> =C2=A0
+> =C2=A0	cpus {
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-=
+g5.dtsi
+> index de127370131d..251fc9f4637e 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -22,6 +22,11 @@
+> =C2=A0		i2c11 =3D &i2c11;
+> =C2=A0		i2c12 =3D &i2c12;
+> =C2=A0		i2c13 =3D &i2c13;
+> +		serial0 =3D &uart1;
+> +		serial1 =3D &uart2;
+> +		serial2 =3D &uart3;
+> +		serial3 =3D &uart4;
+> +		serial4 =3D &uart5;
+> =C2=A0	};
+> =C2=A0
+> =C2=A0	cpus {
+--=-oZEm4benk0uYV4kEaiSn
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAABCgAGBQJZ1G2oAAoJEJ0dnzgO5LT5p3oP/RQbs56cSKiEnBNxy1TJHcUj
-W/g3CFhw8I6AWs+kRIC4GwZPCivFLJQH98iOVQt5AUI+ARdGxkd8+kcpINY0fQqv
-LUzpZOYP+RiLZShlYh46jxLnWkiq8NCpMRmq8Wc5rIY3tUtR4HbGaee/t7XVyrbI
-2BFWWKFG72gj9UVVRWE+JZZPVvSVXxIsvGzmcjegUkR6WLNECtPOd8cxMJ9YG+FO
-2gezN0Q9d9MGiFFmJtJ16/25RV3WKFf+mW+9iEpk6zjMzOmq4w+72AydU32qz5KH
-DYuiLX54Wh4J37E4SHx2dBK7wQS04J0UThFJj2MENCM63smypt3Dds/i7esuJMny
-+ODUGn1zeeD/o2ADfvY43su5LsAmk8kU+jIPCWfwVf7O0vK4PV3ZDiFPax5z6XHg
-MJwB06p/yks1LfJgk1qBanM+wwyNLg0O6Qq2QaS73vWwb3SI1cxnvsfblraGWLrg
-q4wAbWb692gkt2uSADt/oAggZAdSVqBC7uapGY1bCw5P8j4aK62k0I1ce61XiBpU
-CF/Fzh9rpbQO6x7XbZ/8NHGEDB2OmPOuSQS33qnvn/TMbT8Ry38BnE53k8u5xILf
-W990Jf0ogD4KlhwOl6kuUWJ4ig/3X5uE/qIoKun+GVFBtne9/T8EVQE2tly03LKy
-qAsEhPSR+lSYxwxMEl5r
-=sVdT
+iQIcBAABCgAGBQJZ1G3vAAoJEJ0dnzgO5LT5Bh4P/RFuKVoLFXB+A3nrtGsc29R3
+GVxrFMCcMYp3G+4cWzi4MVjA+Vngdjq6NupmWeWrHqm6aTYMga3Xx5F3oGXXCneH
+7bpkH915HbA7oyVSKx3cTEZcGiK+8pK9W5ntmzbxgbY4AE5m1pO790hexXTC6Jj1
+mNaRlZrQrA0AAsJoqNrJFbNwn3saD8xHqhuJ+VIHg3DNW/e4nkDeIbNWIqmoqMxT
+oQwrNC2+xBnL91W4TbY2vP5RaC6ORVPvn7iRsE/x7hsei/QzxEzlM6Ypvx+mKLfE
+cSRS98QmhdzS+SKV2MSHqo/H0joXng4VDgqIPrL/VolSgaBdfsAfFd7lQG9i+Wxr
+ZsDEhGQACuphvlxu6JoPkRycJjhdbLYMduYasvjinzgrWZFHhc4o7OuaxOoUJ4P9
+go7Zm22gUpTIvHRrT0MH5agsUmJLTF5Umd1+TyhCxDbOYX7ETLqnw4K4M+GLjkbU
+6Qtf5Rmv5rr/tqJ20toNhfNo/d7+FNC1zUxfhIFjygD8pwSRwTjYA6I56x+5Z6by
+KTtRVQK1ccDFfevXKlzA0hQWiIn1xP45GUgj5FoGhGJUiWL5xqsYUZz9e8047Vo8
+37vLQDIsHfae0bXLWT0Q45eKR/jLgpJeIZarpWmbHCv5w35Vb8uj4bsVdpZe7ZLU
+SzEXJskn3W6DiRP5ypl5
+=muor
 -----END PGP SIGNATURE-----
 
---=-TTWSZwwPiUzWBYNSs96W--
+--=-oZEm4benk0uYV4kEaiSn--
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
