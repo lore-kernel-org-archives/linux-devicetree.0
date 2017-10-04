@@ -1,223 +1,83 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] media: dt-bindings: Add bindings for TDA1997X
-Date: Wed, 4 Oct 2017 16:14:11 -0500
-Message-ID: <20171004211411.27gxy5wnaymdcm3z@rob-hp-laptop>
-References: <1506119053-21828-1-git-send-email-tharvey@gateworks.com>
- <1506119053-21828-3-git-send-email-tharvey@gateworks.com>
+From: =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+Subject: Re: [PATCH 2/2] arm: AT91: fix DT duplicate node name
+Date: Wed, 4 Oct 2017 23:20:34 +0200
+Message-ID: <20171004212034.6znvbdfe2wbd7uvh@qmqm.qmqm.pl>
+References: <cover.1504037038.git.mirq-linux@rere.qmqm.pl>
+ <910fee2eb99b2d95e59fa6b997645b498f167022.1504037038.git.mirq-linux@rere.qmqm.pl>
+ <e5868359-8708-3d17-df8c-b04ad3624df0@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1506119053-21828-3-git-send-email-tharvey@gateworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+In-Reply-To: <e5868359-8708-3d17-df8c-b04ad3624df0@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 03:24:11PM -0700, Tim Harvey wrote:
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+On Thu, Sep 14, 2017 at 06:53:30PM +0200, Nicolas Ferre wrote:
+> On 29/08/2017 at 22:08, Micha=B3 Miros=B3aw wrote:
+> > Fix following warning at bootup:
+> > =
 
-You need a commit msg. Otherwise, maintainers get publicly shamed.
+> > device-tree: Duplicate name in fb@0x00500000, renamed to "display#1"
+> > =
 
-> ---
->  .../devicetree/bindings/media/i2c/tda1997x.txt     | 159 +++++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> new file mode 100644
-> index 0000000..8330733
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> @@ -0,0 +1,159 @@
-> +Device-Tree bindings for the NXP TDA1997x HDMI receiver
-> +
-> +The TDA19971/73 are HDMI video receivers.
-> +
-> +The TDA19971 Video port output pins can be used as follows:
-> + - RGB 8bit per color (24 bits total): R[11:4] B[11:4] G[11:4]
-> + - YUV444 8bit per color (24 bits total): Y[11:4] Cr[11:4] Cb[11:4]
-> + - YUV422 semi-planar 8bit per component (16 bits total): Y[11:4] CbCr[11:4]
-> + - YUV422 semi-planar 10bit per component (20 bits total): Y[11:2] CbCr[11:2]
-> + - YUV422 semi-planar 12bit per component (24 bits total): - Y[11:0] CbCr[11:0]
-> + - YUV422 BT656 8bit per component (8 bits total): YCbCr[11:4] (2-cycles)
-> + - YUV422 BT656 10bit per component (10 bits total): YCbCr[11:2] (2-cycles)
-> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> +
-> +The TDA19973 Video port output pins can be used as follows:
-> + - RGB 12bit per color (36 bits total): R[11:0] B[11:0] G[11:0]
-> + - YUV444 12bit per color (36 bits total): Y[11:0] Cb[11:0] Cr[11:0]
-> + - YUV422 semi-planar 12bit per component (24 bits total): Y[11:0] CbCr[11:0]
-> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> +
-> +The Video port output pins are mapped via 4-bit 'pin groups' allowing
-> +for a variety fo connection possibilities including swapping pin order within
-> +pin groups. The video_portcfg device-tree property consists of register mapping
-> +pairs which map a chip-specific VP output register to a 4-bit pin group. If
-> +the pin group needs to be bit-swapped you can use the *_S pin-group defines.
-> +
-> +Required Properties:
-> + - compatible      :
-> +  - "nxp,tda19971" for the TDA19971
-> +  - "nxp,tda19973" for the TDA19973
-> + - reg             : I2C slave address
-> + - interrupts      : The interrupt number
-> + - DOVDD-supply    : Digital I/O supply
-> + - DVDD-supply     : Digital Core supply
-> + - AVDD-supply     : Analog supply
-> + - vidout_portcfg  : array of pairs mapping VP output pins to pin groups
+> > Signed-off-by: Micha=B3 Miros=B3aw <mirq-linux@rere.qmqm.pl>
+> > ---
+> >  arch/arm/boot/dts/at91sam9m10g45ek.dts | 48 +++++++++++++++++---------=
+--------
+> >  1 file changed, 24 insertions(+), 24 deletions(-)
+> > =
 
-Needs a vendor prefix and don't use '_'.
+> > diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts=
+/at91sam9m10g45ek.dts
+> > index 9cf1f5163fbd..272af5867403 100644
+> > --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> > +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> > @@ -223,30 +223,6 @@
+> >  		fb0: fb@0x00500000 {
+> >  			display =3D <&display0>;
+> >  			status =3D "okay";
+> > -
+> > -			display0: display {
+> =
 
-> +
-> +Optional Properties:
-> + - max-pixel-rate  : Maximum pixel rate supported by the SoC (MP/sec)
-> + - audio-port      : parameters defining audio output port connection
+> Micha=B3, thanks for your patch.
+> =
 
-That description is meaningless to me.
+> Actually the DT binding requires this:
+> Documentation/devicetree/bindings/video/atmel,lcdc.txt
+> =
 
-> +
-> +Optional Endpoint Properties:
-> +  The following three properties are defined in video-interfaces.txt and
-> +  are valid for source endpoints only:
-> +  - hsync-active: Horizontal synchronization polarity. Defaults to active high.
-> +  - vsync-active: Vertical synchronization polarity. Defaults to active high.
-> +  - data-active: Data polarity. Defaults to active high.
-> +
-> +The Audio output port consists of A_CLK, A_WS, AP0, AP1, AP2, and AP3 pins
-> +and can support up to 8-chanenl audio using the following audio bus DAI formats:
-> + - I2S16
-> + - I2S32
-> + - SPDIF
-> + - OBA (One-Bit-Audio)
-> + - I2S16_HBR_STRAIGHT (High Bitrate straight through)
-> + - I2S16_HBR_DEMUX (High Bitrate demuxed)
-> + - I2S32_HBR_DEMUX (High Bitrate demuxed)
-> + - DST (Direct Stream Transfer)
+> So it's somehow a bigger issue.
+> Moreover, several boards have exactly the same arrangement than the
+> at91sam9m10g45ek, so you probably need to modify them all at the same tim=
+e.
+> =
 
-This either should be a standard, common property or not be in DT. 
-Practically every system is going to have at least one end of the 
-connection that is configurable. The kernel should be able to get lists 
-of supported modes and pick one.
+> After a brief look at drivers/video/fbdev/atmel_lcdfb.c it seems that
+> the name of the node is not so much important, so we can modify it
+> (something like display0: lcd-display {}) .
+> =
 
-> +
-> +Audio samples can be output in either SPDIF or I2S bus formats.
-> +In I2S mode, the TDF1997X is the master with 16bit or 32bit words.
-> +The audio port output is configured by three parameters: DAI format, layout
-> +and clock scaler.
-> +
-> +Each DAI format has two pin layouts shown by the following table:
-> +       |  SPDIF  |  SPDIF  |   I2S   |   I2S   |         HBR demux
-> +       | Layout0 | Layout1 | Layout0 | Layout1 | SPDIF      | I2S
-> + ------+---------+---------+---------+---------+------------+------------
-> + A_WS  | WS      | WS      | WS      | WS      | WS         | WS
-> + AP3   |         | SPDIF3  |         | SD3     | SPDIF[x+3] | SD[x+3]
-> + AP2   |         | SPDIF2  |         | SD2     | SPDIF[x+2] | SD[x+2]
-> + AP1   |         | SPDIF1  |         | SD1     | SPDIF[x+1] | SD[x+1]
-> + AP0   | SPDIF   | SPDIF0  | SD      | SD0     | SPDIF[x]   | SD[x]
-> + A_CLK | (32*Fs) | (32*Fs) |(32*Fs)  | (32*Fs) | (32*Fs)    | (32*Fs)
-> +       | (64*Fs) | (64*Fs) |(64*Fs)  | (64*Fs) | (64*Fs)    | (64*Fs)
-> +
-> +Freq(Sysclk) = 2*freq(Aclk)
-> +
-> +Examples:
-> + - VP[15:0] connected to IMX6 CSI_DATA[19:4] for 16bit YUV422
-> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-> +	hdmi_receiver@48 {
+> I suggest that you modify the binding, the board files affected and
+> re-submit a patch.
 
-s/_/-/
+It looks like the binding documentation is wrong. The driver code does
 
-> +		compatible = "nxp,tda19971";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tda1997x>;
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +		DOVDD-supply = <&reg_3p3v>;
-> +		AVDD-supply = <&reg_1p8v>;
-> +		DVDD-supply = <&reg_1p8v>;
-> +		/* audio output format */
-> +		audio-port = < TDA1997X_I2S16
-> +			       TDA1997X_LAYOUT0
-> +			       TDA1997X_ACLK_128FS >;
-> +		/*
-> +		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-> +		 * and Y[11:4] across 16bits in the same pixclk cycle.
-> +		 */
-> +		vidout_portcfg =
-> +			/* Y[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-> +			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-> +			/* Y[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-> +			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-> +			/* CbCc[11:8]<->VP[07:04]<->CSI_DATA[11:8] */
-> +			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-> +			/* CbCr[7:4]<->VP[03:00]<->CSI_DATA[7:4] */
-> +			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-> +		max-pixel-rate = <180>; /* IMX6 CSI max pixel rate 180MP/sec */
+	of_parse_phandle(np, "display", 0);
 
-That's a constraint that belongs in the i.MX CSI node or driver.
+so it expects a phandle, not a node.
 
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +		};
-> +		port@1 {
-
-You need to describe how many ports and what they are.
-
-> +			reg = <1>;
-> +			hdmi_in: endpoint {
-> +				remote-endpoint = <&ccdc_in>;
-> +			};
-> +		};
-> +	};
-> + - VP[15:8] connected to IMX6 CSI_DATA[19:12] for 8bit BT656
-> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-
-Do you really need 2 examples? It should be possible to figure out other 
-configurations with better descriptions above.
-
-> +	hdmi_receiver@48 {
-> +		compatible = "nxp,tda19971";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tda1997x>;
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +		DOVDD-supply = <&reg_3p3v>;
-> +		AVDD-supply = <&reg_1p8v>;
-> +		DVDD-supply = <&reg_1p8v>;
-> +		/* audio output format */
-> +		#sound-dai-cells = <0>;
-> +		audio-port = < TDA1997X_I2S16
-> +			       TDA1997X_LAYOUT0
-> +			       TDA1997X_ACLK_128FS >;
-> +		/*
-> +		 * The 8bpp BT656 mode outputs YCbCr[11:4] across 8bits over
-> +		 * 2 pixclk cycles.
-> +		 */
-> +		vidout_portcfg =
-> +			/* YCbCr[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-> +			< TDA1997X_VP24_V15_12 TDA1997X_R_CR_CBCR_11_8 >,
-> +			/* YCbCr[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-> +			< TDA1997X_VP24_V11_08 TDA1997X_R_CR_CBCR_7_4 >,
-> +		max-pixel-rate = <180>; /* IMX6 CSI max pixel rate 180MP/sec */
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +		};
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi_in: endpoint {
-> +				remote-endpoint = <&ccdc_in>;
-> +			};
-> +		};
-> +	};
-> +
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Micha=B3 Miros=B3aw
