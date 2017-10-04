@@ -1,216 +1,176 @@
-Return-Path: <SRS0=cgma=BK=gmail.com=hao5781286@kernel.org>
+Return-Path: <ksummit-discuss-bounces@lists.linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <511e01ae-6083-13c8-a486-40e01bf753be@hisilicon.com>
-References: <20161017120705.3726-1-wenpan@hisilicon.com> <20161017120705.3726-2-wenpan@hisilicon.com>
- <5893354.6MrIxqzRoI@wuerfel> <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
- <582C2785.2010804@hisilicon.com> <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
- <511e01ae-6083-13c8-a486-40e01bf753be@hisilicon.com>
-From: Hao Zhang <hao5781286@gmail.com>
-Date: Wed, 11 Oct 2017 13:35:30 +0800
-Message-ID: <CAJeuY78eZqOo3vaGBC-NKZr1nexm9SA0Rmc5vVxqn9K5vQqp9w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
-Content-Type: multipart/alternative; boundary="f40304379aa0b8334c055b3ecab2"
-To: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Cc: Marty Plummer <netz.kernel@gmail.com>, Wei Xu <xuwei5@hisilicon.com>, wenpan <wenpan@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "howell.yang@hisilicon.com" <howell.yang@hisilicon.com>, "jalen.hsu@hisilicon.com" <jalen.hsu@hisilicon.com>, "lvkuanliang@hisilicon.com" <lvkuanliang@hisilicon.com>, "suwenping@hisilicon.com" <suwenping@hisilicon.com>, "raojun@hisilicon.com" <raojun@hisilicon.com>, "kevin.lixu@hisilicon.com" <kevin.lixu@hisilicon.com>, "qinxiaojun@huawei.com" <qinxiaojun@huawei.com>
+References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
+	<CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
+	<CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
+	<CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
+	<CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
+	<CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com>
+	<CACxGe6uoRz1qUSxFNykgSHTO8mAaOoqLvJVbJ6oB3s09YMzzKw@mail.gmail.com>
+	<341aede4-a5ca-b324-c09c-51026a9c3fe0@codethink.co.uk>
+In-Reply-To: <341aede4-a5ca-b324-c09c-51026a9c3fe0@codethink.co.uk>
+From: Grant Likely <grant.likely@secretlab.ca>
+Date: Wed, 04 Oct 2017 17:57:21 +0000
+Message-ID: <CACxGe6s-0tu_QQKfvQkd0HAGe0bUdSwz8aua+A8+JdKsU-6U7Q@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] Devicetree at Linux Plumbers Conference 2017
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/ksummit-discuss>,
+	<mailto:ksummit-discuss-request@lists.linuxfoundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/ksummit-discuss/>
+List-Post: <mailto:ksummit-discuss@lists.linuxfoundation.org>
+List-Help: <mailto:ksummit-discuss-request@lists.linuxfoundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss>,
+	<mailto:ksummit-discuss-request@lists.linuxfoundation.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============2016381177104682800=="
+Sender: ksummit-discuss-bounces@lists.linuxfoundation.org
+Errors-To: ksummit-discuss-bounces@lists.linuxfoundation.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-spec@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ksummit-discuss@lists.linuxfoundation.org" <ksummit-discuss@lists.linuxfoundation.org>
+Cc: Rob Herring <rob.herring@linaro.org>, Jon Loeliger <jdl@jdl.com>, Kumar Gala <kumar.gala@linaro.org>, Olof Johansson <olof.johansson@gmail.com>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Fabien Parent <fparent@baylibre.com>, Ian Campbell <ijc@debian.org>, Stephen Warren <SWarren@nvidia.com>, David Gibson <david@gibson.dropbear.id.au>
 List-ID: <devicetree@vger.kernel.org>
 
---f40304379aa0b8334c055b3ecab2
+--===============2016381177104682800==
+Content-Type: multipart/alternative; boundary="089e08203808942166055abc579e"
+
+--089e08203808942166055abc579e
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-Is there any one working on hi3520dv200 or hi3520dv300?
+On Wed, 4 Oct 2017 at 14:40, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
 
-2016=E5=B9=B411=E6=9C=8818=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94=EF=BC=8CJian=
-cheng Xue <xuejiancheng@hisilicon.com> =E5=86=99=E9=81=93=EF=BC=9A
+> On 03/10/17 23:50, Grant Likely wrote:
+> > On Wed, Aug 30, 2017 at 11:41 AM, Grant Likely
+> > <grant.likely@secretlab.ca> wrote:
+> >> On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely <
+> grant.likely@secretlab.ca> wrote:
+> >>> I owe all of you an update. Unfortunately I don't have any new
+> >>> information yet. I've still got a proposal in to hold a devicetree
+> >>> workshop at Kernel Summit, and if it does get accepted, then /most
+> >>> likely/ it will happen on Thursday afternoon. Don't make any travel
+> >>> plans based on that.
+> >>>
+> >>> As soon as I hear something either way I'll reply to this thread with
+> >>> the new information.
+> >>
+> >> Confirmed! The Devicetree Workshop will be Thursday 26 October in the
+> >> afternoon. Anyone registered for OSS will be able to attend. I don't
+> >> know yet if there are any other consessions for registration. I'm
+> >> finding out now and will update as soon as I know.
+> >
+> > Some more information. I've actually got the workshop room booked for
+> > the full day on Thursday, 26th October. I'm planning to use the
+> > morning as a hacking sprint for anyone who is available, and the
+> > afternoon for discussion topics. I'll pull together a schedule this
+> > week and post an update. As always, feel free to add topics to the
+> > wiki page[1]
+> >
+> > However, the timing is flexible. I can move some topics to the morning
+> > if there are people who aren't going to be around in the afternoon.
+> >
+> > [1] http://wiki.linuxplumbersconf.org/2017:device_tree
+>
+> I tried to register for the device-tree workshop, but couldn't seem
+> to get it to work.
 
-> Hi Marty,
+
+Was that on the OSSummit Europe registration page? What is the error you
+are seeing? I can ask the LF staff to help if you can describe the problem
+you are having.
+
+g.
+
+
+
 >
-> On 2016/11/17 11:03, Jiancheng Xue wrote:
-> > Hi Wei=EF=BC=8C
-> >
-> > On 2016/11/16 17:31, Wei Xu wrote:
-> >> Hi Pan,
-> >>
-> >> On 2016/11/16 8:56, wenpan wrote:
-> >>> Hi Marty=EF=BC=8C
-> >>> Does this confict with your patch=EF=BC=9F If not=EF=BC=8CI hope this=
- could be merged
-> first.  Besides could you tell me the link to your related patch?
-> >>
-> >> This is the link: https://patchwork.kernel.org/patch/9334743/
-> >>
->
-> Could you give your comments on this patch?
-> If you have any objections to it, please let us know.
->
-> >
-> > Thank you for offering this.If I want to give some comments on Marty's
-> patch,
-> > what should I do?
-> >
-> > For Marty's patch, I think there's no need to add specific config item
-> ARCH_HIxxxx
-> > for every chipset. Some existing chipsets depend on ARCH_HISI directly
-> like Hi3519
-> > and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HISI=
-,
-> this kind
-> > of chipsets will must choose other place to select it. I suggest we
-> should keep selecting
-> > ARM_GIC under ARCH_HISI as Pan's patch do.
-> >
-> > The code may be like this:
-> >
-> > config ARCH_HISI
-> >       bool "Hisilicon SoC Support"
-> > -     depends on ARCH_MULTI_V7
-> > +     depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
-> >       select ARM_AMBA
-> > -     select ARM_GIC
-> > +     select ARM_GIC if ARCH_MULTI_V7
-> > +     select ARM_VIC if ARCH_MULTI_V5 || depends on ARCH_MULTI_V6
-> >       select ARM_TIMER_SP804
-> >       select POWER_RESET
-> >       select POWER_RESET_HISI
-> >       select POWER_SUPPLY
-> >
->
-> What's your opinion about this?
->
-> Best Regards,
-> Jiancheng
->
-> >>> On 2016/10/17 21:48, Arnd Bergmann wrote:
-> >>>> On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
-> >>>>> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
-> >>>>>
-> >>>>> Signed-off-by: Pan Wen <wenpan@hisilicon.com <javascript:;>>
-> >>>>>
-> >>>>
-> >>>> Looks ok. I've added Marty Plummer to Cc, he was recently proposing
-> >>>> patches for Hi3520, which I think is closely related to this one.
-> >>>> Please try to work together so the patches don't conflict. It should
-> >>>> be fairly straightforward since you are basically doing the same
-> >>>> change here.
-> >>>>
-> >
-> >
-> >
-> > .
-> >
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org <javascript:;>
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Ben Dooks                               http://www.codethink.co.uk/
+> Senior Engineer                         Codethink - Providing Genius
 >
 
---f40304379aa0b8334c055b3ecab2
+--089e08203808942166055abc579e
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,<div>Is there any one working on hi3520dv200 or hi3520dv300? <br><br=
->2016=E5=B9=B411=E6=9C=8818=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94=EF=BC=8CJia=
-ncheng Xue &lt;<a href=3D"mailto:xuejiancheng@hisilicon.com">xuejiancheng@h=
-isilicon.com</a>&gt; =E5=86=99=E9=81=93=EF=BC=9A<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
-ft:1ex">Hi Marty,<br>
-<br>
-On 2016/11/17 11:03, Jiancheng Xue wrote:<br>
-&gt; Hi Wei=EF=BC=8C<br>
-&gt;<br>
-&gt; On 2016/11/16 17:31, Wei Xu wrote:<br>
-&gt;&gt; Hi Pan,<br>
+<div><br><div class=3D"gmail_quote"><div dir=3D"auto">On Wed, 4 Oct 2017 at=
+ 14:40, Ben Dooks &lt;<a href=3D"mailto:ben.dooks@codethink.co.uk">ben.dook=
+s@codethink.co.uk</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote"=
+ style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">On=
+ 03/10/17 23:50, Grant Likely wrote:<br>
+&gt; On Wed, Aug 30, 2017 at 11:41 AM, Grant Likely<br>
+&gt; &lt;<a href=3D"mailto:grant.likely@secretlab.ca" target=3D"_blank">gra=
+nt.likely@secretlab.ca</a>&gt; wrote:<br>
+&gt;&gt; On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely &lt;<a href=3D"mailt=
+o:grant.likely@secretlab.ca" target=3D"_blank">grant.likely@secretlab.ca</a=
+>&gt; wrote:<br>
+&gt;&gt;&gt; I owe all of you an update. Unfortunately I don&#39;t have any=
+ new<br>
+&gt;&gt;&gt; information yet. I&#39;ve still got a proposal in to hold a de=
+vicetree<br>
+&gt;&gt;&gt; workshop at Kernel Summit, and if it does get accepted, then /=
+most<br>
+&gt;&gt;&gt; likely/ it will happen on Thursday afternoon. Don&#39;t make a=
+ny travel<br>
+&gt;&gt;&gt; plans based on that.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; As soon as I hear something either way I&#39;ll reply to this =
+thread with<br>
+&gt;&gt;&gt; the new information.<br>
 &gt;&gt;<br>
-&gt;&gt; On 2016/11/16 8:56, wenpan wrote:<br>
-&gt;&gt;&gt; Hi Marty=EF=BC=8C<br>
-&gt;&gt;&gt; Does this confict with your patch=EF=BC=9F If not=EF=BC=8CI ho=
-pe this could be merged first.=C2=A0 Besides could you tell me the link to =
-your related patch?<br>
-&gt;&gt;<br>
-&gt;&gt; This is the link: <a href=3D"https://patchwork.kernel.org/patch/93=
-34743/" target=3D"_blank">https://patchwork.kernel.org/<wbr>patch/9334743/<=
-/a><br>
-&gt;&gt;<br>
+&gt;&gt; Confirmed! The Devicetree Workshop will be Thursday 26 October in =
+the<br>
+&gt;&gt; afternoon. Anyone registered for OSS will be able to attend. I don=
+&#39;t<br>
+&gt;&gt; know yet if there are any other consessions for registration. I&#3=
+9;m<br>
+&gt;&gt; finding out now and will update as soon as I know.<br>
+&gt;<br>
+&gt; Some more information. I&#39;ve actually got the workshop room booked =
+for<br>
+&gt; the full day on Thursday, 26th October. I&#39;m planning to use the<br=
+>
+&gt; morning as a hacking sprint for anyone who is available, and the<br>
+&gt; afternoon for discussion topics. I&#39;ll pull together a schedule thi=
+s<br>
+&gt; week and post an update. As always, feel free to add topics to the<br>
+&gt; wiki page[1]<br>
+&gt;<br>
+&gt; However, the timing is flexible. I can move some topics to the morning=
 <br>
-Could you give your comments on this patch?<br>
-If you have any objections to it, please let us know.<br>
+&gt; if there are people who aren&#39;t going to be around in the afternoon=
+.<br>
+&gt;<br>
+&gt; [1] <a href=3D"http://wiki.linuxplumbersconf.org/2017:device_tree" rel=
+=3D"noreferrer" target=3D"_blank">http://wiki.linuxplumbersconf.org/2017:de=
+vice_tree</a><br>
 <br>
-&gt;<br>
-&gt; Thank you for offering this.If I want to give some comments on Marty&#=
-39;s patch,<br>
-&gt; what should I do?<br>
-&gt;<br>
-&gt; For Marty&#39;s patch, I think there&#39;s no need to add specific con=
-fig item ARCH_HIxxxx<br>
-&gt; for every chipset. Some existing chipsets depend on ARCH_HISI directly=
- like Hi3519<br>
-&gt; and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HIS=
-I, this kind<br>
-&gt; of chipsets will must choose other place to select it. I suggest we sh=
-ould keep selecting<br>
-&gt; ARM_GIC under ARCH_HISI as Pan&#39;s patch do.<br>
-&gt;<br>
-&gt; The code may be like this:<br>
-&gt;<br>
-&gt; config ARCH_HISI<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0bool &quot;Hisilicon SoC Support&quot;<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0depends on ARCH_MULTI_V7<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH=
-_MULTI_V7<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select ARM_AMBA<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0select ARM_GIC<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0select ARM_GIC if ARCH_MULTI_V7<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0select ARM_VIC if ARCH_MULTI_V5 || depends on ARC=
-H_MULTI_V6<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select ARM_TIMER_SP804<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select POWER_RESET<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select POWER_RESET_HISI<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select POWER_SUPPLY<br>
-&gt;<br>
+I tried to register for the device-tree workshop, but couldn&#39;t seem<br>
+to get it to work.</blockquote><div dir=3D"auto"><br></div><div dir=3D"auto=
+">Was that on the OSSummit Europe registration page? What is the error you =
+are seeing? I can ask the LF staff to help if you can describe the problem =
+you are having.</div><div dir=3D"auto"><br></div><div dir=3D"auto">g.</div>=
+<div dir=3D"auto"><br></div><div dir=3D"auto"><br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
+ing-left:1ex"><br>
 <br>
-What&#39;s your opinion about this?<br>
-<br>
-Best Regards,<br>
-Jiancheng<br>
-<br>
-&gt;&gt;&gt; On 2016/10/17 21:48, Arnd Bergmann wrote:<br>
-&gt;&gt;&gt;&gt; On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:=
-<br>
-&gt;&gt;&gt;&gt;&gt; Add support for some HiSilicon SoCs which depend on AR=
-CH_MULTI_V5.<br>
-&gt;&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt;&gt; Signed-off-by: Pan Wen &lt;<a href=3D"javascript:;" on=
-click=3D"_e(event, &#39;cvml&#39;, &#39;wenpan@hisilicon.com&#39;)">wenpan@=
-hisilicon.com</a>&gt;<br>
-&gt;&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt;<br>
-&gt;&gt;&gt;&gt; Looks ok. I&#39;ve added Marty Plummer to Cc, he was recen=
-tly proposing<br>
-&gt;&gt;&gt;&gt; patches for Hi3520, which I think is closely related to th=
-is one.<br>
-&gt;&gt;&gt;&gt; Please try to work together so the patches don&#39;t confl=
-ict. It should<br>
-&gt;&gt;&gt;&gt; be fairly straightforward since you are basically doing th=
-e same<br>
-&gt;&gt;&gt;&gt; change here.<br>
-&gt;&gt;&gt;&gt;<br>
-&gt;<br>
-&gt;<br>
-&gt;<br>
-&gt; .<br>
-&gt;<br>
 <br>
 --<br>
-To unsubscribe from this list: send the line &quot;unsubscribe devicetree&q=
-uot; in<br>
-the body of a message to <a href=3D"javascript:;" onclick=3D"_e(event, &#39=
-;cvml&#39;, &#39;majordomo@vger.kernel.org&#39;)">majordomo@vger.kernel.org=
-</a><br>
-More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
-fo.html" target=3D"_blank">http://vger.kernel.org/<wbr>majordomo-info.html<=
+Ben Dooks=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<a href=3D"http://www.codethin=
+k.co.uk/" rel=3D"noreferrer" target=3D"_blank">http://www.codethink.co.uk/<=
 /a><br>
-</blockquote></div>
+Senior Engineer=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Codethink - Providing Genius<br>
+</blockquote></div></div>
 
---f40304379aa0b8334c055b3ecab2--
+--089e08203808942166055abc579e--
+
+--===============2016381177104682800==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Ksummit-discuss mailing list
+Ksummit-discuss@lists.linuxfoundation.org
+https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+
+--===============2016381177104682800==--
