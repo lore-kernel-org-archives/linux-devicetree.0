@@ -1,33 +1,28 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] reset: mediatek: add reset controller dt-bindings
- required header for MT7622 SoC
-Date: Wed, 04 Oct 2017 12:15:17 +0200
-Message-ID: <1507112117.11691.10.camel@pengutronix.de>
-References: <4bb149ef1801c578177beb5e61d19358dd2950ae.1505899696.git.sean.wang@mediatek.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] arm64: dts: renesas: r8a77995 and draak: enable PWM channels
+Date: Wed,  4 Oct 2017 19:27:29 +0900
+Message-ID: <1507112851-10042-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4bb149ef1801c578177beb5e61d19358dd2950ae.1505899696.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-09-20 at 17:40 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add the reset controller dt-bindings exported from infracfg, pericfg,
-> hifsys and ethsys which could be found on MT7622 SoC. So that we can
-> reference them from within a device-tree file.
-> 
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch set is based on the renesas-drivers.git /
+renesas-drivers-2017-10-03-v4.14-rc3 tag.
 
-Applied to the reset/next branch, thank you.
+This patch needs the pfc of PWM patch for r8a77995:
+https://patchwork.kernel.org/patch/9984151/
 
-regards
-Philipp
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yoshihiro Shimoda (2):
+  arm64: dts: renesas: r8a77995: add PWM device nodes
+  arm64: dts: renesas: r8a77995: draak: enable PWM channel 0 and 1
+
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 24 ++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi      | 40 ++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+
+-- 
+1.9.1
