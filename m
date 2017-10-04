@@ -1,60 +1,142 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: pinctrl: add support for RZ/A1M and RZ/A1L
-Date: Wed, 4 Oct 2017 18:47:15 +0200
-Message-ID: <CAMuHMdWy+sS1F1s0-E1MaeHQx4uLUtRdjL+PhwzAm60Wh5Xoww@mail.gmail.com>
-References: <20171004163111.54600-1-chris.brandt@renesas.com> <20171004163111.54600-3-chris.brandt@renesas.com>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v8 3/5] iommu/of: Add msi address regions reservation
+	helper
+Date: Wed, 4 Oct 2017 17:07:15 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83841C809@FRAEML521-MBX.china.huawei.com>
+References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
+	<20170927133241.21036-4-shameerali.kolothum.thodi@huawei.com>
+	<f3146f49-6004-7a15-866b-653e3ea54856@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171004163111.54600-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <f3146f49-6004-7a15-866b-653e3ea54856-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org" <devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
 
-On Wed, Oct 4, 2017 at 6:31 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> Describe how to specify RZ/A1M and RZ/A1L devices.
->
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2:
->  * Added description for RZ/A1M
-> ---
->  Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> index 43e21474528a..f2fc86f8dbab 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
-> @@ -13,7 +13,9 @@ Pin controller node
->
->  Required properties:
->    - compatible
-> -    this shall be "renesas,r7s72100-ports".
-> +    this shall be "renesas,r7s72100-ports" for RZ/A1H, "renesas,r7s72101-ports"
-> +    with a fallback of "renesas,r7s72100-ports" for RZ/A1M (as A1M is compatible
-> +    with A1H), or "renesas,r7s72102-ports" for RZ/A1L
 
-Sorry to bother you again, but having this in a single long sentence is hard
-to read. What about splitting per SoC, like is done in other bindings?
+> -----Original Message-----
+> From: Marc Zyngier [mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org]
+> Sent: Wednesday, October 04, 2017 12:22 PM
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>;
+> lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; sudeep.holla-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org;
+> robin.murphy-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; John Garry
+> <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org; Linuxarm
+> <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Wangzhou (B) <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>;
+> Guohanjun (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Subject: Re: [PATCH v8 3/5] iommu/of: Add msi address regions reservation
+> helper
+> 
+> On 27/09/17 14:32, Shameer Kolothum wrote:
+> > From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >
+> > On some platforms msi-controller address regions have to be excluded
+> > from normal IOVA allocation in that they are detected and decoded in a
+> > HW specific way by system components and so they cannot be considered
+> > normal IOVA address space.
+> >
+> > Add a helper function that retrieves msi address regions through
+> > device tree msi mapping, so that these regions will not be translated
+> > by IOMMU and will be excluded from IOVA allocations.
+> >
+> > Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > [Shameer: Modified msi-parent retrieval logic]
+> > Signed-off-by: Shameer Kolothum
+> <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/iommu/of_iommu.c | 95
+> > ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/of_iommu.h | 10 +++++
+> >  2 files changed, 105 insertions(+)
+> >
+> > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index
+> > e60e3db..ffd7fb7 100644
+> > --- a/drivers/iommu/of_iommu.c
+> > +++ b/drivers/iommu/of_iommu.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/iommu.h>
+> >  #include <linux/limits.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >  #include <linux/of_iommu.h>
+> >  #include <linux/of_pci.h>
+> >  #include <linux/slab.h>
+> > @@ -138,6 +139,14 @@ static int of_iommu_xlate(struct device *dev,
+> >  	return ops->of_xlate(dev, iommu_spec);  }
+> >
+> > +static int __get_pci_rid(struct pci_dev *pdev, u16 alias, void *data)
+> > +{
+> > +	u32 *rid = data;
+> > +
+> > +	*rid = alias;
+> > +	return 0;
+> > +}
+> > +
+> >  struct of_pci_iommu_alias_info {
+> >  	struct device *dev;
+> >  	struct device_node *np;
+> > @@ -163,6 +172,73 @@ static int of_pci_iommu_init(struct pci_dev *pdev,
+> u16 alias, void *data)
+> >  	return info->np == pdev->bus->dev.of_node;  }
+> >
+> > +static int of_iommu_alloc_resv_region(struct device_node *np,
+> > +				      struct list_head *head)
+> > +{
+> > +	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+> > +	struct iommu_resv_region *region;
+> > +	struct resource res;
+> > +	int err;
+> > +
+> > +	err = of_address_to_resource(np, 0, &res);
+> 
+> What is the rational for registering the first region only? Surely you can have
+> more than one region in an MSI controller (yes, your particular case is the ITS
+> which has only one, but we're trying to do something generic here).
 
-For the actual content:
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Ok. 
 
-Gr{oetje,eeting}s,
+> Another issue I have with this code is that it inserts all of the ITS MMIO in the
+> RESV_MSI range. As long as we don't generate any page tables for this, we're
+> fine. But if we ever change this, we'll end-up with the ITS programming
+> interface being exposed to a device, which wouldn't be acceptable.
 
-                        Geert
+I understand the concern of reserving the whole of ITS MMIO region. Sorry, 
+but just being curious, how this will be exposed to a  device ? You mean a device
+can  be configured to access the ITS MMIO region and it will fail because there is
+no SMMU mapping for that?
+ 
+> Why can't we have some generic property instead, that would describe the
+> actual ranges that cannot be translated? That way, no random insertion of a
+> random range, and relatively future proof.
+> 
+> I'm not sure where to declare it (PCIe node? IOMMU node?), but it'd feel like
+> a much nicer and simpler solution to this problem.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+I am not sure that will be seen as legitimizing the untranslated regions or not.
+We had this discussion to include the regions specified in IORT spec and the
+answer was that, it will in a way legitimize this and encourage future
+implementations.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How about making the _msi_get_resv_regions() function be very specific to GIC
+ITS like _its_msi_get_resv_regions() ? Is that something we can consider?
+(In fact we had a checking for "arm, gic-v3-its" in a previous version of this series).
+
+Thanks,
+Shameer
