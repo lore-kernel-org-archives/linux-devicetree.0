@@ -1,71 +1,110 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] regulator: axp20x: Add support for
- AXP813 regulators
-Date: Wed, 4 Oct 2017 11:50:18 +0100
-Message-ID: <20171004105018.oxwhialssxh62sv3@dell>
-References: <20170929032514.31727-1-wens@csie.org>
- <20170929032514.31727-3-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 04/22] firmware: arm_scmi: add basic driver
+ infrastructure for SCMI
+Date: Wed, 4 Oct 2017 12:59:54 +0200
+Message-ID: <CAK8P3a06PM-2t4FpnMaj+57Fp6MvZ8KLo2bcLMRVCO8=K92u4w@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com> <1506604306-20739-5-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB3PZ2LHAKGQEMRNYQCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170929032514.31727-3-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506604306-20739-5-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Sep 2017, Chen-Yu Tsai wrote:
+On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
-> The AXP813 PMIC has 7 DC-DC buck regulators, 16 LDOs (including the
-> fixed RTC LDO and 2 GPIO LDOs), and 1 switchable. The drive-vbus
-> feature is also supported. All the hardware details are very similar
-> to the AXP803, with the following exceptions:
->=20
->   - Extra DCDC7 buck regulator, with the same range as DCDC6
->=20
->   - SWitch now has a separate supply pin, instead of being chained
->     internaly from DCDC1
->=20
->   - RTC LDO output voltage is now 1.8V
->=20
->   - FLDO3 is an LDO with switchable supplies, but unconfigurable output
->     voltage. The voltage is always half that of its supply.
->=20
-> Support for FLDO3 is currently unimplemented, as it requires runtime
-> switching of its supplies, something the regulator subsystem does not
-> support. It is not used in either the reference designs nor actually
-> produced boards available.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/regulator/axp20x-regulator.c | 102 +++++++++++++++++++++++++++++=
-++++--
+> +/**
+> + * struct scmi_msg_hdr - Message(Tx/Rx) header
+> + *
+> + * @id: The identifier of the command being sent
+> + * @protocol_id: The identifier of the protocol used to send @id command
+> + * @seq: The token to identify the message. when a message/command returns,
+> + *       the platform returns the whole message header unmodified including
+> + *      the token.
+> + */
+> +struct scmi_msg_hdr {
+> +       u8 id;
+> +       u8 protocol_id;
+> +       u16 seq;
+> +       u32 status;
+> +       bool poll_completion;
+> +};
 
->  include/linux/mfd/axp20x.h           |   3 ++
+Is this structure part of the protocol, or just part of the linux
+implementation?
+If this is in the protocol, you should not have a 'bool' member in there, which
+does not have a well-defined binary representation across architectures.
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> +/*
+> + * The SCP firmware providing SCM interface to OSPM and other agents must
+> + * execute only in little-endian mode as per SCMI specification, so any buffers
+> + * shared through SCMI should have their contents converted to little-endian
+> + */
 
->  2 files changed, 101 insertions(+), 4 deletions(-)
+That is a very odd thing to put into a specification, are you sure it requires
+a specific runtime endian-mode? I would bet that it only requires the protocol
+to use little-endian data, so better describe it like that.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> +struct scmi_shared_mem {
+> +       __le32 reserved;
+> +       __le32 channel_status;
+> +#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR     BIT(1)
+> +#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE      BIT(0)
+> +       __le32 reserved1[2];
+> +       __le32 flags;
+> +#define SCMI_SHMEM_FLAG_INTR_ENABLED   BIT(0)
+> +       __le32 length;
+> +       __le32 msg_header;
+> +       u8 msg_payload[0];
+> +};
+> +
+> +static int scmi_linux_errmap[] = {
+> +       /* better than switch case as long as return value is continuous */
+> +       0,                      /* SCMI_SUCCESS */
+> +       -EOPNOTSUPP,            /* SCMI_ERR_SUPPORT */
+> +       -EINVAL,                /* SCMI_ERR_PARAM */
+> +       -EACCES,                /* SCMI_ERR_ACCESS */
+> +       -ENOENT,                /* SCMI_ERR_ENTRY */
+> +       -ERANGE,                /* SCMI_ERR_RANGE */
+> +       -EBUSY,                 /* SCMI_ERR_BUSY */
+> +       -ECOMM,                 /* SCMI_ERR_COMMS */
+> +       -EIO,                   /* SCMI_ERR_GENERIC */
+> +       -EREMOTEIO,             /* SCMI_ERR_HARDWARE */
+> +       -EPROTO,                /* SCMI_ERR_PROTOCOL */
+> +};
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+maybe make this 'const'.
+
+> +static struct platform_driver scmi_driver = {
+> +       .driver = {
+> +                  .name = "arm-scmi",
+> +                  .of_match_table = of_match_ptr(scmi_of_match),
+> +                  },
+> +       .probe = scmi_probe,
+> +       .remove = scmi_remove,
+> +};
+
+The 'of_match_ptr' annotation probably causes an 'unused variable'
+warning, better just drop that.
+
+> +#if IS_REACHABLE(CONFIG_ARM_SCMI_PROTOCOL)
+> +int scmi_handle_put(const struct scmi_handle *handle);
+> +const struct scmi_handle *scmi_handle_get(struct device *dev);
+> +const struct scmi_handle *devm_scmi_handle_get(struct device *dev);
+
+IS_REACHABLE() can easily lead to confusion when the driver is
+a loadable module but never gets used by a built-in driver. Maybe use
+IS_ENABLED() here, and add a Kconfig symbol that other drivers
+can depend on if you want them to optionally use it, like:
+
+config MAYBE_ARM_SCMI_PROTOCOL
+        default y if ARM_SCMI_PROTOCOL=n
+        default ARM_SCMI_PROTOCOL
+
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
