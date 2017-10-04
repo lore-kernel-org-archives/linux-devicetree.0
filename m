@@ -1,84 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 7/8] arm64: dts: renesas: initial Eagle board device
- tree
-Date: Wed, 4 Oct 2017 14:03:24 +0300
-Message-ID: <9ad9bd62-300c-cc78-a8f3-bbdd9eed6bed@cogentembedded.com>
-References: <20170915194445.950496886@cogentembedded.com>
- <CAMuHMdUX+RW9H-p5n_JB-SkW8k5g_i0bg-i9LD59b5MLvFm3YQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 10/22] firmware: arm_scmi: probe and initialise all the
+ supported protocols
+Date: Wed, 4 Oct 2017 13:06:20 +0200
+Message-ID: <CAK8P3a15DxNYzaYmAbxEqAm2FCJS9KQFk8vBDqmSn9QUiw64=A@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com> <1506604306-20739-11-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUX+RW9H-p5n_JB-SkW8k5g_i0bg-i9LD59b5MLvFm3YQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506604306-20739-11-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> +static const struct scmi_protocol_match scmi_protocols[] = {
+> +       {
+> +               .protocol_id = SCMI_PROTOCOL_PERF,
+> +               .fn = scmi_perf_protocol_init,
+> +               .name = "scmi-cpufreq",
+> +       }, {
+> +               .protocol_id = SCMI_PROTOCOL_CLOCK,
+> +               .fn = scmi_clock_protocol_init,
+> +               .name = "scmi-clocks",
+> +       }, {
+> +               .protocol_id = SCMI_PROTOCOL_POWER,
+> +               .fn = scmi_power_protocol_init,
+> +               .name = "scmi-power-domain",
+> +       }, {
+> +               .protocol_id = SCMI_PROTOCOL_SENSOR,
+> +               .fn = scmi_sensors_protocol_init,
+> +               .name = "scmi-hwmon",
+> +       },
+> +       {}
+> +};
 
-On 9/21/2017 4:18 PM, Geert Uytterhoeven wrote:
+This looks backwards from what we do elsewhere in the kernel,
+and could be considered a layering violation: it requires a generic
+part of of the driver to know about all the more specific ones,
+and it means that we have to modify the global table here each
+time we add another protocol.
 
->> Add the initial device  tree for  the R8A77970 SoC based Eagle board.
->> The board has 1 debug serial port (SCIF0); include support for it,
->> so that the serial console can work.
->>
->> Based on the original (and large) patch by Vladimir Barinov
->> <vladimir.barinov@cogentembedded.com>.
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
->> --- /dev/null
->> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->> @@ -0,0 +1,45 @@
->> +/*
->> + * Device Tree Source for the Eagle board
->> + *
->> + * Copyright (C) 2016-2017 Renesas Electronics Corp.
->> + * Copyright (C) 2017 Cogent Embedded, Inc.
->> + *
->> + * This file is licensed under the terms of the GNU General Public License
->> + * version 2.  This program is licensed "as is" without any warranty of any
->> + * kind, whether express or implied.
->> + */
->> +
->> +/dts-v1/;
->> +#include "r8a77970.dtsi"
->> +
->> +/ {
->> +       model = "Renesas Eagle board based on r8a77970";
->> +       compatible = "renesas,eagle", "renesas,r8a77970";
->> +
->> +       aliases {
->> +               serial0 = &scif0;
->> +       };
->> +
->> +       chosen {
->> +               bootargs = "ignore_loglevel";
->> +               stdout-path = "serial0:115200n8";
->> +       };
->> +
->> +       memory@48000000 {
->> +               device_type = "memory";
->> +               /* first 128MB is reserved for secure area. */
->> +               reg = <0x0 0x48000000 0x0 0x38000000>;
->> +       };
->> +};
->> +
->> +&extal_clk {
->> +       clock-frequency = <16666666>;
-> 
-> Nitpicking: the schematics say 16.6666 MHz
-> At 100 ppm accuracy that's the same, though.
+Can you rewrite this to allow dynamic registration of the protocols?
 
-    So, you still want me to change this freq?
-
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-
-MBR, Sergei
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
