@@ -1,142 +1,90 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v8 3/5] iommu/of: Add msi address regions reservation
-	helper
-Date: Wed, 4 Oct 2017 17:07:15 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA83841C809@FRAEML521-MBX.china.huawei.com>
-References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
-	<20170927133241.21036-4-shameerali.kolothum.thodi@huawei.com>
-	<f3146f49-6004-7a15-866b-653e3ea54856@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 04/22] firmware: arm_scmi: add basic driver
+ infrastructure for SCMI
+Date: Wed, 4 Oct 2017 18:37:22 +0100
+Message-ID: <a98be359-64a7-230f-dce7-82c34c83b3c3@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-5-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a06PM-2t4FpnMaj+57Fp6MvZ8KLo2bcLMRVCO8=K92u4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <f3146f49-6004-7a15-866b-653e3ea54856-5wv7dgnIgG8@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a06PM-2t4FpnMaj+57Fp6MvZ8KLo2bcLMRVCO8=K92u4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org" <devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Marc Zyngier [mailto:marc.zyngier-5wv7dgnIgG8@public.gmane.org]
-> Sent: Wednesday, October 04, 2017 12:22 PM
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>;
-> lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; sudeep.holla-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org;
-> robin.murphy-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; John Garry
-> <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org; Linuxarm
-> <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Wangzhou (B) <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>;
-> Guohanjun (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Subject: Re: [PATCH v8 3/5] iommu/of: Add msi address regions reservation
-> helper
+On 04/10/17 11:59, Arnd Bergmann wrote:
+> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 > 
-> On 27/09/17 14:32, Shameer Kolothum wrote:
-> > From: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >
-> > On some platforms msi-controller address regions have to be excluded
-> > from normal IOVA allocation in that they are detected and decoded in a
-> > HW specific way by system components and so they cannot be considered
-> > normal IOVA address space.
-> >
-> > Add a helper function that retrieves msi address regions through
-> > device tree msi mapping, so that these regions will not be translated
-> > by IOMMU and will be excluded from IOVA allocations.
-> >
-> > Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > [Shameer: Modified msi-parent retrieval logic]
-> > Signed-off-by: Shameer Kolothum
-> <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/iommu/of_iommu.c | 95
-> > ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/of_iommu.h | 10 +++++
-> >  2 files changed, 105 insertions(+)
-> >
-> > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index
-> > e60e3db..ffd7fb7 100644
-> > --- a/drivers/iommu/of_iommu.c
-> > +++ b/drivers/iommu/of_iommu.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/iommu.h>
-> >  #include <linux/limits.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_address.h>
-> >  #include <linux/of_iommu.h>
-> >  #include <linux/of_pci.h>
-> >  #include <linux/slab.h>
-> > @@ -138,6 +139,14 @@ static int of_iommu_xlate(struct device *dev,
-> >  	return ops->of_xlate(dev, iommu_spec);  }
-> >
-> > +static int __get_pci_rid(struct pci_dev *pdev, u16 alias, void *data)
-> > +{
-> > +	u32 *rid = data;
-> > +
-> > +	*rid = alias;
-> > +	return 0;
-> > +}
-> > +
-> >  struct of_pci_iommu_alias_info {
-> >  	struct device *dev;
-> >  	struct device_node *np;
-> > @@ -163,6 +172,73 @@ static int of_pci_iommu_init(struct pci_dev *pdev,
-> u16 alias, void *data)
-> >  	return info->np == pdev->bus->dev.of_node;  }
-> >
-> > +static int of_iommu_alloc_resv_region(struct device_node *np,
-> > +				      struct list_head *head)
-> > +{
-> > +	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> > +	struct iommu_resv_region *region;
-> > +	struct resource res;
-> > +	int err;
-> > +
-> > +	err = of_address_to_resource(np, 0, &res);
+>> +/**
+>> + * struct scmi_msg_hdr - Message(Tx/Rx) header
+>> + *
+>> + * @id: The identifier of the command being sent
+>> + * @protocol_id: The identifier of the protocol used to send @id command
+>> + * @seq: The token to identify the message. when a message/command returns,
+>> + *       the platform returns the whole message header unmodified including
+>> + *      the token.
+>> + */
+>> +struct scmi_msg_hdr {
+>> +       u8 id;
+>> +       u8 protocol_id;
+>> +       u16 seq;
+>> +       u32 status;
+>> +       bool poll_completion;
+>> +};
 > 
-> What is the rational for registering the first region only? Surely you can have
-> more than one region in an MSI controller (yes, your particular case is the ITS
-> which has only one, but we're trying to do something generic here).
-
-Ok. 
-
-> Another issue I have with this code is that it inserts all of the ITS MMIO in the
-> RESV_MSI range. As long as we don't generate any page tables for this, we're
-> fine. But if we ever change this, we'll end-up with the ITS programming
-> interface being exposed to a device, which wouldn't be acceptable.
-
-I understand the concern of reserving the whole of ITS MMIO region. Sorry, 
-but just being curious, how this will be exposed to a  device ? You mean a device
-can  be configured to access the ITS MMIO region and it will fail because there is
-no SMMU mapping for that?
- 
-> Why can't we have some generic property instead, that would describe the
-> actual ranges that cannot be translated? That way, no random insertion of a
-> random range, and relatively future proof.
+> Is this structure part of the protocol, or just part of the linux
+> implementation?
+> If this is in the protocol, you should not have a 'bool' member in there, which
+> does not have a well-defined binary representation across architectures.
 > 
-> I'm not sure where to declare it (PCIe node? IOMMU node?), but it'd feel like
-> a much nicer and simpler solution to this problem.
 
-I am not sure that will be seen as legitimizing the untranslated regions or not.
-We had this discussion to include the regions specified in IORT spec and the
-answer was that, it will in a way legitimize this and encourage future
-implementations.
+No, it's not part of specification just linux, added to support polling
+based DVFS messages.
 
-How about making the _msi_get_resv_regions() function be very specific to GIC
-ITS like _its_msi_get_resv_regions() ? Is that something we can consider?
-(In fact we had a checking for "arm, gic-v3-its" in a previous version of this series).
+>> +/*
+>> + * The SCP firmware providing SCM interface to OSPM and other agents must
+>> + * execute only in little-endian mode as per SCMI specification, so any buffers
+>> + * shared through SCMI should have their contents converted to little-endian
+>> + */
+> 
+> That is a very odd thing to put into a specification, are you sure it requires
+> a specific runtime endian-mode? I would bet that it only requires the protocol
+> to use little-endian data, so better describe it like that.
+> 
 
-Thanks,
-Shameer
+Right, my bad. Not sure where I copied that text from, but as you
+mention specification just expects data to be in LE format.
+
+[..]
+
+> 
+>> +#if IS_REACHABLE(CONFIG_ARM_SCMI_PROTOCOL)
+>> +int scmi_handle_put(const struct scmi_handle *handle);
+>> +const struct scmi_handle *scmi_handle_get(struct device *dev);
+>> +const struct scmi_handle *devm_scmi_handle_get(struct device *dev);
+> 
+> IS_REACHABLE() can easily lead to confusion when the driver is
+> a loadable module but never gets used by a built-in driver. Maybe use
+> IS_ENABLED() here, and add a Kconfig symbol that other drivers
+> can depend on if you want them to optionally use it, like:
+> 
+> config MAYBE_ARM_SCMI_PROTOCOL
+>         default y if ARM_SCMI_PROTOCOL=n
+>         default ARM_SCMI_PROTOCOL
+
+OK, will check, we may not need that yet.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
