@@ -1,176 +1,212 @@
-Return-Path: <ksummit-discuss-bounces@lists.linuxfoundation.org>
 MIME-Version: 1.0
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
-	<CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
-	<CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
-	<CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
-	<CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
-	<CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com>
-	<CACxGe6uoRz1qUSxFNykgSHTO8mAaOoqLvJVbJ6oB3s09YMzzKw@mail.gmail.com>
-	<341aede4-a5ca-b324-c09c-51026a9c3fe0@codethink.co.uk>
-In-Reply-To: <341aede4-a5ca-b324-c09c-51026a9c3fe0@codethink.co.uk>
-From: Grant Likely <grant.likely@secretlab.ca>
-Date: Wed, 04 Oct 2017 17:57:21 +0000
-Message-ID: <CACxGe6s-0tu_QQKfvQkd0HAGe0bUdSwz8aua+A8+JdKsU-6U7Q@mail.gmail.com>
-Subject: Re: [Ksummit-discuss] Devicetree at Linux Plumbers Conference 2017
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/ksummit-discuss>,
-	<mailto:ksummit-discuss-request@lists.linuxfoundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/ksummit-discuss/>
-List-Post: <mailto:ksummit-discuss@lists.linuxfoundation.org>
-List-Help: <mailto:ksummit-discuss-request@lists.linuxfoundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss>,
-	<mailto:ksummit-discuss-request@lists.linuxfoundation.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2016381177104682800=="
-Sender: ksummit-discuss-bounces@lists.linuxfoundation.org
-Errors-To: ksummit-discuss-bounces@lists.linuxfoundation.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-spec@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ksummit-discuss@lists.linuxfoundation.org" <ksummit-discuss@lists.linuxfoundation.org>
-Cc: Rob Herring <rob.herring@linaro.org>, Jon Loeliger <jdl@jdl.com>, Kumar Gala <kumar.gala@linaro.org>, Olof Johansson <olof.johansson@gmail.com>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Fabien Parent <fparent@baylibre.com>, Ian Campbell <ijc@debian.org>, Stephen Warren <SWarren@nvidia.com>, David Gibson <david@gibson.dropbear.id.au>
+In-Reply-To: <20171004123015.r42bc6f4pznypefc@valkosipuli.retiisi.org.uk>
+References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
+	<CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
+	<20170822150050.GD14873@bigcity.dyn.berto.se>
+	<CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
+	<20170827224033.2ubrkzp33g5supab@kekkonen.localdomain>
+	<CAL_JsqLoROoJYB38Hx76yFrPd8J=6+KOr6EgzMd-g5yLYi8Okw@mail.gmail.com>
+	<20171004123015.r42bc6f4pznypefc@valkosipuli.retiisi.org.uk>
+Date: Wed, 4 Oct 2017 07:48:50 -0500
+Message-ID: <CAL_Jsq+yxsyo7XBtkSjoEWR76iMm61AxmDk5TaBwzf_3BWY6MQ@mail.gmail.com>
+Subject: Re: [PATCH v2] device property: preserve usecount for node passed to of_fwnode_graph_get_port_parent()
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-ID: <devicetree@vger.kernel.org>
 
---===============2016381177104682800==
-Content-Type: multipart/alternative; boundary="089e08203808942166055abc579e"
 
---089e08203808942166055abc579e
-Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 4 Oct 2017 at 14:40, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-
-> On 03/10/17 23:50, Grant Likely wrote:
-> > On Wed, Aug 30, 2017 at 11:41 AM, Grant Likely
-> > <grant.likely@secretlab.ca> wrote:
-> >> On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely <
-> grant.likely@secretlab.ca> wrote:
-> >>> I owe all of you an update. Unfortunately I don't have any new
-> >>> information yet. I've still got a proposal in to hold a devicetree
-> >>> workshop at Kernel Summit, and if it does get accepted, then /most
-> >>> likely/ it will happen on Thursday afternoon. Don't make any travel
-> >>> plans based on that.
-> >>>
-> >>> As soon as I hear something either way I'll reply to this thread with
-> >>> the new information.
-> >>
-> >> Confirmed! The Devicetree Workshop will be Thursday 26 October in the
-> >> afternoon. Anyone registered for OSS will be able to attend. I don't
-> >> know yet if there are any other consessions for registration. I'm
-> >> finding out now and will update as soon as I know.
-> >
-> > Some more information. I've actually got the workshop room booked for
-> > the full day on Thursday, 26th October. I'm planning to use the
-> > morning as a hacking sprint for anyone who is available, and the
-> > afternoon for discussion topics. I'll pull together a schedule this
-> > week and post an update. As always, feel free to add topics to the
-> > wiki page[1]
-> >
-> > However, the timing is flexible. I can move some topics to the morning
-> > if there are people who aren't going to be around in the afternoon.
-> >
-> > [1] http://wiki.linuxplumbersconf.org/2017:device_tree
+On Wed, Oct 4, 2017 at 7:30 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> Hi Rob,
 >
-> I tried to register for the device-tree workshop, but couldn't seem
-> to get it to work.
-
-
-Was that on the OSSummit Europe registration page? What is the error you
-are seeing? I can ask the LF staff to help if you can describe the problem
-you are having.
-
-g.
-
-
-
+> On Tue, Oct 03, 2017 at 08:40:10AM -0500, Rob Herring wrote:
+>> On Sun, Aug 27, 2017 at 5:40 PM, Sakari Ailus
+>> <sakari.ailus@linux.intel.com> wrote:
+>> > Hi Rob,
+>> >
+>> > On Tue, Aug 22, 2017 at 02:42:10PM -0500, Rob Herring wrote:
+>> >> On Tue, Aug 22, 2017 at 10:00 AM, Niklas S=C3=B6derlund
+>> >> <niklas.soderlund@ragnatech.se> wrote:
+>> >> > Hi Rob,
+>> >> >
+>> >> > On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
+>> >> >> On Mon, Aug 21, 2017 at 7:19 PM, Niklas S=C3=B6derlund
+>> >> >> <niklas.soderlund+renesas@ragnatech.se> wrote:
+>> >> >> > Using CONFIG_OF_DYNAMIC=3Dy uncovered an imbalance in the usecou=
+nt of the
+>> >> >> > node being passed to of_fwnode_graph_get_port_parent(). Preserve=
+ the
+>> >> >> > usecount by using of_get_parent() instead of of_get_next_parent(=
+) which
+>> >> >> > don't decrement the usecount of the node passed to it.
+>> >> >> >
+>> >> >> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops=
+ to firmware specific locations")
+>> >> >> > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@r=
+agnatech.se>
+>> >> >> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> >> >> > ---
+>> >> >> >  drivers/of/property.c | 2 +-
+>> >> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >> >>
+>> >> >> Isn't this already fixed with this fix:
+>> >> >>
+>> >> >> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
+>> >> >> Author: Tony Lindgren <tony@atomide.com>
+>> >> >> Date:   Fri Jul 28 01:23:15 2017 -0700
+>> >> >>
+>> >> >> device property: Fix usecount for of_graph_get_port_parent()
+>> >> >
+>> >> > No, that commit fixes it for of_graph_get_port_parent() while this
+>> >> > commit fixes it for of_fwnode_graph_get_port_parent(). But in essen=
+ce it
+>> >> > is the same issue but needs two separate fixes.
+>> >>
+>> >> Ah, because one takes the port node and one takes the endpoint node.
+>> >> That won't confuse anyone.
+>> >
+>> > Yes, I think we've had this for some time in naming of a few graph
+>> > functions and increasingly so lately. It began with
+>> > of_graph_get_remote_port_parent(), which likely was named so to avoid =
+the
+>> > name getting really long. The function itself gets a remove of the end=
+point
+>> > given as an argument, then the port related to the entpoint and finall=
+y the
+>> > parent node of the port node (which is not the "ports" node). That's a=
+ lot
+>> > of work for a single interface function.
+>>
+>> That's because returning the "ports" node would be pointless. The
+>> remote device could have:
+>>
+>> ports {
+>>     port {
+>>         endpoint {
+>>         };
+>>     };
+>> };
+>>
+>> Or no ports node. Both are valid and should be treated equivalently.
 >
+> Indeed --- otherwise you could simply use of_get_parent()...
+>
+>>
+>> >
+>> > What comes to of_fwnode_graph_get_port_parent() --- it's the OF callba=
+ck
+>> > function for the fwnode graph API that, as the name suggests, gets the
+>> > parent of the port node, no more, no less. The function is used in the
+>> > fwnode graph API implementation and is not available in the API as suc=
+h.
+>>
+>> If this operates on the local node, then you should already have the
+>> relevant parent. If you are walking the remote node, then the exact
+>> port structure should be opaque. If you need the remote endpoint and
+>> its properties, that's fine. Otherwise, you should really only need
+>> the remote parent device because the remote's graph structure is
+>> specific to the remote device and any parsing should be done within
+>> the remote's driver.
+>
+> This function is used to implement fwnode_graph_get_remote_port_parent() =
+as
+> well as fwnode_graph_get_port_parent(). These are used by V4L2 to match
+> remote devices currently. That said, we've thought about using endpoints
+> for matching: the connection is made between two hardware interfaces, not
+> devices.
+>
+>>
+>> > The fwnode graph API itself only implements functionality already avai=
+lable
+>> > in the OF graph API under the corresponding name.
+>>
+>> There are graph APIs I want to get rid of, but since there are still
+>> users I haven't. Adding those APIs to the fwnode API will just make it
+>> harder.
+>
+> I remember we've discussed that but I'm not sure we arrived to a conclusi=
+on
+> back then. And that explicitly parsing a port / endpoint pair was
+> preferred.
+>
+> In V4L2 the endpoints are currently iterated over. The endpoint numbers a=
+re
+> also not verified in drivers (apart from perhaps one or two exceptions),
+> they're currently simply ignored. Only port numbers are actually used.
+>
+> I think it boils down to whether (or not) there's a material chance of
+> breaking something by effectively adding the endpoint number checks. Shou=
+ld
+> we assume it will not?
+>
+>>
+>> >> Can we please align this mess. I've tried to make the graph parsing
+>> >> not a free for all, open coded mess. There's no reason to have the
+>> >> port node handle and then need the parent device. Either you started
+>> >> with the parent device to parse local ports and endpoints or you got
+>> >> the remote endpoint with .graph_get_remote_endpoint(). Most of the
+>> >> time you don't even need the endpoint node handles. You really just
+>> >> need to know what is the remote device connected to port X, endpoint =
+Y
+>> >> of my local device.
+>> >
+>> > Perhaps most of the time, yes. V4L2 devices store bus (e.g. MIPI CSI-2=
+)
+>> > specific information in the endpoint nodes.
+>> >
+>> > The current OF graph API is geared towards providing convenience funct=
+ions
+>> > to the extent that a single function performs actions a driver would
+>> > typically need. More recently functions implementing a single operatio=
+n has
+>> > been added; the primitives that just perform a single operation would
+>> > likely be easier to manage.
+>>
+>> Then we have each driver open coding walking the graph.
+>>
+>> > The convenience functions have been, well, convenient as getting and
+>> > putting nodes could have been somewhat ignored in drivers. If the OF g=
+raph
+>> > API usage can be moved out of the drivers we'll likely have way fewer =
+users
+>> > and thus there's no real need for convenience functions. That has othe=
+r
+>> > benefits, too, such as parsing the graph correctly: most V4L2 drivers =
+have
+>> > issues in this area.
+>> >
+>> > The OF graph API (or the fwnode equivalent) is used effectively in all=
+ V4L2
+>> > drivers that support OF (there are about 20 of them); we're moving the=
+se to
+>> > the V4L2 framework but it'll take some time. That should make it easie=
+r for
+>> > cleaning things up. Based on a quick look V4L2 and V4L2 drivers togeth=
+er
+>> > represent a large proportion of all users in the kernel.
+>>
+>> I certainly will care less when there's only subsystems using the API
+>> versus each driver.
+>>
+>> I'd guess it is more equal because most of the DRM drivers are
+>> converted to not use the graph API directly.
+>
+> Ack.
+>
+>>
+>> >
+>> > What do you think?
+>>
+>> I'll apply this fix, but please keep the above in mind when reworking
+>> the V4L2 drivers.
+>
+> Thanks!
 >
 > --
-> Ben Dooks                               http://www.codethink.co.uk/
-> Senior Engineer                         Codethink - Providing Genius
+> Kind regards,
 >
-
---089e08203808942166055abc579e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div><br><div class=3D"gmail_quote"><div dir=3D"auto">On Wed, 4 Oct 2017 at=
- 14:40, Ben Dooks &lt;<a href=3D"mailto:ben.dooks@codethink.co.uk">ben.dook=
-s@codethink.co.uk</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote"=
- style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">On=
- 03/10/17 23:50, Grant Likely wrote:<br>
-&gt; On Wed, Aug 30, 2017 at 11:41 AM, Grant Likely<br>
-&gt; &lt;<a href=3D"mailto:grant.likely@secretlab.ca" target=3D"_blank">gra=
-nt.likely@secretlab.ca</a>&gt; wrote:<br>
-&gt;&gt; On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely &lt;<a href=3D"mailt=
-o:grant.likely@secretlab.ca" target=3D"_blank">grant.likely@secretlab.ca</a=
->&gt; wrote:<br>
-&gt;&gt;&gt; I owe all of you an update. Unfortunately I don&#39;t have any=
- new<br>
-&gt;&gt;&gt; information yet. I&#39;ve still got a proposal in to hold a de=
-vicetree<br>
-&gt;&gt;&gt; workshop at Kernel Summit, and if it does get accepted, then /=
-most<br>
-&gt;&gt;&gt; likely/ it will happen on Thursday afternoon. Don&#39;t make a=
-ny travel<br>
-&gt;&gt;&gt; plans based on that.<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; As soon as I hear something either way I&#39;ll reply to this =
-thread with<br>
-&gt;&gt;&gt; the new information.<br>
-&gt;&gt;<br>
-&gt;&gt; Confirmed! The Devicetree Workshop will be Thursday 26 October in =
-the<br>
-&gt;&gt; afternoon. Anyone registered for OSS will be able to attend. I don=
-&#39;t<br>
-&gt;&gt; know yet if there are any other consessions for registration. I&#3=
-9;m<br>
-&gt;&gt; finding out now and will update as soon as I know.<br>
-&gt;<br>
-&gt; Some more information. I&#39;ve actually got the workshop room booked =
-for<br>
-&gt; the full day on Thursday, 26th October. I&#39;m planning to use the<br=
->
-&gt; morning as a hacking sprint for anyone who is available, and the<br>
-&gt; afternoon for discussion topics. I&#39;ll pull together a schedule thi=
-s<br>
-&gt; week and post an update. As always, feel free to add topics to the<br>
-&gt; wiki page[1]<br>
-&gt;<br>
-&gt; However, the timing is flexible. I can move some topics to the morning=
-<br>
-&gt; if there are people who aren&#39;t going to be around in the afternoon=
-.<br>
-&gt;<br>
-&gt; [1] <a href=3D"http://wiki.linuxplumbersconf.org/2017:device_tree" rel=
-=3D"noreferrer" target=3D"_blank">http://wiki.linuxplumbersconf.org/2017:de=
-vice_tree</a><br>
-<br>
-I tried to register for the device-tree workshop, but couldn&#39;t seem<br>
-to get it to work.</blockquote><div dir=3D"auto"><br></div><div dir=3D"auto=
-">Was that on the OSSummit Europe registration page? What is the error you =
-are seeing? I can ask the LF staff to help if you can describe the problem =
-you are having.</div><div dir=3D"auto"><br></div><div dir=3D"auto">g.</div>=
-<div dir=3D"auto"><br></div><div dir=3D"auto"><br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex"><br>
-<br>
-<br>
---<br>
-Ben Dooks=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<a href=3D"http://www.codethin=
-k.co.uk/" rel=3D"noreferrer" target=3D"_blank">http://www.codethink.co.uk/<=
-/a><br>
-Senior Engineer=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Codethink - Providing Genius<br>
-</blockquote></div></div>
-
---089e08203808942166055abc579e--
-
---===============2016381177104682800==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Ksummit-discuss mailing list
-Ksummit-discuss@lists.linuxfoundation.org
-https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
-
---===============2016381177104682800==--
+> Sakari Ailus
+> e-mail: sakari.ailus@iki.fi
