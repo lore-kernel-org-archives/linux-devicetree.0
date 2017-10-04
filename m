@@ -1,183 +1,32 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2] device property: preserve usecount for node passed to
- of_fwnode_graph_get_port_parent()
-Date: Wed, 4 Oct 2017 15:30:15 +0300
-Message-ID: <20171004123015.r42bc6f4pznypefc@valkosipuli.retiisi.org.uk>
-References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
- <CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
- <20170822150050.GD14873@bigcity.dyn.berto.se>
- <CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
- <20170827224033.2ubrkzp33g5supab@kekkonen.localdomain>
- <CAL_JsqLoROoJYB38Hx76yFrPd8J=6+KOr6EgzMd-g5yLYi8Okw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLoROoJYB38Hx76yFrPd8J=6+KOr6EgzMd-g5yLYi8Okw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, laurent.pinchart@ideasonboard.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: iommu: ipmmu-vmsa: Use generic node name
+Date: Wed,  4 Oct 2017 14:33:08 +0200
+Message-ID: <1507120388-14179-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Use the preferred generic node name in the example.
 
-On Tue, Oct 03, 2017 at 08:40:10AM -0500, Rob Herring wrote:
-> On Sun, Aug 27, 2017 at 5:40 PM, Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> > Hi Rob,
-> >
-> > On Tue, Aug 22, 2017 at 02:42:10PM -0500, Rob Herring wrote:
-> >> On Tue, Aug 22, 2017 at 10:00 AM, Niklas Söderlund
-> >> <niklas.soderlund@ragnatech.se> wrote:
-> >> > Hi Rob,
-> >> >
-> >> > On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
-> >> >> On Mon, Aug 21, 2017 at 7:19 PM, Niklas Söderlund
-> >> >> <niklas.soderlund+renesas@ragnatech.se> wrote:
-> >> >> > Using CONFIG_OF_DYNAMIC=y uncovered an imbalance in the usecount of the
-> >> >> > node being passed to of_fwnode_graph_get_port_parent(). Preserve the
-> >> >> > usecount by using of_get_parent() instead of of_get_next_parent() which
-> >> >> > don't decrement the usecount of the node passed to it.
-> >> >> >
-> >> >> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops to firmware specific locations")
-> >> >> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> >> >> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >> >> > ---
-> >> >> >  drivers/of/property.c | 2 +-
-> >> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >>
-> >> >> Isn't this already fixed with this fix:
-> >> >>
-> >> >> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
-> >> >> Author: Tony Lindgren <tony@atomide.com>
-> >> >> Date:   Fri Jul 28 01:23:15 2017 -0700
-> >> >>
-> >> >> device property: Fix usecount for of_graph_get_port_parent()
-> >> >
-> >> > No, that commit fixes it for of_graph_get_port_parent() while this
-> >> > commit fixes it for of_fwnode_graph_get_port_parent(). But in essence it
-> >> > is the same issue but needs two separate fixes.
-> >>
-> >> Ah, because one takes the port node and one takes the endpoint node.
-> >> That won't confuse anyone.
-> >
-> > Yes, I think we've had this for some time in naming of a few graph
-> > functions and increasingly so lately. It began with
-> > of_graph_get_remote_port_parent(), which likely was named so to avoid the
-> > name getting really long. The function itself gets a remove of the endpoint
-> > given as an argument, then the port related to the entpoint and finally the
-> > parent node of the port node (which is not the "ports" node). That's a lot
-> > of work for a single interface function.
-> 
-> That's because returning the "ports" node would be pointless. The
-> remote device could have:
-> 
-> ports {
->     port {
->         endpoint {
->         };
->     };
-> };
-> 
-> Or no ports node. Both are valid and should be treated equivalently.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Indeed --- otherwise you could simply use of_get_parent()...
-
-> 
-> >
-> > What comes to of_fwnode_graph_get_port_parent() --- it's the OF callback
-> > function for the fwnode graph API that, as the name suggests, gets the
-> > parent of the port node, no more, no less. The function is used in the
-> > fwnode graph API implementation and is not available in the API as such.
-> 
-> If this operates on the local node, then you should already have the
-> relevant parent. If you are walking the remote node, then the exact
-> port structure should be opaque. If you need the remote endpoint and
-> its properties, that's fine. Otherwise, you should really only need
-> the remote parent device because the remote's graph structure is
-> specific to the remote device and any parsing should be done within
-> the remote's driver.
-
-This function is used to implement fwnode_graph_get_remote_port_parent() as
-well as fwnode_graph_get_port_parent(). These are used by V4L2 to match
-remote devices currently. That said, we've thought about using endpoints
-for matching: the connection is made between two hardware interfaces, not
-devices.
-
-> 
-> > The fwnode graph API itself only implements functionality already available
-> > in the OF graph API under the corresponding name.
-> 
-> There are graph APIs I want to get rid of, but since there are still
-> users I haven't. Adding those APIs to the fwnode API will just make it
-> harder.
-
-I remember we've discussed that but I'm not sure we arrived to a conclusion
-back then. And that explicitly parsing a port / endpoint pair was
-preferred.
-
-In V4L2 the endpoints are currently iterated over. The endpoint numbers are
-also not verified in drivers (apart from perhaps one or two exceptions),
-they're currently simply ignored. Only port numbers are actually used.
-
-I think it boils down to whether (or not) there's a material chance of
-breaking something by effectively adding the endpoint number checks. Should
-we assume it will not?
-
-> 
-> >> Can we please align this mess. I've tried to make the graph parsing
-> >> not a free for all, open coded mess. There's no reason to have the
-> >> port node handle and then need the parent device. Either you started
-> >> with the parent device to parse local ports and endpoints or you got
-> >> the remote endpoint with .graph_get_remote_endpoint(). Most of the
-> >> time you don't even need the endpoint node handles. You really just
-> >> need to know what is the remote device connected to port X, endpoint Y
-> >> of my local device.
-> >
-> > Perhaps most of the time, yes. V4L2 devices store bus (e.g. MIPI CSI-2)
-> > specific information in the endpoint nodes.
-> >
-> > The current OF graph API is geared towards providing convenience functions
-> > to the extent that a single function performs actions a driver would
-> > typically need. More recently functions implementing a single operation has
-> > been added; the primitives that just perform a single operation would
-> > likely be easier to manage.
-> 
-> Then we have each driver open coding walking the graph.
-> 
-> > The convenience functions have been, well, convenient as getting and
-> > putting nodes could have been somewhat ignored in drivers. If the OF graph
-> > API usage can be moved out of the drivers we'll likely have way fewer users
-> > and thus there's no real need for convenience functions. That has other
-> > benefits, too, such as parsing the graph correctly: most V4L2 drivers have
-> > issues in this area.
-> >
-> > The OF graph API (or the fwnode equivalent) is used effectively in all V4L2
-> > drivers that support OF (there are about 20 of them); we're moving these to
-> > the V4L2 framework but it'll take some time. That should make it easier for
-> > cleaning things up. Based on a quick look V4L2 and V4L2 drivers together
-> > represent a large proportion of all users in the kernel.
-> 
-> I certainly will care less when there's only subsystems using the API
-> versus each driver.
-> 
-> I'd guess it is more equal because most of the DRM drivers are
-> converted to not use the graph API directly.
-
-Ack.
-
-> 
-> >
-> > What do you think?
-> 
-> I'll apply this fix, but please keep the above in mind when reworking
-> the V4L2 drivers.
-
-Thanks!
-
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+index 3ed027cfca95cc98..857df929a6542157 100644
+--- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+@@ -53,7 +53,7 @@ Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
+ 		#iommu-cells = <1>;
+ 	};
+ 
+-	vsp1@fe928000 {
++	vsp@fe928000 {
+ 		...
+ 		iommus = <&ipmmu_mx 13>;
+ 		...
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+2.7.4
