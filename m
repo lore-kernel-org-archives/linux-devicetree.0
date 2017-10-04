@@ -1,66 +1,67 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a77995: draak: enable PWM channel 0 and 1
-Date: Wed,  4 Oct 2017 19:27:31 +0900
-Message-ID: <1507112851-10042-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1507112851-10042-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 09/14] regmap: add iopoll-like polling macro for
+ regmap_field
+Date: Wed, 4 Oct 2017 11:47:32 +0100
+Message-ID: <20171004104732.jkps4ufekfizcrkz@sirena.co.uk>
+References: <20170929082306.16193-1-wens@csie.org>
+ <20170929082306.16193-10-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507112851-10042-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mcbriylvxsuuyzhz"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170929082306.16193-10-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-This patch enables PWM channel 0 and 1 on the draak. Each channel
-connects to LTC2644 for brightness control.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+--mcbriylvxsuuyzhz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 96b7ff5..ebd472d 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -47,6 +47,16 @@
- 		};
- 	};
- 
-+	pwm0_pins: pwm0 {
-+		groups = "pwm0_c";
-+		function = "pwm0";
-+	};
-+
-+	pwm1_pins: pwm1 {
-+		groups = "pwm1_c";
-+		function = "pwm1";
-+	};
-+
- 	scif2_pins: scif2 {
- 		groups = "scif2_data";
- 		function = "scif2";
-@@ -95,6 +105,20 @@
- 	status = "okay";
- };
- 
-+&pwm0 {
-+	pinctrl-0 = <&pwm0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	pinctrl-0 = <&pwm1_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
- &rwdt {
- 	timeout-sec = <60>;
- 	status = "okay";
--- 
-1.9.1
+On Fri, Sep 29, 2017 at 04:23:01PM +0800, Chen-Yu Tsai wrote:
+> This patch adds a macro regmap_field_read_poll_timeout that works
+> similar to the readx_poll_timeout defined in linux/iopoll.h, except
+> that this can also return the error value returned by a failed
+> regmap_field_read.
+
+The following changes since commit 2bd6bf03f4c1c59381d62c61d03f6cc3fe71f66e:
+
+  Linux 4.14-rc1 (2017-09-16 15:47:51 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-poll-field
+
+for you to fetch changes up to 667063acb81931e2f8fd0cb91df9fcccad131d9a:
+
+  regmap: add iopoll-like polling macro for regmap_field (2017-10-04 11:46:32 +0100)
+
+----------------------------------------------------------------
+regmap: Add field polling macro
+
+----------------------------------------------------------------
+Chen-Yu Tsai (1):
+      regmap: add iopoll-like polling macro for regmap_field
+
+ include/linux/regmap.h | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+--mcbriylvxsuuyzhz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnUvEMACgkQJNaLcl1U
+h9DeYQf+J9va+pqOxYTi/d3jtoxzIwAPBIvt2GRuinplv4i7nix/yuXnUcCFMf4V
+Z1NLoWEfHF5BGBgxk3Gr/PK9tpdUj3kP94FC9D2IchWFdqSkXH/kpJS6uRVEDJMd
+Flz9ZG3SiedY/y2MGPCF6FhY9Z7KWez4DOwwEU0RO27Kj+r2Bp2M1QzjqVMPh2u9
+FjGoe6AHFp7/BkeoQsKCvJkdu27pD8GwSmE/chgAP+jW+IoC8ynCUZF2sU8RbUB0
+YDjWCQsXyqTpBKBkC5Qkx+KVgP+kwti4HE2+nlsNNpIl20pDNCyOTNyBc7SmX+DJ
+AP4wc4u0TOvCKMrFf5MDu+kxnA30SA==
+=vFQm
+-----END PGP SIGNATURE-----
+
+--mcbriylvxsuuyzhz--
