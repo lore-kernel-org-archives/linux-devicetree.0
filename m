@@ -1,147 +1,25 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: Fix incorrect display nodes notation
-Date: Wed, 04 Oct 2017 10:22:53 +0200
-Message-ID: <1507105373.11691.1.camel@pengutronix.de>
-References: <1507052618-30329-1-git-send-email-marco.franchi@nxp.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/2] uio: dt-bindings: document binding for
+ uio-pdrv-genirq
+Date: Wed, 4 Oct 2017 10:31:39 +0200
+Message-ID: <20171004083139.GA17855@kroah.com>
+References: <20170921005326.30490-1-chris.packham@alliedtelesis.co.nz>
+ <20170921005326.30490-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507052618-30329-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170921005326.30490-2-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marco,
-
-On Tue, 2017-10-03 at 14:43 -0300, Marco Franchi wrote:
-> The following build warnings are seen with W=1:
-> 
-> > Warning (unit_address_vs_reg): Node /display@di0 has a unit name, but no reg property
-> > Warning (unit_address_vs_reg): Node /display@di1 has a unit name, but no reg property
-> 
-> Fix all these warnings by changing 'display@diX' to 'dispX'.
-> 
-> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-
-Thank you for fixing this. Mostly
-
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-but I have one remark regarding i.MX51. While on the later SoCs the
-parallel display interface pad groups are called DISP0 and DISP1 in the
-reference manual, on i.MX51 they were called DISP1 and DISP2 [1].
-This is already reflected by the pin function ids: MX51_PAD_DISP[12]_*.
-
-Also, the display ports are currently inconsistently named across the
-i.MX51 board device trees, see below. Should we use this opportunity to
-also fix this inconsistency?
-
-[1] https://www.nxp.com/docs/en/reference-manual/MCIMX51RM.pdf
-
+On Thu, Sep 21, 2017 at 12:53:25PM +1200, Chris Packham wrote:
+> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 > ---
-> I have already submitted a fix for the Documentation bindings:
-> https://git.pengutronix.de/cgit/pza/linux/commit/?h=imx-drm/next&id=db
-> fdd153d4aefec13460c97475737e59af92d8e2
-> 
->  arch/arm/boot/dts/imx51-apf51dev.dts          | 2 +-
->  arch/arm/boot/dts/imx51-babbage.dts           | 4 ++--
->  arch/arm/boot/dts/imx51-ts4800.dts            | 2 +-
-[...]
->  30 files changed, 31 insertions(+), 31 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts
-> b/arch/arm/boot/dts/imx51-apf51dev.dts
-> index a5e6091..f04d0df 100644
-> --- a/arch/arm/boot/dts/imx51-apf51dev.dts
-> +++ b/arch/arm/boot/dts/imx51-apf51dev.dts
-> @@ -24,7 +24,7 @@
->  		default-on;
->  	};
->  
-> -	display@di1 {
-> +	disp1 {
->  		compatible = "fsl,imx-parallel-display";
->  		interface-pix-fmt = "bgr666";
->  		pinctrl-names = "default";
 
-This is actually DISP1 in the reference manual (connected to IPU DI0):
-
-                pinctrl-0 = <&pinctrl_ipu_disp1>;
-                port {
-                        display_in: endpoint {
-                                remote-endpoint = <&ipu_di0_disp0>;                                                                           
-                        };
-                };
-
-The remote endpoint should be renamed to ipu_di0_disp1 for consistency.
-
-> diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-> index 873cf24..297953c 100644
-> --- a/arch/arm/boot/dts/imx51-babbage.dts
-> +++ b/arch/arm/boot/dts/imx51-babbage.dts
-> @@ -39,7 +39,7 @@
->  		};
->  	};
->  
-> -	display0: display@di0 {
-> +	display0: disp0 {
->  		compatible = "fsl,imx-parallel-display";
->  		interface-pix-fmt = "rgb24";
->  		pinctrl-names = "default";
-
-This is also DISP1 in the reference manual (connected to IPU DI0):
-
-		pinctrl-0 = <&pinctrl_ipu_disp1>;
-                port {
-                        display0_in: endpoint {
-   
-                             remote-endpoint = <&ipu_di0_disp0>;
-        
-                };
-                };
-
-@@ -66,7 +66,7 @@
->  		};
->  	};
->  
-> -	display1: display@di1 {
-> +	display1: disp1 {
->  		compatible = "fsl,imx-parallel-display";
->  		interface-pix-fmt = "rgb565";
->  		pinctrl-names = "default";
-
-And this is actually DISP2 in the reference manual (connected to IPU
-DI1):
-		pinctrl-0 = <&pinctrl_ipu_disp2>;
-                port {
-                        display1_in: endpoint {
-                                remote-endpoint = <&ipu_di1_disp1>;
-                        };
-                };
-
-The remote endpoint should be renamed to ipu_di1_disp2.
-
-> diff --git a/arch/arm/boot/dts/imx51-ts4800.dts
-> b/arch/arm/boot/dts/imx51-ts4800.dts
-> index ca1cc5e..e6be869 100644
-> --- a/arch/arm/boot/dts/imx51-ts4800.dts
-> +++ b/arch/arm/boot/dts/imx51-ts4800.dts
-> @@ -50,7 +50,7 @@
->  		power-supply = <&backlight_reg>;
->  	};
->  
-> -	display0: display@di0 {
-> +	display0: disp0 {
->  		compatible = "fsl,imx-parallel-display";
->  		interface-pix-fmt = "rgb24";
->  		pinctrl-names = "default";
-
-And this is also DISP1 according to the reference manual.
-
-regards
-Philipp
+I can't take patches without any changelog text, sorry.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
