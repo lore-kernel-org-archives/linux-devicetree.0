@@ -1,88 +1,55 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
- multiple overlays
-Date: Wed, 4 Oct 2017 10:19:40 -0500
-Message-ID: <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
-References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
- <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
+From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm: dts: gr-peach: Reduce extal_clk resolution
+Date: Wed,  4 Oct 2017 17:40:57 +0200
+Message-ID: <1507131657-6414-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMiwgMjAxNyBhdCAxMDo1MyBQTSwgIDxmcm93YW5kLmxpc3RAZ21haWwuY29t
-PiB3cm90ZToKPiBGcm9tOiBGcmFuayBSb3dhbmQgPGZyYW5rLnJvd2FuZEBzb255LmNvbT4KPgo+
-IFRoZSBwcm9jZXNzIG9mIGFwcGx5aW5nIGFuIG92ZXJsYXkgY29uc2lzdHMgb2Y6Cj4gICAtIHVu
-ZmxhdHRlbiBhbiBvdmVybGF5IEZEVCAoZmxhdHRlbmVkIGRldmljZSB0cmVlKSBpbnRvIGFuCj4g
-ICAgIEVEVCAoZXhwYW5kZWQgZGV2aWNlIHRyZWUpCj4gICAtIGZpeHVwIHRoZSBwaGFuZGxlIHZh
-bHVlcyBpbiB0aGUgb3ZlcmxheSBFRFQgdG8gZml0IGluIGEKPiAgICAgcmFuZ2UgYWJvdmUgdGhl
-IHBoYW5kbGUgdmFsdWVzIGluIHRoZSBsaXZlIGRldmljZSB0cmVlCj4gICAtIGNyZWF0ZSB0aGUg
-b3ZlcmxheSBjaGFuZ2VzZXQgdG8gcmVmbGVjdCB0aGUgY29udGVudHMgb2YKPiAgICAgdGhlIG92
-ZXJsYXkgRURUCj4gICAtIGFwcGx5IHRoZSBvdmVybGF5IGNoYW5nZXNldCwgdG8gbW9kaWZ5IHRo
-ZSBsaXZlIGRldmljZSB0cmVlLAo+ICAgICBwb3RlbnRpYWxseSBjaGFuZ2luZyB0aGUgbWF4aW11
-bSBwaGFuZGxlIHZhbHVlIGluIHRoZSBsaXZlCj4gICAgIGRldmljZSB0cmVlCj4KPiBUaGVyZSBp
-cyBjdXJyZW50bHkgbm8gcHJvdGVjdGlvbiBhZ2FpbnN0IHR3byBvdmVybGF5IGFwcGxpZXMKPiBj
-b25jdXJyZW50bHkgZGV0ZXJtaW5pbmcgd2hhdCByYW5nZSBvZiBwaGFuZGxlIHZhbHVlcyBhcmUg
-aW4gdXNlCj4gaW4gdGhlIGxpdmUgZGV2aWNlIHRyZWUsIGFuZCBzdWJzZXF1ZW50bHkgY2hhbmdp
-bmcgdGhhdCByYW5nZS4KPiBBZGQgYSBtdXRleCB0byBwcmV2ZW50IG11bHRpcGxlIG92ZXJsYXkg
-YXBwbGllcyBmcm9tIG9jY3VycmluZwo+IHNpbXVsdGFuZW91c2x5Lgo+Cj4gSWdub3JpbmcgMiBj
-aGVja3BhdGNoIHdhcm5pbmdzOiBQcmVmZXIgdXNpbmcgJyIlcy4uLiIsIF9fZnVuY19fJwo+IHNv
-IHRoYXQgdGhlIFdBUk4oKSBzdHJpbmcgd2lsbCBiZSBtb3JlIGVhc2lseSBncmVwcGVkLgo+Cj4g
-U2lnbmVkLW9mZi1ieTogRnJhbmsgUm93YW5kIDxmcmFuay5yb3dhbmRAc29ueS5jb20+Cj4gLS0t
-Cj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3NsYXZlX2NvbXBhdC5jIHwgIDcgKysr
-KysrKwo+ICBkcml2ZXJzL29mL292ZXJsYXkuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDIy
-ICsrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9vZi91bml0dGVzdC5jICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAyMSArKysrKysrKysrKysrKysrKysrKysKPiAgaW5jbHVkZS9saW51
-eC9vZi5oICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxOSArKysrKysrKysrKysrKysrKysr
-Cj4gIDQgZmlsZXMgY2hhbmdlZCwgNjkgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3NsYXZlX2NvbXBhdC5jIGIvZHJpdmVycy9ncHUv
-ZHJtL3RpbGNkYy90aWxjZGNfc2xhdmVfY29tcGF0LmMKPiBpbmRleCA3YTdiZTA1MTViZmQuLmM5
-OWY3OTI0YjFjNiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19z
-bGF2ZV9jb21wYXQuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3NsYXZl
-X2NvbXBhdC5jCj4gQEAgLTIyMSw2ICsyMjEsMTEgQEAgc3RhdGljIHZvaWQgX19pbml0IHRpbGNk
-Y19jb252ZXJ0X3NsYXZlX25vZGUodm9pZCkKPiAgICAgICAgICAgICAgICAgZ290byBvdXQ7Cj4g
-ICAgICAgICB9Cj4KPiArICAgICAgIC8qCj4gKyAgICAgICAgKiBwcm90ZWN0IGZyb20gb2ZfcmVz
-b2x2ZV9waGFuZGxlcygpIHRocm91Z2ggb2Zfb3ZlcmxheV9hcHBseSgpCj4gKyAgICAgICAgKi8K
-PiArICAgICAgIG9mX292ZXJsYXlfbXV0ZXhfbG9jaygpOwo+ICsKCldlIGNhbid0IGJlIHJlbHlp
-bmcgb24gY2FsbGVycyB0byBnZXQgdGhlIGxvY2tpbmcgcmlnaHQuLi4KCj4gICAgICAgICBvdmVy
-bGF5ID0gdGlsY2RjX2dldF9vdmVybGF5KCZrZnQpOwo+ICAgICAgICAgaWYgKCFvdmVybGF5KQo+
-ICAgICAgICAgICAgICAgICBnb3RvIG91dDsKPiBAQCAtMjU2LDYgKzI2MSw4IEBAIHN0YXRpYyB2
-b2lkIF9faW5pdCB0aWxjZGNfY29udmVydF9zbGF2ZV9ub2RlKHZvaWQpCj4gICAgICAgICAgICAg
-ICAgIHByX2luZm8oIiVzOiB0aSx0aWxjZGMsc2xhdmUgbm9kZSBzdWNjZXNzZnVsbHkgY29udmVy
-dGVkXG4iLAo+ICAgICAgICAgICAgICAgICAgICAgICAgIF9fZnVuY19fKTsKPiAgb3V0Ogo+ICsg
-ICAgICAgb2Zfb3ZlcmxheV9tdXRleF91bmxvY2soKTsKPiArCj4gICAgICAgICBrZnJlZV90YWJs
-ZV9mcmVlKCZrZnQpOwo+ICAgICAgICAgb2Zfbm9kZV9wdXQoaTJjKTsKPiAgICAgICAgIG9mX25v
-ZGVfcHV0KHNsYXZlKTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9vdmVybGF5LmMgYi9kcml2
-ZXJzL29mL292ZXJsYXkuYwo+IGluZGV4IGEwZDMyMjJmZWJkYy4uNGVkMzcyYWY2Y2U3IDEwMDY0
-NAo+IC0tLSBhL2RyaXZlcnMvb2Yvb3ZlcmxheS5jCj4gKysrIGIvZHJpdmVycy9vZi9vdmVybGF5
-LmMKPiBAQCAtNzEsNiArNzEsMjggQEAgc3RhdGljIGludCBidWlsZF9jaGFuZ2VzZXRfbmV4dF9s
-ZXZlbChzdHJ1Y3Qgb3ZlcmxheV9jaGFuZ2VzZXQgKm92Y3MsCj4gICAgICAgICAgICAgICAgIGNv
-bnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqb3ZlcmxheV9ub2RlLAo+ICAgICAgICAgICAgICAgICBi
-b29sIGlzX3N5bWJvbHNfbm9kZSk7Cj4KPiArLyoKPiArICogb2ZfcmVzb2x2ZV9waGFuZGxlcygp
-IGZpbmRzIHRoZSBsYXJnZXN0IHBoYW5kbGUgaW4gdGhlIGxpdmUgdHJlZS4KPiArICogb2Zfb3Zl
-cmxheV9hcHBseSgpIG1heSBhZGQgYSBsYXJnZXIgcGhhbmRsZSB0byB0aGUgbGl2ZSB0cmVlLgo+
-ICsgKiBEbyBub3QgYWxsb3cgcmFjZSBiZXR3ZWVuIHR3byBvdmVybGF5cyBiZWluZyBhcHBsaWVk
-IHNpbXVsdGFuZW91c2x5Ogo+ICsgKiAgICBtdXRleF9sb2NrKCZvZl9vdmVybGF5X3BoYW5kbGVf
-bXV0ZXgpCj4gKyAqICAgIG9mX3Jlc29sdmVfcGhhbmRsZXMoKQo+ICsgKiAgICBvZl9vdmVybGF5
-X2FwcGx5KCkKPiArICogICAgbXV0ZXhfdW5sb2NrKCZvZl9vdmVybGF5X3BoYW5kbGVfbXV0ZXgp
-CgpXaHkgZG8gdGhlc2UgbmVlZCB0byBiZSBzZXBhcmF0ZSBmdW5jdGlvbnM/IEkgdGhpbmsgSSBt
-ZW50aW9uZWQgaXQKYmVmb3JlLCBidXQgZXNzZW50aWFsbHkgb3ZlcmxheV9kYXRhX2FkZCgpIHNo
-b3VsZCBiZSBwYXJ0IG9mIHRoZQpvdmVybGF5IEFQSS4gV2UgbWF5IG5lZWQgdG8gYWxsb3cgZm9y
-IGNhbGxlcnMgdG8gZG8gZWFjaCBzdGVwLCBidXQKZ2VuZXJhbGx5IEkgdGhpbmsgdGhlIGludGVy
-ZmFjZSBzaG91bGQganVzdCBiZSAiYXBwbHkgdGhpcyBmZHQgYmxvYiIuCgpSb2IKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The system clock described by extal_clk is reported to have a frequency
+of 13.333 Mhz and is correctly described by gr-peach device tree.
+
+However, when enabling a RIIC device the following error is reported by
+drivers/i2c/busses/i2c-riic.c
+
+"invalid parent clk (33332500). Must be 33325000Hz"
+
+As RIIC devices have a clock source obtained by dividing by 12 the
+system clock, the resulting value is not accepted by the driver
+(which clearly states not to support any frequency except the reported
+33325000Hz one).
+
+Hence, reduce the system clock accuracy to a value which makes
+frequencies obtained through division accepted by RIIC driver.
+
+Please note that other r7s72100 boards, such as Genmai, report the same
+"reduced accuracy" frequency, even if their external clock sources are
+effectively 13.333Mhz as gr-peach one.
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/r7s72100-gr-peach.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+index a1c5e88..20309ac 100644
+--- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
++++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+@@ -71,7 +71,7 @@
+ };
+
+ &extal_clk {
+-	clock-frequency = <13333000>;
++	clock-frequency = <13330000>;
+ };
+
+ &usb_x1_clk {
+--
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
