@@ -1,54 +1,67 @@
-From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm: dts: gr-peach: Reduce extal_clk resolution
-Date: Wed,  4 Oct 2017 17:40:57 +0200
-Message-ID: <1507131657-6414-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] nvmem: imx-ocotp: read uniq CPU ID and export as system
+ serial number
+Date: Wed, 4 Oct 2017 16:44:29 +0100
+Message-ID: <20171004154428.GK23092@leverpostej>
+References: <20171004151616.2622-1-marcus.folkesson@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171004151616.2622-1-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The system clock described by extal_clk is reported to have a frequency
-of 13.333 Mhz and is correctly described by gr-peach device tree.
+On Wed, Oct 04, 2017 at 05:16:16PM +0200, Marcus Folkesson wrote:
+> The uniq ID is usually exported as ATAG_SERIAL but in case of
+> devicetrees, this information is not passed.
+> 
+> The uniq ID is stored in OCOTP memory (bank 0, Word 1,2) on imx CPUs.
+> Read the ID and set as system serial number.
+> 
+> This function is activated by setting `read-system-serial`
+> dt property for the imx-ocotp node.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> Comment:
+> I'm not sure if this functionality really should be in a device driver.
+> Maybe it should be in arch/arm/mach-imx/. However, it's not
+> completely wrong so I give it a shot.
+> 
+>  .../devicetree/bindings/nvmem/imx-ocotp.txt        |  1 +
+>  drivers/nvmem/imx-ocotp.c                          | 38 ++++++++++++++++++++++
+>  2 files changed, 39 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> index 70d791b03ea1..bf0cc9e5e50f 100644
+> --- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>  
+>  Optional properties:
+>  - read-only: disable write access
+> +- read-system-serial: read uniq ID and export as system serial number. Available in /proc/cpuinfo
 
-However, when enabling a RIIC device the following error is reported by
-drivers/i2c/busses/i2c-riic.c
+As described, this is a pure SW option (
 
-"invalid parent clk (33332500). Must be 33325000Hz"
+/proc/cpuinfo is a not a HW detail, and whether or not to export this
+information there is a policy. So as described, this shouldn't be in the
+DT.
 
-As RIIC devices have a clock source obtained by dividing by 12 the
-system clock, the resulting value is not accepted by the driver
-(which clearly states not to support any frequency except the reported
-33325000Hz one).
+Are you just trying to describe whether hte information is available in
+the OCOTP memory?
 
-Hence, reduce the system clock accuracy to a value which makes
-frequencies obtained through division accepted by RIIC driver.
+e.g. maybe this should be something like:
 
-Please note that other r7s72100 boards, such as Genmai, report the same
-"reduced accuracy" frequency, even if their external clock sources are
-effectively 13.333Mhz as gr-peach one.
+- has-unique-id: OCOTP bank0, Words 1 & 2 contain a unique ID
+  identifying the system.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/r7s72100-gr-peach.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
-index a1c5e88..20309ac 100644
---- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
-+++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
-@@ -71,7 +71,7 @@
- };
-
- &extal_clk {
--	clock-frequency = <13333000>;
-+	clock-frequency = <13330000>;
- };
-
- &usb_x1_clk {
---
-2.7.4
-
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
