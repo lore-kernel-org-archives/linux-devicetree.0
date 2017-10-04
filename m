@@ -1,197 +1,120 @@
-From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] usb: host: add a generic platform USB roothub
- driver
-Date: Wed, 4 Oct 2017 16:05:02 +0300
-Message-ID: <59D4DC7E.6040003@linux.intel.com>
-References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
- <20170903213829.6589-3-martin.blumenstingl@googlemail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS
+ sensor
+Date: Wed, 4 Oct 2017 16:14:52 +0300
+Message-ID: <20171004131452.6yjaa57xr56v6jza@valkosipuli.retiisi.org.uk>
+References: <20171002202649.10897-1-leonl@leopardimaging.com>
+ <20171002202649.10897-2-leonl@leopardimaging.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170903213829.6589-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171002202649.10897-2-leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04.09.2017 00:38, Martin Blumenstingl wrote:
-> Many SoC platforms have separate devices for the USB PHY which are
-> registered through the generic PHY framework. These PHYs have to be
-> enabled to make the USB controller actually work. They also have to be
-> disabled again on shutdown/suspend.
->
-> Currently (at least) the following HCI platform drivers are using custom
-> code to obtain all PHYs via devicetree for the roothub/controller and
-> disable/enable them when required:
-> - ehci-platform.c has ehci_platform_power_{on,off}
-> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
-> - ohci-platform.c has ohci_platform_power_{on,off}
->
-> These drivers are not using the generic devicetree USB device bindings
-> yet which were only introduced recently (documentation is available in
-> devicetree/bindings/usb/usb-device.txt).
-> With this new driver the usb2-phy and usb3-phy can be specified directly
-> in the child-node of the corresponding port of the roothub via
-> devicetree. This can be extended by not just parsing PHYs (some of the
-> other drivers listed above are for example also parsing a list of clocks
-> as well) when required.
+Hi Leon,
 
-usb_add_hcd() in usb/core/hcd.c is already finding, initializing and turning
-on a phy, would it make sense to expand that one to support several phys instead?
+One more question below.
 
-xhci will add two hcd's one for USB2 and one for USB3
-
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   drivers/usb/host/Kconfig            |   3 +
->   drivers/usb/host/Makefile           |   2 +
->   drivers/usb/host/platform-roothub.c | 180 ++++++++++++++++++++++++++++++++++++
->   drivers/usb/host/platform-roothub.h |  12 +++
->   4 files changed, 197 insertions(+)
->   create mode 100644 drivers/usb/host/platform-roothub.c
->   create mode 100644 drivers/usb/host/platform-roothub.h
->
-
-Instead of creating  platform-roothub files could this content
-be added into into core/hcd.*, core/phy.* and host/xhci-plat.c
-
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index fa5692dec832..b8b05c786b2a 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -805,6 +805,9 @@ config USB_HCD_SSB
->
->   	  If unsure, say N.
->
-> +config USB_PLATFORM_ROOTHUB
-> +	bool
-> +
->   config USB_HCD_TEST_MODE
->   	bool "HCD test mode support"
->   	---help---
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index cf2691fffcc0..dc817f82d632 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
->
->   obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
->
-> +obj-$(CONFIG_USB_PLATFORM_ROOTHUB)	+= platform-roothub.o
-> +
->   obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
->   obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
->   obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-> diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
-> new file mode 100644
-> index 000000000000..70d2d97aa8b2
-> --- /dev/null
-> +++ b/drivers/usb/host/platform-roothub.c
-> @@ -0,0 +1,180 @@
+On Mon, Oct 02, 2017 at 01:26:49PM -0700, Leon Luo wrote:
+...
 > +/*
-> + * platform roothub driver - a virtual PHY device which passes all phy_*
-> + * function calls to multiple (actual) PHY devices. This is comes handy when
-> + * initializing all PHYs on a root-hub (to keep them all in the same state).
+> + * imx274_set_frame_interval - Function called when setting frame interval
+> + * @priv: Pointer to device structure
+> + * @frame_interval: Variable for frame interval
 > + *
-> + * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> + * Change frame interval by updating VMAX value
+> + * The caller should hold the mutex lock imx274->lock if necessary
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + * Return: 0 on success
 > + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/list.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/of.h>
-> +#include <linux/usb/of.h>
-> +
-> +#include "platform-roothub.h"
-> +
-> +#define ROOTHUB_PORTNUM		0
-> +
-> +struct platform_roothub {
-> +	struct phy		*phy;
-> +	struct list_head	list;
-> +};
-> +
-> +static struct platform_roothub *platform_roothub_alloc(struct device *dev)
+> +static int imx274_set_frame_interval(struct stimx274 *priv,
+> +				     struct v4l2_fract frame_interval)
 > +{
-> +	struct platform_roothub *roothub_entry;
+> +	int err;
+> +	u32 frame_length, req_frame_rate;
+> +	u16 svr;
+> +	u16 hmax;
+> +	u8 reg_val[2];
 > +
-> +	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
-> +	if (!roothub_entry)
-> +		return ERR_PTR(-ENOMEM);
+> +	dev_dbg(&priv->client->dev, "%s: input frame interval = %d / %d",
+> +		__func__, frame_interval.numerator,
+> +		frame_interval.denominator);
 > +
-> +	INIT_LIST_HEAD(&roothub_entry->list);
-> +
-> +	return roothub_entry;
-> +}
-> +
-> +static int platform_roothub_add_phy(struct device *dev,
-> +				    struct device_node *port_np,
-> +				    const char *con_id, struct list_head *list)
-> +{
-> +	struct platform_roothub *roothub_entry;
-> +	struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
-> +
-> +	if (IS_ERR_OR_NULL(phy)) {
-> +		if (!phy || PTR_ERR(phy) == -ENODEV)
-> +			return 0;
-> +		else
-> +			return PTR_ERR(phy);
+> +	if (frame_interval.denominator == 0) {
+
+Shouldn't this be numerator? If numerator is 0, then there will be division
+by zero below.
+
+> +		err = -EINVAL;
+> +		goto fail;
 > +	}
 > +
-> +	roothub_entry = platform_roothub_alloc(dev);
-> +	if (IS_ERR(roothub_entry))
-> +		return PTR_ERR(roothub_entry);
+> +	req_frame_rate = (u32)(frame_interval.denominator
+> +				/ frame_interval.numerator);
 > +
-> +	roothub_entry->phy = phy;
+> +	/* boundary check */
+> +	if (req_frame_rate > max_frame_rate[priv->mode_index]) {
+> +		frame_interval.numerator = 1;
+> +		frame_interval.denominator =
+> +					max_frame_rate[priv->mode_index];
+> +	} else if (req_frame_rate < IMX274_MIN_FRAME_RATE) {
+> +		frame_interval.numerator = 1;
+> +		frame_interval.denominator = IMX274_MIN_FRAME_RATE;
+> +	}
 > +
-> +	list_add_tail(&roothub_entry->list, list);
+> +	/*
+> +	 * VMAX = 1/frame_rate x 72M / (SVR+1) / HMAX
+> +	 * frame_length (i.e. VMAX) = (frame_interval) x 72M /(SVR+1) / HMAX
+> +	 */
 > +
+> +	/* SVR */
+> +	err = imx274_read_reg(priv, IMX274_SVR_REG_LSB, &reg_val[0]);
+> +	if (err)
+> +		goto fail;
+> +	err = imx274_read_reg(priv, IMX274_SVR_REG_MSB, &reg_val[1]);
+> +	if (err)
+> +		goto fail;
+> +	svr = (reg_val[1] << IMX274_SHIFT_8_BITS) + reg_val[0];
+> +	dev_dbg(&priv->client->dev,
+> +		"%s : register SVR = %d\n", __func__, svr);
+> +
+> +	/* HMAX */
+> +	err = imx274_read_reg(priv, IMX274_HMAX_REG_LSB, &reg_val[0]);
+> +	if (err)
+> +		goto fail;
+> +	err = imx274_read_reg(priv, IMX274_HMAX_REG_MSB, &reg_val[1]);
+> +	if (err)
+> +		goto fail;
+> +	hmax = (reg_val[1] << IMX274_SHIFT_8_BITS) + reg_val[0];
+> +	dev_dbg(&priv->client->dev,
+> +		"%s : register HMAX = %d\n", __func__, hmax);
+> +
+> +	frame_length = IMX274_PIXCLK_CONST1 / (svr + 1) / hmax
+> +					* frame_interval.numerator
+> +					/ frame_interval.denominator;
+> +
+> +	err = imx274_set_frame_length(priv, frame_length);
+> +	if (err)
+> +		goto fail;
+> +
+> +	priv->frame_interval = frame_interval;
 > +	return 0;
+> +
+> +fail:
+> +	dev_err(&priv->client->dev, "%s error = %d\n", __func__, err);
+> +	return err;
 > +}
-> +
-> +struct platform_roothub *platform_roothub_init(struct device *dev)
-> +{
-> +	struct device_node *roothub_np, *port_np;
-> +	struct platform_roothub *plat_roothub;
-> +	struct platform_roothub *roothub_entry;
-> +	struct list_head *head;
-> +	int err;
-> +
-> +	roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
-> +	if (!of_device_is_available(roothub_np))
-> +		return NULL;
-> +
-> +	plat_roothub = platform_roothub_alloc(dev);
-> +	if (IS_ERR(plat_roothub))
-> +		return plat_roothub;
-> +
-> +	for_each_available_child_of_node(roothub_np, port_np) {
-> +		err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
-> +					       &plat_roothub->list);
-> +		if (err)
-> +			goto err_out;
-> +
-> +		err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
-> +					       &plat_roothub->list);
 
-So if the first 10 ports have the same phy, and 11th and 12th have an other one, won't we end up
-with a phy list with 12 entries for 2 phys, and initialize and turn on the same first phy 10 times?
+-- 
+Regards,
 
-I'm also not sure I understand the reason for having the "usb3-phy" and "usb2-phy" phy-names
-for the ports if we anyways just add everything to one list.
-
--Mathias
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
