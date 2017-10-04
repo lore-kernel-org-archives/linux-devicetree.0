@@ -1,30 +1,66 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] powerpc: pseries: only store the device node basename in full_name
-Date: Wed, 04 Oct 2017 23:37:49 +1100
-Message-ID: <87infvozqa.fsf@concordia.ellerman.id.au>
-References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-5-robh@kernel.org> <87tvzgd1l3.fsf@concordia.ellerman.id.au> <CAL_JsqLiTFM=THW0+WXXUY3S-T4QamV8vS5pWZBPm0oOybQLgg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v10 00/24] Unified fwnode endpoint parser, async
+ sub-device notifier support, N9 flash DTS
+Date: Wed, 4 Oct 2017 15:45:01 +0300
+Message-ID: <20171004124500.bm2rt3abfem63svi@kekkonen.localdomain>
+References: <20170911080008.21208-1-sakari.ailus@linux.intel.com>
+ <CAJZ5v0g4MUx8xaZjBwfVtYnad2+-ftkjk6Y51VRxS86YZar3oQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLiTFM=THW0+WXXUY3S-T4QamV8vS5pWZBPm0oOybQLgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, "nfont@linux.vnet.ibm.com" <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "tyreld@linux.vnet.ibm.com" <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0g4MUx8xaZjBwfVtYnad2+-ftkjk6Y51VRxS86YZar3oQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, Rob Herring <robh@kernel.org>, hverkuil@xs4all.nl, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Mika Westerberg <mika.westerberg@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
-> On Tue, Oct 3, 2017 at 4:26 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
-...
->>
->> The obvious fix is just to allocate it separately as before, eg ~=:
->
-> Yes, I'll go back to doing 2 allocs like v1, but using kstrdup as was
-> also pointed out.
+Hi Rafael,
 
-Yeah that would be better still I guess.
+On Tue, Oct 03, 2017 at 02:04:50AM +0200, Rafael J. Wysocki wrote:
+> Hi,
+> 
+> On Mon, Sep 11, 2017 at 9:59 AM, Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> > Hi folks,
+> >
+> > We have a large influx of new, unmerged, drivers that are now parsing
+> > fwnode endpoints and each one of them is doing this a little bit
+> > differently. The needs are still exactly the same for the graph data
+> > structure is device independent. This is still a non-trivial task and the
+> > majority of the driver implementations are buggy, just buggy in different
+> > ways.
+> >
+> > Facilitate parsing endpoints by adding a convenience function for parsing
+> > the endpoints, and make the omap3isp and rcar-vin drivers use them as an
+> > example.
+> >
+> > To show where we're getting with this, I've added support for async
+> > sub-device notifier support that is notifiers that can be registered by
+> > sub-device drivers as well as V4L2 fwnode improvements to make use of them
+> > and the DTS changes for the Nokia N9. Some of these patches I've posted
+> > previously in this set here:
+> >
+> > <URL:http://www.spinics.net/lists/linux-media/msg118764.html>
+> >
+> > Since that, the complete callback of the master notifier registering the
+> > V4L2 device is only called once all sub-notifiers have been completed as
+> > well. This way the device node creation can be postponed until all devices
+> > have been successfully initialised.
+> >
+> > With this, the as3645a driver successfully registers a sub-device to the
+> > media device created by the omap3isp driver. The kernel also has the
+> > information it's related to the sensor driven by the smiapp driver but we
+> > don't have a way to expose that information yet.
+> 
+> I don't see core changes in this set, so I'm assuming it to be
+> targeted at the users of endpoints etc.
 
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, this is dealing with V4L2 and how information from firmware is used
+mainly but there is also DT binding documentation.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
