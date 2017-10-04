@@ -1,40 +1,41 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: arm: amlogic: Add Tronsmart Vega S96
- binding
-Date: Wed, 4 Oct 2017 09:53:32 +0200
-Message-ID: <ee06206b-83c2-32e8-dfbe-fb4895b9aa91@baylibre.com>
-References: <1507044585-20117-1-git-send-email-narmstrong@baylibre.com>
- <1507044585-20117-3-git-send-email-narmstrong@baylibre.com>
- <20171003213002.64dj4prex63ax5mn@rob-hp-laptop>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/9 v2] usb: usb251xb: Add 5,6,7 ports boost settings
+Date: Wed, 4 Oct 2017 09:57:36 +0200
+Message-ID: <bd49be97-2d63-8f70-b57b-14ae9ada45e4@skidata.com>
+References: <20170915233113.17855-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-1-fancer.lancer@gmail.com>
+ <20170916104220.3742-5-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171003213002.64dj4prex63ax5mn@rob-hp-laptop>
+In-Reply-To: <20170916104220.3742-5-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org, support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2017 23:30, Rob Herring wrote:
-> On Tue, Oct 03, 2017 at 05:29:45PM +0200, Neil Armstrong wrote:
->> Cc: support-QbXJUBtoW2jby3iVrkZq2A@public.gmane.org
->> Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Oleg Ivanov <balbes-150-o+MxOtu4lMCHXe+LvDLADg@public.gmane.org>
->> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
->>  1 file changed, 1 insertion(+)
+
+On 09/16/2017 12:42 PM, Serge Semin wrote:
+> USB electrical signaling drive strength boost bit is also supported
+> by USB2517 hub. Since it got three addition ports, the designers
+> needed to add one more register for initialization. It turned out
+> to be formerly reserved 0xF7. As before we just initialize it with
+> default zeros.
 > 
-> I acked v1. Please add acks when posting new versions.
+> Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/usb/misc/usb251xb.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 > 
 
-Sorry, I misses it.
+Looks good to me. Feel free to add:
 
-Kevin, can you add the missing ack when applying ?
+Acked-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 
-Neil
+regards,
+Richard.L
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
