@@ -1,72 +1,117 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 21/22] cpufreq: add support for CPU DVFS based on SCMI
- message protocol
-Date: Wed, 4 Oct 2017 16:01:13 +0100
-Message-ID: <5efbd0a7-8b62-5b30-98e6-dfaff64e2628@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-22-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a3pAFKM+Dq_yb7KYhB+xeneVuODBq_4nacEuw9creT6Yw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3pAFKM+Dq_yb7KYhB+xeneVuODBq_4nacEuw9creT6Yw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] nvmem: imx-ocotp: read uniq CPU ID and export as system serial number
+Date: Wed,  4 Oct 2017 17:16:16 +0200
+Message-ID: <20171004151616.2622-1-marcus.folkesson@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The uniq ID is usually exported as ATAG_SERIAL but in case of
+devicetrees, this information is not passed.
 
+The uniq ID is stored in OCOTP memory (bank 0, Word 1,2) on imx CPUs.
+Read the ID and set as system serial number.
 
-On 04/10/17 12:30, Arnd Bergmann wrote:
->> +static int scmi_cpufreq_probe(struct platform_device *pdev)
->> +{
->> +       int ret;
->> +
->> +       handle = devm_scmi_handle_get(&pdev->dev);
->> +
->> +       if (IS_ERR_OR_NULL(handle) || !handle->perf_ops)
->> +               return -EPROBE_DEFER;
-> 
-> As mentioned before, never create an interface that needs to use
-> IS_ERR_OR_NULL(), make it return either NULL on error, or always
-> have an error code.
-> 
+This function is activated by setting `read-system-serial`
+dt property for the imx-ocotp node.
 
-Agreed.
+Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
->> +
->> +static struct platform_driver scmi_cpufreq_platdrv = {
->> +       .driver = {
->> +               .name   = "scmi-cpufreq",
->> +       },
->> +       .probe          = scmi_cpufreq_probe,
->> +       .remove         = scmi_cpufreq_remove,
->> +};
-> 
-> You appear to have split this driver into the 'cpufreq' side and
-> the 'protocol' handler in a different file. I already commented that
-> the way the main scmi driver knows about all the protocols looks
-> bad, here we can see another aspect of the same problem.
-> 
-> Rather than manually register a platform_device for the purpose
-> of connecting it to the cpufreq driver, there should be a way
-> to dynamically register the protocol from the cpufreq driver
-> and then have both in the same file.
-> 
+Comment:
+I'm not sure if this functionality really should be in a device driver.
+Maybe it should be in arch/arm/mach-imx/. However, it's not
+completely wrong so I give it a shot.
 
-I agree that should be possible. I took this approach for 2 reasons:
+ .../devicetree/bindings/nvmem/imx-ocotp.txt        |  1 +
+ drivers/nvmem/imx-ocotp.c                          | 38 ++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-1. to avoid all sorts of probe ordering issues
-2. we may have system with multiple instances of SCMI. E.g. a system
-   may have multiple remote processors, each controlling dvfs/power mgmt
-   of a subset of CPUs/devices controller in OS.
-
-I have to admit that I haven't thought too much in details yet. That's
-the main idea behind scmi_handle and restricting access to that only to
-sub-nodes in it. I am open to suggestions.
-
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+index 70d791b03ea1..bf0cc9e5e50f 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+@@ -16,6 +16,7 @@ Required properties:
+ 
+ Optional properties:
+ - read-only: disable write access
++- read-system-serial: read uniq ID and export as system serial number. Available in /proc/cpuinfo
+ 
+ Example:
+ 
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index 193ca8fd350a..574cab017611 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -28,10 +28,16 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <asm/system_info.h>
+ 
+ #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
+ 					       * OTP Bank0 Word0
+ 					       */
++
++/* Uniq ID used for Serial number */
++#define IMX_OCOTP_OFFSET_UID_LOW	(IMX_OCOTP_OFFSET_B0W0 + 0x10)
++#define IMX_OCOTP_OFFSET_UID_HIGH	(IMX_OCOTP_OFFSET_B0W0 + 0x20)
++
+ #define IMX_OCOTP_OFFSET_PER_WORD	0x10  /* Offset between the start addr
+ 					       * of two consecutive OTP words.
+ 					       */
+@@ -298,6 +304,34 @@ static int imx_ocotp_write(void *context, unsigned int offset, void *val,
+ 	return bytes;
+ }
+ 
++static int imx_ocotp_setserial(struct ocotp_priv *priv)
++{
++	int ret;
++
++	mutex_lock(&ocotp_mutex);
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret < 0) {
++		mutex_unlock(&ocotp_mutex);
++		dev_err(priv->dev, "failed to prepare/enable ocotp clk\n");
++		return ret;
++	}
++
++	ret = imx_ocotp_wait_for_busy(priv->base, 0);
++	if (ret < 0) {
++		dev_err(priv->dev, "timeout during read setup\n");
++		goto out;
++	}
++
++	system_serial_low = readl(priv->base + IMX_OCOTP_OFFSET_UID_LOW);
++	system_serial_high = readl(priv->base + IMX_OCOTP_OFFSET_UID_HIGH);
++
++out:
++	clk_disable_unprepare(priv->clk);
++	mutex_unlock(&ocotp_mutex);
++	return ret;
++}
++
+ static struct nvmem_config imx_ocotp_nvmem_config = {
+ 	.name = "imx-ocotp",
+ 	.read_only = false,
+@@ -352,6 +386,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
+ 	if (IS_ERR(nvmem))
+ 		return PTR_ERR(nvmem);
+ 
++	if (of_property_read_bool(pdev->dev.of_node, "read-system-serial")) {
++		if (!imx_ocotp_setserial(priv))
++			dev_warn(&pdev->dev, "Could not read CPU uniq serial number");
++	}
+ 	platform_set_drvdata(pdev, nvmem);
+ 
+ 	return 0;
 -- 
-Regards,
-Sudeep
+2.13.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
