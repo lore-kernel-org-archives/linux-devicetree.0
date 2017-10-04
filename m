@@ -1,73 +1,195 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 7/9] ARM: dts: aspeed: Add aliases for UARTs
-Date: Wed,  4 Oct 2017 17:19:15 +1030
-Message-ID: <20171004064917.2498-8-joel@jms.id.au>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH v2 8/9] ARM: dts: aspeed: Correctly order UART nodes
+Date: Wed,  4 Oct 2017 17:19:16 +1030
+Message-ID: <20171004064917.2498-9-joel@jms.id.au>
 References: <20171004064917.2498-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171004064917.2498-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Rick Altherr <raltherr@google.com>, Brendan Higgins <brendanhiggins@google.com>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-aspeed@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171004064917.2498-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Existing userspace expects the console (UART5) to be at /dev/ttyS4.  To
-ensure the UARTs show up where users expect them, we give them fixed
-aliases starting at 0.
+Order them all by address.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 4 ----
- arch/arm/boot/dts/aspeed-g4.dtsi              | 5 +++++
- arch/arm/boot/dts/aspeed-g5.dtsi              | 5 +++++
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/aspeed-g4.dtsi | 48 +++++++++++++++----------------
+ arch/arm/boot/dts/aspeed-g5.dtsi | 61 ++++++++++++++++++++--------------------
+ 2 files changed, 54 insertions(+), 55 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index e387c80b7f4f..be51be5a5f39 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -6,10 +6,6 @@
- 	model = "Palmetto BMC";
- 	compatible = "tyan,palmetto-bmc", "aspeed,ast2400";
- 
--	aliases {
--		serial4 = &uart5;
--	};
--
- 	chosen {
- 		stdout-path = &uart5;
- 		bootargs = "console=ttyS4,115200 earlyprintk";
 diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index b6ae7b62fd03..a549413bda3f 100644
+index a549413bda3f..4125e07f22f9 100644
 --- a/arch/arm/boot/dts/aspeed-g4.dtsi
 +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -22,6 +22,11 @@
- 		i2c11 = &i2c11;
- 		i2c12 = &i2c12;
- 		i2c13 = &i2c13;
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+		serial4 = &uart5;
- 	};
+@@ -183,6 +183,27 @@
+ 				clock-names = "PCLK";
+ 			};
  
- 	cpus {
++			uart1: serial@1e783000 {
++				compatible = "ns16550a";
++				reg = <0x1e783000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <9>;
++				clocks = <&clk_uart>;
++				no-loopback-test;
++				status = "disabled";
++			};
++
++			uart5: serial@1e784000 {
++				compatible = "ns16550a";
++				reg = <0x1e784000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <10>;
++				clocks = <&clk_uart>;
++				current-speed = <38400>;
++				no-loopback-test;
++				status = "disabled";
++			};
++
+ 			wdt1: wdt@1e785000 {
+ 				compatible = "aspeed,ast2400-wdt";
+ 				reg = <0x1e785000 0x1c>;
+@@ -197,11 +218,11 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart1: serial@1e783000 {
++			uart6: serial@1e787000 {
+ 				compatible = "ns16550a";
+-				reg = <0x1e783000 0x1000>;
++				reg = <0x1e787000 0x1000>;
+ 				reg-shift = <2>;
+-				interrupts = <9>;
++				interrupts = <10>;
+ 				clocks = <&clk_uart>;
+ 				no-loopback-test;
+ 				status = "disabled";
+@@ -237,27 +258,6 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart5: serial@1e784000 {
+-				compatible = "ns16550a";
+-				reg = <0x1e784000 0x1000>;
+-				reg-shift = <2>;
+-				interrupts = <10>;
+-				clocks = <&clk_uart>;
+-				current-speed = <38400>;
+-				no-loopback-test;
+-				status = "disabled";
+-			};
+-
+-			uart6: serial@1e787000 {
+-				compatible = "ns16550a";
+-				reg = <0x1e787000 0x1000>;
+-				reg-shift = <2>;
+-				interrupts = <10>;
+-				clocks = <&clk_uart>;
+-				no-loopback-test;
+-				status = "disabled";
+-			};
+-
+ 			i2c: i2c@1e78a000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
 diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 4c829e915c3e..de2dafa71651 100644
+index de2dafa71651..61cc2d25143a 100644
 --- a/arch/arm/boot/dts/aspeed-g5.dtsi
 +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -22,6 +22,11 @@
- 		i2c11 = &i2c11;
- 		i2c12 = &i2c12;
- 		i2c13 = &i2c13;
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+		serial4 = &uart5;
- 	};
+@@ -227,6 +227,26 @@
+ 				clock-names = "PCLK";
+ 			};
  
- 	cpus {
++			uart1: serial@1e783000 {
++				compatible = "ns16550a";
++				reg = <0x1e783000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <9>;
++				clocks = <&clk_uart>;
++				no-loopback-test;
++				status = "disabled";
++			};
++
++			uart5: serial@1e784000 {
++				compatible = "ns16550a";
++				reg = <0x1e784000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <10>;
++				clocks = <&clk_uart>;
++				current-speed = <38400>;
++				no-loopback-test;
++				status = "disabled";
++			};
+ 
+ 			wdt1: wdt@1e785000 {
+ 				compatible = "aspeed,ast2500-wdt";
+@@ -247,16 +267,6 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart1: serial@1e783000 {
+-				compatible = "ns16550a";
+-				reg = <0x1e783000 0x1000>;
+-				reg-shift = <2>;
+-				interrupts = <9>;
+-				clocks = <&clk_uart>;
+-				no-loopback-test;
+-				status = "disabled";
+-			};
+-
+ 			lpc: lpc@1e789000 {
+ 				compatible = "aspeed,ast2500-lpc", "simple-mfd";
+ 				reg = <0x1e789000 0x1000>;
+@@ -287,6 +297,16 @@
+ 				};
+ 			};
+ 
++			uart6: serial@1e787000 {
++				compatible = "ns16550a";
++				reg = <0x1e787000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <10>;
++				clocks = <&clk_uart>;
++				no-loopback-test;
++				status = "disabled";
++			};
++
+ 			uart2: serial@1e78d000 {
+ 				compatible = "ns16550a";
+ 				reg = <0x1e78d000 0x1000>;
+@@ -317,27 +337,6 @@
+ 				status = "disabled";
+ 			};
+ 
+-			uart5: serial@1e784000 {
+-				compatible = "ns16550a";
+-				reg = <0x1e784000 0x1000>;
+-				reg-shift = <2>;
+-				interrupts = <10>;
+-				clocks = <&clk_uart>;
+-				current-speed = <38400>;
+-				no-loopback-test;
+-				status = "disabled";
+-			};
+-
+-			uart6: serial@1e787000 {
+-				compatible = "ns16550a";
+-				reg = <0x1e787000 0x1000>;
+-				reg-shift = <2>;
+-				interrupts = <10>;
+-				clocks = <&clk_uart>;
+-				no-loopback-test;
+-				status = "disabled";
+-			};
+-
+ 			i2c: i2c@1e78a000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
 -- 
 2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
