@@ -1,69 +1,67 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 15/22] firmware: arm_scmi: abstract mailbox interface
-Date: Wed, 4 Oct 2017 12:32:22 +0100
-Message-ID: <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-16-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a0EUr_aEZdOrjHixzp44yXqsNxTMzBceSBTmk-x8x2MAg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
+Date: Wed, 4 Oct 2017 13:36:39 +0200
+Message-ID: <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com> <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0EUr_aEZdOrjHixzp44yXqsNxTMzBceSBTmk-x8x2MAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> This patch adds ARM MHU specific mailbox interface for SCMI.
+>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
+This clearly needs an explanation why we need another driver.
 
-On 04/10/17 12:24, Arnd Bergmann wrote:
-> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Some of the mailbox controller expects controller specific data in order
->> to implement simple doorbell mechanism as expected by SCMI specification.
->>
->> This patch creates a shim layer to abstract the mailbox interface so
->> that it can support any mailbox controller. It also provides default
->> implementation which maps to standard mailbox client APIs, so that
->> controllers implementing doorbell mechanism need not require any
->> additional layer.
->>
->> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> 
-> Another level? Now we have three levels of stacked mailboxes, with
-> the highest level being the combined mailbox/memory, then the shim,
-> and below it the hardware mailbox.
-> 
-> Can you try to come up with a way to do this with fewer abstractions?
-> 
+> +union mhu_data {
+> +       void *ptr;
+> +       u32 val;
+> +};
+> +
+> +static void mhu_tx_prepare(struct mbox_client *cl, void *m)
+> +{
+> +       struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
+> +       union mhu_data tmp;
+> +
+> +       scmi_generic_tx_prepare(cinfo, m);
+> +
+> +       /* clear only the relavant bit */
+> +       tmp.ptr = cinfo->priv;
+> +       *(u32 *)m &= tmp.val;
+> +}
 
-I completely agree with you. I was against this but Jassi recommended
-this. I just wanted this SCMI to work with mailbox controllers that
-support simple doorbell mechanism as specified in the specification but
-Jassi disagrees with that.
+Why do you use the first 32 bits of the pointer here? That doesn't
+seem to make any sense, in particular on big-endian 64-bit
+architectures.
 
-> Maybe you could assume that the mailbox itself can take variable-length
-> data packets, and then use the shim here for those that require
-> something else?
-> 
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index 97285a22dfaa..bdc9c566e6c1 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -648,6 +648,9 @@ EXPORT_SYMBOL_GPL(devm_scmi_handle_get);
+>  /* Each compatible listed below must have descriptor associated with it */
+>  static const struct of_device_id scmi_of_match[] = {
+>         { .compatible = "arm,scmi", .data = &scmi_generic_desc },
+> +#if IS_REACHABLE(CONFIG_ARM_MHU)
+> +       { .compatible = "arm,mhu-scmi", .data = &mhu_scmi_desc },
+> +#endif
+>         { /* Sentinel */ },
+>  };
+>
 
-As per SCMI specification, we pass all the data in shared memory and it
-just expects to use a simple doorbell feature from hardware mailbox
-controllers. It's done that way intentionally to avoid dependency on h/w
-and we for sure will have variety of it and that defeats the purpose
-of this standard specification.
+This again is a bad abstraction, if the main part needs to know about
+each mailbox that it could use.
 
-Also, I have added shim only for specific controllers that need them.
-E.g. ARM MHU as Jassi disagreed to add doorbell mechanism to that.
-mbox_if provides default implementation that just calls direct mailbox
-APIs.
+Turn the registration around so rather than referring to an exported
+symbol from mhu_scmi_desc.c in the main driver, you export
+a symbol to register the operations and make the mhu
+part its own module.
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+       Arnd
