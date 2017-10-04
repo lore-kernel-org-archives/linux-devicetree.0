@@ -1,131 +1,69 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Wed, 4 Oct 2017 15:47:55 +0100
-Message-ID: <86fc9060-e0da-3dde-899d-1c4055f15386@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-3-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
- <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com>
- <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
- <69fc9095-6961-b861-d2e0-afb58de11d59@arm.com>
- <CAK8P3a3C-xyE-mkj8ERDZHtWbpcOx3Z-gPgHrQHxNVi_3AmAZA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: add support for RZ/A1L
+Date: Wed, 4 Oct 2017 16:49:45 +0200
+Message-ID: <CAMuHMdVmFNyE0QfdWZ5X6fRp4xJy9k+uN7h+zi5_WAG1dcJV5g@mail.gmail.com>
+References: <20171003073334.18917-1-chris.brandt@renesas.com>
+ <20171003073334.18917-3-chris.brandt@renesas.com> <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
+ <SG2PR06MB1165B7C76F5E5528FDF7B7408A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUh05qyi3eoao0KbahGD1NfEnGm03JpcZuFHVrEBSBU1Q@mail.gmail.com> <SG2PR06MB1165243813B8D662AE93911E8A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a3C-xyE-mkj8ERDZHtWbpcOx3Z-gPgHrQHxNVi_3AmAZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165243813B8D662AE93911E8A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
+On Wed, Oct 4, 2017 at 4:43 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> To be clear:
+>
+> On Wednesday, October 04, 2017 1, Geert Uytterhoeven wrote:
+>> >> You could use "renesas,r7s72100-ports" as a fallback property for
+>> RZ/A1M,
+>> >> though.
+>> >
+>> > Do you mean in the DT? Or in pinctrl-rza1.c?
+>>
+>> I mean in DT, i.e.:
+>>
+>>         pinctrl: pin-controller@fcfe3000 {
+>>                 compatible = "renesas,r7s72101-ports", "renesas,r7s72100-
+>> ports";
+>>                 ...
+>>
+>> That way you don't have to extend the pinctrl driver.
+>
+> I will submit a v2 with:
+>
+> [ renesas,rza1-pinctrl.txt ]
+>
+> Required properties:
+>   - compatible
+>     this shall be "renesas,r7s72100-ports" for RZ/A1H,
+>     "renesas,r7s72101-ports" for RZ/M or
 
-On 04/10/17 15:17, Arnd Bergmann wrote:
-> On Wed, Oct 4, 2017 at 3:53 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 04/10/17 13:35, Arnd Bergmann wrote:
->>> On Wed, Oct 4, 2017 at 1:07 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> 
->>>>
->>>> Yes it depends on #clock-cells property. That's the main reason for
->>>> adding #clock-cells
->>>
->>> I'm still unclear on this. Do you mean we look for a subnode with
->>> reg=<0x14> and then assume it's a clock node and require the
->>>  #clock-cells to be there,
->>
->> Yes that's how it's used. Presence of subnode with reg=0x14 indicates
->> clock protocol and #clock-cells to indicate that it's clock provider
->> expecting 1 parameter from consumer which is the clock identifier.
->>
->> or do we look through the sub-nodes to
->>> find one with the #clock-cells property and then look up the 'reg'
->>> property to find out which protocol number to use?
->>>
->>
->> Not this way. Do you see any issues ?
-> 
-> We normally don't assume that a particular unit address implies
-> a specific function. Conventionally that would be done by matching
-> the "compatible" property instead.
-> 
-> What you do clearly works, but it's surprising to the reader.
-> 
-> 
->>> I think the problem is the way we use the mailbox API in Linux, which
->>> is completely abstract at the moment: it could be a pure doorbell, a
->>> single-register for a data, some structured memory, or a
->>> variable-length message. The assumption today is that the mailbox
->>> user and the mailbox driver agree on the interpretation of that
->>> void pointer.
->>>
->>
->> Unfortunately true.
->>
->>> This breaks down here, as you require the message to be a
->>> variable-length message in a fixed physical location, but assume that
->>> the mailbox serves only as a doorbell.
->>>
->>
->> Yes.
->>
->>> The solution might be to extend the mailbox API slightly, to
->>> have explicit support for variable-length messages, and implement
->>> support for that in either mailbox drivers or as an abstraction
->>> on top of doorbell-type mailboxes.
->>>
->> I got the concept. But are you also suggesting that in bindings it shmem
->> should be associated with mailbox controller rather than client ?
-> 
-> There are probably several ways of doing this better, we should see
-> what the best is we can come up with.
-> 
-> I think generally speaking we need a way for a mailbox user to
-> know what it should use as the mailbox data here, so it is
-> able to talk to different incompatible mailbox providers.
-> 
-> One idea I had is to use a nested mailbox driver, that turns
-> a doorbell or single-register styled mailbox into a variable-length
-> mailbox by adding a memory region, like
-> 
->     mailbox@1233000 {
->         compatible = "vendor-hardware-specifc-id";
->         interrupts = <34>;
->         reg = <0x1233000 0x100>;
->         #mbox-cells = <1>;
->     };
-> 
->     mailbox {
->            compatible = "shmem-mailbox";
->            mboxes = <&/mailbox@1233000  25>;
->            #mbox-cells = <1>;
->            shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
->     };
-> 
-> This would create one mailbox that only takes a register argument,
-> and another one that can take longer messages based on the first.
-> In your driver, you then refer to the second one and pass the
-> variable-length data into that directly.
+... with a fallback for "renesas,r7s72100-ports, as RZ/A1M is compatible
+with RZ/A1H (and I assume RZ/A1H is the predecessor?).
 
-1. IIUC it was intentional not to include shmem as part of mailbox
-   controller binding and was pushed to client drivers as it's generally
-   not part of mailbox IP block. I am not sure if there are any other
-   specific reasons for that, but I may be missing some facts.
+>     "renesas,r7s72102-ports" for RZ/A1L
+>
+>
+> [ r7s72100.dtsi ]
+>         pinctrl: pin-controller@fcfe3000 {
+>                 compatible = "renesas,r7s72101-ports", "renesas,r7s72100-ports";
 
-2. I am not sure if we need nested driver/bindings (at-least to begin
-   with). On a platform I don't think both/all modes will be used.
-   I had  proposal for adding doorbell for ARM MHU based on extended
-   bindings, but it was rejected[1]. But I really preferred that over
-   the shim layer I had to add in v3.
+I meant in r7s72101.dtsi (which we don't have!).
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-Regards,
-Sudeep
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-[1] https://patchwork.kernel.org/patch/9745683/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
