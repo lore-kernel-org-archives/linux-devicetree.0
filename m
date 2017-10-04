@@ -1,84 +1,64 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: Enable watchdog two
-Date: Wed, 04 Oct 2017 21:45:39 +1030
-Message-ID: <1507115739.5452.33.camel@aj.id.au>
-References: <20171004091635.12499-1-joel@jms.id.au>
-         <20171004091635.12499-3-joel@jms.id.au>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 11/22] firmware: arm_scmi: add support for polling
+ based SCMI transfers
+Date: Wed, 4 Oct 2017 12:18:59 +0100
+Message-ID: <6b2f2e70-6d0f-e7e4-d130-cd384289eb1a@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-12-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a2wRFif2zYKKmdcNm5wgbGdhqwLdA-YV7AX_0LmM+OiQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-KzVTcEZ8FhmnxCRI2AMr"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171004091635.12499-3-joel@jms.id.au>
+In-Reply-To: <CAK8P3a2wRFif2zYKKmdcNm5wgbGdhqwLdA-YV7AX_0LmM+OiQQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, linux-aspeed@lists.ozlabs.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
---=-KzVTcEZ8FhmnxCRI2AMr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2017-10-04 at 19:46 +1030, Joel Stanley wrote:
-> The second watchdog is left running by u-boot in the common
-> configurations of the firmware shipped on ASPEED boards. Ensure a driver
-> is loaded so the system can succcessfully boot.
->=C2=A0
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+On 04/10/17 12:13, Arnd Bergmann wrote:
+> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> It would be useful to have options to perform some SCMI transfers
+>> atomically by polling for the completion flag instead of interrupt
+>> driven. The SCMI specification has option to disable the interrupt and
+>> poll for the completion flag in the shared memory.
+>>
+>> This patch adds support for polling based SCMI transfers using that
+>> option. This might be used for uninterrupted/atomic DVFS operations
+>> from the scheduler context.
+> 
+> multi-millisecond timeouts from inside the scheduler sound like a
+> really bad idea. Could this maybe get changed to an asynchronous
+> operation?
+> 
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+We already support asynchronous version. This is mainly to support fast
+DVFS switching done at context switch. I can reduce the timeouts to
+few uS as the whole idea of fast dvfs is we can't return or schedule out
+of this function. Typically the remote should see the request in < 10 uS
+and acknowledge it.
 
-> ---
-> =C2=A0arch/arm/boot/dts/aspeed-g4.dtsi | 1 -
-> =C2=A0arch/arm/boot/dts/aspeed-g5.dtsi | 1 -
-> =C2=A02 files changed, 2 deletions(-)
->=C2=A0
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-=
-g4.dtsi
-> index 5be2e6a39917..9bf84d2ba038 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -212,7 +212,6 @@
-> =C2=A0			wdt2: watchdog@1e785020 {
-> =C2=A0				compatible =3D "aspeed,ast2400-wdt";
-> =C2=A0				reg =3D <0x1e785020 0x1c>;
-> -				status =3D "disabled";
-> =C2=A0			};
-> =C2=A0
-> =C2=A0			vuart: serial@1e787000 {
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-=
-g5.dtsi
-> index 71e1264b81aa..ca023e9ab0b8 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -256,7 +256,6 @@
-> =C2=A0			wdt2: watchdog@1e785020 {
-> =C2=A0				compatible =3D "aspeed,ast2500-wdt";
-> =C2=A0				reg =3D <0x1e785020 0x20>;
-> -				status =3D "disabled";
-> =C2=A0			};
-> =C2=A0
-> =C2=A0			wdt3: watchdog@1e785040 {
---=-KzVTcEZ8FhmnxCRI2AMr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+>> +       if (xfer->hdr.poll_completion) {
+>> +               timeout = info->desc->max_rx_timeout_ms * 100;
+>> +               while (!scmi_xfer_poll_done(info, xfer) && timeout--)
+>> +                       udelay(10);
+> 
+> The timeout calculation is bad as well, since both the
+> scmi_xfer_poll_done() call and udelay() can take much longer
+> than the 10 microsecond delay that you use for the calculation.
+> 
 
------BEGIN PGP SIGNATURE-----
+Ah, agreed. I will change it to few uS as that's what is expected.
 
-iQIcBAABCgAGBQJZ1MLbAAoJEJ0dnzgO5LT56+4P/A933gXqpQ913pZQ/HppQtlt
-OevOJmJtRmoMq3cISQT+oTbDgK0k4qNOudFpkgds4bVOkIr1ESih4vX1Ga+eGmEj
-HB3tPn8jkwMgtf/CTKyYClwhnim2Tq5D8JQAD2tabnOz3/NOld3x3rPzfNdvg2T9
-R/37dvP4unbCZz+JWRBcvsBJ6N3w6Teqhnvqe/bw4R989w1T8m0BneWhv7hpqTa/
-8qZedhsBjBlN2Ef9lq4SBP+rRUfbhEIYTGolsyox7DGgxIyDZkDAlHsRAf6aSgR/
-thx3rMQe6RLOdWz/HThlotQsghm6XN9+NE7Lq5HuwkxZxiNDEoGn4NH2YVE9f6Pm
-w//1bpZKOkymzbIkjLuprI+IVSEjkoiloVpQvJSItYX5RrNdycX9yIjMES00POAm
-C+e8JSjREGCnNgqGV9lRvJm364rX3A5/ZG8tQ4fJC6PJMe2ofo8X6U0yyQ9oU8DT
-5UMEW3yKNRlpYOB3Elc8vTNx1oDmM/m4z40p8AkNkpkmpjhCbZT9vnrPlyMpBLFt
-v7Lgql6MORwGKuWkegmryLMTovK7hbMD4Ed95NSM967nHl0A9tWzq+qUkIAx8MtW
-MKi0RS4tc+/a5ldpnpWAHKNa461fyDr4B1wWi5mdo8/hmi7JE8nfK0qQZIpYM4YV
-SUvux4Qw86Jz6HXvBciE
-=PuaF
------END PGP SIGNATURE-----
+> If you want to do a timeout check like this, it should generally
+> be done using ktime_get()/ktime_add()/ktime_before().
+> 
 
---=-KzVTcEZ8FhmnxCRI2AMr--
+Good idea, will try to use that.
+
+-- 
+Regards,
+Sudeep
