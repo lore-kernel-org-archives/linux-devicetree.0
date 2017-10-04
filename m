@@ -1,84 +1,148 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH 8/9 v2] usb: usb251xb: Add max power/current dts property
- support
-Date: Wed, 4 Oct 2017 10:12:51 +0200
-Message-ID: <53559bc4-5faa-6797-7c12-f635049f1411@skidata.com>
-References: <20170915233113.17855-1-fancer.lancer@gmail.com>
- <20170916104220.3742-1-fancer.lancer@gmail.com>
- <20170916104220.3742-9-fancer.lancer@gmail.com>
- <20170920205255.5txbub3y6v6avolh@rob-hp-laptop>
- <20170920212739.GB3547@mobilestation>
- <CAL_Jsq+ftbGSQOOor_1L9NO9h7rjYm9nB26PxNOPgyHU6k3j_A@mail.gmail.com>
- <20170921171022.GA13721@mobilestation>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: Fix incorrect display nodes notation
+Date: Wed, 04 Oct 2017 10:22:53 +0200
+Message-ID: <1507105373.11691.1.camel@pengutronix.de>
+References: <1507052618-30329-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170921171022.GA13721@mobilestation>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Sergey.Semin@t-platforms.ru, Linux USB List <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Richard Leitner <richard.leitner@skidata.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507052618-30329-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Marco,
 
-On 09/21/2017 07:10 PM, Serge Semin wrote:
-> On Thu, Sep 21, 2017 at 11:26:04AM -0500, Rob Herring <robh@kernel.org> wrote:
->> On Wed, Sep 20, 2017 at 4:27 PM, Serge Semin <fancer.lancer@gmail.com> wrote:
-
-...
-
->>> These are different parameters of the device. They got different configuration
->>> registers and descriptions:
->>> max_power* - ... This value also includes the power consumption of a
->>> permanently attached peripheral if the hub is configured as a compound
->>> device, and the embedded peripheral reports 0mA in its descriptors.
->>> max_current* - ... This value does NOT include the power consumption of a
->>> permanently attached peripheral if the hub is configured as a compound
->>> device.
->>
->> Then the names here should somehow reflect the above. Perhaps
->> "composite-current" and "hub-current" or something like that.
->>
+On Tue, 2017-10-03 at 14:43 -0300, Marco Franchi wrote:
+> The following build warnings are seen with W=1:
 > 
-> I left the naming in accordance with the device datasheet. I thought it would be
-> better since the driver user would still need to consult with the device
-> documentation to properly set them. I don't really get how the difference is reflected
-> with the naming declared there though. So what naming would you prefer then? Might be
-> something like:
-> {sp,bp}-max-total-current - for so named {sp,bp}-max-power, since it includes all the
-> permanently attached peripherals.
-> {sp,bp}-max-removable-current - for so named {sp,bp}-max-current, since it doesn't
-> include the permanently attached peripherals.
+> > Warning (unit_address_vs_reg): Node /display@di0 has a unit name, but no reg property
+> > Warning (unit_address_vs_reg): Node /display@di1 has a unit name, but no reg property
 > 
-> Or is it better to leave it in compliance with the documentation naming?
-
-I'd prefer the naming to be in accordance with the device datasheet too.
-Changing it will IMHO generate avoidable misunderstandings...
-
-But if we should go with Robs proposal please make sure the name from
-the device datasheet is mentioned somewhere in the description of the
-binding.
-
+> Fix all these warnings by changing 'display@diX' to 'dispX'.
 > 
->>>
->>> Additionally as you can see, they both are measured in "mA", so it isn't
->>> a real physical power.
->>
->> Well, I can't because there's no units.
->>
-> 
-> What this line means then?
-> - sp-max-{power,current} : ... The value is given in mA in a 0 - 100 range (default is 1mA).
-> - bp-max-{power,current} : ... The value is given in mA in a 0 - 510 range (default is 100mA).
-> 
-> Maybe I don't know something and the description line should state the units somehow
-> clearer?
+> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 
-Append the unit to the binding name, just like in "power-on-time-ms". As
-there's no "Standard Unit Suffix" for mA stated in the documentation
-(Documentation/devicetree/bindings/property-units.txt) I think it should
-be "-milliamp"?
+Thank you for fixing this. Mostly
 
-regards,
-Richard.L
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+but I have one remark regarding i.MX51. While on the later SoCs the
+parallel display interface pad groups are called DISP0 and DISP1 in the
+reference manual, on i.MX51 they were called DISP1 and DISP2 [1].
+This is already reflected by the pin function ids: MX51_PAD_DISP[12]_*.
+
+Also, the display ports are currently inconsistently named across the
+i.MX51 board device trees, see below. Should we use this opportunity to
+also fix this inconsistency?
+
+[1] https://www.nxp.com/docs/en/reference-manual/MCIMX51RM.pdf
+
+> ---
+> I have already submitted a fix for the Documentation bindings:
+> https://git.pengutronix.de/cgit/pza/linux/commit/?h=imx-drm/next&id=db
+> fdd153d4aefec13460c97475737e59af92d8e2
+> 
+>  arch/arm/boot/dts/imx51-apf51dev.dts          | 2 +-
+>  arch/arm/boot/dts/imx51-babbage.dts           | 4 ++--
+>  arch/arm/boot/dts/imx51-ts4800.dts            | 2 +-
+[...]
+>  30 files changed, 31 insertions(+), 31 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts
+> b/arch/arm/boot/dts/imx51-apf51dev.dts
+> index a5e6091..f04d0df 100644
+> --- a/arch/arm/boot/dts/imx51-apf51dev.dts
+> +++ b/arch/arm/boot/dts/imx51-apf51dev.dts
+> @@ -24,7 +24,7 @@
+>  		default-on;
+>  	};
+>  
+> -	display@di1 {
+> +	disp1 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "bgr666";
+>  		pinctrl-names = "default";
+
+This is actually DISP1 in the reference manual (connected to IPU DI0):
+
+                pinctrl-0 = <&pinctrl_ipu_disp1>;
+                port {
+                        display_in: endpoint {
+                                remote-endpoint = <&ipu_di0_disp0>;                                                                           
+                        };
+                };
+
+The remote endpoint should be renamed to ipu_di0_disp1 for consistency.
+
+> diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+> index 873cf24..297953c 100644
+> --- a/arch/arm/boot/dts/imx51-babbage.dts
+> +++ b/arch/arm/boot/dts/imx51-babbage.dts
+> @@ -39,7 +39,7 @@
+>  		};
+>  	};
+>  
+> -	display0: display@di0 {
+> +	display0: disp0 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "rgb24";
+>  		pinctrl-names = "default";
+
+This is also DISP1 in the reference manual (connected to IPU DI0):
+
+		pinctrl-0 = <&pinctrl_ipu_disp1>;
+                port {
+                        display0_in: endpoint {
+   
+                             remote-endpoint = <&ipu_di0_disp0>;
+        
+                };
+                };
+
+@@ -66,7 +66,7 @@
+>  		};
+>  	};
+>  
+> -	display1: display@di1 {
+> +	display1: disp1 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "rgb565";
+>  		pinctrl-names = "default";
+
+And this is actually DISP2 in the reference manual (connected to IPU
+DI1):
+		pinctrl-0 = <&pinctrl_ipu_disp2>;
+                port {
+                        display1_in: endpoint {
+                                remote-endpoint = <&ipu_di1_disp1>;
+                        };
+                };
+
+The remote endpoint should be renamed to ipu_di1_disp2.
+
+> diff --git a/arch/arm/boot/dts/imx51-ts4800.dts
+> b/arch/arm/boot/dts/imx51-ts4800.dts
+> index ca1cc5e..e6be869 100644
+> --- a/arch/arm/boot/dts/imx51-ts4800.dts
+> +++ b/arch/arm/boot/dts/imx51-ts4800.dts
+> @@ -50,7 +50,7 @@
+>  		power-supply = <&backlight_reg>;
+>  	};
+>  
+> -	display0: display@di0 {
+> +	display0: disp0 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "rgb24";
+>  		pinctrl-names = "default";
+
+And this is also DISP1 according to the reference manual.
+
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
