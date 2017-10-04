@@ -1,182 +1,93 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 2/5] ACPI/IORT: Add msi address regions reservation
-	helper
-Date: Wed, 4 Oct 2017 15:17:40 +0100
-Message-ID: <001729e8-7b34-0bb4-8af6-8af100661906@arm.com>
-References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
-	<20170927133241.21036-3-shameerali.kolothum.thodi@huawei.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: add support for RZ/A1L
+Date: Wed, 4 Oct 2017 16:27:39 +0200
+Message-ID: <CAMuHMdUh05qyi3eoao0KbahGD1NfEnGm03JpcZuFHVrEBSBU1Q@mail.gmail.com>
+References: <20171003073334.18917-1-chris.brandt@renesas.com>
+ <20171003073334.18917-3-chris.brandt@renesas.com> <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
+ <SG2PR06MB1165B7C76F5E5528FDF7B7408A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170927133241.21036-3-shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165B7C76F5E5528FDF7B7408A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/09/17 14:32, Shameer Kolothum wrote:
-> On some platforms msi parent address regions have to be excluded from
-> normal IOVA allocation in that they are detected and decoded in a HW
-> specific way by system components and so they cannot be considered normal
-> IOVA address space.
-> 
-> Add a helper function that retrieves ITS address regions - the msi
-> parent - through IORT device <-> ITS mappings and reserves it so that
-> these regions will not be translated by IOMMU and will be excluded from
-> IOVA allocations.
-> 
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> [lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org: updated commit log/added comments]
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/acpi/arm64/iort.c        | 96 ++++++++++++++++++++++++++++++++++++++--
->  drivers/irqchip/irq-gic-v3-its.c |  3 +-
->  include/linux/acpi_iort.h        |  7 ++-
->  3 files changed, 101 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 9565d57..14efa9d 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -39,6 +39,7 @@
->  struct iort_its_msi_chip {
->  	struct list_head	list;
->  	struct fwnode_handle	*fw_node;
-> +	phys_addr_t		base_addr;
->  	u32			translation_id;
->  };
->  
-> @@ -136,14 +137,16 @@ typedef acpi_status (*iort_find_node_callback)
->  static DEFINE_SPINLOCK(iort_msi_chip_lock);
->  
->  /**
-> - * iort_register_domain_token() - register domain token and related ITS ID
-> - * to the list from where we can get it back later on.
-> + * iort_register_domain_token() - register domain token along with related
-> + * ITS ID and base address to the list from where we can get it back later on.
->   * @trans_id: ITS ID.
-> + * @base: ITS base address.
->   * @fw_node: Domain token.
->   *
->   * Returns: 0 on success, -ENOMEM if no memory when allocating list element
->   */
-> -int iort_register_domain_token(int trans_id, struct fwnode_handle *fw_node)
-> +int iort_register_domain_token(int trans_id, phys_addr_t base,
-> +			       struct fwnode_handle *fw_node)
->  {
->  	struct iort_its_msi_chip *its_msi_chip;
->  
-> @@ -153,6 +156,7 @@ int iort_register_domain_token(int trans_id, struct fwnode_handle *fw_node)
->  
->  	its_msi_chip->fw_node = fw_node;
->  	its_msi_chip->translation_id = trans_id;
-> +	its_msi_chip->base_addr = base;
->  
->  	spin_lock(&iort_msi_chip_lock);
->  	list_add(&its_msi_chip->list, &iort_msi_chip_list);
-> @@ -481,6 +485,24 @@ int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id)
->  	return -ENODEV;
->  }
->  
-> +static int __maybe_unused iort_find_its_base(u32 its_id, phys_addr_t *base)
-> +{
-> +	struct iort_its_msi_chip *its_msi_chip;
-> +	bool match = false;
-> +
-> +	spin_lock(&iort_msi_chip_lock);
-> +	list_for_each_entry(its_msi_chip, &iort_msi_chip_list, list) {
-> +		if (its_msi_chip->translation_id == its_id) {
-> +			*base = its_msi_chip->base_addr;
-> +			match = true;
-> +			break;
-> +		}
-> +	}
-> +	spin_unlock(&iort_msi_chip_lock);
-> +
-> +	return match ? 0 : -ENODEV;
-> +}
-> +
->  /**
->   * iort_dev_find_its_id() - Find the ITS identifier for a device
->   * @dev: The device.
-> @@ -639,6 +661,72 @@ int iort_add_device_replay(const struct iommu_ops *ops, struct device *dev)
->  
->  	return err;
->  }
-> +
-> +/**
-> + * iort_iommu_msi_get_resv_regions - Reserved region driver helper
-> + * @dev: Device from iommu_get_resv_regions()
-> + * @head: Reserved region list from iommu_get_resv_regions()
-> + *
-> + * Returns: Number of reserved regions on success (0 if no associated msi
-> + *          regions), appropriate error value otherwise. The ITS regions
-> + *          associated with the device are the msi reserved regions.
-> + */
-> +int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
-> +{
-> +	struct acpi_iort_its_group *its;
-> +	struct acpi_iort_node *node, *its_node = NULL;
-> +	int i, resv = 0;
-> +
-> +	node = iort_find_dev_node(dev);
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Current logic to reserve ITS regions relies on HW topologies
-> +	 * where a given PCI or named component maps its IDs to only one
-> +	 * ITS group; if a PCI or named component can map its IDs to
-> +	 * different ITS groups through IORT mappings this function has
-> +	 * to be reworked to ensure we reserve regions for all ITS groups
-> +	 * a given PCI or named component may map IDs to.
-> +	 */
-> +	if (dev_is_pci(dev)) {
-> +		u32 rid;
-> +
-> +		pci_for_each_dma_alias(to_pci_dev(dev), __get_pci_rid, &rid);
-> +		its_node = iort_node_map_id(node, rid, NULL, IORT_MSI_TYPE);
-> +	} else {
-> +		for (i = 0; i < node->mapping_count; i++) {
-> +			its_node = iort_node_map_platform_id(node, NULL,
-> +							 IORT_MSI_TYPE, i);
-> +			if (its_node)
-> +				break;
-> +		}
-> +	}
-> +
-> +	if (!its_node)
-> +		return 0;
-> +
-> +	/* Move to ITS specific data */
-> +	its = (struct acpi_iort_its_group *)its_node->node_data;
-> +
-> +	for (i = 0; i < its->its_count; i++) {
-> +		phys_addr_t base;
-> +
-> +		if (!iort_find_its_base(its->identifiers[i], &base)) {
-> +			int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
-> +			struct iommu_resv_region *region;
-> +
-> +			region = iommu_alloc_resv_region(base, SZ_128K, prot,
-> +							 IOMMU_RESV_MSI);
+Hi Chris,
 
-Same as the OF part: I strongly object to reserving the whole 128kB
-range. What we really care about is the second 64kB page, and that is
-what should get reserved.
+On Wed, Oct 4, 2017 at 4:16 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Wednesday, October 04, 2017, Geert Uytterhoeven wrote:
+>> >  Required properties:
+>> >    - compatible
+>> > -    this shall be "renesas,r7s72100-ports".
+>> > +    this shall be "renesas,r7s72100-ports" for RZ/A1H and RZ/A1M or
+>> > +    "renesas,r7s72102-ports" for RZ/A1L
+>>
+>> Shouldn't you also document "renesas,r7s72101-ports" for RZ/A1M?
+>
+> I was wondering if you were going to ask for that.
 
-Thanks,
+:-)
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> I put "for RZ/A1H and RZ/A1M" in the DT documentation, but if you
+> prefer, I can also just add to pinctrl-rza1.c:
+>
+> static const struct of_device_id rza1_pinctrl_of_match[] = {
+>         {
+>                 /* RZ/A1H */
+>                 .compatible     = "renesas,r7s72100-ports",
+>                 .data           = &rza1h_pmx_conf,
+>         },
+> +       {
+> +               /* RZ/A1M */
+> +               .compatible     = "renesas,r7s72101-ports",
+> +               .data           = &rza1h_pmx_conf,
+> +       },      {
+>                 /* RZ/A1L */
+>                 .compatible     = "renesas,r7s72102-ports",
+>                 .data           = &rza1l_pmx_conf,
+>         },
+>         { }
+> };
+>
+>
+>
+>> You could use "renesas,r7s72100-ports" as a fallback property for RZ/A1M,
+>> though.
+>
+> Do you mean in the DT? Or in pinctrl-rza1.c?
+
+I mean in DT, i.e.:
+
+        pinctrl: pin-controller@fcfe3000 {
+                compatible = "renesas,r7s72101-ports", "renesas,r7s72100-ports";
+                ...
+
+That way you don't have to extend the pinctrl driver.
+
+>> BTW, is there a way to distinguish the various RZ/A1 SoCs at runtime?
+>
+> Sadly there is not.
+>
+> There is a unique ID number, but it is only accessible via JTAG
+> externally.
+>
+> Internally, you would have to look for registers that don't exist (for
+> the RZ/A1L). But for RZ/A1H vs RZ/A1M, the only actual difference is the
+> amount of RAM, so you would have to do a set-and-test method on RAM.
+
+If RZ/A1H and RZ/A1M differ in the amount of RAM only, I think you can
+just consider them the same, though, and use the same DTS (assumed
+the boot loader fills/corrects in the memory node).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
