@@ -1,121 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC] gpio: of: document gpio-init nodes
-Date: Wed, 4 Oct 2017 15:53:06 -0500
-Message-ID: <20171004205306.wzvxmstcberpws25@rob-hp-laptop>
-References: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: fsi: Add SBEFIFO documentation
+Date: Wed, 4 Oct 2017 15:58:08 -0500
+Message-ID: <20171004205808.c66hjl6il463q4ka@rob-hp-laptop>
+References: <1506114362-492-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1506114362-492-2-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <1506114362-492-2-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 10:41:38PM +0200, Uwe Kleine-König wrote:
-> Sometimes it is desirable to define a "safe" configuration for a GPIO in
-> the device tree but let the operating system later still make use of
-> this pin.
+On Fri, Sep 22, 2017 at 04:05:57PM -0500, Eddie James wrote:
+> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 > 
-> This might for example be useful to initially configure a debug pin that
-> is usually unconnected as output to prevent floating until it is used
-> later.
+> Document the bindings for the SBE CFAM device. SBE devices are
+> located on a CFAM off an FSI bus.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 > ---
-> Hello,
+>  .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt       | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
 > 
-> this picks up a discussion that pops up now and then with our customers.
-> 
-> Last time I discussed this topic with Linus Walleij my suggestion was to
-> merge this usecase with gpio-hogs, but he wasn't happy with it because
-> hogging implies that the pin is not free for other usage and he
-> suggested to use "gpio-init" instead.
-> 
-> Maybe it's arguable if this "initial configuration" belongs into the
-> device tree, but IMHO defining a "safe configuration" should have a
-> place and the requirements are identical. This isn't implied by the name
-> however, but I don't have a better idea for a different name.
-
-It can be argued that by the time the kernel boots, it is way to late to 
-configure pins to a safe state. Of course, even secure world reads the 
-DT these days (or are at least talking about doing so). Still any s/w 
-handling this could be too slow to get to a safe state.
-
-Maybe "optimal default" state would be more accurate. 
-
-> 
-> Thinking further (which was also discussed last time) it would also be
-> nice to restrict usage. For example that a given pin that has
-> "output-low" as its safe setting might be configured later als high
-> output but not as input. Maybe:
-
-I can't imagine that an output can't be an input. Regardless, what 
-you're describing is constraints and that seems like a whole other 
-problem than default/initial state.
-
-Plus, for constraints I'd think we want this done at the pin level, not 
-GPIO. And we kind of already have that with pin states.
-
-> 	companion-reset {
-> 		gpio-somethingwithsafe;
-> 		gpios = <12 0>;
-
-"gpios" is already a defined property with a type (phandle + args). dtc 
-checks for this now though gpio-hogs is already one exception, and I 
-don't want to add another. Maybe it could be generalized to be allowed 
-when the parent is a gpio-controller, but really I'd like to avoid this 
-pattern from spreading.
-
-> 		output-low;
-> 		fixed-direction;
-> 	};
-> 
-> (Conceptually we would have a hog then when also adding "fixed-value".)
-> 
-> I'm not sure the early configuration should be implemented in Linux. I'd
-> target the bootloader for that instead, still having the blessing of a
-> binding document would be great.
-> 
-> I look forward to your comments and ideas.
-> 
-> Best regards
-> Uwe
-> 
->  Documentation/devicetree/bindings/gpio/gpio.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-> index 802402f6cc5d..849d620cee4d 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -207,6 +207,11 @@ configuration.
->  Optional properties:
->  - line-name:  The GPIO label name. If not present the node name is used.
->  
-> +Similar to hogging above GPIOs can be initialized to a certain configuration
-> +only which compared to hogs doesn't prevent the operating system to change the
-> +pin later. The syntax is similar to hog definitons, the difference is only that
-> +the identifying property is "gpio-init" instead of "gpio-hog".
+> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+> new file mode 100644
+> index 0000000..07fbf29
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+> @@ -0,0 +1,20 @@
+> +Device-tree bindings for P9 SBEFIFO CFAM device
+> +-----------------------------------------------
 > +
->  Example of two SOC GPIO banks defined as gpio-controller nodes:
->  
->  	qe_pio_a: gpio-controller@1400 {
-> @@ -221,6 +226,12 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
->  			output-low;
->  			line-name = "foo-bar-gpio";
->  		};
+> +Required properties:
+> + - reg = < address size >		: FSI CFAM address for the SBE engine
+> +					  and address space size.
+
+compatible? 
+
 > +
-> +		companion-reset {
-> +			gpio-init;
-> +			gpios = <12 0>;
-> +			output-low;
-> +		};
->  	};
->  
->  	qe_pio_e: gpio-controller@1460 {
+> +Optional properties:
+> + - <child nodes>			: Devices that are accessible through
+> +					  the SBEFIFO.
+
+You need some sort of definition what's in the child nodes.
+
+> +
+> +Examples:
+> +
+> +    sbefifo@2400 {
+> +        reg = < 0x2400 0x400 >;
+
+Need #{address,size}-cells here.
+
+> +
+> +        occ@1 {
+
+Need a reg property here and you need to define what reg represents.
+
+> +            ...
+> +        };
+> +    };
 > -- 
-> 2.11.0
+> 1.8.3.1
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
