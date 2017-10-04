@@ -1,64 +1,41 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 11/22] firmware: arm_scmi: add support for polling
- based SCMI transfers
-Date: Wed, 4 Oct 2017 12:18:59 +0100
-Message-ID: <6b2f2e70-6d0f-e7e4-d130-cd384289eb1a@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-12-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a2wRFif2zYKKmdcNm5wgbGdhqwLdA-YV7AX_0LmM+OiQQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 04/22] firmware: arm_scmi: add basic driver
+ infrastructure for SCMI
+Date: Wed, 4 Oct 2017 13:19:40 +0200
+Message-ID: <CAK8P3a1o+thrkyUmf2DGYq4pb087y8gwHo2jTyqcDxWdMAnogQ@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com> <1506604306-20739-5-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2wRFif2zYKKmdcNm5wgbGdhqwLdA-YV7AX_0LmM+OiQQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506604306-20739-5-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
+> +static int scmi_mbox_free_channel(struct scmi_info *info)
+> +{
+> +       if (!IS_ERR_OR_NULL(info->tx_chan)) {
+> +               mbox_free_channel(info->tx_chan);
+> +               info->tx_chan = NULL;
+> +       }
+> +
+> +       return 0;
+> +}
 
-On 04/10/17 12:13, Arnd Bergmann wrote:
-> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> It would be useful to have options to perform some SCMI transfers
->> atomically by polling for the completion flag instead of interrupt
->> driven. The SCMI specification has option to disable the interrupt and
->> poll for the completion flag in the shared memory.
->>
->> This patch adds support for polling based SCMI transfers using that
->> option. This might be used for uninterrupted/atomic DVFS operations
->> from the scheduler context.
-> 
-> multi-millisecond timeouts from inside the scheduler sound like a
-> really bad idea. Could this maybe get changed to an asynchronous
-> operation?
-> 
+Any use of IS_ERR_OR_NULL() tends to be an indication of a bad API
+design. Please make a decision about what you want to store in
+info->tx_chan and stick with it.
 
-We already support asynchronous version. This is mainly to support fast
-DVFS switching done at context switch. I can reduce the timeouts to
-few uS as the whole idea of fast dvfs is we can't return or schedule out
-of this function. Typically the remote should see the request in < 10 uS
-and acknowledge it.
+Usually, we don't store error pointers in permanent data structures.
+If you can deal with tx_chan being absent here, then you can just
+store NULL into it when you don't have one, otherwise you should
+make sure you never call this and fail the probe function earlier.
 
->> +       if (xfer->hdr.poll_completion) {
->> +               timeout = info->desc->max_rx_timeout_ms * 100;
->> +               while (!scmi_xfer_poll_done(info, xfer) && timeout--)
->> +                       udelay(10);
-> 
-> The timeout calculation is bad as well, since both the
-> scmi_xfer_poll_done() call and udelay() can take much longer
-> than the 10 microsecond delay that you use for the calculation.
-> 
-
-Ah, agreed. I will change it to few uS as that's what is expected.
-
-> If you want to do a timeout check like this, it should generally
-> be done using ktime_get()/ktime_add()/ktime_before().
-> 
-
-Good idea, will try to use that.
-
--- 
-Regards,
-Sudeep
+      Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
