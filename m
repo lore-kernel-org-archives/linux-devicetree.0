@@ -1,61 +1,30 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/4] ARM: dts: r8a7790: Use generic node name for VSP1 nodes
-Date: Wed,  4 Oct 2017 14:36:46 +0200
-Message-ID: <1507120609-14501-2-git-send-email-geert+renesas@glider.be>
-References: <1507120609-14501-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507120609-14501-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] powerpc: pseries: only store the device node basename in full_name
+Date: Wed, 04 Oct 2017 23:37:49 +1100
+Message-ID: <87infvozqa.fsf@concordia.ellerman.id.au>
+References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-5-robh@kernel.org> <87tvzgd1l3.fsf@concordia.ellerman.id.au> <CAL_JsqLiTFM=THW0+WXXUY3S-T4QamV8vS5pWZBPm0oOybQLgg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLiTFM=THW0+WXXUY3S-T4QamV8vS5pWZBPm0oOybQLgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, "nfont@linux.vnet.ibm.com" <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "tyreld@linux.vnet.ibm.com" <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the preferred generic node name instead of the specific name.
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> On Tue, Oct 3, 2017 at 4:26 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+...
+>>
+>> The obvious fix is just to allocate it separately as before, eg ~=:
+>
+> Yes, I'll go back to doing 2 allocs like v1, but using kstrdup as was
+> also pointed out.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7790.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Yeah that would be better still I guess.
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 252c9664d0836838..ffa57bfe4873415c 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1010,7 +1010,7 @@
- 		status = "disabled";
- 	};
- 
--	vsp1@fe920000 {
-+	vsp@fe920000 {
- 		compatible = "renesas,vsp1";
- 		reg = <0 0xfe920000 0 0x8000>;
- 		interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1019,7 +1019,7 @@
- 		resets = <&cpg 130>;
- 	};
- 
--	vsp1@fe928000 {
-+	vsp@fe928000 {
- 		compatible = "renesas,vsp1";
- 		reg = <0 0xfe928000 0 0x8000>;
- 		interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1028,7 +1028,7 @@
- 		resets = <&cpg 131>;
- 	};
- 
--	vsp1@fe930000 {
-+	vsp@fe930000 {
- 		compatible = "renesas,vsp1";
- 		reg = <0 0xfe930000 0 0x8000>;
- 		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1037,7 +1037,7 @@
- 		resets = <&cpg 128>;
- 	};
- 
--	vsp1@fe938000 {
-+	vsp@fe938000 {
- 		compatible = "renesas,vsp1";
- 		reg = <0 0xfe938000 0 0x8000>;
- 		interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.7.4
+cheers
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
