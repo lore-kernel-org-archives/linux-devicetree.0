@@ -1,131 +1,197 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
-Date: Wed, 04 Oct 2017 14:52:11 +0200
-Message-ID: <878tgrkrd0.fsf@free-electrons.com>
-References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
-        <87377fmbpw.fsf@free-electrons.com>
-        <1506289460890.34765@alliedtelesis.co.nz>
-        <87lgl1ishv.fsf@free-electrons.com>
-        <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc>
-        <87efqsiok3.fsf@free-electrons.com>
-        <20171003214925.353u7l35jvnergsr@rob-hp-laptop>
-        <87lgkrl3ch.fsf@free-electrons.com>
-        <CAL_JsqLWq-Xcg2WusZVA0EwwL1uThkjq6rUY072LrK729yoAmQ@mail.gmail.com>
+From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] usb: host: add a generic platform USB roothub
+ driver
+Date: Wed, 4 Oct 2017 16:05:02 +0300
+Message-ID: <59D4DC7E.6040003@linux.intel.com>
+References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
+ <20170903213829.6589-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLWq-Xcg2WusZVA0EwwL1uThkjq6rUY072LrK729yoAmQ@mail.gmail.com>
-        (Rob Herring's message of "Wed, 4 Oct 2017 07:46:27 -0500")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170903213829.6589-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
- 
- On mer., oct. 04 2017, Rob Herring <robh@kernel.org> wrote:
-
-> On Wed, Oct 4, 2017 at 3:33 AM, Gregory CLEMENT
-> <gregory.clement@free-electrons.com> wrote:
->> Hi Rob,
->>
->>  On mar., oct. 03 2017, Rob Herring <robh@kernel.org> wrote:
->>
->>> On Wed, Sep 27, 2017 at 09:33:00AM +0200, Gregory CLEMENT wrote:
->>>> Hi Chris,
->>>>
->>>>  On mer., sept. 27 2017, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
->>>>
->>>> > Hi Gregory,
->>>> >
->>>> > On 27/09/17 00:56, Gregory CLEMENT wrote:
->>>> >> Hi Kalyan,
->>>> >>
->>>> >> Please try avoid top-posting.
->>>> >>
->>>> >>   On dim., sept. 24 2017, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz> wrote:
->>>> >>
->>>> >>> Hi Gregory,
->>>> >>>
->>>> >>> I got this information from Armada-38x functional errata document.
->>>> >>
->>>> >> OK but in any case just adding a new compatible was not enough you have
->>>> >> to update the driver in the same time, however for this case we won't
->>>> >> need it, see below.
->>>> >>
->>>> >>>
->>>> >>> I can add the "marvell,mv78230-i2c" compatible string to the appropriate  device tree files
->>>> >>> but the i2c-mv64xxx driver enables an additional  feature (offload i2c transactions)
->>>> >>> based on the compatible string "marvell,mv78230-i2c".
->>>> >>>
->>>> >>> I am not sure if this feature (offload i2c transactions) should be enabled for Armada-38x devices.
->>>> >>> That is the reason I felt for the need of a new compatible string
->>>> >>> specifically for Armada-38x SoCs.
->>>> >>
->>>> >> Indeed the Armada-38x SoCs does not support hardware offloading (at
->>>> >> least according the datasheet). But it happens that in the earlier
->>>> >> version of the Armada XP the hardware offloading was buggy, so we
->>>> >> introduced a compatible for this case: marvell,mv78230-a0-i2c. This
->>>> >> compatible enable the errata fix but not the offloading feature. That
->>>> >> means that it is exactly the compatible you need for Armada 38x (and
->>>> >> Armada 39x and 375 I think).
->>>> >
->>>> > The "mv78230-a0-i2c" dt-binding has the following note
->>>> >
->>>> >    Note: Only use "marvell,mv78230-a0-i2c" for a
->>>> >    very rare, initial version of the SoC which
->>>> >    had broken offload support.  Linux
->>>> >    auto-detects this and sets it appropriately.
->>>> >
->>>> > If we are going to re-use this binding for armada-38x we should probably
->>>> > remove this note. Personally my preference would be an armada-38x
->>>>
->>>> Updating the documentation is the right thing to do yes.
->>>>
->>>>
->>>> > compatible string (or 370 if that's the common base of these SoCs). But
->>>> > of course we'll go with whatever your preference is as maintainer.
->>>>
->>>> If the IP is compatible then there is no reason to add a new one, else
->>>> we will end with a compatible for each SoC and the compatible property
->>>> will just loose its meaning.
->>>
->>> If you all had added compatibles for each SoC in the first place, then
->>> we wouldn't be having this dicussion.
->>
->> Really??
->>
->> For Armada 38x we have already 6 flavor 381, 382, 383, 385, 388.  Then
->> we have 9 SoC families on mvebu: orion5x, kirkwood, dove, Armada 370,
->> Armada XP, Armada 375, Armada 39x, Armada 7K, Armada 8K. Of course in
->> each family we have several flavors.
->>
->> But then Allwiner also use this driver in 8 SoC families: sun4i, sun5i,
->> sun6i, sun7i, sun8i, sun9i, sunxi, sun50i. Here again each family have
->> their own flavor.
->>
->> So you are just suggesting to blot the i2c driver with more than 50
->> compatible string!
+On 04.09.2017 00:38, Martin Blumenstingl wrote:
+> Many SoC platforms have separate devices for the USB PHY which are
+> registered through the generic PHY framework. These PHYs have to be
+> enabled to make the USB controller actually work. They also have to be
+> disabled again on shutdown/suspend.
 >
-> No.
+> Currently (at least) the following HCI platform drivers are using custom
+> code to obtain all PHYs via devicetree for the roothub/controller and
+> disable/enable them when required:
+> - ehci-platform.c has ehci_platform_power_{on,off}
+> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
+> - ohci-platform.c has ohci_platform_power_{on,off}
 >
->> That also mean updating the i2c driver each time a new SoC flavor
->> appear, so more or less for each release.
->
-> No. You can have one or several fallbacks. Use the fallback as long as
-> you think they are the same and then add the more specific one to the
-> driver when you find differences.
+> These drivers are not using the generic devicetree USB device bindings
+> yet which were only introduced recently (documentation is available in
+> devicetree/bindings/usb/usb-device.txt).
+> With this new driver the usb2-phy and usb3-phy can be specified directly
+> in the child-node of the corresponding port of the roothub via
+> devicetree. This can be extended by not just parsing PHYs (some of the
+> other drivers listed above are for example also parsing a list of clocks
+> as well) when required.
 
-So you mean adding all the possible variant of the SoC in the binding
-documentation, but only implement them in the driver when needed?
+usb_add_hcd() in usb/core/hcd.c is already finding, initializing and turning
+on a phy, would it make sense to expand that one to support several phys instead?
 
-Gregory
+xhci will add two hcd's one for USB2 and one for USB3
 
 >
-> Rob
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   drivers/usb/host/Kconfig            |   3 +
+>   drivers/usb/host/Makefile           |   2 +
+>   drivers/usb/host/platform-roothub.c | 180 ++++++++++++++++++++++++++++++++++++
+>   drivers/usb/host/platform-roothub.h |  12 +++
+>   4 files changed, 197 insertions(+)
+>   create mode 100644 drivers/usb/host/platform-roothub.c
+>   create mode 100644 drivers/usb/host/platform-roothub.h
+>
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Instead of creating  platform-roothub files could this content
+be added into into core/hcd.*, core/phy.* and host/xhci-plat.c
+
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index fa5692dec832..b8b05c786b2a 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -805,6 +805,9 @@ config USB_HCD_SSB
+>
+>   	  If unsure, say N.
+>
+> +config USB_PLATFORM_ROOTHUB
+> +	bool
+> +
+>   config USB_HCD_TEST_MODE
+>   	bool "HCD test mode support"
+>   	---help---
+> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+> index cf2691fffcc0..dc817f82d632 100644
+> --- a/drivers/usb/host/Makefile
+> +++ b/drivers/usb/host/Makefile
+> @@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
+>
+>   obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
+>
+> +obj-$(CONFIG_USB_PLATFORM_ROOTHUB)	+= platform-roothub.o
+> +
+>   obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
+>   obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
+>   obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
+> diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
+> new file mode 100644
+> index 000000000000..70d2d97aa8b2
+> --- /dev/null
+> +++ b/drivers/usb/host/platform-roothub.c
+> @@ -0,0 +1,180 @@
+> +/*
+> + * platform roothub driver - a virtual PHY device which passes all phy_*
+> + * function calls to multiple (actual) PHY devices. This is comes handy when
+> + * initializing all PHYs on a root-hub (to keep them all in the same state).
+> + *
+> + * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/list.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/of.h>
+> +#include <linux/usb/of.h>
+> +
+> +#include "platform-roothub.h"
+> +
+> +#define ROOTHUB_PORTNUM		0
+> +
+> +struct platform_roothub {
+> +	struct phy		*phy;
+> +	struct list_head	list;
+> +};
+> +
+> +static struct platform_roothub *platform_roothub_alloc(struct device *dev)
+> +{
+> +	struct platform_roothub *roothub_entry;
+> +
+> +	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
+> +	if (!roothub_entry)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	INIT_LIST_HEAD(&roothub_entry->list);
+> +
+> +	return roothub_entry;
+> +}
+> +
+> +static int platform_roothub_add_phy(struct device *dev,
+> +				    struct device_node *port_np,
+> +				    const char *con_id, struct list_head *list)
+> +{
+> +	struct platform_roothub *roothub_entry;
+> +	struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
+> +
+> +	if (IS_ERR_OR_NULL(phy)) {
+> +		if (!phy || PTR_ERR(phy) == -ENODEV)
+> +			return 0;
+> +		else
+> +			return PTR_ERR(phy);
+> +	}
+> +
+> +	roothub_entry = platform_roothub_alloc(dev);
+> +	if (IS_ERR(roothub_entry))
+> +		return PTR_ERR(roothub_entry);
+> +
+> +	roothub_entry->phy = phy;
+> +
+> +	list_add_tail(&roothub_entry->list, list);
+> +
+> +	return 0;
+> +}
+> +
+> +struct platform_roothub *platform_roothub_init(struct device *dev)
+> +{
+> +	struct device_node *roothub_np, *port_np;
+> +	struct platform_roothub *plat_roothub;
+> +	struct platform_roothub *roothub_entry;
+> +	struct list_head *head;
+> +	int err;
+> +
+> +	roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
+> +	if (!of_device_is_available(roothub_np))
+> +		return NULL;
+> +
+> +	plat_roothub = platform_roothub_alloc(dev);
+> +	if (IS_ERR(plat_roothub))
+> +		return plat_roothub;
+> +
+> +	for_each_available_child_of_node(roothub_np, port_np) {
+> +		err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
+> +					       &plat_roothub->list);
+> +		if (err)
+> +			goto err_out;
+> +
+> +		err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
+> +					       &plat_roothub->list);
+
+So if the first 10 ports have the same phy, and 11th and 12th have an other one, won't we end up
+with a phy list with 12 entries for 2 phys, and initialize and turn on the same first phy 10 times?
+
+I'm also not sure I understand the reason for having the "usb3-phy" and "usb2-phy" phy-names
+for the ports if we anyways just add everything to one list.
+
+-Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
