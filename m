@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 1/4] ARM: dts: qcom: msm8974: Add Sony Xperia Z2 Tablet
-Date: Wed,  4 Oct 2017 11:58:54 -0700
-Message-ID: <20171004185857.24510-2-bjorn.andersson@linaro.org>
+Subject: [PATCH 4/4] ARM: qcom_defconfig: Enable Z2 Tablet related options
+Date: Wed,  4 Oct 2017 11:58:57 -0700
+Message-ID: <20171004185857.24510-5-bjorn.andersson@linaro.org>
 References: <20171004185857.24510-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171004185857.24510-1-bjorn.andersson@linaro.org>
@@ -10,730 +10,109 @@ To: Andy Gross <andy.gross@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Select the options necessary to get USB, coincell, WiFI, touchscreen and
+backlight on the Z2 Tablet (and other family B devices) working. The
+device specific peripherals are selected as modules.
 
-This adds a basic DTS file for the Sony Xperia Z2 Tablet, containing
-definitions for regulators, eMMC/SD-card, USB, WiFi, Touchscreen,
-charger, backlight, coincell and buttons.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/Makefile                         |   1 +
- .../boot/dts/qcom-msm8974-sony-xperia-castor.dts   | 641 +++++++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi                |  14 +
- arch/arm/boot/dts/qcom-msm8974pro.dtsi             |  18 +
- 4 files changed, 674 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
- create mode 100644 arch/arm/boot/dts/qcom-msm8974pro.dtsi
+ arch/arm/configs/qcom_defconfig | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faf46abaa4a2..4da1b19178ec 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -701,6 +701,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb \
- 	qcom-msm8974-lge-nexus5-hammerhead.dtb \
-+	qcom-msm8974-sony-xperia-castor.dtb \
- 	qcom-msm8974-sony-xperia-honami.dtb \
- 	qcom-mdm9615-wp8548-mangoh-green.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-new file mode 100644
-index 000000000000..e87f2c99060d
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dts
-@@ -0,0 +1,641 @@
-+#include "qcom-msm8974pro.dtsi"
-+#include "qcom-pm8841.dtsi"
-+#include "qcom-pm8941.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+
-+/ {
-+	model = "Sony Xperia Z2 Tablet";
-+	compatible = "sony,xperia-castor", "qcom,msm8974";
-+
-+	aliases {
-+		serial0 = &blsp1_uart2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		input-name = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys_pin_a>;
-+
-+		volume-down {
-+			label = "volume_down";
-+			gpios = <&pm8941_gpios 2 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+		};
-+
-+		camera-snapshot {
-+			label = "camera_snapshot";
-+			gpios = <&pm8941_gpios 3 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA>;
-+		};
-+
-+		camera-focus {
-+			label = "camera_focus";
-+			gpios = <&pm8941_gpios 4 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_CAMERA_FOCUS>;
-+		};
-+
-+		volume-up {
-+			label = "volume_up";
-+			gpios = <&pm8941_gpios 5 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+
-+	smd {
-+		rpm {
-+			rpm_requests {
-+				pm8941-regulators {
-+					vdd_l1_l3-supply = <&pm8941_s1>;
-+					vdd_l2_lvs1_2_3-supply = <&pm8941_s3>;
-+					vdd_l4_l11-supply = <&pm8941_s1>;
-+					vdd_l5_l7-supply = <&pm8941_s2>;
-+					vdd_l6_l12_l14_l15-supply = <&pm8941_s2>;
-+					vdd_l9_l10_l17_l22-supply = <&vreg_boost>;
-+					vdd_l13_l20_l23_l24-supply = <&vreg_boost>;
-+					vdd_l21-supply = <&vreg_boost>;
-+
-+					s1 {
-+						regulator-min-microvolt = <1300000>;
-+						regulator-max-microvolt = <1300000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					s2 {
-+						regulator-min-microvolt = <2150000>;
-+						regulator-max-microvolt = <2150000>;
-+						regulator-boot-on;
-+					};
-+
-+					s3 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+
-+						regulator-system-load = <154000>;
-+					};
-+
-+					s4 {
-+						regulator-min-microvolt = <5000000>;
-+						regulator-max-microvolt = <5000000>;
-+					};
-+
-+					l1 {
-+						regulator-min-microvolt = <1225000>;
-+						regulator-max-microvolt = <1225000>;
-+
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					l2 {
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <1200000>;
-+					};
-+
-+					l3 {
-+						regulator-min-microvolt = <1200000>;
-+						regulator-max-microvolt = <1200000>;
-+					};
-+
-+					l4 {
-+						regulator-min-microvolt = <1225000>;
-+						regulator-max-microvolt = <1225000>;
-+					};
-+
-+					l5 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l6 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l7 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l8 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l9 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+					};
-+
-+					l11 {
-+						regulator-min-microvolt = <1300000>;
-+						regulator-max-microvolt = <1350000>;
-+					};
-+
-+					l12 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+					l13 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <2950000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l14 {
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+					l15 {
-+						regulator-min-microvolt = <2050000>;
-+						regulator-max-microvolt = <2050000>;
-+					};
-+
-+					l16 {
-+						regulator-min-microvolt = <2700000>;
-+						regulator-max-microvolt = <2700000>;
-+					};
-+
-+					l17 {
-+						regulator-min-microvolt = <2700000>;
-+						regulator-max-microvolt = <2700000>;
-+					};
-+
-+					l18 {
-+						regulator-min-microvolt = <2850000>;
-+						regulator-max-microvolt = <2850000>;
-+					};
-+
-+					l19 {
-+						regulator-min-microvolt = <2850000>;
-+						regulator-max-microvolt = <2850000>;
-+					};
-+
-+					l20 {
-+						regulator-min-microvolt = <2950000>;
-+						regulator-max-microvolt = <2950000>;
-+
-+						regulator-allow-set-load;
-+						regulator-boot-on;
-+						regulator-allow-set-load;
-+						regulator-system-load = <500000>;
-+					};
-+
-+					l21 {
-+						regulator-min-microvolt = <2950000>;
-+						regulator-max-microvolt = <2950000>;
-+
-+						regulator-boot-on;
-+					};
-+
-+					l22 {
-+						regulator-min-microvolt = <3000000>;
-+						regulator-max-microvolt = <3000000>;
-+					};
-+
-+					l23 {
-+						regulator-min-microvolt = <2800000>;
-+						regulator-max-microvolt = <2800000>;
-+					};
-+
-+					l24 {
-+						regulator-min-microvolt = <3075000>;
-+						regulator-max-microvolt = <3075000>;
-+
-+						regulator-boot-on;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	vreg_bl_vddio: lcd-backlight-vddio {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_bl_vddio";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+
-+		gpio = <&msmgpio 69 0>;
-+		enable-active-high;
-+
-+		vin-supply = <&pm8941_s3>;
-+		startup-delay-us = <70000>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_backlight_en_pin_a>;
-+	};
-+
-+	vreg_vsp: lcd-dcdc-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_vsp";
-+		regulator-min-microvolt = <5600000>;
-+		regulator-max-microvolt = <5600000>;
-+
-+		gpio = <&pm8941_gpios 20 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lcd_dcdc_en_pin_a>;
-+	};
-+
-+	vreg_wlan: wlan-regulator {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "wl-reg";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&pm8941_gpios 18 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wlan_regulator_pin>;
-+	};
-+};
-+
-+&soc {
-+	sdhci@f9824900 {
-+		status = "ok";
-+
-+		vmmc-supply = <&pm8941_l20>;
-+		vqmmc-supply = <&pm8941_s3>;
-+
-+		bus-width = <8>;
-+		non-removable;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdhc1_pin_a>;
-+	};
-+
-+	sdhci@f9864900 {
-+		status = "ok";
-+
-+		max-frequency = <100000000>;
-+		non-removable;
-+		vmmc-supply = <&vreg_wlan>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdhc3_pin_a>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		bcrmf@1 {
-+			compatible = "brcm,bcm4339-fmac", "brcm,bcm4329-fmac";
-+			reg = <1>;
-+
-+			brcm,drive-strength = <10>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&wlan_sleep_clk_pin>;
-+		};
-+	};
-+
-+	sdhci@f98a4900 {
-+		status = "ok";
-+
-+		bus-width = <4>;
-+
-+		vmmc-supply = <&pm8941_l21>;
-+		vqmmc-supply = <&pm8941_l13>;
-+
-+		cd-gpios = <&msmgpio 62 GPIO_ACTIVE_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdhc2_pin_a>, <&sdhc2_cd_pin_a>;
-+	};
-+
-+	serial@f991e000 {
-+		status = "ok";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&blsp1_uart2_pin_a>;
-+	};
-+
-+	usb@f9a55000 {
-+		status = "ok";
-+
-+		phys = <&usb_hs1_phy>;
-+		phy-select = <&tcsr 0xb000 0>;
-+		extcon = <&smbb>, <&usb_id>;
-+		vbus-supply = <&chg_otg>;
-+
-+		hnp-disable;
-+		srp-disable;
-+		adp-disable;
-+
-+		ulpi {
-+			phy@a {
-+				status = "ok";
-+
-+				v1p8-supply = <&pm8941_l6>;
-+				v3p3-supply = <&pm8941_l24>;
-+
-+				extcon = <&smbb>;
-+				qcom,init-seq = /bits/ 8 <0x1 0x64>;
-+			};
-+		};
-+	};
-+
-+	pinctrl@fd510000 {
-+		blsp1_uart2_pin_a: blsp1-uart2-pin-active {
-+			rx {
-+				pins = "gpio5";
-+				function = "blsp_uart2";
-+
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
-+
-+			tx {
-+				pins = "gpio4";
-+				function = "blsp_uart2";
-+
-+				drive-strength = <4>;
-+				bias-disable;
-+			};
-+		};
-+
-+		i2c8_pins: i2c8 {
-+			mux {
-+				pins = "gpio47", "gpio48";
-+				function = "blsp_i2c8";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+		i2c11_pins: i2c11 {
-+			mux {
-+				pins = "gpio83", "gpio84";
-+				function = "blsp_i2c11";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+		lcd_backlight_en_pin_a: lcd-backlight-vddio {
-+			pins = "gpio69";
-+			drive-strength = <10>;
-+			output-low;
-+			bias-disable;
-+		};
-+
-+		sdhc1_pin_a: sdhc1-pin-active {
-+			clk {
-+				pins = "sdc1_clk";
-+				drive-strength = <16>;
-+				bias-disable;
-+			};
-+
-+			cmd-data {
-+				pins = "sdc1_cmd", "sdc1_data";
-+				drive-strength = <10>;
-+				bias-pull-up;
-+			};
-+		};
-+
-+		sdhc2_cd_pin_a: sdhc2-cd-pin-active {
-+			pins = "gpio62";
-+			function = "gpio";
-+
-+			drive-strength = <2>;
-+			bias-disable;
-+		 };
-+
-+		sdhc2_pin_a: sdhc2-pin-active {
-+			clk {
-+				pins = "sdc2_clk";
-+				drive-strength = <6>;
-+				bias-disable;
-+			};
-+
-+			cmd-data {
-+				pins = "sdc2_cmd", "sdc2_data";
-+				drive-strength = <6>;
-+				bias-pull-up;
-+			};
-+		};
-+
-+		sdhc3_pin_a: sdhc3-pin-active {
-+			clk {
-+				pins = "gpio40";
-+				function = "sdc3";
-+
-+				drive-strength = <10>;
-+				bias-disable;
-+			};
-+
-+			cmd {
-+				pins = "gpio39";
-+				function = "sdc3";
-+
-+				drive-strength = <10>;
-+				bias-pull-up;
-+			};
-+
-+			data {
-+				pins = "gpio35", "gpio36", "gpio37", "gpio38";
-+				function = "sdc3";
-+
-+				drive-strength = <10>;
-+				bias-pull-up;
-+			};
-+		};
-+
-+		ts_int_pin: synaptics {
-+			pin {
-+				pins = "gpio86";
-+				function = "gpio";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+				input-enable;
-+			};
-+		};
-+	};
-+
-+	i2c@f9964000 {
-+		status = "ok";
-+
-+		clock-frequency = <355000>;
-+		qcom,src-freq = <50000000>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c8_pins>;
-+
-+		synaptics@2c {
-+			compatible = "syna,rmi-i2c";
-+			reg = <0x2c>;
-+
-+			interrupt-parent = <&msmgpio>;
-+			interrupts = <86 IRQ_TYPE_EDGE_FALLING>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			vdd-supply = <&pm8941_l22>;
-+			vio-supply = <&pm8941_lvs3>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ts_int_pin>;
-+
-+			rmi-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep = <1>;
-+			};
-+
-+			rmi-f11@11 {
-+				reg = <0x11>;
-+				syna,f11-flip-x = <1>;
-+				syna,sensor-type = <1>;
-+			};
-+		};
-+	};
-+
-+	i2c@f9967000 {
-+		status = "ok";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c11_pins>;
-+		clock-frequency = <355000>;
-+		qcom,src-freq = <50000000>;
-+
-+		lp8566_wled: backlight@2c {
-+			compatible = "ti,lp8556";
-+			reg = <0x2c>;
-+			power-supply = <&vreg_bl_vddio>;
-+
-+			bl-name = "backlight";
-+			dev-ctrl = /bits/ 8 <0x05>;
-+			init-brt = /bits/ 8 <0x3f>;
-+			rom_a0h {
-+				rom-addr = /bits/ 8 <0xa0>;
-+				rom-val = /bits/ 8 <0xff>;
-+			};
-+			rom_a1h {
-+				rom-addr = /bits/ 8 <0xa1>;
-+				rom-val = /bits/ 8 <0x3f>;
-+			};
-+			rom_a2h {
-+				rom-addr = /bits/ 8 <0xa2>;
-+				rom-val = /bits/ 8 <0x20>;
-+			};
-+			rom_a3h {
-+				rom-addr = /bits/ 8 <0xa3>;
-+				rom-val = /bits/ 8 <0x5e>;
-+			};
-+			rom_a4h {
-+				rom-addr = /bits/ 8 <0xa4>;
-+				rom-val = /bits/ 8 <0x02>;
-+			};
-+			rom_a5h {
-+				rom-addr = /bits/ 8 <0xa5>;
-+				rom-val = /bits/ 8 <0x04>;
-+			};
-+			rom_a6h {
-+				rom-addr = /bits/ 8 <0xa6>;
-+				rom-val = /bits/ 8 <0x80>;
-+			};
-+			rom_a7h {
-+				rom-addr = /bits/ 8 <0xa7>;
-+				rom-val = /bits/ 8 <0xf7>;
-+			};
-+			rom_a9h {
-+				rom-addr = /bits/ 8 <0xa9>;
-+				rom-val = /bits/ 8 <0x80>;
-+			};
-+			rom_aah {
-+				rom-addr = /bits/ 8 <0xaa>;
-+				rom-val = /bits/ 8 <0x0f>;
-+			};
-+			rom_aeh {
-+				rom-addr = /bits/ 8 <0xae>;
-+				rom-val = /bits/ 8 <0x0f>;
-+			};
-+		};
-+	};
-+};
-+
-+&spmi_bus {
-+	pm8941@0 {
-+		charger@1000 {
-+			qcom,fast-charge-safe-current = <1500000>;
-+			qcom,fast-charge-current-limit = <1500000>;
-+			qcom,dc-current-limit = <1800000>;
-+			qcom,fast-charge-safe-voltage = <4400000>;
-+			qcom,fast-charge-high-threshold-voltage = <4350000>;
-+			qcom,fast-charge-low-threshold-voltage = <3400000>;
-+			qcom,auto-recharge-threshold-voltage = <4200000>;
-+			qcom,minimum-input-voltage = <4300000>;
-+		};
-+
-+		gpios@c000 {
-+			gpio_keys_pin_a: gpio-keys-active {
-+				pins = "gpio2", "gpio5";
-+				function = "normal";
-+
-+				bias-pull-up;
-+				power-source = <PM8941_GPIO_S3>;
-+			};
-+
-+			wlan_sleep_clk_pin: wl-sleep-clk {
-+				pins = "gpio17";
-+				function = "func2";
-+
-+				output-high;
-+				power-source = <PM8941_GPIO_S3>;
-+			};
-+
-+			wlan_regulator_pin: wl-reg-active {
-+				pins = "gpio18";
-+				function = "normal";
-+
-+				bias-disable;
-+				power-source = <PM8941_GPIO_S3>;
-+			};
-+
-+			lcd_dcdc_en_pin_a: lcd-dcdc-en-active {
-+				pins = "gpio20";
-+				function = "normal";
-+
-+				bias-disable;
-+				power-source = <PM8941_GPIO_S3>;
-+				input-disable;
-+				output-low;
-+			};
-+
-+		};
-+
-+		coincell@2800 {
-+			status = "ok";
-+			qcom,rset-ohms = <2100>;
-+			qcom,vset-millivolts = <3000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index a39207625354..75cae87219d6 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -613,6 +613,20 @@
- 			status = "disabled";
- 		};
- 
-+		sdhci@f9864900 {
-+			compatible = "qcom,sdhci-msm-v4";
-+			reg = <0xf9864900 0x11c>, <0xf9864000 0x800>;
-+			reg-names = "hc_mem", "core_mem";
-+			interrupts = <GIC_SPI 127 IRQ_TYPE_NONE>,
-+				     <GIC_SPI 224 IRQ_TYPE_NONE>;
-+			interrupt-names = "hc_irq", "pwr_irq";
-+			clocks = <&gcc GCC_SDCC3_APPS_CLK>,
-+				 <&gcc GCC_SDCC3_AHB_CLK>,
-+				 <&xo_board>;
-+			clock-names = "core", "iface", "xo";
-+			status = "disabled";
-+		};
-+
- 		sdhci@f98a4900 {
- 			compatible = "qcom,sdhci-msm-v4";
- 			reg = <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
-diff --git a/arch/arm/boot/dts/qcom-msm8974pro.dtsi b/arch/arm/boot/dts/qcom-msm8974pro.dtsi
-new file mode 100644
-index 000000000000..6740a4cb7da8
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-msm8974pro.dtsi
-@@ -0,0 +1,18 @@
-+#include "qcom-msm8974.dtsi"
-+
-+/ {
-+	soc {
-+		sdhci@f9824900 {
-+			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-+				 <&gcc GCC_SDCC1_AHB_CLK>,
-+				 <&xo_board>,
-+				 <&gcc GCC_SDCC1_CDCCAL_FF_CLK>,
-+				 <&gcc GCC_SDCC1_CDCCAL_SLEEP_CLK>;
-+			clock-names = "core", "iface", "xo", "cal", "sleep";
-+		};
-+
-+		clock-controller@fc400000 {
-+				compatible = "qcom,gcc-msm8974pro";
-+		};
-+	};
-+};
+diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+index f6aa100bf69c..d937f2be7c39 100644
+--- a/arch/arm/configs/qcom_defconfig
++++ b/arch/arm/configs/qcom_defconfig
+@@ -60,6 +60,7 @@ CONFIG_MTD_M25P80=y
+ CONFIG_MTD_SPI_NOR=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
++CONFIG_QCOM_COINCELL=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_CHR_DEV_SG=y
+ CONFIG_CHR_DEV_SCH=y
+@@ -82,6 +83,7 @@ CONFIG_SLIP_MODE_SLIP6=y
+ CONFIG_USB_USBNET=y
+ # CONFIG_USB_NET_AX8817X is not set
+ # CONFIG_USB_NET_ZAURUS is not set
++CONFIG_BRCMFMAC=m
+ CONFIG_INPUT_EVDEV=y
+ # CONFIG_KEYBOARD_ATKBD is not set
+ CONFIG_KEYBOARD_GPIO=y
+@@ -93,6 +95,10 @@ CONFIG_INPUT_MISC=y
+ CONFIG_INPUT_PM8XXX_VIBRATOR=y
+ CONFIG_INPUT_PMIC8XXX_PWRKEY=y
+ CONFIG_INPUT_UINPUT=y
++CONFIG_RMI4_CORE=m
++CONFIG_RMI4_I2C=m
++CONFIG_RMI4_F11=y
++CONFIG_RMI4_F12=y
+ CONFIG_SERIO_LIBPS2=y
+ # CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_MSM=y
+@@ -128,8 +134,13 @@ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_QCOM_RPM=y
+ CONFIG_REGULATOR_QCOM_SMD_RPM=y
++CONFIG_REGULATOR_QCOM_SPMI=y
+ CONFIG_MEDIA_SUPPORT=y
+ CONFIG_FB=y
++CONFIG_BACKLIGHT_LCD_SUPPORT=y
++# CONFIG_LCD_CLASS_DEVICE is not set
++CONFIG_BACKLIGHT_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_LP855X=m
+ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_DYNAMIC_MINORS=y
+@@ -148,11 +159,17 @@ CONFIG_USB_ACM=y
+ CONFIG_USB_CHIPIDEA=y
+ CONFIG_USB_CHIPIDEA_UDC=y
+ CONFIG_USB_CHIPIDEA_HOST=y
++CONFIG_USB_CHIPIDEA_ULPI=y
+ CONFIG_USB_SERIAL=y
+ CONFIG_USB_MSM_OTG=y
+ CONFIG_USB_GADGET=y
+ CONFIG_USB_GADGET_DEBUG_FILES=y
+ CONFIG_USB_GADGET_VBUS_DRAW=500
++CONFIG_USB_CONFIGFS=y
++CONFIG_USB_CONFIGFS_NCM=y
++CONFIG_USB_CONFIGFS_ECM=y
++CONFIG_USB_CONFIGFS_F_FS=y
++CONFIG_USB_ULPI_BUS=y
+ CONFIG_MMC=y
+ CONFIG_MMC_BLOCK_MINORS=32
+ CONFIG_MMC_ARMMMCI=y
+@@ -187,6 +204,7 @@ CONFIG_REMOTEPROC=y
+ CONFIG_QCOM_ADSP_PIL=y
+ CONFIG_QCOM_Q6V5_PIL=y
+ CONFIG_QCOM_WCNSS_PIL=y
++CONFIG_RPMSG_CHAR=y
+ CONFIG_RPMSG_QCOM_SMD=y
+ CONFIG_QCOM_GSBI=y
+ CONFIG_QCOM_PM=y
+@@ -195,6 +213,7 @@ CONFIG_QCOM_SMD_RPM=y
+ CONFIG_QCOM_SMP2P=y
+ CONFIG_QCOM_SMSM=y
+ CONFIG_QCOM_WCNSS_CTRL=y
++CONFIG_EXTCON_QCOM_SPMI_MISC=y
+ CONFIG_IIO=y
+ CONFIG_IIO_BUFFER_CB=y
+ CONFIG_IIO_SW_TRIGGER=y
+@@ -203,8 +222,10 @@ CONFIG_MPU3050_I2C=y
+ CONFIG_AK8975=y
+ CONFIG_IIO_HRTIMER_TRIGGER=y
+ CONFIG_BMP280=y
++CONFIG_PWM=y
+ CONFIG_PHY_QCOM_APQ8064_SATA=y
+ CONFIG_PHY_QCOM_IPQ806X_SATA=y
++CONFIG_PHY_QCOM_USB_HS=y
+ CONFIG_QCOM_QFPROM=y
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+@@ -226,3 +247,4 @@ CONFIG_DYNAMIC_DEBUG=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_MAGIC_SYSRQ=y
+ # CONFIG_SCHED_DEBUG is not set
++CONFIG_CRYPTO_DRBG_MENU=y
 -- 
 2.12.0
