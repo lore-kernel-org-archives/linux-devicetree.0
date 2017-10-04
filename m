@@ -1,59 +1,44 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree at Linux Plumbers Conference 2017
-Date: Wed, 4 Oct 2017 14:40:28 +0100
-Message-ID: <341aede4-a5ca-b324-c09c-51026a9c3fe0@codethink.co.uk>
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
- <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
- <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
- <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
- <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
- <CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com>
- <CACxGe6uoRz1qUSxFNykgSHTO8mAaOoqLvJVbJ6oB3s09YMzzKw@mail.gmail.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/2] dt-bindings: pinctrl: add support for RZ/A1L
+Date: Wed, 4 Oct 2017 14:16:25 +0000
+Message-ID: <SG2PR06MB1165B7C76F5E5528FDF7B7408A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20171003073334.18917-1-chris.brandt@renesas.com>
+ <20171003073334.18917-3-chris.brandt@renesas.com>
+ <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6uoRz1qUSxFNykgSHTO8mAaOoqLvJVbJ6oB3s09YMzzKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
-Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVU_dmMvfSNQXOON1doW98EjRY9p8XT6XP7ccxa7414bw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/17 23:50, Grant Likely wrote:
-> On Wed, Aug 30, 2017 at 11:41 AM, Grant Likely
-> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>> I owe all of you an update. Unfortunately I don't have any new
->>> information yet. I've still got a proposal in to hold a devicetree
->>> workshop at Kernel Summit, and if it does get accepted, then /most
->>> likely/ it will happen on Thursday afternoon. Don't make any travel
->>> plans based on that.
->>>
->>> As soon as I hear something either way I'll reply to this thread with
->>> the new information.
->>
->> Confirmed! The Devicetree Workshop will be Thursday 26 October in the
->> afternoon. Anyone registered for OSS will be able to attend. I don't
->> know yet if there are any other consessions for registration. I'm
->> finding out now and will update as soon as I know.
-> 
-> Some more information. I've actually got the workshop room booked for
-> the full day on Thursday, 26th October. I'm planning to use the
-> morning as a hacking sprint for anyone who is available, and the
-> afternoon for discussion topics. I'll pull together a schedule this
-> week and post an update. As always, feel free to add topics to the
-> wiki page[1]
-> 
-> However, the timing is flexible. I can move some topics to the morning
-> if there are people who aren't going to be around in the afternoon.
-> 
-> [1] http://wiki.linuxplumbersconf.org/2017:device_tree
-
-I tried to register for the device-tree workshop, but couldn't seem
-to get it to work.
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgT2N0b2JlciAwNCwgMjAxNywgR2VlcnQgVXl0dGVy
+aG9ldmVuIHdyb3RlOg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgIC0gY29tcGF0
+aWJsZQ0KPiA+IC0gICAgdGhpcyBzaGFsbCBiZSAicmVuZXNhcyxyN3M3MjEwMC1wb3J0cyIuDQo+
+ID4gKyAgICB0aGlzIHNoYWxsIGJlICJyZW5lc2FzLHI3czcyMTAwLXBvcnRzIiBmb3IgUlovQTFI
+IGFuZCBSWi9BMU0gb3INCj4gPiArICAgICJyZW5lc2FzLHI3czcyMTAyLXBvcnRzIiBmb3IgUlov
+QTFMDQo+IA0KPiBTaG91bGRuJ3QgeW91IGFsc28gZG9jdW1lbnQgInJlbmVzYXMscjdzNzIxMDEt
+cG9ydHMiIGZvciBSWi9BMU0/DQoNCkkgd2FzIHdvbmRlcmluZyBpZiB5b3Ugd2VyZSBnb2luZyB0
+byBhc2sgZm9yIHRoYXQuDQoNCkkgcHV0ICJmb3IgUlovQTFIIGFuZCBSWi9BMU0iIGluIHRoZSBE
+VCBkb2N1bWVudGF0aW9uLCBidXQgaWYgeW91IA0KcHJlZmVyLCBJIGNhbiBhbHNvIGp1c3QgYWRk
+IHRvIHBpbmN0cmwtcnphMS5jOg0KDQpzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBy
+emExX3BpbmN0cmxfb2ZfbWF0Y2hbXSA9IHsNCgl7DQoJCS8qIFJaL0ExSCAqLw0KCQkuY29tcGF0
+aWJsZQk9ICJyZW5lc2FzLHI3czcyMTAwLXBvcnRzIiwNCgkJLmRhdGEJCT0gJnJ6YTFoX3BteF9j
+b25mLA0KCX0sDQorCXsNCisJCS8qIFJaL0ExTSAqLw0KKwkJLmNvbXBhdGlibGUJPSAicmVuZXNh
+cyxyN3M3MjEwMS1wb3J0cyIsDQorCQkuZGF0YQkJPSAmcnphMWhfcG14X2NvbmYsDQorCX0sCXsN
+CgkJLyogUlovQTFMICovDQoJCS5jb21wYXRpYmxlCT0gInJlbmVzYXMscjdzNzIxMDItcG9ydHMi
+LA0KCQkuZGF0YQkJPSAmcnphMWxfcG14X2NvbmYsDQoJfSwNCgl7IH0NCn07DQoNCg0KDQo+IFlv
+dSBjb3VsZCB1c2UgInJlbmVzYXMscjdzNzIxMDAtcG9ydHMiIGFzIGEgZmFsbGJhY2sgcHJvcGVy
+dHkgZm9yIFJaL0ExTSwNCj4gdGhvdWdoLg0KDQpEbyB5b3UgbWVhbiBpbiB0aGUgRFQ/IE9yIGlu
+IHBpbmN0cmwtcnphMS5jPw0KDQo+IEJUVywgaXMgdGhlcmUgYSB3YXkgdG8gZGlzdGluZ3Vpc2gg
+dGhlIHZhcmlvdXMgUlovQTEgU29DcyBhdCBydW50aW1lPw0KDQpTYWRseSB0aGVyZSBpcyBub3Qu
+DQoNClRoZXJlIGlzIGEgdW5pcXVlIElEIG51bWJlciwgYnV0IGl0IGlzIG9ubHkgYWNjZXNzaWJs
+ZSB2aWEgSlRBRyANCmV4dGVybmFsbHkuDQoNCkludGVybmFsbHksIHlvdSB3b3VsZCBoYXZlIHRv
+IGxvb2sgZm9yIHJlZ2lzdGVycyB0aGF0IGRvbid0IGV4aXN0IChmb3IgDQp0aGUgUlovQTFMKS4g
+QnV0IGZvciBSWi9BMUggdnMgUlovQTFNLCB0aGUgb25seSBhY3R1YWwgZGlmZmVyZW5jZSBpcyB0
+aGUgDQphbW91bnQgb2YgUkFNLCBzbyB5b3Ugd291bGQgaGF2ZSB0byBkbyBhIHNldC1hbmQtdGVz
+dCBtZXRob2Qgb24gUkFNLg0KDQoNCkNocmlzDQoNCg==
