@@ -1,33 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77995: add PWM device nodes
-Date: Wed, 4 Oct 2017 16:02:05 +0200
-Message-ID: <CAMuHMdUDDZi86adiOQo0+5BMnTV9JHsRAQ=q6Hg9KjY-S3zFdw@mail.gmail.com>
-References: <1507112851-10042-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1507112851-10042-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree at Linux Plumbers Conference 2017
+Date: Wed, 4 Oct 2017 14:40:28 +0100
+Message-ID: <341aede4-a5ca-b324-c09c-51026a9c3fe0@codethink.co.uk>
+References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
+ <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
+ <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
+ <CACxGe6u9v1pW=FFPJc04fwZqJRsvRaYHK4qfGzAmW=4Ft+Q_QQ@mail.gmail.com>
+ <CACxGe6uEmrho8n5XrXOOEBybQGp7NJ2Jy68Gen+CVxv2Jj95Og@mail.gmail.com>
+ <CACxGe6vOMsL=5tRzAyOoW-Rh5CjvJcvnn_Zv34L3g_tQVGfK4A@mail.gmail.com>
+ <CACxGe6uoRz1qUSxFNykgSHTO8mAaOoqLvJVbJ6oB3s09YMzzKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507112851-10042-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6uoRz1qUSxFNykgSHTO8mAaOoqLvJVbJ6oB3s09YMzzKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 12:27 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This patch adds PWM device nodes for r8a77995.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On 03/10/17 23:50, Grant Likely wrote:
+> On Wed, Aug 30, 2017 at 11:41 AM, Grant Likely
+> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> On Mon, Aug 28, 2017 at 1:30 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>>> I owe all of you an update. Unfortunately I don't have any new
+>>> information yet. I've still got a proposal in to hold a devicetree
+>>> workshop at Kernel Summit, and if it does get accepted, then /most
+>>> likely/ it will happen on Thursday afternoon. Don't make any travel
+>>> plans based on that.
+>>>
+>>> As soon as I hear something either way I'll reply to this thread with
+>>> the new information.
+>>
+>> Confirmed! The Devicetree Workshop will be Thursday 26 October in the
+>> afternoon. Anyone registered for OSS will be able to attend. I don't
+>> know yet if there are any other consessions for registration. I'm
+>> finding out now and will update as soon as I know.
+> 
+> Some more information. I've actually got the workshop room booked for
+> the full day on Thursday, 26th October. I'm planning to use the
+> morning as a hacking sprint for anyone who is available, and the
+> afternoon for discussion topics. I'll pull together a schedule this
+> week and post an update. As always, feel free to add topics to the
+> wiki page[1]
+> 
+> However, the timing is flexible. I can move some topics to the morning
+> if there are people who aren't going to be around in the afternoon.
+> 
+> [1] http://wiki.linuxplumbersconf.org/2017:device_tree
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I tried to register for the device-tree workshop, but couldn't seem
+to get it to work.
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
