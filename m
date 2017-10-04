@@ -1,120 +1,81 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS
- sensor
-Date: Wed, 4 Oct 2017 16:14:52 +0300
-Message-ID: <20171004131452.6yjaa57xr56v6jza@valkosipuli.retiisi.org.uk>
-References: <20171002202649.10897-1-leonl@leopardimaging.com>
- <20171002202649.10897-2-leonl@leopardimaging.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: i2c: Add armada-38x i2c binding
+Date: Wed, 4 Oct 2017 08:33:35 -0500
+Message-ID: <CAL_JsqKq1Gb3wvWEY0xJYsz=f5_1Y7G_t6LSgP1BuAK5rmU8zw@mail.gmail.com>
+References: <20170922020429.20941-1-kalyan.kinthada@alliedtelesis.co.nz>
+ <87377fmbpw.fsf@free-electrons.com> <1506289460890.34765@alliedtelesis.co.nz>
+ <87lgl1ishv.fsf@free-electrons.com> <5376f24bf4c540088ce6432097b5cb51@svr-chch-ex1.atlnz.lc>
+ <87efqsiok3.fsf@free-electrons.com> <20171003214925.353u7l35jvnergsr@rob-hp-laptop>
+ <87lgkrl3ch.fsf@free-electrons.com> <CAL_JsqLWq-Xcg2WusZVA0EwwL1uThkjq6rUY072LrK729yoAmQ@mail.gmail.com>
+ <878tgrkrd0.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171002202649.10897-2-leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <878tgrkrd0.fsf@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leon,
+On Wed, Oct 4, 2017 at 7:52 AM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> Hi Rob,
+>
+>  On mer., oct. 04 2017, Rob Herring <robh@kernel.org> wrote:
+>
+>> On Wed, Oct 4, 2017 at 3:33 AM, Gregory CLEMENT
+>> <gregory.clement@free-electrons.com> wrote:
+>>> Hi Rob,
+>>>
+>>>  On mar., oct. 03 2017, Rob Herring <robh@kernel.org> wrote:
+>>>
+>>>> On Wed, Sep 27, 2017 at 09:33:00AM +0200, Gregory CLEMENT wrote:
+>>>>> Hi Chris,
+>>>>>
+>>>>>  On mer., sept. 27 2017, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
 
-One more question below.
+[...]
 
-On Mon, Oct 02, 2017 at 01:26:49PM -0700, Leon Luo wrote:
-...
-> +/*
-> + * imx274_set_frame_interval - Function called when setting frame interval
-> + * @priv: Pointer to device structure
-> + * @frame_interval: Variable for frame interval
-> + *
-> + * Change frame interval by updating VMAX value
-> + * The caller should hold the mutex lock imx274->lock if necessary
-> + *
-> + * Return: 0 on success
-> + */
-> +static int imx274_set_frame_interval(struct stimx274 *priv,
-> +				     struct v4l2_fract frame_interval)
-> +{
-> +	int err;
-> +	u32 frame_length, req_frame_rate;
-> +	u16 svr;
-> +	u16 hmax;
-> +	u8 reg_val[2];
-> +
-> +	dev_dbg(&priv->client->dev, "%s: input frame interval = %d / %d",
-> +		__func__, frame_interval.numerator,
-> +		frame_interval.denominator);
-> +
-> +	if (frame_interval.denominator == 0) {
+>>>>> If the IP is compatible then there is no reason to add a new one, else
+>>>>> we will end with a compatible for each SoC and the compatible property
+>>>>> will just loose its meaning.
+>>>>
+>>>> If you all had added compatibles for each SoC in the first place, then
+>>>> we wouldn't be having this dicussion.
+>>>
+>>> Really??
+>>>
+>>> For Armada 38x we have already 6 flavor 381, 382, 383, 385, 388.  Then
+>>> we have 9 SoC families on mvebu: orion5x, kirkwood, dove, Armada 370,
+>>> Armada XP, Armada 375, Armada 39x, Armada 7K, Armada 8K. Of course in
+>>> each family we have several flavors.
+>>>
+>>> But then Allwiner also use this driver in 8 SoC families: sun4i, sun5i,
+>>> sun6i, sun7i, sun8i, sun9i, sunxi, sun50i. Here again each family have
+>>> their own flavor.
+>>>
+>>> So you are just suggesting to blot the i2c driver with more than 50
+>>> compatible string!
+>>
+>> No.
+>>
+>>> That also mean updating the i2c driver each time a new SoC flavor
+>>> appear, so more or less for each release.
+>>
+>> No. You can have one or several fallbacks. Use the fallback as long as
+>> you think they are the same and then add the more specific one to the
+>> driver when you find differences.
+>
+> So you mean adding all the possible variant of the SoC in the binding
+> documentation, but only implement them in the driver when needed?
 
-Shouldn't this be numerator? If numerator is 0, then there will be division
-by zero below.
+Yes, and in the dts files. If some are the same die, but just
+different packaging or fusing then I would not distinguish those. But
+I realize you probably don't have that information being outside of
+Marvell.
 
-> +		err = -EINVAL;
-> +		goto fail;
-> +	}
-> +
-> +	req_frame_rate = (u32)(frame_interval.denominator
-> +				/ frame_interval.numerator);
-> +
-> +	/* boundary check */
-> +	if (req_frame_rate > max_frame_rate[priv->mode_index]) {
-> +		frame_interval.numerator = 1;
-> +		frame_interval.denominator =
-> +					max_frame_rate[priv->mode_index];
-> +	} else if (req_frame_rate < IMX274_MIN_FRAME_RATE) {
-> +		frame_interval.numerator = 1;
-> +		frame_interval.denominator = IMX274_MIN_FRAME_RATE;
-> +	}
-> +
-> +	/*
-> +	 * VMAX = 1/frame_rate x 72M / (SVR+1) / HMAX
-> +	 * frame_length (i.e. VMAX) = (frame_interval) x 72M /(SVR+1) / HMAX
-> +	 */
-> +
-> +	/* SVR */
-> +	err = imx274_read_reg(priv, IMX274_SVR_REG_LSB, &reg_val[0]);
-> +	if (err)
-> +		goto fail;
-> +	err = imx274_read_reg(priv, IMX274_SVR_REG_MSB, &reg_val[1]);
-> +	if (err)
-> +		goto fail;
-> +	svr = (reg_val[1] << IMX274_SHIFT_8_BITS) + reg_val[0];
-> +	dev_dbg(&priv->client->dev,
-> +		"%s : register SVR = %d\n", __func__, svr);
-> +
-> +	/* HMAX */
-> +	err = imx274_read_reg(priv, IMX274_HMAX_REG_LSB, &reg_val[0]);
-> +	if (err)
-> +		goto fail;
-> +	err = imx274_read_reg(priv, IMX274_HMAX_REG_MSB, &reg_val[1]);
-> +	if (err)
-> +		goto fail;
-> +	hmax = (reg_val[1] << IMX274_SHIFT_8_BITS) + reg_val[0];
-> +	dev_dbg(&priv->client->dev,
-> +		"%s : register HMAX = %d\n", __func__, hmax);
-> +
-> +	frame_length = IMX274_PIXCLK_CONST1 / (svr + 1) / hmax
-> +					* frame_interval.numerator
-> +					/ frame_interval.denominator;
-> +
-> +	err = imx274_set_frame_length(priv, frame_length);
-> +	if (err)
-> +		goto fail;
-> +
-> +	priv->frame_interval = frame_interval;
-> +	return 0;
-> +
-> +fail:
-> +	dev_err(&priv->client->dev, "%s error = %d\n", __func__, err);
-> +	return err;
-> +}
+For the older parts, I'd guess they've been around long enough you've
+either found the differences by now or few people care anymore, so I'm
+not saying go back and add possible string now.
 
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
