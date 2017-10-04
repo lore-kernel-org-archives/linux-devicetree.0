@@ -1,94 +1,153 @@
-From: "'Arend van Spriel' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding
- for Allwinner XR819 SDIO Wi-Fi
-Date: Wed, 4 Oct 2017 12:02:48 +0200
-Message-ID: <59D4B1C8.8020105@broadcom.com>
-References: <20171003165944.13056-1-icenowy@aosc.io>
- <20171003165944.13056-2-icenowy@aosc.io>
- <871smjxp46.fsf@kamboji.qca.qualcomm.com>
- <E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
-Reply-To: arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v8 0/5] iommu/smmu-v3: Workaround for hisilicon
+	161010801 erratum(reserve HW MSI)
+Date: Wed, 4 Oct 2017 10:03:39 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83841C405@FRAEML521-MBX.china.huawei.com>
+References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRYNGWEWYDBBTHD2LHAKGQEICXCU3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <E46F3A20-294A-497E-AF71-C77A67AFDB8C-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170927133241.21036-1-shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org" <devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/4/2017 11:03 AM, Icenowy Zheng wrote:
->
->
-> =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-5:02:17, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> =E5=86=99=E5=88=B0:
->> Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->>
->>> Allwinner XR819 is a SDIO Wi-Fi chip, which has the functionality to
->> use
->>> an out-of-band interrupt pin instead of SDIO in-band interrupt.
->>>
->>> Add the device tree binding of this chip, in order to make it
->> possible
->>> to add this interrupt pin to device trees.
->>>
->>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>> Changes in v3:
->>> - Renames the node name.
->>> - Adds ACK from Rob.
->>> Changes in v2:
->>> - Removed status property in example.
->>> - Added required property reg.
->>>
->>>   .../bindings/net/wireless/allwinner,xr819.txt      | 38
->> ++++++++++++++++++++++
->>>   1 file changed, 38 insertions(+)
->>>   create mode 100644
->> Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
->>
->> Like I asked already last time, AFAICS there is no upstream xr819
->> wireless driver in drivers/net/wireless directory. Do we still accept
->> bindings like this for out-of-tree drivers?
->
-> See esp8089.
->
-> There's also no in-tree driver for it.
+Hi Will/Lorenzo/Marc,
 
-The question is whether we should. The above might be a precedent, but=20
-it may not necessarily be the way to go. The commit message for esp8089=20
-seems to hint that there is intent to have an in-tree driver:
+Any feedback on this series, please? Really appreciate if you can take a look
+and let us know. 
 
-"""
-     Note that at this point there only is an out of tree driver for this
-     hardware, there is no clear timeline / path for merging this. Still
-     I believe it would be good to specify the binding for this in tree
-     now, so that any future migration to an in tree driver will not cause
-     compatiblity issues.
+Thanks,
+Shameer
 
-     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-     Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-"""
-
-Regardless the bindings are in principle independent of the kernel and=20
-just describing hardware. I think there have been discussions to move=20
-the bindings to their own repository, but apparently it was decided=20
-otherwise.
-
-Regards,
-Arend
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> -----Original Message-----
+> From: Shameerali Kolothum Thodi
+> Sent: Wednesday, September 27, 2017 2:33 PM
+> To: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; marc.zyngier-5wv7dgnIgG8@public.gmane.org;
+> sudeep.holla-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
+> joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; John Garry
+> <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org; Linuxarm
+> <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Wangzhou (B) <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>;
+> Guohanjun (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Shameerali Kolothum
+> Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Subject: [PATCH v8 0/5] iommu/smmu-v3: Workaround for hisilicon
+> 161010801 erratum(reserve HW MSI)
+> 
+> On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
+> deviates from the standard implementation and this breaks PCIe MSI
+> functionality when SMMU is enabled.
+> 
+> The HiSilicon erratum 161010801 describes this limitation of certain
+> HiSilicon platforms to support the SMMU mappings for MSI transactions.
+> On these platforms GICv3 ITS translator is presented with the deviceID
+> by extending the MSI payload data to 64 bits to include the deviceID.
+> Hence, the PCIe controller on this platforms has to differentiate the MSI
+> payload against other DMA payload and has to modify the MSI payload.
+> This basically makes it difficult for this platforms to have a SMMU
+> translation for MSI.
+> 
+> This patch implements an ACPI and DT based quirk to reserve the hw msi
+> regions in the smmu-v3 driver which means these address regions will
+> not be translated and will be excluded from iova allocations.
+> 
+> To implement this quirk, the following changes are incorporated:
+> 1. Added a generic helper function to IORT code to retrieve the
+>    associated ITS base address from a device IORT node.
+> 2. Added a generic helper function to of iommu code to retrieve the
+>    associated msi controller base address from for a PCI RC
+>    msi-mapping and also platform device msi-parent.
+> 3. Added quirk to SMMUv3 to retrieve the HW ITS address and replace
+>    the default SW MSI reserve address based on the IORT SMMU model
+>    or DT bindings.
+> 
+> Changelog:
+> 
+> v7 --> v8
+> Addressed comments from Rob and Lorenzo:
+>  -Modified to use DT compatible string for errata.
+>  -Changed logic to retrieve the msi-parent for DT case.
+> 
+> v6 --> v7
+> Addressed request from Will to add DT support for the erratum:
+>  - added bt binding
+>  - add of_iommu_msi_get_resv_regions()
+> New arm64 silicon errata entry
+> Rename iort_iommu_{its->msi}_get_resv_regions
+> 
+> v5 --> v6
+> Addressed comments from Robin and Lorenzo:
+> -No change to patch#1 .
+> -Reverted v5 patch#2 as this might break the platforms where this quirk
+>   is not applicable. Provided a generic function in iommu code and added
+>   back the quirk implementation in SMMU v3 driver(patch#3)
+> 
+> v4 --> v5
+> Addressed comments from Robin and Lorenzo:
+> -Added a comment to make it clear that, for now, only straightforward
+>   HW topologies are handled while reserving ITS regions(patch #1).
+> 
+> v3 --> v4
+> Rebased on 4.13-rc1.
+> Addressed comments from Robin, Will and Lorenzo:
+> -As suggested by Robin, moved the ITS msi reservation into
+>   iommu_dma_get_resv_regions().
+> -Added its_count != resv region failure case(patch #1).
+> 
+> v2 --> v3
+> Addressed comments from Lorenzo and Robin:
+> -Removed dev_is_pci() check in smmuV3 driver.
+> -Don't treat device not having an ITS mapping as an error in
+>   iort helper function.
+> 
+> v1 --> v2
+> -patch 2/2: Invoke iort helper fn based on fwnode type(acpi).
+> 
+> RFCv2 -->PATCH
+> -Incorporated Lorenzo's review comments.
+> 
+> RFC v1 --> RFC v2
+> Based on Robin's review comments,
+> -Removed  the generic erratum framework.
+> -Using IORT/MADT tables to retrieve the ITS base addr instead  of vendor
+> specific CSRT table.
+> 
+> John Garry (2):
+>   Doc: iommu/arm-smmu-v3: Add workaround for HiSilicon erratum
+> 161010801
+>   iommu/of: Add msi address regions reservation helper
+> 
+> Shameer Kolothum (3):
+>   ACPI/IORT: Add msi address regions reservation helper
+>   iommu/dma: Add a helper function to reserve HW MSI address regions for
+>     IOMMU drivers
+>   iommu/arm-smmu-v3:Enable ACPI based HiSilicon erratum 161010801
+> 
+>  Documentation/arm64/silicon-errata.txt             |  1 +
+>  .../devicetree/bindings/iommu/arm,smmu-v3.txt      |  9 +-
+>  drivers/acpi/arm64/iort.c                          | 96 +++++++++++++++++++++-
+>  drivers/iommu/arm-smmu-v3.c                        | 41 +++++++--
+>  drivers/iommu/dma-iommu.c                          | 19 +++++
+>  drivers/iommu/of_iommu.c                           | 95 +++++++++++++++++++++
+>  drivers/irqchip/irq-gic-v3-its.c                   |  3 +-
+>  include/linux/acpi_iort.h                          |  7 +-
+>  include/linux/dma-iommu.h                          |  7 ++
+>  include/linux/of_iommu.h                           | 10 +++
+>  10 files changed, 276 insertions(+), 12 deletions(-)
+> 
+> --
+> 1.9.1
+> 
