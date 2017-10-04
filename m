@@ -1,7 +1,7 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 5/9] ARM: dts: aspeed-palmetto: Add I2C devices
-Date: Wed,  4 Oct 2017 17:19:13 +1030
-Message-ID: <20171004064917.2498-6-joel@jms.id.au>
+Subject: [PATCH v2 7/9] ARM: dts: aspeed: Add aliases for UARTs
+Date: Wed,  4 Oct 2017 17:19:15 +1030
+Message-ID: <20171004064917.2498-8-joel@jms.id.au>
 References: <20171004064917.2498-1-joel@jms.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171004064917.2498-1-joel@jms.id.au>
@@ -10,76 +10,64 @@ To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Rick Altherr <raltherr@google.com>, Brendan Higgins <brendanhiggins@google.com>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the buses that are in use and the devices that are attached.
-Currently that includes the battery backed RTC, temperature measurement
-and EEPROM.
+Existing userspace expects the console (UART5) to be at /dev/ttyS4.  To
+ensure the UARTs show up where users expect them, we give them fixed
+aliases starting at 0.
 
-Some of these buses are for hotplugged cards, such as PCIe cards.
-Others do not yet have upstream drivers, so there are no devices
-attached.
-
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 48 +++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 4 ----
+ arch/arm/boot/dts/aspeed-g4.dtsi              | 5 +++++
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 5 +++++
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index 112551766275..e387c80b7f4f 100644
+index e387c80b7f4f..be51be5a5f39 100644
 --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
 +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -61,3 +61,51 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_rmii1_default>;
- };
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c256";
-+		reg = <0x50>;
-+		pagesize = <64>;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds3231";
-+		reg = <0x68>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	tmp423@4c {
-+		compatible = "ti,tmp423";
-+		reg = <0x4c>;
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+};
+@@ -6,10 +6,6 @@
+ 	model = "Palmetto BMC";
+ 	compatible = "tyan,palmetto-bmc", "aspeed,ast2400";
+ 
+-	aliases {
+-		serial4 = &uart5;
+-	};
+-
+ 	chosen {
+ 		stdout-path = &uart5;
+ 		bootargs = "console=ttyS4,115200 earlyprintk";
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index b6ae7b62fd03..a549413bda3f 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -22,6 +22,11 @@
+ 		i2c11 = &i2c11;
+ 		i2c12 = &i2c12;
+ 		i2c13 = &i2c13;
++		serial0 = &uart1;
++		serial1 = &uart2;
++		serial2 = &uart3;
++		serial3 = &uart4;
++		serial4 = &uart5;
+ 	};
+ 
+ 	cpus {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 4c829e915c3e..de2dafa71651 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -22,6 +22,11 @@
+ 		i2c11 = &i2c11;
+ 		i2c12 = &i2c12;
+ 		i2c13 = &i2c13;
++		serial0 = &uart1;
++		serial1 = &uart2;
++		serial2 = &uart3;
++		serial3 = &uart4;
++		serial4 = &uart5;
+ 	};
+ 
+ 	cpus {
 -- 
 2.14.1
