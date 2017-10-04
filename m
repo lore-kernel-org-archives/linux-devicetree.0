@@ -1,49 +1,109 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 10/22] firmware: arm_scmi: probe and initialise all the
- supported protocols
-Date: Wed, 4 Oct 2017 13:06:20 +0200
-Message-ID: <CAK8P3a15DxNYzaYmAbxEqAm2FCJS9KQFk8vBDqmSn9QUiw64=A@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com> <1506604306-20739-11-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
+ Control and Management Interface(SCMI) protocol
+Date: Wed, 4 Oct 2017 12:07:50 +0100
+Message-ID: <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-3-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506604306-20739-11-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> +static const struct scmi_protocol_match scmi_protocols[] = {
-> +       {
-> +               .protocol_id = SCMI_PROTOCOL_PERF,
-> +               .fn = scmi_perf_protocol_init,
-> +               .name = "scmi-cpufreq",
-> +       }, {
-> +               .protocol_id = SCMI_PROTOCOL_CLOCK,
-> +               .fn = scmi_clock_protocol_init,
-> +               .name = "scmi-clocks",
-> +       }, {
-> +               .protocol_id = SCMI_PROTOCOL_POWER,
-> +               .fn = scmi_power_protocol_init,
-> +               .name = "scmi-power-domain",
-> +       }, {
-> +               .protocol_id = SCMI_PROTOCOL_SENSOR,
-> +               .fn = scmi_sensors_protocol_init,
-> +               .name = "scmi-hwmon",
-> +       },
-> +       {}
-> +};
+Hi Arnd,
 
-This looks backwards from what we do elsewhere in the kernel,
-and could be considered a layering violation: it requires a generic
-part of of the driver to know about all the more specific ones,
-and it means that we have to modify the global table here each
-time we add another protocol.
+Thanks for taking a look at this.
 
-Can you rewrite this to allow dynamic registration of the protocols?
+On 04/10/17 11:50, Arnd Bergmann wrote:
+> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> +
+>> +The SCMI is intended to allow agents such as OSPM to manage various functions
+>> +that are provided by the hardware platform it is running on, including power
+>> +and performance functions.
+>> +
+>> +This binding is intended to define the interface the firmware implementing
+>> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
+>> +and Management Interface Platform Design Document")[0] provide for OSPM in
+>> +the device tree.
+>> +
+>> +Required properties:
+>> +
+>> +The scmi node with the following properties shall be under the /firmware/ node.
+>> +
+>> +- compatible : shall be "arm,scmi"
+>> +- mboxes: List of phandle and mailbox channel specifiers. It should contain
+>> +         exactly one or two mailboxes, one for transmitting messages("tx")
+>> +         and another optional for receiving the notifications("rx") if
+>> +         supported.
+>> +- mbox-names: shall be "tx" or "rx"
+> 
+> The example below does not have the mbox-names property. If you require
+> exactly two mailboxes, why do you need the names anyway?
+> 
 
-       Arnd
+Good question. I can drop it, but would like to keep in case we need to
+extend it in future. We can always use then to identify.
+
+> However, your example does have a #addresss-cells/#size-cells
+> property that are not documented here. Please add them here as either
+> optional or required, and describe what the permitted values are and
+> how the address is interpreted.
+> 
+
+Ah right, I didn't notice that. I will add it. It was added to provide
+the protocol number in "reg" property.
+
+>> +- shmem : List of phandle pointing to the shared memory(SHM) area as per
+>> +         generic mailbox client binding.
+>> +
+>> +See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
+>> +about the generic mailbox controller and client driver bindings.
+>> +
+>> +The mailbox is the only permitted method of calling the SCMI firmware.
+>> +Mailbox doorbell is used as a mechanism to alert the presence of a
+>> +messages and/or notification.
+> 
+> This looks odd: why not make the message itself part of the mailbox
+> protocol here, and leave the shmem as a implementation detail of the
+> mailbox driver?
+> 
+
+I am not sure if I follow you here. But generally shmem can be memory
+carved out of anything in the system and it's dependent on the protocol
+and the remote firmware rather than the mailbox hardware itself.
+
+>> +Each protocol supported shall have a sub-node with corresponding compatible
+>> +as described in the following sections. If the platform supports dedicated
+>> +communication channel for a particular protocol, the 3 properties namely:
+>> +mboxes, mbox-names and shmem shall be present in the sub-node corresponding
+>> +to that protocol.
+>> +
+>> +Clock/Performance bindings for the clocks/OPPs based on SCMI Message Protocol
+>> +------------------------------------------------------------
+>> +
+>> +This binding uses the common clock binding[1].
+>> +
+>> +Required properties:
+>> +- #clock-cells : Should be 1. Contains the Clock ID value used by SCMI commands.
+>> +
+> 
+> How does the OS identify the fact that a subnode uses the clock binding?
+> Do you need to look for the #clock-cells property, or is this based on the
+> unit address?
+> 
+
+Yes it depends on #clock-cells property. That's the main reason for
+adding #clock-cells
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
