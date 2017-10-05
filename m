@@ -1,12 +1,12 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] pinctrl: meson: remove offset from pinctrl
-Date: Thu, 5 Oct 2017 13:22:42 +0200
-Message-ID: <CACRpkdZJ6YWaMig2HSf6kf3aHHRmQ-ZdB0GhqF7f-EXX6iWLUA@mail.gmail.com>
-References: <20170920133927.17390-1-jbrunet@baylibre.com> <20170920133927.17390-2-jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/8] pinctrl: meson: remove offset continued - gxbb
+Date: Thu, 5 Oct 2017 13:24:07 +0200
+Message-ID: <CACRpkdb1=-j7omaH3pNn3Rb=_V9A13s08kMrgsi6REXwzCuAJg@mail.gmail.com>
+References: <20170920133927.17390-1-jbrunet@baylibre.com> <20170920133927.17390-3-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920133927.17390-2-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170920133927.17390-3-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -14,15 +14,6 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Sep 20, 2017 at 3:39 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-> Offset on meson pinctrl and gpios is something that was carried from the
-> vendor driver, where there is a weird link between the 2
-> controllers. Since these 2 controllers are independent, this offset adds
-> an unnecessary complexity.
->
-> This patch remove this manually set offset and rely on pinctrl to figure
-> out the gpio base offset
->
-> Tested-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
 Patch applied.
