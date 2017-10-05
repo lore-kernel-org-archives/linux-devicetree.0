@@ -1,374 +1,126 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add Timers driver for stm32f746 MCU
-Date: Thu, 5 Oct 2017 18:06:28 +0200
-Message-ID: <589f9f9e-8daf-ea31-e331-2e531793e440@st.com>
-References: <1507109270-24646-1-git-send-email-benjamin.gaignard@linaro.org>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH 2/4] media: dt-bindings: Add bindings for TDA1997X
+Date: Thu, 5 Oct 2017 10:06:06 -0700
+Message-ID: <CAJ+vNU2+7FWqPjBrKBcuKo8y4BKNnRNGhp8NkA3rJOGApaOdoQ@mail.gmail.com>
+References: <1506119053-21828-1-git-send-email-tharvey@gateworks.com>
+ <1506119053-21828-3-git-send-email-tharvey@gateworks.com> <20171004211411.27gxy5wnaymdcm3z@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507109270-24646-1-git-send-email-benjamin.gaignard@linaro.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171004211411.27gxy5wnaymdcm3z@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin,
+On Wed, Oct 4, 2017 at 2:14 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Sep 22, 2017 at 03:24:11PM -0700, Tim Harvey wrote:
+>> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+>
 
-On 10/04/2017 11:27 AM, Benjamin Gaignard wrote:
-> Add Timers and it sub-nodes into DT for stm32f746 family.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->   arch/arm/boot/dts/stm32f746.dtsi | 270 +++++++++++++++++++++++++++++++++++++++
->   1 file changed, 270 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-> index 4506eb9..ae84816 100644
-> --- a/arch/arm/boot/dts/stm32f746.dtsi
-> +++ b/arch/arm/boot/dts/stm32f746.dtsi
-> @@ -82,6 +82,27 @@
->   			status = "disabled";
->   		};
->   
-> +		timers2: timers@40000000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40000000 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM2)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@1 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <1>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		timer3: timer@40000400 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40000400 0x400>;
-> @@ -90,6 +111,27 @@
->   			status = "disabled";
->   		};
->   
-> +		timers3: timers@40000400 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40000400 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM3)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@2 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <2>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		timer4: timer@40000800 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40000800 0x400>;
-> @@ -98,6 +140,27 @@
->   			status = "disabled";
->   		};
->   
-> +		timers4: timers@40000800 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40000800 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM4)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@3 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <3>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		timer5: timer@40000c00 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40000c00 0x400>;
-> @@ -105,6 +168,27 @@
->   			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM5)>;
->   		};
->   
-> +		timers5: timers@40000c00 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40000C00 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM5)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@4 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <4>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		timer6: timer@40001000 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40001000 0x400>;
-> @@ -113,6 +197,22 @@
->   			status = "disabled";
->   		};
->   
-> +		timers6: timers@40001000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40001000 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM6)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			timer@5 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <5>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		timer7: timer@40001400 {
->   			compatible = "st,stm32-timer";
->   			reg = <0x40001400 0x400>;
-> @@ -121,6 +221,73 @@
->   			status = "disabled";
->   		};
->   
-> +		timers7: timers@40001400 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40001400 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM7)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			timer@6 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <6>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		timers12: timers@40001800 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40001800 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM12)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@11 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <11>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		timers13: timers@40001c00 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40001C00 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM13)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		timers14: timers@40002000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40002000 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM14)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		rtc: rtc@40002800 {
->   			compatible = "st,stm32-rtc";
->   			reg = <0x40002800 0x400>;
-> @@ -183,6 +350,48 @@
->   			status = "disabled";
->   		};
->   
-> +		timers1: timers@40010000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40010000 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM1)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@0 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <0>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		timers8: timers@40010400 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40010400 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM8)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@7 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <7>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		usart1: serial@40011000 {
->   			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
->   			reg = <0x40011000 0x400>;
-> @@ -212,11 +421,72 @@
->   			interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
->   		};
->   
-> +		timers9: timers@40014000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40014000 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM9)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +
-> +			timer@8 {
-> +				compatible = "st,stm32-timer-trigger";
-> +				reg = <8>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		timers10: timers@40014400 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40014400 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM10)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		timers11: timers@40014800 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "st,stm32-timers";
-> +			reg = <0x40014800 0x400>;
-> +			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM11)>;
-> +			clock-names = "int";
-> +			status = "disabled";
-> +
-> +			pwm {
-> +				compatible = "st,stm32-pwm";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
->   		pwrcfg: power-config@40007000 {
->   			compatible = "syscon";
->   			reg = <0x40007000 0x400>;
->   		};
->   
-> +		ltdc: display-controller@40016800 {
-> +			compatible = "st,stm32-ltdc";
-> +			reg = <0x40016800 0x200>;
-> +			interrupts = <88>, <89>;
-> +			resets = <&rcc STM32F7_APB2_RESET(LTDC)>;
-> +			clocks = <&rcc 1 CLK_LCD>;
-> +			clock-names = "lcd";
-> +			status = "disabled";
-> +		};
-> +
+Hi Rob, thanks for the review!
 
-Why do you add ltdc node in this patch ? Maybe a separate patch would be 
-better.
+I will add a commit message, vendor prefix to non-standard props, and
+remove '_' in the next revision.
 
->   		pin-controller {
->   			#address-cells = <1>;
->   			#size-cells = <1>;
-> 
+>
+>> +
+>> +Optional Properties:
+>> + - max-pixel-rate  : Maximum pixel rate supported by the SoC (MP/sec)
+>> + - audio-port      : parameters defining audio output port connection
+>
+> That description is meaningless to me.
+>
+<snip>>
+>> +The Audio output port consists of A_CLK, A_WS, AP0, AP1, AP2, and AP3 pins
+>> +and can support up to 8-chanenl audio using the following audio bus DAI formats:
+>> + - I2S16
+>> + - I2S32
+>> + - SPDIF
+>> + - OBA (One-Bit-Audio)
+>> + - I2S16_HBR_STRAIGHT (High Bitrate straight through)
+>> + - I2S16_HBR_DEMUX (High Bitrate demuxed)
+>> + - I2S32_HBR_DEMUX (High Bitrate demuxed)
+>> + - DST (Direct Stream Transfer)
+>
+> This either should be a standard, common property or not be in DT.
+> Practically every system is going to have at least one end of the
+> connection that is configurable. The kernel should be able to get lists
+> of supported modes and pick one.
+>
+
+I struggled with 'audio-port' property quite a bit.
+
+Looking at the datasheet a bit closer
+(http://dev.gateworks.com/datasheets/TDA19971-datasheet-rev3.pdf) I
+see that the audio output port consisting of WS, AP[0:3], CLK really
+only supports I2S and S/PDIF output modes. The AP[0:3] provide support
+for up to 8 audio channels. The way these pins are used is defined in
+Table 5/6/7 in the datasheet but I think that the dt perhaps only
+needs to number of data lines (1-4) (which could also be represented
+as channels (1-8)), and a clock multiplier which could be described as
+a 'mclk-fs' multiplication factor like simple-audio bindings does.
+
+What would your recommendation be here?
+
+>> +
+<snip>
+>> +             max-pixel-rate = <180>; /* IMX6 CSI max pixel rate 180MP/sec */
+>
+> That's a constraint that belongs in the i.MX CSI node or driver.
+
+right - that makes sense. I'll talk to the maintainer of the i.MX CSI
+driver to see what they think.
+
+>
+>> +
+>> +             port@0 {
+>> +                     reg = <0>;
+>> +             };
+>> +             port@1 {
+>
+> You need to describe how many ports and what they are.
+
+ok. My example was a mistake anyway and I propose a single output port such as:
+
+The device node must contain one 'port' child node for its digital output
+video port, in accordance with the video interface bindings defined in
+Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+Example:
+                port {
+                        tda1997x_to_ipu1_csi0_mux: endpoint {
+                                remote-endpoint =
+<&ipu1_csi0_mux_from_parallel_sensor>;
+                                bus-width = <16>;
+                                hsync-active = <1>;
+                                vsync-active = <1>;
+                                data-active = <1>;
+                        };
+                };
+
+>
+>> +                     reg = <1>;
+>> +                     hdmi_in: endpoint {
+>> +                             remote-endpoint = <&ccdc_in>;
+>> +                     };
+>> +             };
+>> +     };
+>> + - VP[15:8] connected to IMX6 CSI_DATA[19:12] for 8bit BT656
+>> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
+>
+> Do you really need 2 examples? It should be possible to figure out other
+> configurations with better descriptions above.
+>
+
+Perhaps, but I feel like the vidout-portcfg is pretty confusing and
+wanted to provide some different mappings as examples. The
+vidout-portcfg property allows you to shift the bits around on the
+output pins per 4-bit groups as well as reverse their order and
+different defines are used depending on RGB444/YUV444/YUV422/BT656. I
+could provide just portcfg examples above the full dts example though
+under the short description of 'nxp,vidout-portcfg'.
+
+Regards,
+
+Tim
