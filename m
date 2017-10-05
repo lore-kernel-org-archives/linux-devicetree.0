@@ -1,37 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/12] dt-bindings: usb: mtu3: add a optional property to
- disable u3ports
-Date: Thu, 5 Oct 2017 17:31:17 -0500
-Message-ID: <20171005223117.23pvuzhg2th4byz3@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 12/12] dt-bindings: usb: mtu3: remove optional pinctrls
+Date: Thu, 5 Oct 2017 17:33:25 -0500
+Message-ID: <20171005223325.ryvu6ifjgcj5scf4@rob-hp-laptop>
 References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
- <fd4890851d8233635b334a0fad7742a58e53bc7a.1506509659.git.chunfeng.yun@mediatek.com>
+ <ec8e65205c6e0a83850e11c030ed440d7b9be2e8.1506509659.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <fd4890851d8233635b334a0fad7742a58e53bc7a.1506509659.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <ec8e65205c6e0a83850e11c030ed440d7b9be2e8.1506509659.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 08:17:18AM +0800, Chunfeng Yun wrote:
-> Add a new optional property to disable u3ports
+On Thu, Sep 28, 2017 at 08:17:20AM +0800, Chunfeng Yun wrote:
+> Remove optional pinctrls due to using FORCE/RG_IDDIG to implement
+> manual switch function.
+
+Another not backwards compatible change. Please explain why that is 
+okay.
+
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/mediatek,mtu3.txt      |    2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/usb/mediatek,mtu3.txt      |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
 > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> index 49f5476..7c611d1 100644
+> index 49c982b..b2271d8 100644
 > --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
 > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> @@ -44,6 +44,8 @@ Optional properties:
->   - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
->   - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
->  	control register, it depends on "mediatek,enable-wakeup".
-> + - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
-> +	bit1 for u3port1, ... etc;
-
-How does this relate to the XHCI change? Same comment applies.
+> @@ -30,9 +30,10 @@ Optional properties:
+>  	when supports dual-role mode.
+>   - vbus-supply : reference to the VBUS regulator, needed when supports
+>  	dual-role mode.
+> - - pinctl-names : a pinctrl state named "default" must be defined,
+> -	"id_float" and "id_ground" are optinal which depends on
+> -	"mediatek,enable-manual-drd"
+> + - pinctrl-names : a pinctrl state named "default" is optional, and need be
+> +	defined if auto drd switch is enabled, that means the property dr_mode
+> +	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
+> +	is not set.
+>   - pinctrl-0 : pin control group
+>  	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>  
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
