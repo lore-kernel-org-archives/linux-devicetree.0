@@ -1,208 +1,182 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: [PATCH v5 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2
- board
-Date: Thu, 05 Oct 2017 16:07:11 +0200
-Message-ID: <1507212431-5801-3-git-send-email-m.purski@samsung.com>
-References: <1507212431-5801-1-git-send-email-m.purski@samsung.com>
-        <CGME20171005140823eucas1p13dbb713c2aa513372694a395bbd25d91@eucas1p1.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1507212431-5801-1-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, krzk@kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Maciej Purski <m.purski@samsung.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx51: Fix inconsistent display port
+ names
+Date: Thu, 05 Oct 2017 16:09:13 +0200
+Message-ID: <1507212553.8473.16.camel@pengutronix.de>
+References: <1507207427-32424-1-git-send-email-marco.franchi@nxp.com>
+         <1507207427-32424-2-git-send-email-marco.franchi@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507207427-32424-2-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add HDMI and Sil9234 MHL converter to Trats2 board.
-Following in SoC devices have been enabled:
-- HDMI (HDMI signal encoder),
-- Mixer (video buffer scanout device),
-- I2C_5 bus (used for HDMI DDC)
-- I2C_8 bus (used for HDMI_PHY control).
+Hi Marco,
 
-Based on previous work by:
-Tomasz Stanislawski <t.stanislaws@samsung.com>
+On Thu, 2017-10-05 at 09:43 -0300, Marco Franchi wrote:
+> The parallel display interface pad groups are called DISP0 and DISP1 in 
+> the reference manuals, but in the i.MX51 dts files they are called DISP1 
+> and DISP2.
 
-Signed-off-by: Maciej Purski <m.purski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-trats2.dts | 111 ++++++++++++++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+To me, this sounds like they are called DISP0/1 also in the i.MX51
+reference manual, but if I'm not mistaken, the i.MX51 reference manual
+actually calls them DISP1/2.
+I'd change the comment to say something to the effect of: "Contrary to
+later SoCs, the parallel display interface pad groups on i.MX51 are
+called DISP1 and DISP2, not DISP0 and DISP1."
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 35e9b94..4483deb 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -18,6 +18,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/clock/maxim,max77686.h>
-+#include <dt-bindings/pinctrl/samsung.h>
- 
- / {
- 	model = "Samsung Trats 2 based on Exynos4412";
-@@ -97,6 +98,34 @@
- 			gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
-+
-+		vsil12: voltage-regulator-6 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "VSIL_1.2V";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			vin-supply = <&buck7_reg>;
-+		};
-+
-+		vcc33mhl: voltage-regulator-7 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "VCC_3.3_MHL";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
-+
-+		vcc18mhl: voltage-regulator-8 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "VCC_1.8_MHL";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -229,6 +258,36 @@
- 		};
- 	};
- 
-+	i2c-mhl {
-+		compatible = "i2c-gpio";
-+		gpios = <&gpf0 4 GPIO_ACTIVE_HIGH>, <&gpf0 6 GPIO_ACTIVE_HIGH>;
-+		i2c-gpio,delay-us = <100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-0 = <&i2c_mhl_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		sii9234: hdmi-bridge@39 {
-+			compatible = "sil,sii9234";
-+			avcc33-supply = <&vcc33mhl>;
-+			iovcc18-supply = <&vcc18mhl>;
-+			avcc12-supply = <&vsil12>;
-+			cvcc12-supply = <&vsil12>;
-+			reset-gpios = <&gpf3 4 GPIO_ACTIVE_LOW>;
-+			interrupt-parent = <&gpf3>;
-+			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x39>;
-+
-+			port {
-+				mhl_to_hdmi: endpoint {
-+					remote-endpoint = <&hdmi_to_mhl>;
-+				};
-+			};
-+		};
-+	};
-+
- 	camera: camera {
- 		pinctrl-0 = <&cam_port_a_clk_active &cam_port_b_clk_active>;
- 		pinctrl-names = "default";
-@@ -522,6 +581,29 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_hpd>;
-+	vdd-supply = <&ldo3_reg>;
-+	vdd_osc-supply = <&ldo4_reg>;
-+	vdd_pll-supply = <&ldo3_reg>;
-+	ddc = <&i2c_5>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@1 {
-+			reg = <1>;
-+			hdmi_to_mhl: endpoint {
-+				remote-endpoint = <&mhl_to_hdmi>;
-+			};
-+		};
-+	};
-+};
-+
- &hsotg {
- 	vusb_d-supply = <&ldo15_reg>;
- 	vusb_a-supply = <&ldo12_reg>;
-@@ -600,6 +682,10 @@
- 	};
- };
- 
-+&i2c_5 {
-+	status = "okay";
-+};
-+
- &i2c_7 {
- 	samsung,i2c-sda-delay = <100>;
- 	samsung,i2c-slave-addr = <0x10>;
-@@ -894,12 +980,20 @@
- 	};
- };
- 
-+&i2c_8 {
-+	status = "okay";
-+};
-+
- &i2s0 {
- 	pinctrl-0 = <&i2s0_bus>;
- 	pinctrl-names = "default";
- 	status = "okay";
- };
- 
-+&mixer {
-+	status = "okay";
-+};
-+
- &mshc_0 {
- 	num-slots = <1>;
- 	broken-cd;
-@@ -926,6 +1020,18 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sleep0>;
- 
-+	mhl_int: mhl-int {
-+		samsung,pins = "gpf3-5";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
-+	i2c_mhl_bus: i2c-mhl-bus {
-+		samsung,pins = "gpf0-4", "gpf0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+
- 	sleep0: sleep-states {
- 		PIN_SLP(gpa0-0, INPUT, NONE);
- 		PIN_SLP(gpa0-1, OUT0, NONE);
-@@ -1029,6 +1135,11 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sleep1>;
- 
-+	hdmi_hpd: hdmi-hpd {
-+		samsung,pins = "gpx3-7";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-+	};
-+
- 	sleep1: sleep-states {
- 		PIN_SLP(gpk0-0, PREV, NONE);
- 		PIN_SLP(gpk0-1, PREV, NONE);
--- 
-2.7.4
+> Fix this inconsistence by changing the DISP names in the i.mx51 dts.
+> 
+> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+
+For the patch itself,
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+> ---
+> Changes since v1:
+> -newly introduced in this series
+>  arch/arm/boot/dts/imx51-apf51dev.dts |  4 ++--
+>  arch/arm/boot/dts/imx51-babbage.dts  | 12 ++++++------
+>  arch/arm/boot/dts/imx51-ts4800.dts   |  6 +++---
+>  arch/arm/boot/dts/imx51.dtsi         |  4 ++--
+>  4 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts
+> b/arch/arm/boot/dts/imx51-apf51dev.dts
+> index f04d0df..2f1a9d2 100644
+> --- a/arch/arm/boot/dts/imx51-apf51dev.dts
+> +++ b/arch/arm/boot/dts/imx51-apf51dev.dts
+> @@ -51,7 +51,7 @@
+>  
+>  		port {
+>  			display_in: endpoint {
+> -				remote-endpoint = <&ipu_di0_disp0>;
+> +				remote-endpoint = <&ipu_di0_disp1>;
+>  			};
+>  		};
+>  	};
+> @@ -218,6 +218,6 @@
+>  	};
+>  };
+>  
+> -&ipu_di0_disp0 {
+> +&ipu_di0_disp1 {
+>  	remote-endpoint = <&display_in>;
+>  };
+> diff --git a/arch/arm/boot/dts/imx51-babbage.dts
+> b/arch/arm/boot/dts/imx51-babbage.dts
+> index 297953c..668c37b 100644
+> --- a/arch/arm/boot/dts/imx51-babbage.dts
+> +++ b/arch/arm/boot/dts/imx51-babbage.dts
+> @@ -39,7 +39,7 @@
+>  		};
+>  	};
+>  
+> -	display0: disp0 {
+> +	display1: disp1 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "rgb24";
+>  		pinctrl-names = "default";
+> @@ -61,12 +61,12 @@
+>  
+>  		port {
+>  			display0_in: endpoint {
+> -				remote-endpoint = <&ipu_di0_disp0>;
+> +				remote-endpoint = <&ipu_di0_disp1>;
+>  			};
+>  		};
+>  	};
+>  
+> -	display1: disp1 {
+> +	display2: disp2 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "rgb565";
+>  		pinctrl-names = "default";
+> @@ -93,7 +93,7 @@
+>  
+>  		port {
+>  			display1_in: endpoint {
+> -				remote-endpoint = <&ipu_di1_disp1>;
+> +				remote-endpoint = <&ipu_di1_disp2>;
+>  			};
+>  		};
+>  	};
+> @@ -348,11 +348,11 @@
+>  	};
+>  };
+>  
+> -&ipu_di0_disp0 {
+> +&ipu_di0_disp1 {
+>  	remote-endpoint = <&display0_in>;
+>  };
+>  
+> -&ipu_di1_disp1 {
+> +&ipu_di1_disp2 {
+>  	remote-endpoint = <&display1_in>;
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx51-ts4800.dts
+> b/arch/arm/boot/dts/imx51-ts4800.dts
+> index e6be869..35a1112 100644
+> --- a/arch/arm/boot/dts/imx51-ts4800.dts
+> +++ b/arch/arm/boot/dts/imx51-ts4800.dts
+> @@ -50,7 +50,7 @@
+>  		power-supply = <&backlight_reg>;
+>  	};
+>  
+> -	display0: disp0 {
+> +	display1: disp1 {
+>  		compatible = "fsl,imx-parallel-display";
+>  		interface-pix-fmt = "rgb24";
+>  		pinctrl-names = "default";
+> @@ -73,7 +73,7 @@
+>  
+>  		port@0 {
+>  			display0_in: endpoint {
+> -				remote-endpoint = <&ipu_di0_disp0>;
+> +				remote-endpoint = <&ipu_di0_disp1>;
+>  			};
+>  		};
+>  	};
+> @@ -107,7 +107,7 @@
+>  	};
+>  };
+>  
+> -&ipu_di0_disp0 {
+> +&ipu_di0_disp1 {
+>  	remote-endpoint = <&display0_in>;
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx51.dtsi
+> b/arch/arm/boot/dts/imx51.dtsi
+> index 1ee1d54..378be72 100644
+> --- a/arch/arm/boot/dts/imx51.dtsi
+> +++ b/arch/arm/boot/dts/imx51.dtsi
+> @@ -148,14 +148,14 @@
+>  			ipu_di0: port@2 {
+>  				reg = <2>;
+>  
+> -				ipu_di0_disp0: endpoint {
+> +				ipu_di0_disp1: endpoint {
+>  				};
+>  			};
+>  
+>  			ipu_di1: port@3 {
+>  				reg = <3>;
+>  
+> -				ipu_di1_disp1: endpoint {
+> +				ipu_di1_disp2: endpoint {
+>  				};
+>  			};
+>  		};
+
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
