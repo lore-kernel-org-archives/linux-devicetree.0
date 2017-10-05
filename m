@@ -1,80 +1,107 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH 2/2] gpio: mcp32s08: add support for mcp23018
-Date: Thu,  5 Oct 2017 09:23:35 +0800
-Message-ID: <1507166615-4530-3-git-send-email-preid@electromag.com.au>
-References: <1507166615-4530-1-git-send-email-preid@electromag.com.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507166615-4530-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] reset: uniphier: add PXs3 reset data
+Date: Thu,  5 Oct 2017 11:30:57 +0900
+Message-ID: <1507170657-26432-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the required definitions for the mcp23018 which is the i2c
-variant of the mcp23s18.
+Add basic reset data for Socionext's new SoC PXs3.
 
-Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/gpio/gpio-mcp23s08.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-index 2a57d024..92751e5 100644
---- a/drivers/gpio/gpio-mcp23s08.c
-+++ b/drivers/gpio/gpio-mcp23s08.c
-@@ -33,6 +33,7 @@
- #define MCP_TYPE_008	2
- #define MCP_TYPE_017	3
- #define MCP_TYPE_S18    4
-+#define MCP_TYPE_018    5
+ .../devicetree/bindings/reset/uniphier-reset.txt   |  3 +++
+ drivers/reset/reset-uniphier.c                     | 26 ++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+index 68a6f48..93efed6 100644
+--- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
++++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+@@ -13,6 +13,7 @@ Required properties:
+     "socionext,uniphier-pxs2-reset" - for PXs2/LD6b SoC
+     "socionext,uniphier-ld11-reset" - for LD11 SoC
+     "socionext,uniphier-ld20-reset" - for LD20 SoC
++    "socionext,uniphier-pxs3-reset" - for PXs3 SoC
+ - #reset-cells: should be 1.
  
- /* Registers are all 8 bits wide.
-  *
-@@ -595,6 +596,13 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		mcp->chip.ngpio = 16;
- 		mcp->chip.label = "mcp23017";
- 		break;
+ Example:
+@@ -44,6 +45,7 @@ Required properties:
+     "socionext,uniphier-ld11-mio-reset" - for LD11 SoC (MIO)
+     "socionext,uniphier-ld11-sd-reset"  - for LD11 SoC (SD)
+     "socionext,uniphier-ld20-sd-reset"  - for LD20 SoC
++    "socionext,uniphier-pxs3-sd-reset"  - for PXs3 SoC
+ - #reset-cells: should be 1.
+ 
+ Example:
+@@ -74,6 +76,7 @@ Required properties:
+     "socionext,uniphier-pxs2-peri-reset" - for PXs2/LD6b SoC
+     "socionext,uniphier-ld11-peri-reset" - for LD11 SoC
+     "socionext,uniphier-ld20-peri-reset" - for LD20 SoC
++    "socionext,uniphier-pxs3-peri-reset" - for PXs3 SoC
+ - #reset-cells: should be 1.
+ 
+ Example:
+diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
+index bda2dd1..6ed808d 100644
+--- a/drivers/reset/reset-uniphier.c
++++ b/drivers/reset/reset-uniphier.c
+@@ -114,6 +114,20 @@ static const struct uniphier_reset_data uniphier_ld20_sys_reset_data[] = {
+ 	UNIPHIER_RESET_END,
+ };
+ 
++static const struct uniphier_reset_data uniphier_pxs3_sys_reset_data[] = {
++	UNIPHIER_RESETX(2, 0x200c, 0),		/* NAND */
++	UNIPHIER_RESETX(4, 0x200c, 2),		/* eMMC */
++	UNIPHIER_RESETX(8, 0x200c, 12),		/* STDMAC */
++	UNIPHIER_RESETX(12, 0x200c, 4),		/* USB30 link (GIO0) */
++	UNIPHIER_RESETX(13, 0x200c, 5),		/* USB31 link (GIO1) */
++	UNIPHIER_RESETX(16, 0x200c, 16),	/* USB30-PHY0 */
++	UNIPHIER_RESETX(17, 0x200c, 18),	/* USB30-PHY1 */
++	UNIPHIER_RESETX(18, 0x200c, 20),	/* USB30-PHY2 */
++	UNIPHIER_RESETX(20, 0x200c, 17),	/* USB31-PHY0 */
++	UNIPHIER_RESETX(21, 0x200c, 19),	/* USB31-PHY1 */
++	UNIPHIER_RESET_END,
++};
 +
-+	case MCP_TYPE_018:
-+		mcp->regmap = devm_regmap_init_i2c(data, &mcp23x17_regmap);
-+		mcp->reg_shift = 1;
-+		mcp->chip.ngpio = 16;
-+		mcp->chip.label = "mcp23018";
-+		break;
- #endif /* CONFIG_I2C */
- 
- 	default:
-@@ -640,7 +648,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		if (mirror)
- 			status |= IOCON_MIRROR | (IOCON_MIRROR << 8);
- 
--		if (type == MCP_TYPE_S18)
-+		if (type == MCP_TYPE_S18 || type == MCP_TYPE_018)
- 			status |= IOCON_INTCC | (IOCON_INTCC << 8);
- 
- 		ret = mcp_write(mcp, MCP_IOCON, status);
-@@ -729,6 +737,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		.compatible = "microchip,mcp23017",
- 		.data = (void *) MCP_TYPE_017,
+ /* Media I/O reset data */
+ #define UNIPHIER_MIO_RESET_SD(id, ch)			\
+ 	UNIPHIER_RESETX((id), 0x110 + 0x200 * (ch), 0)
+@@ -359,6 +373,10 @@ static const struct of_device_id uniphier_reset_match[] = {
+ 		.compatible = "socionext,uniphier-ld20-reset",
+ 		.data = uniphier_ld20_sys_reset_data,
  	},
 +	{
-+		.compatible = "microchip,mcp23018",
-+		.data = (void *) MCP_TYPE_018,
++		.compatible = "socionext,uniphier-pxs3-reset",
++		.data = uniphier_pxs3_sys_reset_data,
 +	},
- /* NOTE: The use of the mcp prefix is deprecated and will be removed. */
+ 	/* Media I/O reset, SD reset */
  	{
- 		.compatible = "mcp,mcp23008",
-@@ -812,6 +824,7 @@ static int mcp230xx_remove(struct i2c_client *client)
- static const struct i2c_device_id mcp230xx_id[] = {
- 	{ "mcp23008", MCP_TYPE_008 },
- 	{ "mcp23017", MCP_TYPE_017 },
-+	{ "mcp23018", MCP_TYPE_018 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, mcp230xx_id);
+ 		.compatible = "socionext,uniphier-ld4-mio-reset",
+@@ -392,6 +410,10 @@ static const struct of_device_id uniphier_reset_match[] = {
+ 		.compatible = "socionext,uniphier-ld20-sd-reset",
+ 		.data = uniphier_pro5_sd_reset_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-pxs3-sd-reset",
++		.data = uniphier_pro5_sd_reset_data,
++	},
+ 	/* Peripheral reset */
+ 	{
+ 		.compatible = "socionext,uniphier-ld4-peri-reset",
+@@ -421,6 +443,10 @@ static const struct of_device_id uniphier_reset_match[] = {
+ 		.compatible = "socionext,uniphier-ld20-peri-reset",
+ 		.data = uniphier_pro4_peri_reset_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-pxs3-peri-reset",
++		.data = uniphier_pro4_peri_reset_data,
++	},
+ 	/* Analog signal amplifiers reset */
+ 	{
+ 		.compatible = "socionext,uniphier-ld11-adamv-reset",
 -- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
