@@ -1,66 +1,68 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] arm: dts: gr-peach: Reduce extal_clk resolution
-Date: Thu, 5 Oct 2017 10:32:08 +0200
-Message-ID: <CAMuHMdUy1BTv7rCSrJ+REpe9RWqc8A3BNhzD=HmimpyuuFb-ag@mail.gmail.com>
-References: <1507131657-6414-1-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdXOJ6V_p26ozzwzUh5a9mvH-Aeiz2MavEf22v3iB6GiKQ@mail.gmail.com> <20171005074859.GN4037@w540>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 00/12] of: overlay: clean up device tree overlay code
+Date: Thu, 5 Oct 2017 11:33:32 +0300
+Message-ID: <96045775-4142-1d2d-52f6-d76c0a982461@ti.com>
+References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqJFPHOxrOYNcJCmNvdTA+1RqZxNSZOq6byzDVygUwV0Ow@mail.gmail.com>
+ <3eac16b0-fdd9-fd6c-e1ca-e0de49ce27cb@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171005074859.GN4037@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Brandt <Chris.Brandt@renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3eac16b0-fdd9-fd6c-e1ca-e0de49ce27cb-l0cyMroinI0@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+=EF=BB=BF
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
+siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-On Thu, Oct 5, 2017 at 9:48 AM, jacopo mondi <jacopo@jmondi.org> wrote:
-> On Wed, Oct 04, 2017 at 05:54:46PM +0200, Geert Uytterhoeven wrote:
->> On Wed, Oct 4, 2017 at 5:40 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->> > The system clock described by extal_clk is reported to have a frequency
->> > of 13.333 Mhz and is correctly described by gr-peach device tree.
->> >
->> > However, when enabling a RIIC device the following error is reported by
->> > drivers/i2c/busses/i2c-riic.c
->> >
->> > "invalid parent clk (33332500). Must be 33325000Hz"
->> >
->> > As RIIC devices have a clock source obtained by dividing by 12 the
->> > system clock, the resulting value is not accepted by the driver
->> > (which clearly states not to support any frequency except the reported
->> > 33325000Hz one).
->> >
->> > Hence, reduce the system clock accuracy to a value which makes
->> > frequencies obtained through division accepted by RIIC driver.
->> >
->> > Please note that other r7s72100 boards, such as Genmai, report the same
->> > "reduced accuracy" frequency, even if their external clock sources are
->> > effectively 13.333Mhz as gr-peach one.
->> >
->> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+On 10/05/17 09:53, Tomi Valkeinen wrote:
+> On 04/10/17 17:56, Rob Herring wrote:
+>> On Mon, Oct 2, 2017 at 10:53 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>>
+>>> I have found the device tree overlay code to be difficult to read and
+>>> maintain.  This patch series attempts to improve that situation.
+>>>
+>>> The cleanup includes some changes visible to users of overlays.  The
+>>> only in kernel user of overlays is fixed up for those changes.  The
+>>> in kernel user is:
+>>>
+>>>    drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
 >>
->> There's no need to do this, Chris already proposed a fix, cfr.
->> "[PATCH v2] i2c: riic: remove fixed clock restriction"
->> (https://www.spinics.net/lists/linux-renesas-soc/msg18573.html).
->
-> Oh that's even better!
-> Do you see any value in augmenting the frequency resolution in Genmai
-> DTS then?
+>> At what point can we remove this? I'm assuming at some point users
+>> will need to update their dtb's for other reasons and this becomes
+>> obsolete.
+>=20
+> To be honest, I have no idea, or how to find that out.
+>=20
 
-The Genmai documentation says EXTAL is 13.33 MHz (which matches
-r7s72100-genmai.dts) everywhere, except in the schematics, where it says
-13.3333 MHz. Sigh...
+I think the first approach could be setting the DRM_TILCDC_SLAVE_COMPAT
+default to n and listen if there is any reports about breakage.
 
-The difference is slightly larger than 100 ppm, so still insignificant, I think.
+> Do we need to get rid of it? Afaik, we haven't do much (or any?)
+> maintenance on tilcdc_slave_compat.c since it was written, so from our
+> perspective it's been a minimal burden. Is it creating burden for others?
+>=20
+> Is the approach done with tilcdc_slave_compat.c something that's not
+> recommended? I'm sure similar situations happen with other drivers too,
+> and I think it's a good idea to have a recommended way of keeping
+> compatibility.
+>=20
 
-Gr{oetje,eeting}s,
+For tilcdc I would say that we soon need a similar mechanism to get rid
+off tilcdc internal panel driver and to start using generic panel
+drivers instead. That is, if we want to keep the kernel compatible with
+old devicetree blobs.
 
-                        Geert
+Best regards,
+Jyri
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
