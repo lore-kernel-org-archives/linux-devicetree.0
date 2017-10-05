@@ -1,37 +1,28 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v6 11/11] of: mdio: Prevent
- of_mdiobus_register from scanning mdio-mux nodes
-Date: Fri, 6 Oct 2017 00:21:59 +0200
-Message-ID: <20171005222159.GO13247@lunn.ch>
-References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
- <20170927073414.17361-12-clabbe.montjoie@gmail.com>
- <20170927141213.GF13516@lunn.ch>
- <c8697b60-294f-7cc1-8425-aa5b837fcca0@gmail.com>
- <20171005220927.7rabn3ftvow253xj@rob-hp-laptop>
-Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/6] dt-bindings: input: Add common keyboard document
+ bindings
+Date: Thu, 5 Oct 2017 17:22:24 -0500
+Message-ID: <20171005222224.ffeewebacx7bljx2@rob-hp-laptop>
+References: <1506509048-19032-1-git-send-email-chen.zhong@mediatek.com>
+ <1506509048-19032-3-git-send-email-chen.zhong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJNHL5JSEOBBG7B3LHAKGQEB3JDDMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171005220927.7rabn3ftvow253xj@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1506509048-19032-3-git-send-email-chen.zhong@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Linus Walleij <linus.walleij@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Looking at this some more, why can't mdio-mux-mmio be used?
+On Wed, Sep 27, 2017 at 06:44:04PM +0800, Chen Zhong wrote:
+> This patch adds the device tree binding documentation for common
+> keyboard.
+> 
+> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/input/keys.txt |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/keys.txt
 
-Hi Rob
-
-That was my first thought. And then i dug into the details. The mux is
-more than just a couple of bits in an address space. Clocks needs to
-be enabled/disabled, and the MAC needs a reset, when the mux changes.
-So the mux needs intimate knowledge of MAC.
-
-   Andrew
+Acked-by: Rob Herring <robh@kernel.org>
