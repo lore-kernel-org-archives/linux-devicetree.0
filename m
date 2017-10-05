@@ -1,40 +1,33 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dmaengine: usb-dmac: Add compatible string for r8a7743/5
-Date: Thu,  5 Oct 2017 16:19:31 +0100
-Message-ID: <1507216771-8957-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx: Fix incorrect display nodes notation
+Date: Thu, 5 Oct 2017 12:56:29 -0300
+Message-ID: <CAOMZO5Ct=UTPXVgqk2RajPs-_9VwAa6mMTSO3hJn+54hEb2yjw@mail.gmail.com>
+References: <1507213901-1349-1-git-send-email-marco.franchi@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507213901-1349-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marco Antonio Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for r8a7743/5 SoC. The Renesas RZ/G1[ME]
-(R8A7743/5) usbdmac engine is identical to the R-Car Gen2 family.
+On Thu, Oct 5, 2017 at 11:31 AM, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org> wrote:
+> The following build warnings are seen with W=1:
+>
+> Warning (unit_address_vs_reg): Node /display@di0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /display@di1 has a unit name, but no reg property
+>
+> Fix all these warnings by changing 'display@diX' to 'dispX'.
+>
+> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-This doesn't change the driver, so it does nothing by itself.  But it does
-mean that checkpatch won't complain about a future patch that adds
-"renesas,r8a7743-usb-dmac" or "renesas,r8a7745-usb-dmac" to a DT,
-which helps ensure that shipped DTs use documented compatibility strings.
+This aligns the dts with the binding doc and also fixes the warnings, great!
+https://git.pengutronix.de/cgit/pza/linux/commit/?h=imx-drm/next&id=dbfdd153d4aefec13460c97475737e59af92d8e2
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch is tested against Linux next tag next-20170929 
-
- Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-index 1be6941..f3d1f15 100644
---- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-+++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-@@ -3,6 +3,8 @@
- Required Properties:
- -compatible: "renesas,<soctype>-usb-dmac", "renesas,usb-dmac" as fallback.
- 	Examples with soctypes are:
-+	  - "renesas,r8a7743-usb-dmac" (RZ/G1M)
-+	  - "renesas,r8a7745-usb-dmac" (RZ/G1E)
- 	  - "renesas,r8a7790-usb-dmac" (R-Car H2)
- 	  - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
- 	  - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
--- 
-1.9.1
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
