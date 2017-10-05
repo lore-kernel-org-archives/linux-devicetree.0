@@ -1,58 +1,58 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v1] i2c:i2c-stm32f7: fix setup structure
-Date: Thu, 5 Oct 2017 13:14:44 +0200
-Message-ID: <20171005111444.77qib2ddnz4jmbnr@ninjato>
-References: <1506000609-27409-1-git-send-email-pierre-yves.mordret@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 21/22] cpufreq: add support for CPU DVFS based on SCMI
+ message protocol
+Date: Thu, 5 Oct 2017 13:20:11 +0200
+Message-ID: <CAK8P3a18i-=6PE2WAZ5LkYHty5CrVjMhTF_qJjtGGE3aCxLOuw@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-22-git-send-email-sudeep.holla@arm.com> <CAK8P3a3pAFKM+Dq_yb7KYhB+xeneVuODBq_4nacEuw9creT6Yw@mail.gmail.com>
+ <5efbd0a7-8b62-5b30-98e6-dfaff64e2628@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x6aochfhdu7k2ja7"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1506000609-27409-1-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <5efbd0a7-8b62-5b30-98e6-dfaff64e2628-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 4, 2017 at 5:01 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> +
+>>> +static struct platform_driver scmi_cpufreq_platdrv = {
+>>> +       .driver = {
+>>> +               .name   = "scmi-cpufreq",
+>>> +       },
+>>> +       .probe          = scmi_cpufreq_probe,
+>>> +       .remove         = scmi_cpufreq_remove,
+>>> +};
+>>
+>> You appear to have split this driver into the 'cpufreq' side and
+>> the 'protocol' handler in a different file. I already commented that
+>> the way the main scmi driver knows about all the protocols looks
+>> bad, here we can see another aspect of the same problem.
+>>
+>> Rather than manually register a platform_device for the purpose
+>> of connecting it to the cpufreq driver, there should be a way
+>> to dynamically register the protocol from the cpufreq driver
+>> and then have both in the same file.
+>>
+>
+> I agree that should be possible. I took this approach for 2 reasons:
+>
+> 1. to avoid all sorts of probe ordering issues
+> 2. we may have system with multiple instances of SCMI. E.g. a system
+>    may have multiple remote processors, each controlling dvfs/power mgmt
+>    of a subset of CPUs/devices controller in OS.
+>
+> I have to admit that I haven't thought too much in details yet. That's
+> the main idea behind scmi_handle and restricting access to that only to
+> sub-nodes in it. I am open to suggestions.
 
---x6aochfhdu7k2ja7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+How about introducing a separate bus_type for protocols?
+The platform_device you use here isn't really the best abstraction,
+and with a new bus_type, you can handle multiple instances of
+scmi as well as decoupling them from the protocol drivers.
 
-On Thu, Sep 21, 2017 at 03:30:09PM +0200, Pierre-Yves MORDRET wrote:
-> I2C drive setup structure is not properly allocated.
-> Make it static instead of pointer to store driver data.
->=20
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-
-Ouch! How did it work before?
-
-Applied to for-current, thanks! Please provide a Fixes: tag next time,
-did this for you now.
-
-
---x6aochfhdu7k2ja7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnWFCQACgkQFA3kzBSg
-KbY13w//QAQXgYmF20eEIk1lC4jjJ9Z4ZMZGj3nMI+v+pRD7oRuZvMB1LQDOoeT1
-YJA2P/lff0Fw+NpvvBQDWTlFei0uFWbGngme3byHfm30cb2GiiO1aFgGgtK0VTvY
-ZxWJTSR8MHHp42PpG98hFinnTfJq9omVyZ8ciHgiLv/nVce9n1aqov3avRmwv89Z
-t9T2dtAVubJi7rLOTFkG7n0t8XwYCVH1dBfKMwTTfwcsnzS1/dGVHSHX9TFMLj0D
-neC0SxtNrC9M/WUzuTn6kOo6g/dzPRwLvdtFG+GE/OXVqyPrTtj9W1gQ5gl9YZWD
-X+WbhbSXS4unICGsqMO5BoGI5DC1S44nbh4+4BfVwcwG3cADgB+09ALlMFoTXPfA
-8oOTp2eYWvpyBOhp3DnuX5R/Zi3Jv8povjZ+5g2ynmGYXZimnAVBGFKc+NcMmOm9
-GdK4HBW8RZoMBHN1yZ2Cs3WSm/W86vN0D30lBesmbw43+/SHcyvrJg+l32v5Te9k
-R8eFRyTtdSZnH5CLkJMCyp6KVnO8rpyIPWqzmEDQ52lmIGBzCIEajgJcnlPMCzrv
-1djLSfEgKANn5aVBeKDK/z47Qio4Yhg1Gp1mSPlMC30FJK9xqJJ06rLwrjpayrXC
-16g2aNQPuKPhVEcoUPhgRGwbELIzvrZPRMtUV60IkFuTF0Qx/IQ=
-=9/mT
------END PGP SIGNATURE-----
-
---x6aochfhdu7k2ja7--
+      Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
