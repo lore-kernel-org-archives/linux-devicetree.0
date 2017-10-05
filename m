@@ -1,126 +1,42 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding
- for Allwinner XR819 SDIO Wi-Fi
-Date: Thu, 05 Oct 2017 09:58:01 +0300
-Message-ID: <878tgq5beu.fsf@codeaurora.org>
-References: <20171003165944.13056-1-icenowy@aosc.io>
-	<20171003165944.13056-2-icenowy@aosc.io>
-	<871smjxp46.fsf@kamboji.qca.qualcomm.com>
-	<E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
-	<59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea>
-	<C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io>
-Reply-To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v8 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS
+ sensor
+Date: Thu, 5 Oct 2017 10:09:37 +0300
+Message-ID: <20171005070937.hxt6hwgmdwgy2vmh@paasikivi.fi.intel.com>
+References: <20171005000621.27841-1-leonl@leopardimaging.com>
+ <20171005000621.27841-2-leonl@leopardimaging.com>
+ <20171005062901.ofexwxfnun45linq@valkosipuli.retiisi.org.uk>
+ <CADu3m9y+GUaD3LXBO-TBpQj2VYR2Js_c85J9+B=ZZnpW7Jr9fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCQYFH77QIORBAFQ27HAKGQE7JVVBTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <C4895259-FCDE-4B21-BB15-8F150FC53BE3-h8G6r0blFSE@public.gmane.org> (Icenowy Zheng's
-	message of "Wed, 04 Oct 2017 18:15:11 +0800")
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CADu3m9y+GUaD3LXBO-TBpQj2VYR2Js_c85J9+B=ZZnpW7Jr9fQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
+Hi Leon,
 
-> =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-6:11:45, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->>On Wed, Oct 04, 2017 at 10:02:48AM +0000, Arend van Spriel wrote:
->>> On 10/4/2017 11:03 AM, Icenowy Zheng wrote:
->>> >=20
->>> >=20
->>> > =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=885:02:17, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>=E5=86=99=E5=88=B0:
->>> > > Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->>> > >=20
->>> > > > Allwinner XR819 is a SDIO Wi-Fi chip, which has the
->>functionality to
->>> > > use
->>> > > > an out-of-band interrupt pin instead of SDIO in-band interrupt.
->>> > > >=20
->>> > > > Add the device tree binding of this chip, in order to make it
->>> > > possible
->>> > > > to add this interrupt pin to device trees.
->>> > > >=20
->>> > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> > > > ---
->>> > > > Changes in v3:
->>> > > > - Renames the node name.
->>> > > > - Adds ACK from Rob.
->>> > > > Changes in v2:
->>> > > > - Removed status property in example.
->>> > > > - Added required property reg.
->>> > > >=20
->>> > > >   .../bindings/net/wireless/allwinner,xr819.txt      | 38
->>> > > ++++++++++++++++++++++
->>> > > >   1 file changed, 38 insertions(+)
->>> > > >   create mode 100644
->>> > >
->>Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
->>> > >=20
->>> > > Like I asked already last time, AFAICS there is no upstream xr819
->>> > > wireless driver in drivers/net/wireless directory. Do we still
->>accept
->>> > > bindings like this for out-of-tree drivers?
->>> >=20
->>> > See esp8089.
->>> >=20
->>> > There's also no in-tree driver for it.
->>>=20
->>> The question is whether we should. The above might be a precedent,
->>but it
->>> may not necessarily be the way to go. The commit message for esp8089
->>seems
->>> to hint that there is intent to have an in-tree driver:
->>>=20
->>> """
->>>     Note that at this point there only is an out of tree driver for
->>this
->>>     hardware, there is no clear timeline / path for merging this.
->>Still
->>>     I believe it would be good to specify the binding for this in
->>tree
->>>     now, so that any future migration to an in tree driver will not
->>cause
->>>     compatiblity issues.
->>>=20
->>>     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>     Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> """
->>>=20
->>> Regardless the bindings are in principle independent of the kernel
->>and just
->>> describing hardware. I think there have been discussions to move the
->>> bindings to their own repository, but apparently it was decided
->>otherwise.
->>
->>Yeah, I guess especially how it could be merged with the cw1200 driver
->>would be very relevant to that commit log.
->
-> The cw1200 driver seems to still have some legacy platform
-> data. Maybe they should also be convert to DT.
-> (Or maybe compatible =3D "allwinner,xr819" is enough, as
-> xr819 is a specified variant of cw1200 family)
+On Thu, Oct 05, 2017 at 12:06:16AM -0700, Leon Luo wrote:
+>    Hi Sakari,
+>    I just got an email saying the patch is accepted. Do I still need to do
+>    anything here? Do I need to add  MEDIA_CAMERA_SUPPORT dependency to
+>    Kconfig and submit a new version? 
 
-Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
-that? Or does cw1200 more changes than just adding the DT support?
+Please don't send HTML e-mail.
 
---=20
-Kalle Valo
+I've added the Kconfig dependency so there's no need to send further
+versions of the patch.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
