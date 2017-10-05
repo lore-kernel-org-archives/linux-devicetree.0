@@ -1,68 +1,60 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
- DMA controller
-Date: Fri, 6 Oct 2017 00:30:59 +0300
-Message-ID: <4cb9745d-4bc1-57f0-f4ee-c12089d0c190@gmail.com>
-References: <cover.1506380746.git.digetx@gmail.com>
- <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
- <20171005203355.5lftjytx5f6rhe2d@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 11/11] of: mdio: Prevent of_mdiobus_register from
+ scanning mdio-mux nodes
+Date: Thu, 5 Oct 2017 17:09:27 -0500
+Message-ID: <20171005220927.7rabn3ftvow253xj@rob-hp-laptop>
+References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+ <20170927073414.17361-12-clabbe.montjoie@gmail.com>
+ <20170927141213.GF13516@lunn.ch>
+ <c8697b60-294f-7cc1-8425-aa5b837fcca0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171005203355.5lftjytx5f6rhe2d@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c8697b60-294f-7cc1-8425-aa5b837fcca0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05.10.2017 23:33, Rob Herring wrote:
-> On Tue, Sep 26, 2017 at 02:22:04AM +0300, Dmitry Osipenko wrote:
->> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
->> on Tegra20/30 SoC's.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->> new file mode 100644
->> index 000000000000..2af9aa76ae11
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
->> @@ -0,0 +1,23 @@
->> +* NVIDIA Tegra AHB DMA controller
->> +
->> +Required properties:
->> +- compatible:	Must be "nvidia,tegra20-ahbdma"
->> +- reg:		Should contain registers base address and length.
->> +- interrupts:	Should contain one entry, DMA controller interrupt.
->> +- clocks:	Should contain one entry, DMA controller clock.
->> +- resets :	Should contain one entry, DMA controller reset.
->> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
->> +		for the peripheral. For more details consult the Tegra TRM's
->> +		documentation, in particular AHB DMA channel control register
->> +		REQ_SEL field.
->> +
->> +Example:
->> +
->> +ahbdma: ahbdma@60008000  {
+On Wed, Sep 27, 2017 at 09:50:46PM -0700, Florian Fainelli wrote:
 > 
-> Use standard node names. dma-controller in this case.
 > 
+> On 09/27/2017 07:12 AM, Andrew Lunn wrote:
+> > On Wed, Sep 27, 2017 at 09:34:14AM +0200, Corentin Labbe wrote:
+> >> Each child node of an MDIO node is scanned as a PHY when calling
+> >> of_mdiobus_register() givint the following result:
+> >> [   18.175379] mdio_bus stmmac-0: /soc/ethernet@1c30000/mdio/mdio-mux has invalid PHY address
+> >> [   18.175408] mdio_bus stmmac-0: scan phy mdio-mux at address 0
+> >> [   18.175450] mdio_bus stmmac-0: scan phy mdio-mux at address 1
+> >> [...]
+> >> [   18.176420] mdio_bus stmmac-0: scan phy mdio-mux at address 30
+> >> [   18.176452] mdio_bus stmmac-0: scan phy mdio-mux at address 31
+> >>
+> >> Since mdio-mux nodes are not PHY, this patch a way to to not scan
+> >> them.
+> > 
+> > Hi Corentin
+> > 
+> > I still don't like this, but ...
+> 
+> Me neither, even more so as I don't understand the reasoning behind
+> putting the mux as a child node of the MDIO bus controller in the first
+> place.
 
-Okay, I'll change it in v3. Thank you for the comment.
+If no one agrees with me, then you shouldn't just accept my answers. I'm 
+not always right.
 
->> +	compatible = "nvidia,tegra20-ahbdma";
->> +	reg = <0x60008000 0x2000>;
->> +	interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
->> +	clocks = <&tegra_car TEGRA20_CLK_AHBDMA>;
->> +	resets = <&tegra_car 33>;
->> +	#dma-cells = <1>;
->> +};
->> -- 
->> 2.14.1
->>
+Looking at this some more, why can't mdio-mux-mmio be used? Then there 
+is nothing to review or discuss. If you want to extend that then make it 
+clear this is just extending/inheriting already defined bindings.
+
+That being said, if we were starting over I would probably do mux 
+designs differently with DT hierarchy reflecting the mux hierarchy, but 
+that ship has sailed.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
