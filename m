@@ -1,68 +1,78 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: [PATCH] ARM64: dts: meson-gxbb-nexbox-a95x: Enable USB Nodes
-Date: Thu,  5 Oct 2017 15:21:18 +0200
-Message-ID: <20171005132118.2150-1-peter@korsgaard.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-nexbox-a95x: Enable USB Nodes
+Date: Thu, 5 Oct 2017 15:23:34 +0200
+Message-ID: <89e9980a-2ca6-4509-b9d5-36aac433b9bd@baylibre.com>
+References: <20171005132118.2150-1-peter@korsgaard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005132118.2150-1-peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+To: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable both gxbb USB controllers and add a 5V regulator for the OTG port
-VBUS, similar to p20x.
+On 05/10/2017 15:21, Peter Korsgaard wrote:
+> Enable both gxbb USB controllers and add a 5V regulator for the OTG port
+> VBUS, similar to p20x.
+> 
+> Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+> ---
+>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> index 38dfdde5c147..60cd9c3b11c8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> @@ -88,6 +88,18 @@
+>  		};
+>  	};
+>  
+> +	usb_pwr: regulator-usb-pwrs {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "USB_PWR";
+> +
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +
+> +		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+>  	vddio_card: gpio-regulator {
+>  		compatible = "regulator-gpio";
+>  
+> @@ -294,3 +306,20 @@
+>  	pinctrl-0 = <&uart_ao_a_pins>;
+>  	pinctrl-names = "default";
+>  };
+> +
+> +&usb0_phy {
+> +	status = "okay";
+> +	phy-supply = <&usb_pwr>;
+> +};
+> +
+> +&usb1_phy {
+> +	status = "okay";
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +};
+> +
+> +&usb1 {
+> +	status = "okay";
+> +};
+> 
 
-Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
----
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Indeed, I forgot to add USB to this board,
+Thanks
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 38dfdde5c147..60cd9c3b11c8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -88,6 +88,18 @@
- 		};
- 	};
- 
-+	usb_pwr: regulator-usb-pwrs {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "USB_PWR";
-+
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- 	vddio_card: gpio-regulator {
- 		compatible = "regulator-gpio";
- 
-@@ -294,3 +306,20 @@
- 	pinctrl-0 = <&uart_ao_a_pins>;
- 	pinctrl-names = "default";
- };
-+
-+&usb0_phy {
-+	status = "okay";
-+	phy-supply = <&usb_pwr>;
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
--- 
-2.11.0
-
+Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
