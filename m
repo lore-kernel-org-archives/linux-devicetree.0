@@ -1,327 +1,51 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v15 00/32] Unified fwnode endpoint parser, async
- sub-device notifier support, N9 flash DTS
-Date: Thu, 5 Oct 2017 09:11:39 +0300
-Message-ID: <20171005061139.cqrauwjjhy4pwvy6@valkosipuli.retiisi.org.uk>
-References: <20171004215051.13385-1-sakari.ailus@linux.intel.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v8 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS
+ sensor
+Date: Thu, 5 Oct 2017 09:29:02 +0300
+Message-ID: <20171005062901.ofexwxfnun45linq@valkosipuli.retiisi.org.uk>
+References: <20171005000621.27841-1-leonl@leopardimaging.com>
+ <20171005000621.27841-2-leonl@leopardimaging.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171004215051.13385-1-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, marc.herbert@intel.com, hyungwoo.yang@intel.com, rajmohan.mani@intel.com, yong.zhi@intel.com
+In-Reply-To: <20171005000621.27841-2-leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 05, 2017 at 12:50:19AM +0300, Sakari Ailus wrote:
-> Hi folks,
+On Wed, Oct 04, 2017 at 05:06:21PM -0700, Leon Luo wrote:
+> The imx274 is a Sony CMOS image sensor that has 1/2.5 image size.
+> It supports up to 3840x2160 (4K) 60fps, 1080p 120fps. The interface
+> is 4-lane MIPI CSI-2 running at 1.44Gbps each.
 > 
-> 	I've dropped the full set from devicetree and linux-acpi lists;
-> 	let me know if you want it back. The entire set is posted to
-> 	linux-media list.
+> This driver has been tested on Xilinx ZCU102 platform with a Leopard
+> LI-IMX274MIPI-FMC camera board.
+> 
+> Support for the following features:
+> -Resolutions: 3840x2160, 1920x1080, 1280x720
+> -Frame rate: 3840x2160 : 5 – 60fps
+>             1920x1080 : 5 – 120fps
+>             1280x720 : 5 – 120fps
+> -Exposure time: 16 – (frame interval) micro-seconds
+> -Gain: 1x - 180x
+> -VFLIP: enable/disabledrivers/media/i2c/imx274.c
+> -Test pattern: 12 test patterns
+> 
+> Signed-off-by: Leon Luo <leonl-+iDsysdzPxZTt5vwKEO50dBPR1lH4CV8@public.gmane.org>
+> Tested-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 
-Here's the diff between v14 and v15. The patches can be found here, with
-the dependencies:
+Thanks!
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=fwnode-parse>
-
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 5aae5cb38b81..ae026eee3d03 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -248,18 +248,20 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- 	list_move(&sd->async_list, &notifier->done);
- 
- 	/*
--	 * See if the sub-device has a notifier. If it does, proceed
--	 * with checking for its async sub-devices.
-+	 * See if the sub-device has a notifier. If not, return here.
- 	 */
- 	subdev_notifier = v4l2_async_find_subdev_notifier(sd);
--	if (subdev_notifier && !subdev_notifier->parent) {
--		subdev_notifier->parent = notifier;
--		ret = v4l2_async_notifier_try_all_subdevs(subdev_notifier);
--		if (ret)
--			return ret;
--	}
-+	if (!subdev_notifier || subdev_notifier->parent)
-+		return 0;
- 
--	return 0;
-+	/*
-+	 * Proceed with checking for the sub-device notifier's async
-+	 * sub-devices, and return the result. The error will be handled by the
-+	 * caller.
-+	 */
-+	subdev_notifier->parent = notifier;
-+
-+	return v4l2_async_notifier_try_all_subdevs(subdev_notifier);
- }
- 
- /* Test all async sub-devices in a notifier for a match. */
-@@ -304,7 +306,28 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
- 	/* Subdevice driver will reprobe and put the subdev back onto the list */
- 	list_del_init(&sd->async_list);
- 	sd->asd = NULL;
--	sd->dev = NULL;
-+}
-+
-+/* Unbind all sub-devices in the notifier tree. */
-+static void v4l2_async_notifier_unbind_all_subdevs(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	struct v4l2_subdev *sd, *tmp;
-+
-+	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
-+		struct v4l2_async_notifier *subdev_notifier =
-+			v4l2_async_find_subdev_notifier(sd);
-+
-+		if (subdev_notifier)
-+			v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
-+
-+		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
-+		v4l2_async_cleanup(sd);
-+
-+		list_move(&sd->async_list, &subdev_list);
-+	}
-+
-+	notifier->parent = NULL;
- }
- 
- /* See if an fwnode can be found in a notifier's lists. */
-@@ -412,9 +435,11 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- 
- 	ret = v4l2_async_notifier_try_all_subdevs(notifier);
- 	if (ret)
--		goto out_unlock;
-+		goto err_unbind;
- 
- 	ret = v4l2_async_notifier_try_complete(notifier);
-+	if (ret)
-+		goto err_unbind;
- 
- 	/* Keep also completed notifiers on the list */
- 	list_add(&notifier->list, &notifier_list);
-@@ -422,69 +447,74 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- out_unlock:
- 	mutex_unlock(&list_lock);
- 
-+	return 0;
-+
-+err_unbind:
-+	/*
-+	 * On failure, unbind all sub-devices registered through this notifier.
-+	 */
-+	v4l2_async_notifier_unbind_all_subdevs(notifier);
-+
-+	mutex_unlock(&list_lock);
-+
- 	return ret;
- }
- 
- int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 				 struct v4l2_async_notifier *notifier)
- {
-+	int ret;
-+
- 	if (WARN_ON(!v4l2_dev || notifier->sd))
- 		return -EINVAL;
- 
- 	notifier->v4l2_dev = v4l2_dev;
- 
--	return __v4l2_async_notifier_register(notifier);
-+	ret = __v4l2_async_notifier_register(notifier);
-+	if (ret)
-+		notifier->v4l2_dev = NULL;
-+
-+	return ret;
- }
- EXPORT_SYMBOL(v4l2_async_notifier_register);
- 
- int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
- 					struct v4l2_async_notifier *notifier)
- {
-+	int ret;
-+
- 	if (WARN_ON(!sd || notifier->v4l2_dev))
- 		return -EINVAL;
- 
- 	notifier->sd = sd;
- 
--	return __v4l2_async_notifier_register(notifier);
-+	ret = __v4l2_async_notifier_register(notifier);
-+	if (ret)
-+		notifier->sd = NULL;
-+
-+	return ret;
- }
- EXPORT_SYMBOL(v4l2_async_subdev_notifier_register);
- 
--/* Unbind all sub-devices in the notifier tree. */
--static void v4l2_async_notifier_unbind_all_subdevs(
-+static void __v4l2_async_notifier_unregister(
- 	struct v4l2_async_notifier *notifier)
- {
--	struct v4l2_subdev *sd, *tmp;
--
--	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
--		struct v4l2_async_notifier *subdev_notifier =
--			v4l2_async_find_subdev_notifier(sd);
--
--		if (subdev_notifier)
--			v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
--
--		v4l2_async_cleanup(sd);
-+	if (!notifier || (!notifier->v4l2_dev && !notifier->sd))
-+		return;
- 
--		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
-+	v4l2_async_notifier_unbind_all_subdevs(notifier);
- 
--		list_move(&sd->async_list, &subdev_list);
--	}
-+	notifier->sd = NULL;
-+	notifier->v4l2_dev = NULL;
- 
--	notifier->parent = NULL;
-+	list_del(&notifier->list);
- }
- 
- void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
- {
--	if (!notifier->v4l2_dev && !notifier->sd)
--		return;
--
- 	mutex_lock(&list_lock);
- 
--	v4l2_async_notifier_unbind_all_subdevs(notifier);
--
--	notifier->sd = NULL;
--	notifier->v4l2_dev = NULL;
--
--	list_del(&notifier->list);
-+	__v4l2_async_notifier_unregister(notifier);
- 
- 	mutex_unlock(&list_lock);
- }
-@@ -522,7 +552,9 @@ EXPORT_SYMBOL_GPL(v4l2_async_notifier_cleanup);
- 
- int v4l2_async_register_subdev(struct v4l2_subdev *sd)
- {
-+	struct v4l2_async_notifier *subdev_notifier;
- 	struct v4l2_async_notifier *notifier;
-+	int ret;
- 
- 	/*
- 	 * No reference taken. The reference is held by the device
-@@ -549,47 +581,64 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
- 		if (!asd)
- 			continue;
- 
--		ret = v4l2_async_match_notify(notifier, v4l2_dev, sd, asd);
-+		ret = v4l2_async_match_notify(notifier, notifier->v4l2_dev, sd,
-+					      asd);
-+		if (ret)
-+			goto err_unbind;
- 
--		if (!ret)
--			ret = v4l2_async_notifier_try_complete(notifier);
-+		ret = v4l2_async_notifier_try_complete(notifier);
-+		if (ret)
-+			goto err_unbind;
- 
--		mutex_unlock(&list_lock);
--		return ret;
-+		goto out_unlock;
- 	}
- 
- 	/* None matched, wait for hot-plugging */
- 	list_add(&sd->async_list, &subdev_list);
- 
-+out_unlock:
- 	mutex_unlock(&list_lock);
- 
- 	return 0;
-+
-+err_unbind:
-+	/*
-+	 * Complete failed. Unbind the sub-devices bound through registering
-+	 * this async sub-device.
-+	 */
-+	subdev_notifier = v4l2_async_find_subdev_notifier(sd);
-+	if (subdev_notifier)
-+		v4l2_async_notifier_unbind_all_subdevs(subdev_notifier);
-+
-+	if (sd->asd)
-+		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
-+	v4l2_async_cleanup(sd);
-+
-+	mutex_unlock(&list_lock);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(v4l2_async_register_subdev);
- 
- void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
- {
--	struct v4l2_async_notifier *notifier = sd->notifier;
-+	mutex_lock(&list_lock);
- 
--	if (sd->subdev_notifier)
--		v4l2_async_notifier_unregister(sd->subdev_notifier);
-+	__v4l2_async_notifier_unregister(sd->subdev_notifier);
- 	v4l2_async_notifier_cleanup(sd->subdev_notifier);
- 	kfree(sd->subdev_notifier);
-+	sd->subdev_notifier = NULL;
- 
--	if (!sd->asd) {
--		if (!list_empty(&sd->async_list))
--			v4l2_async_cleanup(sd);
--		return;
--	}
-+	if (sd->asd) {
-+		struct v4l2_async_notifier *notifier = sd->notifier;
- 
--	mutex_lock(&list_lock);
-+		list_add(&sd->asd->list, &notifier->waiting);
- 
--	list_add(&sd->asd->list, &notifier->waiting);
-+		v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
-+	}
- 
- 	v4l2_async_cleanup(sd);
- 
--	v4l2_async_notifier_call_unbind(notifier, sd, sd->asd);
--
- 	mutex_unlock(&list_lock);
- }
- EXPORT_SYMBOL(v4l2_async_unregister_subdev);
-diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-index 74f2ea27d117..65f87e80081a 100644
---- a/include/media/v4l2-async.h
-+++ b/include/media/v4l2-async.h
-@@ -201,5 +201,4 @@ int __must_check v4l2_async_register_subdev_sensor_common(
-  * @sd: pointer to &struct v4l2_subdev
-  */
- void v4l2_async_unregister_subdev(struct v4l2_subdev *sd);
--
- #endif
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 834e74246412..43fd1a278bcc 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -137,7 +137,7 @@ struct v4l2_fwnode_link {
- int v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 			       struct v4l2_fwnode_endpoint *vep);
- 
--/*
-+/**
-  * v4l2_fwnode_endpoint_free() - free the V4L2 fwnode acquired by
-  * v4l2_fwnode_endpoint_alloc_parse()
-  * @vep - the V4L2 fwnode the resources of which are to be released
-
+Applied with MEDIA_CAMERA_SUPPORT dependency to Kconfig.
 
 -- 
 Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
