@@ -1,82 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Input: Add I2C attached EETI EXC3000 multi touch driver
-Date: Thu, 5 Oct 2017 18:22:28 -0500
-Message-ID: <20171005232228.5m2mxxtdkgavnrs6@rob-hp-laptop>
-References: <20170928152317.19098-1-inan@distec.de>
+Subject: Re: [PATCH 1/4] dt-bindings: net: ravb: Document optional
+ reset-gpios property
+Date: Thu, 5 Oct 2017 18:24:51 -0500
+Message-ID: <20171005232451.loogqlkmar6pdrdd@rob-hp-laptop>
+References: <1506614014-4398-1-git-send-email-geert+renesas@glider.be>
+ <1506614014-4398-2-git-send-email-geert+renesas@glider.be>
+ <fefd2be3-d47a-f035-5078-090df0fc6318@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170928152317.19098-1-inan@distec.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Ahmet Inan <inan@distec.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ahmet Inan <xdsopl@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <fefd2be3-d47a-f035-5078-090df0fc6318@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "David S . Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 05:23:17PM +0200, Ahmet Inan wrote:
-> The 3000 series have a new protocol which allows to report up to 5 points
-> in a single 66 byte frame. One must always read in 66 byte frames.
-> To support up to 10 points, two consecutive frames need to be read:
-> The first frame says how many points until sync.
-> The second frame must say zero points or both frames must be discarded.
+On Thu, Sep 28, 2017 at 11:07:38PM +0300, Sergei Shtylyov wrote:
+> Hello!
 > 
-> To be able to work with the higher 400KHz I2C bus rate, one must
-> successfully send a special package prior _each_ read or the controller
-> will refuse to cooperate.
+> On 09/28/2017 06:53 PM, Geert Uytterhoeven wrote:
 > 
-> This is a minimal implementation based on egalax_i2c.c (which can be found
-> on the internet) and egalax_ts.c but without the vendor interface and no
-> power management support.
+> > The optional "reset-gpios" property (part of the generic MDIO bus
+> > properties) lets us describe the GPIO used for resetting the Ethernet
+> > PHY.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >   Documentation/devicetree/bindings/net/renesas,ravb.txt | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > index c902261893b913f5..4a6ec1ba32d0bf16 100644
+> > --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > @@ -52,6 +52,7 @@ Optional properties:
+> >   			 AVB_LINK signal.
+> >   - renesas,ether-link-active-low: boolean, specify when the AVB_LINK signal is
+> >   				 active-low instead of normal active-high.
+> > +- reset-gpios: see mdio.txt in the same directory.
 > 
-> Signed-off-by: Ahmet Inan <inan@distec.de>
-> ---
->  .../bindings/input/touchscreen/exc3000.txt         |  27 ++++
+>    Sigh, I can only repeat that was a terrible prop name choice -- when
+> applied to a MAC node... what reset does it mean? MAC?
 
-Please split to separate patch.
-
->  drivers/input/touchscreen/Kconfig                  |  10 ++
->  drivers/input/touchscreen/Makefile                 |   1 +
->  drivers/input/touchscreen/exc3000.c                | 173 +++++++++++++++++++++
->  4 files changed, 211 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
->  create mode 100644 drivers/input/touchscreen/exc3000.c
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> new file mode 100644
-> index 000000000000..d2a78e83e921
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> @@ -0,0 +1,27 @@
-> +* EETI EXC3000 Multiple Touch Controller
-> +
-> +Required properties:
-> +- compatible: must be "eeti,exc3000"
-> +- reg: i2c slave address
-> +- interrupt-parent: the phandle for the interrupt controller
-> +- interrupts: touch controller interrupt
-> +- touchscreen-size-x: See touchscreen.txt
-> +- touchscreen-size-y: See touchscreen.txt
-> +
-> +Optional properties:
-> +- touchscreen-inverted-x: See touchscreen.txt
-> +- touchscreen-inverted-y: See touchscreen.txt
-> +- touchscreen-swapped-x-y: See touchscreen.txt
-> +
-> +Example:
-> +
-> +	exc3000@2a {
-
-touchscreen@2a
-
-> +		compatible = "eeti,exc3000";
-> +		reg = <0x2a>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <9 8>; // active low level-sensitive
-
-Use the defines for flags.
-
-> +		touchscreen-size-x = <4096>;
-> +		touchscreen-size-y = <4096>;
-> +		touchscreen-inverted-x;
-> +		touchscreen-swapped-x-y;
-> +	};
+Agreed. This should be in the phy node. Or MDIO at least.
