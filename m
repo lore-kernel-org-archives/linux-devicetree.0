@@ -1,51 +1,64 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: [PATCH v7 1/3] media: dt: bindings: Add binding for tango HW IR
- decoder
-Date: Thu, 5 Oct 2017 16:44:06 +0200
-Message-ID: <a98feda2-fd9e-004b-a139-789193ca4995@sigmadesigns.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] scripts/dtc: add fdt_overlay.c and fdt_addresses.c to
+ sync script
+Date: Thu, 5 Oct 2017 10:09:39 -0500
+Message-ID: <CAL_JsqLGm_OhJUUys7-1s_+rk48sJPKBVR_dTJOB4Lu92GL_Zg@mail.gmail.com>
+References: <20171003183118.2438-1-robh@kernel.org> <20171003220417.GA13661@bill-the-cat>
+ <CAL_Jsq+Ruvu11Nu92FtgGcO0PqxCQk5KhiQAgj8JzbzPKNseqQ@mail.gmail.com> <20171005143930.GB25966@bill-the-cat>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>
-Cc: DT <devicetree@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, Mans Rullgard <mans@mansr.com>, Mason <slash.tmp@free.fr>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005143930.GB25966@bill-the-cat>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyle Yan <kyan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding for the HW IR decoder embedded in SMP86xx/SMP87xx.
+On Thu, Oct 5, 2017 at 9:39 AM, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> On Tue, Oct 03, 2017 at 05:23:28PM -0500, Rob Herring wrote:
+>> On Tue, Oct 3, 2017 at 5:04 PM, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> > On Tue, Oct 03, 2017 at 01:31:17PM -0500, Rob Herring wrote:
+>> >
+>> >> libfdt has gained some new files. We need to include them in the
+>> >> kernel's copy.
+>> >>
+>> >> Reported-by: Kyle Yan <kyan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> ---
+>> >>  scripts/dtc/update-dtc-source.sh | 4 +++-
+>> >>  1 file changed, 3 insertions(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
+>> >> index b8ebcc6722d2..f3e5c596050a 100755
+>> >> --- a/scripts/dtc/update-dtc-source.sh
+>> >> +++ b/scripts/dtc/update-dtc-source.sh
+>> >> @@ -34,7 +34,9 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
+>> >>               srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
+>> >>               dtc-lexer.l dtc-parser.y"
+>> >>  DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
+>> >> -LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
+>> >> +LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_tree.c \
+>> >> +             fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
+>> >> +             fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
+>> >
+>> > Should there be a patch #3 to update the kernel libfdt to include these
+>> > new files that we're copying in too?  That seems to be the main user
+>> > in-tree of the libfdt C files, aside from the 'libfdt' targets under
+>> > arch/{arm,powerpc}/boot/  Thanks!
+>>
+>> Yes, good point. But we can add them when someone wants to use them.
+>> Adding them to the build will bloat the kernel because libfdt doesn't
+>> get built as a static lib (another problem to solve).
+>
+> Well, isn't the kernel starting to more widely use
+> -ffunction-sections/-fdata-sections/--gc-unused-sections ?
 
-Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
----
- .../devicetree/bindings/media/tango-ir.txt          | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/tango-ir.txt
+Unfortunately, no. Nico Pitre did some work there, and I think it
+helps some but is incomplete because of how some of the kernel's
+assembly code works.
 
-diff --git a/Documentation/devicetree/bindings/media/tango-ir.txt b/Documentation/devicetree/bindings/media/tango-ir.txt
-new file mode 100644
-index 000000000000..a9f00c2bf897
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/tango-ir.txt
-@@ -0,0 +1,21 @@
-+Sigma Designs Tango IR NEC/RC-5/RC-6 decoder (SMP86xx and SMP87xx)
-+
-+Required properties:
-+
-+- compatible: "sigma,smp8642-ir"
-+- reg: address/size of NEC+RC5 area, address/size of RC6 area
-+- interrupts: spec for IR IRQ
-+- clocks: spec for IR clock (typically the crystal oscillator)
-+
-+Optional properties:
-+
-+- linux,rc-map-name: see Documentation/devicetree/bindings/media/rc.txt
-+
-+Example:
-+
-+	ir@10518 {
-+		compatible = "sigma,smp8642-ir";
-+		reg = <0x10518 0x18>, <0x105e0 0x1c>;
-+		interrupts = <21 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&xtal>;
-+	};
--- 
-2.14.2
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
