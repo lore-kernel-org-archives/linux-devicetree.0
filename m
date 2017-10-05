@@ -1,93 +1,100 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 3/5] dt-binding: soc: qcom: Add binding for rmtfs memory
-Date: Wed,  4 Oct 2017 20:32:56 -0700
-Message-ID: <20171005033258.12825-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v3 2/5] of: reserved_mem: Accessor for acquiring reserved_mem
+Date: Wed,  4 Oct 2017 20:32:55 -0700
+Message-ID: <20171005033258.12825-3-bjorn.andersson@linaro.org>
 References: <20171005033258.12825-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171005033258.12825-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Rob Herring <robh+dt@kernel.org>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding for describing shared memory used to exchange file
-system blocks between the RMTFS client and service. A client for this is
-generally found in the modem firmware and is used for accessing
-persistent storage for things such as radio calibration.
+In some cases drivers referencing a reserved-memory region might want to
+remap the entire region, but when defining the reserved-memory by "size"
+the client driver has no means to know the associated base address of
+the reserved memory region.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch adds an accessor for such drivers to acquire a handle to
+their associated reserved-memory for this purpose.
+
+A complicating factor for the implementation is that the reserved_mem
+objects are created from the flattened DeviceTree, as such we can't
+use the device_node address for comparison. Fortunately the name of the
+node will be used as "name" of the reserved_mem and will be used when
+building the full_name, so we can compare the "name" with the basename
+of the full_name to find the match.
+
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v2:
-- Renamed compatible to "rmtfs-mem" in attempt to clarify that this is not a
-  file system, but some chunk of memory.
+- None
 
-Changed since v1:
-- Memory described in a single reserved-memory node, rather than by reference
-  from a "dummy" node
-- qcom,vmdid added
+Changes since v1:
+- Previous patch provided interface to resolve memory-region reference, instead
+  of direct lookup by device_node
 
- .../bindings/reserved-memory/qcom,rmtfs-mem.txt    | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
+ drivers/of/of_reserved_mem.c    | 26 ++++++++++++++++++++++++++
+ include/linux/of_reserved_mem.h |  5 +++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
-new file mode 100644
-index 000000000000..8562ba1dce69
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
-@@ -0,0 +1,51 @@
-+Qualcomm Remote File System Memory binding
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index d507c3569a88..b40cfce68fd4 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -397,3 +397,29 @@ void of_reserved_mem_device_release(struct device *dev)
+ 	rmem->ops->device_release(rmem, dev);
+ }
+ EXPORT_SYMBOL_GPL(of_reserved_mem_device_release);
 +
-+This binding describes the Qualcomm remote filesystem memory, which serves the
-+purpose of describing the shared memory region used for remote processors to
-+access block device data using the Remote Filesystem protocol.
++/**
++ * of_reserved_mem_get() - acquire reserved_mem from a device node
++ * @np:		node pointer of the desired reserved-memory region
++ *
++ * This function allows drivers to acquire a reference to the reserved_mem
++ * struct based on a device node handle.
++ *
++ * Returns a reserved_mem reference, or NULL on error.
++ */
++struct reserved_mem *of_reserved_mem_get(struct device_node *np)
++{
++	const char *name;
++	int i;
 +
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be:
-+		    "qcom,rmtfs-mem"
++	if (!np->full_name)
++		return NULL;
 +
-+- reg:
-+	Usage: required for static allocation
-+	Value type: <prop-encoded-array>
-+	Definition: must specify base address and size of the memory region,
-+		    as described in reserved-memory.txt
++	name = kbasename(np->full_name);
++	for (i = 0; i < reserved_mem_count; i++)
++		if (!strcmp(reserved_mem[i].name, name))
++			return &reserved_mem[i];
 +
-+- size:
-+	Usage: required for dynamic allocation
-+	Value type: <prop-encoded-array>
-+	Definition: must specify a size of the memory region, as described in
-+		    reserved-memory.txt
-+
-+- qcom,client-id:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: identifier of the client to use this region for buffers.
-+
-+- qcom,vmid:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: vmid of the remote processor, to set up memory protection.
-+
-+= EXAMPLE
-+The following example shows the remote filesystem memory setup for APQ8016,
-+with the rmtfs region for the Hexagon DSP (id #1) located at 0x86700000.
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		rmtfs@86700000 {
-+			compatible = "qcom,rmtfs-mem";
-+			reg = <0x0 0x86700000 0x0 0xe0000>;
-+			no-map;
-+
-+			qcom,client-id = <1>;
-+		};
-+	};
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(of_reserved_mem_get);
+diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+index f8e1992d6423..91b1eb5076e4 100644
+--- a/include/linux/of_reserved_mem.h
++++ b/include/linux/of_reserved_mem.h
+@@ -44,6 +44,7 @@ int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+ void fdt_init_reserved_mem(void);
+ void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+ 			       phys_addr_t base, phys_addr_t size);
++struct reserved_mem *of_reserved_mem_get(struct device_node *np);
+ #else
+ static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
+ 					struct device_node *np, int idx)
+@@ -55,6 +56,10 @@ static inline void of_reserved_mem_device_release(struct device *pdev) { }
+ static inline void fdt_init_reserved_mem(void) { }
+ static inline void fdt_reserved_mem_save_node(unsigned long node,
+ 		const char *uname, phys_addr_t base, phys_addr_t size) { }
++static inline struct reserved_mem *of_reserved_mem_get(struct device_node *np)
++{
++	return NULL;
++}
+ #endif
+ 
+ /**
 -- 
 2.12.0
