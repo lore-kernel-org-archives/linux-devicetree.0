@@ -1,40 +1,68 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 01/11] dt-bindings: net: Restore sun8i
- dwmac binding
-Date: Thu, 5 Oct 2017 15:59:56 -0500
-Message-ID: <20171005205956.2wy26t4mugbowucn@rob-hp-laptop>
-References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
- <20170927073414.17361-2-clabbe.montjoie@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 3/5] dt-bindings: Add DT bindings for NVIDIA Tegra AHB
+ DMA controller
+Date: Fri, 6 Oct 2017 00:30:59 +0300
+Message-ID: <4cb9745d-4bc1-57f0-f4ee-c12089d0c190@gmail.com>
+References: <cover.1506380746.git.digetx@gmail.com>
+ <604d92036e0936443290e68a2226f935fb348113.1506380746.git.digetx@gmail.com>
+ <20171005203355.5lftjytx5f6rhe2d@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBTV23LHAKGQEYRFA3IY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170927073414.17361-2-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171005203355.5lftjytx5f6rhe2d@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 09:34:04AM +0200, Corentin Labbe wrote:
-> This patch restore dt-bindings documentation about dwmac-sun8i
-> This reverts commit 8aa33ec2f481 ("dt-bindings: net: Revert sun8i dwmac binding")
-
-What's missing here is why you are reverting?
-
+On 05.10.2017 23:33, Rob Herring wrote:
+> On Tue, Sep 26, 2017 at 02:22:04AM +0300, Dmitry Osipenko wrote:
+>> Document DT bindings for NVIDIA Tegra AHB DMA controller that presents
+>> on Tegra20/30 SoC's.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../bindings/dma/nvidia,tegra20-ahbdma.txt         | 23 ++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>> new file mode 100644
+>> index 000000000000..2af9aa76ae11
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra20-ahbdma.txt
+>> @@ -0,0 +1,23 @@
+>> +* NVIDIA Tegra AHB DMA controller
+>> +
+>> +Required properties:
+>> +- compatible:	Must be "nvidia,tegra20-ahbdma"
+>> +- reg:		Should contain registers base address and length.
+>> +- interrupts:	Should contain one entry, DMA controller interrupt.
+>> +- clocks:	Should contain one entry, DMA controller clock.
+>> +- resets :	Should contain one entry, DMA controller reset.
+>> +- #dma-cells:	Should be <1>. The cell represents DMA request select value
+>> +		for the peripheral. For more details consult the Tegra TRM's
+>> +		documentation, in particular AHB DMA channel control register
+>> +		REQ_SEL field.
+>> +
+>> +Example:
+>> +
+>> +ahbdma: ahbdma@60008000  {
 > 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/dwmac-sun8i.txt        | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> Use standard node names. dma-controller in this case.
+> 
 
-Otherwise,
+Okay, I'll change it in v3. Thank you for the comment.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> +	compatible = "nvidia,tegra20-ahbdma";
+>> +	reg = <0x60008000 0x2000>;
+>> +	interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+>> +	clocks = <&tegra_car TEGRA20_CLK_AHBDMA>;
+>> +	resets = <&tegra_car 33>;
+>> +	#dma-cells = <1>;
+>> +};
+>> -- 
+>> 2.14.1
+>>
