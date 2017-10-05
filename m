@@ -1,212 +1,112 @@
 MIME-Version: 1.0
-In-Reply-To: <20171004123015.r42bc6f4pznypefc@valkosipuli.retiisi.org.uk>
-References: <20170822001912.27638-1-niklas.soderlund+renesas@ragnatech.se>
-	<CAL_Jsq+ABipq+YCpSwu_vhjk0rkZQimCD2vG1x5GL91wi6dzKw@mail.gmail.com>
-	<20170822150050.GD14873@bigcity.dyn.berto.se>
-	<CAL_JsqJOZPrOwy1Hi7zdHb-+X69rV2M5ZZd=X8aoWjvjqt+NNg@mail.gmail.com>
-	<20170827224033.2ubrkzp33g5supab@kekkonen.localdomain>
-	<CAL_JsqLoROoJYB38Hx76yFrPd8J=6+KOr6EgzMd-g5yLYi8Okw@mail.gmail.com>
-	<20171004123015.r42bc6f4pznypefc@valkosipuli.retiisi.org.uk>
-Date: Wed, 4 Oct 2017 07:48:50 -0500
-Message-ID: <CAL_Jsq+yxsyo7XBtkSjoEWR76iMm61AxmDk5TaBwzf_3BWY6MQ@mail.gmail.com>
-Subject: Re: [PATCH v2] device property: preserve usecount for node passed to of_fwnode_graph_get_port_parent()
+In-Reply-To: <20171004220046.tfejhywhhowgf3ma@pengutronix.de>
+References: <20170922204138.29951-1-u.kleine-koenig@pengutronix.de>
+	<20171004205306.wzvxmstcberpws25@rob-hp-laptop>
+	<20171004220046.tfejhywhhowgf3ma@pengutronix.de>
+Date: Thu, 5 Oct 2017 09:01:27 -0500
+Message-ID: <CAL_JsqLtHoxd3zu4tAYmCPA5Bkgv0gRC2sDN9YSChca=jqzLSQ@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpio: of: document gpio-init nodes
 From: Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kieran Bingham <kieran.bingham@ideasonboard.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
+On Wed, Oct 4, 2017 at 5:00 PM, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@peng=
+utronix.de> wrote:
+> On Wed, Oct 04, 2017 at 03:53:06PM -0500, Rob Herring wrote:
+>> On Fri, Sep 22, 2017 at 10:41:38PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+>> > Sometimes it is desirable to define a "safe" configuration for a GPIO =
+in
+>> > the device tree but let the operating system later still make use of
+>> > this pin.
+>> >
+>> > This might for example be useful to initially configure a debug pin th=
+at
+>> > is usually unconnected as output to prevent floating until it is used
+>> > later.
+>> >
+>> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+>> > ---
+>> > Hello,
+>> >
+>> > this picks up a discussion that pops up now and then with our customer=
+s.
+>> >
+>> > Last time I discussed this topic with Linus Walleij my suggestion was =
+to
+>> > merge this usecase with gpio-hogs, but he wasn't happy with it because
+>> > hogging implies that the pin is not free for other usage and he
+>> > suggested to use "gpio-init" instead.
+>> >
+>> > Maybe it's arguable if this "initial configuration" belongs into the
+>> > device tree, but IMHO defining a "safe configuration" should have a
+>> > place and the requirements are identical. This isn't implied by the na=
+me
+>> > however, but I don't have a better idea for a different name.
+>>
+>> It can be argued that by the time the kernel boots, it is way to late to
+>> configure pins to a safe state. Of course, even secure world reads the
+>> DT these days (or are at least talking about doing so). Still any s/w
+>> handling this could be too slow to get to a safe state.
+>
+> Note I didn't target the kernel to implement this. I already have
+> patches that implement this in barebox which is also using dt. (After
+> all dt is about hardware description and not about what Linux should do,
+> right? :-)
 
+Right. But how do you know barebox is early enough?
 
-On Wed, Oct 4, 2017 at 7:30 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> Hi Rob,
+>> Maybe "optimal default" state would be more accurate.
+>>
+>> > Thinking further (which was also discussed last time) it would also be
+>> > nice to restrict usage. For example that a given pin that has
+>> > "output-low" as its safe setting might be configured later als high
+>> > output but not as input. Maybe:
+>>
+>> I can't imagine that an output can't be an input.
 >
-> On Tue, Oct 03, 2017 at 08:40:10AM -0500, Rob Herring wrote:
->> On Sun, Aug 27, 2017 at 5:40 PM, Sakari Ailus
->> <sakari.ailus@linux.intel.com> wrote:
->> > Hi Rob,
->> >
->> > On Tue, Aug 22, 2017 at 02:42:10PM -0500, Rob Herring wrote:
->> >> On Tue, Aug 22, 2017 at 10:00 AM, Niklas S=C3=B6derlund
->> >> <niklas.soderlund@ragnatech.se> wrote:
->> >> > Hi Rob,
->> >> >
->> >> > On 2017-08-22 09:49:35 -0500, Rob Herring wrote:
->> >> >> On Mon, Aug 21, 2017 at 7:19 PM, Niklas S=C3=B6derlund
->> >> >> <niklas.soderlund+renesas@ragnatech.se> wrote:
->> >> >> > Using CONFIG_OF_DYNAMIC=3Dy uncovered an imbalance in the usecou=
-nt of the
->> >> >> > node being passed to of_fwnode_graph_get_port_parent(). Preserve=
- the
->> >> >> > usecount by using of_get_parent() instead of of_get_next_parent(=
-) which
->> >> >> > don't decrement the usecount of the node passed to it.
->> >> >> >
->> >> >> > Fixes: 3b27d00e7b6d7c88 ("device property: Move fwnode graph ops=
- to firmware specific locations")
->> >> >> > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@r=
-agnatech.se>
->> >> >> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> >> >> > ---
->> >> >> >  drivers/of/property.c | 2 +-
->> >> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >> >>
->> >> >> Isn't this already fixed with this fix:
->> >> >>
->> >> >> commit c0a480d1acf7dc184f9f3e7cf724483b0d28dc2e
->> >> >> Author: Tony Lindgren <tony@atomide.com>
->> >> >> Date:   Fri Jul 28 01:23:15 2017 -0700
->> >> >>
->> >> >> device property: Fix usecount for of_graph_get_port_parent()
->> >> >
->> >> > No, that commit fixes it for of_graph_get_port_parent() while this
->> >> > commit fixes it for of_fwnode_graph_get_port_parent(). But in essen=
-ce it
->> >> > is the same issue but needs two separate fixes.
->> >>
->> >> Ah, because one takes the port node and one takes the endpoint node.
->> >> That won't confuse anyone.
->> >
->> > Yes, I think we've had this for some time in naming of a few graph
->> > functions and increasingly so lately. It began with
->> > of_graph_get_remote_port_parent(), which likely was named so to avoid =
-the
->> > name getting really long. The function itself gets a remove of the end=
-point
->> > given as an argument, then the port related to the entpoint and finall=
-y the
->> > parent node of the port node (which is not the "ports" node). That's a=
- lot
->> > of work for a single interface function.
->>
->> That's because returning the "ports" node would be pointless. The
->> remote device could have:
->>
->> ports {
->>     port {
->>         endpoint {
->>         };
->>     };
->> };
->>
->> Or no ports node. Both are valid and should be treated equivalently.
+> It might make that line float which I'd consider "unsafe" (or "not
+> optimal").
 >
-> Indeed --- otherwise you could simply use of_get_parent()...
+>> Regardless, what you're describing is constraints and that seems like
+>> a whole other problem than default/initial state.
+>>
+>> Plus, for constraints I'd think we want this done at the pin level, not
+>> GPIO. And we kind of already have that with pin states.
 >
->>
->> >
->> > What comes to of_fwnode_graph_get_port_parent() --- it's the OF callba=
-ck
->> > function for the fwnode graph API that, as the name suggests, gets the
->> > parent of the port node, no more, no less. The function is used in the
->> > fwnode graph API implementation and is not available in the API as suc=
-h.
->>
->> If this operates on the local node, then you should already have the
->> relevant parent. If you are walking the remote node, then the exact
->> port structure should be opaque. If you need the remote endpoint and
->> its properties, that's fine. Otherwise, you should really only need
->> the remote parent device because the remote's graph structure is
->> specific to the remote device and any parsing should be done within
->> the remote's driver.
+> Not 100% sure I'm up to date here, if you mean
 >
-> This function is used to implement fwnode_graph_get_remote_port_parent() =
-as
-> well as fwnode_graph_get_port_parent(). These are used by V4L2 to match
-> remote devices currently. That said, we've thought about using endpoints
-> for matching: the connection is made between two hardware interfaces, not
-> devices.
+>         pinctrl-names =3D "default", "idle"
+>         pinctrl-0 =3D ... /* that's default */
+>         pinctrl-1 =3D ... /* that's idle */
 >
->>
->> > The fwnode graph API itself only implements functionality already avai=
-lable
->> > in the OF graph API under the corresponding name.
->>
->> There are graph APIs I want to get rid of, but since there are still
->> users I haven't. Adding those APIs to the fwnode API will just make it
->> harder.
+> this doesn't help completely. If the idle/save state means that the pin
+> should be configured as low-output, you cannot define that in general.
+> You can only configure the pin into its gpio function but not say it
+> should be an output driving the pin low.
+
 >
-> I remember we've discussed that but I'm not sure we arrived to a conclusi=
-on
-> back then. And that explicitly parsing a port / endpoint pair was
-> preferred.
+>> >     companion-reset {
+>> >             gpio-somethingwithsafe;
+>> >             gpios =3D <12 0>;
+>>
+>> "gpios" is already a defined property with a type (phandle + args). dtc
+>> checks for this now though gpio-hogs is already one exception, and I
+>> don't want to add another. Maybe it could be generalized to be allowed
+>> when the parent is a gpio-controller, but really I'd like to avoid this
+>> pattern from spreading.
 >
-> In V4L2 the endpoints are currently iterated over. The endpoint numbers a=
-re
-> also not verified in drivers (apart from perhaps one or two exceptions),
-> they're currently simply ignored. Only port numbers are actually used.
+> I choosed the same way as gpio-hogs because IMHO they are quite similar.
+> Also if the propery is supposed to be located in a child node of a
+> gpio-controller, repeating &gpioX seems to be at least arguable.
 >
-> I think it boils down to whether (or not) there's a material chance of
-> breaking something by effectively adding the endpoint number checks. Shou=
-ld
-> we assume it will not?
->
->>
->> >> Can we please align this mess. I've tried to make the graph parsing
->> >> not a free for all, open coded mess. There's no reason to have the
->> >> port node handle and then need the parent device. Either you started
->> >> with the parent device to parse local ports and endpoints or you got
->> >> the remote endpoint with .graph_get_remote_endpoint(). Most of the
->> >> time you don't even need the endpoint node handles. You really just
->> >> need to know what is the remote device connected to port X, endpoint =
-Y
->> >> of my local device.
->> >
->> > Perhaps most of the time, yes. V4L2 devices store bus (e.g. MIPI CSI-2=
-)
->> > specific information in the endpoint nodes.
->> >
->> > The current OF graph API is geared towards providing convenience funct=
-ions
->> > to the extent that a single function performs actions a driver would
->> > typically need. More recently functions implementing a single operatio=
-n has
->> > been added; the primitives that just perform a single operation would
->> > likely be easier to manage.
->>
->> Then we have each driver open coding walking the graph.
->>
->> > The convenience functions have been, well, convenient as getting and
->> > putting nodes could have been somewhat ignored in drivers. If the OF g=
-raph
->> > API usage can be moved out of the drivers we'll likely have way fewer =
-users
->> > and thus there's no real need for convenience functions. That has othe=
-r
->> > benefits, too, such as parsing the graph correctly: most V4L2 drivers =
-have
->> > issues in this area.
->> >
->> > The OF graph API (or the fwnode equivalent) is used effectively in all=
- V4L2
->> > drivers that support OF (there are about 20 of them); we're moving the=
-se to
->> > the V4L2 framework but it'll take some time. That should make it easie=
-r for
->> > cleaning things up. Based on a quick look V4L2 and V4L2 drivers togeth=
-er
->> > represent a large proportion of all users in the kernel.
->>
->> I certainly will care less when there's only subsystems using the API
->> versus each driver.
->>
->> I'd guess it is more equal because most of the DRM drivers are
->> converted to not use the graph API directly.
->
-> Ack.
->
->>
->> >
->> > What do you think?
->>
->> I'll apply this fix, but please keep the above in mind when reworking
->> the V4L2 drivers.
->
-> Thanks!
+> Best regards
+> Uwe
 >
 > --
-> Kind regards,
->
-> Sakari Ailus
-> e-mail: sakari.ailus@iki.fi
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
