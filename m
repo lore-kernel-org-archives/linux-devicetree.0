@@ -1,40 +1,93 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 0/5] Qualcomm remote filesystem shared memory driver
-Date: Wed,  4 Oct 2017 20:32:53 -0700
-Message-ID: <20171005033258.12825-1-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH v3 3/5] dt-binding: soc: qcom: Add binding for rmtfs memory
+Date: Wed,  4 Oct 2017 20:32:56 -0700
+Message-ID: <20171005033258.12825-4-bjorn.andersson@linaro.org>
+References: <20171005033258.12825-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171005033258.12825-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
 Cc: Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Rob Herring <robh+dt@kernel.org>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some remote processors (in particular the modem) found in Qualcomm platforms
-stores configuration parameters and other data in a file system. As the remotes
-does not have direct storage access it needs to relay block accesses through a
-service running on the application CPU.
+This adds the binding for describing shared memory used to exchange file
+system blocks between the RMTFS client and service. A client for this is
+generally found in the modem firmware and is used for accessing
+persistent storage for things such as radio calibration.
 
-The memory is described in DeviceTree by a new reserved-memory compatible and
-the implementation provides the user space service a read/write interface to
-this chunk of memory.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Bjorn Andersson (5):
-  of/platform: Generalize /reserved-memory handling
-  of: reserved_mem: Accessor for acquiring reserved_mem
-  dt-binding: soc: qcom: Add binding for rmtfs memory
-  soc: qcom: Remote filesystem memory driver
-  arm64: dts: msm8916: Mark rmtfs node as qcom,rmtfs-mem compatible
+Changes since v2:
+- Renamed compatible to "rmtfs-mem" in attempt to clarify that this is not a
+  file system, but some chunk of memory.
 
- .../bindings/reserved-memory/qcom,rmtfs-mem.txt    |  51 ++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi              |   3 +
- drivers/of/of_reserved_mem.c                       |  26 ++
- drivers/of/platform.c                              |  19 +-
- drivers/soc/qcom/Kconfig                           |  11 +
- drivers/soc/qcom/Makefile                          |   1 +
- drivers/soc/qcom/rmtfs_mem.c                       | 272 +++++++++++++++++++++
- include/linux/of_reserved_mem.h                    |   5 +
- 8 files changed, 380 insertions(+), 8 deletions(-)
+Changed since v1:
+- Memory described in a single reserved-memory node, rather than by reference
+  from a "dummy" node
+- qcom,vmdid added
+
+ .../bindings/reserved-memory/qcom,rmtfs-mem.txt    | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
- create mode 100644 drivers/soc/qcom/rmtfs_mem.c
 
+diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
+new file mode 100644
+index 000000000000..8562ba1dce69
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
+@@ -0,0 +1,51 @@
++Qualcomm Remote File System Memory binding
++
++This binding describes the Qualcomm remote filesystem memory, which serves the
++purpose of describing the shared memory region used for remote processors to
++access block device data using the Remote Filesystem protocol.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be:
++		    "qcom,rmtfs-mem"
++
++- reg:
++	Usage: required for static allocation
++	Value type: <prop-encoded-array>
++	Definition: must specify base address and size of the memory region,
++		    as described in reserved-memory.txt
++
++- size:
++	Usage: required for dynamic allocation
++	Value type: <prop-encoded-array>
++	Definition: must specify a size of the memory region, as described in
++		    reserved-memory.txt
++
++- qcom,client-id:
++	Usage: required
++	Value type: <u32>
++	Definition: identifier of the client to use this region for buffers.
++
++- qcom,vmid:
++	Usage: optional
++	Value type: <u32>
++	Definition: vmid of the remote processor, to set up memory protection.
++
++= EXAMPLE
++The following example shows the remote filesystem memory setup for APQ8016,
++with the rmtfs region for the Hexagon DSP (id #1) located at 0x86700000.
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		rmtfs@86700000 {
++			compatible = "qcom,rmtfs-mem";
++			reg = <0x0 0x86700000 0x0 0xe0000>;
++			no-map;
++
++			qcom,client-id = <1>;
++		};
++	};
 -- 
 2.12.0
