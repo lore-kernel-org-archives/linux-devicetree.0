@@ -1,90 +1,49 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: Re: [PATCH 3/4] dt-bindings: hwmon: Add max-expected-current
- property to ina2xx
-Date: Thu, 05 Oct 2017 17:15:07 +0200
-Message-ID: <b990ff1b-80d6-4686-eb8f-51f045a92858@samsung.com>
-References: <1506603015-27202-1-git-send-email-m.purski@samsung.com>
-        <CGME20170928125104eucas1p20a3ead82624005331e36b8ebeca46815@eucas1p2.samsung.com>
-        <1506603015-27202-4-git-send-email-m.purski@samsung.com>
-        <20171001113145.2e839bc1@archlinux>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <20171001113145.2e839bc1@archlinux>
-Content-language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH] usb: renesas_usbhs: Add compatible string for r8a7743/5
+Date: Thu,  5 Oct 2017 16:12:38 +0100
+Message-ID: <1507216358-917-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2017 12:31 PM, Jonathan Cameron wrote:
-> On Thu, 28 Sep 2017 14:50:14 +0200
-> Maciej Purski <m.purski@samsung.com> wrote:
-> 
->> Add optional max expected current property which allows calibrating
->> the ina sensor in order to achieve requested precision. Document
->> the changes in Documentation/hwmon/ina2xx.
->>
-> 
-> This is introducing new generic devicetree bindings..
-> I'm not totally sure we want to do this rather than having a
-> manufacturer specific binding...  I don't have a good feeling for
-> how common this will be in other devices.
-> 
-> If it's generic, then this isn't necessarily the place to define it.
-> 
-> Jonathan
->
+This patch adds support for r8a7743/5 SoC.  The Renesas RZ/G1[ME]
+(R8A7743/5) usbhs is identical to the R-Car Gen2 family.
 
-I agree, this should be manufacturer-specific property. Thanks.
+This doesn't change the driver, so it does nothing by itself.  But it does
+mean that checkpatch won't complain about a future patch that adds
+"renesas,usbhs-r8a7743" or "renesas,usbhs-r8a7745" to a DT, which helps
+ensure that shipped DTs use documented compatibility strings.
 
->> Signed-off-by: Maciej Purski <m.purski@samsung.com>
->> ---
->>   Documentation/devicetree/bindings/hwmon/ina2xx.txt | 4 +++-
->>   Documentation/hwmon/ina2xx                         | 9 +++++----
->>   2 files changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
->> index 02af0d9..25ba372 100644
->> --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
->> +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
->> @@ -14,11 +14,13 @@ Optional properties:
->>   
->>   - shunt-resistor
->>   	Shunt resistor value in micro-Ohm
->> -
->> +- max-expected-current
->> +	Max expected current value in mA
->>   Example:
->>   
->>   ina220@44 {
->>   	compatible = "ti,ina220";
->>   	reg = <0x44>;
->>   	shunt-resistor = <1000>;
->> +	max-expected-current = <3000>;
->>   };
->> diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
->> index cfd31d9..e9ca838 100644
->> --- a/Documentation/hwmon/ina2xx
->> +++ b/Documentation/hwmon/ina2xx
->> @@ -51,10 +51,11 @@ INA230 and INA231 are high or low side current shunt and power monitors
->>   with an I2C interface. The chips monitor both a shunt voltage drop and
->>   bus supply voltage.
->>   
->> -The shunt value in micro-ohms can be set via platform data or device tree at
->> -compile-time or via the shunt_resistor attribute in sysfs at run-time. Please
->> -refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
->> -if the device tree is used.
->> +The shunt value in micro-ohms and max expected current in mA can be set
->> +via platform data or device tree at compile-time or via the shunt_resistor
->> +and max_expected_current attributes in sysfs at run-time. Please refer to the
->> +Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings if the
->> +device tree is used.
->>   
->>   Additionally ina226 supports update_interval attribute as described in
->>   Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
-> 
-> 
-> 
-> 
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+This patch is tested against Linux next tag next-20170929
+
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 9e18e00..479215b 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -3,6 +3,8 @@ Renesas Electronics USBHS driver
+ Required properties:
+   - compatible: Must contain one or more of the following:
+ 
++	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
++	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
+ 	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+ 	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
+ 	- "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
+@@ -10,7 +12,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+ 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+ 	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+-	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
++	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible device
+ 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
+ 
+ 	When compatible with the generic version, nodes must list the
+-- 
+1.9.1
