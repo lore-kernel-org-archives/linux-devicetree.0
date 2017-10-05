@@ -1,65 +1,69 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Thu, 5 Oct 2017 06:20:17 -0700
-Message-ID: <CABb+yY2Td+FubKJDedgbpnFCag608VZ2RAhW0qKoJ_9Jjh_k7Q@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-3-git-send-email-sudeep.holla@arm.com> <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
- <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com> <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+Subject: [PATCH] ARM64: dts: meson-gxbb-nexbox-a95x: Enable USB Nodes
+Date: Thu,  5 Oct 2017 15:21:18 +0200
+Message-ID: <20171005132118.2150-1-peter@korsgaard.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 5:35 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wed, Oct 4, 2017 at 1:07 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> On 04/10/17 11:50, Arnd Bergmann wrote:
->>> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+Enable both gxbb USB controllers and add a 5V regulator for the OTG port
+VBUS, similar to p20x.
 
->
->>>> +- shmem : List of phandle pointing to the shared memory(SHM) area as per
->>>> +         generic mailbox client binding.
->>>> +
->>>> +See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
->>>> +about the generic mailbox controller and client driver bindings.
->>>> +
->>>> +The mailbox is the only permitted method of calling the SCMI firmware.
->>>> +Mailbox doorbell is used as a mechanism to alert the presence of a
->>>> +messages and/or notification.
->>>
->>> This looks odd: why not make the message itself part of the mailbox
->>> protocol here, and leave the shmem as a implementation detail of the
->>> mailbox driver?
->>>
->>
->> I am not sure if I follow you here. But generally shmem can be memory
->> carved out of anything in the system and it's dependent on the protocol
->> and the remote firmware rather than the mailbox hardware itself.
->
-> I think the problem is the way we use the mailbox API in Linux, which
-> is completely abstract at the moment: it could be a pure doorbell, a
-> single-register for a data, some structured memory, or a
-> variable-length message. The assumption today is that the mailbox
-> user and the mailbox driver agree on the interpretation of that
-> void pointer.
->
-The way controllers and remote firmwares are paired there is no other
-way to write reusable code.
+Signed-off-by: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
+---
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-> This breaks down here, as you require the message to be a
-> variable-length message in a fixed physical location, but assume that
-> the mailbox serves only as a doorbell.
->
-That is a valid usecase, already supported. There's an optional
-callback provided by the api to fill SHMEM
-mbox_chan->mbox_client->tx_prepare()
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 38dfdde5c147..60cd9c3b11c8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -88,6 +88,18 @@
+ 		};
+ 	};
+ 
++	usb_pwr: regulator-usb-pwrs {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_PWR";
++
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		gpio = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	vddio_card: gpio-regulator {
+ 		compatible = "regulator-gpio";
+ 
+@@ -294,3 +306,20 @@
+ 	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+ };
++
++&usb0_phy {
++	status = "okay";
++	phy-supply = <&usb_pwr>;
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
+-- 
+2.11.0
 
-Data passing via SHMEM is purely optional because some controllers
-have deep fifos to carry data while some platforms may not have any
-region of memory shared between Linux and the remote firmware.
-
-Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
