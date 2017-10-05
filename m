@@ -1,107 +1,109 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] reset: uniphier: add PXs3 reset data
-Date: Thu,  5 Oct 2017 11:30:57 +0900
-Message-ID: <1507170657-26432-1-git-send-email-yamada.masahiro@socionext.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
+ multiple overlays
+Date: Wed, 4 Oct 2017 20:29:59 -0700
+Message-ID: <59D5A737.9090905@gmail.com>
+References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+ <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Add basic reset data for Socionext's new SoC PXs3.
+On 10/04/17 08:19, Rob Herring wrote:
+> On Mon, Oct 2, 2017 at 10:53 PM,  <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> The process of applying an overlay consists of:
+>>   - unflatten an overlay FDT (flattened device tree) into an
+>>     EDT (expanded device tree)
+>>   - fixup the phandle values in the overlay EDT to fit in a
+>>     range above the phandle values in the live device tree
+>>   - create the overlay changeset to reflect the contents of
+>>     the overlay EDT
+>>   - apply the overlay changeset, to modify the live device tree,
+>>     potentially changing the maximum phandle value in the live
+>>     device tree
+>>
+>> There is currently no protection against two overlay applies
+>> concurrently determining what range of phandle values are in use
+>> in the live device tree, and subsequently changing that range.
+>> Add a mutex to prevent multiple overlay applies from occurring
+>> simultaneously.
+>>
+>> Ignoring 2 checkpatch warnings: Prefer using '"%s...", __func__'
+>> so that the WARN() string will be more easily grepped.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  7 +++++++
+>>  drivers/of/overlay.c                         | 22 ++++++++++++++++++++++
+>>  drivers/of/unittest.c                        | 21 +++++++++++++++++++++
+>>  include/linux/of.h                           | 19 +++++++++++++++++++
+>>  4 files changed, 69 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>> index 7a7be0515bfd..c99f7924b1c6 100644
+>> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>> @@ -221,6 +221,11 @@ static void __init tilcdc_convert_slave_node(void)
+>>                 goto out;
+>>         }
+>>
+>> +       /*
+>> +        * protect from of_resolve_phandles() through of_overlay_apply()
+>> +        */
+>> +       of_overlay_mutex_lock();
+>> +
+> 
+> We can't be relying on callers to get the locking right...
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Agreed.
 
- .../devicetree/bindings/reset/uniphier-reset.txt   |  3 +++
- drivers/reset/reset-uniphier.c                     | 26 ++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-index 68a6f48..93efed6 100644
---- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-@@ -13,6 +13,7 @@ Required properties:
-     "socionext,uniphier-pxs2-reset" - for PXs2/LD6b SoC
-     "socionext,uniphier-ld11-reset" - for LD11 SoC
-     "socionext,uniphier-ld20-reset" - for LD20 SoC
-+    "socionext,uniphier-pxs3-reset" - for PXs3 SoC
- - #reset-cells: should be 1.
- 
- Example:
-@@ -44,6 +45,7 @@ Required properties:
-     "socionext,uniphier-ld11-mio-reset" - for LD11 SoC (MIO)
-     "socionext,uniphier-ld11-sd-reset"  - for LD11 SoC (SD)
-     "socionext,uniphier-ld20-sd-reset"  - for LD20 SoC
-+    "socionext,uniphier-pxs3-sd-reset"  - for PXs3 SoC
- - #reset-cells: should be 1.
- 
- Example:
-@@ -74,6 +76,7 @@ Required properties:
-     "socionext,uniphier-pxs2-peri-reset" - for PXs2/LD6b SoC
-     "socionext,uniphier-ld11-peri-reset" - for LD11 SoC
-     "socionext,uniphier-ld20-peri-reset" - for LD20 SoC
-+    "socionext,uniphier-pxs3-peri-reset" - for PXs3 SoC
- - #reset-cells: should be 1.
- 
- Example:
-diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
-index bda2dd1..6ed808d 100644
---- a/drivers/reset/reset-uniphier.c
-+++ b/drivers/reset/reset-uniphier.c
-@@ -114,6 +114,20 @@ static const struct uniphier_reset_data uniphier_ld20_sys_reset_data[] = {
- 	UNIPHIER_RESET_END,
- };
- 
-+static const struct uniphier_reset_data uniphier_pxs3_sys_reset_data[] = {
-+	UNIPHIER_RESETX(2, 0x200c, 0),		/* NAND */
-+	UNIPHIER_RESETX(4, 0x200c, 2),		/* eMMC */
-+	UNIPHIER_RESETX(8, 0x200c, 12),		/* STDMAC */
-+	UNIPHIER_RESETX(12, 0x200c, 4),		/* USB30 link (GIO0) */
-+	UNIPHIER_RESETX(13, 0x200c, 5),		/* USB31 link (GIO1) */
-+	UNIPHIER_RESETX(16, 0x200c, 16),	/* USB30-PHY0 */
-+	UNIPHIER_RESETX(17, 0x200c, 18),	/* USB30-PHY1 */
-+	UNIPHIER_RESETX(18, 0x200c, 20),	/* USB30-PHY2 */
-+	UNIPHIER_RESETX(20, 0x200c, 17),	/* USB31-PHY0 */
-+	UNIPHIER_RESETX(21, 0x200c, 19),	/* USB31-PHY1 */
-+	UNIPHIER_RESET_END,
-+};
-+
- /* Media I/O reset data */
- #define UNIPHIER_MIO_RESET_SD(id, ch)			\
- 	UNIPHIER_RESETX((id), 0x110 + 0x200 * (ch), 0)
-@@ -359,6 +373,10 @@ static const struct of_device_id uniphier_reset_match[] = {
- 		.compatible = "socionext,uniphier-ld20-reset",
- 		.data = uniphier_ld20_sys_reset_data,
- 	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-reset",
-+		.data = uniphier_pxs3_sys_reset_data,
-+	},
- 	/* Media I/O reset, SD reset */
- 	{
- 		.compatible = "socionext,uniphier-ld4-mio-reset",
-@@ -392,6 +410,10 @@ static const struct of_device_id uniphier_reset_match[] = {
- 		.compatible = "socionext,uniphier-ld20-sd-reset",
- 		.data = uniphier_pro5_sd_reset_data,
- 	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-sd-reset",
-+		.data = uniphier_pro5_sd_reset_data,
-+	},
- 	/* Peripheral reset */
- 	{
- 		.compatible = "socionext,uniphier-ld4-peri-reset",
-@@ -421,6 +443,10 @@ static const struct of_device_id uniphier_reset_match[] = {
- 		.compatible = "socionext,uniphier-ld20-peri-reset",
- 		.data = uniphier_pro4_peri_reset_data,
- 	},
-+	{
-+		.compatible = "socionext,uniphier-pxs3-peri-reset",
-+		.data = uniphier_pro4_peri_reset_data,
-+	},
- 	/* Analog signal amplifiers reset */
- 	{
- 		.compatible = "socionext,uniphier-ld11-adamv-reset",
--- 
-2.7.4
+> 
+>>         overlay = tilcdc_get_overlay(&kft);
+>>         if (!overlay)
+>>                 goto out;
+>> @@ -256,6 +261,8 @@ static void __init tilcdc_convert_slave_node(void)
+>>                 pr_info("%s: ti,tilcdc,slave node successfully converted\n",
+>>                         __func__);
+>>  out:
+>> +       of_overlay_mutex_unlock();
+>> +
+>>         kfree_table_free(&kft);
+>>         of_node_put(i2c);
+>>         of_node_put(slave);
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index a0d3222febdc..4ed372af6ce7 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -71,6 +71,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
+>>                 const struct device_node *overlay_node,
+>>                 bool is_symbols_node);
+>>
+>> +/*
+>> + * of_resolve_phandles() finds the largest phandle in the live tree.
+>> + * of_overlay_apply() may add a larger phandle to the live tree.
+>> + * Do not allow race between two overlays being applied simultaneously:
+>> + *    mutex_lock(&of_overlay_phandle_mutex)
+>> + *    of_resolve_phandles()
+>> + *    of_overlay_apply()
+>> + *    mutex_unlock(&of_overlay_phandle_mutex)
+> 
+> Why do these need to be separate functions? I think I mentioned it
+> before, but essentially overlay_data_add() should be part of the
+> overlay API. We may need to allow for callers to do each step, but
+> generally I think the interface should just be "apply this fdt blob".
+
+Yes, that is where I want to end up.
+
+> 
+> Rob
+> 
