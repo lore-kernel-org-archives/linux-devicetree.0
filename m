@@ -1,89 +1,43 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Thu, 5 Oct 2017 13:56:28 +0100
-Message-ID: <19eca9f4-5606-5849-12f1-5480d89b95e7@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-3-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
- <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com>
- <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
- <69fc9095-6961-b861-d2e0-afb58de11d59@arm.com>
- <CAK8P3a3C-xyE-mkj8ERDZHtWbpcOx3Z-gPgHrQHxNVi_3AmAZA@mail.gmail.com>
- <86fc9060-e0da-3dde-899d-1c4055f15386@arm.com>
- <CAK8P3a2+tXNpYxot-OFRNeVhrDA=VN4Ui8KhuRynHgcL+Ch9ug@mail.gmail.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH v3] ARC: [plat-hsdk]: Add reset controller node to manage
+ ethernet reset
+Date: Thu, 5 Oct 2017 06:04:44 -0700
+Message-ID: <64d3fb1d-8d6e-3c5f-f143-c3e6a205a95b@synopsys.com>
+References: <20170922164911.1125-1-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2+tXNpYxot-OFRNeVhrDA=VN4Ui8KhuRynHgcL+Ch9ug@mail.gmail.com>
+In-Reply-To: <20170922164911.1125-1-Eugeniy.Paltsev@synopsys.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Eugeniy,
 
+On 09/22/2017 09:49 AM, Eugeniy Paltsev wrote:
+> DW ethernet controller on HSDK hangs sometimes after SW reset, so
+> add reset node to make possible to reset DW ethernet controller HW.
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+> Changes v2 -> v3:
+>    * Remove v1 suffix as we finaly got rid of v1 suffix in reset
+>      driver and docs.
+>    * Rename reset node to "reset-controller" for consistency with
+>      the other bindings.
+> 
+> Changes v1 -> v2:
+>    * Enable HSDK reset driver in hsdk_defconfig
 
-On 05/10/17 12:56, Arnd Bergmann wrote:
-> On Wed, Oct 4, 2017 at 4:47 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> On 04/10/17 15:17, Arnd Bergmann wrote:
->>> On Wed, Oct 4, 2017 at 3:53 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>>> On 04/10/17 13:35, Arnd Bergmann wrote:
->>>>> On Wed, Oct 4, 2017 at 1:07 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> 
->>> There are probably several ways of doing this better, we should see
->>> what the best is we can come up with.
->>>
->>> I think generally speaking we need a way for a mailbox user to
->>> know what it should use as the mailbox data here, so it is
->>> able to talk to different incompatible mailbox providers.
->>>
->>> One idea I had is to use a nested mailbox driver, that turns
->>> a doorbell or single-register styled mailbox into a variable-length
->>> mailbox by adding a memory region, like
->>>
->>>     mailbox@1233000 {
->>>         compatible = "vendor-hardware-specifc-id";
->>>         interrupts = <34>;
->>>         reg = <0x1233000 0x100>;
->>>         #mbox-cells = <1>;
->>>     };
->>>
->>>     mailbox {
->>>            compatible = "shmem-mailbox";
->>>            mboxes = <&/mailbox@1233000  25>;
->>>            #mbox-cells = <1>;
->>>            shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
->>>     };
->>>
->>> This would create one mailbox that only takes a register argument,
->>> and another one that can take longer messages based on the first.
->>> In your driver, you then refer to the second one and pass the
->>> variable-length data into that directly.
->>
->> 1. IIUC it was intentional not to include shmem as part of mailbox
->>    controller binding and was pushed to client drivers as it's generally
->>    not part of mailbox IP block. I am not sure if there are any other
->>    specific reasons for that, but I may be missing some facts.
-> 
-> Ok, I see.
-> 
->> 2. I am not sure if we need nested driver/bindings (at-least to begin
->>    with). On a platform I don't think both/all modes will be used.
->>    I had  proposal for adding doorbell for ARM MHU based on extended
->>    bindings, but it was rejected[1]. But I really preferred that over
->>    the shim layer I had to add in v3.
-> 
-> Maybe we can come up with a more generic way to do doorbells
-> on top of mailboxes instead? This sounds like a problem that
-> would come back with other drivers, so the MHU-specific shim
-> will not be a permanent solution either.
-> 
+Revisiting this given that changes to driver have been merged upstream: we 
+currently carry a reset workaround for axs+ethernet, i.e. your patch
 
-I completely agree. I have seen few drivers that just implement
-doorbells in their controller. I will check them in details again.
+     ARC: [plat-axs103] Add temporary quirk to reset ethernet IP
 
--- 
-Regards,
-Sudeep
+But there's nothing similar for HSDK. IOW, we don't need to revert anything foro 
+hsdk, after this gets applied ?
+
+-Vineet
