@@ -1,127 +1,125 @@
+Return-Path: <SRS0=CwX3=BE=leopardimaging.com=leonl@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <AM5PR0701MB2657E31C99D3AAA873F12B1DE44F0@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-References: <AM5PR0701MB2657FDDE2E0CE80D0EECB4B3E4770@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-	<20171013200609.x6cjol7a57eypohl@rob-hp-laptop>
-	<AM5PR0701MB2657E31C99D3AAA873F12B1DE44F0@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-Date: Mon, 16 Oct 2017 16:21:29 -0500
-Message-ID: <CAL_Jsq+JZHZDo4kZE3oEhKvb37_U_fpsPs6WYzuWRveVgr97DA@mail.gmail.com>
-Subject: Re: [PATCHv3 1/2] Add device tree bindings for Altera FPGA Manager GPIO
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20171005062901.ofexwxfnun45linq@valkosipuli.retiisi.org.uk>
+References: <20171005000621.27841-1-leonl@leopardimaging.com>
+ <20171005000621.27841-2-leonl@leopardimaging.com> <20171005062901.ofexwxfnun45linq@valkosipuli.retiisi.org.uk>
+From: Leon Luo <leonl@leopardimaging.com>
+Date: Thu, 5 Oct 2017 00:06:16 -0700
+Message-ID: <CADu3m9y+GUaD3LXBO-TBpQj2VYR2Js_c85J9+B=ZZnpW7Jr9fQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS sensor
+Content-Type: multipart/alternative; boundary="001a113c3a1a477ef5055ac75caf"
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Oct 16, 2017 at 12:04 PM, Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
-> On 10/13/17 22:06, Rob Herring wrote:
->> On Sun, Oct 08, 2017 at 11:30:27AM +0000, Bernd Edlinger wrote:
->>> These are the bindings for the gpio-altera-fpgamgr driver.
->>
->> Bindings are for h/w devices, not drivers.
->>
->
-> I should drop that sentence then?
+--001a113c3a1a477ef5055ac75caf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, but you need some commit msg besides just the subject.
+Hi Sakari,
 
-> The first line is already:
-> "Add device tree bindings for Altera FPGA Manager GPIO"
->
->>>
->>> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
->>> ---
->>>   .../bindings/gpio/gpio-altera-fpgamgr.txt          | 45 ++++++++++++++++++++++
->>>   1 file changed, 45 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
->>> new file mode 100644
->>> index 0000000..7e9434f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
->>> @@ -0,0 +1,45 @@
->>> +Altera FPGA Manager GPIO controller bindings
->>> +
->>> +Required controller properties:
->>> +- #address-cells : Should be 1
->>> +- #size-cells : Should be 0
->>> +- compatible:
->>> +  - "altr,fpgamgr-gpio"
->>
->> Seems kind of generic. Only 1 implementation of h/w?
->
-> I guess, there are lots of Altera devices with similar peripherals.
->
->>
->>> +- reg: Physical base address and length of the controller's registers.
->>> +- status : "okay" or "disabled".
->>
->> No need to document status.
->>
->
-> Ok, will remove here and in the Example.
->
->>> +
->>> +The FPGA Manager has two 32-bit ports, one for input and one for output.
->>
->> This sounds more like a system control/status register to tie off all
->> the leftover signals than a GPIO block. Linus likely has some opinions
->> on that.
->>
->
-> I don't think so, the only difference is that the signals are not at the
-> external boundary, instead they connect internally the FPGA logic.
-> What these signals control depends entirely on the user's logic design.
+I just got an email saying the patch is accepted. Do I still need to do
+anything here? Do I need to add  MEDIA_CAMERA_SUPPORT dependency to Kconfig
+and submit a new version?
 
+Regards,
+Leon Luo
+1130 Cadillac CT
+Milpitas, CA 95035
+Phone: (510)371-1169
+Fax: (408) 217-1960
+Email: leonl@leopardimaging.com
+www.leopardimaging.com
 
->>> +
->>> +Port properties:
->>> +- compatible:
->>> +  - "altr,fpgamgr-gpio-output"
->>> +  - "altr,fpgamgr-gpio-input"
->>> +- #gpio-cells : Should be 2
->>> +  - The first cell is the gpio offset number.
->>> +  - The second cell is reserved and is currently unused.
->>> +- gpio-controller : Marks the device node as a GPIO controller.
->>> +- reg : Port number, 0 for output, 1 for input.
->>> +
->>> +Example:
->>> +
->>> +gpio3: gpio@ff706010 {
->>> +  #address-cells = <1>;
->>> +  #size-cells = <0>;
->>> +  compatible = "altr,fpgamgr-gpio";
->>> +  reg = <0xff706010 0x8>;
->>> +  status = "okay";
->>> +
->>> +  portd: gpio-controller@0 {
->>> +    compatible = "altr,fpgamgr-gpio-output";
->>> +    gpio-controller;
->>> +    #gpio-cells = <2>;
->>> +    reg = <0>;
->>> +  };
->>> +
->>> +  porte: gpio-controller@1 {
->>> +    compatible = "altr,fpgamgr-gpio-input";
->>> +    gpio-controller;
->>> +    #gpio-cells = <2>;
->>> +    reg = <1>;
->>> +  };
->>
->> These child nodes don't really add anything. Can't you just define the
->> controller has 64 lines with the 1st 32 being outputs.
->>
->
-> Other device bindings can refer to the single bits in each port
-> as "<&portd 1 0>" or "<&porte 2 0>" which is more mnemonic,
-> but it is possible that this makes no difference to the user mode.
->
-> The bindings are structured similar to what's in
-> Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> where the bindings are structured in the same way.
+On Wed, Oct 4, 2017 at 11:29 PM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
 
-The DW GPIO was a bit of an oddball IIRC, so I don't think I'd copy
+> On Wed, Oct 04, 2017 at 05:06:21PM -0700, Leon Luo wrote:
+> > The imx274 is a Sony CMOS image sensor that has 1/2.5 image size.
+> > It supports up to 3840x2160 (4K) 60fps, 1080p 120fps. The interface
+> > is 4-lane MIPI CSI-2 running at 1.44Gbps each.
+> >
+> > This driver has been tested on Xilinx ZCU102 platform with a Leopard
+> > LI-IMX274MIPI-FMC camera board.
+> >
+> > Support for the following features:
+> > -Resolutions: 3840x2160, 1920x1080, 1280x720
+> > -Frame rate: 3840x2160 : 5 =E2=80=93 60fps
+> >             1920x1080 : 5 =E2=80=93 120fps
+> >             1280x720 : 5 =E2=80=93 120fps
+> > -Exposure time: 16 =E2=80=93 (frame interval) micro-seconds
+> > -Gain: 1x - 180x
+> > -VFLIP: enable/disabledrivers/media/i2c/imx274.c
+> > -Test pattern: 12 test patterns
+> >
+> > Signed-off-by: Leon Luo <leonl@leopardimaging.com>
+> > Tested-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
+> > Acked-by: Sakari Ailus <sakari.ailus@iki.fi>
+>
+> Thanks!
+>
+> Applied with MEDIA_CAMERA_SUPPORT dependency to Kconfig.
+>
+> --
+> Sakari Ailus
+> e-mail: sakari.ailus@iki.fi
+>
 
+--001a113c3a1a477ef5055ac75caf
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Sakari,<div><br></div><div><span style=3D"font-size:12.=
+8px">I just got an email saying the patch is accepted.=C2=A0</span>Do I sti=
+ll need to do anything here? Do I need to add=C2=A0<span style=3D"font-size=
+:12.8px">=C2=A0</span><span style=3D"font-size:12.8px">MEDIA_CAMERA_SUPPORT=
+ dependency to Kconfig and submit a new version?=C2=A0</span></div></div><d=
+iv class=3D"gmail_extra"><br clear=3D"all"><div><div class=3D"gmail_signatu=
+re" data-smartmail=3D"gmail_signature">Regards,<br>Leon Luo<br>1130 Cadilla=
+c CT<br>Milpitas, CA 95035<br>Phone: (510)371-1169<br>Fax: (408) 217-1960<b=
+r>Email: <a href=3D"mailto:leonl@leopardimaging.com" target=3D"_blank">leon=
+l@leopardimaging.com</a><br><a href=3D"http://www.leopardimaging.com" targe=
+t=3D"_blank">www.leopardimaging.com</a><br></div></div>
+<br><div class=3D"gmail_quote">On Wed, Oct 4, 2017 at 11:29 PM, Sakari Ailu=
+s <span dir=3D"ltr">&lt;<a href=3D"mailto:sakari.ailus@iki.fi" target=3D"_b=
+lank">sakari.ailus@iki.fi</a>&gt;</span> wrote:<br><blockquote class=3D"gma=
+il_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-lef=
+t:1ex"><span class=3D"">On Wed, Oct 04, 2017 at 05:06:21PM -0700, Leon Luo =
+wrote:<br>
+&gt; The imx274 is a Sony CMOS image sensor that has 1/2.5 image size.<br>
+&gt; It supports up to 3840x2160 (4K) 60fps, 1080p 120fps. The interface<br=
 >
->
-> Bernd.
+&gt; is 4-lane MIPI CSI-2 running at 1.44Gbps each.<br>
+&gt;<br>
+&gt; This driver has been tested on Xilinx ZCU102 platform with a Leopard<b=
+r>
+&gt; LI-IMX274MIPI-FMC camera board.<br>
+&gt;<br>
+&gt; Support for the following features:<br>
+&gt; -Resolutions: 3840x2160, 1920x1080, 1280x720<br>
+&gt; -Frame rate: 3840x2160 : 5 =E2=80=93 60fps<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A01920x1080 : 5 =E2=80=93=
+ 120fps<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A01280x720 : 5 =E2=80=93 =
+120fps<br>
+&gt; -Exposure time: 16 =E2=80=93 (frame interval) micro-seconds<br>
+&gt; -Gain: 1x - 180x<br>
+&gt; -VFLIP: enable/disabledrivers/media/<wbr>i2c/imx274.c<br>
+&gt; -Test pattern: 12 test patterns<br>
+&gt;<br>
+&gt; Signed-off-by: Leon Luo &lt;<a href=3D"mailto:leonl@leopardimaging.com=
+">leonl@leopardimaging.com</a>&gt;<br>
+&gt; Tested-by: S=C3=B6ren Brinkmann &lt;<a href=3D"mailto:soren.brinkmann@=
+xilinx.com">soren.brinkmann@xilinx.com</a>&gt;<br>
+&gt; Acked-by: Sakari Ailus &lt;<a href=3D"mailto:sakari.ailus@iki.fi">saka=
+ri.ailus@iki.fi</a>&gt;<br>
+<br>
+</span>Thanks!<br>
+<br>
+Applied with MEDIA_CAMERA_SUPPORT dependency to Kconfig.<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+Sakari Ailus<br>
+e-mail: <a href=3D"mailto:sakari.ailus@iki.fi">sakari.ailus@iki.fi</a><br>
+</font></span></blockquote></div><br></div>
+
+--001a113c3a1a477ef5055ac75caf--
