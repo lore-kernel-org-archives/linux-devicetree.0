@@ -1,46 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: net: ravb: Document optional
- reset-gpios property
-Date: Thu, 5 Oct 2017 18:24:51 -0500
-Message-ID: <20171005232451.loogqlkmar6pdrdd@rob-hp-laptop>
-References: <1506614014-4398-1-git-send-email-geert+renesas@glider.be>
- <1506614014-4398-2-git-send-email-geert+renesas@glider.be>
- <fefd2be3-d47a-f035-5078-090df0fc6318@cogentembedded.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: i2c: Update documentation for
+ "mv78230-a0-i2c"
+Date: Thu, 5 Oct 2017 18:29:53 -0500
+Message-ID: <20171005232953.gsxs6ecp6kopolf2@rob-hp-laptop>
+References: <20170928213605.22874-1-kalyan.kinthada@alliedtelesis.co.nz>
+ <20170928213605.22874-3-kalyan.kinthada@alliedtelesis.co.nz>
+ <87k20dmxw0.fsf@free-electrons.com>
+ <20171005110820.phcjh7dmygi43dhq@ninjato>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fefd2be3-d47a-f035-5078-090df0fc6318@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "David S . Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20171005110820.phcjh7dmygi43dhq@ninjato>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 11:07:38PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 09/28/2017 06:53 PM, Geert Uytterhoeven wrote:
-> 
-> > The optional "reset-gpios" property (part of the generic MDIO bus
-> > properties) lets us describe the GPIO used for resetting the Ethernet
-> > PHY.
+On Thu, Oct 05, 2017 at 01:08:20PM +0200, Wolfram Sang wrote:
+> On Mon, Oct 02, 2017 at 04:23:43PM +0200, Gregory CLEMENT wrote:
+> > Hi Wolfram,
+> >  
+> >  On ven., sept. 29 2017, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz> wrote:
 > > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >   Documentation/devicetree/bindings/net/renesas,ravb.txt | 2 ++
-> >   1 file changed, 2 insertions(+)
+> > > This commit modifies the documentation for
+> > > "marvell,mv78230-a0-i2c" compatible string.
+> > >
+> > > The "marvell,mv78230-a0-i2c" compatible string enables the workaround
+> > > for an i2c repeated start timing violation, but unlike
+> > > "marvell,mv78230-i2c" it disables the i2c offload support. This is
+> > > applicable to a number of SoCs such as early revisions of the Armada XP
+> > > and the Armada 38x.
+> > >
+> > > Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
 > > 
-> > diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > index c902261893b913f5..4a6ec1ba32d0bf16 100644
-> > --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > @@ -52,6 +52,7 @@ Optional properties:
-> >   			 AVB_LINK signal.
-> >   - renesas,ether-link-active-low: boolean, specify when the AVB_LINK signal is
-> >   				 active-low instead of normal active-high.
-> > +- reset-gpios: see mdio.txt in the same directory.
+> > 
+> > I applied the dt fix on my mvebu/fixes branch. Do you want to apply this
+> > one on your branch, or do you prefer I take it. In this case an acked-by
+> > would be nice.
 > 
->    Sigh, I can only repeat that was a terrible prop name choice -- when
-> applied to a MAC node... what reset does it mean? MAC?
+> I'd prefer to take it. What I'd really like to see here is an ack from
+> Rob because of the previous discussion of an earlier revision of this
+> patch.
 
-Agreed. This should be in the phy node. Or MDIO at least.
+I'm confused how mv78230 relates to Armada XP or 38x... I don't really 
+want to know either. If normal compatible string conventions were 
+followed then I wouldn't have to.
+
+Rob
