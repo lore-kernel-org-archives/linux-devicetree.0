@@ -1,42 +1,34 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Amlogic: add documentation for the SoC
- info register areas
-Date: Thu, 5 Oct 2017 14:52:46 -0500
-Message-ID: <20171005195246.6nddrovf53zenxxo@rob-hp-laptop>
-References: <20170923141403.20882-1-martin.blumenstingl@googlemail.com>
- <20170923141403.20882-2-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add support for the USB3 PHY on
+ Amlogic Meson GXL SoCs
+Date: Thu, 5 Oct 2017 15:02:40 -0500
+Message-ID: <20171005200240.bdxd4kupapkqlosh@rob-hp-laptop>
+References: <20170924195000.13276-1-martin.blumenstingl@googlemail.com>
+ <20170924195000.13276-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170923141403.20882-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170924195000.13276-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 23, 2017 at 04:14:01PM +0200, Martin Blumenstingl wrote:
-> There are three register areas which contain information about the SoC
-> version and revision:
-> - the assist registers contain the SoC's "major version" which encodes
->   the SoC generation and part number. this is available on Meson6,
->   Meson8 and Meson8b SoCs.
-> - the bootrom register contains at least the SoCs "misc version". this
->   is avilable on Meson6, Meson8 and Meson8b
-> - the analog top registers contain information about the SoC revision.
->   this is only available on Meson8 and Meson8b
-> 
-> Not much else is currently known about these registers.
+On Sun, Sep 24, 2017 at 09:49:59PM +0200, Martin Blumenstingl wrote:
+> Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
+> for GXL, has three) USB2 ports. The first USB2 port supports host and
+> peripheral (also called "device") mode.
+> While the dwc3 controller has no USB3 port enabled we still need the
+> USB3 PHY to be initialized, otherwise some boards (probably those where
+> the bootloader does not initialize the USB3 PHY) show errors with
+> high-speed USB devices connected to any of the USB2 ports.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/amlogic/analog-top.txt   | 20 ++++++++++++++++++++
->  .../devicetree/bindings/arm/amlogic/assist.txt       | 17 +++++++++++++++++
->  .../devicetree/bindings/arm/amlogic/bootrom.txt      | 17 +++++++++++++++++
->  3 files changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/analog-top.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/assist.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/bootrom.txt
+>  .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt    | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
