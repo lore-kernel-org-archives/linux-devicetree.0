@@ -1,37 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: Add support for the USB3 PHY on
- Amlogic Meson GXL SoCs
-Date: Thu, 5 Oct 2017 15:02:40 -0500
-Message-ID: <20171005200240.bdxd4kupapkqlosh@rob-hp-laptop>
-References: <20170924195000.13276-1-martin.blumenstingl@googlemail.com>
- <20170924195000.13276-2-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5 v2] input: mouse: Add DT bindings for GPIO mice
+Date: Thu, 5 Oct 2017 15:23:06 -0500
+Message-ID: <20171005202306.s43u3wfmi66jcpq2@rob-hp-laptop>
+References: <20170925163430.22397-1-linus.walleij@linaro.org>
+ <20170925163430.22397-3-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170924195000.13276-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+In-Reply-To: <20170925163430.22397-3-linus.walleij@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 24, 2017 at 09:49:59PM +0200, Martin Blumenstingl wrote:
-> Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
-> for GXL, has three) USB2 ports. The first USB2 port supports host and
-> peripheral (also called "device") mode.
-> While the dwc3 controller has no USB3 port enabled we still need the
-> USB3 PHY to be initialized, otherwise some boards (probably those where
-> the bootloader does not initialize the USB3 PHY) show errors with
-> high-speed USB devices connected to any of the USB2 ports.
+On Mon, Sep 25, 2017 at 06:34:28PM +0200, Linus Walleij wrote:
+> This adds DT bindings for simple mice attached to GPIO lines.
+> As the properties are very general and pertains to all mice I
+> can think of, we use very generic names for the 4-7 GPIO lines,
+> "up", "down" etc.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Acked-by: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt    | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+> ChangeLog v1->v2:
+> - Collect Hand-Christian's ACK
+> - Uses 5-7 lines rather than 4-7 lines
+> - Add suffix "-ms" to the scan interval property
+> - Fix compatible string in the example
+> ---
+>  .../devicetree/bindings/input/gpio-mouse.txt       | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-mouse.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
