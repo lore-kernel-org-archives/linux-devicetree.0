@@ -1,51 +1,92 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 00/12] of: overlay: clean up device tree overlay code
-Date: Thu, 5 Oct 2017 09:53:33 +0300
-Message-ID: <3eac16b0-fdd9-fd6c-e1ca-e0de49ce27cb@ti.com>
-References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqJFPHOxrOYNcJCmNvdTA+1RqZxNSZOq6byzDVygUwV0Ow@mail.gmail.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH 2/2] gpio: mcp32s08: add support for mcp23018
+Date: Thu, 5 Oct 2017 14:56:56 +0800
+Message-ID: <de082b41-5bdc-d48b-41bf-da4ea0cadee0@electromag.com.au>
+References: <1507166615-4530-1-git-send-email-preid@electromag.com.au>
+ <1507166615-4530-3-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJFPHOxrOYNcJCmNvdTA+1RqZxNSZOq6byzDVygUwV0Ow@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jyri Sarha <jsarha@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1507166615-4530-3-git-send-email-preid@electromag.com.au>
+Content-Language: en-AU
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-77u/ClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
-IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
-bWljaWxlOiBIZWxzaW5raQoKT24gMDQvMTAvMTcgMTc6NTYsIFJvYiBIZXJyaW5nIHdyb3RlOgo+
-IE9uIE1vbiwgT2N0IDIsIDIwMTcgYXQgMTA6NTMgUE0sICA8ZnJvd2FuZC5saXN0QGdtYWlsLmNv
-bT4gd3JvdGU6Cj4+IEZyb206IEZyYW5rIFJvd2FuZCA8ZnJhbmsucm93YW5kQHNvbnkuY29tPgo+
-Pgo+PiBJIGhhdmUgZm91bmQgdGhlIGRldmljZSB0cmVlIG92ZXJsYXkgY29kZSB0byBiZSBkaWZm
-aWN1bHQgdG8gcmVhZCBhbmQKPj4gbWFpbnRhaW4uICBUaGlzIHBhdGNoIHNlcmllcyBhdHRlbXB0
-cyB0byBpbXByb3ZlIHRoYXQgc2l0dWF0aW9uLgo+Pgo+PiBUaGUgY2xlYW51cCBpbmNsdWRlcyBz
-b21lIGNoYW5nZXMgdmlzaWJsZSB0byB1c2VycyBvZiBvdmVybGF5cy4gIFRoZQo+PiBvbmx5IGlu
-IGtlcm5lbCB1c2VyIG9mIG92ZXJsYXlzIGlzIGZpeGVkIHVwIGZvciB0aG9zZSBjaGFuZ2VzLiAg
-VGhlCj4+IGluIGtlcm5lbCB1c2VyIGlzOgo+Pgo+PiAgICBkcml2ZXJzL2dwdS9kcm0vdGlsY2Rj
-L3RpbGNkY19zbGF2ZV9jb21wYXQuYwo+IAo+IEF0IHdoYXQgcG9pbnQgY2FuIHdlIHJlbW92ZSB0
-aGlzPyBJJ20gYXNzdW1pbmcgYXQgc29tZSBwb2ludCB1c2Vycwo+IHdpbGwgbmVlZCB0byB1cGRh
-dGUgdGhlaXIgZHRiJ3MgZm9yIG90aGVyIHJlYXNvbnMgYW5kIHRoaXMgYmVjb21lcwo+IG9ic29s
-ZXRlLgoKVG8gYmUgaG9uZXN0LCBJIGhhdmUgbm8gaWRlYSwgb3IgaG93IHRvIGZpbmQgdGhhdCBv
-dXQuCgpEbyB3ZSBuZWVkIHRvIGdldCByaWQgb2YgaXQ/IEFmYWlrLCB3ZSBoYXZlbid0IGRvIG11
-Y2ggKG9yIGFueT8pCm1haW50ZW5hbmNlIG9uIHRpbGNkY19zbGF2ZV9jb21wYXQuYyBzaW5jZSBp
-dCB3YXMgd3JpdHRlbiwgc28gZnJvbSBvdXIKcGVyc3BlY3RpdmUgaXQncyBiZWVuIGEgbWluaW1h
-bCBidXJkZW4uIElzIGl0IGNyZWF0aW5nIGJ1cmRlbiBmb3Igb3RoZXJzPwoKSXMgdGhlIGFwcHJv
-YWNoIGRvbmUgd2l0aCB0aWxjZGNfc2xhdmVfY29tcGF0LmMgc29tZXRoaW5nIHRoYXQncyBub3QK
-cmVjb21tZW5kZWQ/IEknbSBzdXJlIHNpbWlsYXIgc2l0dWF0aW9ucyBoYXBwZW4gd2l0aCBvdGhl
-ciBkcml2ZXJzIHRvbywKYW5kIEkgdGhpbmsgaXQncyBhIGdvb2QgaWRlYSB0byBoYXZlIGEgcmVj
-b21tZW5kZWQgd2F5IG9mIGtlZXBpbmcKY29tcGF0aWJpbGl0eS4KCiBUb21pCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 5/10/2017 09:23, Phil Reid wrote:
+> This adds the required definitions for the mcp23018 which is the i2c
+> variant of the mcp23s18.
+> 
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>   drivers/gpio/gpio-mcp23s08.c | 15 ++++++++++++++-
+>   1 file changed, 14 insertions(+), 1 deletion(-)
+
+I've just noticed that this needs to be rebased as mcp23s08 driver has moved.
+Other that the new location the patch is the same so far.
+I have a couple of queries regarding the driver in another email, will wait for that first..
+
+
+
+> 
+> diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
+> index 2a57d024..92751e5 100644
+> --- a/drivers/gpio/gpio-mcp23s08.c
+> +++ b/drivers/gpio/gpio-mcp23s08.c
+> @@ -33,6 +33,7 @@
+>   #define MCP_TYPE_008	2
+>   #define MCP_TYPE_017	3
+>   #define MCP_TYPE_S18    4
+> +#define MCP_TYPE_018    5
+>   
+>   /* Registers are all 8 bits wide.
+>    *
+> @@ -595,6 +596,13 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+>   		mcp->chip.ngpio = 16;
+>   		mcp->chip.label = "mcp23017";
+>   		break;
+> +
+> +	case MCP_TYPE_018:
+> +		mcp->regmap = devm_regmap_init_i2c(data, &mcp23x17_regmap);
+> +		mcp->reg_shift = 1;
+> +		mcp->chip.ngpio = 16;
+> +		mcp->chip.label = "mcp23018";
+> +		break;
+>   #endif /* CONFIG_I2C */
+>   
+>   	default:
+> @@ -640,7 +648,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+>   		if (mirror)
+>   			status |= IOCON_MIRROR | (IOCON_MIRROR << 8);
+>   
+> -		if (type == MCP_TYPE_S18)
+> +		if (type == MCP_TYPE_S18 || type == MCP_TYPE_018)
+>   			status |= IOCON_INTCC | (IOCON_INTCC << 8);
+>   
+>   		ret = mcp_write(mcp, MCP_IOCON, status);
+> @@ -729,6 +737,10 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+>   		.compatible = "microchip,mcp23017",
+>   		.data = (void *) MCP_TYPE_017,
+>   	},
+> +	{
+> +		.compatible = "microchip,mcp23018",
+> +		.data = (void *) MCP_TYPE_018,
+> +	},
+>   /* NOTE: The use of the mcp prefix is deprecated and will be removed. */
+>   	{
+>   		.compatible = "mcp,mcp23008",
+> @@ -812,6 +824,7 @@ static int mcp230xx_remove(struct i2c_client *client)
+>   static const struct i2c_device_id mcp230xx_id[] = {
+>   	{ "mcp23008", MCP_TYPE_008 },
+>   	{ "mcp23017", MCP_TYPE_017 },
+> +	{ "mcp23018", MCP_TYPE_018 },
+>   	{ },
+>   };
+>   MODULE_DEVICE_TABLE(i2c, mcp230xx_id);
+> 
+
+
+-- 
+Regards
+Phil Reid
