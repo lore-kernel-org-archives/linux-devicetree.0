@@ -1,126 +1,72 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH 2/4] media: dt-bindings: Add bindings for TDA1997X
-Date: Thu, 5 Oct 2017 10:06:06 -0700
-Message-ID: <CAJ+vNU2+7FWqPjBrKBcuKo8y4BKNnRNGhp8NkA3rJOGApaOdoQ@mail.gmail.com>
-References: <1506119053-21828-1-git-send-email-tharvey@gateworks.com>
- <1506119053-21828-3-git-send-email-tharvey@gateworks.com> <20171004211411.27gxy5wnaymdcm3z@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
+Date: Thu, 5 Oct 2017 20:18:38 +0300
+Message-ID: <dca19642-e511-5cd5-b7b9-9ed339407ed6@cogentembedded.com>
+References: <20170915194449.538504992@cogentembedded.com>
+ <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
+ <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
+ <CAMuHMdVCTORpfKN+GTka_6pT1VWjOneV2GBhGo7Y8DsZYSxdvw@mail.gmail.com>
+ <20171005090500.GC26369@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171004211411.27gxy5wnaymdcm3z@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005090500.GC26369-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-MW
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 2:14 PM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Sep 22, 2017 at 03:24:11PM -0700, Tim Harvey wrote:
->> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->
+On 10/05/2017 12:05 PM, Simon Horman wrote:
 
-Hi Rob, thanks for the review!
+>>>>> Define the Eagle board  dependent part of the EtherAVB device node.
+>>>>> Enable DHCP  and NFS root for the kernel booting.
+>>>>>
+>>>>> Based  on the original (and large) patch by Vladimir Barinov.
+>>>>>
+>>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>>>
+>>>>
+>>>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+>>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+>>>
+>>> [...]
+>>>>>
+>>>>> @@ -43,3 +44,14 @@
+>>>>>    &scif0 {
+>>>>>           status = "okay";
+>>>>>    };
+>>>>> +
+>>>>> +&avb {
+>>>>> +       renesas,no-ether-link;
+>>>>> +       phy-handle = <&phy0>;
+>>>>> +       status = "okay";
+>>>>> +
+>>>>> +       phy0: ethernet-phy@0 {
+>>>>> +               rxc-skew-ps = <1500>;
+>>>>> +               reg = <0>;
+>>>>
+>>>>
+>>>> Any specific reason why you don't want to wire up the interrupt?
+>>>>
+>>>>                   interrupt-parent = <&gpio2>;
+>>>
+>>>
+>>>     I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem
+>>> to require PFC.
+>>
+>> Of course. And these can be added later.
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> 
+> Thanks, applied.
 
-I will add a commit message, vendor prefix to non-standard props, and
-remove '_' in the next revision.
+    Still not seeing any devel branch updates/tags -- have you pushed it?
 
->
->> +
->> +Optional Properties:
->> + - max-pixel-rate  : Maximum pixel rate supported by the SoC (MP/sec)
->> + - audio-port      : parameters defining audio output port connection
->
-> That description is meaningless to me.
->
-<snip>>
->> +The Audio output port consists of A_CLK, A_WS, AP0, AP1, AP2, and AP3 pins
->> +and can support up to 8-chanenl audio using the following audio bus DAI formats:
->> + - I2S16
->> + - I2S32
->> + - SPDIF
->> + - OBA (One-Bit-Audio)
->> + - I2S16_HBR_STRAIGHT (High Bitrate straight through)
->> + - I2S16_HBR_DEMUX (High Bitrate demuxed)
->> + - I2S32_HBR_DEMUX (High Bitrate demuxed)
->> + - DST (Direct Stream Transfer)
->
-> This either should be a standard, common property or not be in DT.
-> Practically every system is going to have at least one end of the
-> connection that is configurable. The kernel should be able to get lists
-> of supported modes and pick one.
->
-
-I struggled with 'audio-port' property quite a bit.
-
-Looking at the datasheet a bit closer
-(http://dev.gateworks.com/datasheets/TDA19971-datasheet-rev3.pdf) I
-see that the audio output port consisting of WS, AP[0:3], CLK really
-only supports I2S and S/PDIF output modes. The AP[0:3] provide support
-for up to 8 audio channels. The way these pins are used is defined in
-Table 5/6/7 in the datasheet but I think that the dt perhaps only
-needs to number of data lines (1-4) (which could also be represented
-as channels (1-8)), and a clock multiplier which could be described as
-a 'mclk-fs' multiplication factor like simple-audio bindings does.
-
-What would your recommendation be here?
-
->> +
-<snip>
->> +             max-pixel-rate = <180>; /* IMX6 CSI max pixel rate 180MP/sec */
->
-> That's a constraint that belongs in the i.MX CSI node or driver.
-
-right - that makes sense. I'll talk to the maintainer of the i.MX CSI
-driver to see what they think.
-
->
->> +
->> +             port@0 {
->> +                     reg = <0>;
->> +             };
->> +             port@1 {
->
-> You need to describe how many ports and what they are.
-
-ok. My example was a mistake anyway and I propose a single output port such as:
-
-The device node must contain one 'port' child node for its digital output
-video port, in accordance with the video interface bindings defined in
-Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Example:
-                port {
-                        tda1997x_to_ipu1_csi0_mux: endpoint {
-                                remote-endpoint =
-<&ipu1_csi0_mux_from_parallel_sensor>;
-                                bus-width = <16>;
-                                hsync-active = <1>;
-                                vsync-active = <1>;
-                                data-active = <1>;
-                        };
-                };
-
->
->> +                     reg = <1>;
->> +                     hdmi_in: endpoint {
->> +                             remote-endpoint = <&ccdc_in>;
->> +                     };
->> +             };
->> +     };
->> + - VP[15:8] connected to IMX6 CSI_DATA[19:12] for 8bit BT656
->> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
->
-> Do you really need 2 examples? It should be possible to figure out other
-> configurations with better descriptions above.
->
-
-Perhaps, but I feel like the vidout-portcfg is pretty confusing and
-wanted to provide some different mappings as examples. The
-vidout-portcfg property allows you to shift the bits around on the
-output pins per 4-bit groups as well as reverse their order and
-different defines are used depending on RGB444/YUV444/YUV422/BT656. I
-could provide just portcfg examples above the full dts example though
-under the short description of 'nxp,vidout-portcfg'.
-
-Regards,
-
-Tim
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
