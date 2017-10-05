@@ -1,64 +1,90 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] scripts/dtc: add fdt_overlay.c and fdt_addresses.c to
- sync script
-Date: Thu, 5 Oct 2017 10:09:39 -0500
-Message-ID: <CAL_JsqLGm_OhJUUys7-1s_+rk48sJPKBVR_dTJOB4Lu92GL_Zg@mail.gmail.com>
-References: <20171003183118.2438-1-robh@kernel.org> <20171003220417.GA13661@bill-the-cat>
- <CAL_Jsq+Ruvu11Nu92FtgGcO0PqxCQk5KhiQAgj8JzbzPKNseqQ@mail.gmail.com> <20171005143930.GB25966@bill-the-cat>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: Re: [PATCH 3/4] dt-bindings: hwmon: Add max-expected-current
+ property to ina2xx
+Date: Thu, 05 Oct 2017 17:15:07 +0200
+Message-ID: <b990ff1b-80d6-4686-eb8f-51f045a92858@samsung.com>
+References: <1506603015-27202-1-git-send-email-m.purski@samsung.com>
+        <CGME20170928125104eucas1p20a3ead82624005331e36b8ebeca46815@eucas1p2.samsung.com>
+        <1506603015-27202-4-git-send-email-m.purski@samsung.com>
+        <20171001113145.2e839bc1@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171005143930.GB25966@bill-the-cat>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyle Yan <kyan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20171001113145.2e839bc1@archlinux>
+Content-language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 5, 2017 at 9:39 AM, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> On Tue, Oct 03, 2017 at 05:23:28PM -0500, Rob Herring wrote:
->> On Tue, Oct 3, 2017 at 5:04 PM, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> > On Tue, Oct 03, 2017 at 01:31:17PM -0500, Rob Herring wrote:
->> >
->> >> libfdt has gained some new files. We need to include them in the
->> >> kernel's copy.
->> >>
->> >> Reported-by: Kyle Yan <kyan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> >> ---
->> >>  scripts/dtc/update-dtc-source.sh | 4 +++-
->> >>  1 file changed, 3 insertions(+), 1 deletion(-)
->> >>
->> >> diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
->> >> index b8ebcc6722d2..f3e5c596050a 100755
->> >> --- a/scripts/dtc/update-dtc-source.sh
->> >> +++ b/scripts/dtc/update-dtc-source.sh
->> >> @@ -34,7 +34,9 @@ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c
->> >>               srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
->> >>               dtc-lexer.l dtc-parser.y"
->> >>  DTC_GENERATED="dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
->> >> -LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
->> >> +LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_tree.c \
->> >> +             fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
->> >> +             fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
->> >
->> > Should there be a patch #3 to update the kernel libfdt to include these
->> > new files that we're copying in too?  That seems to be the main user
->> > in-tree of the libfdt C files, aside from the 'libfdt' targets under
->> > arch/{arm,powerpc}/boot/  Thanks!
+On 10/01/2017 12:31 PM, Jonathan Cameron wrote:
+> On Thu, 28 Sep 2017 14:50:14 +0200
+> Maciej Purski <m.purski@samsung.com> wrote:
+> 
+>> Add optional max expected current property which allows calibrating
+>> the ina sensor in order to achieve requested precision. Document
+>> the changes in Documentation/hwmon/ina2xx.
 >>
->> Yes, good point. But we can add them when someone wants to use them.
->> Adding them to the build will bloat the kernel because libfdt doesn't
->> get built as a static lib (another problem to solve).
+> 
+> This is introducing new generic devicetree bindings..
+> I'm not totally sure we want to do this rather than having a
+> manufacturer specific binding...  I don't have a good feeling for
+> how common this will be in other devices.
+> 
+> If it's generic, then this isn't necessarily the place to define it.
+> 
+> Jonathan
 >
-> Well, isn't the kernel starting to more widely use
-> -ffunction-sections/-fdata-sections/--gc-unused-sections ?
 
-Unfortunately, no. Nico Pitre did some work there, and I think it
-helps some but is incomplete because of how some of the kernel's
-assembly code works.
+I agree, this should be manufacturer-specific property. Thanks.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+>> ---
+>>   Documentation/devicetree/bindings/hwmon/ina2xx.txt | 4 +++-
+>>   Documentation/hwmon/ina2xx                         | 9 +++++----
+>>   2 files changed, 8 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
+>> index 02af0d9..25ba372 100644
+>> --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
+>> +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
+>> @@ -14,11 +14,13 @@ Optional properties:
+>>   
+>>   - shunt-resistor
+>>   	Shunt resistor value in micro-Ohm
+>> -
+>> +- max-expected-current
+>> +	Max expected current value in mA
+>>   Example:
+>>   
+>>   ina220@44 {
+>>   	compatible = "ti,ina220";
+>>   	reg = <0x44>;
+>>   	shunt-resistor = <1000>;
+>> +	max-expected-current = <3000>;
+>>   };
+>> diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
+>> index cfd31d9..e9ca838 100644
+>> --- a/Documentation/hwmon/ina2xx
+>> +++ b/Documentation/hwmon/ina2xx
+>> @@ -51,10 +51,11 @@ INA230 and INA231 are high or low side current shunt and power monitors
+>>   with an I2C interface. The chips monitor both a shunt voltage drop and
+>>   bus supply voltage.
+>>   
+>> -The shunt value in micro-ohms can be set via platform data or device tree at
+>> -compile-time or via the shunt_resistor attribute in sysfs at run-time. Please
+>> -refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
+>> -if the device tree is used.
+>> +The shunt value in micro-ohms and max expected current in mA can be set
+>> +via platform data or device tree at compile-time or via the shunt_resistor
+>> +and max_expected_current attributes in sysfs at run-time. Please refer to the
+>> +Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings if the
+>> +device tree is used.
+>>   
+>>   Additionally ina226 supports update_interval attribute as described in
+>>   Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
+> 
+> 
+> 
+> 
