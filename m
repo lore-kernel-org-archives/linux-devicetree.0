@@ -1,152 +1,58 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] iommu/of: Add msi address regions reservation
-	helper
-Date: Thu, 5 Oct 2017 13:44:49 +0100
-Message-ID: <cd4d3ad0-317e-6b7b-c5f4-f4e6eac3ee10@arm.com>
-References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
-	<20170927133241.21036-4-shameerali.kolothum.thodi@huawei.com>
-	<f3146f49-6004-7a15-866b-653e3ea54856@arm.com>
-	<20171004135007.GA12327@red-moon>
-	<5c80f292-dc5d-a1c6-d7a0-df2a84cc77d1@arm.com>
-	<d525f112-fb20-d14b-bea0-6547c8b933dd@huawei.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] Enable NAND on Armada-7040-DB board
+Date: Thu, 5 Oct 2017 14:53:43 +0200
+Message-ID: <20171005145343.1ba59fb7@bbrezillon>
+References: <20170925145352.13145-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <d525f112-fb20-d14b-bea0-6547c8b933dd-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170925145352.13145-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMTAvMTcgMTM6MzcsIEpvaG4gR2Fycnkgd3JvdGU6Cj4gT24gMDUvMTAvMjAxNyAxMjow
-NywgUm9iaW4gTXVycGh5IHdyb3RlOgo+PiBPbiAwNC8xMC8xNyAxNDo1MCwgTG9yZW56byBQaWVy
-YWxpc2kgd3JvdGU6Cj4+PiBPbiBXZWQsIE9jdCAwNCwgMjAxNyBhdCAxMjoyMjowNFBNICswMTAw
-LCBNYXJjIFp5bmdpZXIgd3JvdGU6Cj4+Pj4gT24gMjcvMDkvMTcgMTQ6MzIsIFNoYW1lZXIgS29s
-b3RodW0gd3JvdGU6Cj4+Pj4+IEZyb206IEpvaG4gR2FycnkgPGpvaG4uZ2FycnlAaHVhd2VpLmNv
-bT4KPj4+Pj4KPj4+Pj4gT24gc29tZSBwbGF0Zm9ybXMgbXNpLWNvbnRyb2xsZXIgYWRkcmVzcyBy
-ZWdpb25zIGhhdmUgdG8gYmUgZXhjbHVkZWQKPj4+Pj4gZnJvbSBub3JtYWwgSU9WQSBhbGxvY2F0
-aW9uIGluIHRoYXQgdGhleSBhcmUgZGV0ZWN0ZWQgYW5kIGRlY29kZWQgaW4KPj4+Pj4gYSBIVyBz
-cGVjaWZpYyB3YXkgYnkgc3lzdGVtIGNvbXBvbmVudHMgYW5kIHNvIHRoZXkgY2Fubm90IGJlCj4+
-Pj4+IGNvbnNpZGVyZWQKPj4+Pj4gbm9ybWFsIElPVkEgYWRkcmVzcyBzcGFjZS4KPj4+Pj4KPj4+
-Pj4gQWRkIGEgaGVscGVyIGZ1bmN0aW9uIHRoYXQgcmV0cmlldmVzIG1zaSBhZGRyZXNzIHJlZ2lv
-bnMgdGhyb3VnaAo+Pj4+PiBkZXZpY2UKPj4+Pj4gdHJlZSBtc2kgbWFwcGluZywgc28gdGhhdCB0
-aGVzZSByZWdpb25zIHdpbGwgbm90IGJlIHRyYW5zbGF0ZWQgYnkKPj4+Pj4gSU9NTVUKPj4+Pj4g
-YW5kIHdpbGwgYmUgZXhjbHVkZWQgZnJvbSBJT1ZBIGFsbG9jYXRpb25zLgo+Pj4+Pgo+Pj4+PiBT
-aWduZWQtb2ZmLWJ5OiBKb2huIEdhcnJ5IDxqb2huLmdhcnJ5QGh1YXdlaS5jb20+Cj4+Pj4+IFtT
-aGFtZWVyOiBNb2RpZmllZCBtc2ktcGFyZW50IHJldHJpZXZhbCBsb2dpY10KPj4+Pj4gU2lnbmVk
-LW9mZi1ieTogU2hhbWVlciBLb2xvdGh1bSA8c2hhbWVlcmFsaS5rb2xvdGh1bS50aG9kaUBodWF3
-ZWkuY29tPgo+Pj4+PiAtLS0KPj4+Pj4gwqBkcml2ZXJzL2lvbW11L29mX2lvbW11LmMgfCA5NQo+
-Pj4+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4+
-Pj4gwqBpbmNsdWRlL2xpbnV4L29mX2lvbW11LmggfCAxMCArKysrKwo+Pj4+PiDCoDIgZmlsZXMg
-Y2hhbmdlZCwgMTA1IGluc2VydGlvbnMoKykKPj4+Pj4KPj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvaW9tbXUvb2ZfaW9tbXUuYyBiL2RyaXZlcnMvaW9tbXUvb2ZfaW9tbXUuYwo+Pj4+PiBpbmRl
-eCBlNjBlM2RiLi5mZmQ3ZmI3IDEwMDY0NAo+Pj4+PiAtLS0gYS9kcml2ZXJzL2lvbW11L29mX2lv
-bW11LmMKPj4+Pj4gKysrIGIvZHJpdmVycy9pb21tdS9vZl9pb21tdS5jCj4+Pj4+IEBAIC0yMSw2
-ICsyMSw3IEBACj4+Pj4+IMKgI2luY2x1ZGUgPGxpbnV4L2lvbW11Lmg+Cj4+Pj4+IMKgI2luY2x1
-ZGUgPGxpbnV4L2xpbWl0cy5oPgo+Pj4+PiDCoCNpbmNsdWRlIDxsaW51eC9vZi5oPgo+Pj4+PiAr
-I2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KPj4+Pj4gwqAjaW5jbHVkZSA8bGludXgvb2Zf
-aW9tbXUuaD4KPj4+Pj4gwqAjaW5jbHVkZSA8bGludXgvb2ZfcGNpLmg+Cj4+Pj4+IMKgI2luY2x1
-ZGUgPGxpbnV4L3NsYWIuaD4KPj4+Pj4gQEAgLTEzOCw2ICsxMzksMTQgQEAgc3RhdGljIGludCBv
-Zl9pb21tdV94bGF0ZShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4+Pj4+IMKgwqDCoMKgIHJldHVybiBv
-cHMtPm9mX3hsYXRlKGRldiwgaW9tbXVfc3BlYyk7Cj4+Pj4+IMKgfQo+Pj4+Pgo+Pj4+PiArc3Rh
-dGljIGludCBfX2dldF9wY2lfcmlkKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCB1MTYgYWxpYXMsIHZv
-aWQgKmRhdGEpCj4+Pj4+ICt7Cj4+Pj4+ICvCoMKgwqAgdTMyICpyaWQgPSBkYXRhOwo+Pj4+PiAr
-Cj4+Pj4+ICvCoMKgwqAgKnJpZCA9IGFsaWFzOwo+Pj4+PiArwqDCoMKgIHJldHVybiAwOwo+Pj4+
-PiArfQo+Pj4+PiArCj4+Pj4+IMKgc3RydWN0IG9mX3BjaV9pb21tdV9hbGlhc19pbmZvIHsKPj4+
-Pj4gwqDCoMKgwqAgc3RydWN0IGRldmljZSAqZGV2Owo+Pj4+PiDCoMKgwqDCoCBzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5wOwo+Pj4+PiBAQCAtMTYzLDYgKzE3Miw3MyBAQCBzdGF0aWMgaW50IG9mX3Bj
-aV9pb21tdV9pbml0KHN0cnVjdCBwY2lfZGV2Cj4+Pj4+ICpwZGV2LCB1MTYgYWxpYXMsIHZvaWQg
-KmRhdGEpCj4+Pj4+IMKgwqDCoMKgIHJldHVybiBpbmZvLT5ucCA9PSBwZGV2LT5idXMtPmRldi5v
-Zl9ub2RlOwo+Pj4+PiDCoH0KPj4+Pj4KPj4+Pj4gK3N0YXRpYyBpbnQgb2ZfaW9tbXVfYWxsb2Nf
-cmVzdl9yZWdpb24oc3RydWN0IGRldmljZV9ub2RlICpucCwKPj4+Pj4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgbGlzdF9oZWFkICpoZWFkKQo+Pj4+
-PiArewo+Pj4+PiArwqDCoMKgIGludCBwcm90ID0gSU9NTVVfV1JJVEUgfCBJT01NVV9OT0VYRUMg
-fCBJT01NVV9NTUlPOwo+Pj4+PiArwqDCoMKgIHN0cnVjdCBpb21tdV9yZXN2X3JlZ2lvbiAqcmVn
-aW9uOwo+Pj4+PiArwqDCoMKgIHN0cnVjdCByZXNvdXJjZSByZXM7Cj4+Pj4+ICvCoMKgwqAgaW50
-IGVycjsKPj4+Pj4gKwo+Pj4+PiArwqDCoMKgIGVyciA9IG9mX2FkZHJlc3NfdG9fcmVzb3VyY2Uo
-bnAsIDAsICZyZXMpOwo+Pj4+Cj4+Pj4gV2hhdCBpcyB0aGUgcmF0aW9uYWwgZm9yIHJlZ2lzdGVy
-aW5nIHRoZSBmaXJzdCByZWdpb24gb25seT8gU3VyZWx5IHlvdQo+Pj4+IGNhbiBoYXZlIG1vcmUg
-dGhhbiBvbmUgcmVnaW9uIGluIGFuIE1TSSBjb250cm9sbGVyICh5ZXMsIHlvdXIKPj4+PiBwYXJ0
-aWN1bGFyCj4+Pj4gY2FzZSBpcyB0aGUgSVRTIHdoaWNoIGhhcyBvbmx5IG9uZSwgYnV0IHdlJ3Jl
-IHRyeWluZyB0byBkbyBzb21ldGhpbmcKPj4+PiBnZW5lcmljIGhlcmUpLgo+Pj4+Cj4+Pj4gQW5v
-dGhlciBpc3N1ZSBJIGhhdmUgd2l0aCB0aGlzIGNvZGUgaXMgdGhhdCBpdCBpbnNlcnRzIGFsbCBv
-ZiB0aGUgSVRTCj4+Pj4gTU1JTyBpbiB0aGUgUkVTVl9NU0kgcmFuZ2UuIEFzIGxvbmcgYXMgd2Ug
-ZG9uJ3QgZ2VuZXJhdGUgYW55IHBhZ2UKPj4+PiB0YWJsZXMKPj4+PiBmb3IgdGhpcywgd2UncmUg
-ZmluZS4gQnV0IGlmIHdlIGV2ZXIgY2hhbmdlIHRoaXMsIHdlJ2xsIGVuZC11cCB3aXRoIHRoZQo+
-Pj4+IElUUyBwcm9ncmFtbWluZyBpbnRlcmZhY2UgYmVpbmcgZXhwb3NlZCB0byBhIGRldmljZSwg
-d2hpY2ggd291bGRuJ3QgYmUKPj4+PiBhY2NlcHRhYmxlLgo+Pj4+Cj4+Pj4gV2h5IGNhbid0IHdl
-IGhhdmUgc29tZSBnZW5lcmljIHByb3BlcnR5IGluc3RlYWQsIHRoYXQgd291bGQgZGVzY3JpYmUK
-Pj4+PiB0aGUKPj4+PiBhY3R1YWwgcmFuZ2VzIHRoYXQgY2Fubm90IGJlIHRyYW5zbGF0ZWQ/IFRo
-YXQgd2F5LCBubyByYW5kb20gaW5zZXJ0aW9uCj4+Pj4gb2YgYSByYW5kb20gcmFuZ2UsIGFuZCBy
-ZWxhdGl2ZWx5IGZ1dHVyZSBwcm9vZi4KPj4KPj4gSW5kZWVkLiBGdXJ0aGVybW9yZSwgSU9SVCBo
-YXMgdGhlIGFkdmFudGFnZSBvZiBiZWluZyBsaW1pdGVkIHRvIGEgZmV3Cj4+IGRpc3RpbmN0IGRl
-dmljZSB0eXBlcyBhbmQgU0JTQS1jb21wbGlhbnQgc3lzdGVtIHRvcG9sb2dpZXMsIHNvIHRoZQo+
-PiBJVFMtY2hhc2luZyBpcyByZWFzb25hYmxlIHRoZXJlIChtb2R1bG8gb25seSByZXNlcnZpbmcg
-R0lUU19UUkFOU0xBVEVSKS4KPj4gVGhlIHNjb3BlIG9mIERUIGNvdmVycyBtb3JlIGVtYmVkZGVk
-IHRoaW5ncyBhcyB3ZWxsIGxpa2UgUENJIGhvc3QKPj4gY29udHJvbGxlcnMgd2l0aCBpbnRlcm5h
-bCBNU0kgZG9vcmJlbGxzLCBhbmQgcG90ZW50aWFsbHkgZXZlbgo+PiBkaXJlY3QtbWFwcGVkIG1l
-bW9yeSByZWdpb25zIGZvciB0aGluZ3MgbGlrZSBib290bG9hZGVyIGZyYW1lYnVmZmVycyB0bwo+
-PiBwcmV2ZW50IGRpc3BsYXkgZ2xpdGNoZXMgLSBhIGdlbmVyaWMgYWRkcmVzcy9zaXplL2ZsYWdz
-IGRlc2NyaXB0aW9uIG9mIGEKPj4gcmVnaW9uIGNvdWxkIHdvcmsgZm9yIGp1c3QgYWJvdXQgZXZl
-cnl0aGluZy4KPj4KPj4+IElPUlQgY29kZSBoYXMgdGhlIHNhbWUgaXNzdWUgKGllIGl0IHJlc2Vy
-dmVzIGFsbCBJVFMgcmVnaW9ucykgYW5kIEkgZG8KPj4+IG5vdCBrbm93IHdoZXJlIGEgcHJvcGVy
-dHkgY2FuIGJlIGFkZGVkIHRvIGRlc2NyaWJlIHRob3NlIHJhbmdlcyAoSU9SVAo+Pj4gc3BlY3Mg
-PyBJJ2QgcmF0aGVyIG5vdCkgaW4gQUNQSSBvdGhlciB0aGFuIHRoZSBJT1JUIHRhYmxlcyBlbnRy
-aWVzCj4+PiB0aGVtc2VsdmVzLgo+Pj4KPj4+PiBJJ20gbm90IHN1cmUgd2hlcmUgdG8gZGVjbGFy
-ZSBpdCAoUENJZSBub2RlPyBJT01NVSBub2RlPyksIGJ1dCBpdCdkCj4+Pj4gZmVlbAo+Pj4+IGxp
-a2UgYSBtdWNoIG5pY2VyIGFuZCBzaW1wbGVyIHNvbHV0aW9uIHRvIHRoaXMgcHJvYmxlbS4KPj4+
-Cj4+PiBJdCBjb3VsZCBiZSBidXQgaWYgd2UgdGhyb3cgQUNQSSBpbnRvIHRoZSBwaWN0dXJlIHdl
-IGhhdmUgdG8ga25vY2sKPj4+IHRvZ2V0aGVyIEhpc2lsaWNvbiBzcGVjaWZpYyBuYW1lc3BhY2Ug
-YmluZGluZ3MgdG8gaGFuZGxlIHRoaXMgYW5kCj4+PiBxdWlja2x5Lgo+Pgo+PiBBcyBhYm92ZSBJ
-J20gaGFwcHkgd2l0aCB0aGUgSVRTLXNwZWNpZmljIHNvbHV0aW9uIGZvciBBQ1BJIGdpdmVuIHRo
-ZQo+PiBsaW1pdHMgb2YgSU9SVC4gV2hhdCBJIGhhZCBpbiBtaW5kIGZvciBEVCB3YXMgc29tZXRo
-aW5nIHRpZWQgaW4gd2l0aCB0aGUKPj4gZ2VuZXJpYyBJT01NVSBiaW5kaW5ncy4gU29tZXRoaW5n
-IGxpa2UgdGhpcyBpcyBwcm9iYWJseSBlYXNpZXN0IHRvCj4+IGhhbmRsZSwgYnV0IGRvZXMgcmF0
-aGVyIHNwcmVhZCB0aGUgaW5mb3JtYXRpb24gYXJvdW5kOgo+Pgo+Pgo+PiDCoCBwY2kgewo+PiDC
-oMKgwqDCoMKgIC4uLgo+PiDCoMKgwqDCoMKgIGlvbW11LW1hcCA9IDwwIDAgJmlvbW11MSAweDEw
-MDAwPjsKPj4gwqDCoMKgwqDCoCBpb21tdS1yZXNlcnZlZC1yYW5nZXMgPSA8MHgxMjM0MDAwMCAw
-eDEwMDAgSU9NTVVfTVNJPiwKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8
-MHgzNDU2MDAwMCAweDEwMDAgSU9NTVVfTVNJPjsKPj4gwqAgfTsKPj4KPj4gwqAgZGlzcGxheSB7
-Cj4+IMKgwqDCoMKgwqAgLi4uCj4+IMKgwqDCoMKgwqAgaW9tbXVzID0gPCZpb21tdTEgMHgyMDAw
-MD47Cj4+IMKgwqDCoMKgwqAgLyogc2ltcGxlZmIgcmVnaW9uICovCj4+IMKgwqDCoMKgwqAgaW9t
-bXUtcmVzZXJ2ZWQtcmFuZ2VzID0gPDB4ODAwODAwMDAgMHg4MDAwMCBJT01NVV9ESVJFQ1Q+LAo+
-PiDCoCB9Owo+Pgo+Pgo+PiBBbHRlcm5hdGl2ZWx5LCBzb21ldGhpbmcgaW5zcGlyZWQgYnkgcmVz
-ZXJ2ZWQtbWVtb3J5IG1pZ2h0IHBlcmhhcHMgYmUKPj4gY29uY2VwdHVhbGx5IG5lYXRlciwgYXQg
-dGhlIHJpc2sgb2YgYmVpbmcgbW9yZSBjb21wbGljYXRlZDoKPj4KPj4KPj4gwqAgaW9tbXUxOiBp
-b21tdUBhY2JkMDAwMCB7Cj4+IMKgwqDCoMKgwqAgLi4uCj4+IMKgwqDCoMKgwqAgI2lvbW11LWNl
-bGxzID0gPDE+Owo+Pgo+PiDCoMKgwqDCoMKgIGlvbW11LXJlc2VydmVkLXJhbmdlcyB7Cj4+IMKg
-wqDCoMKgwqDCoMKgwqDCoCAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gwqDCoMKgwqDCoMKgwqDC
-oMKgICNzaXplLWNlbGxzID0gPDE+Owo+Pgo+PiDCoMKgwqDCoMKgwqDCoCBpdHMwX3Jlc3Y6IG1z
-aUAxMjM0MDAwMCB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAi
-aW9tbXUtbXNpLXJlZ2lvbiI7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZyA9IDww
-eDEyMzQwMDAwIDB4MTAwMD47Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoCB9Owo+Pgo+PiDCoMKgwqDC
-oMKgwqDCoCBpdHMxX3Jlc3Y6IG1zaUAzNDU2MDAwMCB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIGNvbXBhdGlibGUgPSAiaW9tbXUtbXNpLXJlZ2lvbiI7Cj4+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHJlZyA9IDwweDM0NTYwMDAwIDB4MTAwMD47Cj4+IMKgwqDCoMKgwqDCoMKg
-wqDCoCB9Owo+Pgo+PiDCoMKgwqDCoMKgwqDCoCBmYl9yZXN2OiBkaXJlY3RAMTIzNDAwMDAgewo+
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXRpYmxlID0gImlvbW11LWRpcmVjdC1y
-ZWdpb24iOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcgPSA8MHg4MDA4MDAwMCAw
-eDgwMDAwPjsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4+IMKgwqDCoMKgwqAgfTsKPj4gwqAg
-fTsKPj4KPj4KPiAKPiBJZiB3ZSBkaWQgdGhpcywgd291bGRuJ3QgaXQgYmUgZWFzaWVyIHRvIGNy
-ZWF0ZSBkYW5nZXJvdXMgcmVzZXJ2ZWQKPiByZWdpb25zLCBsaWtlIG91ciBJVFMgcmVnaW9uIHdo
-aWNoIE1hcmMgd2FzIGNvbmNlcm5lZCBieT8gSXQncyBub3Qgc28KPiBoYXJkIHRvIGdldCBkdHMg
-Y2hhbmdlcyBpbnRvIHRoZSBrZXJuZWwuCgpXZWxsLCB5ZWFoLiBJdCdzIGFsc28gZXF1YWxseSBl
-YXN5IHRvIGFkZCBzb21lIHBlcmlwaGVyYWwgcmVnaXN0ZXIKcmVnaW9uIHRvIHRoZSAvbWVtb3J5
-IG5vZGUgYW5kIHdhdGNoIGhpbGFyaXR5IGVuc3VlLiBUaGUgc29sdXRpb24gdG8KYm90aCBpcyAi
-ZG9uJ3QgcHV0IGJvZ3VzIGNyYXAgaW4geW91ciBEVCIuCgpUaGVyZSdzIGEgYmlnIGRpZmZlcmVu
-Y2UgYmV0d2VlbiB3aWxmdWxseSBtaXNkZXNjcmliaW5nIHlvdXIgcGxhdGZvcm0KcmVxdWlyZW1l
-bnRzIHZzLiBoYXZpbmcgdGhlIGtlcm5lbCBhdXRvbWFnaWNhbGx5IGluZmVyIHNvbWV0aGluZyBi
-dXQKbGVhdmUgYSBob2xlIG9wZW4gaW4gdGhlIHByb2Nlc3MuCgpSb2Jpbi4KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0Cmlv
-bW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0
-aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
+On Mon, 25 Sep 2017 16:53:49 +0200
+Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> Hi,
+> 
+> This series adds support for NAND on Armada-7040-DB board.
+> 
+> Besides standard NAND node addition, it also introduces a new compatible
+> string for the pxa3xx_nand driver to support the subitilities of A7k/A8k
+> SoCs, as well as a new property used by the pxa3xx_nand driver to grab a
+> phandle on the system control node in order to enable the NAND
+> controller itself.
+> 
+> Regards,
+> Miquel
+> 
+> 
+> Gregory CLEMENT (1):
+>   arm64: dts: marvell: add NAND support on the 7040-DB board
+> 
+> Miquel Raynal (2):
+>   Documentation: devicetree: add pxa3xx compatible and syscon property
+>   mtd: nand: pxa3xx: enable NAND controller if the SoC needs it
+
+Applied patch 1 and 2.
+
+Thanks,
+
+Boris
+
+> 
+>  .../devicetree/bindings/mtd/pxa3xx-nand.txt        |  4 +++
+>  arch/arm64/boot/dts/marvell/armada-7040-db.dts     | 24 +++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-70x0.dtsi       | 14 ++++++++
+>  .../boot/dts/marvell/armada-cp110-master.dtsi      |  3 +-
+>  drivers/mtd/nand/pxa3xx_nand.c                     | 41 +++++++++++++++++++---
+>  5 files changed, 81 insertions(+), 5 deletions(-)
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
