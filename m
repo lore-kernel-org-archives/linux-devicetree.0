@@ -1,462 +1,94 @@
-From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: dts: imx: Fix incorrect display nodes notation
-Date: Thu, 5 Oct 2017 11:31:40 -0300
-Message-ID: <1507213901-1349-1-git-send-email-marco.franchi@nxp.com>
+From: Tom Rini <trini@konsulko.com>
+Subject: Re: [PATCH 1/2] scripts/dtc: add fdt_overlay.c and fdt_addresses.c
+ to sync script
+Date: Thu, 5 Oct 2017 10:39:30 -0400
+Message-ID: <20171005143930.GB25966@bill-the-cat>
+References: <20171003183118.2438-1-robh@kernel.org>
+ <20171003220417.GA13661@bill-the-cat>
+ <CAL_Jsq+Ruvu11Nu92FtgGcO0PqxCQk5KhiQAgj8JzbzPKNseqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+Ruvu11Nu92FtgGcO0PqxCQk5KhiQAgj8JzbzPKNseqQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Kyle Yan <kyan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The following build warnings are seen with W=1:
 
-Warning (unit_address_vs_reg): Node /display@di0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /display@di1 has a unit name, but no reg property
+--IiVenqGWf+H9Y6IX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fix all these warnings by changing 'display@diX' to 'dispX'.
+On Tue, Oct 03, 2017 at 05:23:28PM -0500, Rob Herring wrote:
+> On Tue, Oct 3, 2017 at 5:04 PM, Tom Rini <trini@konsulko.com> wrote:
+> > On Tue, Oct 03, 2017 at 01:31:17PM -0500, Rob Herring wrote:
+> >
+> >> libfdt has gained some new files. We need to include them in the
+> >> kernel's copy.
+> >>
+> >> Reported-by: Kyle Yan <kyan@codeaurora.org>
+> >> Signed-off-by: Rob Herring <robh@kernel.org>
+> >> ---
+> >>  scripts/dtc/update-dtc-source.sh | 4 +++-
+> >>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc=
+-source.sh
+> >> index b8ebcc6722d2..f3e5c596050a 100755
+> >> --- a/scripts/dtc/update-dtc-source.sh
+> >> +++ b/scripts/dtc/update-dtc-source.sh
+> >> @@ -34,7 +34,9 @@ DTC_SOURCE=3D"checks.c data.c dtc.c dtc.h flattree.c=
+ fstree.c livetree.c srcpos.c
+> >>               srcpos.h treesource.c util.c util.h version_gen.h Makefi=
+le.dtc \
+> >>               dtc-lexer.l dtc-parser.y"
+> >>  DTC_GENERATED=3D"dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h"
+> >> -LIBFDT_SOURCE=3D"Makefile.libfdt fdt.c fdt.h fdt_empty_tree.c fdt_ro.=
+c fdt_rw.c fdt_strerror.c fdt_sw.c fdt_wip.c libfdt.h libfdt_env.h libfdt_i=
+nternal.h"
+> >> +LIBFDT_SOURCE=3D"Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empt=
+y_tree.c \
+> >> +             fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
+> >> +             fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
+> >
+> > Should there be a patch #3 to update the kernel libfdt to include these
+> > new files that we're copying in too?  That seems to be the main user
+> > in-tree of the libfdt C files, aside from the 'libfdt' targets under
+> > arch/{arm,powerpc}/boot/  Thanks!
+>=20
+> Yes, good point. But we can add them when someone wants to use them.
+> Adding them to the build will bloat the kernel because libfdt doesn't
+> get built as a static lib (another problem to solve).
 
-Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since v2:
--none
- arch/arm/boot/dts/imx51-apf51dev.dts          | 2 +-
- arch/arm/boot/dts/imx51-babbage.dts           | 4 ++--
- arch/arm/boot/dts/imx51-ts4800.dts            | 2 +-
- arch/arm/boot/dts/imx53-m53evk.dts            | 2 +-
- arch/arm/boot/dts/imx53-mba53.dts             | 2 +-
- arch/arm/boot/dts/imx53-qsb-common.dtsi       | 2 +-
- arch/arm/boot/dts/imx53-tx53-x03x.dts         | 2 +-
- arch/arm/boot/dts/imx6dl-aristainetos2_4.dts  | 2 +-
- arch/arm/boot/dts/imx6dl-aristainetos_4.dts   | 2 +-
- arch/arm/boot/dts/imx6dl-aristainetos_7.dts   | 2 +-
- arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 2 +-
- arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts     | 2 +-
- arch/arm/boot/dts/imx6dl-tx6s-8034.dts        | 2 +-
- arch/arm/boot/dts/imx6dl-tx6s-8035.dts        | 2 +-
- arch/arm/boot/dts/imx6dl-tx6u-801x.dts        | 2 +-
- arch/arm/boot/dts/imx6dl-tx6u-8033.dts        | 2 +-
- arch/arm/boot/dts/imx6q-apalis-eval.dts       | 2 +-
- arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 2 +-
- arch/arm/boot/dts/imx6q-apalis-ixora.dts      | 2 +-
- arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts  | 2 +-
- arch/arm/boot/dts/imx6q-tx6q-1010.dts         | 2 +-
- arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts  | 2 +-
- arch/arm/boot/dts/imx6q-tx6q-1020.dts         | 2 +-
- arch/arm/boot/dts/imx6q-tx6q-1036.dts         | 2 +-
- arch/arm/boot/dts/imx6qdl-apf6dev.dtsi        | 2 +-
- arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi  | 2 +-
- arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi | 2 +-
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi     | 2 +-
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi      | 2 +-
- arch/arm/boot/dts/imx6ul-tx6ul.dtsi           | 2 +-
- 30 files changed, 31 insertions(+), 31 deletions(-)
+Well, isn't the kernel starting to more widely use
+-ffunction-sections/-fdata-sections/--gc-unused-sections ?
 
-diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
-index a5e6091..f04d0df 100644
---- a/arch/arm/boot/dts/imx51-apf51dev.dts
-+++ b/arch/arm/boot/dts/imx51-apf51dev.dts
-@@ -24,7 +24,7 @@
- 		default-on;
- 	};
- 
--	display@di1 {
-+	disp1 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "bgr666";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-index 873cf24..297953c 100644
---- a/arch/arm/boot/dts/imx51-babbage.dts
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -39,7 +39,7 @@
- 		};
- 	};
- 
--	display0: display@di0 {
-+	display0: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-@@ -66,7 +66,7 @@
- 		};
- 	};
- 
--	display1: display@di1 {
-+	display1: disp1 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb565";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
-index ca1cc5e..e6be869 100644
---- a/arch/arm/boot/dts/imx51-ts4800.dts
-+++ b/arch/arm/boot/dts/imx51-ts4800.dts
-@@ -50,7 +50,7 @@
- 		power-supply = <&backlight_reg>;
- 	};
- 
--	display0: display@di0 {
-+	display0: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx53-m53evk.dts b/arch/arm/boot/dts/imx53-m53evk.dts
-index 4347a32..9794a04 100644
---- a/arch/arm/boot/dts/imx53-m53evk.dts
-+++ b/arch/arm/boot/dts/imx53-m53evk.dts
-@@ -16,7 +16,7 @@
- 	model = "Aries/DENX M53EVK";
- 	compatible = "aries,imx53-m53evk", "denx,imx53-m53evk", "fsl,imx53";
- 
--	display1: display@di1 {
-+	display1: disp1 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "bgr666";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
-index df705ba..296dd74 100644
---- a/arch/arm/boot/dts/imx53-mba53.dts
-+++ b/arch/arm/boot/dts/imx53-mba53.dts
-@@ -30,7 +30,7 @@
- 		power-supply = <&reg_backlight>;
- 	};
- 
--	disp1: display@disp1 {
-+	disp1: disp1 {
- 		compatible = "fsl,imx-parallel-display";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_disp1_1>;
-diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-index 683dcbe..d5adf33 100644
---- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
-+++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-@@ -22,7 +22,7 @@
- 		      <0xb0000000 0x20000000>;
- 	};
- 
--	display0: display@di0 {
-+	display0: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb565";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx53-tx53-x03x.dts b/arch/arm/boot/dts/imx53-tx53-x03x.dts
-index 0ecb43d..b1ea73f 100644
---- a/arch/arm/boot/dts/imx53-tx53-x03x.dts
-+++ b/arch/arm/boot/dts/imx53-tx53-x03x.dts
-@@ -24,7 +24,7 @@
- 	};
- 
- 	soc {
--		display: display@di0 {
-+		display: disp0 {
- 			compatible = "fsl,imx-parallel-display";
- 			interface-pix-fmt = "rgb24";
- 			pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts b/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
-index 0677625..5f0d196 100644
---- a/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos2_4.dts
-@@ -52,7 +52,7 @@
- 		reg = <0x10000000 0x40000000>;
- 	};
- 
--	display0: display@di0 {
-+	display0: disp0 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		compatible = "fsl,imx-parallel-display";
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-index 32a812b..cc418ce 100644
---- a/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos_4.dts
-@@ -32,7 +32,7 @@
- 	};
- 
- 	soc {
--		display0: display@di0 {
-+		display0: disp0 {
- 			compatible = "fsl,imx-parallel-display";
- 			interface-pix-fmt = "rgb24";
- 			pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6dl-aristainetos_7.dts b/arch/arm/boot/dts/imx6dl-aristainetos_7.dts
-index 15203f0..126ff96 100644
---- a/arch/arm/boot/dts/imx6dl-aristainetos_7.dts
-+++ b/arch/arm/boot/dts/imx6dl-aristainetos_7.dts
-@@ -21,7 +21,7 @@
- 	};
- 
- 	soc {
--		display0: display@di0 {
-+		display0: disp0 {
- 			compatible = "fsl,imx-parallel-display";
- 			interface-pix-fmt = "rgb24";
- 			pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-index 2654153..5705ebe 100644
---- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-+++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -88,7 +88,7 @@
- 		};
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts b/arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts
-index aac42ac..389fc16 100644
---- a/arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts
-@@ -73,7 +73,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6dl-tx6s-8034.dts b/arch/arm/boot/dts/imx6dl-tx6s-8034.dts
-index ff8f7b1..a21075b 100644
---- a/arch/arm/boot/dts/imx6dl-tx6s-8034.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6s-8034.dts
-@@ -81,7 +81,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_disp0_2>;
-diff --git a/arch/arm/boot/dts/imx6dl-tx6s-8035.dts b/arch/arm/boot/dts/imx6dl-tx6s-8035.dts
-index f988950..fee8854 100644
---- a/arch/arm/boot/dts/imx6dl-tx6s-8035.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6s-8035.dts
-@@ -81,7 +81,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_disp0_2>;
-diff --git a/arch/arm/boot/dts/imx6dl-tx6u-801x.dts b/arch/arm/boot/dts/imx6dl-tx6u-801x.dts
-index d1f1298..efe5772 100644
---- a/arch/arm/boot/dts/imx6dl-tx6u-801x.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6u-801x.dts
-@@ -73,7 +73,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6dl-tx6u-8033.dts b/arch/arm/boot/dts/imx6dl-tx6u-8033.dts
-index 4d3204a..e222086 100644
---- a/arch/arm/boot/dts/imx6dl-tx6u-8033.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6u-8033.dts
-@@ -76,7 +76,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_disp0_2>;
-diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-index 4bbfe3d..8b56656 100644
---- a/arch/arm/boot/dts/imx6q-apalis-eval.dts
-+++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-@@ -76,7 +76,7 @@
- 		};
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-index a35c7a5..27dc0fc 100644
---- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-+++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
-@@ -77,7 +77,7 @@
- 		};
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-index 60d33e9..40b2c67 100644
---- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-+++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-@@ -76,7 +76,7 @@
- 		};
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts b/arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts
-index 71746ed..d3ee1f5 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts
-@@ -73,7 +73,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1010.dts b/arch/arm/boot/dts/imx6q-tx6q-1010.dts
-index f9cd21a..e14e6be 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1010.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1010.dts
-@@ -73,7 +73,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts b/arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts
-index 959ff3fb..ea84561 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts
-@@ -73,7 +73,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1020.dts b/arch/arm/boot/dts/imx6q-tx6q-1020.dts
-index b49133d..9c168ee 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1020.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1020.dts
-@@ -73,7 +73,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "rgb24";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1036.dts b/arch/arm/boot/dts/imx6q-tx6q-1036.dts
-index 7c152e3..c81e8bd 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1036.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1036.dts
-@@ -76,7 +76,7 @@
- 		default-brightness-level = <50>;
- 	};
- 
--	display: display@di0 {
-+	display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_disp0_2>;
-diff --git a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-index 9cd2a74..37a59a8 100644
---- a/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apf6dev.dtsi
-@@ -54,7 +54,7 @@
- 		stdout-path = &uart4;
- 	};
- 
--	display@di0 {
-+	disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		interface-pix-fmt = "bgr666";
- 		pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-index b63134e..472b0c9 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
-@@ -256,7 +256,7 @@
- 		status = "okay";
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-index a24e4f1..4bab60a 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_som2.dtsi
-@@ -120,7 +120,7 @@
- 		};
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index d309a4d..9a46cf1 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -197,7 +197,7 @@
- 		status = "okay";
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index 756c505..fc1f2c0 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -221,7 +221,7 @@
- 		status = "okay";
- 	};
- 
--	lcd_display: display@di0 {
-+	lcd_display: disp0 {
- 		compatible = "fsl,imx-parallel-display";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-index ec745eb..5610d19 100644
---- a/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-tx6ul.dtsi
-@@ -424,7 +424,7 @@
- 	display = <&display>;
- 	status = "okay";
- 
--	display: display@di0 {
-+	display: disp0 {
- 		bits-per-pixel = <32>;
- 		bus-width = <24>;
- 		status = "okay";
--- 
-2.7.4
+--=20
+Tom
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--IiVenqGWf+H9Y6IX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJZ1kQhAAoJEIf59jXTHXZSLgUP/jdI/okH+7kDwx9YpURYP2Ts
+ysHGu7A7onZmrqr00XH/mNzJMpQRVM6oDy9zMae0HimA4ZT2wbdSrOK8U62aHtbW
+nsT/Cc+WbLZcmz1icWKiFOFL+9yvQKf5Du507U4kAg+ckalZLQ2q1dL6oBpnYCzE
+r+uNq7YpLgXTICGvh6Me5A5/AE/xVc/7veVu/Zw2sTCG9ja5Gd0z4X6NVXyEdVaK
+ffT9n6xlr8gSjxfvETflH6DmAWyKaKnUjqBiix5QqHWtmJk8WOuDmGcl06s05DP9
+9nWH49wTzweyAbpekLEpFSOfqbyKQNBbRFzdId5SKMOlD3a2ChWIdwvKCxecDJow
+LDqy+cZItiwXxHgy/0G5hQ1ZORCOOQdR834Bku6jU6sfqB+gGLv/Z0p+GBg8vrOt
+rjpLBzP1E3epyfrV45eqIdzJAmYRVjDTrz7UVXcd/zlJLHKJ1w9d+gAwsFPYrXI1
+YZxejHRpGxmHOSZd76T6FDCpqh1ugebIDthQmAoB2bIOW3cuZ2tcUwoWKinKzJJT
+MH824v522re3B7iXe/azB/5lRvagZJEokC+zgdr25pamS53bD1YGzjAtbGpnydlJ
+kEkpxyc+OtkYOsSwy+baVnNEb7eOdU8mpglh3kmCK12rsTBCGx1OdlEfrqI1JBNg
+GC8EssbbPbzjMCwk3TiO
+=yVMK
+-----END PGP SIGNATURE-----
+
+--IiVenqGWf+H9Y6IX--
