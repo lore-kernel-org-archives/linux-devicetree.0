@@ -1,71 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
-Date: Thu, 5 Oct 2017 20:18:38 +0300
-Message-ID: <dca19642-e511-5cd5-b7b9-9ed339407ed6@cogentembedded.com>
-References: <20170915194449.538504992@cogentembedded.com>
- <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
- <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
- <CAMuHMdVCTORpfKN+GTka_6pT1VWjOneV2GBhGo7Y8DsZYSxdvw@mail.gmail.com>
- <20171005090500.GC26369@verge.net.au>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/fdt: skip unflattening of disabled nodes
+Date: Thu, 5 Oct 2017 14:29:33 -0400 (EDT)
+Message-ID: <nycvar.YSQ.7.76.1710051427000.1693@knanqh.ubzr>
+References: <20171003161815.25999-1-robh@kernel.org> <20171003161815.25999-2-robh@kernel.org> <nycvar.YSQ.7.76.1710031444060.5407@knanqh.ubzr> <59D40813.4020009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171005090500.GC26369-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-MW
+In-Reply-To: <59D40813.4020009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/2017 12:05 PM, Simon Horman wrote:
+On Tue, 3 Oct 2017, Frank Rowand wrote:
 
->>>>> Define the Eagle board  dependent part of the EtherAVB device node.
->>>>> Enable DHCP  and NFS root for the kernel booting.
->>>>>
->>>>> Based  on the original (and large) patch by Vladimir Barinov.
->>>>>
->>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>>>
->>>>
->>>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>>
->>> [...]
->>>>>
->>>>> @@ -43,3 +44,14 @@
->>>>>    &scif0 {
->>>>>           status = "okay";
->>>>>    };
->>>>> +
->>>>> +&avb {
->>>>> +       renesas,no-ether-link;
->>>>> +       phy-handle = <&phy0>;
->>>>> +       status = "okay";
->>>>> +
->>>>> +       phy0: ethernet-phy@0 {
->>>>> +               rxc-skew-ps = <1500>;
->>>>> +               reg = <0>;
->>>>
->>>>
->>>> Any specific reason why you don't want to wire up the interrupt?
->>>>
->>>>                   interrupt-parent = <&gpio2>;
->>>
->>>
->>>     I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem
->>> to require PFC.
->>
->> Of course. And these can be added later.
->>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> On 10/03/17 11:46, Nicolas Pitre wrote:
+> > On Tue, 3 Oct 2017, Rob Herring wrote:
+> > 
+> >> For static DT usecases, we don't need the disabled nodes and can skip
+> >> unflattening. This saves a significant amount of RAM in memory constrained
+> >> cases. In one example on STM32F469, the RAM usage goes from 118K to 26K.
+> >>
+> >> There are a few cases in the kernel that modify the status property
+> >> dynamically. These all are changes from enabled to disabled, depend on
+> >> OF_DYNAMIC or are not FDT based (PDT based).
+> >>
+> >> Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> > Tested-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> >> ---
+> >> For more background, see this presentation from Nico:
+> >>
+> >> https://connect.linaro.org/resource/sfo17/sfo17-100/
+> > 
+> > Oh my ... this is horrible ...
 > 
-> Thanks, applied.
+> I found the presentation to be quite good and useful.
 
-    Still not seeing any devel branch updates/tags -- have you pushed it?
+Thanks. I think the content is good. I'm just a terrible speaker.
 
-MBR, Sergei
+> The Linaro site does not have the slides, could you please send
+> me a copy?
+
+I've asked for the slides to be uploaded to the site. I've sent you a 
+copy privately in the mean time.
+
+
+Nicolas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
