@@ -1,78 +1,162 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 02/22] dt-bindings: arm: add support for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Thu, 5 Oct 2017 15:10:24 +0100
-Message-ID: <e14806c9-068b-028d-b053-89c51cc43d95@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-3-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a2-7NJTukWaf3=oB9dC+b3uuOGiN+Kc95FS_YBGGHz3ug@mail.gmail.com>
- <c561b2b9-7146-6262-0e9f-fd6511455518@arm.com>
- <CAK8P3a2Vu1SWjYykyXtzjFVmGjm_pAfA1QuTG_X5CHzmtk+WJw@mail.gmail.com>
- <CABb+yY2Td+FubKJDedgbpnFCag608VZ2RAhW0qKoJ_9Jjh_k7Q@mail.gmail.com>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 2/2] ARM: dts: imx51: Fix inconsistent display port names
+Date: Thu, 5 Oct 2017 11:31:41 -0300
+Message-ID: <1507213901-1349-2-git-send-email-marco.franchi@nxp.com>
+References: <1507213901-1349-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY2Td+FubKJDedgbpnFCag608VZ2RAhW0qKoJ_9Jjh_k7Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507213901-1349-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Contrary to later i.MX SoCs, the parallel display interface pad groups on 
+i.MX51 are called DISP1 and DISP2 in the Reference Manual, not DISP0 and 
+DISP1.
 
+Fix this inconsistence by changing the DISP names in the i.mx51 dts.
 
-On 05/10/17 14:20, Jassi Brar wrote:
-> On Wed, Oct 4, 2017 at 5:35 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Wed, Oct 4, 2017 at 1:07 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> On 04/10/17 11:50, Arnd Bergmann wrote:
->>>> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> 
->>
->>>>> +- shmem : List of phandle pointing to the shared memory(SHM) area as per
->>>>> +         generic mailbox client binding.
->>>>> +
->>>>> +See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
->>>>> +about the generic mailbox controller and client driver bindings.
->>>>> +
->>>>> +The mailbox is the only permitted method of calling the SCMI firmware.
->>>>> +Mailbox doorbell is used as a mechanism to alert the presence of a
->>>>> +messages and/or notification.
->>>>
->>>> This looks odd: why not make the message itself part of the mailbox
->>>> protocol here, and leave the shmem as a implementation detail of the
->>>> mailbox driver?
->>>>
->>>
->>> I am not sure if I follow you here. But generally shmem can be memory
->>> carved out of anything in the system and it's dependent on the protocol
->>> and the remote firmware rather than the mailbox hardware itself.
->>
->> I think the problem is the way we use the mailbox API in Linux, which
->> is completely abstract at the moment: it could be a pure doorbell, a
->> single-register for a data, some structured memory, or a
->> variable-length message. The assumption today is that the mailbox
->> user and the mailbox driver agree on the interpretation of that
->> void pointer.
->>
-> The way controllers and remote firmwares are paired there is no other
-> way to write reusable code.
-> 
->> This breaks down here, as you require the message to be a
->> variable-length message in a fixed physical location, but assume that
->> the mailbox serves only as a doorbell.
->>
-> That is a valid usecase, already supported. There's an optional
-> callback provided by the api to fill SHMEM
-> mbox_chan->mbox_client->tx_prepare()
-> 
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v2:
+-change message log text
+ arch/arm/boot/dts/imx51-apf51dev.dts |  4 ++--
+ arch/arm/boot/dts/imx51-babbage.dts  | 12 ++++++------
+ arch/arm/boot/dts/imx51-ts4800.dts   |  6 +++---
+ arch/arm/boot/dts/imx51.dtsi         |  4 ++--
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-Thanks, I missed to mention this earlier. But the point here is to avoid
-the shim layer with each protocol for most common use case like doorbell.
-
-But what I understood from Arnd's suggestion is to have another API
-which just *sends signal* _rather_than_ *send data" to identify between
-the two.
+diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
+index f04d0df..2f1a9d2 100644
+--- a/arch/arm/boot/dts/imx51-apf51dev.dts
++++ b/arch/arm/boot/dts/imx51-apf51dev.dts
+@@ -51,7 +51,7 @@
+ 
+ 		port {
+ 			display_in: endpoint {
+-				remote-endpoint = <&ipu_di0_disp0>;
++				remote-endpoint = <&ipu_di0_disp1>;
+ 			};
+ 		};
+ 	};
+@@ -218,6 +218,6 @@
+ 	};
+ };
+ 
+-&ipu_di0_disp0 {
++&ipu_di0_disp1 {
+ 	remote-endpoint = <&display_in>;
+ };
+diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
+index 297953c..668c37b 100644
+--- a/arch/arm/boot/dts/imx51-babbage.dts
++++ b/arch/arm/boot/dts/imx51-babbage.dts
+@@ -39,7 +39,7 @@
+ 		};
+ 	};
+ 
+-	display0: disp0 {
++	display1: disp1 {
+ 		compatible = "fsl,imx-parallel-display";
+ 		interface-pix-fmt = "rgb24";
+ 		pinctrl-names = "default";
+@@ -61,12 +61,12 @@
+ 
+ 		port {
+ 			display0_in: endpoint {
+-				remote-endpoint = <&ipu_di0_disp0>;
++				remote-endpoint = <&ipu_di0_disp1>;
+ 			};
+ 		};
+ 	};
+ 
+-	display1: disp1 {
++	display2: disp2 {
+ 		compatible = "fsl,imx-parallel-display";
+ 		interface-pix-fmt = "rgb565";
+ 		pinctrl-names = "default";
+@@ -93,7 +93,7 @@
+ 
+ 		port {
+ 			display1_in: endpoint {
+-				remote-endpoint = <&ipu_di1_disp1>;
++				remote-endpoint = <&ipu_di1_disp2>;
+ 			};
+ 		};
+ 	};
+@@ -348,11 +348,11 @@
+ 	};
+ };
+ 
+-&ipu_di0_disp0 {
++&ipu_di0_disp1 {
+ 	remote-endpoint = <&display0_in>;
+ };
+ 
+-&ipu_di1_disp1 {
++&ipu_di1_disp2 {
+ 	remote-endpoint = <&display1_in>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+index e6be869..35a1112 100644
+--- a/arch/arm/boot/dts/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/imx51-ts4800.dts
+@@ -50,7 +50,7 @@
+ 		power-supply = <&backlight_reg>;
+ 	};
+ 
+-	display0: disp0 {
++	display1: disp1 {
+ 		compatible = "fsl,imx-parallel-display";
+ 		interface-pix-fmt = "rgb24";
+ 		pinctrl-names = "default";
+@@ -73,7 +73,7 @@
+ 
+ 		port@0 {
+ 			display0_in: endpoint {
+-				remote-endpoint = <&ipu_di0_disp0>;
++				remote-endpoint = <&ipu_di0_disp1>;
+ 			};
+ 		};
+ 	};
+@@ -107,7 +107,7 @@
+ 	};
+ };
+ 
+-&ipu_di0_disp0 {
++&ipu_di0_disp1 {
+ 	remote-endpoint = <&display0_in>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index 1ee1d54..378be72 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -148,14 +148,14 @@
+ 			ipu_di0: port@2 {
+ 				reg = <2>;
+ 
+-				ipu_di0_disp0: endpoint {
++				ipu_di0_disp1: endpoint {
+ 				};
+ 			};
+ 
+ 			ipu_di1: port@3 {
+ 				reg = <3>;
+ 
+-				ipu_di1_disp1: endpoint {
++				ipu_di1_disp2: endpoint {
+ 				};
+ 			};
+ 		};
 -- 
-Regards,
-Sudeep
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
