@@ -1,34 +1,62 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 1/3] crypto: engine - permit to enqueue aead_request
-Date: Thu, 5 Oct 2017 11:39:25 +0800
-Message-ID: <20171005033925.GA31996@gondor.apana.org.au>
-References: <1503047946-27799-1-git-send-email-fabien.dessenne@st.com>
- <1503047946-27799-2-git-send-email-fabien.dessenne@st.com>
- <20170922090921.GA15677@gondor.apana.org.au>
- <20206811-7075-5ca9-98cd-26a5709751fb@st.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 0/4] add support of clock driver on MediaTek MT7622
+Date: Thu, 5 Oct 2017 11:50:21 +0800
+Message-ID: <cover.1507174350.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20206811-7075-5ca9-98cd-26a5709751fb@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Lionel DEBIEVE <lionel.debieve@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Corentin Labbe <clabbe.montjoie@gmail.com>
+To: sboyd@codeaurora.org, mturquette@baylibre.com, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 03, 2017 at 07:48:08AM +0000, Fabien DESSENNE wrote:
->
-> It looks like there is no more activity around this "crypto_engine 
-> interface clean up" task.
-> This unfortunately has been blocking the introduction of this new STM32 
-> crypto driver for 3 months now.
-> Would it make sense to have this driver reviewed first, and then 
-> reworked (I expect minor update here) when the interface update is ready?
+From: Sean Wang <sean.wang@mediatek.com>
 
-Hmm, is it possible to disable the AEAD part of the driver first?
+Changes since v1:
+- fix up the makefile target for clk-mt7622-aud.o
 
-Cheers,
+Add clock driver required by each function driver on MT7622 SoC with
+adding all clocks exported from every hardware subsystem such as topckgen,
+apmixedsys, infracfg, pericfg , pciessys, ssusbsys, ethsys and audsys.
+
+Chen Zhong (2):
+  clk: mediatek: add the option for determining PLL source clock
+  clk: mediatek: add clocks dt-bindings required header for MT7622 SoC
+
+Sean Wang (2):
+  dt-bindings: clock: mediatek: document clk bindings for MediaTek
+    MT7622 SoC
+  clk: mediatek: add clock support for MT7622 SoC
+
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |   1 +
+ .../bindings/arm/mediatek/mediatek,audsys.txt      |  22 +
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   1 +
+ .../bindings/arm/mediatek/mediatek,hifsys.txt      |   1 +
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |   1 +
+ .../bindings/arm/mediatek/mediatek,pciesys.txt     |  22 +
+ .../bindings/arm/mediatek/mediatek,pericfg.txt     |   1 +
+ .../bindings/arm/mediatek/mediatek,sgmiisys.txt    |  22 +
+ .../bindings/arm/mediatek/mediatek,ssusbsys.txt    |  22 +
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |   1 +
+ drivers/clk/mediatek/Kconfig                       |  30 +
+ drivers/clk/mediatek/Makefile                      |   4 +
+ drivers/clk/mediatek/clk-mt7622-aud.c              | 195 ++++++
+ drivers/clk/mediatek/clk-mt7622-eth.c              | 156 +++++
+ drivers/clk/mediatek/clk-mt7622-hif.c              | 169 +++++
+ drivers/clk/mediatek/clk-mt7622.c                  | 780 +++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.h                     |   1 +
+ drivers/clk/mediatek/clk-pll.c                     |   5 +-
+ include/dt-bindings/clock/mt7622-clk.h             | 289 ++++++++
+ 19 files changed, 1722 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,sgmiisys.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
+ create mode 100644 drivers/clk/mediatek/clk-mt7622-aud.c
+ create mode 100644 drivers/clk/mediatek/clk-mt7622-eth.c
+ create mode 100644 drivers/clk/mediatek/clk-mt7622-hif.c
+ create mode 100644 drivers/clk/mediatek/clk-mt7622.c
+ create mode 100644 include/dt-bindings/clock/mt7622-clk.h
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.7.4
