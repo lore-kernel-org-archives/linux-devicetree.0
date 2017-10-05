@@ -1,44 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/5] Doc: iommu/arm-smmu-v3: Add workaround for
- HiSilicon erratum 161010801
-Date: Thu, 5 Oct 2017 17:24:16 -0500
-Message-ID: <20171005222416.zrrzwd3lmxccwodo@rob-hp-laptop>
-References: <20170927133241.21036-1-shameerali.kolothum.thodi@huawei.com>
- <20170927133241.21036-2-shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH v2 0/6] dt-bindings: rtc: document existing bindings
+Date: Thu, 5 Oct 2017 17:27:45 -0500
+Message-ID: <20171005222745.ppbilw3jle67ixsa@rob-hp-laptop>
+References: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170927133241.21036-2-shameerali.kolothum.thodi@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Cc: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, sudeep.holla@arm.com, will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org, mark.rutland@arm.com, gabriele.paoloni@huawei.com, john.garry@huawei.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, devel@acpica.org, linuxarm@huawei.com, wangzhou1@hisilicon.com, guohanjun@huawei.com
+In-Reply-To: <20170927140345.5537-1-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 27, 2017 at 02:32:37PM +0100, Shameer Kolothum wrote:
-> From: John Garry <john.garry@huawei.com>
+On Wed, Sep 27, 2017 at 04:03:39PM +0200, Alexandre Belloni wrote:
+> Document currently undocumented bindings.
 > 
-> The HiSilicon erratum 161010801 describes the limitation of HiSilicon
-> platforms hip06/hip07 to support the SMMU mappings for MSI transactions.
+> Rob, as discussed, all of this can probably go through your tree.
 > 
-> On these platforms, GICv3 ITS translator is presented with the deviceID
-> by extending the MSI payload data to 64 bits to include the deviceID.
-> Hence, the PCIe controller on this platforms has to differentiate the MSI
-> payload against other DMA payload and has to modify the MSI payload.
-> This basically makes it difficult for this platforms to have a SMMU
-> translation for MSI.
+> Changes in v2:
+>  - made a proper series
+>  - fixed sirf2 example
+>  - listed the ds1307 compatible that support the trickle charging properties
 > 
-> This patch adds a compatible string to implement this errata for
-> HiSilicon Hi161x SMMUv3 model on hip06/hip07 platforms.
-> 
-> Also, the arm64 silicon errata is updated with this same erratum.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> [Shameer: Modified to use compatible string for errata]
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> ---
->  Documentation/arm64/silicon-errata.txt                  | 1 +
->  Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt | 9 ++++++++-
->  2 files changed, 9 insertions(+), 1 deletion(-)
+> Alexandre Belloni (6):
+>   dt-bindings: trivial: Add RTCs
+>   dt-bindings: rtc: add stericsson,coh901331 bindings
+>   dt-bindings: rtc: Add sirf,prima2-sysrtc bindings
+>   dt-bindings: rtc: DS1307 and compatibles are not trivial
+>   dt-bindings: rtc: Add bindings for m41t80 and compatibles
+>   dt-bindings: rtc: merge ds1339 in ds1307 documentation
 
-Acked-by: Rob Herring <robh@kernel.org>
+Series applied.
+
+Rob
