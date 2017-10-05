@@ -1,105 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend 02/12] usb: typec: add basic typec properties
-Date: Thu, 5 Oct 2017 15:44:00 -0500
-Message-ID: <20171005204400.4q3fpeui525tmfo4@rob-hp-laptop>
-References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
- <1506398723-19359-3-git-send-email-jun.li@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4] Input: add support for the Samsung S6SY761 touchscreen
+Date: Thu, 5 Oct 2017 15:47:25 -0500
+Message-ID: <20171005204725.ya7vg2y4uvesvzzd@rob-hp-laptop>
+References: <CGME20170926063153epcas2p2980241d1aa064cd9eb0a335c841ff801@epcas2p2.samsung.com>
+ <20170926063135.16480-1-andi.shyti@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1506398723-19359-3-git-send-email-jun.li-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170926063135.16480-1-andi.shyti@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 26, 2017 at 12:05:13PM +0800, Li Jun wrote:
-> port-type is required for any typec port; default-role is only required
-> for drp; power source capable needs src-pdos; power sink capable needs
-> snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
-
-"dt-bindings: usb: ..." for the subject prefix.
-
+On Tue, Sep 26, 2017 at 03:31:35PM +0900, Andi Shyti wrote:
+> The S6SY761 touchscreen is a capicitive multi-touch controller
+> for mobile use. It's connected with i2c at the address 0x48.
 > 
-> Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> This commit provides a basic version of the driver which can
+> handle only initialization, touch events and power states.
+> 
+> The controller is controlled by a firmware which, in the version
+> I currently have, doesn't provide all the possible
+> functionalities mentioned in the datasheet.
+> 
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
 > ---
->  Documentation/devicetree/bindings/usb/typec.txt | 46 +++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/typec.txt b/Documentation/devicetree/bindings/usb/typec.txt
-> new file mode 100644
-> index 0000000..36d4467
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/typec.txt
-> @@ -0,0 +1,46 @@
-> +Generic typec and power delivery properties
-> +-------------------------------------------
-
-What node do these apply to? A type C connector node? The PD 
-microcontroller?
-
-I'm reluctant to accept just a random list of properties without a more 
-complete Type-C binding which I'd expect to have a connector node, OF 
-graph ports to connect to video outputs, connection to USB controller, 
-and connection to the PD controller.
-
-> +
-> +Required properties:
-> +- port-type:    should be one of "source", "sink" or "dual".
-> +- default-role: preferred power role if drp, should be "sink" or "source".
-> +- src-pdos:     An array of u32 with each entry providing supported power
-> +                source data object(PDO), the detailed bit definitions of
-> +                PDO can be found in "Universal Serial Bus Power Delivery
-> +                Specification" chapter 6.4.1.2 Source_Capabilities Message,
-> +                the order of each entry(PDO) should follow the PD spec chapter
-> +                6.4.1. Required only for power source and power dual role with
-> +                power delivery support.
-> +- snk-pdos:     An array of u32 with each entry providing supported power
-> +                sink data object(PDO), the detailed bit definitions of PDO
-> +                can be found in "Universal Serial Bus Power Delivery
-> +                Specification" chapter 6.4.1.3 Sink Capabilities Message,
-> +                the order of each entry(PDO) should follow the PD spec chapter
-> +                6.4.1. Required only for power sink and power dual role with
-> +                power delivery support.
-
-> +- max-snk-mv:   The max voltage the sink can support in millivoltage, required
-> +                only for power sink and power dual role with power delivery
-> +                support.
-> +- max-snk-ma:   The max current the sink can support in milliampere, required
-> +                only for power sink and power dual role with power delivery
-> +                support.
-> +- op-snk-mw:    Sink required operating power in milliwatts, if source offered
-> +                power is less then it, Capability Mismatch is set, required
-> +                only for power sink and power dual role with power delivery
-> +                support.
-
-Use the standard unit suffixes as defined in property-units.txt
-
-> +
-> +Example:
-> +
-> +ptn5110@50 {
-> +	compatible = "usb,tcpci";
-> +	reg = <0x50>;
-> +	interrupt-parent = <&gpio3>;
-> +	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-> +	port-type = "dual";
-> +	default-role = "sink";
-> +	src-pdos = <0x380190c8>;
-> +	snk-pdos = <0x380190c8 0x3802d0c8>;
-> +	max-snk-mv = <9000>;
-> +	max-snk-ma = <1000>;
-> +	op-snk-mw = <9000>;
-> +};
-> -- 
-> 2.6.6
+> sorry for the mix-up of the previous patch. This one should be
+> fine. Here's the changelog:
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> v3 - v4
+>  - fixed a mismatch on the module name
+> 
+> v2 - v3
+>  - added security check on an unsigned value which can (unlikely)
+>    get a "negative" value
+> 
+>  - in the probe function the interrupt is requested after the
+>    input device registration in order to avoid checking in the
+>    interrupt handler whether the input device has been registered
+> 
+>  - removed the 'prev_pm_state' variable. Its original meaning
+>    was to restore the state of the device when coming back from
+>    sleep mode, but because I removed in patch v2 the low power
+>    mode, now the device works only in two modes and therefore
+>    'prev_pm_state' is not required any longer.
+> 
+> v1 - v2
+>  - remove the low power functionality as it doesn't bring any
+>    benefit
+>  - use get_unaligned_be16 instead of the form 'a << 8 | b'
+>  - use max_t instead of '? :'
+>  - use managed 'devm_device_add_group()'
+> 
+> Thanks,
+> Andi
+> 
+>  .../bindings/input/touchscreen/samsung,s6sy761.txt |  34 ++
+
+In the future, a separate patch for bindings please.
+
+Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/input/touchscreen/Kconfig                  |  11 +
+>  drivers/input/touchscreen/Makefile                 |   1 +
+>  drivers/input/touchscreen/s6sy761.c                | 556 +++++++++++++++++++++
+>  4 files changed, 602 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
+>  create mode 100644 drivers/input/touchscreen/s6sy761.c
