@@ -1,59 +1,46 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 16/16] arm64: dts: marvell: armada-3720-espressobin:
- fill UART nodes
-Date: Fri, 6 Oct 2017 15:15:21 +0200
-Message-ID: <20171006151521.440418a2@windsurf.lan>
-References: <20171006101344.15590-1-miquel.raynal@free-electrons.com>
-        <20171006101344.15590-17-miquel.raynal@free-electrons.com>
-        <87fuawe8gx.fsf@free-electrons.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 15/22] firmware: arm_scmi: abstract mailbox interface
+Date: Fri, 6 Oct 2017 14:27:07 +0100
+Message-ID: <4b1ea5ac-1b50-901f-e33a-5af1f04f8a8f@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-16-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a0EUr_aEZdOrjHixzp44yXqsNxTMzBceSBTmk-x8x2MAg@mail.gmail.com>
+ <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com>
+ <CABb+yY0SmQaPgBxan44a_Sx2mFuuiPcMz41J1yjqfO5irPTYig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fuawe8gx.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CABb+yY0SmQaPgBxan44a_Sx2mFuuiPcMz41J1yjqfO5irPTYig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Fri, 06 Oct 2017 15:01:18 +0200, Gregory CLEMENT wrote:
 
->  /*
->   * To enable the second UART on J17 (pins 24,26) refer to the uart1
->   * node from armada-3720-db.dts.
->   * Note that TX and RX signal are the ones coming directly from the SoC:
->   * 1.8V TTL.
->   */
+On 06/10/17 12:34, Jassi Brar wrote:
+> On Wed, Oct 4, 2017 at 5:02 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> 
+>> Also, I have added shim only for specific controllers that need them.
+>> E.g. ARM MHU as Jassi disagreed to add doorbell mechanism to that.
+>> mbox_if provides default implementation that just calls direct mailbox
+>> APIs.
+>>
+> Yeah you could hack away the MHU driver to make your life easy at the
+> cost of duplicated code and extra DT bindings, but for a moment think
+> what if your development platform wasn't MHU but, say, Rockchip
+> mailbox controller?
+> 
 
-One issue with this comment (and Miquèl's version as well) is that it
-does not explain why you don't enable this UART by default.
+As mentioned before I understand your concern. But the point is this
+needs to be replicated with each protocol on that controller. So as Arnd
+pointed out we can reduce that by generalizing common things like doorbell.
 
-The real reason is in the commit log from Miquèl, and should probably
-be part of the comment. Perhaps something like:
-
-/*
-
- * Connector J17 (pins X, Y, Z) exposes a number of different
- * features:
- *  - UART1 (pins 24 = RX, pins 26 = TX), see armada-3720-db.dts for an
- *    example on how to enable UART1. Beware that the signals are 1.8V
- *    TTL.
- *  - SPIxyz
- *  - I2Cxyz
- */
-
-Otherwise, it's not clear at all why you don't just enable UART1. Or
-perhaps I misunderstood Miquèl's commit log ?
-
-Best regards,
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
