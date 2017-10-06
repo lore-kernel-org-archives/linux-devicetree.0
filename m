@@ -1,40 +1,38 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: meson8b: add reserved memory zone to fix silent freezes
-Date: Fri, 06 Oct 2017 15:59:40 -0700
-Message-ID: <7h1smf992b.fsf@baylibre.com>
-References: <20171002155903.19511-1-linus.luessing@c0d3.blue>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] ARM64: meson-gxm: Add support for Khadas VIM2
+Date: Fri, 06 Oct 2017 16:05:01 -0700
+Message-ID: <7hwp477u8y.fsf@baylibre.com>
+References: <1507044283-18476-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171002155903.19511-1-linus.luessing@c0d3.blue> ("Linus
-        =?utf-8?Q?L=C3=BCssing=22's?= message of "Mon, 2 Oct 2017 17:59:03 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507044283-18476-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Tue, 3 Oct 2017 17:24:41 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Linus L=C3=BCssing <linus.luessing@c0d3.blue> writes:
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-> So far, the stress-ng tool for instance quickly resulted in a silent
-> freeze of the system with no prior notice on a serial console when
-> running its filesystem or memory stressor classes.
+> The Khadas VIM2 is a Single Board Computer, respin of the origin
+> Khadas VIM board, using an Amlogic S912 SoC and more server oriented.
+>     
+> It provides the same external connectors and header pinout, plus a SPI
+> NOR Flash, a reprogrammable STM8S003 MCU, FPC Connector, Cooling FAN header
+> and Pogo Pads Arrays.
 >
-> Even with a panic-on-OOM and reboot-on-panic (vm.panic_on_oom=3D1,
-> kernel.panic=3D10) configured, the system would neither reboot nor
-> would the OOM killer get any chance to otherwise do its job.
+> To eventually provide access to the SPI NOR flash, the eMMC DS pin must be
+> configured as a different pincrl node to disable it's access from the MMC
+> Controller. This first patch splits this emmc pins entry for GXBB and GXL.
 >
-> The Amlogic reference source code uses a 2MB PHYS_OFFSET. With these 2MB
-> reserved via DT, stress-ng was able to run on an Odroid C1+ just fine for
-> several hours, the OOM killer was able to kill processes again and if
-> configured would successfully trigger a reboot of the system.
->
-> Fixes: 4a69fcd3a108 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ bo=
-ards")
-> Signed-off-by: Linus L=C3=BCssing <linus.luessing@c0d3.blue>
+> Depends on eMMC ARM64 DT patches from Jerome Brunet at [2]
 
-Applied to v4.15/dt with Martin's Tested-by,
-
-Thanks,
+eMMC patches now merged in mainline, so Appled to v4.15/dt64 with
+Jerome's Tested-by,
 
 Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
