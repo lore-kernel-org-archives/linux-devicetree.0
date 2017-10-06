@@ -1,73 +1,35 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
- mailbox client bindings
-Date: Fri, 6 Oct 2017 10:42:10 +0100
-Message-ID: <98f8f8fe-1fa6-db1c-73dd-f198d9211a7f@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-4-git-send-email-sudeep.holla@arm.com>
- <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 5/6] of: wrap accesses to device_node kobject
+Date: Fri, 6 Oct 2017 12:09:25 +0200
+Message-ID: <20171006100925.GB30565@kroah.com>
+References: <20171005194422.26224-1-robh@kernel.org>
+ <20171005194422.26224-6-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171005194422.26224-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/10/17 00:20, Rob Herring wrote:
-> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
->> This patch adds ARM MHU specific mailbox client bindings to support
->> SCMI. Since SCMI specification just requires doorbell mechanism from
->> mailbox controllers, we add mailbox data to specify the doorbell bit(s).
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  .../devicetree/bindings/arm/arm,mhu-scmi.txt          | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
->> new file mode 100644
->> index 000000000000..8c106f1cdeb8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
->> @@ -0,0 +1,19 @@
->> +ARM MHU mailbox client bindings for SCMI Message Protocol
->> +----------------------------------------------------------
->> +
->> +This binding is intended to define the ARM MHU specific extensions to
->> +the generic SCMI bindings[2].
->> +
->> +Required properties:
->> +
->> +The scmi node with the following properties shall be under the /firmware/ node.
->> +
->> +- compatible : shall be "arm,scmi" and "arm,mhu-scmi"
+On Thu, Oct 05, 2017 at 02:44:21PM -0500, Rob Herring wrote:
+> In preparation to make kobject element in struct device_node optional,
+> provide and use a macro to return the kobject pointer. The only user
+> outside the DT core is the driver core.
 > 
-> Most specific first.
-> 
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/base/core.c | 2 +-
+>  include/linux/of.h  | 2 ++
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 
-Ah right, sorry for missing that.
-
->> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
->> +	      data as expected by the mailbox controller
-> 
-> Shouldn't that be cells as part of mboxes property?
-> 
-
-Yes, that's what I proposed with my ARM MHU doorbell bindings[1]. Since
-Jassi rejected that and asked to make it part client. But I agree with
-you comment. Even Arnd had similar opinion.
-
--- 
-Regards,
-Sudeep
-
-[1] https://patchwork.kernel.org/patch/9745683/
+Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
