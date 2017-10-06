@@ -1,52 +1,166 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/3] soc: amlogic: Add Meson6/8/8b SoC Information driver
-Date: Fri, 06 Oct 2017 15:38:13 -0700
-Message-ID: <7h60br9a22.fsf@baylibre.com>
-References: <20170923141403.20882-1-martin.blumenstingl@googlemail.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
+ ECAM shift mode
+Date: Fri, 6 Oct 2017 17:45:03 -0500
+Message-ID: <20171006224503.GH25517@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+ <20170828180437.2646-2-ard.biesheuvel@linaro.org>
+ <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
+ <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA@mail.gmail.com>
+ <CAKv+Gu_MM--uHwQk_brJh1bPOdsUTH4j+aJUDyS1um3mHDdsEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170923141403.20882-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Sat, 23 Sep 2017 16:14:00 +0200")
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_MM--uHwQk_brJh1bPOdsUTH4j+aJUDyS1um3mHDdsEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+On Fri, Oct 06, 2017 at 03:52:03PM +0100, Ard Biesheuvel wrote:
+> On 28 September 2017 at 16:51, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On 26 September 2017 at 10:32, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >> [+cc Will]
+> >>
+> >> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
+> >>> Some implementations of the Synopsys Designware PCIe controller implement
+> >>> a so-called ECAM shift mode, which allows a static memory window to be
+> >>> configured that covers the configuration space of the entire bus range.
+> >>>
+> >>> If the firmware performs all the low level configuration that is required
+> >>> to expose this controller in a fully ECAM compatible manner, we can
+> >>> simply describe it as "pci-host-ecam-generic" and be done with it.
+> >>> However, it appears that in some cases (one of which is the Armada 80x0),
+> >>> the IP is synthesized with an ATU window size that does not allow the
+> >>> first bus to be mapped in a way that prevents the device on the
+> >>> downstream port from appearing more than once.
+> >>>
+> >>> So implement a driver that relies on the firmware to perform all low
+> >>> level initialization, and drives the controller in ECAM mode, but
+> >>> overrides the config space accessors to take the above quirk into
+> >>> account.
+> >>>
+> >>> Note that, unlike most drivers for this IP, this driver does not expose
+> >>> a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
+> >>> given that this is not a true bridge, and does not require any windows
+> >>> to be configured in order for the downstream device to operate correctly.
+> >>> Omitting it also prevents the PCI resource allocation routines from
+> >>> handing out BAR space to it unnecessarily.
+> >>
+> >> This is a tangent, but does this mean the other drivers do not need to
+> >> expose a fake 00:00.0 device either?
+> >>
+> >
+> > To be honest, I am not so sure anymore. I am seeing some issues in
+> > ASPM code making the assumption that any device which is not a root
+> > port has a parent. If this is mandated by the spec, I guess there
+> > isn't a whole lot we can do except expose a fake root port on b/d/f
+> > 0/0/0. This used to work fine, though, and I have to confirm whether
+> > the issues I am seeing currently are due to different hardware or
+> > changes in the software.
+> >
+> 
+> OK, so the issue was new because I hadn't tried using a PCIe switch
+> before, and you have already queued the fix to make the ASPM code deal
+> with that.
+> 
+> So I think it /would/ be better for the other drivers to not bother
+> mocking up the root port, and simply expose the downstream device as
+> B/D/F 0/0/0 (assuming the bus range starts at 0).
+> 
+> It really looks like Altera, Aardvark, Sigma, etc are all in the same
+> boat here, and need to
+> a) filter type 0 config TLPs to avoid the downstream device to appear
+> 32 times, and
+> b) mangle config space accesses to the 'root port' to hide BARs that
+> have different meanings in this context (the size of the inbound
+> window), in order to prevent the PCI resource allocation routines to
+> waste huge amounts of BAR space on them.
 
-> The 32-bit Amlogic SoC have some registers which contain some information
-> the SoC's major and version, as well as a "major version".
-> This patchset adds support for this register decoding and exposing with the
-> SoC bus infrastructure, with dt-bindings and DT node.
->
-> This is inspired by Neil's Meson GX socinfo driver, see [0]
->
-> All information was taken from Amlogic's 3.10 GPL kernel sources because
-> the public S805 datasheet from Hardkernel does not contain any relevant
-> information for these register blocks.
->
->
-> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-June/004187.html
->
-> Martin Blumenstingl (3):
->   dt-bindings: Amlogic: add documentation for the SoC info register
->     areas
+I don't know what to do about this.  Obviously it's not your problem
+to clean this up.
 
-Applied to v4.15/dt
+I don't know anything about the topology of those systems.  If the
+ASPM thing was the only issue, we can probably fix that.  Of course,
+that means no device connected to the link from those RCs could use
+ASPM (maybe that's the case anyway with the mocked-up root ports).
 
->   soc: amlogic: Add Meson6/Meson8/Meson8b/Meson8m2 SoC Information
->     driver
+> >>> +static int pci_dw_ecam_config_read(struct pci_bus *bus, u32 devfn, int where,
+> >>> +                                int size, u32 *val)
+> >>> +{
+> >>> +     struct pci_config_window *cfg = bus->sysdata;
+> >>> +
+> >>> +     /*
+> >>> +      * The Synopsys dw PCIe controller in RC mode will not filter type 0
+> >>> +      * config TLPs sent to devices 1 and up on its downstream port,
+> >>> +      * resulting in devices appearing multiple times on bus 0 unless we
+> >>> +      * filter them here.
+> >>> +      */
+> >>> +     if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0) {
+> >>
+> >> Trivial, but maybe you could factor out this test?  We already have
+> >> these functions that do basically the same thing and it'd be nice to
+> >> use a similar pattern (altera and dw also check for the link being up,
+> >> which seems racy and possibly bogus to me):
+> >>
+> >>   altera_pcie_valid_device()
+> >>   dw_pcie_valid_device()
+> >>   rockchip_pcie_valid_device()
+> >>
+> 
+> This is rather difficult to factor out, I'm afraid:
+> 
+> static bool altera_pcie_valid_device(struct altera_pcie *pcie,
+>                                      struct pci_bus *bus, int dev)
+> 
+> static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
+>                                 int dev)
+> 
+> static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
+>                                       struct pci_bus *bus, int dev)
+> 
+> They all use different struct types to describe the RC, and the fact
+> that they model a root port means the type0 TLP filter should be
+> applied to bus 1 not bus 0.
+> So I agree there is some similarity between these, but not as much
+> with the driver I am proposing.
 
-Applied to v4.15/drivers
+Sorry, I didn't mean to factor all these out into a single routine; I
+just meant maybe we could add a pci_dw_valid_device() with a structure
+similar to those I mentioned.
 
->   ARM: dts: meson: add SoC information nodes
+> >> The fact that altera and rockchip do essentially the same thing as dw
+> >> here suggests that this pattern is not limited to DesignWare.
+> >>
+> 
+> No.
+> >> These other functions also do something similar, though not structured
+> >> the same way:
+> >>
+> >>   hisi_pcie_rd_conf()
+> >>   advk_pcie_rd_conf()
+> >>   thunder_pem_bridge_read()
+> >>   rcar_pcie_config_access()
+> >>   gapspci_config_access()
+> >>
+> >
+> > I can look into that.
+> >
+> 
+> I think only hisi_pcie_rd_conf() comes close to what I need to do in
+> this driver, and this is not surprising given that it uses Synopsys IP
+> as well. I would like to replace that entirely with this driver at
+> some point, but for now I'd like to proceed with Marvell Armada 8k and
+> Socionext Synquacer only, given that those are the only ones I can
+> actually test myself.
 
-Applied to v4.15/dt
+Sorry again, more unclear communication on my part.  I don't think we
+can easily factor these things out; I was really just making the
+observation that these all look pretty similar and it would be good to
+make this new driver look as similar to the existing ones as possible.
 
-Thanks,
-
-Kevin
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
