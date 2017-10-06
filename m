@@ -1,61 +1,249 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] dmaengine: usb-dmac: Add compatible string for r8a7743/5
-Date: Fri, 6 Oct 2017 09:36:09 +0200
-Message-ID: <CAMuHMdXMgwyJQfEb3_326vW6Kwsf548Yz=PuCoCABDa63R4gbg@mail.gmail.com>
-References: <1507216771-8957-1-git-send-email-biju.das@bp.renesas.com>
+From: Ahmet Inan <inan@distec.de>
+Subject: [PATCH 1/2] Input: Add I2C attached EETI EXC3000 multi touch driver
+Date: Fri, 6 Oct 2017 09:37:27 +0200
+Message-ID: <20171006073728.14724-1-inan@distec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507216771-8957-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, dmaengine@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Ahmet Inan <xdsopl@gmail.com>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Ahmet Inan <inan@distec.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju,
+The 3000 series have a new protocol which allows to report up to 5 points
+in a single 66 byte frame. One must always read in 66 byte frames.
+To support up to 10 points, two consecutive frames need to be read:
+The first frame says how many points until sync.
+The second frame must say zero points or both frames must be discarded.
 
-On Thu, Oct 5, 2017 at 5:19 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> This patch adds support for r8a7743/5 SoC. The Renesas RZ/G1[ME]
-> (R8A7743/5) usbdmac engine is identical to the R-Car Gen2 family.
->
-> This doesn't change the driver, so it does nothing by itself.  But it does
+To be able to work with the higher 400KHz I2C bus rate, one must
+successfully send a special package prior _each_ read or the controller
+will refuse to cooperate.
 
-Wording it like this may give the wrong impression to the casual reader
-that a driver change will be submitted separately.
-No driver change is needed due to the fallback compatible value
-"renesas,usb-dmac".
+This is a minimal implementation based on egalax_i2c.c (which can be found
+on the internet) and egalax_ts.c but without the vendor interface and no
+power management support.
 
-> mean that checkpatch won't complain about a future patch that adds
-> "renesas,r8a7743-usb-dmac" or "renesas,r8a7745-usb-dmac" to a DT,
-> which helps ensure that shipped DTs use documented compatibility strings.
+Signed-off-by: Ahmet Inan <inan@distec.de>
+---
+ drivers/input/touchscreen/Kconfig   |  10 +++
+ drivers/input/touchscreen/Makefile  |   1 +
+ drivers/input/touchscreen/exc3000.c | 173 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 184 insertions(+)
+ create mode 100644 drivers/input/touchscreen/exc3000.c
 
-Adding the SoC-specific compatible values here has two purposes:
-  1. Document which SoCs have this hardware module,
-  2. Allow checkpatch to validate compatible values.
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 0bf78ff1ae88..9ea2d9287b38 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -314,6 +314,16 @@ config TOUCHSCREEN_EGALAX_SERIAL
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called egalax_ts_serial.
+ 
++config TOUCHSCREEN_EXC3000
++	tristate "EETI EXC3000 multi-touch panel support"
++	depends on I2C
++	help
++	  Say Y here to enable support for I2C connected EETI
++	  EXC3000 multi-touch panels.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called exc3000.
++
+ config TOUCHSCREEN_FUJITSU
+ 	tristate "Fujitsu serial touchscreen"
+ 	select SERIO
+diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
+index f720bc30ada9..48118379fee7 100644
+--- a/drivers/input/touchscreen/Makefile
++++ b/drivers/input/touchscreen/Makefile
+@@ -38,6 +38,7 @@ obj-$(CONFIG_TOUCHSCREEN_ELAN)		+= elants_i2c.o
+ obj-$(CONFIG_TOUCHSCREEN_ELO)		+= elo.o
+ obj-$(CONFIG_TOUCHSCREEN_EGALAX)	+= egalax_ts.o
+ obj-$(CONFIG_TOUCHSCREEN_EGALAX_SERIAL)	+= egalax_ts_serial.o
++obj-$(CONFIG_TOUCHSCREEN_EXC3000)	+= exc3000.o
+ obj-$(CONFIG_TOUCHSCREEN_FUJITSU)	+= fujitsu_ts.o
+ obj-$(CONFIG_TOUCHSCREEN_GOODIX)	+= goodix.o
+ obj-$(CONFIG_TOUCHSCREEN_ILI210X)	+= ili210x.o
+diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+new file mode 100644
+index 000000000000..b822e064a17b
+--- /dev/null
++++ b/drivers/input/touchscreen/exc3000.c
+@@ -0,0 +1,173 @@
++/*
++ * Driver for I2C connected EETI EXC3000 multiple touch controller
++ *
++ * Copyright (C) 2017 Ahmet Inan <inan@distec.de>
++ *
++ * minimal implementation based on egalax_ts.c and egalax_i2c.c
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/i2c.h>
++#include <linux/input.h>
++#include <linux/irq.h>
++#include <linux/input/mt.h>
++#include <linux/input/touchscreen.h>
++#include <asm/unaligned.h>
++
++#define EXC3000_NUM_SLOTS	10
++#define EXC3000_SLOTS_PER_FRAME	5
++#define EXC3000_LEN_FRAME	66
++#define EXC3000_LEN_POINT	10
++#define EXC3000_MT_EVENT	6
++#define EXC3000_TIMEOUT		msecs_to_jiffies(100)
++
++struct exc3000_data {
++	struct i2c_client *client;
++	struct input_dev *input;
++	struct touchscreen_properties prop;
++	struct timer_list timer;
++	u8 buf[2 * EXC3000_LEN_FRAME];
++};
++
++static void exc3000_process(struct input_dev *input,
++		struct touchscreen_properties *prop, u8 *buf, int num)
++{
++	for (; num--; buf += EXC3000_LEN_POINT) {
++		if (buf[0] & 1) {
++			input_mt_slot(input, buf[1]);
++			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
++			touchscreen_report_pos(input, prop,
++					get_unaligned_le16(buf + 2),
++					get_unaligned_le16(buf + 4), true);
++		}
++	}
++}
++
++static int exc3000_read(struct i2c_client *client, u8 *buf)
++{
++	return i2c_master_send(client, "'", 2) != 2 ||
++		i2c_master_recv(client, buf,
++				EXC3000_LEN_FRAME) != EXC3000_LEN_FRAME ||
++		get_unaligned_le16(buf) != EXC3000_LEN_FRAME ||
++		buf[2] != EXC3000_MT_EVENT;
++}
++
++static void exc3000_timer(unsigned long data)
++{
++	struct input_dev *input = (void *)data;
++
++	input_mt_sync_frame(input);
++	input_sync(input);
++}
++
++static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
++{
++	struct exc3000_data *data = dev_id;
++	struct i2c_client *client = data->client;
++	struct input_dev *input = data->input;
++	struct touchscreen_properties *prop = &data->prop;
++	struct timer_list *timer = &data->timer;
++	u8 *buf = data->buf;
++
++	if (exc3000_read(client, buf) ||
++			!buf[3] || buf[3] > EXC3000_NUM_SLOTS) {
++		mod_timer(timer, jiffies + EXC3000_TIMEOUT);
++		return IRQ_HANDLED;
++	}
++	if (buf[3] <= EXC3000_SLOTS_PER_FRAME) {
++		del_timer_sync(timer);
++		exc3000_process(input, prop, buf + 4, buf[3]);
++	} else {
++		if (exc3000_read(client, buf + EXC3000_LEN_FRAME) ||
++				buf[EXC3000_LEN_FRAME + 3]) {
++			mod_timer(timer, jiffies + EXC3000_TIMEOUT);
++			return IRQ_HANDLED;
++		}
++		del_timer_sync(timer);
++		exc3000_process(input, prop, buf + 4, EXC3000_SLOTS_PER_FRAME);
++		exc3000_process(input, prop, buf + EXC3000_LEN_FRAME + 4,
++				buf[3] - EXC3000_SLOTS_PER_FRAME);
++	}
++	input_mt_sync_frame(input);
++	input_sync(input);
++	return IRQ_HANDLED;
++}
++
++static int exc3000_probe(struct i2c_client *client,
++		const struct i2c_device_id *id)
++{
++	struct exc3000_data *data;
++	struct input_dev *input;
++	int error;
++
++	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	input = devm_input_allocate_device(&client->dev);
++	if (!input)
++		return -ENOMEM;
++
++	input->name = "EETI EXC3000 Touch Screen";
++	input->id.bustype = BUS_I2C;
++
++	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
++	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
++	touchscreen_parse_properties(input, true, &data->prop);
++
++	error = input_mt_init_slots(input, EXC3000_NUM_SLOTS,
++			INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
++	if (error)
++		return error;
++
++	error = input_register_device(input);
++	if (error)
++		return error;
++
++	data->input = input;
++	data->client = client;
++	i2c_set_clientdata(client, data);
++
++	setup_timer(&data->timer, exc3000_timer, (unsigned long)input);
++
++	error = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++			exc3000_interrupt, IRQF_ONESHOT, client->name, data);
++	if (error)
++		return error;
++
++	return 0;
++}
++
++static const struct i2c_device_id exc3000_id[] = {
++	{ "exc3000", 0 },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(i2c, exc3000_id);
++
++#ifdef CONFIG_OF
++static const struct of_device_id exc3000_of_match[] = {
++	{ .compatible = "eeti,exc3000" },
++	{ }
++};
++#endif
++
++static struct i2c_driver exc3000_driver = {
++	.driver = {
++		.name	= "exc3000",
++		.of_match_table = of_match_ptr(exc3000_of_match),
++	},
++	.id_table	= exc3000_id,
++	.probe		= exc3000_probe,
++};
++
++module_i2c_driver(exc3000_driver);
++
++MODULE_AUTHOR("Ahmet Inan <inan@distec.de>");
++MODULE_DESCRIPTION("I2C connected EETI EXC3000 multiple touch controller driver");
++MODULE_LICENSE("GPL");
+-- 
+2.11.0
 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
-> @@ -3,6 +3,8 @@
->  Required Properties:
->  -compatible: "renesas,<soctype>-usb-dmac", "renesas,usb-dmac" as fallback.
->         Examples with soctypes are:
-> +         - "renesas,r8a7743-usb-dmac" (RZ/G1M)
-> +         - "renesas,r8a7745-usb-dmac" (RZ/G1E)
->           - "renesas,r8a7790-usb-dmac" (R-Car H2)
->           - "renesas,r8a7791-usb-dmac" (R-Car M2-W)
->           - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
