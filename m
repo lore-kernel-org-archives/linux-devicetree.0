@@ -1,40 +1,56 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Specify USB ports for USB LED of Luxul
- XWR-1200
-Date: Fri,  6 Oct 2017 10:52:35 +0200
-Message-ID: <20171006085235.13508-1-zajec5@gmail.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH] usb: renesas_usbhs: Add compatible string for r8a7743/5
+Date: Fri, 6 Oct 2017 08:59:30 +0000
+Message-ID: <SG2PR06MB1711AE7B86C8066F1856C7E0B8710@SG2PR06MB1711.apcprd06.prod.outlook.com>
+References: <1507216358-917-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVOWn97YnyO5A3_3cjYfykrWYaaSVun2dVX2RrHSuB5tw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Dan Haab <dhaab@luxul.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdVOWn97YnyO5A3_3cjYfykrWYaaSVun2dVX2RrHSuB5tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBpbmZvIGNhbiBi
-ZSB1c2VkIGJ5IG9wZXJhdGluZyBzeXN0ZW0gdG8gc2V0dXAgTEVEIGJlaGF2aW9yLgoKUmVwb3J0
-ZWQtYnk6IERhbiBIYWFiIDxkaGFhYkBsdXh1bC5jb20+ClNpZ25lZC1vZmYtYnk6IFJhZmHFgiBN
-acWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9iY200NzA4
-MS1sdXh1bC14d3ItMTIwMC5kdHMgfCAzICsrLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3
-MDgxLWx1eHVsLXh3ci0xMjAwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgxLWx1eHVs
-LXh3ci0xMjAwLmR0cwppbmRleCBjNTQ0YWIzMDIwMTIuLmJhMWMxOWIxYjNlYiAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwODEtbHV4dWwteHdyLTEyMDAuZHRzCisrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgxLWx1eHVsLXh3ci0xMjAwLmR0cwpAQCAtNTcsNyArNTcs
-OCBAQAogCQl1c2IgewogCQkJbGFiZWwgPSAiYmNtNTN4eDpncmVlbjp1c2IiOwogCQkJZ3Bpb3Mg
-PSA8JmNoaXBjb21tb24gOCBHUElPX0FDVElWRV9MT1c+OwotCQkJbGludXgsZGVmYXVsdC10cmln
-Z2VyID0gIm5vbmUiOworCQkJdHJpZ2dlci1zb3VyY2VzID0gPCZvaGNpX3BvcnQyPiwgPCZlaGNp
-X3BvcnQyPjsKKwkJCWxpbnV4LGRlZmF1bHQtdHJpZ2dlciA9ICJ1c2Jwb3J0IjsKIAkJfTsKIAog
-CQlzdGF0dXMgewotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGdlZXJ0LnV5dHRlcmhvZXZl
+bkBnbWFpbC5jb20gW21haWx0bzpnZWVydC51eXR0ZXJob2V2ZW5AZ21haWwuY29tXQ0KPiBPbiBC
+ZWhhbGYgT2YgR2VlcnQgVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IDA2IE9jdG9iZXIgMjAxNyAwODoz
+NA0KPiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBDYzogR3JlZyBL
+cm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IFJvYiBIZXJyaW5nDQo+
+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29t
+PjsgU2ltb24NCj4gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBDaHJpcyBQYXRlcnNvbg0K
+PiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPjsgRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJy
+aXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
+TGludXgtUmVuZXNhcw0KPiA8bGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwub3JnPjsgVVNC
+IGxpc3QgPGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hd
+IHVzYjogcmVuZXNhc191c2JoczogQWRkIGNvbXBhdGlibGUgc3RyaW5nIGZvciByOGE3NzQzLzUN
+Cj4NCj4gSGkgQmlqdSwNCj4NCj4gT24gVGh1LCBPY3QgNSwgMjAxNyBhdCA1OjEyIFBNLCBCaWp1
+IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRk
+cyBzdXBwb3J0IGZvciByOGE3NzQzLzUgU29DLiAgVGhlIFJlbmVzYXMgUlovRzFbTUVdDQo+ID4g
+KFI4QTc3NDMvNSkgdXNiaHMgaXMgaWRlbnRpY2FsIHRvIHRoZSBSLUNhciBHZW4yIGZhbWlseS4N
+Cj4gPg0KPiA+IFRoaXMgZG9lc24ndCBjaGFuZ2UgdGhlIGRyaXZlciwgc28gaXQgZG9lcyBub3Ro
+aW5nIGJ5IGl0c2VsZi4gIEJ1dCBpdA0KPiA+IGRvZXMNCj4NCj4gV29yZGluZyBpdCBsaWtlIHRo
+aXMgbWF5IGdpdmUgdGhlIHdyb25nIGltcHJlc3Npb24gdG8gdGhlIGNhc3VhbCByZWFkZXIgdGhh
+dCBhDQo+IGRyaXZlciBjaGFuZ2Ugd2lsbCBiZSBzdWJtaXR0ZWQgc2VwYXJhdGVseS4NCj4gTm8g
+ZHJpdmVyIGNoYW5nZSBpcyBuZWVkZWQgZHVlIHRvIHRoZSBmYWxsYmFjayBjb21wYXRpYmxlIHZh
+bHVlICJyZW5lc2FzLHJjYXItDQo+IGdlbjItdXNiaHMiLg0KPg0KPiA+IG1lYW4gdGhhdCBjaGVj
+a3BhdGNoIHdvbid0IGNvbXBsYWluIGFib3V0IGEgZnV0dXJlIHBhdGNoIHRoYXQgYWRkcw0KPiA+
+ICJyZW5lc2FzLHVzYmhzLXI4YTc3NDMiIG9yICJyZW5lc2FzLHVzYmhzLXI4YTc3NDUiIHRvIGEg
+RFQsIHdoaWNoDQo+ID4gaGVscHMgZW5zdXJlIHRoYXQgc2hpcHBlZCBEVHMgdXNlIGRvY3VtZW50
+ZWQgY29tcGF0aWJpbGl0eSBzdHJpbmdzLg0KPg0KPiBBZGRpbmcgdGhlIFNvQy1zcGVjaWZpYyBj
+b21wYXRpYmxlIHZhbHVlcyBoZXJlIGhhcyB0d28gcHVycG9zZXM6DQo+ICAgMS4gRG9jdW1lbnQg
+d2hpY2ggU29DcyBoYXZlIHRoaXMgaGFyZHdhcmUgbW9kdWxlLA0KPiAgIDIuIEFsbG93IGNoZWNr
+cGF0Y2ggdG8gdmFsaWRhdGUgY29tcGF0aWJsZSB2YWx1ZXMuDQoNClRoYW5rcy4gSSB3aWxsIHNl
+bmQgIHYyIHdpdGggYWJvdmUgY2hhbmdlcw0KICsNCldpbGwgcmViYXNlIG9uIHRoZSBiZWxvdyBS
+LUNhciBEMyBwYXRjaA0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85OTgyMjY3
+Lw0KDQpyZWdhcmRzLA0KQmlqdQ0KDQoNCg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJv
+cGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5n
+aGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRl
+ciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
