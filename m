@@ -1,54 +1,161 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [RESEND PATCH v5 4/4] ARM: configs: stm32: Add DMAMUX support in
- STM32 defconfig
-Date: Fri, 6 Oct 2017 15:01:50 +0200
-Message-ID: <5dfb2dc4-a286-b810-3707-82d39ab07ae5@st.com>
-References: <1506065492-31478-1-git-send-email-pierre-yves.mordret@st.com>
- <1506065492-31478-5-git-send-email-pierre-yves.mordret@st.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: stm32: Add lptimer definitions to stm32h743
+Date: Fri, 6 Oct 2017 15:03:07 +0200
+Message-ID: <87996cbe-9b3c-7bcc-d8c3-c13ded688b7b@st.com>
+References: <1505740615-24920-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506065492-31478-5-git-send-email-pierre-yves.mordret@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505740615-24920-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 09/22/2017 09:31 AM, Pierre-Yves MORDRET wrote:
-> This patch adds DMAMUX support in STM32 defconfig file
+On 09/18/2017 03:16 PM, Fabrice Gasnier wrote:
+> Add lptimer definitions, depending on features they provide:
+> - lptimer1 & 2 can act as PWM, trigger and encoder/counter
+> - lptimer3 can act as PWM and trigger
+> - lptimer4 & 5 can act as PWM
 > 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 > ---
->   Version history:
->      v5:
->      v4:
->      v3:
->      v2:
->          * None
-> ---
-> ---
->   arch/arm/configs/stm32_defconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
-> index 90e5c46..988f395 100644
-> --- a/arch/arm/configs/stm32_defconfig
-> +++ b/arch/arm/configs/stm32_defconfig
-> @@ -67,6 +67,7 @@ CONFIG_RTC_CLASS=y
->   CONFIG_RTC_DRV_STM32=y
->   CONFIG_DMADEVICES=y
->   CONFIG_STM32_DMA=y
-> +CONFIG_STM32_DMAMUX=y
->   CONFIG_IIO=y
->   CONFIG_STM32_ADC_CORE=y
->   CONFIG_STM32_ADC=y
-> 
 
-Applied on stm32-defconfig-for-v4.15 branch.
+Applied on stm32-dt-for-v4.15 branch.
 
 Thanks
 Alex
+
+>   arch/arm/boot/dts/stm32h743.dtsi | 103 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 103 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+> index 58ec227..de54123 100644
+> --- a/arch/arm/boot/dts/stm32h743.dtsi
+> +++ b/arch/arm/boot/dts/stm32h743.dtsi
+> @@ -66,6 +66,32 @@
+>   			clocks = <&timer_clk>;
+>   		};
+>   
+> +		lptimer1: timer@0x40002400 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "st,stm32-lptimer";
+> +			reg = <0x40002400 0x400>;
+> +			clocks = <&timer_clk>;
+> +			clock-names = "mux";
+> +			status = "disabled";
+> +
+> +			pwm {
+> +				compatible = "st,stm32-pwm-lp";
+> +				status = "disabled";
+> +			};
+> +
+> +			trigger@0 {
+> +				compatible = "st,stm32-lptimer-trigger";
+> +				reg = <0>;
+> +				status = "disabled";
+> +			};
+> +
+> +			counter {
+> +				compatible = "st,stm32-lptimer-counter";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>   		usart2: serial@40004400 {
+>   			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
+>   			reg = <0x40004400 0x400>;
+> @@ -172,6 +198,83 @@
+>   			};
+>   		};
+>   
+> +		lptimer2: timer@0x58002400 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "st,stm32-lptimer";
+> +			reg = <0x58002400 0x400>;
+> +			clocks = <&timer_clk>;
+> +			clock-names = "mux";
+> +			status = "disabled";
+> +
+> +			pwm {
+> +				compatible = "st,stm32-pwm-lp";
+> +				status = "disabled";
+> +			};
+> +
+> +			trigger@1 {
+> +				compatible = "st,stm32-lptimer-trigger";
+> +				reg = <1>;
+> +				status = "disabled";
+> +			};
+> +
+> +			counter {
+> +				compatible = "st,stm32-lptimer-counter";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		lptimer3: timer@0x58002800 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "st,stm32-lptimer";
+> +			reg = <0x58002800 0x400>;
+> +			clocks = <&timer_clk>;
+> +			clock-names = "mux";
+> +			status = "disabled";
+> +
+> +			pwm {
+> +				compatible = "st,stm32-pwm-lp";
+> +				status = "disabled";
+> +			};
+> +
+> +			trigger@2 {
+> +				compatible = "st,stm32-lptimer-trigger";
+> +				reg = <2>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		lptimer4: timer@0x58002c00 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "st,stm32-lptimer";
+> +			reg = <0x58002c00 0x400>;
+> +			clocks = <&timer_clk>;
+> +			clock-names = "mux";
+> +			status = "disabled";
+> +
+> +			pwm {
+> +				compatible = "st,stm32-pwm-lp";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		lptimer5: timer@0x58003000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "st,stm32-lptimer";
+> +			reg = <0x58003000 0x400>;
+> +			clocks = <&timer_clk>;
+> +			clock-names = "mux";
+> +			status = "disabled";
+> +
+> +			pwm {
+> +				compatible = "st,stm32-pwm-lp";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+>   		adc_3: adc@58026000 {
+>   			compatible = "st,stm32h7-adc-core";
+>   			reg = <0x58026000 0x400>;
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
