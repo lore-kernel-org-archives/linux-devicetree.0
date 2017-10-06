@@ -1,120 +1,46 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add device trees for camera DB
-Date: Fri,  6 Oct 2017 18:59:53 +0100
-Message-ID: <1507312793-6877-3-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <CAMuHMdW-Y7tK28YAGBRMqdgZK7vVqnUcud1FtzQd6wLrKii_AA@mail.gmail.com>
- <1507312793-6877-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507312793-6877-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Chris Paterson <chris.paterson2@renesas.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8916: Shrink mdp address length for msm8916
+Date: Fri, 6 Oct 2017 14:08:39 -0400
+Message-ID: <CAF6AEGurDDN3fmifwX6wVhba=xfo5Gihd7Ex-rDO8qCT1sGm-g@mail.gmail.com>
+References: <20171006155751.31261-1-ctatlor97@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171006155751.31261-1-ctatlor97@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a .dtsi that describes the camera daughter board
-and a .dts to describe the HW made of iWave's RZ/G1M SoM, iWave's
-RZ/G1M/G1N Qseven carrier board, and the camera daughter board.
-The camera daughter board .dtsi adds support for ttySC[14].
+On Fri, Oct 6, 2017 at 11:57 AM, Craig Tatlor <ctatlor97@gmail.com> wrote:
+> This shrinks the address size down to 89000 from its previous 90000
+> which was mistakenly pulled from downstream.
+>
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-* Reodered nodes alphabetically
+Acked-by: Rob Clark <robdclark@gmail.com>
 
- arch/arm/boot/dts/Makefile                      |  1 +
- arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi        | 43 +++++++++++++++++++++++++
- arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts | 19 +++++++++++
- 3 files changed, 63 insertions(+)
- create mode 100644 arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
- create mode 100644 arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e87f311..8c34d06 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -724,6 +724,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7743-iwg20d-q7.dtb \
-+	r8a7743-iwg20d-q7-dbcm-ca.dtb \
- 	r8a7743-sk-rzg1m.dtb \
- 	r8a7745-iwg22d-sodimm.dtb \
- 	r8a7745-sk-rzg1e.dtb \
-diff --git a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-new file mode 100644
-index 0000000..31fab5f
---- /dev/null
-+++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-@@ -0,0 +1,43 @@
-+/*
-+ * Device Tree Source for the iWave-RZ-G1M/N Daughter Board Camera Module
-+ *
-+ * Copyright (C) 2017 Renesas Electronics Corp.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/ {
-+	aliases {
-+		serial1 = &scif1;
-+		serial4 = &hscif1;
-+	};
-+};
-+
-+&hscif1 {
-+	pinctrl-0 = <&hscif1_pins>;
-+	pinctrl-names = "default";
-+
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&pfc {
-+	hscif1_pins: hscif1 {
-+		groups = "hscif1_data_c", "hscif1_ctrl_c";
-+		function = "hscif1";
-+	};
-+
-+	scif1_pins: scif1 {
-+		groups = "scif1_data_d";
-+		function = "scif1";
-+	};
-+};
-+
-+&scif1 {
-+	pinctrl-0 = <&scif1_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts b/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts
-new file mode 100644
-index 0000000..d90eb84
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts
-@@ -0,0 +1,19 @@
-+/*
-+ * Device Tree Source for the iWave-RZ/G1M Qseven board + camera daughter board
-+ *
-+ * Copyright (C) 2017 Renesas Electronics Corp.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7743-iwg20m.dtsi"
-+#include "iwg20d-q7-common.dtsi"
-+#include "iwg20d-q7-dbcm-ca.dtsi"
-+
-+/ {
-+	model = "iW-RainboW-G20D-Q7 RZ/G1M based plus camera daughter board";
-+	compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743";
-+};
--- 
-2.7.4
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index dc3817593e14..47262757b09e 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -814,7 +814,7 @@
+>
+>                         mdp: mdp@1a01000 {
+>                                 compatible = "qcom,mdp5";
+> -                               reg = <0x1a01000 0x90000>;
+> +                               reg = <0x1a01000 0x89000>;
+>                                 reg-names = "mdp_phys";
+>
+>                                 interrupt-parent = <&mdss>;
+> --
+> 2.14.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
