@@ -1,36 +1,46 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v5 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2
- board
-Date: Fri, 06 Oct 2017 15:44:18 +0200
-Message-ID: <0d5b11a0-bd21-d70b-90ee-8862f7fc7d5b@samsung.com>
-References: <1507212431-5801-1-git-send-email-m.purski@samsung.com>
-        <CGME20171005140823eucas1p13dbb713c2aa513372694a395bbd25d91@eucas1p1.samsung.com>
-        <1507212431-5801-3-git-send-email-m.purski@samsung.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
+Date: Fri, 6 Oct 2017 19:17:17 +0530
+Message-ID: <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-17-git-send-email-sudeep.holla@arm.com> <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
+ <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com> <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1507212431-5801-3-git-send-email-m.purski@samsung.com>
-Content-language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, Laurent.pinchart@ideasonboard.com, krzk@kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05.10.2017 16:07, Maciej Purski wrote:
-> Add HDMI and Sil9234 MHL converter to Trats2 board.
-> Following in SoC devices have been enabled:
-> - HDMI (HDMI signal encoder),
-> - Mixer (video buffer scanout device),
-> - I2C_5 bus (used for HDMI DDC)
-> - I2C_8 bus (used for HDMI_PHY control).
+On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 >
-> Based on previous work by:
-> Tomasz Stanislawski <t.stanislaws@samsung.com>
 >
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
+> On 06/10/17 12:26, Jassi Brar wrote:
+>> On Wed, Oct 4, 2017 at 5:06 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>> This patch adds ARM MHU specific mailbox interface for SCMI.
+>>>>
+>>>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>>>
+>>> This clearly needs an explanation why we need another driver.
+>>>
+>> Yes the patch needs explanation which is that we need a shim layer to
+>> map SCMI requests onto what the underlying controller expects. The
+>> alternative was to clone the controller driver (MHU now and others
+>> later when their platforms support SCMI) and pretend SCMI is the only
+>> client they are ever going to serve.
+>>
+>
+> Again that's not the point, doorbell is more common feature and that can
+> be supported. As SCMI expects doorbell feature in the specification, it
+> just need to support that class of controllers.
+>
+NO.  All SCMI expects is SHMEM and a signal reaching the other end.
+The signal mechanism need not necessarily be "doorbell".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
