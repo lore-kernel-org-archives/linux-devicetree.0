@@ -1,390 +1,261 @@
-From: Oza Pawandeep <oza.pawandeep@gmail.com>
-Subject: Re: [PATCH v6 3/3] PCI: iproc: Implement PCI hotplug support
-Date: Fri, 6 Oct 2017 20:03:52 +0530
-Message-ID: <CAK1A=4z6T9MLmCBBCmr5jVkVOySpw6fMTiTPqb=Nr-pjxhuARw@mail.gmail.com>
-References: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com>
- <1504155029-24729-4-git-send-email-oza.oza@broadcom.com> <20171006113700.GA25517@bhelgaas-glaptop.roam.corp.google.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
+ ECAM shift mode
+Date: Fri, 6 Oct 2017 15:52:03 +0100
+Message-ID: <CAKv+Gu_MM--uHwQk_brJh1bPOdsUTH4j+aJUDyS1um3mHDdsEA@mail.gmail.com>
+References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
+ <20170828180437.2646-2-ard.biesheuvel@linaro.org> <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
+ <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171006113700.GA25517@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Oza Pawandeep <oza.oza@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Andy Gospodarek <gospo@broadcom.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Vikram Prakash <vikram.prakash@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 5:07 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Thu, Aug 31, 2017 at 10:20:29AM +0530, Oza Pawandeep wrote:
->> This patch implements PCI hotplug support for iproc family chipsets.
+On 28 September 2017 at 16:51, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 26 September 2017 at 10:32, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> [+cc Will]
 >>
->> iproc based SOC (e.g. Stingray) does not have hotplug controller
->> integrated.
->> Hence, standard PCI hotplug framework hooks can-not be used.
->> e.g. controlled power up/down of slot.
+>> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
+>>> Some implementations of the Synopsys Designware PCIe controller implement
+>>> a so-called ECAM shift mode, which allows a static memory window to be
+>>> configured that covers the configuration space of the entire bus range.
+>>>
+>>> If the firmware performs all the low level configuration that is required
+>>> to expose this controller in a fully ECAM compatible manner, we can
+>>> simply describe it as "pci-host-ecam-generic" and be done with it.
+>>> However, it appears that in some cases (one of which is the Armada 80x0),
+>>> the IP is synthesized with an ATU window size that does not allow the
+>>> first bus to be mapped in a way that prevents the device on the
+>>> downstream port from appearing more than once.
+>>>
+>>> So implement a driver that relies on the firmware to perform all low
+>>> level initialization, and drives the controller in ECAM mode, but
+>>> overrides the config space accessors to take the above quirk into
+>>> account.
+>>>
+>>> Note that, unlike most drivers for this IP, this driver does not expose
+>>> a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
+>>> given that this is not a true bridge, and does not require any windows
+>>> to be configured in order for the downstream device to operate correctly.
+>>> Omitting it also prevents the PCI resource allocation routines from
+>>> handing out BAR space to it unnecessarily.
 >>
->> The mechanism, for e.g. Stingray has adopted for PCI hotplug is as follows:
->> PCI present lines are input to GPIOs depending on the type of
->> connector (x2, x4, x8).
+>> This is a tangent, but does this mean the other drivers do not need to
+>> expose a fake 00:00.0 device either?
 >>
->> GPIO array needs to be present if hotplug is supported.
->> HW implementation is SOC/Board specific, and also it depends on how
->> add-in card is designed
->> (e.g. how many present pins are implemented).
->>
->> If x8 card is connected, then it might be possible that all the
->> 3 present pins could go low, or at least one pin goes low.
->> If x4 card is connected, then it might be possible that 2 present
->> pins go low, or at least one pin goes low.
->>
->> The implementation essentially takes care of following:
->> > Initializing hotplug irq thread.
->> > Detecting the endpoint device based on link state.
->> > Handling PERST and detecting the plugged devices.
->> > Ordered Hot plug-out, where User is expected
->>   to write 1 to /sys/bus/pci/devices/<pci_dev>/remove
->> > Handling spurious interrupt
->> > Handling multiple interrupts and makes sure that card is
->>   enumerated only once.
 >
-> I haven't forgotten this, but I am dragging my feet a little bit.
-> There is a standard way for hardware to support PCIe hotplug, and it's
-> hard enough to get the software for that right.  I really, really
-> don't want to see a bunch of one-off implementations that sort of look
-> like standard hotplug but not really.
->
-> I have a few trivial comments below but haven't really reviewed the
-> whole thing.
->
->> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>
->> diff --git a/drivers/pci/host/pcie-iproc-platform.c b/drivers/pci/host/pcie-iproc-platform.c
->> index a5073a9..6287a43 100644
->> --- a/drivers/pci/host/pcie-iproc-platform.c
->> +++ b/drivers/pci/host/pcie-iproc-platform.c
->> @@ -92,6 +92,9 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
->>               pcie->need_ob_cfg = true;
->>       }
->>
->> +     if (of_property_read_bool(np, "slot-pluggable"))
->> +             pcie->enable_hotplug = true;
->> +
->>       /* PHY use is optional */
->>       pcie->phy = devm_phy_get(dev, "pcie-phy");
->>       if (IS_ERR(pcie->phy)) {
->> diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
->> index 8bd5e54..2b4d830 100644
->> --- a/drivers/pci/host/pcie-iproc.c
->> +++ b/drivers/pci/host/pcie-iproc.c
->> @@ -28,6 +28,7 @@
->>  #include <linux/of_irq.h>
->>  #include <linux/of_platform.h>
->>  #include <linux/phy/phy.h>
->> +#include <linux/gpio.h>
->>
->>  #include "pcie-iproc.h"
->>
->> @@ -65,6 +66,17 @@
->>  #define PCIE_DL_ACTIVE_SHIFT         2
->>  #define PCIE_DL_ACTIVE               BIT(PCIE_DL_ACTIVE_SHIFT)
->>
->> +#define CFG_RC_LTSSM                 0x1cf8
->> +#define CFG_RC_PHY_CTL               0x1804
->> +#define CFG_RC_LTSSM_TIMEOUT         1000
->> +#define CFG_RC_LTSSM_STATE_MASK      0xff
->> +#define CFG_RC_LTSSM_STATE_L1        0x1
->> +
->> +#define CFG_RC_CLR_LTSSM_HIST_SHIFT  29
->> +#define CFG_RC_CLR_LTSSM_HIST_MASK   BIT(CFG_RC_CLR_LTSSM_HIST_SHIFT)
->> +#define CFG_RC_CLR_RECOV_HIST_SHIFT  31
->> +#define CFG_RC_CLR_RECOV_HIST_MASK   BIT(CFG_RC_CLR_RECOV_HIST_SHIFT)
->> +
->>  #define APB_ERR_EN_SHIFT             0
->>  #define APB_ERR_EN                   BIT(APB_ERR_EN_SHIFT)
->>
->> @@ -1354,13 +1366,107 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
->>       return 0;
->>  }
->>
->> +static bool iproc_pci_hp_check_ltssm(struct iproc_pcie *pcie)
->
-> *_check_*() is a terrible name for a function because it doesn't give
-> any hint about what a "true" return value means.
->
-> This looks sort of like dw_pcie_wait_for_link() and
-> advk_pcie_wait_for_link().  Please use a name more like them and
-> structure the code more like them.
->
->> +{
->> +     struct pci_bus *bus = pcie->root_bus;
->> +     u32 val, timeout = CFG_RC_LTSSM_TIMEOUT;
->> +
->> +     /* Clear LTSSM history. */
->> +     pci_bus_read_config_dword(pcie->root_bus, 0,
->> +                               CFG_RC_PHY_CTL, &val);
->> +     pci_bus_write_config_dword(bus, 0, CFG_RC_PHY_CTL,
->> +                                val | CFG_RC_CLR_RECOV_HIST_MASK |
->> +                                CFG_RC_CLR_LTSSM_HIST_MASK);
->> +     /* write back the origional value. */
->
-> s/origional/original/
->
->> +     pci_bus_write_config_dword(bus, 0, CFG_RC_PHY_CTL, val);
->> +
->> +     do {
->> +             pci_bus_read_config_dword(pcie->root_bus, 0,
->> +                                       CFG_RC_LTSSM, &val);
->> +             /* check link state to see if link moved to L1 state. */
->> +             if ((val & CFG_RC_LTSSM_STATE_MASK) ==
->> +                  CFG_RC_LTSSM_STATE_L1)
->> +                     return true;
->> +             timeout--;
->> +             usleep_range(500, 1000);
->> +     } while (timeout);
->> +
->> +     return false;
->> +}
->> +
->> +static irqreturn_t iproc_pci_hotplug_thread(int irq, void *data)
->> +{
->> +     struct iproc_pcie *pcie = data;
->
->   struct device *dev = pcie->dev;
->
-> Then you don't have to repeat "pcie->dev" below.
->
->> +     struct pci_bus *bus = pcie->root_bus, *child;
->> +     bool link_status;
->> +
->> +     iproc_pcie_perst_ctrl(pcie, true);
->> +     iproc_pcie_perst_ctrl(pcie, false);
->> +
->> +     link_status = iproc_pci_hp_check_ltssm(pcie);
->> +
->> +     if (link_status &&
->> +         !iproc_pcie_check_link(pcie) &&
->
-> iproc_pcie_check_link() already exists, but is still a poor name.
->
-> Please add some preliminary patches to rename and restructure it along
-> the lines of the other *_link_up() functions, e.g.,
-> advk_pcie_link_up(), nwl_pcie_link_up(), spear13xx_pcie_link_up(),
-> etc.
->
-> iproc_pcie_check_link() does a bunch of other stuff that should be
-> moved to other functions.  Some of it looks similar to the
-> *_establish_link() functions in other drivers.
->
->> +         !pcie->ep_is_present) {
->> +             pci_rescan_bus(bus);
->> +             list_for_each_entry(child, &bus->children, node)
->> +                     pcie_bus_configure_settings(child);
->> +             pcie->ep_is_present = true;
->> +             dev_info(pcie->dev,
->> +                      "PCI Hotplug: <device detected and enumerated>\n");
->> +     } else if (link_status && pcie->ep_is_present)
->> +             /*
->> +              * ep_is_present makes sure, enumuration done only once.
->
-> s/enumuration/enumeration/
->
->> +              * So it can handle spurious intrrupts, and also if we
->
-> s/intrrupts/interrupts/
->
->> +              * get multiple interrupts for all the implemented pins,
->> +              * we handle it only once.
->> +              */
->> +             dev_info(pcie->dev,
->> +                      "PCI Hotplug: <device already present>\n");
->> +     else {
->> +             iproc_pcie_perst_ctrl(pcie, true);
->> +             pcie->ep_is_present = false;
->> +             dev_info(pcie->dev,
->> +                      "PCI Hotplug: <device removed>\n");
->> +     }
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +static int iproc_pci_hp_gpio_irq_get(struct iproc_pcie *pcie)
->> +{
->> +     struct gpio_descs *hp_gpiod;
->> +     struct device *dev = pcie->dev;
->> +     int i;
->> +
->> +     hp_gpiod = devm_gpiod_get_array(dev, "prsnt", GPIOD_IN);
->> +     if (PTR_ERR(hp_gpiod) == -EPROBE_DEFER)
->> +             return -EPROBE_DEFER;
->> +
->> +     if (!IS_ERR(hp_gpiod) && (hp_gpiod->ndescs > 0)) {
->> +             for (i = 0; i < hp_gpiod->ndescs; ++i) {
->> +                     gpiod_direction_input(hp_gpiod->desc[i]);
->> +                     if (request_threaded_irq(gpiod_to_irq
->> +                                              (hp_gpiod->desc[i]),
->> +                                              NULL, iproc_pci_hotplug_thread,
->> +                                              IRQF_TRIGGER_FALLING,
->> +                                              "PCI-hotplug", pcie))
->> +                             dev_err(dev,
->> +                                     "PCI hotplug prsnt: request irq failed\n");
->> +                     }
->> +     }
->> +     pcie->ep_is_present = false;
->> +
->> +     return 0;
->> +}
->> +
->>  int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->>  {
->>       struct device *dev;
->>       int ret;
->>       void *sysdata;
->> -     struct pci_bus *child;
->> +     struct pci_bus *bus, *child;
->>       struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
->> +     bool link_not_active;
->>
->>       dev = pcie->dev;
->>
->> @@ -1386,6 +1492,12 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->>               goto err_exit_phy;
->>       }
->>
->> +     if (pcie->enable_hotplug) {
->> +             ret = iproc_pci_hp_gpio_irq_get(pcie);
->> +             if (ret < 0)
->> +                     return ret;
->> +     }
->> +
->>       iproc_pcie_perst_ctrl(pcie, true);
->>       iproc_pcie_perst_ctrl(pcie, false);
->>
->> @@ -1408,8 +1520,16 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->>       sysdata = pcie;
->>  #endif
->>
->> -     ret = iproc_pcie_check_link(pcie);
->> -     if (ret) {
->> +     link_not_active = iproc_pcie_check_link(pcie);
->> +     if (link_not_active && pcie->enable_hotplug) {
->> +             /*
->> +              * When link is not active and PCI hotplug
->> +              * is supported, do not turn off phy, let probe
->> +              * go ahead.
->> +              */
->> +             dev_err(dev, "no PCIe EP device detected\n");
->> +             iproc_pcie_perst_ctrl(pcie, true);
->> +     } else if (link_not_active) {
->>               dev_err(dev, "no PCIe EP device detected\n");
->>               goto err_power_off_phy;
->>       }
->> @@ -1420,24 +1540,34 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->>               if (iproc_pcie_msi_enable(pcie))
->>                       dev_info(dev, "not using iProc MSI\n");
->>
->> -     list_splice_init(res, &host->windows);
->> -     host->busnr = 0;
->> -     host->dev.parent = dev;
->> -     host->ops = &iproc_pcie_ops;
->> -     host->sysdata = sysdata;
->> -     host->map_irq = pcie->map_irq;
->> -     host->swizzle_irq = pci_common_swizzle;
->> +     if (!link_not_active) {
->
-> Double negation.  If you pick a better name, e.g., "link_active", this
-> will read much better.  But I don't understand why you want to check
-> whether the link is active here anyway.  pci_scan_root_bus_bridge()
-> should work fine even if there's no device present below the bridge.
-> Won't the root port be there always, even if there's no downstream
-> device?
+> To be honest, I am not so sure anymore. I am seeing some issues in
+> ASPM code making the assumption that any device which is not a root
+> port has a parent. If this is mandated by the spec, I guess there
+> isn't a whole lot we can do except expose a fake root port on b/d/f
+> 0/0/0. This used to work fine, though, and I have to confirm whether
+> the issues I am seeing currently are due to different hardware or
+> changes in the software.
 >
 
-will change all the names and spellings as you are suggesting.
+OK, so the issue was new because I hadn't tried using a PCIe switch
+before, and you have already queued the fix to make the ASPM code deal
+with that.
 
-pci_scan_root_bus_bridge crashes when link is not active. when I last
-tested, that is what I observed.
+So I think it /would/ be better for the other drivers to not bother
+mocking up the root port, and simply expose the downstream device as
+B/D/F 0/0/0 (assuming the bus range starts at 0).
 
-because in previous code when we dont support hotplug, we just got to
-err, and remove root-bus in case link is not active.
-we dont do scan bus.
+It really looks like Altera, Aardvark, Sigma, etc are all in the same
+boat here, and need to
+a) filter type 0 config TLPs to avoid the downstream device to appear
+32 times, and
+b) mangle config space accesses to the 'root port' to hide BARs that
+have different meanings in this context (the size of the inbound
+window), in order to prevent the PCI resource allocation routines to
+waste huge amounts of BAR space on them.
 
-if fact so far none of the RC driver implements hotplug so this might
-not have been exercised.
-
-Ray and Vikram: please help to see these comments implemented.
-
-
->> +             list_splice_init(res, &host->windows);
->> +             host->busnr = 0;
->> +             host->dev.parent = dev;
->> +             host->ops = &iproc_pcie_ops;
->> +             host->sysdata = sysdata;
->> +             host->map_irq = pcie->map_irq;
->> +             host->swizzle_irq = pci_common_swizzle;
->> +
->> +             ret = pci_scan_root_bus_bridge(host);
->> +             if (ret < 0) {
->> +                     dev_err(dev, "failed to scan host: %d\n", ret);
->> +                     goto err_power_off_phy;
->> +             }
+>> s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
 >>
->> -     ret = pci_scan_root_bus_bridge(host);
->> -     if (ret < 0) {
->> -             dev_err(dev, "failed to scan host: %d\n", ret);
->> -             goto err_power_off_phy;
->> +             pci_assign_unassigned_bus_resources(host->bus);
->> +             pcie->root_bus = host->bus;
->> +     } else {
->> +             bus = pci_create_root_bus(dev, 0,
->> +                                       &iproc_pcie_ops, sysdata, res);
->> +             if (!bus) {
->> +                     dev_err(dev, "unable to create PCI root bus\n");
->> +                     ret = -ENOMEM;
->> +                     goto err_power_off_phy;
->> +             }
->> +             pcie->root_bus = bus;
->>       }
->>
->> -     pci_assign_unassigned_bus_resources(host->bus);
->> -
->> -     pcie->root_bus = host->bus;
->> -
->>       list_for_each_entry(child, &host->bus->children, node)
->>               pcie_bus_configure_settings(child);
->>
->> diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
->> index a6b55ce..e5d0cd4 100644
->> --- a/drivers/pci/host/pcie-iproc.h
->> +++ b/drivers/pci/host/pcie-iproc.h
->> @@ -77,6 +77,10 @@ struct iproc_pcie_ib {
->>   * @ib: inbound mapping related parameters
->>   * @ib_map: outbound mapping region related parameters
->>   *
->> + * @enable_hotplug: indicates PCI hotplug feature is enabled
->> + * @ep_is_present: when PCIe hotplug is enabled, this flag is used to
->> + * indicate whether or not the endpoint device is present
->> + *
->>   * @need_msi_steer: indicates additional configuration of the iProc PCIe
->>   * controller is required to steer MSI writes to external interrupt controller
->>   * @msi: MSI data
->> @@ -104,6 +108,9 @@ struct iproc_pcie {
->>       struct iproc_pcie_ib ib;
->>       const struct iproc_pcie_ib_map *ib_map;
->>
->> +     bool enable_hotplug;
->> +     bool ep_is_present;
 >
-> Are you suggesting that only an endpoint can be hotplugged?  You can't
-> hotplug a switch?
+> OK
 >
-
-ok, we can change the name, PCI switch also can be hot-plugged.
-
->>       bool need_msi_steer;
->>       struct iproc_msi *msi;
->>  };
->> --
->> 1.9.1
+>>> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>>> Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  drivers/pci/dwc/Kconfig                | 11 +++
+>>>  drivers/pci/dwc/Makefile               |  1 +
+>>>  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
+>>
+>> This really doesn't have any DesignWare specifics in it, and it seems
+>> more related to drivers/pci/host/pci-host-generic.c than to anything
+>> in drivers/pci/dwc.  Maybe it should be
+>> drivers/pci/host/pci-host-generic-quirks.c or something?  That's
+>> unwieldy, I admit.
+>>
+>
+> I don't care where we put it, and I am fine with owning it if you prefer.
+>
+>> Putting it in pci/dwc would make Jingoo and Joao the default
+>> maintainers; I don't know how they feel about that.  We would probably
+>> have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
+>>
+>> Any thoughts on this, Will?
+>>
+>>>  3 files changed, 89 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+>>> index d275aadc47ee..477576d07911 100644
+>>> --- a/drivers/pci/dwc/Kconfig
+>>> +++ b/drivers/pci/dwc/Kconfig
+>>> @@ -169,4 +169,15 @@ config PCIE_KIRIN
+>>>         Say Y here if you want PCIe controller support
+>>>         on HiSilicon Kirin series SoCs.
+>>>
+>>> +config PCIE_DW_HOST_ECAM
+>>> +     bool "Synopsys DesignWare PCIe controller in ECAM mode"
+>>> +     depends on OF && PCI
+>>> +     select PCI_HOST_COMMON
+>>> +     select IRQ_DOMAIN
+>>> +     help
+>>> +       Add support for Synopsys DesignWare PCIe controllers configured
+>>> +       by the firmware into ECAM shift mode. In some cases, these are
+>>> +       fully ECAM compliant, in which case the pci-host-generic driver
+>>> +       may be used instead.
+>>
+>> This doesn't quite read right.  It sounds like a controller in ECAM
+>> shift mode might be fully ECAM compliant, but I don't think that's
+>> what you intended.
+>>
+>
+> Yes, that is what I mean. ECAM shift mode results in a fully compliant
+> ECAM config space iff the IP was synthesized with a 32 KB granularity
+> for the iATU windows. The default is 64 KB, though, in which case you
+> need this driver.
+>
+>> IIUC, the controller can be in either "ECAM shift mode" (where we need
+>> this new driver) or in a "fully ECAM compliant mode" (where we can use
+>> pci-host-generic).
+>>
+>
+> No, this is not the case
+>
+>>>  endmenu
+>>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+>>> index c61be9738cce..7d5a23e5b767 100644
+>>> --- a/drivers/pci/dwc/Makefile
+>>> +++ b/drivers/pci/dwc/Makefile
+>>> @@ -1,5 +1,6 @@
+>>>  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>> +obj-$(CONFIG_PCIE_DW_HOST_ECAM) += pcie-designware-ecam.o
+>>>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>>>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+>>> diff --git a/drivers/pci/dwc/pcie-designware-ecam.c b/drivers/pci/dwc/pcie-designware-ecam.c
+>>> new file mode 100644
+>>> index 000000000000..ede627d7d08b
+>>> --- /dev/null
+>>> +++ b/drivers/pci/dwc/pcie-designware-ecam.c
+>>> @@ -0,0 +1,77 @@
+>>> +/*
+>>> + * Driver for mostly ECAM compatible Synopsys dw PCIe controllers
+>>> + * configured by the firmware into RC mode
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + *
+>>> + * Copyright (C) 2014 ARM Limited
+>>> + * Copyright (C) 2017 Linaro Limited
+>>> + *
+>>> + * Authors: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>>> + *          Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> + */
+>>> +
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/of_pci.h>
+>>> +#include <linux/pci-ecam.h>
+>>> +#include <linux/platform_device.h>
+>>> +
+>>> +static int pci_dw_ecam_config_read(struct pci_bus *bus, u32 devfn, int where,
+>>> +                                int size, u32 *val)
+>>> +{
+>>> +     struct pci_config_window *cfg = bus->sysdata;
+>>> +
+>>> +     /*
+>>> +      * The Synopsys dw PCIe controller in RC mode will not filter type 0
+>>> +      * config TLPs sent to devices 1 and up on its downstream port,
+>>> +      * resulting in devices appearing multiple times on bus 0 unless we
+>>> +      * filter them here.
+>>> +      */
+>>> +     if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0) {
+>>
+>> Trivial, but maybe you could factor out this test?  We already have
+>> these functions that do basically the same thing and it'd be nice to
+>> use a similar pattern (altera and dw also check for the link being up,
+>> which seems racy and possibly bogus to me):
+>>
+>>   altera_pcie_valid_device()
+>>   dw_pcie_valid_device()
+>>   rockchip_pcie_valid_device()
 >>
 
-Regards,
-Oza.
+This is rather difficult to factor out, I'm afraid:
+
+static bool altera_pcie_valid_device(struct altera_pcie *pcie,
+                                     struct pci_bus *bus, int dev)
+
+static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
+                                int dev)
+
+static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
+                                      struct pci_bus *bus, int dev)
+
+They all use different struct types to describe the RC, and the fact
+that they model a root port means the type0 TLP filter should be
+applied to bus 1 not bus 0.
+So I agree there is some similarity between these, but not as much
+with the driver I am proposing.
+
+
+>> The fact that altera and rockchip do essentially the same thing as dw
+>> here suggests that this pattern is not limited to DesignWare.
+>>
+
+No.
+>> These other functions also do something similar, though not structured
+>> the same way:
+>>
+>>   hisi_pcie_rd_conf()
+>>   advk_pcie_rd_conf()
+>>   thunder_pem_bridge_read()
+>>   rcar_pcie_config_access()
+>>   gapspci_config_access()
+>>
+>
+> I can look into that.
+>
+
+I think only hisi_pcie_rd_conf() comes close to what I need to do in
+this driver, and this is not surprising given that it uses Synopsys IP
+as well. I would like to replace that entirely with this driver at
+some point, but for now I'd like to proceed with Marvell Armada 8k and
+Socionext Synquacer only, given that those are the only ones I can
+actually test myself.
+
+
+So what I will do is respin the patch as an extension to
+pci-host-generic, so we'll have something to poke at, and perhaps you
+could give some more detailed guidance as to how to refactor these
+existing routines.
+
+Thanks,
+Ard.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
