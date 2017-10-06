@@ -1,85 +1,95 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] usb: renesas_usbhs: Add compatible string for r8a7743/5
-Date: Fri, 6 Oct 2017 02:44:27 +0000
-Message-ID: <TY1PR06MB09929C1AA6DF445EDC38F32ED8710@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1507216358-917-1-git-send-email-biju.das@bp.renesas.com>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
+Date: Fri, 6 Oct 2017 05:47:25 +0300
+Message-ID: <9635bb2d-8695-a168-d49e-0bd51807cc19@cogentembedded.com>
+References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507216358-917-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju-san,
-(+ Felipe-san)
+Hi Simon, Geert,
 
-Thank you for the patch!
+Do you need extra actions from my side to accept this patch?
 
-> From: Biju Das, Sent: Friday, October 6, 2017 12:13 AM
->=20
-> This patch adds support for r8a7743/5 SoC.  The Renesas RZ/G1[ME]
-> (R8A7743/5) usbhs is identical to the R-Car Gen2 family.
->=20
-> This doesn't change the driver, so it does nothing by itself.  But it doe=
-s
-> mean that checkpatch won't complain about a future patch that adds
-> "renesas,usbhs-r8a7743" or "renesas,usbhs-r8a7745" to a DT, which helps
-> ensure that shipped DTs use documented compatibility strings.
->=20
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> ---
-> This patch is tested against Linux next tag next-20170929
->=20
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> index 9e18e00..479215b 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-> @@ -3,6 +3,8 @@ Renesas Electronics USBHS driver
->  Required properties:
->    - compatible: Must contain one or more of the following:
->=20
-> +	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
-> +	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
->  	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
->  	- "renesas,usbhs-r8a7791" for r8a7791 (R-Car M2-W) compatible device
->  	- "renesas,usbhs-r8a7792" for r8a7792 (R-Car V2H) compatible device
-> @@ -10,7 +12,7 @@ Required properties:
->  	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
->  	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
->  	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
-> -	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
-> +	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible device
->  	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
-
-This will be conflict with my R-Car D3 support patch.
-https://patchwork.kernel.org/patch/9982267/
-The R-Car D3 patch is not applied into usb.git yet though...
-
-Hi Felipe-san,
-
-Could you resolve this conflict on your side?
-Or, should this r8a7743/5 patch be rebased on the R-Car D3 patch?
-
-When after resolved the conflict:
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-
-Best regards,
-Yoshihiro Shimoda
-
->  	When compatible with the generic version, nodes must list the
+On 20.09.2017 15:32, Geert Uytterhoeven wrote:
+> Hi Vladimir,
+>
+> [CC Pantelis]
+>
+> On Thu, Sep 14, 2017 at 4:18 PM, Vladimir Barinov
+> <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+>> Add the initial device tree for the M3ULCB with Kingfisher extension
+>> infotainment board.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> ---
+>> Changes in version 2:
+>> - added own compatible value "shimafuji,kingfisher"
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>
+> Some food for thought below...
+>
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
+>> @@ -0,0 +1,19 @@
+>> +/*
+>> + * Device Tree Source for the M3ULCB Kingfisher board
+>> + *
+>> + * Copyright (C) 2017 Renesas Electronics Corp.
+>> + * Copyright (C) 2017 Cogent Embedded, Inc.
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public License
+>> + * version 2.  This program is licensed "as is" without any warranty of any
+>> + * kind, whether express or implied.
+>> + */
+>> +
+>> +#include "r8a7796-m3ulcb.dts"
+> Ideally, we don't include *.dts files, only *.dtsi.
+> But I don't see a better immediate solution.
+>
+>> +#include "ulcb-kf.dtsi"
+> As the Kingfisher is actually an expansion board for H3ULCB (with R-Car H3
+> ES1.1 and ES2.0) and M3ULCB (with R-Car M3-W), turning ulcb-kf.dtsi into a
+> DT overlay would make sense.
+> That would also solve the issue of the 3 extra DTSes needed for all possible
+> combinations of ULCB and Kingfisher (r8a7795-es1-h3ulcb-kf.dts,
+> r8a7795-h3ulcb-kf.dts, r8a7796-h3ulcb-kf.dts (perhaps more to follow?)).
+>
+> But that's too premature, without upstream support for the easy loading of
+> DT overlays.
+>
+>> +/ {
+>> +       model = "Renesas M3ULCB Kingfisher board based on r8a7796";
+>> +       compatible = "shimafuji,kingfisher", "renesas,m3ulcb",
+>> +                    "renesas,r8a7796";
+>> +};
+> And how to support from an overlay the addition of "shimafuji,kingfisher" to
+> (not replacement of!) the main compatible value?
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
 > --
-> 1.9.1
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                  -- Linus Torvalds
+
+
+-- 
+Regards,
+Vladimir
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
