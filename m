@@ -1,372 +1,129 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] PCI: iproc: Implement PCI hotplug support
-Date: Fri, 6 Oct 2017 06:37:00 -0500
-Message-ID: <20171006113700.GA25517@bhelgaas-glaptop.roam.corp.google.com>
-References: <1504155029-24729-1-git-send-email-oza.oza@broadcom.com>
- <1504155029-24729-4-git-send-email-oza.oza@broadcom.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 1/2] arm: dts: Add support for National Instruments
+ Project Sulfur SDRs
+Date: Fri, 6 Oct 2017 13:49:44 +0200
+Message-ID: <58fe4e6c-8765-bd9a-0698-8f8326f95e40@xilinx.com>
+References: <20170911232223.91894-1-mdf@kernel.org>
+ <314acb1f-1f0f-7893-70a8-9379c01112ac@xilinx.com>
+ <20170925161136.GA12943@tyrael.ni.corp.natinst.com>
+ <6b87e902-3201-6710-4921-d465dea19dcd@xilinx.com>
+ <20170926175018.GA14962@tyrael.ni.corp.natinst.com>
+ <dfb517fe-8584-2a1a-22e5-946980cc9644@balister.org>
+ <a606ab17-6fb9-2ce1-3b3b-5a2e72d3fc7c@xilinx.com>
+ <3b41cfc0-08b7-853d-3439-7f9848d04d3c@balister.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1504155029-24729-4-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Andy Gospodarek <gospo-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3b41cfc0-08b7-853d-3439-7f9848d04d3c@balister.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philip Balister <philip@balister.org>, Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <mdf@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, davem@davemloft.net, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 31, 2017 at 10:20:29AM +0530, Oza Pawandeep wrote:
-> This patch implements PCI hotplug support for iproc family chipsets.
+On 26.9.2017 20:15, Philip Balister wrote:
+> On 09/26/2017 02:06 PM, Michal Simek wrote:
+>> On 26.9.2017 19:58, Philip Balister wrote:
+>>> On 09/26/2017 01:50 PM, Moritz Fischer wrote:
+>>>> Michal,
+>>>>
+>>>> On Tue, Sep 26, 2017 at 02:54:48PM +0200, Michal Simek wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 25.9.2017 18:11, Moritz Fischer wrote:
+>>>>>> Hi Michal,
+>>>>>>
+>>>>>> On Mon, Sep 25, 2017 at 10:19:44AM +0200, Michal Simek wrote:
+>>>>>>> Hi Moritz
+>>>>>>>
+>>>>>>> sorry for delay.
+>>>>>>
+>>>>>> No problem.
+>>>>>>
+>>>>>>>
+>>>>>>> On 12.9.2017 01:22, Moritz Fischer wrote:
+>>>>>>>> Add support for the National Instruments Project Sulfur SDR
+>>>>>>>> motherboards Rev 2,3 and 4.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+>>>>>>>> ---
+>>>>>>>>  arch/arm/boot/dts/Makefile                |   3 +
+>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur-rev2.dts |  84 +++++++++++++++++++
+>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur-rev3.dts | 118 ++++++++++++++++++++++++++
+>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur-rev4.dts |  26 ++++++
+>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur.dtsi     | 133 ++++++++++++++++++++++++++++++
+>>>>>>>>  5 files changed, 364 insertions(+)
+>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev2.dts
+>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev3.dts
+>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev4.dts
+>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur.dtsi
+>>>>>>>
+>>>>>>> Is this publicly available board?
+>>>>>>
+>>>>>> Will be in Q1 2018 was announced at GRCon'17 ([1]).
+>>>>>> Some of the Rev3s are currently deployed in Norway as part of a radar
+>>>>>> system.
+>>>>>>
+>>>>>>> I am not quite sure we should apply these dts files. There are a lot of
+>>>>>>> boards with zynq and there must be any strong argument for applying this
+>>>>>>> to the tree. For arm32 with even flat tree structure.
+>>>>>>
+>>>>>> What's the issue with merging them, except for having 3 more files? 
+>>>>>
+>>>>> For me this is not a problem because on Linux side it is not increasing
+>>>>> build time.
+>>>>> I want to see the value for community. All xilinx platforms are
+>>>>> evaluation generic purpose boards which are showing how to connect stuff
+>>>>> together.
+>>>>> On the other hand this is real product.
+>>>>
+>>>> Uh.
+>>>>
+>>>>> I would let arm-soc maintainer to decide if this is fine or not. I
+>>>>> definitely don't want to end up in situation that we will have dts for
+>>>>> real products which are not bringing any value for others.
+>>>>
+>>>> Sure, it's the maintainers call.
+>>>>
+>>>> I do intend to have my customers run mainline on it eventually, currently
+>>>> I'm a handful of patches away from making that happen. So yes, running
+>>>> mainline is a usecase that matters to me.
+>>>>
+>>>> It is one thing to keep bitching about vendor kernels as a community
+>>>> continuously, but then if someone goes through the effort and actually
+>>>> tries to run mainline, you give them crap like that above.
+>>>>
+>>>> Our products usually come with full schematics [1], firmware, fpga code and all
+>>>> available, I don't know what makes them less useful to the community as a
+>>>> platform to experiment and develop on than Xilinx eval boards.
+>>>>
+>>>> There's several people that I know of both hobbyists and companies that
+>>>> build systems around these platforms, so I don't know ...
+>>>
+>>> I expect this product to be delivered with full source and a mainline
+>>> kernel, so lets make it easy for Moritz to do the right thing here. This
+>>> makes long term support of this product much easier.
+>>>
+>>> Acked-by: Philip Balister <philip@opensdr.com>
+>>
+>> I think this is the right way to go. Get ACK from Arnd or Olof or Kevin
+>> and I will merge this.
+>> I am simply just afraid that if a lot of zynq customers will ask for it
+>> we can will end up with a lot of zynq/zynqmp based dts files in the
+>> kernel and arm-soc guys will stop this that it is simply too much and
+>> won't accept +1 case.
 > 
-> iproc based SOC (e.g. Stingray) does not have hotplug controller
-> integrated.
-> Hence, standard PCI hotplug framework hooks can-not be used.
-> e.g. controlled power up/down of slot.
+> I share the same concerns. Unfortunately, there doesn't seem like any
+> other structured way to manage dts files.
 > 
-> The mechanism, for e.g. Stingray has adopted for PCI hotplug is as follows:
-> PCI present lines are input to GPIOs depending on the type of
-> connector (x2, x4, x8).
-> 
-> GPIO array needs to be present if hotplug is supported.
-> HW implementation is SOC/Board specific, and also it depends on how
-> add-in card is designed
-> (e.g. how many present pins are implemented).
-> 
-> If x8 card is connected, then it might be possible that all the
-> 3 present pins could go low, or at least one pin goes low.
-> If x4 card is connected, then it might be possible that 2 present
-> pins go low, or at least one pin goes low.
-> 
-> The implementation essentially takes care of following:
-> > Initializing hotplug irq thread.
-> > Detecting the endpoint device based on link state.
-> > Handling PERST and detecting the plugged devices.
-> > Ordered Hot plug-out, where User is expected
->   to write 1 to /sys/bus/pci/devices/<pci_dev>/remove
-> > Handling spurious interrupt
-> > Handling multiple interrupts and makes sure that card is
->   enumerated only once.
+> As an OpenEmbedded guy, I know I can carry them with BSP's, but not
+> everyone uses OpenEmbedded. I'd love to see a long term scalable
+> solution for tracking dts files, but that is outside the scope of
+> Moritz's request.
 
-I haven't forgotten this, but I am dragging my feet a little bit.
-There is a standard way for hardware to support PCIe hotplug, and it's
-hard enough to get the software for that right.  I really, really
-don't want to see a bunch of one-off implementations that sort of look
-like standard hotplug but not really.
+Are you guys coming to ELCE? There will be Devicetree Workshop which
+will be good place to talk about this.
 
-I have a few trivial comments below but haven't really reviewed the
-whole thing.
-
-> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> 
-> diff --git a/drivers/pci/host/pcie-iproc-platform.c b/drivers/pci/host/pcie-iproc-platform.c
-> index a5073a9..6287a43 100644
-> --- a/drivers/pci/host/pcie-iproc-platform.c
-> +++ b/drivers/pci/host/pcie-iproc-platform.c
-> @@ -92,6 +92,9 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
->  		pcie->need_ob_cfg = true;
->  	}
->  
-> +	if (of_property_read_bool(np, "slot-pluggable"))
-> +		pcie->enable_hotplug = true;
-> +
->  	/* PHY use is optional */
->  	pcie->phy = devm_phy_get(dev, "pcie-phy");
->  	if (IS_ERR(pcie->phy)) {
-> diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-> index 8bd5e54..2b4d830 100644
-> --- a/drivers/pci/host/pcie-iproc.c
-> +++ b/drivers/pci/host/pcie-iproc.c
-> @@ -28,6 +28,7 @@
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/gpio.h>
->  
->  #include "pcie-iproc.h"
->  
-> @@ -65,6 +66,17 @@
->  #define PCIE_DL_ACTIVE_SHIFT         2
->  #define PCIE_DL_ACTIVE               BIT(PCIE_DL_ACTIVE_SHIFT)
->  
-> +#define CFG_RC_LTSSM                 0x1cf8
-> +#define CFG_RC_PHY_CTL               0x1804
-> +#define CFG_RC_LTSSM_TIMEOUT         1000
-> +#define CFG_RC_LTSSM_STATE_MASK      0xff
-> +#define CFG_RC_LTSSM_STATE_L1        0x1
-> +
-> +#define CFG_RC_CLR_LTSSM_HIST_SHIFT  29
-> +#define CFG_RC_CLR_LTSSM_HIST_MASK   BIT(CFG_RC_CLR_LTSSM_HIST_SHIFT)
-> +#define CFG_RC_CLR_RECOV_HIST_SHIFT  31
-> +#define CFG_RC_CLR_RECOV_HIST_MASK   BIT(CFG_RC_CLR_RECOV_HIST_SHIFT)
-> +
->  #define APB_ERR_EN_SHIFT             0
->  #define APB_ERR_EN                   BIT(APB_ERR_EN_SHIFT)
->  
-> @@ -1354,13 +1366,107 @@ static int iproc_pcie_rev_init(struct iproc_pcie *pcie)
->  	return 0;
->  }
->  
-> +static bool iproc_pci_hp_check_ltssm(struct iproc_pcie *pcie)
-
-*_check_*() is a terrible name for a function because it doesn't give
-any hint about what a "true" return value means.
-
-This looks sort of like dw_pcie_wait_for_link() and
-advk_pcie_wait_for_link().  Please use a name more like them and
-structure the code more like them.
-
-> +{
-> +	struct pci_bus *bus = pcie->root_bus;
-> +	u32 val, timeout = CFG_RC_LTSSM_TIMEOUT;
-> +
-> +	/* Clear LTSSM history. */
-> +	pci_bus_read_config_dword(pcie->root_bus, 0,
-> +				  CFG_RC_PHY_CTL, &val);
-> +	pci_bus_write_config_dword(bus, 0, CFG_RC_PHY_CTL,
-> +				   val | CFG_RC_CLR_RECOV_HIST_MASK |
-> +				   CFG_RC_CLR_LTSSM_HIST_MASK);
-> +	/* write back the origional value. */
-
-s/origional/original/
-
-> +	pci_bus_write_config_dword(bus, 0, CFG_RC_PHY_CTL, val);
-> +
-> +	do {
-> +		pci_bus_read_config_dword(pcie->root_bus, 0,
-> +					  CFG_RC_LTSSM, &val);
-> +		/* check link state to see if link moved to L1 state. */
-> +		if ((val & CFG_RC_LTSSM_STATE_MASK) ==
-> +		     CFG_RC_LTSSM_STATE_L1)
-> +			return true;
-> +		timeout--;
-> +		usleep_range(500, 1000);
-> +	} while (timeout);
-> +
-> +	return false;
-> +}
-> +
-> +static irqreturn_t iproc_pci_hotplug_thread(int irq, void *data)
-> +{
-> +	struct iproc_pcie *pcie = data;
-
-  struct device *dev = pcie->dev;
-
-Then you don't have to repeat "pcie->dev" below.
-
-> +	struct pci_bus *bus = pcie->root_bus, *child;
-> +	bool link_status;
-> +
-> +	iproc_pcie_perst_ctrl(pcie, true);
-> +	iproc_pcie_perst_ctrl(pcie, false);
-> +
-> +	link_status = iproc_pci_hp_check_ltssm(pcie);
-> +
-> +	if (link_status &&
-> +	    !iproc_pcie_check_link(pcie) &&
-
-iproc_pcie_check_link() already exists, but is still a poor name.
-
-Please add some preliminary patches to rename and restructure it along
-the lines of the other *_link_up() functions, e.g.,
-advk_pcie_link_up(), nwl_pcie_link_up(), spear13xx_pcie_link_up(),
-etc.
-
-iproc_pcie_check_link() does a bunch of other stuff that should be
-moved to other functions.  Some of it looks similar to the
-*_establish_link() functions in other drivers.
-
-> +	    !pcie->ep_is_present) {
-> +		pci_rescan_bus(bus);
-> +		list_for_each_entry(child, &bus->children, node)
-> +			pcie_bus_configure_settings(child);
-> +		pcie->ep_is_present = true;
-> +		dev_info(pcie->dev,
-> +			 "PCI Hotplug: <device detected and enumerated>\n");
-> +	} else if (link_status && pcie->ep_is_present)
-> +		/*
-> +		 * ep_is_present makes sure, enumuration done only once.
-
-s/enumuration/enumeration/
-
-> +		 * So it can handle spurious intrrupts, and also if we
-
-s/intrrupts/interrupts/
-
-> +		 * get multiple interrupts for all the implemented pins,
-> +		 * we handle it only once.
-> +		 */
-> +		dev_info(pcie->dev,
-> +			 "PCI Hotplug: <device already present>\n");
-> +	else {
-> +		iproc_pcie_perst_ctrl(pcie, true);
-> +		pcie->ep_is_present = false;
-> +		dev_info(pcie->dev,
-> +			 "PCI Hotplug: <device removed>\n");
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int iproc_pci_hp_gpio_irq_get(struct iproc_pcie *pcie)
-> +{
-> +	struct gpio_descs *hp_gpiod;
-> +	struct device *dev = pcie->dev;
-> +	int i;
-> +
-> +	hp_gpiod = devm_gpiod_get_array(dev, "prsnt", GPIOD_IN);
-> +	if (PTR_ERR(hp_gpiod) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +
-> +	if (!IS_ERR(hp_gpiod) && (hp_gpiod->ndescs > 0)) {
-> +		for (i = 0; i < hp_gpiod->ndescs; ++i) {
-> +			gpiod_direction_input(hp_gpiod->desc[i]);
-> +			if (request_threaded_irq(gpiod_to_irq
-> +						 (hp_gpiod->desc[i]),
-> +						 NULL, iproc_pci_hotplug_thread,
-> +						 IRQF_TRIGGER_FALLING,
-> +						 "PCI-hotplug", pcie))
-> +				dev_err(dev,
-> +					"PCI hotplug prsnt: request irq failed\n");
-> +			}
-> +	}
-> +	pcie->ep_is_present = false;
-> +
-> +	return 0;
-> +}
-> +
->  int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  {
->  	struct device *dev;
->  	int ret;
->  	void *sysdata;
-> -	struct pci_bus *child;
-> +	struct pci_bus *bus, *child;
->  	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> +	bool link_not_active;
->  
->  	dev = pcie->dev;
->  
-> @@ -1386,6 +1492,12 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  		goto err_exit_phy;
->  	}
->  
-> +	if (pcie->enable_hotplug) {
-> +		ret = iproc_pci_hp_gpio_irq_get(pcie);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	iproc_pcie_perst_ctrl(pcie, true);
->  	iproc_pcie_perst_ctrl(pcie, false);
->  
-> @@ -1408,8 +1520,16 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  	sysdata = pcie;
->  #endif
->  
-> -	ret = iproc_pcie_check_link(pcie);
-> -	if (ret) {
-> +	link_not_active = iproc_pcie_check_link(pcie);
-> +	if (link_not_active && pcie->enable_hotplug) {
-> +		/*
-> +		 * When link is not active and PCI hotplug
-> +		 * is supported, do not turn off phy, let probe
-> +		 * go ahead.
-> +		 */
-> +		dev_err(dev, "no PCIe EP device detected\n");
-> +		iproc_pcie_perst_ctrl(pcie, true);
-> +	} else if (link_not_active) {
->  		dev_err(dev, "no PCIe EP device detected\n");
->  		goto err_power_off_phy;
->  	}
-> @@ -1420,24 +1540,34 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
->  		if (iproc_pcie_msi_enable(pcie))
->  			dev_info(dev, "not using iProc MSI\n");
->  
-> -	list_splice_init(res, &host->windows);
-> -	host->busnr = 0;
-> -	host->dev.parent = dev;
-> -	host->ops = &iproc_pcie_ops;
-> -	host->sysdata = sysdata;
-> -	host->map_irq = pcie->map_irq;
-> -	host->swizzle_irq = pci_common_swizzle;
-> +	if (!link_not_active) {
-
-Double negation.  If you pick a better name, e.g., "link_active", this
-will read much better.  But I don't understand why you want to check
-whether the link is active here anyway.  pci_scan_root_bus_bridge()
-should work fine even if there's no device present below the bridge.
-Won't the root port be there always, even if there's no downstream
-device?
-
-> +		list_splice_init(res, &host->windows);
-> +		host->busnr = 0;
-> +		host->dev.parent = dev;
-> +		host->ops = &iproc_pcie_ops;
-> +		host->sysdata = sysdata;
-> +		host->map_irq = pcie->map_irq;
-> +		host->swizzle_irq = pci_common_swizzle;
-> +
-> +		ret = pci_scan_root_bus_bridge(host);
-> +		if (ret < 0) {
-> +			dev_err(dev, "failed to scan host: %d\n", ret);
-> +			goto err_power_off_phy;
-> +		}
->  
-> -	ret = pci_scan_root_bus_bridge(host);
-> -	if (ret < 0) {
-> -		dev_err(dev, "failed to scan host: %d\n", ret);
-> -		goto err_power_off_phy;
-> +		pci_assign_unassigned_bus_resources(host->bus);
-> +		pcie->root_bus = host->bus;
-> +	} else {
-> +		bus = pci_create_root_bus(dev, 0,
-> +					  &iproc_pcie_ops, sysdata, res);
-> +		if (!bus) {
-> +			dev_err(dev, "unable to create PCI root bus\n");
-> +			ret = -ENOMEM;
-> +			goto err_power_off_phy;
-> +		}
-> +		pcie->root_bus = bus;
->  	}
->  
-> -	pci_assign_unassigned_bus_resources(host->bus);
-> -
-> -	pcie->root_bus = host->bus;
-> -
->  	list_for_each_entry(child, &host->bus->children, node)
->  		pcie_bus_configure_settings(child);
->  
-> diff --git a/drivers/pci/host/pcie-iproc.h b/drivers/pci/host/pcie-iproc.h
-> index a6b55ce..e5d0cd4 100644
-> --- a/drivers/pci/host/pcie-iproc.h
-> +++ b/drivers/pci/host/pcie-iproc.h
-> @@ -77,6 +77,10 @@ struct iproc_pcie_ib {
->   * @ib: inbound mapping related parameters
->   * @ib_map: outbound mapping region related parameters
->   *
-> + * @enable_hotplug: indicates PCI hotplug feature is enabled
-> + * @ep_is_present: when PCIe hotplug is enabled, this flag is used to
-> + * indicate whether or not the endpoint device is present
-> + *
->   * @need_msi_steer: indicates additional configuration of the iProc PCIe
->   * controller is required to steer MSI writes to external interrupt controller
->   * @msi: MSI data
-> @@ -104,6 +108,9 @@ struct iproc_pcie {
->  	struct iproc_pcie_ib ib;
->  	const struct iproc_pcie_ib_map *ib_map;
->  
-> +	bool enable_hotplug;
-> +	bool ep_is_present;
-
-Are you suggesting that only an endpoint can be hotplugged?  You can't
-hotplug a switch?
-
->  	bool need_msi_steer;
->  	struct iproc_msi *msi;
->  };
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Michal
