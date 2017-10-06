@@ -1,342 +1,92 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v2] ARM: dts: stm32: add Timers driver for stm32f746 MCU
-Date: Fri,  6 Oct 2017 09:14:10 +0200
-Message-ID: <1507274050-14510-1-git-send-email-benjamin.gaignard@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 09/18] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
+Date: Fri, 6 Oct 2017 09:15:28 +0200
+Message-ID: <CAMuHMdXL1P5vhoBU9W+S1qX8maXLRmyg88cjgbYpCGZSQ1FBtQ@mail.gmail.com>
+References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1504737377-23191-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX1FZ3_iKCMRkDozsn7QzEmmvuUzkjq5Hn9+L42F=X7sQ@mail.gmail.com> <806c5e8e-af85-e73b-a7a4-44ebf82dee7e@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <806c5e8e-af85-e73b-a7a4-44ebf82dee7e@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Timers and it sub-nodes into DT for stm32f746 family.
+Hi Vladimir,
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-version 2:
-- without ltdc node
-  
- arch/arm/boot/dts/stm32f746.dtsi | 260 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 260 insertions(+)
+CC Shimoda-san
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 4506eb9..d0deee2 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -82,6 +82,27 @@
- 			status = "disabled";
- 		};
- 
-+		timers2: timers@40000000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40000000 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM2)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@1 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <1>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		timer3: timer@40000400 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000400 0x400>;
-@@ -90,6 +111,27 @@
- 			status = "disabled";
- 		};
- 
-+		timers3: timers@40000400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40000400 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM3)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@2 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <2>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		timer4: timer@40000800 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000800 0x400>;
-@@ -98,6 +140,27 @@
- 			status = "disabled";
- 		};
- 
-+		timers4: timers@40000800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40000800 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM4)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@3 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <3>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		timer5: timer@40000c00 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40000c00 0x400>;
-@@ -105,6 +168,27 @@
- 			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM5)>;
- 		};
- 
-+		timers5: timers@40000c00 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40000C00 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM5)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@4 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <4>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		timer6: timer@40001000 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001000 0x400>;
-@@ -113,6 +197,22 @@
- 			status = "disabled";
- 		};
- 
-+		timers6: timers@40001000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40001000 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM6)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			timer@5 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <5>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		timer7: timer@40001400 {
- 			compatible = "st,stm32-timer";
- 			reg = <0x40001400 0x400>;
-@@ -121,6 +221,73 @@
- 			status = "disabled";
- 		};
- 
-+		timers7: timers@40001400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40001400 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM7)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			timer@6 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <6>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		timers12: timers@40001800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40001800 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM12)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@11 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <11>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		timers13: timers@40001c00 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40001C00 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM13)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+		};
-+
-+		timers14: timers@40002000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40002000 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM14)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+		};
-+
- 		rtc: rtc@40002800 {
- 			compatible = "st,stm32-rtc";
- 			reg = <0x40002800 0x400>;
-@@ -183,6 +350,48 @@
- 			status = "disabled";
- 		};
- 
-+		timers1: timers@40010000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40010000 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM1)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@0 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <0>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		timers8: timers@40010400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40010400 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM8)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@7 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <7>;
-+				status = "disabled";
-+			};
-+		};
-+
- 		usart1: serial@40011000 {
- 			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
- 			reg = <0x40011000 0x400>;
-@@ -212,6 +421,57 @@
- 			interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
- 		};
- 
-+		timers9: timers@40014000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40014000 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM9)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+
-+			timer@8 {
-+				compatible = "st,stm32-timer-trigger";
-+				reg = <8>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		timers10: timers@40014400 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40014400 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM10)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+		};
-+
-+		timers11: timers@40014800 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "st,stm32-timers";
-+			reg = <0x40014800 0x400>;
-+			clocks = <&rcc 0 STM32F7_APB2_CLOCK(TIM11)>;
-+			clock-names = "int";
-+			status = "disabled";
-+
-+			pwm {
-+				compatible = "st,stm32-pwm";
-+				status = "disabled";
-+			};
-+		};
-+
- 		pwrcfg: power-config@40007000 {
- 			compatible = "syscon";
- 			reg = <0x40007000 0x400>;
--- 
-2.7.4
+On Fri, Oct 6, 2017 at 4:38 AM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> On 20.09.2017 15:59, Geert Uytterhoeven wrote:
+>> On Thu, Sep 7, 2017 at 12:36 AM, Vladimir Barinov
+>> <vladimir.barinov@cogentembedded.com> wrote:
+>>> This supports USB2 PHY channel #0 on ULCB Kingfisher board
+>>>
+>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>>> index ca8de1a..0854600 100644
+>>> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+>>> @@ -60,6 +60,11 @@
+>>>                  groups = "scif1_data_b";
+>>>                  function = "scif1";
+>>>          };
+>>> +
+>>> +       usb0_pins: usb0 {
+>>> +               groups = "usb0";
+>>> +               function = "usb0";
+>>> +       };
+>>>   };
+>>>
+>>>   &scif1 {
+>>> @@ -68,3 +73,10 @@
+>>>
+>>>          status = "okay";
+>>>   };
+>>> +
+>>> +&usb2_phy0 {
+>>> +       pinctrl-0 = <&usb0_pins>;
+>>> +       pinctrl-names = "default";
+>>> +
+>>
+>> Don't you need
+>>
+>>      vbus-supply = <&vbus0_usb2>;
+>>
+>> with vbus0_usb2 a fixed regulator controlled by GPIO P11 (OTG_EXTLPn) from
+>> GPIO expander U11 (TCA9539)?
+>> May be optional, though. salvator-common.dtsi has it.
+>
+> Yes, I need this gpio.
+> I need both OTG_EXTLPn and OTG_OFFVBUSn from the same gpio expander.
+>
+> I've been considering to use either vbus-supply + gpio hog or use gpio hog
+> for both of them for consistency.
+> What do you think about this?
+
+For OTG_EXTLPn you don't really need a hog, as it will be controlled by the
+USB driver/subsystem, like on Salvator-X(S), right?
+
+For OTG_OFFVBUSn, which is (optionally) driven from USB0_PWEN on
+Salvator-X(S) I don't know if you need a GPIO hog or not. I have to defer your
+question to Shimoda-san.
+
+> I plan to add these gpios control as a separate patch.
+
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
