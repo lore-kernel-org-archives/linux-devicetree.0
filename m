@@ -1,13 +1,13 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gxl-libretech-cc: enable saradc
-Date: Fri, 06 Oct 2017 14:24:11 -0700
-Message-ID: <7hzi947yx0.fsf@baylibre.com>
-References: <20170905170955.13135-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxl-libretech-cc: enable internal phy leds
+Date: Fri, 06 Oct 2017 14:24:36 -0700
+Message-ID: <7hvajs7ywb.fsf@baylibre.com>
+References: <20170906122547.11310-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170905170955.13135-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
-        message of "Tue, 5 Sep 2017 19:09:55 +0200")
+In-Reply-To: <20170906122547.11310-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
+        message of "Wed, 6 Sep 2017 14:25:47 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -15,9 +15,7 @@ List-Id: devicetree@vger.kernel.org
 
 Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-> Enable saradc and add the reference 1.8v regulator required.
-> The libretech-cc has saradc channel 0 and 2 available on the 2 first
-> pins of 2J3 header
+> Enable the internal phy ACT and LINK leds pinmux
 >
 > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
