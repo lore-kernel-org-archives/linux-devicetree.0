@@ -1,63 +1,97 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox
- interface
-Date: Fri, 6 Oct 2017 14:51:57 +0100
-Message-ID: <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
- <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
- <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com>
- <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: bcm283x: Fix console path on RPi3
+Date: Fri,  6 Oct 2017 15:52:52 +0200
+Message-ID: <1507297972-10512-1-git-send-email-loic.poulain@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Contrary to other RPi devices, RPi3 uses uart0 to communicate with
+the BCM43438 bluetooth controller. uart1 is then used for the console.
+Today, the console configuration is inherited from the bcm283x dtsi
+(bootargs) which is not the correct one for the RPi3. This leads to
+routing issue and confuses the Bluetooth controller with unexpected
+data.
 
+This patch introduces chosen/stdout path to configure console to uart0
+on bcm283x family and overwrite it to uart1 in the RPi3 dts.
 
-On 06/10/17 14:47, Jassi Brar wrote:
-> On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 06/10/17 12:26, Jassi Brar wrote:
->>> On Wed, Oct 4, 2017 at 5:06 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>>> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>>> This patch adds ARM MHU specific mailbox interface for SCMI.
->>>>>
->>>>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>>>
->>>> This clearly needs an explanation why we need another driver.
->>>>
->>> Yes the patch needs explanation which is that we need a shim layer to
->>> map SCMI requests onto what the underlying controller expects. The
->>> alternative was to clone the controller driver (MHU now and others
->>> later when their platforms support SCMI) and pretend SCMI is the only
->>> client they are ever going to serve.
->>>
->>
->> Again that's not the point, doorbell is more common feature and that can
->> be supported. As SCMI expects doorbell feature in the specification, it
->> just need to support that class of controllers.
->>
-> NO.  All SCMI expects is SHMEM and a signal reaching the other end.
-> The signal mechanism need not necessarily be "doorbell".
-> 
+Create serial0/1 aliases referring to uart0 and uart1 paths.
+Remove unneeded earlyprintk.
 
-Agreed, but creating an abstraction ro do something as generic as
-doorbell and writing shim layer for each controller to use SCMI also
-sounds bad.
+Fixes: 4188ea2aeb6d ("ARM: bcm283x: Define UART pinmuxing on board level")
+Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ v2: remove serial aliases redefinition in bcm2835-rpi-zero-w.dts
+ v3: Replace this entire aliases block with same chosen as RPi3
 
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 11 ++++-------
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts    |  5 +++++
+ arch/arm/boot/dts/bcm283x.dtsi           |  7 ++++++-
+ 3 files changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+index 82651c3..a0c8080 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -18,13 +18,10 @@
+ 	compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
+ 	model = "Raspberry Pi Zero W";
+ 
+-	/* Needed by firmware to properly init UARTs */
+-	aliases {
+-		uart0 = "/soc/serial@7e201000";
+-		uart1 = "/soc/serial@7e215040";
+-		serial0 = "/soc/serial@7e201000";
+-		serial1 = "/soc/serial@7e215040";
+-	};
++	chosen {
++                /* 8250 auxiliar UART instead of pl011 */
++                stdout-path = "serial1:115200n8";
++        };
+ 
+ 	leds {
+ 		act {
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index 20725ca..f1c0811 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -8,6 +8,11 @@
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+ 	model = "Raspberry Pi 3 Model B";
+ 
++	chosen {
++		/* 8250 auxiliar UART instead of pl011 */
++		stdout-path = "serial1:115200n8";
++	};
++
+ 	memory {
+ 		reg = <0 0x40000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 431dcfc..013431e 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -20,8 +20,13 @@
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
+ 	chosen {
+-		bootargs = "earlyprintk console=ttyAMA0";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	thermal-zones {
 -- 
-Regards,
-Sudeep
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
