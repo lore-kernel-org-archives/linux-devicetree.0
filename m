@@ -1,108 +1,72 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 serial slave
-Date: Fri, 06 Oct 2017 15:03:58 -0700
-Message-ID: <87poa0djch.fsf@anholt.net>
-References: <1504125721-4760-1-git-send-email-loic.poulain@gmail.com> <1504125721-4760-2-git-send-email-loic.poulain@gmail.com> <C1D28787-A7C3-4A7A-8EAC-7E7994E54B29@holtmann.org>
+Subject: Re: [PATCH v3] ARM: dts: bcm283x: Fix console path on RPi3
+Date: Fri, 06 Oct 2017 15:06:12 -0700
+Message-ID: <87mv54dj8r.fsf@anholt.net>
+References: <1507297972-10512-1-git-send-email-loic.poulain@gmail.com> <1740609206.57031.1507313620912@email.1und1.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C1D28787-A7C3-4A7A-8EAC-7E7994E54B29-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1740609206.57031.1507313620912-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> writes:
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-> Hi,
+> Hi Loic,
 >
->> Add BCM43438 (bluetooth) as a slave device of uart0 (pl011/ttyAMA0).
->> This allows to automatically insert the bcm43438 to the bluetooth
->> subsystem instead of relying on userspace helpers (hciattach).
+>> Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 6. Oktober 2017 um 15:52 ge=
+schrieben:
 >>=20
->> Overwrite chosen/stdout-path to use 8250 aux uart as console.
 >>=20
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Contrary to other RPi devices, RPi3 uses uart0 to communicate with
+>> the BCM43438 bluetooth controller. uart1 is then used for the console.
+>> Today, the console configuration is inherited from the bcm283x dtsi
+>> (bootargs) which is not the correct one for the RPi3. This leads to
+>> routing issue and confuses the Bluetooth controller with unexpected
+>> data.
+>>=20
+>> This patch introduces chosen/stdout path to configure console to uart0
+>> on bcm283x family and overwrite it to uart1 in the RPi3 dts.
+>>=20
+>> Create serial0/1 aliases referring to uart0 and uart1 paths.
+>> Remove unneeded earlyprintk.
+>>=20
+>> Fixes: 4188ea2aeb6d ("ARM: bcm283x: Define UART pinmuxing on board level=
+")
 >> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
->> 1 file changed, 10 insertions(+)
->>=20
->> v2: dt-bindings as separate patch
->>     rebase on upcoming pi3 dts changes
->> v3: changes in bcm serdev drivers:
->>     name refactoring and additional comments
->>     Add generic host_set_baudrate method
->>     Use agnostic device_property_read
->> v4: changes in doc and dts:
->>     Add additional params to broadcom bt dt-bindings
->>     Set the max baudrate to 2000000 instead of 921600
->>     use chosen/stdout-path instead of console=3D
->>     remove useless earlyprintk
->>     same changes in bcm283x.dtsi
->> v5: remove 1/4 dt-bindings and 4/4 hci_bcm serdev support
->>     1/4 and 4/4 merged in bluetooth-next tree
->>=20
->> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/b=
-cm2837-rpi-3-b.dts
->> index 20725ca..e4488cb 100644
->> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> @@ -8,6 +8,11 @@
->> 	compatible =3D "raspberrypi,3-model-b", "brcm,bcm2837";
->> 	model =3D "Raspberry Pi 3 Model B";
->>=20
->> +	chosen {
->> +		/* 8250 auxiliar UART instead of pl011 */
->> +		stdout-path =3D "serial1:115200n8";
->> +	};
->> +
->> 	memory {
->> 		reg =3D <0 0x40000000>;
->> 	};
->> @@ -24,6 +29,11 @@
->> 	pinctrl-names =3D "default";
->> 	pinctrl-0 =3D <&uart0_gpio32 &gpclk2_gpio43>;
->> 	status =3D "okay";
->> +
->> +	bluetooth {
->> +		compatible =3D "brcm,bcm43438-bt";
->> +		max-speed =3D <2000000>;
->> +	};
->> };
->>=20
 >
-> the driver for this is already in Linus=E2=80=99 tree. And I would really=
- prefer that we get the DT changes merged in as well.
+> after changing serial0 to serial1 in my cmdline.txt, i can see the boot m=
+essages on my RPi Zero W.
+>
+> Tested-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 
-Now that the separated stdout patch is ready to go, I've applied this
-for -next (dropping the chosen node) and I'm sending the PR for both.
-
-Thanks so much for working on this!
+I touched up whitespace/spelling and sent the PR.  Thanks for testing!
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlnX/c8ACgkQtdYpNtH8
-nuilexAAr4xunwCEukkTmwYopUp1osVIvBaifaYB+LV5AW7DSEKXJDRgBXtbf/j0
-28K1iseN8iRXRNgByqJOFmwEmOPitBd405rw3hjoP8gDKiY/E2UIgGM0TSkrNg6E
-NUqdlCO6cjtAFFgeA+GMShGg1m+LIZsWwvxoUzZCrxCFl+MXcg0txV29WsmAduO0
-LuxMMEzivF/nlWaLgusNJvdkGlQfdsfHIWz70NY6pGmzfQRDNKBylul0uy4Cl912
-5nLWvVOdfxXmSLgWjJUhdZGuiP3JrolZ51xWBi//GwoHrPs857TMG7xlncNePVTV
-wiH1D38INJ5KKAhop/SY7ULc0SG5L5tGNHVEdGp0Gq53FkReVGZYL3Z3vPaWTO7f
-GeO1jhtxsGkhBsupkQEZ6IHT37O4unX6FRSXyYBS2Y3G6FjGdcmlFCjg6TR8pume
-qtIijXUQ+SRGNF0Mwks4TikHY7OBMc7jvbGXZ1a3S9EGo0KsC0fU6R+sTnis22Zl
-QOO9kYmrETWeCv18NDDqUdPDgvt8h7V/eXMp/C9OpPUFFhWffk8DhL+YO3F282w6
-+uW5msSp7kAwIgiHw1ljaJntEQpWLIjabsZMPkQpdgoBobjNvc2auUjY6BT3MRjE
-Tp+2dRDRwWtYFMWo2kbm6VgJjZnB49b9TQOGSfU15nhL8QsOylU=
-=iHSs
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlnX/lQACgkQtdYpNtH8
+nujt5A/9Ez4F9+/FR2wVxX8ITw3/9+TaWswtWxxHzOsFz5sVJuQgk3VGqIpEQ8Be
+5Jytpx/2ztpyoLqIaOLAE5r6Xne5WmmNdUd9YzSk14dEYU7NzUkEMbhhtHXFr89D
++z0RaZnBQodvUeRWvj/U8gbrwFBOOCV046/ibwgoNcd66z8Qe5WXETgqaojsQLgu
+YvcDZAOUTDEBN+WvqqbhOxhQD1GcB7PtiZ1efv8BScIQNVIvFk/I5EfHhQTz9Q3/
++lyCl4U/J5WS0/ny8yZJv+r/mHvk3cCoZnGC4bi0cghv/WvlXBOMF1UJQY/yUhcr
+0YPXYWxt+TQytF+ET1ddNeqLsok/sBQ+ubYwbvtYkjJppHZKR8hfyOhWILI/zdKY
+PfJKIAdB/aPI/4KAn6QxnD7D1oIXzc5F3IfvUbj55jit+s/1KfzRCD/aB+Ec0wAG
+8hpEdo+tGkhngp1cRMCtitMZt2EmuZqWo6pL5Qd+7WZQJCMXwZHx9iAo//mLxygO
+6Bg2MxgOnfvfJBLiySRrgowG/TYE+t5467sp8Imm1WJwUblL/ppqvS40eObO0y2K
+it7BnrHTfeb02grXyxO127awyjVBZA1SlOD8ne9Ce5oCjEgfRQRqXmH1dcWsWSQ+
+IDAmPzKvxeHtCKXi1Cju0ufrN1Gp4TXENJbVFCWv7Vpxpo694qs=
+=ODbi
 -----END PGP SIGNATURE-----
 --=-=-=--
 --
