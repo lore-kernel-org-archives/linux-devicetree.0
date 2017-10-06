@@ -1,141 +1,62 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2 1/2] staging: Introduce NVIDIA Tegra20 video decoder
- driver
-Date: Fri, 6 Oct 2017 13:46:42 +0300
-Message-ID: <b9023559-b41a-9cbb-c0da-b95e3aff5b6f@gmail.com>
-References: <201710061105.oOGaoiDu%fengguang.wu@intel.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
+ mailbox client bindings
+Date: Fri, 6 Oct 2017 16:31:55 +0530
+Message-ID: <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-4-git-send-email-sudeep.holla@arm.com> <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <201710061105.oOGaoiDu%fengguang.wu@intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: kbuild test robot <lkp@intel.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, kbuild-all@01.org, linux-tegra@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06.10.2017 06:57, kbuild test robot wrote:
-> Hi Dmitry,
-> 
-> [auto build test WARNING on staging/staging-testing]
-> [also build test WARNING on v4.14-rc3 next-20170929]
-> [cannot apply to tegra/for-next]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Dmitry-Osipenko/staging-Introduce-NVIDIA-Tegra20-video-decoder-driver/20171006-101015
-> config: ia64-allmodconfig (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 6.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=ia64 
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from include/linux/kernel.h:13:0,
->                     from include/linux/clk.h:16,
->                     from drivers/staging/tegra-vde/vde.c:11:
->    drivers/staging/tegra-vde/vde.c: In function 'tegra_vde_setup_hw_context':
->>> drivers/staging/tegra-vde/vde.c:51:11: warning: format '%X' expects argument of type 'unsigned int', but argument 5 has type 'long long unsigned int' [-Wformat=]
->      pr_debug("%s: %d: 0x%08X => " #__addr ")\n", \
->               ^
->    include/linux/printk.h:285:21: note: in definition of macro 'pr_fmt'
->     #define pr_fmt(fmt) fmt
->                         ^~~
->    include/linux/printk.h:333:2: note: in expansion of macro 'dynamic_pr_debug'
->      dynamic_pr_debug(fmt, ##__VA_ARGS__)
->      ^~~~~~~~~~~~~~~~
->    drivers/staging/tegra-vde/vde.c:51:2: note: in expansion of macro 'pr_debug'
->      pr_debug("%s: %d: 0x%08X => " #__addr ")\n", \
->      ^~~~~~~~
->    drivers/staging/tegra-vde/vde.c:362:2: note: in expansion of macro 'VDE_WR'
->      VDE_WR(bitstream_data_paddr + bitstream_data_size,
->      ^~~~~~
->>> drivers/staging/tegra-vde/vde.c:51:11: warning: format '%X' expects argument of type 'unsigned int', but argument 5 has type 'phys_addr_t {aka long long unsigned int}' [-Wformat=]
->      pr_debug("%s: %d: 0x%08X => " #__addr ")\n", \
->               ^
->    include/linux/printk.h:285:21: note: in definition of macro 'pr_fmt'
->     #define pr_fmt(fmt) fmt
->                         ^~~
->    include/linux/printk.h:333:2: note: in expansion of macro 'dynamic_pr_debug'
->      dynamic_pr_debug(fmt, ##__VA_ARGS__)
->      ^~~~~~~~~~~~~~~~
->    drivers/staging/tegra-vde/vde.c:51:2: note: in expansion of macro 'pr_debug'
->      pr_debug("%s: %d: 0x%08X => " #__addr ")\n", \
->      ^~~~~~~~
->    drivers/staging/tegra-vde/vde.c:435:2: note: in expansion of macro 'VDE_WR'
->      VDE_WR(bitstream_data_paddr, vde->regs + SXE(0x6C));
->      ^~~~~~
->    drivers/staging/tegra-vde/vde.c: In function 'tegra_vde_attach_dmabuf':
->    drivers/staging/tegra-vde/vde.c:531:40: warning: format '%d' expects argument of type 'int', but argument 3 has type 'size_t {aka long unsigned int}' [-Wformat=]
->       dev_err(dev, "Too small dmabuf size %d @0x%lX, "
->                                            ^
->    drivers/staging/tegra-vde/vde.c: In function 'tegra_vde_ioctl_decode_h264':
->    drivers/staging/tegra-vde/vde.c:855:16: warning: format '%X' expects argument of type 'unsigned int', but argument 3 has type 'phys_addr_t {aka long long unsigned int}' [-Wformat=]
->       dev_err(dev, "Decoding failed, "
->                    ^~~~~~~~~~~~~~~~~~~
-> 
-> vim +51 drivers/staging/tegra-vde/vde.c
-> 
->   > 11	#include <linux/clk.h>
->     12	#include <linux/delay.h>
->     13	#include <linux/dma-buf.h>
->     14	#include <linux/interrupt.h>
->     15	#include <linux/io.h>
->     16	#include <linux/iopoll.h>
->     17	#include <linux/miscdevice.h>
->     18	#include <linux/module.h>
->     19	#include <linux/platform_device.h>
->     20	#include <linux/pm_runtime.h>
->     21	#include <linux/reset.h>
->     22	#include <linux/slab.h>
->     23	#include <linux/uaccess.h>
->     24	
->     25	#include <soc/tegra/pmc.h>
->     26	
->     27	#include "uapi.h"
->     28	
->     29	#define SXE(offt)		(0x0000 + (offt)) /* Syntax Engine */
->     30	#define BSEV(offt)		(0x1000 + (offt)) /* Video Bitstream Engine */
->     31	#define MBE(offt)		(0x2000 + (offt)) /* Macroblock Engine */
->     32	#define PPE(offt)		(0x2200 + (offt)) /* Post-processing Engine */
->     33	#define MCE(offt)		(0x2400 + (offt)) /* Motion Compensation Eng. */
->     34	#define TFE(offt)		(0x2600 + (offt)) /* Transform Engine */
->     35	#define VDMA(offt)		(0x2A00 + (offt)) /* Video DMA */
->     36	#define FRAMEID(offt)		(0x3800 + (offt))
->     37	
->     38	#define ICMDQUE_WR		0x00
->     39	#define CMDQUE_CONTROL		0x08
->     40	#define INTR_STATUS		0x18
->     41	#define BSE_INT_ENB		0x40
->     42	#define BSE_CONFIG		0x44
->     43	
->     44	#define BSE_ICMDQUE_EMPTY	BIT(3)
->     45	#define BSE_DMA_BUSY		BIT(23)
->     46	
->     47	#define TEGRA_VDE_TIMEOUT	msecs_to_jiffies(1000)
->     48	
->     49	#define VDE_WR(__data, __addr)				\
->     50	do {							\
->   > 51		pr_debug("%s: %d: 0x%08X => " #__addr ")\n",	\
->     52			  __func__, __LINE__, (__data));	\
->     53		writel_relaxed(__data, __addr);			\
->     54	} while (0)
->     55	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
-
-I'll silence these warnings in v3.
+On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
+>> This patch adds ARM MHU specific mailbox client bindings to support
+>> SCMI. Since SCMI specification just requires doorbell mechanism from
+>> mailbox controllers, we add mailbox data to specify the doorbell bit(s).
+>>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/arm/arm,mhu-scmi.txt          | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
+>> new file mode 100644
+>> index 000000000000..8c106f1cdeb8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
+>> @@ -0,0 +1,19 @@
+>> +ARM MHU mailbox client bindings for SCMI Message Protocol
+>> +----------------------------------------------------------
+>> +
+>> +This binding is intended to define the ARM MHU specific extensions to
+>> +the generic SCMI bindings[2].
+>> +
+>> +Required properties:
+>> +
+>> +The scmi node with the following properties shall be under the /firmware/ node.
+>> +
+>> +- compatible : shall be "arm,scmi" and "arm,mhu-scmi"
+>
+> Most specific first.
+>
+>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
+>> +           data as expected by the mailbox controller
+>
+> Shouldn't that be cells as part of mboxes property?
+>
+A MHU client can send any number of commands (such u32 values) over a channel.
+This client (SCMI) sends just one command over a channel, but other
+clients may/do send two or more.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
