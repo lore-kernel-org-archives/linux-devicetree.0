@@ -1,42 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/6] Shrinking DT memory usage
-Date: Fri, 6 Oct 2017 17:10:22 -0500
-Message-ID: <CAL_JsqLDhf2tx5PHAnY9X3ju42BayVmJ1KONoKFhhbSaxaKGHQ@mail.gmail.com>
-References: <20171005194422.26224-1-robh@kernel.org> <nycvar.YSQ.7.76.1710061726330.1834@knanqh.ubzr>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/7] ARM: dts: meson: clean pin offsets
+Date: Fri, 06 Oct 2017 15:30:03 -0700
+Message-ID: <7ha8139afo.fsf@baylibre.com>
+References: <20170921171450.27407-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <nycvar.YSQ.7.76.1710061726330.1834-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+In-Reply-To: <20170921171450.27407-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
+        message of "Thu, 21 Sep 2017 19:14:43 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 4:30 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 5 Oct 2017, Rob Herring wrote:
+Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+
+> The series is the device-tree part of the series sent to pinctrl [0]
+> The present patchset depends on the pinctrl part.
 >
->> On kernels with a minimal config and a RAM target in the 100s of KB, DT
->> is quite a hog of runtime memory usage. How much is dependent on how many
->> nodes and properties in the DT which have a corresponding struct device_node
->> and struct property in the kernel. Just skipping disabled nodes saves a
->> lot by not creating the device_nodes in the first place[1], but there's
->> more low hanging fruit by making some of the fields in struct property and
->> struct device_node optional. With the changes here, the memory usage goes
->> from 17KB to under 8KB on QEMU's ARM virt machine which is a relatively
->> small DT.
+> The purpose of this series is to:
+> 1) remove the hardcoded gpio offset
+> 2) adjust gpio-ranges with respect to the new pin number of each
+>    controller
+> 3) adjust gpio-line-names accordingly for the boards having this property.
 >
-> My test case went from 118072 bytes ddown to 21548 bytes with this
-> series.
+> [0]: https://lkml.kernel.org/r/20170918134610.17743-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 
-Did that include the changes for FDT skipping status=disabled and to
-stop storing the full path of every node? With those 2 alone you said
-it dropped to 25K.
+Seeing the driver part is now merged, applying to v4.15/dt64,
 
-> Tested-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Thanks,
 
-Thanks.
-
-Rob
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
