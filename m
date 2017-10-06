@@ -1,49 +1,51 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/3] arm64: dts: r8a77995: Add INTC-EX device node
-Date: Fri,  6 Oct 2017 14:05:53 +0200
-Message-ID: <1507291553-24396-4-git-send-email-geert+renesas@glider.be>
-References: <1507291553-24396-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/3] arm64: dts: renesas: Add INTC-EX device node on R-Car M3-W, V3M, and D3
+Date: Fri,  6 Oct 2017 14:05:50 +0200
+Message-ID: <1507291553-24396-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507291553-24396-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add a device node for the Interrupt Controller for External Devices
-(INTC-EX) on R-Car D3, which serves external IRQ pins IRQ[0-5].
+	Hi Simon, Magnus,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
+This patch series adds device nodes for the Interrupt Controller for
+External Devices (INTC-EX) to the DT sources for the R-Car M3-W, V3M, and
+D3 SoCs.
+
+This has been tested on Salvator-X with R-Car M3-W.
+(FWIW, I also tested on Salvator-XS with H3 ES2.0).
+
+The compatible values used depend on the DT binding update "[PATCH]
+dt-bindings: irqchip: renesas-irqc: Document R-Car M3-W, V3M, D3 support",
+but they are non-controversial.
+
+Actual use may depend on pinctrl patches (e.g. "[PATCH 2/3] pinctrl:
+sh-pfc: r8a7796: Add support for INTC-EX IRQ pins").
+
+Thanks!
+
+Geert Uytterhoeven (3):
+  arm64: dts: r8a7796: Add INTC-EX device node
+  arm64: dts: r8a77970: Add INTC-EX device node
+  arm64: dts: r8a77995: Add INTC-EX device node
+
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 16 ++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 16 ++++++++++++++++
  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ 3 files changed, 48 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 56e42921e879673d..b2411a4d1debc62c 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -139,6 +139,22 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		intc_ex: interrupt-controller@e61c0000 {
-+			compatible = "renesas,intc-ex-r8a77995", "renesas,irqc";
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			reg = <0 0xe61c0000 0 0x200>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 407>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 407>;
-+		};
-+
- 		gpio0: gpio@e6050000 {
- 			compatible = "renesas,gpio-r8a77995",
- 				     "renesas,rcar-gen3-gpio",
 -- 
 2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
