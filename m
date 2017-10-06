@@ -1,37 +1,89 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car M3-W, V3M, D3 support
-Date: Fri,  6 Oct 2017 13:51:32 +0200
-Message-ID: <1507290692-23062-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: r8a7796: Add INTC-EX device node
+Date: Fri,  6 Oct 2017 14:05:51 +0200
+Message-ID: <1507291553-24396-2-git-send-email-geert+renesas@glider.be>
+References: <1507291553-24396-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507291553-24396-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document support for the Interrupt Controller for Externel Devices
-(INTC-EX) in the Renesas M3-W (r8a7796), V3M (r8a77970), and D3
-(r8a77995) SoCs.
+Add a device node for the Interrupt Controller for External Devices
+(INTC-EX) on R-Car M3-W, which serves external IRQ pins IRQ[0-5].
 
-No driver update is needed.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- .../devicetree/bindings/interrupt-controller/renesas,irqc.txt          | 3 +++
- 1 file changed, 3 insertions(+)
+Tested on Salvator-X by:
+  1) Enabling pinctrl and pull-up for IRQ1/GP2_01 in
+     salvator-common.dtsi:
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-index e3f052d8c11a24c3..33c9a10fdc91a1dc 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -13,6 +13,9 @@ Required properties:
-     - "renesas,irqc-r8a7793" (R-Car M2-N)
-     - "renesas,irqc-r8a7794" (R-Car E2)
-     - "renesas,intc-ex-r8a7795" (R-Car H3)
-+    - "renesas,intc-ex-r8a7796" (R-Car M3-W)
-+    - "renesas,intc-ex-r8a77970" (R-Car V3M)
-+    - "renesas,intc-ex-r8a77995" (R-Car D3)
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-   interrupts.txt in this directory
- - clocks: Must contain a reference to the functional clock.
+	@@ -376,7 +376,7 @@
+	 };
+
+	 &pfc {
+	-	pinctrl-0 = <&scif_clk_pins>;
+	+	pinctrl-0 = <&scif_clk_pins &irq1_pins &keyboard_pins>;
+		pinctrl-names = "default";
+
+		avb_pins: avb {
+	@@ -407,6 +407,16 @@
+			function = "i2c2";
+		};
+
+	+	irq1_pins: irq1 {
+	+		groups = "intc_ex_irq1";
+	+		function = "intc_ex";
+	+	};
+	+
+	+	keyboard_pins: keyboard {
+	+		pins = "GP_2_1";
+	+		bias-pull-up;
+	+	};
+	+
+		pwm1_pins: pwm1 {
+			groups = "pwm1_a";
+			function = "pwm1";
+
+  2) Triggering IRQ1 by tying EXIO-D pin 50 to GND,
+  3) Verifying that the IRQC_MONITOR register contents change due to
+     triggering.
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index d9c928f9d224015d..afee3360cb4f0f56 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -725,6 +725,22 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		intc_ex: interrupt-controller@e61c0000 {
++			compatible = "renesas,intc-ex-r8a7796", "renesas,irqc";
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			reg = <0 0xe61c0000 0 0x200>;
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 407>;
++			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++			resets = <&cpg 407>;
++		};
++
+ 		i2c_dvfs: i2c@e60b0000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
