@@ -1,82 +1,55 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 16/16] arm64: dts: marvell: armada-3720-espressobin: fill UART nodes
-Date: Fri, 06 Oct 2017 15:01:18 +0200
-Message-ID: <87fuawe8gx.fsf@free-electrons.com>
-References: <20171006101344.15590-1-miquel.raynal@free-electrons.com>
-        <20171006101344.15590-17-miquel.raynal@free-electrons.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: stm32: add vrefbuf to stm32h743
+Date: Fri, 6 Oct 2017 15:01:10 +0200
+Message-ID: <46c381ed-f096-5da5-c352-89a044aea10d@st.com>
+References: <1504108529-31727-1-git-send-email-fabrice.gasnier@st.com>
+ <1504108529-31727-4-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171006101344.15590-17-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-        (Miquel Raynal's message of "Fri, 6 Oct 2017 12:13:44 +0200")
+In-Reply-To: <1504108529-31727-4-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On ven., oct. 06 2017, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi Fabrice,
 
-> Fill ESPRESSObin uart0 node with pinctrl information like in the
-> Armada-3720-DB device tree (which uses the same node).
->
-> Also explain how to enable the second UART port available on the
-> headers. This second port is not enabled by default because both
-> headers are dedicated to expose general purpose pins and remapping
-> some of them to use the second UART would break existing users.
->
-> Suggested-by: László ÁSHIN <laszlo-3b5oun+KfQA@public.gmane.org>
-> Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 08/30/2017 05:55 PM, Fabrice Gasnier wrote:
+> Add STM32H743 VREFBUF (Voltage Reference Buffer) definition.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> index 2ce52ba74f73..c05b274ab1a9 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-> @@ -98,9 +98,17 @@
->  
->  /* Exported on the micro USB connector J5 through an FTDI */
->  &uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1_pins>;
->  	status = "okay";
->  };
->  
-> +/*
-> + * Enabling the second UART on J17 (pins 24,26) is just a matter of copying the
-> + * uart1 node from armada-3720-db.dts with one difference: it works with 1.8V
-> + * TTL levels.
-
-This difference is not related to the device tree. So I would write:
- /*
-  * To enable the second UART on J17 (pins 24,26) refer to the uart1
-  * node from armada-3720-db.dts.
-  * Note that TX and RX signal are the ones coming directly from the SoC:
-  * 1.8V TTL.
-  */
-
-Thanks,
-
-Gregory
-
-> + */
+>   arch/arm/boot/dts/stm32h743.dtsi | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+> index 36a99db..83ee8fe 100644
+> --- a/arch/arm/boot/dts/stm32h743.dtsi
+> +++ b/arch/arm/boot/dts/stm32h743.dtsi
+> @@ -82,6 +82,15 @@
+>   			interrupts = <50>;
+>   			clocks = <&timer_clk>;
+>   		};
 > +
->  /* J7 */
->  &usb3 {
->  	status = "okay";
-> -- 
-> 2.11.0
->
+> +		vrefbuf: regulator@58003C00 {
+> +			compatible = "st,stm32-vrefbuf";
+> +			reg = <0x58003C00 0x8>;
+> +			clocks = <&timer_clk>;
+> +			regulator-min-microvolt = <1500000>;
+> +			regulator-max-microvolt = <2500000>;
+> +			status = "disabled";
+> +		};
+>   	};
+>   };
+>   
+> 
+Applied on stm32-dt-for-v4.15 branch.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Thanks
+Alex
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
