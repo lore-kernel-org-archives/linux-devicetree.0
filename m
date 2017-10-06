@@ -1,91 +1,95 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/16] serial: mvebu-uart: support probe of multiple ports
-Date: Fri, 06 Oct 2017 14:23:55 +0200
-Message-ID: <87poa0foro.fsf@free-electrons.com>
-References: <20171006101344.15590-1-miquel.raynal@free-electrons.com>
-        <20171006101344.15590-5-miquel.raynal@free-electrons.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 3/3] ARM: dts: gr-peach: Add ETHER pin group
+Date: Fri, 6 Oct 2017 14:25:23 +0200
+Message-ID: <20171006122523.GD19008@w540>
+References: <1507193900-23801-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1507193900-23801-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171006101344.15590-5-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Miquel
-        Raynal's message of "Fri, 6 Oct 2017 12:13:32 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507193900-23801-4-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: horms@verge.net.au, geert@linux-m68k.org, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On ven., oct. 06 2017, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi Simon,
 
-> From: Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Thu, Oct 05, 2017 at 10:58:20AM +0200, Jacopo Mondi wrote:
+> Add pin configuration subnode for ETHER pin group and enable the interface.
 >
-> Until now, the mvebu-uart driver only supported probing a single UART
-> port. However, some platforms have multiple instances of this UART
-> controller, and therefore the driver should support multiple ports.
->
-> In order to achieve this, we make sure to assign port->line properly,
-> instead of hardcoding it to zero.
->
-> Signed-off-by: Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  drivers/tty/serial/mvebu-uart.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/r7s72100-gr-peach.dts | 38 +++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 >
-> diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
-> index 7e0a3e9fee15..25b11ede3a97 100644
-> --- a/drivers/tty/serial/mvebu-uart.c
-> +++ b/drivers/tty/serial/mvebu-uart.c
-> @@ -560,7 +560,16 @@ static int mvebu_uart_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> -	port = &mvebu_uart_ports[0];
-> +	if (pdev->dev.of_node)
-> +		pdev->id = of_alias_get_id(pdev->dev.of_node, "serial");
 
-If the id is retrieved using an of_ function, then I think that the
-driver would depend on OF_CONFIG.
+Can you confirm you have not applied this yet?
 
-Gregory
+I have received indications from netdev people to change location of
+the reset pin properties, as they belong to PHY node, and also to
+change the node layout.
+
+If you have applied the first 2 but not this one, I will re-submit this one only
+
+Thanks
+   j
 
 
+> diff --git a/arch/arm/boot/dts/r7s72100-gr-peach.dts b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> index ad6a627..8b5a2c5 100644
+> --- a/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> +++ b/arch/arm/boot/dts/r7s72100-gr-peach.dts
+> @@ -68,6 +68,28 @@
+>  		/* P6_2 as RxD2; P6_3 as TxD2 */
+>  		pinmux = <RZA1_PINMUX(6, 2, 7)>, <RZA1_PINMUX(6, 3, 7)>;
+>  	};
 > +
-> +	if (pdev->id >= MVEBU_NR_UARTS) {
-> +		dev_err(&pdev->dev, "cannot have more than %d UART ports\n",
-> +			MVEBU_NR_UARTS);
-> +		return -EINVAL;
-> +	}
+> +	ether_pins: ether {
+> +		/* Ethernet on Ports 1,3,5,10 */
+> +		pinmux = <RZA1_PINMUX(1, 14, 4)>, /* P1_14 = ET_COL   */
+> +			 <RZA1_PINMUX(3, 0, 2)>,  /* P3_0 = ET_TXCLK  */
+> +			 <RZA1_PINMUX(3, 3, 2)>,  /* P3_3 = ET_MDIO   */
+> +			 <RZA1_PINMUX(3, 4, 2)>,  /* P3_4 = ET_RXCLK  */
+> +			 <RZA1_PINMUX(3, 5, 2)>,  /* P3_5 = ET_RXER   */
+> +			 <RZA1_PINMUX(3, 6, 2)>,  /* P3_6 = ET_RXDV   */
+> +			 <RZA1_PINMUX(5, 9, 2)>,  /* P5_9 = ET_MDC    */
+> +			 <RZA1_PINMUX(10, 1, 4)>, /* P10_1 = ET_TXER  */
+> +			 <RZA1_PINMUX(10, 2, 4)>, /* P10_2 = ET_TXEN  */
+> +			 <RZA1_PINMUX(10, 3, 4)>, /* P10_3 = ET_CRS   */
+> +			 <RZA1_PINMUX(10, 4, 4)>, /* P10_4 = ET_TXD0  */
+> +			 <RZA1_PINMUX(10, 5, 4)>, /* P10_5 = ET_TXD1  */
+> +			 <RZA1_PINMUX(10, 6, 4)>, /* P10_6 = ET_TXD2  */
+> +			 <RZA1_PINMUX(10, 7, 4)>, /* P10_7 = ET_TXD3  */
+> +			 <RZA1_PINMUX(10, 8, 4)>, /* P10_8 = ET_RXD0  */
+> +			 <RZA1_PINMUX(10, 9, 4)>, /* P10_9 = ET_RXD1  */
+> +			 <RZA1_PINMUX(10, 10, 4)>,/* P10_10 = ET_RXD2 */
+> +			 <RZA1_PINMUX(10, 11, 4)>;/* P10_11 = ET_RXD3 */
+> +	};
+>  };
+>
+>  &extal_clk {
+> @@ -88,3 +110,19 @@
+>
+>  	status = "okay";
+>  };
 > +
-> +	port = &mvebu_uart_ports[pdev->id];
->  
->  	spin_lock_init(&port->lock);
->  
-> @@ -572,7 +581,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
->  	port->fifosize   = 32;
->  	port->iotype     = UPIO_MEM32;
->  	port->flags      = UPF_FIXED_PORT;
-> -	port->line       = 0; /* single port: force line number to  0 */
-> +	port->line       = pdev->id;
->  
->  	port->irq        = irq->start;
->  	port->irqflags   = 0;
-> -- 
-> 2.11.0
+> +&ether {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&ether_pins>;
+> +
+> +	status = "okay";
+> +
+> +	reset-gpios = <&port4 2 GPIO_ACTIVE_LOW>;
+> +	reset-delay-us = <5>;
+> +
+> +	renesas,no-ether-link;
+> +	phy-handle = <&phy0>;
+> +	phy0: ethernet-phy@0 {
+> +		reg = <0>;
+> +	};
+> +};
+> --
+> 2.7.4
 >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
