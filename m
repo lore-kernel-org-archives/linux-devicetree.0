@@ -1,28 +1,43 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Fri, 6 Oct 2017 11:18:00 +0200
-Message-ID: <20171006091759.GF7734@verge.net.au>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
- <9635bb2d-8695-a168-d49e-0bd51807cc19@cogentembedded.com>
+From: Fabien DESSENNE <fabien.dessenne@st.com>
+Subject: Re: [PATCH v3 1/3] crypto: engine - permit to enqueue aead_request
+Date: Fri, 6 Oct 2017 09:26:07 +0000
+Message-ID: <9d89727b-f3cb-3322-6513-962e9df63ca8@st.com>
+References: <1503047946-27799-1-git-send-email-fabien.dessenne@st.com>
+ <1503047946-27799-2-git-send-email-fabien.dessenne@st.com>
+ <20170922090921.GA15677@gondor.apana.org.au>
+ <20206811-7075-5ca9-98cd-26a5709751fb@st.com>
+ <20171005033925.GA31996@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9635bb2d-8695-a168-d49e-0bd51807cc19-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171005033925.GA31996@gondor.apana.org.au>
+Content-Language: en-US
+Content-ID: <C0B609ED5768BF43A409E2B1F4009EE6@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lionel DEBIEVE <lionel.debieve@st.com>, Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Ludovic BARRE <ludovic.barre@st.com>, "David S . Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 06, 2017 at 05:47:25AM +0300, Vladimir Barinov wrote:
-> Hi Simon, Geert,
-> 
-> Do you need extra actions from my side to accept this patch?
+OK, I will send an initial version without the AEAD part.
 
-Yes, I need patch 3/18.
-Could you repost it?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 05/10/17 05:39, Herbert Xu wrote:
+> On Tue, Oct 03, 2017 at 07:48:08AM +0000, Fabien DESSENNE wrote:
+>> It looks like there is no more activity around this "crypto_engine
+>> interface clean up" task.
+>> This unfortunately has been blocking the introduction of this new STM32
+>> crypto driver for 3 months now.
+>> Would it make sense to have this driver reviewed first, and then
+>> reworked (I expect minor update here) when the interface update is ready?
+> Hmm, is it possible to disable the AEAD part of the driver first?
+>
+> Cheers,
