@@ -1,55 +1,46 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox
- interface
-Date: Fri, 6 Oct 2017 14:32:00 +0100
-Message-ID: <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v3 15/22] firmware: arm_scmi: abstract mailbox interface
+Date: Fri, 6 Oct 2017 19:04:13 +0530
+Message-ID: <CABb+yY0DiDTKUkVrCDkx8_czfp2p6enzs7w_FRJpy91GDs9wXQ@mail.gmail.com>
 References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
- <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
+ <1506604306-20739-16-git-send-email-sudeep.holla@arm.com> <CAK8P3a0EUr_aEZdOrjHixzp44yXqsNxTMzBceSBTmk-x8x2MAg@mail.gmail.com>
+ <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com> <CABb+yY0SmQaPgBxan44a_Sx2mFuuiPcMz41J1yjqfO5irPTYig@mail.gmail.com>
+ <4b1ea5ac-1b50-901f-e33a-5af1f04f8a8f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <4b1ea5ac-1b50-901f-e33a-5af1f04f8a8f@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/10/17 12:26, Jassi Brar wrote:
-> On Wed, Oct 4, 2017 at 5:06 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> This patch adds ARM MHU specific mailbox interface for SCMI.
+On Fri, Oct 6, 2017 at 6:57 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 06/10/17 12:34, Jassi Brar wrote:
+>> On Wed, Oct 4, 2017 at 5:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>
+>>> Also, I have added shim only for specific controllers that need them.
+>>> E.g. ARM MHU as Jassi disagreed to add doorbell mechanism to that.
+>>> mbox_if provides default implementation that just calls direct mailbox
+>>> APIs.
 >>>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> Yeah you could hack away the MHU driver to make your life easy at the
+>> cost of duplicated code and extra DT bindings, but for a moment think
+>> what if your development platform wasn't MHU but, say, Rockchip
+>> mailbox controller?
 >>
->> This clearly needs an explanation why we need another driver.
->>
-> Yes the patch needs explanation which is that we need a shim layer to
-> map SCMI requests onto what the underlying controller expects. The
-> alternative was to clone the controller driver (MHU now and others
-> later when their platforms support SCMI) and pretend SCMI is the only
-> client they are ever going to serve.
-> 
+>
+> As mentioned before I understand your concern. But the point is this
+> needs to be replicated with each protocol on that controller.
+>
+Only generic protocols need to have a platform specific transport
+layer. There's no escaping that.
 
-Again that's not the point, doorbell is more common feature and that can
-be supported. As SCMI expects doorbell feature in the specification, it
-just need to support that class of controllers.
-
-> BTW, I haven't reviewed this patchset yet so I am not sure about this
-> code but I do believe we need a transport layer (this shim driver)
-> between generic SCMI implementation and each controller driver.
-> 
-
-Again Arnd's point was to extend mailbox API instead of adding this
-abstract layer which I think is more elegant. The controllers that
-can provide that feature will support that.
-
--- 
-Regards,
-Sudeep
+> So as Arnd
+> pointed out we can reduce that by generalizing common things like doorbell.
+>
+Rockchip, and most other controllers, has no "doorbell". And yet each
+is perfectly capable of supporting SCMI.
+Looking forward to your "generalised doorbell".
