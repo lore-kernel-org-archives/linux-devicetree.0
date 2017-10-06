@@ -1,261 +1,137 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] pci: designware: add driver for DWC controller in
- ECAM shift mode
-Date: Fri, 6 Oct 2017 15:52:03 +0100
-Message-ID: <CAKv+Gu_MM--uHwQk_brJh1bPOdsUTH4j+aJUDyS1um3mHDdsEA@mail.gmail.com>
-References: <20170828180437.2646-1-ard.biesheuvel@linaro.org>
- <20170828180437.2646-2-ard.biesheuvel@linaro.org> <20170926173200.GL15970@bhelgaas-glaptop.roam.corp.google.com>
- <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA@mail.gmail.com>
+From: Philip Balister <philip@balister.org>
+Subject: Re: [PATCH 1/2] arm: dts: Add support for National Instruments
+ Project Sulfur SDRs
+Date: Fri, 6 Oct 2017 07:58:40 -0700
+Message-ID: <2ecee25d-bac5-d818-00bc-5361a21c9ac5@balister.org>
+References: <20170911232223.91894-1-mdf@kernel.org>
+ <314acb1f-1f0f-7893-70a8-9379c01112ac@xilinx.com>
+ <20170925161136.GA12943@tyrael.ni.corp.natinst.com>
+ <6b87e902-3201-6710-4921-d465dea19dcd@xilinx.com>
+ <20170926175018.GA14962@tyrael.ni.corp.natinst.com>
+ <dfb517fe-8584-2a1a-22e5-946980cc9644@balister.org>
+ <a606ab17-6fb9-2ce1-3b3b-5a2e72d3fc7c@xilinx.com>
+ <3b41cfc0-08b7-853d-3439-7f9848d04d3c@balister.org>
+ <58fe4e6c-8765-bd9a-0698-8f8326f95e40@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu8CCcm_R3S1PbXZFqzvjAJVfU_bKpimVxbeQ78ciAgJyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <58fe4e6c-8765-bd9a-0698-8f8326f95e40@xilinx.com>
+Content-Language: en-MW
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, Moritz Fischer <mdf@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, davem@davemloft.net, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 28 September 2017 at 16:51, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 26 September 2017 at 10:32, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> [+cc Will]
->>
->> On Mon, Aug 28, 2017 at 07:04:36PM +0100, Ard Biesheuvel wrote:
->>> Some implementations of the Synopsys Designware PCIe controller implement
->>> a so-called ECAM shift mode, which allows a static memory window to be
->>> configured that covers the configuration space of the entire bus range.
+On 10/06/2017 04:49 AM, Michal Simek wrote:
+> On 26.9.2017 20:15, Philip Balister wrote:
+>> On 09/26/2017 02:06 PM, Michal Simek wrote:
+>>> On 26.9.2017 19:58, Philip Balister wrote:
+>>>> On 09/26/2017 01:50 PM, Moritz Fischer wrote:
+>>>>> Michal,
+>>>>>
+>>>>> On Tue, Sep 26, 2017 at 02:54:48PM +0200, Michal Simek wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 25.9.2017 18:11, Moritz Fischer wrote:
+>>>>>>> Hi Michal,
+>>>>>>>
+>>>>>>> On Mon, Sep 25, 2017 at 10:19:44AM +0200, Michal Simek wrote:
+>>>>>>>> Hi Moritz
+>>>>>>>>
+>>>>>>>> sorry for delay.
+>>>>>>>
+>>>>>>> No problem.
+>>>>>>>
+>>>>>>>>
+>>>>>>>> On 12.9.2017 01:22, Moritz Fischer wrote:
+>>>>>>>>> Add support for the National Instruments Project Sulfur SDR
+>>>>>>>>> motherboards Rev 2,3 and 4.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+>>>>>>>>> ---
+>>>>>>>>>  arch/arm/boot/dts/Makefile                |   3 +
+>>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur-rev2.dts |  84 +++++++++++++++++++
+>>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur-rev3.dts | 118 ++++++++++++++++++++++++++
+>>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur-rev4.dts |  26 ++++++
+>>>>>>>>>  arch/arm/boot/dts/zynq-ni-sulfur.dtsi     | 133 ++++++++++++++++++++++++++++++
+>>>>>>>>>  5 files changed, 364 insertions(+)
+>>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev2.dts
+>>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev3.dts
+>>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur-rev4.dts
+>>>>>>>>>  create mode 100644 arch/arm/boot/dts/zynq-ni-sulfur.dtsi
+>>>>>>>>
+>>>>>>>> Is this publicly available board?
+>>>>>>>
+>>>>>>> Will be in Q1 2018 was announced at GRCon'17 ([1]).
+>>>>>>> Some of the Rev3s are currently deployed in Norway as part of a radar
+>>>>>>> system.
+>>>>>>>
+>>>>>>>> I am not quite sure we should apply these dts files. There are a lot of
+>>>>>>>> boards with zynq and there must be any strong argument for applying this
+>>>>>>>> to the tree. For arm32 with even flat tree structure.
+>>>>>>>
+>>>>>>> What's the issue with merging them, except for having 3 more files? 
+>>>>>>
+>>>>>> For me this is not a problem because on Linux side it is not increasing
+>>>>>> build time.
+>>>>>> I want to see the value for community. All xilinx platforms are
+>>>>>> evaluation generic purpose boards which are showing how to connect stuff
+>>>>>> together.
+>>>>>> On the other hand this is real product.
+>>>>>
+>>>>> Uh.
+>>>>>
+>>>>>> I would let arm-soc maintainer to decide if this is fine or not. I
+>>>>>> definitely don't want to end up in situation that we will have dts for
+>>>>>> real products which are not bringing any value for others.
+>>>>>
+>>>>> Sure, it's the maintainers call.
+>>>>>
+>>>>> I do intend to have my customers run mainline on it eventually, currently
+>>>>> I'm a handful of patches away from making that happen. So yes, running
+>>>>> mainline is a usecase that matters to me.
+>>>>>
+>>>>> It is one thing to keep bitching about vendor kernels as a community
+>>>>> continuously, but then if someone goes through the effort and actually
+>>>>> tries to run mainline, you give them crap like that above.
+>>>>>
+>>>>> Our products usually come with full schematics [1], firmware, fpga code and all
+>>>>> available, I don't know what makes them less useful to the community as a
+>>>>> platform to experiment and develop on than Xilinx eval boards.
+>>>>>
+>>>>> There's several people that I know of both hobbyists and companies that
+>>>>> build systems around these platforms, so I don't know ...
+>>>>
+>>>> I expect this product to be delivered with full source and a mainline
+>>>> kernel, so lets make it easy for Moritz to do the right thing here. This
+>>>> makes long term support of this product much easier.
+>>>>
+>>>> Acked-by: Philip Balister <philip@opensdr.com>
 >>>
->>> If the firmware performs all the low level configuration that is required
->>> to expose this controller in a fully ECAM compatible manner, we can
->>> simply describe it as "pci-host-ecam-generic" and be done with it.
->>> However, it appears that in some cases (one of which is the Armada 80x0),
->>> the IP is synthesized with an ATU window size that does not allow the
->>> first bus to be mapped in a way that prevents the device on the
->>> downstream port from appearing more than once.
->>>
->>> So implement a driver that relies on the firmware to perform all low
->>> level initialization, and drives the controller in ECAM mode, but
->>> overrides the config space accessors to take the above quirk into
->>> account.
->>>
->>> Note that, unlike most drivers for this IP, this driver does not expose
->>> a fake bridge device at B/D/F 00:00.0. There is no point in doing so,
->>> given that this is not a true bridge, and does not require any windows
->>> to be configured in order for the downstream device to operate correctly.
->>> Omitting it also prevents the PCI resource allocation routines from
->>> handing out BAR space to it unnecessarily.
+>>> I think this is the right way to go. Get ACK from Arnd or Olof or Kevin
+>>> and I will merge this.
+>>> I am simply just afraid that if a lot of zynq customers will ask for it
+>>> we can will end up with a lot of zynq/zynqmp based dts files in the
+>>> kernel and arm-soc guys will stop this that it is simply too much and
+>>> won't accept +1 case.
 >>
->> This is a tangent, but does this mean the other drivers do not need to
->> expose a fake 00:00.0 device either?
+>> I share the same concerns. Unfortunately, there doesn't seem like any
+>> other structured way to manage dts files.
 >>
->
-> To be honest, I am not so sure anymore. I am seeing some issues in
-> ASPM code making the assumption that any device which is not a root
-> port has a parent. If this is mandated by the spec, I guess there
-> isn't a whole lot we can do except expose a fake root port on b/d/f
-> 0/0/0. This used to work fine, though, and I have to confirm whether
-> the issues I am seeing currently are due to different hardware or
-> changes in the software.
->
+>> As an OpenEmbedded guy, I know I can carry them with BSP's, but not
+>> everyone uses OpenEmbedded. I'd love to see a long term scalable
+>> solution for tracking dts files, but that is outside the scope of
+>> Moritz's request.
+> 
+> Are you guys coming to ELCE? There will be Devicetree Workshop which
+> will be good place to talk about this.
 
-OK, so the issue was new because I hadn't tried using a PCIe switch
-before, and you have already queued the fix to make the ASPM code deal
-with that.
+Yes. When is the workshop?
 
-So I think it /would/ be better for the other drivers to not bother
-mocking up the root port, and simply expose the downstream device as
-B/D/F 0/0/0 (assuming the bus range starts at 0).
+Philip
 
-It really looks like Altera, Aardvark, Sigma, etc are all in the same
-boat here, and need to
-a) filter type 0 config TLPs to avoid the downstream device to appear
-32 times, and
-b) mangle config space accesses to the 'root port' to hide BARs that
-have different meanings in this context (the size of the inbound
-window), in order to prevent the PCI resource allocation routines to
-waste huge amounts of BAR space on them.
-
->> s/Designware/DesignWare/ in comments, changelogs, Kconfig text, etc.
->>
->
-> OK
->
->>> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->>> Cc: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>  drivers/pci/dwc/Kconfig                | 11 +++
->>>  drivers/pci/dwc/Makefile               |  1 +
->>>  drivers/pci/dwc/pcie-designware-ecam.c | 77 ++++++++++++++++++++
->>
->> This really doesn't have any DesignWare specifics in it, and it seems
->> more related to drivers/pci/host/pci-host-generic.c than to anything
->> in drivers/pci/dwc.  Maybe it should be
->> drivers/pci/host/pci-host-generic-quirks.c or something?  That's
->> unwieldy, I admit.
->>
->
-> I don't care where we put it, and I am fine with owning it if you prefer.
->
->> Putting it in pci/dwc would make Jingoo and Joao the default
->> maintainers; I don't know how they feel about that.  We would probably
->> have to tweak MAINTAINERS if we *didn't* put it in pci/dwc.
->>
->> Any thoughts on this, Will?
->>
->>>  3 files changed, 89 insertions(+)
->>>
->>> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
->>> index d275aadc47ee..477576d07911 100644
->>> --- a/drivers/pci/dwc/Kconfig
->>> +++ b/drivers/pci/dwc/Kconfig
->>> @@ -169,4 +169,15 @@ config PCIE_KIRIN
->>>         Say Y here if you want PCIe controller support
->>>         on HiSilicon Kirin series SoCs.
->>>
->>> +config PCIE_DW_HOST_ECAM
->>> +     bool "Synopsys DesignWare PCIe controller in ECAM mode"
->>> +     depends on OF && PCI
->>> +     select PCI_HOST_COMMON
->>> +     select IRQ_DOMAIN
->>> +     help
->>> +       Add support for Synopsys DesignWare PCIe controllers configured
->>> +       by the firmware into ECAM shift mode. In some cases, these are
->>> +       fully ECAM compliant, in which case the pci-host-generic driver
->>> +       may be used instead.
->>
->> This doesn't quite read right.  It sounds like a controller in ECAM
->> shift mode might be fully ECAM compliant, but I don't think that's
->> what you intended.
->>
->
-> Yes, that is what I mean. ECAM shift mode results in a fully compliant
-> ECAM config space iff the IP was synthesized with a 32 KB granularity
-> for the iATU windows. The default is 64 KB, though, in which case you
-> need this driver.
->
->> IIUC, the controller can be in either "ECAM shift mode" (where we need
->> this new driver) or in a "fully ECAM compliant mode" (where we can use
->> pci-host-generic).
->>
->
-> No, this is not the case
->
->>>  endmenu
->>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
->>> index c61be9738cce..7d5a23e5b767 100644
->>> --- a/drivers/pci/dwc/Makefile
->>> +++ b/drivers/pci/dwc/Makefile
->>> @@ -1,5 +1,6 @@
->>>  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->>>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->>> +obj-$(CONFIG_PCIE_DW_HOST_ECAM) += pcie-designware-ecam.o
->>>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->>>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->>>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->>> diff --git a/drivers/pci/dwc/pcie-designware-ecam.c b/drivers/pci/dwc/pcie-designware-ecam.c
->>> new file mode 100644
->>> index 000000000000..ede627d7d08b
->>> --- /dev/null
->>> +++ b/drivers/pci/dwc/pcie-designware-ecam.c
->>> @@ -0,0 +1,77 @@
->>> +/*
->>> + * Driver for mostly ECAM compatible Synopsys dw PCIe controllers
->>> + * configured by the firmware into RC mode
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * Copyright (C) 2014 ARM Limited
->>> + * Copyright (C) 2017 Linaro Limited
->>> + *
->>> + * Authors: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->>> + *          Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> + */
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/init.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/of_pci.h>
->>> +#include <linux/pci-ecam.h>
->>> +#include <linux/platform_device.h>
->>> +
->>> +static int pci_dw_ecam_config_read(struct pci_bus *bus, u32 devfn, int where,
->>> +                                int size, u32 *val)
->>> +{
->>> +     struct pci_config_window *cfg = bus->sysdata;
->>> +
->>> +     /*
->>> +      * The Synopsys dw PCIe controller in RC mode will not filter type 0
->>> +      * config TLPs sent to devices 1 and up on its downstream port,
->>> +      * resulting in devices appearing multiple times on bus 0 unless we
->>> +      * filter them here.
->>> +      */
->>> +     if (bus->number == cfg->busr.start && PCI_SLOT(devfn) > 0) {
->>
->> Trivial, but maybe you could factor out this test?  We already have
->> these functions that do basically the same thing and it'd be nice to
->> use a similar pattern (altera and dw also check for the link being up,
->> which seems racy and possibly bogus to me):
->>
->>   altera_pcie_valid_device()
->>   dw_pcie_valid_device()
->>   rockchip_pcie_valid_device()
->>
-
-This is rather difficult to factor out, I'm afraid:
-
-static bool altera_pcie_valid_device(struct altera_pcie *pcie,
-                                     struct pci_bus *bus, int dev)
-
-static int dw_pcie_valid_device(struct pcie_port *pp, struct pci_bus *bus,
-                                int dev)
-
-static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
-                                      struct pci_bus *bus, int dev)
-
-They all use different struct types to describe the RC, and the fact
-that they model a root port means the type0 TLP filter should be
-applied to bus 1 not bus 0.
-So I agree there is some similarity between these, but not as much
-with the driver I am proposing.
-
-
->> The fact that altera and rockchip do essentially the same thing as dw
->> here suggests that this pattern is not limited to DesignWare.
->>
-
-No.
->> These other functions also do something similar, though not structured
->> the same way:
->>
->>   hisi_pcie_rd_conf()
->>   advk_pcie_rd_conf()
->>   thunder_pem_bridge_read()
->>   rcar_pcie_config_access()
->>   gapspci_config_access()
->>
->
-> I can look into that.
->
-
-I think only hisi_pcie_rd_conf() comes close to what I need to do in
-this driver, and this is not surprising given that it uses Synopsys IP
-as well. I would like to replace that entirely with this driver at
-some point, but for now I'd like to proceed with Marvell Armada 8k and
-Socionext Synquacer only, given that those are the only ones I can
-actually test myself.
-
-
-So what I will do is respin the patch as an extension to
-pci-host-generic, so we'll have something to poke at, and perhaps you
-could give some more detailed guidance as to how to refactor these
-existing routines.
-
-Thanks,
-Ard.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> Michal
+> 
