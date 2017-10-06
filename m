@@ -1,49 +1,97 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add device trees for
- camera DB
-Date: Fri, 6 Oct 2017 09:57:11 +0200
-Message-ID: <CAMuHMdU-zOogwOKS_s8-r_fsUfXxu38WKkaoryuuuGGJzmBkSw@mail.gmail.com>
-References: <1507108713-10686-1-git-send-email-fabrizio.castro@bp.renesas.com> <1507108713-10686-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: iwg20d-q7: Rework DT architecture
+Date: Fri, 6 Oct 2017 09:57:21 +0200
+Message-ID: <CAMuHMdW-Y7tK28YAGBRMqdgZK7vVqnUcud1FtzQd6wLrKii_AA@mail.gmail.com>
+References: <1507108713-10686-1-git-send-email-fabrizio.castro@bp.renesas.com> <1507108713-10686-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507108713-10686-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507108713-10686-2-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Fabrizio,
 
 On Wed, Oct 4, 2017 at 11:18 AM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This patch adds a .dtsi that describes the camera daughter board
-> and a .dts to describe the HW made of iWave's RZ/G1M SoM, iWave's
-> RZ/G1M/G1N Qseven carrier board, and the camera daughter board.
-> The camera daughter board .dtsi adds support for ttySC[14].
+<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Since the same carrier board may host RZ/G1M and RZ/G1N based
+> Systems on Module, the DT architecture for iwg20d-q7 needs
+> better decoupling. This patch provides:
+> * iwg20d-q7-common.dtsi - its purpose is to define the carrier
+>   board definitions, and its content is basically the same
+>   as the previous version of r8a7743-iwg20d-q7.dts, only it
+>   has no reference to the SoM .dtsi, and that's why the
+>   filename doesn't mention the SoC name any more.
+> * r8a7743-iwg20d-q7.dts - its new purpose is to put together
+>   the SoM .dtsi (r8a7743-iwg20m.dtsi) and the carrier board
+>   .dtsi defined by this very patch, along with "model" and
+>   "compatible" properties.
+> The final DT architecture to describe the board is now:
+> r8a7743-iwg20d-q7.dts           # Carrier Board + SoM
+> =E2=94=9C=E2=94=80=E2=94=80 r8a7743-iwg20m.dtsi         # SoM
+> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 r8a7743.dtsi            # SoC
+> =E2=94=94=E2=94=80=E2=94=80 iwg20d-q7-common.dtsi       # Carrier Board
+> and maximizes the reuse of the definitions for the carrier board
+> and for the SoM.
 >
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks for your patch!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
 
-> +/ {
-> +       aliases {
-> +               serial1 = &scif1;
-> +               serial4 = &hscif1;
+> +&pfc {
+> +       i2c2_pins: i2c2 {
+> +               groups =3D "i2c2";
+> +               function =3D "i2c2";
+> +       };
+> +
+> +       scif0_pins: scif0 {
+> +               groups =3D "scif0_data_d";
+> +               function =3D "scif0";
+> +       };
+> +
+> +       avb_pins: avb {
+> +               groups =3D "avb_mdio", "avb_gmii";
+> +               function =3D "avb";
+> +       };
 
-BTW, what's the reason you picked serial4 for the third serial port?
+Perhaps you want to use this opportunity to restore alphabetical sort order=
+?
+
+> +&scif0 {
+
+[...]
+
+> +};
+> +
+> +&avb {
+
+Likewise.
+
+Can be a separate patch, though.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
