@@ -1,48 +1,28 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add device trees for
- camera DB
-Date: Fri, 6 Oct 2017 09:06:14 +0000
-Message-ID: <TY1PR06MB0895E77A6CC9BF8B042E9553C0710@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1507108713-10686-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1507108713-10686-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdU-zOogwOKS_s8-r_fsUfXxu38WKkaoryuuuGGJzmBkSw@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
+Date: Fri, 6 Oct 2017 11:18:00 +0200
+Message-ID: <20171006091759.GF7734@verge.net.au>
+References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
+ <9635bb2d-8695-a168-d49e-0bd51807cc19@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU-zOogwOKS_s8-r_fsUfXxu38WKkaoryuuuGGJzmBkSw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9635bb2d-8695-a168-d49e-0bd51807cc19-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCj4gSGkgRmFicml6aW8sDQo+DQo+IE9uIFdlZCwgT2N0IDQsIDIwMTcgYXQg
-MTE6MTggQU0sIEZhYnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
-Y29tPiB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgYSAuZHRzaSB0aGF0IGRlc2NyaWJlcyB0
-aGUgY2FtZXJhIGRhdWdodGVyIGJvYXJkDQo+ID4gYW5kIGEgLmR0cyB0byBkZXNjcmliZSB0aGUg
-SFcgbWFkZSBvZiBpV2F2ZSdzIFJaL0cxTSBTb00sIGlXYXZlJ3MNCj4gPiBSWi9HMU0vRzFOIFFz
-ZXZlbiBjYXJyaWVyIGJvYXJkLCBhbmQgdGhlIGNhbWVyYSBkYXVnaHRlciBib2FyZC4NCj4gPiBU
-aGUgY2FtZXJhIGRhdWdodGVyIGJvYXJkIC5kdHNpIGFkZHMgc3VwcG9ydCBmb3IgdHR5U0NbMTRd
-Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0
-cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGF0ZXJzb24gPGNo
-cmlzLnBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4NCj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRl
-cmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+DQo+DQo+ID4gLS0tIC9kZXYvbnVsbA0K
-PiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2l3ZzIwZC1xNy1kYmNtLWNhLmR0c2kNCj4NCj4g
-PiArLyB7DQo+ID4gKyAgICAgICBhbGlhc2VzIHsNCj4gPiArICAgICAgICAgICAgICAgc2VyaWFs
-MSA9ICZzY2lmMTsNCj4gPiArICAgICAgICAgICAgICAgc2VyaWFsNCA9ICZoc2NpZjE7DQo+DQo+
-IEJUVywgd2hhdCdzIHRoZSByZWFzb24geW91IHBpY2tlZCBzZXJpYWw0IGZvciB0aGUgdGhpcmQg
-c2VyaWFsIHBvcnQ/DQoNCkJlY2F1c2UgaXQgbWF0Y2hlcyB0aGUgY29uZmlndXJhdGlvbiBpV2F2
-ZSBoYWQgaW4gdGhlaXIgb2ZmaWNpYWwgcmVsZWFzZSBiYXNlZCBvbg0Ka2VybmVsIDMuMTAuIFdl
-IGRlY2lkZWQgdG8ga2VlcCB0aGUgc2FtZSBudW1iZXJpbmcgc2NoZW1lIGFzIGEgcHJlY2F1dGlv
-biB0bw0KYXZvaWQgYnJlYWtpbmcgZXhpc3RpbmcgY29kZS4NCg0KVGhhbmtzLA0KRmFiDQoNCj4N
-Cj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0
-DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXgg
-YmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29u
-dmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIu
-IEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dy
-YW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVy
-b3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2lu
-Z2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5k
-ZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+On Fri, Oct 06, 2017 at 05:47:25AM +0300, Vladimir Barinov wrote:
+> Hi Simon, Geert,
+> 
+> Do you need extra actions from my side to accept this patch?
+
+Yes, I need patch 3/18.
+Could you repost it?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
