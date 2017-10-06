@@ -1,74 +1,73 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
-Date: Fri, 6 Oct 2017 12:34:27 +0300
-Message-ID: <317baf29-ce3f-38a6-20ca-accd0e34fb25@cogentembedded.com>
-References: <20170915194449.538504992@cogentembedded.com>
- <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
- <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
- <CAMuHMdVCTORpfKN+GTka_6pT1VWjOneV2GBhGo7Y8DsZYSxdvw@mail.gmail.com>
- <20171005090500.GC26369@verge.net.au>
- <dca19642-e511-5cd5-b7b9-9ed339407ed6@cogentembedded.com>
- <20171006093112.GJ7734@verge.net.au>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
+ mailbox client bindings
+Date: Fri, 6 Oct 2017 10:42:10 +0100
+Message-ID: <98f8f8fe-1fa6-db1c-73dd-f198d9211a7f@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-4-git-send-email-sudeep.holla@arm.com>
+ <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171006093112.GJ7734@verge.net.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/6/2017 12:31 PM, Simon Horman wrote:
 
->>>>>>> Define the Eagle board  dependent part of the EtherAVB device node.
->>>>>>> Enable DHCP  and NFS root for the kernel booting.
->>>>>>>
->>>>>>> Based  on the original (and large) patch by Vladimir Barinov.
->>>>>>>
->>>>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>>>
->>>>>>
->>>>>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>>>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>>>>
->>>>> [...]
->>>>>>>
->>>>>>> @@ -43,3 +44,14 @@
->>>>>>>    &scif0 {
->>>>>>>           status = "okay";
->>>>>>>    };
->>>>>>> +
->>>>>>> +&avb {
->>>>>>> +       renesas,no-ether-link;
->>>>>>> +       phy-handle = <&phy0>;
->>>>>>> +       status = "okay";
->>>>>>> +
->>>>>>> +       phy0: ethernet-phy@0 {
->>>>>>> +               rxc-skew-ps = <1500>;
->>>>>>> +               reg = <0>;
->>>>>>
->>>>>>
->>>>>> Any specific reason why you don't want to wire up the interrupt?
->>>>>>
->>>>>>                   interrupt-parent = <&gpio2>;
->>>>>
->>>>>
->>>>>     I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem
->>>>> to require PFC.
->>>>
->>>> Of course. And these can be added later.
->>>>
->>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>> Thanks, applied.
+
+On 06/10/17 00:20, Rob Herring wrote:
+> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
+>> This patch adds ARM MHU specific mailbox client bindings to support
+>> SCMI. Since SCMI specification just requires doorbell mechanism from
+>> mailbox controllers, we add mailbox data to specify the doorbell bit(s).
 >>
->>     Still not seeing any devel branch updates/tags -- have you pushed it?
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> ---
+>>  .../devicetree/bindings/arm/arm,mhu-scmi.txt          | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
+>> new file mode 100644
+>> index 000000000000..8c106f1cdeb8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/arm,mhu-scmi.txt
+>> @@ -0,0 +1,19 @@
+>> +ARM MHU mailbox client bindings for SCMI Message Protocol
+>> +----------------------------------------------------------
+>> +
+>> +This binding is intended to define the ARM MHU specific extensions to
+>> +the generic SCMI bindings[2].
+>> +
+>> +Required properties:
+>> +
+>> +The scmi node with the following properties shall be under the /firmware/ node.
+>> +
+>> +- compatible : shall be "arm,scmi" and "arm,mhu-scmi"
 > 
-> Sorry, there was a bit of a delay. But it is there.
+> Most specific first.
+> 
 
-    Yeah, I saw it later yesterday, thanks!
+Ah right, sorry for missing that.
 
-MBR, Sergei
+>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
+>> +	      data as expected by the mailbox controller
+> 
+> Shouldn't that be cells as part of mboxes property?
+> 
+
+Yes, that's what I proposed with my ARM MHU doorbell bindings[1]. Since
+Jassi rejected that and asked to make it part client. But I agree with
+you comment. Even Arnd had similar opinion.
+
+-- 
+Regards,
+Sudeep
+
+[1] https://patchwork.kernel.org/patch/9745683/
