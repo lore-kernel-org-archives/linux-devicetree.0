@@ -1,74 +1,44 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/6] Shrinking DT memory usage
-Date: Fri, 6 Oct 2017 19:11:37 -0700
-Message-ID: <59D837D9.1080203@gmail.com>
-References: <20171005194422.26224-1-robh@kernel.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
+ mailbox client bindings
+Date: Sat, 7 Oct 2017 07:56:37 +0530
+Message-ID: <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-4-git-send-email-sudeep.holla@arm.com> <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
+ <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com> <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171005194422.26224-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/17 12:44, Rob Herring wrote:
-> On kernels with a minimal config and a RAM target in the 100s of KB, DT 
-> is quite a hog of runtime memory usage. How much is dependent on how many
-> nodes and properties in the DT which have a corresponding struct device_node
-> and struct property in the kernel. Just skipping disabled nodes saves a 
-> lot by not creating the device_nodes in the first place[1], but there's 
-> more low hanging fruit by making some of the fields in struct property and
-> struct device_node optional. With the changes here, the memory usage goes
-> from 17KB to under 8KB on QEMU's ARM virt machine which is a relatively 
-> small DT.
-> 
-> The majority of the diffstat here is just moving all the kobject/sysfs 
-> related code to its own file so we can avoid adding a bunch of ifdefs.
-> 
-> There's more drastic approaches we could take such as doing the 
-> unflattening at build time and storing the bulk of the unflattened tree 
-> as const data. Grant also has some ideas on storing properties as ids 
-> instead. He's explained it to me, but I still don't understand it.
-> 
-> Rob
-> 
-> [1] https://patchwork.kernel.org/patch/9983203/
-> 
-> Rob Herring (6):
->   of: fix missing kobject init for !SYSFS && OF_DYNAMIC config
->   of: remove struct property.unique_id for FDT
->   of: make struct property _flags field configurable
->   of: move kobj_to_device_node() into dynamic.c
->   of: wrap accesses to device_node kobject
->   of: make kobject and bin_attribute support configurable
-> 
->  drivers/base/core.c     |   2 +-
->  drivers/of/Kconfig      |   4 ++
->  drivers/of/Makefile     |   1 +
->  drivers/of/base.c       | 133 ---------------------------------------
->  drivers/of/dynamic.c    |  27 ++------
->  drivers/of/kobj.c       | 164 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/of_private.h |  29 +++++++--
->  include/linux/of.h      |  28 +++++----
->  8 files changed, 215 insertions(+), 173 deletions(-)
->  create mode 100644 drivers/of/kobj.c
-> 
+On Fri, Oct 6, 2017 at 9:24 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Oct 6, 2017 at 6:01 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>> On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
 
-For the entire series:
+>>>
+>>>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
+>>>> +           data as expected by the mailbox controller
+>>>
+>>> Shouldn't that be cells as part of mboxes property?
+>>>
+>> A MHU client can send any number of commands (such u32 values) over a channel.
+>> This client (SCMI) sends just one command over a channel, but other
+>> clients may/do send two or more.
+>
+> Okay, then I guess I don't understand why this is in DT.
+>
+Yeah the client has to provide code (u32 value) for the commands it
+sends, and that value is going to be platform specific. For example,
+on Juno the ITS_AN_SCMI_COMMAND may be defined as BIT(7) while on my
+platform it may be 0x4567
 
-Reviewed-by: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+For MHU based platforms, it becomes easy if the u32 is passed from DT.
+And that should be ok since that is like a h/w parameter - a value
+chosen/expected by the remote firmware.
 
-I don't know if there will be any conflicts between my series
-"[PATCH 00/12] of: overlay: clean up device tree overlay code"
-and this series.
-
-If you choose to apply this series first, I will make any needed
-changes to my series.
-
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thnx
