@@ -1,266 +1,78 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] usb: host: add a generic platform USB roothub driver
-Date: Sat, 7 Oct 2017 19:08:27 +0200
-Message-ID: <CAFBinCAerqdvhsTkLLd2t9W3d04F5wzQk5Zo2+h+HOHLdDeQZw@mail.gmail.com>
-References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
- <20170903213829.6589-3-martin.blumenstingl@googlemail.com> <59D4DC7E.6040003@linux.intel.com>
+From: Bernd Edlinger <bernd.edlinger-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
+Subject: [PATCH] Add device tree bindings for Altera FPGA Manager GPIO
+Date: Sat, 7 Oct 2017 18:13:49 +0000
+Message-ID: <AM5PR0701MB26572E57A1787CD9684B7FC1E4760@AM5PR0701MB2657.eurprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59D4DC7E.6040003-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Language: de-DE
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathias,
+Add device tree bindings for Altera FPGA Manager GPIO.
 
-thank you for taking the time to go through my patch
+Signed-off-by: Bernd Edlinger <bernd.edlinger-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
+---
+ .../bindings/gpio/gpio-altera-fpgamgr.txt          | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
 
-On Wed, Oct 4, 2017 at 3:05 PM, Mathias Nyman
-<mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> On 04.09.2017 00:38, Martin Blumenstingl wrote:
->>
->> Many SoC platforms have separate devices for the USB PHY which are
->> registered through the generic PHY framework. These PHYs have to be
->> enabled to make the USB controller actually work. They also have to be
->> disabled again on shutdown/suspend.
->>
->> Currently (at least) the following HCI platform drivers are using custom
->> code to obtain all PHYs via devicetree for the roothub/controller and
->> disable/enable them when required:
->> - ehci-platform.c has ehci_platform_power_{on,off}
->> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
->> - ohci-platform.c has ohci_platform_power_{on,off}
->>
->> These drivers are not using the generic devicetree USB device bindings
->> yet which were only introduced recently (documentation is available in
->> devicetree/bindings/usb/usb-device.txt).
->> With this new driver the usb2-phy and usb3-phy can be specified directly
->> in the child-node of the corresponding port of the roothub via
->> devicetree. This can be extended by not just parsing PHYs (some of the
->> other drivers listed above are for example also parsing a list of clocks
->> as well) when required.
->
->
-> usb_add_hcd() in usb/core/hcd.c is already finding, initializing and turning
-> on a phy, would it make sense to expand that one to support several phys
-> instead?
->
-> xhci will add two hcd's one for USB2 and one for USB3
-that is a great suggestion - thank you for bringing this up!
-as a benefit we would add multiple PHY support for all the other
-use-cases I found (at least: ehci-platform.c, xhci-mtk.c,
-ohci-platform.c) - instead of just handling this in xhci-plat.c
-
-I have one quick question regarding usb/core/hcd.c:
-are hcd_bus_suspend() and hcd_bus_resume() the right places to
-power_{off,on} the PHYs during suspend?
-(currently usb/core/hcd.c doesn't touch the PHY during suspend/resume
-- xhci-mtk.c on the other hand seems to require it during a
-suspend/resume cycle)
-
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>   drivers/usb/host/Kconfig            |   3 +
->>   drivers/usb/host/Makefile           |   2 +
->>   drivers/usb/host/platform-roothub.c | 180
->> ++++++++++++++++++++++++++++++++++++
->>   drivers/usb/host/platform-roothub.h |  12 +++
->>   4 files changed, 197 insertions(+)
->>   create mode 100644 drivers/usb/host/platform-roothub.c
->>   create mode 100644 drivers/usb/host/platform-roothub.h
->>
->
-> Instead of creating  platform-roothub files could this content
-> be added into into core/hcd.*, core/phy.* and host/xhci-plat.c
-OK, I will try this and send a patch so we can have a look at the
-potential result and start a discussion based on that (if required)
-
->
->> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
->> index fa5692dec832..b8b05c786b2a 100644
->> --- a/drivers/usb/host/Kconfig
->> +++ b/drivers/usb/host/Kconfig
->> @@ -805,6 +805,9 @@ config USB_HCD_SSB
->>
->>           If unsure, say N.
->>
->> +config USB_PLATFORM_ROOTHUB
->> +       bool
->> +
->>   config USB_HCD_TEST_MODE
->>         bool "HCD test mode support"
->>         ---help---
->> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
->> index cf2691fffcc0..dc817f82d632 100644
->> --- a/drivers/usb/host/Makefile
->> +++ b/drivers/usb/host/Makefile
->> @@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)    += whci/
->>
->>   obj-$(CONFIG_USB_PCI) += pci-quirks.o
->>
->> +obj-$(CONFIG_USB_PLATFORM_ROOTHUB)     += platform-roothub.o
->> +
->>   obj-$(CONFIG_USB_EHCI_HCD)    += ehci-hcd.o
->>   obj-$(CONFIG_USB_EHCI_PCI)    += ehci-pci.o
->>   obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)   += ehci-platform.o
->> diff --git a/drivers/usb/host/platform-roothub.c
->> b/drivers/usb/host/platform-roothub.c
->> new file mode 100644
->> index 000000000000..70d2d97aa8b2
->> --- /dev/null
->> +++ b/drivers/usb/host/platform-roothub.c
->> @@ -0,0 +1,180 @@
->> +/*
->> + * platform roothub driver - a virtual PHY device which passes all phy_*
->> + * function calls to multiple (actual) PHY devices. This is comes handy
->> when
->> + * initializing all PHYs on a root-hub (to keep them all in the same
->> state).
->> + *
->> + * Copyright (C) 2017 Martin Blumenstingl
->> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/list.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/of.h>
->> +#include <linux/usb/of.h>
->> +
->> +#include "platform-roothub.h"
->> +
->> +#define ROOTHUB_PORTNUM                0
->> +
->> +struct platform_roothub {
->> +       struct phy              *phy;
->> +       struct list_head        list;
->> +};
->> +
->> +static struct platform_roothub *platform_roothub_alloc(struct device
->> *dev)
->> +{
->> +       struct platform_roothub *roothub_entry;
->> +
->> +       roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry),
->> GFP_KERNEL);
->> +       if (!roothub_entry)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       INIT_LIST_HEAD(&roothub_entry->list);
->> +
->> +       return roothub_entry;
->> +}
->> +
->> +static int platform_roothub_add_phy(struct device *dev,
->> +                                   struct device_node *port_np,
->> +                                   const char *con_id, struct list_head
->> *list)
->> +{
->> +       struct platform_roothub *roothub_entry;
->> +       struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
->> +
->> +       if (IS_ERR_OR_NULL(phy)) {
->> +               if (!phy || PTR_ERR(phy) == -ENODEV)
->> +                       return 0;
->> +               else
->> +                       return PTR_ERR(phy);
->> +       }
->> +
->> +       roothub_entry = platform_roothub_alloc(dev);
->> +       if (IS_ERR(roothub_entry))
->> +               return PTR_ERR(roothub_entry);
->> +
->> +       roothub_entry->phy = phy;
->> +
->> +       list_add_tail(&roothub_entry->list, list);
->> +
->> +       return 0;
->> +}
->> +
->> +struct platform_roothub *platform_roothub_init(struct device *dev)
->> +{
->> +       struct device_node *roothub_np, *port_np;
->> +       struct platform_roothub *plat_roothub;
->> +       struct platform_roothub *roothub_entry;
->> +       struct list_head *head;
->> +       int err;
->> +
->> +       roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
->> +       if (!of_device_is_available(roothub_np))
->> +               return NULL;
->> +
->> +       plat_roothub = platform_roothub_alloc(dev);
->> +       if (IS_ERR(plat_roothub))
->> +               return plat_roothub;
->> +
->> +       for_each_available_child_of_node(roothub_np, port_np) {
->> +               err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
->> +                                              &plat_roothub->list);
->> +               if (err)
->> +                       goto err_out;
->> +
->> +               err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
->> +                                              &plat_roothub->list);
->
->
-> So if the first 10 ports have the same phy, and 11th and 12th have an other
-> one, won't we end up
-> with a phy list with 12 entries for 2 phys, and initialize and turn on the
-> same first phy 10 times?
-indeed, we would call phy_init() and phy_power_on() multiple times on
-the same PHY.
-however, this is not an issue since the PHY framework is doing
-ref-counting for us (see [0] and [1] - the PHY driver's .init() and
-.power_on() callbacks will only be called once for each PHY in your
-scenario)
-do you see any other issues with this?
-
-> I'm also not sure I understand the reason for having the "usb3-phy" and
-> "usb2-phy" phy-names
-> for the ports if we anyways just add everything to one list.
-the PHY devicetree bindings state that the "phy-names" property is
-mandatory: [2]
-
-when moving the whole multiple PHY logic to usb_add_hcd() then it even
-makes sense to look for specific PHYs (imho):
-- let's assume we have a XHCI controller with two ports
-- both ports have a USB2 PHY, but only one has a USB3 PHY
-- (this basically describes the situation on the Amlogic Meson GXL
-SoCs, Mediatek uses similar designs)
-
-this would result in the following flow:
-1. usb_add_hcd is called for the high-speed HCD
-2. we would parse the PHYs for the high-speed HCD
-3. usb_add_hcd is called for the super-speed HCD
-4. we would parse the PHYs for the super-speed HCD
-depending on how we parse the PHYs (mapping the controller-type to
-phy-name "usb2-phy" or "usb3-phy") we either end up with:
-- 3 PHY handles (2x USB2, 1x USB3) if we take the
-controller-type/phy-name into account
-- 6 PHY handles (doubling the amount from the use-case above) if we don't
-
-please let me know if there is an easier solution - I prefer simple
-code myself, so I don't want to add complexity where it's not needed.
-
-
-Regards,
-Martin
-
-
-[0] http://elixir.free-electrons.com/linux/v4.14-rc3/source/drivers/phy/phy-core.c#L231
-[1] http://elixir.free-electrons.com/linux/v4.14-rc3/source/drivers/phy/phy-core.c#L296
-[2] http://elixir.free-electrons.com/linux/v4.14-rc3/source/Documentation/devicetree/bindings/phy/phy-bindings.txt#L36
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
+new file mode 100644
+index 0000000..7e9434f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
+@@ -0,0 +1,45 @@
++Altera FPGA Manager GPIO controller bindings
++
++Required controller properties:
++- #address-cells : Should be 1
++- #size-cells : Should be 0
++- compatible:
++  - "altr,fpgamgr-gpio"
++- reg: Physical base address and length of the controller's registers.
++- status : "okay" or "disabled".
++
++The FPGA Manager has two 32-bit ports, one for input and one for output.
++
++Port properties:
++- compatible:
++  - "altr,fpgamgr-gpio-output"
++  - "altr,fpgamgr-gpio-input"
++- #gpio-cells : Should be 2
++  - The first cell is the gpio offset number.
++  - The second cell is reserved and is currently unused.
++- gpio-controller : Marks the device node as a GPIO controller.
++- reg : Port number, 0 for output, 1 for input.
++
++Example:
++
++gpio3: gpio@ff706010 {
++  #address-cells = <1>;
++  #size-cells = <0>;
++  compatible = "altr,fpgamgr-gpio";
++  reg = <0xff706010 0x8>;
++  status = "okay";
++
++  portd: gpio-controller@0 {
++    compatible = "altr,fpgamgr-gpio-output";
++    gpio-controller;
++    #gpio-cells = <2>;
++    reg = <0>;
++  };
++
++  porte: gpio-controller@1 {
++    compatible = "altr,fpgamgr-gpio-input";
++    gpio-controller;
++    #gpio-cells = <2>;
++    reg = <1>;
++  };
++};
+-- 
+1.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
