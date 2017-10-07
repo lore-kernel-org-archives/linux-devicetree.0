@@ -1,41 +1,30 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 00/12] add pinmuxing support for pins in AXP209 and
- AXP813 PMICs
-Date: Sat, 7 Oct 2017 12:48:31 +0200
-Message-ID: <CACRpkdYBfuyr8hzVTH_RFfM4uYOMbWTHnH9SeF8SMGFe-shEWA@mail.gmail.com>
-References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v3 1/2] pinctrl: rza1: add support for RZ/A1L
+Date: Sat, 7 Oct 2017 13:19:52 +0200
+Message-ID: <CACRpkdaQf=O19op+0kWHtsfHps80JQZbXT+ajVxQMtHZ_Te7bQ@mail.gmail.com>
+References: <20171004210724.59797-1-chris.brandt@renesas.com> <20171004210724.59797-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+In-Reply-To: <20171004210724.59797-2-chris.brandt@renesas.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 2, 2017 at 2:08 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
+On Wed, Oct 4, 2017 at 11:07 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
 
-> The AXP209 and AXP813 PMICs have several pins (respectively 3 and 2) that can
-> be used either as GPIOs or for other purposes (ADC or LDO here).
+> Aspects like the number of ports and the location where peripherals are
+> brought out differ between the RZ/A1H and RZ/A1L.
 >
-> We already have a GPIO driver for the GPIO use of those pins on the AXP209.
-> Let's "upgrade" this driver to support all the functions these pins can have.
->
-> Then we add support to this driver for the AXP813 which is slighlty different
-> (basically a different offset in a register and one less pin).
->
-> I suggest patches 1 to 6 go through Linus's tree and 7 to 12 via Maxime or
-> Chen-Yu's tree.
->
-> This version of the patchset is based on Chen-Yu's patchset for AXP813/818
-> regulators[1].
->
-> v3:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+> v2:
+>  * added Reviewed-by
 
-This is starting to look really good, but I see there are still comments.
-
-Keep the series going, we merge once Maxime and Chen-Yu are happy.
+Looks good, I expect Geert to queue this for me with a pull
+request like with other Renesas stuff.
 
 Yours,
 Linus Walleij
