@@ -1,130 +1,267 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding
- for Allwinner XR819 SDIO Wi-Fi
-Date: Sat, 07 Oct 2017 21:01:51 +0800
-Message-ID: <46e9b7199a2668842313504273f9f86a@aosc.io>
-References: <20171003165944.13056-1-icenowy@aosc.io>
- <20171003165944.13056-2-icenowy@aosc.io>
- <871smjxp46.fsf@kamboji.qca.qualcomm.com>
- <E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
- <59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea>
- <C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io>
- <878tgq5beu.fsf@codeaurora.org>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] usb: host: add a generic platform USB roothub driver
+Date: Sat, 7 Oct 2017 19:08:27 +0200
+Message-ID: <CAFBinCAerqdvhsTkLLd2t9W3d04F5wzQk5Zo2+h+HOHLdDeQZw@mail.gmail.com>
+References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
+ <20170903213829.6589-3-martin.blumenstingl@googlemail.com> <59D4DC7E.6040003@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBQFA4PHAKGQEHZNQVQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <878tgq5beu.fsf-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59D4DC7E.6040003-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-10-05 14:58=EF=BC=8CKalle Valo =E5=86=99=E9=81=93=EF=BC=9A
-> Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->=20
->> =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=886:11:45, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->>> On Wed, Oct 04, 2017 at 10:02:48AM +0000, Arend van Spriel wrote:
->>>> On 10/4/2017 11:03 AM, Icenowy Zheng wrote:
->>>> >
->>>> >
->>>> > =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=885:02:17, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> =E5=86=99=E5=88=B0:
->>>> > > Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->>>> > >
->>>> > > > Allwinner XR819 is a SDIO Wi-Fi chip, which has the
->>> functionality to
->>>> > > use
->>>> > > > an out-of-band interrupt pin instead of SDIO in-band interrupt.
->>>> > > >
->>>> > > > Add the device tree binding of this chip, in order to make it
->>>> > > possible
->>>> > > > to add this interrupt pin to device trees.
->>>> > > >
->>>> > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> > > > ---
->>>> > > > Changes in v3:
->>>> > > > - Renames the node name.
->>>> > > > - Adds ACK from Rob.
->>>> > > > Changes in v2:
->>>> > > > - Removed status property in example.
->>>> > > > - Added required property reg.
->>>> > > >
->>>> > > >   .../bindings/net/wireless/allwinner,xr819.txt      | 38
->>>> > > ++++++++++++++++++++++
->>>> > > >   1 file changed, 38 insertions(+)
->>>> > > >   create mode 100644
->>>> > >
->>> Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
->>>> > >
->>>> > > Like I asked already last time, AFAICS there is no upstream xr819
->>>> > > wireless driver in drivers/net/wireless directory. Do we still
->>> accept
->>>> > > bindings like this for out-of-tree drivers?
->>>> >
->>>> > See esp8089.
->>>> >
->>>> > There's also no in-tree driver for it.
->>>>=20
->>>> The question is whether we should. The above might be a precedent,
->>> but it
->>>> may not necessarily be the way to go. The commit message for esp8089
->>> seems
->>>> to hint that there is intent to have an in-tree driver:
->>>>=20
->>>> """
->>>>     Note that at this point there only is an out of tree driver for
->>> this
->>>>     hardware, there is no clear timeline / path for merging this.
->>> Still
->>>>     I believe it would be good to specify the binding for this in
->>> tree
->>>>     now, so that any future migration to an in tree driver will not
->>> cause
->>>>     compatiblity issues.
->>>>=20
->>>>     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>     Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> """
->>>>=20
->>>> Regardless the bindings are in principle independent of the kernel
->>> and just
->>>> describing hardware. I think there have been discussions to move the
->>>> bindings to their own repository, but apparently it was decided
->>> otherwise.
->>>=20
->>> Yeah, I guess especially how it could be merged with the cw1200=20
->>> driver
->>> would be very relevant to that commit log.
->>=20
->> The cw1200 driver seems to still have some legacy platform
->> data. Maybe they should also be convert to DT.
->> (Or maybe compatible =3D "allwinner,xr819" is enough, as
->> xr819 is a specified variant of cw1200 family)
->=20
-> Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
-> that? Or does cw1200 more changes than just adding the DT support?
+Hi Mathias,
 
-By doing some tests, XR819 is in the the CW1x60 family, which is not
-yet well supported by cw1200 driver.
+thank you for taking the time to go through my patch
 
-More work should be needed for support xr819 in cw1200 driver.
+On Wed, Oct 4, 2017 at 3:05 PM, Mathias Nyman
+<mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> On 04.09.2017 00:38, Martin Blumenstingl wrote:
+>>
+>> Many SoC platforms have separate devices for the USB PHY which are
+>> registered through the generic PHY framework. These PHYs have to be
+>> enabled to make the USB controller actually work. They also have to be
+>> disabled again on shutdown/suspend.
+>>
+>> Currently (at least) the following HCI platform drivers are using custom
+>> code to obtain all PHYs via devicetree for the roothub/controller and
+>> disable/enable them when required:
+>> - ehci-platform.c has ehci_platform_power_{on,off}
+>> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
+>> - ohci-platform.c has ohci_platform_power_{on,off}
+>>
+>> These drivers are not using the generic devicetree USB device bindings
+>> yet which were only introduced recently (documentation is available in
+>> devicetree/bindings/usb/usb-device.txt).
+>> With this new driver the usb2-phy and usb3-phy can be specified directly
+>> in the child-node of the corresponding port of the roothub via
+>> devicetree. This can be extended by not just parsing PHYs (some of the
+>> other drivers listed above are for example also parsing a list of clocks
+>> as well) when required.
+>
+>
+> usb_add_hcd() in usb/core/hcd.c is already finding, initializing and turning
+> on a phy, would it make sense to expand that one to support several phys
+> instead?
+>
+> xhci will add two hcd's one for USB2 and one for USB3
+that is a great suggestion - thank you for bringing this up!
+as a benefit we would add multiple PHY support for all the other
+use-cases I found (at least: ehci-platform.c, xhci-mtk.c,
+ohci-platform.c) - instead of just handling this in xhci-plat.c
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I have one quick question regarding usb/core/hcd.c:
+are hcd_bus_suspend() and hcd_bus_resume() the right places to
+power_{off,on} the PHYs during suspend?
+(currently usb/core/hcd.c doesn't touch the PHY during suspend/resume
+- xhci-mtk.c on the other hand seems to require it during a
+suspend/resume cycle)
+
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   drivers/usb/host/Kconfig            |   3 +
+>>   drivers/usb/host/Makefile           |   2 +
+>>   drivers/usb/host/platform-roothub.c | 180
+>> ++++++++++++++++++++++++++++++++++++
+>>   drivers/usb/host/platform-roothub.h |  12 +++
+>>   4 files changed, 197 insertions(+)
+>>   create mode 100644 drivers/usb/host/platform-roothub.c
+>>   create mode 100644 drivers/usb/host/platform-roothub.h
+>>
+>
+> Instead of creating  platform-roothub files could this content
+> be added into into core/hcd.*, core/phy.* and host/xhci-plat.c
+OK, I will try this and send a patch so we can have a look at the
+potential result and start a discussion based on that (if required)
+
+>
+>> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+>> index fa5692dec832..b8b05c786b2a 100644
+>> --- a/drivers/usb/host/Kconfig
+>> +++ b/drivers/usb/host/Kconfig
+>> @@ -805,6 +805,9 @@ config USB_HCD_SSB
+>>
+>>           If unsure, say N.
+>>
+>> +config USB_PLATFORM_ROOTHUB
+>> +       bool
+>> +
+>>   config USB_HCD_TEST_MODE
+>>         bool "HCD test mode support"
+>>         ---help---
+>> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+>> index cf2691fffcc0..dc817f82d632 100644
+>> --- a/drivers/usb/host/Makefile
+>> +++ b/drivers/usb/host/Makefile
+>> @@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)    += whci/
+>>
+>>   obj-$(CONFIG_USB_PCI) += pci-quirks.o
+>>
+>> +obj-$(CONFIG_USB_PLATFORM_ROOTHUB)     += platform-roothub.o
+>> +
+>>   obj-$(CONFIG_USB_EHCI_HCD)    += ehci-hcd.o
+>>   obj-$(CONFIG_USB_EHCI_PCI)    += ehci-pci.o
+>>   obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)   += ehci-platform.o
+>> diff --git a/drivers/usb/host/platform-roothub.c
+>> b/drivers/usb/host/platform-roothub.c
+>> new file mode 100644
+>> index 000000000000..70d2d97aa8b2
+>> --- /dev/null
+>> +++ b/drivers/usb/host/platform-roothub.c
+>> @@ -0,0 +1,180 @@
+>> +/*
+>> + * platform roothub driver - a virtual PHY device which passes all phy_*
+>> + * function calls to multiple (actual) PHY devices. This is comes handy
+>> when
+>> + * initializing all PHYs on a root-hub (to keep them all in the same
+>> state).
+>> + *
+>> + * Copyright (C) 2017 Martin Blumenstingl
+>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/list.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/of.h>
+>> +#include <linux/usb/of.h>
+>> +
+>> +#include "platform-roothub.h"
+>> +
+>> +#define ROOTHUB_PORTNUM                0
+>> +
+>> +struct platform_roothub {
+>> +       struct phy              *phy;
+>> +       struct list_head        list;
+>> +};
+>> +
+>> +static struct platform_roothub *platform_roothub_alloc(struct device
+>> *dev)
+>> +{
+>> +       struct platform_roothub *roothub_entry;
+>> +
+>> +       roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry),
+>> GFP_KERNEL);
+>> +       if (!roothub_entry)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       INIT_LIST_HEAD(&roothub_entry->list);
+>> +
+>> +       return roothub_entry;
+>> +}
+>> +
+>> +static int platform_roothub_add_phy(struct device *dev,
+>> +                                   struct device_node *port_np,
+>> +                                   const char *con_id, struct list_head
+>> *list)
+>> +{
+>> +       struct platform_roothub *roothub_entry;
+>> +       struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
+>> +
+>> +       if (IS_ERR_OR_NULL(phy)) {
+>> +               if (!phy || PTR_ERR(phy) == -ENODEV)
+>> +                       return 0;
+>> +               else
+>> +                       return PTR_ERR(phy);
+>> +       }
+>> +
+>> +       roothub_entry = platform_roothub_alloc(dev);
+>> +       if (IS_ERR(roothub_entry))
+>> +               return PTR_ERR(roothub_entry);
+>> +
+>> +       roothub_entry->phy = phy;
+>> +
+>> +       list_add_tail(&roothub_entry->list, list);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +struct platform_roothub *platform_roothub_init(struct device *dev)
+>> +{
+>> +       struct device_node *roothub_np, *port_np;
+>> +       struct platform_roothub *plat_roothub;
+>> +       struct platform_roothub *roothub_entry;
+>> +       struct list_head *head;
+>> +       int err;
+>> +
+>> +       roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
+>> +       if (!of_device_is_available(roothub_np))
+>> +               return NULL;
+>> +
+>> +       plat_roothub = platform_roothub_alloc(dev);
+>> +       if (IS_ERR(plat_roothub))
+>> +               return plat_roothub;
+>> +
+>> +       for_each_available_child_of_node(roothub_np, port_np) {
+>> +               err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
+>> +                                              &plat_roothub->list);
+>> +               if (err)
+>> +                       goto err_out;
+>> +
+>> +               err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
+>> +                                              &plat_roothub->list);
+>
+>
+> So if the first 10 ports have the same phy, and 11th and 12th have an other
+> one, won't we end up
+> with a phy list with 12 entries for 2 phys, and initialize and turn on the
+> same first phy 10 times?
+indeed, we would call phy_init() and phy_power_on() multiple times on
+the same PHY.
+however, this is not an issue since the PHY framework is doing
+ref-counting for us (see [0] and [1] - the PHY driver's .init() and
+.power_on() callbacks will only be called once for each PHY in your
+scenario)
+do you see any other issues with this?
+
+> I'm also not sure I understand the reason for having the "usb3-phy" and
+> "usb2-phy" phy-names
+> for the ports if we anyways just add everything to one list.
+the PHY devicetree bindings state that the "phy-names" property is
+mandatory: [2]
+
+when moving the whole multiple PHY logic to usb_add_hcd() then it even
+makes sense to look for specific PHYs (imho):
+- let's assume we have a XHCI controller with two ports
+- both ports have a USB2 PHY, but only one has a USB3 PHY
+- (this basically describes the situation on the Amlogic Meson GXL
+SoCs, Mediatek uses similar designs)
+
+this would result in the following flow:
+1. usb_add_hcd is called for the high-speed HCD
+2. we would parse the PHYs for the high-speed HCD
+3. usb_add_hcd is called for the super-speed HCD
+4. we would parse the PHYs for the super-speed HCD
+depending on how we parse the PHYs (mapping the controller-type to
+phy-name "usb2-phy" or "usb3-phy") we either end up with:
+- 3 PHY handles (2x USB2, 1x USB3) if we take the
+controller-type/phy-name into account
+- 6 PHY handles (doubling the amount from the use-case above) if we don't
+
+please let me know if there is an easier solution - I prefer simple
+code myself, so I don't want to add complexity where it's not needed.
+
+
+Regards,
+Martin
+
+
+[0] http://elixir.free-electrons.com/linux/v4.14-rc3/source/drivers/phy/phy-core.c#L231
+[1] http://elixir.free-electrons.com/linux/v4.14-rc3/source/drivers/phy/phy-core.c#L296
+[2] http://elixir.free-electrons.com/linux/v4.14-rc3/source/Documentation/devicetree/bindings/phy/phy-bindings.txt#L36
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
