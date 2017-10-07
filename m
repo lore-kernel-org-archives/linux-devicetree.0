@@ -1,30 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/2] pinctrl: rza1: add support for RZ/A1L
-Date: Sat, 7 Oct 2017 13:19:52 +0200
-Message-ID: <CACRpkdaQf=O19op+0kWHtsfHps80JQZbXT+ajVxQMtHZ_Te7bQ@mail.gmail.com>
-References: <20171004210724.59797-1-chris.brandt@renesas.com> <20171004210724.59797-2-chris.brandt@renesas.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH 0/2] Add support for Hi6220 coresight
+Date: Sat, 7 Oct 2017 20:18:02 +0800
+Message-ID: <20171007121802.GC23080@leoy-linaro>
+References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
+ <20170901013301.GN21656@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20171004210724.59797-2-chris.brandt@renesas.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170901013301.GN21656@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 11:07 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+Hi Stephen, Wei,
 
-> Aspects like the number of ports and the location where peripherals are
-> brought out differ between the RZ/A1H and RZ/A1L.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
-> v2:
->  * added Reviewed-by
+On Thu, Aug 31, 2017 at 06:33:01PM -0700, Stephen Boyd wrote:
+> On 09/01, Leo Yan wrote:
+> > This patch series adds support for coresight on Hi6220; the first patch
+> > is to fix coresight PLL so can avoid system hang after we enable
+> > coresight, the second patch is to add DT binding according to coresight
+> > topology.
+> > 
+> > The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
+> > can successfully decode ETF and ETB trace data.
+> > 
+> 
+> I can take the first one and second one goes through arm-soc?
 
-Looks good, I expect Geert to queue this for me with a pull
-request like with other Renesas stuff.
+Could you pick these two patches for Hi6220 coresight enabling for
+this merge window? Or need me resend these two patches?
 
-Yours,
-Linus Walleij
+Thanks,
+Leo Yan
