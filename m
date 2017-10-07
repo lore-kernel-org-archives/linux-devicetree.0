@@ -1,123 +1,64 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [Patch v6 5/7] slimbus: qcom: Add runtime-pm support using
- clock-pause feature
-Date: Sat, 7 Oct 2017 10:22:59 +0200
-Message-ID: <20171007082259.kumlkus5mg5eh5cr@latitude>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-6-srinivas.kandagatla@linaro.org>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: dac: Add Texas Instruments 8/10/12-bit
+ 2/4-channel DAC driver
+Date: Sat, 7 Oct 2017 11:13:12 +0200
+Message-ID: <20171007091312.GA6890@wunner.de>
+References: <cceeb1a985343d36dc90d2708371f3e1a73264f6.1504602350.git.lukas@wunner.de>
+ <5d861035569248ac4ae971638ce7fd1e50947232.1504602350.git.lukas@wunner.de>
+ <20170910161108.2ecc34d3@archlinux>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ezdii7jlobx6xej4"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171006155136.4682-6-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+In-Reply-To: <20170910161108.2ecc34d3@archlinux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Sep 10, 2017 at 04:11:08PM +0100, Jonathan Cameron wrote:
+> On Tue, 5 Sep 2017 11:27:00 +0200 Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+> > The DACrrcS085 (rr = 08/10/12, c = 2/4) family of SPI DACs was
+> > inherited by TI when they acquired National Semiconductor in 2011.
+> 
+> Very nice.  A few really minor comments inline.
 
---ezdii7jlobx6xej4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+D'accord on all your comments except this one:
 
-Hi, some more trivial comments below.
 
-On Fri, Oct 06, 2017 at 05:51:34PM +0200, srinivas.kandagatla@linaro.org wr=
-ote:
-> From: Sagar Dharia <sdharia@codeaurora.org>
->=20
-> Slimbus HW mandates that clock-pause sequence has to be executed
-> before disabling relevant interface and core clocks.
-> Runtime-PM's autosuspend feature is used here to enter/exit low
-> power mode for Qualcomm's Slimbus controller. Autosuspend feature
-> enables driver to avoid changing power-modes too frequently since
-> entering clock-pause is an expensive sequence
->=20
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-[...]
-> +static int msm_clk_pause_wakeup(struct slim_controller *ctrl)
-> +{
-> +	struct msm_slim_ctrl *dev =3D slim_get_ctrldata(ctrl);
-> +
-> +	clk_prepare_enable(dev->hclk);
-> +	clk_prepare_enable(dev->rclk);
-> +	enable_irq(dev->irq);
-> +
-> +	writel_relaxed(1, dev->base + FRM_WAKEUP);
-> +	/* Make sure framer wakeup write goes through before ISR fires */
-> +	mb();
-> +	/**
+> > +	ret = sscanf(spi->modalias, "dac%2hhu%1d",
+> > +		     &ti_dac->resolution, &indio_dev->num_channels);
+> > +	WARN_ON(ret != 2);
+> 
+> Whilst this seems nice and clear now, it may not work if this driver
+> had additional parts added in future. 
+> 
+> I would prefer an explicit table with this information in it and
+> use an enum to reference into it.
+> 
+> This is a bit 'too clever' :)
 
-This isn't really a kerneldoc comment.
+Hm, I looked at the other SPI DACs available from TI and their programming
+interface is sufficiently different that they don't lend themselves all
+too well for integration into this driver.  There might be DACs from other
+vendors with a similar programming interface.
 
-> +	 * HW Workaround: Currently, slave is reporting lost-sync messages
-> +	 * after slimbus comes out of clock pause.
-> +	 * Transaction with slave fail before slave reports that message
-> +	 * Give some time for that report to come
-> +	 * Slimbus wakes up in clock gear 10 at 24.576MHz. With each superframe
-> +	 * being 250 usecs, we wait for 5-10 superframes here to ensure
-> +	 * we get the message
-> +	 */
-> +	usleep_range(1250, 2500);
-> +	return 0;
-> +}
-[...]
-> +#ifdef CONFIG_PM_SLEEP
-> +static int msm_slim_suspend(struct device *dev)
-> +{
-> +	int ret =3D 0;
-> +
-> +	if (!pm_runtime_enabled(dev) ||
-> +		(!pm_runtime_suspended(dev))) {
-> +		dev_dbg(dev, "system suspend");
-> +		ret =3D msm_slim_runtime_suspend(dev);
-> +	}
-> +	if (ret =3D=3D -EISCONN) {
-> +	/**
+What I *could* do is encode the resolution and number of channels in the
+driver_data field of the spi MODULE_DEVICE_TABLE like this:
 
-ditto.
-Also, it looks misindented.
+static const struct spi_device_id ti_dac_spi_id[] = {
+	{ "dac082s085",  8 << 8 + 2 },
+	{ "dac102s085", 10 << 8 + 2 },
+	...
 
-> +	 * If the clock pause failed due to active channels, there is
-> +	 * a possibility that some audio stream is active during suspend.
-> +	 * (e.g. modem usecase during suspend)
-> +	 * We dont want to return suspend failure in that case so that
-> +	 * display and relevant components can still go to suspend.
-> +	 * If there is some other error, then it should prevent
-> +	 * system level suspend
-> +	 */
-> +		ret =3D 0;
-> +	}
-> +	return ret;
-> +}
-
+Then instead of reading the information from the modalias I'd read them
+from driver_data.  However it looks a bit redundant and silly to me.
+Can we add this extra complexity when the need for it actually arises?
 
 Thanks,
-Jonathan Neusch=C3=A4fer
 
---ezdii7jlobx6xej4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJZ2I7aAAoJEAgwRJqO81/bglEP/24cg2BZPl93DsIhXUXqoRO7
-Ah5ObC/VnIswHMI8aywhAbovMBq/CR0PGLHlIAEcr23lQevwYdjlxiZ64Dh0PGCP
-/C9cnsfg5VnGAh3lZe60sD+euLwYAJux+bVjouRB+P9Q6Ppin8BKbykjh+mkPhQm
-tgvagfqkdpt3bCz86l6hECGUpbZkU6HJuMcV8B28buZjoszPA0rVfFzfTo/n6Y/I
-yxvUMNfUg/7xc76iQ1R3lecsBQ3gdin4otO1crzvmZGA0A302S8qq6ulXtutFWFH
-NPoqW//pZQVpnSdO1RxBVLqWCbtLNVLBpscUjEfNliFIC65Na43NCgFoPbRj0lfd
-Kl6iLlwJcCefu2I2NBJOX6ZvJgUxSE1D6NTe38CxJoBkg5QamHVcH20NIwrql73j
-WaHZYeKQujrH2u0B0Z/dvWKaV4mOZ4qECyrXhIB4qeefE5traaXDyJfhcTr2Z7M0
-mX1F86pNK8b5ejLASCc8k2uJW8e7fHIkjs9a51a13c5vfuizOlucdVcRzdKK3etH
-AQ7XTYdB/4dmNaOPl2RSNlntL2aukeL7WNviul9H866FD3nvwl2xlsRMyEjeoxUj
-/CuwezwAR5dQGOR4cmsh1gmQuoi2B4olA03a1fmjlTscJhFjoof8mAzyyz9GnwGs
-eJFV24oeOEjm9UPXS4mz
-=OdJY
------END PGP SIGNATURE-----
-
---ezdii7jlobx6xej4--
+Lukas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
