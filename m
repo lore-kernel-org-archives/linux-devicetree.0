@@ -1,34 +1,30 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] gpio: dt-bindings: add mcp23018 to mcp23s08 documentation
-Date: Sun, 8 Oct 2017 01:41:26 +0200
-Message-ID: <CACRpkdY-NRR1wcBbaeCLHfWwCVoQB+s=P=nMxZgMSyuqdmkA6g@mail.gmail.com>
-References: <1507166615-4530-1-git-send-email-preid@electromag.com.au> <1507166615-4530-2-git-send-email-preid@electromag.com.au>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Move mcp23s08 from gpio
+Date: Sun, 8 Oct 2017 01:58:52 +0200
+Message-ID: <CACRpkdY=r8XBqHKrVeZ34jR8FJM-zmOUxCSMhEROc6fOjfwX-A@mail.gmail.com>
+References: <20171005075002.9901-1-poeschel@lemonage.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1507166615-4530-2-git-send-email-preid@electromag.com.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005075002.9901-1-poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 5, 2017 at 3:23 AM, Phil Reid <preid@electromag.com.au> wrote:
+On Thu, Oct 5, 2017 at 9:50 AM, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org> wrote:
 
-> This adds the required definitions for the mcp23018 which is the i2c
-> variant of the mcp23s18.
+> The mcp23s08 driver was moved from gpio to pinctrl. This moves it's
+> devicetree binding doc as well. So driver and binding doc are in sync
+> again.
+>
+> Signed-off-by: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
 
-Which is logical if "s" stands for "SPI", "0" is normal or I2C.
+Are there no new references to the generic pin control binding
+needed as well?
 
->      - "microchip,mcp23s18" for 16 GPIO SPI version
-
-So that is the SPI version
-
->      - "microchip,mcp23008" for  8 GPIO I2C version or
->      - "microchip,mcp23017" for 16 GPIO I2C version of the chip
-> +    - "microchip,mcp23018" for 16 GPIO SPI version
-
-And right here you say that this is also the SPI version, but the
-commit message says it is the I2C version.
-
-Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
