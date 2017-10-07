@@ -1,82 +1,41 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [Patch v6 6/7] regmap: add SLIMBUS support
-Date: Sat, 7 Oct 2017 11:25:22 +0100
-Message-ID: <d37242b1-dace-15d2-e758-1f242dadfa09@linaro.org>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-7-srinivas.kandagatla@linaro.org>
- <20171007050242.4smp3x2rqkwxvg5h@latitude>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 00/12] add pinmuxing support for pins in AXP209 and
+ AXP813 PMICs
+Date: Sat, 7 Oct 2017 12:48:31 +0200
+Message-ID: <CACRpkdYBfuyr8hzVTH_RFfM4uYOMbWTHnH9SeF8SMGFe-shEWA@mail.gmail.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171007050242.4smp3x2rqkwxvg5h@latitude>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review comments,
+On Mon, Oct 2, 2017 at 2:08 PM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
 
-On 07/10/17 06:02, Jonathan Neuschäfer wrote:
-> Hi,
-> 
-> On Fri, Oct 06, 2017 at 05:51:35PM +0200, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> This patch adds support to read/write slimbus value elements.
->> Currently it only supports byte read/write. Adding this support in
->> regmap would give codec drivers more flexibility when there are more
->> than 2 control interfaces like slimbus, i2c.
->>
->> Without this patch each codec driver has to directly call slimbus value
->> element apis, and this could would get messy once we want to add i2c
->> interface to it.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
-> [...]
->> +static int regmap_slimbus_byte_reg_read(void *context, unsigned int reg,
->> +					unsigned int *val)
->> +{
->> +	struct slim_device *slim = context;
->> +	struct slim_val_inf msg = {0,};
->> +
->> +	msg.start_offset = reg;
->> +	msg.num_bytes = 1;
->> +	msg.rbuf = (void *)val;
->> +
->> +	return slim_request_val_element(slim, &msg);
->> +}
-> 
-> This looks like it won't work on big-endian systems. I know big endian
-> is pretty uncommon in devices that will likely have SLIMBus, but it's
-> better to be endian-independent.
+> The AXP209 and AXP813 PMICs have several pins (respectively 3 and 2) that can
+> be used either as GPIOs or for other purposes (ADC or LDO here).
+>
+> We already have a GPIO driver for the GPIO use of those pins on the AXP209.
+> Let's "upgrade" this driver to support all the functions these pins can have.
+>
+> Then we add support to this driver for the AXP813 which is slighlty different
+> (basically a different offset in a register and one less pin).
+>
+> I suggest patches 1 to 6 go through Linus's tree and 7 to 12 via Maxime or
+> Chen-Yu's tree.
+>
+> This version of the patchset is based on Chen-Yu's patchset for AXP813/818
+> regulators[1].
+>
+> v3:
 
-Yep, I agree! will fix it in next version.
+This is starting to look really good, but I see there are still comments.
 
-> 
->> +static int regmap_slimbus_byte_reg_write(void *context, unsigned int reg,
->> +					 unsigned int val)
->> +{
->> +	struct slim_device *slim = context;
->> +	struct slim_val_inf msg = {0,};
->> +
->> +	msg.start_offset = reg;
->> +	msg.num_bytes = 1;
->> +	msg.wbuf = (void *)&val;
->> +
->> +	return slim_change_val_element(slim, &msg);
->> +}
-> 
-> dito
-> 
->> +static struct regmap_bus regmap_slimbus_bus = {
->> +	.reg_write = regmap_slimbus_byte_reg_write,
->> +	.reg_read = regmap_slimbus_byte_reg_read,
->> +};
-> 
-> 
-> Thanks,
-> Jonathan Neuschäfer
-> 
+Keep the series going, we merge once Maxime and Chen-Yu are happy.
+
+Yours,
+Linus Walleij
