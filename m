@@ -1,14 +1,20 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: icenowy-h8G6r0blFSE@public.gmane.org
 Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding
  for Allwinner XR819 SDIO Wi-Fi
-Date: Sat, 07 Oct 2017 20:31:59 +0800
-Message-ID: <19ECFB2A-CA47-401A-AAB2-42967C381EA7@aosc.io>
-References: <20171003165944.13056-1-icenowy@aosc.io> <20171003165944.13056-2-icenowy@aosc.io> <871smjxp46.fsf@kamboji.qca.qualcomm.com> <E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io> <59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea> <C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io> <878tgq5beu.fsf@codeaurora.org>
+Date: Sat, 07 Oct 2017 21:01:51 +0800
+Message-ID: <46e9b7199a2668842313504273f9f86a@aosc.io>
+References: <20171003165944.13056-1-icenowy@aosc.io>
+ <20171003165944.13056-2-icenowy@aosc.io>
+ <871smjxp46.fsf@kamboji.qca.qualcomm.com>
+ <E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
+ <59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea>
+ <C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io>
+ <878tgq5beu.fsf@codeaurora.org>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBTES4PHAKGQEUTZ7GXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBQFA4PHAKGQEHZNQVQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <878tgq5beu.fsf-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,39 +23,34 @@ List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2017=E5=B9=B410=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=882:=
-58:01, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> =E5=86=99=E5=88=B0:
->Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->
+=E5=9C=A8 2017-10-05 14:58=EF=BC=8CKalle Valo =E5=86=99=E9=81=93=EF=BC=9A
+> Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
+>=20
 >> =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
 =886:11:45, Maxime Ripard
 >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->>>On Wed, Oct 04, 2017 at 10:02:48AM +0000, Arend van Spriel wrote:
+>>> On Wed, Oct 04, 2017 at 10:02:48AM +0000, Arend van Spriel wrote:
 >>>> On 10/4/2017 11:03 AM, Icenowy Zheng wrote:
->>>> >=20
->>>> >=20
+>>>> >
+>>>> >
 >>>> > =E4=BA=8E 2017=E5=B9=B410=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=885:02:17, Kalle Valo
-><kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>=E5=86=99=E5=88=B0:
+=8D=885:02:17, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> =E5=86=99=E5=88=B0:
 >>>> > > Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->>>> > >=20
+>>>> > >
 >>>> > > > Allwinner XR819 is a SDIO Wi-Fi chip, which has the
->>>functionality to
+>>> functionality to
 >>>> > > use
->>>> > > > an out-of-band interrupt pin instead of SDIO in-band
->interrupt.
->>>> > > >=20
+>>>> > > > an out-of-band interrupt pin instead of SDIO in-band interrupt.
+>>>> > > >
 >>>> > > > Add the device tree binding of this chip, in order to make it
 >>>> > > possible
 >>>> > > > to add this interrupt pin to device trees.
->>>> > > >=20
+>>>> > > >
 >>>> > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 >>>> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >>>> > > > ---
@@ -59,40 +60,38 @@ List-Id: devicetree@vger.kernel.org
 >>>> > > > Changes in v2:
 >>>> > > > - Removed status property in example.
 >>>> > > > - Added required property reg.
->>>> > > >=20
+>>>> > > >
 >>>> > > >   .../bindings/net/wireless/allwinner,xr819.txt      | 38
 >>>> > > ++++++++++++++++++++++
 >>>> > > >   1 file changed, 38 insertions(+)
 >>>> > > >   create mode 100644
 >>>> > >
->>>Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
->>>> > >=20
->>>> > > Like I asked already last time, AFAICS there is no upstream
->xr819
+>>> Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+>>>> > >
+>>>> > > Like I asked already last time, AFAICS there is no upstream xr819
 >>>> > > wireless driver in drivers/net/wireless directory. Do we still
->>>accept
+>>> accept
 >>>> > > bindings like this for out-of-tree drivers?
->>>> >=20
+>>>> >
 >>>> > See esp8089.
->>>> >=20
+>>>> >
 >>>> > There's also no in-tree driver for it.
 >>>>=20
 >>>> The question is whether we should. The above might be a precedent,
->>>but it
->>>> may not necessarily be the way to go. The commit message for
->esp8089
->>>seems
+>>> but it
+>>>> may not necessarily be the way to go. The commit message for esp8089
+>>> seems
 >>>> to hint that there is intent to have an in-tree driver:
 >>>>=20
 >>>> """
 >>>>     Note that at this point there only is an out of tree driver for
->>>this
+>>> this
 >>>>     hardware, there is no clear timeline / path for merging this.
->>>Still
+>>> Still
 >>>>     I believe it would be good to specify the binding for this in
->>>tree
+>>> tree
 >>>>     now, so that any future migration to an in tree driver will not
->>>cause
+>>> cause
 >>>>     compatiblity issues.
 >>>>=20
 >>>>     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
@@ -101,35 +100,27 @@ List-Id: devicetree@vger.kernel.org
 >>>> """
 >>>>=20
 >>>> Regardless the bindings are in principle independent of the kernel
->>>and just
->>>> describing hardware. I think there have been discussions to move
->the
+>>> and just
+>>>> describing hardware. I think there have been discussions to move the
 >>>> bindings to their own repository, but apparently it was decided
->>>otherwise.
->>>
->>>Yeah, I guess especially how it could be merged with the cw1200
->driver
->>>would be very relevant to that commit log.
->>
+>>> otherwise.
+>>>=20
+>>> Yeah, I guess especially how it could be merged with the cw1200=20
+>>> driver
+>>> would be very relevant to that commit log.
+>>=20
 >> The cw1200 driver seems to still have some legacy platform
 >> data. Maybe they should also be convert to DT.
 >> (Or maybe compatible =3D "allwinner,xr819" is enough, as
 >> xr819 is a specified variant of cw1200 family)
->
->Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
->that? Or does cw1200 more changes than just adding the DT support?
+>=20
+> Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
+> that? Or does cw1200 more changes than just adding the DT support?
 
-I think the cw1200 driver currently lacks maintain, and
-the product is already discontinued by ST-E.
+By doing some tests, XR819 is in the the CW1x60 family, which is not
+yet well supported by cw1200 driver.
 
->
->--=20
->Kalle Valo
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+More work should be needed for support xr819 in cw1200 driver.
 
 --=20
 You received this message because you are subscribed to the Google Groups "=
