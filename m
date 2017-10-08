@@ -1,30 +1,36 @@
-From: Artur Lorincz <larturus2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: (unknown)
-Date: Sun,  8 Oct 2017 18:28:26 +0200
-Message-ID: <1507480107-3576-1-git-send-email-larturus2@gmail.com>
+From: Artur Lorincz <larturus2@gmail.com>
+Subject: [PATCH] Added default implementation for of_find_all_nodes(). This function is used by board.c from the board module (drivers/staging/board).
+Date: Sun,  8 Oct 2017 18:28:27 +0200
+Message-ID: <1507480107-3576-2-git-send-email-larturus2@gmail.com>
 References: <1504117946-3958-1-git-send-email-larturus2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Subject: 
-In-Reply-To: <1504117946-3958-1-git-send-email-larturus2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, larturus-/E1597aS9LQAvxtiuMwx3w@public.gmane.org
+ <1507480107-3576-1-git-send-email-larturus2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507480107-3576-1-git-send-email-larturus2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, larturus@yahoo.com, Artur Lorincz <larturus2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Signed-off-by: Artur Lorincz <larturus@yahoo.com>
+---
+ include/linux/of.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks for checking the patch.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index cfc34117fc92..250ab4d55fac 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -538,6 +538,11 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
 
-I missed the #else part of he CONFIG_OF #ifdef previously.
+ bool of_console_check(struct device_node *dn, char *name, int index);
 
-I made the code properly depend on CONFIG_OF now.
++static inline struct device_node *of_find_all_nodes(struct device_node *prev)
++{
++	return NULL;
++}
++
+ #else /* CONFIG_OF */
 
-I am not familiar with this code base. When time allows I would like to contribute by  refactoring code in this area.
-
-Let me know if you have specific ideas about what should change and how the code should be refactored.
-
-Artur
+ static inline void of_core_init(void)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.6
