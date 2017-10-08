@@ -1,57 +1,66 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFC 2/2] phy: exynos5-usbdrd: remove disable and enable of phy clk
-Date: Sun, 8 Oct 2017 18:11:12 +0530
-Message-ID: <CANAwSgSbHR+e_2wX3i3VoVxPe10mUOoS94uRpvebfUfybaNQ+g@mail.gmail.com>
-References: <1507264595-3565-1-git-send-email-linux.amoon@gmail.com>
- <1507264595-3565-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPe9FCKqrvsgdohTAN9tXXwbMOuyaDiHPxZ1Ym1LLPD41w@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] dt-bindings: gpio: uniphier: add UniPhier GPIO binding
+Date: Sun, 8 Oct 2017 22:42:22 +0900
+Message-ID: <CAK7LNASz+_v=AFJqVchVRZJbXH0Rne0dO9MUCSao0UrFYexGmw@mail.gmail.com>
+References: <1506480343-9597-1-git-send-email-yamada.masahiro@socionext.com>
+ <1506480343-9597-2-git-send-email-yamada.masahiro@socionext.com> <CACRpkdYJSXH+94QScrpSPdfy8ULa6dV2q0qRjsfKAAWSRuKTKQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPe9FCKqrvsgdohTAN9tXXwbMOuyaDiHPxZ1Ym1LLPD41w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYJSXH+94QScrpSPdfy8ULa6dV2q0qRjsfKAAWSRuKTKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Linus,
 
-On 6 October 2017 at 12:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, Oct 6, 2017 at 6:36 AM, Anand Moon <linux.amoon@gmail.com> wrote:
->> remove the disable and enable of phy clk.
->> phy clk is needed to tune the phy controller.
+
+2017-09-27 22:42 GMT+09:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On Wed, Sep 27, 2017 at 4:45 AM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
 >
-> Drivers should in general enable and disable the clocks they use. Just
-> like in patch #1 please describe why you are doing this, what kind of
-> problem are you trying to solve and what exactly are you trying to do
-> here.
+>> This GPIO controller is used on UniPhier SoC family.
+>>
+>> The vendor specific property "socionext,interrupt-ranges" is for
+>> specifying interrupt mapping to the parent interrupt controller
+>> because the mapping is not contiguous.  It works like "ranges",
+>> but transforms "interrupts" instead of "reg".
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-> BR,
-> Krzysztof
+> I don't think Rob has seen the new interrupt range thing?
+> (It's not a big deal. Things like these are a bit fuzzy.)
 >
+>> +               socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
+>
+> If it is as you say, that other SoCs are doing the same, we should
+> think about creating a generic property for this. Like
+> hierarchy-interrupt-ranges or so.
+>
+> I kind of liked the old patch where it was just "interrupts" and
+> then you looked it up from the irq subsystem. (tglx even ACKed
+> the patch).
+>
+> But I want the DT people to say something here.
+>
+> Yours,
+> Linus Walleij
 
-[snip]
 
-Usually we would disable the clk on error patch and return with failed.
-but in the current code we disable the clk in init routine and
-enable the clk in disable routine which seem incorrect.
+I explained the technical background of this approach,
+but I have not had any comment.
+(DT people are silent, too)
 
-[0] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L362-L412
-[1] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L424-L446
+Is this driver applicable?
 
-On 3.10.x kernel clk_summary all the clk are enables.
 
-    mout_usbdrd300              3           3            24000000
-       dout_usbdrd300           2           2            24000000
-          sclk_usbdrd300        1           1            24000000
-       dout_usbphy300           2           2            24000000
-          sclk_usbphy300        1           1            24000000
-    mout_usbdrd301              3           3            24000000
-       dout_usbdrd301           2           2            24000000
-          sclk_usbdrd301        1           1            24000000
-       dout_usbphy301           2           2            24000000
-          sclk_usbphy301        1           1            24000000
 
-Some more changes in clk driver might be required to stabilize the usb module.
-
+-- 
 Best Regards
--Anand
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
