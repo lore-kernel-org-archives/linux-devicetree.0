@@ -1,55 +1,99 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] uio: dt-bindings: document binding for
- uio-pdrv-genirq
-Date: Sun, 8 Oct 2017 21:03:09 +0000
-Message-ID: <22b9c6eb06ea4e8182c4e214b2a96fce@svr-chch-ex1.atlnz.lc>
-References: <20170921154814.7510-1-chris.packham@alliedtelesis.co.nz>
- <20170921154814.7510-2-chris.packham@alliedtelesis.co.nz>
- <20171003213755.df4s35xdni6ywxwg@rob-hp-laptop>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [RFC 1/2] ARM: dts: exynos: update the usbdrd phy and ref clk
+Date: Mon, 9 Oct 2017 02:36:13 +0530
+Message-ID: <CANAwSgRX0FJ0piYd_T_FeUpKP=Dg5sCjhAH+7r_=JUvS-CNONQ@mail.gmail.com>
+References: <1507264595-3565-1-git-send-email-linux.amoon@gmail.com>
+ <CAJKOXPe=hd7QdsaqpqPv3cNvL59FBqCfy24mYmGdQvi7Yp8wBQ@mail.gmail.com>
+ <CANAwSgRK+F62xKFeFM9ZJ_rgPWj831ca=tX9BSKXUyRBhN4yhA@mail.gmail.com> <20171008154759.moic645jwrp7nztg@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171008154759.moic645jwrp7nztg@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Greg,=0A=
-=0A=
-On 04/10/17 10:38, Rob Herring wrote:=0A=
-> On Fri, Sep 22, 2017 at 03:48:13AM +1200, Chris Packham wrote:=0A=
->> Document the device tree bindings for the uio-prv-genirq driver. Provide=
-=0A=
->> some examples on how it can be used.=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>=0A=
->> ---=0A=
->>   .../bindings/uio/linux,uio-pdrv-genirq.txt         | 28 ++++++++++++++=
-++++++++=0A=
->>   1 file changed, 28 insertions(+)=0A=
->>   create mode 100644 Documentation/devicetree/bindings/uio/linux,uio-pdr=
-v-genirq.txt=0A=
-> =0A=
-> NAK.=0A=
-> =0A=
-> I'm sure this has come up before but if you want to map a device to a=0A=
-> uio driver, then add its compatible string to the driver. Bindings=0A=
-> describe h/w devices.=0A=
-=0A=
-Fair enough.=0A=
-=0A=
-The problem for me is that the uio-pdrv-genirq is so generic it could =0A=
-apply to pretty much any hardware device. The driver has dt-awareness =0A=
-but it currently doesn't have any built-in compatible string (it is set =0A=
-via a module param).=0A=
-=0A=
-My use-case is a microcontoller with a userspace driver all I need out =0A=
-of the kernel is i2c access and interrupts. Any suggestions as to how to =
-=0A=
-move forward with this.=0A=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Krzysztof,
+
+On 8 October 2017 at 21:17, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Sun, Oct 08, 2017 at 06:06:19PM +0530, Anand Moon wrote:
+>> Hi Krzysztof,
+>>
+>> On 6 October 2017 at 12:08, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> > On Fri, Oct 6, 2017 at 6:36 AM, Anand Moon <linux.amoon@gmail.com> wrote:
+>> >> update the usbdrd link control and phy contol clks.
+>> >
+>> > The commit title and especially commit message should explain why you
+>> > are doing this and what are you doing. "Update" is not enough.
+>> > Everything could be called update.
+>> >
+>> > Therefore I do not understand the reason behind the patch.
+>> >
+>> > BR,
+>> > Krzysztof
+>>
+>> so as per the driver.
+>> @clk: phy clock for register access
+>> @ref_clk: reference clock to PHY block from which PHY's operational
+>> clocks are derived
+>>
+>> Both CLK_SCLK_USBPHY300 and CLK_SCLK_USBD300 belong to FSYS Clock
+>> and CLK_USBD300 clk is being used by the usbdrd dwc3 module.
+>>
+>> [0] https://github.com/torvalds/linux/blob/master/drivers/clk/samsung/clk-exynos5420.c#L1040-L1053
+>>
+>> So their is mismatch of the clk used by the usbdrd driver.
+>
+> Where is the mismatch? I do not understand.
+>
+>> with the above changes the driver work well with camera and disk drives
+>> connected to usb 3.0 ports and their is improvement in the performance.
+>
+> If something is not working now, please describe it exactly so we could
+> both reproduce and then observe the end results of fix.
+>
+> I do not understand how the change of these clocks brings improvement in
+> performance... ok, sometimes it might happen if the rate of clock is
+> being used on bus. Is this the case?
+>
+> Best regards,
+> Krzysztof
+>
+[snip]
+
+As per Exynos5422 CMU
+
+CLK_SCLK_USBPHY300 and CLK_SCLK_USBD300 are special clk meant to
+control the usbdrd
+
+CLK_SCLK_USBPHY300/1 is used for phy control
+CLK_SCLK_USBD300/1 is used for link control.
+
+Following link share the details of the CMU_TOP
+[0] https://imgur.com/9OKaXEM
+
+On Odroid cloudshell module with old hard disk it time to time do reset of hub.
+on heavy traffic of data.
+
+[46953.765974] usb 4-1.1: reset SuperSpeed USB device number 3 using xhci-hcd
+[47006.851310] usb 4-1.1: reset SuperSpeed USB device number 3 using xhci-hcd
+
+[  730.078441] sd 1:0:0:0: [sdb] tag#5 CDB: opcode=0x2a 2a 00 26 b6 58
+80 00 00 80 00
+[  730.078471] sd 1:0:0:0: [sdb] tag#6 uas_zap_pending 0 uas-tag 7 inflight: CMD
+[  730.078498] sd 1:0:0:0: [sdb] tag#6 CDB: opcode=0x28 28 00 00 00 20
+00 00 04 00 00
+[  730.161071] usb 4-1.2: reset SuperSpeed USB device number 4 using xhci-hcd
+[  730.187194] scsi host1: uas_eh_bus_reset_handler success
+
+At some time it work stable but eventfully their is loss of data.
+
+On 3.10.x
+It clk gate is tuned to support CLK_GATE_MULTI_BIT_SET, I am not sure
+how this will apply on 4.x kernel
+
+[1] https://github.com/hardkernel/linux/blob/odroidxu3-3.10.y/drivers/clk/samsung/clk-exynos5422.c#L1771-L1777
+
+Best Regards
+-Anand
