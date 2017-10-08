@@ -1,92 +1,88 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v2 7/7] pinctrl: mcp23s08: remove unused variables from
- pinconf_set
-Date: Sun, 8 Oct 2017 23:12:27 +0200
-Message-ID: <20171008211227.ye63jjbvjlxu4czh@earth>
+Subject: Re: [PATCH v2 6/7] pinctrl: mcp23s08: remove hardcoded irq polarity
+ in irq_setup
+Date: Sun, 8 Oct 2017 23:14:17 +0200
+Message-ID: <20171008211416.mknehc4htt3ozffa@earth>
 References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
- <1507266491-73971-8-git-send-email-preid@electromag.com.au>
+ <1507266491-73971-7-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2muw7nddynsrgcwa"
+        protocol="application/pgp-signature"; boundary="ir3zriknfxfih4vr"
 Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1507266491-73971-8-git-send-email-preid@electromag.com.au>
+In-Reply-To: <1507266491-73971-7-git-send-email-preid@electromag.com.au>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Phil Reid <preid@electromag.com.au>
 Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, poeschel@lemonage.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---2muw7nddynsrgcwa
+--ir3zriknfxfih4vr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Oct 06, 2017 at 01:08:11PM +0800, Phil Reid wrote:
-> Variable mask and val are not used in the mcp_pinconf_set().
+On Fri, Oct 06, 2017 at 01:08:10PM +0800, Phil Reid wrote:
+> The irq_active_high flag is for controlling the polarity of the output
+> from the mcp23s08 series devices. The polarity of the irq could be altered
+> by additional logic (eg inverters) between the device and irq input devic=
+e.
+> The device-tree already allows for this as the irq can be specified in the
+> binding. So hardcoding it in the driver is overly restrictive.
+>=20
+> There are no inkernel users of the mcp23s08 driver with irq's.
 >=20
 > Signed-off-by: Phil Reid <preid@electromag.com.au>
-
-Thanks, those are leftovers from before I added mcp_set_bit.
 
 Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
 -- Sebastian
 
 > ---
->  drivers/pinctrl/pinctrl-mcp23s08.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  drivers/pinctrl/pinctrl-mcp23s08.c | 5 -----
+>  1 file changed, 5 deletions(-)
 >=20
 > diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl=
 -mcp23s08.c
-> index 8dceaa1..8e461cc 100644
+> index 150f216..8dceaa1 100644
 > --- a/drivers/pinctrl/pinctrl-mcp23s08.c
 > +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> @@ -279,8 +279,7 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctlde=
-v, unsigned int pin,
->  {
->  	struct mcp23s08 *mcp =3D pinctrl_dev_get_drvdata(pctldev);
->  	enum pin_config_param param;
-> -	u32 arg, mask;
-> -	u16 val;
-> +	u32 arg;
->  	int ret =3D 0;
->  	int i;
+> @@ -630,11 +630,6 @@ static int mcp23s08_irq_setup(struct mcp23s08 *mcp)
+>  	int err;
+>  	unsigned long irqflags =3D IRQF_ONESHOT | IRQF_SHARED;
 > =20
-> @@ -290,8 +289,6 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctlde=
-v, unsigned int pin,
-> =20
->  		switch (param) {
->  		case PIN_CONFIG_BIAS_PULL_UP:
-> -			val =3D arg ? 0xFFFF : 0x0000;
-> -			mask =3D BIT(pin);
->  			ret =3D mcp_set_bit(mcp, MCP_GPPU, pin, arg);
->  			break;
->  		default:
+> -	if (mcp->irq_active_high)
+> -		irqflags |=3D IRQF_TRIGGER_HIGH;
+> -	else
+> -		irqflags |=3D IRQF_TRIGGER_LOW;
+> -
+>  	err =3D devm_request_threaded_irq(chip->parent, mcp->irq, NULL,
+>  					mcp23s08_irq,
+>  					irqflags, dev_name(chip->parent), mcp);
 > --=20
 > 1.8.3.1
 >=20
 
---2muw7nddynsrgcwa
+--ir3zriknfxfih4vr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnalLgACgkQ2O7X88g7
-+pqN4A/8DTUeiuA8sau6qJ6yTc6H7qa62pn/8SYMF3viHb8BYDlH5e/Rt8oQdGpJ
-45HQc+VSn5ACGyT3yl2Ja5cq7rRbohMzzkouIa5p2flfne5rbjBZyutamUAjd0NG
-hRVayKNhTMeyA3ddgToFJcoOaEGR78PVEF0ZdLkf9+NBDK6M5sXBhUdFE7jXGDxn
-goPAMg48LMVNF7HN3E+9Rj/ioONJAX9OXgcFEE2u/HDAHBJQm78udXEan6FzZsvQ
-x0aNGWsWtOQtmiUV5u3RpjIC9OwPfixqFVg+UKkuiY/U70pspvxrMsMGUQQv7ra5
-qYpYBqUlRLo8JYFLL3+W8RuKUrUzMK4ZpwGtpMgzOq+xVLzZHgY38CFbVpYfHfWd
-WF2iRVrIARmg7Q/CWGkrThXl4lS2RgvTvXzH2z8uytb6sebjEcJ4x5MJ8S5hsHpP
-Mr/H0X62D7V8IseTbpfpjmR2rJH1QIMPKvatw0/XM/5sJsFm62w4q62YSjrhrP1K
-dPKUKxNjCsCPYlzae/ZJNkE5ImjcBxSy0EKbjMWAZKLR8x3jmrB3vTHHleZZapym
-Px0IVrR8itpkVZH7MOqxVcpnmWNV8W5cNmzjIt41Hhcu0ftDJtxMoQ29YOqUr6mE
-33HB+IkutWG+zoKN+W155dHKvuOhcf0M2Rbr+9MKerovqh8Yj80=
-=RWMV
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnalSgACgkQ2O7X88g7
++ppcKBAAh2k0gfKWqQBzrE1Cz/O9OJ9SwkmEjnEiR4PyPcRtanb/f2ndMFwW4SUa
+XrtT0zTZq/UUSHg+GaF0snQmqsoAsgpYSbVoT2/Ss5cY33xF+PiIdqXx74S5pI5/
+WGYGbUQ9oTuKrqv3/MM12Q+WMZy7xCHv4Zazm9wGJ5DH9RKXeAkKmaNzvJNPw+eg
+E0x/Byvly2BOREyO5ntFoH4IxMHIB0j4E+7rQ1pSVAS94YQMQbP8Rn4HlUAKNt9i
+Eb7A0xayu6rCAEQr7FJ9qOEw/Mba1/ZLAHzeuLjYVYstnl7B1CUk/JsZI7n4zzDQ
+JTPXjmpclUYVn/K7RkO2EcEIa0cneInAqyIHKF9KOXq/KpGjRLy0wH+cSAK4a4cQ
+oRwOKDAcKy+w0Um8uX63ir8tC6dDrPVFbArpwc3MXgRo3sv8VFqEZaKvVEuo24qe
+3hImaSvYJaizUO2rymGm58B/bHuVd1mU27cK6Weq3nRCCdqapHbaYV0/Vh9cktI8
+R3XTnEHUcXoUdUkKph/mJSu9s/4uLxNg0YnSy28oJ+zjoj1y1qbanK/OEzrH+z8/
+fRyKBP2L+9T2wULMXmHAR2Js4lTdQucJFDM8i+xb7gkjIQuo4jsedCykiOlIcZM7
+hjJ6s1fybH7TmboJS6H1ca2YHgFBCewW+ICbferareGzoHDzAvY=
+=SAvg
 -----END PGP SIGNATURE-----
 
---2muw7nddynsrgcwa--
+--ir3zriknfxfih4vr--
