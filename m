@@ -1,82 +1,96 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: add mcp23018 to mcp23s08
- documentation
-Date: Sun, 8 Oct 2017 23:18:50 +0200
-Message-ID: <20171008211850.wrvbraxbapc52axm@earth>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] pinctrl: change Kconfig PINCTRL variable to a
+ menuconfig
+Date: Sun, 8 Oct 2017 23:24:43 +0200
+Message-ID: <20171008212442.ybbdwcnjsrrusxlh@earth>
 References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
- <1507266491-73971-3-git-send-email-preid@electromag.com.au>
+ <1507266491-73971-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="es6kojppzsqsnkdw"
+        protocol="application/pgp-signature"; boundary="rzgeo74v45a6vvkc"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1507266491-73971-3-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <1507266491-73971-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---es6kojppzsqsnkdw
+--rzgeo74v45a6vvkc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Oct 06, 2017 at 01:08:06PM +0800, Phil Reid wrote:
-> This adds the compatible string for the mcp23018, which is the i2c variant
-> of the mcp23s18.
->=20
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-> ---
+On Fri, Oct 06, 2017 at 01:08:05PM +0800, Phil Reid wrote:
+> This allows PINCTRL to be selected manually to allow enabling of the
+> mcp23s08 i2c/spi gpio driver. Which is not platform specific.
+
+FWIW with i2c/spi based pin controllers available it makes sense
+to have this available everywhere. I actually did test my changes
+using an i2c-tiny-usb controller with my x86 based notebook, so:
 
 Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
 -- Sebastian
 
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> ---
+>  drivers/pinctrl/Kconfig | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.t=
-xt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> index c934106..8a5bf99 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> @@ -13,6 +13,7 @@ Required properties:
->      - "microchip,mcp23s18" for 16 GPIO SPI version
->      - "microchip,mcp23008" for  8 GPIO I2C version or
->      - "microchip,mcp23017" for 16 GPIO I2C version of the chip
-> +    - "microchip,mcp23018" for 16 GPIO I2C version
->      NOTE: Do not use the old mcp prefix any more. It is deprecated and w=
-ill be
->      removed.
->  - #gpio-cells : Should be two.
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 1778cf4..8da29e9 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -2,11 +2,10 @@
+>  # PINCTRL infrastructure and drivers
+>  #
+> =20
+> -config PINCTRL
+> -	bool
+> +menuconfig PINCTRL
+> +	bool "Pin controllers"
+> =20
+> -menu "Pin controllers"
+> -	depends on PINCTRL
+> +if PINCTRL
+> =20
+>  config GENERIC_PINCTRL_GROUPS
+>  	bool
+> @@ -379,4 +378,4 @@ config PINCTRL_TB10X
+>  	depends on OF && ARC_PLAT_TB10X
+>  	select GPIOLIB
+> =20
+> -endmenu
+> +endif
 > --=20
 > 1.8.3.1
 >=20
 
---es6kojppzsqsnkdw
+--rzgeo74v45a6vvkc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnaljoACgkQ2O7X88g7
-+prR5Q//UCzoUIjR1eBP8pWtoXBDRDhUHWwFkQALki0XZ6nqiJw7KUKj6Szzxq3F
-DCJ5NNiaEE2dKAubej+1MEYgQQrSYlfjAV9R7bCTOc27F3rCWnEC54TngretiVr9
-/pk41Bc3Brpxx/6oazsi3CPZzy/JwIg+irdGZqnkf/jss32QJ7OkdkDeKj/wKjL9
-6rSzOf9dj6/hQo6EwboWe0zhQQsfbeTexiXqbdSWYO8vbZN/V2DkP8b05gufi6+k
-LzsEbQBf3NFzMzoOrNZJARXPRYIaZfOE57QUrNKkYwIaJBMi4iqzd3MQ8jRomkdv
-jieurT6IyXJWNufTMEqleMEHm4ou7HnVm+jG0CcgH+EK3ZL7V1gYADIAezHhmsYz
-4EdkitrPfEjcGlqIceDRIV3SBUGUnHRlEFFjX1kqRUGgrJOfxAiYwiG4DQYro+J+
-71dWQJEn9CBRfGnJs5t0tHFWOTE3v1ol7s9znEGoJt9lw3fvtWfmXz/YH8VUWb3/
-WfgPgDzRqrjMA+cnmE/OuWSACKifmhmZCkdULdwnX+milULS5P5OHzd8o46BYN5a
-XYpTGcSovxE2Hlj3dul6RVmyMNztgk2gquAyhkAVJSChEfOK0Zj9w+yfOcsgpvi0
-1JF6hRJaHROf0vuj+dNxTYLb79uQ78tM2b2a2kPBLG/kBXljmic=
-=c1Hd
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnal5oACgkQ2O7X88g7
++poigw//fxvw+teP53hM79rt3ts+aM2L/wLDGW7Yal6q8lS1KEuPjUqf9/5JVO7e
+Q+yw4Mo6A4JKCUfWfCstFCGCaaBPjYUXTrhpuIjwoFNmHjDQsiP9JmLqkL8bCdyB
+IgPoVn6i000laDF7orhqDa+ScadahA38pnzp6ZzKTzZlB+1WNVvT3q1OY3j+Hio1
+oVf2+B7gb8/9HIHFPzSEhQho/mxXQZ+7vj46GYUj6AnFG+5PsOmA+EOEMkxCTaTx
+swKaz9HaCrxqfP5rf/RMw22Rh5XCMt3TjMs0oe8M2zLC6rZkt5xunmJ7+lzTGV/Z
+Mlg93BJ1twduHx8QlAzqIJenn+hiCAhpm+FJ8Xc1G4BsGyj3MVZz7dzUy0fFVN2I
+ruGmv0A7PI5U8e/sJpRF1mkhOTu4MwagUC/TrZrJMqYxjs2S++Cez9D0gb8yqn16
+dx0f8ttmxuDzho3GB+UO6b841Su2PC6TUOTqhplJV3TNUaEKJiaHecZ/EDgHGcwg
+A2nLvpbO01ptvtX0PqFN56dQJtajaTzKYDkDFiQuK8oiXO78UfvZM/ZqLBV6myZ1
+YhBfH97mvP8mhCe0+OVxqQNctxiH6opVA2Y/gBj+nfmhK8TKSvvuyopw+Ml+SOd/
+aZZttJhagZIVmfENMjmwsInozL9YeDkihPyrx0dbWe0KB9nxRqI=
+=Asyv
 -----END PGP SIGNATURE-----
 
---es6kojppzsqsnkdw--
+--rzgeo74v45a6vvkc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
