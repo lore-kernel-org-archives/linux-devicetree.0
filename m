@@ -1,92 +1,92 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/2] phy: exynos5-usbdrd: remove disable and enable of phy clk
-Date: Mon, 9 Oct 2017 02:37:14 +0530
-Message-ID: <CANAwSgSMFBS8n48=_OnNNs_=Di9Oqq2tNeiwZM9u1qaLevLP4w@mail.gmail.com>
-References: <1507264595-3565-1-git-send-email-linux.amoon@gmail.com>
- <1507264595-3565-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPe9FCKqrvsgdohTAN9tXXwbMOuyaDiHPxZ1Ym1LLPD41w@mail.gmail.com>
- <CANAwSgSbHR+e_2wX3i3VoVxPe10mUOoS94uRpvebfUfybaNQ+g@mail.gmail.com> <20171008155015.252gefhsc4tks7k6@kozik-lap>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v2 7/7] pinctrl: mcp23s08: remove unused variables from
+ pinconf_set
+Date: Sun, 8 Oct 2017 23:12:27 +0200
+Message-ID: <20171008211227.ye63jjbvjlxu4czh@earth>
+References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
+ <1507266491-73971-8-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171008155015.252gefhsc4tks7k6@kozik-lap>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2muw7nddynsrgcwa"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507266491-73971-8-git-send-email-preid@electromag.com.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, poeschel@lemonage.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 8 October 2017 at 21:20, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Oct 08, 2017 at 06:11:12PM +0530, Anand Moon wrote:
->> Hi Krzysztof,
->>
->> On 6 October 2017 at 12:12, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> > On Fri, Oct 6, 2017 at 6:36 AM, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >> remove the disable and enable of phy clk.
->> >> phy clk is needed to tune the phy controller.
->> >
->> > Drivers should in general enable and disable the clocks they use. Just
->> > like in patch #1 please describe why you are doing this, what kind of
->> > problem are you trying to solve and what exactly are you trying to do
->> > here.
->> >
->> > BR,
->> > Krzysztof
->> >
->>
->> [snip]
->>
->> Usually we would disable the clk on error patch and return with failed.
->> but in the current code we disable the clk in init routine and
->> enable the clk in disable routine which seem incorrect.
->
-> No. For example for exynos5_usbdrd_phy_exit() the driver enables the
-> clock only for the access to PHY block (PHY registers).
->
+--2muw7nddynsrgcwa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But I dont get it why we disable code phy clk, which could be used in
-future phy tune or link control as it part of CLK_FSYS.
+Hi,
 
->>
->> [0] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L362-L412
->> [1] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L424-L446
->>
->> On 3.10.x kernel clk_summary all the clk are enables.
->>
->>     mout_usbdrd300              3           3            24000000
->>        dout_usbdrd300           2           2            24000000
->>           sclk_usbdrd300        1           1            24000000
->>        dout_usbphy300           2           2            24000000
->>           sclk_usbphy300        1           1            24000000
->>     mout_usbdrd301              3           3            24000000
->>        dout_usbdrd301           2           2            24000000
->>           sclk_usbdrd301        1           1            24000000
->>        dout_usbphy301           2           2            24000000
->>           sclk_usbphy301        1           1            24000000
->>
->> Some more changes in clk driver might be required to stabilize the usb module.
->
-> Please describe the issues with stability first.
->
-> Best regards,
-> Krzysztof
->
-On stability:
+On Fri, Oct 06, 2017 at 01:08:11PM +0800, Phil Reid wrote:
+> Variable mask and val are not used in the mcp_pinconf_set().
+>=20
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-USB 3.0 read / write performance is not up to mark with moderate data
-read / write speed,
-If you give long compilation of kernel or any source code it would
-likely be slow
-It work pretty good with USB 3.0 SSD but generally failed with 2.5' inc HDD.
+Thanks, those are leftovers from before I added mcp_set_bit.
 
-If needed I will share you some performance test result with and
-without these patches.
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
-I have some more changes related to usbdrd phy change queued along this on.
+-- Sebastian
 
-Best Regards
--Anand
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/pinctrl/pinctrl-mcp23s08.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl=
+-mcp23s08.c
+> index 8dceaa1..8e461cc 100644
+> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
+> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+> @@ -279,8 +279,7 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctlde=
+v, unsigned int pin,
+>  {
+>  	struct mcp23s08 *mcp =3D pinctrl_dev_get_drvdata(pctldev);
+>  	enum pin_config_param param;
+> -	u32 arg, mask;
+> -	u16 val;
+> +	u32 arg;
+>  	int ret =3D 0;
+>  	int i;
+> =20
+> @@ -290,8 +289,6 @@ static int mcp_pinconf_set(struct pinctrl_dev *pctlde=
+v, unsigned int pin,
+> =20
+>  		switch (param) {
+>  		case PIN_CONFIG_BIAS_PULL_UP:
+> -			val =3D arg ? 0xFFFF : 0x0000;
+> -			mask =3D BIT(pin);
+>  			ret =3D mcp_set_bit(mcp, MCP_GPPU, pin, arg);
+>  			break;
+>  		default:
+> --=20
+> 1.8.3.1
+>=20
+
+--2muw7nddynsrgcwa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnalLgACgkQ2O7X88g7
++pqN4A/8DTUeiuA8sau6qJ6yTc6H7qa62pn/8SYMF3viHb8BYDlH5e/Rt8oQdGpJ
+45HQc+VSn5ACGyT3yl2Ja5cq7rRbohMzzkouIa5p2flfne5rbjBZyutamUAjd0NG
+hRVayKNhTMeyA3ddgToFJcoOaEGR78PVEF0ZdLkf9+NBDK6M5sXBhUdFE7jXGDxn
+goPAMg48LMVNF7HN3E+9Rj/ioONJAX9OXgcFEE2u/HDAHBJQm78udXEan6FzZsvQ
+x0aNGWsWtOQtmiUV5u3RpjIC9OwPfixqFVg+UKkuiY/U70pspvxrMsMGUQQv7ra5
+qYpYBqUlRLo8JYFLL3+W8RuKUrUzMK4ZpwGtpMgzOq+xVLzZHgY38CFbVpYfHfWd
+WF2iRVrIARmg7Q/CWGkrThXl4lS2RgvTvXzH2z8uytb6sebjEcJ4x5MJ8S5hsHpP
+Mr/H0X62D7V8IseTbpfpjmR2rJH1QIMPKvatw0/XM/5sJsFm62w4q62YSjrhrP1K
+dPKUKxNjCsCPYlzae/ZJNkE5ImjcBxSy0EKbjMWAZKLR8x3jmrB3vTHHleZZapym
+Px0IVrR8itpkVZH7MOqxVcpnmWNV8W5cNmzjIt41Hhcu0ftDJtxMoQ29YOqUr6mE
+33HB+IkutWG+zoKN+W155dHKvuOhcf0M2Rbr+9MKerovqh8Yj80=
+=RWMV
+-----END PGP SIGNATURE-----
+
+--2muw7nddynsrgcwa--
