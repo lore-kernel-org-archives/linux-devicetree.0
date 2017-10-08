@@ -1,46 +1,36 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2
- board
-Date: Sun, 8 Oct 2017 13:48:19 +0200
-Message-ID: <20171008114819.deffq33oqbvr4azc@kozik-lap>
-References: <1507212431-5801-1-git-send-email-m.purski@samsung.com>
- <CGME20171005140823eucas1p13dbb713c2aa513372694a395bbd25d91@eucas1p1.samsung.com>
- <1507212431-5801-3-git-send-email-m.purski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1507212431-5801-3-git-send-email-m.purski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, m.szyprowski@samsung.com
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] dt-bindings: samsung: Document binding for new Odroid HC1 board
+Date: Sun,  8 Oct 2017 14:26:28 +0200
+Message-ID: <20171008122628.30973-1-krzk@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMDUsIDIwMTcgYXQgMDQ6MDc6MTFQTSArMDIwMCwgTWFjaWVqIFB1cnNraSB3
-cm90ZToKPiBBZGQgSERNSSBhbmQgU2lsOTIzNCBNSEwgY29udmVydGVyIHRvIFRyYXRzMiBib2Fy
-ZC4KPiBGb2xsb3dpbmcgaW4gU29DIGRldmljZXMgaGF2ZSBiZWVuIGVuYWJsZWQ6Cj4gLSBIRE1J
-IChIRE1JIHNpZ25hbCBlbmNvZGVyKSwKPiAtIE1peGVyICh2aWRlbyBidWZmZXIgc2Nhbm91dCBk
-ZXZpY2UpLAo+IC0gSTJDXzUgYnVzICh1c2VkIGZvciBIRE1JIEREQykKPiAtIEkyQ184IGJ1cyAo
-dXNlZCBmb3IgSERNSV9QSFkgY29udHJvbCkuCj4gCj4gQmFzZWQgb24gcHJldmlvdXMgd29yayBi
-eToKPiBUb21hc3ogU3RhbmlzbGF3c2tpIDx0LnN0YW5pc2xhd3NAc2Ftc3VuZy5jb20+Cj4gCj4g
-U2lnbmVkLW9mZi1ieTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ftc3VuZy5jb20+Cj4gLS0t
-Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTItdHJhdHMyLmR0cyB8IDExMSArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTExIGluc2VydGlv
-bnMoKykKClVuZm9ydHVuYXRlbHkgdGhpcyBkb2VzIG5vdCBhcHBseS4gSXQgaXMgd2VpcmQgYmVj
-YXVzZSB0aGVyZSB3ZXJlIG5vCmNoYW5nZXMgYXJvdW5kIFRyYXRzMiBEVFMgc28gaXQgbG9va3Mg
-eW91IGJhc2VkIHlvdXIgY2hhbmdlIG9uIHNvbWUKdW51c3VhbCB0cmVlIG9yIHZlcnNpb24uCgpD
-YW4geW91IHJlYmFzZSBvbiB0b3Agb2YgbXkgbmV4dC9kdD8KaHR0cHM6Ly9naXQua2VybmVsLm9y
-Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQva3J6ay9saW51eC5naXQvCgoKQmVzdCByZWdhcmRz
-LApLcnp5c3p0b2YKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Document the binding for new Hardkernel Odroid HC1 board.
+
+Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+index 3c551894f621..5e95e3e81140 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+@@ -57,6 +57,7 @@ Required root node properties:
+ 	- "hardkernel,odroid-xu3-lite" - for Exynos5422-based Hardkernel
+ 					 Odroid XU3 Lite board.
+ 	- "hardkernel,odroid-xu4" - for Exynos5422-based Hardkernel Odroid XU4.
++	- "hardkernel,odroid-hc1" - for Exynos5422-based Hardkernel Odroid HC1.
+ 
+   * Insignal
+ 	- "insignal,arndale"      - for Exynos5250-based Insignal Arndale board.
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
