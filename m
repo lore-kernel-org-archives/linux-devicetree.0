@@ -1,96 +1,117 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] pinctrl: change Kconfig PINCTRL variable to a
- menuconfig
-Date: Sun, 8 Oct 2017 23:24:43 +0200
-Message-ID: <20171008212442.ybbdwcnjsrrusxlh@earth>
-References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
- <1507266491-73971-2-git-send-email-preid@electromag.com.au>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/fdt: skip unflattening of disabled nodes
+Date: Sun, 8 Oct 2017 15:57:51 -0700
+Message-ID: <59DAAD6F.7010907@gmail.com>
+References: <20171003161815.25999-1-robh@kernel.org>
+ <20171003161815.25999-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rzgeo74v45a6vvkc"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1507266491-73971-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <20171003161815.25999-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---rzgeo74v45a6vvkc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, Oct 06, 2017 at 01:08:05PM +0800, Phil Reid wrote:
-> This allows PINCTRL to be selected manually to allow enabling of the
-> mcp23s08 i2c/spi gpio driver. Which is not platform specific.
-
-FWIW with i2c/spi based pin controllers available it makes sense
-to have this available everywhere. I actually did test my changes
-using an i2c-tiny-usb controller with my x86 based notebook, so:
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-
--- Sebastian
-
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+On 10/03/17 09:18, Rob Herring wrote:
+> For static DT usecases, we don't need the disabled nodes and can skip
+> unflattening. This saves a significant amount of RAM in memory constrained
+> cases. In one example on STM32F469, the RAM usage goes from 118K to 26K.
+> 
+> There are a few cases in the kernel that modify the status property
+> dynamically. These all are changes from enabled to disabled, depend on
+> OF_DYNAMIC or are not FDT based (PDT based).
+> 
+> Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/pinctrl/Kconfig | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 1778cf4..8da29e9 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -2,11 +2,10 @@
->  # PINCTRL infrastructure and drivers
->  #
-> =20
-> -config PINCTRL
-> -	bool
-> +menuconfig PINCTRL
-> +	bool "Pin controllers"
-> =20
-> -menu "Pin controllers"
-> -	depends on PINCTRL
-> +if PINCTRL
-> =20
->  config GENERIC_PINCTRL_GROUPS
->  	bool
-> @@ -379,4 +378,4 @@ config PINCTRL_TB10X
->  	depends on OF && ARC_PLAT_TB10X
->  	select GPIOLIB
-> =20
-> -endmenu
-> +endif
-> --=20
-> 1.8.3.1
->=20
+> For more background, see this presentation from Nico:
+> 
+> https://connect.linaro.org/resource/sfo17/sfo17-100/
+> 
+>  drivers/of/fdt.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index f8c39705418b..efe91c6856a0 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -396,6 +396,10 @@ static int unflatten_dt_nodes(const void *blob,
+>  		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
+>  			continue;
+>  
+> +		if (!IS_ENABLED(CONFIG_OF_DYNAMIC) &&
+> +		    !of_fdt_device_is_available(blob, offset))
+> +			continue;
+> +
+>  		if (!populate_node(blob, offset, &mem, nps[depth],
+>  				   &nps[depth+1], dryrun))
+>  			return mem - base;
+> 
 
---rzgeo74v45a6vvkc
-Content-Type: application/pgp-signature; name="signature.asc"
+Hi Rob,
 
------BEGIN PGP SIGNATURE-----
+I strongly support the idea of this patch, but there may be an
+issue we have to resolve.  I'm pretty sure we had talked about
+the issue a long time ago, and it has been sitting on my todo
+list.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnal5oACgkQ2O7X88g7
-+poigw//fxvw+teP53hM79rt3ts+aM2L/wLDGW7Yal6q8lS1KEuPjUqf9/5JVO7e
-Q+yw4Mo6A4JKCUfWfCstFCGCaaBPjYUXTrhpuIjwoFNmHjDQsiP9JmLqkL8bCdyB
-IgPoVn6i000laDF7orhqDa+ScadahA38pnzp6ZzKTzZlB+1WNVvT3q1OY3j+Hio1
-oVf2+B7gb8/9HIHFPzSEhQho/mxXQZ+7vj46GYUj6AnFG+5PsOmA+EOEMkxCTaTx
-swKaz9HaCrxqfP5rf/RMw22Rh5XCMt3TjMs0oe8M2zLC6rZkt5xunmJ7+lzTGV/Z
-Mlg93BJ1twduHx8QlAzqIJenn+hiCAhpm+FJ8Xc1G4BsGyj3MVZz7dzUy0fFVN2I
-ruGmv0A7PI5U8e/sJpRF1mkhOTu4MwagUC/TrZrJMqYxjs2S++Cez9D0gb8yqn16
-dx0f8ttmxuDzho3GB+UO6b841Su2PC6TUOTqhplJV3TNUaEKJiaHecZ/EDgHGcwg
-A2nLvpbO01ptvtX0PqFN56dQJtajaTzKYDkDFiQuK8oiXO78UfvZM/ZqLBV6myZ1
-YhBfH97mvP8mhCe0+OVxqQNctxiH6opVA2Y/gBj+nfmhK8TKSvvuyopw+Ml+SOd/
-aZZttJhagZIVmfENMjmwsInozL9YeDkihPyrx0dbWe0KB9nxRqI=
-=Asyv
------END PGP SIGNATURE-----
+We have two sets of node traversal macros and functions.  One
+set honors the status property, and the other ignores it.  If
+I recall our previous discussion properly, we want the normal
+usage to honor the status property and only a tiny (or maybe
+non-existent) set of locations to be allowed to ignore the
+status property.
 
---rzgeo74v45a6vvkc--
+A rough sense of how often the status property is honored or
+not is:
+
+   $ git grep for_each_child_of_node | wc -l
+   293
+   $ git grep of_get_next_child | wc -l
+   103
+
+   $ git grep for_each_available_child_of_node | wc -l
+   106
+   $ git grep of_get_next_available_child | wc -l
+   20
+
+Many of the cases where the status flag is ignored will not
+actually encounter a node that is not available, so many of
+the cases where status is not checked could currently be
+checking status.
+
+And just for completeness, there are a number of standalone
+checks for whether a node is available:
+
+   $ git grep of_device_is_available | wc -l
+   128
+
+It will be a pain to manually check all of the sites that
+ignore the status property, but that task should be done.
+
+In the mean time, maybe we could flush out the few cases
+that currently depend on ignoring the status property by
+
+   - making for_each_child_of_node() and of_get_next_child()
+     actually check for valid status
+
+   - provide a temporary (one or two kernel release)
+     CONFIG option to allow the old behavior for
+     for_each_child_of_node() and of_get_next_child()
+     just in case we miss any locations that need to
+     be fixed
+
+   - fix up the few places in core device tree code that
+     actually need to ignore status (if such places exist)
+
+In the end, the *_available_*() interfaces should be
+removed, because the normal behavior of node traversal
+should be to only traverse nodes that are available.
+
+-Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
