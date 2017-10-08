@@ -1,51 +1,30 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH 1/2] gpio: dt-bindings: add mcp23018 to mcp23s08
- documentation
-Date: Sun, 8 Oct 2017 18:20:59 +0800
-Message-ID: <b2a9b5d7-2537-ce8e-82f4-4c2d131143a0@electromag.com.au>
-References: <1507166615-4530-1-git-send-email-preid@electromag.com.au>
- <1507166615-4530-2-git-send-email-preid@electromag.com.au>
- <CACRpkdY-NRR1wcBbaeCLHfWwCVoQB+s=P=nMxZgMSyuqdmkA6g@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2] dmaengine: usb-dmac: Add compatible string for
+ r8a7743/5
+Date: Sun, 8 Oct 2017 16:21:11 +0530
+Message-ID: <20171008105111.GN30097@localhost>
+References: <1507310117-9436-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY-NRR1wcBbaeCLHfWwCVoQB+s=P=nMxZgMSyuqdmkA6g@mail.gmail.com>
-Content-Language: en-AU
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507310117-9436-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/10/2017 07:41, Linus Walleij wrote:
-> On Thu, Oct 5, 2017 at 3:23 AM, Phil Reid <preid@electromag.com.au> wrote:
+On Fri, Oct 06, 2017 at 06:15:17PM +0100, Biju Das wrote:
+> This patch adds support for r8a7743/5 SoCs. The Renesas RZ/G1[ME]
+> (R8A7743/5) usbdmac engine is identical to the R-Car Gen2 family.
 > 
->> This adds the required definitions for the mcp23018 which is the i2c
->> variant of the mcp23s18.
-> 
-> Which is logical if "s" stands for "SPI", "0" is normal or I2C.
-> 
->>       - "microchip,mcp23s18" for 16 GPIO SPI version
-> 
-> So that is the SPI version
-> 
->>       - "microchip,mcp23008" for  8 GPIO I2C version or
->>       - "microchip,mcp23017" for 16 GPIO I2C version of the chip
->> +    - "microchip,mcp23018" for 16 GPIO SPI version
-> 
-> And right here you say that this is also the SPI version, but the
-> commit message says it is the I2C version.
-> 
-G'day Linus,
+> No driver change is needed due to the fallback compatible value
+> "renesas,r8a7743-usb-dmac".
+> Adding the SoC-specific compatible values here has two purposes:
+>   1. Document which SoCs have this hardware module,
+>   2. Allow checkpatch to validate compatible values.
 
-thanks for looking at this.
-Sorry, there's a v2 fixing that.
-
-Along with proposed patches for fixing the items raised in my RFI.
-
-Except for modelling the inverter. Not even sure how to approach that one.
-
+Applied, thanks
 
 -- 
-Regards
-Phil Reid
+~Vinod
