@@ -1,32 +1,33 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v2 4/7] dt-bindings: pinctrl: mcp23s08: add documentation
- for irq-open-drain
-Date: Sun, 8 Oct 2017 23:15:37 +0200
-Message-ID: <20171008211537.x5guehawe3e4x6cq@earth>
+Subject: Re: [PATCH v2 5/7] pinctrl: mcp23s08: add open drain configuration
+ for irq pinctrl
+Date: Sun, 8 Oct 2017 23:16:55 +0200
+Message-ID: <20171008211655.7o77rxdxvsf44xds@earth>
 References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
- <1507266491-73971-5-git-send-email-preid@electromag.com.au>
+ <1507266491-73971-6-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xdngcljtt35tg73w"
+        protocol="application/pgp-signature"; boundary="esa4wbxilwcpwar2"
 Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1507266491-73971-5-git-send-email-preid@electromag.com.au>
+In-Reply-To: <1507266491-73971-6-git-send-email-preid@electromag.com.au>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Phil Reid <preid@electromag.com.au>
 Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, poeschel@lemonage.de, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---xdngcljtt35tg73w
+--esa4wbxilwcpwar2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, Oct 06, 2017 at 01:08:08PM +0800, Phil Reid wrote:
-> This flag set the mcp23s08 device series irq type to open drain active lo=
-w.
+On Fri, Oct 06, 2017 at 01:08:09PM +0800, Phil Reid wrote:
+> The mcp23s08 series device can be configured for wired and interupts
+> using an external pullup and open drain output via the IOCON_ODR bit.
+> And "microchip,irq-open-drain" property to enable this.
 >=20
 > Signed-off-by: Phil Reid <preid@electromag.com.au>
 
@@ -35,47 +36,66 @@ Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 -- Sebastian
 
 > ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/pinctrl/pinctrl-mcp23s08.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.t=
-xt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> index 8a5bf99..7a0808f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
-> @@ -58,6 +58,8 @@ Optional device specific properties:
->          On devices with only one interrupt output this property is usele=
-ss.
->  - microchip,irq-active-high: Sets the INTPOL flag in the IOCON register.=
- This
->          configures the IRQ output polarity as active high.
-> +- microchip,irq-open-drain: Sets the ODR flag in the IOCON register. This
-> +        configures the IRQ output as open drain active low.
+> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl=
+-mcp23s08.c
+> index 8d356df..150f216 100644
+> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
+> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+> @@ -780,6 +780,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, s=
+truct device *dev,
+>  {
+>  	int status, ret;
+>  	bool mirror =3D false;
+> +	bool open_drain =3D false;
 > =20
->  Example I2C (with interrupt):
->  gpiom1: gpio@20 {
+>  	mutex_init(&mcp->lock);
+> =20
+> @@ -876,6 +877,8 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, s=
+truct device *dev,
+>  					      "microchip,irq-active-high");
+> =20
+>  		mirror =3D device_property_read_bool(dev, "microchip,irq-mirror");
+> +		open_drain =3D device_property_read_bool(dev,
+> +						    "microchip,irq-open-drain");
+>  	}
+> =20
+>  	if ((status & IOCON_SEQOP) || !(status & IOCON_HAEN) || mirror ||
+> @@ -891,6 +894,9 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, s=
+truct device *dev,
+>  		if (mirror)
+>  			status |=3D IOCON_MIRROR | (IOCON_MIRROR << 8);
+> =20
+> +		if (open_drain)
+> +			status |=3D IOCON_ODR | (IOCON_ODR << 8);
+> +
+>  		if (type =3D=3D MCP_TYPE_S18 || type =3D=3D MCP_TYPE_018)
+>  			status |=3D IOCON_INTCC | (IOCON_INTCC << 8);
+> =20
 > --=20
 > 1.8.3.1
 >=20
 
---xdngcljtt35tg73w
+--esa4wbxilwcpwar2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnalXkACgkQ2O7X88g7
-+ppkZg//RCZS6GBAbVbJ9DyPsd3iyp6QZP8gMb6tefWs5JtFjv5g2XE/XMoOlaTy
-2gyx1XWojJF7/T6F/BtR1LSBpy42iqytS679+iBIg0ohLto7ZPOddRf2AHxPJc8S
-AW3PhiNDeYLFw+1hvUgfvZlxJYphnifs2iPajDlhtHDBCCJSvjja5jrUJwc5ng9d
-larX1ZnM9Gwaxg8JgmA1aNKEVhD6Zudh7p1ZPsJxL16ZxTsvCGBX1tKhn4iTMC66
-KaKcBhADO8M9zzh16kIWyQ0JWQ2xi8Ml1yeMsYAXf4EK6fw7xjEY8m+xrdHIlWLB
-Xwc3WZc89lWyKMJCibwtAn0XnFw+BvP3/ueXN8x9plyeLjH1c0bS88Zi0AlO6aoN
-2HbRhu1V4hyVrw82tX/9upyZksBbg/xxglLumEOpwyvottnymDXB2JjNFVgntgWY
-R5cMkfKHHVYAPisPLfzdux56ng+Q49jQeficometOYUF5e+Xt4NO2VvXPExq3Nl7
-W5f+m4zAce2fMoZGLqlTg96GwjDVkBMNEnU+nZu+R/b5+SuWEB7VS4XEPr5OKc1G
-9CjBKogGJV/DxjBvm3xE3E7k5vSY1nci55p28pxBXKRQcQF1kVp1N5vo7kERaEtV
-DFtNJsJQ8wAlNlOjB4+o8D2uD82bZNpNr7FgJsDhKcR/B85dNh8=
-=bWC+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnalccACgkQ2O7X88g7
++po/UQ/+PTslzdXCaU71U8tNGfO2DRGgpHM1EdGftRp3tVgHaV+YHlHMRWRX0om9
+fyprn7yOyljSNv5U2U9/UGiqI4frO/Fmj13iWJR4ODXRlJ0EIwiNRZiptHVQq5HC
+9w+vCnyo02D4qNQJ2kl3zWJApvUj7ANe+X1ydx3jCexMmm6RS94MQEvETEEl/yOu
+D5MRW3rLe5K2eXaxECvL78HY4I/YRvnhY9AaQjY+8AejqilUQqMZrN6Q2YBoUaDm
+TZAKRigtG5gO2k4oEnHBksf3lsf75W87GZrKy2EaAuXdiL/hB5nE89zM8Xpk43rg
+peFORZRNq8cYm+8Kdo/SQcyZ/E/f614nqmMKxTodoSX/CsWP+WVjONaTorzar25p
+zv8ZAnS/RyWkhknDBBZKWJHOUWi5gtIQazEYKjueYIKGZXdKxR4MuDV8NZ+Tj8nY
+cuj+nXClSYpTUF2zdi52uQSLN3BYnF7PRpV13V3v0chEeYazdTAfUeKi6AplDU/X
+MVCFO64zB2kGJ/TjIzqmefNAacxu6ehg7yklZ5tGQ0vXWbS3PLkodTAVIU5xL2Xg
+t5z1ubDOC5wRVoV5mi3qhRt1eV1vNVzoSfCnt5867Dex5EUEoKZL0BaTiQDRA0QC
+6FdVJiB9xUnIDgj+v4Rwgy69IvVznbqHzIFRlT0NYkTNP13hP5U=
+=WbL2
 -----END PGP SIGNATURE-----
 
---xdngcljtt35tg73w--
+--esa4wbxilwcpwar2--
