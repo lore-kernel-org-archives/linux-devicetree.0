@@ -1,29 +1,41 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Move mcp23s08 from gpio
-Date: Sun, 8 Oct 2017 01:58:52 +0200
-Message-ID: <CACRpkdY=r8XBqHKrVeZ34jR8FJM-zmOUxCSMhEROc6fOjfwX-A@mail.gmail.com>
-References: <20171005075002.9901-1-poeschel@lemonage.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/6] Allwinner R40 USB host support
+Date: Sun,  8 Oct 2017 12:29:00 +0800
+Message-ID: <20171008042906.46779-1-icenowy@aosc.io>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171005075002.9901-1-poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 5, 2017 at 9:50 AM, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org> wrote:
+This patchset adds support for the USB host ports on Allwiner R40, and
+enable them on Banana Pi M2 Ultra and Berry boards.
 
-> The mcp23s08 driver was moved from gpio to pinctrl. This moves it's
-> devicetree binding doc as well. So driver and binding doc are in sync
-> again.
->
-> Signed-off-by: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
+The first patch adds R40 support to the USB PHY driver.
 
-Are there no new references to the generic pin control binding
-needed as well?
+The second patch adds USB PHY and EHCI/OHCI nodes to the R40 DTSI.
 
-Linus Walleij
+The thrid and fourth patch adds 5V regulator for the two boards, and
+the fifth and sixth patch finally adds USB host ports support.
+
+Icenowy Zheng (6):
+  phy: sun4i-usb: add support for R40 USB PHY
+  ARM: sun8i: r40: add USB host port nodes for R40
+  ARM: sun8i: r40: add 5V regulator for Banana Pi M2 Ultra
+  ARM: sun8i: v40: add 5V regulator for Banana Pi M2 Berry
+  ARM: sun8i: r40: enable USB host for Banana Pi M2 Ultra
+  ARM: sun8i: v40: enable USB host ports for Banana Pi M2 Berry
+
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  1 +
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 31 +++++++++
+ arch/arm/boot/dts/sun8i-r40.dtsi                   | 78 ++++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts  | 22 ++++++
+ drivers/phy/allwinner/phy-sun4i-usb.c              | 12 ++++
+ 5 files changed, 144 insertions(+)
+
+-- 
+2.13.6
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
