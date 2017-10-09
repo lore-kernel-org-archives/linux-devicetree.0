@@ -1,82 +1,47 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v11 1/4] rockchip/rga: v4l2 m2m support
-Date: Mon, 09 Oct 2017 14:52:06 +0200
-Message-ID: <1723232.PDSGHSTtIa@diego>
-References: <20171009090424.15292-1-jacob-chen@iotwrt.com> <20171009090424.15292-2-jacob-chen@iotwrt.com> <39318451-a078-3451-47f8-9205a31cadb5@xs4all.nl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add document for rockchip RGB output
+ interface
+Date: Mon, 9 Oct 2017 08:05:44 -0500
+Message-ID: <CAL_JsqJcO6VtgYBzby+gjerODT9n6fE0aMNJXNejvvhF1nqM-Q@mail.gmail.com>
+References: <1506049221-117283-1-git-send-email-hjc@rock-chips.com>
+ <1506049229-117376-1-git-send-email-hjc@rock-chips.com>
+ <20171003215631.rc2jsf2m3qgoltsb@rob-hp-laptop>
+ <2d502a9d-e952-8afb-d2d7-45c21c36da7e@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <39318451-a078-3451-47f8-9205a31cadb5@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2d502a9d-e952-8afb-d2d7-45c21c36da7e@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandy Huang <hjc@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-Am Montag, 9. Oktober 2017, 14:48:13 CEST schrieb Hans Verkuil:
-> On 09/10/17 11:04, Jacob Chen wrote:
-> > Rockchip RGA is a separate 2D raster graphic acceleration unit. It
-> > accelerates 2D graphics operations, such as point/line drawing, image
-> > scaling, rotation, BitBLT, alpha blending and image blur/sharpness
-> > 
-> > The driver supports various operations from the rendering pipeline.
-> > 
-> >  - copy
-> >  - fast solid color fill
-> >  - rotation
-> >  - flip
-> >  - alpha blending
-> > 
-> > The code in rga-hw.c is used to configure regs according to operations
-> > The code in rga-buf.c is used to create private mmu table for RGA.
-> > 
-> > Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-> 
-> I ran checkpatch --strict on this patch and I found a few small issues:
-> 
-> WARNING: Avoid crashing the kernel - try using WARN_ON & recovery code
-> rather than BUG() or BUG_ON() #1222: FILE:
-> drivers/media/platform/rockchip/rga/rga.c:89:
-> +               BUG_ON(!ctx);
-> 
-> WARNING: Avoid crashing the kernel - try using WARN_ON & recovery code
-> rather than BUG() or BUG_ON() #1229: FILE:
-> drivers/media/platform/rockchip/rga/rga.c:96:
-> +               BUG_ON(!src);
-> 
-> WARNING: Avoid crashing the kernel - try using WARN_ON & recovery code
-> rather than BUG() or BUG_ON() #1230: FILE:
-> drivers/media/platform/rockchip/rga/rga.c:97:
-> +               BUG_ON(!dst);
-> 
-> I think you can use WARN_ON here and just return.
-> 
-> CHECK: struct mutex definition without comment
-> #2235: FILE: drivers/media/platform/rockchip/rga/rga.h:84:
-> +       struct mutex mutex;
-> 
-> CHECK: spinlock_t definition without comment
-> #2236: FILE: drivers/media/platform/rockchip/rga/rga.h:85:
-> +       spinlock_t ctrl_lock;
-> 
-> These two fields need a comment describing what the locks protect.
-> 
-> Also move patch 4/4 to the beginning of the patch series. The bindings
-> patch should come before the driver.
-> 
-> If I have a v12 with these issues fixed and a MAINTAINERS patch, then
-> I'll take it on Friday.
-> 
-> Do you want me to take the dts patches or will they go through another tree?
-
-I'd prefer for me to pick up the dts patches ("ARM: dts" and "arm64: dts:"), 
-as otherwise we always get conflicts and confusion :-)
-
-I'm monitoring this series, so after you pick the binding + driver, I can
-just pick the other two.
-
-
-Thanks
-Heiko
+T24gTW9uLCBPY3QgOSwgMjAxNyBhdCAzOjA2IEFNLCBTYW5keSBIdWFuZyA8aGpjQHJvY2stY2hp
+cHMuY29tPiB3cm90ZToKPiBIaSByb2IsCj4gICAgIFRoYW5rcyBmb3IgeW91ciByZXBseS4KPgo+
+IOWcqCAyMDE3LzEwLzQgNTo1NiwgUm9iIEhlcnJpbmcg5YaZ6YGTOgo+Pgo+PiBPbiBGcmksIFNl
+cCAyMiwgMjAxNyBhdCAxMTowMDoyNkFNICswODAwLCBTYW5keSBIdWFuZyB3cm90ZToKPj4+Cj4+
+PiBUaGlzIHBhdGggYWRkIHN1cHBvcnQgcnYxMTA4IHJnYiBvdXRwdXQgaW50ZXJmYWNlIGRyaXZl
+ci4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBTYW5keSBIdWFuZyA8aGpjQHJvY2stY2hpcHMuY29t
+Pgo+Pj4gLS0tCj4+PiBDaGFuZ2VzIGluIHYyOgo+Pj4gICAxLiByZW5hbWUgcm9ja2NoaXAscmdi
+LW1vZGUgdG8gcmdiLW1vZGU7Cj4+Cj4+Cj4+IFlvdSBjYW4ndCBqdXN0IGRyb3AgdGhlIHZlbmRv
+ci4gVGhpcyBuZWVkcyB0byBiZSBkb2N1bWVudGVkIGluIGEgY29tbW9uCj4+IHBsYWNlIHRoYXQg
+b3RoZXJzIHdpbGwgZmluZCBhbmQgdXNlLiBTZWUgcGFuZWwtY29tbW9uLnR4dCBvcgo+PiBwYW5l
+bC1kcGkudHh0Lgo+Pgo+PiBBbHRlcm5hdGl2ZWx5LCB5b3UgY291bGQganVzdCBkcm9wIGl0IGFu
+ZCBsZXQgdGhlIHBhbmVsIGNvbXBhdGlibGUgaW1wbHkKPj4gd2hhdCB0aGUgbW9kZSBpcy4KPj4K
+Pj4KPiBvaywgZ2V0IGl0LCBpIHdpbGwgbW92ZSB0aGUgcmdiLW1vZGUgdG8gcGFuZWwgYW5kIGRl
+c2NyaWJlIGl0IGF0Cj4gcGFuZWwtcmdiLnR4dC4gdGhlIHBhdGNoZXMgd2lsbCBiZSBzZW5kIHNv
+b24gbGF0ZXIuCgpEb24ndCBjcmVhdGUgeWV0IGFub3RoZXIgY29tbW9uIHBhbmVsIGZpbGUuIFdl
+IGFscmVhZHkgaGF2ZQpwYW5lbC1kcGkudHh0IHdoaWNoIGlzIGZvciBkaWdpdGFsIHBhcmFsbGVs
+IGludGVyZmFjZS4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
