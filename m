@@ -1,91 +1,41 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add document for rockchip RGB output
- interface
-Date: Mon, 9 Oct 2017 16:06:05 +0800
-Message-ID: <2d502a9d-e952-8afb-d2d7-45c21c36da7e@rock-chips.com>
-References: <1506049221-117283-1-git-send-email-hjc@rock-chips.com>
- <1506049229-117376-1-git-send-email-hjc@rock-chips.com>
- <20171003215631.rc2jsf2m3qgoltsb@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171003215631.rc2jsf2m3qgoltsb@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/4] Add support rockchip RGB output interface
+Date: Mon,  9 Oct 2017 16:06:36 +0800
+Message-ID: <1507536396-106827-1-git-send-email-hjc@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgcm9iLAogICAgIFRoYW5rcyBmb3IgeW91ciByZXBseS4KCuWcqCAyMDE3LzEwLzQgNTo1Niwg
-Um9iIEhlcnJpbmcg5YaZ6YGTOgo+IE9uIEZyaSwgU2VwIDIyLCAyMDE3IGF0IDExOjAwOjI2QU0g
-KzA4MDAsIFNhbmR5IEh1YW5nIHdyb3RlOgo+PiBUaGlzIHBhdGggYWRkIHN1cHBvcnQgcnYxMTA4
-IHJnYiBvdXRwdXQgaW50ZXJmYWNlIGRyaXZlci4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU2FuZHkg
-SHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+IENoYW5nZXMgaW4gdjI6Cj4+ICAg
-MS4gcmVuYW1lIHJvY2tjaGlwLHJnYi1tb2RlIHRvIHJnYi1tb2RlOwo+IAo+IFlvdSBjYW4ndCBq
-dXN0IGRyb3AgdGhlIHZlbmRvci4gVGhpcyBuZWVkcyB0byBiZSBkb2N1bWVudGVkIGluIGEgY29t
-bW9uCj4gcGxhY2UgdGhhdCBvdGhlcnMgd2lsbCBmaW5kIGFuZCB1c2UuIFNlZSBwYW5lbC1jb21t
-b24udHh0IG9yCj4gcGFuZWwtZHBpLnR4dC4KPiAKPiBBbHRlcm5hdGl2ZWx5LCB5b3UgY291bGQg
-anVzdCBkcm9wIGl0IGFuZCBsZXQgdGhlIHBhbmVsIGNvbXBhdGlibGUgaW1wbHkKPiB3aGF0IHRo
-ZSBtb2RlIGlzLgo+IAo+IApvaywgZ2V0IGl0LCBpIHdpbGwgbW92ZSB0aGUgcmdiLW1vZGUgdG8g
-cGFuZWwgYW5kIGRlc2NyaWJlIGl0IGF0IApwYW5lbC1yZ2IudHh0LiB0aGUgcGF0Y2hlcyB3aWxs
-IGJlIHNlbmQgc29vbiBsYXRlci4KCj4+ICAgMi4gZGVsZXRlIHJlZyBmb3Igc2lnbmxlIGVuZHBv
-aW50Owo+Pgo+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50
-eHQgICAgIHwgNzggKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA3
-OCBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQKPj4KPj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jv
-Y2tjaGlwL3JvY2tjaGlwLXJnYi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjg2YmQxY2UKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hp
-cC1yZ2IudHh0Cj4+IEBAIC0wLDAgKzEsNzggQEAKPj4gK1JvY2tjaGlwIFJWMTEwOCBSR0IgaW50
-ZXJmYWNlCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGU6
-Cj4+ICsJLSAicm9ja2NoaXAscnYxMTA4LXJnYiI7Cj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRp
-ZXM6Cj4+ICstIHBpbmN0cmwtbmFtZXM6IG11c3QgY29udGFpbiBhICJsY2RjIiBlbnRyeS4KPj4g
-Ky0gcGluY3RybC0wOiBwaW4gY29udHJvbCBncm91cCB0byBiZSB1c2VkIGZvciB0aGlzIGludGVy
-ZmFjZS4KPj4gKwo+PiArUmVxdWlyZWQgbm9kZXM6Cj4+ICstIHJnYi1tb2RlOiBzaG91bGQgYmUg
-InA4ODgiLCAicDY2NiIsICJwNTY1IiwgInM4ODgiLCAiczg4OC1kdW1teSIKPj4gKwktIHA4ODg6
-IG91dHB1dCByOC1nOC1iOCBhdCBlYWNoIGRjbGsgY3ljbGUgZm9yIHBlci1waXhlbAo+PiArCS0g
-cDY2Njogb3V0cHV0IHI2LWc2LWI2IGF0IGVhY2ggZGNsayBjeWNsZSBmb3IgcGVyLXBpeGVsCj4+
-ICsJLSBwNTY1OiBvdXRwdXQgcjUtZzYtYjUgYXQgZWFjaCBkY2xrIGN5Y2xlIGZvciBwZXItcGl4
-ZWwKPj4gKwktIHM4ODg6IG91dHB1dCByOC1nOC1iOCBpbiB0aHJlZSBkY2xrIGN5Y2xlIGZvciBw
-ZXItcGl4ZWwKPj4gKwktIHM4ODgtZG1teTogb3V0cHV0IHI4LWc4LWI4LWR1bW15IGluIGZvdXIg
-ZGNsayBjeWNsZSBmb3IgcGVyLXBpeGVsCj4+ICsKPj4gK1RoZSByZ2IgaGFzIHR3byB2aWRlbyBw
-b3J0cyBkZXNjcmliZWQgYnk6Cj4+ICsJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4+ICtUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9k
-ZWxlZCB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCj4+ICsJRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPj4gKwo+PiArLSB2aWRlbyBw
-b3J0IDAgZm9yIHRoZSBWT1AgaW5wdXQsIHRoZSByZW1vdGUgZW5kcG9pbnQgbWF5YmUgdm9wYi92
-b3BsL3ZvcAo+PiArLSB2aWRlbyBwb3J0IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVl
-bnQgZW5jb2Rlcgo+PiArCj4+ICt0aGUgcGFuZWwgZGVzY3JpYmVkIGJ5Ogo+PiArCURvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQK
-Pj4gK1BhbmVsIG90aGVyIHJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIHBvcnRzIGZvciByZW1v
-dGUgcmdiIG91dHB1dC4KPj4gKwo+PiArRXhhbXBsZToKPj4gKwo+PiArcGFuZWw6IHBhbmVsIHsK
-Pj4gKwljb21wYXRpYmxlID0gImF1byxiMTAxZWFuMDEiOwo+PiArCWVuYWJsZS1ncGlvcyA9IDwm
-Z3BpbzcgMjEgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsKPj4gKwlwb3J0cyB7Cj4+ICsJCXBhbmVs
-X2luX3JnYjogZW5kcG9pbnQgewo+PiArCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZyZ2Jfb3V0X3Bh
-bmVsPjsKPj4gKwkJfTsKPj4gKwl9Owo+PiArfTsKPj4gKwo+PiArRm9yIFJvY2tjaGlwIFJWMTEw
-ODoKPj4gKwo+PiArCXJnYjogcmdiIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxydjEx
-MDgtcmdiIjsKPj4gKwkJcGluY3RybC1uYW1lcyA9ICJsY2RjIjsKPj4gKwkJcGluY3RybC0wID0g
-PCZsY2RjX2N0bD47Cj4+ICsJCXJnYi1tb2RlID0gInA4ODgiOwo+PiArCj4+ICsJCXBvcnRzIHsK
-Pj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4+
-ICsKPj4gKwkJCXJnYl9pbjogcG9ydEAwIHsKPj4gKwkJCQlyZWcgPSA8MD47Cj4+ICsJCQkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsKPj4gKwkJ
-CQlyZ2JfaW5fdm9wOiBlbmRwb2ludCB7Cj4+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdm9w
-X291dF9yZ2I+Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiArCj4+ICsJCQlyZ2Jfb3V0OiBwb3J0
-QDEgewo+PiArCQkJCXJlZyA9IDwxPjsKPj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4g
-KwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwo+PiArCQkJCXJnYl9vdXRfcGFuZWw6IGVuZHBv
-aW50IHsKPj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbl9yZ2I+Owo+PiArCQkJ
-CX07Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiArCX07Cj4+IC0tIAo+PiAyLjcuNAo+Pgo+Pgo+IAo+
-IAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patches add support rockchip RGB output, Some Rockchip CRTCs, like rv1108,
+can directly output parallel and serial RGB data to panel or to conversion chip.
+So we add this driver to probe encoder and connector to support this case.
+
+Sandy Huang (4):
+  devicetree/bindings: display: Add doucument for RGB panels
+  devicetree/bindings: display: Add document for rockchip RGB output
+  drm/rockchip: Add support for Rockchip Soc RGB output interface
+  drm/rockchip: vop: Add more RGB output interface type
+
+ .../bindings/display/panel/panel-rgb.txt           | 116 +++++++
+ .../bindings/display/rockchip/rockchip-rgb.txt     |  72 +++++
+ drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_rgb.c            | 343 +++++++++++++++++++++
+ 8 files changed, 546 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-rgb.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_rgb.c
+
+-- 
+2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
