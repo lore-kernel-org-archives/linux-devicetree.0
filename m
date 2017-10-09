@@ -1,120 +1,44 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 1/2] ARM: dts: exynos: update the usbdrd phy and ref clk
-Date: Mon, 9 Oct 2017 19:05:14 +0200
-Message-ID: <20171009170514.saqrbv7rmjdkghkp@kozik-lap>
-References: <1507264595-3565-1-git-send-email-linux.amoon@gmail.com>
- <CAJKOXPe=hd7QdsaqpqPv3cNvL59FBqCfy24mYmGdQvi7Yp8wBQ@mail.gmail.com>
- <CANAwSgRK+F62xKFeFM9ZJ_rgPWj831ca=tX9BSKXUyRBhN4yhA@mail.gmail.com>
- <20171008154759.moic645jwrp7nztg@kozik-lap>
- <CANAwSgRX0FJ0piYd_T_FeUpKP=Dg5sCjhAH+7r_=JUvS-CNONQ@mail.gmail.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [RFC usb-next v5 2/3] usb: core: add a wrapper for the USB PHYs
+ on the root-hub
+Date: Mon, 9 Oct 2017 13:16:03 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1710091314310.6996-100000@netrider.rowland.org>
+References: <20171008211713.18696-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANAwSgRX0FJ0piYd_T_FeUpKP=Dg5sCjhAH+7r_=JUvS-CNONQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171008211713.18696-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 09, 2017 at 02:36:13AM +0530, Anand Moon wrote:
-> Hi Krzysztof,
-> 
-> On 8 October 2017 at 21:17, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > On Sun, Oct 08, 2017 at 06:06:19PM +0530, Anand Moon wrote:
-> >> Hi Krzysztof,
-> >>
-> >> On 6 October 2017 at 12:08, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >> > On Fri, Oct 6, 2017 at 6:36 AM, Anand Moon <linux.amoon@gmail.com> wrote:
-> >> >> update the usbdrd link control and phy contol clks.
-> >> >
-> >> > The commit title and especially commit message should explain why you
-> >> > are doing this and what are you doing. "Update" is not enough.
-> >> > Everything could be called update.
-> >> >
-> >> > Therefore I do not understand the reason behind the patch.
-> >> >
-> >> > BR,
-> >> > Krzysztof
-> >>
-> >> so as per the driver.
-> >> @clk: phy clock for register access
-> >> @ref_clk: reference clock to PHY block from which PHY's operational
-> >> clocks are derived
-> >>
-> >> Both CLK_SCLK_USBPHY300 and CLK_SCLK_USBD300 belong to FSYS Clock
-> >> and CLK_USBD300 clk is being used by the usbdrd dwc3 module.
-> >>
-> >> [0] https://github.com/torvalds/linux/blob/master/drivers/clk/samsung/clk-exynos5420.c#L1040-L1053
-> >>
-> >> So their is mismatch of the clk used by the usbdrd driver.
-> >
-> > Where is the mismatch? I do not understand.
-> >
-> >> with the above changes the driver work well with camera and disk drives
-> >> connected to usb 3.0 ports and their is improvement in the performance.
-> >
-> > If something is not working now, please describe it exactly so we could
-> > both reproduce and then observe the end results of fix.
-> >
-> > I do not understand how the change of these clocks brings improvement in
-> > performance... ok, sometimes it might happen if the rate of clock is
-> > being used on bus. Is this the case?
-> >
-> > Best regards,
-> > Krzysztof
-> >
-> [snip]
-> 
-> As per Exynos5422 CMU
-> 
-> CLK_SCLK_USBPHY300 and CLK_SCLK_USBD300 are special clk meant to
-> control the usbdrd
-> 
-> CLK_SCLK_USBPHY300/1 is used for phy control
-> CLK_SCLK_USBD300/1 is used for link control.
-> 
-> Following link share the details of the CMU_TOP
-> [0] https://imgur.com/9OKaXEM
+On Sun, 8 Oct 2017, Martin Blumenstingl wrote:
 
-... and? Unfortunately this does not explain the problem to me.
+> Many SoC platforms have separate devices for the USB PHY which are
+> registered through the generic PHY framework. These PHYs have to be
+> enabled to make the USB controller actually work. They also have to be
+> disabled again on shutdown/suspend.
 
-> 
-> On Odroid cloudshell module with old hard disk it time to time do reset of hub.
-> on heavy traffic of data.
-> 
-> [46953.765974] usb 4-1.1: reset SuperSpeed USB device number 3 using xhci-hcd
-> [47006.851310] usb 4-1.1: reset SuperSpeed USB device number 3 using xhci-hcd
-> 
-> [  730.078441] sd 1:0:0:0: [sdb] tag#5 CDB: opcode=0x2a 2a 00 26 b6 58
-> 80 00 00 80 00
-> [  730.078471] sd 1:0:0:0: [sdb] tag#6 uas_zap_pending 0 uas-tag 7 inflight: CMD
-> [  730.078498] sd 1:0:0:0: [sdb] tag#6 CDB: opcode=0x28 28 00 00 00 20
-> 00 00 04 00 00
-> [  730.161071] usb 4-1.2: reset SuperSpeed USB device number 4 using xhci-hcd
-> [  730.187194] scsi host1: uas_eh_bus_reset_handler success
-> 
-> At some time it work stable but eventfully their is loss of data.
+...
 
-Thanks for the error log. You still did not say it explicitly so I am
-guessing: do you mean that these errors are the effect of disabled clock?
+> --- /dev/null
+> +++ b/drivers/usb/core/phy.h
+> @@ -0,0 +1,7 @@
+> +struct usb_phy_roothub;
+> +
+> +struct usb_phy_roothub *usb_phy_roothub_init(struct device *dev);
+> +int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+> +
+> +int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+> +int usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
 
-Maybe try to explain in simple sentences:
-1. What is the visible problem.
-2. How to reproduce it (you partially mentioned this here - Odroid
-   cloudshell with some disk)
-3. What is the reason behind the problem.
-4. How this patch fixes the reason behind (thus fixing the visible
-   problem).
+Have you considered the possibility that a phy might need three power
+states, for on, off, and suspended?
 
-> 
-> On 3.10.x
-> It clk gate is tuned to support CLK_GATE_MULTI_BIT_SET, I am not sure
-> how this will apply on 4.x kernel
-> 
-> [1] https://github.com/hardkernel/linux/blob/odroidxu3-3.10.y/drivers/clk/samsung/clk-exynos5422.c#L1771-L1777
+Alan Stern
 
-Me neither.
-
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
