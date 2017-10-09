@@ -1,42 +1,73 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Move mcp23s08 from gpio
-Date: Mon, 09 Oct 2017 11:39:02 +0200
-Message-ID: <8063886.6te7U6k3td@lem-wkst-02>
-References: <20171005075002.9901-1-poeschel@lemonage.de> <CACRpkdY=r8XBqHKrVeZ34jR8FJM-zmOUxCSMhEROc6fOjfwX-A@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH ] phy: rcar-gen2: Add r8a7743/5 support
+Date: Mon, 9 Oct 2017 15:16:56 +0530
+Message-ID: <535bd74a-ca7d-31bf-e7df-f2bda31be1a6@ti.com>
+References: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdW8x-7LVGgJr1GQfMJurfW=0Ky71K18zc+x5_XHMC6VxA@mail.gmail.com>
+ <KL1PR06MB17020EBD5992AFA4F6E3F6C7B8740@KL1PR06MB1702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY=r8XBqHKrVeZ34jR8FJM-zmOUxCSMhEROc6fOjfwX-A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <KL1PR06MB17020EBD5992AFA4F6E3F6C7B8740@KL1PR06MB1702.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 8, 2017 at 01:58:52 CEST Linus Walleij wrote:
+Hi,
 
-CCing-in Sebastian Reichel who did the move to pinctrl and pinctrl support as 
-well.
-
-> On Thu, Oct 5, 2017 at 9:50 AM, Lars Poeschel <poeschel@lemonage.de> wrote:
-> > The mcp23s08 driver was moved from gpio to pinctrl. This moves it's
-> > devicetree binding doc as well. So driver and binding doc are in sync
-> > again.
-> > 
-> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+On Monday 09 October 2017 02:19 PM, Biju Das wrote:
+> Hi Kishon,
 > 
-> Are there no new references to the generic pin control binding
-> needed as well?
+> Looks like the below patch is not merged into linux-next.  Somehow I missed your mail ID, when I submitted the patch(scripts/get_maintainer.pl  script  didn't show your mail address for this patch)
+> 
+> https://patchwork.kernel.org/patch/9919727/
 
-Well, yes there is one: As far as I can see it supports the bias-pull-up 
-property.
-My first intention was to have the doc as we have it in the right place, but 
-you are right: It needs an update as well. I can do this, but Sebastian, 
-please keep an eye on that.
+Can you resend the patch with all the Ack's you got?
 
-As there are already patches depending on this patch (https://marc.info/?
-l=linux-gpio&m=150726650325394&w=4) I would suggest, that you pull in this 
-patch as is and I do the little update on the doc as a seperate patch.
-
-Regards,
-Lars
+Thanks
+Kishon
+> 
+> Regards,
+> Biju
+> 
+> 
+>> -----Original Message-----
+>> From: geert.uytterhoeven@gmail.com [mailto:geert.uytterhoeven@gmail.com]
+>> On Behalf Of Geert Uytterhoeven
+>> Sent: 19 September 2017 15:58
+>> To: Biju Das <biju.das@bp.renesas.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+>> <mark.rutland@arm.com>; Simon Horman <horms@verge.net.au>; Magnus
+>> Damm <magnus.damm@gmail.com>; Russell King <linux@armlinux.org.uk>;
+>> Chris Paterson <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org;
+>> Linux-Renesas <linux-renesas-soc@vger.kernel.org>; linux-arm-
+>> kernel@lists.infradead.org
+>> Subject: Re: [PATCH ] phy: rcar-gen2: Add r8a7743/5 support
+>>
+>> On Thu, Aug 24, 2017 at 11:59 AM, Biju Das <biju.das@bp.renesas.com>
+>> wrote:
+>>> Add USB PHY support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5)
+>>> USB PHY is identical to the R-Car Gen2 family.
+>>>
+>>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> Gr{oetje,eeting}s,
+>>
+>>                         Geert
+>>
+>> --
+>> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-
+>> m68k.org
+>>
+>> In personal conversations with technical people, I call myself a hacker. But when
+>> I'm talking to journalists I just say "programmer" or something like that.
+>>                                 -- Linus Torvalds
+> 
+> 
+> 
+> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+> 
