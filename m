@@ -1,166 +1,151 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH resend 02/12] usb: typec: add basic typec properties
-Date: Mon, 9 Oct 2017 11:21:23 +0000
-Message-ID: <DB4PR04MB07683A52DD500A40C2B9047A89740@DB4PR04MB0768.eurprd04.prod.outlook.com>
-References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
- <1506398723-19359-3-git-send-email-jun.li@nxp.com>
- <20171005204400.4q3fpeui525tmfo4@rob-hp-laptop>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFCv2 PATCH 00/36] Process management for IOMMU + SVM for SMMUv3
+Date: Mon, 9 Oct 2017 12:36:22 +0100
+Message-ID: <0fecd29e-eaf7-9503-b087-7bfbc251da88@arm.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171005204400.4q3fpeui525tmfo4@rob-hp-laptop>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
 Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Yisheng Xie <xieyisheng1@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, nwatters@cod
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Friday, October 06, 2017 4:44 AM
-> To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org; yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org;
-> Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>; linux-
-> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH resend 02/12] usb: typec: add basic typec properties
->=20
-> On Tue, Sep 26, 2017 at 12:05:13PM +0800, Li Jun wrote:
-> > port-type is required for any typec port; default-role is only
-> > required for drp; power source capable needs src-pdos; power sink
-> > capable needs snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
->=20
-> "dt-bindings: usb: ..." for the subject prefix.
->=20
+On 09/10/17 10:49, Yisheng Xie wrote:
+> Hi Jean,
+> 
+> On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
+>> Following discussions at plumbers and elsewhere, it seems like we need to
+>> unify some of the Shared Virtual Memory (SVM) code, in order to define
+>> clear semantics for the SVM API.
+>>
+>> My previous RFC [1] was centered on the SMMUv3, but some of this code will
+>> need to be reused by the SMMUv2 and virtio-iommu drivers. This second
+>> proposal focuses on abstracting a little more into the core IOMMU API, and
+>> also trying to find common ground for all SVM-capable IOMMUs.
+>>
+>> SVM is, in the context of the IOMMU, sharing page tables between a process
+>> and a device. Traditionally it requires IO Page Fault and Process Address
+>> Space ID capabilities in device and IOMMU.
+>>
+>> * A device driver can bind a process to a device, with iommu_process_bind.
+>>   Internally we hold on to the mm and get notified of its activity with an
+>>   mmu_notifier. The bond is removed by exit_mm, by a call to
+>>   iommu_process_unbind or iommu_detach_device.
+>>
+>> * iommu_process_bind returns a 20-bit PASID (PCI terminology) to the
+>>   device driver, which programs it into the device to access the process
+>>   address space.
+>>
+>> * The device and the IOMMU support recoverable page faults. This can be
+>>   either ATS+PRI for PCI, or platform-specific mechanisms such as Stall
+>>   for SMMU.
+>>
+>> Ideally systems wanting to use SVM have to support these three features,
+>> but in practice we'll see implementations supporting just a subset of
+>> them, especially in validation environments. So even if this particular
+>> patchset assumes all three capabilities, it should also be possible to
+>> support PASID without IOPF (by pinning everything, see non-system SVM in
+>> OpenCL)
+> How to pin everything? If user malloc anything we should pin it. It should
+> from user or driver?
 
-Will update in next version.
+For userspace drivers, I guess it would be via a VFIO ioctl, that does the
+same preparatory work as VFIO_IOMMU_MAP_DMA, but doesn't call iommu_map.
+For things like OpenCL SVM buffers, it's the kernel driver that does the
+pinning, just like VFIO does it, before launching the work on a SVM buffer.
 
-> >
-> > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/typec.txt | 46
-> > +++++++++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/typec.txt
-> > b/Documentation/devicetree/bindings/usb/typec.txt
-> > new file mode 100644
-> > index 0000000..36d4467
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/typec.txt
-> > @@ -0,0 +1,46 @@
-> > +Generic typec and power delivery properties
-> > +-------------------------------------------
->=20
-> What node do these apply to? A type C connector node? The PD microcontrol=
-ler?
->=20
+>> , or IOPF without PASID (sharing the single device address space
+>> with a process, could be useful for DPDK+VFIO).
+>>
+>> Implementing both these cases would enable PT sharing alone. Some people
+>> would also like IOPF alone without SVM (covered by this series) or process
+>> management without shared PT (not covered). Using these features
+>> individually is also important for testing, as SVM is in its infancy and
+>> providing easy ways to test is essential to reduce the number of quirks
+>> down the line.
+>>
+>>   Process management
+>>   ==================
+>>
+>> The first part of this series introduces boilerplate code for managing
+>> PASIDs and processes bound to devices. It's something any IOMMU driver
+>> that wants to support bind/unbind will have to do, and it is difficult to
+>> get right.
+>>
+>> Patches
+>> 1: iommu_process and PASID allocation, attach and release
+>> 2: process_exit callback for device drivers
+>> 3: iommu_process search by PASID
+>> 4: track process changes with an MMU notifiers
+>> 5: bind and unbind operations
+>>
+>> My proposal uses the following model:
+>>
+>> * The PASID space is system-wide. This means that a Linux process will
+>>   have a single PASID. I introduce the iommu_process structure and a
+>>   global IDR to manage this.
+>>
+>> * An iommu_process can be bound to multiple domains, and a domain can have
+>>   multiple iommu_process.
+> when bind a task to device, can we create a single domain for it? I am thinking
+> about process management without shared PT(for some device only support PASID
+> without pri ability), it seems hard to expand if a domain have multiple iommu_process?
+> Do you have any idea about this?
 
-My initial thinking is those are general type-c properties, which can be ap=
-plied to
-type-C connector or used by PD microcontroller directly (my example),  I wa=
-nt
-to get inputs on how this can be handled properly, so do you think a separa=
-ted
-node(e.g. type-c connector) is required to describe all the capability of t=
-he type-c
-port has, then a type-c related driver get the phandle of it?=20
+A device always has to be in a domain, as far as I know. Not supporting
+PRI forces you to pin down all user mappings (or just the ones you use for
+DMA) but you should sill be able to share PT. Now if you don't support
+shared PT either, but only PASID, then you'll have to use io-pgtable and a
+new map/unmap API on an iommu_process. I don't understand your concern
+though, how would the link between process and domains prevent this use-case?
 
-> I'm reluctant to accept just a random list of properties without a more c=
-omplete
-> Type-C binding which I'd expect to have a connector node, OF graph ports =
-to
-> connect to video outputs, connection to USB controller, and connection to=
- the
-> PD controller.
->=20
+>> * IOMMU groups share same PASID table. IOMMU groups are a convenient way
+>>   to cover various hardware weaknesses that prevent a group of device to
+>>   be isolated by the IOMMU (untrusted bridge, for instance). It's foolish
+>>   to assume that all PASID implementations will perfectly isolate devices
+>>   within a bus and functions within a device, so let's assume all devices
+>>   within an IOMMU group have to share PASID traffic as well. In general
+>>   there will be a single device per group.
+>>
+>> * It's up to the driver implementation to decide where to implement the
+>>   PASID tables. For SMMU it's more convenient to have a single PASID table
+>>   per domain. And I think the model fits better with the existing IOMMU
+>>   API: IOVA traffic is shared by all devices in a domain, so should PASID
+>>   traffic.
+> What's the meaning of "share PASID traffic"? PASID space is system-wide,
+> and a domain can have multiple iommu_process , so a domain can have multiple
+> PASIDs , one PASID for a iommu_process, right?
 
-As type-C with PD has many properties to complete the description for diff =
-usage,
-so this is just a first step to have the basic power related bindings.
+Yes, I meant that if a device can access mappings for a specific PASID,
+then other devices in that same domain are also able to access them.
 
-> > +
-> > +Required properties:
-> > +- port-type:    should be one of "source", "sink" or "dual".
-> > +- default-role: preferred power role if drp, should be "sink" or "sour=
-ce".
-> > +- src-pdos:     An array of u32 with each entry providing supported po=
-wer
-> > +                source data object(PDO), the detailed bit definitions =
-of
-> > +                PDO can be found in "Universal Serial Bus Power Delive=
-ry
-> > +                Specification" chapter 6.4.1.2 Source_Capabilities Mes=
-sage,
-> > +                the order of each entry(PDO) should follow the PD spec=
- chapter
-> > +                6.4.1. Required only for power source and power dual r=
-ole with
-> > +                power delivery support.
-> > +- snk-pdos:     An array of u32 with each entry providing supported po=
-wer
-> > +                sink data object(PDO), the detailed bit definitions of=
- PDO
-> > +                can be found in "Universal Serial Bus Power Delivery
-> > +                Specification" chapter 6.4.1.3 Sink Capabilities Messa=
-ge,
-> > +                the order of each entry(PDO) should follow the PD spec=
- chapter
-> > +                6.4.1. Required only for power sink and power dual rol=
-e with
-> > +                power delivery support.
->=20
-> > +- max-snk-mv:   The max voltage the sink can support in millivoltage, =
-required
-> > +                only for power sink and power dual role with power del=
-ivery
-> > +                support.
-> > +- max-snk-ma:   The max current the sink can support in milliampere, r=
-equired
-> > +                only for power sink and power dual role with power del=
-ivery
-> > +                support.
-> > +- op-snk-mw:    Sink required operating power in milliwatts, if source=
- offered
-> > +                power is less then it, Capability Mismatch is set, req=
-uired
-> > +                only for power sink and power dual role with power del=
-ivery
-> > +                support.
->=20
-> Use the standard unit suffixes as defined in property-units.txt
->=20
+A few reasons for this choice in the SMMU:
+* As all devices in an IOMMU group will be in the same domain and share
+the same PASID traffic, it encompasses that case. Groups are the smallest
+isolation granularity, then users are free to choose to put different
+IOMMU groups in different domains.
+* For architectures that can have both non-PASID and PASID traffic
+simultaneously, like the SMMU, it is simpler to reason about PASID tables
+being a domain, rather than sharing PASID0 within the domain and handling
+all others per device.
+* It's the same principle as non-PASID mappings (iommu_map/unmap is on a
+domain).
+* It implement the classic example of IOMMU architectures where multiple
+device descriptors point to the same PASID tables.
+* It may be desirable for drivers to share PASIDs within a domain, if they
+are actually using domains for conveniently sharing address spaces between
+devices. I'm not sure how much this is used as a feature. It does model a
+shared bus where each device can snoop DMA, so it may be useful.
 
-Thanks, will update in next version.
+bind/unbind operations are done on devices and not domains, though,
+because it allows users to know which device supports PASID, PRI, etc.
 
-Li Jun
-> > +
-> > +Example:
-> > +
-> > +ptn5110@50 {
-> > +	compatible =3D "usb,tcpci";
-> > +	reg =3D <0x50>;
-> > +	interrupt-parent =3D <&gpio3>;
-> > +	interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
-> > +	port-type =3D "dual";
-> > +	default-role =3D "sink";
-> > +	src-pdos =3D <0x380190c8>;
-> > +	snk-pdos =3D <0x380190c8 0x3802d0c8>;
-> > +	max-snk-mv =3D <9000>;
-> > +	max-snk-ma =3D <1000>;
-> > +	op-snk-mw =3D <9000>;
-> > +};
-> > --
-> > 2.6.6
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Jean
