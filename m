@@ -1,85 +1,113 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
- mailbox client bindings
-Date: Mon, 9 Oct 2017 17:57:16 -0500
-Message-ID: <CAL_JsqJTuq4rDu9+T6rcC_q8Gw5nyDScNZy2cNkq+y5_v9pegA@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-4-git-send-email-sudeep.holla@arm.com> <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
- <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com>
- <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com>
- <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
- <CAL_JsqKy+WzEiHRS0BrE3_3Md4CGOr0e2ZZ_vBCB-Opgg49s+A@mail.gmail.com> <CABb+yY0KNafWbD00hBVrNNGnFDcU0v6KXXY2D2K7KNouak1HdQ@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: sun8i: r40: add USB host port
+ nodes for R40
+Date: Tue, 10 Oct 2017 07:24:28 +0800
+Message-ID: <55B35500-67FC-40AA-9A07-98C843DE55B3@aosc.io>
+References: <20171008042906.46779-1-icenowy@aosc.io> <20171008042906.46779-3-icenowy@aosc.io> <20171009210340.ak6wo3vqnwj4gom4@flea.home>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY0KNafWbD00hBVrNNGnFDcU0v6KXXY2D2K7KNouak1HdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBNUK6DHAKGQEBKS26SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171009210340.ak6wo3vqnwj4gom4-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 9, 2017 at 9:46 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Oct 9, 2017 at 7:22 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Oct 6, 2017 at 9:26 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Fri, Oct 6, 2017 at 9:24 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On Fri, Oct 6, 2017 at 6:01 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
->>>
->>>>>>
->>>>>>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
->>>>>>> +           data as expected by the mailbox controller
->>>>>>
->>>>>> Shouldn't that be cells as part of mboxes property?
->>>>>>
->>>>> A MHU client can send any number of commands (such u32 values) over a channel.
->>>>> This client (SCMI) sends just one command over a channel, but other
->>>>> clients may/do send two or more.
->>
->> The above definition doesn't support 2 or more as it is 1-1 with channels.
->>
-> I thought you suggested to make controller driver accept the command
-> as another cell in client's mboxes property.
-> Which we can't do.
 
-Yes, agreed. But I'm wondering since a client may need more than one,
-how would that be expressed?
 
->>>> Okay, then I guess I don't understand why this is in DT.
->>>>
->>> Yeah the client has to provide code (u32 value) for the commands it
->>> sends, and that value is going to be platform specific. For example,
->>> on Juno the ITS_AN_SCMI_COMMAND may be defined as BIT(7) while on my
->>> platform it may be 0x4567
->>>
->>> For MHU based platforms, it becomes easy if the u32 is passed from DT.
->>> And that should be ok since that is like a h/w parameter - a value
->>> chosen/expected by the remote firmware.
->>
->> Could it ever be more than 1 cell?
->>
-> SCMI sends sub-commands via SHMEM, so it is always going to be 1cell for _scmi_.
-> However many firmwares are unlikely to use just one command over a
-> channel - say, the protocol is trivial or the linux and remote have no
-> SHMEM.
+=E4=BA=8E 2017=E5=B9=B410=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=885=
+:03:40, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0=
+:
+>On Sun, Oct 08, 2017 at 04:29:02AM +0000, Icenowy Zheng wrote:
+>> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>=20
+>> Allwinner R40 SoC features a USB OTG port and two USB HOST ports.
+>>=20
+>> Add support for the host ports in the DTSI file.
+>>=20
+>> The OTG controller still cannot work with existing compatibles, and
+>needs
+>> more investigation. So it's not added yet.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-r40.dtsi | 78
+>++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 78 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi
+>b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> index d5a6745409ae..f6c917cbbaac 100644
+>> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+>> @@ -173,6 +173,84 @@
+>>  			#size-cells =3D <0>;
+>>  		};
+>> =20
+>> +		usbphy: phy@1c13400 {
+>> +			compatible =3D "allwinner,sun8i-r40-usb-phy";
+>> +			reg =3D <0x01c13400 0x14>,
+>> +			      <0x01c14800 0x4>,
+>> +			      <0x01c19800 0x4>,
+>> +			      <0x01c1c800 0x4>;
+>> +			reg-names =3D "phy_ctrl",
+>> +				    "pmu0",
+>> +				    "pmu1",
+>> +				    "pmu2";
+>> +			clocks =3D <&ccu CLK_USB_PHY0>,
+>> +				 <&ccu CLK_USB_PHY1>,
+>> +				 <&ccu CLK_USB_PHY2>;
+>> +			clock-names =3D "usb0_phy",
+>> +				      "usb1_phy",
+>> +				      "usb2_phy";
+>> +			resets =3D <&ccu RST_USB_PHY0>,
+>> +				 <&ccu RST_USB_PHY1>,
+>> +				 <&ccu RST_USB_PHY2>;
+>> +			reset-names =3D "usb0_reset",
+>> +				      "usb1_reset",
+>> +				      "usb2_reset";
+>> +			status =3D "disabled";
+>> +			#phy-cells =3D <1>;
+>> +		};
+>> +
+>> +		ehci1: usb@1c19000 {
+>> +			compatible =3D "allwinner,sun8i-r40-ehci", "generic-ehci";
+>> +			reg =3D <0x01c19000 0x100>;
+>
+>What is the actual size here?
 
-I'd hope the normal case is not enumerating commands and sub-commands
-in DT and this is special case of a "generic" protocol with platform
-specific aspects. It could be solved with a specific compatible for
-each platform/implementation. We'll probably regret not doing that,
-but I'm going to pretend that this time SoC vendors won't mess it up.
+The OHCI/EHCI/PHY-PHY three parts are listed in the user manual
+as one MMIO zone.
 
->> I guess being in DT is fine, but I'm still not sure about the naming.
->> The current name suggests it is part of the mbox binding. Do we want
->> that or should it be SCMI specific? Then "data" is vague. Perhaps
->> "scmi-commands"?
->>
-> Sure. I have no problem with whatever we wanna call it.
+The size can be at most 0x400, as the OHCI is at offset 0x400.
 
-Okay. That should have an "arm" prefix too BTW.
+>
+>> +			interrupts =3D <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&ccu CLK_BUS_OHCI1>,
+>> +				 <&ccu CLK_BUS_EHCI1>,
+>> +				 <&ccu CLK_USB_OHCI1>;
+>> +			resets =3D <&ccu RST_BUS_OHCI1>,
+>> +				 <&ccu RST_BUS_EHCI1>;
+>
+>Why do you need to take the OHCI resources too?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+AW's strange design -- without OHCI resources taken EHCI
+won't work.
+
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
