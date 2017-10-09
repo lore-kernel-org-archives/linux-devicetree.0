@@ -1,7 +1,7 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 11/15] ARM: dts: at91: sama5d2_xplained: add pinmuxing for pwm0
-Date: Mon, 9 Oct 2017 19:09:33 +0300
-Message-ID: <1507565377-1545-12-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 12/15] ARM: dts: at91: sama5d2_xplained: remove pull-up on SD/MMC lines
+Date: Mon, 9 Oct 2017 19:09:34 +0300
+Message-ID: <1507565377-1545-13-git-send-email-claudiu.beznea@microchip.com>
 References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,39 @@ To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@k
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pin muxing for pwm0 and set it as disabled since it is in conflict
-with pins for leds.
+As the board have the proper pull-ups soldered on the data and CMD
+lines we don't need them specified in the PADs. So remove the
+"bias-pull-up" property and set "bias-disable".
+This will also save some power.
 
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+[claudiu.beznea@microchip.com: change subject to match the desired prefix]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index e04db7b74714..82777747cc72 100644
+index 82777747cc72..cd53c0a33591 100644
 --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
 +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -231,7 +231,9 @@
- 			};
+@@ -444,7 +444,7 @@
+ 							 <PIN_PA7__SDMMC0_DAT5>,
+ 							 <PIN_PA8__SDMMC0_DAT6>,
+ 							 <PIN_PA9__SDMMC0_DAT7>;
+-						bias-pull-up;
++						bias-disable;
+ 					};
  
- 			pwm0: pwm@f802c000 {
--				status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_pwm0_pwm2_default>;
-+				status = "disabled"; /* conflict with leds */
- 			};
+ 					ck_cd_rstn_vddsel {
+@@ -463,7 +463,7 @@
+ 							 <PIN_PA19__SDMMC1_DAT1>,
+ 							 <PIN_PA20__SDMMC1_DAT2>,
+ 							 <PIN_PA21__SDMMC1_DAT3>;
+-						bias-pull-up;
++						bias-disable;
+ 					};
  
- 			flx0: flexcom@f8034000 {
-@@ -501,6 +503,11 @@
- 					bias-disable;
- 				};
- 
-+				pinctrl_pwm0_pwm2_default: pwm0_pwm2_default {
-+					pinmux = <PIN_PB5__PWMH2>,
-+						 <PIN_PB6__PWML2>;
-+					bias-pull-up;
-+				};
- 			};
- 
- 			classd: classd@fc048000 {
-@@ -537,7 +544,7 @@
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_led_gpio_default>;
--		status = "okay";
-+		status = "okay"; /* conflict with pwm0 */
- 
- 		red {
- 			label = "red";
+ 					conf-ck_cd {
 -- 
 2.7.4
