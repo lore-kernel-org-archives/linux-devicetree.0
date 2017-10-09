@@ -1,45 +1,41 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 0/5] using uio_pdrv_genirq without module param
-Date: Tue, 10 Oct 2017 11:46:50 +1300
-Message-ID: <20171009224655.6173-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v3 2/5] uio: dt-bindings: Add binding for "st,stm32f100"
+Date: Tue, 10 Oct 2017 11:46:52 +1300
+Message-ID: <20171009224655.6173-3-chris.packham@alliedtelesis.co.nz>
+References: <20171009224655.6173-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171009224655.6173-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-I found myself about to add a driver that was a sub-optimal clone of
-uio_pdrv_genirq the only difference was that I didn't want to modify the args
-passed to the kernel by my bootloader. If uio_pdrv_genirq had a default
-of_match entry I could simply use that. This series attempts to implement this.
+The stm32f100 is a general purpose micro controller. Document a binding
+that allows a user-space driver to be implemented for these devices.
 
-I wonder if it is worth having a catch-all compat string for this driver
-"generic-dev" or something. People seem to be ok with spidev not having any
-such fallback so perhaps there is no-need (other than the 2 devices I want to
-support with userspace drivers).
-
-Changes in v2:
-- added a better commit message to 1/2
-- remove bogus checkpatch fix in 2/2
-
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 Changes in v3:
-- As suggested by Rob document the bindings for the hardware and treat
-  uio_pdrv_genirq.c as one potential implementer of a compatible driver.
-  Following the model used by spidev.c
-- Patches 1-3 replace patch 1 from v2 of this series
-- Patches 4-5 replace patch 2 from v2
+- (replaces "uio: dt-bindings: document binding for uio-pdrv-genirq")
+- split the bindings up into the devices I'm actually wanting to support. The
+  first is a stm32f100 micro controller.
 
-Chris Packham (5):
-  uio: dt-bindings: document existing binding for uio-pdrv-genirq
-  uio: dt-bindings: Add binding for "st,stm32f100"
-  uio: dt-bindings: Add binding for "marvell,88e2040"
-  uio: uio_pdrv_genirq: Add st,stm32f100 to dt compatible list
-  uio: uio_pdrv_genirq: Add "marvell,88e2040" to dt compatible list
+ Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/uio/uio-pdrv-genirq.txt    | 28 ++++++++++++++++++++++
- drivers/uio/uio_pdrv_genirq.c                      |  4 +++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
-
+diff --git a/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt b/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
+index 5a92b1f8825f..fb4c1b5059f2 100644
+--- a/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
++++ b/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
+@@ -1,7 +1,8 @@
+ *Generic UIO platform driver with interrupts
+ 
+ Required properties:
+-- compatible: Should be a value set with the of_id module parameter.
++- compatible: Should be a value set with the of_id module parameter or the
++  built in value "st,stm32f100".
+ 
+ Optional properties:
+ - interrupts: Should contain the interrupt to be associated with this device
 -- 
 2.14.2
