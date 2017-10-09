@@ -1,38 +1,68 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC usb-next v5 1/3] dt-bindings: usb: add the documentation for
- USB root-hub
-Date: Mon, 9 Oct 2017 12:24:59 +0200
-Message-ID: <CAK8P3a2607YnNRRmAJJyTNJTTJmJvx-ZJm3QNAq84noPLy+F+A@mail.gmail.com>
-References: <20171008211713.18696-1-martin.blumenstingl@googlemail.com> <20171008211713.18696-2-martin.blumenstingl@googlemail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Move mcp23s08 from gpio
+Date: Mon, 9 Oct 2017 12:29:07 +0200
+Message-ID: <20171009102907.vnfx3aot3yryqsef@earth>
+References: <20171005075002.9901-1-poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171008211713.18696-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jpyipejgld2wy4ux"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171005075002.9901-1-poeschel@lemonage.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 8, 2017 at 11:17 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> A USB root-hub may have several PHYs which need to be configured before
-> the root-hub starts working.
-> This adds the documentation for such a USB root-hub as well as a hint
-> regarding the child-nodes on XHCI controllers which can include the
-> roothub.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Have you checked that this still works with DT properties on a USB device
-that is listed in the DT? A common use-case is to provide the MAC address
-of a soldered-down USB-ethernet that lacks its own eeprom, and it seems
-you are changing the way the parent devices of that get represented,
-so the dev->of_node pointer in the USB device might no longer refer
-to the correct device.
+--jpyipejgld2wy4ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Thu, Oct 05, 2017 at 09:50:02AM +0200, Lars Poeschel wrote:
+> The mcp23s08 driver was moved from gpio to pinctrl. This moves it's
+> devicetree binding doc as well. So driver and binding doc are in sync
+> again.
+>=20
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> ---
+>  .../bindings/{gpio/gpio-mcp23s08.txt =3D> pinctrl/pinctrl-mcp23s08.txt} =
+    | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{gpio/gpio-mcp23s08.txt =3D> pi=
+nctrl/pinctrl-mcp23s08.txt} (100%)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/D=
+ocumentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> rename to Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+
+-- Sebastian
+
+--jpyipejgld2wy4ux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnbT3AACgkQ2O7X88g7
++poBnRAAkX3zSXF6sDg6iCWcb4c8bxsqwJmA09N7/tpYT+QxJ/KwofeO1f2N3r3y
+0bJcH3L2DbWKAmLKFKMV7yVorVwSQ0HaMErY+BcAjKhPkYq/dNwK9qPBrqiLJUsB
+/imCf2nmylihW1bruMG0soHOM/WzizXq6LL4xJRnGGOTF8R7NDTYkuNQxYaQDls5
+0X9qLnG7lbTx22PJKxEve7hh0IWw8OWXV9tH/Qj7F3D6WEgz3Jshj0NCfqQr13W0
+RgrTeHZ7LBlNeeNDPwWA/m5WjWsZyogUO1E4oYrVK6hb+7mIkVd+UOcHt13urKe2
+YSfdYMpwag+hupYZLoNZrFzZ30r/Zqq2VgSGfR+vN/kd58d8ZjJovvLmnKiG9ynX
+rrkgmCHQdjCtiMNbrzfeJJX2242AHqzP7dIrFdeqU9dGUw9u+TdNLEYw7LzIAjgd
+eC31uPEPLN40mBjJGxevgOaUOYoVxDWrUZCXUFMk5lsGZeuGxR6wf58cHNMB96sq
+86SeBBy5sh8898a+HnnWTtAmBFQrxWFG3t84/l4WFI7iTz8LyqlDZVdSzpsAPYCi
+pF7wVWvE8r3rsyFFAAMa0+kjioki7w4rp1i4zRIQ/TfiwE2f6PCwBlHw03tqvBEU
+qcr1pLWpVXh51HW0Tg7raU5vVx5z+e8P8YzizNWiZc33uHHM38E=
+=PcoF
+-----END PGP SIGNATURE-----
+
+--jpyipejgld2wy4ux--
