@@ -1,130 +1,196 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Mon, 9 Oct 2017 17:59:04 +0300
-Message-ID: <3D2E2DE3-3A5E-4185-852D-C91A70EA62F7@konsulko.com>
-References: <1506628736.28192.9.camel@hp800z>
- <CAL_Jsq+Hxjf8PecU+ZpCoFqbKAYJtzHpFco2Wsi_KT499fb-=g@mail.gmail.com>
- <1506973580.17981.5.camel@hp800z>
- <CAL_Jsq+vrAXQbfSGdANhqM3QJ2fHTQXDT1J6qGnTJkZ4egepNw@mail.gmail.com>
- <1507039989.17981.25.camel@hp800z>
- <CAL_JsqLLJE8bp3gwdExcsAtF+U4AHkROpbqHX8_79YhYjROovQ@mail.gmail.com>
- <1507052352.17981.48.camel@hp800z>
- <CAL_JsqKtQ1LyM09EcaXnPR8zfDJanuNQW2F474k2Z_hUjXOz5Q@mail.gmail.com>
- <4D25319A-34A8-4FE6-8B14-616686D2192A@konsulko.com>
- <59DAAFD3.9070900@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59DAAFD3.9070900@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, David Gibson <david@gibson.dropbear.id.au>, Tom Rini <trini@konsulko.com>, Franklin S Cooper Jr <fcooper@ti.com>, Matt Porter <mporter@konsulko.com>, Simon Glass <sjg@chromium.org>, Phil Elwell <philip.j.elwell@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Marek Vasut <marex@denx.de>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 09/13] mmc: mediatek: add stop_clk fix and enhance_rx
+ support
+Date: Mon, 9 Oct 2017 17:00:53 +0200
+Message-ID: <f3bea03b-9fc3-ba60-da2d-63438df96e27@gmail.com>
+References: <1507548926-9555-1-git-send-email-chaotian.jing@mediatek.com>
+ <1507548926-9555-10-git-send-email-chaotian.jing@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507548926-9555-10-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
 
-> On Oct 9, 2017, at 02:08 , Frank Rowand <frowand.list@gmail.com> =
-wrote:
->=20
-> On 10/07/17 03:23, Pantelis Antoniou wrote:
->> Hi Rob,
->>=20
->>> On Oct 6, 2017, at 16:55 , Rob Herring <robherring2@gmail.com> =
-wrote:
->>>=20
->>> On Tue, Oct 3, 2017 at 12:39 PM, Pantelis Antoniou
->>> <pantelis.antoniou@konsulko.com> wrote:
->>>> Hi Rob,
->=20
-> < snip >
->=20
->>>> eBPF is portable, can be serialized after compiling in the schema =
-file
->>>> and can be executed in the kernel.
->>>=20
->>> Executing in the kernel is a non-goal for me.
->=20
-> Executing in the kernel is an anti-goal for me.
->=20
-> We are trying to reduce the device tree footprint inside the kernel,
-> not increase it.
->=20
-> 99.99% of the validation should be possible statically, in the compile
-> phase.
->=20
 
-That=E2=80=99s not possible when you dynamically alter the tree at =
-runtime.
+On 10/09/2017 01:35 PM, Chaotian Jing wrote:
+> mt2712 supports stop_clk fix and enhance_rx, which can improve
+> host stability.
+> 
+> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   drivers/mmc/host/mtk-sd.c | 47 +++++++++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 43 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 555824d..5d99e05 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -67,6 +67,7 @@
+>   #define SDC_RESP2        0x48
+>   #define SDC_RESP3        0x4c
+>   #define SDC_BLK_NUM      0x50
+> +#define SDC_ADV_CFG0     0x64
+>   #define EMMC_IOCON       0x7c
+>   #define SDC_ACMD_RESP    0x80
+>   #define MSDC_DMA_SA      0x90
+> @@ -80,6 +81,7 @@
+>   #define PAD_DS_TUNE      0x188
+>   #define PAD_CMD_TUNE     0x18c
+>   #define EMMC50_CFG0      0x208
+> +#define SDC_FIFO_CFG     0x228
+>   
+>   /*--------------------------------------------------------------------------*/
+>   /* Register Mask                                                            */
+> @@ -188,6 +190,9 @@
+>   #define SDC_STS_CMDBUSY         (0x1 << 1)	/* RW */
+>   #define SDC_STS_SWR_COMPL       (0x1 << 31)	/* RW */
+>   
+> +/* SDC_ADV_CFG0 mask */
+> +#define SDC_RX_ENHANCE_EN	(0x1 << 20)	/* RW */
+> +
+>   /* MSDC_DMA_CTRL mask */
+>   #define MSDC_DMA_CTRL_START     (0x1 << 0)	/* W */
+>   #define MSDC_DMA_CTRL_STOP      (0x1 << 1)	/* W */
+> @@ -217,6 +222,8 @@
+>   #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)	/* RW */
+>   #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
+>   
+> +#define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
+> +
+>   #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
+>   #define MSDC_PATCH_BIT2_CFGCRCSTS (0x1 << 28)   /* RW */
+>   #define MSDC_PB2_RESPWAIT         (0x3 << 2)    /* RW */
+> @@ -242,6 +249,9 @@
+>   #define EMMC50_CFG_CRCSTS_EDGE    (0x1 << 3)   /* RW */
+>   #define EMMC50_CFG_CFCSTS_SEL     (0x1 << 4)   /* RW */
+>   
+> +#define SDC_FIFO_CFG_WRVALIDSEL   (0x1 << 24)  /* RW */
+> +#define SDC_FIFO_CFG_RDVALIDSEL   (0x1 << 25)  /* RW */
+> +
+>   #define REQ_CMD_EIO  (0x1 << 0)
+>   #define REQ_CMD_TMO  (0x1 << 1)
+>   #define REQ_DAT_ERR  (0x1 << 2)
+> @@ -308,6 +318,7 @@ struct msdc_save_para {
+>   	u32 pad_ds_tune;
+>   	u32 pad_cmd_tune;
+>   	u32 emmc50_cfg0;
+> +	u32 sdc_fifo_cfg;
+>   };
+>   
+>   struct mtk_mmc_compatible {
+> @@ -316,6 +327,8 @@ struct mtk_mmc_compatible {
+>   	bool async_fifo;
+>   	bool data_tune;
+>   	bool busy_check;
+> +	bool stop_clk_fix;
+> +	bool enhance_rx;
+>   };
+>   
+>   struct msdc_tune_para {
+> @@ -381,6 +394,8 @@ struct msdc_host {
+>   	.async_fifo = false,
+>   	.data_tune = false,
+>   	.busy_check = false,
+> +	.stop_clk_fix = false,
+> +	.enhance_rx = false,
+>   };
+>   
+>   static const struct mtk_mmc_compatible mt8173_compat = {
+> @@ -389,6 +404,8 @@ struct msdc_host {
+>   	.async_fifo = false,
+>   	.data_tune = false,
+>   	.busy_check = false,
+> +	.stop_clk_fix = false,
+> +	.enhance_rx = false,
+>   };
+>   
 
->=20
->>>> By stripping out all documentation related properties and nodes =
-keeping
->>>> only the compiled filters you can generate a dtb blob that passed =
-to
->>>> kernel can be used for verification of all runtime changes in the
->>>> kernel's live tree. eBPF is enforcing an execution model that is =
-'safe'
->>>> so we can be sure that no foul play is possible.
->=20
-> Run time changes can be assumed correct (short of bugs in the overlay
-> application code), if the base tree is validated, the overlay is =
-validated,
-> and the interface between the live tree and the overlay is a =
-connector.
->=20
+If you add a flag for hs400_tune then mt8173_compat and mt8135_compat will be 
+actually different and therefore it will make sense that they exist both in the 
+driver code.
 
-You can validate the base tree statically but not the overlays.
+Regards,
+Matthias
 
-In fact a large percentage of overlay usage simply modifies a status =
-property
-to turn on or off a device. There is nothing to validate in such case.
-
-The portable connector is still a long ways off and I haven=E2=80=99t =
-seen anything that
-could handle something trickier that a few GPIOs and I2C or SPI busses.
-
-My goal is something that works covering all the cases without any =
-surprising
-gotchas.
-
->=20
->>> Humm, if you wanted to ensure dtb's are safe, I'd think that we just
->>> sign them like you would for the kernel or modules.
->>>=20
->>=20
->> That=E2=80=99s a problem when deploying; the runtime validation is =
-for making sure
->> developers don=E2=80=99t get bogged down chasing problems when =
-working on their
->> own platforms/drivers.
->>=20
->> We have absolutely zero checks for stopping badly configured DT blobs
->> hanging the kernel. With runtime validation a bug that might take a =
-few
->> days to figure out can be cut down to a few minutes.
->=20
-> Same reply as above.
->=20
->=20
->>>> That means that you can a) run it at boot-time, verifying the dtb =
-blob
->>>> passed by the bootloader for errors (potentially disabling devices
->>>> that their nodes fail) and b) run it when applying overlays to =
-reject
->>>> any that result in an invalid tree.
->>>=20
->>> Let's get verification at build time working first, then we can =
-worry
->>> about something like this.
->=20
-> < snip >
->=20
-
-Right, let=E2=80=99s get build verification working first.
-
-> -Frank
-
-Regards
-
-=E2=80=94 Pantelis
+>   static const struct mtk_mmc_compatible mt2701_compat = {
+> @@ -397,6 +414,8 @@ struct msdc_host {
+>   	.async_fifo = true,
+>   	.data_tune = true,
+>   	.busy_check = false,
+> +	.stop_clk_fix = false,
+> +	.enhance_rx = false,
+>   };
+>   
+>   static const struct mtk_mmc_compatible mt2712_compat = {
+> @@ -405,6 +424,8 @@ struct msdc_host {
+>   	.async_fifo = true,
+>   	.data_tune = true,
+>   	.busy_check = true,
+> +	.stop_clk_fix = true,
+> +	.enhance_rx = true,
+>   };
+>   
+>   static const struct of_device_id msdc_of_ids[] = {
+> @@ -1281,15 +1302,31 @@ static void msdc_init_hw(struct msdc_host *host)
+>   	sdr_set_field(host->base + MSDC_PATCH_BIT, MSDC_CKGEN_MSDC_DLY_SEL, 1);
+>   	writel(0xffff4089, host->base + MSDC_PATCH_BIT1);
+>   	sdr_set_bits(host->base + EMMC50_CFG0, EMMC50_CFG_CFCSTS_SEL);
+> +
+> +	if (host->dev_comp->stop_clk_fix) {
+> +		sdr_set_field(host->base + MSDC_PATCH_BIT1,
+> +			      MSDC_PATCH_BIT1_STOP_DLY, 3);
+> +		sdr_clr_bits(host->base + SDC_FIFO_CFG,
+> +			     SDC_FIFO_CFG_WRVALIDSEL);
+> +		sdr_clr_bits(host->base + SDC_FIFO_CFG,
+> +			     SDC_FIFO_CFG_RDVALIDSEL);
+> +	}
+> +
+>   	if (host->dev_comp->busy_check)
+>   		sdr_clr_bits(host->base + MSDC_PATCH_BIT1, (1 << 7));
+> +
+>   	if (host->dev_comp->async_fifo) {
+>   		sdr_set_field(host->base + MSDC_PATCH_BIT2,
+>   			      MSDC_PB2_RESPWAIT, 3);
+> -		sdr_set_field(host->base + MSDC_PATCH_BIT2,
+> -			      MSDC_PB2_RESPSTSENSEL, 2);
+> -		sdr_set_field(host->base + MSDC_PATCH_BIT2,
+> -			      MSDC_PB2_CRCSTSENSEL, 2);
+> +		if (host->dev_comp->enhance_rx) {
+> +			sdr_set_bits(host->base + SDC_ADV_CFG0,
+> +				     SDC_RX_ENHANCE_EN);
+> +		} else {
+> +			sdr_set_field(host->base + MSDC_PATCH_BIT2,
+> +				      MSDC_PB2_RESPSTSENSEL, 2);
+> +			sdr_set_field(host->base + MSDC_PATCH_BIT2,
+> +				      MSDC_PB2_CRCSTSENSEL, 2);
+> +		}
+>   		/* use async fifo, then no need tune internal delay */
+>   		sdr_clr_bits(host->base + MSDC_PATCH_BIT2,
+>   			     MSDC_PATCH_BIT2_CFGRESP);
+> @@ -1946,6 +1983,7 @@ static void msdc_save_reg(struct msdc_host *host)
+>   	host->save_para.pad_ds_tune = readl(host->base + PAD_DS_TUNE);
+>   	host->save_para.pad_cmd_tune = readl(host->base + PAD_CMD_TUNE);
+>   	host->save_para.emmc50_cfg0 = readl(host->base + EMMC50_CFG0);
+> +	host->save_para.sdc_fifo_cfg = readl(host->base + SDC_FIFO_CFG);
+>   }
+>   
+>   static void msdc_restore_reg(struct msdc_host *host)
+> @@ -1964,6 +2002,7 @@ static void msdc_restore_reg(struct msdc_host *host)
+>   	writel(host->save_para.pad_ds_tune, host->base + PAD_DS_TUNE);
+>   	writel(host->save_para.pad_cmd_tune, host->base + PAD_CMD_TUNE);
+>   	writel(host->save_para.emmc50_cfg0, host->base + EMMC50_CFG0);
+> +	writel(host->save_para.sdc_fifo_cfg, host->base + SDC_FIFO_CFG);
+>   }
+>   
+>   static int msdc_runtime_suspend(struct device *dev)
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
