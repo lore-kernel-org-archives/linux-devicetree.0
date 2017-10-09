@@ -1,107 +1,91 @@
-From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 01/12] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Mon, 9 Oct 2017 10:16:29 +0800
-Message-ID: <1507515389.19789.0.camel@mhfsdcap03>
-References: <1505207272-16983-1-git-send-email-chaotian.jing@mediatek.com>
-         <1505207272-16983-2-git-send-email-chaotian.jing@mediatek.com>
-         <20170913141026.43oh4n4foipmahsk@rob-hp-laptop>
-         <1505355021.8308.4.camel@mhfsdcap03>
-         <CAPDyKFrUe-0hEsxVRQSZvujcXY8WrR6m-0DMW=VwDDLvz7Lexw@mail.gmail.com>
-         <1506475100.19851.9.camel@mhfsdcap03>
-         <1506650162.19851.12.camel@mhfsdcap03>
-         <CAPDyKFoiJJ=NM8EZ7mh+91Nj=EBYcAJmvZ3Z+xskeU3qB40HEw@mail.gmail.com>
+From: Kalyan Kinthada <Kalyan.Kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370
+ variants.
+Date: Mon, 9 Oct 2017 02:31:30 +0000
+Message-ID: <c6832720-7c58-4afe-2d1b-76bb9397299e@alliedtelesis.co.nz>
+References: <20170928005756.3938-1-kalyan.kinthada@alliedtelesis.co.nz>
+ <20170928005756.3938-2-kalyan.kinthada@alliedtelesis.co.nz>
+ <20171005094138.11b73a0e@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFoiJJ=NM8EZ7mh+91Nj=EBYcAJmvZ3Z+xskeU3qB40HEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171005094138.11b73a0e@xps13>
+Content-Language: en-US
+Content-ID: <CF144C5A9632314282AEAB507F2DF333-aR5bhbO/t7M@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org" <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-10-02 at 08:53 +0200, Ulf Hansson wrote:
-> [...]
-> 
-> >> > >> >  Required properties:
-> >> > >> > -- compatible: Should be "mediatek,mt8173-mmc","mediatek,mt8135-mmc"
-> >> > >> > +- compatible: value should be either of the following.
-> >> > >> > +   "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
-> >> > >> > +   "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
-> >> > >> > +   "mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
-> >> > >> > +   "mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> >> > >> > +- reg: physical base address of the controller and length
-> >> > >> >  - interrupts: Should contain MSDC interrupt number
-> >> > >> > -- clocks: MSDC source clock, HCLK
-> >> > >> > -- clock-names: "source", "hclk"
-> >> > >> > +- clocks: MSDC source clock, HCLK, source_cg
-> >> > >> > +- clock-names: "source", "hclk", "source_cg"
-> >> > >>
-> >> > >> All chips support source_cg? That's not backwards compatible for
-> >> > >> existing compatible strings if the driver requires it.
-> >> > > Not all chips support source_cg, for chips which do not support
-> >> > > source_cg, no need source_cg here, and the driver will parse it
-> >> > > to know if current chip support it.
-> >> >
-> >> > In such case you must not add add a required binding for it. I think
-> >> > that is what Rob is trying to point out for you.
-> >> >
-> >> > [...]
-> >> >
-> >> > Kind regards
-> >> > Uffe
-> >> The source_cg is required(MUST) at MT2712 and future SoCs, but not
-> >> required(do not have it) at previous SoCs, so that put it at required
-> >> properties, let the driver to handle it.
-> 
-> Then you must explain that in the binding...
-> 
-> On 29 September 2017 at 03:56, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > On Wed, 2017-09-27 at 09:18 +0800, Chaotian Jing wrote:
-> >> On Wed, 2017-09-27 at 00:33 +0200, Ulf Hansson wrote:
-> >> > On 14 September 2017 at 04:10, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> > > On Wed, 2017-09-13 at 09:10 -0500, Rob Herring wrote:
-> >> > >> On Tue, Sep 12, 2017 at 05:07:41PM +0800, Chaotian Jing wrote:
-> >> > >> > Change the comptiable for support of multi-platform
-> >> > >> > Add description for reg
-> >> > >> > Add description for source_cg
-> >> > >> > Add description for mediatek,latch-ck
-> >> > >>
-> >> > >> This is at least the 3rd patch with exactly the same vague subject.
-> >> > >> Please make the subject somewhat unique.
-> >> > >>
-> >> > > Thx, will change the subject at next version
-> >> > >> >
-> >> > >> > Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> > >> > ---
-> >> > >> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 13 ++++++++++---
-> >> > >> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >> > >> >
-> >> > >> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> >> > >> > index 4182ea3..405cd06 100644
-> >> > >> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> >> > >> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> >> > >> > @@ -7,10 +7,15 @@ This file documents differences between the core properties in mmc.txt
-> >> > >> >  and the properties used by the msdc driver.
-> >> > >> >
-> >
-> > Any other comments about it ? still must not add a required binding for
-> > it ? if add a optional binding for it, how to add it ? as cannot
-> > duplicate "clocks" & "clock-names" in one node.
-> >
-> >
-> 
-> I suggest you keep the description of the new clock name part of the
-> "Required properties:" header. However, after each clock name,
-> explicit state when the clock is required/optional. Something along
-> the lines as sdhci-msm does it.
-> Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> 
-> Kind regards
-> Uffe
-
-Thx, I will send a new series of patch v2 to review.
-
+T24gMDUvMTAvMTcgMjA6NDEsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+IEhlbGxvIEthbHlhbiwN
+Cj4NCj4gT24gVGh1LCAyOCBTZXAgMjAxNyAxMzo1Nzo1NiArMTMwMA0KPiBLYWx5YW4gS2ludGhh
+ZGEgPGthbHlhbi5raW50aGFkYUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90ZToNCj4NCj4+IFdo
+ZW4gdGhlIGFyYml0cmF0aW9uIGJldHdlZW4gTk9SIGFuZCBOQU5EIGZsYXNoIGlzIGVuYWJsZWQN
+Cj4+IHRoZSA8Rk9SQ0VfQ1NYPiBmaWVsZCBiaXRbMjFdIGluIHRoZSBEYXRhIEZsYXNoIENvbnRy
+b2wgUmVnaXN0ZXINCj4+IG5lZWRzIHRvIGJlIHNldCB0byAxIGFjY29yZGluZyB0byBndWlkbGVp
+bmUgR0wtNTgzMDc0MSBtZW50aW9uZWQNCj4gVHlwbzogZ3VpZGVsaW5lIF4NCkkgd2lsbCBjb3Jy
+ZWN0IHRoaXMgdHlwbyBpbiB0aGUgbmV4dCBwYXRjaCB2ZXJzaW9uLg0KPj4gaW4gTWFydmVsbCBF
+cnJhdGEgZG9jdW1lbnQgTVYtUzUwMTM3Ny0wMCwgUmV2LiBELg0KPiBUaGFua3MgZm9yIHRoYXQs
+IEkgY2hlY2tlZCBpdC4NCj4NCj4+IFRoaXMgY29tbWl0IHNldHMgdGhlIEZPUkNFX0NTWCBiaXQg
+dG8gMSBmb3IgYWxsDQo+PiBBUk1BREEzNzAgdmFyaWFudHMgYXMgdGhlIGFyYml0cmF0aW9uIGlz
+IGFsd2F5cyBlbmFibGVkIGJ5IGRlZmF1bHQuDQo+PiBUaGlzIGNoYW5nZSBkb2VzIG5vdCBhcHBs
+eSBmb3IgcHhhM3h4IHZhcmlhbnRzIGJlY2F1c2UgdGhlIEZPUkNFX0NTWA0KPj4gYml0IGRvZXMg
+bm90IGV4aXN0L3Jlc2VydmVkIG9uIHRoZSBORkN2MS4NCj4gU29ycnkgdG8gYm90aGVyIHlvdSBh
+Z2FpbiBidXQgSSBhbSByZXdvcmtpbmcgdGhlIHB4YTN4eF9uYW5kIGRyaXZlciBhbmQNCj4gc28g
+SSB3b3VsZCBsaWtlIHRvIGRlZXBseSB1bmRlcnN0YW5kIHdoeSB0aGlzIGlzIG5lZWRlZCBiZWNh
+dXNlIEkgd2lsbA0KPiBoYXZlIHRvIGludGVncmF0ZSBpdCBpbiBteSB3b3JrIHRvby4NCj4NCj4g
+U28gcGxlYXNlIHRlbGwgbWUgd2hhdCBpcyB5b3VyIHNldHVwLCBkbyB5b3UgcmVhbGx5IHVzZSBO
+QU5EL05PUg0KPiBhcmJpdHJhdGlvbj8gRG8geW91IGhhdmUgbm90LURvbid0IENhcmUgQ1MgTkFO
+RCBjaGlwcz8gSSBoYXZlIHNvbWUNCj4gZG91YnRzIGJlY2F1c2UgZXZlbiBpZiB0aGUgc3BlYyBw
+cmVjaXNlcyBpbiB0aGUgTkFORCBjb250cm9sbGVyIGNoYXB0ZXINCj4gdGhhdCBhcmJpdHJhdGlv
+biBpcyBhbHdheXMgZW5hYmxlZCBieSBkZWZhdWx0LCB0aGUgYml0IDI3IChOZkFyYml0ZXJFbikN
+Cj4gaW4gdGhlIFNvQyBEZXZpY2UgTXVsdGlwbGV4IFJlZ2lzdGVyIGF0IG9mZnNldCAweDAwMDE4
+MjA4IGlzIGFjdHVhbGx5DQo+IGF0IDAgYnkgZGVmYXVsdCAoZGlzYWJsZWQpLiBEaWQgeW91IGVu
+YWJsZSB0aGlzIGJpdCBtYW51YWxseSA/IEkNCj4gY2hlY2tlZCB3aXRoIGRldm1lbSBvbiBteSBz
+ZXR1cCBhbmQgdGhpcyBiaXQgd2FzIHVuc2V0Lg0KWWVzLCBteSBzZXR1cCB1c2UgTkFORC9OT1Ig
+YXJiaXRyYXRpb24gYW5kIHVzZSBhIERvbid0DQpjYXJlIENTIE5hbmQgQ2hpcC4gVGhlIGJpdCAy
+NyBhdCBvZmZzZXQgMHgwMDAxODIwOCBpcyBzZXQgdG8gMQ0KYnkgZGVmYXVsdCBpbiBteSBjYXNl
+LiBJIGRpZCBub3QgbWFudWFsbHkgc2V0IHRoZSBiaXQgMjcgdG8gMS4NCg0KUGxlYXNlIGxldCBt
+ZSBub3cgaWYgeW91IGhhdmUgYW55IG90aGVyIHF1ZXN0aW9uIG9yIGRvIHlvdSB3YW50IG1lDQp0
+byBzZW5kIHRoZSB1cGRhdGVkIHBhdGNoIHZlcnNpb24gd2l0aCB0aGUgdHlwbyBmaXhlZC4NCg0K
+VGhhbmsgWW91LA0KS2FseWFuDQoNCj4NCj4gVGhhbmsgeW91IGZvciB5b3VyIHRpbWUsDQo+IE1p
+cXXDqGwNCj4NCj4+IFRoZSBORENSX05EX01PREUgY29uZmxpY3RzIHdpdGggdGhlIG5ldyBORENS
+X0ZPUkNFX0NTWCBidXQgaXMgdW51c2VkDQo+PiBzbyByZW1vdmUgaXQgYWxvbmcgd2l0aCBORENS
+X05BTkRfTU9ERS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBLYWx5YW4gS2ludGhhZGEgPGthbHlh
+bi5raW50aGFkYUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPj4gLS0tDQo+DQo+DQo+PiAgIGRyaXZl
+cnMvbXRkL25hbmQvcHhhM3h4X25hbmQuYyB8IDkgKysrKysrKy0tDQo+PiAgIDEgZmlsZSBjaGFu
+Z2VkLCA3IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQuYw0KPj4gYi9kcml2ZXJzL210ZC9uYW5kL3B4
+YTN4eF9uYW5kLmMgaW5kZXggODVjZmY2ODY0M2UwLi5hNmE3YTVhZjdiZWQNCj4+IDEwMDY0NCAt
+LS0gYS9kcml2ZXJzL210ZC9uYW5kL3B4YTN4eF9uYW5kLmMNCj4+ICsrKyBiL2RyaXZlcnMvbXRk
+L25hbmQvcHhhM3h4X25hbmQuYw0KPj4gQEAgLTY3LDggKzY3LDcgQEANCj4+ICAgI2RlZmluZSBO
+RENSX0RXSURUSF9NCQkoMHgxIDw8IDI2KQ0KPj4gICAjZGVmaW5lIE5EQ1JfUEFHRV9TWgkJKDB4
+MSA8PCAyNCkNCj4+ICAgI2RlZmluZSBORENSX05DU1gJCSgweDEgPDwgMjMpDQo+PiAtI2RlZmlu
+ZSBORENSX05EX01PREUJCSgweDMgPDwgMjEpDQo+PiAtI2RlZmluZSBORENSX05BTkRfTU9ERSAg
+IAkoMHgwKQ0KPj4gKyNkZWZpbmUgTkRDUl9GT1JDRV9DU1gJCSgweDEgPDwgMjEpDQo+PiAgICNk
+ZWZpbmUgTkRDUl9DTFJfUEdfQ05UCQkoMHgxIDw8IDIwKQ0KPj4gICAjZGVmaW5lIE5GQ1YxX05E
+Q1JfQVJCX0NOVEwJKDB4MSA8PCAxOSkNCj4+ICAgI2RlZmluZSBORkNWMl9ORENSX1NUT1BfT05f
+VU5DT1IJKDB4MSA8PCAxOSkNCj4+IEBAIC0xNDY0LDYgKzE0NjMsOSBAQCBzdGF0aWMgaW50IHB4
+YTN4eF9uYW5kX2NvbmZpZ19pZGVudChzdHJ1Y3QNCj4+IHB4YTN4eF9uYW5kX2luZm8gKmluZm8p
+IGluZm8tPmNodW5rX3NpemUgPSBQQUdFX0NIVU5LX1NJWkU7DQo+PiAgIAlpbmZvLT5yZWdfbmRj
+ciA9IDB4MDsgLyogZW5hYmxlIGFsbCBpbnRlcnJ1cHRzICovDQo+PiAgIAlpbmZvLT5yZWdfbmRj
+ciB8PSAocGRhdGEtPmVuYWJsZV9hcmJpdGVyKSA/IE5EQ1JfTkRfQVJCX0VOIDoNCj4+IDA7DQo+
+PiArCS8qIFNldCBGT1JDRV9DU1ggYml0IGZvciBhbGwgQVJNQURBMzcwIFZhcmlhbnRzLiBSZWYj
+Og0KPj4gR0wtNTgzMDc0MSAqLw0KPj4gKwlpZiAoaW5mby0+dmFyaWFudCA9PSBQWEEzWFhfTkFO
+RF9WQVJJQU5UX0FSTUFEQTM3MCkNCj4+ICsJCWluZm8tPnJlZ19uZGNyIHw9IE5EQ1JfRk9SQ0Vf
+Q1NYOw0KPj4gICAJaW5mby0+cmVnX25kY3IgfD0gTkRDUl9SRF9JRF9DTlQoUkVBRF9JRF9CWVRF
+Uyk7DQo+PiAgIAlpbmZvLT5yZWdfbmRjciB8PSBORENSX1NQQVJFX0VOOw0KPj4gICANCj4+IEBA
+IC0xNDk4LDYgKzE1MDAsOSBAQCBzdGF0aWMgdm9pZCBweGEzeHhfbmFuZF9kZXRlY3RfY29uZmln
+KHN0cnVjdA0KPj4gcHhhM3h4X25hbmRfaW5mbyAqaW5mbykgaW5mby0+cmVnX25kY3IgPSBuZGNy
+ICYNCj4+ICAgCQl+KE5EQ1JfSU5UX01BU0sgfCBORENSX05EX0FSQl9FTiB8DQo+PiBORkNWMV9O
+RENSX0FSQl9DTlRMKTsgaW5mby0+cmVnX25kY3IgfD0gKHBkYXRhLT5lbmFibGVfYXJiaXRlcikg
+Pw0KPj4gTkRDUl9ORF9BUkJfRU4gOiAwOw0KPj4gKwkvKiBTZXQgRk9SQ0VfQ1NYIGJpdCBmb3Ig
+YWxsIEFSTUFEQTM3MCBWYXJpYW50cy4gUmVmIzoNCj4+IEdMLTU4MzA3NDEgKi8NCj4+ICsJaWYg
+KGluZm8tPnZhcmlhbnQgPT0gUFhBM1hYX05BTkRfVkFSSUFOVF9BUk1BREEzNzApDQo+PiArCQlp
+bmZvLT5yZWdfbmRjciB8PSBORENSX0ZPUkNFX0NTWDsNCj4+ICAgCWluZm8tPm5kdHIwY3MwID0g
+bmFuZF9yZWFkbChpbmZvLCBORFRSMENTMCk7DQo+PiAgIAlpbmZvLT5uZHRyMWNzMCA9IG5hbmRf
+cmVhZGwoaW5mbywgTkRUUjFDUzApOw0KPj4gICB9DQo+DQo+DQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
