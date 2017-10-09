@@ -1,59 +1,85 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 1/5] uio: dt-bindings: document existing binding for uio-pdrv-genirq
-Date: Tue, 10 Oct 2017 11:46:51 +1300
-Message-ID: <20171009224655.6173-2-chris.packham@alliedtelesis.co.nz>
-References: <20171009224655.6173-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171009224655.6173-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
+ mailbox client bindings
+Date: Mon, 9 Oct 2017 17:57:16 -0500
+Message-ID: <CAL_JsqJTuq4rDu9+T6rcC_q8Gw5nyDScNZy2cNkq+y5_v9pegA@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-4-git-send-email-sudeep.holla@arm.com> <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
+ <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com>
+ <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com>
+ <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
+ <CAL_JsqKy+WzEiHRS0BrE3_3Md4CGOr0e2ZZ_vBCB-Opgg49s+A@mail.gmail.com> <CABb+yY0KNafWbD00hBVrNNGnFDcU0v6KXXY2D2K7KNouak1HdQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY0KNafWbD00hBVrNNGnFDcU0v6KXXY2D2K7KNouak1HdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree bindings for the uio-prv-genirq driver. Provide
-some examples on how it can be used.
+On Mon, Oct 9, 2017 at 9:46 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Oct 9, 2017 at 7:22 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Oct 6, 2017 at 9:26 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Fri, Oct 6, 2017 at 9:24 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Fri, Oct 6, 2017 at 6:01 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>>>> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
+>>>
+>>>>>>
+>>>>>>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
+>>>>>>> +           data as expected by the mailbox controller
+>>>>>>
+>>>>>> Shouldn't that be cells as part of mboxes property?
+>>>>>>
+>>>>> A MHU client can send any number of commands (such u32 values) over a channel.
+>>>>> This client (SCMI) sends just one command over a channel, but other
+>>>>> clients may/do send two or more.
+>>
+>> The above definition doesn't support 2 or more as it is 1-1 with channels.
+>>
+> I thought you suggested to make controller driver accept the command
+> as another cell in client's mboxes property.
+> Which we can't do.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v3:
-- New. Document existing binding first.
+Yes, agreed. But I'm wondering since a client may need more than one,
+how would that be expressed?
 
- .../devicetree/bindings/uio/uio-pdrv-genirq.txt    | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
+>>>> Okay, then I guess I don't understand why this is in DT.
+>>>>
+>>> Yeah the client has to provide code (u32 value) for the commands it
+>>> sends, and that value is going to be platform specific. For example,
+>>> on Juno the ITS_AN_SCMI_COMMAND may be defined as BIT(7) while on my
+>>> platform it may be 0x4567
+>>>
+>>> For MHU based platforms, it becomes easy if the u32 is passed from DT.
+>>> And that should be ok since that is like a h/w parameter - a value
+>>> chosen/expected by the remote firmware.
+>>
+>> Could it ever be more than 1 cell?
+>>
+> SCMI sends sub-commands via SHMEM, so it is always going to be 1cell for _scmi_.
+> However many firmwares are unlikely to use just one command over a
+> channel - say, the protocol is trivial or the linux and remote have no
+> SHMEM.
 
-diff --git a/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt b/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
-new file mode 100644
-index 000000000000..5a92b1f8825f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/uio/uio-pdrv-genirq.txt
-@@ -0,0 +1,27 @@
-+*Generic UIO platform driver with interrupts
-+
-+Required properties:
-+- compatible: Should be a value set with the of_id module parameter.
-+
-+Optional properties:
-+- interrupts: Should contain the interrupt to be associated with this device
-+  (only a single interrupt is supported per device).
-+- interrupt-parent: Specifies the phandle to the parent interrupt controller.
-+- reg: Should specify the physical address spaces used by this device.
-+
-+Example:
-+
-+/* Device with MM IO and interrupt assuming of_id="me,my-device" */
-+my-device@10000 {
-+	compatible = "me,my-device";
-+	reg = <0x10000 0x40>;
-+	interrupts = <4 IRQ_TYPE_EDGE_BOTH>;
-+	interrupt-parent = <&gic>;
-+};
-+
-+/* Device with interrupt only assuming of_id="me,my-device" */
-+my-int {
-+	compatible = "me,my-device";
-+	interrupts = <6 IRQ_TYPE_EDGE_BOTH>;
-+	interrupt-parent = <&gic>;
-+};
--- 
-2.14.2
+I'd hope the normal case is not enumerating commands and sub-commands
+in DT and this is special case of a "generic" protocol with platform
+specific aspects. It could be solved with a specific compatible for
+each platform/implementation. We'll probably regret not doing that,
+but I'm going to pretend that this time SoC vendors won't mess it up.
+
+>> I guess being in DT is fine, but I'm still not sure about the naming.
+>> The current name suggests it is part of the mbox binding. Do we want
+>> that or should it be SCMI specific? Then "data" is vague. Perhaps
+>> "scmi-commands"?
+>>
+> Sure. I have no problem with whatever we wanna call it.
+
+Okay. That should have an "arm" prefix too BTW.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
