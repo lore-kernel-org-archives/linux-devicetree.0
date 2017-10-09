@@ -1,67 +1,44 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: arm64: 4.14 of_match_node() issues
-Date: Mon, 9 Oct 2017 10:24:09 +0100
-Message-ID: <20171009092409.GB5127@arm.com>
-References: <5d2ff063-1f7e-0200-cc02-99804f7d9219@suse.de>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 0/4] stm32 clocksource driver rework
+Date: Mon, 9 Oct 2017 11:27:17 +0200
+Message-ID: <b7179354-1a97-375e-56b3-8aef383d90d2@linaro.org>
+References: <1506959513-16851-1-git-send-email-benjamin.gaignard@linaro.org>
+ <CA+M3ks551+w1wtg9O_bYRiTjx00M8qOBsB92og2-EL0Wnrf2rw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5d2ff063-1f7e-0200-cc02-99804f7d9219-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Stefan Bruens <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+M3ks551+w1wtg9O_bYRiTjx00M8qOBsB92og2-EL0Wnrf2rw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-On Sat, Oct 07, 2017 at 02:42:13AM +0200, Andreas Färber wrote:
-> Since 4.14-rc1 I am seeing frequent oopses during module loading (e.g.,
-> MMC, USB) from initrd on aarch64. Symptoms are similar to this in -rc3:
+On 09/10/2017 11:23, Benjamin Gaignard wrote:
+> 2017-10-02 17:51 GMT+02:00 Benjamin Gaignard <benjamin.gaignard@linaro.org>:
+>> version 4:
+>> - split patch in 3 parts
+>>   - convert code to timer_of
+>>   - only use 32 bits timers
+>>   - add clocksource support
 > 
-> [  OK  ] Started udev Coldplug all Devices.
-> [   10.117775] usbcore: registered new interface driver usbfs
-> [   10.118235] Unable to handle kernel paging request at virtual address
-> ffff000008e5abc0
-> [   10.118238] Mem abort info:
-> [   10.118245]   Exception class = DABT (current EL), IL = 32 bits
-> [   10.118249]   SET = 0, FnV = 0
-> [   10.118253]   EA = 0, S1PTW = 0
-> [   10.118256] Data abort info:
-> [   10.118261]   ISV = 0, ISS = 0x00000006
-> [   10.118264]   CM = 0, WnR = 0
-> [   10.118274] swapper pgtable: 4k pages, 48-bit VAs, pgd = ffff0000094a5000
-> [   10.118279] [ffff000008e5abc0] *pgd=00000000bfffe003,
-> *pud=00000000bfffd003, *pmd=0000000000000000
-> [   10.118299] Internal error: Oops: 96000006 [#1] SMP
-> [   10.118305] Modules linked in: fixed usbcore(+) sunxi_mmc mmc_core
-> phy_sun4i_usb sg
-> [   10.118341] CPU: 3 PID: 49 Comm: kworker/3:1 Not tainted
-> 4.14.0-rc3-2.gf27997b-default #1
-> [   10.118345] Hardware name: sunxi sunxi/sunxi, BIOS 2017.05-rc1 04/13/2017
-> [   10.118369] Workqueue: events deferred_probe_work_func
-> [   10.118378] task: ffff80007c8f4000 task.stack: ffff0000099d8000
-> [   10.118394] PC is at __of_match_node.part.1+0x48/0x88
-> [   10.118403] LR is at of_match_node+0x40/0x70
-> [   10.118411] pc : [<ffff00000879aed0>] lr : [<ffff00000879af50>]
-
-[...]
-
-> This has been observed on Pine64 (>60%; also by Stefan) and Odroid-C2;
-> my other arm64 boards such as Raspberry Pi 3 have not run into this so
-> far. No such problems on 32-bit boards.
+> Hello Daniel,
 > 
-> This is using the openSUSE config:
-> https://kernel.opensuse.org/cgit/kernel-source/plain/config/arm64/default
+> Does the patches split sound good for you ?
 
-Hmm, hard to know what to suggest without a concrete reproducer. Do you know
-which driver is being probed in the log above? Also, does this still break
-if you pass "keepinitrd" on the cmdline? Finally, can you dump the kernel
-virtual memory layout, please?
+Hi Benjamin,
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, the split is ok. I will go for the details as soon as I can.
+
+Thanks.
+
+  -- Daniel
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
