@@ -1,55 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
- mailbox client bindings
-Date: Mon, 9 Oct 2017 08:52:35 -0500
-Message-ID: <CAL_JsqKy+WzEiHRS0BrE3_3Md4CGOr0e2ZZ_vBCB-Opgg49s+A@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-4-git-send-email-sudeep.holla@arm.com> <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
- <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com>
- <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com> <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  0/5] Add USB2.0 Host support
+Date: Mon,  9 Oct 2017 14:58:56 +0100
+Message-ID: <1507557541-46560-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 9:26 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> On Fri, Oct 6, 2017 at 9:24 PM, Rob Herring <robh@kernel.org> wrote:
->> On Fri, Oct 6, 2017 at 6:01 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
->>> On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh@kernel.org> wrote:
->>>> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
->
->>>>
->>>>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
->>>>> +           data as expected by the mailbox controller
->>>>
->>>> Shouldn't that be cells as part of mboxes property?
->>>>
->>> A MHU client can send any number of commands (such u32 values) over a channel.
->>> This client (SCMI) sends just one command over a channel, but other
->>> clients may/do send two or more.
+Hello,
 
-The above definition doesn't support 2 or more as it is 1-1 with channels.
+This series aims to add USB2.0 Host support on iWave RZ/G1E(r8a7745) based board.
 
->> Okay, then I guess I don't understand why this is in DT.
->>
-> Yeah the client has to provide code (u32 value) for the commands it
-> sends, and that value is going to be platform specific. For example,
-> on Juno the ITS_AN_SCMI_COMMAND may be defined as BIT(7) while on my
-> platform it may be 0x4567
->
-> For MHU based platforms, it becomes easy if the u32 is passed from DT.
-> And that should be ok since that is like a h/w parameter - a value
-> chosen/expected by the remote firmware.
+This series has been tested against renesas-dev tag 20171009-v4.14-rc4
 
-Could it ever be more than 1 cell?
+This patch has documentation dependency on below patch
+ * [RESEND] phy: rcar-gen2: Add r8a7743/5 support
+https://patchwork.kernel.org/patch/9992587/
 
-I guess being in DT is fine, but I'm still not sure about the naming.
-The current name suggests it is part of the mbox binding. Do we want
-that or should it be SCMI specific? Then "data" is vague. Perhaps
-"scmi-commands"?
+Biju Das (5):
+  ARM: dts: r8a7745: Add internal PCI bridge nodes
+  ARM: dts: r8a7745: Add USB PHY DT support
+  ARM: dts: r8a7745: Link PCI USB devices to USB PHY
+  ARM: dts: iwg22d-sodimm: Enable internal PCI
+  ARM: dts: iwg22d-sodimm: Enable USB PHY
 
-Rob
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 15 +++++
+ arch/arm/boot/dts/r8a7745.dtsi              | 92 +++++++++++++++++++++++++++++
+ 2 files changed, 107 insertions(+)
+
+-- 
+1.9.1
