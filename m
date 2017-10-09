@@ -1,7 +1,7 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 13/15] ARM: dts: at91: at91sam9x25ek: add CAN1 interface
-Date: Mon, 9 Oct 2017 19:09:35 +0300
-Message-ID: <1507565377-1545-14-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 10/15] ARM: dts: at91: sama5d2_xplained: set PB_USER as wakeup source
+Date: Mon, 9 Oct 2017 19:09:32 +0300
+Message-ID: <1507565377-1545-11-git-send-email-claudiu.beznea@microchip.com>
 References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,32 +9,29 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-As the CAN1 interface is not multiplexed with other peripherals on this
-board, enable it so that it can be tested more easily.
+Set the PB_USER button as a wakeup source to resume from ulp0 mode.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+[claudiu.beznea@microchip.com: change subject to match the desired prefix]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91sam9x25ek.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9x25ek.dts b/arch/arm/boot/dts/at91sam9x25ek.dts
-index 494864836e83..f8360fb23107 100644
---- a/arch/arm/boot/dts/at91sam9x25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9x25ek.dts
-@@ -16,6 +16,10 @@
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+index 848ca1b025be..e04db7b74714 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -529,6 +529,7 @@
+ 			label = "PB_USER";
+ 			gpios = <&pioA PIN_PB9 GPIO_ACTIVE_LOW>;
+ 			linux,code = <0x104>;
++			wakeup-source;
+ 		};
+ 	};
  
- 	ahb {
- 		apb {
-+			can1: can@f8004000 {
-+				status = "okay";
-+			};
-+
- 			macb0: ethernet@f802c000 {
- 				phy-mode = "rmii";
- 				status = "okay";
 -- 
 2.7.4
