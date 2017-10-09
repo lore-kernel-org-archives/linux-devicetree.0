@@ -1,58 +1,55 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
-Date: Mon, 9 Oct 2017 13:45:07 +0000
-Message-ID: <TY1PR06MB0895612044D5E21BCBFEF46BC0740@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
+ mailbox client bindings
+Date: Mon, 9 Oct 2017 08:52:35 -0500
+Message-ID: <CAL_JsqKy+WzEiHRS0BrE3_3Md4CGOr0e2ZZ_vBCB-Opgg49s+A@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-4-git-send-email-sudeep.holla@arm.com> <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
+ <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com>
+ <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com> <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsDQoNCnRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPg0KPiBIaSBG
-YWJyaXppbywgQ2hyaXMsDQo+DQo+IE9uIE1vbiwgT2N0IDksIDIwMTcgYXQgMTE6MDYgQU0sIEZh
-YnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5y
-ZW5lc2FzLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYXRlcnNvbiA8Y2hyaXMucGF0
-ZXJzb24yQHJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+DQo+IFJl
-dmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0K
-Pg0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2l3ZzIwZC1xNy1jb21tb24uZHRzaQ0KPiA+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2l3ZzIwZC1xNy1jb21tb24uZHRzaQ0KPiA+IEBAIC0x
-MSw2ICsxMSw3IEBADQo+ID4gIC8gew0KPiA+ICAgICAgICAgYWxpYXNlcyB7DQo+ID4gICAgICAg
-ICAgICAgICAgIHNlcmlhbDAgPSAmc2NpZjA7DQo+ID4gKyAgICAgICAgICAgICAgIHNlcmlhbDMg
-PSAmc2NpZmIxOw0KPg0KPiBHaXZlbiB0aGlzIHBvcnQgaXMgbm90IGxhYmVsZWQgInNlcmlhbDMi
-LCBidXQgY2FsbGVkICJkYXRhIHVhcnQiLCB5b3UgbWF5IHdhbnQNCj4gdG8gYWRkIGEgY29tbWVu
-dCB0byBhdm9pZCBjb25mdXNpb246DQoNCkl0J3MgYSBsaXR0bGUgYml0IGNvbmZ1c2luZywgaXNu
-J3QgaXQ/IFRoZSBsaW5lcyByZWxhdGVkIHRvIHN1Y2ggaW50ZXJmYWNlIGFyZSBuYW1lZCBhcyBV
-QVJUMF94IG9uIHRoZSBjYXJyaWVyIGJvYXJkIHNjaGVtYXRpYywgdGhlIHNlY3Rpb24gb2YgdGhl
-IHNjaGVtYXRpYyB0aGF0IGNvbnRhaW5zIHRoZSBoZWFkZXIgaXMgbmFtZWQgImRhdGEgdWFydCBo
-ZWFkZXIiLCBhbmQgdGhlIGJvYXJkIGRvY3VtZW50YXRpb24gbmFtZXMgaXQgZXhwbGljaXRseSBh
-cyAiVUFSVCAzIC0gL2Rldi90dHlTQzMgKFNDSUZCMSkiLg0KDQpJIGRvbid0IHRoaW5rIHRoZXJl
-IGlzIGFueXRoaW5nIHdlIGNhbiBkbyB0byBtYWtlIHRoaXMgZWFzaWVyIGZvciB0aGUgdXNlciBy
-ZWFsbHksIGlzIHRoZXJlPyA6RA0KSWYgd2UgZGVjaWRlIHRvIGFkZCBhIGNvbW1lbnQgdG8gc2Vy
-aWFsIDMsIEkgZ3Vlc3Mgd2UgbmVlZCB0byBiZSBjb25zaXN0ZW50IGFuZCBhZGQgY29tbWVudHMg
-Zm9yIHRoZSBvdGhlciBzZXJpYWwgaW50ZXJmYWNlcyB0b28uDQpJZiB5b3Ugc3RpbGwgcHJlZmVy
-IGhhdmluZyBhIGNvbW1lbnQgdGhlcmUgSSdsbCBzZW5kIGEgdjIgYW5kIHBhdGNoKGVzKSBmb3Ig
-YWRkaW5nIGNvbW1lbnRzIHRvIHRoZSBvdGhlciBpbnRlcmZhY2VzLCBqdXN0IGxldCBtZSBrbm93
-Lg0KDQpUaGFua3MsDQpGYWINCg0KPg0KPiAgICAgc2VyaWFsMyA9ICZzY2lmYjE7IC8qIGRhdGEg
-dWFydCAqLw0KPg0KPiA+ICAgICAgICAgICAgICAgICBldGhlcm5ldDAgPSAmYXZiOw0KPiA+ICAg
-ICAgICAgfTsNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxv
-dHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4NCj4gSW4g
-cGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNl
-bGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVz
-dCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVzYXMgRWxl
-Y3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5l
-IEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5k
-ICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Oct 6, 2017 at 9:26 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> On Fri, Oct 6, 2017 at 9:24 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Oct 6, 2017 at 6:01 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>>> On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh@kernel.org> wrote:
+>>>> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
+>
+>>>>
+>>>>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
+>>>>> +           data as expected by the mailbox controller
+>>>>
+>>>> Shouldn't that be cells as part of mboxes property?
+>>>>
+>>> A MHU client can send any number of commands (such u32 values) over a channel.
+>>> This client (SCMI) sends just one command over a channel, but other
+>>> clients may/do send two or more.
+
+The above definition doesn't support 2 or more as it is 1-1 with channels.
+
+>> Okay, then I guess I don't understand why this is in DT.
+>>
+> Yeah the client has to provide code (u32 value) for the commands it
+> sends, and that value is going to be platform specific. For example,
+> on Juno the ITS_AN_SCMI_COMMAND may be defined as BIT(7) while on my
+> platform it may be 0x4567
+>
+> For MHU based platforms, it becomes easy if the u32 is passed from DT.
+> And that should be ok since that is like a h/w parameter - a value
+> chosen/expected by the remote firmware.
+
+Could it ever be more than 1 cell?
+
+I guess being in DT is fine, but I'm still not sure about the naming.
+The current name suggests it is part of the mbox binding. Do we want
+that or should it be SCMI specific? Then "data" is vague. Perhaps
+"scmi-commands"?
+
+Rob
