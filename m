@@ -1,111 +1,45 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv3 1/2] drivers: phy: add calibrate method
-Date: Mon, 9 Oct 2017 15:45:45 +0530
-Message-ID: <6de8a17a-745b-0fa2-c39d-cdeb28fc9489@ti.com>
-References: <6935498c-9788-14e6-844f-f9e8288026dc@samsung.com>
- <1507205511-23048-1-git-send-email-andrzej.p@samsung.com>
- <CGME20171005121201eucas1p269da2155c4257777b0c3a5b210c651f8@eucas1p2.samsung.com>
- <1507205511-23048-2-git-send-email-andrzej.p@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507205511-23048-2-git-send-email-andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH RESEND] phy: rcar-gen2: Add r8a7743/5 support
+Date: Mon,  9 Oct 2017 11:22:23 +0100
+Message-ID: <1507544543-28654-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add USB PHY support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5)
+USB PHY is identical to the R-Car Gen2 family.
 
-On Thursday 05 October 2017 05:41 PM, Andrzej Pietrasiewicz wrote:
-> Some quirky UDCs (like dwc3 on exynos) need to have heir phys calibrated
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This patch is tested against Linux next tag next-20170929.
 
-%s/heir/their
-> e.g. for using super speed.
+ Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-The commit log should also include when phy calibrate should be used and why
-existing API's is not sufficient for initializing/calibrating the phy.
-
-Thanks
-Kishon
-> 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/phy/phy-core.c  | 15 +++++++++++++++
->  include/linux/phy/phy.h | 10 ++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index a268f4d..b4964b0 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -372,6 +372,21 @@ int phy_reset(struct phy *phy)
->  }
->  EXPORT_SYMBOL_GPL(phy_reset);
->  
-> +int phy_calibrate(struct phy *phy)
-> +{
-> +	int ret;
-> +
-> +	if (!phy || !phy->ops->calibrate)
-> +		return 0;
-> +
-> +	mutex_lock(&phy->mutex);
-> +	ret = phy->ops->calibrate(phy);
-> +	mutex_unlock(&phy->mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_calibrate);
-> +
->  /**
->   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->   * @np: device_node for which to get the phy
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index e694d40..87580c8 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -39,6 +39,7 @@ enum phy_mode {
->   * @power_off: powering off the phy
->   * @set_mode: set the mode of the phy
->   * @reset: resetting the phy
-> + * @calibrate: calibrate the phy
->   * @owner: the module owner containing the ops
->   */
->  struct phy_ops {
-> @@ -48,6 +49,7 @@ struct phy_ops {
->  	int	(*power_off)(struct phy *phy);
->  	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
->  	int	(*reset)(struct phy *phy);
-> +	int	(*calibrate)(struct phy *phy);
->  	struct module *owner;
->  };
->  
-> @@ -141,6 +143,7 @@ static inline void *phy_get_drvdata(struct phy *phy)
->  int phy_power_off(struct phy *phy);
->  int phy_set_mode(struct phy *phy, enum phy_mode mode);
->  int phy_reset(struct phy *phy);
-> +int phy_calibrate(struct phy *phy);
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->  	return phy->attrs.bus_width;
-> @@ -262,6 +265,13 @@ static inline int phy_reset(struct phy *phy)
->  	return -ENOSYS;
->  }
->  
-> +static inline int phy_calibrate(struct phy *phy)
-> +{
-> +	if (!phy)
-> +		return 0;
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->  	return -ENOSYS;
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+index 91da947..eeb9e18 100644
+--- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+@@ -4,10 +4,13 @@ This file provides information on what the device node for the R-Car generation
+ 2 USB PHY contains.
+ 
+ Required properties:
+-- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
++- compatible: "renesas,usb-phy-r8a7743" if the device is a part of R8A7743 SoC.
++	      "renesas,usb-phy-r8a7745" if the device is a part of R8A7745 SoC.
++	      "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
+ 	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+ 	      "renesas,usb-phy-r8a7794" if the device is a part of R8A7794 SoC.
+-	      "renesas,rcar-gen2-usb-phy" for a generic R-Car Gen2 compatible device.
++	      "renesas,rcar-gen2-usb-phy" for a generic R-Car Gen2 or
++					  RZ/G1 compatible device.
+ 
+ 	      When compatible with the generic version, nodes must list the
+ 	      SoC-specific version corresponding to the platform first
+-- 
+1.9.1
