@@ -1,141 +1,95 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Mon, 9 Oct 2017 18:07:28 +0300
-Message-ID: <8306BF82-3141-4994-8EFE-D5D2052F9FE1@konsulko.com>
-References: <1506628736.28192.9.camel@hp800z>
- <CAL_Jsq+Hxjf8PecU+ZpCoFqbKAYJtzHpFco2Wsi_KT499fb-=g@mail.gmail.com>
- <1506973580.17981.5.camel@hp800z>
- <CAL_Jsq+vrAXQbfSGdANhqM3QJ2fHTQXDT1J6qGnTJkZ4egepNw@mail.gmail.com>
- <1507039989.17981.25.camel@hp800z>
- <CAL_JsqLLJE8bp3gwdExcsAtF+U4AHkROpbqHX8_79YhYjROovQ@mail.gmail.com>
- <1507052352.17981.48.camel@hp800z>
- <CAL_JsqKtQ1LyM09EcaXnPR8zfDJanuNQW2F474k2Z_hUjXOz5Q@mail.gmail.com>
- <4D25319A-34A8-4FE6-8B14-616686D2192A@konsulko.com>
- <59DAAFD3.9070900@gmail.com> <20171009000053.GQ10050@umbus.fritz.box>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171009000053.GQ10050-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [RFC 2/2] phy: exynos5-usbdrd: remove disable and enable of phy clk
+Date: Mon, 9 Oct 2017 20:46:48 +0530
+Message-ID: <CANAwSgRmyEqTbw1ZfZhenC8Cs4ffgeYB4vyDNsGeX-zvg92aPw@mail.gmail.com>
+References: <1507264595-3565-1-git-send-email-linux.amoon@gmail.com>
+ <1507264595-3565-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPe9FCKqrvsgdohTAN9tXXwbMOuyaDiHPxZ1Ym1LLPD41w@mail.gmail.com>
+ <CANAwSgSbHR+e_2wX3i3VoVxPe10mUOoS94uRpvebfUfybaNQ+g@mail.gmail.com>
+ <20171008155015.252gefhsc4tks7k6@kozik-lap> <CANAwSgSMFBS8n48=_OnNNs_=Di9Oqq2tNeiwZM9u1qaLevLP4w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgSMFBS8n48=_OnNNs_=Di9Oqq2tNeiwZM9u1qaLevLP4w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+hi Krzysztof,
 
-> On Oct 9, 2017, at 03:00 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
->=20
-> On Sun, Oct 08, 2017 at 04:08:03PM -0700, Frank Rowand wrote:
->> On 10/07/17 03:23, Pantelis Antoniou wrote:
->>> Hi Rob,
->>>=20
->>>> On Oct 6, 2017, at 16:55 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->>>>=20
->>>> On Tue, Oct 3, 2017 at 12:39 PM, Pantelis Antoniou
->>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>>> Hi Rob,
->>=20
->> < snip >
->>=20
->>>>> eBPF is portable, can be serialized after compiling in the schema =
-file
->>>>> and can be executed in the kernel.
->>>>=20
->>>> Executing in the kernel is a non-goal for me.
->>=20
->> Executing in the kernel is an anti-goal for me.
->>=20
->> We are trying to reduce the device tree footprint inside the kernel,
->> not increase it.
->>=20
->> 99.99% of the validation should be possible statically, in the =
-compile
->> phase.
->>=20
->>=20
->>>>> By stripping out all documentation related properties and nodes =
-keeping
->>>>> only the compiled filters you can generate a dtb blob that passed =
-to
->>>>> kernel can be used for verification of all runtime changes in the
->>>>> kernel's live tree. eBPF is enforcing an execution model that is =
-'safe'
->>>>> so we can be sure that no foul play is possible.
->>=20
->> Run time changes can be assumed correct (short of bugs in the overlay
->> application code), if the base tree is validated, the overlay is =
-validated,
->> and the interface between the live tree and the overlay is a
->> connector.
->=20
-> In addition, no amount of schema validation can really protect the
-> kernel from a bad DT.  Even if the schemas can 100% verify that the DT
-> is "syntactically" correct, which is ambitious, it can't protect
-> against a DT which is in the right form, but contains information that
-> is simply wrong for the hardware in question.  That can stuff the
-> kernel at least as easily as an incorrectly formatted DT.
->=20
+On 9 October 2017 at 02:37, Anand Moon <linux.amoon@gmail.com> wrote:
+> Hi Krzysztof,
+>
+> On 8 October 2017 at 21:20, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On Sun, Oct 08, 2017 at 06:11:12PM +0530, Anand Moon wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On 6 October 2017 at 12:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>> > On Fri, Oct 6, 2017 at 6:36 AM, Anand Moon <linux.amoon@gmail.com> wrote:
+>>> >> remove the disable and enable of phy clk.
+>>> >> phy clk is needed to tune the phy controller.
+>>> >
+>>> > Drivers should in general enable and disable the clocks they use. Just
+>>> > like in patch #1 please describe why you are doing this, what kind of
+>>> > problem are you trying to solve and what exactly are you trying to do
+>>> > here.
+>>> >
+>>> > BR,
+>>> > Krzysztof
+>>> >
+>>>
+>>> [snip]
+>>>
+>>> Usually we would disable the clk on error patch and return with failed.
+>>> but in the current code we disable the clk in init routine and
+>>> enable the clk in disable routine which seem incorrect.
+>>
 
-I disagree.
+disable of clk could affect the PMU used to control the phy driver.
 
-There are multiple levels of validation. For now we=E2=80=99re only =
-talking about
-binding validation. There can be SoC level validation, board level =
-validation,
-revision level validation and finally application specific validation.
-
-Binding validation is making sure properties/nodes follow the binding =
-document.
-For instance that for a foo device there=E2=80=99s a mandatory interrupt =
-property.
-
-Simplified
-
-interrupt =3D <X>;
-
-Binding validation would =E2=80=98catch=E2=80=99 errors like assigning a =
-string or not having the
-interrupt property available.
-
-SoC level validation would list the available interrupt number that a =
-given
-SoC would support for that device.
-
-For example that interrupt can only take the values 10 or 99 in a given =
-SoC.
-
-Board level validation would narrow this down even further to a value of =
-10 for
-a given board model.
-
-Similar revision level validation would place further restriction on the =
-allowed
-configuration.
-
-Finally application specific validation could place restriction based on =
-the intended
-application that piece of hardware is used for. For instance devices =
-that should not
-exceed a given power budget would have restrictions on the clock =
-frequency of the processor
-or bus frequencies etc.
-
-> --=20
-> David Gibson			| I'll have my music baroque, and my =
-code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
-_the_ _other_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
-
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> No. For example for exynos5_usbdrd_phy_exit() the driver enables the
+>> clock only for the access to PHY block (PHY registers).
+>>
+>
+> But I dont get it why we disable code phy clk, which could be used in
+> future phy tune or link control as it part of CLK_FSYS.
+>
+>>>
+>>> [0] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L362-L412
+>>> [1] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L424-L446
+>>>
+>>> On 3.10.x kernel clk_summary all the clk are enables.
+>>>
+>>>     mout_usbdrd300              3           3            24000000
+>>>        dout_usbdrd300           2           2            24000000
+>>>           sclk_usbdrd300        1           1            24000000
+>>>        dout_usbphy300           2           2            24000000
+>>>           sclk_usbphy300        1           1            24000000
+>>>     mout_usbdrd301              3           3            24000000
+>>>        dout_usbdrd301           2           2            24000000
+>>>           sclk_usbdrd301        1           1            24000000
+>>>        dout_usbphy301           2           2            24000000
+>>>           sclk_usbphy301        1           1            24000000
+>>>
+>>> Some more changes in clk driver might be required to stabilize the usb module.
+>>
+>> Please describe the issues with stability first.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> On stability:
+>
+> USB 3.0 read / write performance is not up to mark with moderate data
+> read / write speed,
+> If you give long compilation of kernel or any source code it would
+> likely be slow
+> It work pretty good with USB 3.0 SSD but generally failed with 2.5' inc HDD.
+>
+> If needed I will share you some performance test result with and
+> without these patches.
+>
+> I have some more changes related to usbdrd phy change queued along this on.
+>
+> Best Regards
+> -Anand
