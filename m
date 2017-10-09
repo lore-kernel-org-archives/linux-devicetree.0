@@ -1,44 +1,57 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 14/15] ARM: dts: at91: at91sam9x25ek: add pwm0
-Date: Mon, 9 Oct 2017 19:09:36 +0300
-Message-ID: <1507565377-1545-15-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 06/15] ARM: dts: at91: sama5d27_som1_ek: add pinmuxing for pwm0
+Date: Mon, 9 Oct 2017 19:09:28 +0300
+Message-ID: <1507565377-1545-7-git-send-email-claudiu.beznea@microchip.com>
 References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the PWM0 interface and one output of channel 0 (on PC10) on this headless
-board. The output conflicts with LCD and ISI, so only enable it for this
-particular board of the series (ISI is enabled on at91sam9g25ek, as an example
-but we can do the other way around).
+Add pin muxing for pwm0 and set it as disabled since it is in conflict
+with the pins for leds.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91sam9x25ek.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9x25ek.dts b/arch/arm/boot/dts/at91sam9x25ek.dts
-index f8360fb23107..f705a3165656 100644
---- a/arch/arm/boot/dts/at91sam9x25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9x25ek.dts
-@@ -29,6 +29,12 @@
- 				phy-mode = "rmii";
- 				status = "okay";
+diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+index 6c4c976a99d1..339f4e71cf40 100644
+--- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+@@ -136,7 +136,9 @@
  			};
-+
-+			pwm0: pwm@f8034000 {
+ 
+ 			pwm0: pwm@f802c000 {
+-				status = "okay";
 +				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_pwm0_pwm0_1>;
-+				status = "okay";
-+			};
- 		};
- 	};
- };
++				pinctrl-0 = <&pinctrl_mikrobus1_pwm &pinctrl_mikrobus2_pwm>;
++				status = "disabled"; /* Conflict with leds. */
+ 			};
+ 
+ 			flx1: flexcom@f8038000 {
+@@ -529,7 +531,7 @@
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_led_gpio_default>;
+-		status = "okay";
++		status = "okay"; /* Conflict with pwm0. */
+ 
+ 		red {
+ 			label = "red";
 -- 
 2.7.4
