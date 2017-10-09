@@ -1,7 +1,7 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 08/15] ARM: dts: at91: sama5d27_som1_ek: remove pull-up on SD/MMC lines
-Date: Mon, 9 Oct 2017 19:09:30 +0300
-Message-ID: <1507565377-1545-9-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 09/15] ARM: dts: at91: sama5d2_xplained: Add charger node of pmic.
+Date: Mon, 9 Oct 2017 19:09:31 +0300
+Message-ID: <1507565377-1545-10-git-send-email-claudiu.beznea@microchip.com>
 References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,41 +9,61 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-As the board have the proper pull-ups soldered on the data
-and CMD lines we don't need them specified in the PADs. So remove
-the "bias-pull-up" property and set "bias-disable".
+Add charger device node as a sub-device node of act8945a mfd, move
+the charger's properties to this node, and use the "interrupts"
+property to replace "active-semi,irq_gpios" to denote the act8945a
+charger's irq.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-[claudiu.beznea@microchip.com: change subject to match the desired prefix]
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+[claudiu.beznea@microchip.com: replace numbers with pin macros]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-index 651ed5d4defc..e72036fa8ddb 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -349,7 +349,7 @@
- 							 <PIN_PA7__SDMMC0_DAT5>,
- 							 <PIN_PA8__SDMMC0_DAT6>,
- 							 <PIN_PA9__SDMMC0_DAT7>;
--						bias-pull-up;
-+						bias-disable;
- 					};
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+index c7e9ccf2bc87..848ca1b025be 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -160,14 +160,6 @@
+ 					compatible = "active-semi,act8945a";
+ 					reg = <0x5b>;
+ 					active-semi,vsel-high;
+-					active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
+-					active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
+-					active-semi,irq_gpios = <&pioA PIN_PB13 GPIO_ACTIVE_LOW>;
+-					active-semi,input-voltage-threshold-microvolt = <6600>;
+-					active-semi,precondition-timeout = <40>;
+-					active-semi,total-timeout = <3>;
+-					pinctrl-names = "default";
+-					pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
+ 					status = "okay";
  
- 					ck_cd_vddsel {
-@@ -367,7 +367,7 @@
- 							 <PIN_PA19__SDMMC1_DAT1>,
- 							 <PIN_PA20__SDMMC1_DAT2>,
- 							 <PIN_PA21__SDMMC1_DAT3>;
--						bias-pull-up;
-+						bias-disable;
+ 					regulators {
+@@ -220,6 +212,21 @@
+ 							regulator-always-on;
+ 						};
  					};
++
++					charger {
++						compatible = "active-semi,act8945a-charger";
++						pinctrl-names = "default";
++						pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
++						interrupt-parent = <&pioA>;
++						interrupts = <PIN_PB13 GPIO_ACTIVE_LOW>;
++
++						active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
++						active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
++						active-semi,input-voltage-threshold-microvolt = <6600>;
++						active-semi,precondition-timeout = <40>;
++						active-semi,total-timeout = <3>;
++						status = "okay";
++					};
+ 				};
+ 			};
  
- 					conf-ck_cd {
 -- 
 2.7.4
