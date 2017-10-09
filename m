@@ -1,78 +1,70 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v7 3/6] coresight: of: Use of_cpu_node_to_id helper
-Date: Mon, 9 Oct 2017 10:58:42 +0800
-Message-ID: <20171009025842.GA3146@leoy-linaro>
-References: <20171006103610.11853-1-suzuki.poulose@arm.com>
- <20171006103610.11853-4-suzuki.poulose@arm.com>
+From: "Mohandass, Divagar" <divagar.mohandass@intel.com>
+Subject: RE: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
+Date: Mon, 9 Oct 2017 03:14:24 +0000
+Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DF530B@BGSMSX107.gar.corp.intel.com>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
+ <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
+ <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
+ <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
+ <CAAFQd5B65bJHsZkMgtjGgyd3btuoWzJwYQRQb5j2kSaefxCZ7Q@mail.gmail.com>
+ <20170920093222.yzfw2ctrupep5iqx@valkosipuli.retiisi.org.uk>
+ <20171003135109.v7ch7oc4fvjwzl7w@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171006103610.11853-4-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh@kernel.org, will.deacon@arm.com, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Jonathan.Cameron@huawei.com, marc.zyngier@arm.com, peterz@infradead.org, mathieu.poirier@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171003135109.v7ch7oc4fvjwzl7w@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: "'sakari.ailus@iki.fi'" <sakari.ailus@iki.fi>, Tomasz Figa <tfiga@chromium.org>
+Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
-
-On Fri, Oct 06, 2017 at 11:36:07AM +0100, Suzuki K Poulose wrote:
-> Reuse the new generic helper, of_cpu_node_to_id() to map a
-> given CPU phandle to a logical CPU number.
-> 
-> Cc: Leo Yan <leo.yan@linaro.org>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-Tested-by: Leo Yan <leo.yan@linaro.org>
-
-BTW, I think the function get_cpu_for_node() in the file
-arch/arm64/kernel/topology.c we also can refactor with the same
-function, just reminding for this.
-
-> ---
-> Changes since V4:
->  - Fix a regression introduced in v4, reported by bugrobot
-> Changes since V3:
->  - Reflect the renaming of the helper and return value changes
-> ---
->  drivers/hwtracing/coresight/of_coresight.c | 15 +++------------
->  1 file changed, 3 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index a18794128bf8..7c375443ede6 100644
-> --- a/drivers/hwtracing/coresight/of_coresight.c
-> +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -104,26 +104,17 @@ static int of_coresight_alloc_memory(struct device *dev,
->  int of_coresight_get_cpu(const struct device_node *node)
->  {
->  	int cpu;
-> -	bool found;
-> -	struct device_node *dn, *np;
-> +	struct device_node *dn;
->  
->  	dn = of_parse_phandle(node, "cpu", 0);
-> -
->  	/* Affinity defaults to CPU0 */
->  	if (!dn)
->  		return 0;
-> -
-> -	for_each_possible_cpu(cpu) {
-> -		np = of_cpu_device_node_get(cpu);
-> -		found = (dn == np);
-> -		of_node_put(np);
-> -		if (found)
-> -			break;
-> -	}
-> +	cpu = of_cpu_node_to_id(dn);
->  	of_node_put(dn);
->  
->  	/* Affinity to CPU0 if no cpu nodes are found */
-> -	return found ? cpu : 0;
-> +	return (cpu < 0) ? 0 : cpu;
->  }
->  EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
->  
-> -- 
-> 2.13.6
-> 
+SGkgVG9tYXN6LA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBzYWthcmku
+YWlsdXNAaWtpLmZpIFttYWlsdG86c2FrYXJpLmFpbHVzQGlraS5maV0NCj5TZW50OiBUdWVzZGF5
+LCBPY3RvYmVyIDAzLCAyMDE3IDc6MjEgUE0NCj5UbzogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9t
+aXVtLm9yZz4NCj5DYzogTWFuaSwgUmFqbW9oYW4gPHJham1vaGFuLm1hbmlAaW50ZWwuY29tPjsg
+TW9oYW5kYXNzLCBEaXZhZ2FyDQo+PGRpdmFnYXIubW9oYW5kYXNzQGludGVsLmNvbT47IHJvYmgr
+ZHRAa2VybmVsLm9yZzsNCj5tYXJrLnJ1dGxhbmRAYXJtLmNvbTsgd3NhQHRoZS1kcmVhbXMuZGU7
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+bWlrYS53ZXN0ZXJiZXJnQGxpbnV4Lmlu
+dGVsLmNvbTsgbGludXgtcG1Admdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUmU6IFtQQVRDSCB2
+NiAzLzNdIGVlcHJvbTogYXQyNDogZW5hYmxlIHJ1bnRpbWUgcG0gc3VwcG9ydA0KPg0KPkhpIFRv
+bWFzeiwNCj4NCj5PbiBXZWQsIFNlcCAyMCwgMjAxNyBhdCAxMjozMjoyMlBNICswMzAwLCBzYWth
+cmkuYWlsdXNAaWtpLmZpIHdyb3RlOg0KPj4gPiA+PiA+PiBAQCAtNzQzLDExICs3NzAsMTcgQEAg
+c3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+PiA+ID4+ID4+ICpjbGll
+bnQsIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4+ID4gPj4gPj4NCj4+ID4gPj4g
+Pj4gICAgICAgaTJjX3NldF9jbGllbnRkYXRhKGNsaWVudCwgYXQyNCk7DQo+PiA+ID4+ID4+DQo+
+PiA+ID4+ID4+ICsgICAgIC8qIGVuYWJsZSBydW50aW1lIHBtICovDQo+PiA+ID4+ID4+ICsgICAg
+IHBtX3J1bnRpbWVfZ2V0X25vcmVzdW1lKCZjbGllbnQtPmRldik7DQo+PiA+ID4+ID4+ICsgICAg
+IHBtX3J1bnRpbWVfc2V0X2FjdGl2ZSgmY2xpZW50LT5kZXYpOw0KPj4gPiA+PiA+PiArICAgICBw
+bV9ydW50aW1lX2VuYWJsZSgmY2xpZW50LT5kZXYpOw0KPj4gPiA+Pg0KPj4gPiA+PiBEbyB3ZSBu
+ZWVkIHRoaXMgZ2V0X25vcmVzdW1lL3NldF9hY3RpdmUgZGFuY2U/IEkgcmVtZW1iZXIgaXQgd2Fz
+DQo+PiA+ID4+IGZvciBzb21lIHJlYXNvbiBuZWVkZWQgZm9yIFBDSSBkZXZpY2VzLCBidXQgSSBk
+b24ndCBzZWUgd2h5IGZvcg0KPj4gPiA+PiBJMkMgYW55dGhpbmcgZWxzZSB0aGFuIGp1c3QgcG1f
+cnVudGltZV9lbmFibGUoKSB3b3VsZCBiZSBuZWNlc3NhcnkuDQo+PiA+ID4NCj4+ID4gPiBZb3Ug
+c3BlY2lmaWNhbGx5IGRvIG5vdCBuZWVkIChhbGwpIHRoaXMgZm9yIFBDSSBkZXZpY2VzLCBidXQg
+QUZBSVUNCj4+ID4gPiBmb3IgSea2jg0KPj4gPiA+IGRldmljZXMgeW91IGRvLiBUaGUgcnVudGlt
+ZSBQTSBzdGF0dXMgb2YgYSBkZXZpY2UgaXMgZGlzYWJsZWQgYnkNCj4+ID4gPiBkZWZhdWx0IGFu
+ZCB0aGUgdXNlIGNvdW50IGlzIHplcm8sIGJ1dCBvbiBBQ1BJIGJhc2VkIHN5c3RlbXMgdGhlDQo+
+PiA+ID4gZGV2aWNlIGlzIHN0aWxsIHBvd2VyZWQgb24uDQo+PiA+DQo+PiA+IE9rYXksIHNvIF9n
+ZXRfbm9yZXN1bWUoKSBhbmQgX3NldF9hY3RpdmUoKSB3b3VsZCBkbyB0aGUgdGhpbmcgZm9yDQo+
+PiA+IEFDUEkgaW5kZWVkLCBidXQgbm90IHN1cmUgYWJvdXQgb3RoZXIgcGxhdGZvcm1zLiBQZXJo
+YXBzIF9lbmFibGUoKSwNCj4+ID4gX2dldF9zeW5jKCkgd291bGQgYmUgbW9yZSBnZW5lcmFsPw0K
+Pj4NCj4+IFdoYXQgSSBlbmRlZCB1cCBkb2luZyBpbiBlLmcuIHRoZSBzbWlhcHAgZHJpdmVyIHdh
+cyB0byBleHBsaWNpdGx5DQo+PiBwb3dlciB0aGUgZGV2aWNlIG9uIGZpcnN0IGFuZCB0aGVuIGVu
+YWJsZSBydW50aW1lIFBNLiAoU2VlDQo+PiBkcml2ZXJzL21lZGlhL2kyYy9zbWlhcHAvc21pYXBw
+LWNvcmUuYyAuKSBUaGlzIGFwcHJvYWNoIHdvcmtzIGV2ZW4gaWYNCj4+IENPTkZJR19QTSBpcyBk
+aXNhYmxlZCwgYm90aCBvbiBEVCBhbmQgQUNQSS4NCj4NCj5wbV9ydW50aW1lX2dldF9ub3Jlc3Vt
+ZSgpICsgcG1fcnVudGltZV9wdXQoKSBjYW4gYmUgcmVwbGFjZWQgYnkgYSBzaW5nbGUNCj5wbV9y
+dW50aW1lX2lkbGUoKSBjYWxsICh3aGVyZSBwbV9ydW50aW1lX3B1dCgpIHdhcykuIHBtX3J1bnRp
+bWVfZW5hYmxlKCkNCj5pcyByZXF1aXJlZCB0byBlbmFibGUgcnVudGltZSBQTSBmb3IgYSBkZXZp
+Y2UuDQoNClZlcmlmaWVkIHRoZSBjaGFuZ2Ugc3VnZ2VzdGVkIGJ5IFNha2FyaS4gDQpMZXQgbWUg
+a25vdyBJIGNhbiBzZW5kIGEgdXBkYXRlZCBwYXRjaCB2ZXJzaW9uIHdpdGggdGhpcyBjaGFuZ2Uu
+DQoNCj4NCj5wbV9ydW50aW1lX2FsbG93KCkgbWF5IGJlIG9taXR0ZWQgYnV0IHRoZW4gdG8gbWFr
+ZSB0aGUgcnVudGltZSBQTQ0KPmZyYW1ld29yayB0byBtYWtlIHRoZSBwb3dlciBzdGF0ZSB0cmFu
+c2l0aW9ucyB0aGlzIG5lZWRzIHRvIGJlIGNvbmZpZ3VyZWQNCj5mcm9tIHRoZSB1c2VyIHNwYWNl
+IC0tLSB3aGljaCBJIGRvbid0IHRoaW5rIGlzIGludGVuZGVkLg0KPg0KPkNjIGxpbnV4LXBtLCB0
+b28uDQo+DQo+LS0NCj5SZWdhcmRzLA0KPg0KPlNha2FyaSBBaWx1cw0KPmUtbWFpbDogc2FrYXJp
+LmFpbHVzQGlraS5maQ0K
