@@ -1,65 +1,45 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [RFC usb-next v5 3/3] usb: core: hcd: integrate the PHY roothub
- wrapper
-Date: Mon, 9 Oct 2017 13:18:17 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1710091316170.6996-100000@netrider.rowland.org>
-References: <20171008211713.18696-4-martin.blumenstingl@googlemail.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v5] ARM: dts: exynos: Add HDMI and Sil9234 to
+ Trats2 board
+Date: Mon, 9 Oct 2017 19:51:02 +0200
+Message-ID: <20171009175102.egq3kshmvce6opkq@kozik-lap>
+References: <20171008114819.deffq33oqbvr4azc@kozik-lap>
+ <CGME20171009074012eucas1p17a1e713558fc8faf18220643bdee0afc@eucas1p1.samsung.com>
+ <1507534778-31447-1-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171008211713.18696-4-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1507534778-31447-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 8 Oct 2017, Martin Blumenstingl wrote:
-
-> This integrates the PHY roothub wrapper into the core hcd
-> infrastructure. Multiple PHYs which are part of the roothub devicetree
-> node (which is a sub-node of the sysdev's node) are now managed
-> (= powered on/off when needed), by the new usb_phy_roothub code.
+On Mon, Oct 09, 2017 at 09:39:38AM +0200, Maciej Purski wrote:
+> Add HDMI and Sil9234 MHL converter to Trats2 board.
+> Following in SoC devices have been enabled:
+> - HDMI (HDMI signal encoder),
+> - Mixer (video buffer scanout device),
+> - I2C_5 bus (used for HDMI DDC)
+> - I2C_8 bus (used for HDMI_PHY control).
 > 
-> One example where this is required is the Amlogic GXL and GXM SoCs:
-> They are using a dwc3 USB controller with up to three ports enabled on
-> the internal roothub. Using only the top-level "phy" properties does not
-> work here since one can only specify one "usb2-phy" and one "usb3-phy",
-> while actually at least two "usb2-phy" have to be specified.
+> Based on previous work by:
+> Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/usb/core/hcd.c  | 30 +++++++++++++++++++++++++++++-
->  include/linux/usb/hcd.h |  1 +
->  2 files changed, 30 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 111 ++++++++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 > 
-> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> index 67aa3d039b9b..56704dd10c15 100644
-> --- a/drivers/usb/core/hcd.c
-> +++ b/drivers/usb/core/hcd.c
-> @@ -50,6 +50,7 @@
->  #include <linux/usb/otg.h>
->  
->  #include "usb.h"
-> +#include "phy.h"
->  
->  
->  /*-------------------------------------------------------------------------*/
-> @@ -2292,7 +2293,11 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
->  		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
->  				"suspend", status);
->  	}
-> -	return status;
-> +
-> +	if (status == 0)
-> +		return usb_phy_roothub_power_off(hcd->phy_roothub);
 
-Is this really the right thing to do?  If usb_phy_roothub_power_off() 
-fails, what condition does this leave the bus in?  And what condition 
-does the kernel _think_ the bus is in?
+Thanks, applied.
 
-Alan Stern
+Best regards,
+Krzysztof
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
