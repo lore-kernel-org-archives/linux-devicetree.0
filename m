@@ -1,32 +1,41 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Mon, 9 Oct 2017 09:18:14 +0200
-Message-ID: <20171009071814.GO17360@verge.net.au>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
- <9635bb2d-8695-a168-d49e-0bd51807cc19@cogentembedded.com>
- <20171006091759.GF7734@verge.net.au>
+Subject: Re: [PATCH 0/3] arm64: dts: renesas: Add INTC-EX device node on
+ R-Car M3-W, V3M, and D3
+Date: Mon, 9 Oct 2017 09:25:19 +0200
+Message-ID: <20171009072518.GQ17360@verge.net.au>
+References: <1507291553-24396-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171006091759.GF7734@verge.net.au>
+In-Reply-To: <1507291553-24396-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 06, 2017 at 11:18:00AM +0200, Simon Horman wrote:
-> On Fri, Oct 06, 2017 at 05:47:25AM +0300, Vladimir Barinov wrote:
-> > Hi Simon, Geert,
-> > 
-> > Do you need extra actions from my side to accept this patch?
+On Fri, Oct 06, 2017 at 02:05:50PM +0200, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
 > 
-> Yes, I need patch 3/18.
-> Could you repost it?
+> This patch series adds device nodes for the Interrupt Controller for
+> External Devices (INTC-EX) to the DT sources for the R-Car M3-W, V3M, and
+> D3 SoCs.
+> 
+> This has been tested on Salvator-X with R-Car M3-W.
+> (FWIW, I also tested on Salvator-XS with H3 ES2.0).
+> 
+> The compatible values used depend on the DT binding update "[PATCH]
+> dt-bindings: irqchip: renesas-irqc: Document R-Car M3-W, V3M, D3 support",
+> but they are non-controversial.
+> 
+> Actual use may depend on pinctrl patches (e.g. "[PATCH 2/3] pinctrl:
+> sh-pfc: r8a7796: Add support for INTC-EX IRQ pins").
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (3):
+>   arm64: dts: r8a7796: Add INTC-EX device node
+>   arm64: dts: r8a77970: Add INTC-EX device node
+>   arm64: dts: r8a77995: Add INTC-EX device node
 
-I see you have done so, thanks.
-
-I have applied this patch with Geert's tag.  I had to apply the patch
-manually so please check that I did so correctly once I have pushed the
-next branch to the renesas tree a little later today.
+Thanks, applied.
