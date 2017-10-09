@@ -1,26 +1,32 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car M3-W,
- V3M, D3 support
-Date: Mon, 9 Oct 2017 07:55:40 +0200
-Message-ID: <20171009055539.GC31804@verge.net.au>
-References: <1507290692-23062-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH 3/3] ARM: dts: gr-peach: Add ETHER pin group
+Date: Mon, 9 Oct 2017 07:57:49 +0200
+Message-ID: <20171009055749.GD31804@verge.net.au>
+References: <1507193900-23801-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1507193900-23801-4-git-send-email-jacopo+renesas@jmondi.org>
+ <20171006122523.GD19008@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1507290692-23062-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20171006122523.GD19008@w540>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 06, 2017 at 01:51:32PM +0200, Geert Uytterhoeven wrote:
-> Document support for the Interrupt Controller for Externel Devices
-> (INTC-EX) in the Renesas M3-W (r8a7796), V3M (r8a77970), and D3
-> (r8a77995) SoCs.
+On Fri, Oct 06, 2017 at 02:25:23PM +0200, jacopo mondi wrote:
+> Hi Simon,
 > 
-> No driver update is needed.
+> On Thu, Oct 05, 2017 at 10:58:20AM +0200, Jacopo Mondi wrote:
+> > Add pin configuration subnode for ETHER pin group and enable the interface.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  arch/arm/boot/dts/r7s72100-gr-peach.dts | 38 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Can you confirm you have not applied this yet?
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Confirmed.
