@@ -1,165 +1,107 @@
 From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH v3 1/4] devicetree/bindings: display: Add doucument for RGB
- panels
-Date: Mon,  9 Oct 2017 16:06:41 +0800
-Message-ID: <1507536404-108507-1-git-send-email-hjc@rock-chips.com>
+Subject: [PATCH v3 2/4] devicetree/bindings: display: Add document for rockchip RGB output
+Date: Mon,  9 Oct 2017 16:06:47 +0800
+Message-ID: <1507536409-110749-1-git-send-email-hjc@rock-chips.com>
 References: <1507536396-106827-1-git-send-email-hjc@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507536396-106827-1-git-send-email-hjc@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Sandy Huang <hjc@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RGVzY3JpYmUgdGhlIHBhbmVsIHByb3BlcnR5IHJnYi1tb2RlIGZvciBwYXJhbGxlbCBhbmQgc2Vy
-aWFsClJHQiBvdXRwdXQgaW50ZXJmYWNlLCBpbmNsdWRlIHRoZSBjb25uZWN0aW9uIHJlbGF0aW9u
-cyBmb3IgZWFjaAptb2RlLgoKU2lnbmVkLW9mZi1ieTogU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNo
-aXBzLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1yZ2IudHh0ICAg
-ICAgICAgICB8IDExNiArKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMTYg
-aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXJnYi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1yZ2IudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwt
-cmdiLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi4wYzViMDU0Ci0tLSAv
-ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvcGFuZWwtcmdiLnR4dApAQCAtMCwwICsxLDExNiBAQAorUkdCIERpc3BsYXkgUGFuZWwK
-Kz09PT09PT09PT09PT09PT09PQorCitUaGlzIGRlc2NyaWJlIHRoZSBwYW5lbCBwcm9wZXJ0eSBy
-Z2ItbW9kZSBmb3IgcGFyYWxsZWwgYW5kIHNlcmlhbAorUkdCIG91dHB1dCBpbnRlcmZhY2UuIHJn
-Yi1tb2RlIHNob3VsZCBiZSAicDg4OCIsICJwNjY2IiwgInA1NjUiLCAiczg4OCIKK2FuZCAiczg4
-OC1kdW1teSIsIHRoZSBmb2xsb3dpbmcgZGVzY3JpYmUgdGhlIGNvbm5lY3Rpb24gcmVsYXRpb25z
-LgorCitwODg4IG1vZGU6CisgICAgICAgICAgIF9fXyAgICAgX19fICAgICBfX18gICAgIF9fXyAg
-ICAgX19fICAgICBfX18gICAgIF9fXworZGNsayAgICBfXy8gICBcX19fLyAgIFxfX18vICAgXF9f
-Xy8gICBcX19fLyAgIFxfX18vICAgXF9fXy8gICBcX19fCisgICAgICAgICAgX19fX19fICBfX19f
-X18gIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fCitEQVRBMjMgID48X19S
-N19fPjxfX1I3X18+PF9fUjdfXz48X19SN19fPjxfX1I3X18+PF9fUjdfXz48X19SN19fPjwKK0RB
-VEEyMiAgPjxfX1I2X18+PF9fUjZfXz48X19SNl9fPjxfX1I2X18+PF9fUjZfXz48X19SNl9fPjxf
-X1I2X18+PAorREFUQTIxICA+PF9fUjVfXz48X19SNV9fPjxfX1I1X18+PF9fUjVfXz48X19SNV9f
-PjxfX1I1X18+PF9fUjVfXz48CitEQVRBMjAgID48X19SNF9fPjxfX1I0X18+PF9fUjRfXz48X19S
-NF9fPjxfX1I0X18+PF9fUjRfXz48X19SNF9fPjwKK0RBVEExOSAgPjxfX1IzX18+PF9fUjNfXz48
-X19SM19fPjxfX1IzX18+PF9fUjNfXz48X19SM19fPjxfX1IzX18+PAorREFUQTE4ICA+PF9fUjJf
-Xz48X19SMl9fPjxfX1IyX18+PF9fUjJfXz48X19SMl9fPjxfX1IyX18+PF9fUjJfXz48CitEQVRB
-MTcgID48X19SMV9fPjxfX1IxX18+PF9fUjFfXz48X19SMV9fPjxfX1IxX18+PF9fUjFfXz48X19S
-MV9fPjwKK0RBVEExNiAgPjxfX1IwX18+PF9fUjBfXz48X19SMF9fPjxfX1IwX18+PF9fUjBfXz48
-X19SMF9fPjxfX1IwX18+PAorICAgICAgICAgIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19f
-XyAgX19fX19fICBfX19fX18gIF9fX19fXworREFUQTE1ICA+PF9fRzdfXz48X19HN19fPjxfX0c3
-X18+PF9fRzdfXz48X19HN19fPjxfX0c3X18+PF9fRzdfXz48CitEQVRBMTQgID48X19HNl9fPjxf
-X0c2X18+PF9fRzZfXz48X19HNl9fPjxfX0c2X18+PF9fRzZfXz48X19HNl9fPjwKK0RBVEExMyAg
-PjxfX0c1X18+PF9fRzVfXz48X19HNV9fPjxfX0c1X18+PF9fRzVfXz48X19HNV9fPjxfX0c1X18+
-PAorREFUQTEyICA+PF9fRzRfXz48X19HNF9fPjxfX0c0X18+PF9fRzRfXz48X19HNF9fPjxfX0c0
-X18+PF9fRzRfXz48CitEQVRBMTEgID48X19HM19fPjxfX0czX18+PF9fRzNfXz48X19HM19fPjxf
-X0czX18+PF9fRzNfXz48X19HM19fPjwKK0RBVEExMCAgPjxfX0cyX18+PF9fRzJfXz48X19HMl9f
-PjxfX0cyX18+PF9fRzJfXz48X19HMl9fPjxfX0cyX18+PAorREFUQTkgICA+PF9fRzFfXz48X19H
-MV9fPjxfX0cxX18+PF9fRzFfXz48X19HMV9fPjxfX0cxX18+PF9fRzFfXz48CitEQVRBOCAgID48
-X19HMF9fPjxfX0cwX18+PF9fRzBfXz48X19HMF9fPjxfX0cwX18+PF9fRzBfXz48X19HMF9fPjwK
-KyAgICAgICAgICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19f
-ICBfX19fX18KK0RBVEE3ICAgPjxfX0I3X18+PF9fQjdfXz48X19CN19fPjxfX0I3X18+PF9fQjdf
-Xz48X19CN19fPjxfX0I3X18+PAorREFUQTYgICA+PF9fQjZfXz48X19CNl9fPjxfX0I2X18+PF9f
-QjZfXz48X19CNl9fPjxfX0I2X18+PF9fQjZfXz48CitEQVRBNSAgID48X19CNV9fPjxfX0I1X18+
-PF9fQjVfXz48X19CNV9fPjxfX0I1X18+PF9fQjVfXz48X19CNV9fPjwKK0RBVEE0ICAgPjxfX0I0
-X18+PF9fQjRfXz48X19CNF9fPjxfX0I0X18+PF9fQjRfXz48X19CNF9fPjxfX0I0X18+PAorREFU
-QTMgICA+PF9fQjNfXz48X19CM19fPjxfX0IzX18+PF9fQjNfXz48X19CM19fPjxfX0IzX18+PF9f
-QjNfXz48CitEQVRBMiAgID48X19CMl9fPjxfX0IyX18+PF9fQjJfXz48X19CMl9fPjxfX0IyX18+
-PF9fQjJfXz48X19CMl9fPjwKK0RBVEExICAgPjxfX0IxX18+PF9fQjFfXz48X19CMV9fPjxfX0Ix
-X18+PF9fQjFfXz48X19CMV9fPjxfX0IxX18+PAorREFUQTAgICA+PF9fQjBfXz48X19CMF9fPjxf
-X0IwX18+PF9fQjBfXz48X19CMF9fPjxfX0IwX18+PF9fQjBfXz48CitwaXhlbCAgIHwgICBuICAg
-fCAgbisxICB8ICBuKzMgIHwgIG4rNCAgfCAgbis1ICB8ICBuKzYgIHwgIG4rNyAgfAorCitwNjY2
-IG1vZGU6CisgICAgICAgICAgIF9fXyAgICAgX19fICAgICBfX18gICAgIF9fXyAgICAgX19fICAg
-ICBfX18gICAgIF9fXworZGNsayAgICBfXy8gICBcX19fLyAgIFxfX18vICAgXF9fXy8gICBcX19f
-LyAgIFxfX18vICAgXF9fXy8gICBcX19fCisgICAgICAgICAgX19fX19fICBfX19fX18gIF9fX19f
-XyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fCitEQVRBMTcgID48X19SNV9fPjxfX1I1
-X18+PF9fUjVfXz48X19SNV9fPjxfX1I1X18+PF9fUjVfXz48X19SNV9fPjwKK0RBVEExNiAgPjxf
-X1I0X18+PF9fUjRfXz48X19SNF9fPjxfX1I0X18+PF9fUjRfXz48X19SNF9fPjxfX1I0X18+PAor
-REFUQTE1ICA+PF9fUjNfXz48X19SM19fPjxfX1IzX18+PF9fUjNfXz48X19SM19fPjxfX1IzX18+
-PF9fUjNfXz48CitEQVRBMTQgID48X19SMl9fPjxfX1IyX18+PF9fUjJfXz48X19SMl9fPjxfX1Iy
-X18+PF9fUjJfXz48X19SMl9fPjwKK0RBVEExMyAgPjxfX1IxX18+PF9fUjFfXz48X19SMV9fPjxf
-X1IxX18+PF9fUjFfXz48X19SMV9fPjxfX1IxX18+PAorREFUQTEyICA+PF9fUjBfXz48X19SMF9f
-PjxfX1IwX18+PF9fUjBfXz48X19SMF9fPjxfX1IwX18+PF9fUjBfXz48CisgICAgICAgICAgX19f
-X19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fCitEQVRB
-MTEgID48X19HNV9fPjxfX0c1X18+PF9fRzVfXz48X19HNV9fPjxfX0c1X18+PF9fRzVfXz48X19H
-NV9fPjwKK0RBVEExMCAgPjxfX0c0X18+PF9fRzRfXz48X19HNF9fPjxfX0c0X18+PF9fRzRfXz48
-X19HNF9fPjxfX0c0X18+PAorREFUQTkgICA+PF9fRzNfXz48X19HM19fPjxfX0czX18+PF9fRzNf
-Xz48X19HM19fPjxfX0czX18+PF9fRzNfXz48CitEQVRBOCAgID48X19HMl9fPjxfX0cyX18+PF9f
-RzJfXz48X19HMl9fPjxfX0cyX18+PF9fRzJfXz48X19HMl9fPjwKK0RBVEE3ICAgPjxfX0cxX18+
-PF9fRzFfXz48X19HMV9fPjxfX0cxX18+PF9fRzFfXz48X19HMV9fPjxfX0cxX18+PAorREFUQTYg
-ICA+PF9fRzBfXz48X19HMF9fPjxfX0cwX18+PF9fRzBfXz48X19HMF9fPjxfX0cwX18+PF9fRzBf
-Xz48CisgICAgICAgICAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18gIF9f
-X19fXyAgX19fX19fCitEQVRBNSAgID48X19CNV9fPjxfX0I1X18+PF9fQjVfXz48X19CNV9fPjxf
-X0I1X18+PF9fQjVfXz48X19CNV9fPjwKK0RBVEE0ICAgPjxfX0I0X18+PF9fQjRfXz48X19CNF9f
-PjxfX0I0X18+PF9fQjRfXz48X19CNF9fPjxfX0I0X18+PAorREFUQTMgICA+PF9fQjNfXz48X19C
-M19fPjxfX0IzX18+PF9fQjNfXz48X19CM19fPjxfX0IzX18+PF9fQjNfXz48CitEQVRBMiAgID48
-X19CMl9fPjxfX0IyX18+PF9fQjJfXz48X19CMl9fPjxfX0IyX18+PF9fQjJfXz48X19CMl9fPjwK
-K0RBVEExICAgPjxfX0IxX18+PF9fQjFfXz48X19CMV9fPjxfX0IxX18+PF9fQjFfXz48X19CMV9f
-PjxfX0IxX18+PAorREFUQTAgICA+PF9fQjBfXz48X19CMF9fPjxfX0IwX18+PF9fQjBfXz48X19C
-MF9fPjxfX0IwX18+PF9fQjBfXz48CitwaXhlbCAgIHwgICBuICAgfCAgbisxICB8ICBuKzMgIHwg
-IG4rNCAgfCAgbis1ICB8ICBuKzYgIHwgIG4rNyAgfAorCitwNTY1IG1vZGU6CisgICAgICAgICAg
-IF9fXyAgICAgX19fICAgICBfX18gICAgIF9fXyAgICAgX19fICAgICBfX18gICAgIF9fXworZGNs
-ayAgICBfXy8gICBcX19fLyAgIFxfX18vICAgXF9fXy8gICBcX19fLyAgIFxfX18vICAgXF9fXy8g
-ICBcX19fCisgICAgICAgICAgX19fX19fICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18g
-IF9fX19fXyAgX19fX19fCitEQVRBMTUgID48X19SNF9fPjxfX1I0X18+PF9fUjRfXz48X19SNF9f
-PjxfX1I0X18+PF9fUjRfXz48X19SNF9fPjwKK0RBVEExNCAgPjxfX1IzX18+PF9fUjNfXz48X19S
-M19fPjxfX1IzX18+PF9fUjNfXz48X19SM19fPjxfX1IzX18+PAorREFUQTEzICA+PF9fUjJfXz48
-X19SMl9fPjxfX1IyX18+PF9fUjJfXz48X19SMl9fPjxfX1IyX18+PF9fUjJfXz48CitEQVRBMTIg
-ID48X19SMV9fPjxfX1IxX18+PF9fUjFfXz48X19SMV9fPjxfX1IxX18+PF9fUjFfXz48X19SMV9f
-PjwKK0RBVEExMSAgPjxfX1IwX18+PF9fUjBfXz48X19SMF9fPjxfX1IwX18+PF9fUjBfXz48X19S
-MF9fPjxfX1IwX18+PAorICAgICAgICAgIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXyAg
-X19fX19fICBfX19fX18gIF9fX19fXworREFUQTEwICA+PF9fRzVfXz48X19HNV9fPjxfX0c1X18+
-PF9fRzVfXz48X19HNV9fPjxfX0c1X18+PF9fRzVfXz48CitEQVRBOSAgID48X19HNF9fPjxfX0c0
-X18+PF9fRzRfXz48X19HNF9fPjxfX0c0X18+PF9fRzRfXz48X19HNF9fPjwKK0RBVEE4ICAgPjxf
-X0czX18+PF9fRzNfXz48X19HM19fPjxfX0czX18+PF9fRzNfXz48X19HM19fPjxfX0czX18+PAor
-REFUQTcgICA+PF9fRzJfXz48X19HMl9fPjxfX0cyX18+PF9fRzJfXz48X19HMl9fPjxfX0cyX18+
-PF9fRzJfXz48CitEQVRBNiAgID48X19HMV9fPjxfX0cxX18+PF9fRzFfXz48X19HMV9fPjxfX0cx
-X18+PF9fRzFfXz48X19HMV9fPjwKK0RBVEE1ICAgPjxfX0cwX18+PF9fRzBfXz48X19HMF9fPjxf
-X0cwX18+PF9fRzBfXz48X19HMF9fPjxfX0cwX18+PAorICAgICAgICAgIF9fX19fXyAgX19fX19f
-ICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18gIF9fX19fXworREFUQTQgICA+PF9fQjRf
-Xz48X19CNF9fPjxfX0I0X18+PF9fQjRfXz48X19CNF9fPjxfX0I0X18+PF9fQjRfXz48CitEQVRB
-MyAgID48X19CM19fPjxfX0IzX18+PF9fQjNfXz48X19CM19fPjxfX0IzX18+PF9fQjNfXz48X19C
-M19fPjwKK0RBVEEyICAgPjxfX0IyX18+PF9fQjJfXz48X19CMl9fPjxfX0IyX18+PF9fQjJfXz48
-X19CMl9fPjxfX0IyX18+PAorREFUQTEgICA+PF9fQjFfXz48X19CMV9fPjxfX0IxX18+PF9fQjFf
-Xz48X19CMV9fPjxfX0IxX18+PF9fQjFfXz48CitEQVRBMCAgID48X19CMF9fPjxfX0IwX18+PF9f
-QjBfXz48X19CMF9fPjxfX0IwX18+PF9fQjBfXz48X19CMF9fPjwKK3BpeGVsICAgfCAgIG4gICB8
-ICBuKzEgIHwgIG4rMyAgfCAgbis0ICB8ICBuKzUgIHwgIG4rNiAgfCAgbis3ICB8CisKK3M4ODgg
-bW9kZToKKyAgICAgICAgICAgX19fICAgICBfX18gICAgIF9fXyAgICAgX19fICAgICBfX18gICAg
-IF9fXyAgICAgX19fCitkY2xrICAgIF9fLyAgIFxfX18vICAgXF9fXy8gICBcX19fLyAgIFxfX18v
-ICAgXF9fXy8gICBcX19fLyAgIFxfX18KKyAgICAgICAgICBfX19fX18gIF9fX19fXyAgX19fX19f
-ICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18KK0RBVEE3ICAgPjxfX1I3X18+PF9fRzdf
-Xz48X19CN19fPjxfX1I3X18+PF9fRzdfXz48X19CN19fPjxfX1I3X18+PAorREFUQTYgICA+PF9f
-UjZfXz48X19HNl9fPjxfX0I2X18+PF9fUjZfXz48X19HNl9fPjxfX0I2X18+PF9fUjZfXz48CitE
-QVRBNSAgID48X19SNV9fPjxfX0c1X18+PF9fQjVfXz48X19SNV9fPjxfX0c1X18+PF9fQjVfXz48
-X19SNV9fPjwKK0RBVEE0ICAgPjxfX1I0X18+PF9fRzRfXz48X19CNF9fPjxfX1I0X18+PF9fRzRf
-Xz48X19CNF9fPjxfX1I0X18+PAorREFUQTMgICA+PF9fUjNfXz48X19HM19fPjxfX0IzX18+PF9f
-UjNfXz48X19HM19fPjxfX0IzX18+PF9fUjNfXz48CitEQVRBMiAgID48X19SMl9fPjxfX0cyX18+
-PF9fQjJfXz48X19SMl9fPjxfX0cyX18+PF9fQjJfXz48X19SMl9fPjwKK0RBVEExICAgPjxfX1Ix
-X18+PF9fRzFfXz48X19CMV9fPjxfX1IxX18+PF9fRzFfXz48X19CMV9fPjxfX1IxX18+PAorREFU
-QTAgICA+PF9fUjBfXz48X19HMF9fPjxfX0IwX18+PF9fUjBfXz48X19HMF9fPjxfX0IwX18+PF9f
-UjBfXz48CitwaXhlbCAgIHwgLS0tLS0tLS0tIG4gLS0tLS0tLS0tIHwgLS0tLS0tLSBuICsgMSAt
-LS0tLS0tIHwgLS0tLS0tLS0KKworczg4OC1kdW1teSBtb2RlOgorICAgICAgICAgICBfX18gICAg
-IF9fXyAgICAgX19fICAgICBfX18gICAgIF9fXyAgICAgX19fICAgICBfX18gICAgIF9fXworZGNs
-ayAgICBfXy8gICBcX19fLyAgIFxfX18vICAgXF9fXy8gICBcX19fLyAgIFxfX18vICAgXF9fXy8g
-ICBcX19fLyAgIFxfX18KKyAgICAgICAgICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18g
-ICBfX19fX18gIF9fX19fXyAgX19fX19fICBfX19fX18KK0RBVEE3ICAgPjxfX1I3X18+PF9fRzdf
-Xz48X19CN19fPjxfTlVMTF8+PF9fUjdfXz48X19HN19fPjxfX0I3X18+PF9OVUxMXz48CitEQVRB
-NiAgID48X19SNl9fPjxfX0c2X18+PF9fQjZfXz48X05VTExfPjxfX1I2X18+PF9fRzZfXz48X19C
-Nl9fPjxfTlVMTF8+PAorREFUQTUgICA+PF9fUjVfXz48X19HNV9fPjxfX0I1X18+PF9OVUxMXz48
-X19SNV9fPjxfX0c1X18+PF9fQjVfXz48X05VTExfPjwKK0RBVEE0ICAgPjxfX1I0X18+PF9fRzRf
-Xz48X19CNF9fPjxfTlVMTF8+PF9fUjRfXz48X19HNF9fPjxfX0I0X18+PF9OVUxMXz48CitEQVRB
-MyAgID48X19SM19fPjxfX0czX18+PF9fQjNfXz48X05VTExfPjxfX1IzX18+PF9fRzNfXz48X19C
-M19fPjxfTlVMTF8+PAorREFUQTIgICA+PF9fUjJfXz48X19HMl9fPjxfX0IyX18+PF9OVUxMXz48
-X19SMl9fPjxfX0cyX18+PF9fQjJfXz48X05VTExfPjwKK0RBVEExICAgPjxfX1IxX18+PF9fRzFf
-Xz48X19CMV9fPjxfTlVMTF8+PF9fUjFfXz48X19HMV9fPjxfX0IxX18+PF9OVUxMXz48CitEQVRB
-MCAgID48X19SMF9fPjxfX0cwX18+PF9fQjBfXz48X05VTExfPjxfX1IwX18+PF9fRzBfXz48X19C
-MF9fPjxfTlVMTF8+PAorcGl4ZWwgICB8IC0tLS0tLS0tLS0tLS0gbiAtLS0tLS0tLS0tLS0tIHwg
-LS0tLS0tLS0tLS0gbiArIDEgLS0tLS0tLS0tLS0gfAotLSAKMi43LjQKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This path add support rv1108 rgb output interface driver.
+
+Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+---
+Changes in v3:
+ move rgb-mode to panel node which describe at:
+ Documentation/devicetree/bindings/display/panel/panel-rgb.txt
+
+Changes in v2:
+ 1. rename rockchip,rgb-mode to rgb-mode;
+ 2. delete reg for signle endpoint;
+ .../bindings/display/rockchip/rockchip-rgb.txt     | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+new file mode 100644
+index 0000000..d91a7bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+@@ -0,0 +1,72 @@
++Rockchip RV1108 RGB interface
++================================
++
++Required properties:
++- compatible: matching the soc type:
++	- "rockchip,rv1108-rgb";
++
++Optional properties:
++- pinctrl-names: must contain a "lcdc" entry.
++- pinctrl-0: pin control group to be used for this interface.
++
++The rgb has two video ports described by:
++	Documentation/devicetree/bindings/media/video-interfaces.txt
++Their connections are modeled using the OF graph bindings specified in
++	Documentation/devicetree/bindings/graph.txt.
++
++- video port 0 for the VOP input, the remote endpoint maybe vopb/vopl/vop
++- video port 1 for either a panel or subsequent encoder
++
++the panel described by:
++	Documentation/devicetree/bindings/display/panel/simple-panel.txt
++rgb-mode nodes described by:
++	Documentation/devicetree/bindings/display/panel/panel-rgb.txt
++Panel other required properties:
++- ports for remote rgb output.
++
++Example:
++
++panel: panel {
++	compatible = "auo,b101ean01";
++	enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
++	rgb-mode = "p888";
++
++	ports {
++		panel_in_rgb: endpoint {
++			remote-endpoint = <&rgb_out_panel>;
++		};
++	};
++};
++
++For Rockchip RV1108:
++
++	rgb: rgb {
++		compatible = "rockchip,rv1108-rgb";
++		pinctrl-names = "lcdc";
++		pinctrl-0 = <&lcdc_ctl>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			rgb_in: port@0 {
++				reg = <0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				rgb_in_vop: endpoint {
++					remote-endpoint = <&vop_out_rgb>;
++				};
++			};
++
++			rgb_out: port@1 {
++				reg = <1>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				rgb_out_panel: endpoint {
++					remote-endpoint = <&panel_in_rgb>;
++				};
++			};
++		};
++	};
+-- 
+2.7.4
