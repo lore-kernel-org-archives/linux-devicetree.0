@@ -1,49 +1,77 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH ] phy: rcar-gen2: Add r8a7743/5 support
-Date: Mon, 9 Oct 2017 08:49:32 +0000
-Message-ID: <KL1PR06MB17020EBD5992AFA4F6E3F6C7B8740@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1503568773-41410-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdW8x-7LVGgJr1GQfMJurfW=0Ky71K18zc+x5_XHMC6VxA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW8x-7LVGgJr1GQfMJurfW=0Ky71K18zc+x5_XHMC6VxA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: "kishon@ti.com" <kishon@ti.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH v11 0/4] Add Rockchip RGA V4l2 support
+Date: Mon,  9 Oct 2017 17:04:20 +0800
+Message-ID: <20171009090424.15292-1-jacob-chen@iotwrt.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, Jacob Chen <jacob-chen@iotwrt.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9uLA0KDQpMb29rcyBsaWtlIHRoZSBiZWxvdyBwYXRjaCBpcyBub3QgbWVyZ2VkIGlu
-dG8gbGludXgtbmV4dC4gIFNvbWVob3cgSSBtaXNzZWQgeW91ciBtYWlsIElELCB3aGVuIEkgc3Vi
-bWl0dGVkIHRoZSBwYXRjaChzY3JpcHRzL2dldF9tYWludGFpbmVyLnBsICBzY3JpcHQgIGRpZG4n
-dCBzaG93IHlvdXIgbWFpbCBhZGRyZXNzIGZvciB0aGlzIHBhdGNoKQ0KDQpodHRwczovL3BhdGNo
-d29yay5rZXJuZWwub3JnL3BhdGNoLzk5MTk3MjcvDQoNClJlZ2FyZHMsDQpCaWp1DQoNCg0KPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBnZWVydC51eXR0ZXJob2V2ZW5AZ21h
-aWwuY29tIFttYWlsdG86Z2VlcnQudXl0dGVyaG9ldmVuQGdtYWlsLmNvbV0NCj4gT24gQmVoYWxm
-IE9mIEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAxOSBTZXB0ZW1iZXIgMjAxNyAxNTo1OA0K
-PiBUbzogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBDYzogUm9iIEhlcnJp
-bmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFy
-bS5jb20+OyBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT47IE1hZ251cw0KPiBEYW1t
-IDxtYWdudXMuZGFtbUBnbWFpbC5jb20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybWxpbnV4Lm9y
-Zy51az47DQo+IENocmlzIFBhdGVyc29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNh
-cy1zb2NAdmdlci5rZXJuZWwub3JnPjsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIF0gcGh5OiByY2FyLWdlbjI6IEFkZCByOGE3
-NzQzLzUgc3VwcG9ydA0KPg0KPiBPbiBUaHUsIEF1ZyAyNCwgMjAxNyBhdCAxMTo1OSBBTSwgQmlq
-dSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4gPiBBZGQgVVNCIFBI
-WSBzdXBwb3J0IGZvciByOGE3NzQzLzUgU29DLiBSZW5lc2FzIFJaL0cxW01FXSAoUjhBNzc0My81
-KQ0KPiA+IFVTQiBQSFkgaXMgaWRlbnRpY2FsIHRvIHRoZSBSLUNhciBHZW4yIGZhbWlseS4NCj4g
-Pg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4N
-Cj4NCj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlk
-ZXIuYmU+DQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAg
-ICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3Rz
-IG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJ
-biBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15
-c2VsZiBhIGhhY2tlci4gQnV0IHdoZW4NCj4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBq
-dXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBF
-bGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3Vy
-bmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xh
-bmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+change in V11:
+- fix compile warning
+
+change in V10:
+- move to rockchip/rga
+- changes according to comments
+- some style changes
+
+change in V9:
+- remove protduff things
+- test with the latest v4l2-compliance
+
+change in V8:
+- remove protduff things
+
+change in V6,V7:
+- correct warning in checkpatch.pl
+
+change in V5:
+- v4l2-compliance: handle invalid pxielformat
+- v4l2-compliance: add subscribe_event
+- add colorspace support
+
+change in V4:
+- document the controls.
+- change according to Hans's comments
+
+change in V3:
+- rename the controls.
+- add pm_runtime support.
+- enable node by default.
+- correct spelling in documents.
+
+change in V2:
+- generalize the controls.
+- map buffers (10-50 us) in every cmd-run rather than in buffer-import to avoid get_free_pages failed on
+actively used systems.
+- remove status in dt-bindings examples.
+
+Jacob Chen (4):
+  rockchip/rga: v4l2 m2m support
+  ARM: dts: rockchip: add RGA device node for RK3288
+  arm64: dts: rockchip: add RGA device node for RK3399
+  dt-bindings: Document the Rockchip RGA bindings
+
+ .../devicetree/bindings/media/rockchip-rga.txt     |   33 +
+ arch/arm/boot/dts/rk3288.dtsi                      |   11 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   11 +
+ drivers/media/platform/Kconfig                     |   15 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/rockchip/rga/Makefile       |    3 +
+ drivers/media/platform/rockchip/rga/rga-buf.c      |  154 +++
+ drivers/media/platform/rockchip/rga/rga-hw.c       |  421 ++++++++
+ drivers/media/platform/rockchip/rga/rga-hw.h       |  437 +++++++++
+ drivers/media/platform/rockchip/rga/rga.c          | 1012 ++++++++++++++++++++
+ drivers/media/platform/rockchip/rga/rga.h          |  123 +++
+ 11 files changed, 2222 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+ create mode 100644 drivers/media/platform/rockchip/rga/Makefile
+ create mode 100644 drivers/media/platform/rockchip/rga/rga-buf.c
+ create mode 100644 drivers/media/platform/rockchip/rga/rga-hw.c
+ create mode 100644 drivers/media/platform/rockchip/rga/rga-hw.h
+ create mode 100644 drivers/media/platform/rockchip/rga/rga.c
+ create mode 100644 drivers/media/platform/rockchip/rga/rga.h
+
+-- 
+2.14.1
