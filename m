@@ -1,89 +1,91 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/6] ARM: sun8i: r40: add 5V regulator for Banana Pi M2
- Ultra
-Date: Mon, 9 Oct 2017 23:04:07 +0200
-Message-ID: <20171009210407.ueharyifho3s6xvu@flea.home>
-References: <20171008042906.46779-1-icenowy@aosc.io>
- <20171008042906.46779-4-icenowy@aosc.io>
+Subject: Re: [PATCH v6 05/11] dt-bindings: net: dwmac-sun8i:
+ update documentation about integrated PHY
+Date: Mon, 9 Oct 2017 23:08:31 +0200
+Message-ID: <20171009210831.qc2cgxr4cx2qz5x7@flea.home>
+References: <20170927073414.17361-1-clabbe.montjoie@gmail.com>
+ <20170927073414.17361-6-clabbe.montjoie@gmail.com>
+ <20170927140210.GE13516@lunn.ch>
+ <20170928073708.GB32676@Red>
+ <20171008183340.GA21531@Red>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ngebpu2bs7noklkr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="mrd4h4xx4avcyvdw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUGK57HAKGQELUGIQ4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171008042906.46779-4-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171008183340.GA21531@Red>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ngebpu2bs7noklkr
-Content-Type: text/plain; charset=us-ascii
+--mrd4h4xx4avcyvdw
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 08, 2017 at 04:29:03AM +0000, Icenowy Zheng wrote:
-> On newer revisions of the Banana Pi M2 Ultra boards, the 5V power output
-> (used by HDMI, SATA and USB) is controller via a GPIO.
->=20
-> Add the regulator node for it.
->=20
-> Older revisions just have the 5V power output always on, and the GPIO is
-> reserved on these boards. So it won't affect the older revisions.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm=
-/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> index 7b52608cebe6..035599d870b9 100644
-> --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> @@ -78,6 +78,15 @@
->  		};
->  	};
-> =20
-> +	reg_vcc5v0: vcc5v0 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc5v0";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		gpio =3D <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
-> +		enable-active-high;
+On Sun, Oct 08, 2017 at 06:33:40PM +0000, Corentin Labbe wrote:
+> On Thu, Sep 28, 2017 at 09:37:08AM +0200, Corentin Labbe wrote:
+> > On Wed, Sep 27, 2017 at 04:02:10PM +0200, Andrew Lunn wrote:
+> > > Hi Corentin
+> > > 
+> > > > +Required properties for the mdio-mux node:
+> > > > +  - compatible = "mdio-mux"
+> > > 
+> > > This is too generic. Please add a more specific compatible for this
+> > > particular mux. You can keep "mdio-mux", since that is what the MDIO
+> > > subsystem will look for.
+> > > 
+> > 
+> > I will add allwinner,sun8i-h3-mdio-mux
+> > 
+> > > > +Required properties of the integrated phy node:
+> > > >  - clocks: a phandle to the reference clock for the EPHY
+> > > >  - resets: a phandle to the reset control for the EPHY
+> > > > +- phy-is-integrated
+> > > 
+> > > So the last thing you said is that the mux is not the problem
+> > > here. Something else is locking up. Did you discover what?
+> > > 
+> > > I really would like phy-is-integrated to go away.
+> > > 
+> > 
+> > I have found the problem: by enabling ephy clk/reset the timeout does not occur anymore.
+> > So we could remove phy-is-integrated by:
+> > Moving internal phy clk/reset handling in mdio_mux_syscon_switch_fn()
+> > But this means:
+> > - getting internalphy node always by manually get internal_mdio/internal_phy (and not by the given phyhandle)
+> > - doing some unnecessary tasks (enable/scan/disable) when external_phy is needed
+> > 
+> > Regards
+> 
+> Hello all
+> 
+> Below is the current patch, as you can read, it does not use anymore the phy-is-integrated property.
+> So now, the mdio-mux must always enable the internal mdio when switch_fn ask for it and so reset MAC and so need to enable ephy clk/reset.
+> But for this I need a reference to thoses clock and reset. (this is done in get_ephy_nodes)
+> The current version set those clock in mdio-mux node, and as you can see it is already ugly (lots of get next node),
+> if the clk/rst nodes were as it should be, in phy nodes, it will be more bad.
+> 
+> So, since the MAC have a dependency on thoses clk/rst nodes for
+> doing reset(), I seek a proper way to get references on it.
+>
+> OR do you agree that putting ephy clk/rst in emac is acceptable ?
 
-This is redundant with the GPIO flag
+Why not just parsing the DT child nodes looking for resets and clocks
+properties? The usual PHY don't have that.
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---ngebpu2bs7noklkr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ2+RHAAoJEBx+YmzsjxAg35cQAKvGPLLmkJzZAhof4u3rbLWB
-PEc4KKVJ36ueOYMgEIRUBVGYuDJAqqxyrifhTO2feVlO54J5GkssnPWX4lzZJKJh
-3Dd72kkDb++q1gTCZT3zyXI50UQtMfllesjUlBtABt1iVFuFG0W5R6dPNyosf+3d
-6wpUOhAbHZ7fhxFqoIPab4dnFVoh6GeqTIvrRF4wqBOEs7+WjqVytn+z3Z6nMsLC
-Sxu8VE5jgCoe407oDid/MpdWg1OiK8FcAcsBHP33vfpst/kckyOTYBA3h8C5XAHd
-nvvfomaN2qUt9AALQdKjXiySD60cHrZgUbaPgWhN4RxAc9a/vugZnF3Yg/t3g8Bk
-RcwmeXmWui/ybqh0IqRPNQBIgBAj1mMG0yvOHVhGg60uvHkqzvWbu09tiX/d9W0q
-wX4bZXzM2imcfJRLhn5VaEcVyENEJrosWFC9mKrnTc+34nGhTRoyOEe6NnmkwAAN
-JkCdQSZ1/lNQQ9fJmAPzGnzOix3hLkYAftQQYnGv8kyZZhO3VpNEvp1cBYwpBPaB
-E6iRwwZ7o3Iyno/XUiAoGjnhzGdm0ueM2bK1yQ+VSJfQJgOkxwO5QloucJ0dqRxF
-kFRg+PEDaCwhqbxIk5sxo5QT3I1c8di4Zz0e30rNylO0j8mC7BnzdA9pIm1vTQTw
-w4KAGzm9cLRpNUQ27apj
-=F8yS
------END PGP SIGNATURE-----
-
---ngebpu2bs7noklkr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--mrd4h4xx4avcyvdw--
