@@ -1,105 +1,89 @@
-From: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
-Subject: [PATCHv4 1/2] drivers: phy: add calibrate method
-Date: Mon, 09 Oct 2017 14:00:50 +0200
-Message-ID: <1507550451-21324-2-git-send-email-andrzej.p@samsung.com>
-References: <6de8a17a-745b-0fa2-c39d-cdeb28fc9489@ti.com>
-        <1507550451-21324-1-git-send-email-andrzej.p@samsung.com>
-        <CGME20171009120101eucas1p1c79faf4b39df7f9ff622404a15922875@eucas1p1.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1507550451-21324-1-git-send-email-andrzej.p@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: [PATCH] dt-bindings: pinctrl: mcp23s08 update binding doc
+Date: Mon,  9 Oct 2017 14:03:00 +0200
+Message-ID: <20171009120300.18251-1-poeschel@lemonage.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Lars Poeschel <poeschel@lemonage.de>
 List-Id: devicetree@vger.kernel.org
 
-Some quirky UDCs (like dwc3 on Exynos) need to have their phys calibrated e.g.
-for using super speed. This patch adds a new phy_calibrate() method.
-When the calibration should be used is dependent on actual chip.
+The mcp23s08 driver moved to pinctrl recently. It accepts the
+bias-pull-up pinctrl property since then. This updates the binding
+doc to reflect that.
+Thanks to Sebastian Reichel for the working example.
 
-In case of dwc3 on Exynos the calibration must happen after usb_add_hcd()
-(while in host mode), because certain phy parameters like Tx LOS levels
-and boost levels need to be calibrated further post initialization of xHCI
-controller, to get SuperSpeed operations working. But an hcd must be
-prepared first in order to pass it to usb_add_hcd(), so, in particular, dwc3
-registers must be available first, and in order for the latter to happen
-the phys must be initialized. This poses a chicken and egg problem if
-the calibration were to be performed in phy_init(). To break the circular
-dependency a separate method is added which can be called at a desired
-moment after phy intialization.
-
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
- drivers/phy/phy-core.c  | 15 +++++++++++++++
- include/linux/phy/phy.h | 10 ++++++++++
- 2 files changed, 25 insertions(+)
+ .../bindings/pinctrl/pinctrl-mcp23s08.txt          | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index a268f4d..b4964b0 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -372,6 +372,21 @@ int phy_reset(struct phy *phy)
- }
- EXPORT_SYMBOL_GPL(phy_reset);
- 
-+int phy_calibrate(struct phy *phy)
-+{
-+	int ret;
-+
-+	if (!phy || !phy->ops->calibrate)
-+		return 0;
-+
-+	mutex_lock(&phy->mutex);
-+	ret = phy->ops->calibrate(phy);
-+	mutex_unlock(&phy->mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(phy_calibrate);
-+
- /**
-  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
-  * @np: device_node for which to get the phy
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index e694d40..87580c8 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -39,6 +39,7 @@ enum phy_mode {
-  * @power_off: powering off the phy
-  * @set_mode: set the mode of the phy
-  * @reset: resetting the phy
-+ * @calibrate: calibrate the phy
-  * @owner: the module owner containing the ops
-  */
- struct phy_ops {
-@@ -48,6 +49,7 @@ struct phy_ops {
- 	int	(*power_off)(struct phy *phy);
- 	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
- 	int	(*reset)(struct phy *phy);
-+	int	(*calibrate)(struct phy *phy);
- 	struct module *owner;
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+index 8a5bf994379d..9c451c20dda4 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+@@ -82,3 +82,61 @@ gpiom1: gpio@0 {
+         reg = <0>;
+         spi-max-frequency = <1000000>;
  };
- 
-@@ -141,6 +143,7 @@ static inline void *phy_get_drvdata(struct phy *phy)
- int phy_power_off(struct phy *phy);
- int phy_set_mode(struct phy *phy, enum phy_mode mode);
- int phy_reset(struct phy *phy);
-+int phy_calibrate(struct phy *phy);
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return phy->attrs.bus_width;
-@@ -262,6 +265,13 @@ static inline int phy_reset(struct phy *phy)
- 	return -ENOSYS;
- }
- 
-+static inline int phy_calibrate(struct phy *phy)
-+{
-+	if (!phy)
-+		return 0;
-+	return -ENOSYS;
-+}
 +
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return -ENOSYS;
++Pull-up configuration
++=====================
++
++If pins are used as output, they can also be configured with pull-ups. This is
++done with pinctrl.
++
++Please refer file <devicetree/bindings/pinctrl/pinctrl-bindings.txt>
++for details of the common pinctrl bindings used by client devices,
++including the meaning of the phrase "pin configuration node".
++
++Optional Pinmux properties:
++--------------------------
++Following properties are required if default setting of pins are required
++at boot.
++- pinctrl-names: A pinctrl state named per <pinctrl-binding.txt>.
++- pinctrl[0...n]: Properties to contain the phandle for pinctrl states per
++		<pinctrl-binding.txt>.
++
++The pin configurations are defined as child of the pinctrl states node. Each
++sub-node have following properties:
++
++Required properties:
++------------------
++- pins: List of pins. Valid values of pins properties are:
++		      gpio0 ... gpio7 for the devices with 8 GPIO pins and
++		      gpio0 ... gpio15 for the devices with 16 GPIO pins.
++
++Optional properties:
++-------------------
++The following optional property is defined in the pinmux DT binding document
++<pinctrl-bindings.txt>. Absence of this property will leave the configuration
++in its default state.
++	bias-pull-up
++
++Example with pinctrl to pull-up output pins:
++gpio21: gpio@21 {
++	compatible = "microchip,mcp23017";
++	gpio-controller;
++	#gpio-cells = <0x2>;
++	reg = <0x21>;
++	interrupt-parent = <&socgpio>;
++	interrupts = <0x17 0x8>;
++	interrupt-names = "mcp23017@21 irq";
++	interrupt-controller;
++	#interrupt-cells = <0x2>;
++	microchip,irq-mirror;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2cgpio0irq &gpio21pullups>;
++
++	gpio21pullups: pinmux {
++		pins =	"gpio0", "gpio1", "gpio2", "gpio3",
++			"gpio4", "gpio5", "gpio6", "gpio7",
++			"gpio8", "gpio9", "gpio10", "gpio11",
++			"gpio12", "gpio13", "gpio14", "gpio15";
++		bias-pull-up;
++	};
++};
 -- 
-1.9.1
+2.14.2
+
