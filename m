@@ -1,95 +1,110 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFC 2/2] phy: exynos5-usbdrd: remove disable and enable of phy clk
-Date: Mon, 9 Oct 2017 20:46:48 +0530
-Message-ID: <CANAwSgRmyEqTbw1ZfZhenC8Cs4ffgeYB4vyDNsGeX-zvg92aPw@mail.gmail.com>
-References: <1507264595-3565-1-git-send-email-linux.amoon@gmail.com>
- <1507264595-3565-2-git-send-email-linux.amoon@gmail.com> <CAJKOXPe9FCKqrvsgdohTAN9tXXwbMOuyaDiHPxZ1Ym1LLPD41w@mail.gmail.com>
- <CANAwSgSbHR+e_2wX3i3VoVxPe10mUOoS94uRpvebfUfybaNQ+g@mail.gmail.com>
- <20171008155015.252gefhsc4tks7k6@kozik-lap> <CANAwSgSMFBS8n48=_OnNNs_=Di9Oqq2tNeiwZM9u1qaLevLP4w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgSMFBS8n48=_OnNNs_=Di9Oqq2tNeiwZM9u1qaLevLP4w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+From: Dan Haab <riproute-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: BCM5301X: Add DT for Luxul XBR-4500
+Date: Mon,  9 Oct 2017 09:46:22 -0600
+Message-ID: <1507563983-7354-1-git-send-email-riproute@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Krzysztof,
+From: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
 
-On 9 October 2017 at 02:37, Anand Moon <linux.amoon@gmail.com> wrote:
-> Hi Krzysztof,
->
-> On 8 October 2017 at 21:20, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On Sun, Oct 08, 2017 at 06:11:12PM +0530, Anand Moon wrote:
->>> Hi Krzysztof,
->>>
->>> On 6 October 2017 at 12:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>> > On Fri, Oct 6, 2017 at 6:36 AM, Anand Moon <linux.amoon@gmail.com> wrote:
->>> >> remove the disable and enable of phy clk.
->>> >> phy clk is needed to tune the phy controller.
->>> >
->>> > Drivers should in general enable and disable the clocks they use. Just
->>> > like in patch #1 please describe why you are doing this, what kind of
->>> > problem are you trying to solve and what exactly are you trying to do
->>> > here.
->>> >
->>> > BR,
->>> > Krzysztof
->>> >
->>>
->>> [snip]
->>>
->>> Usually we would disable the clk on error patch and return with failed.
->>> but in the current code we disable the clk in init routine and
->>> enable the clk in disable routine which seem incorrect.
->>
+This is BCM47094 (AKA BCM4709C0) based router with ports-on-the-front
+board design.
 
-disable of clk could affect the PMU used to control the phy driver.
+Signed-off-by: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                    |  1 +
+ arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dts | 63 +++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dts
 
->> No. For example for exynos5_usbdrd_phy_exit() the driver enables the
->> clock only for the access to PHY block (PHY registers).
->>
->
-> But I dont get it why we disable code phy clk, which could be used in
-> future phy tune or link control as it part of CLK_FSYS.
->
->>>
->>> [0] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L362-L412
->>> [1] https://github.com/torvalds/linux/blob/master/drivers/phy/samsung/phy-exynos5-usbdrd.c#L424-L446
->>>
->>> On 3.10.x kernel clk_summary all the clk are enables.
->>>
->>>     mout_usbdrd300              3           3            24000000
->>>        dout_usbdrd300           2           2            24000000
->>>           sclk_usbdrd300        1           1            24000000
->>>        dout_usbphy300           2           2            24000000
->>>           sclk_usbphy300        1           1            24000000
->>>     mout_usbdrd301              3           3            24000000
->>>        dout_usbdrd301           2           2            24000000
->>>           sclk_usbdrd301        1           1            24000000
->>>        dout_usbphy301           2           2            24000000
->>>           sclk_usbphy301        1           1            24000000
->>>
->>> Some more changes in clk driver might be required to stabilize the usb module.
->>
->> Please describe the issues with stability first.
->>
->> Best regards,
->> Krzysztof
->>
-> On stability:
->
-> USB 3.0 read / write performance is not up to mark with moderate data
-> read / write speed,
-> If you give long compilation of kernel or any source code it would
-> likely be slow
-> It work pretty good with USB 3.0 SSD but generally failed with 2.5' inc HDD.
->
-> If needed I will share you some performance test result with and
-> without these patches.
->
-> I have some more changes related to usbdrd phy change queued along this on.
->
-> Best Regards
-> -Anand
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index faf46ab..563f8a4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -100,6 +100,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4709-tplink-archer-c9-v1.dtb \
+ 	bcm47094-dlink-dir-885l.dtb \
+ 	bcm47094-linksys-panamera.dtb \
++	bcm47094-luxul-xbr-4500.dtb \
+ 	bcm47094-luxul-xwr-3100.dtb \
+ 	bcm47094-netgear-r8500.dtb \
+ 	bcm94708.dtb \
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dts b/arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dts
+new file mode 100644
+index 0000000..15ffb1a
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm47094-luxul-xbr-4500.dts
+@@ -0,0 +1,63 @@
++/*
++ * Copyright (C) 2017 Luxul Inc.
++ *
++ * Licensed under the ISC license.
++ */
++
++/dts-v1/;
++
++#include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
++
++/ {
++	compatible = "luxul,xbr-4500-v1", "brcm,bcm47094", "brcm,bcm4708";
++	model = "Luxul XBR-4500 V1";
++
++	chosen {
++		bootargs = "earlycon";
++	};
++
++	memory {
++		reg = <0x00000000 0x08000000
++		       0x88000000 0x18000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		status {
++			label = "bcm53xx:green:status";
++			gpios = <&chipcommon 20 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "timer";
++		};
++
++		usb3 {
++			label = "bcm53xx:green:usb3";
++			gpios = <&chipcommon 19 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++				<&xhci_port1>;
++			linux,default-trigger = "usbport";
++		};
++
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		restart {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 17 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&usb3 {
++	vcc-gpio = <&chipcommon 18 GPIO_ACTIVE_HIGH>;
++};
++
++&spi_nor {
++	status = "okay";
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
