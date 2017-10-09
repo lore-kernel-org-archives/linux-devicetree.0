@@ -1,7 +1,7 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 12/15] ARM: dts: at91: sama5d2_xplained: remove pull-up on SD/MMC lines
-Date: Mon, 9 Oct 2017 19:09:34 +0300
-Message-ID: <1507565377-1545-13-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 07/15] ARM: dts: at91: sama5d27_som1_ek: remove not connected CAN0
+Date: Mon, 9 Oct 2017 19:09:29 +0300
+Message-ID: <1507565377-1545-8-git-send-email-claudiu.beznea@microchip.com>
 References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,39 +12,45 @@ To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@k
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-As the board have the proper pull-ups soldered on the data and CMD
-lines we don't need them specified in the PADs. So remove the
-"bias-pull-up" property and set "bias-disable".
-This will also save some power.
+CAN0 is not connected on the sama5d27_som1_ek board, so remove
+it from DT.
 
 Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 [claudiu.beznea@microchip.com: change subject to match the desired prefix]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 82777747cc72..cd53c0a33591 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -444,7 +444,7 @@
- 							 <PIN_PA7__SDMMC0_DAT5>,
- 							 <PIN_PA8__SDMMC0_DAT6>,
- 							 <PIN_PA9__SDMMC0_DAT7>;
--						bias-pull-up;
-+						bias-disable;
- 					};
+diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+index 339f4e71cf40..651ed5d4defc 100644
+--- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+@@ -175,12 +175,6 @@
+ 				status = "okay";
+ 			};
  
- 					ck_cd_rstn_vddsel {
-@@ -463,7 +463,7 @@
- 							 <PIN_PA19__SDMMC1_DAT1>,
- 							 <PIN_PA20__SDMMC1_DAT2>,
- 							 <PIN_PA21__SDMMC1_DAT3>;
--						bias-pull-up;
-+						bias-disable;
- 					};
+-			can0: can@f8054000 {
+-				pinctrl-names = "default";
+-				pinctrl-0 = <&pinctrl_can0_default>;
+-				status = "disabled"; /* Conflict with isc. */
+-			};
+-
+ 			uart3: serial@fc008000 {
+ 				atmel,use-dma-rx;
+ 				atmel,use-dma-tx;
+@@ -279,12 +273,6 @@
  
- 					conf-ck_cd {
+ 			pinctrl@fc038000 {
+ 
+-				pinctrl_can0_default: can0_default {
+-					pinmux = <PIN_PC10__CANTX0>,
+-						 <PIN_PC11__CANRX0>;
+-					bias-disable;
+-				};
+-
+ 				pinctrl_can1_default: can1_default {
+ 					pinmux = <PIN_PC26__CANTX1>,
+ 						 <PIN_PC27__CANRX1>;
 -- 
 2.7.4
