@@ -1,45 +1,91 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 00/14] at91 fixes and enhancements
-Date: Mon, 9 Oct 2017 19:09:22 +0300
-Message-ID: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 01/15] ARM: dts: at91: sama5d27_som1_ek: add disabled status
+Date: Mon, 9 Oct 2017 19:09:23 +0300
+Message-ID: <1507565377-1545-2-git-send-email-claudiu.beznea@microchip.com>
+References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add disabled statuses for all devices and for those those which pins
+are in conflict with other devices add a comment in the DT file to specify
+this.
 
-This series contains fixes and enhancements for Atmel/Microchip boards,
-mainly for SoM1-EK board, SAMA5D2 Xplained board and SAM9x5 boards.
-Please accept them for 4.15.
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Thank you,
-Claudiu Beznea
-
-Claudiu Beznea (14):
-  ARM: dts: at91: sama5d27_som1_ek: add disabled/okay status
-  ARM: dts: at91: sama5d27_som1_ek: update serial aliases
-  ARM: dts: at91: sama5d27_som1_ek: set USER button as a wakeup source
-  ARM: dts: at91: sama5d27_som1_ek: add aliases for i2c
-  ARM: dts: at91: sama5d27_som1_ek: add pinmuxing for pwm0
-  ARM: dts: at91: sama5d27_som1_ek: remove not connected CAN0
-  ARM: dts: at91: sama5d27_som1_ek: remove pull-up on SD/MMC lines
-  ARM: dts: at91: sama5d2_xplained: Add charger node of pmic.
-  ARM: dts: at91: sama5d2_xplained: set PB_USER as wakeup source
-  ARM: dts: at91: sama5d2_xplained: add pinmuxing for pwm0
-  ARM: dts: at91: sama5d2_xplained: remove pull-up on SD/MMC lines
-  ARM: dts: at91: at91sam9x25ek: add CAN1 interface
-  ARM: dts: at91: at91sam9x25ek: add pwm0
-  ARM: dts: at91: at91sam9x5ek: use DMA for USART0
-
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 46 ++++++++++++++---------------
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 39 ++++++++++++++++--------
- arch/arm/boot/dts/at91sam9x25ek.dts         | 10 +++++++
- arch/arm/boot/dts/at91sam9x5ek.dtsi         |  2 ++
- 4 files changed, 62 insertions(+), 35 deletions(-)
-
+diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+index 60cb084a8d92..43bca17b9e4e 100644
+--- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+@@ -168,6 +168,7 @@
+ 			can0: can@f8054000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_can0_default>;
++				status = "disabled"; /* Conflict with isc. */
+ 			};
+ 
+ 			uart3: serial@fc008000 {
+@@ -175,7 +176,7 @@
+ 				atmel,use-dma-tx;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_uart3_default>;
+-				status = "disabled";
++				status = "disabled"; /* Conflict with isc. */
+ 			};
+ 
+ 			uart4: serial@fc00c000 {
+@@ -199,7 +200,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_flx3_default>;
+ 					atmel,fifo-size = <32>;
+-					status = "disabled";
++					status = "disabled"; /* Conflict with isc. */
+ 				};
+ 
+ 				spi2: spi@400 {
+@@ -211,7 +212,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_flx3_default>;
+ 					atmel,fifo-size = <16>;
+-					status = "disabled";
++					status = "disabled"; /* Conflict with isc. */
+ 				};
+ 			};
+ 
+@@ -228,7 +229,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_flx4_default>;
+ 					atmel,fifo-size = <32>;
+-					status = "disabled";
++					status = "disabled"; /* Conflict with spi3 and i2c3. */
+ 				};
+ 
+ 				spi3: spi@400 {
+@@ -240,7 +241,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_mikrobus_spi &pinctrl_mikrobus1_spi_cs &pinctrl_mikrobus2_spi_cs>;
+ 					atmel,fifo-size = <16>;
+-					status = "okay";
++					status = "okay"; /* Conflict with uart6 and i2c3. */
+ 				};
+ 
+ 				i2c3: i2c@600 {
+@@ -255,7 +256,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_flx4_default>;
+ 					atmel,fifo-size = <16>;
+-					status = "disabled";
++					status = "disabled"; /* Conflict with uart6 and spi3. */
+ 				};
+ 			};
+ 
 -- 
 2.7.4
