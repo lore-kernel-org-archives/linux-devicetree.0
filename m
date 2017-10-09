@@ -1,50 +1,26 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 1/2] ARM: dts: dra7: Increase max-voltage of pbias regulator
-Date: Mon, 9 Oct 2017 11:23:11 +0530
-Message-ID: <20171009055312.24165-2-kishon@ti.com>
-References: <20171009055312.24165-1-kishon@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car M3-W,
+ V3M, D3 support
+Date: Mon, 9 Oct 2017 07:55:40 +0200
+Message-ID: <20171009055539.GC31804@verge.net.au>
+References: <1507290692-23062-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171009055312.24165-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Ravikumar Kattekola <rk@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507290692-23062-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ravikumar Kattekola <rk@ti.com>
+On Fri, Oct 06, 2017 at 01:51:32PM +0200, Geert Uytterhoeven wrote:
+> Document support for the Interrupt Controller for Externel Devices
+> (INTC-EX) in the Renesas M3-W (r8a7796), V3M (r8a77970), and D3
+> (r8a77995) SoCs.
+> 
+> No driver update is needed.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-As per recent TRM, PBIAS cell on dra7 devices supports
-3.3v and not 3.0v as documented earlier.
-
-Update PBIAS regulator max voltage to match this.
-
-Document reference:
-SPRUI30C – DRA75x, DRA74x Technical reference manual- November 2016
-
-Tested on:
-DRA75x PG 2.0 REV H EVM
-
-Signed-off-by: Ravikumar Kattekola <rk@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 02a136a4661a..14d75c589369 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -170,7 +170,7 @@
- 						pbias_mmc_reg: pbias_mmc_omap5 {
- 							regulator-name = "pbias_mmc_omap5";
- 							regulator-min-microvolt = <1800000>;
--							regulator-max-microvolt = <3000000>;
-+							regulator-max-microvolt = <3300000>;
- 						};
- 					};
- 
--- 
-2.11.0
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
