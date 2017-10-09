@@ -1,7 +1,7 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 07/15] ARM: dts: at91: sama5d27_som1_ek: remove not connected CAN0
-Date: Mon, 9 Oct 2017 19:09:29 +0300
-Message-ID: <1507565377-1545-8-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 02/15] ARM: dts: at91: sama5d27_som1_ek: enable i2c2
+Date: Mon, 9 Oct 2017 19:09:24 +0300
+Message-ID: <1507565377-1545-3-git-send-email-claudiu.beznea@microchip.com>
 References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,45 +12,34 @@ To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@k
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-CAN0 is not connected on the sama5d27_som1_ek board, so remove
-it from DT.
+Enable i2c.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-[claudiu.beznea@microchip.com: change subject to match the desired prefix]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 12 ------------
- 1 file changed, 12 deletions(-)
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-index 339f4e71cf40..651ed5d4defc 100644
+index 43bca17b9e4e..03a4c77fd6ab 100644
 --- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
 +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -175,12 +175,6 @@
- 				status = "okay";
+@@ -133,7 +133,7 @@
+ 
+ 			flx1: flexcom@f8038000 {
+ 				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_TWI>;
+-				status = "disabled";
++				status = "okay";
+ 
+ 				i2c2: i2c@600 {
+ 					compatible = "atmel,sama5d2-i2c";
+@@ -147,7 +147,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_mikrobus_i2c>;
+ 					atmel,fifo-size = <16>;
+-					status = "disabled";
++					status = "okay";
+ 				};
  			};
  
--			can0: can@f8054000 {
--				pinctrl-names = "default";
--				pinctrl-0 = <&pinctrl_can0_default>;
--				status = "disabled"; /* Conflict with isc. */
--			};
--
- 			uart3: serial@fc008000 {
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
-@@ -279,12 +273,6 @@
- 
- 			pinctrl@fc038000 {
- 
--				pinctrl_can0_default: can0_default {
--					pinmux = <PIN_PC10__CANTX0>,
--						 <PIN_PC11__CANRX0>;
--					bias-disable;
--				};
--
- 				pinctrl_can1_default: can1_default {
- 					pinmux = <PIN_PC26__CANTX1>,
- 						 <PIN_PC27__CANRX1>;
 -- 
 2.7.4
