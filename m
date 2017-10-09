@@ -1,64 +1,101 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/6] phy: sun4i-usb: add support for R40 USB PHY
-Date: Mon, 9 Oct 2017 22:58:39 +0200
-Message-ID: <20171009205839.432f6jd5zhmstwp3@flea.home>
+Subject: Re: [PATCH 2/6] ARM: sun8i: r40: add USB host port
+ nodes for R40
+Date: Mon, 9 Oct 2017 23:03:40 +0200
+Message-ID: <20171009210340.ak6wo3vqnwj4gom4@flea.home>
 References: <20171008042906.46779-1-icenowy@aosc.io>
- <20171008042906.46779-2-icenowy@aosc.io>
+ <20171008042906.46779-3-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2dldsa4ta6res3u7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="hdh4muw3sglqehek"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBN6I57HAKGQEKOBKSGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171008042906.46779-2-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171008042906.46779-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---2dldsa4ta6res3u7
-Content-Type: text/plain; charset=us-ascii
+--hdh4muw3sglqehek
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 08, 2017 at 04:29:01AM +0000, Icenowy Zheng wrote:
-> Allwinner R40 features a USB PHY like the one in A64, but with 3 PHYs.
->=20
-> Add support for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+On Sun, Oct 08, 2017 at 04:29:02AM +0000, Icenowy Zheng wrote:
+> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> 
+> Allwinner R40 SoC features a USB OTG port and two USB HOST ports.
+> 
+> Add support for the host ports in the DTSI file.
+> 
+> The OTG controller still cannot work with existing compatibles, and needs
+> more investigation. So it's not added yet.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 78 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> index d5a6745409ae..f6c917cbbaac 100644
+> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -173,6 +173,84 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		usbphy: phy@1c13400 {
+> +			compatible = "allwinner,sun8i-r40-usb-phy";
+> +			reg = <0x01c13400 0x14>,
+> +			      <0x01c14800 0x4>,
+> +			      <0x01c19800 0x4>,
+> +			      <0x01c1c800 0x4>;
+> +			reg-names = "phy_ctrl",
+> +				    "pmu0",
+> +				    "pmu1",
+> +				    "pmu2";
+> +			clocks = <&ccu CLK_USB_PHY0>,
+> +				 <&ccu CLK_USB_PHY1>,
+> +				 <&ccu CLK_USB_PHY2>;
+> +			clock-names = "usb0_phy",
+> +				      "usb1_phy",
+> +				      "usb2_phy";
+> +			resets = <&ccu RST_USB_PHY0>,
+> +				 <&ccu RST_USB_PHY1>,
+> +				 <&ccu RST_USB_PHY2>;
+> +			reset-names = "usb0_reset",
+> +				      "usb1_reset",
+> +				      "usb2_reset";
+> +			status = "disabled";
+> +			#phy-cells = <1>;
+> +		};
+> +
+> +		ehci1: usb@1c19000 {
+> +			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
+> +			reg = <0x01c19000 0x100>;
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+What is the actual size here?
+
+> +			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_OHCI1>,
+> +				 <&ccu CLK_BUS_EHCI1>,
+> +				 <&ccu CLK_USB_OHCI1>;
+> +			resets = <&ccu RST_BUS_OHCI1>,
+> +				 <&ccu RST_BUS_EHCI1>;
+
+Why do you need to take the OHCI resources too?
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---2dldsa4ta6res3u7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ2+L/AAoJEBx+YmzsjxAgE/sP/1c49wf55rcZ9AnTbTu+NfLn
-g1R7oa1ze4MVeDxOTcgtUUIYeD7uZDvPcdwjDP4RQFnhwQnLfDjqjkSmTtbEdDjK
-bdlNrWjoWzCjQ8BkmWVfXjM3R2RXCGHJj0pADVG/pRsmL1SGJ4HT5Q+OSpxqKj8G
-Q57kTDuz855LHQkGtLEo8GygU5Qx6r5Hx/rZ4aRJ4mnOlZT/5Ujj50vEfFK/Otlc
-RNjG/bB/uCYlhaiWpHEAtdoVfqpJHel9JJ7xDvbBkEpGmsR5Y7CfcPMQtdObYwW7
-N0s093lQu09+4Du/AktNKL9hhI3BMp8siw6ER+Z0NBPDJvAohAmcrWtMR4yh4gQ8
-AiHRYedM4WhSAss+tcZMwX62Y6c0OcrIQxItvBBDBPZ7tKMLj9swJWMhwqSSTMzK
-Ed3Dp6zWN9v/+7s0kNfKPC3+wJ3fp0mDI40FFtFvqSX62jwWIx9XhNftSisnyXGp
-r8d+EUvMLUMTj2wNpPawi3y4h8+T1TGt7Q7Kl/6tyH3rj1wYjOqGW/eouvzpTShK
-Ep0YTNdInpaUB+r+sK1j4cbM1EqHa8pSXzBL/GUkklTdyKkJ2+4nTqFfaThsmxnj
-uKXbR1L3sgM2NixJCsNHJ4x8id2j1mN5xgskuCA+WsaIQSYdwJL9RagFvHPc8bQa
-4GEk7qplrAq2YEx4hzd7
-=XsCc
------END PGP SIGNATURE-----
-
---2dldsa4ta6res3u7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--hdh4muw3sglqehek--
