@@ -1,73 +1,166 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: arm64: 4.14 of_match_node() issues
-Date: Mon, 9 Oct 2017 11:58:16 +0100
-Message-ID: <66956548-fa7a-332a-8045-8202ae0aa564@arm.com>
-References: <5d2ff063-1f7e-0200-cc02-99804f7d9219@suse.de>
- <20171009092409.GB5127@arm.com>
+From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH resend 02/12] usb: typec: add basic typec properties
+Date: Mon, 9 Oct 2017 11:21:23 +0000
+Message-ID: <DB4PR04MB07683A52DD500A40C2B9047A89740@DB4PR04MB0768.eurprd04.prod.outlook.com>
+References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
+ <1506398723-19359-3-git-send-email-jun.li@nxp.com>
+ <20171005204400.4q3fpeui525tmfo4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171009092409.GB5127-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005204400.4q3fpeui525tmfo4@rob-hp-laptop>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stefan Bruens <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/17 10:24, Will Deacon wrote:
-> Hi Andreas,
-> 
-> On Sat, Oct 07, 2017 at 02:42:13AM +0200, Andreas Färber wrote:
->> Since 4.14-rc1 I am seeing frequent oopses during module loading (e.g.,
->> MMC, USB) from initrd on aarch64. Symptoms are similar to this in -rc3:
->>
->> [  OK  ] Started udev Coldplug all Devices.
->> [   10.117775] usbcore: registered new interface driver usbfs
->> [   10.118235] Unable to handle kernel paging request at virtual address
->> ffff000008e5abc0
->> [   10.118238] Mem abort info:
->> [   10.118245]   Exception class = DABT (current EL), IL = 32 bits
->> [   10.118249]   SET = 0, FnV = 0
->> [   10.118253]   EA = 0, S1PTW = 0
->> [   10.118256] Data abort info:
->> [   10.118261]   ISV = 0, ISS = 0x00000006
->> [   10.118264]   CM = 0, WnR = 0
->> [   10.118274] swapper pgtable: 4k pages, 48-bit VAs, pgd = ffff0000094a5000
->> [   10.118279] [ffff000008e5abc0] *pgd=00000000bfffe003,
->> *pud=00000000bfffd003, *pmd=0000000000000000
->> [   10.118299] Internal error: Oops: 96000006 [#1] SMP
->> [   10.118305] Modules linked in: fixed usbcore(+) sunxi_mmc mmc_core
->> phy_sun4i_usb sg
->> [   10.118341] CPU: 3 PID: 49 Comm: kworker/3:1 Not tainted
->> 4.14.0-rc3-2.gf27997b-default #1
->> [   10.118345] Hardware name: sunxi sunxi/sunxi, BIOS 2017.05-rc1 04/13/2017
->> [   10.118369] Workqueue: events deferred_probe_work_func
->> [   10.118378] task: ffff80007c8f4000 task.stack: ffff0000099d8000
->> [   10.118394] PC is at __of_match_node.part.1+0x48/0x88
->> [   10.118403] LR is at of_match_node+0x40/0x70
->> [   10.118411] pc : [<ffff00000879aed0>] lr : [<ffff00000879af50>]
-> 
-> [...]
-> 
->> This has been observed on Pine64 (>60%; also by Stefan) and Odroid-C2;
->> my other arm64 boards such as Raspberry Pi 3 have not run into this so
->> far. No such problems on 32-bit boards.
->>
->> This is using the openSUSE config:
->> https://kernel.opensuse.org/cgit/kernel-source/plain/config/arm64/default
-> 
-> Hmm, hard to know what to suggest without a concrete reproducer. Do you know
-> which driver is being probed in the log above? Also, does this still break
-> if you pass "keepinitrd" on the cmdline? Finally, can you dump the kernel
-> virtual memory layout, please?
+Hi Rob,
 
-FWIW, this looks a lot like what happens when a built-in driver's
-of_match_table is marked __init, but for whatever reason (deferred probe
-etc.) winds up getting poked by a module load after it no longer exists.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Friday, October 06, 2017 4:44 AM
+> To: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org; yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org;
+> Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>; A.s. Dong <aisheng.dong-3arQi8VN3Tc@public.gmane.org>; linux-
+> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH resend 02/12] usb: typec: add basic typec properties
+>=20
+> On Tue, Sep 26, 2017 at 12:05:13PM +0800, Li Jun wrote:
+> > port-type is required for any typec port; default-role is only
+> > required for drp; power source capable needs src-pdos; power sink
+> > capable needs snk-pdos, max-snk-mv, max-snk-ma, op-snk-mw.
+>=20
+> "dt-bindings: usb: ..." for the subject prefix.
+>=20
 
-Robin.
+Will update in next version.
+
+> >
+> > Signed-off-by: Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/usb/typec.txt | 46
+> > +++++++++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/typec.txt
+> > b/Documentation/devicetree/bindings/usb/typec.txt
+> > new file mode 100644
+> > index 0000000..36d4467
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/typec.txt
+> > @@ -0,0 +1,46 @@
+> > +Generic typec and power delivery properties
+> > +-------------------------------------------
+>=20
+> What node do these apply to? A type C connector node? The PD microcontrol=
+ler?
+>=20
+
+My initial thinking is those are general type-c properties, which can be ap=
+plied to
+type-C connector or used by PD microcontroller directly (my example),  I wa=
+nt
+to get inputs on how this can be handled properly, so do you think a separa=
+ted
+node(e.g. type-c connector) is required to describe all the capability of t=
+he type-c
+port has, then a type-c related driver get the phandle of it?=20
+
+> I'm reluctant to accept just a random list of properties without a more c=
+omplete
+> Type-C binding which I'd expect to have a connector node, OF graph ports =
+to
+> connect to video outputs, connection to USB controller, and connection to=
+ the
+> PD controller.
+>=20
+
+As type-C with PD has many properties to complete the description for diff =
+usage,
+so this is just a first step to have the basic power related bindings.
+
+> > +
+> > +Required properties:
+> > +- port-type:    should be one of "source", "sink" or "dual".
+> > +- default-role: preferred power role if drp, should be "sink" or "sour=
+ce".
+> > +- src-pdos:     An array of u32 with each entry providing supported po=
+wer
+> > +                source data object(PDO), the detailed bit definitions =
+of
+> > +                PDO can be found in "Universal Serial Bus Power Delive=
+ry
+> > +                Specification" chapter 6.4.1.2 Source_Capabilities Mes=
+sage,
+> > +                the order of each entry(PDO) should follow the PD spec=
+ chapter
+> > +                6.4.1. Required only for power source and power dual r=
+ole with
+> > +                power delivery support.
+> > +- snk-pdos:     An array of u32 with each entry providing supported po=
+wer
+> > +                sink data object(PDO), the detailed bit definitions of=
+ PDO
+> > +                can be found in "Universal Serial Bus Power Delivery
+> > +                Specification" chapter 6.4.1.3 Sink Capabilities Messa=
+ge,
+> > +                the order of each entry(PDO) should follow the PD spec=
+ chapter
+> > +                6.4.1. Required only for power sink and power dual rol=
+e with
+> > +                power delivery support.
+>=20
+> > +- max-snk-mv:   The max voltage the sink can support in millivoltage, =
+required
+> > +                only for power sink and power dual role with power del=
+ivery
+> > +                support.
+> > +- max-snk-ma:   The max current the sink can support in milliampere, r=
+equired
+> > +                only for power sink and power dual role with power del=
+ivery
+> > +                support.
+> > +- op-snk-mw:    Sink required operating power in milliwatts, if source=
+ offered
+> > +                power is less then it, Capability Mismatch is set, req=
+uired
+> > +                only for power sink and power dual role with power del=
+ivery
+> > +                support.
+>=20
+> Use the standard unit suffixes as defined in property-units.txt
+>=20
+
+Thanks, will update in next version.
+
+Li Jun
+> > +
+> > +Example:
+> > +
+> > +ptn5110@50 {
+> > +	compatible =3D "usb,tcpci";
+> > +	reg =3D <0x50>;
+> > +	interrupt-parent =3D <&gpio3>;
+> > +	interrupts =3D <3 IRQ_TYPE_LEVEL_LOW>;
+> > +	port-type =3D "dual";
+> > +	default-role =3D "sink";
+> > +	src-pdos =3D <0x380190c8>;
+> > +	snk-pdos =3D <0x380190c8 0x3802d0c8>;
+> > +	max-snk-mv =3D <9000>;
+> > +	max-snk-ma =3D <1000>;
+> > +	op-snk-mw =3D <9000>;
+> > +};
+> > --
+> > 2.6.6
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
