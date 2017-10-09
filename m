@@ -1,44 +1,57 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v11 3/4] arm64: dts: rockchip: add RGA device node for RK3399
-Date: Mon,  9 Oct 2017 17:04:23 +0800
-Message-ID: <20171009090424.15292-4-jacob-chen@iotwrt.com>
-References: <20171009090424.15292-1-jacob-chen@iotwrt.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171009090424.15292-1-jacob-chen@iotwrt.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
+Date: Mon,  9 Oct 2017 10:06:21 +0100
+Message-ID: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Chris Paterson <chris.paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the RGA dt config of RK3399 SoC.
-
-Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index d79e9b3265b9..a3fab6af5a17 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1204,6 +1204,17 @@
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+index 1c072c0..8c852d1 100644
+--- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
++++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+@@ -11,6 +11,7 @@
+ / {
+ 	aliases {
+ 		serial0 = &scif0;
++		serial3 = &scifb1;
+ 		ethernet0 = &avb;
  	};
  
-+	rga: rga@ff680000 {
-+		compatible = "rockchip,rk3399-rga";
-+		reg = <0x0 0xff680000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
-+		clock-names = "aclk", "hclk", "sclk";
-+		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
-+		reset-names = "core", "axi", "ahb";
-+		power-domains = <&power RK3399_PD_RGA>;
+@@ -99,6 +100,11 @@
+ 		function = "scif0";
+ 	};
+ 
++	scifb1_pins: scifb1 {
++		groups = "scifb1_data_d", "scifb1_ctrl";
++		function = "scifb1";
 +	};
 +
- 	efuse0: efuse@ff690000 {
- 		compatible = "rockchip,rk3399-efuse";
- 		reg = <0x0 0xff690000 0x0 0x80>;
+ 	sdhi1_pins: sd1 {
+ 		groups = "sdhi1_data4", "sdhi1_ctrl";
+ 		function = "sdhi1";
+@@ -129,6 +135,14 @@
+ 	status = "okay";
+ };
+ 
++&scifb1 {
++	pinctrl-0 = <&scifb1_pins>;
++	pinctrl-names = "default";
++
++	uart-has-rtscts;
++	status = "okay";
++};
++
+ &sdhi1 {
+ 	pinctrl-0 = <&sdhi1_pins>;
+ 	pinctrl-1 = <&sdhi1_pins_uhs>;
 -- 
-2.14.1
+2.7.4
