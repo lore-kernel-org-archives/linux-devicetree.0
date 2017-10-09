@@ -1,70 +1,68 @@
-From: "Mohandass, Divagar" <divagar.mohandass@intel.com>
-Subject: RE: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
-Date: Mon, 9 Oct 2017 03:14:24 +0000
-Message-ID: <7B8CE47BD58441468D2BB13285B50E6031DF530B@BGSMSX107.gar.corp.intel.com>
-References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
- <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
- <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
- <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
- <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
- <CAAFQd5B65bJHsZkMgtjGgyd3btuoWzJwYQRQb5j2kSaefxCZ7Q@mail.gmail.com>
- <20170920093222.yzfw2ctrupep5iqx@valkosipuli.retiisi.org.uk>
- <20171003135109.v7ch7oc4fvjwzl7w@valkosipuli.retiisi.org.uk>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 12/12] dt-bindings: usb: mtu3: remove optional pinctrls
+Date: Mon, 9 Oct 2017 11:25:54 +0800
+Message-ID: <1507519554.17567.65.camel@mhfsdcap03>
+References: <fe8df8503f602586bcea4b1598eb09678b1525e3.1506509658.git.chunfeng.yun@mediatek.com>
+         <ec8e65205c6e0a83850e11c030ed440d7b9be2e8.1506509659.git.chunfeng.yun@mediatek.com>
+         <20171005223325.ryvu6ifjgcj5scf4@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171003135109.v7ch7oc4fvjwzl7w@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: "'sakari.ailus@iki.fi'" <sakari.ailus@iki.fi>, Tomasz Figa <tfiga@chromium.org>
-Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005223325.ryvu6ifjgcj5scf4@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9tYXN6LA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBzYWthcmku
-YWlsdXNAaWtpLmZpIFttYWlsdG86c2FrYXJpLmFpbHVzQGlraS5maV0NCj5TZW50OiBUdWVzZGF5
-LCBPY3RvYmVyIDAzLCAyMDE3IDc6MjEgUE0NCj5UbzogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9t
-aXVtLm9yZz4NCj5DYzogTWFuaSwgUmFqbW9oYW4gPHJham1vaGFuLm1hbmlAaW50ZWwuY29tPjsg
-TW9oYW5kYXNzLCBEaXZhZ2FyDQo+PGRpdmFnYXIubW9oYW5kYXNzQGludGVsLmNvbT47IHJvYmgr
-ZHRAa2VybmVsLm9yZzsNCj5tYXJrLnJ1dGxhbmRAYXJtLmNvbTsgd3NhQHRoZS1kcmVhbXMuZGU7
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPmxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+bWlrYS53ZXN0ZXJiZXJnQGxpbnV4Lmlu
-dGVsLmNvbTsgbGludXgtcG1Admdlci5rZXJuZWwub3JnDQo+U3ViamVjdDogUmU6IFtQQVRDSCB2
-NiAzLzNdIGVlcHJvbTogYXQyNDogZW5hYmxlIHJ1bnRpbWUgcG0gc3VwcG9ydA0KPg0KPkhpIFRv
-bWFzeiwNCj4NCj5PbiBXZWQsIFNlcCAyMCwgMjAxNyBhdCAxMjozMjoyMlBNICswMzAwLCBzYWth
-cmkuYWlsdXNAaWtpLmZpIHdyb3RlOg0KPj4gPiA+PiA+PiBAQCAtNzQzLDExICs3NzAsMTcgQEAg
-c3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+PiA+ID4+ID4+ICpjbGll
-bnQsIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4+ID4gPj4gPj4NCj4+ID4gPj4g
-Pj4gICAgICAgaTJjX3NldF9jbGllbnRkYXRhKGNsaWVudCwgYXQyNCk7DQo+PiA+ID4+ID4+DQo+
-PiA+ID4+ID4+ICsgICAgIC8qIGVuYWJsZSBydW50aW1lIHBtICovDQo+PiA+ID4+ID4+ICsgICAg
-IHBtX3J1bnRpbWVfZ2V0X25vcmVzdW1lKCZjbGllbnQtPmRldik7DQo+PiA+ID4+ID4+ICsgICAg
-IHBtX3J1bnRpbWVfc2V0X2FjdGl2ZSgmY2xpZW50LT5kZXYpOw0KPj4gPiA+PiA+PiArICAgICBw
-bV9ydW50aW1lX2VuYWJsZSgmY2xpZW50LT5kZXYpOw0KPj4gPiA+Pg0KPj4gPiA+PiBEbyB3ZSBu
-ZWVkIHRoaXMgZ2V0X25vcmVzdW1lL3NldF9hY3RpdmUgZGFuY2U/IEkgcmVtZW1iZXIgaXQgd2Fz
-DQo+PiA+ID4+IGZvciBzb21lIHJlYXNvbiBuZWVkZWQgZm9yIFBDSSBkZXZpY2VzLCBidXQgSSBk
-b24ndCBzZWUgd2h5IGZvcg0KPj4gPiA+PiBJMkMgYW55dGhpbmcgZWxzZSB0aGFuIGp1c3QgcG1f
-cnVudGltZV9lbmFibGUoKSB3b3VsZCBiZSBuZWNlc3NhcnkuDQo+PiA+ID4NCj4+ID4gPiBZb3Ug
-c3BlY2lmaWNhbGx5IGRvIG5vdCBuZWVkIChhbGwpIHRoaXMgZm9yIFBDSSBkZXZpY2VzLCBidXQg
-QUZBSVUNCj4+ID4gPiBmb3IgSea2jg0KPj4gPiA+IGRldmljZXMgeW91IGRvLiBUaGUgcnVudGlt
-ZSBQTSBzdGF0dXMgb2YgYSBkZXZpY2UgaXMgZGlzYWJsZWQgYnkNCj4+ID4gPiBkZWZhdWx0IGFu
-ZCB0aGUgdXNlIGNvdW50IGlzIHplcm8sIGJ1dCBvbiBBQ1BJIGJhc2VkIHN5c3RlbXMgdGhlDQo+
-PiA+ID4gZGV2aWNlIGlzIHN0aWxsIHBvd2VyZWQgb24uDQo+PiA+DQo+PiA+IE9rYXksIHNvIF9n
-ZXRfbm9yZXN1bWUoKSBhbmQgX3NldF9hY3RpdmUoKSB3b3VsZCBkbyB0aGUgdGhpbmcgZm9yDQo+
-PiA+IEFDUEkgaW5kZWVkLCBidXQgbm90IHN1cmUgYWJvdXQgb3RoZXIgcGxhdGZvcm1zLiBQZXJo
-YXBzIF9lbmFibGUoKSwNCj4+ID4gX2dldF9zeW5jKCkgd291bGQgYmUgbW9yZSBnZW5lcmFsPw0K
-Pj4NCj4+IFdoYXQgSSBlbmRlZCB1cCBkb2luZyBpbiBlLmcuIHRoZSBzbWlhcHAgZHJpdmVyIHdh
-cyB0byBleHBsaWNpdGx5DQo+PiBwb3dlciB0aGUgZGV2aWNlIG9uIGZpcnN0IGFuZCB0aGVuIGVu
-YWJsZSBydW50aW1lIFBNLiAoU2VlDQo+PiBkcml2ZXJzL21lZGlhL2kyYy9zbWlhcHAvc21pYXBw
-LWNvcmUuYyAuKSBUaGlzIGFwcHJvYWNoIHdvcmtzIGV2ZW4gaWYNCj4+IENPTkZJR19QTSBpcyBk
-aXNhYmxlZCwgYm90aCBvbiBEVCBhbmQgQUNQSS4NCj4NCj5wbV9ydW50aW1lX2dldF9ub3Jlc3Vt
-ZSgpICsgcG1fcnVudGltZV9wdXQoKSBjYW4gYmUgcmVwbGFjZWQgYnkgYSBzaW5nbGUNCj5wbV9y
-dW50aW1lX2lkbGUoKSBjYWxsICh3aGVyZSBwbV9ydW50aW1lX3B1dCgpIHdhcykuIHBtX3J1bnRp
-bWVfZW5hYmxlKCkNCj5pcyByZXF1aXJlZCB0byBlbmFibGUgcnVudGltZSBQTSBmb3IgYSBkZXZp
-Y2UuDQoNClZlcmlmaWVkIHRoZSBjaGFuZ2Ugc3VnZ2VzdGVkIGJ5IFNha2FyaS4gDQpMZXQgbWUg
-a25vdyBJIGNhbiBzZW5kIGEgdXBkYXRlZCBwYXRjaCB2ZXJzaW9uIHdpdGggdGhpcyBjaGFuZ2Uu
-DQoNCj4NCj5wbV9ydW50aW1lX2FsbG93KCkgbWF5IGJlIG9taXR0ZWQgYnV0IHRoZW4gdG8gbWFr
-ZSB0aGUgcnVudGltZSBQTQ0KPmZyYW1ld29yayB0byBtYWtlIHRoZSBwb3dlciBzdGF0ZSB0cmFu
-c2l0aW9ucyB0aGlzIG5lZWRzIHRvIGJlIGNvbmZpZ3VyZWQNCj5mcm9tIHRoZSB1c2VyIHNwYWNl
-IC0tLSB3aGljaCBJIGRvbid0IHRoaW5rIGlzIGludGVuZGVkLg0KPg0KPkNjIGxpbnV4LXBtLCB0
-b28uDQo+DQo+LS0NCj5SZWdhcmRzLA0KPg0KPlNha2FyaSBBaWx1cw0KPmUtbWFpbDogc2FrYXJp
-LmFpbHVzQGlraS5maQ0K
+On Thu, 2017-10-05 at 17:33 -0500, Rob Herring wrote:
+> On Thu, Sep 28, 2017 at 08:17:20AM +0800, Chunfeng Yun wrote:
+> > Remove optional pinctrls due to using FORCE/RG_IDDIG to implement
+> > manual switch function.
+> 
+> Another not backwards compatible change. Please explain why that is 
+> okay.
+The old way of manual switch function uses the IDDIG pin (IDPIN) to
+switch mode between device and host indirectly by pulling up or pulling
+down it by driver. But there is a limitation, when the IDDIG pin is
+connected to the ground, the driver can't pull it up anymore, so it will
+fail when the receptacle is micro type.
+And there is no such limitation through FORCE/RG_IDDIG, because when the
+FORCE_IDDIG is set, the staus of RG_IDDIG is given higher priority than
+IDDIG pin. So it is okay no matter whether id_float and id_ground pins
+are provided or not.
+ 
+> 
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/usb/mediatek,mtu3.txt      |    7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > index 49c982b..b2271d8 100644
+> > --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+> > @@ -30,9 +30,10 @@ Optional properties:
+> >  	when supports dual-role mode.
+> >   - vbus-supply : reference to the VBUS regulator, needed when supports
+> >  	dual-role mode.
+> > - - pinctl-names : a pinctrl state named "default" must be defined,
+> > -	"id_float" and "id_ground" are optinal which depends on
+> > -	"mediatek,enable-manual-drd"
+> > + - pinctrl-names : a pinctrl state named "default" is optional, and need be
+> > +	defined if auto drd switch is enabled, that means the property dr_mode
+> > +	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
+> > +	is not set.
+> >   - pinctrl-0 : pin control group
+> >  	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> >  
+> > -- 
+> > 1.7.9.5
+> > 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
