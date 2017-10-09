@@ -1,146 +1,383 @@
-From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] usb: host: add a generic platform USB roothub
- driver
-Date: Mon, 9 Oct 2017 16:43:08 +0300
-Message-ID: <59DB7CEC.50006@linux.intel.com>
-References: <20170903213829.6589-1-martin.blumenstingl@googlemail.com>
- <20170903213829.6589-3-martin.blumenstingl@googlemail.com>
- <59D4DC7E.6040003@linux.intel.com>
- <CAFBinCAerqdvhsTkLLd2t9W3d04F5wzQk5Zo2+h+HOHLdDeQZw@mail.gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 1/4] iio: adc: ina2xx: Make max expected current
+ configurable
+Date: Mon, 9 Oct 2017 14:35:39 +0100
+Message-ID: <20171009143539.00002222@huawei.com>
+References: <1506603015-27202-1-git-send-email-m.purski@samsung.com>
+        <CGME20170928125053eucas1p19e757ac5c3774f54c7cd0ee4525decbe@eucas1p1.samsung.com>
+        <1506603015-27202-2-git-send-email-m.purski@samsung.com>
+        <20171001112934.360c840b@archlinux>
+        <f04fb517-9866-39fe-310d-b65a915375ca@samsung.com>
+        <20171008104756.6eaa62c5@archlinux>
+        <662441b9-1b04-3e8b-baac-5852ba873ca5@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCAerqdvhsTkLLd2t9W3d04F5wzQk5Zo2+h+HOHLdDeQZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <662441b9-1b04-3e8b-baac-5852ba873ca5@samsung.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.10.2017 20:08, Martin Blumenstingl wrote:
-> Hi Mathias,
->
-> thank you for taking the time to go through my patch
->
-> On Wed, Oct 4, 2017 at 3:05 PM, Mathias Nyman
-> <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->> On 04.09.2017 00:38, Martin Blumenstingl wrote:
->>>
->>> Many SoC platforms have separate devices for the USB PHY which are
->>> registered through the generic PHY framework. These PHYs have to be
->>> enabled to make the USB controller actually work. They also have to be
->>> disabled again on shutdown/suspend.
->>>
->>> Currently (at least) the following HCI platform drivers are using custom
->>> code to obtain all PHYs via devicetree for the roothub/controller and
->>> disable/enable them when required:
->>> - ehci-platform.c has ehci_platform_power_{on,off}
->>> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
->>> - ohci-platform.c has ohci_platform_power_{on,off}
->>>
->>> These drivers are not using the generic devicetree USB device bindings
->>> yet which were only introduced recently (documentation is available in
->>> devicetree/bindings/usb/usb-device.txt).
->>> With this new driver the usb2-phy and usb3-phy can be specified directly
->>> in the child-node of the corresponding port of the roothub via
->>> devicetree. This can be extended by not just parsing PHYs (some of the
->>> other drivers listed above are for example also parsing a list of clocks
->>> as well) when required.
->>
->>
->> usb_add_hcd() in usb/core/hcd.c is already finding, initializing and turning
->> on a phy, would it make sense to expand that one to support several phys
->> instead?
->>
->> xhci will add two hcd's one for USB2 and one for USB3
-> that is a great suggestion - thank you for bringing this up!
-> as a benefit we would add multiple PHY support for all the other
-> use-cases I found (at least: ehci-platform.c, xhci-mtk.c,
-> ohci-platform.c) - instead of just handling this in xhci-plat.c
->
-> I have one quick question regarding usb/core/hcd.c:
-> are hcd_bus_suspend() and hcd_bus_resume() the right places to
-> power_{off,on} the PHYs during suspend?
-> (currently usb/core/hcd.c doesn't touch the PHY during suspend/resume
-> - xhci-mtk.c on the other hand seems to require it during a
-> suspend/resume cycle)
+On Mon, 9 Oct 2017 10:08:42 +0200
+Maciej Purski <m.purski@samsung.com> wrote:
 
-I'm not sure what would be the correct place, hcd_bus_suspend() will be called
-twice for xhci, oce for each hcd, so then we need to make sure we only turn off
-phys related to that hcd. Host controller can still be running when bus is suspended.
+> On 10/08/2017 11:47 AM, Jonathan Cameron wrote:
+> > On Wed, 04 Oct 2017 09:11:31 +0200
+> > Maciej Purski <m.purski@samsung.com> wrote:
+> >   
+> >> On 10/01/2017 12:29 PM, Jonathan Cameron wrote:  
+> >>> On Thu, 28 Sep 2017 14:50:12 +0200
+> >>> Maciej Purski <m.purski@samsung.com> wrote:
+> >>>      
+> >>>> Max expected current is used for calculating calibration register value,
+> >>>> Current LSB and Power LSB according to equations found in ina datasheet.
+> >>>> Max expected current is now implicitly set to default value,
+> >>>> which is 2^15, thanks to which Current LSB is equal to 1 mA and
+> >>>> Power LSB is equal to 20000 uW or 25000 uW depending on ina model.
+> >>>>
+> >>>> Make max expected current configurable, just like it's already done
+> >>>> with shunt resistance: from device tree, platform_data or later
+> >>>> from sysfs. On each max_expected_current change, calculate new values
+> >>>> for Current LSB and Power LSB. According to datasheet Current LSB should
+> >>>> be calculated by dividing max expected current by 2^15, as values read
+> >>>> from device registers are in this case 16-bit integers. Power LSB
+> >>>> is calculated by multiplying Current LSB by a factor, which is defined
+> >>>> in ina documentation.  
+> >>>
+> >>> One odd bit of casting inline.  Also this is new userspace ABI.
+> >>> It needs documenting in
+> >>>
+> >>> Documentation/ABI/testing/sysfs-bus-iio* as appropriate.
+> >>> I'm also unclear on one element about this - is it a value used only
+> >>> for calibration or are we talking about the actual 'range' of the device?
+> >>>      
+> >>
+> >> This is used for calibration. The device measures directly only voltage.
+> >> However, it has also current and power registers. Their values are
+> >> calculated by the device using the calibration register which is calculated
+> >> using max expected current. So I guess that it's not what you mean
+> >> by the actual 'range' of the device.
+> >>  
+> >>> The interpretation of this value isn't clear against the more general
+> >>> ABI.
+> >>>
+> >>> In particular it is it in raw units (adc counts) or mA?  Docs say
+> >>> that but the naming of the attribute doesn't make this clear.
+> >>>      
+> >>
+> >> It's in mA. I can make it clear in the attribute name.
+> >>  
+> >>> Also I'm unconvinced this isn't better represented using the
+> >>> range specifications available for any IIO attribute on the raw
+> >>> value in combination with adjusting the scale value.
+> >>> Note not many drivers yet provide ranges on their raw outputs
+> >>> but we do have core support for it.  I've been meaning to start
+> >>> pushing this out into drivers, but been busy since we introduced
+> >>> the core support.  The dpot-dac driver does use it for examplel
+> >>>     
+> >>
+> >>
+> >> I'm not sure if what I'm about to add is similar to what is done
+> >> in the mentioned dpot-dac driver. It seems that the callback read_avail
+> >> returns information on raw values which can be obtained from the device.
+> >> What I need is an adjustable value, which is then used by the device internally
+> >> in order to calculate current with the requested precision. Max expected current
+> >> is also used for calculating the scale value.
+> >> Tell me if I'm wrong. Maybe I misunderstood the 'range' concept in IIO and
+> >> your solution fits in here.
+> >>  
+> > 
+> > I think I answered this in the other branch of the thread.
+> > _calibscale is what you want here as it's internal to the device.
+> > 
+> > It's not one often used for ADCs but quite a few other types of
+> > device provide some front end analog adjustment (whilst it is digital
+> > here, it is applied within the device - so we don't need to care).
+> > 
+> > Jonathan  
+> 
+> Thank you for your explanation. Calibscale seems suitable for me in this case,
+> but what do you think I should do then with SCALE attribute? Should I get rid of 
+> it for current and use only calibscale? Or should I use both calibscale and 
+> scale attributes and for current they will be the same value?
 
-xhci-mtk turns off phy when host controller is suspended and stopped.
+You'll have to leave it as it is existing ABI.  It won't have the same value
+as calibscale.  Calibscale is for internal changes that don't effect the raw
+value.  scale is to be applied by userspace to the raw value. As I understand it
+here the calibscale value should have no effect on scale.
+> 
+> I should mention that currenst_lsb value is also used for calculating power_lsb
+> as they have a fixed ratio (20 or 25) given in the documentation.
 
->>
->>
->> So if the first 10 ports have the same phy, and 11th and 12th have an other
->> one, won't we end up
->> with a phy list with 12 entries for 2 phys, and initialize and turn on the
->> same first phy 10 times?
-> indeed, we would call phy_init() and phy_power_on() multiple times on
-> the same PHY.
-> however, this is not an issue since the PHY framework is doing
-> ref-counting for us (see [0] and [1] - the PHY driver's .init() and
-> .power_on() callbacks will only be called once for each PHY in your
-> scenario)
+Then expose it for power as well (appropriately adjusted).
+In IIO ABI it is fine to have two elements addressing the same underlying hardware
+value - rule is you change something, you check everything else hasn't changed.
 
-Ok
+Jonathan 
+> 
+> Thanks,
+> 
+> Maciej
+> 
+> >   
+> >> Best regards,
+> >>
+> >> 	Maciej  
+> >>> This moves the burden of calculating the 1lsb value to userspace,
+> >>> but importantly it would give us a consistent ABI where this fits
+> >>> in with existing elements (largely buy not introducing any new
+> >>> ones :).
+> >>>
+> >>> Thanks,
+> >>>
+> >>> Jonathan  
+> >>>>
+> >>>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> >>>> ---
+> >>>>    drivers/iio/adc/ina2xx-adc.c         | 110 ++++++++++++++++++++++++++++++-----
+> >>>>    include/linux/platform_data/ina2xx.h |   2 +
+> >>>>    2 files changed, 98 insertions(+), 14 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
+> >>>> index f387b97..883fede 100644
+> >>>> --- a/drivers/iio/adc/ina2xx-adc.c
+> >>>> +++ b/drivers/iio/adc/ina2xx-adc.c
+> >>>> @@ -56,6 +56,7 @@
+> >>>>    #define INA226_DEFAULT_IT		1110
+> >>>>    
+> >>>>    #define INA2XX_RSHUNT_DEFAULT           10000
+> >>>> +#define INA2XX_MAX_EXPECTED_A_DEFAULT	(1 << 15)	/* current_lsb = 1 mA */
+> >>>>    
+> >>>>    /*
+> >>>>     * bit masks for reading the settings in the configuration register
+> >>>> @@ -114,7 +115,7 @@ struct ina2xx_config {
+> >>>>    	int shunt_div;
+> >>>>    	int bus_voltage_shift;
+> >>>>    	int bus_voltage_lsb;	/* uV */
+> >>>> -	int power_lsb;		/* uW */
+> >>>> +	int power_lsb_factor;
+> >>>>    	enum ina2xx_ids chip_id;
+> >>>>    };
+> >>>>    
+> >>>> @@ -123,7 +124,10 @@ struct ina2xx_chip_info {
+> >>>>    	struct task_struct *task;
+> >>>>    	const struct ina2xx_config *config;
+> >>>>    	struct mutex state_lock;
+> >>>> -	unsigned int shunt_resistor;
+> >>>> +	unsigned int shunt_resistor;		/* uOhms */
+> >>>> +	unsigned int max_expected_current;	/* mA */
+> >>>> +	int current_lsb;			/* uA */
+> >>>> +	int power_lsb;				/* uW */
+> >>>>    	int avg;
+> >>>>    	int int_time_vbus; /* Bus voltage integration time uS */
+> >>>>    	int int_time_vshunt; /* Shunt voltage integration time uS */
+> >>>> @@ -137,7 +141,7 @@ static const struct ina2xx_config ina2xx_config[] = {
+> >>>>    		.shunt_div = 100,
+> >>>>    		.bus_voltage_shift = 3,
+> >>>>    		.bus_voltage_lsb = 4000,
+> >>>> -		.power_lsb = 20000,
+> >>>> +		.power_lsb_factor = 20,
+> >>>>    		.chip_id = ina219,
+> >>>>    	},
+> >>>>    	[ina226] = {
+> >>>> @@ -146,7 +150,7 @@ static const struct ina2xx_config ina2xx_config[] = {
+> >>>>    		.shunt_div = 400,
+> >>>>    		.bus_voltage_shift = 0,
+> >>>>    		.bus_voltage_lsb = 1250,
+> >>>> -		.power_lsb = 25000,
+> >>>> +		.power_lsb_factor = 25,
+> >>>>    		.chip_id = ina226,
+> >>>>    	},
+> >>>>    };
+> >>>> @@ -210,14 +214,15 @@ static int ina2xx_read_raw(struct iio_dev *indio_dev,
+> >>>>    
+> >>>>    		case INA2XX_POWER:
+> >>>>    			/* processed (mW) = raw*lsb (uW) / 1000 */
+> >>>> -			*val = chip->config->power_lsb;
+> >>>> +			*val = chip->power_lsb;
+> >>>>    			*val2 = 1000;
+> >>>>    			return IIO_VAL_FRACTIONAL;
+> >>>>    
+> >>>>    		case INA2XX_CURRENT:
+> >>>> -			/* processed (mA) = raw (mA) */
+> >>>> -			*val = 1;
+> >>>> -			return IIO_VAL_INT;
+> >>>> +			/* processed (mA) = raw*lsb (uA) / 1000 */
+> >>>> +			*val = chip->current_lsb;
+> >>>> +			*val2 = 1000;
+> >>>> +			return IIO_VAL_FRACTIONAL;
+> >>>>    		}
+> >>>>    	}
+> >>>>    
+> >>>> @@ -434,24 +439,47 @@ static ssize_t ina2xx_allow_async_readout_store(struct device *dev,
+> >>>>    }
+> >>>>    
+> >>>>    /*
+> >>>> - * Set current LSB to 1mA, shunt is in uOhms
+> >>>> - * (equation 13 in datasheet). We hardcode a Current_LSB
+> >>>> - * of 1.0 x10-6. The only remaining parameter is RShunt.
+> >>>> + * Calculate calibration value according to equation 1 in ina226 datasheet
+> >>>> + * http://www.ti.com/lit/ds/symlink/ina226.pdf.
+> >>>> + * Current LSB is in uA and RShunt is in uOhms, so RShunt should be
+> >>>> + * converted to mOhms in order to keep the scale.
+> >>>>     * There is no need to expose the CALIBRATION register
+> >>>>     * to the user for now. But we need to reset this register
+> >>>> - * if the user updates RShunt after driver init, e.g upon
+> >>>> - * reading an EEPROM/Probe-type value.
+> >>>> + * if the user updates RShunt or max expected current after driver
+> >>>> + * init, e.g upon reading an EEPROM/Probe-type value.
+> >>>>     */
+> >>>>    static int ina2xx_set_calibration(struct ina2xx_chip_info *chip)
+> >>>>    {
+> >>>> +	unsigned int rshunt = DIV_ROUND_CLOSEST(chip->shunt_resistor, 1000);
+> >>>>    	u16 regval = DIV_ROUND_CLOSEST(chip->config->calibration_factor,
+> >>>> -				   chip->shunt_resistor);
+> >>>> +				     chip->current_lsb * rshunt);
+> >>>>    
+> >>>>    	return regmap_write(chip->regmap, INA2XX_CALIBRATION, regval);
+> >>>>    }
+> >>>>    
+> >>>> +/*
+> >>>> + * Set max_expected_current (mA) and calculate current_lsb (uA),
+> >>>> + * according to equation 2 in ina226 datasheet. Power LSB is calculated
+> >>>> + * by multiplying Current LSB by a given factor, which may vary depending
+> >>>> + * on ina version.
+> >>>> + */
+> >>>> +static int set_max_expected_current(struct ina2xx_chip_info *chip,
+> >>>> +				    unsigned int val)
+> >>>> +{
+> >>>> +	if (val <= 0 || val > chip->config->calibration_factor)
+> >>>> +		return -EINVAL;
+> >>>> +
+> >>>> +	chip->max_expected_current = val;
+> >>>> +	chip->current_lsb = DIV_ROUND_CLOSEST(chip->max_expected_current * 1000,
+> >>>> +					      1 << 15);
+> >>>> +	chip->power_lsb = chip->current_lsb * chip->config->power_lsb_factor;
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>>    static int set_shunt_resistor(struct ina2xx_chip_info *chip, unsigned int val)
+> >>>>    {
+> >>>> +
+> >>>>    	if (val <= 0 || val > chip->config->calibration_factor)
+> >>>>    		return -EINVAL;
+> >>>>    
+> >>>> @@ -493,6 +521,39 @@ static ssize_t ina2xx_shunt_resistor_store(struct device *dev,
+> >>>>    	return len;
+> >>>>    }
+> >>>>    
+> >>>> +static ssize_t ina2xx_max_expected_current_show(struct device *dev,
+> >>>> +					  struct device_attribute *attr,
+> >>>> +					  char *buf)
+> >>>> +{
+> >>>> +	struct ina2xx_chip_info *chip = iio_priv(dev_to_iio_dev(dev));
+> >>>> +
+> >>>> +	return sprintf(buf, "%d\n", chip->max_expected_current);
+> >>>> +}
+> >>>> +
+> >>>> +static ssize_t ina2xx_max_expected_current_store(struct device *dev,
+> >>>> +					   struct device_attribute *attr,
+> >>>> +					   const char *buf, size_t len)
+> >>>> +{
+> >>>> +	struct ina2xx_chip_info *chip = iio_priv(dev_to_iio_dev(dev));
+> >>>> +	unsigned long val;
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	ret = kstrtoul((const char *) buf, 10, &val);  
+> >>>
+> >>> Odd bit of casting given that's what it already is...
+> >>>      
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>> +	ret = set_max_expected_current(chip, val);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>> +	/* Update the Calibration register */
+> >>>> +	ret = ina2xx_set_calibration(chip);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>> +	return len;
+> >>>> +}
+> >>>> +
+> >>>>    #define INA219_CHAN(_type, _index, _address) { \
+> >>>>    	.type = (_type), \
+> >>>>    	.address = (_address), \
+> >>>> @@ -755,10 +816,15 @@ static IIO_DEVICE_ATTR(in_shunt_resistor, S_IRUGO | S_IWUSR,
+> >>>>    		       ina2xx_shunt_resistor_show,
+> >>>>    		       ina2xx_shunt_resistor_store, 0);
+> >>>>    
+> >>>> +static IIO_DEVICE_ATTR(in_max_expected_current, S_IRUGO | S_IWUSR,
+> >>>> +		       ina2xx_max_expected_current_show,
+> >>>> +		       ina2xx_max_expected_current_store, 0);
+> >>>> +
+> >>>>    static struct attribute *ina219_attributes[] = {
+> >>>>    	&iio_dev_attr_in_allow_async_readout.dev_attr.attr,
+> >>>>    	&iio_const_attr_ina219_integration_time_available.dev_attr.attr,
+> >>>>    	&iio_dev_attr_in_shunt_resistor.dev_attr.attr,
+> >>>> +	&iio_dev_attr_in_max_expected_current.dev_attr.attr,
+> >>>>    	NULL,
+> >>>>    };
+> >>>>    
+> >>>> @@ -766,6 +832,7 @@ static struct attribute *ina226_attributes[] = {
+> >>>>    	&iio_dev_attr_in_allow_async_readout.dev_attr.attr,
+> >>>>    	&iio_const_attr_ina226_integration_time_available.dev_attr.attr,
+> >>>>    	&iio_dev_attr_in_shunt_resistor.dev_attr.attr,
+> >>>> +	&iio_dev_attr_in_max_expected_current.dev_attr.attr,
+> >>>>    	NULL,
+> >>>>    };
+> >>>>    
+> >>>> @@ -851,6 +918,21 @@ static int ina2xx_probe(struct i2c_client *client,
+> >>>>    	if (ret)
+> >>>>    		return ret;
+> >>>>    
+> >>>> +	if (of_property_read_u32(client->dev.of_node,
+> >>>> +				  "max-expected-current", &val) < 0) {
+> >>>> +		struct ina2xx_platform_data *pdata =
+> >>>> +		    dev_get_platdata(&client->dev);
+> >>>> +
+> >>>> +		if (pdata && pdata->max_mA != 0)
+> >>>> +			val = pdata->max_mA;
+> >>>> +		else
+> >>>> +			val = INA2XX_MAX_EXPECTED_A_DEFAULT;
+> >>>> +	}
+> >>>> +
+> >>>> +	ret = set_max_expected_current(chip, val);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>>    	/* Patch the current config register with default. */
+> >>>>    	val = chip->config->config_default;
+> >>>>    
+> >>>> diff --git a/include/linux/platform_data/ina2xx.h b/include/linux/platform_data/ina2xx.h
+> >>>> index 9abc0ca..f02b1d8 100644
+> >>>> --- a/include/linux/platform_data/ina2xx.h
+> >>>> +++ b/include/linux/platform_data/ina2xx.h
+> >>>> @@ -13,7 +13,9 @@
+> >>>>    /**
+> >>>>     * struct ina2xx_platform_data - ina2xx info
+> >>>>     * @shunt_uohms		shunt resistance in microohms
+> >>>> + * @max_mA		max expected current in mA
+> >>>>     */
+> >>>>    struct ina2xx_platform_data {
+> >>>>    	long shunt_uohms;
+> >>>> +	int max_mA;
+> >>>>    };  
+> >>>
+> >>>
+> >>>
+> >>>      
+> > 
+> > 
+> > 
+> >   
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-> do you see any other issues with this?
->
-
-Not really, fine by me.
-
->> I'm also not sure I understand the reason for having the "usb3-phy" and
->> "usb2-phy" phy-names
->> for the ports if we anyways just add everything to one list.
-> the PHY devicetree bindings state that the "phy-names" property is
-> mandatory: [2]
->
-> when moving the whole multiple PHY logic to usb_add_hcd() then it even
-> makes sense to look for specific PHYs (imho):
-> - let's assume we have a XHCI controller with two ports
-> - both ports have a USB2 PHY, but only one has a USB3 PHY
-> - (this basically describes the situation on the Amlogic Meson GXL
-> SoCs, Mediatek uses similar designs)
->
-> this would result in the following flow:
-> 1. usb_add_hcd is called for the high-speed HCD
-> 2. we would parse the PHYs for the high-speed HCD
-> 3. usb_add_hcd is called for the super-speed HCD
-> 4. we would parse the PHYs for the super-speed HCD
-> depending on how we parse the PHYs (mapping the controller-type to
-> phy-name "usb2-phy" or "usb3-phy") we either end up with:
-> - 3 PHY handles (2x USB2, 1x USB3) if we take the
-> controller-type/phy-name into account
-> - 6 PHY handles (doubling the amount from the use-case above) if we don't
->
-> please let me know if there is an easier solution - I prefer simple
-> code myself, so I don't want to add complexity where it's not needed.
-
-Ah, ok, I'm used to the ACPI tables way of listing ports where a physical USB3 connector
-(HS & SS) is actually described as two separate ports. one HS and one SS.
-With this layout one port can have only one PHY.
-
-The Amlogic Meson GXL with two physical USB connectors (USB2&3 and USB2 only)
-would look something like this in ACPI:
-
-Device (RHUB) {
-	...
-	Device (HS01) {...}
-	Device (HS02) {...}
-	Device (SS01) {...}
-
-xhci register layout is similar.
-Each port has its own port status/control register.
-Depending on if a USB2 or USB3 device is connected to a physical connector it will trigger
-different port status registers.
-
-Not sure which way is better.
-
--Mathias
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
