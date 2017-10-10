@@ -1,113 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
- multiple overlays
-Date: Tue, 10 Oct 2017 13:40:14 -0500
-Message-ID: <20171010184014.m2chslx36kbhvgug@rob-hp-laptop>
-References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
- <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
- <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
- <59D5A737.9090905@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: nvmem: Describe the Amlogic
+ Meson6/Meson8/Meson8b efuse
+Date: Tue, 10 Oct 2017 13:56:56 -0500
+Message-ID: <20171010185656.pf4jybiohcywp7wj@rob-hp-laptop>
+References: <20171002232804.20042-1-martin.blumenstingl@googlemail.com>
+ <20171002232804.20042-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <59D5A737.9090905@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
+In-Reply-To: <20171002232804.20042-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 04, 2017 at 08:29:59PM -0700, Frank Rowand wrote:
-> On 10/04/17 08:19, Rob Herring wrote:
-> > On Mon, Oct 2, 2017 at 10:53 PM,  <frowand.list@gmail.com> wrote:
-> >> From: Frank Rowand <frank.rowand@sony.com>
-> >>
-> >> The process of applying an overlay consists of:
-> >>   - unflatten an overlay FDT (flattened device tree) into an
-> >>     EDT (expanded device tree)
-> >>   - fixup the phandle values in the overlay EDT to fit in a
-> >>     range above the phandle values in the live device tree
-> >>   - create the overlay changeset to reflect the contents of
-> >>     the overlay EDT
-> >>   - apply the overlay changeset, to modify the live device tree,
-> >>     potentially changing the maximum phandle value in the live
-> >>     device tree
-> >>
-> >> There is currently no protection against two overlay applies
-> >> concurrently determining what range of phandle values are in use
-> >> in the live device tree, and subsequently changing that range.
-> >> Add a mutex to prevent multiple overlay applies from occurring
-> >> simultaneously.
-> >>
-> >> Ignoring 2 checkpatch warnings: Prefer using '"%s...", __func__'
-> >> so that the WARN() string will be more easily grepped.
-> >>
-> >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> >> ---
-> >>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  7 +++++++
-> >>  drivers/of/overlay.c                         | 22 ++++++++++++++++++++++
-> >>  drivers/of/unittest.c                        | 21 +++++++++++++++++++++
-> >>  include/linux/of.h                           | 19 +++++++++++++++++++
-> >>  4 files changed, 69 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-> >> index 7a7be0515bfd..c99f7924b1c6 100644
-> >> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-> >> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
-> >> @@ -221,6 +221,11 @@ static void __init tilcdc_convert_slave_node(void)
-> >>                 goto out;
-> >>         }
-> >>
-> >> +       /*
-> >> +        * protect from of_resolve_phandles() through of_overlay_apply()
-> >> +        */
-> >> +       of_overlay_mutex_lock();
-> >> +
-> > 
-> > We can't be relying on callers to get the locking right...
+On Tue, Oct 03, 2017 at 01:28:01AM +0200, Martin Blumenstingl wrote:
+> Amlogic Meson6, Meson8 and Meson8b SoCs have an efuse which contains
+> calibration data from the factory (for the internal temperature sensor
+> and some CVBS connector settings). Some manufacturers also store the MAC
+> address or serial number in the efuse.
 > 
-> Agreed.
+> This documents the devicetree bindings for the efuse on these SoCs.
 > 
-> 
-> > 
-> >>         overlay = tilcdc_get_overlay(&kft);
-> >>         if (!overlay)
-> >>                 goto out;
-> >> @@ -256,6 +261,8 @@ static void __init tilcdc_convert_slave_node(void)
-> >>                 pr_info("%s: ti,tilcdc,slave node successfully converted\n",
-> >>                         __func__);
-> >>  out:
-> >> +       of_overlay_mutex_unlock();
-> >> +
-> >>         kfree_table_free(&kft);
-> >>         of_node_put(i2c);
-> >>         of_node_put(slave);
-> >> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> >> index a0d3222febdc..4ed372af6ce7 100644
-> >> --- a/drivers/of/overlay.c
-> >> +++ b/drivers/of/overlay.c
-> >> @@ -71,6 +71,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
-> >>                 const struct device_node *overlay_node,
-> >>                 bool is_symbols_node);
-> >>
-> >> +/*
-> >> + * of_resolve_phandles() finds the largest phandle in the live tree.
-> >> + * of_overlay_apply() may add a larger phandle to the live tree.
-> >> + * Do not allow race between two overlays being applied simultaneously:
-> >> + *    mutex_lock(&of_overlay_phandle_mutex)
-> >> + *    of_resolve_phandles()
-> >> + *    of_overlay_apply()
-> >> + *    mutex_unlock(&of_overlay_phandle_mutex)
-> > 
-> > Why do these need to be separate functions? I think I mentioned it
-> > before, but essentially overlay_data_add() should be part of the
-> > overlay API. We may need to allow for callers to do each step, but
-> > generally I think the interface should just be "apply this fdt blob".
-> 
-> Yes, that is where I want to end up.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  .../bindings/nvmem/amlogic-meson-mx-efuse.txt      | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/amlogic-meson-mx-efuse.txt
 
-So, is that not doable now? To put it another way, why does 
-of_resolve_phandles need to be a separate call? Seems like an internal 
-detail of how you apply an overlay to me.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
