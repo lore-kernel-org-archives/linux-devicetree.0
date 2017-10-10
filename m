@@ -1,81 +1,154 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 17/22][UPDATE] firmware: arm_scmi: add device power
- domain support genpd
-Date: Tue, 10 Oct 2017 14:02:58 +0100
-Message-ID: <44ccfb6b-893c-14d9-d373-d00c5bce3f06@arm.com>
-References: <1506604306-20739-18-git-send-email-sudeep.holla@arm.com>
- <1506692575-7743-1-git-send-email-sudeep.holla@arm.com>
- <CAPDyKFpCxJXgT9F7_xq3eL13hnuhOy1sW8ipv0YeitfFhmOcNA@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain
+ device / integer references
+Date: Tue, 10 Oct 2017 15:07:29 +0200
+Message-ID: <d8a48273-7a19-0f83-4a4d-8058b7a59e0e@xs4all.nl>
+References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+ <20170925222540.371-21-sakari.ailus@linux.intel.com>
+ <fbd2f71d-aa6d-08ef-1723-132864bde27b@xs4all.nl>
+ <20170926113029.eh5i4sp6we6lvgow@paasikivi.fi.intel.com>
+ <4363f544-d1ec-68e4-1edf-9a16b3cdb1ea@xs4all.nl>
+ <20171010112710.noq6a4ktjqzt5u22@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFpCxJXgT9F7_xq3eL13hnuhOy1sW8ipv0YeitfFhmOcNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20171010112710.noq6a4ktjqzt5u22@valkosipuli.retiisi.org.uk>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/10/17 12:05, Ulf Hansson wrote:
-> On 29 September 2017 at 15:42, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> This patch hooks up the support for device power domain provided by
->> SCMI using the Linux generic power domain infrastructure.
+On 10/10/2017 01:27 PM, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> On Mon, Oct 09, 2017 at 02:06:55PM +0200, Hans Verkuil wrote:
+>> Hi Sakari,
 >>
->> Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/firmware/Kconfig                   |  13 +++
->>  drivers/firmware/arm_scmi/Makefile         |   1 +
->>  drivers/firmware/arm_scmi/scmi_pm_domain.c | 136 +++++++++++++++++++++++++++++
->>  3 files changed, 150 insertions(+)
->>  create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+>> My reply here is also valid for v15.
 >>
->> - updated to read the initial state instead of assuming off as
->>   suggested by Ulf
+>> On 26/09/17 13:30, Sakari Ailus wrote:
+>>> Hi Hans,
+>>>
+>>> Thanks for the review.
+>>>
+>>> On Tue, Sep 26, 2017 at 10:47:40AM +0200, Hans Verkuil wrote:
+>>>> On 26/09/17 00:25, Sakari Ailus wrote:
+>>>>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+>>>>> the device's own fwnode, it will follow child fwnodes with the given
+>>>>> property-value pair and return the resulting fwnode.
+>>>>>
+>>>>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>>> ---
+>>>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 201 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> index f739dfd16cf7..f93049c361e4 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>>>> @@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
+>>>>>  	return ret;
+>>>>>  }
+>>>>>  
+>>>>> +/*
+>>>>> + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
+>>>>> + *					arguments
+>>>>> + * @dev: struct device pointer
+>>>>> + * @notifier: notifier for @dev
+>>>>> + * @prop: the name of the property
+>>>>> + * @index: the index of the reference to get
+>>>>> + * @props: the array of integer property names
+>>>>> + * @nprops: the number of integer property names in @nprops
+>>>>> + *
+>>>>> + * Find fwnodes referred to by a property @prop, then under that
+>>>>> + * iteratively, @nprops times, follow each child node which has a
+>>>>> + * property in @props array at a given child index the value of which
+>>>>> + * matches the integer argument at an index.
+>>>>
+>>>> "at an index". Still makes no sense to me. Which index?
+>>>
+>>> How about this:
+>>>
+>>> First find an fwnode referred to by the reference at @index in @prop.
+>>>
+>>> Then under that fwnode, @nprops times, for each property in @props,
+>>> iteratively follow child nodes starting from fwnode such that they have the
+>>> property in @props array at the index of the child node distance from the
 >>
->> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
->> index c3d1a12763ce..a4462bc661c8 100644
->> --- a/drivers/firmware/Kconfig
->> +++ b/drivers/firmware/Kconfig
->> @@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
-
-[..]
-
->> +               domains[i] = &scmi_pd->genpd;
->> +
->> +               scmi_pd->domain = i;
->> +               scmi_pd->handle = handle;
->> +               scmi_pd->name = handle->power_ops->name_get(handle, i);
->> +               scmi_pd->genpd.name = scmi_pd->name;
->> +               scmi_pd->genpd.power_off = scmi_pd_power_off;
->> +               scmi_pd->genpd.power_on = scmi_pd_power_on;
->> +
->> +               if (handle->power_ops->state_get(handle, i, &state)) {
->> +                       dev_dbg(dev, "failed to get state for domain %d\n", i);
+>> distance? You mean 'instance'?
 > 
-> Perhaps dev_warn() instead?
+> No. It's a tree structure: this is the distance between a node in the tree
+> and the root node (i.e. device's fwnode).
 > 
+>>
+>>> root node and the value of that property matching with the integer argument of
+>>> the reference, at the same index.
+>>
+>> You've completely lost me. About halfway through this sentence my brain crashed :-)
+> 
+> :-D
+> 
+> Did keeping distance have any effect?
 
-Will do.
+No :-)
 
-[..]
+"the index of the child node distance from the root node": I have absolutely
+no idea how to interpret that.
 
 > 
-> Besides the nitpick above, feel free to add:
+>>
+>>>
+>>>>
+>>>>> + *
+>>>>> + * For example, if this function was called with arguments and values
+>>>>> + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
+>>>>> + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
+>>>>> + * it would return the node marked with THISONE. The @dev argument in
+>>>>> + * the ASL below.
+>>>>
+>>>> I know I asked for this before, but can you change the example to one where
+>>>> nprops = 2? I think that will help understanding this.
+>>>
+>>> I could do that but then the example no longer corresponds to any actual
+>>> case that exists at the moment. LED nodes will use a single integer
+>>> argument and lens-focus nodes none.
+>>
+>> So? The example is here to understand the code and it doesn't have to be
+>> related to actual hardware for a mainlined driver.
 > 
-> Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
+> This isn't about hardware, the definitions being parsed currently aren't
+> specific to any single piece of hardware. I could add an example which does
+> not exist, that's certainly possible. But I fail to see how it'd help
+> while the contrary could well be the case.
 
-Thanks.
+It helps to relate the code (and the comments for that matter) to what is in
+the ACPI. In fact, if you can make such an example, then I can see if I can
+come up with a better description.
 
--- 
 Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+	Hans
+
+> 
+>>
+>> If you really don't want to do this here, then put the example in the commit
+>> log. I don't see any reason why you can't put it here, though.
+>>
+>> I think that once I see an 'nprops = 2' example I can rephrase that
+>> brain-crash sentence for you...
+>>
+>> BTW, where are the ACPI 'bindings' defined anyway? For DT they are in the
+>> bindings directory, but where does ACPI define such things? Just curious.
+> 
+> As the fwnode interface can be used to access information in both ACPI and
+> DT, there is an incentive to maintain the interfaces effectively the same.
+> In other words where the interfaces are the same, there is no need to
+> define bindings for ACPI as such. Where there are differences the bindings
+> are defined in Documentation/acpi/dsd .
+> 
+> The so far only technical reason to that is related to the same is that
+> ACPI can only refer to device nodes (i.e. nodes that correspond to struct
+> devices), not sub-nodes under them.
+> 
