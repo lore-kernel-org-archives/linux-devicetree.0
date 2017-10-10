@@ -1,106 +1,100 @@
-From: Julien Thierry <julien.thierry@arm.com>
-Subject: Re: [PATCH v4 05/12] mmc: mediatek: add pad_tune0 support
-Date: Tue, 10 Oct 2017 17:57:26 +0100
-Message-ID: <afac6efe-d721-acae-6c07-adf4cfff962d@arm.com>
-References: <1507627831-29323-1-git-send-email-chaotian.jing@mediatek.com>
- <1507627831-29323-6-git-send-email-chaotian.jing@mediatek.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 7/7] ARM: dts: Use ti-sysc module driver for omap4 musb
+Date: Tue, 10 Oct 2017 10:01:28 -0700
+Message-ID: <20171010170128.GW4394@atomide.com>
+References: <20170929223411.9691-1-tony@atomide.com>
+ <20170929223411.9691-8-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507627831-29323-6-git-send-email-chaotian.jing@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, yong mao <yong.mao@mediatek.com>, Phong LE <ple@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mmc@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170929223411.9691-8-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170929 15:35]:
+> Let's make use of the generic ti-sysc module for musb to have
+> a child device with working runtime PM.
+...
+> +		target-module@4a0ab000 {
+> +			compatible = "ti,sysc-omap4";
+>  			ti,hwmods = "usb_otg_hs";
 
-On 10/10/17 10:30, Chaotian Jing wrote:
-> from mt2701, the register of PAD_TUNE has been phased out,
-> while there is a new register of PAD_TUNE0
-> 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->   drivers/mmc/host/mtk-sd.c | 69 ++++++++++++++++++++++++++++++++++-------------
->   1 file changed, 51 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index ab2fbbb..0dc45b3 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -75,6 +75,7 @@
->   #define MSDC_PATCH_BIT   0xb0
->   #define MSDC_PATCH_BIT1  0xb4
->   #define MSDC_PAD_TUNE    0xec
-> +#define MSDC_PAD_TUNE0   0xf0
->   #define PAD_DS_TUNE      0x188
->   #define PAD_CMD_TUNE     0x18c
->   #define EMMC50_CFG0      0x208
-> @@ -301,6 +302,7 @@ struct msdc_save_para {
->   struct mtk_mmc_compatible {
->   	u8 clk_div_bits;
->   	bool hs400_tune; /* only used for MT8173 */
-> +	bool pad_tune0;
+And this should be compatible with "ti,sysc-omap2", I messed it up while
+changing from type1 and 2 to omap2 and omap4. Will apply the updated
+version below.
 
-You only use this to decide whether to use MDSC_PAD_TUNE or 
-MSDC_PAD_TUNE0 as tune regs.
+Regards,
 
-Couldn't this field directly be a 'u32' that is either MDSC_PAD_TUNE or 
-MDSC_PAD_TUNE0 rather than a bool?
+Tony
 
->   };
->   
->   struct msdc_tune_para {
-> @@ -362,21 +364,25 @@ struct msdc_host {
->   static const struct mtk_mmc_compatible mt8135_compat = {
->   	.clk_div_bits = 8,
->   	.hs400_tune = false,
-> +	.pad_tune0 = false,
+8< ---------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Date: Fri, 29 Sep 2017 08:20:50 -0700
+Subject: [PATCH] ARM: dts: Use ti-sysc module driver for omap4 musb
 
-and here we could have (field could be renamed accordingly of course):
+Let's make use of the generic ti-sysc module for musb to have
+a child device with working runtime PM.
 
-	.pad_tune0 = MDSC_PAD_TUNE,
+Cc: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4.dtsi | 36 ++++++++++++++++++++++++------------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
->   };
->   
->   static const struct mtk_mmc_compatible mt8173_compat = {
->   	.clk_div_bits = 8,
->   	.hs400_tune = true,
-> +	.pad_tune0 = false,
->   };
->   
->   static const struct mtk_mmc_compatible mt2701_compat = {
->   	.clk_div_bits = 12,
->   	.hs400_tune = false,
-> +	.pad_tune0 = true,
-
-here:
-	.pad_tune0 = MDSC_PAD_TUNE0,
-
->   };
->   
->   static const struct mtk_mmc_compatible mt2712_compat = {
->   	.clk_div_bits = 12,
->   	.hs400_tune = false,
-> +	.pad_tune0 = true,
->   };
->   
->   static const struct of_device_id msdc_of_ids[] = {
-> @@ -581,6 +587,10 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
->   	u32 flags;
->   	u32 div;
->   	u32 sclk;
-> +	u32 tune_reg = MSDC_PAD_TUNE;
-> +
-> +	if (host->dev_comp->pad_tune0)
-> +		tune_reg = MSDC_PAD_TUNE0;
-
-And this would not be needed here nor in the other functions, it could 
-just be replaced by host->dev_comp->pad_tune0.
-
-Thanks,
-
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -1117,19 +1117,31 @@
+ 			reg-names = "otghs_control";
+ 		};
+ 
+-		usb_otg_hs: usb_otg_hs@4a0ab000 {
+-			compatible = "ti,omap4-musb";
+-			reg = <0x4a0ab000 0x7ff>;
+-			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "mc", "dma";
++		target-module@4a0ab000 {
++			compatible = "ti,sysc-omap2";
+ 			ti,hwmods = "usb_otg_hs";
+-			usb-phy = <&usb2_phy>;
+-			phys = <&usb2_phy>;
+-			phy-names = "usb2-phy";
+-			multipoint = <1>;
+-			num-eps = <16>;
+-			ram-bits = <12>;
+-			ctrl-module = <&omap_control_usbotg>;
++			reg = <0x4a0ab000 0x4>,
++			      <0x4a0ab004 0x4>,
++			      <0x4a0ab008 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x4a0ab000 0x1000>;
++
++			usb_otg_hs: otg@0 {
++				compatible = "ti,omap2-musb";
++				reg = <0x0 0x7ff>;
++				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "mc", "dma";
++				usb-phy = <&usb2_phy>;
++				phys = <&usb2_phy>;
++				phy-names = "usb2-phy";
++				multipoint = <1>;
++				num-eps = <16>;
++				ram-bits = <12>;
++				ctrl-module = <&omap_control_usbotg>;
++			};
+ 		};
+ 
+ 		aes1: aes@4b501000 {
 -- 
-Julien Thierry
+2.14.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
