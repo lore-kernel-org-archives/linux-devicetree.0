@@ -1,124 +1,29 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 4/5] soc: qcom: Remote filesystem memory driver
-Date: Mon, 9 Oct 2017 19:49:47 -0500
-Message-ID: <CAL_JsqK+pGsAf+FYTFDUGreTsCU_Rc7ouDsyE6hXJkYexomkzQ@mail.gmail.com>
-References: <20171005033258.12825-1-bjorn.andersson@linaro.org> <20171005033258.12825-5-bjorn.andersson@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] of/platform: Generalize /reserved-memory handling
+Date: Mon, 9 Oct 2017 19:50:38 -0500
+Message-ID: <CAL_JsqKVBC8CoXotxoruO-89VMdUtb1HhcfOsyd7JiFwJ4dCfA@mail.gmail.com>
+References: <20171005033258.12825-1-bjorn.andersson@linaro.org> <20171005033258.12825-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171005033258.12825-5-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171005033258.12825-2-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Oct 4, 2017 at 10:32 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> The Qualcomm remote file system protocol is used by certain remoteprocs,
-> in particular the modem, to read and write persistent storage in
-> platforms where only the application CPU has physical storage access.
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> By iterating over all /reserved-memory child nodes and match each one to
+> a list of compatibles that we want to treat specially, we can easily
+> extend the list of compatibles to handle - without having to resort to
+> of_platform_populate() that would create unnecessary platform_devices.
 >
-> The protocol is based on a set of QMI-encoded control-messages and a
-> shared memory buffer for exchaning the data. This driver implements the
-> latter, providing the user space service access to the carved out chunk
-> of memory.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->
-> Changes since v2:
-> - Renamed driver to "rmtfs_mem" in attempt to clarify that this is not a
->   file system, but some chunk of memory.
->
-> Changes since v1:
-> - RFSA device represented direclty by the reserved-memory node
->
->  drivers/of/platform.c        |   1 +
->  drivers/soc/qcom/Kconfig     |  11 ++
->  drivers/soc/qcom/Makefile    |   1 +
->  drivers/soc/qcom/rmtfs_mem.c | 272 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 285 insertions(+)
->  create mode 100644 drivers/soc/qcom/rmtfs_mem.c
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index ee89f096f0f3..e7548c9a9915 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -498,6 +498,7 @@ EXPORT_SYMBOL_GPL(of_platform_default_populate);
->
->  #ifndef CONFIG_PPC
->  static const struct of_device_id reserved_mem_matches[] = {
-> +       { .compatible = "qcom,rmtfs-mem" },
->         { .compatible = "ramoops" },
->         {}
->  };
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index 9fca977ef18d..6dff89eaf3f8 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -24,6 +24,17 @@ config QCOM_PM
->           modes. It interface with various system drivers to put the cores in
->           low power modes.
->
-> +config QCOM_RMTFS_MEM
-> +       tristate "Qualcomm Remote Filesystem memory driver"
-> +       depends on ARCH_QCOM
-> +       help
-> +         The Qualcomm remote filesystem memory driver is used for allocating
-> +         and exposing regions of shared memory with remote processors for the
-> +         purpose of exchanging sector-data between the remote filesystem
-> +         service and its clients.
-> +
-> +         Say y here if you intend to boot the modem remoteproc.
-> +
->  config QCOM_SMEM
->         tristate "Qualcomm Shared Memory Manager (SMEM)"
->         depends on ARCH_QCOM
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index 414f0de274fa..541c1f40d126 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -1,6 +1,7 @@
->  obj-$(CONFIG_QCOM_GSBI)        +=      qcom_gsbi.o
->  obj-$(CONFIG_QCOM_MDT_LOADER)  += mdt_loader.o
->  obj-$(CONFIG_QCOM_PM)  +=      spm.o
-> +obj-$(CONFIG_QCOM_RMTFS_MEM)   += rmtfs_mem.o
->  obj-$(CONFIG_QCOM_SMD_RPM)     += smd-rpm.o
->  obj-$(CONFIG_QCOM_SMEM) +=     smem.o
->  obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
-> diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
-> new file mode 100644
-> index 000000000000..2e7c955e7cf0
-> --- /dev/null
-> +++ b/drivers/soc/qcom/rmtfs_mem.c
-> @@ -0,0 +1,272 @@
-> +/*
-> + * Copyright (c) 2017 Linaro Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/cdev.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_reserved_mem.h>
-> +#include <linux/of_fdt.h>
 
-This shouldn't be needed?
-
-
-> +#include <linux/dma-mapping.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/io.h>
-> +#include <linux/qcom_scm.h>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
