@@ -1,103 +1,220 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 03/22] dt-bindings: arm: scmi: add ARM MHU specific
- mailbox client bindings
-Date: Tue, 10 Oct 2017 12:04:06 +0100
-Message-ID: <d8ce2158-f0fc-9bac-713a-ed131bd479bd@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-4-git-send-email-sudeep.holla@arm.com>
- <20171005232031.7373ni5ssln4wlpr@rob-hp-laptop>
- <CABb+yY1ra5bgRB1VND+NvCcDFqfggG04a+JPWFZ+HpNg08eR8g@mail.gmail.com>
- <CAL_Jsq+0paGePmJVjsyFJiHx0UaDPjQrbe3C030U+fuUkWCJ+A@mail.gmail.com>
- <CABb+yY2v8D9NFVsG9OwSpL8cswKihY6OUru8QA6Jfq5YmVVD7A@mail.gmail.com>
- <CAL_JsqKy+WzEiHRS0BrE3_3Md4CGOr0e2ZZ_vBCB-Opgg49s+A@mail.gmail.com>
- <CABb+yY0KNafWbD00hBVrNNGnFDcU0v6KXXY2D2K7KNouak1HdQ@mail.gmail.com>
- <CAL_JsqJTuq4rDu9+T6rcC_q8Gw5nyDScNZy2cNkq+y5_v9pegA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 17/22][UPDATE] firmware: arm_scmi: add device power
+ domain support genpd
+Date: Tue, 10 Oct 2017 13:05:16 +0200
+Message-ID: <CAPDyKFpCxJXgT9F7_xq3eL13hnuhOy1sW8ipv0YeitfFhmOcNA@mail.gmail.com>
+References: <1506604306-20739-18-git-send-email-sudeep.holla@arm.com> <1506692575-7743-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJTuq4rDu9+T6rcC_q8Gw5nyDScNZy2cNkq+y5_v9pegA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, DTML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Harb Abdulhamid <harba@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, LKML <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>, Alexey Klimov <alexey.klimov@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506692575-7743-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+On 29 September 2017 at 15:42, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> This patch hooks up the support for device power domain provided by
+> SCMI using the Linux generic power domain infrastructure.
+>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/Kconfig                   |  13 +++
+>  drivers/firmware/arm_scmi/Makefile         |   1 +
+>  drivers/firmware/arm_scmi/scmi_pm_domain.c | 136 +++++++++++++++++++++++++++++
+>  3 files changed, 150 insertions(+)
+>  create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+>
+> - updated to read the initial state instead of assuming off as
+>   suggested by Ulf
+>
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index c3d1a12763ce..a4462bc661c8 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
+>           This protocol library provides interface for all the client drivers
+>           making use of the features offered by the SCMI.
+>
+> +config ARM_SCMI_POWER_DOMAIN
+> +       tristate "SCMI power domain driver"
+> +       depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> +       default y
+> +       select PM_GENERIC_DOMAINS if PM
+> +       help
+> +         This enables support for the SCMI power domains which can be
+> +         enabled or disabled via the SCP firmware
+> +
+> +         This driver can also be built as a module.  If so, the module
+> +         will be called scmi_pm_domain. Note this may needed early in boot
+> +         before rootfs may be available.
+> +
+>  config ARM_SCPI_PROTOCOL
+>         tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+>         depends on ARM || ARM64 || COMPILE_TEST
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index 7fb026c71833..289e9e5a4764 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL)        = arm_scmi.o
+>  arm_scmi-y = base.o clock.o driver.o mbox_if.o perf.o power.o sensors.o
+>  arm_scmi-$(CONFIG_ARM_MHU) += arm_mhu_if.o
+> +obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+> diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> new file mode 100644
+> index 000000000000..f105f7d5c660
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> @@ -0,0 +1,136 @@
+> +/*
+> + * SCMI Generic power domain support.
+> + *
+> + * Copyright (C) 2017 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/scmi_protocol.h>
+> +
+> +struct scmi_pm_domain {
+> +       struct generic_pm_domain genpd;
+> +       const struct scmi_handle *handle;
+> +       const char *name;
+> +       u32 domain;
+> +};
+> +
+> +#define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
+> +
+> +static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
+> +{
+> +       int ret;
+> +       u32 state, ret_state;
+> +       struct scmi_pm_domain *pd = to_scmi_pd(domain);
+> +       const struct scmi_power_ops *ops = pd->handle->power_ops;
+> +
+> +       if (power_on)
+> +               state = SCMI_POWER_STATE_GENERIC_ON;
+> +       else
+> +               state = SCMI_POWER_STATE_GENERIC_OFF;
+> +
+> +       ret = ops->state_set(pd->handle, pd->domain, state);
+> +       if (!ret)
+> +               ret = ops->state_get(pd->handle, pd->domain, &ret_state);
+> +       if (!ret && state != ret_state)
+> +               return -EIO;
+> +
+> +       return ret;
+> +}
+> +
+> +static int scmi_pd_power_on(struct generic_pm_domain *domain)
+> +{
+> +       return scmi_pd_power(domain, true);
+> +}
+> +
+> +static int scmi_pd_power_off(struct generic_pm_domain *domain)
+> +{
+> +       return scmi_pd_power(domain, false);
+> +}
+> +
+> +static int scmi_pm_domain_probe(struct platform_device *pdev)
+> +{
+> +       int num_domains, i;
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *np = dev->of_node;
+> +       struct scmi_pm_domain *scmi_pd;
+> +       struct genpd_onecell_data *scmi_pd_data;
+> +       struct generic_pm_domain **domains;
+> +       const struct scmi_handle *handle = devm_scmi_handle_get(dev);
+> +
+> +       if (IS_ERR_OR_NULL(handle) || !handle->power_ops)
+> +               return -EPROBE_DEFER;
+> +
+> +       num_domains = handle->power_ops->num_domains_get(handle);
+> +       if (num_domains < 0) {
+> +               dev_err(dev, "number of domains not found\n");
+> +               return num_domains;
+> +       }
+> +
+> +       scmi_pd = devm_kcalloc(dev, num_domains, sizeof(*scmi_pd), GFP_KERNEL);
+> +       if (!scmi_pd)
+> +               return -ENOMEM;
+> +
+> +       scmi_pd_data = devm_kzalloc(dev, sizeof(*scmi_pd_data), GFP_KERNEL);
+> +       if (!scmi_pd_data)
+> +               return -ENOMEM;
+> +
+> +       domains = devm_kcalloc(dev, num_domains, sizeof(*domains), GFP_KERNEL);
+> +       if (!domains)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < num_domains; i++, scmi_pd++) {
+> +               u32 state;
+> +
+> +               domains[i] = &scmi_pd->genpd;
+> +
+> +               scmi_pd->domain = i;
+> +               scmi_pd->handle = handle;
+> +               scmi_pd->name = handle->power_ops->name_get(handle, i);
+> +               scmi_pd->genpd.name = scmi_pd->name;
+> +               scmi_pd->genpd.power_off = scmi_pd_power_off;
+> +               scmi_pd->genpd.power_on = scmi_pd_power_on;
+> +
+> +               if (handle->power_ops->state_get(handle, i, &state)) {
+> +                       dev_dbg(dev, "failed to get state for domain %d\n", i);
 
+Perhaps dev_warn() instead?
 
-On 09/10/17 23:57, Rob Herring wrote:
-> On Mon, Oct 9, 2017 at 9:46 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
->> On Mon, Oct 9, 2017 at 7:22 PM, Rob Herring <robh@kernel.org> wrote:
->>> On Fri, Oct 6, 2017 at 9:26 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
->>>> On Fri, Oct 6, 2017 at 9:24 PM, Rob Herring <robh@kernel.org> wrote:
->>>>> On Fri, Oct 6, 2017 at 6:01 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
->>>>>> On Fri, Oct 6, 2017 at 4:50 AM, Rob Herring <robh@kernel.org> wrote:
->>>>>>> On Thu, Sep 28, 2017 at 02:11:27PM +0100, Sudeep Holla wrote:
->>>>
->>>>>>>
->>>>>>>> +- mbox-data : For each phandle listed in mboxes property, an unsigned 32-bit
->>>>>>>> +           data as expected by the mailbox controller
->>>>>>>
->>>>>>> Shouldn't that be cells as part of mboxes property?
->>>>>>>
->>>>>> A MHU client can send any number of commands (such u32 values) over a channel.
->>>>>> This client (SCMI) sends just one command over a channel, but other
->>>>>> clients may/do send two or more.
->>>
->>> The above definition doesn't support 2 or more as it is 1-1 with channels.
->>>
->> I thought you suggested to make controller driver accept the command
->> as another cell in client's mboxes property.
->> Which we can't do.
-> 
-> Yes, agreed. But I'm wondering since a client may need more than one,
-> how would that be expressed?
-> 
->>>>> Okay, then I guess I don't understand why this is in DT.
->>>>>
->>>> Yeah the client has to provide code (u32 value) for the commands it
->>>> sends, and that value is going to be platform specific. For example,
->>>> on Juno the ITS_AN_SCMI_COMMAND may be defined as BIT(7) while on my
->>>> platform it may be 0x4567
->>>>
->>>> For MHU based platforms, it becomes easy if the u32 is passed from DT.
->>>> And that should be ok since that is like a h/w parameter - a value
->>>> chosen/expected by the remote firmware.
->>>
->>> Could it ever be more than 1 cell?
->>>
->> SCMI sends sub-commands via SHMEM, so it is always going to be 1cell for _scmi_.
->> However many firmwares are unlikely to use just one command over a
->> channel - say, the protocol is trivial or the linux and remote have no
->> SHMEM.
-> 
-> I'd hope the normal case is not enumerating commands and sub-commands
-> in DT and this is special case of a "generic" protocol with platform
-> specific aspects. It could be solved with a specific compatible for
-> each platform/implementation. We'll probably regret not doing that,
-> but I'm going to pretend that this time SoC vendors won't mess it up.
-> 
+> +                       continue;
+> +               }
+> +
+> +               pm_genpd_init(&scmi_pd->genpd, NULL,
+> +                             state == SCMI_POWER_STATE_GENERIC_OFF);
+> +       }
+> +
+> +       scmi_pd_data->domains = domains;
+> +       scmi_pd_data->num_domains = num_domains;
+> +
+> +       of_genpd_add_provider_onecell(np, scmi_pd_data);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver scmi_power_domain_driver = {
+> +       .driver = {
+> +               .name = "scmi-power-domain",
+> +       },
+> +       .probe = scmi_pm_domain_probe,
+> +};
+> +module_platform_driver(scmi_power_domain_driver);
+> +
+> +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
+> +MODULE_DESCRIPTION("ARM SCMI power domain driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
 
-Just to align on the same page, I would like to define the terms used
-above in context of SCMI:
-1. commands : this is platform specific "command" to trigger/signal the
-	      firmware that SCMI packet is sent. This is always platform
-	      or controller specific and is not part of the
-	      specification. It's just like doorbell but since MHU can
-	      send 32-bit data, we need a way to specify the exact bit
-	      as 32-bit data with just one bit set.
+Besides the nitpick above, feel free to add:
 
-2. sub-commands : It is SCMI packet that includes the actual command
-		defined in the SCMI specification. There are sent in
-		SHMEM as Jassi mentioned above.
--- 
-Regards,
-Sudeep
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
