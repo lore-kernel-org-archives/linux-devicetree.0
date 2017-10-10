@@ -1,115 +1,79 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 10/11] ARM: dts: sun6i: Add device node for
- HDMI controller
-Date: Tue, 10 Oct 2017 11:20:07 +0800
-Message-ID: <20171010032008.682-11-wens@csie.org>
-References: <20171010032008.682-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
+Date: Tue, 10 Oct 2017 12:54:52 +0900
+Message-ID: <CAAFQd5CjjAfkcfLVDSk4mSakPA=ELM_XFwJhduNFL5rZxJdN5Q@mail.gmail.com>
+References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
+ <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
+ <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
+ <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
+ <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk> <20171003142349.6uxwfime32dwzxwk@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3XY6DHAKGQEKHMWCTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171010032008.682-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171003142349.6uxwfime32dwzxwk@valkosipuli.retiisi.org.uk>
+Sender: linux-i2c-owner@vger.kernel.org
+To: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+Cc: "Mani, Rajmohan" <rajmohan.mani@intel.com>, "Mohandass, Divagar" <divagar.mohandass@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, mika.westerberg@linux.intel.com, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we support the HDMI controller on the A31 SoC, we can add it
-to the device tree.
+On Tue, Oct 3, 2017 at 11:23 PM, sakari.ailus@iki.fi
+<sakari.ailus@iki.fi> wrote:
+> On Wed, Sep 20, 2017 at 11:45:20AM +0300, sakari.ailus@iki.fi wrote:
+>> > >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client *clie=
+nt, const
+>> > >> struct i2c_device_id *id)
+>> > >>
+>> > >>       i2c_set_clientdata(client, at24);
+>> > >>
+>> > >> +     /* enable runtime pm */
+>> > >> +     pm_runtime_get_noresume(&client->dev);
+>> > >> +     pm_runtime_set_active(&client->dev);
+>> > >> +     pm_runtime_enable(&client->dev);
+>> >
+>> > Do we need this get_noresume/set_active dance? I remember it was for
+>> > some reason needed for PCI devices, but I don't see why for I2C
+>> > anything else than just pm_runtime_enable() would be necessary.
+>>
+>> You specifically do not need (all) this for PCI devices, but AFAIU for I=
+=E6=B6=8E
+>> devices you do. The runtime PM status of a device is disabled by default
+>> and the use count is zero, but on ACPI based systems the device is still
+>> powered on.
+>>
+>> >
+>> > Also, we enable runtime PM, but we don't provide any callbacks. If
+>> > there is no callback in any level of the hierarchy, NULL would be
+>> > returned in [3], making [2] return -ENOSYS and [1] fail. The behavior
+>> > depends on subsystem and whether the device is attached to a
+>> > pm_domain. In our particular case I'd guess the device would be in an
+>> > ACPI pm_domain and that would work, but the driver is generic and must
+>> > work in any cases.
+>>
+>> Agreed.
+>
+> I looked at the code and what actually happens here is the runtime_suspen=
+d
+> and runtime_resume callbacks aren't set is that the first pm_runtime_put(=
+)
+> call itself succeeds because checking the the runtime_suspend callback wi=
+ll
+> be done in the work queue function. This leaves the device in RPM_ACTIVE
+> state, which I don't think is a problem since the driver did not have
+> explicit functions to control the device power state.
+>
+> Further pm_runtime_put() and pm_runtime_get() calls will succeed because
+> the device is in RPM_ACTIVE state.
+>
+> So I see no reason to set the callbacks if they would not actually contro=
+l
+> regulators, clocks or GPIOs required by the device.
+>
+> Cc linux-pm.
 
-This adds a device node for the HDMI controller, and the of_graph nodes
-connecting it to the 2 TCONs.
+Sounds reasonable. I remember seeing some problems in the past, but
+looks like they may be already fixed in current upstream. Thanks for
+checking this thoroughly.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 93209cda28db..48b2382a18a9 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -289,6 +289,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon0_out_hdmi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&hdmi_in_tcon0>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -331,6 +337,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon1_out_hdmi: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&hdmi_in_tcon1>;
-+						allwinner,tcon-channel = <1>;
-+					};
- 				};
- 			};
- 		};
-@@ -411,6 +423,49 @@
- 			#size-cells = <0>;
- 		};
- 
-+		hdmi: hdmi@01c16000 {
-+			compatible = "allwinner,sun6i-a31-hdmi";
-+			reg = <0x01c16000 0x1000>;
-+			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_AHB1_HDMI>, <&ccu CLK_HDMI>,
-+				 <&ccu CLK_HDMI_DDC>,
-+				 <&ccu CLK_PLL_VIDEO0_2X>,
-+				 <&ccu CLK_PLL_VIDEO1_2X>;
-+			clock-names = "ahb", "mod", "ddc", "pll-0", "pll-1";
-+			resets = <&ccu RST_AHB1_HDMI>;
-+			reset-names = "ahb";
-+			dma-names = "ddc-tx", "ddc-rx", "audio-tx";
-+			dmas = <&dma 13>, <&dma 13>, <&dma 14>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				hdmi_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+
-+					hdmi_in_tcon0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon0_out_hdmi>;
-+					};
-+
-+					hdmi_in_tcon1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&tcon1_out_hdmi>;
-+					};
-+				};
-+
-+				hdmi_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+				};
-+			};
-+		};
-+
- 		usb_otg: usb@01c19000 {
- 			compatible = "allwinner,sun6i-a31-musb";
- 			reg = <0x01c19000 0x0400>;
--- 
-2.14.2
+Best regards,
+Tomasz
