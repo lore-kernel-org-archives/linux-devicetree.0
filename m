@@ -1,63 +1,68 @@
-From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add document for rockchip RGB output
- interface
-Date: Tue, 10 Oct 2017 09:59:24 +0800
-Message-ID: <e877b1d6-9365-6c26-fbca-8d307610c94a@rock-chips.com>
-References: <1506049221-117283-1-git-send-email-hjc@rock-chips.com>
- <1506049229-117376-1-git-send-email-hjc@rock-chips.com>
- <20171003215631.rc2jsf2m3qgoltsb@rob-hp-laptop>
- <2d502a9d-e952-8afb-d2d7-45c21c36da7e@rock-chips.com>
- <CAL_JsqJcO6VtgYBzby+gjerODT9n6fE0aMNJXNejvvhF1nqM-Q@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 3/6] ARM: sun8i: r40: add 5V regulator
+ for Banana Pi M2 Ultra
+Date: Tue, 10 Oct 2017 10:25:35 +0800
+Message-ID: <CAGb2v66r2UyR1NWrtjdoKLEi_2NdXkhr_c5D6or9_9amNnh6PQ@mail.gmail.com>
+References: <20171008042906.46779-1-icenowy@aosc.io> <20171008042906.46779-4-icenowy@aosc.io>
+ <20171009210407.ueharyifho3s6xvu@flea.home> <61E002C8-4046-44E4-8E1A-43C8AF74257C@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJcO6VtgYBzby+gjerODT9n6fE0aMNJXNejvvhF1nqM-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <61E002C8-4046-44E4-8E1A-43C8AF74257C-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-在 2017/10/9 21:05, Rob Herring 写道:
-> On Mon, Oct 9, 2017 at 3:06 AM, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> Hi rob,
->>      Thanks for your reply.
+On Tue, Oct 10, 2017 at 7:25 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+>
+> 于 2017年10月10日 GMT+08:00 上午5:04:07, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 写到:
+>>On Sun, Oct 08, 2017 at 04:29:03AM +0000, Icenowy Zheng wrote:
+>>> On newer revisions of the Banana Pi M2 Ultra boards, the 5V power
+>>output
+>>> (used by HDMI, SATA and USB) is controller via a GPIO.
+>>>
+>>> Add the regulator node for it.
+>>>
+>>> Older revisions just have the 5V power output always on, and the GPIO
+>>is
+>>> reserved on these boards. So it won't affect the older revisions.
+>>>
+>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+>>b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+>>> index 7b52608cebe6..035599d870b9 100644
+>>> --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+>>> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+>>> @@ -78,6 +78,15 @@
+>>>              };
+>>>      };
+>>>
+>>> +    reg_vcc5v0: vcc5v0 {
+>>> +            compatible = "regulator-fixed";
+>>> +            regulator-name = "vcc5v0";
+>>> +            regulator-min-microvolt = <5000000>;
+>>> +            regulator-max-microvolt = <5000000>;
+>>> +            gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
+>>> +            enable-active-high;
 >>
->> 在 2017/10/4 5:56, Rob Herring 写道:
->>>
->>> On Fri, Sep 22, 2017 at 11:00:26AM +0800, Sandy Huang wrote:
->>>>
->>>> This path add support rv1108 rgb output interface driver.
->>>>
->>>> Signed-off-by: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> ---
->>>> Changes in v2:
->>>>    1. rename rockchip,rgb-mode to rgb-mode;
->>>
->>>
->>> You can't just drop the vendor. This needs to be documented in a common
->>> place that others will find and use. See panel-common.txt or
->>> panel-dpi.txt.
->>>
->>> Alternatively, you could just drop it and let the panel compatible imply
->>> what the mode is.
->>>
->>>
->> ok, get it, i will move the rgb-mode to panel and describe it at
->> panel-rgb.txt. the patches will be send soon later.
-> 
-> Don't create yet another common panel file. We already have
-> panel-dpi.txt which is for digital parallel interface.
-> The panel-rgb.txt define different rgb output format and timing, this is 
-the detail info: https://patchwork.kernel.org/patch/9992241/
-do you think this need move to panel-dpi.txt?
-> Rob
-> 
-> 
-> 
+>>This is redundant with the GPIO flag
+>
+> I remember someone suggested me to add this
+> property (maybe wens). It's said that the driver may not
+> process the GPIO_ACTIVE_HIGH correctly.
 
+I believe it was me. The fixed regulator driver has not migrated to
+the GPIO descriptor API, and it doesn't look like it cares about the
+GPIO flags.
+
+ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
