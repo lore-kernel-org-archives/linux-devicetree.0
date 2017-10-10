@@ -1,55 +1,77 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/4] ARM: dts: iwg20d-q7: Enable HS-USB
-Date: Tue, 10 Oct 2017 09:30:58 +0200
-Message-ID: <20171010073057.GK2518@verge.net.au>
-References: <1507555281-57845-1-git-send-email-biju.das@bp.renesas.com>
- <1507555281-57845-3-git-send-email-biju.das@bp.renesas.com>
- <cbf92515-644c-b677-80dd-f33028a3829d@cogentembedded.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
+Date: Tue, 10 Oct 2017 09:33:46 +0200
+Message-ID: <20171010073346.GL2518@verge.net.au>
+References: <20170915194449.538504992@cogentembedded.com>
+ <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
+ <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
+ <CAMuHMdVCTORpfKN+GTka_6pT1VWjOneV2GBhGo7Y8DsZYSxdvw@mail.gmail.com>
+ <20171005090500.GC26369@verge.net.au>
+ <d5940a12-3823-eebb-50d9-c0fd0fcf0fd1@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cbf92515-644c-b677-80dd-f33028a3829d@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <d5940a12-3823-eebb-50d9-c0fd0fcf0fd1-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 09, 2017 at 07:18:24PM +0300, Sergei Shtylyov wrote:
-> Hello!
+On Mon, Oct 09, 2017 at 08:57:42PM +0300, Sergei Shtylyov wrote:
+> On 10/05/2017 12:05 PM, Simon Horman wrote:
 > 
-> On 10/09/2017 04:21 PM, Biju Das wrote:
-> 
-> >Enable HS-USB device for the iWave G20D-Q7 carrier board based on
-> >RZ/G1M.
-> >Also disable the host mode support on usb otg port by default to avoid
-> >pin conflicts.
+> >>>On 9/21/2017 4:08 PM, Geert Uytterhoeven wrote:
+> >>>>>Define the Eagle board  dependent part of the EtherAVB device node.
+> >>>>>Enable DHCP  and NFS root for the kernel booting.
+> >>>>>
+> >>>>>Based  on the original (and large) patch by Vladimir Barinov.
+> >>>>>
+> >>>>>Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >>>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >>>>
+> >>>>
+> >>>>>--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> >>>>>+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+> >>>
+> >>>[...]
+> >>>>>
+> >>>>>@@ -43,3 +44,14 @@
+> >>>>>   &scif0 {
+> >>>>>          status = "okay";
+> >>>>>   };
+> >>>>>+
+> >>>>>+&avb {
+> >>>>>+       renesas,no-ether-link;
+> >>>>>+       phy-handle = <&phy0>;
+> >>>>>+       status = "okay";
+> >>>>>+
+> >>>>>+       phy0: ethernet-phy@0 {
+> >>>>>+               rxc-skew-ps = <1500>;
+> >>>>>+               reg = <0>;
+> >>>>
+> >>>>
+> >>>>Any specific reason why you don't want to wire up the interrupt?
+> >>>>
+> >>>>                  interrupt-parent = <&gpio2>;
+> >>>
+> >>>
+> >>>    I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem
+> >>>to require PFC.
+> >>
+> >>Of course. And these can be added later.
+> >>
+> >>Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 > >
-> >Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> >Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> >---
-> >  arch/arm/boot/dts/iwg20d-q7-common.dtsi | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> >index 1c072c0..e6b50c6 100644
-> >--- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> >+++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> [...]
-> >@@ -72,7 +78,7 @@
-> >  };
-> >  &pci0 {
-> >-	status = "okay";
-> >+	status = "disabled";
+> >Thanks, applied.
 > 
->    I think you may just omit this prop -- you most prolly have it
-> "disabloed" in the R8A7743's DT.
+>    Unfortunately, you applied an outdated version of this patch. :-(
 
-Yes, I expect so too.
+Sorry, I think patchwork has been playing up of late - or my use of it!
 
-> >  	pinctrl-0 = <&usb0_pins>;
-> >  	pinctrl-names = "default";
-> >  };
-> 
-> MBR, Sergei
-> 
+Could you repost the correct patch so I am sure to get the right one
+the second time around?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
