@@ -1,43 +1,31 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] rtc: add support for NXP PCF85363 real-time clock
-Date: Tue, 10 Oct 2017 10:31:59 -0300
-Message-ID: <CAOMZO5C_boginn88C7zgXSBaikx==5FHJrgaE1ewYUyUgGfnFQ@mail.gmail.com>
-References: <1507578100-2148-1-git-send-email-eric@nelint.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507578100-2148-1-git-send-email-eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Otavio Salvador <otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: meson-gxm: enable HS400 on the vim2
+Date: Tue, 10 Oct 2017 16:18:22 +0200
+Message-ID: <20171010141822.16266-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+Enable HS400 high speed eMMC mode on the khadas vim2
 
-On Mon, Oct 9, 2017 at 4:41 PM, Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org> wrote:
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +config RTC_DRV_PCF85363
-> +       tristate "NXP PCF85363"
-> +       depends on I2C
-
-It seems you missed a dependency on REGMAP_I2C.
-
-> +static const struct i2c_device_id pcf85363_id[] = {
-> +       { "pcf85363", 0 },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, pcf85363_id);
-
-Even though the driver can probe via the i2c device id, it is
-recommended to explicitly pass the compatible string:
-
-static const struct of_device_id pcf85363_dt_match[] = {
-{ .compatible = "nxp,pcf85363" },
-{ },
-
-See this previous discussion:
-https://www.spinics.net/lists/devicetree/msg195176.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index 32c138ec0e58..34a41b26a4ed 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -348,6 +348,7 @@
+ 	disable-wp;
+ 	mmc-ddr-1_8v;
+ 	mmc-hs200-1_8v;
++	mmc-hs400-1_8v;
+ 
+ 	mmc-pwrseq = <&emmc_pwrseq>;
+ 	vmmc-supply = <&vcc_3v3>;
+-- 
+2.13.6
