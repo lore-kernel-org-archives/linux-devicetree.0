@@ -1,49 +1,41 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 04/14] ARM: dts: at91: sama5d27_som1_ek: set USER button as
- a wakeup source
-Date: Tue, 10 Oct 2017 13:09:39 +0300
-Message-ID: <1507630189-15504-5-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 05/14] ARM: dts: at91: sama5d27_som1_ek: add aliases for i2c
+Date: Tue, 10 Oct 2017 13:09:40 +0300
+Message-ID: <1507630189-15504-6-git-send-email-claudiu.beznea@microchip.com>
 References: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-Set the USER button as a wakeup source to allow wakeup from ULP0.
+Add aliases for i2c devices to not rely on probe order for i2c device
+numbering.
 
 Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-[claudiu.beznea@microchip.com: change subject to match the desired prefix]
+[claudiu.beznea@microchip.com: remove i2c0, change subject]
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-index b31778121c41..ac79730213f1 100644
+index ac79730213f1..6c4c976a99d1 100644
 --- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
 +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -519,6 +519,7 @@
- 			label = "USER";
- 			gpios = <&pioA PIN_PA29 GPIO_ACTIVE_LOW>;
- 			linux,code = <0x104>;
-+			wakeup-source;
- 		};
+@@ -57,6 +57,8 @@
+ 		serial0 = &uart1;	/* DBGU */
+ 		serial1 = &uart4;	/* mikro BUS 1 */
+ 		serial2 = &uart2;	/* mikro BUS 2 */
++		i2c1	= &i2c1;
++		i2c2	= &i2c2;
  	};
  
+ 	chosen {
 -- 
 2.7.4
