@@ -1,67 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2 00/14] at91 fixes and enhancements
-Date: Tue, 10 Oct 2017 15:27:21 +0200
-Message-ID: <20171010132721.xbblbwuzfeyy6xva@piout.net>
-References: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] rtc: add support for NXP PCF85363 real-time clock
+Date: Tue, 10 Oct 2017 10:31:59 -0300
+Message-ID: <CAOMZO5C_boginn88C7zgXSBaikx==5FHJrgaE1ewYUyUgGfnFQ@mail.gmail.com>
+References: <1507578100-2148-1-git-send-email-eric@nelint.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: nicolas.ferre@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507578100-2148-1-git-send-email-eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Otavio Salvador <otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2017 at 13:09:35 +0300, Claudiu Beznea wrote:
-> Hi,
-> 
-> This series contains fixes and enhancements for Atmel/Microchip boards,
-> mainly for SoM1-EK board, SAMA5D2 Xplained board and SAM9x5 boards.
-> Please accept them for 4.15.
-> 
-> Thank you,
-> Claudiu Beznea
-> 
-> Changes since v1:
-> - correct author for some patches; these were developed first on internal
-> branch and then were manualy ported by me to Linux public tree (since the device
-> tree files are different) but then I forgot to keep the real author
-> - removed patch "ARM: dts: at91: sama5d2_xplained: Add charger node of pmic."
-> from this series since it was already applied on at91-dt branch (see [1])
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=at91-dt&id=4b6ad41f267b8ddabf5dd1b02a318bc74f0b95e9
-> 
-> Claudiu Beznea (14):
->   ARM: dts: at91: sama5d27_som1_ek: add disabled/okay status
->   ARM: dts: at91: sama5d27_som1_ek: update serial aliases
->   ARM: dts: at91: sama5d27_som1_ek: set USER button as a wakeup source
->   ARM: dts: at91: sama5d27_som1_ek: add aliases for i2c
->   ARM: dts: at91: sama5d27_som1_ek: add pinmuxing for pwm0
->   ARM: dts: at91: sama5d27_som1_ek: remove not connected CAN0
->   ARM: dts: at91: sama5d27_som1_ek: remove pull-up on SD/MMC lines
->   ARM: dts: at91: sama5d2_xplained: Add charger node of pmic.
->   ARM: dts: at91: sama5d2_xplained: set PB_USER as wakeup source
->   ARM: dts: at91: sama5d2_xplained: add pinmuxing for pwm0
->   ARM: dts: at91: sama5d2_xplained: remove pull-up on SD/MMC lines
->   ARM: dts: at91: at91sam9x25ek: add CAN1 interface
->   ARM: dts: at91: at91sam9x25ek: add pwm0
->   ARM: dts: at91: at91sam9x5ek: use DMA for USART0
-> 
->  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 46 ++++++++++++++---------------
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 39 ++++++++++++++++--------
->  arch/arm/boot/dts/at91sam9x25ek.dts         | 10 +++++++
->  arch/arm/boot/dts/at91sam9x5ek.dtsi         |  2 ++
->  4 files changed, 62 insertions(+), 35 deletions(-)
-> 
+Hi Eric,
 
-All applied
+On Mon, Oct 9, 2017 at 4:41 PM, Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org> wrote:
 
-> -- 
-> 2.7.4
-> 
+> +config RTC_DRV_PCF85363
+> +       tristate "NXP PCF85363"
+> +       depends on I2C
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+It seems you missed a dependency on REGMAP_I2C.
+
+> +static const struct i2c_device_id pcf85363_id[] = {
+> +       { "pcf85363", 0 },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pcf85363_id);
+
+Even though the driver can probe via the i2c device id, it is
+recommended to explicitly pass the compatible string:
+
+static const struct of_device_id pcf85363_dt_match[] = {
+{ .compatible = "nxp,pcf85363" },
+{ },
+
+See this previous discussion:
+https://www.spinics.net/lists/devicetree/msg195176.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
