@@ -1,133 +1,83 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 3/4] phy: rcar-gen3-usb2: add SoC-specific parameter for dedicated pins
-Date: Tue, 10 Oct 2017 18:41:29 +0900
-Message-ID: <1507628490-7944-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1507628490-7944-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: fix typo in iommu nodes
+Date: Tue, 10 Oct 2017 11:48:25 +0200
+Message-ID: <4123717.0VmPnCpUOn@diego>
+References: <20171010085648.1339605-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507628490-7944-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171010085648.1339605-1-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rocky Hao <rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds SoC-specific parameter to avoid reading/writing
-specific registers wrongly if this driver runs on a SoC which doesn't
-have dedicated pins (e.g. R-Car D3). This patch also changes the
-value "has_otg" to "has_otg_pins" for slightly easier reading of
-the code.
+Hi Arnd,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+Am Dienstag, 10. Oktober 2017, 10:56:01 CEST schrieb Arnd Bergmann:
+> The latest dtc warns about an extraneous cell in the interrupt
+> property of two of the iommu device nodes:
+> 
+> Warning (interrupts_property): interrupts size is (16), expected multiple of
+> 12 in /iommu@ff373f00 Warning (interrupts_property): interrupts size is
+> (16), expected multiple of 12 in /iommu@ff900800
+> 
+> This removes the typo.
+> 
+> Fixes: cede4c79de28 ("arm64: dts: rockchip: add rk3368 iommu nodes")
+> Fixes: 49c82f2b7c5d ("arm64: dts: rockchip: add rk3328 iommu nodes")
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 7314b49..eb9786e 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-@@ -80,6 +81,8 @@
- #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
- #define USB2_ADPCTRL_DRVVBUS		BIT(4)
- 
-+#define RCAR_GEN3_PHY_HAS_DEDICATED_PINS	1
-+
- struct rcar_gen3_chan {
- 	void __iomem *base;
- 	struct extcon_dev *extcon;
-@@ -87,7 +90,7 @@ struct rcar_gen3_chan {
- 	struct regulator *vbus;
- 	struct work_struct work;
- 	bool extcon_host;
--	bool has_otg;
-+	bool has_otg_pins;
- };
- 
- static void rcar_gen3_phy_usb2_work(struct work_struct *work)
-@@ -234,7 +237,7 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 	bool is_b_device;
- 	enum phy_mode cur_mode, new_mode;
- 
--	if (!ch->has_otg || !ch->phy->init_count)
-+	if (!ch->has_otg_pins || !ch->phy->init_count)
- 		return -EIO;
- 
- 	if (!strncmp(buf, "host", strlen("host")))
-@@ -272,7 +275,7 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
- 
--	if (!ch->has_otg || !ch->phy->init_count)
-+	if (!ch->has_otg_pins || !ch->phy->init_count)
- 		return -EIO;
- 
- 	return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
-@@ -311,7 +314,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
- 
- 	/* Initialize otg part */
--	if (channel->has_otg)
-+	if (channel->has_otg_pins)
- 		rcar_gen3_init_otg(channel);
- 
- 	return 0;
-@@ -385,9 +388,17 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- }
- 
- static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
--	{ .compatible = "renesas,usb2-phy-r8a7795" },
--	{ .compatible = "renesas,usb2-phy-r8a7796" },
--	{ .compatible = "renesas,rcar-gen3-usb2-phy" },
-+	{
-+		.compatible = "renesas,usb2-phy-r8a7795",
-+		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
-+	},
-+	{
-+		.compatible = "renesas,usb2-phy-r8a7796",
-+		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
-+	},
-+	{
-+		.compatible = "renesas,rcar-gen3-usb2-phy",
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
-@@ -433,7 +444,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 	if (of_usb_get_dr_mode_by_phy(dev->of_node, 0) == USB_DR_MODE_OTG) {
- 		int ret;
- 
--		channel->has_otg = true;
-+		channel->has_otg_pins = (uintptr_t)of_device_get_match_data(dev);
- 		channel->extcon = devm_extcon_dev_allocate(dev,
- 							rcar_gen3_phy_cable);
- 		if (IS_ERR(channel->extcon))
-@@ -475,7 +486,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		dev_err(dev, "Failed to register PHY provider\n");
- 		ret = PTR_ERR(provider);
- 		goto error;
--	} else if (channel->has_otg) {
-+	} else if (channel->has_otg_pins) {
- 		int ret;
- 
- 		ret = device_create_file(dev, &dev_attr_role);
-@@ -495,7 +506,7 @@ static int rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
- {
- 	struct rcar_gen3_chan *channel = platform_get_drvdata(pdev);
- 
--	if (channel->has_otg)
-+	if (channel->has_otg_pins)
- 		device_remove_file(&pdev->dev, &dev_attr_role);
- 
- 	pm_runtime_disable(&pdev->dev);
--- 
-1.9.1
+looks like that got copy-pasted from rk3399 where we have 4 elements per irq.
+In any case the change looks good, so if you want to apply it directly to 
+armsoc-fixes here is a
+
+Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+Depending on how you want to handle it I can also merge it, but
+Olof already picked up my 2 fixes for 4.14, so you applying it might
+save us the round-trip for a further 1-patch pull request :-)
+
+
+Heiko
+
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 2 +-
+>  arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3328.dtsi index 6d615cb6e64d..41d61840fb99
+> 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+> @@ -582,7 +582,7 @@
+>  	vop_mmu: iommu@ff373f00 {
+>  		compatible = "rockchip,iommu";
+>  		reg = <0x0 0xff373f00 0x0 0x100>;
+> -		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-names = "vop_mmu";
+>  		#iommu-cells = <0>;
+>  		status = "disabled";
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3368.dtsi index 19fbaa5e7bdd..1070c8264c13
+> 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+> @@ -740,7 +740,7 @@
+>  	iep_mmu: iommu@ff900800 {
+>  		compatible = "rockchip,iommu";
+>  		reg = <0x0 0xff900800 0x0 0x100>;
+> -		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+>  		interrupt-names = "iep_mmu";
+>  		#iommu-cells = <0>;
+>  		status = "disabled";
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
