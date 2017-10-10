@@ -1,76 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: enable touchpad button for
- rk3399-gru-kevin
-Date: Tue, 10 Oct 2017 10:25:16 -0700
-Message-ID: <20171010172516.GA1681@dtor-ws>
-References: <20171009184028.11829-1-kernel@esmil.dk>
- <4174027.Z5MyPRUDcj@phil>
- <CANBLGcx187QrX3pgUAjvBmPbyJsX7ZiYdWXhamM-atEe+Mqe3A@mail.gmail.com>
- <20171010170355.GA136735@google.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Oct 9th (of: unittest: testcases)
+Date: Tue, 10 Oct 2017 10:33:22 -0700
+Message-ID: <7524d1e5-137c-cb78-c24f-6a9701e46701@infradead.org>
+References: <20171009212122.wx4lgnecmqyzuywq@sirena.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171010170355.GA136735@google.com>
+In-Reply-To: <20171009212122.wx4lgnecmqyzuywq@sirena.co.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 10, 2017 at 10:03:57AM -0700, Brian Norris wrote:
-> + Dmitry, who can probably answer better than I can
+On 10/09/17 14:21, Mark Brown wrote:
+> For my birthday I've gone and got myself a linux-next tree:
 > 
-> On Tue, Oct 10, 2017 at 01:04:20PM +0200, Emil Renner Berthing wrote:
-> > On 10 October 2017 at 11:33, Heiko Stuebner <heiko@sntech.de> wrote:
-> > > Am Montag, 9. Oktober 2017, 20:40:28 CEST schrieb Emil Renner Berthing:
-> > >> Adding the linux,gpio-keymap entry also has
-> > >> the side-effect of making the driver register
-> > >> the touchpad as a touchpad rather than another
-> > >> touchscreen.
-> > >>
-> > >> The index for BTN_LEFT was found by trial and error.
-> > >>
-> > >> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> > >
-> > > looks good to me. I'll just give the ChromeOS people a chance to
-> > > respond before applying [maybe they can even tell what the other
-> > > keys are :-) ]
-
-They are not connected.
-
-> > 
-> > Good plan. As far as I can tell their kernel doesn't send anything but
-> > BTN_LEFT either. It's just that the controller supports multiple
-> > buttons, but not all are necessarily connected to any button.
-> > Their version of the driver has logic to detect the proper keymap
-> > whereas the mainline driver gets it from this devicetree entry.
+> Changes since 20170929:
 > 
-> I believe Emil is mostly correct. We only are using a BTN_LEFT in our
-> copy of the driver, and I'm not sure the others are connected to
-> anything. As Dmitry has explained to me (when I also wondered about
-> "detect[ing] the proper keymap"), we don't exactly "auto"discover
-> things; we just heuristically determine the configurations we know are
-> used on Chrome devices.
+> The net-next and drm trees lost their build failures but the rcu tree
+> gained one.
 
-Right, we had a "legacy" GPIO/button mapping on original Pixels that
-used T9 multitouch reports, then we switched to a bit different mapping
-for newer devices that use T100 multitouch reports.
 
-We should really have explicit map, like we have in upstream driver.
+I don't know what this is but it's new AFAIK.
+(seen on i386 and x86_64)
 
-> 
-> So from the sound of it, this keymap property is reasonable. I haven't
-> actually checked what our driver "auto" detects on gru-kevin, but if
-> this works then I'll bet it's correct :)
-> 
-> IOW, I don't know enough to ACK this patch, but I'm certainly not going
-> to NAK it.
 
-I think I can ACK it:
+  DTC     drivers/of/unittest-data/testcases.dtb
+drivers/of/unittest-data/testcases.dtb: Warning (interrupts_extended_property): Could not get phandle node for /__local_fixups__/testcase-data/interrupts/interrupts-extended0:interrupts-extended(cell 3)
+drivers/of/unittest-data/testcases.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 8 in /testcase-data/testcase-device2
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Thanks.
 
 -- 
-Dmitry
+~Randy
