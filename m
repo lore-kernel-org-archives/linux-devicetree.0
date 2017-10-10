@@ -1,41 +1,33 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 05/14] ARM: dts: at91: sama5d27_som1_ek: add aliases for i2c
-Date: Tue, 10 Oct 2017 13:09:40 +0300
-Message-ID: <1507630189-15504-6-git-send-email-claudiu.beznea@microchip.com>
-References: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/4] PCI: dwc: pci-dra7: Support PCIe x2 lane mode
+Date: Tue, 10 Oct 2017 15:46:02 +0530
+Message-ID: <20171010101606.15951-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Patch series adds support to enable x2 lane mode in dra74/dra76
+based boards in pci-dra7xx driver. It introduces new compatible strings
+in order to enable x2 lane mode support.
 
-Add aliases for i2c devices to not rely on probe order for i2c device
-numbering.
+x2 lane mode support for dra72 based boards will be added in a later
+series.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-[claudiu.beznea@microchip.com: remove i2c0, change subject]
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 2 ++
- 1 file changed, 2 insertions(+)
+patch series is created on top of https://lkml.org/lkml/2017/10/9/133.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-index ac79730213f1..6c4c976a99d1 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -57,6 +57,8 @@
- 		serial0 = &uart1;	/* DBGU */
- 		serial1 = &uart4;	/* mikro BUS 1 */
- 		serial2 = &uart2;	/* mikro BUS 2 */
-+		i2c1	= &i2c1;
-+		i2c2	= &i2c2;
- 	};
- 
- 	chosen {
+Kishon Vijay Abraham I (4):
+  dt-bindings: PCI: dra7xx: Add SoC specific compatible strings
+  dt-bindings: PCI: dra7xx: Add properties to enable x2 lane in dra7
+  PCI: dwc: dra7xx: Add support for SoC specific compatible strings
+  PCI: dwc: pci-dra7xx: Enable x2 mode support
+
+ Documentation/devicetree/bindings/pci/ti-pci.txt | 12 +++-
+ drivers/pci/dwc/pci-dra7xx.c                     | 80 ++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+), 2 deletions(-)
+
 -- 
-2.7.4
+2.11.0
