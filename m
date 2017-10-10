@@ -1,52 +1,113 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: Tree for Oct 9th (of: unittest: testcases)
-Date: Tue, 10 Oct 2017 11:34:20 -0700
-Message-ID: <ec791848-ea92-db98-e0c8-ef96a6409caf@infradead.org>
-References: <20171009212122.wx4lgnecmqyzuywq@sirena.co.uk>
- <7524d1e5-137c-cb78-c24f-6a9701e46701@infradead.org>
- <CAL_JsqJgf+HOp-7DNzpExOE2UnXbraL3uaL0a01K4t8Z6fkoSA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
+ multiple overlays
+Date: Tue, 10 Oct 2017 13:40:14 -0500
+Message-ID: <20171010184014.m2chslx36kbhvgug@rob-hp-laptop>
+References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+ <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
+ <59D5A737.9090905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJgf+HOp-7DNzpExOE2UnXbraL3uaL0a01K4t8Z6fkoSA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <59D5A737.9090905@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/17 11:26, Rob Herring wrote:
-> +Frank
+On Wed, Oct 04, 2017 at 08:29:59PM -0700, Frank Rowand wrote:
+> On 10/04/17 08:19, Rob Herring wrote:
+> > On Mon, Oct 2, 2017 at 10:53 PM,  <frowand.list@gmail.com> wrote:
+> >> From: Frank Rowand <frank.rowand@sony.com>
+> >>
+> >> The process of applying an overlay consists of:
+> >>   - unflatten an overlay FDT (flattened device tree) into an
+> >>     EDT (expanded device tree)
+> >>   - fixup the phandle values in the overlay EDT to fit in a
+> >>     range above the phandle values in the live device tree
+> >>   - create the overlay changeset to reflect the contents of
+> >>     the overlay EDT
+> >>   - apply the overlay changeset, to modify the live device tree,
+> >>     potentially changing the maximum phandle value in the live
+> >>     device tree
+> >>
+> >> There is currently no protection against two overlay applies
+> >> concurrently determining what range of phandle values are in use
+> >> in the live device tree, and subsequently changing that range.
+> >> Add a mutex to prevent multiple overlay applies from occurring
+> >> simultaneously.
+> >>
+> >> Ignoring 2 checkpatch warnings: Prefer using '"%s...", __func__'
+> >> so that the WARN() string will be more easily grepped.
+> >>
+> >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> >> ---
+> >>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  7 +++++++
+> >>  drivers/of/overlay.c                         | 22 ++++++++++++++++++++++
+> >>  drivers/of/unittest.c                        | 21 +++++++++++++++++++++
+> >>  include/linux/of.h                           | 19 +++++++++++++++++++
+> >>  4 files changed, 69 insertions(+)
+> >>
+> >> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> >> index 7a7be0515bfd..c99f7924b1c6 100644
+> >> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> >> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> >> @@ -221,6 +221,11 @@ static void __init tilcdc_convert_slave_node(void)
+> >>                 goto out;
+> >>         }
+> >>
+> >> +       /*
+> >> +        * protect from of_resolve_phandles() through of_overlay_apply()
+> >> +        */
+> >> +       of_overlay_mutex_lock();
+> >> +
+> > 
+> > We can't be relying on callers to get the locking right...
 > 
-> On Tue, Oct 10, 2017 at 12:33 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 10/09/17 14:21, Mark Brown wrote:
->>> For my birthday I've gone and got myself a linux-next tree:
->>>
->>> Changes since 20170929:
->>>
->>> The net-next and drm trees lost their build failures but the rcu tree
->>> gained one.
->>
->>
->> I don't know what this is but it's new AFAIK.
->> (seen on i386 and x86_64)
+> Agreed.
 > 
-> Yes, new dtc version with new warnings.
 > 
->>   DTC     drivers/of/unittest-data/testcases.dtb
->> drivers/of/unittest-data/testcases.dtb: Warning (interrupts_extended_property): Could not get phandle node for /__local_fixups__/testcase-data/interrupts/interrupts-extended0:interrupts-extended(cell 3)
+> > 
+> >>         overlay = tilcdc_get_overlay(&kft);
+> >>         if (!overlay)
+> >>                 goto out;
+> >> @@ -256,6 +261,8 @@ static void __init tilcdc_convert_slave_node(void)
+> >>                 pr_info("%s: ti,tilcdc,slave node successfully converted\n",
+> >>                         __func__);
+> >>  out:
+> >> +       of_overlay_mutex_unlock();
+> >> +
+> >>         kfree_table_free(&kft);
+> >>         of_node_put(i2c);
+> >>         of_node_put(slave);
+> >> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> >> index a0d3222febdc..4ed372af6ce7 100644
+> >> --- a/drivers/of/overlay.c
+> >> +++ b/drivers/of/overlay.c
+> >> @@ -71,6 +71,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
+> >>                 const struct device_node *overlay_node,
+> >>                 bool is_symbols_node);
+> >>
+> >> +/*
+> >> + * of_resolve_phandles() finds the largest phandle in the live tree.
+> >> + * of_overlay_apply() may add a larger phandle to the live tree.
+> >> + * Do not allow race between two overlays being applied simultaneously:
+> >> + *    mutex_lock(&of_overlay_phandle_mutex)
+> >> + *    of_resolve_phandles()
+> >> + *    of_overlay_apply()
+> >> + *    mutex_unlock(&of_overlay_phandle_mutex)
+> > 
+> > Why do these need to be separate functions? I think I mentioned it
+> > before, but essentially overlay_data_add() should be part of the
+> > overlay API. We may need to allow for callers to do each step, but
+> > generally I think the interface should just be "apply this fdt blob".
 > 
-> Frank, this is in __local_fixups__, we should be able to remove that
-> now as the necessary dtc changes are in place, right?
-> 
->> drivers/of/unittest-data/testcases.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 8 in /testcase-data/testcase-device2
-> 
-> This one is purposely bad data to feed the unit test. If I suppress
-> it, then it is suppressed everywhere in the unit test data.
+> Yes, that is where I want to end up.
 
-Thanks for the info.
+So, is that not doable now? To put it another way, why does 
+of_resolve_phandles need to be a separate call? Seems like an internal 
+detail of how you apply an overlay to me.
 
-
--- 
-~Randy
+Rob
