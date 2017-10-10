@@ -1,86 +1,59 @@
-From: m18063 <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 09/15] ARM: dts: at91: sama5d2_xplained: Add charger node
- of pmic.
-Date: Tue, 10 Oct 2017 13:09:32 +0300
-Message-ID: <5714eb53-d777-130e-b8bd-f80eda7c96b0@microchip.com>
-References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
- <1507565377-1545-10-git-send-email-claudiu.beznea@microchip.com>
- <d42b60fb-7eac-229c-5e71-303e271c01a0@Microchip.com>
+From: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 00/14] at91 fixes and enhancements
+Date: Tue, 10 Oct 2017 13:09:35 +0300
+Message-ID: <1507630189-15504-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d42b60fb-7eac-229c-5e71-303e271c01a0@Microchip.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Yang, Wenyou" <Wenyou.Yang@Microchip.com>, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wenyou,
+Hi,
 
-On 10.10.2017 03:39, Yang, Wenyou wrote:
-> Hi Claudiu,
-> 
-> 
-> On 2017/10/10 0:09, Claudiu Beznea wrote:
->> Add charger device node as a sub-device node of act8945a mfd, move
->> the charger's properties to this node, and use the "interrupts"
->> property to replace "active-semi,irq_gpios" to denote the act8945a
->> charger's irq.
->>
->> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
->> [claudiu.beznea@microchip.com: replace numbers with pin macros]
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> This patch has already applied on at91-dt branch.
-> https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=at91-dt&id=4b6ad41f267b8ddabf5dd1b02a318bc74f0b95e9
-> 
-Thanks, I will remove it from v2.
+This series contains fixes and enhancements for Atmel/Microchip boards,
+mainly for SoM1-EK board, SAMA5D2 Xplained board and SAM9x5 boards.
+Please accept them for 4.15.
 
->> ---
->>   arch/arm/boot/dts/at91-sama5d2_xplained.dts | 23 +++++++++++++++--------
->>   1 file changed, 15 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
->> index c7e9ccf2bc87..848ca1b025be 100644
->> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
->> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
->> @@ -160,14 +160,6 @@
->>                       compatible = "active-semi,act8945a";
->>                       reg = <0x5b>;
->>                       active-semi,vsel-high;
->> -                    active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
->> -                    active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
->> -                    active-semi,irq_gpios = <&pioA PIN_PB13 GPIO_ACTIVE_LOW>;
->> -                    active-semi,input-voltage-threshold-microvolt = <6600>;
->> -                    active-semi,precondition-timeout = <40>;
->> -                    active-semi,total-timeout = <3>;
->> -                    pinctrl-names = "default";
->> -                    pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
->>                       status = "okay";
->>                         regulators {
->> @@ -220,6 +212,21 @@
->>                               regulator-always-on;
->>                           };
->>                       };
->> +
->> +                    charger {
->> +                        compatible = "active-semi,act8945a-charger";
->> +                        pinctrl-names = "default";
->> +                        pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
->> +                        interrupt-parent = <&pioA>;
->> +                        interrupts = <PIN_PB13 GPIO_ACTIVE_LOW>;
->> +
->> +                        active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
->> +                        active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
->> +                        active-semi,input-voltage-threshold-microvolt = <6600>;
->> +                        active-semi,precondition-timeout = <40>;
->> +                        active-semi,total-timeout = <3>;
->> +                        status = "okay";
->> +                    };
->>                   };
->>               };
->>   
-> 
-> Best Regards,
-> Wenyou Yang
+Thank you,
+Claudiu Beznea
+
+Changes since v1:
+- correct author for some patches; these were developed first on internal
+branch and then were manualy ported by me to Linux public tree (since the device
+tree files are different) but then I forgot to keep the real author
+- removed patch "ARM: dts: at91: sama5d2_xplained: Add charger node of pmic."
+from this series since it was already applied on at91-dt branch (see [1])
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=at91-dt&id=4b6ad41f267b8ddabf5dd1b02a318bc74f0b95e9
+
+Claudiu Beznea (14):
+  ARM: dts: at91: sama5d27_som1_ek: add disabled/okay status
+  ARM: dts: at91: sama5d27_som1_ek: update serial aliases
+  ARM: dts: at91: sama5d27_som1_ek: set USER button as a wakeup source
+  ARM: dts: at91: sama5d27_som1_ek: add aliases for i2c
+  ARM: dts: at91: sama5d27_som1_ek: add pinmuxing for pwm0
+  ARM: dts: at91: sama5d27_som1_ek: remove not connected CAN0
+  ARM: dts: at91: sama5d27_som1_ek: remove pull-up on SD/MMC lines
+  ARM: dts: at91: sama5d2_xplained: Add charger node of pmic.
+  ARM: dts: at91: sama5d2_xplained: set PB_USER as wakeup source
+  ARM: dts: at91: sama5d2_xplained: add pinmuxing for pwm0
+  ARM: dts: at91: sama5d2_xplained: remove pull-up on SD/MMC lines
+  ARM: dts: at91: at91sam9x25ek: add CAN1 interface
+  ARM: dts: at91: at91sam9x25ek: add pwm0
+  ARM: dts: at91: at91sam9x5ek: use DMA for USART0
+
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 46 ++++++++++++++---------------
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 39 ++++++++++++++++--------
+ arch/arm/boot/dts/at91sam9x25ek.dts         | 10 +++++++
+ arch/arm/boot/dts/at91sam9x5ek.dtsi         |  2 ++
+ 4 files changed, 62 insertions(+), 35 deletions(-)
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
