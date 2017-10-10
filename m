@@ -1,123 +1,70 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 2/4] phy: rcar-gen3-usb2: cleanup the role_{store,show}()
-Date: Tue, 10 Oct 2017 14:58:28 +0900
-Message-ID: <1507615110-26206-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 1/4] phy: rcar-gen3-usb2: check dr_mode for otg mode
+Date: Tue, 10 Oct 2017 14:58:27 +0900
+Message-ID: <1507615110-26206-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1507615110-26206-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507615110-26206-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch cleanups the role_{store,show}() and replaces the local
-"bool" for host/device mode selection with the "enum phy_mode" in
-the role_store().
+The previous code assumed a channel has otg capability if a channel
+has interrupt property. But, it is not good because:
+ - Battery charging feature also needs interrupt property.
+ - Some R-Car Gen3 SoCs (e.g. R-Car D3) don't have OTG capability.
+
+So, this patch checks whether usb 2.0 host node has dr_mode property or
+not. If it has 'dr_mode = "otg";', this driver enables otg capability.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 58 ++++++++++++++++++++++----------
- 1 file changed, 40 insertions(+), 18 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index e00e99a..7619468 100644
+index 54c3429..e00e99a 100644
 --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
 +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -219,14 +219,10 @@ static bool rcar_gen3_is_host(struct rcar_gen3_chan *ch)
- 	return !(readl(ch->base + USB2_COMMCTRL) & USB2_COMMCTRL_OTG_PERI);
- }
+@@ -1,7 +1,7 @@
+ /*
+  * Renesas R-Car Gen3 for USB2.0 PHY driver
+  *
+- * Copyright (C) 2015 Renesas Electronics Corporation
++ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+  *
+  * This is based on the phy-rcar-gen2 driver:
+  * Copyright (C) 2014 Renesas Solutions Corp.
+@@ -22,6 +22,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/usb/of.h>
+ #include <linux/workqueue.h>
  
--static ssize_t role_store(struct device *dev, struct device_attribute *attr,
--			  const char *buf, size_t count)
-+static ssize_t rcar_gen3_otg_change_role(struct rcar_gen3_chan *ch,
-+					 enum phy_mode mode)
- {
--	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
--	bool is_b_device, is_host, new_mode_is_host;
+ /******* USB2.0 Host registers (original offset is +0x200) *******/
+@@ -415,13 +416,16 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	/* call request_irq for OTG */
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq >= 0) {
+-		int ret;
 -
--	if (!ch->has_otg || !ch->phy->init_count)
--		return -EIO;
-+	bool is_b_device, is_host;
- 
- 	/*
- 	 * is_b_device: true is B-Device. false is A-Device.
-@@ -234,18 +230,13 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 	 */
- 	is_b_device = rcar_gen3_check_id(ch);
- 	is_host = rcar_gen3_is_host(ch);
--	if (!strncmp(buf, "host", strlen("host")))
--		new_mode_is_host = true;
--	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
--		new_mode_is_host = false;
--	else
--		return -EINVAL;
- 
- 	/* If current and new mode is the same, this returns the error */
--	if (is_host == new_mode_is_host)
-+	if ((is_host && mode == PHY_MODE_USB_HOST) ||
-+	    (!is_host && mode == PHY_MODE_USB_DEVICE))
- 		return -EINVAL;
- 
--	if (new_mode_is_host) {		/* And is_host must be false */
-+	if (mode == PHY_MODE_USB_HOST) { /* And is_host must be false */
- 		if (!is_b_device)	/* A-Peripheral */
- 			rcar_gen3_init_from_a_peri_to_a_host(ch);
- 		else			/* B-Peripheral */
-@@ -257,6 +248,32 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 			rcar_gen3_init_for_peri(ch);
- 	}
- 
-+	return 0;
-+}
+ 		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
+ 		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
+ 				       IRQF_SHARED, dev_name(dev), channel);
+ 		if (irq < 0)
+ 			dev_err(dev, "No irq handler (%d)\n", irq);
++	}
 +
-+static ssize_t role_store(struct device *dev, struct device_attribute *attr,
-+			  const char *buf, size_t count)
-+{
-+	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
-+	enum phy_mode mode;
-+	ssize_t ret = -EIO;
++	if (of_usb_get_dr_mode_by_phy(dev->of_node, 0) == USB_DR_MODE_OTG) {
++		int ret;
 +
-+	if (!ch->phy->init_count)
-+		return -EIO;
-+
-+	if (!strncmp(buf, "host", strlen("host")))
-+		mode = PHY_MODE_USB_HOST;
-+	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
-+		mode = PHY_MODE_USB_DEVICE;
-+	else
-+		return -EINVAL;
-+
-+	if (ch->has_otg)
-+		ret = rcar_gen3_otg_change_role(ch, mode);
-+
-+	if (ret < 0)
-+		return ret;
-+
- 	return count;
- }
- 
-@@ -264,12 +281,17 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
- 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
-+	bool is_host;
- 
--	if (!ch->has_otg || !ch->phy->init_count)
-+	if (!ch->phy->init_count)
-+		return -EIO;
-+
-+	if (ch->has_otg)
-+		is_host = rcar_gen3_is_host(ch);
-+	else
- 		return -EIO;
- 
--	return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
--							    "peripheral");
-+	return sprintf(buf, "%s\n", is_host ? "host" : "peripheral");
- }
- static DEVICE_ATTR_RW(role);
- 
+ 		channel->has_otg = true;
+ 		channel->extcon = devm_extcon_dev_allocate(dev,
+ 							rcar_gen3_phy_cable);
 -- 
 1.9.1
