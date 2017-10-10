@@ -1,182 +1,202 @@
-From: "Han, Nandor (GE Healthcare)" <nandor.han-JJi787mZWgc@public.gmane.org>
-Subject: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 10 Oct 2017 07:58:31 +0000
-Message-ID: <AM3P101MB0180BF8845D0CCFD9C76C63EE6750@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <AM3P101MB0180F7019908E059648488F0E67D0@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
- <20171004214935.nejsdqmlj4wwyq5v@pengutronix.de>
+From: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 02/12] mmc: mediatek: add support of mt2701/mt2712
+Date: Tue, 10 Oct 2017 17:30:21 +0800
+Message-ID: <1507627831-29323-3-git-send-email-chaotian.jing@mediatek.com>
+References: <1507627831-29323-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171004214935.nejsdqmlj4wwyq5v-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1507627831-29323-1-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+mt2701/mt2712 has 12bit clock div, which is not compatible with
+mt8135/mt8173. and, some additional features will be added in
+mt2701/mt2712, so that need distinguish it by comatibale name.
 
+Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/mmc/host/mtk-sd.c | 82 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 69 insertions(+), 13 deletions(-)
 
-> -----Original Message-----
-> From: Uwe Kleine-König [mailto:u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
-> Sent: 05 October 2017 00:50
-> To: Han, Nandor (GE Healthcare) <nandor.han-JJi787mZWgc@public.gmane.org>
-> Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>; Greg Kroah-Hartman
-> <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>; linux-
-> serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: EXT: Re: [PATCH] serial: imx-serial - move DMA buffer configuration
-> to DT
-> 
-> Hello,
-> 
-> On Mon, Oct 02, 2017 at 01:17:41PM +0000, Han, Nandor (GE Healthcare)
-> wrote:
-> > > -----Original Message-----
-> > > From: Uwe Kleine-König [mailto:u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
-> > > Sent: 29 June 2017 21:26
-> > > To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Jiri Slaby
-> > > <jslaby-IBi9RG/b67k@public.gmane.org>; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Han, Nandor (GE
-> > > Healthcare) <nandor.han-JJi787mZWgc@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > > Subject: EXT: Re: [PATCH] serial: imx-serial - move DMA buffer
-> > > configuration to DT
-> > >
-> > > Hello,
-> > >
-> > > Cc: += devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > >
-> > > On Wed, Jun 28, 2017 at 12:15:14PM +0200, Romain Perier wrote:
-> > > > From: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-> > > >
-> > > > The size of the DMA buffer can affect the delta time between data
-> > > > being produced and data being consumed. Basically the DMA system
-> > > > will move data to tty buffer when a) DMA buffer is full b) serial line is
-> idle.
-> > > > The situation is visible when producer generates data continuously
-> > > > and there is no possibility for idle line. At this point the DMA
-> > > > buffer is directly affecting the delta time.
-> >
-> > Hi Uwe,
-> >    Maybe I can explain a bit better the situation. At least I've tried
-> > to explain well enough the problem and the fix. :)
-> >
-> > >
-> > > This doesn't look like a hw property but a configuration item. Also
-> > > I don't understand the problematic case. The i.MX is sending
-> > > continuously and then doesn't receive bytes until the DMA buffer is full?
-> >
-> > Yes
-> >
-> > > What is the DMA buffer?
-> > > You don't mean the FIFO here, do you?
-> > >
-> >
-> > DMA buffer is not HW FIFO. Is the buffer provided by serial driver to DMA to
-> store data.
-> >
-> > > That doesn't sound like a good fix but more like a work around.
-> > > Which other options did you test to fix your problem?
-> > >
-> >
-> > I haven't tried any other, because except using maybe, ioctl I haven't
-> > got anything better.
-> 
-> My question didn't target where to configure the buffer size instead of dts. I
-> wonder if it would help to change the fifo watermark limits for example.
-> 
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 267f7ab..643c795 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -95,6 +95,9 @@
+ #define MSDC_CFG_CKDIV          (0xff << 8)	/* RW */
+ #define MSDC_CFG_CKMOD          (0x3 << 16)	/* RW */
+ #define MSDC_CFG_HS400_CK_MODE  (0x1 << 18)	/* RW */
++#define MSDC_CFG_HS400_CK_MODE_EXTRA  (0x1 << 22)	/* RW */
++#define MSDC_CFG_CKDIV_EXTRA    (0xfff << 8)	/* RW */
++#define MSDC_CFG_CKMOD_EXTRA    (0x3 << 20)	/* RW */
+ 
+ /* MSDC_IOCON mask */
+ #define MSDC_IOCON_SDR104CKS    (0x1 << 0)	/* RW */
+@@ -295,6 +298,10 @@ struct msdc_save_para {
+ 	u32 emmc50_cfg0;
+ };
+ 
++struct mtk_mmc_compatible {
++	u8 clk_div_bits;
++};
++
+ struct msdc_tune_para {
+ 	u32 iocon;
+ 	u32 pad_tune;
+@@ -309,6 +316,7 @@ struct msdc_delay_phase {
+ 
+ struct msdc_host {
+ 	struct device *dev;
++	const struct mtk_mmc_compatible *dev_comp;
+ 	struct mmc_host *mmc;	/* mmc structure */
+ 	int cmd_rsp;
+ 
+@@ -350,6 +358,31 @@ struct msdc_host {
+ 	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
+ };
+ 
++static const struct mtk_mmc_compatible mt8135_compat = {
++	.clk_div_bits = 8,
++};
++
++static const struct mtk_mmc_compatible mt8173_compat = {
++	.clk_div_bits = 8,
++};
++
++static const struct mtk_mmc_compatible mt2701_compat = {
++	.clk_div_bits = 12,
++};
++
++static const struct mtk_mmc_compatible mt2712_compat = {
++	.clk_div_bits = 12,
++};
++
++static const struct of_device_id msdc_of_ids[] = {
++	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
++	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
++	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
++	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
++	{}
++};
++MODULE_DEVICE_TABLE(of, msdc_of_ids);
++
+ static void sdr_set_bits(void __iomem *reg, u32 bs)
+ {
+ 	u32 val = readl(reg);
+@@ -509,7 +542,12 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
+ 		timeout = (ns + clk_ns - 1) / clk_ns + clks;
+ 		/* in 1048576 sclk cycle unit */
+ 		timeout = (timeout + (0x1 << 20) - 1) >> 20;
+-		sdr_get_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD, &mode);
++		if (host->dev_comp->clk_div_bits == 8)
++			sdr_get_field(host->base + MSDC_CFG,
++				      MSDC_CFG_CKMOD, &mode);
++		else
++			sdr_get_field(host->base + MSDC_CFG,
++				      MSDC_CFG_CKMOD_EXTRA, &mode);
+ 		/*DDR mode will double the clk cycles for data timeout */
+ 		timeout = mode >= 2 ? timeout * 2 : timeout;
+ 		timeout = timeout > 1 ? timeout - 1 : 0;
+@@ -548,7 +586,11 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 
+ 	flags = readl(host->base + MSDC_INTEN);
+ 	sdr_clr_bits(host->base + MSDC_INTEN, flags);
+-	sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
++	if (host->dev_comp->clk_div_bits == 8)
++		sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
++	else
++		sdr_clr_bits(host->base + MSDC_CFG,
++			     MSDC_CFG_HS400_CK_MODE_EXTRA);
+ 	if (timing == MMC_TIMING_UHS_DDR50 ||
+ 	    timing == MMC_TIMING_MMC_DDR52 ||
+ 	    timing == MMC_TIMING_MMC_HS400) {
+@@ -568,8 +610,12 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 
+ 		if (timing == MMC_TIMING_MMC_HS400 &&
+ 		    hz >= (host->src_clk_freq >> 1)) {
+-			sdr_set_bits(host->base + MSDC_CFG,
+-				     MSDC_CFG_HS400_CK_MODE);
++			if (host->dev_comp->clk_div_bits == 8)
++				sdr_set_bits(host->base + MSDC_CFG,
++					     MSDC_CFG_HS400_CK_MODE);
++			else
++				sdr_set_bits(host->base + MSDC_CFG,
++					     MSDC_CFG_HS400_CK_MODE_EXTRA);
+ 			sclk = host->src_clk_freq >> 1;
+ 			div = 0; /* div is ignore when bit18 is set */
+ 		}
+@@ -587,8 +633,15 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+ 			sclk = (host->src_clk_freq >> 2) / div;
+ 		}
+ 	}
+-	sdr_set_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
+-		      (mode << 8) | div);
++	if (host->dev_comp->clk_div_bits == 8)
++		sdr_set_field(host->base + MSDC_CFG,
++			      MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
++			      (mode << 8) | div);
++	else
++		sdr_set_field(host->base + MSDC_CFG,
++			      MSDC_CFG_CKMOD_EXTRA | MSDC_CFG_CKDIV_EXTRA,
++			      (mode << 12) | div);
++
+ 	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_CKPDN);
+ 	while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
+ 		cpu_relax();
+@@ -1617,12 +1670,17 @@ static int msdc_drv_probe(struct platform_device *pdev)
+ 	struct mmc_host *mmc;
+ 	struct msdc_host *host;
+ 	struct resource *res;
++	const struct of_device_id *of_id;
+ 	int ret;
+ 
+ 	if (!pdev->dev.of_node) {
+ 		dev_err(&pdev->dev, "No DT found\n");
+ 		return -EINVAL;
+ 	}
++
++	of_id = of_match_node(msdc_of_ids, pdev->dev.of_node);
++	if (!of_id)
++		return -EINVAL;
+ 	/* Allocate MMC host for this device */
+ 	mmc = mmc_alloc_host(sizeof(struct msdc_host), &pdev->dev);
+ 	if (!mmc)
+@@ -1686,11 +1744,15 @@ static int msdc_drv_probe(struct platform_device *pdev)
+ 	msdc_of_property_parse(pdev, host);
+ 
+ 	host->dev = &pdev->dev;
++	host->dev_comp = of_id->data;
+ 	host->mmc = mmc;
+ 	host->src_clk_freq = clk_get_rate(host->src_clk);
+ 	/* Set host parameters to mmc */
+ 	mmc->ops = &mt_msdc_ops;
+-	mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 255);
++	if (host->dev_comp->clk_div_bits == 8)
++		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 255);
++	else
++		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 4095);
+ 
+ 	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
+ 	/* MMC core transfer sizes tunable parameters */
+@@ -1839,12 +1901,6 @@ static int msdc_runtime_resume(struct device *dev)
+ 	SET_RUNTIME_PM_OPS(msdc_runtime_suspend, msdc_runtime_resume, NULL)
+ };
+ 
+-static const struct of_device_id msdc_of_ids[] = {
+-	{   .compatible = "mediatek,mt8135-mmc", },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(of, msdc_of_ids);
+-
+ static struct platform_driver mt_msdc_driver = {
+ 	.probe = msdc_drv_probe,
+ 	.remove = msdc_drv_remove,
+-- 
+1.8.1.1.dirty
 
-Ok. Sorry I didn't understand correct. Watermark will not help in this case because it is used only to trigger
-the moving of the data from RX FIFO to DMA buffer.  The iMX DMA (check the iMX6 RM A.3.1.2.4 since is missing
-from iMX53 RM) will only return data to serial driver when no more data exist in the RX FIFO (is using aging timer for this check)
-or BD (DMA buffer) is full. If data is sent continuously DMA will return data to driver only when BD is full.
-
-So what we need here is a trigger that will force DMA to return data faster to serial driver. The only one that I could find was the size of the buffer. Of course another way will be to create different SDMA scripts that can do all kinds of handling -- but dint' want to go on that route :) 
-
-> > Our problem is that in our system some serial ports needs to have
-> > really low data latency, where others trade more bytes over data
-> > latency. This situation results in a need of beeing able to have
-> > different DMA buffer size for different ports.
-> >
-> > How can DMA buffer size affect latency?
-> > DMA works like this: (To answer to your question DMA buffer is not
-> > FIFO)  1. Transfer the data from HW FIFO to DMA buffer based on some
-> > interrupts (character received, etc)  2. Transfer the DMA buffer back
-> > to serial port based on some events (buffer full, aging timer, etc)  3. Serial
-> port forwards to tty buffer.
-> 
-> BTW In the past I saw the serial core introduce latency, too. Are you sure
-> that's not your bottle neck?
-> 
-
-Can you be more specific? Receiving data seems very straight forward and serial core is not involved that much with or without DMA.
-Basically the driver handles the moving of the data from rx FIFO to tty buffer. Beside this lowering the DMA buffer fixed our issue. So I will assume that no. 
-
-> > Data availability to consumer depends on: DMA buffer size, baud rate
-> > and communication pattern. By communication patter I'm refering that
-> > we send data continuoselly (serial line is never idle) or packet by
-> > packet (serial line is idle in between)
-> > Example:
-> >       Baud: 19200 (1Byte = 0.52 ms)
-> >       DMA buffer size: 100 bytes
-> >       Communication pattern: continuously
-> >       =>  DMA will return data to serial port only when DMA buffer is
-> >       full, since the communication is continuously. This result in a
-> >       data latency of 0.52 ms* 100bytes = 52ms. In case the buffer
-> >       will be 200bytes the letency will be double.
-> >
-> > I agree with you, this is not directly a hw property but a DMA configuration
-> item.
-> > But I've found this to be the best way to configure this comparing with using
-> ioctl.
-> >
-> > Let me know if you need more clarification and I would really be open
-> > to other options that will solve our problem.
-> >
-> > <snip>
-> >
-> > > > +- fsl,dma-size : Indicate the size of the DMA buffer and its
-> > > > +periods
-> > >
-> > > This is a sparse description, just from reading that I don't
-> > > understand what it does.
-> > >
-> >
-> > Serial driver configures a circular ring of buffers for DMA. Here we
-> > can configure the size and the number of buffers.
-> 
-> The problem is: How should a person, who wants to make available a port on a
-> machine via dts, choose what value to use for fsl,dma-size?
-
-It doesn't have too. If this configuration is not provided the serial port will have a default value.
-The user has the possibility to tweak this settings in case is needed.
-
-> 
-> What you want (for a low latency port) is that also small amounts of data
-> received are passed quickly to the upper layer. The knob you identified to be
-> available for that is the dma buffer size.
-> 
-> I'd prefer to talk about low latency instead of buffer sizes when setting
-> parameters for the port. That this influences the buffer size (and maybe
-> watermark settings) under the hood shouldn't matter for the person
-> configuring the low latency property.
-> 
-
-I understand your point of view. A simple grep in "Documentation/devicetree/bindings" shows me that both options are used (latency/buffer configurations). We could use latency here as configuration and then translate it to DMA buffer size taking in consideration the baud rate but it's a bit more work to do and beside this we have also the number of buffers configuration which will be trickier to convert it from latency. In my opinion, I don't see a significant difference between latency and buffer since most of the serial port users (userspace level) don't touch these settings. Of course, will be a different story if this configuration will be provided using termios or other means accessible from userspace. 
-
-> Best regards
-> Uwe
-> 
-
-Thanks Uwe :)
-
-Regards,
-     Nandor
-
-> --
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
