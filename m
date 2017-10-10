@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 04/11] drm/sun4i: hdmi: create a regmap for
- later use
-Date: Tue, 10 Oct 2017 11:20:01 +0800
-Message-ID: <20171010032008.682-5-wens@csie.org>
+Subject: [PATCH v4 11/11] ARM: dts: sun6i: Enable HDMI support
+ on some A31/A31s devices
+Date: Tue, 10 Oct 2017 11:20:08 +0800
+Message-ID: <20171010032008.682-12-wens@csie.org>
 References: <20171010032008.682-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3PY6DHAKGQEOASNQ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3XY6DHAKGQEKHMWCTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171010032008.682-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,73 +20,157 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The HDMI driver is written with readl/writel I/O to the registers.
-However, to support the A31 variant, which has a different layout
-for the DDC registers, it was recommended to use regfields to have
-a cleaner implementation. To use regfields, we need to create an
-underlying regmap.
+All the A31/A31s devices I own have some kind of HDMI connector wired
+to the dedicated HDMI pins on the SoC:
 
-This patch only adds the regmap. It does not convert the existing
-driver accesses to use regmap.
+  - A31 Hummingbird (standard HDMI connector, display already enabled)
+  - Sinlinx SinA31s (standard HDMI connector)
+  - MSI Primo81 tablet (micro HDMI connector)
+
+Enable the display pipeline (if needed) and HDMI output for them.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/sun6i-a31s-primo81.dts    | 25 +++++++++++++++++++++++++
+ arch/arm/boot/dts/sun6i-a31s-sina31s.dts    | 25 +++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index a1f8cba251a2..aef157d3b659 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -163,6 +163,7 @@ struct sun4i_hdmi {
- 	struct device		*dev;
+diff --git a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+index 9ecb5f0b3f83..19e382a11297 100644
+--- a/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
++++ b/arch/arm/boot/dts/sun6i-a31-hummingbird.dts
+@@ -62,6 +62,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- 	void __iomem		*base;
-+	struct regmap		*regmap;
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	vga-connector {
+ 		compatible = "vga-connector";
  
- 	/* Parent clocks */
- 	struct clk		*bus_clk;
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 3cf1a6932fac..5ab811cda00e 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -22,6 +22,7 @@
- #include <linux/iopoll.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
- 
- #include "sun4i_backend.h"
- #include "sun4i_crtc.h"
-@@ -267,6 +268,13 @@ static const struct cec_pin_ops sun4i_hdmi_cec_pin_ops = {
+@@ -162,6 +173,16 @@
+ 	};
  };
- #endif
  
-+static const struct regmap_config sun4i_hdmi_regmap_config = {
-+	.reg_bits	= 32,
-+	.val_bits	= 32,
-+	.reg_stride	= 4,
-+	.max_register	= 0x580,
++&hdmi {
++	status = "okay";
 +};
 +
- static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 			   void *data)
- {
-@@ -321,6 +329,13 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 		goto err_disable_mod_clk;
- 	}
- 
-+	hdmi->regmap = devm_regmap_init_mmio(dev, hdmi->base,
-+					     &sun4i_hdmi_regmap_config);
-+	if (IS_ERR(hdmi->regmap)) {
-+		dev_err(dev, "Couldn't create HDMI encoder regmap\n");
-+		return PTR_ERR(hdmi->regmap);
-+	}
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
 +
- 	ret = sun4i_tmds_create(hdmi);
- 	if (ret) {
- 		dev_err(dev, "Couldn't create the TMDS clock\n");
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
+diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+index 4c10123509c4..0cdb38ab3377 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+@@ -52,17 +52,42 @@
+ / {
+ 	model = "MSI Primo81 tablet";
+ 	compatible = "msi,primo81", "allwinner,sun6i-a31s";
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "c";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
+ };
+ 
+ &cpu0 {
+ 	cpu-supply = <&reg_dcdc3>;
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	/* rtl8188etv wifi is connected here */
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	/* pull-ups and device VDDIO use AXP221 DLDO3 */
+ 	pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
+index b3d98222bd81..298476485bb4 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-sina31s.dts
+@@ -53,6 +53,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -90,6 +101,10 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	/* USB 2.0 4 port hub IC */
+ 	status = "okay";
+@@ -112,6 +127,16 @@
+ 	};
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &ir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&ir_pins_a>;
 -- 
 2.14.2
