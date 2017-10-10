@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 05/11] drm/sun4i: hdmi: Allow using second
- PLL as TMDS clk parent
-Date: Tue, 10 Oct 2017 11:20:02 +0800
-Message-ID: <20171010032008.682-6-wens@csie.org>
+Subject: [PATCH v4 04/11] drm/sun4i: hdmi: create a regmap for
+ later use
+Date: Tue, 10 Oct 2017 11:20:01 +0800
+Message-ID: <20171010032008.682-5-wens@csie.org>
 References: <20171010032008.682-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3XY6DHAKGQEKHMWCTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3PY6DHAKGQEOASNQ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171010032008.682-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,97 +20,73 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On SoCs with two display pipelines, it is possible that the two
-pipelines are active at the same time, with potentially incompatible
-dot clocks.
+The HDMI driver is written with readl/writel I/O to the registers.
+However, to support the A31 variant, which has a different layout
+for the DDC registers, it was recommended to use regfields to have
+a cleaner implementation. To use regfields, we need to create an
+underlying regmap.
 
-Let the HDMI encoder's TMDS clock go through all of its parents when
-calculating possible clock rates. This allows usage of the second video
-PLL as its parent.
+This patch only adds the regmap. It does not convert the existing
+driver accesses to use regmap.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 53 ++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 24 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-index 5cf2527bffc8..e8d4c311b80d 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-@@ -67,11 +67,11 @@ static unsigned long sun4i_tmds_calc_divider(unsigned long rate,
- static int sun4i_tmds_determine_rate(struct clk_hw *hw,
- 				     struct clk_rate_request *req)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+index a1f8cba251a2..aef157d3b659 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+@@ -163,6 +163,7 @@ struct sun4i_hdmi {
+ 	struct device		*dev;
+ 
+ 	void __iomem		*base;
++	struct regmap		*regmap;
+ 
+ 	/* Parent clocks */
+ 	struct clk		*bus_clk;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 3cf1a6932fac..5ab811cda00e 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -22,6 +22,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regmap.h>
+ 
+ #include "sun4i_backend.h"
+ #include "sun4i_crtc.h"
+@@ -267,6 +268,13 @@ static const struct cec_pin_ops sun4i_hdmi_cec_pin_ops = {
+ };
+ #endif
+ 
++static const struct regmap_config sun4i_hdmi_regmap_config = {
++	.reg_bits	= 32,
++	.val_bits	= 32,
++	.reg_stride	= 4,
++	.max_register	= 0x580,
++};
++
+ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 			   void *data)
  {
--	struct clk_hw *parent;
-+	struct clk_hw *parent = NULL;
- 	unsigned long best_parent = 0;
- 	unsigned long rate = req->rate;
- 	int best_div = 1, best_half = 1;
--	int i, j;
-+	int i, j, p;
- 
- 	/*
- 	 * We only consider PLL3, since the TCON is very likely to be
-@@ -79,32 +79,37 @@ static int sun4i_tmds_determine_rate(struct clk_hw *hw,
- 	 * clock, so we should not need to do anything.
- 	 */
- 
--	parent = clk_hw_get_parent_by_index(hw, 0);
--	if (!parent)
--		return -EINVAL;
--
--	for (i = 1; i < 3; i++) {
--		for (j = 1; j < 16; j++) {
--			unsigned long ideal = rate * i * j;
--			unsigned long rounded;
--
--			rounded = clk_hw_round_rate(parent, ideal);
--
--			if (rounded == ideal) {
--				best_parent = rounded;
--				best_half = i;
--				best_div = j;
--				goto out;
--			}
--
--			if (abs(rate - rounded / i) <
--			    abs(rate - best_parent / best_div)) {
--				best_parent = rounded;
--				best_div = i;
-+	for (p = 0; p < clk_hw_get_num_parents(hw); p++) {
-+		parent = clk_hw_get_parent_by_index(hw, p);
-+		if (!parent)
-+			continue;
-+
-+		for (i = 1; i < 3; i++) {
-+			for (j = 1; j < 16; j++) {
-+				unsigned long ideal = rate * i * j;
-+				unsigned long rounded;
-+
-+				rounded = clk_hw_round_rate(parent, ideal);
-+
-+				if (rounded == ideal) {
-+					best_parent = rounded;
-+					best_half = i;
-+					best_div = j;
-+					goto out;
-+				}
-+
-+				if (abs(rate - rounded / i) <
-+				    abs(rate - best_parent / best_div)) {
-+					best_parent = rounded;
-+					best_div = i;
-+				}
- 			}
- 		}
+@@ -321,6 +329,13 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 		goto err_disable_mod_clk;
  	}
  
-+	if (!parent)
-+		return -EINVAL;
++	hdmi->regmap = devm_regmap_init_mmio(dev, hdmi->base,
++					     &sun4i_hdmi_regmap_config);
++	if (IS_ERR(hdmi->regmap)) {
++		dev_err(dev, "Couldn't create HDMI encoder regmap\n");
++		return PTR_ERR(hdmi->regmap);
++	}
 +
- out:
- 	req->rate = best_parent / best_half / best_div;
- 	req->best_parent_rate = best_parent;
+ 	ret = sun4i_tmds_create(hdmi);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't create the TMDS clock\n");
 -- 
 2.14.2
