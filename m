@@ -1,80 +1,133 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 2/4] phy: rcar-gen3-usb2: use enum phy_mode in the role_store()
-Date: Tue, 10 Oct 2017 18:41:28 +0900
-Message-ID: <1507628490-7944-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 3/4] phy: rcar-gen3-usb2: add SoC-specific parameter for dedicated pins
+Date: Tue, 10 Oct 2017 18:41:29 +0900
+Message-ID: <1507628490-7944-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1507628490-7944-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507628490-7944-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch modifies the role_store() to use "enum phy_mode" instead
-of the local "bool" for host/device mode selection.
+This patch adds SoC-specific parameter to avoid reading/writing
+specific registers wrongly if this driver runs on a SoC which doesn't
+have dedicated pins (e.g. R-Car D3). This patch also changes the
+value "has_otg" to "has_otg_pins" for slightly easier reading of
+the code.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index e00e99a..7314b49 100644
+index 7314b49..eb9786e 100644
 --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
 +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -219,33 +219,40 @@ static bool rcar_gen3_is_host(struct rcar_gen3_chan *ch)
- 	return !(readl(ch->base + USB2_COMMCTRL) & USB2_COMMCTRL_OTG_PERI);
- }
+@@ -18,6 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+@@ -80,6 +81,8 @@
+ #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+ #define USB2_ADPCTRL_DRVVBUS		BIT(4)
  
-+static enum phy_mode rcar_gen3_get_phy_mode(struct rcar_gen3_chan *ch)
-+{
-+	if (rcar_gen3_is_host(ch))
-+		return PHY_MODE_USB_HOST;
-+	else
-+		return PHY_MODE_USB_DEVICE;
-+}
++#define RCAR_GEN3_PHY_HAS_DEDICATED_PINS	1
 +
- static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 			  const char *buf, size_t count)
- {
- 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
--	bool is_b_device, is_host, new_mode_is_host;
-+	bool is_b_device;
-+	enum phy_mode cur_mode, new_mode;
+ struct rcar_gen3_chan {
+ 	void __iomem *base;
+ 	struct extcon_dev *extcon;
+@@ -87,7 +90,7 @@ struct rcar_gen3_chan {
+ 	struct regulator *vbus;
+ 	struct work_struct work;
+ 	bool extcon_host;
+-	bool has_otg;
++	bool has_otg_pins;
+ };
  
- 	if (!ch->has_otg || !ch->phy->init_count)
+ static void rcar_gen3_phy_usb2_work(struct work_struct *work)
+@@ -234,7 +237,7 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
+ 	bool is_b_device;
+ 	enum phy_mode cur_mode, new_mode;
+ 
+-	if (!ch->has_otg || !ch->phy->init_count)
++	if (!ch->has_otg_pins || !ch->phy->init_count)
  		return -EIO;
  
--	/*
--	 * is_b_device: true is B-Device. false is A-Device.
--	 * If {new_mode_}is_host: true is Host mode. false is Peripheral mode.
--	 */
--	is_b_device = rcar_gen3_check_id(ch);
--	is_host = rcar_gen3_is_host(ch);
  	if (!strncmp(buf, "host", strlen("host")))
--		new_mode_is_host = true;
-+		new_mode = PHY_MODE_USB_HOST;
- 	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
--		new_mode_is_host = false;
-+		new_mode = PHY_MODE_USB_DEVICE;
- 	else
- 		return -EINVAL;
+@@ -272,7 +275,7 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
  
-+	/* is_b_device: true is B-Device. false is A-Device. */
-+	is_b_device = rcar_gen3_check_id(ch);
-+	cur_mode = rcar_gen3_get_phy_mode(ch);
-+
- 	/* If current and new mode is the same, this returns the error */
--	if (is_host == new_mode_is_host)
-+	if (cur_mode == new_mode)
- 		return -EINVAL;
+-	if (!ch->has_otg || !ch->phy->init_count)
++	if (!ch->has_otg_pins || !ch->phy->init_count)
+ 		return -EIO;
  
--	if (new_mode_is_host) {		/* And is_host must be false */
-+	if (new_mode == PHY_MODE_USB_HOST) { /* And is_host must be false */
- 		if (!is_b_device)	/* A-Peripheral */
- 			rcar_gen3_init_from_a_peri_to_a_host(ch);
- 		else			/* B-Peripheral */
+ 	return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
+@@ -311,7 +314,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ 	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+ 
+ 	/* Initialize otg part */
+-	if (channel->has_otg)
++	if (channel->has_otg_pins)
+ 		rcar_gen3_init_otg(channel);
+ 
+ 	return 0;
+@@ -385,9 +388,17 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ }
+ 
+ static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+-	{ .compatible = "renesas,usb2-phy-r8a7795" },
+-	{ .compatible = "renesas,usb2-phy-r8a7796" },
+-	{ .compatible = "renesas,rcar-gen3-usb2-phy" },
++	{
++		.compatible = "renesas,usb2-phy-r8a7795",
++		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
++	},
++	{
++		.compatible = "renesas,usb2-phy-r8a7796",
++		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
++	},
++	{
++		.compatible = "renesas,rcar-gen3-usb2-phy",
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
+@@ -433,7 +444,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	if (of_usb_get_dr_mode_by_phy(dev->of_node, 0) == USB_DR_MODE_OTG) {
+ 		int ret;
+ 
+-		channel->has_otg = true;
++		channel->has_otg_pins = (uintptr_t)of_device_get_match_data(dev);
+ 		channel->extcon = devm_extcon_dev_allocate(dev,
+ 							rcar_gen3_phy_cable);
+ 		if (IS_ERR(channel->extcon))
+@@ -475,7 +486,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		dev_err(dev, "Failed to register PHY provider\n");
+ 		ret = PTR_ERR(provider);
+ 		goto error;
+-	} else if (channel->has_otg) {
++	} else if (channel->has_otg_pins) {
+ 		int ret;
+ 
+ 		ret = device_create_file(dev, &dev_attr_role);
+@@ -495,7 +506,7 @@ static int rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
+ {
+ 	struct rcar_gen3_chan *channel = platform_get_drvdata(pdev);
+ 
+-	if (channel->has_otg)
++	if (channel->has_otg_pins)
+ 		device_remove_file(&pdev->dev, &dev_attr_role);
+ 
+ 	pm_runtime_disable(&pdev->dev);
 -- 
 1.9.1
