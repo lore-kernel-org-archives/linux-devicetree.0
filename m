@@ -1,183 +1,42 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Tue, 10 Oct 2017 18:19:03 +0300
-Message-ID: <04D49C2F-9AB8-4007-AE30-7A80980220F0@konsulko.com>
-References: <1506973580.17981.5.camel@hp800z>
- <CAL_Jsq+vrAXQbfSGdANhqM3QJ2fHTQXDT1J6qGnTJkZ4egepNw@mail.gmail.com>
- <1507039989.17981.25.camel@hp800z>
- <CAL_JsqLLJE8bp3gwdExcsAtF+U4AHkROpbqHX8_79YhYjROovQ@mail.gmail.com>
- <1507052352.17981.48.camel@hp800z>
- <CAL_JsqKtQ1LyM09EcaXnPR8zfDJanuNQW2F474k2Z_hUjXOz5Q@mail.gmail.com>
- <4D25319A-34A8-4FE6-8B14-616686D2192A@konsulko.com>
- <59DAAFD3.9070900@gmail.com> <20171009000053.GQ10050@umbus.fritz.box>
- <8306BF82-3141-4994-8EFE-D5D2052F9FE1@konsulko.com>
- <20171010015020.GE2668@umbus.fritz.box>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171010015020.GE2668-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 3/5] mfd: bd9571mwv: Allow DDR Backup Power register access
+Date: Tue, 10 Oct 2017 17:26:16 +0200
+Message-ID: <1507649178-31473-4-git-send-email-geert+renesas@glider.be>
+References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Enable read/write access to the BD9571MWV_BKUP_MODE_CNT register, which
+is a.o. used to configure DDR Backup Power.
 
-> On Oct 10, 2017, at 04:50 , David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> =
-wrote:
->=20
-> On Mon, Oct 09, 2017 at 06:07:28PM +0300, Pantelis Antoniou wrote:
->> Hi David,
->>=20
->>> On Oct 9, 2017, at 03:00 , David Gibson =
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->>>=20
->>> On Sun, Oct 08, 2017 at 04:08:03PM -0700, Frank Rowand wrote:
->>>> On 10/07/17 03:23, Pantelis Antoniou wrote:
->>>>> Hi Rob,
->>>>>=20
->>>>>> On Oct 6, 2017, at 16:55 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
->>>>>>=20
->>>>>> On Tue, Oct 3, 2017 at 12:39 PM, Pantelis Antoniou
->>>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>>>>> Hi Rob,
->>>>=20
->>>> < snip >
->>>>=20
->>>>>>> eBPF is portable, can be serialized after compiling in the =
-schema file
->>>>>>> and can be executed in the kernel.
->>>>>>=20
->>>>>> Executing in the kernel is a non-goal for me.
->>>>=20
->>>> Executing in the kernel is an anti-goal for me.
->>>>=20
->>>> We are trying to reduce the device tree footprint inside the =
-kernel,
->>>> not increase it.
->>>>=20
->>>> 99.99% of the validation should be possible statically, in the =
-compile
->>>> phase.
->>>>=20
->>>>=20
->>>>>>> By stripping out all documentation related properties and nodes =
-keeping
->>>>>>> only the compiled filters you can generate a dtb blob that =
-passed to
->>>>>>> kernel can be used for verification of all runtime changes in =
-the
->>>>>>> kernel's live tree. eBPF is enforcing an execution model that is =
-'safe'
->>>>>>> so we can be sure that no foul play is possible.
->>>>=20
->>>> Run time changes can be assumed correct (short of bugs in the =
-overlay
->>>> application code), if the base tree is validated, the overlay is =
-validated,
->>>> and the interface between the live tree and the overlay is a
->>>> connector.
->>>=20
->>> In addition, no amount of schema validation can really protect the
->>> kernel from a bad DT.  Even if the schemas can 100% verify that the =
-DT
->>> is "syntactically" correct, which is ambitious, it can't protect
->>> against a DT which is in the right form, but contains information =
-that
->>> is simply wrong for the hardware in question.  That can stuff the
->>> kernel at least as easily as an incorrectly formatted DT.
->>>=20
->>=20
->> I disagree.
->>=20
->> There are multiple levels of validation. For now we=E2=80=99re only =
-talking about
->> binding validation. There can be SoC level validation, board level =
-validation,
->> revision level validation and finally application specific =
-validation.
->>=20
->> Binding validation is making sure properties/nodes follow the binding =
-document.
->> For instance that for a foo device there=E2=80=99s a mandatory =
-interrupt property.
->>=20
->> Simplified
->>=20
->> interrupt =3D <X>;
->>=20
->> Binding validation would =E2=80=98catch=E2=80=99 errors like =
-assigning a string or not having the
->> interrupt property available.
->>=20
->> SoC level validation would list the available interrupt number that a =
-given
->> SoC would support for that device.
->>=20
->> For example that interrupt can only take the values 10 or 99 in a =
-given SoC.
->>=20
->> Board level validation would narrow this down even further to a value =
-of 10 for
->> a given board model.
->=20
->> Similar revision level validation would place further restriction on =
-the allowed
->> configuration.
->>=20
->> Finally application specific validation could place restriction based =
-on the intended
->> application that piece of hardware is used for. For instance devices =
-that should not
->> exceed a given power budget would have restrictions on the clock =
-frequency of the processor
->> or bus frequencies etc.
->=20
-> This doesn't help.  In order to do this, the validator would need
-> information that's essentially equivalent to the content of DT, at
-> which point there's no point to the DT at all - and you're left with
-> the problem of validating the information that the validator has.
->=20
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/mfd/bd9571mwv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-That would be the case if hardware IP only has a single way to be =
-configured.
-
-The industry standard nowadays is picking reusable IP blocks and =
-integrating them
-together in an SoC. The driver and the binding is common for every =
-platform that uses
-that block, but the allowed configuration varies according to what the =
-hardware
-people uses in a given instance.
-
-> Fundamentally a validator that's useful *cannot* tell the difference
-> between a correct tree and one which _could_ be correct for some
-> theoretical hardware, but isn't for this particular hardware.
->=20
-
-That=E2=80=99s why there=E2=80=99s reason for a nested hierarchy of =
-bindings IMO.
-
-Completeness of validation schemes can be a differentiating factor when
-choosing parts for hardware design. They would sure cut down development =
-time.
-
-
-> --=20
-> David Gibson			| I'll have my music baroque, and my =
-code
-> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT =
-_the_ _other_
-> 				| _way_ _around_!
-> http://www.ozlabs.org/~dgibson
-
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mfd/bd9571mwv.c b/drivers/mfd/bd9571mwv.c
+index 64e088dfe7b05b5b..503979c81dae11bb 100644
+--- a/drivers/mfd/bd9571mwv.c
++++ b/drivers/mfd/bd9571mwv.c
+@@ -29,6 +29,7 @@ static const struct mfd_cell bd9571mwv_cells[] = {
+ 
+ static const struct regmap_range bd9571mwv_readable_yes_ranges[] = {
+ 	regmap_reg_range(BD9571MWV_VENDOR_CODE, BD9571MWV_PRODUCT_REVISION),
++	regmap_reg_range(BD9571MWV_BKUP_MODE_CNT, BD9571MWV_BKUP_MODE_CNT),
+ 	regmap_reg_range(BD9571MWV_AVS_SET_MONI, BD9571MWV_AVS_DVFS_VID(3)),
+ 	regmap_reg_range(BD9571MWV_VD18_VID, BD9571MWV_VD33_VID),
+ 	regmap_reg_range(BD9571MWV_DVFS_VINIT, BD9571MWV_DVFS_VINIT),
+@@ -44,6 +45,7 @@ static const struct regmap_access_table bd9571mwv_readable_table = {
+ };
+ 
+ static const struct regmap_range bd9571mwv_writable_yes_ranges[] = {
++	regmap_reg_range(BD9571MWV_BKUP_MODE_CNT, BD9571MWV_BKUP_MODE_CNT),
+ 	regmap_reg_range(BD9571MWV_AVS_VD09_VID(0), BD9571MWV_AVS_VD09_VID(3)),
+ 	regmap_reg_range(BD9571MWV_DVFS_SETVID, BD9571MWV_DVFS_SETVID),
+ 	regmap_reg_range(BD9571MWV_GPIO_DIR, BD9571MWV_GPIO_OUT),
+-- 
+2.7.4
