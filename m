@@ -1,106 +1,115 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 02/11] drm/sun4i: tcon: Add support for
- demuxing TCON output on A31
-Date: Tue, 10 Oct 2017 11:19:59 +0800
-Message-ID: <20171010032008.682-3-wens@csie.org>
-References: <20171010032008.682-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v4 00/11] drm/sun4i: hdmi: Support HDMI controller on A31
+Date: Tue, 10 Oct 2017 11:19:57 +0800
+Message-ID: <20171010032008.682-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3PY6DHAKGQEOASNQ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171010032008.682-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On systems with 2 TCONs such as the A31, it is possible to demux the
-output of the TCONs to one encoder.
-
-Add support for this for the A31.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 47 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 75124043d655..68751b999877 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -112,6 +112,27 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
- }
- EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
- 
-+/*
-+ * This function is a helper for TCON output muxing. The TCON output
-+ * muxing control register in earlier SoCs (without the TCON TOP block)
-+ * are located in TCON0. This helper returns a pointer to TCON0's
-+ * sun4i_tcon structure, or NULL if not found.
-+ */
-+static struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
-+{
-+	struct sun4i_drv *drv = drm->dev_private;
-+	struct sun4i_tcon *tcon;
-+
-+	list_for_each_entry(tcon, &drv->tcon_list, list)
-+		if (tcon->id == 0)
-+			return tcon;
-+
-+	dev_warn(drm->dev,
-+		 "TCON0 not found, display output muxing may not work\n");
-+
-+	return NULL;
-+}
-+
- void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
- 			struct drm_encoder *encoder)
- {
-@@ -777,6 +798,31 @@ static int sun5i_a13_tcon_set_mux(struct sun4i_tcon *tcon,
- 	return regmap_write(tcon->regs, SUN4I_TCON_MUX_CTRL_REG, val);
- }
- 
-+static int sun6i_tcon_set_mux(struct sun4i_tcon *tcon,
-+			      struct drm_encoder *encoder)
-+{
-+	struct sun4i_tcon *tcon0 = sun4i_get_tcon0(encoder->dev);
-+	u32 shift;
-+
-+	if (!tcon0)
-+		return -EINVAL;
-+
-+	switch (encoder->encoder_type) {
-+	case DRM_MODE_ENCODER_TMDS:
-+		/* HDMI */
-+		shift = 8;
-+		break;
-+	default:
-+		/* TODO A31 has MIPI DSI but A31s does not */
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(tcon0->regs, SUN4I_TCON_MUX_CTRL_REG,
-+			   0x3 << shift, tcon->id << shift);
-+
-+	return 0;
-+}
-+
- static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
- 	.has_channel_1		= true,
- 	.set_mux		= sun5i_a13_tcon_set_mux,
-@@ -785,6 +831,7 @@ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
- static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
- 	.has_channel_1		= true,
- 	.needs_de_be_mux	= true,
-+	.set_mux		= sun6i_tcon_set_mux,
- };
- 
- static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
--- 
-2.14.2
+SGkgZXZlcnlvbmUsCgpUaGlzIGlzIHY0IG9mIG15IEEzMSBIRE1JIHN1cHBvcnQgc2VyaWVzLiBU
+aGUgRFRTIHBhdGNoZXMgZGVwZW5kIG9uCnRoZSBwYXRjaCAiY2xrOiBzdW54aS1uZzogc3VuNmk6
+IEV4cG9ydCB2aWRlbyBQTExzIiBhbHJlYXkgbWVyZ2VkLgpUaGUgRFJNIHBhdGNoZXMgZGVwZW5k
+IG9uICJyZWdtYXA6IGFkZCBpb3BvbGwtbGlrZSBwb2xsaW5nIG1hY3JvIGZvcgpyZWdtYXBfZmll
+bGQiIGFscmVhZHkgbWVyZ2VkIG9uIGEgdG9waWMgYnJhbmNoIGluIHRoZSByZWdtYXAgcmVwb3Np
+dG9yeS4KCkNoYW5nZXMgc2luY2UgdjM6CgogICAgLSBSZW5hbWVkIHN1bjRpX2dldF9maXJzdF90
+Y29uKCkgdG8gc3VuNGlfZ2V0X3Rjb24wKCkKCiAgICAtIE1hZGUgc3VuNGlfZ2V0X3Rjb24wKCkg
+cmV0dXJuIE5VTEwgd2hlbiBpdCBmYWlscywgYW5kCiAgICAgIHN1bjZpX3Rjb25fc2V0X211eCgp
+IHdpbGwgZXJyb3Igb3V0IGlmIHRoYXQgaGFwcGVucy4KCiAgICAtIFJlbW92ZWQgaGFzX3Vua25v
+d25fbXV4IGZpZWxkIGluIHRjb25fcXVpcmtzIHN0cnVjdHVyZSwKICAgICAgYXMgaXRzIGZ1bmN0
+aW9uIGlzIHJlcGxhY2VkIGJ5IHRoZSBwZXItc29jIG11eGluZyBmdW5jdGlvbgogICAgICBwb2lu
+dGVyLgoKICAgIC0gRHJvcHBlZCBjbGsgYW5kIHJlZ21hcCBwYXRjaGVzIHRoYXQgd2VyZSBtZXJn
+ZWQuCgpDaGFuZ2VzIHNpbmNlIHYyOgoKICAgIC0gVENPTiBtdXhpbmcgbW92ZWQgaW50byBmdW5j
+dGlvbnMgZm9yIGVhY2ggcGxhdGZvcm0sIHdpdGggcG9pbnRlcnMKICAgICAgdG8gdGhlbSBpbiB0
+aGUgVENPTiBxdWlya3Mgc3RydWN0dXJlLgoKICAgIC0gQ0NVICJoZG1pLWRkYyIgY2xvY2sgcmVu
+YW1lZCB0byAiZGRjIi4KCiAgICAtIEFkZGVkIE1heGltZSdzIGFja3MuCgpDaGFuZ2VzIHNpbmNl
+IHYxOgoKICAgIC0gQ29yZSBjaGFuZ2VzIHRvIHN1bjRpLWRybSB0byBzdXBwb3J0IHR3byBkaXNw
+bGF5IHBpcGVsaW5lcwogICAgICBoYXZlIGJlZW4gbWVyZ2VkIGludG8gZHJtLW1pc2MgYW5kIHRo
+dXMgZHJvcHBlZCBmcm9tIHRoaXMKICAgICAgdmVyc2lvbgoKICAgIC0gUmV3b3JrZWQgRERDIHZh
+cmlhbnQgc3VwcG9ydCBvbnRvIG5ldyBleHBvc2VkIEkyQyBpbnRlcmZhY2UgYml0cy4KCiAgICAt
+IFJld29ya2VkIEREQyB2YXJpYW50IHN1cHBvcnQgdG8gdXNlIHJlZ21hcF9maWVsZHMuCgogICAg
+LSBQYXRjaGVzIHRvIGFkZCB2YXJpYW50IHN1cHBvcnQgdG8gdmFyaW91cyAoVE1EUywgRERDLCBI
+RE1JCiAgICAgIGNvbnRyb2xsZXIpIHN1Yi1ibG9ja3MgaGF2ZSBiZWVuIG1lcmdlZCBpbnRvIG9u
+ZSBwYXRjaC4KClRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEhETUkgY29udHJvbGxl
+ciBmb3VuZCBvbiBBbGx3aW5uZXIKQTMxL0EzMXMgU29Dcy4gSXQgYnVpbGRzIHVwb24gTWF4aW1l
+J3Mgd29yayB0aGF0IGFkZGVkIHN1cHBvcnQgZm9yCnRoZSBIRE1JIGNvbnRyb2xsZXIgb24gdGhl
+IEFsbHdpbm5lciBBMTBzIFNvQy4KClRoZSBIRE1JIGNvbnRyb2xsZXJzIGluIHRoZSBvbGRlciBn
+ZW5lcmF0aW9uIEFsbHdpbm5lciBTb0NzIGlzIHZlcnkKc2ltaWxhci4gVGhlIEExMC9BMTBzL0Ey
+MCBhbGwgaGF2ZSB0aGUgc2FtZSBoYXJkd2FyZSBibG9jaywgd2l0aCB0aGUKQTEwIGhhdmluZyBz
+bGlnaHRseSBkaWZmZXJlbnQgaW5pdGlhbCBjb25maWd1cmF0aW9uIHZhbHVlcy4gVGhlIEEzMSdz
+CnZhcmlhbnQgc3BsaXRzIG91dCB0aGUgRERDIHBhcmVudCBjbG9jaywgaGFzIGRpZmZlcmVudCBm
+b3JtdWxhcyBmb3IKdGhlIEREQyBhbmQgVE1EUyBjbG9ja3MsIGFuZCBhIGRpZmZlcmVudCByZWdp
+c3RlciBsYXlvdXQgZm9yIHRoZSBEREMKYmxvY2suIEFsc28sIGl0IGRvZXMgbm90IGV4cG9zZSB0
+aGUgQ0VDIHBpbnMgb3V0c2lkZSBvZiB0aGUgU29DLCB3aGljaAppcyB1bmZvcnR1bmF0ZS4KClBh
+dGNoIDEgbW92ZXMgdGhlIGV4aXN0aW5nIFRDT04gbXV4aW5nIGNvZGUgZm9yIHRoZSBBMTMgaW50
+byBhIHNlcGFyYXRlCmZ1bmN0aW9uLCBwb2ludGVkIHRvIGJ5IGJ5IGZ1bmN0aW9uIHBvaW50ZXIg
+aW4gdGhlIHF1aXJrcyBzdHJ1Y3R1cmUuClRoZSBleGlzdGluZyBzdW40aV90Y29uX3NldF9tdXgo
+KSBmdW5jdGlvbiBjYWxscyB0aGUgZnVuY3Rpb24gcG9pbnRlcgppZiBpdCBpcyBzZXQuCgpQYXRj
+aCAyIGFkZHMgc3VwcG9ydCBmb3IgdGhlIFRDT04gZGVtdXhpbmcgZmVhdHVyZSBvbiB0aGUgQTMx
+LiBUaGlzIGlzCm5lZWRlZCBpZiB0aGUgdXNlciB3YW50cyB0byBvdXRwdXQgdGhyb3VnaCBIRE1J
+IGZyb20gdGhlIHNlY29uZCBkaXNwbGF5CnBpcGVsaW5lLgoKUGF0Y2ggMyBhZGRzIHByb3BlciBl
+cnJvciBwYXRoIGNsZWFudXAgdG8gdGhlIEhETUkgZHJpdmVyLgoKUGF0Y2ggNCBhZGRzIGEgcmVn
+bWFwIGZvciB0aGUgSERNSSBkcml2ZXIsIHRvIGJlIHVzZWQgaW4gYSBzdWJzZXF1ZW50CnBhdGNo
+LgoKUGF0Y2ggNSBhbGxvd3MgdGhlIEhETUkgVE1EUyBjbG9jayB0byB1c2UgdGhlIHNlY29uZCBQ
+TEwgYXMgaXRzIHBhcmVudCwKaW4gY2FzZSB0aGUgZmlyc3QgUExMIGlzIGRyaXZpbmcgYW4gaW5j
+b21wYXRpYmxlIGRvdCBjbG9jay4KClBhdGNoIDYgYWRkcyB0aGUgQTMxIEhETUkgY29udHJvbGxl
+ciB2YXJpYW50IHRvIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5nLgoKUGF0Y2ggNyBhZGRzIHN1cHBv
+cnQgZm9yIGRpZmZlcmVudCB2YXJpYW50cyBvZiB0aGUgSERNSSBjb250cm9sbGVyCmhhcmR3YXJl
+LCB3aXRoIHRoZSBkaWZmZXJlbmNlcyBtZW50aW9uZWQgaW4gdGhlIGJlZ2lubmluZyBvZiB0aGlz
+CmxldHRlci4KClBhdGNoIDggYWRkcyBkZWZpbmVzIGZvciB0aGUgQTMxIHNwZWNpZmljIEREQyBy
+ZWdpc3RlciBvZmZzZXRzLgoKUGF0Y2ggOSBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBMzEncyBIRE1J
+IGNvbnRyb2xsZXIgdmFyaWFudC4KClBhdGNoIDEwIGFkZHMgYSBkZXZpY2Ugbm9kZSBmb3IgdGhl
+IEhETUkgY29udHJvbGxlciBvbiB0aGUgQTMxLgoKUGF0Y2ggMTEgZW5hYmxlIEhETUkgdmlkZW8g
+b3V0cHV0IG9uIHRocmVlIGJvYXJkcyB0aGF0IEkgaGF2ZS4KCgpJIGFsc28gaGFkIHNpbXVsdGFu
+ZW91cyBvdXRwdXQgb24gYm90aCBkaXNwbGF5IHBpcGVsaW5lcyBvbiB0aGUgU2luQTMxcywKb25l
+IHdpdGggYW4gTENEIHBhbmVsIGFuZCB0aGUgb3RoZXIgdXNpbmcgSERNSS4gQWZ0ZXIgYm9vdCwg
+Ym90aCBzY3JlZW5zCnNob3dlZCBhIHByb3BlciBjb25zb2xlLiBUaGUgSERNSSBzY3JlZW4gaGFk
+IGhpZ2hlciByZXNvbHV0aW9uLCBzbyB0aGUKY29uc29sZSB3YXMgbGltaXRlZCB0byB0aGUgdXBw
+ZXIgbGVmdCBjb3JuZXIuCgpOb3RlIHRoYXQgdGhpcyBzZXJpZXMgZG9lcyBub3QgZGVhbCB3aXRo
+IGNvbmZsaWN0aW5nIHBpeGVsIGNsb2Nrcy4KCkFzIEkgc3RpbGwgZG9uJ3QgaGF2ZSBhIGZyZWVk
+ZXNrdG9wLm9yZyBhY2NvdW50IFsxXSB0byBhY2Nlc3MgZHJtLW1pc2MsCk1heGltZSB3aWxsIGhh
+dmUgdG8gYXBwbHkgdGhlIHBhdGNoZXMgZm9yIG1lLgoKClJlZ2FyZHMKQ2hlbll1CgoKWzFdIGh0
+dHBzOi8vYnVncy5mcmVlZGVza3RvcC5vcmcvc2hvd19idWcuY2dpP2lkPTEwMjkyMAoKQ2hlbi1Z
+dSBUc2FpICgxMSk6CiAgZHJtL3N1bjRpOiB0Y29uOiBBZGQgdmFyaWFudCBjYWxsYmFjayBmb3Ig
+VENPTiBvdXRwdXQgbXV4aW5nCiAgZHJtL3N1bjRpOiB0Y29uOiBBZGQgc3VwcG9ydCBmb3IgZGVt
+dXhpbmcgVENPTiBvdXRwdXQgb24gQTMxCiAgZHJtL3N1bjRpOiBoZG1pOiBEaXNhYmxlIGNsa3Mg
+aW4gYmluZCBmdW5jdGlvbiBlcnJvciBwYXRoIGFuZCB1bmJpbmQKICAgIGZ1bmN0aW9uCiAgZHJt
+L3N1bjRpOiBoZG1pOiBjcmVhdGUgYSByZWdtYXAgZm9yIGxhdGVyIHVzZQogIGRybS9zdW40aTog
+aGRtaTogQWxsb3cgdXNpbmcgc2Vjb25kIFBMTCBhcyBUTURTIGNsayBwYXJlbnQKICBkdC1iaW5k
+aW5nczogZGlzcGxheTogc3VuNGk6IEFkZCBiaW5kaW5nIGZvciBBMzEgSERNSSBjb250cm9sbGVy
+CiAgZHJtL3N1bjRpOiBoZG1pOiBBZGQgc3VwcG9ydCBmb3IgY29udHJvbGxlciBoYXJkd2FyZSB2
+YXJpYW50cwogIGRybS9zdW40aTogaGRtaTogQWRkIEEzMSBzcGVjaWZpYyBEREMgcmVnaXN0ZXIg
+ZGVmaW5pdGlvbnMKICBkcm0vc3VuNGk6IGhkbWk6IEFkZCBzdXBwb3J0IGZvciBBMzEncyBIRE1J
+IGNvbnRyb2xsZXIKICBBUk06IGR0czogc3VuNmk6IEFkZCBkZXZpY2Ugbm9kZSBmb3IgSERNSSBj
+b250cm9sbGVyCiAgQVJNOiBkdHM6IHN1bjZpOiBFbmFibGUgSERNSSBzdXBwb3J0IG9uIHNvbWUg
+QTMxL0EzMXMgZGV2aWNlcwoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjRpLWRybS50
+eHQgICAgICAgICAgIHwgICAzICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEzMS1odW1taW5n
+YmlyZC5kdHMgICAgICAgIHwgIDIxICsrCiBhcmNoL2FybS9ib290L2R0cy9zdW42aS1hMzEuZHRz
+aSAgICAgICAgICAgICAgICAgICB8ICA1NSArKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvc3VuNmkt
+YTMxcy1wcmltbzgxLmR0cyAgICAgICAgICAgfCAgMjUgKysrCiBhcmNoL2FybS9ib290L2R0cy9z
+dW42aS1hMzFzLXNpbmEzMXMuZHRzICAgICAgICAgICB8ICAyNSArKysKIGRyaXZlcnMvZ3B1L2Ry
+bS9zdW40aS9zdW40aV9oZG1pLmggICAgICAgICAgICAgICAgIHwgMTA3ICsrKysrKysrKysKIGRy
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9oZG1pX2RkY19jbGsuYyAgICAgICAgIHwgIDM4ICsr
+Ky0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9oZG1pX2VuYy5jICAgICAgICAgICAgIHwg
+MjA0ICsrKysrKysrKysrKysrKy0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2hkbWlf
+aTJjLmMgICAgICAgICAgICAgfCAyMjcgKysrKysrKysrKysrKysrLS0tLS0tCiBkcml2ZXJzL2dw
+dS9kcm0vc3VuNGkvc3VuNGlfaGRtaV90bWRzX2Nsay5jICAgICAgICB8ICA2OCArKystLS0KIGRy
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgICAgICAgICAgICAgICAgIHwgIDkxICsr
+KysrKystLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uaCAgICAgICAgICAgICAg
+ICAgfCAgIDYgKy0KIDEyIGZpbGVzIGNoYW5nZWQsIDcyNyBpbnNlcnRpb25zKCspLCAxNDMgZGVs
+ZXRpb25zKC0pCgotLSAKMi4xNC4yCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
