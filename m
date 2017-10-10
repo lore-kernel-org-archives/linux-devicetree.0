@@ -1,71 +1,124 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH v2 0/3] Altera ASMI Parallel II IP Core
-Date: Mon, 9 Oct 2017 17:49:54 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1710091748430.24764@mgerlach-VirtualBox>
-References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 4/5] soc: qcom: Remote filesystem memory driver
+Date: Mon, 9 Oct 2017 19:49:47 -0500
+Message-ID: <CAL_JsqK+pGsAf+FYTFDUGreTsCU_Rc7ouDsyE6hXJkYexomkzQ@mail.gmail.com>
+References: <20171005033258.12825-1-bjorn.andersson@linaro.org> <20171005033258.12825-5-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
+In-Reply-To: <20171005033258.12825-5-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org, tien.hock.loh@intel.com, hean.loong.ong@intel.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 4, 2017 at 10:32 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> The Qualcomm remote file system protocol is used by certain remoteprocs,
+> in particular the modem, to read and write persistent storage in
+> platforms where only the application CPU has physical storage access.
+>
+> The protocol is based on a set of QMI-encoded control-messages and a
+> shared memory buffer for exchaning the data. This driver implements the
+> latter, providing the user space service access to the carved out chunk
+> of memory.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>
+> Changes since v2:
+> - Renamed driver to "rmtfs_mem" in attempt to clarify that this is not a
+>   file system, but some chunk of memory.
+>
+> Changes since v1:
+> - RFSA device represented direclty by the reserved-memory node
+>
+>  drivers/of/platform.c        |   1 +
+>  drivers/soc/qcom/Kconfig     |  11 ++
+>  drivers/soc/qcom/Makefile    |   1 +
+>  drivers/soc/qcom/rmtfs_mem.c | 272 +++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 285 insertions(+)
+>  create mode 100644 drivers/soc/qcom/rmtfs_mem.c
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index ee89f096f0f3..e7548c9a9915 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -498,6 +498,7 @@ EXPORT_SYMBOL_GPL(of_platform_default_populate);
+>
+>  #ifndef CONFIG_PPC
+>  static const struct of_device_id reserved_mem_matches[] = {
+> +       { .compatible = "qcom,rmtfs-mem" },
+>         { .compatible = "ramoops" },
+>         {}
+>  };
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 9fca977ef18d..6dff89eaf3f8 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -24,6 +24,17 @@ config QCOM_PM
+>           modes. It interface with various system drivers to put the cores in
+>           low power modes.
+>
+> +config QCOM_RMTFS_MEM
+> +       tristate "Qualcomm Remote Filesystem memory driver"
+> +       depends on ARCH_QCOM
+> +       help
+> +         The Qualcomm remote filesystem memory driver is used for allocating
+> +         and exposing regions of shared memory with remote processors for the
+> +         purpose of exchanging sector-data between the remote filesystem
+> +         service and its clients.
+> +
+> +         Say y here if you intend to boot the modem remoteproc.
+> +
+>  config QCOM_SMEM
+>         tristate "Qualcomm Shared Memory Manager (SMEM)"
+>         depends on ARCH_QCOM
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index 414f0de274fa..541c1f40d126 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -1,6 +1,7 @@
+>  obj-$(CONFIG_QCOM_GSBI)        +=      qcom_gsbi.o
+>  obj-$(CONFIG_QCOM_MDT_LOADER)  += mdt_loader.o
+>  obj-$(CONFIG_QCOM_PM)  +=      spm.o
+> +obj-$(CONFIG_QCOM_RMTFS_MEM)   += rmtfs_mem.o
+>  obj-$(CONFIG_QCOM_SMD_RPM)     += smd-rpm.o
+>  obj-$(CONFIG_QCOM_SMEM) +=     smem.o
+>  obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
+> diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
+> new file mode 100644
+> index 000000000000..2e7c955e7cf0
+> --- /dev/null
+> +++ b/drivers/soc/qcom/rmtfs_mem.c
+> @@ -0,0 +1,272 @@
+> +/*
+> + * Copyright (c) 2017 Linaro Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/cdev.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_reserved_mem.h>
+> +#include <linux/of_fdt.h>
 
-Hi Everyone,
+This shouldn't be needed?
 
-Thanks to Rob Herring for Acking the device tree bindings part of the 
-patch.  Does anyone have any feedback for the rest of the patch set?
 
-Thanks,
-
-Matthew Gerlach
-
-On Wed, 20 Sep 2017, matthew.gerlach@linux.intel.com wrote:
-
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->
-> This patch set adds a spi-nor flash driver for the Altera ASMI Parallel II
-> IP Core.  This driver was created based on feedback from Marek Vasut,
-> Cyrill Pitchen, and Michal Suchanek regarding Version 2 of the Altera
-> Quadspi Controller: https://lkml.org/lkml/2017/6/26/518
->
-> The overall problem with Version 2 of the Altera Quadspi Controller and
-> its driver was the fact that there was much duplication of code and logic
-> with the spi-nor framework.  This new combination of fpga hardware and
-> software "gets out of the way" of the spi-nor framework.  The result is a
-> much simpler driver with the spi-nor framework performing the bulk of the work.
->
-> Patch 1 contains the device tree bindings for the driver for
-> the Altera ASMI-Parallel II IP Core.
->
-> Patch 2 contains the driver code for the Altera ASMI-Parallel II IP Core.
-> This driver supports being configured via a device tree or with platform
-> data.  In the later case, the memory for the registers has been remapped.
->
-> Patch 3 contains a work around for some non-standard behavior of EPCQ flash.
->
-> Matthew Gerlach (3):
->  dt-bindings: mtd: Altera ASMI Parallel II IP Core
->  mtd: spi-nor: Altera ASMI Parallel II IP Core
->  mtd: spi-nor: add flag for reading dummy cycles from nv cfg reg
->
-> .../devicetree/bindings/mtd/altera-asmip2.txt      |  15 +
-> MAINTAINERS                                        |   7 +
-> drivers/mtd/spi-nor/Kconfig                        |   6 +
-> drivers/mtd/spi-nor/Makefile                       |   1 +
-> drivers/mtd/spi-nor/altera-asmip2.c                | 478 +++++++++++++++++++++
-> include/linux/mtd/altera-asmip2.h                  |  27 ++
-> 6 files changed, 534 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
-> create mode 100644 drivers/mtd/spi-nor/altera-asmip2.c
-> create mode 100644 include/linux/mtd/altera-asmip2.h
->
-> -- 
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+> +#include <linux/dma-mapping.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/io.h>
+> +#include <linux/qcom_scm.h>
