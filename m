@@ -1,63 +1,73 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 03/13] mmc: dt-bindings: make compatible explicit
-Date: Tue, 10 Oct 2017 10:35:48 +0200
-Message-ID: <d6118956-6fb4-cf7c-010b-b53f1c76b0c3@gmail.com>
-References: <1507548926-9555-1-git-send-email-chaotian.jing@mediatek.com>
- <1507548926-9555-4-git-send-email-chaotian.jing@mediatek.com>
- <e4e5fa8b-b6a5-dc70-fbfc-6328493cd073@gmail.com>
- <1507599473.19789.1.camel@mhfsdcap03>
- <CAPDyKFpzuctUJ7FB9thMi0h602iJZc=kbs7iaVb+0oNCC4K4ng@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpzuctUJ7FB9thMi0h602iJZc=kbs7iaVb+0oNCC4K4ng@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: [PATCH] ARM: dts: r8a779x: add '#reset-cells' in cpg-mssr
+Date: Tue, 10 Oct 2017 10:45:51 +0200
+Message-ID: <20171010084611.968735-1-arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+With the latest dtc, we get many warnings about the missing
+'#reset-cells' property in these controllers, e.g.:
 
+arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
+arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
+arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
+arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
+arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
+arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
 
-On 10/10/2017 09:19 AM, Ulf Hansson wrote:
-> On 10 October 2017 at 03:37, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
->> On Mon, 2017-10-09 at 16:54 +0200, Matthias Brugger wrote:
->>>
->>> On 10/09/2017 01:35 PM, Chaotian Jing wrote:
->>>> the driver has updated to have an explicit compatible, so update
->>>> binding file according to the driver change.
->>>>
->>>> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/mmc/mtk-sd.txt | 4 ++--
->>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
->>>> index 3e0a97c..2bb585b 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
->>>> @@ -8,8 +8,8 @@ and the properties used by the msdc driver.
->>>>
->>>>    Required properties:
->>>>    - compatible: value should be either of the following.
->>>> -   "mediatek,mt8173-mmc","mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
->>>> -   "mediatek,mt8173-mmc","mediatek,mt8135-mmc": for mmc host ip compatible with mt8173
->>>> +   "mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
->>>> +   "mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
->>>
->>> You can merge this with patch 1.
->>
->> OK, will merge it in next patch.
-> 
-> No, please don't!
-> 
-> I would like DT documentation changes to be posted in separate
-> patches. Moreover, those should be before driver changes, when you
-> order the changes in your series.
-> 
-> In this way, the bindings can be reviewed and acked separately, which
-> makes it more convenient.
-> 
+This adds it for the three r8a779x chips that were lacking it. The
+binding mandates this as <1>, so this is the value I use.
 
-Sounds reasonable, sorry for the confusion.
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 1 +
+ arch/arm/boot/dts/r8a7792.dtsi | 1 +
+ arch/arm/boot/dts/r8a7794.dtsi | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 17a48199b7a9..8215a971cf17 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1186,6 +1186,7 @@
+ 		clock-names = "extal", "usb_extal";
+ 		#clock-cells = <2>;
+ 		#power-domain-cells = <0>;
++		#reset-cells = <1>;
+ 	};
+ 
+ 	prr: chipid@ff000044 {
+diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
+index 549eafe8ff12..cde709e3a916 100644
+--- a/arch/arm/boot/dts/r8a7792.dtsi
++++ b/arch/arm/boot/dts/r8a7792.dtsi
+@@ -828,6 +828,7 @@
+ 			clock-names = "extal";
+ 			#clock-cells = <2>;
+ 			#power-domain-cells = <0>;
++			#reset-cells = <1>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 19cff0dd90cf..a406d56234ba 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -1098,6 +1098,7 @@
+ 		clock-names = "extal", "usb_extal";
+ 		#clock-cells = <2>;
+ 		#power-domain-cells = <0>;
++		#reset-cells = <1>;
+ 	};
+ 
+ 	rst: reset-controller@e6160000 {
+-- 
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
