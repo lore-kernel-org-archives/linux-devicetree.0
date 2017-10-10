@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 03/11] drm/sun4i: hdmi: Disable clks in bind
- function error path and unbind function
-Date: Tue, 10 Oct 2017 11:20:00 +0800
-Message-ID: <20171010032008.682-4-wens@csie.org>
+Subject: [PATCH v4 02/11] drm/sun4i: tcon: Add support for
+ demuxing TCON output on A31
+Date: Tue, 10 Oct 2017 11:19:59 +0800
+Message-ID: <20171010032008.682-3-wens@csie.org>
 References: <20171010032008.682-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,89 +20,87 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The HDMI driver enables the bus and mod clocks in the bind function, but
-does not disable them if it then bails our due to any errors. Neither
-does it disable the clocks in the unbind function.
+On systems with 2 TCONs such as the A31, it is possible to demux the
+output of the TCONs to one encoder.
 
-Fix this by adding a proper error path to the bind function, and
-clk_disable_unprepare calls to the unbind function.
+Add support for this for the A31.
 
-Also rename the err_cleanup_connector label to err_cleanup_encoder,
-since it is the encoder that gets cleaned up.
-
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 47 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 9ea6cd5a1370..3cf1a6932fac 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -302,26 +302,29 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 	hdmi->mod_clk = devm_clk_get(dev, "mod");
- 	if (IS_ERR(hdmi->mod_clk)) {
- 		dev_err(dev, "Couldn't get the HDMI mod clock\n");
--		return PTR_ERR(hdmi->mod_clk);
-+		ret = PTR_ERR(hdmi->mod_clk);
-+		goto err_disable_bus_clk;
- 	}
- 	clk_prepare_enable(hdmi->mod_clk);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 75124043d655..68751b999877 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -112,6 +112,27 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
+ }
+ EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
  
- 	hdmi->pll0_clk = devm_clk_get(dev, "pll-0");
- 	if (IS_ERR(hdmi->pll0_clk)) {
- 		dev_err(dev, "Couldn't get the HDMI PLL 0 clock\n");
--		return PTR_ERR(hdmi->pll0_clk);
-+		ret = PTR_ERR(hdmi->pll0_clk);
-+		goto err_disable_mod_clk;
- 	}
- 
- 	hdmi->pll1_clk = devm_clk_get(dev, "pll-1");
- 	if (IS_ERR(hdmi->pll1_clk)) {
- 		dev_err(dev, "Couldn't get the HDMI PLL 1 clock\n");
--		return PTR_ERR(hdmi->pll1_clk);
-+		ret = PTR_ERR(hdmi->pll1_clk);
-+		goto err_disable_mod_clk;
- 	}
- 
- 	ret = sun4i_tmds_create(hdmi);
- 	if (ret) {
- 		dev_err(dev, "Couldn't create the TMDS clock\n");
--		return ret;
-+		goto err_disable_mod_clk;
- 	}
- 
- 	writel(SUN4I_HDMI_CTRL_ENABLE, hdmi->base + SUN4I_HDMI_CTRL_REG);
-@@ -362,7 +365,7 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 	ret = sun4i_hdmi_i2c_create(dev, hdmi);
- 	if (ret) {
- 		dev_err(dev, "Couldn't create the HDMI I2C adapter\n");
--		return ret;
-+		goto err_disable_mod_clk;
- 	}
- 
- 	drm_encoder_helper_add(&hdmi->encoder,
-@@ -422,6 +425,10 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 	drm_encoder_cleanup(&hdmi->encoder);
- err_del_i2c_adapter:
- 	i2c_del_adapter(hdmi->i2c);
-+err_disable_mod_clk:
-+	clk_disable_unprepare(hdmi->mod_clk);
-+err_disable_bus_clk:
-+	clk_disable_unprepare(hdmi->bus_clk);
- 	return ret;
++/*
++ * This function is a helper for TCON output muxing. The TCON output
++ * muxing control register in earlier SoCs (without the TCON TOP block)
++ * are located in TCON0. This helper returns a pointer to TCON0's
++ * sun4i_tcon structure, or NULL if not found.
++ */
++static struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
++{
++	struct sun4i_drv *drv = drm->dev_private;
++	struct sun4i_tcon *tcon;
++
++	list_for_each_entry(tcon, &drv->tcon_list, list)
++		if (tcon->id == 0)
++			return tcon;
++
++	dev_warn(drm->dev,
++		 "TCON0 not found, display output muxing may not work\n");
++
++	return NULL;
++}
++
+ void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
+ 			struct drm_encoder *encoder)
+ {
+@@ -777,6 +798,31 @@ static int sun5i_a13_tcon_set_mux(struct sun4i_tcon *tcon,
+ 	return regmap_write(tcon->regs, SUN4I_TCON_MUX_CTRL_REG, val);
  }
  
-@@ -434,6 +441,8 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
- 	drm_connector_cleanup(&hdmi->connector);
- 	drm_encoder_cleanup(&hdmi->encoder);
- 	i2c_del_adapter(hdmi->i2c);
-+	clk_disable_unprepare(hdmi->mod_clk);
-+	clk_disable_unprepare(hdmi->bus_clk);
- }
++static int sun6i_tcon_set_mux(struct sun4i_tcon *tcon,
++			      struct drm_encoder *encoder)
++{
++	struct sun4i_tcon *tcon0 = sun4i_get_tcon0(encoder->dev);
++	u32 shift;
++
++	if (!tcon0)
++		return -EINVAL;
++
++	switch (encoder->encoder_type) {
++	case DRM_MODE_ENCODER_TMDS:
++		/* HDMI */
++		shift = 8;
++		break;
++	default:
++		/* TODO A31 has MIPI DSI but A31s does not */
++		return -EINVAL;
++	}
++
++	regmap_update_bits(tcon0->regs, SUN4I_TCON_MUX_CTRL_REG,
++			   0x3 << shift, tcon->id << shift);
++
++	return 0;
++}
++
+ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
+ 	.has_channel_1		= true,
+ 	.set_mux		= sun5i_a13_tcon_set_mux,
+@@ -785,6 +831,7 @@ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
+ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
+ 	.has_channel_1		= true,
+ 	.needs_de_be_mux	= true,
++	.set_mux		= sun6i_tcon_set_mux,
+ };
  
- static const struct component_ops sun4i_hdmi_ops = {
+ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
 -- 
 2.14.2
