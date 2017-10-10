@@ -1,141 +1,390 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain
- device / integer references
-Date: Tue, 10 Oct 2017 14:27:10 +0300
-Message-ID: <20171010112710.noq6a4ktjqzt5u22@valkosipuli.retiisi.org.uk>
-References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
- <20170925222540.371-21-sakari.ailus@linux.intel.com>
- <fbd2f71d-aa6d-08ef-1723-132864bde27b@xs4all.nl>
- <20170926113029.eh5i4sp6we6lvgow@paasikivi.fi.intel.com>
- <4363f544-d1ec-68e4-1edf-9a16b3cdb1ea@xs4all.nl>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [Patch v6 2/7] slimbus: Add messaging APIs to
+ slimbus framework
+Date: Tue, 10 Oct 2017 13:19:38 +0100
+Message-ID: <20171010121938.2uwzauf6uaivoe7f@localhost.localdomain>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <4363f544-d1ec-68e4-1edf-9a16b3cdb1ea@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, robh@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, pavel@ucw.cz, sre@kernel.org
+In-Reply-To: <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, gregkh@linuxfoundation.org, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Mon, Oct 09, 2017 at 02:06:55PM +0200, Hans Verkuil wrote:
-> Hi Sakari,
+On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla@linaro.org wrote:
+> From: Sagar Dharia <sdharia@codeaurora.org>
 > 
-> My reply here is also valid for v15.
+> Slimbus devices use value-element, and information elements to
+> control device parameters (e.g. value element is used to represent
+> gain for codec, information element is used to represent interrupt
+> status for codec when codec interrupt fires).
+> Messaging APIs are used to set/get these value and information
+> elements. Slimbus specification uses 8-bit "transaction IDs" for
+> messages where a read-value is anticipated. Framework uses a table
+> of pointers to store those TIDs and responds back to the caller in
+> O(1).
+> Caller can opt to do synchronous, or asynchronous reads/writes. For
+> asynchronous operations, the callback will be called from atomic
+> context.
+> TX and RX circular rings are used to allow queuing of multiple
+> transfers per controller. Controller can choose size of these rings
+> based of controller HW implementation. The buffers are coerently
+> mapped so that controller can utilize DMA operations for the
+> transactions without remapping every transaction buffer.
+> Statically allocated rings help to improve performance by avoiding
+> overhead of dynamically allocating transactions on need basis.
 > 
-> On 26/09/17 13:30, Sakari Ailus wrote:
-> > Hi Hans,
-> > 
-> > Thanks for the review.
-> > 
-> > On Tue, Sep 26, 2017 at 10:47:40AM +0200, Hans Verkuil wrote:
-> >> On 26/09/17 00:25, Sakari Ailus wrote:
-> >>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
-> >>> the device's own fwnode, it will follow child fwnodes with the given
-> >>> property-value pair and return the resulting fwnode.
-> >>>
-> >>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> >>> ---
-> >>>  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
-> >>>  1 file changed, 201 insertions(+)
-> >>>
-> >>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> index f739dfd16cf7..f93049c361e4 100644
-> >>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> @@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
-> >>>  	return ret;
-> >>>  }
-> >>>  
-> >>> +/*
-> >>> + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
-> >>> + *					arguments
-> >>> + * @dev: struct device pointer
-> >>> + * @notifier: notifier for @dev
-> >>> + * @prop: the name of the property
-> >>> + * @index: the index of the reference to get
-> >>> + * @props: the array of integer property names
-> >>> + * @nprops: the number of integer property names in @nprops
-> >>> + *
-> >>> + * Find fwnodes referred to by a property @prop, then under that
-> >>> + * iteratively, @nprops times, follow each child node which has a
-> >>> + * property in @props array at a given child index the value of which
-> >>> + * matches the integer argument at an index.
-> >>
-> >> "at an index". Still makes no sense to me. Which index?
-> > 
-> > How about this:
-> > 
-> > First find an fwnode referred to by the reference at @index in @prop.
-> > 
-> > Then under that fwnode, @nprops times, for each property in @props,
-> > iteratively follow child nodes starting from fwnode such that they have the
-> > property in @props array at the index of the child node distance from the
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Tested-by: Naveen Kaje <nkaje@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/slimbus/Makefile         |   2 +-
+>  drivers/slimbus/slim-core.c      |  15 ++
+>  drivers/slimbus/slim-messaging.c | 471 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/slimbus.h          | 161 +++++++++++++
+>  4 files changed, 648 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/slimbus/slim-messaging.c
 > 
-> distance? You mean 'instance'?
+> +/**
+> + * slim_processtxn: Process a slimbus-messaging transaction
+> + * @ctrl: Controller handle
+> + * @txn: Transaction to be sent over SLIMbus
+> + * Called by controller to transmit messaging transactions not dealing with
+> + * Interface/Value elements. (e.g. transmittting a message to assign logical
+> + * address to a slave device
+> + * Returns:
+> + * -ETIMEDOUT: If transmission of this message timed out (e.g. due to bus lines
+> + *	not being clocked or driven by controller)
+> + * -ENOTCONN: If the transmitted message was not ACKed by destination device.
+> + */
+> +int slim_processtxn(struct slim_controller *ctrl,
+> +				struct slim_msg_txn *txn)
 
-No. It's a tree structure: this is the distance between a node in the tree
-and the root node (i.e. device's fwnode).
+Can all go on one line.
 
-> 
-> > root node and the value of that property matching with the integer argument of
-> > the reference, at the same index.
-> 
-> You've completely lost me. About halfway through this sentence my brain crashed :-)
+> +{
+> +	int ret, i = 0;
+> +	unsigned long flags;
+> +	u8 *buf;
+> +	bool async = false;
+> +	struct slim_cb_data cbd;
+> +	DECLARE_COMPLETION_ONSTACK(done);
+> +	bool need_tid = slim_tid_txn(txn->mt, txn->mc);
+> +
+> +	if (!txn->msg->comp_cb) {
+> +		txn->msg->comp_cb = slim_sync_default_cb;
+> +		cbd.comp = &done;
+> +		txn->msg->ctx = &cbd;
+> +	} else {
+> +		async = true;
+> +	}
+> +
+> +	buf = slim_get_tx(ctrl, txn, need_tid);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	if (need_tid) {
+> +		spin_lock_irqsave(&ctrl->txn_lock, flags);
+> +		for (i = 0; i < ctrl->last_tid; i++) {
+> +			if (ctrl->tid_tbl[i] == NULL)
+> +				break;
+> +		}
+> +		if (i >= ctrl->last_tid) {
+> +			if (ctrl->last_tid == (SLIM_MAX_TIDS - 1)) {
+> +				spin_unlock_irqrestore(&ctrl->txn_lock, flags);
+> +				slim_return_tx(ctrl, -ENOMEM);
+> +				return -ENOMEM;
+> +			}
+> +			ctrl->last_tid++;
+> +		}
+> +		ctrl->tid_tbl[i] = txn->msg;
+> +		txn->tid = i;
+> +		spin_unlock_irqrestore(&ctrl->txn_lock, flags);
+> +	}
+> +
+> +	ret = ctrl->xfer_msg(ctrl, txn, buf);
+> +
+> +	if (!ret && !async) { /* sync transaction */
+> +		/* Fine-tune calculation after bandwidth management */
+> +		unsigned long ms = txn->rl + 100;
+> +
+> +		ret = wait_for_completion_timeout(&done,
+> +						  msecs_to_jiffies(ms));
+> +		if (!ret)
+> +			slim_return_tx(ctrl, -ETIMEDOUT);
+> +
+> +		ret = cbd.ret;
+> +	}
+> +
+> +	if (ret && need_tid) {
+> +		spin_lock_irqsave(&ctrl->txn_lock, flags);
+> +		/* Invalidate the transaction */
+> +		ctrl->tid_tbl[txn->tid] = NULL;
+> +		spin_unlock_irqrestore(&ctrl->txn_lock, flags);
+> +	}
+> +	if (ret)
+> +		dev_err(&ctrl->dev, "Tx:MT:0x%x, MC:0x%x, LA:0x%x failed:%d\n",
+> +			txn->mt, txn->mc, txn->la, ret);
+> +	if (!async) {
+> +		txn->msg->comp_cb = NULL;
+> +		txn->msg->ctx = NULL;
+> +	}
 
-:-D
+What is the intent of this if statement here? We set async
+locally so this code only runs if we executed the else on the if
+statement at the top. If its just clearing anything the user
+might have put in these fields why not do it up there.
 
-Did keeping distance have any effect?
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(slim_processtxn);
+> +
+> +int slim_xfer_msg(struct slim_controller *ctrl,
+> +			struct slim_device *sbdev, struct slim_val_inf *msg,
+> +			u8 mc)
+> +{
+> +	DEFINE_SLIM_LDEST_TXN(txn_stack, mc, 6, sbdev->laddr, msg);
+> +	struct slim_msg_txn *txn = &txn_stack;
+> +	int ret;
+> +	u16 sl, cur;
+> +
+> +	ret = slim_val_inf_sanity(ctrl, msg, mc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sl = slim_slicesize(msg->num_bytes);
+> +
+> +	dev_dbg(&ctrl->dev, "SB xfer msg:os:%x, len:%d, MC:%x, sl:%x\n",
+> +		msg->start_offset, msg->num_bytes, mc, sl);
+> +
+> +	cur = slim_slicecodefromsize(sl);
 
-> 
-> > 
-> >>
-> >>> + *
-> >>> + * For example, if this function was called with arguments and values
-> >>> + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
-> >>> + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
-> >>> + * it would return the node marked with THISONE. The @dev argument in
-> >>> + * the ASL below.
-> >>
-> >> I know I asked for this before, but can you change the example to one where
-> >> nprops = 2? I think that will help understanding this.
-> > 
-> > I could do that but then the example no longer corresponds to any actual
-> > case that exists at the moment. LED nodes will use a single integer
-> > argument and lens-focus nodes none.
-> 
-> So? The example is here to understand the code and it doesn't have to be
-> related to actual hardware for a mainlined driver.
+cur should probably be removed until it is needed.
 
-This isn't about hardware, the definitions being parsed currently aren't
-specific to any single piece of hardware. I could add an example which does
-not exist, that's certainly possible. But I fail to see how it'd help
-while the contrary could well be the case.
+> +	txn->ec = ((sl | (1 << 3)) | ((msg->start_offset & 0xFFF) << 4));
+> +
+> +	switch (mc) {
+> +	case SLIM_MSG_MC_REQUEST_CHANGE_VALUE:
+> +	case SLIM_MSG_MC_CHANGE_VALUE:
+> +	case SLIM_MSG_MC_REQUEST_CLEAR_INFORMATION:
+> +	case SLIM_MSG_MC_CLEAR_INFORMATION:
+> +		txn->rl += msg->num_bytes;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (slim_tid_txn(txn->mt, txn->mc))
+> +		txn->rl++;
+> +
+> +	return slim_processtxn(ctrl, txn);
+> +}
+> +EXPORT_SYMBOL_GPL(slim_xfer_msg);
+> +
+> +/* Message APIs Unicast message APIs used by slimbus slave drivers */
+> +
+> +/*
+> + * slim_request_val_element: request value element
+> + * @sb: client handle requesting elemental message reads, writes.
+> + * @msg: Input structure for start-offset, number of bytes to read.
+> + * context: can sleep
+> + * Returns:
+> + * -EINVAL: Invalid parameters
+> + * -ETIMEDOUT: If transmission of this message timed out (e.g. due to bus lines
+> + *	not being clocked or driven by controller)
+> + * -ENOTCONN: If the transmitted message was not ACKed by destination device.
+> + */
+> +int slim_request_val_element(struct slim_device *sb,
+> +				struct slim_val_inf *msg)
+> +{
+> +	struct slim_controller *ctrl = sb->ctrl;
+> +
+> +	if (!ctrl)
+> +		return -EINVAL;
 
-> 
-> If you really don't want to do this here, then put the example in the commit
-> log. I don't see any reason why you can't put it here, though.
-> 
-> I think that once I see an 'nprops = 2' example I can rephrase that
-> brain-crash sentence for you...
-> 
-> BTW, where are the ACPI 'bindings' defined anyway? For DT they are in the
-> bindings directory, but where does ACPI define such things? Just curious.
+You could put this check into slim_xfer_msg and save duplicating
+it. Would also then cover cases that call that function directly,
+also would let you make these functions either inlines or macros.
 
-As the fwnode interface can be used to access information in both ACPI and
-DT, there is an incentive to maintain the interfaces effectively the same.
-In other words where the interfaces are the same, there is no need to
-define bindings for ACPI as such. Where there are differences the bindings
-are defined in Documentation/acpi/dsd .
+> +
+> +	return slim_xfer_msg(ctrl, sb, msg, SLIM_MSG_MC_REQUEST_VALUE);
+> +}
+> +EXPORT_SYMBOL_GPL(slim_request_val_element);
+> +
+> +/* Functions to get/return TX, RX buffers for messaging. */
+> +
+> +/**
+> + * slim_get_rx: To get RX buffers for messaging.
+> + * @ctrl: Controller handle
+> + * These functions are called by controller to process the RX buffers.
+> + * RX buffer is requested by controller when data is received from HW, but is
+> + * not processed (e.g. 'report-present message was sent by HW in ISR and SW
+> + * needs more time to process the buffer to assign Logical Address)
+> + * RX buffer is returned back to the pool when associated RX action
+> + * is taken (e.g. Received message is decoded and client's
+> + * response buffer is filled in.)
+> + */
+> +void *slim_get_rx(struct slim_controller *ctrl)
+> +{
+> +	unsigned long flags;
+> +	int idx;
+> +
+> +	spin_lock_irqsave(&ctrl->rx.lock, flags);
+> +	if ((ctrl->rx.tail + 1) % ctrl->rx.n == ctrl->rx.head) {
+> +		spin_unlock_irqrestore(&ctrl->rx.lock, flags);
+> +		dev_err(&ctrl->dev, "RX QUEUE full!");
+> +		return NULL;
+> +	}
+> +	idx = ctrl->rx.tail;
+> +	ctrl->rx.tail = (ctrl->rx.tail + 1) % ctrl->rx.n;
+> +	spin_unlock_irqrestore(&ctrl->rx.lock, flags);
+> +
+> +	return ctrl->rx.base + (idx * ctrl->rx.sl_sz);
+> +}
+> +EXPORT_SYMBOL_GPL(slim_get_rx);
+> +
+> +int slim_return_rx(struct slim_controller *ctrl, void *buf)
+> +{
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&ctrl->rx.lock, flags);
+> +	if (ctrl->rx.tail == ctrl->rx.head) {
+> +		spin_unlock_irqrestore(&ctrl->rx.lock, flags);
+> +		return -ENODATA;
+> +	}
+> +	memcpy(buf, ctrl->rx.base + (ctrl->rx.head * ctrl->rx.sl_sz),
+> +				ctrl->rx.sl_sz);
+> +	ctrl->rx.head = (ctrl->rx.head + 1) % ctrl->rx.n;
+> +	spin_unlock_irqrestore(&ctrl->rx.lock, flags);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(slim_return_rx);
 
-The so far only technical reason to that is related to the same is that
-ACPI can only refer to device nodes (i.e. nodes that correspond to struct
-devices), not sub-nodes under them.
+I find the combination of get/return a bit odd, would get/put
+maybe more idiomatic? Also the return could use some kernel doc.
 
--- 
-Kind regards,
+> +
+> +void slim_return_tx(struct slim_controller *ctrl, int err)
+> +{
+> +	unsigned long flags;
+> +	int idx;
+> +	struct slim_pending cur;
+> +
+> +	spin_lock_irqsave(&ctrl->tx.lock, flags);
+> +	idx = ctrl->tx.head;
+> +	ctrl->tx.head = (ctrl->tx.head + 1) % ctrl->tx.n;
+> +	cur = ctrl->pending_wr[idx];
+> +	spin_unlock_irqrestore(&ctrl->tx.lock, flags);
+> +
+> +	if (!cur.cb)
+> +		dev_err(&ctrl->dev, "NULL Transaction or completion");
+> +	else
+> +		cur.cb(cur.ctx, err);
+> +
+> +	up(&ctrl->tx_sem);
+> +}
+> +EXPORT_SYMBOL_GPL(slim_return_tx);
+> +
+> +/**
+> + * slim_get_tx: To get TX buffers for messaging.
+> + * @ctrl: Controller handle
+> + * These functions are called by controller to process the TX buffers.
+> + * TX buffer is requested by controller when it's filled-in and sent to the
+> + * HW. When HW has finished processing this buffer, controller should return it
+> + * back to the pool.
+> + */
+> +void *slim_get_tx(struct slim_controller *ctrl, struct slim_msg_txn *txn,
+> +		bool need_tid)
+> +{
+> +	unsigned long flags;
+> +	int ret, idx;
+> +
+> +	ret = down_interruptible(&ctrl->tx_sem);
+> +	if (ret < 0) {
+> +		dev_err(&ctrl->dev, "TX semaphore down returned:%d", ret);
+> +		return NULL;
+> +	}
+> +	spin_lock_irqsave(&ctrl->tx.lock, flags);
+> +
+> +	if (((ctrl->tx.head + 1) % ctrl->tx.n) == ctrl->tx.tail) {
+> +		spin_unlock_irqrestore(&ctrl->tx.lock, flags);
+> +		dev_err(&ctrl->dev, "controller TX buf unavailable");
+> +		up(&ctrl->tx_sem);
+> +		return NULL;
+> +	}
+> +	idx = ctrl->tx.tail;
+> +	ctrl->tx.tail = (ctrl->tx.tail + 1) % ctrl->tx.n;
+> +	ctrl->pending_wr[idx].cb = txn->msg->comp_cb;
+> +	ctrl->pending_wr[idx].ctx = txn->msg->ctx;
+> +	ctrl->pending_wr[idx].need_tid = need_tid;
+> +	spin_unlock_irqrestore(&ctrl->tx.lock, flags);
+> +
+> +	return ctrl->tx.base + (idx * ctrl->tx.sl_sz);
+> +}
+> +EXPORT_SYMBOL_GPL(slim_get_tx);
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+The rx calls seem ok that is basically the controller's job to
+call those, but with these two calls it seems sometimes the
+framework calls them sometimes the controller driver has to. Is
+there anyway we can simplify that a bit? Or at least include some
+documentation as to when the controller should call them.
+
+> diff --git a/include/linux/slimbus.h b/include/linux/slimbus.h
+> index b5064b6..080d86a 100644
+> --- a/include/linux/slimbus.h
+> +++ b/include/linux/slimbus.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/module.h>
+>  #include <linux/device.h>
+>  #include <linux/mutex.h>
+> +#include <linux/semaphore.h>
+>  #include <linux/mod_devicetable.h>
+>  
+>  /**
+> @@ -34,6 +35,9 @@ extern struct bus_type slimbus_type;
+>  #define SLIM_FRM_SLOTS_PER_SUPERFRAME	16
+>  #define SLIM_GDE_SLOTS_PER_SUPERFRAME	2
+>  
+> +/* MAX in-flight transactions neededing transaction ID (8-bit, per spec) */
+
+s/neededing/needing/
+
+> +
+> +/* Frequently used message transaction structures */
+> +#define DEFINE_SLIM_LDEST_TXN(name, mc, rl, la, msg) \
+> +	struct slim_msg_txn name = { rl, 0, mc, SLIM_MSG_DEST_LOGICALADDR, 0,\
+> +					0, la, msg, }
+> +
+> +#define DEFINE_SLIM_BCAST_TXN(name, mc, rl, la, msg) \
+> +	struct slim_msg_txn name = { rl, 0, mc, SLIM_MSG_DEST_BROADCAST, 0,\
+> +					0, la, msg, }
+
+If the LA isn't used in broadcast messages wouldn't it be simpler
+to set it to a fixed value in this macro?
+
+> +
+> +#define DEFINE_SLIM_EDEST_TXN(name, mc, rl, la, msg) \
+> +	struct slim_msg_txn name = { rl, 0, mc, SLIM_MSG_DEST_ENUMADDR, 0,\
+> +					0, la, msg, }
+> +
+
+Also one final overall comment this commit contains a lot of two
+and three letter abreviations that are not always clear. I would
+probably suggest expanding a few of the less standard ones out to
+make the code a little easier to follow.
+
+Thanks,
+Charles
