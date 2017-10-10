@@ -1,56 +1,133 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 0/4] phy: rcar-gen3-usb2: add support for r8a77995
-Date: Tue, 10 Oct 2017 14:58:26 +0900
-Message-ID: <1507615110-26206-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 3/4] phy: rcar-gen3-usb2: add SoC-specific parameter for dedicated pins
+Date: Tue, 10 Oct 2017 14:58:29 +0900
+Message-ID: <1507615110-26206-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1507615110-26206-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507615110-26206-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on the latest phy.git / next branch
-(the commit id = 415060b21f318e009d865b4bcbf8f220ebc36964)
+This patch adds SoC-specific parameter to avoid reading/writing
+specific registers wrongly if this driver runs on a SoC which doesn't
+have dedicated pins (e.g. R-Car D3). This patch also changes the
+value "has_otg" to "has_otg_pins" for slightly easier reading of
+the code.
 
-After this patch set is applied, a usb 2.0 host node that is combined
-with usb 2.0 peripheral needs 'dr_mode = "otg";' property.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-Changes from v3:
- - Use enum phy_mode in patch 2.
- - Remove "can_role_swap" parameter and revise the commit log in patch 2
-   because a case of "can_role_swap = true" and "has_otg = false" is
-   not supported for role swap at the moment.
- - Changes the name of "has_otg" to "has_otg_pins" in patch 3.
- - Use of_device_get_match_data() instead of of_match_device()
- - Add "Reviewed-by:" into patch No.1, 2 and 4. (Simon-san, Thanks!)
-  - Since patch No.3 is changed in big at v4, I dropped his "Reviewed-by".
-
-Changes from v2:
- - Revise the commit log ("SoCs" is not third-person singular present).
-
-Changes from v1:
- - Revise typo "wronly" to "wrongly".
- - Remove RCAR_GEN3_PHY_HAS_DEDICATED_PINS from generic gen3 entry in
-   patch 3/4
- - Remove the driver change from patch 4/4.
- - Revise the commit log of patch 4/4.
-
-
-Yoshihiro Shimoda (4):
-  phy: rcar-gen3-usb2: check dr_mode for otg mode
-  phy: rcar-gen3-usb2: cleanup the role_{store,show}()
-  phy: rcar-gen3-usb2: add SoC-specific parameter for dedicated pins
-  phy: rcar-gen3-usb2: add binding for r8a77995
-
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 95 +++++++++++++++-------
- 2 files changed, 68 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 7619468..d097539 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -18,6 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+@@ -80,6 +81,8 @@
+ #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+ #define USB2_ADPCTRL_DRVVBUS		BIT(4)
+ 
++#define RCAR_GEN3_PHY_HAS_DEDICATED_PINS	1
++
+ struct rcar_gen3_chan {
+ 	void __iomem *base;
+ 	struct extcon_dev *extcon;
+@@ -87,7 +90,7 @@ struct rcar_gen3_chan {
+ 	struct regulator *vbus;
+ 	struct work_struct work;
+ 	bool extcon_host;
+-	bool has_otg;
++	bool has_otg_pins;
+ };
+ 
+ static void rcar_gen3_phy_usb2_work(struct work_struct *work)
+@@ -268,7 +271,7 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
+ 	else
+ 		return -EINVAL;
+ 
+-	if (ch->has_otg)
++	if (ch->has_otg_pins)
+ 		ret = rcar_gen3_otg_change_role(ch, mode);
+ 
+ 	if (ret < 0)
+@@ -286,7 +289,7 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
+ 	if (!ch->phy->init_count)
+ 		return -EIO;
+ 
+-	if (ch->has_otg)
++	if (ch->has_otg_pins)
+ 		is_host = rcar_gen3_is_host(ch);
+ 	else
+ 		return -EIO;
+@@ -326,7 +329,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ 	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+ 
+ 	/* Initialize otg part */
+-	if (channel->has_otg)
++	if (channel->has_otg_pins)
+ 		rcar_gen3_init_otg(channel);
+ 
+ 	return 0;
+@@ -400,9 +403,17 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ }
+ 
+ static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+-	{ .compatible = "renesas,usb2-phy-r8a7795" },
+-	{ .compatible = "renesas,usb2-phy-r8a7796" },
+-	{ .compatible = "renesas,rcar-gen3-usb2-phy" },
++	{
++		.compatible = "renesas,usb2-phy-r8a7795",
++		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
++	},
++	{
++		.compatible = "renesas,usb2-phy-r8a7796",
++		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
++	},
++	{
++		.compatible = "renesas,rcar-gen3-usb2-phy",
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
+@@ -448,7 +459,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	if (of_usb_get_dr_mode_by_phy(dev->of_node, 0) == USB_DR_MODE_OTG) {
+ 		int ret;
+ 
+-		channel->has_otg = true;
++		channel->has_otg_pins = (uintptr_t)of_device_get_match_data(dev);
+ 		channel->extcon = devm_extcon_dev_allocate(dev,
+ 							rcar_gen3_phy_cable);
+ 		if (IS_ERR(channel->extcon))
+@@ -490,7 +501,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		dev_err(dev, "Failed to register PHY provider\n");
+ 		ret = PTR_ERR(provider);
+ 		goto error;
+-	} else if (channel->has_otg) {
++	} else if (channel->has_otg_pins) {
+ 		int ret;
+ 
+ 		ret = device_create_file(dev, &dev_attr_role);
+@@ -510,7 +521,7 @@ static int rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
+ {
+ 	struct rcar_gen3_chan *channel = platform_get_drvdata(pdev);
+ 
+-	if (channel->has_otg)
++	if (channel->has_otg_pins)
+ 		device_remove_file(&pdev->dev, &dev_attr_role);
+ 
+ 	pm_runtime_disable(&pdev->dev);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
