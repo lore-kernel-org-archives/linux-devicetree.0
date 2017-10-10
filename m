@@ -1,81 +1,110 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] dts: display5: Device tree description of LWN's
- DISPLAY5 board
-Date: Tue, 10 Oct 2017 16:57:05 -0300
-Message-ID: <CAOMZO5D+uQMoVX4gzGa==6qkuUX=kH9g2=w_B73jwK=jxd_xHA@mail.gmail.com>
-References: <1506353849-21912-1-git-send-email-lukma@denx.de>
+From: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
+Subject: Re: [PATCH v3 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370
+ variants.
+Date: Tue, 10 Oct 2017 20:26:07 +0000
+Message-ID: <0a9cf087-63de-19db-f695-ca8f3796fad0@alliedtelesis.co.nz>
+References: <20170928005756.3938-1-kalyan.kinthada@alliedtelesis.co.nz>
+ <20170928005756.3938-2-kalyan.kinthada@alliedtelesis.co.nz>
+ <20171005094138.11b73a0e@xps13>
+ <c6832720-7c58-4afe-2d1b-76bb9397299e@alliedtelesis.co.nz>
+ <20171009081848.49681975@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1506353849-21912-1-git-send-email-lukma@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171009081848.49681975@xps13>
+Content-Language: en-US
+Content-ID: <312455A69AFC9D49B538D78BE1DD05BD@atlnz.lc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
-
-Usually the Subject should have the ARM prefix: ARM: dts: ....
-
-On Mon, Sep 25, 2017 at 12:37 PM, Lukasz Majewski <lukma@denx.de> wrote:
-
-> +       backlight_lvds: backlight {
-> +               compatible = "pwm-backlight";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_backlight>;
-> +               pwms = <&pwm2 0 5000000 0>;
-> +               brightness-levels = <  0   1   2   3   4   5   6   7   8   9
-> +                                     10  11  12  13  14  15  16  17  18  19
-> +                                     20  21  22  23  24  25  26  27  28  29
-> +                                     30  31  32  33  34  35  36  37  38  39
-> +                                     40  41  42  43  44  45  46  47  48  49
-> +                                     50  51  52  53  54  55  56  57  58  59
-> +                                     60  61  62  63  64  65  66  67  68  69
-> +                                     70  71  72  73  74  75  76  77  78  79
-> +                                     80  81  82  83  84  85  86  87  88  89
-> +                                     90  91  92  93  94  95  96  97  98  99
-> +                                    100 101 102 103 104 105 106 107 108 109
-> +                                    110 111 112 113 114 115 116 117 118 119
-> +                                    120 121 122 123 124 125 126 127 128 129
-> +                                    130 131 132 133 134 135 136 137 138 139
-> +                                    140 141 142 143 144 145 146 147 148 149
-> +                                    150 151 152 153 154 155 156 157 158 159
-> +                                    160 161 162 163 164 165 166 167 168 169
-> +                                    170 171 172 173 174 175 176 177 178 179
-> +                                    180 181 182 183 184 185 186 187 188 189
-> +                                    190 191 192 193 194 195 196 197 198 199
-> +                                    200 201 202 203 204 205 206 207 208 209
-> +                                    210 211 212 213 214 215 216 217 218 219
-> +                                    220 221 222 223 224 225 226 227 228 229
-> +                                    230 231 232 233 234 235 236 237 238 239
-> +                                    240 241 242 243 244 245 246 247 248 249
-> +                                    250 251 252 253 254 255>;
-
-Do you need such fine grained brightness levels? ;-)
-
-> +&i2c1 {
-> +       clock-frequency = <400000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +       status = "okay";
-> +
-> +       codec: tfa9879@6C {
-> +               #sound-dai-cells = <0>;
-> +               compatible = "tfa9879";
-
-compatible = "nxp,tfa9879" , please.
-
-
-> +&iomuxc {
-> +       pinctrl-names = "default";
-
-This line can be removed.
+SGVsbG8gTWlxdWVsLA0KT24gMDkvMTAvMTcgMTk6MTgsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+
+IEhlbGxvIEthbHlhbiwNCj4NCj4gT24gTW9uLCA5IE9jdCAyMDE3IDAyOjMxOjMwICswMDAwDQo+
+IEthbHlhbiBLaW50aGFkYSA8S2FseWFuLktpbnRoYWRhQGFsbGllZHRlbGVzaXMuY28ubno+IHdy
+b3RlOg0KPg0KPj4gT24gMDUvMTAvMTcgMjA6NDEsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+Pj4g
+SGVsbG8gS2FseWFuLA0KPj4+DQo+Pj4gT24gVGh1LCAyOCBTZXAgMjAxNyAxMzo1Nzo1NiArMTMw
+MA0KPj4+IEthbHlhbiBLaW50aGFkYSA8a2FseWFuLmtpbnRoYWRhQGFsbGllZHRlbGVzaXMuY28u
+bno+IHdyb3RlOg0KPj4+ICAgDQo+Pj4+IFdoZW4gdGhlIGFyYml0cmF0aW9uIGJldHdlZW4gTk9S
+IGFuZCBOQU5EIGZsYXNoIGlzIGVuYWJsZWQNCj4+Pj4gdGhlIDxGT1JDRV9DU1g+IGZpZWxkIGJp
+dFsyMV0gaW4gdGhlIERhdGEgRmxhc2ggQ29udHJvbCBSZWdpc3Rlcg0KPj4+PiBuZWVkcyB0byBi
+ZSBzZXQgdG8gMSBhY2NvcmRpbmcgdG8gZ3VpZGxlaW5lIEdMLTU4MzA3NDEgbWVudGlvbmVkDQo+
+Pj4gVHlwbzogZ3VpZGVsaW5lIF4NCj4+IEkgd2lsbCBjb3JyZWN0IHRoaXMgdHlwbyBpbiB0aGUg
+bmV4dCBwYXRjaCB2ZXJzaW9uLg0KPj4+PiBpbiBNYXJ2ZWxsIEVycmF0YSBkb2N1bWVudCBNVi1T
+NTAxMzc3LTAwLCBSZXYuIEQuDQo+Pj4gVGhhbmtzIGZvciB0aGF0LCBJIGNoZWNrZWQgaXQuDQo+
+Pj4gICANCj4+Pj4gVGhpcyBjb21taXQgc2V0cyB0aGUgRk9SQ0VfQ1NYIGJpdCB0byAxIGZvciBh
+bGwNCj4+Pj4gQVJNQURBMzcwIHZhcmlhbnRzIGFzIHRoZSBhcmJpdHJhdGlvbiBpcyBhbHdheXMg
+ZW5hYmxlZCBieSBkZWZhdWx0Lg0KPj4+PiBUaGlzIGNoYW5nZSBkb2VzIG5vdCBhcHBseSBmb3Ig
+cHhhM3h4IHZhcmlhbnRzIGJlY2F1c2UgdGhlDQo+Pj4+IEZPUkNFX0NTWCBiaXQgZG9lcyBub3Qg
+ZXhpc3QvcmVzZXJ2ZWQgb24gdGhlIE5GQ3YxLg0KPj4+IFNvcnJ5IHRvIGJvdGhlciB5b3UgYWdh
+aW4gYnV0IEkgYW0gcmV3b3JraW5nIHRoZSBweGEzeHhfbmFuZCBkcml2ZXINCj4+PiBhbmQgc28g
+SSB3b3VsZCBsaWtlIHRvIGRlZXBseSB1bmRlcnN0YW5kIHdoeSB0aGlzIGlzIG5lZWRlZCBiZWNh
+dXNlDQo+Pj4gSSB3aWxsIGhhdmUgdG8gaW50ZWdyYXRlIGl0IGluIG15IHdvcmsgdG9vLg0KPj4+
+DQo+Pj4gU28gcGxlYXNlIHRlbGwgbWUgd2hhdCBpcyB5b3VyIHNldHVwLCBkbyB5b3UgcmVhbGx5
+IHVzZSBOQU5EL05PUg0KPj4+IGFyYml0cmF0aW9uPyBEbyB5b3UgaGF2ZSBub3QtRG9uJ3QgQ2Fy
+ZSBDUyBOQU5EIGNoaXBzPyBJIGhhdmUgc29tZQ0KPj4+IGRvdWJ0cyBiZWNhdXNlIGV2ZW4gaWYg
+dGhlIHNwZWMgcHJlY2lzZXMgaW4gdGhlIE5BTkQgY29udHJvbGxlcg0KPj4+IGNoYXB0ZXIgdGhh
+dCBhcmJpdHJhdGlvbiBpcyBhbHdheXMgZW5hYmxlZCBieSBkZWZhdWx0LCB0aGUgYml0IDI3DQo+
+Pj4gKE5mQXJiaXRlckVuKSBpbiB0aGUgU29DIERldmljZSBNdWx0aXBsZXggUmVnaXN0ZXIgYXQg
+b2Zmc2V0DQo+Pj4gMHgwMDAxODIwOCBpcyBhY3R1YWxseSBhdCAwIGJ5IGRlZmF1bHQgKGRpc2Fi
+bGVkKS4gRGlkIHlvdSBlbmFibGUNCj4+PiB0aGlzIGJpdCBtYW51YWxseSA/IEkgY2hlY2tlZCB3
+aXRoIGRldm1lbSBvbiBteSBzZXR1cCBhbmQgdGhpcyBiaXQNCj4+PiB3YXMgdW5zZXQuDQo+PiBZ
+ZXMsIG15IHNldHVwIHVzZSBOQU5EL05PUiBhcmJpdHJhdGlvbiBhbmQgdXNlIGEgRG9uJ3QNCj4+
+IGNhcmUgQ1MgTmFuZCBDaGlwLiBUaGUgYml0IDI3IGF0IG9mZnNldCAweDAwMDE4MjA4IGlzIHNl
+dCB0byAxDQo+PiBieSBkZWZhdWx0IGluIG15IGNhc2UuIEkgZGlkIG5vdCBtYW51YWxseSBzZXQg
+dGhlIGJpdCAyNyB0byAxLg0KPiBBY3R1YWxseSBpZiB5b3UgdXNlIERvbid0IENhcmUgQ1MgTkFO
+RCBjaGlwcyB5b3Ugc2hvdWxkIG5vdCBuZWVkIHRoZQ0KPiBmb3JjZSBDUyBiaXQsIGFzIGl0IGlz
+IG1lbnRpb25lZCBpbiB0aGUgZ3VpZGVsaW5lcyB5b3UgcG9pbnRlZCwgdGhpcw0KPiBiaXQgaXMg
+b25seSB1c2VmdWwgZm9yICpub3QqIGRvbid0IGNhcmUgQ1MgTkFORCBjaGlwcyAoYW5kIHRoZSBu
+YW1lDQo+ICJmb3JjZSBDUyIgaXMgcHJldHR5IHN0cmFpZ2h0IGZvcndhcmQgdG9vISkuDQpPay4g
+SSB1bmRlcnN0YW5kIG5vdy4gVGhhbmsgeW91Lg0KPg0KPiBPdGhlcndpc2Ugd2hhdCBib290bG9h
+ZGVyIGFuZCBrZXJuZWwgZG8geW91IHVzZSB0byBoYXZlIHRoaXMNCj4gYml0IHNldCBieSBkZWZh
+dWx0PyBZb3UgbWF5IGFsc28gd2FudCB0byBjaGVjayBpZiB0aGlzIGJpdCBpcyBzZXQgYnkNCj4g
+eW91ciBib290bG9hZGVyIGJ5IHN0b3BwaW5nIGl0IGJlZm9yZSBpdCBsb2FkcyBMaW51eCBhbmQg
+Y2hlY2sgbWFudWFsbHkNCj4gdGhlIHZhbHVlIG9mIHRoaXMgYml0IHdpdGggJ21kJyAob24gVS1C
+b290KS4NClRoZSBiaXQyNyBhdCBvZmZzZXQgMHgwMDAxODIwOCBpcyBzZXQgaW4gYm9vdGxvYWRl
+ci4NClVib290IHZlcnNpb24gMjAxNi4xMQ0KTGludXggS2VybmVsIDQuNC42DQoNClRoYW5rcywN
+CkthbHlhbg0KPg0KPiBUaGFuayB5b3UsDQo+IE1pcXXDqGwNCj4NCj4+IFBsZWFzZSBsZXQgbWUg
+bm93IGlmIHlvdSBoYXZlIGFueSBvdGhlciBxdWVzdGlvbiBvciBkbyB5b3Ugd2FudCBtZQ0KPj4g
+dG8gc2VuZCB0aGUgdXBkYXRlZCBwYXRjaCB2ZXJzaW9uIHdpdGggdGhlIHR5cG8gZml4ZWQuDQo+
+Pg0KPj4gVGhhbmsgWW91LA0KPj4gS2FseWFuDQo+Pg0KPj4+IFRoYW5rIHlvdSBmb3IgeW91ciB0
+aW1lLA0KPj4+IE1pcXXDqGwNCj4+PiAgIA0KPj4+PiBUaGUgTkRDUl9ORF9NT0RFIGNvbmZsaWN0
+cyB3aXRoIHRoZSBuZXcgTkRDUl9GT1JDRV9DU1ggYnV0IGlzDQo+Pj4+IHVudXNlZCBzbyByZW1v
+dmUgaXQgYWxvbmcgd2l0aCBORENSX05BTkRfTU9ERS4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1i
+eTogS2FseWFuIEtpbnRoYWRhDQo+Pj4+IDxrYWx5YW4ua2ludGhhZGFAYWxsaWVkdGVsZXNpcy5j
+by5uej4gLS0tDQo+Pj4gICANCj4+Pj4gICAgZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5j
+IHwgOSArKysrKysrLS0NCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQv
+cHhhM3h4X25hbmQuYw0KPj4+PiBiL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQuYyBpbmRl
+eCA4NWNmZjY4NjQzZTAuLmE2YTdhNWFmN2JlZA0KPj4+PiAxMDA2NDQgLS0tIGEvZHJpdmVycy9t
+dGQvbmFuZC9weGEzeHhfbmFuZC5jDQo+Pj4+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4
+X25hbmQuYw0KPj4+PiBAQCAtNjcsOCArNjcsNyBAQA0KPj4+PiAgICAjZGVmaW5lIE5EQ1JfRFdJ
+RFRIX00JCSgweDEgPDwgMjYpDQo+Pj4+ICAgICNkZWZpbmUgTkRDUl9QQUdFX1NaCQkoMHgxIDw8
+IDI0KQ0KPj4+PiAgICAjZGVmaW5lIE5EQ1JfTkNTWAkJKDB4MSA8PCAyMykNCj4+Pj4gLSNkZWZp
+bmUgTkRDUl9ORF9NT0RFCQkoMHgzIDw8IDIxKQ0KPj4+PiAtI2RlZmluZSBORENSX05BTkRfTU9E
+RSAgIAkoMHgwKQ0KPj4+PiArI2RlZmluZSBORENSX0ZPUkNFX0NTWAkJKDB4MSA8PCAyMSkNCj4+
+Pj4gICAgI2RlZmluZSBORENSX0NMUl9QR19DTlQJCSgweDEgPDwgMjApDQo+Pj4+ICAgICNkZWZp
+bmUgTkZDVjFfTkRDUl9BUkJfQ05UTAkoMHgxIDw8IDE5KQ0KPj4+PiAgICAjZGVmaW5lIE5GQ1Yy
+X05EQ1JfU1RPUF9PTl9VTkNPUgkoMHgxIDw8IDE5KQ0KPj4+PiBAQCAtMTQ2NCw2ICsxNDYzLDkg
+QEAgc3RhdGljIGludCBweGEzeHhfbmFuZF9jb25maWdfaWRlbnQoc3RydWN0DQo+Pj4+IHB4YTN4
+eF9uYW5kX2luZm8gKmluZm8pIGluZm8tPmNodW5rX3NpemUgPSBQQUdFX0NIVU5LX1NJWkU7DQo+
+Pj4+ICAgIAlpbmZvLT5yZWdfbmRjciA9IDB4MDsgLyogZW5hYmxlIGFsbCBpbnRlcnJ1cHRzICov
+DQo+Pj4+ICAgIAlpbmZvLT5yZWdfbmRjciB8PSAocGRhdGEtPmVuYWJsZV9hcmJpdGVyKSA/DQo+
+Pj4+IE5EQ1JfTkRfQVJCX0VOIDogMDsNCj4+Pj4gKwkvKiBTZXQgRk9SQ0VfQ1NYIGJpdCBmb3Ig
+YWxsIEFSTUFEQTM3MCBWYXJpYW50cy4gUmVmIzoNCj4+Pj4gR0wtNTgzMDc0MSAqLw0KPj4+PiAr
+CWlmIChpbmZvLT52YXJpYW50ID09IFBYQTNYWF9OQU5EX1ZBUklBTlRfQVJNQURBMzcwKQ0KPj4+
+PiArCQlpbmZvLT5yZWdfbmRjciB8PSBORENSX0ZPUkNFX0NTWDsNCj4+Pj4gICAgCWluZm8tPnJl
+Z19uZGNyIHw9IE5EQ1JfUkRfSURfQ05UKFJFQURfSURfQllURVMpOw0KPj4+PiAgICAJaW5mby0+
+cmVnX25kY3IgfD0gTkRDUl9TUEFSRV9FTjsNCj4+Pj4gICAgDQo+Pj4+IEBAIC0xNDk4LDYgKzE1
+MDAsOSBAQCBzdGF0aWMgdm9pZCBweGEzeHhfbmFuZF9kZXRlY3RfY29uZmlnKHN0cnVjdA0KPj4+
+PiBweGEzeHhfbmFuZF9pbmZvICppbmZvKSBpbmZvLT5yZWdfbmRjciA9IG5kY3IgJg0KPj4+PiAg
+ICAJCX4oTkRDUl9JTlRfTUFTSyB8IE5EQ1JfTkRfQVJCX0VOIHwNCj4+Pj4gTkZDVjFfTkRDUl9B
+UkJfQ05UTCk7IGluZm8tPnJlZ19uZGNyIHw9IChwZGF0YS0+ZW5hYmxlX2FyYml0ZXIpID8NCj4+
+Pj4gTkRDUl9ORF9BUkJfRU4gOiAwOw0KPj4+PiArCS8qIFNldCBGT1JDRV9DU1ggYml0IGZvciBh
+bGwgQVJNQURBMzcwIFZhcmlhbnRzLiBSZWYjOg0KPj4+PiBHTC01ODMwNzQxICovDQo+Pj4+ICsJ
+aWYgKGluZm8tPnZhcmlhbnQgPT0gUFhBM1hYX05BTkRfVkFSSUFOVF9BUk1BREEzNzApDQo+Pj4+
+ICsJCWluZm8tPnJlZ19uZGNyIHw9IE5EQ1JfRk9SQ0VfQ1NYOw0KPj4+PiAgICAJaW5mby0+bmR0
+cjBjczAgPSBuYW5kX3JlYWRsKGluZm8sIE5EVFIwQ1MwKTsNCj4+Pj4gICAgCWluZm8tPm5kdHIx
+Y3MwID0gbmFuZF9yZWFkbChpbmZvLCBORFRSMUNTMCk7DQo+Pj4+ICAgIH0NCj4+PiAgIA0KPg0K
+Pg0K
