@@ -1,82 +1,85 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
-Date: Tue, 10 Oct 2017 12:55:45 +0900
-Message-ID: <CAAFQd5CF5SOsPw9=t-XDj1ey0YV-+M04xzQLAjZEQjecOyYUdw@mail.gmail.com>
-References: <1504520928-5191-1-git-send-email-divagar.mohandass@intel.com>
- <1504520928-5191-4-git-send-email-divagar.mohandass@intel.com>
- <6F87890CF0F5204F892DEA1EF0D77A5972FC1278@FMSMSX114.amr.corp.intel.com>
- <CAAFQd5DUNHJ7fqWy5iD_fb=TBUqGy3AQ3uGXr-TdQ5v39f_hsw@mail.gmail.com>
- <20170920084519.asyfjxo6upt36woz@valkosipuli.retiisi.org.uk>
- <CAAFQd5B65bJHsZkMgtjGgyd3btuoWzJwYQRQb5j2kSaefxCZ7Q@mail.gmail.com>
- <20170920093222.yzfw2ctrupep5iqx@valkosipuli.retiisi.org.uk>
- <20171003135109.v7ch7oc4fvjwzl7w@valkosipuli.retiisi.org.uk> <7B8CE47BD58441468D2BB13285B50E6031DF530B@BGSMSX107.gar.corp.intel.com>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v4 1/2] dt-bindings: dma: Add Spreadtrum SC9860 DMA controller
+Date: Tue, 10 Oct 2017 13:23:00 +0800
+Message-ID: <84d9f80ce9853ae8441ef91e8701ba516db8f697.1507612144.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7B8CE47BD58441468D2BB13285B50E6031DF530B@BGSMSX107.gar.corp.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Mohandass, Divagar" <divagar.mohandass@intel.com>
-Cc: "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>, "Mani, Rajmohan" <rajmohan.mani@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 9, 2017 at 12:14 PM, Mohandass, Divagar
-<divagar.mohandass@intel.com> wrote:
-> Hi Tomasz,
->
->>-----Original Message-----
->>From: sakari.ailus@iki.fi [mailto:sakari.ailus@iki.fi]
->>Sent: Tuesday, October 03, 2017 7:21 PM
->>To: Tomasz Figa <tfiga@chromium.org>
->>Cc: Mani, Rajmohan <rajmohan.mani@intel.com>; Mohandass, Divagar
->><divagar.mohandass@intel.com>; robh+dt@kernel.org;
->>mark.rutland@arm.com; wsa@the-dreams.de; devicetree@vger.kernel.org;
->>linux-i2c@vger.kernel.org; linux-kernel@vger.kernel.org;
->>mika.westerberg@linux.intel.com; linux-pm@vger.kernel.org
->>Subject: Re: [PATCH v6 3/3] eeprom: at24: enable runtime pm support
->>
->>Hi Tomasz,
->>
->>On Wed, Sep 20, 2017 at 12:32:22PM +0300, sakari.ailus@iki.fi wrote:
->>> > >> >> @@ -743,11 +770,17 @@ static int at24_probe(struct i2c_client
->>> > >> >> *client, const struct i2c_device_id *id)
->>> > >> >>
->>> > >> >>       i2c_set_clientdata(client, at24);
->>> > >> >>
->>> > >> >> +     /* enable runtime pm */
->>> > >> >> +     pm_runtime_get_noresume(&client->dev);
->>> > >> >> +     pm_runtime_set_active(&client->dev);
->>> > >> >> +     pm_runtime_enable(&client->dev);
->>> > >>
->>> > >> Do we need this get_noresume/set_active dance? I remember it was
->>> > >> for some reason needed for PCI devices, but I don't see why for
->>> > >> I2C anything else than just pm_runtime_enable() would be necessary=
-.
->>> > >
->>> > > You specifically do not need (all) this for PCI devices, but AFAIU
->>> > > for I=E6=B6=8E
->>> > > devices you do. The runtime PM status of a device is disabled by
->>> > > default and the use count is zero, but on ACPI based systems the
->>> > > device is still powered on.
->>> >
->>> > Okay, so _get_noresume() and _set_active() would do the thing for
->>> > ACPI indeed, but not sure about other platforms. Perhaps _enable(),
->>> > _get_sync() would be more general?
->>>
->>> What I ended up doing in e.g. the smiapp driver was to explicitly
->>> power the device on first and then enable runtime PM. (See
->>> drivers/media/i2c/smiapp/smiapp-core.c .) This approach works even if
->>> CONFIG_PM is disabled, both on DT and ACPI.
->>
->>pm_runtime_get_noresume() + pm_runtime_put() can be replaced by a single
->>pm_runtime_idle() call (where pm_runtime_put() was). pm_runtime_enable()
->>is required to enable runtime PM for a device.
->
-> Verified the change suggested by Sakari.
-> Let me know I can send a updated patch version with this change.
+This patch adds the binding documentation for Spreadtrum SC9860 DMA
+controller device.
 
-Okay, looks like Sakari confirmed that the driver should work fine
-without callbacks, so please go ahead. Thanks for patience.
+Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since v3:
+ - No update.
 
-Best regards,
-Tomasz
+Changes since v2:
+ - No update.
+
+Changes since v1:
+ - Fix typos.
+---
+ Documentation/devicetree/bindings/dma/sprd-dma.txt |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sprd-dma.txt
+
+diff --git a/Documentation/devicetree/bindings/dma/sprd-dma.txt b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+new file mode 100644
+index 0000000..7a10fea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+@@ -0,0 +1,41 @@
++* Spreadtrum DMA controller
++
++This binding follows the generic DMA bindings defined in dma.txt.
++
++Required properties:
++- compatible: Should be "sprd,sc9860-dma".
++- reg: Should contain DMA registers location and length.
++- interrupts: Should contain one interrupt shared by all channel.
++- #dma-cells: must be <1>. Used to represent the number of integer
++	cells in the dmas property of client device.
++- #dma-channels : Number of DMA channels supported. Should be 32.
++- clock-names: Should contain the clock of the DMA controller.
++- clocks: Should contain a clock specifier for each entry in clock-names.
++
++Example:
++
++Controller:
++apdma: dma-controller@20100000 {
++	compatible = "sprd,sc9860-dma";
++	reg = <0x20100000 0x4000>;
++	interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++	#dma-cells = <1>;
++	#dma-channels = <32>;
++	clock-names = "enable";
++	clocks = <&clk_ap_ahb_gates 5>;
++};
++
++
++Client:
++DMA clients connected to the Spreadtrum DMA controller must use the format
++described in the dma.txt file, using a two-cell specifier for each channel.
++The two cells in order are:
++1. A phandle pointing to the DMA controller.
++2. The channel id.
++
++spi0: spi@70a00000{
++	...
++	dma-names = "rx_chn", "tx_chn";
++	dmas = <&apdma 11>, <&apdma 12>;
++	...
++};
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
