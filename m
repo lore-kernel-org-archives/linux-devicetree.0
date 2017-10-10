@@ -1,38 +1,81 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] dt-bindings: iio: accel: add LIS3DHH device
- bindings
-Date: Tue, 10 Oct 2017 20:43:13 +0100
-Message-ID: <20171010204313.34733c98@archlinux>
-References: <20170917161712.14645-1-lorenzo.bianconi@st.com>
-        <20170917161712.14645-5-lorenzo.bianconi@st.com>
-        <20170920142055.tmhvpxs5uvimxnmy@rob-hp-laptop>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2] dts: display5: Device tree description of LWN's
+ DISPLAY5 board
+Date: Tue, 10 Oct 2017 16:57:05 -0300
+Message-ID: <CAOMZO5D+uQMoVX4gzGa==6qkuUX=kH9g2=w_B73jwK=jxd_xHA@mail.gmail.com>
+References: <1506353849-21912-1-git-send-email-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170920142055.tmhvpxs5uvimxnmy@rob-hp-laptop>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1506353849-21912-1-git-send-email-lukma@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Sep 2017 15:53:07 -0500
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Hi Lukasz,
 
-> On Sun, Sep 17, 2017 at 06:17:12PM +0200, Lorenzo Bianconi wrote:
-> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
-> >  1 file changed, 1 insertion(+)  
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git and pushed out as testing.
+Usually the Subject should have the ARM prefix: ARM: dts: ....
 
-Thanks,
+On Mon, Sep 25, 2017 at 12:37 PM, Lukasz Majewski <lukma@denx.de> wrote:
 
-Jonathan
+> +       backlight_lvds: backlight {
+> +               compatible = "pwm-backlight";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_backlight>;
+> +               pwms = <&pwm2 0 5000000 0>;
+> +               brightness-levels = <  0   1   2   3   4   5   6   7   8   9
+> +                                     10  11  12  13  14  15  16  17  18  19
+> +                                     20  21  22  23  24  25  26  27  28  29
+> +                                     30  31  32  33  34  35  36  37  38  39
+> +                                     40  41  42  43  44  45  46  47  48  49
+> +                                     50  51  52  53  54  55  56  57  58  59
+> +                                     60  61  62  63  64  65  66  67  68  69
+> +                                     70  71  72  73  74  75  76  77  78  79
+> +                                     80  81  82  83  84  85  86  87  88  89
+> +                                     90  91  92  93  94  95  96  97  98  99
+> +                                    100 101 102 103 104 105 106 107 108 109
+> +                                    110 111 112 113 114 115 116 117 118 119
+> +                                    120 121 122 123 124 125 126 127 128 129
+> +                                    130 131 132 133 134 135 136 137 138 139
+> +                                    140 141 142 143 144 145 146 147 148 149
+> +                                    150 151 152 153 154 155 156 157 158 159
+> +                                    160 161 162 163 164 165 166 167 168 169
+> +                                    170 171 172 173 174 175 176 177 178 179
+> +                                    180 181 182 183 184 185 186 187 188 189
+> +                                    190 191 192 193 194 195 196 197 198 199
+> +                                    200 201 202 203 204 205 206 207 208 209
+> +                                    210 211 212 213 214 215 216 217 218 219
+> +                                    220 221 222 223 224 225 226 227 228 229
+> +                                    230 231 232 233 234 235 236 237 238 239
+> +                                    240 241 242 243 244 245 246 247 248 249
+> +                                    250 251 252 253 254 255>;
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you need such fine grained brightness levels? ;-)
+
+> +&i2c1 {
+> +       clock-frequency = <400000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       status = "okay";
+> +
+> +       codec: tfa9879@6C {
+> +               #sound-dai-cells = <0>;
+> +               compatible = "tfa9879";
+
+compatible = "nxp,tfa9879" , please.
+
+
+> +&iomuxc {
+> +       pinctrl-names = "default";
+
+This line can be removed.
