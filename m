@@ -1,55 +1,63 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v8 5/8] arm64: Use of_cpu_node_to_id helper for CPU topology parsing
-Date: Tue, 10 Oct 2017 11:33:00 +0100
-Message-ID: <20171010103303.32436-6-suzuki.poulose@arm.com>
+Subject: [PATCH v8 3/8] coresight: of: Use of_cpu_node_to_id helper
+Date: Tue, 10 Oct 2017 11:32:58 +0100
+Message-ID: <20171010103303.32436-4-suzuki.poulose@arm.com>
 References: <20171010103303.32436-1-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171010103303.32436-1-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh@kernel.org, will.deacon@arm.com, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Jonathan.Cameron@huawei.com, marc.zyngier@arm.com, peterz@infradead.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh@kernel.org, will.deacon@arm.com, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Jonathan.Cameron@huawei.com, marc.zyngier@arm.com, peterz@infradead.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Make use of the new generic helper to convert an of_node of a CPU
-to the logical CPU id in parsing the topology.
+Reuse the new generic helper, of_cpu_node_to_id() to map a
+given CPU phandle to a logical CPU number.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm64/kernel/topology.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Changes since V4:
+ - Fix a regression introduced in v4, reported by bugrobot
+Changes since V3:
+ - Reflect the renaming of the helper and return value changes
+---
+ drivers/hwtracing/coresight/of_coresight.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 8d48b233e6ce..21868530018e 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -37,18 +37,14 @@ static int __init get_cpu_for_node(struct device_node *node)
- 	if (!cpu_node)
- 		return -1;
+diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+index a18794128bf8..7c375443ede6 100644
+--- a/drivers/hwtracing/coresight/of_coresight.c
++++ b/drivers/hwtracing/coresight/of_coresight.c
+@@ -104,26 +104,17 @@ static int of_coresight_alloc_memory(struct device *dev,
+ int of_coresight_get_cpu(const struct device_node *node)
+ {
+ 	int cpu;
+-	bool found;
+-	struct device_node *dn, *np;
++	struct device_node *dn;
  
--	for_each_possible_cpu(cpu) {
--		if (of_get_cpu_node(cpu, NULL) == cpu_node) {
--			topology_parse_cpu_capacity(cpu_node, cpu);
--			of_node_put(cpu_node);
--			return cpu;
--		}
--	}
+ 	dn = of_parse_phandle(node, "cpu", 0);
 -
--	pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-+	cpu = of_cpu_node_to_id(cpu_node);
-+	if (cpu >= 0)
-+		topology_parse_cpu_capacity(cpu_node, cpu);
-+	else
-+		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+ 	/* Affinity defaults to CPU0 */
+ 	if (!dn)
+ 		return 0;
+-
+-	for_each_possible_cpu(cpu) {
+-		np = of_cpu_device_node_get(cpu);
+-		found = (dn == np);
+-		of_node_put(np);
+-		if (found)
+-			break;
+-	}
++	cpu = of_cpu_node_to_id(dn);
+ 	of_node_put(dn);
  
- 	of_node_put(cpu_node);
--	return -1;
-+	return cpu;
+ 	/* Affinity to CPU0 if no cpu nodes are found */
+-	return found ? cpu : 0;
++	return (cpu < 0) ? 0 : cpu;
  }
+ EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
  
- static int __init parse_core(struct device_node *core, int cluster_id,
 -- 
 2.13.6
