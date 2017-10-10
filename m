@@ -1,39 +1,67 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ARM: dts: r8a779x: add '#reset-cells' in cpg-mssr
-Date: Tue, 10 Oct 2017 11:07:14 +0200
-Message-ID: <CAK8P3a0h0xGb3r=SdmyzNVGu5LmTG6GzvvxEsqmubBWJDFbG3A@mail.gmail.com>
-References: <20171010084611.968735-1-arnd@arndb.de>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: Altera ASMI Parallel II IP Core
+Date: Tue, 10 Oct 2017 11:24:03 +0200
+Message-ID: <deae5a9f-4301-c7de-b265-b09292f8da15@gmail.com>
+References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1505932139-2905-3-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171010084611.968735-1-arnd@arndb.de>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Marc Zyngier <marc.zyngier@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1505932139-2905-3-git-send-email-matthew.gerlach@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com, vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org, tien.hock.loh@intel.com, hean.loong.ong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 10, 2017 at 10:45 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> With the latest dtc, we get many warnings about the missing
-> '#reset-cells' property in these controllers, e.g.:
->
-> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
-> arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
-> arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
-> arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
-> arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
-> arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
->
-> This adds it for the three r8a779x chips that were lacking it. The
-> binding mandates this as <1>, so this is the value I use.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 09/20/2017 08:28 PM, matthew.gerlach@linux.intel.com wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> 
+> This patch adds support for a spi-nor, platform driver for the
+> Altera ASMI Parallel II IP Core.  The intended use case is to be able
+> to update the flash used to load a FPGA at power up with mtd-utils.
+> 
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > ---
->  arch/arm/boot/dts/r8a7790.dtsi | 1 +
->  arch/arm/boot/dts/r8a7792.dtsi | 1 +
->  arch/arm/boot/dts/r8a7794.dtsi | 1 +
+> v2:
+>     minor checkpatch fixing by Wu Hao <hao.wu@intel.com>
+>     Use read_dummy value as suggested by Cyrille Pitchen.
+>     Don't assume 4 byte addressing (Cryille Pichecn and Marek Vasut).
+>     Fixed #define indenting as suggested by Marek Vasut.
+>     Added units to timer values as suggested by Marek Vasut.
+>     Use io(read|write)8_rep() as suggested by Marek Vasut.
+>     Renamed function prefixed with __ as suggested by Marek Vasut.
 
-It seems I missed the same problem in r8a7793. I'll do some more tests to
-see if there is more of the same, and will send an updated patch once
-I'm more confident I have the right version.
+[...]
 
-       Arnd
+> +#define QSPI_ACTION_REG			0
+> +#define QSPI_ACTION_RST			BIT(0)
+> +#define QSPI_ACTION_EN			BIT(1)
+> +#define QSPI_ACTION_SC			BIT(2)
+> +#define QSPI_ACTION_CHIP_SEL_SFT	4
+> +#define QSPI_ACTION_DUMMY_SFT		8
+> +#define QSPI_ACTION_READ_BACK_SFT	16
+> +
+> +#define QSPI_FIFO_CNT_REG		4
+> +#define QSPI_FIFO_DEPTH			0x200
+> +#define QSPI_FIFO_CNT_MSK		0x3ff
+> +#define QSPI_FIFO_CNT_RX_SFT		0
+> +#define QSPI_FIFO_CNT_TX_SFT		12
+> +
+> +#define QSPI_DATA_REG			0x8
+> +
+> +#define QSPI_POLL_TIMEOUT_US		10000000
+
+10 s poll timeout ? :)
+
+> +#define QSPI_POLL_INTERVAL_US		5
+> +
+> +struct altera_asmip2 {
+
+[...]
+
+Otherwise looks good
+
+-- 
+Best regards,
+Marek Vasut
