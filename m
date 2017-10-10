@@ -1,39 +1,37 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 2/5] mfd: bd9571mwv: Add DDR Backup Power register bit definitions
-Date: Tue, 10 Oct 2017 17:26:15 +0200
-Message-ID: <1507649178-31473-3-git-send-email-geert+renesas@glider.be>
-References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: qcom: clk-smd-rpm: add msm8996 rpmclks
+Date: Tue, 10 Oct 2017 10:38:21 -0500
+Message-ID: <20171010153821.wuusgkzrgqc6o4x7@rob-hp-laptop>
+References: <1507625834-30499-1-git-send-email-rnayak@codeaurora.org>
+ <1507625834-30499-2-git-send-email-rnayak@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1507625834-30499-2-git-send-email-rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add definitions for the KEEPON_* bits in the "BKUP Mode Cnt" register,
-which control the DDR rails to be kept powered when backup mode is
-enabled.
+On Tue, Oct 10, 2017 at 02:27:13PM +0530, Rajendra Nayak wrote:
+> Add all RPM controlled clocks on msm8996 platform
+> 
+> Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> [srini: Fixed various issues with offsets and made names specific to msm8996]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- include/linux/mfd/bd9571mwv.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Please add acks when posting new versions. 
 
-diff --git a/include/linux/mfd/bd9571mwv.h b/include/linux/mfd/bd9571mwv.h
-index f0708ba4cbbae2dc..eb05569f752bb089 100644
---- a/include/linux/mfd/bd9571mwv.h
-+++ b/include/linux/mfd/bd9571mwv.h
-@@ -33,6 +33,11 @@
- #define BD9571MWV_I2C_MD2_E1_BIT_2		0x12
- 
- #define BD9571MWV_BKUP_MODE_CNT			0x20
-+#define BD9571MWV_BKUP_MODE_CNT_KEEPON_MASK	GENMASK(3, 0)
-+#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR0	BIT(0)
-+#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR1	BIT(1)
-+#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR0C	BIT(2)
-+#define BD9571MWV_BKUP_MODE_CNT_KEEPON_DDR1C	BIT(3)
- #define BD9571MWV_BKUP_MODE_STATUS		0x21
- #define BD9571MWV_BKUP_RECOVERY_CNT		0x22
- #define BD9571MWV_BKUP_CTRL_TIM_CNT		0x23
--- 
-2.7.4
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/clk/qcom/clk-smd-rpm.c                     | 82 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h             | 14 ++++
+>  include/linux/soc/qcom/smd-rpm.h                   |  4 ++
+>  4 files changed, 101 insertions(+)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
