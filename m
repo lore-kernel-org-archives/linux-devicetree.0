@@ -1,81 +1,71 @@
-From: "Yang, Wenyou" <Wenyou.Yang@Microchip.com>
-Subject: Re: [PATCH 09/15] ARM: dts: at91: sama5d2_xplained: Add charger node
- of pmic.
-Date: Tue, 10 Oct 2017 08:39:48 +0800
-Message-ID: <d42b60fb-7eac-229c-5e71-303e271c01a0@Microchip.com>
-References: <1507565377-1545-1-git-send-email-claudiu.beznea@microchip.com>
- <1507565377-1545-10-git-send-email-claudiu.beznea@microchip.com>
+From: matthew.gerlach@linux.intel.com
+Subject: Re: [PATCH v2 0/3] Altera ASMI Parallel II IP Core
+Date: Mon, 9 Oct 2017 17:49:54 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1710091748430.24764@mgerlach-VirtualBox>
+References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507565377-1545-10-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
+In-Reply-To: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+To: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org, tien.hock.loh@intel.com, hean.loong.ong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Claudiu,
 
+Hi Everyone,
 
-On 2017/10/10 0:09, Claudiu Beznea wrote:
-> Add charger device node as a sub-device node of act8945a mfd, move
-> the charger's properties to this node, and use the "interrupts"
-> property to replace "active-semi,irq_gpios" to denote the act8945a
-> charger's irq.
+Thanks to Rob Herring for Acking the device tree bindings part of the 
+patch.  Does anyone have any feedback for the rest of the patch set?
+
+Thanks,
+
+Matthew Gerlach
+
+On Wed, 20 Sep 2017, matthew.gerlach@linux.intel.com wrote:
+
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 >
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> [claudiu.beznea@microchip.com: replace numbers with pin macros]
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-This patch has already applied on at91-dt branch.
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=at91-dt&id=4b6ad41f267b8ddabf5dd1b02a318bc74f0b95e9
-
-> ---
->   arch/arm/boot/dts/at91-sama5d2_xplained.dts | 23 +++++++++++++++--------
->   1 file changed, 15 insertions(+), 8 deletions(-)
+> This patch set adds a spi-nor flash driver for the Altera ASMI Parallel II
+> IP Core.  This driver was created based on feedback from Marek Vasut,
+> Cyrill Pitchen, and Michal Suchanek regarding Version 2 of the Altera
+> Quadspi Controller: https://lkml.org/lkml/2017/6/26/518
 >
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> index c7e9ccf2bc87..848ca1b025be 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-> @@ -160,14 +160,6 @@
->   					compatible = "active-semi,act8945a";
->   					reg = <0x5b>;
->   					active-semi,vsel-high;
-> -					active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
-> -					active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
-> -					active-semi,irq_gpios = <&pioA PIN_PB13 GPIO_ACTIVE_LOW>;
-> -					active-semi,input-voltage-threshold-microvolt = <6600>;
-> -					active-semi,precondition-timeout = <40>;
-> -					active-semi,total-timeout = <3>;
-> -					pinctrl-names = "default";
-> -					pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
->   					status = "okay";
->   
->   					regulators {
-> @@ -220,6 +212,21 @@
->   							regulator-always-on;
->   						};
->   					};
-> +
-> +					charger {
-> +						compatible = "active-semi,act8945a-charger";
-> +						pinctrl-names = "default";
-> +						pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
-> +						interrupt-parent = <&pioA>;
-> +						interrupts = <PIN_PB13 GPIO_ACTIVE_LOW>;
-> +
-> +						active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
-> +						active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
-> +						active-semi,input-voltage-threshold-microvolt = <6600>;
-> +						active-semi,precondition-timeout = <40>;
-> +						active-semi,total-timeout = <3>;
-> +						status = "okay";
-> +					};
->   				};
->   			};
->   
-
-Best Regards,
-Wenyou Yang
+> The overall problem with Version 2 of the Altera Quadspi Controller and
+> its driver was the fact that there was much duplication of code and logic
+> with the spi-nor framework.  This new combination of fpga hardware and
+> software "gets out of the way" of the spi-nor framework.  The result is a
+> much simpler driver with the spi-nor framework performing the bulk of the work.
+>
+> Patch 1 contains the device tree bindings for the driver for
+> the Altera ASMI-Parallel II IP Core.
+>
+> Patch 2 contains the driver code for the Altera ASMI-Parallel II IP Core.
+> This driver supports being configured via a device tree or with platform
+> data.  In the later case, the memory for the registers has been remapped.
+>
+> Patch 3 contains a work around for some non-standard behavior of EPCQ flash.
+>
+> Matthew Gerlach (3):
+>  dt-bindings: mtd: Altera ASMI Parallel II IP Core
+>  mtd: spi-nor: Altera ASMI Parallel II IP Core
+>  mtd: spi-nor: add flag for reading dummy cycles from nv cfg reg
+>
+> .../devicetree/bindings/mtd/altera-asmip2.txt      |  15 +
+> MAINTAINERS                                        |   7 +
+> drivers/mtd/spi-nor/Kconfig                        |   6 +
+> drivers/mtd/spi-nor/Makefile                       |   1 +
+> drivers/mtd/spi-nor/altera-asmip2.c                | 478 +++++++++++++++++++++
+> include/linux/mtd/altera-asmip2.h                  |  27 ++
+> 6 files changed, 534 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
+> create mode 100644 drivers/mtd/spi-nor/altera-asmip2.c
+> create mode 100644 include/linux/mtd/altera-asmip2.h
+>
+> -- 
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
