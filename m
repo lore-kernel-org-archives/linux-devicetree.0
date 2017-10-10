@@ -1,110 +1,140 @@
-From: Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>
-Subject: Re: [PATCH v3 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to ARMADA370
- variants.
-Date: Tue, 10 Oct 2017 20:26:07 +0000
-Message-ID: <0a9cf087-63de-19db-f695-ca8f3796fad0@alliedtelesis.co.nz>
-References: <20170928005756.3938-1-kalyan.kinthada@alliedtelesis.co.nz>
- <20170928005756.3938-2-kalyan.kinthada@alliedtelesis.co.nz>
- <20171005094138.11b73a0e@xps13>
- <c6832720-7c58-4afe-2d1b-76bb9397299e@alliedtelesis.co.nz>
- <20171009081848.49681975@xps13>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
+ multiple overlays
+Date: Tue, 10 Oct 2017 16:06:48 -0500
+Message-ID: <CAL_JsqK8cxBk754UBziGOTMx035C8P5ehPvENE0=-TNHqmTCbg@mail.gmail.com>
+References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+ <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
+ <59D5A737.9090905@gmail.com> <20171010184014.m2chslx36kbhvgug@rob-hp-laptop> <59DD21F3.6080001@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171009081848.49681975@xps13>
-Content-Language: en-US
-Content-ID: <312455A69AFC9D49B538D78BE1DD05BD@atlnz.lc>
+In-Reply-To: <59DD21F3.6080001@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWlxdWVsLA0KT24gMDkvMTAvMTcgMTk6MTgsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+
-IEhlbGxvIEthbHlhbiwNCj4NCj4gT24gTW9uLCA5IE9jdCAyMDE3IDAyOjMxOjMwICswMDAwDQo+
-IEthbHlhbiBLaW50aGFkYSA8S2FseWFuLktpbnRoYWRhQGFsbGllZHRlbGVzaXMuY28ubno+IHdy
-b3RlOg0KPg0KPj4gT24gMDUvMTAvMTcgMjA6NDEsIE1pcXVlbCBSQVlOQUwgd3JvdGU6DQo+Pj4g
-SGVsbG8gS2FseWFuLA0KPj4+DQo+Pj4gT24gVGh1LCAyOCBTZXAgMjAxNyAxMzo1Nzo1NiArMTMw
-MA0KPj4+IEthbHlhbiBLaW50aGFkYSA8a2FseWFuLmtpbnRoYWRhQGFsbGllZHRlbGVzaXMuY28u
-bno+IHdyb3RlOg0KPj4+ICAgDQo+Pj4+IFdoZW4gdGhlIGFyYml0cmF0aW9uIGJldHdlZW4gTk9S
-IGFuZCBOQU5EIGZsYXNoIGlzIGVuYWJsZWQNCj4+Pj4gdGhlIDxGT1JDRV9DU1g+IGZpZWxkIGJp
-dFsyMV0gaW4gdGhlIERhdGEgRmxhc2ggQ29udHJvbCBSZWdpc3Rlcg0KPj4+PiBuZWVkcyB0byBi
-ZSBzZXQgdG8gMSBhY2NvcmRpbmcgdG8gZ3VpZGxlaW5lIEdMLTU4MzA3NDEgbWVudGlvbmVkDQo+
-Pj4gVHlwbzogZ3VpZGVsaW5lIF4NCj4+IEkgd2lsbCBjb3JyZWN0IHRoaXMgdHlwbyBpbiB0aGUg
-bmV4dCBwYXRjaCB2ZXJzaW9uLg0KPj4+PiBpbiBNYXJ2ZWxsIEVycmF0YSBkb2N1bWVudCBNVi1T
-NTAxMzc3LTAwLCBSZXYuIEQuDQo+Pj4gVGhhbmtzIGZvciB0aGF0LCBJIGNoZWNrZWQgaXQuDQo+
-Pj4gICANCj4+Pj4gVGhpcyBjb21taXQgc2V0cyB0aGUgRk9SQ0VfQ1NYIGJpdCB0byAxIGZvciBh
-bGwNCj4+Pj4gQVJNQURBMzcwIHZhcmlhbnRzIGFzIHRoZSBhcmJpdHJhdGlvbiBpcyBhbHdheXMg
-ZW5hYmxlZCBieSBkZWZhdWx0Lg0KPj4+PiBUaGlzIGNoYW5nZSBkb2VzIG5vdCBhcHBseSBmb3Ig
-cHhhM3h4IHZhcmlhbnRzIGJlY2F1c2UgdGhlDQo+Pj4+IEZPUkNFX0NTWCBiaXQgZG9lcyBub3Qg
-ZXhpc3QvcmVzZXJ2ZWQgb24gdGhlIE5GQ3YxLg0KPj4+IFNvcnJ5IHRvIGJvdGhlciB5b3UgYWdh
-aW4gYnV0IEkgYW0gcmV3b3JraW5nIHRoZSBweGEzeHhfbmFuZCBkcml2ZXINCj4+PiBhbmQgc28g
-SSB3b3VsZCBsaWtlIHRvIGRlZXBseSB1bmRlcnN0YW5kIHdoeSB0aGlzIGlzIG5lZWRlZCBiZWNh
-dXNlDQo+Pj4gSSB3aWxsIGhhdmUgdG8gaW50ZWdyYXRlIGl0IGluIG15IHdvcmsgdG9vLg0KPj4+
-DQo+Pj4gU28gcGxlYXNlIHRlbGwgbWUgd2hhdCBpcyB5b3VyIHNldHVwLCBkbyB5b3UgcmVhbGx5
-IHVzZSBOQU5EL05PUg0KPj4+IGFyYml0cmF0aW9uPyBEbyB5b3UgaGF2ZSBub3QtRG9uJ3QgQ2Fy
-ZSBDUyBOQU5EIGNoaXBzPyBJIGhhdmUgc29tZQ0KPj4+IGRvdWJ0cyBiZWNhdXNlIGV2ZW4gaWYg
-dGhlIHNwZWMgcHJlY2lzZXMgaW4gdGhlIE5BTkQgY29udHJvbGxlcg0KPj4+IGNoYXB0ZXIgdGhh
-dCBhcmJpdHJhdGlvbiBpcyBhbHdheXMgZW5hYmxlZCBieSBkZWZhdWx0LCB0aGUgYml0IDI3DQo+
-Pj4gKE5mQXJiaXRlckVuKSBpbiB0aGUgU29DIERldmljZSBNdWx0aXBsZXggUmVnaXN0ZXIgYXQg
-b2Zmc2V0DQo+Pj4gMHgwMDAxODIwOCBpcyBhY3R1YWxseSBhdCAwIGJ5IGRlZmF1bHQgKGRpc2Fi
-bGVkKS4gRGlkIHlvdSBlbmFibGUNCj4+PiB0aGlzIGJpdCBtYW51YWxseSA/IEkgY2hlY2tlZCB3
-aXRoIGRldm1lbSBvbiBteSBzZXR1cCBhbmQgdGhpcyBiaXQNCj4+PiB3YXMgdW5zZXQuDQo+PiBZ
-ZXMsIG15IHNldHVwIHVzZSBOQU5EL05PUiBhcmJpdHJhdGlvbiBhbmQgdXNlIGEgRG9uJ3QNCj4+
-IGNhcmUgQ1MgTmFuZCBDaGlwLiBUaGUgYml0IDI3IGF0IG9mZnNldCAweDAwMDE4MjA4IGlzIHNl
-dCB0byAxDQo+PiBieSBkZWZhdWx0IGluIG15IGNhc2UuIEkgZGlkIG5vdCBtYW51YWxseSBzZXQg
-dGhlIGJpdCAyNyB0byAxLg0KPiBBY3R1YWxseSBpZiB5b3UgdXNlIERvbid0IENhcmUgQ1MgTkFO
-RCBjaGlwcyB5b3Ugc2hvdWxkIG5vdCBuZWVkIHRoZQ0KPiBmb3JjZSBDUyBiaXQsIGFzIGl0IGlz
-IG1lbnRpb25lZCBpbiB0aGUgZ3VpZGVsaW5lcyB5b3UgcG9pbnRlZCwgdGhpcw0KPiBiaXQgaXMg
-b25seSB1c2VmdWwgZm9yICpub3QqIGRvbid0IGNhcmUgQ1MgTkFORCBjaGlwcyAoYW5kIHRoZSBu
-YW1lDQo+ICJmb3JjZSBDUyIgaXMgcHJldHR5IHN0cmFpZ2h0IGZvcndhcmQgdG9vISkuDQpPay4g
-SSB1bmRlcnN0YW5kIG5vdy4gVGhhbmsgeW91Lg0KPg0KPiBPdGhlcndpc2Ugd2hhdCBib290bG9h
-ZGVyIGFuZCBrZXJuZWwgZG8geW91IHVzZSB0byBoYXZlIHRoaXMNCj4gYml0IHNldCBieSBkZWZh
-dWx0PyBZb3UgbWF5IGFsc28gd2FudCB0byBjaGVjayBpZiB0aGlzIGJpdCBpcyBzZXQgYnkNCj4g
-eW91ciBib290bG9hZGVyIGJ5IHN0b3BwaW5nIGl0IGJlZm9yZSBpdCBsb2FkcyBMaW51eCBhbmQg
-Y2hlY2sgbWFudWFsbHkNCj4gdGhlIHZhbHVlIG9mIHRoaXMgYml0IHdpdGggJ21kJyAob24gVS1C
-b290KS4NClRoZSBiaXQyNyBhdCBvZmZzZXQgMHgwMDAxODIwOCBpcyBzZXQgaW4gYm9vdGxvYWRl
-ci4NClVib290IHZlcnNpb24gMjAxNi4xMQ0KTGludXggS2VybmVsIDQuNC42DQoNClRoYW5rcywN
-CkthbHlhbg0KPg0KPiBUaGFuayB5b3UsDQo+IE1pcXXDqGwNCj4NCj4+IFBsZWFzZSBsZXQgbWUg
-bm93IGlmIHlvdSBoYXZlIGFueSBvdGhlciBxdWVzdGlvbiBvciBkbyB5b3Ugd2FudCBtZQ0KPj4g
-dG8gc2VuZCB0aGUgdXBkYXRlZCBwYXRjaCB2ZXJzaW9uIHdpdGggdGhlIHR5cG8gZml4ZWQuDQo+
-Pg0KPj4gVGhhbmsgWW91LA0KPj4gS2FseWFuDQo+Pg0KPj4+IFRoYW5rIHlvdSBmb3IgeW91ciB0
-aW1lLA0KPj4+IE1pcXXDqGwNCj4+PiAgIA0KPj4+PiBUaGUgTkRDUl9ORF9NT0RFIGNvbmZsaWN0
-cyB3aXRoIHRoZSBuZXcgTkRDUl9GT1JDRV9DU1ggYnV0IGlzDQo+Pj4+IHVudXNlZCBzbyByZW1v
-dmUgaXQgYWxvbmcgd2l0aCBORENSX05BTkRfTU9ERS4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1i
-eTogS2FseWFuIEtpbnRoYWRhDQo+Pj4+IDxrYWx5YW4ua2ludGhhZGFAYWxsaWVkdGVsZXNpcy5j
-by5uej4gLS0tDQo+Pj4gICANCj4+Pj4gICAgZHJpdmVycy9tdGQvbmFuZC9weGEzeHhfbmFuZC5j
-IHwgOSArKysrKysrLS0NCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwg
-MiBkZWxldGlvbnMoLSkNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQv
-cHhhM3h4X25hbmQuYw0KPj4+PiBiL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4X25hbmQuYyBpbmRl
-eCA4NWNmZjY4NjQzZTAuLmE2YTdhNWFmN2JlZA0KPj4+PiAxMDA2NDQgLS0tIGEvZHJpdmVycy9t
-dGQvbmFuZC9weGEzeHhfbmFuZC5jDQo+Pj4+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvcHhhM3h4
-X25hbmQuYw0KPj4+PiBAQCAtNjcsOCArNjcsNyBAQA0KPj4+PiAgICAjZGVmaW5lIE5EQ1JfRFdJ
-RFRIX00JCSgweDEgPDwgMjYpDQo+Pj4+ICAgICNkZWZpbmUgTkRDUl9QQUdFX1NaCQkoMHgxIDw8
-IDI0KQ0KPj4+PiAgICAjZGVmaW5lIE5EQ1JfTkNTWAkJKDB4MSA8PCAyMykNCj4+Pj4gLSNkZWZp
-bmUgTkRDUl9ORF9NT0RFCQkoMHgzIDw8IDIxKQ0KPj4+PiAtI2RlZmluZSBORENSX05BTkRfTU9E
-RSAgIAkoMHgwKQ0KPj4+PiArI2RlZmluZSBORENSX0ZPUkNFX0NTWAkJKDB4MSA8PCAyMSkNCj4+
-Pj4gICAgI2RlZmluZSBORENSX0NMUl9QR19DTlQJCSgweDEgPDwgMjApDQo+Pj4+ICAgICNkZWZp
-bmUgTkZDVjFfTkRDUl9BUkJfQ05UTAkoMHgxIDw8IDE5KQ0KPj4+PiAgICAjZGVmaW5lIE5GQ1Yy
-X05EQ1JfU1RPUF9PTl9VTkNPUgkoMHgxIDw8IDE5KQ0KPj4+PiBAQCAtMTQ2NCw2ICsxNDYzLDkg
-QEAgc3RhdGljIGludCBweGEzeHhfbmFuZF9jb25maWdfaWRlbnQoc3RydWN0DQo+Pj4+IHB4YTN4
-eF9uYW5kX2luZm8gKmluZm8pIGluZm8tPmNodW5rX3NpemUgPSBQQUdFX0NIVU5LX1NJWkU7DQo+
-Pj4+ICAgIAlpbmZvLT5yZWdfbmRjciA9IDB4MDsgLyogZW5hYmxlIGFsbCBpbnRlcnJ1cHRzICov
-DQo+Pj4+ICAgIAlpbmZvLT5yZWdfbmRjciB8PSAocGRhdGEtPmVuYWJsZV9hcmJpdGVyKSA/DQo+
-Pj4+IE5EQ1JfTkRfQVJCX0VOIDogMDsNCj4+Pj4gKwkvKiBTZXQgRk9SQ0VfQ1NYIGJpdCBmb3Ig
-YWxsIEFSTUFEQTM3MCBWYXJpYW50cy4gUmVmIzoNCj4+Pj4gR0wtNTgzMDc0MSAqLw0KPj4+PiAr
-CWlmIChpbmZvLT52YXJpYW50ID09IFBYQTNYWF9OQU5EX1ZBUklBTlRfQVJNQURBMzcwKQ0KPj4+
-PiArCQlpbmZvLT5yZWdfbmRjciB8PSBORENSX0ZPUkNFX0NTWDsNCj4+Pj4gICAgCWluZm8tPnJl
-Z19uZGNyIHw9IE5EQ1JfUkRfSURfQ05UKFJFQURfSURfQllURVMpOw0KPj4+PiAgICAJaW5mby0+
-cmVnX25kY3IgfD0gTkRDUl9TUEFSRV9FTjsNCj4+Pj4gICAgDQo+Pj4+IEBAIC0xNDk4LDYgKzE1
-MDAsOSBAQCBzdGF0aWMgdm9pZCBweGEzeHhfbmFuZF9kZXRlY3RfY29uZmlnKHN0cnVjdA0KPj4+
-PiBweGEzeHhfbmFuZF9pbmZvICppbmZvKSBpbmZvLT5yZWdfbmRjciA9IG5kY3IgJg0KPj4+PiAg
-ICAJCX4oTkRDUl9JTlRfTUFTSyB8IE5EQ1JfTkRfQVJCX0VOIHwNCj4+Pj4gTkZDVjFfTkRDUl9B
-UkJfQ05UTCk7IGluZm8tPnJlZ19uZGNyIHw9IChwZGF0YS0+ZW5hYmxlX2FyYml0ZXIpID8NCj4+
-Pj4gTkRDUl9ORF9BUkJfRU4gOiAwOw0KPj4+PiArCS8qIFNldCBGT1JDRV9DU1ggYml0IGZvciBh
-bGwgQVJNQURBMzcwIFZhcmlhbnRzLiBSZWYjOg0KPj4+PiBHTC01ODMwNzQxICovDQo+Pj4+ICsJ
-aWYgKGluZm8tPnZhcmlhbnQgPT0gUFhBM1hYX05BTkRfVkFSSUFOVF9BUk1BREEzNzApDQo+Pj4+
-ICsJCWluZm8tPnJlZ19uZGNyIHw9IE5EQ1JfRk9SQ0VfQ1NYOw0KPj4+PiAgICAJaW5mby0+bmR0
-cjBjczAgPSBuYW5kX3JlYWRsKGluZm8sIE5EVFIwQ1MwKTsNCj4+Pj4gICAgCWluZm8tPm5kdHIx
-Y3MwID0gbmFuZF9yZWFkbChpbmZvLCBORFRSMUNTMCk7DQo+Pj4+ICAgIH0NCj4+PiAgIA0KPg0K
-Pg0K
+On Tue, Oct 10, 2017 at 2:39 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 10/10/17 11:40, Rob Herring wrote:
+>> On Wed, Oct 04, 2017 at 08:29:59PM -0700, Frank Rowand wrote:
+>>> On 10/04/17 08:19, Rob Herring wrote:
+>>>> On Mon, Oct 2, 2017 at 10:53 PM,  <frowand.list@gmail.com> wrote:
+>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>
+>>>>> The process of applying an overlay consists of:
+>>>>>   - unflatten an overlay FDT (flattened device tree) into an
+>>>>>     EDT (expanded device tree)
+>>>>>   - fixup the phandle values in the overlay EDT to fit in a
+>>>>>     range above the phandle values in the live device tree
+>>>>>   - create the overlay changeset to reflect the contents of
+>>>>>     the overlay EDT
+>>>>>   - apply the overlay changeset, to modify the live device tree,
+>>>>>     potentially changing the maximum phandle value in the live
+>>>>>     device tree
+>>>>>
+>>>>> There is currently no protection against two overlay applies
+>>>>> concurrently determining what range of phandle values are in use
+>>>>> in the live device tree, and subsequently changing that range.
+>>>>> Add a mutex to prevent multiple overlay applies from occurring
+>>>>> simultaneously.
+>>>>>
+>>>>> Ignoring 2 checkpatch warnings: Prefer using '"%s...", __func__'
+>>>>> so that the WARN() string will be more easily grepped.
+>>>>>
+>>>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>>>>> ---
+>>>>>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  7 +++++++
+>>>>>  drivers/of/overlay.c                         | 22 ++++++++++++++++++++++
+>>>>>  drivers/of/unittest.c                        | 21 +++++++++++++++++++++
+>>>>>  include/linux/of.h                           | 19 +++++++++++++++++++
+>>>>>  4 files changed, 69 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>>>>> index 7a7be0515bfd..c99f7924b1c6 100644
+>>>>> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>>>>> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>>>>> @@ -221,6 +221,11 @@ static void __init tilcdc_convert_slave_node(void)
+>>>>>                 goto out;
+>>>>>         }
+>>>>>
+>>>>> +       /*
+>>>>> +        * protect from of_resolve_phandles() through of_overlay_apply()
+>>>>> +        */
+>>>>> +       of_overlay_mutex_lock();
+>>>>> +
+>>>>
+>>>> We can't be relying on callers to get the locking right...
+>>>
+>>> Agreed.
+>>>
+>>>
+>>>>
+>>>>>         overlay = tilcdc_get_overlay(&kft);
+>>>>>         if (!overlay)
+>>>>>                 goto out;
+>>>>> @@ -256,6 +261,8 @@ static void __init tilcdc_convert_slave_node(void)
+>>>>>                 pr_info("%s: ti,tilcdc,slave node successfully converted\n",
+>>>>>                         __func__);
+>>>>>  out:
+>>>>> +       of_overlay_mutex_unlock();
+>>>>> +
+>>>>>         kfree_table_free(&kft);
+>>>>>         of_node_put(i2c);
+>>>>>         of_node_put(slave);
+>>>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>>>> index a0d3222febdc..4ed372af6ce7 100644
+>>>>> --- a/drivers/of/overlay.c
+>>>>> +++ b/drivers/of/overlay.c
+>>>>> @@ -71,6 +71,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
+>>>>>                 const struct device_node *overlay_node,
+>>>>>                 bool is_symbols_node);
+>>>>>
+>>>>> +/*
+>>>>> + * of_resolve_phandles() finds the largest phandle in the live tree.
+>>>>> + * of_overlay_apply() may add a larger phandle to the live tree.
+>>>>> + * Do not allow race between two overlays being applied simultaneously:
+>>>>> + *    mutex_lock(&of_overlay_phandle_mutex)
+>>>>> + *    of_resolve_phandles()
+>>>>> + *    of_overlay_apply()
+>>>>> + *    mutex_unlock(&of_overlay_phandle_mutex)
+>>>>
+>>>> Why do these need to be separate functions? I think I mentioned it
+>>>> before, but essentially overlay_data_add() should be part of the
+>>>> overlay API. We may need to allow for callers to do each step, but
+>>>> generally I think the interface should just be "apply this fdt blob".
+>>>
+>>> Yes, that is where I want to end up.
+>>
+>> So, is that not doable now? To put it another way, why does
+>> of_resolve_phandles need to be a separate call? Seems like an internal
+>> detail of how you apply an overlay to me.
+>>
+>> Rob
+>
+> Yes, of_resolve_phandles() should become an internal call made from
+> the "apply this fdt blob" function.
+
+I mean just moving of_resolve_phandles into of_overlay_apply. Not the
+unflattening too.
+
+> The biggest obstacle is drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> using overlays in a convoluted manner.  The second obstacle will
+> probably be the older overlay tests in drivers/of/unittest.c.  I
+> need to look at how to convert them to using actual overlays.
+>
+> There are other fixes and improvements to the overlay code that
+> need to occur, but it is like pulling on a loose thread in a
+> sweater - it just goes on and on.  I'd like to get this set of
+> patches in, with whatever changes are absolutely essential,
+> then continue on with more patch sets.  This code will be
+> much easier for me to modify in the future if this patch set
+> is applied.
+
+AFAICT, I don't think anything between of_resolve_phandles and
+of_overlay_apply calls in tilcdc depends on the phandles being fixed
+up. And for the unittests that don't call of_resolve_phandles, would
+there be any side effect of calling of_resolve_phandles?
+
+Rob
