@@ -1,84 +1,44 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] arm64: dts: renesas: eagle: add EtherAVB support
-Date: Tue, 10 Oct 2017 10:03:37 +0200
-Message-ID: <20171010080337.GO2518@verge.net.au>
-References: <20170915194449.538504992@cogentembedded.com>
- <CAMuHMdXQXFuVzwW7G-U7XWZUEj8qFRjtfDQF1+TgyzO0Xb+eYg@mail.gmail.com>
- <c0390fc1-7da4-ac60-afee-97126d1fd372@cogentembedded.com>
- <CAMuHMdVCTORpfKN+GTka_6pT1VWjOneV2GBhGo7Y8DsZYSxdvw@mail.gmail.com>
- <20171005090500.GC26369@verge.net.au>
- <d5940a12-3823-eebb-50d9-c0fd0fcf0fd1@cogentembedded.com>
- <20171010073346.GL2518@verge.net.au>
- <20171010074842.GN2518@verge.net.au>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 01/12] mmc: mediatek: add support of mt2701/mt2712
+Date: Tue, 10 Oct 2017 10:09:49 +0200
+Message-ID: <CAPDyKFppTCdaMizSGTjrfgsbMuHCsNi+knHVf9ibxgrAQ0GD2w@mail.gmail.com>
+References: <1507604480-23246-1-git-send-email-chaotian.jing@mediatek.com>
+ <1507604480-23246-2-git-send-email-chaotian.jing@mediatek.com>
+ <CAPDyKFrqv5tt8Exq1msUBbMEROam2c+YnStazsf5SPj-NLrGSg@mail.gmail.com> <1507620951.19789.7.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171010074842.GN2518-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+In-Reply-To: <1507620951.19789.7.camel@mhfsdcap03>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 10, 2017 at 09:48:42AM +0200, Simon Horman wrote:
-> On Tue, Oct 10, 2017 at 09:33:46AM +0200, Simon Horman wrote:
-> > On Mon, Oct 09, 2017 at 08:57:42PM +0300, Sergei Shtylyov wrote:
-> > > On 10/05/2017 12:05 PM, Simon Horman wrote:
-> > > 
-> > > >>>On 9/21/2017 4:08 PM, Geert Uytterhoeven wrote:
-> > > >>>>>Define the Eagle board  dependent part of the EtherAVB device node.
-> > > >>>>>Enable DHCP  and NFS root for the kernel booting.
-> > > >>>>>
-> > > >>>>>Based  on the original (and large) patch by Vladimir Barinov.
-> > > >>>>>
-> > > >>>>>Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > > >>>>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > > >>>>
-> > > >>>>
-> > > >>>>>--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> > > >>>>>+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-> > > >>>
-> > > >>>[...]
-> > > >>>>>
-> > > >>>>>@@ -43,3 +44,14 @@
-> > > >>>>>   &scif0 {
-> > > >>>>>          status = "okay";
-> > > >>>>>   };
-> > > >>>>>+
-> > > >>>>>+&avb {
-> > > >>>>>+       renesas,no-ether-link;
-> > > >>>>>+       phy-handle = <&phy0>;
-> > > >>>>>+       status = "okay";
-> > > >>>>>+
-> > > >>>>>+       phy0: ethernet-phy@0 {
-> > > >>>>>+               rxc-skew-ps = <1500>;
-> > > >>>>>+               reg = <0>;
-> > > >>>>
-> > > >>>>
-> > > >>>>Any specific reason why you don't want to wire up the interrupt?
-> > > >>>>
-> > > >>>>                  interrupt-parent = <&gpio2>;
-> > > >>>
-> > > >>>
-> > > >>>    I thought it's quite obvious -- we don't have GPIOs yet, and GPIOs seem
-> > > >>>to require PFC.
-> > > >>
-> > > >>Of course. And these can be added later.
-> > > >>
-> > > >>Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > > >
-> > > >Thanks, applied.
-> > > 
-> > >    Unfortunately, you applied an outdated version of this patch. :-(
-> > 
-> > Sorry, I think patchwork has been playing up of late - or my use of it!
-> > 
-> > Could you repost the correct patch so I am sure to get the right one
-> > the second time around?
-> 
-> Please ignore that request. I'll go ahead and apply v2.
+On 10 October 2017 at 09:35, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> On Tue, 2017-10-10 at 09:26 +0200, Ulf Hansson wrote:
+>> [...]
+>>
+>> > +
+>> > +static const struct of_device_id msdc_of_ids[] = {
+>> > +       { .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+>> > +       { .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+>> > +       { .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
+>> > +       { .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
+>> > +       {}
+>> > +};
+>> > +MODULE_DEVICE_TABLE(of, msdc_of_ids);
+>>
+>> As already stated in the other reply. These new compatible changes
+>> needs to be discussed and acked before the driver starts using them.
+>>
+>> In other words, make patch3 to precede this one.
+> but, then there will have a probe issue as mentioned in previous mail
+> list. that's why I separate the binding file changes to 2 patches.
 
-Done, please check renesas-next-20171010-v4.14-rc1
+That sounds seriously wrong. Aren't the bindings backwards compatible?
+
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
