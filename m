@@ -1,61 +1,86 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 6/7] ARM: dts: imx53-tx53: add support for I2C bus recovery
-Date: Wed, 11 Oct 2017 13:07:40 +0200
-Message-ID: <1507720061-27666-7-git-send-email-LW@KARO-electronics.de>
-References: <1507720061-27666-1-git-send-email-LW@KARO-electronics.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [Patch v6 2/7] slimbus: Add messaging APIs to
+ slimbus framework
+Date: Wed, 11 Oct 2017 12:12:20 +0100
+Message-ID: <8a6e9376-89a6-56d4-055a-29aae7abc311@linaro.org>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
+ <20171011043814.GF30097@localhost>
+ <aa117cb8-ba59-894c-5a82-1b38facfa841@linaro.org>
+ <20171011102436.GH30097@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507720061-27666-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171011102436.GH30097@localhost>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGlteC1pMmMgZHJpdmVyIHN1cHBvcnRzIGF1dG9tYXRpYyBidXMgcmVjb3ZlcnkgdmlhIHRo
-ZSBHUElPCmZ1bmN0aW9uIG9mIHRoZSBJMkMgcGlucy4gRW5hYmxlIHRoaXMgZnVuY3Rpb25hbGl0
-eSBmb3IgdGhlIEthLVJvCmVsZWN0cm9uaWNzIFRYNTMgbW9kdWxlcy4KClNpZ25lZC1vZmYtYnk6
-IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4KLS0tCiBhcmNoL2FybS9i
-b290L2R0cy9pbXg1My10eDUzLXgxM3guZHRzIHwgIDUgKysrKy0KIGFyY2gvYXJtL2Jvb3QvZHRz
-L2lteDUzLXR4NTMuZHRzaSAgICAgfCAxOSArKysrKysrKysrKysrKysrKystCiAyIGZpbGVzIGNo
-YW5nZWQsIDIyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NTMtdHg1My14MTN4LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDUzLXR4NTMteDEzeC5kdHMKaW5kZXggZTIxYmM5MS4uYTg3YTEwYiAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NTMtdHg1My14MTN4LmR0cworKysgYi9hcmNoL2FybS9ib290L2R0
-cy9pbXg1My10eDUzLXgxM3guZHRzCkBAIC0xMjEsOCArMTIxLDExIEBACiB9OwogCiAmaTJjMyB7
-Ci0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQi
-LCAiZ3BpbyI7CiAJcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzM+OworCXBpbmN0cmwtMSA9IDwm
-cGluY3RybF9pMmMzX2dwaW8+OworCXNjbC1ncGlvcyA9IDwmZ3BpbzMgMjEgR1BJT19BQ1RJVkVf
-SElHSD47CisJc2RhLWdwaW9zID0gPCZncGlvMyAyOCBHUElPX0FDVElWRV9ISUdIPjsKIAlzdGF0
-dXMgPSAib2theSI7CiAKIAlzZ3RsNTAwMDogY29kZWNAMGEgewpkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NTMtdHg1My5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NTMtdHg1
-My5kdHNpCmluZGV4IDMzOTM0ZTUuLjhlMTBjNDcgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDUzLXR4NTMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg1My10eDUzLmR0
-c2kKQEAgLTIzMyw4ICsyMzMsMTEgQEAKIH07CiAKICZpMmMxIHsKLQlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJncGlvIjsKIAlwaW5jdHJs
-LTAgPSA8JnBpbmN0cmxfaTJjMT47CisJcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzFfZ3Bpbz47
-CisJc2NsLWdwaW9zID0gPCZncGlvMyAyMSBHUElPX0FDVElWRV9ISUdIPjsKKwlzZGEtZ3Bpb3Mg
-PSA8JmdwaW8zIDI4IEdQSU9fQUNUSVZFX0hJR0g+OwogCWNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAw
-MDA+OwogCXN0YXR1cyA9ICJva2F5IjsKIApAQCAtMzk0LDYgKzM5NywxMyBAQAogCQkJPjsKIAkJ
-fTsKIAorCQlwaW5jdHJsX2kyYzFfZ3BpbzogaTJjMS1ncGlvZ3JwIHsKKwkJCWZzbCxwaW5zID0g
-PAorCQkJCU1YNTNfUEFEX0VJTV9EMjFfX0dQSU8zXzIxCQkweDQwMDAwMWU2CisJCQkJTVg1M19Q
-QURfRUlNX0QyOF9fR1BJTzNfMjgJCTB4NDAwMDAxZTYKKwkJCT47CisJCX07CisKIAkJcGluY3Ry
-bF9pMmMzOiBpMmMzZ3JwIHsKIAkJCWZzbCxwaW5zID0gPAogCQkJCU1YNTNfUEFEX0dQSU9fM19f
-STJDM19TQ0wJCTB4NDAwMDAxZTQKQEAgLTQwMSw2ICs0MTEsMTMgQEAKIAkJCT47CiAJCX07CiAK
-KwkJcGluY3RybF9pMmMzX2dwaW86IGkyYzMtZ3Bpb2dycCB7CisJCQlmc2wscGlucyA9IDwKKwkJ
-CQlNWDUzX1BBRF9HUElPXzNfX0dQSU8xXzMJCTB4NDAwMDAxZTYKKwkJCQlNWDUzX1BBRF9HUElP
-XzZfX0dQSU8xXzYJCTB4NDAwMDAxZTYKKwkJCT47CisJCX07CisKIAkJcGluY3RybF9uYW5kOiBu
-YW5kZ3JwIHsKIAkJCWZzbCxwaW5zID0gPAogCQkJCU1YNTNfUEFEX05BTkRGX1dFX0JfX0VNSV9O
-QU5ERl9XRV9CCTB4NAotLSAKMi4xLjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+On 11/10/17 11:24, Vinod Koul wrote:
+> On Wed, Oct 11, 2017 at 10:42:28AM +0100, Srinivas Kandagatla wrote:
+>> On 11/10/17 05:38, Vinod Koul wrote:
+>>> On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla@linaro.org wrote:
+>>>
+>>>>   	mutex_init(&ctrl->m_ctrl);
+>>>> +	spin_lock_init(&ctrl->tx.lock);
+>>>> +	spin_lock_init(&ctrl->rx.lock);
+>>>
+>>> locks galore :) My assumption is that you want to optimize these? But given
+>>> that audio user is going to be serialized do we practically need two locks?
+>>>
+>> If we remove the locking, It will be issue if we have multiple devices in a
+>> component, which is common atleast with the codec which am looking at.
+> 
+> can you explian what you mean by a "device" here?
+
+SLIMbus component contain two or more SLIMbus devices,
+like function(Generic) device, interface device.
+Interface device provides bus management services, where as generic 
+device provides more of application specific functionality like ADC/DAC..
+
+
+> 
+>>>> +	switch (mc) {
+>>>> +	case SLIM_MSG_MC_REQUEST_VALUE:
+>>>> +	case SLIM_MSG_MC_REQUEST_INFORMATION:
+>>>
+>>> what does MC refer to?
+>>
+>> Message Code.
+> 
+> isnt SLIM_MSG enough :D I think we cna get rid of MC here..
+> 
+>>>> +struct slim_val_inf {
+>>>> +	u16			start_offset;
+>>>> +	u8			num_bytes;
+>>>> +	u8			*rbuf;
+>>>> +	const u8		*wbuf;
+>>>
+>>> can we do read and write, if not it can be a buf which maybe rbuf or wbug
+>>> based on type
+>> With REQUEST_CHANGE_VALUE single command we can read old value at the same
+>> time we can write new value.
+> 
+> so that is a read modify write, correct? Is that implemented in HW, if so we
+> need to provide only write value
+
+Its not really a read-modify-write,
+REQUEST_CHANGE_VALUE/REQUEST_CLEAR_INFORMATION commands are part of 
+SLIMbus Spec.
+We need provide write value + buffer for read value to store.
+
+all REQUEST_CHANGE_VALUE cmd do is this in single operation:
+
+1> save the old value
+2> update new value from wbuf
+3> return the saved value from step 1, into rbuf
+
+Not sure what is the real usecase for this, I have not seen its usage in 
+any Qualcomm downstream code.
+
+May be it can be used to implement some class of atomic ops.
