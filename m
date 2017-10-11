@@ -1,44 +1,40 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v12 4/5] ARM: dts: rockchip: add RGA device node for RK3288
-Date: Wed, 11 Oct 2017 15:29:37 +0800
-Message-ID: <20171011072938.383-5-jacob-chen@iotwrt.com>
-References: <20171011072938.383-1-jacob-chen@iotwrt.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171011072938.383-1-jacob-chen@iotwrt.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
+Date: Wed, 11 Oct 2017 09:33:36 +0200
+Message-ID: <20171011073336.GE9661@verge.net.au>
+References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
+ <9635bb2d-8695-a168-d49e-0bd51807cc19@cogentembedded.com>
+ <20171006091759.GF7734@verge.net.au>
+ <20171009071814.GO17360@verge.net.au>
+ <00c273d8-ab80-4509-5cc7-15f7b3d60568@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <00c273d8-ab80-4509-5cc7-15f7b3d60568@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the RGA dt config of rk3288 SoC.
+On Tue, Oct 10, 2017 at 07:16:38PM +0300, Vladimir Barinov wrote:
+> Hi Simon,
+> 
+> On 09.10.2017 10:18, Simon Horman wrote:
+> >On Fri, Oct 06, 2017 at 11:18:00AM +0200, Simon Horman wrote:
+> >>On Fri, Oct 06, 2017 at 05:47:25AM +0300, Vladimir Barinov wrote:
+> >>>Hi Simon, Geert,
+> >>>
+> >>>Do you need extra actions from my side to accept this patch?
+> >>Yes, I need patch 3/18.
+> >>Could you repost it?
+> >I see you have done so, thanks.
+> >
+> >I have applied this patch with Geert's tag.  I had to apply the patch
+> >manually so please check that I did so correctly once I have pushed the
+> >next branch to the renesas tree a little later today.
+> I've verified that all is correct.
+> Thank you.
 
-Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
- arch/arm/boot/dts/rk3288.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index a0a0b08bff74..8c6dfc0abc42 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -972,6 +972,17 @@
- 		status = "disabled";
- 	};
- 
-+	rga: rga@ff920000 {
-+		compatible = "rockchip,rk3288-rga";
-+		reg = <0x0 0xff920000 0x0 0x180>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-+		clock-names = "aclk", "hclk", "sclk";
-+		power-domains = <&power RK3288_PD_VIO>;
-+		resets = <&cru SRST_RGA_CORE>, <&cru SRST_RGA_AXI>, <&cru SRST_RGA_AHB>;
-+		reset-names = "core", "axi", "ahb";
-+	};
-+
- 	vopb: vop@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
- 		reg = <0x0 0xff930000 0x0 0x19c>;
--- 
-2.14.1
+Thanks for confirming.
