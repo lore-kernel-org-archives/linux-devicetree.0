@@ -1,47 +1,26 @@
-From: <gabriel.fernandez@st.com>
-Subject: [RESEND PATCH] clk: stm32h7: fix test of clock config
-Date: Wed, 11 Oct 2017 08:57:24 +0200
-Message-ID: <1507705044-30458-1-git-send-email-gabriel.fernandez@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 2/4] phy: rcar-gen3-usb2: use enum phy_mode in the
+ role_store()
+Date: Wed, 11 Oct 2017 09:29:24 +0200
+Message-ID: <20171011072924.GD9661@verge.net.au>
+References: <1507628490-7944-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1507628490-7944-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507628490-7944-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Tue, Oct 10, 2017 at 06:41:28PM +0900, Yoshihiro Shimoda wrote:
+> This patch modifies the role_store() to use "enum phy_mode" instead
+> of the local "bool" for host/device mode selection.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-fix test of composite clock config (bad copy / past)
+Thanks for the updates, this looks nice to me.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Fixes: 3e4d618b0722 ("clk: stm32h7: Add stm32h743 clock driver")
----
- drivers/clk/clk-stm32h7.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk-stm32h7.c b/drivers/clk/clk-stm32h7.c
-index a94c3f5..61c3e40 100644
---- a/drivers/clk/clk-stm32h7.c
-+++ b/drivers/clk/clk-stm32h7.c
-@@ -384,7 +384,7 @@ static void get_cfg_composite_div(const struct composite_clk_gcfg *gcfg,
- 	mux_ops = div_ops = gate_ops = NULL;
- 	mux_hw = div_hw = gate_hw = NULL;
- 
--	if (gcfg->mux && gcfg->mux) {
-+	if (gcfg->mux && cfg->mux) {
- 		mux = _get_cmux(base + cfg->mux->offset,
- 				cfg->mux->shift,
- 				cfg->mux->width,
-@@ -410,7 +410,7 @@ static void get_cfg_composite_div(const struct composite_clk_gcfg *gcfg,
- 		}
- 	}
- 
--	if (gcfg->gate && gcfg->gate) {
-+	if (gcfg->gate && cfg->gate) {
- 		gate = _get_cgate(base + cfg->gate->offset,
- 				cfg->gate->bit_idx,
- 				gcfg->gate->flags, lock);
--- 
-1.9.1
-
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
