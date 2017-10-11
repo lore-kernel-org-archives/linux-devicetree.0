@@ -1,123 +1,145 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 10/12] ARM: dts: imx6-tx6: add a .dtsi file for the MB7
- baseboard
-Date: Wed, 11 Oct 2017 13:50:33 +0200
-Message-ID: <1507722635-30801-11-git-send-email-LW@KARO-electronics.de>
-References: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+Date: Wed, 11 Oct 2017 13:55:44 +0200
+Message-ID: <20171011115544.w7eswyhke6dskgbb@flea>
+References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
+ <20170922114703.30511-3-maxime.ripard@free-electrons.com>
+ <20170929182125.GB3163@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qcs55slvibc6hjsc"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170929182125.GB3163@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-TW92ZSB0aGUgTUI3IHNwZWNpZmljIHNldHRpbmdzIHRvIGEgc2VwYXJhdGUgLmR0c2kgZmlsZSB0
-byBmYWNpbGl0YXRlCnN1cHBvcnRpbmcgbW9yZSBtb2R1bGUgdmFyaWFudHMgd2l0aCB0aGlzIGJh
-c2Vib2FyZC4KClNpZ25lZC1vZmYtYnk6IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJv
-bmljcy5kZT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9pbXg2ZGwtdHg2dS04MXh4LW1iNy5kdHMg
-fCAgOSArLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTF4MC1tYjcuZHRzICB8IDQy
-ICstLS0tLS0tLS0tLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LW1iNy5kdHNpICAg
-ICB8IDk5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAx
-MDIgaW5zZXJ0aW9ucygrKSwgNDggZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYtbWI3LmR0c2kKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2ZGwtdHg2dS04MXh4LW1iNy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXg2ZGwtdHg2dS04MXh4LW1iNy5kdHMKaW5kZXggZTQzZmYxMi4uMjFlYWVjOSAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLXR4NnUtODF4eC1tYjcuZHRzCisrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZkbC10eDZ1LTgxeHgtbWI3LmR0cwpAQCAtNDMsNiArNDMsNyBAQAog
-I2luY2x1ZGUgImlteDZkbC5kdHNpIgogI2luY2x1ZGUgImlteDZxZGwtdHg2LmR0c2kiCiAjaW5j
-bHVkZSAiaW14NnFkbC10eDYtbHZkcy5kdHNpIgorI2luY2x1ZGUgImlteDZxZGwtdHg2LW1iNy5k
-dHNpIgogCiAvIHsKIAltb2RlbCA9ICJLYS1SbyBlbGVjdHJvbmljcyBUWDZVLTgxeHggTW9kdWxl
-IG9uIE1CNyBiYXNlYm9hcmQiOwpAQCAtNTgsMTEgKzU5LDMgQEAKIAlwd21zID0gPCZwd20xIDAg
-NTAwMDAwIFBXTV9QT0xBUklUWV9JTlZFUlRFRD47CiAJdHVybi1vbi1kZWxheS1tcyA9IDwzNT47
-CiB9OwotCi0mY2FuMSB7Ci0Jc3RhdHVzID0gImRpc2FibGVkIjsKLX07Ci0KLSZjYW4yIHsKLQl4
-Y2VpdmVyLXN1cHBseSA9IDwmcmVnXzN2Mz47Ci19OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnEtdHg2cS0xMXgwLW1iNy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cS10
-eDZxLTExeDAtbWI3LmR0cwppbmRleCA5NjQ4YzIxLi4zODdlZGYyIDEwMDY0NAotLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExeDAtbWI3LmR0cworKysgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg2cS10eDZxLTExeDAtbWI3LmR0cwpAQCAtNDAsNDcgKzQwLDkgQEAKICAqLwogCiAv
-ZHRzLXYxLzsKLSNpbmNsdWRlICJpbXg2cS5kdHNpIgotI2luY2x1ZGUgImlteDZxZGwtdHg2LmR0
-c2kiCi0jaW5jbHVkZSAiaW14NnFkbC10eDYtbHZkcy5kdHNpIgorI2luY2x1ZGUgImlteDZxLXR4
-NnEtMTExMC5kdHMiCisjaW5jbHVkZSAiaW14NnFkbC10eDYtbWI3LmR0c2kiCiAKIC8gewogCW1v
-ZGVsID0gIkthLVJvIGVsZWN0cm9uaWNzIFRYNlEtMTExMC8tMTEzMCBNb2R1bGUgb24gTUI3IGJh
-c2Vib2FyZCI7Ci0JY29tcGF0aWJsZSA9ICJrYXJvLGlteDZxLXR4NnEiLCAiZnNsLGlteDZxIjsK
-LX07Ci0KLSZiYWNrbGlnaHQwIHsKLQlwd21zID0gPCZwd20yIDAgNTAwMDAwIFBXTV9QT0xBUklU
-WV9JTlZFUlRFRD47Ci0JdHVybi1vbi1kZWxheS1tcyA9IDwzNT47Ci0JcG93ZXItc3VwcGx5ID0g
-PCZyZWdfbGNkMV9wd3I+OwotfTsKLQotJmJhY2tsaWdodDEgewotCXB3bXMgPSA8JnB3bTEgMCA1
-MDAwMDAgUFdNX1BPTEFSSVRZX0lOVkVSVEVEPjsKLQl0dXJuLW9uLWRlbGF5LW1zID0gPDM1PjsK
-LQlwb3dlci1zdXBwbHkgPSA8JnJlZ19sY2QxX3B3cj47Ci19OwotCi0mY2FuMSB7Ci0Jc3RhdHVz
-ID0gImRpc2FibGVkIjsKLX07Ci0KLSZjYW4yIHsKLQl4Y2VpdmVyLXN1cHBseSA9IDwmcmVnXzN2
-Mz47Ci19OwotCi0maXB1MiB7Ci0Jc3RhdHVzID0gImRpc2FibGVkIjsKLX07Ci0KLSZsdmRzMF9w
-YW5lbCB7Ci0JY29tcGF0aWJsZSA9ICJlZHQsZXQwNTcwOTBkaHUiOwotfTsKLQotJmx2ZHMxX3Bh
-bmVsIHsKLQljb21wYXRpYmxlID0gImVkdCxldDA1NzA5MGRodSI7Ci19OwotCi0mc2F0YSB7Ci0J
-c3RhdHVzID0gIm9rYXkiOwogfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZx
-ZGwtdHg2LW1iNy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYtbWI3LmR0c2kK
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNGM0ZTJlMQotLS0gL2Rldi9udWxs
-CisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LW1iNy5kdHNpCkBAIC0wLDAgKzEs
-OTkgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAxNyBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxl
-Y3Ryb25pY3MuZGU+CisgKgorICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4g
-dXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKKyAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBs
-aWNlbnNlLCBhdCB5b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAorICogbGljZW5zaW5n
-IG9ubHkgYXBwbGllcyB0byB0aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0IGFzIGEKKyAq
-IHdob2xlLgorICoKKyAqICBhKSBUaGlzIGZpbGUgaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiBy
-ZWRpc3RyaWJ1dGUgaXQgYW5kL29yCisgKiAgICAgbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBv
-ZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UKKyAqICAgICB2ZXJzaW9uIDIgYXMgcHVi
-bGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCisgKgorICogICAgIFRoaXMg
-ZmlsZSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLAor
-ICogICAgIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVk
-IHdhcnJhbnR5IG9mCisgKiAgICAgTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFS
-VElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQorICogICAgIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNl
-bnNlIGZvciBtb3JlIGRldGFpbHMuCisgKgorICogT3IsIGFsdGVybmF0aXZlbHksCisgKgorICog
-IGIpIFBlcm1pc3Npb24gaXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkg
-cGVyc29uCisgKiAgICAgb2J0YWluaW5nIGEgY29weSBvZiB0aGlzIHNvZnR3YXJlIGFuZCBhc3Nv
-Y2lhdGVkIGRvY3VtZW50YXRpb24KKyAqICAgICBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBk
-ZWFsIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0CisgKiAgICAgcmVzdHJpY3Rpb24sIGluY2x1ZGlu
-ZyB3aXRob3V0IGxpbWl0YXRpb24gdGhlIHJpZ2h0cyB0byB1c2UsCisgKiAgICAgY29weSwgbW9k
-aWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yCisgKiAg
-ICAgc2VsbCBjb3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8g
-d2hvbSB0aGUKKyAqICAgICBTb2Z0d2FyZSBpcyBmdXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3Qg
-dG8gdGhlIGZvbGxvd2luZworICogICAgIGNvbmRpdGlvbnM6CisgKgorICogICAgIFRoZSBhYm92
-ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJlCisg
-KiAgICAgaW5jbHVkZWQgaW4gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0
-aGUgU29mdHdhcmUuCisgKgorICogICAgIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMi
-LCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFOWSBLSU5ELAorICogICAgIEVYUFJFU1MgT1IgSU1QTElF
-RCwgSU5DTFVESU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFOVElFUworICogICAgIE9G
-IE1FUkNIQU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5ECisg
-KiAgICAgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBD
-T1BZUklHSFQKKyAqICAgICBIT0xERVJTIEJFIExJQUJMRSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VT
-IE9SIE9USEVSIExJQUJJTElUWSwKKyAqICAgICBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05U
-UkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcKKyAqICAgICBGUk9NLCBPVVQgT0YgT1Ig
-SU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SCisgKiAgICAgT1RI
-RVIgREVBTElOR1MgSU4gVEhFIFNPRlRXQVJFLgorICovCisKKy8geworCWJhY2tsaWdodDAgewor
-CQlwd21zID0gPCZwd20xIDAgNTAwMDAwIFBXTV9QT0xBUklUWV9JTlZFUlRFRD47CisJCXR1cm4t
-b24tZGVsYXktbXMgPSA8MzU+OworCQlwb3dlci1zdXBwbHkgPSA8JnJlZ19sY2QxX3B3cj47CisJ
-fTsKKworCWJhY2tsaWdodDEgeworCQlwd21zID0gPCZwd20yIDAgNTAwMDAwIFBXTV9QT0xBUklU
-WV9JTlZFUlRFRD47CisJCXR1cm4tb24tZGVsYXktbXMgPSA8MzU+OworCQlwb3dlci1zdXBwbHkg
-PSA8JnJlZ19sY2QxX3B3cj47CisJfTsKKworCWxjZC1wYW5lbCB7CisJCWNvbXBhdGlibGUgPSAi
-ZWR0LGV0MDU3MDkwZGh1IjsKKwkJYnVzLWZvcm1hdC1vdmVycmlkZSA9ICJyZ2IyNCI7CisJCXBp
-eGVsY2xrLWFjdGl2ZSA9IDwwPjsKKwl9OworCisJbHZkczAtcGFuZWwgeworCQljb21wYXRpYmxl
-ID0gImVkdCxldG1sMTAxMGcwZGthIjsKKwkJYnVzLWZvcm1hdC1vdmVycmlkZSA9ICJzcHdnLTE4
-IjsKKwkJcGl4ZWxjbGstYWN0aXZlID0gPDA+OworCX07CisKKwlsdmRzMS1wYW5lbCB7CisJCWNv
-bXBhdGlibGUgPSAiZWR0LGV0bWwxMDEwZzBka2EiOworCQlidXMtZm9ybWF0LW92ZXJyaWRlID0g
-InNwd2ctMTgiOworCQlwaXhlbGNsay1hY3RpdmUgPSA8MD47CisJfTsKK307CisKKyZjYW4xIHsK
-KwlzdGF0dXMgPSAiZGlzYWJsZWQiOworfTsKKworJmNhbjIgeworCXhjZWl2ZXItc3VwcGx5ID0g
-PCZyZWdfM3YzPjsKK307CisKKyZkczEzMzkgeworCS8qCisJICogVGhlIGJhY2t1cCB2b2x0YWdl
-IG9mIHRoZSBtb2R1bGUgaW50ZXJuYWwgUlRDIGlzIG5vdCB3aXJlZAorCSAqIGJ5IGRlZmF1bHQg
-b24gdGhlIE1CNywgc28gZGlzYWJsZSB0aGF0IFJUQyBjaGlwLgorCSAqLworCXN0YXR1cyA9ICJk
-aXNhYmxlZCI7Cit9OworCismaTJjMyB7CisJcnRjOiBtY3A3OTQweEA2ZiB7CisJCWNvbXBhdGli
-bGUgPSAibWljcm9jaGlwLG1jcDc5NDB4IjsKKwkJcmVnID0gPDB4NmY+OworCX07Cit9OworCism
-cmVnX2xjZDBfcHdyIHsKKwlzdGF0dXMgPSAiZGlzYWJsZWQiOworfTsKLS0gCjIuMS40CgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+
+--qcs55slvibc6hjsc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Benoit,
+
+On Fri, Sep 29, 2017 at 06:21:25PM +0000, Benoit Parrot wrote:
+> > +struct csi2tx_priv {
+> > +	struct device			*dev;
+> > +	atomic_t			count;
+> > +
+> > +	void __iomem			*base;
+> > +
+> > +	struct clk			*esc_clk;
+> > +	struct clk			*p_clk;
+> > +	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
+> > +
+> > +	struct v4l2_subdev		subdev;
+> > +	struct media_pad		pads[CSI2TX_PAD_MAX];
+> > +	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
+> > +
+> > +	bool				has_internal_dphy;
+>=20
+> I assume dphy support is for a subsequent revision?
+
+Yes, the situation is similar to the CSI2-RX driver.
+
+> > +		/*
+> > +		 * We use the stream ID there, but it's wrong.
+> > +		 *
+> > +		 * A stream could very well send a data type that is
+> > +		 * not equal to its stream ID. We need to find a
+> > +		 * proper way to address it.
+> > +		 */
+>=20
+> I don't quite get the above comment, from the code below it looks like
+> you are using the current fmt as a source to provide the correct DT.
+> Am I missing soemthing?
+
+Yes, so far the datatype is inferred from the format set. Is there
+anything wrong with that?
+
+>=20
+> > +		writel(CSI2TX_DT_CFG_DT(fmt->dt),
+> > +		       csi2tx->base + CSI2TX_DT_CFG_REG(stream));
+> > +
+> > +		writel(CSI2TX_DT_FORMAT_BYTES_PER_LINE(mfmt->width * fmt->bpp) |
+> > +		       CSI2TX_DT_FORMAT_MAX_LINE_NUM(mfmt->height + 1),
+> > +		       csi2tx->base + CSI2TX_DT_FORMAT_REG(stream));
+> > +
+> > +		/*
+> > +		 * TODO: This needs to be calculated based on the
+> > +		 * clock rate.
+> > +		 */
+> > +		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
+> > +		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
+> > +	}
+> > +
+> > +	/* Disable the configuration mode */
+> > +	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int csi2tx_stop(struct csi2tx_priv *csi2tx)
+> > +{
+> > +	/*
+> > +	 * Let the last user turn off the lights
+> > +	 */
+> > +	if (!atomic_dec_and_test(&csi2tx->count))
+> > +		return 0;
+> > +
+> > +	/* FIXME: Disable the IP here */
+> > +
+> > +	return 0;
+> > +}
+>=20
+> At this point both _start() and _stop() only return 0.
+> Are there any cases where any of these might fail to "start" or "stop"?
+
+None that I know of.
+
+There might be some errors with the video stream itself, but that
+can be detected after the block has been enabled.
+
+> > +	csi2tx->lanes =3D csi2tx_get_num_lanes(&pdev->dev);
+> > +	if (csi2tx->lanes < 0) {
+> > +		dev_err(&pdev->dev, "Invalid number of lanes, bailing out.\n");
+> > +		ret =3D csi2tx->lanes;
+> > +		goto err_free_priv;
+> > +	}
+>=20
+> csi2tx->lanes is unsigned so it will never be negative.
+
+Ah, right, I'll change that.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--qcs55slvibc6hjsc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZ3gbAAAoJEBx+YmzsjxAg6gwP/1UIcPeIKkTMuiGKIJ69FZfv
+bVTujMQd1GfxVLqev+0RW3iVw+XUjpf9GHSVWv61ip1dSWIwd4N0mNzdHyJkAbrF
+NWsE0II7OYoCMqs2uYDVnQM/C/8R22s0Q6laVKPzyEnXRF6RBYiRjIGlFac71Iik
+AKRWy/fxu653ZfPvQ9PbLQVuoMhM8/kxgRqdNqtG8Lo83t53Rx7xcTntJ1p3azLC
+7zL/+g+06kOct1a2kfd8L5CCET2C/GRwnwcNdeWEUg8ZwVHxnRidMjqDDvdIfYvY
+MbORToUsKs/ri/82v6ZZKmpTweMngs+FhhANnaO9jg5nLV0yxULY31/pZujmr6Ds
+k7rZD4XcKWYN4yied6JrWDF2dfurTN0noaC8xJcRYoupHWEPqlY40zJxbOmjUl1l
+AX35HENCqCUfntQiEfH5gGTyjXb5ZvLnLjdWz/Gp3KONvNelMn6fUULL20JdScg0
+n4HB64jgc3NB5JUmXzkL6rW8HcfS+/daIvarTf0lQSxQNvCLmYOLTZsqIKKiyBvB
+h7+dGVLAot+KqsLq04hezKAOEUzaDewhYGsvjlAgeJ+ae3oj1GnJBP/YRrPDmEcw
+1tpuFyS9QklgZ3Zc20jRPiUiGKsZieQFKftFm9vCKsYKSajFJDGdOOdUJ27i+bHE
+FwdnVpQwU1r1b7r+s/Yg
+=w8B1
+-----END PGP SIGNATURE-----
+
+--qcs55slvibc6hjsc--
