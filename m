@@ -1,60 +1,56 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v3 00/10] update MT7623 and MT2701 dts
-Date: Wed, 11 Oct 2017 17:02:31 +0800
-Message-ID: <1507712551.13764.7.camel@mtkswgap22>
-References: <cover.1506908511.git.ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1506908511.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2] ARM: dts: iwg20d-q7: Enable HS-USB
+Date: Wed, 11 Oct 2017 10:04:33 +0100
+Message-ID: <1507712673-57370-1-git-send-email-biju.das@bp.renesas.com>
+References: <20171010073057.GK2518@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171010073057.GK2518@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Enable HS-USB device for the iWave G20D-Q7 carrier board based on
+RZ/G1M.
+Also disable the host mode support on usb otg port by default to avoid
+pin conflicts.
 
-How does this series look to you?
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+v1-->v2 
+    * Dropped "status" property,to disable host mode support on USB otg 
+      port by default.
 
+This patch has been tested against renesas-dev tag 20171011-v4.14-rc4.
 
-On Mon, 2017-10-02 at 09:54 +0800, Ryder Lee wrote:
-> Hi Matthias,
-> 
-> This patch series adds/corrects some device nodes for both MT7623 and MT2701.
-> 
-> changes since v3:
-> - revert PIO register space.
-> 
-> changes since v2:
-> - move non-common part and non-display related nodes to different patches.
-> - remove unused wdma node.
-> - add display related nodes for MT2701.
-> 
-> changes since v1:
-> - rebase to v4.14.
-> - sort nodes in alphabetical order
-> 
-> Ryder Lee (7):
->   arm: dts: mediatek: update audio node for mt2701 and mt7623
->   arm: dts: mt7623: update pio, usb and crypto nodes
->   arm: dts: mt7623: add subsystem clock controller nodes
->   arm: dts: mt7623: add iommu and jpecdec nodes
->   arm: dts: mt7623: add display subsystem related nodes
->   arm: dts: mt7623: enable bananapi-r2 display function
->   arm: dts: mt7623: add PCIe related nodes
-> 
-> Weiqing Kong (2):
->   arm: dts: mt2701: add pwm backlight device node
->   arm: dts: mt2701: enable display pwm backlight
-> 
-> YT Shen (1):
->   arm: dts: mt2701: add display subsystem related nodes
-> 
->  arch/arm/boot/dts/mt2701-evb.dts              |  23 ++
->  arch/arm/boot/dts/mt2701.dtsi                 |  88 ++++++-
->  arch/arm/boot/dts/mt7623.dtsi                 | 338 +++++++++++++++++++++++++-
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  71 +++++-
->  include/dt-bindings/pinctrl/mt7623-pinfunc.h  |  12 +
->  5 files changed, 516 insertions(+), 16 deletions(-)
-> 
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+index 1c072c0..efd8af9 100644
+--- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
++++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+@@ -58,6 +58,12 @@
+ 	};
+ };
+ 
++&hsusb {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
++
+ &i2c2 {
+ 	pinctrl-0 = <&i2c2_pins>;
+ 	pinctrl-names = "default";
+@@ -72,7 +78,6 @@
+ };
+ 
+ &pci0 {
+-	status = "okay";
+ 	pinctrl-0 = <&usb0_pins>;
+ 	pinctrl-names = "default";
+ };
+-- 
+1.9.1
