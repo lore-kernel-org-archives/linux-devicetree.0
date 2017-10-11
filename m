@@ -1,43 +1,63 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 09/12] ARM: dts: imx6-tx6: move display configuration to
- .dtsi file
-Date: Wed, 11 Oct 2017 17:11:49 +0200
-Message-ID: <1507734709.22082.5.camel@pengutronix.de>
-References: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
-         <1507722635-30801-10-git-send-email-LW@KARO-electronics.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: dra7-evm: Move pcie RC node to common file
+Date: Wed, 11 Oct 2017 08:44:48 -0700
+Message-ID: <20171011154447.GY4394@atomide.com>
+References: <20171011080430.13160-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507722635-30801-10-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171011080430.13160-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, Ravikumar Kattekola <rk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lothar,
-
-On Wed, 2017-10-11 at 13:50 +0200, Lothar Waßmann wrote:
-> Currently the display (LCD or LVDS) configuration is duplicated with
-> slight variations in each TX6 module specific file.
+* Kishon Vijay Abraham I <kishon@ti.com> [171011 01:06]:
+> From: Ravikumar Kattekola <rk@ti.com>
 > 
-> Move it to an include file for simplification and consistency.
+> Move the pcie_rc node to common file so that it can be
+> used by dra76-evm as well.
 > 
-> Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> Signed-off-by: Ravikumar Kattekola <rk@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 
-This is much appreciated,
+Can you please resend this with your Signed-off-by also
+since you're the one sending it out?
 
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Regards,
 
-This patch does conflict with Marco's "ARM: dts: imx: Fix incorrect
-display nodes notation" patch [1], which renames the display@di0 nodes
-to disp0. Assuming it gets merged as-is, maybe rebase on top of that?
+Tony
 
-[1] https://patchwork.kernel.org/patch/9987341/
-
-regards
-Philipp
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  arch/arm/boot/dts/dra7-evm-common.dtsi | 4 ++++
+>  arch/arm/boot/dts/dra7-evm.dts         | 4 ----
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> index 343e95f9a001..e088bb93636a 100644
+> --- a/arch/arm/boot/dts/dra7-evm-common.dtsi
+> +++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> @@ -256,3 +256,7 @@
+>  		status = "okay";
+>  	};
+>  };
+> +
+> +&pcie1_rc {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+> index aa426dabb6c3..ef9c90daa74b 100644
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -497,7 +497,3 @@
+>  	pinctrl-1 = <&dcan1_pins_sleep>;
+>  	pinctrl-2 = <&dcan1_pins_default>;
+>  };
+> -
+> -&pcie1_rc {
+> -	status = "okay";
+> -};
+> -- 
+> 2.11.0
+> 
