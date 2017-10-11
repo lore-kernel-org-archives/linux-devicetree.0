@@ -1,236 +1,60 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 11/12] ARM: dts: imx: add support for TX6QP
-Date: Wed, 11 Oct 2017 13:50:34 +0200
-Message-ID: <1507722635-30801-12-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 01/12] ARM: dts: imx6-tx6: update model property to match
+ current module HW revision
+Date: Wed, 11 Oct 2017 13:50:24 +0200
+Message-ID: <1507722635-30801-2-git-send-email-LW@KARO-electronics.de>
 References: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-The TX6QP-8037 is a Computer On Module manufactured by
-  Ka-Ro electronics GmbH with the following characteristics:
-  Processor    Freescale i.MX 6QuadPlus MCIMX6QP7, 1 GHz
-  RAM          1GiB 64-bit DDR3 SDRAM
-  ROM          4GB HiRel eMMC
-  Power supply Single 3.3 to 5V
-  Size         26mm SO-DIMM
-  Temp. Range  -40°C to 105°C
-
-Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
----
- arch/arm/boot/dts/Makefile              |  2 +
- arch/arm/boot/dts/imx6qp-tx6qp-8037.dts | 86 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qp-tx6qp-8137.dts | 90 +++++++++++++++++++++++++++++++++
- 3 files changed, 178 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6qp-tx6qp-8037.dts
- create mode 100644 arch/arm/boot/dts/imx6qp-tx6qp-8137.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35..0672369 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -451,6 +451,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6qp-nitrogen6_som2.dtb \
- 	imx6qp-sabreauto.dtb \
- 	imx6qp-sabresd.dtb \
-+	imx6qp-tx6qp-8037.dtb \
-+	imx6qp-tx6qp-8137.dtb \
- 	imx6qp-zii-rdu2.dtb
- dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
-diff --git a/arch/arm/boot/dts/imx6qp-tx6qp-8037.dts b/arch/arm/boot/dts/imx6qp-tx6qp-8037.dts
-new file mode 100644
-index 0000000..ffc0f2e
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qp-tx6qp-8037.dts
-@@ -0,0 +1,86 @@
-+/*
-+ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "imx6qp.dtsi"
-+#include "imx6qdl-tx6.dtsi"
-+#include "imx6qdl-tx6-lcd.dtsi"
-+
-+/ {
-+	model = "Ka-Ro electronics TX6QP-8037 Module";
-+	compatible = "karo,imx6qp-tx6qp", "fsl,imx6qp";
-+};
-+
-+&ds1339 {
-+	status = "disabled";
-+};
-+
-+&gpmi {
-+	status = "disabled";
-+};
-+
-+&ipu2 {
-+	status = "disabled";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <4>;
-+	non-removable;
-+	no-1-8-v;
-+	fsl,wp-controller;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_usdhc4: usdhc4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD		0x070b1
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK		0x070b1
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0		0x070b1
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1		0x070b1
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2		0x070b1
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3		0x070b1
-+			MX6QDL_PAD_NANDF_ALE__SD4_RESET		0x0b0b1
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6qp-tx6qp-8137.dts b/arch/arm/boot/dts/imx6qp-tx6qp-8137.dts
-new file mode 100644
-index 0000000..dd494d5
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qp-tx6qp-8137.dts
-@@ -0,0 +1,90 @@
-+/*
-+ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "imx6qp.dtsi"
-+#include "imx6qdl-tx6.dtsi"
-+#include "imx6qdl-tx6-lvds.dtsi"
-+
-+/ {
-+	model = "Ka-Ro electronics TX6QP-8137 Module";
-+	compatible = "karo,imx6qp-tx6qp", "fsl,imx6qp";
-+};
-+
-+&ds1339 {
-+	status = "disabled";
-+};
-+
-+&gpmi {
-+	status = "disabled";
-+};
-+
-+&ipu2 {
-+	status = "disabled";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <4>;
-+	non-removable;
-+	no-1-8-v;
-+	fsl,wp-controller;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_usdhc4: usdhc4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD		0x070b1
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK		0x070b1
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0		0x070b1
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1		0x070b1
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2		0x070b1
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3		0x070b1
-+			MX6QDL_PAD_NANDF_ALE__SD4_RESET		0x0b0b1
-+		>;
-+	};
-+};
--- 
-2.1.4
+VGhlIGN1cnJlbnQgVFg2USBtb2R1bGUgSFcgcmV2aXNpb24gaXMgMyByZWZsZWN0ZWQgaW4gdGhl
+IG1vZHVsZSBuYW1lCnN1ZmZpeCAnLTEwMzAnICgtMTEzMCBmb3IgTFZEUykuCkNoYW5nZSB0aGUg
+bW9kZWwgc3RyaW5nIHRvIHByZXZlbnQgY29uZnVzaW9uIGFib3V0IHdoYXQgRFRTIGZpbGUgdG8K
+dXNlIGZvciB0aGVzZSBtb2R1bGVzLgoKU2lnbmVkLW9mZi1ieTogTG90aGFyIFdhw59tYW5uIDxM
+V0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEt
+MTAxMC5kdHMgfCA0ICsrLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTExMC5kdHMg
+fCA0ICsrLS0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygt
+KQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTAxMC5kdHMgYi9h
+cmNoL2FybS9ib290L2R0cy9pbXg2cS10eDZxLTEwMTAuZHRzCmluZGV4IGY5Y2QyMWEuLjU0YmM0
+NDIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTAxMC5kdHMKKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtdHg2cS0xMDEwLmR0cwpAQCAtMSw1ICsxLDUgQEAK
+IC8qCi0gKiBDb3B5cmlnaHQgMjAxNC0yMDE2IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVj
+dHJvbmljcy5kZT4KKyAqIENvcHlyaWdodCAyMDE0LTIwMTcgTG90aGFyIFdhw59tYW5uIDxMV0BL
+QVJPLWVsZWN0cm9uaWNzLmRlPgogICoKICAqIFRoaXMgZmlsZSBpcyBkdWFsLWxpY2Vuc2VkOiB5
+b3UgY2FuIHVzZSBpdCBlaXRoZXIgdW5kZXIgdGhlIHRlcm1zCiAgKiBvZiB0aGUgR1BMIG9yIHRo
+ZSBYMTEgbGljZW5zZSwgYXQgeW91ciBvcHRpb24uIE5vdGUgdGhhdCB0aGlzIGR1YWwKQEAgLTQ0
+LDcgKzQ0LDcgQEAKICNpbmNsdWRlICJpbXg2cWRsLXR4Ni5kdHNpIgogCiAvIHsKLQltb2RlbCA9
+ICJLYS1SbyBlbGVjdHJvbmljcyBUWDZRLTEwMTAgTW9kdWxlIjsKKwltb2RlbCA9ICJLYS1SbyBl
+bGVjdHJvbmljcyBUWDZRLTEwMTAvLTEwMzAgTW9kdWxlIjsKIAljb21wYXRpYmxlID0gImthcm8s
+aW14NnEtdHg2cSIsICJmc2wsaW14NnEiOwogCiAJYWxpYXNlcyB7CmRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExMTAuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnEtdHg2cS0xMTEwLmR0cwppbmRleCAwNDMzZTIyLi4wZjVlNjM4IDEwMDY0NAotLS0gYS9hcmNo
+L2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExMTAuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZxLXR4NnEtMTExMC5kdHMKQEAgLTEsNSArMSw1IEBACiAvKgotICogQ29weXJpZ2h0IDIw
+MTQtMjAxNiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+CisgKiBDb3B5
+cmlnaHQgMjAxNC0yMDE3IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4K
+ICAqCiAgKiBUaGlzIGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNhbiB1c2UgaXQgZWl0aGVy
+IHVuZGVyIHRoZSB0ZXJtcwogICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlv
+dXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsCkBAIC00NCw3ICs0NCw3IEBACiAjaW5jbHVk
+ZSAiaW14NnFkbC10eDYuZHRzaSIKIAogLyB7Ci0JbW9kZWwgPSAiS2EtUm8gZWxlY3Ryb25pY3Mg
+VFg2US0xMTEwIE1vZHVsZSI7CisJbW9kZWwgPSAiS2EtUm8gZWxlY3Ryb25pY3MgVFg2US0xMTEw
+Ly0xMTMwIE1vZHVsZSI7CiAJY29tcGF0aWJsZSA9ICJrYXJvLGlteDZxLXR4NnEiLCAiZnNsLGlt
+eDZxIjsKIAogCWFsaWFzZXMgewotLSAKMi4xLjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
