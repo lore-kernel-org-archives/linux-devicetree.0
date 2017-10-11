@@ -1,56 +1,32 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2] ARM: dts: iwg20d-q7: Enable HS-USB
-Date: Wed, 11 Oct 2017 10:04:33 +0100
-Message-ID: <1507712673-57370-1-git-send-email-biju.das@bp.renesas.com>
-References: <20171010073057.GK2518@verge.net.au>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171010073057.GK2518@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 2/2] dt-bindings: iio: health: Use binding name for max30102 in example
+Date: Wed, 11 Oct 2017 11:09:08 +0200
+Message-ID: <1507712948-29300-2-git-send-email-pmeerw@pmeerw.net>
+References: <1507712948-29300-1-git-send-email-pmeerw@pmeerw.net>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507712948-29300-1-git-send-email-pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable HS-USB device for the iWave G20D-Q7 carrier board based on
-RZ/G1M.
-Also disable the host mode support on usb otg port by default to avoid
-pin conflicts.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+Signed-off-by: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 ---
-v1-->v2 
-    * Dropped "status" property,to disable host mode support on USB otg 
-      port by default.
+ Documentation/devicetree/bindings/iio/health/max30102.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch has been tested against renesas-dev tag 20171011-v4.14-rc4.
-
- arch/arm/boot/dts/iwg20d-q7-common.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-index 1c072c0..efd8af9 100644
---- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-+++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-@@ -58,6 +58,12 @@
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/iio/health/max30102.txt b/Documentation/devicetree/bindings/iio/health/max30102.txt
+index c695e7c..8629c18 100644
+--- a/Documentation/devicetree/bindings/iio/health/max30102.txt
++++ b/Documentation/devicetree/bindings/iio/health/max30102.txt
+@@ -20,7 +20,7 @@ Optional properties:
  
-+&hsusb {
-+	status = "okay";
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &i2c2 {
- 	pinctrl-0 = <&i2c2_pins>;
- 	pinctrl-names = "default";
-@@ -72,7 +78,6 @@
- };
+ Example:
  
- &pci0 {
--	status = "okay";
- 	pinctrl-0 = <&usb0_pins>;
- 	pinctrl-names = "default";
- };
+-max30100@57 {
++max30102@57 {
+ 	compatible = "maxim,max30102";
+ 	reg = <0x57>;
+ 	maxim,red-led-current-microamp = <7000>;
 -- 
-1.9.1
+2.7.4
