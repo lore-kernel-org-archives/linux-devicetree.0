@@ -1,43 +1,107 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 1/2] pinctrl: rza1: add support for RZ/A1L
-Date: Wed, 11 Oct 2017 11:36:03 +0200
-Message-ID: <CAMuHMdWPKm2PxrbZGrZcVXxC4=nUaB_s1U4zH=5WBRkPjO9Mfw@mail.gmail.com>
-References: <20171004210724.59797-1-chris.brandt@renesas.com>
- <20171004210724.59797-2-chris.brandt@renesas.com> <CACRpkdaQf=O19op+0kWHtsfHps80JQZbXT+ajVxQMtHZ_Te7bQ@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v6 2/2] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Wed, 11 Oct 2017 18:38:48 +0900
+Message-ID: <CAK7LNARQa59mQfj8ZQDp9Dig7vCi9xUhCcasYnObUmGry7X9YA@mail.gmail.com>
+References: <1506480022-8995-1-git-send-email-yamada.masahiro@socionext.com>
+ <1506480022-8995-3-git-send-email-yamada.masahiro@socionext.com> <CACRpkdYRwwAVY2JuwB8goOfOJG2w0agoMwA1dFDaKA1RN=q+fw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaQf=O19op+0kWHtsfHps80JQZbXT+ajVxQMtHZ_Te7bQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYRwwAVY2JuwB8goOfOJG2w0agoMwA1dFDaKA1RN=q+fw@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+2017-10-11 17:40 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
 
-On Sat, Oct 7, 2017 at 1:19 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Oct 4, 2017 at 11:07 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
->> Aspects like the number of ports and the location where peripherals are
->> brought out differ between the RZ/A1H and RZ/A1L.
->>
->> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
->> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->> ---
->> v2:
->>  * added Reviewed-by
 >
-> Looks good, I expect Geert to queue this for me with a pull
-> request like with other Renesas stuff.
+>> +++ b/include/dt-bindings/gpio/uniphier-gpio.h
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + * Copyright (C) 2017 Socionext Inc.
+>> + *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_GPIO_UNIPHIER_H
+>> +#define _DT_BINDINGS_GPIO_UNIPHIER_H
+>> +
+>> +#define UNIPHIER_GPIO_LINES_PER_BANK   8
+>> +
+>> +#define UNIPHIER_GPIO_IRQ_OFFSET       ((UNIPHIER_GPIO_LINES_PER_BANK) * 15)
+>> +
+>> +#define UNIPHIER_GPIO_PORT(bank, line) \
+>> +                       ((UNIPHIER_GPIO_LINES_PER_BANK) * (bank) + (line))
+>> +
+>> +#define UNIPHIER_GPIO_IRQ(n)           ((UNIPHIER_GPIO_IRQ_OFFSET) + (n))
+>> +
+>> +#endif /* _DT_BINDINGS_GPIO_UNIPHIER_H */
+>
+> I do not understand what some of these things are doing in the
+> device tree header file.
+> It just looks creepingly similar to some of the magic I've seen
+> in board files.
 
-Thank you, your wish my command.
+Because this hardware design is crazy crap.
 
-Gr{oetje,eeting}s,
+Only the one's place of the GPIO labels is octal.
+The other places are decimal.
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> It makes much more sense that the device trees either:
+>
+> - Use the interrupts as a flat array 0...N across all banks
+
+I think I did so.
+
+But, please note only bank 15, 16, 17 can support irq.
+(and bank 15, 16, 17 share the same irq control register)
+
+No irq support for bank 0-14, 18-31.
+
+No symmetry in the hardware structure.
+
+
+> - Model each bank as a separate GPIO chip
+
+No, no, never.
+I had already tried per-bank splitting approach,
+but it was a horrible disaster.
+
+Please note there would end up 31 banks if it were split.
+(31 nodes in DT)
+
+What is worse, registers from different banks interleave,
+and, in some places, share the same registers.
+
+
+
+> This is somewhere inbetween, you are modeling it as a single
+> gpiochip but still not, becuase the device tree author still need
+> to address banking, that is confusing.
+
+This is the best solution I found.
+
+
+
+Unfortunately, the hardware specification adopts weird GPIO pin labeling.
+The ports are named as
+  PORT00,  PORT01,  PORT02,  ..., PORT07,
+  PORT10,  PORT11,  PORT12,  ..., PORT17,
+  PORT20,  PORT21,  PORT22,  ..., PORT27,
+    ...
+  PORT90,  PORT91,  PORT92,  ..., PORT97,
+  PORT100, PORT101, PORT102, ..., PORT107,
+   ...
+
+
+No PORT08, PORT09, ...
+As I said above, only the one's place is octal.
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
