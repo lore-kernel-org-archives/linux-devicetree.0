@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 3/9] drm/panel: simple: make it possible to override LCD bus format
-Date: Wed, 11 Oct 2017 13:23:35 +0200
-Message-ID: <1507721021-28174-4-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 9/9] drm/panel: simple: add support for EDT ET1010G0DSA/ETML1010G0DKA 10.1" WXGA LVDS panels
+Date: Wed, 11 Oct 2017 13:23:41 +0200
+Message-ID: <1507721021-28174-10-git-send-email-LW@KARO-electronics.de>
 References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,111 +13,86 @@ To: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob He
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-The baseboards for the Ka-Ro electronics series of i.MX modules
-use a 24bit LCD interface, no matter what LCD bus width the SoC on the
-module provides and what the LCD panel expects. LCDs with 6bit per color
-will ignore the 2 LSBs of each color lane, and modules using a SoC
-that provides only 6bit per color, drive the display information on the
-6 MSBs of each color lane and tie the 2 LSBs of each color lane to GND.
-
-Thus, no matter what combination of LCD and SoC is used, the LCD port
-can be used without shuffling bit lanes by always configuring the LCD
-output to 24bit mode.
-
-Add a function to handle certain quirks of the LCD interface to the
-panel driver to be able to override the bus format specified in a
-panel's display_mode.
+This adds support for the Emerging Display Technologies Corporation
+10.1" WXGA LVDS panel ET1010G0DSA (without a touch panel) and
+ETML1010G0DKA (with capacitive touch panel).
 
 Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
 ---
- .../bindings/display/panel/simple-panel.txt        |  2 ++
- drivers/gpu/drm/panel/panel-simple.c               | 40 +++++++++++++++++++++-
- 2 files changed, 41 insertions(+), 1 deletion(-)
+ .../bindings/display/panel/edt,et1010g0dsa.txt     |  7 +++++++
+ .../bindings/display/panel/edt,etml1010g0dka.txt   |  9 +++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 22 ++++++++++++++++++++++
+ 3 files changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/edt,et1010g0dsa.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/edt,etml1010g0dka.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-index 1341bbf..e2308c3 100644
---- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-+++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-@@ -7,6 +7,8 @@ Optional properties:
- - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
- - enable-gpios: GPIO pin to enable or disable the panel
- - backlight: phandle of the backlight device attached to the panel
-+- bus-format-override: override the bus_format setting of the panel's
-+  display_mode settings
- 
- Example:
- 
+diff --git a/Documentation/devicetree/bindings/display/panel/edt,et1010g0dsa.txt b/Documentation/devicetree/bindings/display/panel/edt,et1010g0dsa.txt
+new file mode 100644
+index 0000000..f76e070
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/edt,et1010g0dsa.txt
+@@ -0,0 +1,7 @@
++Emerging Display Technology Corp. ET1010G0DSA 10.1" WXGA TFT LVDS display panel
++
++Required properties:
++- compatible: should be "edt,et1010g0dsa"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/display/panel/edt,etml1010g0dka.txt b/Documentation/devicetree/bindings/display/panel/edt,etml1010g0dka.txt
+new file mode 100644
+index 0000000..1413ea9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/edt,etml1010g0dka.txt
+@@ -0,0 +1,9 @@
++Emerging Display Technology Corp. ETML1010G0DKA 10.1" WXGA TFT LVDS display panel
++
++Required properties:
++- compatible: should be "edt,etml1010g0dka"
++
++This panel is the same as ET101G0DSA with an integrated capacitive multitouch panel.
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
 diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index fde9c41..f356a7b 100644
+index d4d2a89..5154cb9 100644
 --- a/drivers/gpu/drm/panel/panel-simple.c
 +++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -87,6 +87,8 @@ struct panel_simple {
- 	struct i2c_adapter *ddc;
- 
- 	struct gpio_desc *enable_gpio;
-+
-+	u32 bus_fmt_override;
+@@ -839,6 +839,22 @@ static const struct panel_desc edt_etm0700g0edh6 = {
+ 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
  };
  
- #define SP_DISPLAY_MODE(freq, ha, hfp, hs, hbp, va, vfp, vs, vbp, vr, flgs) { \
-@@ -165,7 +167,11 @@ static int panel_simple_get_fixed_modes(struct panel_simple *panel)
- 	connector->display_info.bpc = panel->desc->bpc;
- 	connector->display_info.width_mm = panel->desc->size.width;
- 	connector->display_info.height_mm = panel->desc->size.height;
--	if (panel->desc->bus_format)
++static const struct drm_display_mode edt_et1010g0dsa_mode =
++	SP_DISPLAY_MODE(71100, 1280, 25, 80, 55, 800, 5, 2, 16, 60,
++			DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
 +
-+	if (panel->bus_fmt_override)
-+		drm_display_info_set_bus_formats(&connector->display_info,
-+						 &panel->bus_fmt_override, 1);
-+	else if (panel->desc->bus_format)
- 		drm_display_info_set_bus_formats(&connector->display_info,
- 						 &panel->desc->bus_format, 1);
- 	connector->display_info.bus_flags = panel->desc->bus_flags;
-@@ -298,6 +304,34 @@ static int panel_simple_get_timings(struct drm_panel *panel,
- 	return p->desc->num_timings;
- }
++static const struct panel_desc edt_et1010g0dsa = {
++	.modes = &edt_et1010g0dsa_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 217,
++		.height = 136,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
++};
++
+ static const struct drm_display_mode foxlink_fl500wvr00_a0t_mode =
+ 	SP_DISPLAY_MODE(32260, 800, 168, 64, 88, 480, 37, 2, 8, 60, 0);
  
-+static inline int panel_simple_check_quirks(struct device *dev,
-+					    struct panel_simple *p)
-+{
-+	const char *bus_fmt;
-+
-+	if (of_property_read_string(dev->of_node, "bus-format-override",
-+				    &bus_fmt) == 0) {
-+		if (strcmp(bus_fmt, "rgb24") == 0)
-+			p->bus_fmt_override = MEDIA_BUS_FMT_RGB888_1X24;
-+		else if (strcmp(bus_fmt, "rgb666") == 0)
-+			p->bus_fmt_override = MEDIA_BUS_FMT_RGB666_1X18;
-+		else if (strcmp(bus_fmt, "rgb565") == 0)
-+			p->bus_fmt_override = MEDIA_BUS_FMT_RGB565_1X16;
-+		else if (strcmp(bus_fmt, "spwg-18") == 0)
-+			p->bus_fmt_override = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG;
-+		else if (strcmp(bus_fmt, "spwg-24") == 0)
-+			p->bus_fmt_override = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG;
-+		else if (strcmp(bus_fmt, "jeida-24") == 0)
-+			p->bus_fmt_override = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-+		else
-+			dev_err(dev,
-+				"Unsupported bus-format-override value: '%s'\n",
-+				bus_fmt);
-+		return p->bus_fmt_override ? 0 : -EINVAL;
-+	}
-+	return 0;
-+}
-+
- static const struct drm_panel_funcs panel_simple_funcs = {
- 	.disable = panel_simple_disable,
- 	.unprepare = panel_simple_unprepare,
-@@ -353,6 +387,10 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 		}
- 	}
- 
-+	err = panel_simple_check_quirks(dev, panel);
-+	if (err)
-+		goto free_ddc;
-+
- 	drm_panel_init(&panel->base);
- 	panel->base.dev = dev;
- 	panel->base.funcs = &panel_simple_funcs;
+@@ -1683,6 +1699,12 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "edt,et070080dh6",
+ 		.data = &edt_etm0700g0dh6,
+ 	}, {
++		.compatible = "edt,et1010g0dsa",
++		.data = &edt_et1010g0dsa,
++	}, {
++		.compatible = "edt,etml1010g0dka",
++		.data = &edt_et1010g0dsa,
++	}, {
+ 		.compatible = "edt,etm0700g0dh6",
+ 		.data = &edt_etm0700g0dh6,
+ 	}, {
 -- 
 2.1.4
