@@ -1,80 +1,138 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [alsa-devel] [Patch v6 1/7] slimbus: Device management on SLIMbus
-Date: Wed, 11 Oct 2017 09:37:41 +0530
-Message-ID: <20171011040741.GE30097@localhost>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
- <20171010104509.GC30097@localhost>
- <fd966acd-a86c-5021-8a8b-ddf1508ab63e@linaro.org>
- <20171010164930.GD30097@localhost>
- <9e2bb2fa-b391-055e-407e-c93f43428840@linaro.org>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCH 2/3] watchdog: orion: don't enable rstout if an interrupt
+ is configured
+Date: Wed, 11 Oct 2017 04:30:50 +0000
+Message-ID: <4f82b24c3b244d3eba0f8de8cb25049f@svr-chch-ex1.atlnz.lc>
+References: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
+ <20171011022958.31268-3-chris.packham@alliedtelesis.co.nz>
+ <227eed69-c4c8-01a1-3c6b-6cf95e84a9cd@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9e2bb2fa-b391-055e-407e-c93f43428840@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 10, 2017 at 06:21:34PM +0100, Srinivas Kandagatla wrote:
-> On 10/10/17 17:49, Vinod Koul wrote:
-
-> >>>>+static int slim_device_probe(struct device *dev)
-> >>>>+{
-> >>>>+	struct slim_device	*sbdev;
-> >>>>+	struct slim_driver	*sbdrv;
-> >>>>+	int status = 0;
-> >>>>+
-> >>>>+	sbdev = to_slim_device(dev);
-> >>>>+	sbdrv = to_slim_driver(dev->driver);
-> >>>>+
-> >>>>+	sbdev->driver = sbdrv;
-> >>>>+
-> >>>>+	if (sbdrv->probe)
-> >>>>+		status = sbdrv->probe(sbdev);
-> >>>>+
-> >>>>+	if (status)
-> >>>>+		sbdev->driver = NULL;
-> >>>>+	else if (sbdrv->device_up)
-> >>>>+		schedule_slim_report(sbdev->ctrl, sbdev, true);
-> >>>
-> >>>can you please explain what this is trying to do?
-> >>
-> >>It is scheduling a device_up() callback in workqueue for reporting
-> >>discovered device.
-> >
-> >any reason for that? Would the device not announce itself on the bus and
-> >then you can synchronously update the device.
-> You are correct,  Device should announce itself in all cases. core should
-> only call this callback only when device is announced, it does not make
-> sense for this call in slim_device_probe(). Will remove it from here in next
-> version.
-
-Okay great. Btw do you need a notify being scheduled in those cases? I guess
-your controller would get an interrupt and you will handle that in bottom
-half and then cll this, so why not call in the bottom half?
-
-> >>>>+/**
-> >>>>+ * slim_register_controller: Controller bring-up and registration.
-> ...
-> >>>>+
-> >>>>+	mutex_init(&ctrl->m_ctrl);
-> >>>>+	ret = device_register(&ctrl->dev);
-> >>>
-> >>>one more device_register?? Can you explain why
-> >>>
-> >>
-> >>This is a device for each controller.
-> >
-> >wont the controller have its own platform_device?
-> 
-> Reason could be that slim_register controller can be called from any code
-> not just platform devices..
-
-ah which cases would those be. I was expecting that you would have a
-platform_device as a slimbus controller which would call slim_register?
-
--- 
-~Vinod
+On 11/10/17 16:42, Guenter Roeck wrote:=0A=
+> On 10/10/2017 07:29 PM, Chris Packham wrote:=0A=
+>> The orion_wdt_irq invokes panic() so we are going to reset the CPU=0A=
+>> regardless.  By not setting this bit we get a chance to gather debug=0A=
+>> from the panic output before the system is reset.=0A=
+>>=0A=
+>> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>=0A=
+> =0A=
+> Unless I am missing something, this assumes that the interrupt is=0A=
+> handled, ie that the system is not stuck with interrupts disabled.=0A=
+> This makes the watchdog less reliable. This added verbosity comes=0A=
+> at a significant cost. I'd like to get input from others if this=0A=
+> is acceptable.=0A=
+> =0A=
+> That would be different if there was a means to configure a pretimeout,=
+=0A=
+> ie a means to tell the system to generate an irq first, followed by a=0A=
+> hard reset if the interrupt is not served. that does not seem to be=0A=
+> the case here, though.=0A=
+> =0A=
+=0A=
+As far as I can tell there is no pretimeout capability in the orion =0A=
+/armada WDT. I have got a work-in-progress patch that enables the RSTOUT =
+=0A=
+in the interrupt handler which some-what mitigates your concern but =0A=
+still requires the interrupt to be handled at least once.=0A=
+=0A=
+Another option would be to use one of the spare global timers to provide =
+=0A=
+the interrupt-driven aspect.=0A=
+=0A=
+Of course if the irq isn't specified then the existing behaviour is =0A=
+retained which would make the 3/3 patch of this series the debatable part.=
+=0A=
+=0A=
+=0A=
+> Guenter=0A=
+> =0A=
+>> ---=0A=
+>>    drivers/watchdog/orion_wdt.c | 25 +++++++++++++++++--------=0A=
+>>    1 file changed, 17 insertions(+), 8 deletions(-)=0A=
+>>=0A=
+>> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c=
+=0A=
+>> index ea676d233e1e..ce88f339ef7f 100644=0A=
+>> --- a/drivers/watchdog/orion_wdt.c=0A=
+>> +++ b/drivers/watchdog/orion_wdt.c=0A=
+>> @@ -71,6 +71,7 @@ struct orion_watchdog {=0A=
+>>    	unsigned long clk_rate;=0A=
+>>    	struct clk *clk;=0A=
+>>    	const struct orion_watchdog_data *data;=0A=
+>> +	int irq;=0A=
+>>    };=0A=
+>>    =0A=
+>>    static int orion_wdt_clock_init(struct platform_device *pdev,=0A=
+>> @@ -203,9 +204,11 @@ static int armada375_start(struct watchdog_device *=
+wdt_dev)=0A=
+>>    						dev->data->wdt_enable_bit);=0A=
+>>    =0A=
+>>    	/* Enable reset on watchdog */=0A=
+>> -	reg =3D readl(dev->rstout);=0A=
+>> -	reg |=3D dev->data->rstout_enable_bit;=0A=
+>> -	writel(reg, dev->rstout);=0A=
+>> +	if (!dev->irq) {=0A=
+>> +		reg =3D readl(dev->rstout);=0A=
+>> +		reg |=3D dev->data->rstout_enable_bit;=0A=
+>> +		writel(reg, dev->rstout);=0A=
+>> +	}=0A=
+>>    =0A=
+>>    	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit, 0);=
+=0A=
+>>    	return 0;=0A=
+>> @@ -228,9 +231,12 @@ static int armada370_start(struct watchdog_device *=
+wdt_dev)=0A=
+>>    						dev->data->wdt_enable_bit);=0A=
+>>    =0A=
+>>    	/* Enable reset on watchdog */=0A=
+>> -	reg =3D readl(dev->rstout);=0A=
+>> -	reg |=3D dev->data->rstout_enable_bit;=0A=
+>> -	writel(reg, dev->rstout);=0A=
+>> +	if (!dev->irq) {=0A=
+>> +		reg =3D readl(dev->rstout);=0A=
+>> +		reg |=3D dev->data->rstout_enable_bit;=0A=
+>> +		writel(reg, dev->rstout);=0A=
+>> +	}=0A=
+>> +=0A=
+>>    	return 0;=0A=
+>>    }=0A=
+>>    =0A=
+>> @@ -247,8 +253,9 @@ static int orion_start(struct watchdog_device *wdt_d=
+ev)=0A=
+>>    						dev->data->wdt_enable_bit);=0A=
+>>    =0A=
+>>    	/* Enable reset on watchdog */=0A=
+>> -	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,=0A=
+>> -				      dev->data->rstout_enable_bit);=0A=
+>> +	if (!dev->irq)=0A=
+>> +		atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,=0A=
+>> +					      dev->data->rstout_enable_bit);=0A=
+>>    =0A=
+>>    	return 0;=0A=
+>>    }=0A=
+>> @@ -595,6 +602,8 @@ static int orion_wdt_probe(struct platform_device *p=
+dev)=0A=
+>>    			dev_err(&pdev->dev, "failed to request IRQ\n");=0A=
+>>    			goto disable_clk;=0A=
+>>    		}=0A=
+>> +=0A=
+>> +		dev->irq =3D irq;=0A=
+>>    	}=0A=
+>>    =0A=
+>>    	watchdog_set_nowayout(&dev->wdt, nowayout);=0A=
+>>=0A=
+> =0A=
+> =0A=
+=0A=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
