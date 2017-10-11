@@ -1,74 +1,78 @@
-From: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] staging: Introduce NVIDIA Tegra20 video decoder
- driver
-Date: Wed, 11 Oct 2017 16:47:18 -0400
-Message-ID: <1507754838.19342.11.camel@ndufresne.ca>
-References: <cover.1507752381.git.digetx@gmail.com>
-         <3d432aa2617977a2b0a8621a1fc2f36f751133e1.1507752381.git.digetx@gmail.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: Altera ASMI Parallel II IP Core
+Date: Wed, 11 Oct 2017 23:06:02 +0200
+Message-ID: <ca36c177-0e7c-647d-f821-ab4bb7d85b10@gmail.com>
+References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1505932139-2905-3-git-send-email-matthew.gerlach@linux.intel.com>
+ <deae5a9f-4301-c7de-b265-b09292f8da15@gmail.com>
+ <alpine.DEB.2.20.1710110956260.2194@mgerlach-VirtualBox>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-hQ+YrLKtwEhINVxeVYTt"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3d432aa2617977a2b0a8621a1fc2f36f751133e1.1507752381.git.digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1710110956260.2194@mgerlach-VirtualBox>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com
+Cc: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org, tien.hock.loh@intel.com, hean.loong.ong@intel.com
 List-Id: devicetree@vger.kernel.org
 
+On 10/11/2017 07:00 PM, matthew.gerlach@linux.intel.com wrote:
+> 
+> 
+> On Tue, 10 Oct 2017, Marek Vasut wrote:
+> 
+>> On 09/20/2017 08:28 PM, matthew.gerlach@linux.intel.com wrote:
+>>> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>>
+>>> This patch adds support for a spi-nor, platform driver for the
+>>> Altera ASMI Parallel II IP Core.  The intended use case is to be able
+>>> to update the flash used to load a FPGA at power up with mtd-utils.
+>>>
+>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>> ---
+>>> v2:
+>>>     minor checkpatch fixing by Wu Hao <hao.wu@intel.com>
+>>>     Use read_dummy value as suggested by Cyrille Pitchen.
+>>>     Don't assume 4 byte addressing (Cryille Pichecn and Marek Vasut).
+>>>     Fixed #define indenting as suggested by Marek Vasut.
+>>>     Added units to timer values as suggested by Marek Vasut.
+>>>     Use io(read|write)8_rep() as suggested by Marek Vasut.
+>>>     Renamed function prefixed with __ as suggested by Marek Vasut.
+>>
+>> [...]
+>>
+>>> +#define QSPI_ACTION_REG            0
+>>> +#define QSPI_ACTION_RST            BIT(0)
+>>> +#define QSPI_ACTION_EN            BIT(1)
+>>> +#define QSPI_ACTION_SC            BIT(2)
+>>> +#define QSPI_ACTION_CHIP_SEL_SFT    4
+>>> +#define QSPI_ACTION_DUMMY_SFT        8
+>>> +#define QSPI_ACTION_READ_BACK_SFT    16
+>>> +
+>>> +#define QSPI_FIFO_CNT_REG        4
+>>> +#define QSPI_FIFO_DEPTH            0x200
+>>> +#define QSPI_FIFO_CNT_MSK        0x3ff
+>>> +#define QSPI_FIFO_CNT_RX_SFT        0
+>>> +#define QSPI_FIFO_CNT_TX_SFT        12
+>>> +
+>>> +#define QSPI_DATA_REG            0x8
+>>> +
+>>> +#define QSPI_POLL_TIMEOUT_US        10000000
+>>
+>> 10 s poll timeout ? :)
+> 
+> Hi Marek,
+> 
+> The 10s timeout is fairly arbitrary.  In other words, I pulled it out of
+> thin air.  Can you suggest a better timeout?  From a practical
+> standpoint 10s seemed to be much better than no timeout when I was
+> debugging bad FPGA images.  Without a timeout I was hanging the system
+> when the FPGA image failed.  With this timeout, we get a nice message
+> and Linux keeps running happily.
+AFAIK the SPI subsystem has a timeout which is adaptive to the bus
+clock, maybe that's what you want to use here ?
 
---=-hQ+YrLKtwEhINVxeVYTt
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mercredi 11 octobre 2017 =C3=A0 23:08 +0300, Dmitry Osipenko a =C3=A9cri=
-t :
-> diff --git a/drivers/staging/tegra-vde/TODO b/drivers/staging/tegra-
-> vde/TODO
-> new file mode 100644
-> index 000000000000..e98bbc7b3c19
-> --- /dev/null
-> +++ b/drivers/staging/tegra-vde/TODO
-> @@ -0,0 +1,5 @@
-> +TODO:
-> +       - Figure out how generic V4L2 API could be utilized by this
-> driver,
-> +         implement it.
-> +
-
-That is a very interesting effort, I think it's the first time someone
-is proposing an upstream driver for a Tegra platform. When I look
-tegra_vde_h264_decoder_ctx, it looks like the only thing that the HW is
-not parsing is the media header (pps/sps). Is that correct ?
-
-I wonder how acceptable it would be to parse this inside the driver. It
-is no more complex then parsing an EDID. If that was possible, wrapping
-this driver as a v4l2 mem2mem should be rather simple. As a side
-effect, you'll automatically get some userspace working, notably
-GStreamer and FFmpeg.
-
-For the case even parsing the headers is too much from a kernel point
-of view, then I think you should have a look at the following effort.
-It's a proposal base on yet to be merged Request API. Hugues is also
-propose a libv4l2 adapter that makes the driver looks like a normal
-v4l2 m2m, hiding all the userspace parsing and table filling. This
-though, is long term plan to integrate state-less or parser-less
-encoders into linux-media. It seems rather overkill for state-full
-driver that requires parsed headers like PPS/SPS.
-
-https://lwn.net/Articles/720797/
-
-regards,
-Nicolas
---=-hQ+YrLKtwEhINVxeVYTt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCWd6DVwAKCRBxUwItrAao
-HDQrAKDVFLfZTOGk1lK0E7rdaFkXPVUI1QCfasRs+MAVBvxhbQl6+N2IwHr2EkU=
-=I5vO
------END PGP SIGNATURE-----
-
---=-hQ+YrLKtwEhINVxeVYTt--
+-- 
+Best regards,
+Marek Vasut
