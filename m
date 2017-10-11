@@ -1,36 +1,34 @@
-From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH 0/3] getting more output from orion_wdt
-Date: Wed, 11 Oct 2017 15:29:55 +1300
-Message-ID: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 1/3] watchdog: orion: fix typo
+Date: Wed, 11 Oct 2017 15:29:56 +1300
+Message-ID: <20171011022958.31268-2-chris.packham@alliedtelesis.co.nz>
+References: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@roeck-us.net, wim@iguana.be, gregory.clement@free-electrons.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On the Armada-38x platforms (and probably 37x/XP) the current behaviour of on
-exipry of the watchdog is a silent reboot of the CPU. The Armada-38x does have
-an interrupt which if we don't enable the Global WD bit in the RSTOUTn register
-gives us a chance to generate some panic messages that may help track down the
-cause of the watchdog timeout.
+Correct typo in comment "insterted" -> "inserted".
 
-I've been a bit bold and enabled this in the generic armada-38x.dtsi file. I'd
-be happy to leave that part out and have the interrupt enabled on a
-board-by-board basis if there are objections.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/watchdog/orion_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Chris Packham (3):
-  watchdog: orion: fix typo
-  watchdog: orion: don't enable rstout if an interrupt is configured
-  ARM: mvebu: dts: connect interrupt for WD on armada-38x
-
- arch/arm/boot/dts/armada-38x.dtsi |  1 +
- drivers/watchdog/orion_wdt.c      | 27 ++++++++++++++++++---------
- 2 files changed, 19 insertions(+), 9 deletions(-)
-
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index 83af7d6cc37c..ea676d233e1e 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -576,7 +576,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 	/*
+ 	 * Let's make sure the watchdog is fully stopped, unless it's
+ 	 * explicitly enabled. This may be the case if the module was
+-	 * removed and re-insterted, or if the bootloader explicitly
++	 * removed and re-inserted, or if the bootloader explicitly
+ 	 * set a running watchdog before booting the kernel.
+ 	 */
+ 	if (!orion_wdt_enabled(&dev->wdt))
 -- 
 2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
