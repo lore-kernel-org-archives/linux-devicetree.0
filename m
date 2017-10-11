@@ -1,41 +1,46 @@
-From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v2 4/5] iio: adc: at91-sama5d2_adc: ack DRDY irq in direct mode
-Date: Wed, 11 Oct 2017 09:35:31 +0300
-Message-ID: <1507703732-29175-5-git-send-email-eugen.hristev@microchip.com>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 1/5] dt-bindings: iio: at91-sama5d2_adc: add optional dma property
+Date: Wed, 11 Oct 2017 09:35:28 +0300
+Message-ID: <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
 References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, jic23@kernel.org
-Cc: eugen.hristev@microchip.com
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507703732-29175-1-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Need to acknowledge DRDY irq in direct mode/ software
-triggered mode. Otherwise, on the next conversion, overrun
-flag will be raised, which is not a correct state.
-This doesn't affect the functionality, but will generate
-possible incorrect overrun reports.
+Added property for DMA configuration of the device.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 ---
- drivers/iio/adc/at91-sama5d2_adc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index 7a9305a..7e51ecb 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -773,6 +773,9 @@ static int at91_adc_read_raw(struct iio_dev *indio_dev,
- 		at91_adc_writel(st, AT91_SAMA5D2_IDR, BIT(chan->channel));
- 		at91_adc_writel(st, AT91_SAMA5D2_CHDR, BIT(chan->channel));
+diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+index 552e7a8..5f94d479 100644
+--- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+@@ -17,6 +17,11 @@ Required properties:
+   This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
+   IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
  
-+		/* Needed to ACK the DRDY interruption */
-+		at91_adc_readl(st, AT91_SAMA5D2_LCDR);
++Optional properties:
++  - dmas: Phandle to dma channel for the ADC.
++  See ../../dma/dma.txt for details.
++  - dma-names: Must be "rx" when dmas property is being used.
 +
- 		mutex_unlock(&st->lock);
+ Example:
  
- 		iio_device_release_direct_mode(indio_dev);
+ adc: adc@fc030000 {
+@@ -31,4 +36,6 @@ adc: adc@fc030000 {
+ 	vddana-supply = <&vdd_3v3_lp_reg>;
+ 	vref-supply = <&vdd_3v3_lp_reg>;
+ 	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
++	dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
++	dma-names = "rx";
+ }
 -- 
 2.7.4
