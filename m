@@ -1,105 +1,31 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v4 2/5] of: reserved_mem: Accessor for acquiring reserved_mem
-Date: Tue, 10 Oct 2017 22:08:54 -0700
-Message-ID: <20171011050857.7588-3-bjorn.andersson@linaro.org>
-References: <20171011050857.7588-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171011050857.7588-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+Subject: Re: [PATCH 1/2] clk: qcom: clk-smd-rpm: add msm8996 rpmclks
+Date: Tue, 10 Oct 2017 22:43:20 -0700
+Message-ID: <20171011054319.GF1165@minitux>
+References: <1507625834-30499-1-git-send-email-rnayak@codeaurora.org>
+ <1507625834-30499-2-git-send-email-rnayak@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507625834-30499-2-git-send-email-rnayak@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: sboyd@codeaurora.org, mturquette@baylibre.com, andy.gross@linaro.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In some cases drivers referencing a reserved-memory region might want to
-remap the entire region, but when defining the reserved-memory by "size"
-the client driver has no means to know the associated base address of
-the reserved memory region.
+On Tue 10 Oct 01:57 PDT 2017, Rajendra Nayak wrote:
 
-This patch adds an accessor for such drivers to acquire a handle to
-their associated reserved-memory for this purpose.
+> Add all RPM controlled clocks on msm8996 platform
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> [srini: Fixed various issues with offsets and made names specific to msm8996]
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-A complicating factor for the implementation is that the reserved_mem
-objects are created from the flattened DeviceTree, as such we can't
-use the device_node address for comparison. Fortunately the name of the
-node will be used as "name" of the reserved_mem and will be used when
-building the full_name, so we can compare the "name" with the basename
-of the full_name to find the match.
+Your S-o-b should be last in this list.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
 
-Changes since v3:
-- Renamed function from _get() to _lookup()
-- Picked up Rob's R-b
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Changes since v2:
-- None
-
-Changes since v1:
-- Previous patch provided interface to resolve memory-region reference, instead
-  of direct lookup by device_node
-
- drivers/of/of_reserved_mem.c    | 26 ++++++++++++++++++++++++++
- include/linux/of_reserved_mem.h |  5 +++++
- 2 files changed, 31 insertions(+)
-
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index d507c3569a88..b108c7a1f74c 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -397,3 +397,29 @@ void of_reserved_mem_device_release(struct device *dev)
- 	rmem->ops->device_release(rmem, dev);
- }
- EXPORT_SYMBOL_GPL(of_reserved_mem_device_release);
-+
-+/**
-+ * of_reserved_mem_lookup() - acquire reserved_mem from a device node
-+ * @np:		node pointer of the desired reserved-memory region
-+ *
-+ * This function allows drivers to acquire a reference to the reserved_mem
-+ * struct based on a device node handle.
-+ *
-+ * Returns a reserved_mem reference, or NULL on error.
-+ */
-+struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
-+{
-+	const char *name;
-+	int i;
-+
-+	if (!np->full_name)
-+		return NULL;
-+
-+	name = kbasename(np->full_name);
-+	for (i = 0; i < reserved_mem_count; i++)
-+		if (!strcmp(reserved_mem[i].name, name))
-+			return &reserved_mem[i];
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_reserved_mem_lookup);
-diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-index f8e1992d6423..c58f780104f9 100644
---- a/include/linux/of_reserved_mem.h
-+++ b/include/linux/of_reserved_mem.h
-@@ -44,6 +44,7 @@ int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
- void fdt_init_reserved_mem(void);
- void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 			       phys_addr_t base, phys_addr_t size);
-+struct reserved_mem *of_reserved_mem_lookup(struct device_node *np);
- #else
- static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
- 					struct device_node *np, int idx)
-@@ -55,6 +56,10 @@ static inline void of_reserved_mem_device_release(struct device *pdev) { }
- static inline void fdt_init_reserved_mem(void) { }
- static inline void fdt_reserved_mem_save_node(unsigned long node,
- 		const char *uname, phys_addr_t base, phys_addr_t size) { }
-+static inline struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
-+{
-+	return NULL;
-+}
- #endif
- 
- /**
--- 
-2.12.0
+Regards,
+Bjorn
