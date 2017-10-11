@@ -1,84 +1,36 @@
-From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v2 0/5] iio: adc: at91-sama5d2_adc: add DMA support
-Date: Wed, 11 Oct 2017 09:35:27 +0300
-Message-ID: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v2 2/5] ARM: dts: at91: sama5d2: added dma property for ADC device
+Date: Wed, 11 Oct 2017 09:35:29 +0300
+Message-ID: <1507703732-29175-3-git-send-email-eugen.hristev@microchip.com>
+References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, jic23@kernel.org
+Cc: eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-This patch implements the DMA support for the ADC in sama5d2 SoC.
-After discussing on the mailing list, this approach is based on triggered
-kfifo buffer, with DMA support added on top of it.
-Thus, the trigger is enabled by the buffer. The ADC itself will not have
-an IRQ enabled if using DMA. With DMA, the channels are enabled, and DMA
-controller is configured to read from the data ready registers.
-When DMA starts, the trigger will start the conversion (external trigger
-configured), then the registers will have the conversion data ready, the ADC
-will trigger the DMA controller to read from the registers, the DMA will
-copy the data into the software buffer, and trigger the DMA IRQ.
-In the bottom half, the trigger polled and the data from the DMA buffer is
-pushed to buffer.
+Added DMA property for ADC device
 
-The DMA will use a cyclic buffer to write to one half, and the software can
-read from the other half. The DMA operation doesn't stop until the buffer is
-disabled.
-The DMA coherent area is allocated when DMA is initially started, and
-deallocated only if the watermark is changed to 1 (no more DMA usage). The
-coherent area is large enough to cope with maximum fifo size for all possible
-channels enabled.
-The fifo size is set to 128 conversions by default in the driver.
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+ arch/arm/boot/dts/sama5d2.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The implementation uses the user watermark  to decide whether DMA will be
-used or not. For watermark 1, DMA will not be used. If watermark is greater,
-DMA will be used.
-Sysfs attributes are created to indicate whether the DMA is used,
-with hwfifo_enabled, and the current DMA watermark is readable
-in hwfifo_watermark. Minimum and maximum values are in hwfifo_watermark_min
-and hwfifo_watermark_max.
-
-Devicetree binding added for dma as well.
-Modified devicetree for sama5d2 SoC to add connected DMA channel.
-
-A different commit modifies the driver to use the highest ADC clock
-to demonstrate the capabilities of the DMA support at best sampling rate.
-
-A different commit addresses the issue of not clearing the DRDY irq in direct
-mode. This is required to avoid erroneous overrun warnings.
-
-  Changes in v2:
- - No longer add last timestamp to all samples. Now, compute an interval
-between samples w.r.t. start and end time of the transfer and number
-of samples. Then distribute them each in the time interval.
- - Add warning for conversion overrun. This helps user identify cases
-when the watermark needs adjustment : the software is too slow in reading
-data from the ADC.
- - Protection around watermark is not needed, changing of the watermark
-cannot be done while the buffer is enabled. When buffer is disabled, all
-DMA resources are freed anyway.
- - Added validation on trigger to be used by own device
- - Best sample rate I could obtain using the low frequency clock was about
-4k samples/second, with a watermark of 100. To get up to 50k samples/second
-the ADC frequency must be increased to max.
- - Addressed other comments from mailing list review. Feedback is appreciated
- - Added [PATCH v2 4/5] iio: adc: at91-sama5d2_adc: ack DRDY irq in direct
- - Added [PATCH v2 5/5] iio: adc: at91-sama5d2_adc: use max sample rate
-
-Eugen Hristev (5):
-  dt-bindings: iio: at91-sama5d2_adc: add optional dma property
-  ARM: dts: at91: sama5d2: added dma property for ADC device
-  iio: adc: at91-sama5d2_adc: add support for DMA
-  iio: adc: at91-sama5d2_adc: ack DRDY irq in direct mode
-  iio: adc: at91-sama5d2_adc: use max sample rate
-
- .../bindings/iio/adc/at91-sama5d2_adc.txt          |   7 +
- arch/arm/boot/dts/sama5d2.dtsi                     |   2 +
- drivers/iio/adc/Kconfig                            |   1 +
- drivers/iio/adc/at91-sama5d2_adc.c                 | 437 ++++++++++++++++++++-
- 4 files changed, 428 insertions(+), 19 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index cc06da3..8b4c60c 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -1368,6 +1368,8 @@
+ 				atmel,min-sample-rate-hz = <200000>;
+ 				atmel,max-sample-rate-hz = <20000000>;
+ 				atmel,startup-time-ms = <4>;
++				dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
++				dma-names = "rx";
+ 				status = "disabled";
+ 			};
+ 
 -- 
 2.7.4
