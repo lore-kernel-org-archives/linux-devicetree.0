@@ -1,285 +1,216 @@
-Return-Path: <SRS0=ilLa=BD=leopardimaging.com=leonl@kernel.org>
+Return-Path: <SRS0=cgma=BK=gmail.com=hao5781286@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20171004131452.6yjaa57xr56v6jza@valkosipuli.retiisi.org.uk>
-References: <20171002202649.10897-1-leonl@leopardimaging.com>
- <20171002202649.10897-2-leonl@leopardimaging.com> <20171004131452.6yjaa57xr56v6jza@valkosipuli.retiisi.org.uk>
-From: Leon Luo <leonl@leopardimaging.com>
-Date: Wed, 4 Oct 2017 10:54:23 -0700
-Message-ID: <CADu3m9yioMBDUg5+rRsdkvDhfa7jDFWBhsZW5A-BR+sS4Ovx8w@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] media:imx274 V4l2 driver for Sony imx274 CMOS sensor
-Content-Type: multipart/alternative; boundary="94eb2c069734557b10055abc4c1b"
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, sakari.ailus@linux.intel.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+In-Reply-To: <511e01ae-6083-13c8-a486-40e01bf753be@hisilicon.com>
+References: <20161017120705.3726-1-wenpan@hisilicon.com> <20161017120705.3726-2-wenpan@hisilicon.com>
+ <5893354.6MrIxqzRoI@wuerfel> <e78a288b-8bab-9441-2edb-6ec08e5103d7@hisilicon.com>
+ <582C2785.2010804@hisilicon.com> <114569cb-79ab-a46d-8582-6169f182a32c@hisilicon.com>
+ <511e01ae-6083-13c8-a486-40e01bf753be@hisilicon.com>
+From: Hao Zhang <hao5781286@gmail.com>
+Date: Wed, 11 Oct 2017 13:35:30 +0800
+Message-ID: <CAJeuY78eZqOo3vaGBC-NKZr1nexm9SA0Rmc5vVxqn9K5vQqp9w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm: hisi: add ARCH_MULTI_V5 support
+Content-Type: multipart/alternative; boundary="f40304379aa0b8334c055b3ecab2"
+To: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: Marty Plummer <netz.kernel@gmail.com>, Wei Xu <xuwei5@hisilicon.com>, wenpan <wenpan@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "howell.yang@hisilicon.com" <howell.yang@hisilicon.com>, "jalen.hsu@hisilicon.com" <jalen.hsu@hisilicon.com>, "lvkuanliang@hisilicon.com" <lvkuanliang@hisilicon.com>, "suwenping@hisilicon.com" <suwenping@hisilicon.com>, "raojun@hisilicon.com" <raojun@hisilicon.com>, "kevin.lixu@hisilicon.com" <kevin.lixu@hisilicon.com>, "qinxiaojun@huawei.com" <qinxiaojun@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
---94eb2c069734557b10055abc4c1b
+--f40304379aa0b8334c055b3ecab2
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-You are right. I will fix it. Thanks.
+Hi all,
+Is there any one working on hi3520dv200 or hi3520dv300?
 
-Regards,
-Leon Luo
-1130 Cadillac CT
-Milpitas, CA 95035
-Phone: (510)371-1169
-Fax: (408) 217-1960
-Email: leonl@leopardimaging.com
-www.leopardimaging.com
+2016=E5=B9=B411=E6=9C=8818=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94=EF=BC=8CJian=
+cheng Xue <xuejiancheng@hisilicon.com> =E5=86=99=E9=81=93=EF=BC=9A
 
-On Wed, Oct 4, 2017 at 6:14 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-
-> Hi Leon,
+> Hi Marty,
 >
-> One more question below.
+> On 2016/11/17 11:03, Jiancheng Xue wrote:
+> > Hi Wei=EF=BC=8C
+> >
+> > On 2016/11/16 17:31, Wei Xu wrote:
+> >> Hi Pan,
+> >>
+> >> On 2016/11/16 8:56, wenpan wrote:
+> >>> Hi Marty=EF=BC=8C
+> >>> Does this confict with your patch=EF=BC=9F If not=EF=BC=8CI hope this=
+ could be merged
+> first.  Besides could you tell me the link to your related patch?
+> >>
+> >> This is the link: https://patchwork.kernel.org/patch/9334743/
+> >>
 >
-> On Mon, Oct 02, 2017 at 01:26:49PM -0700, Leon Luo wrote:
-> ...
-> > +/*
-> > + * imx274_set_frame_interval - Function called when setting frame
-> interval
-> > + * @priv: Pointer to device structure
-> > + * @frame_interval: Variable for frame interval
-> > + *
-> > + * Change frame interval by updating VMAX value
-> > + * The caller should hold the mutex lock imx274->lock if necessary
-> > + *
-> > + * Return: 0 on success
-> > + */
-> > +static int imx274_set_frame_interval(struct stimx274 *priv,
-> > +                                  struct v4l2_fract frame_interval)
-> > +{
-> > +     int err;
-> > +     u32 frame_length, req_frame_rate;
-> > +     u16 svr;
-> > +     u16 hmax;
-> > +     u8 reg_val[2];
-> > +
-> > +     dev_dbg(&priv->client->dev, "%s: input frame interval = %d / %d",
-> > +             __func__, frame_interval.numerator,
-> > +             frame_interval.denominator);
-> > +
-> > +     if (frame_interval.denominator == 0) {
+> Could you give your comments on this patch?
+> If you have any objections to it, please let us know.
 >
-> Shouldn't this be numerator? If numerator is 0, then there will be division
-> by zero below.
+> >
+> > Thank you for offering this.If I want to give some comments on Marty's
+> patch,
+> > what should I do?
+> >
+> > For Marty's patch, I think there's no need to add specific config item
+> ARCH_HIxxxx
+> > for every chipset. Some existing chipsets depend on ARCH_HISI directly
+> like Hi3519
+> > and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HISI=
+,
+> this kind
+> > of chipsets will must choose other place to select it. I suggest we
+> should keep selecting
+> > ARM_GIC under ARCH_HISI as Pan's patch do.
+> >
+> > The code may be like this:
+> >
+> > config ARCH_HISI
+> >       bool "Hisilicon SoC Support"
+> > -     depends on ARCH_MULTI_V7
+> > +     depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH_MULTI_V7
+> >       select ARM_AMBA
+> > -     select ARM_GIC
+> > +     select ARM_GIC if ARCH_MULTI_V7
+> > +     select ARM_VIC if ARCH_MULTI_V5 || depends on ARCH_MULTI_V6
+> >       select ARM_TIMER_SP804
+> >       select POWER_RESET
+> >       select POWER_RESET_HISI
+> >       select POWER_SUPPLY
+> >
 >
-> > +             err = -EINVAL;
-> > +             goto fail;
-> > +     }
-> > +
-> > +     req_frame_rate = (u32)(frame_interval.denominator
-> > +                             / frame_interval.numerator);
-> > +
-> > +     /* boundary check */
-> > +     if (req_frame_rate > max_frame_rate[priv->mode_index]) {
-> > +             frame_interval.numerator = 1;
-> > +             frame_interval.denominator =
-> > +                                     max_frame_rate[priv->mode_index];
-> > +     } else if (req_frame_rate < IMX274_MIN_FRAME_RATE) {
-> > +             frame_interval.numerator = 1;
-> > +             frame_interval.denominator = IMX274_MIN_FRAME_RATE;
-> > +     }
-> > +
-> > +     /*
-> > +      * VMAX = 1/frame_rate x 72M / (SVR+1) / HMAX
-> > +      * frame_length (i.e. VMAX) = (frame_interval) x 72M /(SVR+1) /
-> HMAX
-> > +      */
-> > +
-> > +     /* SVR */
-> > +     err = imx274_read_reg(priv, IMX274_SVR_REG_LSB, &reg_val[0]);
-> > +     if (err)
-> > +             goto fail;
-> > +     err = imx274_read_reg(priv, IMX274_SVR_REG_MSB, &reg_val[1]);
-> > +     if (err)
-> > +             goto fail;
-> > +     svr = (reg_val[1] << IMX274_SHIFT_8_BITS) + reg_val[0];
-> > +     dev_dbg(&priv->client->dev,
-> > +             "%s : register SVR = %d\n", __func__, svr);
-> > +
-> > +     /* HMAX */
-> > +     err = imx274_read_reg(priv, IMX274_HMAX_REG_LSB, &reg_val[0]);
-> > +     if (err)
-> > +             goto fail;
-> > +     err = imx274_read_reg(priv, IMX274_HMAX_REG_MSB, &reg_val[1]);
-> > +     if (err)
-> > +             goto fail;
-> > +     hmax = (reg_val[1] << IMX274_SHIFT_8_BITS) + reg_val[0];
-> > +     dev_dbg(&priv->client->dev,
-> > +             "%s : register HMAX = %d\n", __func__, hmax);
-> > +
-> > +     frame_length = IMX274_PIXCLK_CONST1 / (svr + 1) / hmax
-> > +                                     * frame_interval.numerator
-> > +                                     / frame_interval.denominator;
-> > +
-> > +     err = imx274_set_frame_length(priv, frame_length);
-> > +     if (err)
-> > +             goto fail;
-> > +
-> > +     priv->frame_interval = frame_interval;
-> > +     return 0;
-> > +
-> > +fail:
-> > +     dev_err(&priv->client->dev, "%s error = %d\n", __func__, err);
-> > +     return err;
-> > +}
+> What's your opinion about this?
+>
+> Best Regards,
+> Jiancheng
+>
+> >>> On 2016/10/17 21:48, Arnd Bergmann wrote:
+> >>>> On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:
+> >>>>> Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
+> >>>>>
+> >>>>> Signed-off-by: Pan Wen <wenpan@hisilicon.com <javascript:;>>
+> >>>>>
+> >>>>
+> >>>> Looks ok. I've added Marty Plummer to Cc, he was recently proposing
+> >>>> patches for Hi3520, which I think is closely related to this one.
+> >>>> Please try to work together so the patches don't conflict. It should
+> >>>> be fairly straightforward since you are basically doing the same
+> >>>> change here.
+> >>>>
+> >
+> >
+> >
+> > .
+> >
 >
 > --
-> Regards,
->
-> Sakari Ailus
-> e-mail: sakari.ailus@iki.fi
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org <javascript:;>
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
 
---94eb2c069734557b10055abc4c1b
+--f40304379aa0b8334c055b3ecab2
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">You are right. I will fix it. Thanks.</div><div class=3D"g=
-mail_extra"><br clear=3D"all"><div><div class=3D"gmail_signature" data-smar=
-tmail=3D"gmail_signature">Regards,<br>Leon Luo<br>1130 Cadillac CT<br>Milpi=
-tas, CA 95035<br>Phone: (510)371-1169<br>Fax: (408) 217-1960<br>Email: <a h=
-ref=3D"mailto:leonl@leopardimaging.com" target=3D"_blank">leonl@leopardimag=
-ing.com</a><br><a href=3D"http://www.leopardimaging.com" target=3D"_blank">=
-www.leopardimaging.com</a><br></div></div>
-<br><div class=3D"gmail_quote">On Wed, Oct 4, 2017 at 6:14 AM, Sakari Ailus=
- <span dir=3D"ltr">&lt;<a href=3D"mailto:sakari.ailus@iki.fi" target=3D"_bl=
-ank">sakari.ailus@iki.fi</a>&gt;</span> wrote:<br><blockquote class=3D"gmai=
-l_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left=
-:1ex">Hi Leon,<br>
+Hi all,<div>Is there any one working on hi3520dv200 or hi3520dv300? <br><br=
+>2016=E5=B9=B411=E6=9C=8818=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94=EF=BC=8CJia=
+ncheng Xue &lt;<a href=3D"mailto:xuejiancheng@hisilicon.com">xuejiancheng@h=
+isilicon.com</a>&gt; =E5=86=99=E9=81=93=EF=BC=9A<br><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
+ft:1ex">Hi Marty,<br>
 <br>
-One more question below.<br>
+On 2016/11/17 11:03, Jiancheng Xue wrote:<br>
+&gt; Hi Wei=EF=BC=8C<br>
+&gt;<br>
+&gt; On 2016/11/16 17:31, Wei Xu wrote:<br>
+&gt;&gt; Hi Pan,<br>
+&gt;&gt;<br>
+&gt;&gt; On 2016/11/16 8:56, wenpan wrote:<br>
+&gt;&gt;&gt; Hi Marty=EF=BC=8C<br>
+&gt;&gt;&gt; Does this confict with your patch=EF=BC=9F If not=EF=BC=8CI ho=
+pe this could be merged first.=C2=A0 Besides could you tell me the link to =
+your related patch?<br>
+&gt;&gt;<br>
+&gt;&gt; This is the link: <a href=3D"https://patchwork.kernel.org/patch/93=
+34743/" target=3D"_blank">https://patchwork.kernel.org/<wbr>patch/9334743/<=
+/a><br>
+&gt;&gt;<br>
 <br>
-On Mon, Oct 02, 2017 at 01:26:49PM -0700, Leon Luo wrote:<br>
-...<br>
-<span class=3D"">&gt; +/*<br>
-&gt; + * imx274_set_frame_interval - Function called when setting frame int=
-erval<br>
-&gt; + * @priv: Pointer to device structure<br>
-&gt; + * @frame_interval: Variable for frame interval<br>
-&gt; + *<br>
-&gt; + * Change frame interval by updating VMAX value<br>
-&gt; + * The caller should hold the mutex lock imx274-&gt;lock if necessary=
+Could you give your comments on this patch?<br>
+If you have any objections to it, please let us know.<br>
 <br>
-&gt; + *<br>
-&gt; + * Return: 0 on success<br>
-&gt; + */<br>
-&gt; +static int imx274_set_frame_interval(<wbr>struct stimx274 *priv,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct v4l2_fract frame_i=
-nterval)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0int err;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u32 frame_length, req_frame_rate;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u16 svr;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u16 hmax;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u8 reg_val[2];<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0dev_dbg(&amp;priv-&gt;client-&gt;dev, &quot;%s: i=
-nput frame interval =3D %d / %d&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0__func__, frame_inter=
-val.numerator,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0frame_interval.denomi=
-nator);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (frame_interval.denominator =3D=3D 0) {<br>
+&gt;<br>
+&gt; Thank you for offering this.If I want to give some comments on Marty&#=
+39;s patch,<br>
+&gt; what should I do?<br>
+&gt;<br>
+&gt; For Marty&#39;s patch, I think there&#39;s no need to add specific con=
+fig item ARCH_HIxxxx<br>
+&gt; for every chipset. Some existing chipsets depend on ARCH_HISI directly=
+ like Hi3519<br>
+&gt; and Hi3798CV200. If some options like ARM_GIC is removed from ARCH_HIS=
+I, this kind<br>
+&gt; of chipsets will must choose other place to select it. I suggest we sh=
+ould keep selecting<br>
+&gt; ARM_GIC under ARCH_HISI as Pan&#39;s patch do.<br>
+&gt;<br>
+&gt; The code may be like this:<br>
+&gt;<br>
+&gt; config ARCH_HISI<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0bool &quot;Hisilicon SoC Support&quot;<br>
+&gt; -=C2=A0 =C2=A0 =C2=A0depends on ARCH_MULTI_V7<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0depends on ARCH_MULTI_V5 || ARCH_MULTI_V6 || ARCH=
+_MULTI_V7<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select ARM_AMBA<br>
+&gt; -=C2=A0 =C2=A0 =C2=A0select ARM_GIC<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0select ARM_GIC if ARCH_MULTI_V7<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0select ARM_VIC if ARCH_MULTI_V5 || depends on ARC=
+H_MULTI_V6<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select ARM_TIMER_SP804<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select POWER_RESET<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select POWER_RESET_HISI<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0select POWER_SUPPLY<br>
+&gt;<br>
 <br>
-</span>Shouldn&#39;t this be numerator? If numerator is 0, then there will =
-be division<br>
-by zero below.<br>
-<div class=3D"HOEnZb"><div class=3D"h5"><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D -EINVAL;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto fail;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0req_frame_rate =3D (u32)(frame_interval.<wbr>deno=
-minator<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/ frame_interval.numerator);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/* boundary check */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (req_frame_rate &gt; max_frame_rate[priv-&gt;m=
-ode_<wbr>index]) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0frame_interval.numera=
-tor =3D 1;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0frame_interval.denomi=
-nator =3D<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0max_frame_ra=
-te[priv-&gt;mode_<wbr>index];<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0} else if (req_frame_rate &lt; IMX274_MIN_FRAME_R=
-ATE) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0frame_interval.numera=
-tor =3D 1;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0frame_interval.denomi=
-nator =3D IMX274_MIN_FRAME_RATE;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/*<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 * VMAX =3D 1/frame_rate x 72M / (SVR+1) / HMAX<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0 * frame_length (i.e. VMAX) =3D (frame_interval) =
-x 72M /(SVR+1) / HMAX<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 */<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/* SVR */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0err =3D imx274_read_reg(priv, IMX274_SVR_REG_LSB,=
- &amp;reg_val[0]);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (err)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto fail;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0err =3D imx274_read_reg(priv, IMX274_SVR_REG_MSB,=
- &amp;reg_val[1]);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (err)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto fail;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0svr =3D (reg_val[1] &lt;&lt; IMX274_SHIFT_8_BITS)=
- + reg_val[0];<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0dev_dbg(&amp;priv-&gt;client-&gt;dev,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;%s : register S=
-VR =3D %d\n&quot;, __func__, svr);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/* HMAX */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0err =3D imx274_read_reg(priv, IMX274_HMAX_REG_LSB=
-, &amp;reg_val[0]);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (err)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto fail;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0err =3D imx274_read_reg(priv, IMX274_HMAX_REG_MSB=
-, &amp;reg_val[1]);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (err)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto fail;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0hmax =3D (reg_val[1] &lt;&lt; IMX274_SHIFT_8_BITS=
-) + reg_val[0];<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0dev_dbg(&amp;priv-&gt;client-&gt;dev,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;%s : register H=
-MAX =3D %d\n&quot;, __func__, hmax);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0frame_length =3D IMX274_PIXCLK_CONST1 / (svr + 1)=
- / hmax<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0* frame_inte=
-rval.numerator<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/ frame_inte=
-rval.denominator;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0err =3D imx274_set_frame_length(priv, frame_lengt=
-h);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (err)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto fail;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0priv-&gt;frame_interval =3D frame_interval;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +<br>
-&gt; +fail:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0dev_err(&amp;priv-&gt;client-&gt;dev, &quot;%s er=
-ror =3D %d\n&quot;, __func__, err);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return err;<br>
-&gt; +}<br>
+What&#39;s your opinion about this?<br>
 <br>
-</div></div><span class=3D"HOEnZb"><font color=3D"#888888">--<br>
-Regards,<br>
+Best Regards,<br>
+Jiancheng<br>
 <br>
-Sakari Ailus<br>
-e-mail: <a href=3D"mailto:sakari.ailus@iki.fi">sakari.ailus@iki.fi</a><br>
-</font></span></blockquote></div><br></div>
+&gt;&gt;&gt; On 2016/10/17 21:48, Arnd Bergmann wrote:<br>
+&gt;&gt;&gt;&gt; On Monday, October 17, 2016 8:07:03 PM CEST Pan Wen wrote:=
+<br>
+&gt;&gt;&gt;&gt;&gt; Add support for some HiSilicon SoCs which depend on AR=
+CH_MULTI_V5.<br>
+&gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; Signed-off-by: Pan Wen &lt;<a href=3D"javascript:;" on=
+click=3D"_e(event, &#39;cvml&#39;, &#39;wenpan@hisilicon.com&#39;)">wenpan@=
+hisilicon.com</a>&gt;<br>
+&gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; Looks ok. I&#39;ve added Marty Plummer to Cc, he was recen=
+tly proposing<br>
+&gt;&gt;&gt;&gt; patches for Hi3520, which I think is closely related to th=
+is one.<br>
+&gt;&gt;&gt;&gt; Please try to work together so the patches don&#39;t confl=
+ict. It should<br>
+&gt;&gt;&gt;&gt; be fairly straightforward since you are basically doing th=
+e same<br>
+&gt;&gt;&gt;&gt; change here.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;<br>
+&gt;<br>
+&gt;<br>
+&gt; .<br>
+&gt;<br>
+<br>
+--<br>
+To unsubscribe from this list: send the line &quot;unsubscribe devicetree&q=
+uot; in<br>
+the body of a message to <a href=3D"javascript:;" onclick=3D"_e(event, &#39=
+;cvml&#39;, &#39;majordomo@vger.kernel.org&#39;)">majordomo@vger.kernel.org=
+</a><br>
+More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
+fo.html" target=3D"_blank">http://vger.kernel.org/<wbr>majordomo-info.html<=
+/a><br>
+</blockquote></div>
 
---94eb2c069734557b10055abc4c1b--
+--f40304379aa0b8334c055b3ecab2--
