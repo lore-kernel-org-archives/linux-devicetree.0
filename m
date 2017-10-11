@@ -1,66 +1,36 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
- used as LDOs
-Date: Wed, 11 Oct 2017 09:43:40 +0200
-Message-ID: <CACRpkdbjHZ7=m1-6vOw3ru+XkoCfSvHJSEFtCtHo5LkB4cPyhA@mail.gmail.com>
-References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
- <20171002120854.5212-13-quentin.schulz@free-electrons.com>
- <CACRpkdZYcSuhvn0b0qa0k1PQHoyXjNyjoyhR2sPme_t1pF12Dg@mail.gmail.com>
- <20171003144737.rhgtp3uwckhvoqdw@flea> <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA@mail.gmail.com>
- <8be22e47-8071-be4c-0bd4-38fa51cbe3ff@free-electrons.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [alsa-devel] [Patch v6 2/7] slimbus: Add messaging APIs to
+ slimbus framework
+Date: Wed, 11 Oct 2017 09:53:09 +0200
+Message-ID: <CAK8P3a2T+7_dVmWcdYhV85Mm-evzsMFf9RAo=GAvNGMfqWOxKw@mail.gmail.com>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-3-srinivas.kandagatla@linaro.org> <20171011043814.GF30097@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8be22e47-8071-be4c-0bd4-38fa51cbe3ff-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20171011043814.GF30097@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jkosina-AlSwsSmVLrQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dani
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 9:35 AM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> Just to be a little more precise,
->      - 0: drive low
->      - 1: drive high
->      - 2: input with interrupt triggering
->      - 3: LDO on
->      - 4: LDO off
->      - 5~7: floating (or ADC)
+On Wed, Oct 11, 2017 at 6:38 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+>> +     ctrl->pending_wr = kcalloc((ctrl->tx.n - 1),
+>> +                                sizeof(struct slim_pending),
+>> +                                GFP_KERNEL);
+>> +     if (!ctrl->pending_wr) {
+>> +             ret = -ENOMEM;
+>> +             goto wr_alloc_failed;
+>> +     }
+>> +
+>> +     sema_init(&ctrl->tx_sem, (ctrl->tx.n - 1));
 >
-> for AXP813, and
->      - 0: drive low
->      - 1: drive high
->      - 2: input with interrupt triggering
->      - 3: LDO on
->      - 4: ADC
->      - 5~7: floating
+> i though v5 comment from Arnd was not to use semaphores..
 
-Fair enough, it's mux modes that the pin supports, no big surprises.
+Right, these need to go away. Thanks for spotting it!
 
-> So I think what you suggested Linus is not really relevant here as the
-> regulator framework will take care of disabling the regulator when
-> needed (for AXP813 via the ldo_off "muxing" selected by the regulator
-> framework).
-
-I think I see why I got confused.
-
-The point is that your mode for setting it to "LDO on" should have the
-pin control state connected to the relevant device.
-
-It should be connected to the regulator and nothing else, so if there is a fixed
-regulator or whatever in the device tree, it should have pinctrl-0
-and pinctrl-names = ".."; here is is for some obscure reason connected
-to the GPIO controller (!) instead, and the actual consumer of this state
-is NOT the GPIO controller, but quite obviously the regulator, so
-put the pinctrl business in that regulator node instead.
-
-"default" mode is OK on a regulator, as that can be expected to make the
-pin precisely a regulator pin. Forget my ramblings about a "regulator"
-state.
-
-Yours,
-Linus Walleij
+     Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
