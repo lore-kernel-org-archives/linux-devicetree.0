@@ -1,40 +1,36 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
- multiple overlays
-Date: Tue, 10 Oct 2017 18:41:04 -0700
-Message-ID: <59DD76B0.3040400@gmail.com>
-References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
- <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
- <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
- <59D5A737.9090905@gmail.com> <20171010184014.m2chslx36kbhvgug@rob-hp-laptop>
- <59DD21F3.6080001@gmail.com>
- <CAL_JsqK8cxBk754UBziGOTMx035C8P5ehPvENE0=-TNHqmTCbg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqK8cxBk754UBziGOTMx035C8P5ehPvENE0=-TNHqmTCbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH 0/3] getting more output from orion_wdt
+Date: Wed, 11 Oct 2017 15:29:55 +1300
+Message-ID: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/17 14:06, Rob Herring wrote:
-> On Tue, Oct 10, 2017 at 2:39 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On the Armada-38x platforms (and probably 37x/XP) the current behaviour of on
+exipry of the watchdog is a silent reboot of the CPU. The Armada-38x does have
+an interrupt which if we don't enable the Global WD bit in the RSTOUTn register
+gives us a chance to generate some panic messages that may help track down the
+cause of the watchdog timeout.
 
-< snip >
+I've been a bit bold and enabled this in the generic armada-38x.dtsi file. I'd
+be happy to leave that part out and have the interrupt enabled on a
+board-by-board basis if there are objections.
 
-> 
-> AFAICT, I don't think anything between of_resolve_phandles and
-> of_overlay_apply calls in tilcdc depends on the phandles being fixed
-> up.
+Chris Packham (3):
+  watchdog: orion: fix typo
+  watchdog: orion: don't enable rstout if an interrupt is configured
+  ARM: mvebu: dts: connect interrupt for WD on armada-38x
 
-I think you are correct, after another quick scan of that code.
+ arch/arm/boot/dts/armada-38x.dtsi |  1 +
+ drivers/watchdog/orion_wdt.c      | 27 ++++++++++++++++++---------
+ 2 files changed, 19 insertions(+), 9 deletions(-)
 
-< snip >
+-- 
+2.14.2
 
--Frank
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
