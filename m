@@ -1,60 +1,84 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 8/9] dt-bindings: usb: mtk-xhci: add a optional property
- to disable u3ports
-Date: Wed, 11 Oct 2017 14:37:34 +0800
-Message-ID: <1507703854.17567.77.camel@mhfsdcap03>
-References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1506503879.git.chunfeng.yun@mediatek.com>
-         <fd8b6099192ddee3b277f5ca3a699c20fb273ffe.1506503880.git.chunfeng.yun@mediatek.com>
-         <20171005221650.yfyh72op6azm2nri@rob-hp-laptop>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 0/5] iio: adc: at91-sama5d2_adc: add DMA support
+Date: Wed, 11 Oct 2017 09:35:27 +0300
+Message-ID: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171005221650.yfyh72op6azm2nri@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-10-05 at 17:16 -0500, Rob Herring wrote:
-Hi,
-> On Wed, Sep 27, 2017 at 05:23:04PM +0800, Chunfeng Yun wrote:
-> > Add a new optional property to disable u3ports
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |    2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> > index 5611a2e..2d9b459 100644
-> > --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> > @@ -38,6 +38,8 @@ Optional properties:
-> >  	mode;
-> >   - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
-> >  	control register, it depends on "mediatek,wakeup-src".
-> > + - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
-> > +	bit1 for u3port1, ... etc;
-> 
-> I think you should have child nodes for ports and use "status" to 
-> disable them (or omit them). IIRC, the common USB bus binding already 
-> defines ports.
-I find only one common binding document about USB bus, that is
-bindings/usb/usb-device.txt, but it can't be used to disable some ports,
-because in hub_probe() function, hub driver enables all downstream
-ports, but doesn't get any property info from DTS.
+This patch implements the DMA support for the ADC in sama5d2 SoC.
+After discussing on the mailing list, this approach is based on triggered
+kfifo buffer, with DMA support added on top of it.
+Thus, the trigger is enabled by the buffer. The ADC itself will not have
+an IRQ enabled if using DMA. With DMA, the channels are enabled, and DMA
+controller is configured to read from the data ready registers.
+When DMA starts, the trigger will start the conversion (external trigger
+configured), then the registers will have the conversion data ready, the ADC
+will trigger the DMA controller to read from the registers, the DMA will
+copy the data into the software buffer, and trigger the DMA IRQ.
+In the bottom half, the trigger polled and the data from the DMA buffer is
+pushed to buffer.
 
-> 
-> >   - vbus-supply : reference to the VBUS regulator;
-> >   - usb3-lpm-capable : supports USB3.0 LPM
-> >   - pinctrl-names : a pinctrl state named "default" must be defined
-> > -- 
-> > 1.7.9.5
-> > 
+The DMA will use a cyclic buffer to write to one half, and the software can
+read from the other half. The DMA operation doesn't stop until the buffer is
+disabled.
+The DMA coherent area is allocated when DMA is initially started, and
+deallocated only if the watermark is changed to 1 (no more DMA usage). The
+coherent area is large enough to cope with maximum fifo size for all possible
+channels enabled.
+The fifo size is set to 128 conversions by default in the driver.
 
+The implementation uses the user watermark  to decide whether DMA will be
+used or not. For watermark 1, DMA will not be used. If watermark is greater,
+DMA will be used.
+Sysfs attributes are created to indicate whether the DMA is used,
+with hwfifo_enabled, and the current DMA watermark is readable
+in hwfifo_watermark. Minimum and maximum values are in hwfifo_watermark_min
+and hwfifo_watermark_max.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Devicetree binding added for dma as well.
+Modified devicetree for sama5d2 SoC to add connected DMA channel.
+
+A different commit modifies the driver to use the highest ADC clock
+to demonstrate the capabilities of the DMA support at best sampling rate.
+
+A different commit addresses the issue of not clearing the DRDY irq in direct
+mode. This is required to avoid erroneous overrun warnings.
+
+  Changes in v2:
+ - No longer add last timestamp to all samples. Now, compute an interval
+between samples w.r.t. start and end time of the transfer and number
+of samples. Then distribute them each in the time interval.
+ - Add warning for conversion overrun. This helps user identify cases
+when the watermark needs adjustment : the software is too slow in reading
+data from the ADC.
+ - Protection around watermark is not needed, changing of the watermark
+cannot be done while the buffer is enabled. When buffer is disabled, all
+DMA resources are freed anyway.
+ - Added validation on trigger to be used by own device
+ - Best sample rate I could obtain using the low frequency clock was about
+4k samples/second, with a watermark of 100. To get up to 50k samples/second
+the ADC frequency must be increased to max.
+ - Addressed other comments from mailing list review. Feedback is appreciated
+ - Added [PATCH v2 4/5] iio: adc: at91-sama5d2_adc: ack DRDY irq in direct
+ - Added [PATCH v2 5/5] iio: adc: at91-sama5d2_adc: use max sample rate
+
+Eugen Hristev (5):
+  dt-bindings: iio: at91-sama5d2_adc: add optional dma property
+  ARM: dts: at91: sama5d2: added dma property for ADC device
+  iio: adc: at91-sama5d2_adc: add support for DMA
+  iio: adc: at91-sama5d2_adc: ack DRDY irq in direct mode
+  iio: adc: at91-sama5d2_adc: use max sample rate
+
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   7 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |   2 +
+ drivers/iio/adc/Kconfig                            |   1 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 437 ++++++++++++++++++++-
+ 4 files changed, 428 insertions(+), 19 deletions(-)
+
+-- 
+2.7.4
