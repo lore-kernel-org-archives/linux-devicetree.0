@@ -1,86 +1,81 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [Patch v6 2/7] slimbus: Add messaging APIs to
- slimbus framework
-Date: Wed, 11 Oct 2017 12:12:20 +0100
-Message-ID: <8a6e9376-89a6-56d4-055a-29aae7abc311@linaro.org>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
- <20171011043814.GF30097@localhost>
- <aa117cb8-ba59-894c-5a82-1b38facfa841@linaro.org>
- <20171011102436.GH30097@localhost>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCH 1/4] ARM: dts: imx28-tx28: Relicense the TX28 dts file under
+ GPLv2/X11
+Date: Wed, 11 Oct 2017 13:05:36 +0200
+Message-ID: <1507719939-27250-2-git-send-email-LW@KARO-electronics.de>
+References: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171011102436.GH30097@localhost>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/10/17 11:24, Vinod Koul wrote:
-> On Wed, Oct 11, 2017 at 10:42:28AM +0100, Srinivas Kandagatla wrote:
->> On 11/10/17 05:38, Vinod Koul wrote:
->>> On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla@linaro.org wrote:
->>>
->>>>   	mutex_init(&ctrl->m_ctrl);
->>>> +	spin_lock_init(&ctrl->tx.lock);
->>>> +	spin_lock_init(&ctrl->rx.lock);
->>>
->>> locks galore :) My assumption is that you want to optimize these? But given
->>> that audio user is going to be serialized do we practically need two locks?
->>>
->> If we remove the locking, It will be issue if we have multiple devices in a
->> component, which is common atleast with the codec which am looking at.
-> 
-> can you explian what you mean by a "device" here?
-
-SLIMbus component contain two or more SLIMbus devices,
-like function(Generic) device, interface device.
-Interface device provides bus management services, where as generic 
-device provides more of application specific functionality like ADC/DAC..
-
-
-> 
->>>> +	switch (mc) {
->>>> +	case SLIM_MSG_MC_REQUEST_VALUE:
->>>> +	case SLIM_MSG_MC_REQUEST_INFORMATION:
->>>
->>> what does MC refer to?
->>
->> Message Code.
-> 
-> isnt SLIM_MSG enough :D I think we cna get rid of MC here..
-> 
->>>> +struct slim_val_inf {
->>>> +	u16			start_offset;
->>>> +	u8			num_bytes;
->>>> +	u8			*rbuf;
->>>> +	const u8		*wbuf;
->>>
->>> can we do read and write, if not it can be a buf which maybe rbuf or wbug
->>> based on type
->> With REQUEST_CHANGE_VALUE single command we can read old value at the same
->> time we can write new value.
-> 
-> so that is a read modify write, correct? Is that implemented in HW, if so we
-> need to provide only write value
-
-Its not really a read-modify-write,
-REQUEST_CHANGE_VALUE/REQUEST_CLEAR_INFORMATION commands are part of 
-SLIMbus Spec.
-We need provide write value + buffer for read value to store.
-
-all REQUEST_CHANGE_VALUE cmd do is this in single operation:
-
-1> save the old value
-2> update new value from wbuf
-3> return the saved value from step 1, into rbuf
-
-Not sure what is the real usecase for this, I have not seen its usage in 
-any Qualcomm downstream code.
-
-May be it can be used to implement some class of atomic ops.
+VGhlIGN1cnJlbnQgR1BMIG9ubHkgbGljZW5zaW5nIG9uIHRoZSBkdHMgZmlsZSBtYWtlcyBpdCB2
+ZXJ5CmltcHJhY3RpY2FsIGZvciBvdGhlciBzb2Z0d2FyZSBjb21wb25lbnRzIGxpY2Vuc2VkIHVu
+ZGVyIGFub3RoZXIKbGljZW5zZS4KCkluIG9yZGVyIHRvIG1ha2UgaXQgZWFzaWVyIGZvciB0aGVt
+IHRvIHJldXNlIG91ciBkZXZpY2UgdHJlZXMsCnJlbGljZW5zZSBvdXIgZHRzIGZpbGVzIGZpcnN0
+IHVuZGVyIGEgR1BML1gxMSBkdWFsLWxpY2Vuc2UuCgpTaWduZWQtb2ZmLWJ5OiBMb3RoYXIgV2HD
+n21hbm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14
+MjgtdHgyOC5kdHMgfCA0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0t
+CiAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKCmRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0cyBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDI4LXR4MjguZHRzCmluZGV4IDBlYmJjODMuLjMxOWNmMTcgMTAwNjQ0Ci0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDI4LXR4MjguZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDI4LXR4MjguZHRzCkBAIC0xLDEzICsxLDQzIEBACiAvKgogICogQ29weXJpZ2h0IDIwMTIgU2hh
+d24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KLSAqIENvcHlyaWdodCAyMDEzIExvdGhhciBX
+YcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4KKyAqIENvcHlyaWdodCAyMDEzLTIwMTcg
+TG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgogICoKLSAqIFRoZSBjb2Rl
+IGNvbnRhaW5lZCBoZXJlaW4gaXMgbGljZW5zZWQgdW5kZXIgdGhlIEdOVSBHZW5lcmFsIFB1Ymxp
+YwotICogTGljZW5zZS4gWW91IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQ
+dWJsaWMgTGljZW5zZQotICogVmVyc2lvbiAyIGF0IHRoZSBmb2xsb3dpbmcgbG9jYXRpb25zOgor
+ICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1bmRl
+ciB0aGUgdGVybXMKKyAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBsaWNlbnNlLCBhdCB5b3VyIG9w
+dGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbAorICogbGljZW5zaW5nIG9ubHkgYXBwbGllcyB0byB0
+aGlzIGZpbGUsIGFuZCBub3QgdGhpcyBwcm9qZWN0IGFzIGEKKyAqIHdob2xlLgogICoKLSAqIGh0
+dHA6Ly93d3cub3BlbnNvdXJjZS5vcmcvbGljZW5zZXMvZ3BsLWxpY2Vuc2UuaHRtbAotICogaHR0
+cDovL3d3dy5nbnUub3JnL2NvcHlsZWZ0L2dwbC5odG1sCisgKiAgYSkgVGhpcyBmaWxlIGlzIGZy
+ZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcgorICogICAgIG1vZGlm
+eSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlCisg
+KiAgICAgdmVyc2lvbiAyIGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0
+aW9uLgorICoKKyAqICAgICBUaGlzIGZpbGUgaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhh
+dCBpdCB3aWxsIGJlIHVzZWZ1bCwKKyAqICAgICBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdp
+dGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgorICogICAgIE1FUkNIQU5UQUJJTElU
+WSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKKyAqICAgICBH
+TlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgorICoKKyAqIE9yLCBh
+bHRlcm5hdGl2ZWx5LAorICoKKyAqICBiKSBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBm
+cmVlIG9mIGNoYXJnZSwgdG8gYW55IHBlcnNvbgorICogICAgIG9idGFpbmluZyBhIGNvcHkgb2Yg
+dGhpcyBzb2Z0d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1bWVudGF0aW9uCisgKiAgICAgZmlsZXMg
+KHRoZSAiU29mdHdhcmUiKSwgdG8gZGVhbCBpbiB0aGUgU29mdHdhcmUgd2l0aG91dAorICogICAg
+IHJlc3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8g
+dXNlLAorICogICAgIGNvcHksIG1vZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1
+YmxpY2Vuc2UsIGFuZC9vcgorICogICAgIHNlbGwgY29waWVzIG9mIHRoZSBTb2Z0d2FyZSwgYW5k
+IHRvIHBlcm1pdCBwZXJzb25zIHRvIHdob20gdGhlCisgKiAgICAgU29mdHdhcmUgaXMgZnVybmlz
+aGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcKKyAqICAgICBjb25kaXRpb25z
+OgorICoKKyAqICAgICBUaGUgYWJvdmUgY29weXJpZ2h0IG5vdGljZSBhbmQgdGhpcyBwZXJtaXNz
+aW9uIG5vdGljZSBzaGFsbCBiZQorICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Igc3Vi
+c3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgorICoKKyAqICAgICBUSEUgU09GVFdB
+UkUgSVMgUFJPVklERUQgIkFTIElTIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwKKyAq
+ICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhF
+IFdBUlJBTlRJRVMKKyAqICAgICBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFS
+VElDVUxBUiBQVVJQT1NFIEFORAorICogICAgIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQg
+U0hBTEwgVEhFIEFVVEhPUlMgT1IgQ09QWVJJR0hUCisgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUg
+Rk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksCisgKiAgICAgV0hFVEhF
+UiBJTiBBTiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HCisg
+KiAgICAgRlJPTSwgT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1Ig
+VEhFIFVTRSBPUgorICogICAgIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KICAqLwog
+CiAvZHRzLXYxLzsKLS0gCjIuMS40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
