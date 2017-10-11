@@ -1,36 +1,42 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
- used as LDOs
-Date: Wed, 11 Oct 2017 21:09:58 +0200
-Message-ID: <CACRpkdY0GWqjkbxm=OBfRsTmkQ7kc86Dw96XUT08azSbD57Xrw@mail.gmail.com>
-References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
- <20171002120854.5212-13-quentin.schulz@free-electrons.com>
- <CACRpkdZYcSuhvn0b0qa0k1PQHoyXjNyjoyhR2sPme_t1pF12Dg@mail.gmail.com>
- <20171003144737.rhgtp3uwckhvoqdw@flea> <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA@mail.gmail.com>
- <8be22e47-8071-be4c-0bd4-38fa51cbe3ff@free-electrons.com> <CAGb2v65-_MjUsfTHMoyzvczs_280p7NXEsStSaoR6wnvTCq5+A@mail.gmail.com>
- <20171011120036.bvw5dpz4myngtwu7@flea>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] gpio-rcar: document R8A77970 bindings
+Date: Wed, 11 Oct 2017 22:51:59 +0300
+Message-ID: <20171011195210.555925176@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171011120036.bvw5dpz4myngtwu7@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Lee Jones <lee.jones@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline; filename=gpio-rcar-document-R8A77970-bindings.patch
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 2:00 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
+Renesas R-Car V3M (R8A77970) SoC also has the R-Car gen3 compatible GPIO
+controllers, so document the SoC specific bindings.
 
-> What about not enforcing any muxing state when we want to mux to the
-> "ldo" function? We just leave it to whatever value it is, that way we
-> keep it under the regulator framework's control, and we don't disrupt
-> anything when the pin is requested.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-In a way since setting the bits one way means "LDO on" and another
-setting means "LDO off" those bits should be handled by the
-regulator framework when used as a regulator, not pin control.
+---
+The patch is against the 'devel' branch of Linus Walleij's 'linux-gpio.git'
+repo.
 
-So I would say yes.
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-Yours,
-Linus Walleij
+Index: linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+===================================================================
+--- linux-gpio.orig/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ linux-gpio/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -14,6 +14,7 @@ Required Properties:
+     - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
+     - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
+     - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
++    - "renesas,gpio-r8a77970": for R8A77970 (R-Car V3M) compatible GPIO controller.
+     - "renesas,rcar-gen1-gpio": for a generic R-Car Gen1 GPIO controller.
+     - "renesas,rcar-gen2-gpio": for a generic R-Car Gen2 or RZ/G1 GPIO controller.
+     - "renesas,rcar-gen3-gpio": for a generic R-Car Gen3 GPIO controller.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
