@@ -1,69 +1,52 @@
-From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-Date: Wed, 11 Oct 2017 08:36:39 -0500
-Message-ID: <20171011133639.GC25400@ti.com>
-References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
- <20170922114703.30511-3-maxime.ripard@free-electrons.com>
- <20170929182125.GB3163@ti.com>
- <20171011115544.w7eswyhke6dskgbb@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171011115544.w7eswyhke6dskgbb@flea>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: PCI: rcar: Correct example to match reality
+Date: Wed, 11 Oct 2017 15:50:13 +0200
+Message-ID: <1507729813-21501-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Correct the USB subnodes in the example, cfr. commit f7d569c1e6a6fa73
+("ARM: dts: r8a779x: Fix PCI bus dtc warnings"):
+  1. Drop the bogus 'device_type = "pci"' properties,
+  2. Correct the unit addresses.
 
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote on Wed [2017-Oct-11 13:55:44 +0200]:
-> Hi Benoit,
-> 
-> On Fri, Sep 29, 2017 at 06:21:25PM +0000, Benoit Parrot wrote:
-> > > +struct csi2tx_priv {
-> > > +	struct device			*dev;
-> > > +	atomic_t			count;
-> > > +
-> > > +	void __iomem			*base;
-> > > +
-> > > +	struct clk			*esc_clk;
-> > > +	struct clk			*p_clk;
-> > > +	struct clk			*pixel_clk[CSI2TX_STREAMS_MAX];
-> > > +
-> > > +	struct v4l2_subdev		subdev;
-> > > +	struct media_pad		pads[CSI2TX_PAD_MAX];
-> > > +	struct v4l2_mbus_framefmt	pad_fmts[CSI2TX_PAD_MAX];
-> > > +
-> > > +	bool				has_internal_dphy;
-> > 
-> > I assume dphy support is for a subsequent revision?
-> 
-> Yes, the situation is similar to the CSI2-RX driver.
-> 
-> > > +		/*
-> > > +		 * We use the stream ID there, but it's wrong.
-> > > +		 *
-> > > +		 * A stream could very well send a data type that is
-> > > +		 * not equal to its stream ID. We need to find a
-> > > +		 * proper way to address it.
-> > > +		 */
-> > 
-> > I don't quite get the above comment, from the code below it looks like
-> > you are using the current fmt as a source to provide the correct DT.
-> > Am I missing soemthing?
-> 
-> Yes, so far the datatype is inferred from the format set. Is there
-> anything wrong with that?
+Update other bits in the example to match real use:
+  1. Rename the USB subnodes from "pci" to "usb",
+  2. Update the "phys" property.
 
-No, nothing wrong with that behavior it just doesn't not match the comment
-above, where it is says that the DT is set to the stream ID...
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Regards,
-Benoit
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+index 3d038638612b8ec2..9fe7e12a7bf37b7c 100644
+--- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
++++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+@@ -60,17 +60,15 @@ Example SoC configuration:
+ 				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+ 				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-		pci@0,1 {
++		usb@1,0 {
+ 			reg = <0x800 0 0 0 0>;
+-			device_type = "pci";
+-			phys = <&usbphy 0 0>;
++			phys = <&usb0 0>;
+ 			phy-names = "usb";
+ 		};
+ 
+-		pci@0,2 {
++		usb@2,0 {
+ 			reg = <0x1000 0 0 0 0>;
+-			device_type = "pci";
+-			phys = <&usbphy 0 0>;
++			phys = <&usb0 0>;
+ 			phy-names = "usb";
+ 		};
+ 	};
+-- 
+2.7.4
