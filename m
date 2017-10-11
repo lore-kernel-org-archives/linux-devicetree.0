@@ -1,52 +1,41 @@
-From: Baolin Wang <baolin.wang@spreadtrum.com>
-Subject: [PATCH 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC documentation
-Date: Wed, 11 Oct 2017 20:17:44 +0800
-Message-ID: <73965e7fb34d6a96529589cdf48e54e95ed666b8.1507723345.git.baolin.wang@spreadtrum.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] ARM: dts: gr-peach: Enable ostm0 and ostm1 timers
+Date: Wed, 11 Oct 2017 14:45:16 +0200
+Message-ID: <CAMuHMdXPiO1iZMABAZRfKv0HwYcVtZ_BkEa=dKFczx-3s84_Gg@mail.gmail.com>
+References: <1507538915-16566-1-git-send-email-jacopo+renesas@jmondi.org> <1507538915-16566-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507538915-16566-3-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Chris Brandt <Chris.Brandt@renesas.com>, Andrew Lunn <andrew@lunn.ch>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the binding documentation for Spreadtrum SC27xx series
-PMIC device.
+On Mon, Oct 9, 2017 at 10:48 AM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Enable ostm0 and ostm1 timers to be used as clock source and clockevent
+> source. The timers provides greater accuracy than the already enabled
+> mtu2 one.
+>
+> With these enabled:
+>
+> clocksource: ostm: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 57352151442 ns
+> sched_clock: 32 bits at 33MHz, resolution 30ns, wraps every 64440619504ns
+> ostm: used for clocksource
+> ostm: used for clock events
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Suggested-by: Chris Brandt <chris.brandt@renesas.com>
 
-Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
----
- .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   23 ++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-new file mode 100644
-index 0000000..333c818
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-@@ -0,0 +1,23 @@
-+Spreadtrum SC27xx Power Management Integrated Circuit (PMIC)
-+
-+Required properties:
-+- compatible: Should be "sprd,sc2731".
-+- reg: SPI chip select.
-+- spi-max-frequency: Typically set to 26000000.
-+- interrupts: The interrupt line the device is connected to.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: The number of cells to describe an PMIC IRQ, should be 2.
-+- #address-cells: Child device offset number of cells, should be 1.
-+- #size-cells: Child device size number of cells, should be 0.
-+
-+Example:
-+pmic: pmic@0 {
-+	compatible = "sprd,sc2731";
-+	reg = <0>;
-+	spi-max-frequency = <26000000>;
-+	interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+};
--- 
-1.7.9.5
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
