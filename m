@@ -1,57 +1,149 @@
-From: Guochun Mao <guochun.mao@mediatek.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: mtd: add new compatible strings and
- improve description
-Date: Wed, 11 Oct 2017 11:15:13 +0800
-Message-ID: <1507691713.14979.2.camel@mhfsdcap03>
+From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] mtd: mtk-nor: add suspend/resume support
+Date: Wed, 11 Oct 2017 11:16:19 +0800
+Message-ID: <1507691779.14979.3.camel@mhfsdcap03>
 References: <1505997906-30921-1-git-send-email-guochun.mao@mediatek.com>
-         <1505997906-30921-2-git-send-email-guochun.mao@mediatek.com>
+         <1505997906-30921-3-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1505997906-30921-2-git-send-email-guochun.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Marek Vasut <marek.vasut@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505997906-30921-3-git-send-email-guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 gentle ping...
 
 On Thu, 2017-09-21 at 20:45 +0800, Guochun Mao wrote:
-> Add "mediatak,mt2712-nor" and "mediatek,mt7622-nor"
-> for nor flash node's compatible strings.
-> Explicate the fallback compatible.
+> Abstract functions of clock setting, to avoid duplicated code,
+> these functions been used in new feature.
+> Implement suspend/resume functions.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/mtd/mtk-quadspi.txt        |   15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+>  drivers/mtd/spi-nor/mtk-quadspi.c |   70 ++++++++++++++++++++++++++++++-------
+>  1 file changed, 58 insertions(+), 12 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> index 840f940..56d3668 100644
-> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> @@ -1,13 +1,16 @@
->  * Serial NOR flash controller for MTK MT81xx (and similar)
+> diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
+> index c258c7a..abe455c 100644
+> --- a/drivers/mtd/spi-nor/mtk-quadspi.c
+> +++ b/drivers/mtd/spi-nor/mtk-quadspi.c
+> @@ -404,6 +404,29 @@ static int mt8173_nor_write_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
+>  	return ret;
+>  }
 >  
->  Required properties:
-> -- compatible: 	  The possible values are:
-> -		  "mediatek,mt2701-nor"
-> -		  "mediatek,mt7623-nor"
-> +- compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
-> +		  and it's the fallback compatible for other Soc.
-> +		  For every other SoC, should contain both the SoC-specific compatible
-> +		  string and "mediatek,mt8173-nor".
-> +		  The possible values are:
-> +		  "mediatek,mt2701-nor", "mediatek,mt8173-nor"
-> +		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
-> +		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
-> +		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
->  		  "mediatek,mt8173-nor"
-> -		  For mt8173, compatible should be "mediatek,mt8173-nor".
-> -		  For every other SoC, should contain both the SoC-specific compatible string
-> -		  and "mediatek,mt8173-nor".
->  - reg: 		  physical base address and length of the controller's register
->  - clocks: 	  the phandle of the clocks needed by the nor controller
->  - clock-names: 	  the names of the clocks
+> +static void mt8173_nor_disable_clk(struct mt8173_nor *mt8173_nor)
+> +{
+> +	clk_disable_unprepare(mt8173_nor->spi_clk);
+> +	clk_disable_unprepare(mt8173_nor->nor_clk);
+> +}
+> +
+> +static int mt8173_nor_enable_clk(struct mt8173_nor *mt8173_nor)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(mt8173_nor->spi_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(mt8173_nor->nor_clk);
+> +	if (ret) {
+> +		clk_disable_unprepare(mt8173_nor->spi_clk);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int mtk_nor_init(struct mt8173_nor *mt8173_nor,
+>  			struct device_node *flash_node)
+>  {
+> @@ -468,15 +491,11 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
+>  		return PTR_ERR(mt8173_nor->nor_clk);
+>  
+>  	mt8173_nor->dev = &pdev->dev;
+> -	ret = clk_prepare_enable(mt8173_nor->spi_clk);
+> +
+> +	ret = mt8173_nor_enable_clk(mt8173_nor);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = clk_prepare_enable(mt8173_nor->nor_clk);
+> -	if (ret) {
+> -		clk_disable_unprepare(mt8173_nor->spi_clk);
+> -		return ret;
+> -	}
+>  	/* only support one attached flash */
+>  	flash_np = of_get_next_available_child(pdev->dev.of_node, NULL);
+>  	if (!flash_np) {
+> @@ -487,10 +506,9 @@ static int mtk_nor_drv_probe(struct platform_device *pdev)
+>  	ret = mtk_nor_init(mt8173_nor, flash_np);
+>  
+>  nor_free:
+> -	if (ret) {
+> -		clk_disable_unprepare(mt8173_nor->spi_clk);
+> -		clk_disable_unprepare(mt8173_nor->nor_clk);
+> -	}
+> +	if (ret)
+> +		mt8173_nor_disable_clk(mt8173_nor);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -498,11 +516,38 @@ static int mtk_nor_drv_remove(struct platform_device *pdev)
+>  {
+>  	struct mt8173_nor *mt8173_nor = platform_get_drvdata(pdev);
+>  
+> -	clk_disable_unprepare(mt8173_nor->spi_clk);
+> -	clk_disable_unprepare(mt8173_nor->nor_clk);
+> +	mt8173_nor_disable_clk(mt8173_nor);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int mtk_nor_suspend(struct device *dev)
+> +{
+> +	struct mt8173_nor *mt8173_nor = dev_get_drvdata(dev);
+> +
+> +	mt8173_nor_disable_clk(mt8173_nor);
+> +
+>  	return 0;
+>  }
+>  
+> +static int mtk_nor_resume(struct device *dev)
+> +{
+> +	struct mt8173_nor *mt8173_nor = dev_get_drvdata(dev);
+> +
+> +	return mt8173_nor_enable_clk(mt8173_nor);
+> +}
+> +
+> +static const struct dev_pm_ops mtk_nor_dev_pm_ops = {
+> +	.suspend = mtk_nor_suspend,
+> +	.resume = mtk_nor_resume,
+> +};
+> +
+> +#define MTK_NOR_DEV_PM_OPS	(&mtk_nor_dev_pm_ops)
+> +#else
+> +#define MTK_NOR_DEV_PM_OPS	NULL
+> +#endif
+> +
+>  static const struct of_device_id mtk_nor_of_ids[] = {
+>  	{ .compatible = "mediatek,mt8173-nor"},
+>  	{ /* sentinel */ }
+> @@ -514,6 +559,7 @@ static int mtk_nor_drv_remove(struct platform_device *pdev)
+>  	.remove = mtk_nor_drv_remove,
+>  	.driver = {
+>  		.name = "mtk-nor",
+> +		.pm = MTK_NOR_DEV_PM_OPS,
+>  		.of_match_table = mtk_nor_of_ids,
+>  	},
+>  };
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
