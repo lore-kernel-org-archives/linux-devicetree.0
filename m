@@ -1,48 +1,44 @@
-From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v12 3/5] MAINTAINERS: add entry for Rockchip RGA driver
-Date: Wed, 11 Oct 2017 15:29:36 +0800
-Message-ID: <20171011072938.383-4-jacob-chen@iotwrt.com>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH v12 4/5] ARM: dts: rockchip: add RGA device node for RK3288
+Date: Wed, 11 Oct 2017 15:29:37 +0800
+Message-ID: <20171011072938.383-5-jacob-chen@iotwrt.com>
 References: <20171011072938.383-1-jacob-chen@iotwrt.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20171011072938.383-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171011072938.383-1-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+This patch add the RGA dt config of rk3288 SoC.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6671f375f7fc..335497bbc3f3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11509,6 +11509,13 @@ F:	drivers/hid/hid-roccat*
- F:	include/linux/hid-roccat*
- F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
+Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index a0a0b08bff74..8c6dfc0abc42 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -972,6 +972,17 @@
+ 		status = "disabled";
+ 	};
  
-+ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
-+M:	Jacob chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	drivers/media/platform/rockchip/rga/
-+F:	Documentation/devicetree/bindings/media/rockchip-rga.txt
++	rga: rga@ff920000 {
++		compatible = "rockchip,rk3288-rga";
++		reg = <0x0 0xff920000 0x0 0x180>;
++		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
++		clock-names = "aclk", "hclk", "sclk";
++		power-domains = <&power RK3288_PD_VIO>;
++		resets = <&cru SRST_RGA_CORE>, <&cru SRST_RGA_AXI>, <&cru SRST_RGA_AHB>;
++		reset-names = "core", "axi", "ahb";
++	};
 +
- ROCKER DRIVER
- M:	Jiri Pirko <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>
- L:	netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ 	vopb: vop@ff930000 {
+ 		compatible = "rockchip,rk3288-vop";
+ 		reg = <0x0 0xff930000 0x0 0x19c>;
 -- 
 2.14.1
