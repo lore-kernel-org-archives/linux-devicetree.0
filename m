@@ -1,37 +1,25 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [alsa-devel] [Patch v6 2/7] slimbus: Add messaging APIs to
- slimbus framework
-Date: Wed, 11 Oct 2017 09:53:09 +0200
-Message-ID: <CAK8P3a2T+7_dVmWcdYhV85Mm-evzsMFf9RAo=GAvNGMfqWOxKw@mail.gmail.com>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-3-srinivas.kandagatla@linaro.org> <20171011043814.GF30097@localhost>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/7] pinctrl: change Kconfig PINCTRL variable to a menuconfig
+Date: Wed, 11 Oct 2017 09:58:51 +0200
+Message-ID: <CACRpkdaHWkr8766VMkTTfPPFYyCSdO7FWSb0m_WJb4YsJ1ycUw@mail.gmail.com>
+References: <1507266491-73971-1-git-send-email-preid@electromag.com.au> <1507266491-73971-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171011043814.GF30097@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jkosina-AlSwsSmVLrQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dani
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1507266491-73971-2-git-send-email-preid@electromag.com.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lars Poeschel <poeschel@lemonage.de>, Sebastian Reichel <sre@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 6:38 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> +     ctrl->pending_wr = kcalloc((ctrl->tx.n - 1),
->> +                                sizeof(struct slim_pending),
->> +                                GFP_KERNEL);
->> +     if (!ctrl->pending_wr) {
->> +             ret = -ENOMEM;
->> +             goto wr_alloc_failed;
->> +     }
->> +
->> +     sema_init(&ctrl->tx_sem, (ctrl->tx.n - 1));
+On Fri, Oct 6, 2017 at 7:08 AM, Phil Reid <preid@electromag.com.au> wrote:
+
+> This allows PINCTRL to be selected manually to allow enabling of the
+> mcp23s08 i2c/spi gpio driver. Which is not platform specific.
 >
-> i though v5 comment from Arnd was not to use semaphores..
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-Right, these need to go away. Thanks for spotting it!
+Patch applied with Sebastian's review tag.
 
-     Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
