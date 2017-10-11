@@ -1,34 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] pinctrl: mcp23s08: remove hardcoded irq polarity
- in irq_setup
-Date: Wed, 11 Oct 2017 10:17:44 +0200
-Message-ID: <CACRpkdZawLotbari82Y6G5X0geveJosS9eCSYdhux17bX4g6Dw@mail.gmail.com>
-References: <1507266491-73971-1-git-send-email-preid@electromag.com.au> <1507266491-73971-7-git-send-email-preid@electromag.com.au>
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: stratix10: enable gpio and leds
+Date: Wed, 11 Oct 2017 03:18:54 -0500
+Message-ID: <e180a731-c7b3-5900-36c1-5943a7b11386@kernel.org>
+References: <20171010212538.3331-1-atull@kernel.org>
+ <20171010212538.3331-2-atull@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507266491-73971-7-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <20171010212538.3331-2-atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 7:08 AM, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
 
-> The irq_active_high flag is for controlling the polarity of the output
-> from the mcp23s08 series devices. The polarity of the irq could be altered
-> by additional logic (eg inverters) between the device and irq input device.
-> The device-tree already allows for this as the irq can be specified in the
-> binding. So hardcoding it in the driver is overly restrictive.
->
-> There are no inkernel users of the mcp23s08 driver with irq's.
->
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 
-Look this up from the irq descriptor as discussed in 4/7.
+On 10/10/2017 04:25 PM, Alan Tull wrote:
+> Enable gpio and leds for socdk OOBE daughtercard.
+> 
+> pushbutton PB_SW0 = gpio1.io4
+> pushbutton PB_SW1 = gpio1.io5
+> LED HPS_LED0      = gpio1.io20
+> LED HPS_LED1      = gpio1.io19
+> LED HPS_LED2      = gpio1.io21
+> 
+> Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
 
-Yours,
-Linus Walleij
+Both patches applied, thanks Alan!
+
+Dinh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
