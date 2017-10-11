@@ -1,35 +1,87 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 3/3] ARM: mvebu: dts: connect interrupt for WD on armada-38x
-Date: Wed, 11 Oct 2017 15:29:58 +1300
-Message-ID: <20171011022958.31268-4-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/3] watchdog: orion: don't enable rstout if an interrupt is configured
+Date: Wed, 11 Oct 2017 15:29:57 +1300
+Message-ID: <20171011022958.31268-3-chris.packham@alliedtelesis.co.nz>
 References: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux@roeck-us.net, wim@iguana.be, gregory.clement@free-electrons.com, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-The watchdog timer interrupt is available internally on the Armada-38x
-SoCs. Connect it so that we can have the orion_wdt_irq generate debug
-information when a watchdog timeout occurs.
+The orion_wdt_irq invokes panic() so we are going to reset the CPU
+regardless.  By not setting this bit we get a chance to gather debug
+from the panic output before the system is reset.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- arch/arm/boot/dts/armada-38x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/watchdog/orion_wdt.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 7ff0811e61db..9ac76c54c9e5 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -408,6 +408,7 @@
- 				reg = <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
- 				clocks = <&coreclk 2>, <&refclk>;
- 				clock-names = "nbclk", "fixed";
-+				interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
- 			};
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index ea676d233e1e..ce88f339ef7f 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -71,6 +71,7 @@ struct orion_watchdog {
+ 	unsigned long clk_rate;
+ 	struct clk *clk;
+ 	const struct orion_watchdog_data *data;
++	int irq;
+ };
  
- 			cpurst: cpurst@20800 {
+ static int orion_wdt_clock_init(struct platform_device *pdev,
+@@ -203,9 +204,11 @@ static int armada375_start(struct watchdog_device *wdt_dev)
+ 						dev->data->wdt_enable_bit);
+ 
+ 	/* Enable reset on watchdog */
+-	reg = readl(dev->rstout);
+-	reg |= dev->data->rstout_enable_bit;
+-	writel(reg, dev->rstout);
++	if (!dev->irq) {
++		reg = readl(dev->rstout);
++		reg |= dev->data->rstout_enable_bit;
++		writel(reg, dev->rstout);
++	}
+ 
+ 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit, 0);
+ 	return 0;
+@@ -228,9 +231,12 @@ static int armada370_start(struct watchdog_device *wdt_dev)
+ 						dev->data->wdt_enable_bit);
+ 
+ 	/* Enable reset on watchdog */
+-	reg = readl(dev->rstout);
+-	reg |= dev->data->rstout_enable_bit;
+-	writel(reg, dev->rstout);
++	if (!dev->irq) {
++		reg = readl(dev->rstout);
++		reg |= dev->data->rstout_enable_bit;
++		writel(reg, dev->rstout);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -247,8 +253,9 @@ static int orion_start(struct watchdog_device *wdt_dev)
+ 						dev->data->wdt_enable_bit);
+ 
+ 	/* Enable reset on watchdog */
+-	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,
+-				      dev->data->rstout_enable_bit);
++	if (!dev->irq)
++		atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,
++					      dev->data->rstout_enable_bit);
+ 
+ 	return 0;
+ }
+@@ -595,6 +602,8 @@ static int orion_wdt_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev, "failed to request IRQ\n");
+ 			goto disable_clk;
+ 		}
++
++		dev->irq = irq;
+ 	}
+ 
+ 	watchdog_set_nowayout(&dev->wdt, nowayout);
 -- 
 2.14.2
