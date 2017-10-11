@@ -1,38 +1,36 @@
-From: Tom McLeod <tom.mcleod-i/fjllWUydfqlBn2x/YWAg@public.gmane.org>
-Subject: [PATCH] dt-bindings: Add vendor prefix for Opal Kelly Inc
-Date: Wed, 11 Oct 2017 11:57:50 -0700
-Message-ID: <1507748270-13354-1-git-send-email-tom.mcleod@opalkelly.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tom McLeod <tom.mcleod-i/fjllWUydfqlBn2x/YWAg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
+ used as LDOs
+Date: Wed, 11 Oct 2017 21:09:58 +0200
+Message-ID: <CACRpkdY0GWqjkbxm=OBfRsTmkQ7kc86Dw96XUT08azSbD57Xrw@mail.gmail.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-13-quentin.schulz@free-electrons.com>
+ <CACRpkdZYcSuhvn0b0qa0k1PQHoyXjNyjoyhR2sPme_t1pF12Dg@mail.gmail.com>
+ <20171003144737.rhgtp3uwckhvoqdw@flea> <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA@mail.gmail.com>
+ <8be22e47-8071-be4c-0bd4-38fa51cbe3ff@free-electrons.com> <CAGb2v65-_MjUsfTHMoyzvczs_280p7NXEsStSaoR6wnvTCq5+A@mail.gmail.com>
+ <20171011120036.bvw5dpz4myngtwu7@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171011120036.bvw5dpz4myngtwu7@flea>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Lee Jones <lee.jones@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Opal Kelly is a manufacturer of FPGA Integration Modules.
+On Wed, Oct 11, 2017 at 2:00 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 
-Signed-off-by: Tom McLeod <tom.mcleod-i/fjllWUydfqlBn2x/YWAg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+> What about not enforcing any muxing state when we want to mux to the
+> "ldo" function? We just leave it to whatever value it is, that way we
+> keep it under the regulator framework's control, and we don't disrupt
+> anything when the pin is requested.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1afd298..f0c0584 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -245,6 +245,7 @@ olimex	OLIMEX Ltd.
- onion	Onion Corporation
- onnn	ON Semiconductor Corp.
- ontat	On Tat Industrial Company
-+opalkelly	Opal Kelly Incorporated
- opencores	OpenCores.org
- option	Option NV
- ORCL	Oracle Corporation
--- 
-2.7.4
+In a way since setting the bits one way means "LDO on" and another
+setting means "LDO off" those bits should be handled by the
+regulator framework when used as a regulator, not pin control.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So I would say yes.
+
+Yours,
+Linus Walleij
