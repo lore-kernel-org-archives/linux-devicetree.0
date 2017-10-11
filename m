@@ -1,114 +1,91 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCH 07/12] ARM: dts: imx6-tx6: convert to using simple-audio-card
-Date: Wed, 11 Oct 2017 13:50:30 +0200
-Message-ID: <1507722635-30801-8-git-send-email-LW@KARO-electronics.de>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCH 05/12] ARM: dts: imx6-tx6: improve ethernet related pinctrl setup
+Date: Wed, 11 Oct 2017 13:50:28 +0200
+Message-ID: <1507722635-30801-6-git-send-email-LW@KARO-electronics.de>
 References: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507722635-30801-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Convert the DTS sound setup to use the simple-audio-card driver.
+Remove the PHY INT and RESET pins from hog section and put them into
+their own pinctrl nodes referenced by the appropriate driver nodes.
+Also, the MDIO pins are required for probing the Ethernet PHY, so they
+must be configured by the FEC driver, not by the PHY driver. Move the
+corresponding pinctrl settings from the PHY subnode to the FEC node.
 
-Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx6qdl-tx6.dtsi | 50 ++++++++++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/imx6qdl-tx6.dtsi | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-index c6b2d63..e0dbf8b 100644
+index a50bf71..aa32956 100644
 --- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-@@ -43,6 +43,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2014-2016 Lothar Waßmann <LW@KARO-electronics.de>
++ * Copyright 2014-2017 Lothar Waßmann <LW@KARO-electronics.de>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPL or the X11 license, at your option. Note that this dual
+@@ -241,7 +241,7 @@
  
- / {
- 	aliases {
-@@ -183,24 +184,56 @@
+ &fec {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_enet>;
++	pinctrl-0 = <&pinctrl_enet &pinctrl_enet_mdio &pinctrl_etnphy_rst>;
+ 	clocks = <&clks IMX6QDL_CLK_ENET>,
+ 		 <&clks IMX6QDL_CLK_ENET>,
+ 		 <&clks IMX6QDL_CLK_ENET_REF>,
+@@ -261,7 +261,7 @@
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
+ 			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_enet_mdio>;
++			pinctrl-0 = <&pinctrl_etnphy_int>;
+ 			interrupts-extended = <&gpio7 1 IRQ_TYPE_EDGE_FALLING>;
+ 		};
+ 	};
+@@ -334,8 +334,6 @@
+ 
+ 	pinctrl_hog: hoggrp {
+ 		fsl,pins = <
+-			MX6QDL_PAD_SD3_DAT2__GPIO7_IO06		0x1b0b1 /* ETN PHY RESET */
+-			MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x1b0b1 /* ETN PHY INT */
+ 			MX6QDL_PAD_EIM_A25__GPIO5_IO02		0x1b0b1 /* PWR BTN */
+ 		>;
+ 	};
+@@ -453,12 +451,24 @@
+ 		>;
  	};
  
- 	sound {
--		compatible = "karo,imx6qdl-tx6qdl-sgtl5000",
--			     "fsl,imx-audio-sgtl5000";
--		model = "sgtl5000-audio";
-+		compatible = "karo,imx6qdl-tx6-sgtl5000",
-+			     "simple-audio-card";
-+		simple-audio-card,name = "imx6qdl-tx6-sgtl5000-audio";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_audmux>;
--		ssi-controller = <&ssi1>;
--		audio-codec = <&sgtl5000>;
--		audio-routing =
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Line", "Line In",
-+			"Line", "Line Out",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
- 			"MIC_IN", "Mic Jack",
- 			"Mic Jack", "Mic Bias",
- 			"Headphone Jack", "HP_OUT";
--		mux-int-port = <1>;
--		mux-ext-port = <5>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&ssi1>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+		};
- 	};
- };
- 
- &audmux {
- 	status = "okay";
-+
-+	ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_SYN |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(4) |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(4) |
-+			IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
++	pinctrl_etnphy_int: etnphy-intgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x1b0b1 /* ETN PHY INT */
 +		>;
 +	};
 +
-+	pins5 {
-+		fsl,audmux-port = <4>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
+ 	pinctrl_etnphy_power: etnphy-pwrgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1 /* ETN PHY POWER */
+ 		>;
+ 	};
+ 
++	pinctrl_etnphy_rst: etnphy-rstgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_DAT2__GPIO7_IO06		0x1b0b1 /* ETN PHY RESET */
 +		>;
 +	};
- };
- 
- &can1 {
-@@ -298,6 +331,7 @@
- 
- 	sgtl5000: sgtl5000@0a {
- 		compatible = "fsl,sgtl5000";
-+		#sound-dai-cells = <0>;
- 		reg = <0x0a>;
- 		VDDA-supply = <&reg_2v5>;
- 		VDDIO-supply = <&reg_3v3>;
++
+ 	pinctrl_flexcan1: flexcan1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX		0x1b0b0
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
