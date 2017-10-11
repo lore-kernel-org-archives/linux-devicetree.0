@@ -1,138 +1,167 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: [PATCH 2/3] watchdog: orion: don't enable rstout if an interrupt
- is configured
-Date: Wed, 11 Oct 2017 04:30:50 +0000
-Message-ID: <4f82b24c3b244d3eba0f8de8cb25049f@svr-chch-ex1.atlnz.lc>
-References: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
- <20171011022958.31268-3-chris.packham@alliedtelesis.co.nz>
- <227eed69-c4c8-01a1-3c6b-6cf95e84a9cd@roeck-us.net>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [alsa-devel] [Patch v6 2/7] slimbus: Add messaging APIs to
+ slimbus framework
+Date: Wed, 11 Oct 2017 10:08:14 +0530
+Message-ID: <20171011043814.GF30097@localhost>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org
+Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/17 16:42, Guenter Roeck wrote:=0A=
-> On 10/10/2017 07:29 PM, Chris Packham wrote:=0A=
->> The orion_wdt_irq invokes panic() so we are going to reset the CPU=0A=
->> regardless.  By not setting this bit we get a chance to gather debug=0A=
->> from the panic output before the system is reset.=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>=0A=
-> =0A=
-> Unless I am missing something, this assumes that the interrupt is=0A=
-> handled, ie that the system is not stuck with interrupts disabled.=0A=
-> This makes the watchdog less reliable. This added verbosity comes=0A=
-> at a significant cost. I'd like to get input from others if this=0A=
-> is acceptable.=0A=
-> =0A=
-> That would be different if there was a means to configure a pretimeout,=
-=0A=
-> ie a means to tell the system to generate an irq first, followed by a=0A=
-> hard reset if the interrupt is not served. that does not seem to be=0A=
-> the case here, though.=0A=
-> =0A=
-=0A=
-As far as I can tell there is no pretimeout capability in the orion =0A=
-/armada WDT. I have got a work-in-progress patch that enables the RSTOUT =
-=0A=
-in the interrupt handler which some-what mitigates your concern but =0A=
-still requires the interrupt to be handled at least once.=0A=
-=0A=
-Another option would be to use one of the spare global timers to provide =
-=0A=
-the interrupt-driven aspect.=0A=
-=0A=
-Of course if the irq isn't specified then the existing behaviour is =0A=
-retained which would make the 3/3 patch of this series the debatable part.=
-=0A=
-=0A=
-=0A=
-> Guenter=0A=
-> =0A=
->> ---=0A=
->>    drivers/watchdog/orion_wdt.c | 25 +++++++++++++++++--------=0A=
->>    1 file changed, 17 insertions(+), 8 deletions(-)=0A=
->>=0A=
->> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c=
-=0A=
->> index ea676d233e1e..ce88f339ef7f 100644=0A=
->> --- a/drivers/watchdog/orion_wdt.c=0A=
->> +++ b/drivers/watchdog/orion_wdt.c=0A=
->> @@ -71,6 +71,7 @@ struct orion_watchdog {=0A=
->>    	unsigned long clk_rate;=0A=
->>    	struct clk *clk;=0A=
->>    	const struct orion_watchdog_data *data;=0A=
->> +	int irq;=0A=
->>    };=0A=
->>    =0A=
->>    static int orion_wdt_clock_init(struct platform_device *pdev,=0A=
->> @@ -203,9 +204,11 @@ static int armada375_start(struct watchdog_device *=
-wdt_dev)=0A=
->>    						dev->data->wdt_enable_bit);=0A=
->>    =0A=
->>    	/* Enable reset on watchdog */=0A=
->> -	reg =3D readl(dev->rstout);=0A=
->> -	reg |=3D dev->data->rstout_enable_bit;=0A=
->> -	writel(reg, dev->rstout);=0A=
->> +	if (!dev->irq) {=0A=
->> +		reg =3D readl(dev->rstout);=0A=
->> +		reg |=3D dev->data->rstout_enable_bit;=0A=
->> +		writel(reg, dev->rstout);=0A=
->> +	}=0A=
->>    =0A=
->>    	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit, 0);=
-=0A=
->>    	return 0;=0A=
->> @@ -228,9 +231,12 @@ static int armada370_start(struct watchdog_device *=
-wdt_dev)=0A=
->>    						dev->data->wdt_enable_bit);=0A=
->>    =0A=
->>    	/* Enable reset on watchdog */=0A=
->> -	reg =3D readl(dev->rstout);=0A=
->> -	reg |=3D dev->data->rstout_enable_bit;=0A=
->> -	writel(reg, dev->rstout);=0A=
->> +	if (!dev->irq) {=0A=
->> +		reg =3D readl(dev->rstout);=0A=
->> +		reg |=3D dev->data->rstout_enable_bit;=0A=
->> +		writel(reg, dev->rstout);=0A=
->> +	}=0A=
->> +=0A=
->>    	return 0;=0A=
->>    }=0A=
->>    =0A=
->> @@ -247,8 +253,9 @@ static int orion_start(struct watchdog_device *wdt_d=
-ev)=0A=
->>    						dev->data->wdt_enable_bit);=0A=
->>    =0A=
->>    	/* Enable reset on watchdog */=0A=
->> -	atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,=0A=
->> -				      dev->data->rstout_enable_bit);=0A=
->> +	if (!dev->irq)=0A=
->> +		atomic_io_modify(dev->rstout, dev->data->rstout_enable_bit,=0A=
->> +					      dev->data->rstout_enable_bit);=0A=
->>    =0A=
->>    	return 0;=0A=
->>    }=0A=
->> @@ -595,6 +602,8 @@ static int orion_wdt_probe(struct platform_device *p=
-dev)=0A=
->>    			dev_err(&pdev->dev, "failed to request IRQ\n");=0A=
->>    			goto disable_clk;=0A=
->>    		}=0A=
->> +=0A=
->> +		dev->irq =3D irq;=0A=
->>    	}=0A=
->>    =0A=
->>    	watchdog_set_nowayout(&dev->wdt, nowayout);=0A=
->>=0A=
-> =0A=
-> =0A=
-=0A=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla@linaro.org wrote:
+
+>  	mutex_init(&ctrl->m_ctrl);
+> +	spin_lock_init(&ctrl->tx.lock);
+> +	spin_lock_init(&ctrl->rx.lock);
+
+locks galore :) My assumption is that you want to optimize these? But given
+that audio user is going to be serialized do we practically need two locks?
+
+> +
+> +	ctrl->pending_wr = kcalloc((ctrl->tx.n - 1),
+> +				   sizeof(struct slim_pending),
+> +				   GFP_KERNEL);
+> +	if (!ctrl->pending_wr) {
+> +		ret = -ENOMEM;
+> +		goto wr_alloc_failed;
+> +	}
+> +
+> +	sema_init(&ctrl->tx_sem, (ctrl->tx.n - 1));
+
+i though v5 comment from Arnd was not to use semaphores..
+
+> +/* Copyright (c) 2011-2016, The Linux Foundation. All rights reserved.
+
+2017?
+
+> +int slim_processtxn(struct slim_controller *ctrl,
+
+slim_process_txn seems more readable to me
+
+> +				struct slim_msg_txn *txn)
+> +{
+> +	int ret, i = 0;
+> +	unsigned long flags;
+> +	u8 *buf;
+> +	bool async = false;
+> +	struct slim_cb_data cbd;
+> +	DECLARE_COMPLETION_ONSTACK(done);
+> +	bool need_tid = slim_tid_txn(txn->mt, txn->mc);
+> +
+> +	if (!txn->msg->comp_cb) {
+> +		txn->msg->comp_cb = slim_sync_default_cb;
+> +		cbd.comp = &done;
+> +		txn->msg->ctx = &cbd;
+> +	} else {
+> +		async = true;
+> +	}
+> +
+> +	buf = slim_get_tx(ctrl, txn, need_tid);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	if (need_tid) {
+> +		spin_lock_irqsave(&ctrl->txn_lock, flags);
+> +		for (i = 0; i < ctrl->last_tid; i++) {
+> +			if (ctrl->tid_tbl[i] == NULL)
+> +				break;
+> +		}
+> +		if (i >= ctrl->last_tid) {
+> +			if (ctrl->last_tid == (SLIM_MAX_TIDS - 1)) {
+> +				spin_unlock_irqrestore(&ctrl->txn_lock, flags);
+> +				slim_return_tx(ctrl, -ENOMEM);
+> +				return -ENOMEM;
+> +			}
+> +			ctrl->last_tid++;
+> +		}
+> +		ctrl->tid_tbl[i] = txn->msg;
+> +		txn->tid = i;
+> +		spin_unlock_irqrestore(&ctrl->txn_lock, flags);
+> +	}
+> +
+> +	ret = ctrl->xfer_msg(ctrl, txn, buf);
+> +
+> +	if (!ret && !async) { /* sync transaction */
+> +		/* Fine-tune calculation after bandwidth management */
+> +		unsigned long ms = txn->rl + 100;
+> +
+> +		ret = wait_for_completion_timeout(&done,
+> +						  msecs_to_jiffies(ms));
+> +		if (!ret)
+> +			slim_return_tx(ctrl, -ETIMEDOUT);
+> +
+> +		ret = cbd.ret;
+> +	}
+> +
+> +	if (ret && need_tid) {
+> +		spin_lock_irqsave(&ctrl->txn_lock, flags);
+> +		/* Invalidate the transaction */
+> +		ctrl->tid_tbl[txn->tid] = NULL;
+> +		spin_unlock_irqrestore(&ctrl->txn_lock, flags);
+> +	}
+> +	if (ret)
+> +		dev_err(&ctrl->dev, "Tx:MT:0x%x, MC:0x%x, LA:0x%x failed:%d\n",
+> +			txn->mt, txn->mc, txn->la, ret);
+> +	if (!async) {
+> +		txn->msg->comp_cb = NULL;
+> +		txn->msg->ctx = NULL;
+> +	}
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(slim_processtxn);
+
+that is interesting, I was expecting this to be internal API. So users are
+expected to use this which is not very convenient IMO. Can we hide the gory
+details and give users simple tx/rx or read/write APIs. FWIW most of the
+usage would be thru regmap where people would call regmap_read/write()
+
+> +
+> +static int slim_val_inf_sanity(struct slim_controller *ctrl,
+> +			       struct slim_val_inf *msg, u8 mc)
+> +{
+> +	if (!msg || msg->num_bytes > 16 ||
+> +	    (msg->start_offset + msg->num_bytes) > 0xC00)
+> +		goto reterr;
+
+line break here
+
+> +	switch (mc) {
+> +	case SLIM_MSG_MC_REQUEST_VALUE:
+> +	case SLIM_MSG_MC_REQUEST_INFORMATION:
+
+what does MC refer to?
+
+> +		if (msg->rbuf != NULL)
+> +			return 0;
+> +		break;
+
+after each break too
+
+> +static u16 slim_slicecodefromsize(u16 req)
+
+hmmm Linux code doesnt prefernamesnames like this :)
+
+> +EXPORT_SYMBOL_GPL(slim_request_inf_element);
+> +
+> +
+
+unnecessary double space
+
+> +struct slim_val_inf {
+> +	u16			start_offset;
+> +	u8			num_bytes;
+> +	u8			*rbuf;
+> +	const u8		*wbuf;
+
+can we do read and write, if not it can be a buf which maybe rbuf or wbug
+based on type
+
+-- 
+~Vinod
