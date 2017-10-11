@@ -1,53 +1,56 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] drm/bridge: Add Cadence DSI driver
-Date: Wed, 11 Oct 2017 15:43:15 +0530
-Message-ID: <b7c0b92e-83e6-0005-2d55-02615292e9ee@codeaurora.org>
-References: <20170831155519.3704-1-boris.brezillon@free-electrons.com>
- <c17e158a-3e37-8ae6-e31c-7ed89429166a@codeaurora.org>
- <20171011112602.15a7817d@bbrezillon>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [alsa-devel] [Patch v6 1/7] slimbus: Device management on SLIMbus
+Date: Wed, 11 Oct 2017 15:51:32 +0530
+Message-ID: <20171011102132.GG30097@localhost>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
+ <20171010104509.GC30097@localhost>
+ <fd966acd-a86c-5021-8a8b-ddf1508ab63e@linaro.org>
+ <20171010164930.GD30097@localhost>
+ <9e2bb2fa-b391-055e-407e-c93f43428840@linaro.org>
+ <20171011040741.GE30097@localhost>
+ <c777820e-fd60-f8d1-4fc1-5934ff18af1b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171011112602.15a7817d@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Jyri Sarha <jsarha@ti.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, Neil Webb <neilw@cadence.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c777820e-fd60-f8d1-4fc1-5934ff18af1b@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMC8xMS8yMDE3IDAyOjU2IFBNLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gSGkgQXJj
-aGl0LAo+IAo+IE9uIFRodSwgNyBTZXAgMjAxNyAxNTowNjoxMyArMDUzMAo+IEFyY2hpdCBUYW5l
-amEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+IAo+Pgo+Pj4gKwo+Pj4gK3N0YXRp
-YyB2b2lkIGNkbnNfZHNpX2JyaWRnZV9kaXNhYmxlKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2Up
-Cj4+PiArewo+Pj4gKwlzdHJ1Y3QgY2Ruc19kc2lfaW5wdXQgKmlucHV0ID0gYnJpZGdlX3RvX2Nk
-bnNfZHNpX2lucHV0KGJyaWRnZSk7Cj4+PiArCXN0cnVjdCBjZG5zX2RzaSAqZHNpID0gaW5wdXRf
-dG9fZHNpKGlucHV0KTsKPj4+ICsJdTMyIHZhbDsKPj4+ICsKPj4+ICsJdmFsID0gcmVhZGwoZHNp
-LT5yZWdzICsgTUNUTF9NQUlOX0RBVEFfQ1RMKTsKPj4+ICsJdmFsICY9IH4oSUZfVklEX1NFTEVD
-VF9NQVNLIHwgSUZfVklEX01PREUgfCBWSURfRU4gfCBIT1NUX0VPVF9HRU4gfAo+Pj4gKwkJIERJ
-U1BfRU9UX0dFTik7Cj4+Cj4+IEkgc2VlIHNvbWUgdHJ1bmNhdGlvbiByZWxhdGVkIHNwYXJzZSB3
-YXJuaW5ncyBoZXJlIGFuZCBhIGNvdXBsZSBvZiBvdGhlciBwbGFjZXMKPj4gd2hlbiBidWlsZGlu
-ZyBhZ2FpbnN0IGFybTMyLiBUaG9zZSB3b3VsZCBiZSBuaWNlIHRvIGZpeC4KPiAKPiBJIGhhZCBh
-IGxvb2sgYW5kIGl0IHNlZW1zIHRvIGhhcHBlbiBldmVyeXRpbWUgSSB1c2UgR0VOTUFTSygpICh0
-aGUKPiB0cnVuY2F0aW9uIGlzIGhhcm1sZXNzLCBidXQgc3BhcnNlIGNvbXBsYWlucykuCj4gSWYg
-eW91IGRvbid0IG1pbmQsIEknZCBwcmVmZXIgdG8ga2VlcCBHRU5NQVNLKCkgcmF0aGVyIHRoYW4g
-bWFudWFsbHkKPiBkZWZpbmluZyBtYXNrcywgYnV0IG1heWJlIHlvdSBoYXZlIGFuIGlkZWEgaG93
-IHRvIGZpeCB0aGVzZSB3YXJuaW5ncwo+IHdpdGhvdXQgZ2V0dGluZyByaWQgb2YgR0VOTUFTSygp
-LgoKSSBkb24ndCBrbm93IGVpdGhlci4gTGV0J3MgbGl2ZSB3aXRoIHRoZSB3YXJuaW5ncyBmb3Ig
-bm93LgoKVGhhbmtzLApBcmNoaXQKCj4gCj4+Cj4+PiArCXdyaXRlbCh2YWwsIGRzaS0+cmVncyAr
-IE1DVExfTUFJTl9EQVRBX0NUTCk7Cj4+PiArCj4+PiArCXZhbCA9IHJlYWRsKGRzaS0+cmVncyAr
-IE1DVExfTUFJTl9FTikgJiB+SUZfRU4oaW5wdXQtPmlkKTsKPj4+ICsJd3JpdGVsKHZhbCwgZHNp
-LT5yZWdzICsgTUNUTF9NQUlOX0VOKTsKPj4+ICt9Cj4gCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlv
-biBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXgg
-Rm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Oct 11, 2017 at 10:42:23AM +0100, Srinivas Kandagatla wrote:
+> On 11/10/17 05:07, Vinod Koul wrote:
+> >On Tue, Oct 10, 2017 at 06:21:34PM +0100, Srinivas Kandagatla wrote:
+> >>On 10/10/17 17:49, Vinod Koul wrote:
+
+> >>>>>>+/**
+> >>>>>>+ * slim_register_controller: Controller bring-up and registration.
+> >>...
+> >>>>>>+
+> >>>>>>+	mutex_init(&ctrl->m_ctrl);
+> >>>>>>+	ret = device_register(&ctrl->dev);
+> >>>>>
+> >>>>>one more device_register?? Can you explain why
+> >>>>>
+> >>>>
+> >>>>This is a device for each controller.
+> >>>
+> >>>wont the controller have its own platform_device?
+> >>
+> >>Reason could be that slim_register controller can be called from any code
+> >>not just platform devices..
+> >
+> >ah which cases would those be. I was expecting that you would have a
+> >platform_device as a slimbus controller which would call slim_register?
+> As of now there is only one controller which uses platform driver, but in
+> future there might be more, but this is something which makes the slimbus
+> core more flexible.
+
+even if you have more controllers wouldn't we have similar number of platform
+devices. Each instance of the link/controller would have its device node.
+
+Thanks
+-- 
+~Vinod
