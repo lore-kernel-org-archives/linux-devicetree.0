@@ -1,45 +1,367 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 0/5] Qualcomm remote filesystem shared memory driver
-Date: Tue, 10 Oct 2017 22:08:52 -0700
-Message-ID: <20171011050857.7588-1-bjorn.andersson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v4 4/5] soc: qcom: Remote filesystem memory driver
+Date: Tue, 10 Oct 2017 22:08:56 -0700
+Message-ID: <20171011050857.7588-5-bjorn.andersson@linaro.org>
+References: <20171011050857.7588-1-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171011050857.7588-1-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, David Brown <david.brown@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some remote processors (in particular the modem) found in Qualcomm platforms
-stores configuration parameters and other data in a file system. As the remotes
-does not have direct storage access it needs to relay block accesses through a
-service running on the application CPU.
+The Qualcomm remote file system protocol is used by certain remoteprocs,
+in particular the modem, to read and write persistent storage in
+platforms where only the application CPU has physical storage access.
 
-The memory is described in DeviceTree by a new reserved-memory compatible and
-the implementation provides the user space service a read/write interface to
-this chunk of memory.
+The protocol is based on a set of QMI-encoded control-messages and a
+shared memory buffer for exchaning the data. This driver implements the
+latter, providing the user space service access to the carved out chunk
+of memory.
 
-Bjorn Andersson (5):
-  of/platform: Generalize /reserved-memory handling
-  of: reserved_mem: Accessor for acquiring reserved_mem
-  dt-binding: soc: qcom: Add binding for rmtfs memory
-  soc: qcom: Remote filesystem memory driver
-  arm64: dts: msm8916: Mark rmtfs node as qcom,rmtfs-mem compatible
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
- .../bindings/reserved-memory/qcom,rmtfs-mem.txt    |  51 ++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi              |   3 +
- drivers/of/of_reserved_mem.c                       |  26 ++
- drivers/of/platform.c                              |  19 +-
- drivers/soc/qcom/Kconfig                           |  11 +
- drivers/soc/qcom/Makefile                          |   1 +
- drivers/soc/qcom/rmtfs_mem.c                       | 271 +++++++++++++++++++++
- include/linux/of_reserved_mem.h                    |   5 +
- 8 files changed, 379 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.txt
+Changes since v3:
+- Dropped linux/of_fdt.h include
+- Update to follow name change of of_reserved_mem_lookup()
+
+Changes since v2:
+- Renamed driver to "rmtfs_mem" in attempt to clarify that this is not a
+  file system, but some chunk of memory.
+
+Changes since v1:
+- RFSA device represented direclty by the reserved-memory node
+
+ drivers/of/platform.c        |   1 +
+ drivers/soc/qcom/Kconfig     |  11 ++
+ drivers/soc/qcom/Makefile    |   1 +
+ drivers/soc/qcom/rmtfs_mem.c | 271 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 284 insertions(+)
  create mode 100644 drivers/soc/qcom/rmtfs_mem.c
 
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index ee89f096f0f3..e7548c9a9915 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -498,6 +498,7 @@ EXPORT_SYMBOL_GPL(of_platform_default_populate);
+ 
+ #ifndef CONFIG_PPC
+ static const struct of_device_id reserved_mem_matches[] = {
++	{ .compatible = "qcom,rmtfs-mem" },
+ 	{ .compatible = "ramoops" },
+ 	{}
+ };
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 9fca977ef18d..6dff89eaf3f8 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -24,6 +24,17 @@ config QCOM_PM
+ 	  modes. It interface with various system drivers to put the cores in
+ 	  low power modes.
+ 
++config QCOM_RMTFS_MEM
++	tristate "Qualcomm Remote Filesystem memory driver"
++	depends on ARCH_QCOM
++	help
++	  The Qualcomm remote filesystem memory driver is used for allocating
++	  and exposing regions of shared memory with remote processors for the
++	  purpose of exchanging sector-data between the remote filesystem
++	  service and its clients.
++
++	  Say y here if you intend to boot the modem remoteproc.
++
+ config QCOM_SMEM
+ 	tristate "Qualcomm Shared Memory Manager (SMEM)"
+ 	depends on ARCH_QCOM
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index 414f0de274fa..541c1f40d126 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1,6 +1,7 @@
+ obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
+ obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
+ obj-$(CONFIG_QCOM_PM)	+=	spm.o
++obj-$(CONFIG_QCOM_RMTFS_MEM)	+= rmtfs_mem.o
+ obj-$(CONFIG_QCOM_SMD_RPM)	+= smd-rpm.o
+ obj-$(CONFIG_QCOM_SMEM) +=	smem.o
+ obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
+diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
+new file mode 100644
+index 000000000000..f6f2f0cb3b3a
+--- /dev/null
++++ b/drivers/soc/qcom/rmtfs_mem.c
+@@ -0,0 +1,271 @@
++/*
++ * Copyright (c) 2017 Linaro Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/kernel.h>
++#include <linux/cdev.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_reserved_mem.h>
++#include <linux/dma-mapping.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
++#include <linux/io.h>
++#include <linux/qcom_scm.h>
++
++#define QCOM_RMTFS_MEM_DEV_MAX	(MINORMASK + 1)
++
++static dev_t qcom_rmtfs_mem_major;
++
++struct qcom_rmtfs_mem {
++	struct device dev;
++	struct cdev cdev;
++
++	void *base;
++	phys_addr_t addr;
++	phys_addr_t size;
++
++	unsigned int client_id;
++};
++
++static ssize_t qcom_rmtfs_mem_show(struct device *dev,
++			      struct device_attribute *attr,
++			      char *buf);
++
++static DEVICE_ATTR(phys_addr, 0400, qcom_rmtfs_mem_show, NULL);
++static DEVICE_ATTR(size, 0400, qcom_rmtfs_mem_show, NULL);
++static DEVICE_ATTR(client_id, 0400, qcom_rmtfs_mem_show, NULL);
++
++static ssize_t qcom_rmtfs_mem_show(struct device *dev,
++			      struct device_attribute *attr,
++			      char *buf)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = container_of(dev,
++							struct qcom_rmtfs_mem,
++							dev);
++
++	if (attr == &dev_attr_phys_addr)
++		return sprintf(buf, "%pa\n", &rmtfs_mem->addr);
++	if (attr == &dev_attr_size)
++		return sprintf(buf, "%pa\n", &rmtfs_mem->size);
++	if (attr == &dev_attr_client_id)
++		return sprintf(buf, "%d\n", rmtfs_mem->client_id);
++
++	return -EINVAL;
++}
++
++static struct attribute *qcom_rmtfs_mem_attrs[] = {
++	&dev_attr_phys_addr.attr,
++	&dev_attr_size.attr,
++	&dev_attr_client_id.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(qcom_rmtfs_mem);
++
++static int qcom_rmtfs_mem_open(struct inode *inode, struct file *filp)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = container_of(inode->i_cdev,
++							struct qcom_rmtfs_mem,
++							cdev);
++
++	get_device(&rmtfs_mem->dev);
++	filp->private_data = rmtfs_mem;
++
++	return 0;
++}
++static ssize_t qcom_rmtfs_mem_read(struct file *filp,
++			      char __user *buf, size_t count, loff_t *f_pos)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
++
++	if (*f_pos >= rmtfs_mem->size)
++		return 0;
++
++	if (*f_pos + count >= rmtfs_mem->size)
++		count = rmtfs_mem->size - *f_pos;
++
++	if (copy_to_user(buf, rmtfs_mem->base + *f_pos, count))
++		return -EFAULT;
++
++	*f_pos += count;
++	return count;
++}
++
++static ssize_t qcom_rmtfs_mem_write(struct file *filp,
++			       const char __user *buf, size_t count,
++			       loff_t *f_pos)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
++
++	if (*f_pos >= rmtfs_mem->size)
++		return 0;
++
++	if (*f_pos + count >= rmtfs_mem->size)
++		count = rmtfs_mem->size - *f_pos;
++
++	if (copy_from_user(rmtfs_mem->base + *f_pos, buf, count))
++		return -EFAULT;
++
++	*f_pos += count;
++	return count;
++}
++
++static int qcom_rmtfs_mem_release(struct inode *inode, struct file *filp)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
++
++	put_device(&rmtfs_mem->dev);
++
++	return 0;
++}
++
++static const struct file_operations qcom_rmtfs_mem_fops = {
++	.owner = THIS_MODULE,
++	.open = qcom_rmtfs_mem_open,
++	.read = qcom_rmtfs_mem_read,
++	.write = qcom_rmtfs_mem_write,
++	.release = qcom_rmtfs_mem_release,
++	.llseek = default_llseek,
++};
++
++static void qcom_rmtfs_mem_release_device(struct device *dev)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = container_of(dev,
++							struct qcom_rmtfs_mem,
++							dev);
++
++	kfree(rmtfs_mem);
++}
++
++static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct reserved_mem *rmem;
++	struct qcom_rmtfs_mem *rmtfs_mem;
++	u32 client_id;
++	int ret;
++
++	rmem = of_reserved_mem_lookup(node);
++	if (!rmem) {
++		dev_err(&pdev->dev, "failed to acquire memory region\n");
++		return -EINVAL;
++	}
++
++	ret = of_property_read_u32(node, "qcom,client-id", &client_id);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to parse \"qcom,client-id\"\n");
++		return ret;
++
++	}
++
++	rmtfs_mem = kzalloc(sizeof(*rmtfs_mem), GFP_KERNEL);
++	if (!rmtfs_mem)
++		return -ENOMEM;
++
++	rmtfs_mem->addr = rmem->base;
++	rmtfs_mem->client_id = client_id;
++	rmtfs_mem->size = rmem->size;
++
++	device_initialize(&rmtfs_mem->dev);
++	rmtfs_mem->dev.parent = &pdev->dev;
++	rmtfs_mem->dev.groups = qcom_rmtfs_mem_groups;
++
++	rmtfs_mem->base = devm_memremap(&rmtfs_mem->dev, rmtfs_mem->addr,
++					rmtfs_mem->size, MEMREMAP_WC);
++	if (IS_ERR(rmtfs_mem->base)) {
++		dev_err(&pdev->dev, "failed to remap rmtfs_mem region\n");
++		ret = PTR_ERR(rmtfs_mem->base);
++		goto put_device;
++	}
++
++	cdev_init(&rmtfs_mem->cdev, &qcom_rmtfs_mem_fops);
++	rmtfs_mem->cdev.owner = THIS_MODULE;
++
++	dev_set_name(&rmtfs_mem->dev, "qcom_rmtfs_mem%d", client_id);
++	rmtfs_mem->dev.id = client_id;
++	rmtfs_mem->dev.devt = MKDEV(MAJOR(qcom_rmtfs_mem_major), client_id);
++
++	ret = cdev_device_add(&rmtfs_mem->cdev, &rmtfs_mem->dev);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to add cdev: %d\n", ret);
++		goto put_device;
++	}
++
++	rmtfs_mem->dev.release = qcom_rmtfs_mem_release_device;
++
++	dev_set_drvdata(&pdev->dev, rmtfs_mem);
++
++	return 0;
++
++remove_cdev:
++	cdev_device_del(&rmtfs_mem->cdev, &rmtfs_mem->dev);
++put_device:
++	put_device(&rmtfs_mem->dev);
++
++	return ret;
++}
++
++static int qcom_rmtfs_mem_remove(struct platform_device *pdev)
++{
++	struct qcom_rmtfs_mem *rmtfs_mem = dev_get_drvdata(&pdev->dev);
++
++	cdev_device_del(&rmtfs_mem->cdev, &rmtfs_mem->dev);
++	put_device(&rmtfs_mem->dev);
++
++	return 0;
++}
++
++static const struct of_device_id qcom_rmtfs_mem_of_match[] = {
++	{ .compatible = "qcom,rmtfs-mem" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, qcom_rmtfs_mem_of_match);
++
++static struct platform_driver qcom_rmtfs_mem_driver = {
++	.probe = qcom_rmtfs_mem_probe,
++	.remove = qcom_rmtfs_mem_remove,
++	.driver  = {
++		.name  = "qcom_rmtfs_mem",
++		.of_match_table = qcom_rmtfs_mem_of_match,
++	},
++};
++
++static int qcom_rmtfs_mem_init(void)
++{
++	int ret;
++
++	ret = alloc_chrdev_region(&qcom_rmtfs_mem_major, 0,
++				  QCOM_RMTFS_MEM_DEV_MAX, "qcom_rmtfs_mem");
++	if (ret < 0) {
++		pr_err("qcom_rmtfs_mem: failed to allocate char dev region\n");
++		return ret;
++	}
++
++	ret = platform_driver_register(&qcom_rmtfs_mem_driver);
++	if (ret < 0) {
++		pr_err("qcom_rmtfs_mem: failed to register rmtfs_mem driver\n");
++		unregister_chrdev_region(qcom_rmtfs_mem_major,
++					 QCOM_RMTFS_MEM_DEV_MAX);
++	}
++
++	return ret;
++}
++module_init(qcom_rmtfs_mem_init);
++
++static void qcom_rmtfs_mem_exit(void)
++{
++	platform_driver_unregister(&qcom_rmtfs_mem_driver);
++	unregister_chrdev_region(qcom_rmtfs_mem_major, QCOM_RMTFS_MEM_DEV_MAX);
++}
++module_exit(qcom_rmtfs_mem_exit);
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
