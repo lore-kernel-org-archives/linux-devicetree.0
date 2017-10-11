@@ -1,57 +1,80 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 09/14] regmap: add iopoll-like polling macro for
- regmap_field
-Date: Wed, 11 Oct 2017 13:24:03 +0200
-Message-ID: <20171011112403.cftnkwzlbpo5ngzc@phenom.ffwll.local>
-References: <20170929082306.16193-1-wens@csie.org>
- <20170929082306.16193-10-wens@csie.org>
- <20171004104732.jkps4ufekfizcrkz@sirena.co.uk>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to
+ and from devices
+Date: Wed, 11 Oct 2017 13:33:48 +0200
+Message-ID: <20171011113348.GE30803@8bytes.org>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-6-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171004104732.jkps4ufekfizcrkz@sirena.co.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20171006133203.22803-6-jean-philippe.brucker@arm.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, robin.murphy@arm.com, bhelgaas@google.com, alex.williamson@redhat.com, tn@semihalf.com, liubo95@huawei.com, thunder.leizhen@huawei.com, xieyisheng1@huawei.com, gabriele.paoloni@huawei.com, nwatters@codeaurora.org, okaya@codeaurora.org, rfranz@cavium.com, dwmw2@infradead.org, jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com, ashok.raj@intel.com, robdclark@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBPY3QgMDQsIDIwMTcgYXQgMTE6NDc6MzJBTSArMDEwMCwgTWFyayBCcm93biB3cm90
-ZToKPiBPbiBGcmksIFNlcCAyOSwgMjAxNyBhdCAwNDoyMzowMVBNICswODAwLCBDaGVuLVl1IFRz
-YWkgd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgYSBtYWNybyByZWdtYXBfZmllbGRfcmVhZF9w
-b2xsX3RpbWVvdXQgdGhhdCB3b3Jrcwo+ID4gc2ltaWxhciB0byB0aGUgcmVhZHhfcG9sbF90aW1l
-b3V0IGRlZmluZWQgaW4gbGludXgvaW9wb2xsLmgsIGV4Y2VwdAo+ID4gdGhhdCB0aGlzIGNhbiBh
-bHNvIHJldHVybiB0aGUgZXJyb3IgdmFsdWUgcmV0dXJuZWQgYnkgYSBmYWlsZWQKPiA+IHJlZ21h
-cF9maWVsZF9yZWFkLgo+IAo+IFRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMmJk
-NmJmMDNmNGMxYzU5MzgxZDYyYzYxZDAzZjZjYzNmZTcxZjY2ZToKPiAKPiAgIExpbnV4IDQuMTQt
-cmMxICgyMDE3LTA5LTE2IDE1OjQ3OjUxIC0wNzAwKQo+IAo+IGFyZSBhdmFpbGFibGUgaW4gdGhl
-IGdpdCByZXBvc2l0b3J5IGF0Ogo+IAo+ICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9s
-aW51eC9rZXJuZWwvZ2l0L2Jyb29uaWUvcmVnbWFwLmdpdCB0YWdzL3JlZ21hcC1wb2xsLWZpZWxk
-Cj4gCj4gZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvIDY2NzA2M2FjYjgxOTMxZTJmOGZk
-MGNiOTFkZjlmY2NjYWQxMzFkOWE6Cj4gCj4gICByZWdtYXA6IGFkZCBpb3BvbGwtbGlrZSBwb2xs
-aW5nIG1hY3JvIGZvciByZWdtYXBfZmllbGQgKDIwMTctMTAtMDQgMTE6NDY6MzIgKzAxMDApCgpQ
-dWxsZWQgaW50byBkcm0tbWlzYy1uZXh0IGZvciA0LjE1IHNpbmNlIE1heGltZSBuZWVkcyB0aGF0
-IGZvciB0aGUgc3VuNGkKY2hhbmdlcy4KClRoYW5rcywgRGFuaWVsCgo+IAo+IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiBy
-ZWdtYXA6IEFkZCBmaWVsZCBwb2xsaW5nIG1hY3JvCj4gCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+IENoZW4tWXUgVHNh
-aSAoMSk6Cj4gICAgICAgcmVnbWFwOiBhZGQgaW9wb2xsLWxpa2UgcG9sbGluZyBtYWNybyBmb3Ig
-cmVnbWFwX2ZpZWxkCj4gCj4gIGluY2x1ZGUvbGludXgvcmVnbWFwLmggfCAzOSArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM5IGluc2Vy
-dGlvbnMoKykKCgoKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwKCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29y
-cG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Jean-Philipe,
+
+Thanks for your patches, this is definitly a step in the right direction
+to get generic support for IO virtual memory into the IOMMU core code.
+
+But I see an issue with the design around task_struct, please see
+below.
+
+On Fri, Oct 06, 2017 at 02:31:32PM +0100, Jean-Philippe Brucker wrote:
+> +int iommu_process_bind_device(struct device *dev, struct task_struct *task,
+> +			      int *pasid, int flags)
+
+I just took this patch as an example, it is in the other patches as
+well. The code is designed around 'struct task_struct' while it should
+really be designed around 'struct mm_struct'. You are not attaching a
+specific process to a device, but the address-space of one or more
+processes. And that should be reflected in the design.
+
+There are several bad implications of building it around task_struct,
+one is the life-time of the binding. If the address space is detached
+from the device when the process exits, only the thread that did the
+setup can can safely make use of the device, because if the device is
+accessed from another thread it will crash when the setup-thread exits.
+
+There are other benefits of using mm_struct, for example that you can
+use mmu_notifiers to exit-handling.
+
+Here is how I think the base API should look like:
+
+	* iommu_iovm_device_init(struct device *dev);
+	  iommu_iovm_device_shutdown(struct device *dev);
+
+	  These two functions do the device specific setup/shutdown. For
+	  PCI this would include enabling the PRI, PASID, and ATS
+	  capabilities and setting up a PASID table for the device.
+
+	* iommu_iovm_bind_mm(struct device *dev, struct mm_struct *mm,
+			     iovm_shutdown_cb *cb);
+	  iommu_iovm_unbind_mm(struct device *dev, struct mm_struct *mm);
+
+	  These functions add and delete the entries in the PASID table
+	  for the device and setup mmu_notifiers for the mm_struct to
+	  keep IOMMU TLBs in sync with the CPU TLBs.
+
+	  The shutdown_cb is invoked by the IOMMU core code when the
+	  mm_struct goes away, for example because the process
+	  segfaults.
+
+	The PASID handling is best done these functions as well, unless
+	there is a strong reason to allow device drivers to do the
+	handling themselves.
+
+The context data can be stored directly in mm_struct, including the
+PASID for that mm.
+
+There is of course more functionality needed, the above only outlines
+the very basic needs.
+
+
+Regards,
+
+	Joerg
+
