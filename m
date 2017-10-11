@@ -1,40 +1,67 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 04/18] arm64: dts: m3ulcb-kf: initial device tree
-Date: Wed, 11 Oct 2017 09:33:36 +0200
-Message-ID: <20171011073336.GE9661@verge.net.au>
-References: <1505398732-4614-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX-7MG2fCzJ-K5iQLnJcmZBaWjqMhmOhCxEemmWTh9pvw@mail.gmail.com>
- <9635bb2d-8695-a168-d49e-0bd51807cc19@cogentembedded.com>
- <20171006091759.GF7734@verge.net.au>
- <20171009071814.GO17360@verge.net.au>
- <00c273d8-ab80-4509-5cc7-15f7b3d60568@cogentembedded.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for GPIO0/1 when
+ used as LDOs
+Date: Wed, 11 Oct 2017 09:43:40 +0200
+Message-ID: <CACRpkdbjHZ7=m1-6vOw3ru+XkoCfSvHJSEFtCtHo5LkB4cPyhA@mail.gmail.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-13-quentin.schulz@free-electrons.com>
+ <CACRpkdZYcSuhvn0b0qa0k1PQHoyXjNyjoyhR2sPme_t1pF12Dg@mail.gmail.com>
+ <20171003144737.rhgtp3uwckhvoqdw@flea> <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA@mail.gmail.com>
+ <8be22e47-8071-be4c-0bd4-38fa51cbe3ff@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <00c273d8-ab80-4509-5cc7-15f7b3d60568@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8be22e47-8071-be4c-0bd4-38fa51cbe3ff-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 10, 2017 at 07:16:38PM +0300, Vladimir Barinov wrote:
-> Hi Simon,
-> 
-> On 09.10.2017 10:18, Simon Horman wrote:
-> >On Fri, Oct 06, 2017 at 11:18:00AM +0200, Simon Horman wrote:
-> >>On Fri, Oct 06, 2017 at 05:47:25AM +0300, Vladimir Barinov wrote:
-> >>>Hi Simon, Geert,
-> >>>
-> >>>Do you need extra actions from my side to accept this patch?
-> >>Yes, I need patch 3/18.
-> >>Could you repost it?
-> >I see you have done so, thanks.
-> >
-> >I have applied this patch with Geert's tag.  I had to apply the patch
-> >manually so please check that I did so correctly once I have pushed the
-> >next branch to the renesas tree a little later today.
-> I've verified that all is correct.
-> Thank you.
+On Wed, Oct 4, 2017 at 9:35 AM, Quentin Schulz
+<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Thanks for confirming.
+> Just to be a little more precise,
+>      - 0: drive low
+>      - 1: drive high
+>      - 2: input with interrupt triggering
+>      - 3: LDO on
+>      - 4: LDO off
+>      - 5~7: floating (or ADC)
+>
+> for AXP813, and
+>      - 0: drive low
+>      - 1: drive high
+>      - 2: input with interrupt triggering
+>      - 3: LDO on
+>      - 4: ADC
+>      - 5~7: floating
+
+Fair enough, it's mux modes that the pin supports, no big surprises.
+
+> So I think what you suggested Linus is not really relevant here as the
+> regulator framework will take care of disabling the regulator when
+> needed (for AXP813 via the ldo_off "muxing" selected by the regulator
+> framework).
+
+I think I see why I got confused.
+
+The point is that your mode for setting it to "LDO on" should have the
+pin control state connected to the relevant device.
+
+It should be connected to the regulator and nothing else, so if there is a fixed
+regulator or whatever in the device tree, it should have pinctrl-0
+and pinctrl-names = ".."; here is is for some obscure reason connected
+to the GPIO controller (!) instead, and the actual consumer of this state
+is NOT the GPIO controller, but quite obviously the regulator, so
+put the pinctrl business in that regulator node instead.
+
+"default" mode is OK on a regulator, as that can be expected to make the
+pin precisely a regulator pin. Forget my ramblings about a "regulator"
+state.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
