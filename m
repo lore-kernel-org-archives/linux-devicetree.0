@@ -1,60 +1,71 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: linux-next: Tree for Oct 9th (of: unittest: testcases)
-Date: Wed, 11 Oct 2017 11:11:14 -0700
-Message-ID: <59DE5EC2.9030306@gmail.com>
-References: <20171009212122.wx4lgnecmqyzuywq@sirena.co.uk>
- <7524d1e5-137c-cb78-c24f-6a9701e46701@infradead.org>
- <CAL_JsqJgf+HOp-7DNzpExOE2UnXbraL3uaL0a01K4t8Z6fkoSA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: dts: dra7-evm-common: Enable relevant IPU and
+ DSP MMU nodes
+Date: Wed, 11 Oct 2017 11:22:46 -0700
+Message-ID: <20171011182246.GE4394@atomide.com>
+References: <20170821235158.4968-1-s-anna@ti.com>
+ <20170821235158.4968-2-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJgf+HOp-7DNzpExOE2UnXbraL3uaL0a01K4t8Z6fkoSA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: Mark Brown <broonie@kernel.org>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170821235158.4968-2-s-anna-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/17 11:26, Rob Herring wrote:
-> +Frank
+* Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [170821 16:52]:
+> The MMU nodes for the remote processors IPU1, IPU2, DSP1 and
+> DSP2 have all been enabled. All these nodes are relevant and
+> valid for both the DRA7 EVM and DRA76 EVM boards, so are added
+> in the dra7 common evm dtsi file.
 > 
-> On Tue, Oct 10, 2017 at 12:33 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 10/09/17 14:21, Mark Brown wrote:
->>> For my birthday I've gone and got myself a linux-next tree:
->>>
->>> Changes since 20170929:
->>>
->>> The net-next and drm trees lost their build failures but the rcu tree
->>> gained one.
->>
->>
->> I don't know what this is but it's new AFAIK.
->> (seen on i386 and x86_64)
+> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/dra7-evm-common.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> Yes, new dtc version with new warnings.
-> 
->>   DTC     drivers/of/unittest-data/testcases.dtb
->> drivers/of/unittest-data/testcases.dtb: Warning (interrupts_extended_property): Could not get phandle node for /__local_fixups__/testcase-data/interrupts/interrupts-extended0:interrupts-extended(cell 3)
-> 
-> Frank, this is in __local_fixups__, we should be able to remove that
-> now as the necessary dtc changes are in place, right?
+> diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> index 343e95f9a001..01a5d4e0b044 100644
+> --- a/arch/arm/boot/dts/dra7-evm-common.dtsi
+> +++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
+> @@ -256,3 +256,27 @@
+>  		status = "okay";
+>  	};
+>  };
+> +
+> +&mmu0_dsp1 {
+> +	status = "okay";
+> +};
+> +
+> +&mmu1_dsp1 {
+> +	status = "okay";
+> +};
+> +
+> +&mmu0_dsp2 {
+> +	status = "okay";
+> +};
+> +
+> +&mmu1_dsp2 {
+> +	status = "okay";
+> +};
+> +
+> +&mmu_ipu1 {
+> +	status = "okay";
+> +};
+> +
+> +&mmu_ipu2 {
+> +	status = "okay";
+> +};
 
-Yes, I have a patch to add "/plugin/;" to testcases.dts and remove the __local_fixups__ node,
-but have not submitted it yet.
+This is getting quite silly.. The default is "okay" so just remove the useless
+"disabled" from the common file and all these patches are no longer needed.
 
-It builds and the unit tests still work.
+Regards,
 
-I still need to rework all of the overlays that are hand coded in testcases.dts,
-and was planning to do that before submitting the above changes.
-
--Frank
-
-> 
->> drivers/of/unittest-data/testcases.dtb: Warning (interrupts_property): interrupts size is (4), expected multiple of 8 in /testcase-data/testcase-device2
-> 
-> This one is purposely bad data to feed the unit test. If I suppress
-> it, then it is suppressed everywhere in the unit test data.
-> 
-> Rob
-> .
-> 
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
