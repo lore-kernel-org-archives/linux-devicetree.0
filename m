@@ -1,106 +1,39 @@
-From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: arm64: 4.14 of_match_node() issues
-Date: Wed, 11 Oct 2017 11:07:32 +0100
-Message-ID: <bbf611c8-c7e8-d67f-f933-3e7b23bdba22@arm.com>
-References: <5d2ff063-1f7e-0200-cc02-99804f7d9219@suse.de>
- <20171009092409.GB5127@arm.com>
- <66956548-fa7a-332a-8045-8202ae0aa564@arm.com>
- <CGME20171009120447epcas2p3d22ec871318e38a71a5b92f840b5e4d4@epcas2p3.samsung.com>
- <d4e48d3d-015f-08d2-7745-51c482c1a09a@arm.com>
- <42630b8b-8987-57ff-be7e-79af7294856e@samsung.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v4 02/11] drm/sun4i: tcon: Add support for
+ demuxing TCON output on A31
+Date: Wed, 11 Oct 2017 21:09:36 +1100
+Message-ID: <CAGRGNgXPt=E-8SBKuA6=CSSf1zee0HVMgZAdjBtTb9WqnXxh2Q@mail.gmail.com>
+References: <20171010032008.682-1-wens@csie.org> <20171010032008.682-3-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <42630b8b-8987-57ff-be7e-79af7294856e-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171010032008.682-3-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Bruens <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/17 13:20, Marek Szyprowski wrote:
-> Hi All,
-> 
-> On 2017-10-09 14:04, Robin Murphy wrote:
->> On 09/10/17 11:58, Robin Murphy wrote:
->>> On 09/10/17 10:24, Will Deacon wrote:
->>>> Hi Andreas,
->>>>
->>>> On Sat, Oct 07, 2017 at 02:42:13AM +0200, Andreas Färber wrote:
->>>>> Since 4.14-rc1 I am seeing frequent oopses during module loading (e.g.,
->>>>> MMC, USB) from initrd on aarch64. Symptoms are similar to this in -rc3:
->>>>>
->>>>> [  OK  ] Started udev Coldplug all Devices.
->>>>> [   10.117775] usbcore: registered new interface driver usbfs
->>>>> [   10.118235] Unable to handle kernel paging request at virtual address
->>>>> ffff000008e5abc0
->>>>> [   10.118238] Mem abort info:
->>>>> [   10.118245]   Exception class = DABT (current EL), IL = 32 bits
->>>>> [   10.118249]   SET = 0, FnV = 0
->>>>> [   10.118253]   EA = 0, S1PTW = 0
->>>>> [   10.118256] Data abort info:
->>>>> [   10.118261]   ISV = 0, ISS = 0x00000006
->>>>> [   10.118264]   CM = 0, WnR = 0
->>>>> [   10.118274] swapper pgtable: 4k pages, 48-bit VAs, pgd = ffff0000094a5000
->>>>> [   10.118279] [ffff000008e5abc0] *pgd=00000000bfffe003,
->>>>> *pud=00000000bfffd003, *pmd=0000000000000000
->>>>> [   10.118299] Internal error: Oops: 96000006 [#1] SMP
->>>>> [   10.118305] Modules linked in: fixed usbcore(+) sunxi_mmc mmc_core
->>>>> phy_sun4i_usb sg
->>>>> [   10.118341] CPU: 3 PID: 49 Comm: kworker/3:1 Not tainted
->>>>> 4.14.0-rc3-2.gf27997b-default #1
->>>>> [   10.118345] Hardware name: sunxi sunxi/sunxi, BIOS 2017.05-rc1 04/13/2017
->>>>> [   10.118369] Workqueue: events deferred_probe_work_func
->>>>> [   10.118378] task: ffff80007c8f4000 task.stack: ffff0000099d8000
->>>>> [   10.118394] PC is at __of_match_node.part.1+0x48/0x88
->>>>> [   10.118403] LR is at of_match_node+0x40/0x70
->>>>> [   10.118411] pc : [<ffff00000879aed0>] lr : [<ffff00000879af50>]
->>>> [...]
->>>>
->>>>> This has been observed on Pine64 (>60%; also by Stefan) and Odroid-C2;
->>>>> my other arm64 boards such as Raspberry Pi 3 have not run into this so
->>>>> far. No such problems on 32-bit boards.
->>>>>
->>>>> This is using the openSUSE config:
->>>>> https://kernel.opensuse.org/cgit/kernel-source/plain/config/arm64/default
->>>> Hmm, hard to know what to suggest without a concrete reproducer. Do you know
->>>> which driver is being probed in the log above? Also, does this still break
->>>> if you pass "keepinitrd" on the cmdline? Finally, can you dump the kernel
->>>> virtual memory layout, please?
->>> FWIW, this looks a lot like what happens when a built-in driver's
->>> of_match_table is marked __init, but for whatever reason (deferred probe
->>> etc.) winds up getting poked by a module load after it no longer exists.
->> Heh, synchronicity...
->>
->> https://lists.linuxfoundation.org/pipermail/iommu/2017-October/024572.html
->>
->> Looks like we either have to revert plenty of patches from the const
->> brigade, avoid freeing init, or come up with some way to make the driver
->> core cleverer about the whole deal :(
-> 
-> It's not that bad. I did a quick check with
-> 
-> # git grep "of_device_id.*init"
-> 
-> and Exynos SYSMMU driver was the only candidate for a fix. Maybe someone
-> else should double check that list to make sure that there is no other
-> platform device/driver related code there.
-> 
-> Best regards
+Hi Chen-Yu,
 
-The root cause of the problem we hit here is definitely the exynos_smmu driver
-problem. The modrpobe triggers a device scan and the deferred_probe work goes
-through the registered drivers again for each device and since the exynos_smmu
-driver table is gone already, we end up in this crash.
+On Tue, Oct 10, 2017 at 2:19 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> On systems with 2 TCONs such as the A31, it is possible to demux the
+> output of the TCONs to one encoder.
+>
+> Add support for this for the A31.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Andreas,
+Thanks!
 
-Please could you try with the patch above in the link ?
+FWIW this is:
 
-Kind regards
-Suzuki
+Reviewed-by: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
