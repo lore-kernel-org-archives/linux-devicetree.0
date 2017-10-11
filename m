@@ -1,46 +1,38 @@
-From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v2 1/5] dt-bindings: iio: at91-sama5d2_adc: add optional dma property
-Date: Wed, 11 Oct 2017 09:35:28 +0300
-Message-ID: <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v2 5/5] iio: adc: at91-sama5d2_adc: use max sample rate
+Date: Wed, 11 Oct 2017 09:35:32 +0300
+Message-ID: <1507703732-29175-6-git-send-email-eugen.hristev@microchip.com>
 References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507703732-29175-1-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, jic23@kernel.org
+Cc: eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Added property for DMA configuration of the device.
+Change driver settings to use maximum sample rate clock.
+This is useful to achieve best possible sampling rate
+if we use DMA.
 
-Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/iio/adc/at91-sama5d2_adc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-index 552e7a8..5f94d479 100644
---- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-@@ -17,6 +17,11 @@ Required properties:
-   This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
-   IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
+diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+index 7e51ecb..b76f88f 100644
+--- a/drivers/iio/adc/at91-sama5d2_adc.c
++++ b/drivers/iio/adc/at91-sama5d2_adc.c
+@@ -934,7 +934,7 @@ static void at91_adc_hw_init(struct at91_adc_state *st)
+ 	at91_adc_writel(st, AT91_SAMA5D2_MR,
+ 			AT91_SAMA5D2_MR_TRANSFER(2) | AT91_SAMA5D2_MR_ANACH);
  
-+Optional properties:
-+  - dmas: Phandle to dma channel for the ADC.
-+  See ../../dma/dma.txt for details.
-+  - dma-names: Must be "rx" when dmas property is being used.
-+
- Example:
- 
- adc: adc@fc030000 {
-@@ -31,4 +36,6 @@ adc: adc@fc030000 {
- 	vddana-supply = <&vdd_3v3_lp_reg>;
- 	vref-supply = <&vdd_3v3_lp_reg>;
- 	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
-+	dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
-+	dma-names = "rx";
+-	at91_adc_setup_samp_freq(st, st->soc_info.min_sample_rate);
++	at91_adc_setup_samp_freq(st, st->soc_info.max_sample_rate);
  }
+ 
+ static ssize_t at91_adc_get_fifo_state(struct device *dev,
 -- 
 2.7.4
