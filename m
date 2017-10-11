@@ -1,34 +1,92 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: dts: iwg22d-sodimm: Enable USB PHY
-Date: Wed, 11 Oct 2017 15:16:49 +0200
-Message-ID: <CAMuHMdVrukW9oNnxRQw4=VEs2_QOf9bSqh5AsvEsvNX11BE2EQ@mail.gmail.com>
-References: <1507557541-46560-1-git-send-email-biju.das@bp.renesas.com> <1507557541-46560-6-git-send-email-biju.das@bp.renesas.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [PATCH v4 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Date: Wed, 11 Oct 2017 08:22:59 -0500
+Message-ID: <20171011132258.GB25400@ti.com>
+References: <20170922100823.18184-1-maxime.ripard@free-electrons.com>
+ <20170922100823.18184-3-maxime.ripard@free-electrons.com>
+ <20170929172709.GA3163@ti.com>
+ <20171011092409.ndtr3fdo2oj3zueb@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507557541-46560-6-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171011092409.ndtr3fdo2oj3zueb@flea.lan>
+Sender: linux-media-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 9, 2017 at 3:59 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Hi Maxime,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Wed [2017-Oct-11 11:24:09 +0200]:
+> Hi Benoit,
+> 
+> On Fri, Sep 29, 2017 at 05:27:09PM +0000, Benoit Parrot wrote:
+> > > +static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
+> > > +				struct platform_device *pdev)
+> > > +{
+> > > +	struct resource *res;
+> > > +	unsigned char i;
+> > > +	u32 reg;
+> > > +
+> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
+> > > +	if (IS_ERR(csi2rx->base))
+> > > +		return PTR_ERR(csi2rx->base);
+> > > +
+> > > +	csi2rx->sys_clk = devm_clk_get(&pdev->dev, "sys_clk");
+> > > +	if (IS_ERR(csi2rx->sys_clk)) {
+> > > +		dev_err(&pdev->dev, "Couldn't get sys clock\n");
+> > > +		return PTR_ERR(csi2rx->sys_clk);
+> > > +	}
+> > > +
+> > > +	csi2rx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
+> > > +	if (IS_ERR(csi2rx->p_clk)) {
+> > > +		dev_err(&pdev->dev, "Couldn't get P clock\n");
+> > > +		return PTR_ERR(csi2rx->p_clk);
+> > > +	}
+> > > +
+> > > +	csi2rx->dphy = devm_phy_optional_get(&pdev->dev, "dphy");
+> > > +	if (IS_ERR(csi2rx->dphy)) {
+> > > +		dev_err(&pdev->dev, "Couldn't get external D-PHY\n");
+> > > +		return PTR_ERR(csi2rx->dphy);
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * FIXME: Once we'll have external D-PHY support, the check
+> > > +	 * will need to be removed.
+> > > +	 */
+> > > +	if (csi2rx->dphy) {
+> > > +		dev_err(&pdev->dev, "External D-PHY not supported yet\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > 
+> > I understand that in your current environment you do not have a
+> > DPHY. But I am wondering in a real setup where you will have either
+> > an internal or an external DPHY, how are they going to interact with
+> > this driver or vice-versa?
+> 
+> It's difficult to give an answer with so little details. How would you
+> choose between those two PHYs? Is there a mux, or should we just power
+> one of the two? If that's the case, is there any use case were we
+> might want to power both? If not, which one should we favor, in which
+> situations?
 
-Gr{oetje,eeting}s,
+Oops, I guess I should clarify, in this case I did not mean we would
+have both an internal and an external DPHY. I just meant one or the other.
+Basically just want to see how you would actually handle a DPHY here whether
+it's internal or external?
 
-                        Geert
+For instance, using direct register access from within this driver or make
+use of an separate phy driver...
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> I guess all those questions actually depend on the way the integration
+> has been done, and we're not quite there yet. I guess we could do
+> either a platform specific structure or a glue, depending on the
+> complexity. The platform specific compatible will allow us to do that
+> as we see fit anyway.
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Benoit
