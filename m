@@ -1,32 +1,48 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] pinctrl: mcp23s08: remove unused variables from pinconf_set
-Date: Wed, 11 Oct 2017 10:19:49 +0200
-Message-ID: <CACRpkdY1yV0WFt0U57yehB8jxuf2wvWZWZnANZW9gK1662zMuA@mail.gmail.com>
-References: <1507266491-73971-1-git-send-email-preid@electromag.com.au> <1507266491-73971-8-git-send-email-preid@electromag.com.au>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 2/4] phy: rcar-gen3-usb2: use enum phy_mode in the
+ role_store()
+Date: Wed, 11 Oct 2017 13:57:40 +0530
+Message-ID: <743b1a5b-7c5b-1974-b5d3-a75a17d6b27a@ti.com>
+References: <1507628490-7944-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1507628490-7944-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507266491-73971-8-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507628490-7944-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 7:08 AM, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
+Hi,
 
-> Variable mask and val are not used in the mcp_pinconf_set().
->
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+On Tuesday 10 October 2017 03:11 PM, Yoshihiro Shimoda wrote:
+> This patch modifies the role_store() to use "enum phy_mode" instead
+> of the local "bool" for host/device mode selection.
 
-Patch applied with Sebastian's ACK.
+looks good except for one minor comment..
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> index e00e99a..7314b49 100644
+> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> @@ -219,33 +219,40 @@ static bool rcar_gen3_is_host(struct rcar_gen3_chan *ch)
+>  	return !(readl(ch->base + USB2_COMMCTRL) & USB2_COMMCTRL_OTG_PERI);
+>  }
+>  
+> +static enum phy_mode rcar_gen3_get_phy_mode(struct rcar_gen3_chan *ch)
+> +{
+> +	if (rcar_gen3_is_host(ch))
+> +		return PHY_MODE_USB_HOST;
+> +	else
 
-Please rebase the remaining patches on my devel branch
-and focus on getting open drain and active high/low things
-right.
+the else here is not required.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
