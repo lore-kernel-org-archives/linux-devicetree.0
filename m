@@ -1,44 +1,57 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [Patch v6 1/7] slimbus: Device management on SLIMbus
-Date: Wed, 11 Oct 2017 12:23:13 +0100
-Message-ID: <d6c8f7f8-202c-37e5-7070-a8f141d2b93a@linaro.org>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
- <20171010104509.GC30097@localhost>
- <fd966acd-a86c-5021-8a8b-ddf1508ab63e@linaro.org>
- <20171010164930.GD30097@localhost>
- <9e2bb2fa-b391-055e-407e-c93f43428840@linaro.org>
- <20171011040741.GE30097@localhost>
- <c777820e-fd60-f8d1-4fc1-5934ff18af1b@linaro.org>
- <20171011102132.GG30097@localhost>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 09/14] regmap: add iopoll-like polling macro for
+ regmap_field
+Date: Wed, 11 Oct 2017 13:24:03 +0200
+Message-ID: <20171011112403.cftnkwzlbpo5ngzc@phenom.ffwll.local>
+References: <20170929082306.16193-1-wens@csie.org>
+ <20170929082306.16193-10-wens@csie.org>
+ <20171004104732.jkps4ufekfizcrkz@sirena.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20171011102132.GG30097@localhost>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20171004104732.jkps4ufekfizcrkz@sirena.co.uk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/10/17 11:21, Vinod Koul wrote:
->>> ah which cases would those be. I was expecting that you would have a
->>> platform_device as a slimbus controller which would call slim_register?
->> As of now there is only one controller which uses platform driver, but in
->> future there might be more, but this is something which makes the slimbus
->> core more flexible.
-> even if you have more controllers wouldn't we have similar number of platform
-> devices. Each instance of the link/controller would have its device node.
->
-Yep, I will give at try and see in next version!
-
-
-thanks,
-srini
-
-
-> Thanks
-> -- ~Vinod
+T24gV2VkLCBPY3QgMDQsIDIwMTcgYXQgMTE6NDc6MzJBTSArMDEwMCwgTWFyayBCcm93biB3cm90
+ZToKPiBPbiBGcmksIFNlcCAyOSwgMjAxNyBhdCAwNDoyMzowMVBNICswODAwLCBDaGVuLVl1IFRz
+YWkgd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgYSBtYWNybyByZWdtYXBfZmllbGRfcmVhZF9w
+b2xsX3RpbWVvdXQgdGhhdCB3b3Jrcwo+ID4gc2ltaWxhciB0byB0aGUgcmVhZHhfcG9sbF90aW1l
+b3V0IGRlZmluZWQgaW4gbGludXgvaW9wb2xsLmgsIGV4Y2VwdAo+ID4gdGhhdCB0aGlzIGNhbiBh
+bHNvIHJldHVybiB0aGUgZXJyb3IgdmFsdWUgcmV0dXJuZWQgYnkgYSBmYWlsZWQKPiA+IHJlZ21h
+cF9maWVsZF9yZWFkLgo+IAo+IFRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMmJk
+NmJmMDNmNGMxYzU5MzgxZDYyYzYxZDAzZjZjYzNmZTcxZjY2ZToKPiAKPiAgIExpbnV4IDQuMTQt
+cmMxICgyMDE3LTA5LTE2IDE1OjQ3OjUxIC0wNzAwKQo+IAo+IGFyZSBhdmFpbGFibGUgaW4gdGhl
+IGdpdCByZXBvc2l0b3J5IGF0Ogo+IAo+ICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9s
+aW51eC9rZXJuZWwvZ2l0L2Jyb29uaWUvcmVnbWFwLmdpdCB0YWdzL3JlZ21hcC1wb2xsLWZpZWxk
+Cj4gCj4gZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvIDY2NzA2M2FjYjgxOTMxZTJmOGZk
+MGNiOTFkZjlmY2NjYWQxMzFkOWE6Cj4gCj4gICByZWdtYXA6IGFkZCBpb3BvbGwtbGlrZSBwb2xs
+aW5nIG1hY3JvIGZvciByZWdtYXBfZmllbGQgKDIwMTctMTAtMDQgMTE6NDY6MzIgKzAxMDApCgpQ
+dWxsZWQgaW50byBkcm0tbWlzYy1uZXh0IGZvciA0LjE1IHNpbmNlIE1heGltZSBuZWVkcyB0aGF0
+IGZvciB0aGUgc3VuNGkKY2hhbmdlcy4KClRoYW5rcywgRGFuaWVsCgo+IAo+IC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiBy
+ZWdtYXA6IEFkZCBmaWVsZCBwb2xsaW5nIG1hY3JvCj4gCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+IENoZW4tWXUgVHNh
+aSAoMSk6Cj4gICAgICAgcmVnbWFwOiBhZGQgaW9wb2xsLWxpa2UgcG9sbGluZyBtYWNybyBmb3Ig
+cmVnbWFwX2ZpZWxkCj4gCj4gIGluY2x1ZGUvbGludXgvcmVnbWFwLmggfCAzOSArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDM5IGluc2Vy
+dGlvbnMoKykKCgoKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwKCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29y
+cG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
