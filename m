@@ -1,13 +1,11 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 3/7] ARM: dts: imx53-tx53: remove obsolete eeti,egalax_ts
-Date: Wed, 11 Oct 2017 13:07:37 +0200
-Message-ID: <1507720061-27666-4-git-send-email-LW@KARO-electronics.de>
-References: <1507720061-27666-1-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 0/7] ARM: dts: imx53: Update Update Ka-Ro TX53 dts files
+Date: Wed, 11 Oct 2017 13:07:34 +0200
+Message-ID: <1507720061-27666-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507720061-27666-1-git-send-email-LW@KARO-electronics.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,37 +16,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGRpc3BsYXksIHRoYXQgaW5jb3Jwb3JhdGVzIHRoaXMgdG91Y2hwYW5lbCBpcyBvYnNvbGV0
-ZSBhbmQgd29uJ3QKYmUgc3VwcG9ydGVkIGFueSBtb3JlLgoKU2lnbmVkLW9mZi1ieTogTG90aGFy
-IFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRz
-L2lteDUzLXR4NTMteDEzeC5kdHMgfCAzNSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQogMSBmaWxlIGNoYW5nZWQsIDM1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMteDEzeC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg1
-My10eDUzLXgxM3guZHRzCmluZGV4IDBkMTdjODAuLmUyMWJjOTEgMTAwNjQ0Ci0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDUzLXR4NTMteDEzeC5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NTMtdHg1My14MTN4LmR0cwpAQCAtMTIwLDIzICsxMjAsNiBAQAogCX07CiB9OwogCi0maTJj
-MiB7Ci0JcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKLQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
-aTJjMj47Ci0Jc3RhdHVzID0gIm9rYXkiOwotCi0JdG91Y2hzY3JlZW4yOiBlZXRpQDA0IHsKLQkJ
-Y29tcGF0aWJsZSA9ICJlZXRpLGVnYWxheF90cyI7Ci0JCXJlZyA9IDwweDA0PjsKLQkJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKLQkJcGluY3RybC0wID0gPCZwaW5jdHJsX2VldGkyPjsKLQkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzM+OwotCQlpbnRlcnJ1cHRzID0gPDIzIDA+OwotCQl3
-YWtldXAtZ3Bpb3MgPSA8JmdwaW8zIDIzIEdQSU9fQUNUSVZFX0hJR0g+OwotCQl3YWtldXAtc291
-cmNlOwotCX07Ci19OwotCiAmaTJjMyB7CiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlw
-aW5jdHJsLTAgPSA8JnBpbmN0cmxfaTJjMz47CkBAIC0xNDksMjggKzEzMiwxMCBAQAogCQlWRERJ
-Ty1zdXBwbHkgPSA8JnJlZ18zdjM+OwogCQljbG9ja3MgPSA8Jm1jbGs+OwogCX07Ci0KLQl0b3Vj
-aHNjcmVlbjE6IGVldGlAMDQgewotCQljb21wYXRpYmxlID0gImVldGksZWdhbGF4X3RzIjsKLQkJ
-cmVnID0gPDB4MDQ+OwotCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwotCQlwaW5jdHJsLTAg
-PSA8JnBpbmN0cmxfZWV0aTE+OwotCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMz47Ci0JCWlu
-dGVycnVwdHMgPSA8MjIgMD47Ci0JCXdha2V1cC1ncGlvcyA9IDwmZ3BpbzMgMjIgR1BJT19BQ1RJ
-VkVfSElHSD47Ci0JCXdha2V1cC1zb3VyY2U7Ci0JfTsKIH07CiAKICZpb211eGMgewogCWlteDUz
-LXR4NTMteDEzeCB7Ci0JCXBpbmN0cmxfaTJjMjogaTJjMi1ncnAxIHsKLQkJCWZzbCxwaW5zID0g
-PAotCQkJCU1YNTNfUEFEX0tFWV9ST1czX19JMkMyX1NEQQkJMHhjMDAwMDAwMAotCQkJCU1YNTNf
-UEFEX0tFWV9DT0wzX19JMkMyX1NDTAkJMHhjMDAwMDAwMAotCQkJPjsKLQkJfTsKLQogCQlwaW5j
-dHJsX2x2ZHMwOiBsdmRzMGdycCB7CiAJCQlmc2wscGlucyA9IDwKIAkJCQlNWDUzX1BBRF9MVkRT
-MF9UWDNfUF9fTERCX0xWRFMwX1RYMyAweDgwMDAwMDAwCi0tIAoyLjEuNAoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+This patch set brings the Ka-Ro electronics GmbH TX53 module series
+dts files up to date.
