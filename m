@@ -1,80 +1,53 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to
- and from devices
-Date: Wed, 11 Oct 2017 13:33:48 +0200
-Message-ID: <20171011113348.GE30803@8bytes.org>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-6-jean-philippe.brucker@arm.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
+Date: Wed, 11 Oct 2017 13:36:51 +0200
+Message-ID: <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com>
+References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
+ <878tgim24i.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171006133203.22803-6-jean-philippe.brucker@arm.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, robin.murphy@arm.com, bhelgaas@google.com, alex.williamson@redhat.com, tn@semihalf.com, liubo95@huawei.com, thunder.leizhen@huawei.com, xieyisheng1@huawei.com, gabriele.paoloni@huawei.com, nwatters@codeaurora.org, okaya@codeaurora.org, rfranz@cavium.com, dwmw2@infradead.org, jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com, ashok.raj@intel.com, robdclark@gmail.com
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <878tgim24i.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Philipe,
+Hi Felip
 
-Thanks for your patches, this is definitly a step in the right direction
-to get generic support for IO virtual memory into the IOMMU core code.
+On 10/11/2017 12:04 PM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org> writes:
+>> The STM32F7 MCU family embeds two DWC2 USB OTG cores. One core is USB
+>> OTG FS and the other is USB OTG HS. The USB FS core only works with its
+>> internal phy whilst the USB HS core can work in HS with external ULPI phy
+>> or in FS/LS with the on-chip FS phy.
+>>
+>> Amelie Delaunay (7):
+>>    dt-bindings: usb: Document the STM32F7 DWC2 USB OTG HS core binding
+>>    usb: dwc2: add support for STM32F7 USB OTG HS
+>>    ARM: dts: stm32: Add USB HS support for STM32F746 MCU
+> 
+> I have applied these three patches. Should I take the rest? They seems
+> like they could go upstream through the ARM maintainers.
+> 
 
-But I see an issue with the design around task_struct, please see
-below.
+I will take other DT patches in my PR.
 
-On Fri, Oct 06, 2017 at 02:31:32PM +0100, Jean-Philippe Brucker wrote:
-> +int iommu_process_bind_device(struct device *dev, struct task_struct *task,
-> +			      int *pasid, int flags)
+Concerning "ARM: dts: stm32: Add USB HS support for STM32F746 MCU" patch 
+I prefer also to take it. This patch adds some pinctrl groups but stm32 
+pinctrl bindings will change in my next PR (we will use a macro to 
+define pins instead of using defined values). So if you push the DT 
+patch through your pull request there will be a merge issue.
+It is possible that I take also this one ?
 
-I just took this patch as an example, it is in the other patches as
-well. The code is designed around 'struct task_struct' while it should
-really be designed around 'struct mm_struct'. You are not attaching a
-specific process to a device, but the address-space of one or more
-processes. And that should be reflected in the design.
-
-There are several bad implications of building it around task_struct,
-one is the life-time of the binding. If the address space is detached
-from the device when the process exits, only the thread that did the
-setup can can safely make use of the device, because if the device is
-accessed from another thread it will crash when the setup-thread exits.
-
-There are other benefits of using mm_struct, for example that you can
-use mmu_notifiers to exit-handling.
-
-Here is how I think the base API should look like:
-
-	* iommu_iovm_device_init(struct device *dev);
-	  iommu_iovm_device_shutdown(struct device *dev);
-
-	  These two functions do the device specific setup/shutdown. For
-	  PCI this would include enabling the PRI, PASID, and ATS
-	  capabilities and setting up a PASID table for the device.
-
-	* iommu_iovm_bind_mm(struct device *dev, struct mm_struct *mm,
-			     iovm_shutdown_cb *cb);
-	  iommu_iovm_unbind_mm(struct device *dev, struct mm_struct *mm);
-
-	  These functions add and delete the entries in the PASID table
-	  for the device and setup mmu_notifiers for the mm_struct to
-	  keep IOMMU TLBs in sync with the CPU TLBs.
-
-	  The shutdown_cb is invoked by the IOMMU core code when the
-	  mm_struct goes away, for example because the process
-	  segfaults.
-
-	The PASID handling is best done these functions as well, unless
-	there is a strong reason to allow device drivers to do the
-	handling themselves.
-
-The context data can be stored directly in mm_struct, including the
-PASID for that mm.
-
-There is of course more functionality needed, the above only outlines
-the very basic needs.
-
-
-Regards,
-
-	Joerg
-
+Regards
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
