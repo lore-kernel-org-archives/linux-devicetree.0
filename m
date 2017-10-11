@@ -1,55 +1,42 @@
-From: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] rtc: add support for NXP PCF85363 real-time clock
-Date: Wed, 11 Oct 2017 08:08:31 -0700
-Message-ID: <cc764cec-0f83-5d8f-d4b8-02f4b2cd8627@nelint.com>
-References: <1507578100-2148-1-git-send-email-eric@nelint.com>
- <CAOMZO5C_boginn88C7zgXSBaikx==5FHJrgaE1ewYUyUgGfnFQ@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 09/12] ARM: dts: imx6-tx6: move display configuration to
+ .dtsi file
+Date: Wed, 11 Oct 2017 17:11:49 +0200
+Message-ID: <1507734709.22082.5.camel@pengutronix.de>
+References: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
+         <1507722635-30801-10-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5C_boginn88C7zgXSBaikx==5FHJrgaE1ewYUyUgGfnFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1507722635-30801-10-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Otavio Salvador <otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+To: Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hi Lothar,
 
-On 10/10/2017 06:31 AM, Fabio Estevam wrote:
-> Hi Eric,
+On Wed, 2017-10-11 at 13:50 +0200, Lothar Waßmann wrote:
+> Currently the display (LCD or LVDS) configuration is duplicated with
+> slight variations in each TX6 module specific file.
 > 
-> On Mon, Oct 9, 2017 at 4:41 PM, Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org> wrote:
+> Move it to an include file for simplification and consistency.
 > 
->> +config RTC_DRV_PCF85363
->> +       tristate "NXP PCF85363"
->> +       depends on I2C
-> 
-> It seems you missed a dependency on REGMAP_I2C.
-> 
+> Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 
-Nice catch. Thanks.
+This is much appreciated,
 
->> +static const struct i2c_device_id pcf85363_id[] = {
->> +       { "pcf85363", 0 },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(i2c, pcf85363_id);
-> 
-> Even though the driver can probe via the i2c device id, it is
-> recommended to explicitly pass the compatible string:
-> 
-> static const struct of_device_id pcf85363_dt_match[] = {
-> { .compatible = "nxp,pcf85363" },
-> { },
-> 
-> See this previous discussion:
-> https://www.spinics.net/lists/devicetree/msg195176.html
-> 
-Thanks for that, too.
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-I'll fix this up in V2.
+This patch does conflict with Marco's "ARM: dts: imx: Fix incorrect
+display nodes notation" patch [1], which renames the display@di0 nodes
+to disp0. Assuming it gets merged as-is, maybe rebase on top of that?
+
+[1] https://patchwork.kernel.org/patch/9987341/
+
+regards
+Philipp
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
