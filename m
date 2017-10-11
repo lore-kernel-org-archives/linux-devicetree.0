@@ -1,126 +1,178 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH v2] dts: display5: Device tree description of LWN's
- DISPLAY5 board
-Date: Tue, 10 Oct 2017 23:32:12 +0200
-Message-ID: <20171010233212.3fc4e5a8@jawa>
-References: <1506353849-21912-1-git-send-email-lukma@denx.de>
-        <CAOMZO5D+uQMoVX4gzGa==6qkuUX=kH9g2=w_B73jwK=jxd_xHA@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 09/12] of: overlay: avoid race condition between applying
+ multiple overlays
+Date: Tue, 10 Oct 2017 17:53:20 -0700
+Message-ID: <59DD6B80.8050204@gmail.com>
+References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+ <1507002826-16393-10-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKHkPp6M-aE9yVM1Bs599NTpjV33hGXvnOo-W8KKPPsJw@mail.gmail.com>
+ <59D5A737.9090905@gmail.com> <20171010184014.m2chslx36kbhvgug@rob-hp-laptop>
+ <59DD21F3.6080001@gmail.com>
+ <CAL_JsqK8cxBk754UBziGOTMx035C8P5ehPvENE0=-TNHqmTCbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5D+uQMoVX4gzGa==6qkuUX=kH9g2=w_B73jwK=jxd_xHA@mail.gmail.com>
+In-Reply-To: <CAL_JsqK8cxBk754UBziGOTMx035C8P5ehPvENE0=-TNHqmTCbg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-
-> Hi Lukasz,
+On 10/10/17 14:06, Rob Herring wrote:
+> On Tue, Oct 10, 2017 at 2:39 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 10/10/17 11:40, Rob Herring wrote:
+>>> On Wed, Oct 04, 2017 at 08:29:59PM -0700, Frank Rowand wrote:
+>>>> On 10/04/17 08:19, Rob Herring wrote:
+>>>>> On Mon, Oct 2, 2017 at 10:53 PM,  <frowand.list@gmail.com> wrote:
+>>>>>> From: Frank Rowand <frank.rowand@sony.com>
+>>>>>>
+>>>>>> The process of applying an overlay consists of:
+>>>>>>   - unflatten an overlay FDT (flattened device tree) into an
+>>>>>>     EDT (expanded device tree)
+>>>>>>   - fixup the phandle values in the overlay EDT to fit in a
+>>>>>>     range above the phandle values in the live device tree
+>>>>>>   - create the overlay changeset to reflect the contents of
+>>>>>>     the overlay EDT
+>>>>>>   - apply the overlay changeset, to modify the live device tree,
+>>>>>>     potentially changing the maximum phandle value in the live
+>>>>>>     device tree
+>>>>>>
+>>>>>> There is currently no protection against two overlay applies
+>>>>>> concurrently determining what range of phandle values are in use
+>>>>>> in the live device tree, and subsequently changing that range.
+>>>>>> Add a mutex to prevent multiple overlay applies from occurring
+>>>>>> simultaneously.
+>>>>>>
+>>>>>> Ignoring 2 checkpatch warnings: Prefer using '"%s...", __func__'
+>>>>>> so that the WARN() string will be more easily grepped.
+>>>>>>
+>>>>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>>>>>> ---
+>>>>>>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  7 +++++++
+>>>>>>  drivers/of/overlay.c                         | 22 ++++++++++++++++++++++
+>>>>>>  drivers/of/unittest.c                        | 21 +++++++++++++++++++++
+>>>>>>  include/linux/of.h                           | 19 +++++++++++++++++++
+>>>>>>  4 files changed, 69 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>>>>>> index 7a7be0515bfd..c99f7924b1c6 100644
+>>>>>> --- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>>>>>> +++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>>>>>> @@ -221,6 +221,11 @@ static void __init tilcdc_convert_slave_node(void)
+>>>>>>                 goto out;
+>>>>>>         }
+>>>>>>
+>>>>>> +       /*
+>>>>>> +        * protect from of_resolve_phandles() through of_overlay_apply()
+>>>>>> +        */
+>>>>>> +       of_overlay_mutex_lock();
+>>>>>> +
+>>>>>
+>>>>> We can't be relying on callers to get the locking right...
+>>>>
+>>>> Agreed.
+>>>>
+>>>>
+>>>>>
+>>>>>>         overlay = tilcdc_get_overlay(&kft);
+>>>>>>         if (!overlay)
+>>>>>>                 goto out;
+>>>>>> @@ -256,6 +261,8 @@ static void __init tilcdc_convert_slave_node(void)
+>>>>>>                 pr_info("%s: ti,tilcdc,slave node successfully converted\n",
+>>>>>>                         __func__);
+>>>>>>  out:
+>>>>>> +       of_overlay_mutex_unlock();
+>>>>>> +
+>>>>>>         kfree_table_free(&kft);
+>>>>>>         of_node_put(i2c);
+>>>>>>         of_node_put(slave);
+>>>>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>>>>> index a0d3222febdc..4ed372af6ce7 100644
+>>>>>> --- a/drivers/of/overlay.c
+>>>>>> +++ b/drivers/of/overlay.c
+>>>>>> @@ -71,6 +71,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
+>>>>>>                 const struct device_node *overlay_node,
+>>>>>>                 bool is_symbols_node);
+>>>>>>
+>>>>>> +/*
+>>>>>> + * of_resolve_phandles() finds the largest phandle in the live tree.
+>>>>>> + * of_overlay_apply() may add a larger phandle to the live tree.
+>>>>>> + * Do not allow race between two overlays being applied simultaneously:
+>>>>>> + *    mutex_lock(&of_overlay_phandle_mutex)
+>>>>>> + *    of_resolve_phandles()
+>>>>>> + *    of_overlay_apply()
+>>>>>> + *    mutex_unlock(&of_overlay_phandle_mutex)
+>>>>>
+>>>>> Why do these need to be separate functions? I think I mentioned it
+>>>>> before, but essentially overlay_data_add() should be part of the
+>>>>> overlay API. We may need to allow for callers to do each step, but
+>>>>> generally I think the interface should just be "apply this fdt blob".
+>>>>
+>>>> Yes, that is where I want to end up.
+>>>
+>>> So, is that not doable now? To put it another way, why does
+>>> of_resolve_phandles need to be a separate call? Seems like an internal
+>>> detail of how you apply an overlay to me.
+>>>
+>>> Rob
+>>
+>> Yes, of_resolve_phandles() should become an internal call made from
+>> the "apply this fdt blob" function.
 > 
-> Usually the Subject should have the ARM prefix: ARM: dts: ....
+> I mean just moving of_resolve_phandles into of_overlay_apply. Not the
+> unflattening too.
 
-Ok. I will change this, no problem.
+OK, I can do that.  I'll send another patch that shows what is involved.
 
+
+>> The biggest obstacle is drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+>> using overlays in a convoluted manner.  The second obstacle will
+>> probably be the older overlay tests in drivers/of/unittest.c.  I
+>> need to look at how to convert them to using actual overlays.
+>>
+>> There are other fixes and improvements to the overlay code that
+>> need to occur, but it is like pulling on a loose thread in a
+>> sweater - it just goes on and on.  I'd like to get this set of
+>> patches in, with whatever changes are absolutely essential,
+>> then continue on with more patch sets.  This code will be
+>> much easier for me to modify in the future if this patch set
+>> is applied.
 > 
-> On Mon, Sep 25, 2017 at 12:37 PM, Lukasz Majewski <lukma@denx.de>
-> wrote:
-> 
-> > +       backlight_lvds: backlight {
-> > +               compatible = "pwm-backlight";
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&pinctrl_backlight>;
-> > +               pwms = <&pwm2 0 5000000 0>;
-> > +               brightness-levels = <  0   1   2   3   4   5   6
-> > 7   8   9
-> > +                                     10  11  12  13  14  15  16
-> > 17  18  19
-> > +                                     20  21  22  23  24  25  26
-> > 27  28  29
-> > +                                     30  31  32  33  34  35  36
-> > 37  38  39
-> > +                                     40  41  42  43  44  45  46
-> > 47  48  49
-> > +                                     50  51  52  53  54  55  56
-> > 57  58  59
-> > +                                     60  61  62  63  64  65  66
-> > 67  68  69
-> > +                                     70  71  72  73  74  75  76
-> > 77  78  79
-> > +                                     80  81  82  83  84  85  86
-> > 87  88  89
-> > +                                     90  91  92  93  94  95  96
-> > 97  98  99
-> > +                                    100 101 102 103 104 105 106
-> > 107 108 109
-> > +                                    110 111 112 113 114 115 116
-> > 117 118 119
-> > +                                    120 121 122 123 124 125 126
-> > 127 128 129
-> > +                                    130 131 132 133 134 135 136
-> > 137 138 139
-> > +                                    140 141 142 143 144 145 146
-> > 147 148 149
-> > +                                    150 151 152 153 154 155 156
-> > 157 158 159
-> > +                                    160 161 162 163 164 165 166
-> > 167 168 169
-> > +                                    170 171 172 173 174 175 176
-> > 177 178 179
-> > +                                    180 181 182 183 184 185 186
-> > 187 188 189
-> > +                                    190 191 192 193 194 195 196
-> > 197 198 199
-> > +                                    200 201 202 203 204 205 206
-> > 207 208 209
-> > +                                    210 211 212 213 214 215 216
-> > 217 218 219
-> > +                                    220 221 222 223 224 225 226
-> > 227 228 229
-> > +                                    230 231 232 233 234 235 236
-> > 237 238 239
-> > +                                    240 241 242 243 244 245 246
-> > 247 248 249
-> > +                                    250 251 252 253 254 255>;
-> 
-> Do you need such fine grained brightness levels? ;-)
+> AFAICT, I don't think anything between of_resolve_phandles and
+> of_overlay_apply calls in tilcdc depends on the phandles being fixed
+> up.
 
-Yes. The device is supposed to work with some harsh environment, hence
-so grained brightness levels.
-
-> 
-> > +&i2c1 {
-> > +       clock-frequency = <400000>;
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_i2c1>;
-> > +       status = "okay";
-> > +
-> > +       codec: tfa9879@6C {
-> > +               #sound-dai-cells = <0>;
-> > +               compatible = "tfa9879";
-> 
-> compatible = "nxp,tfa9879" , please.
-
-Yes. No problem. I will "refer" to your NXP codec patch (which adds
-proper compatibles to this device).
-
-> 
-> 
-> > +&iomuxc {
-> > +       pinctrl-names = "default";
-> 
-> This line can be removed.
-
-Ok.
+I started looking at that, then decided that it wasn't worth the
+aggravation at the moment.  That use of overlays is fragile and
+really needs to go away.  With this latest change on top of all
+the others, someone who has that hardware really needs to test
+the patches to make sure nothing broke.
 
 
-Best regards,
+> And for the unittests that don't call of_resolve_phandles, would
+> there be any side effect of calling of_resolve_phandles?
 
-Lukasz Majewski
+Yes.  The old style overlay tests do not use true overlays.  Those
+tests were created before dtc was able to handle overlays, so they
+are somewhat hand crafted.
 
---
+This has two results.  First, the subtrees that are passed to
+of_overlay_apply() are deeper in the tree than a true overlay
+would be.  Thus they do not contain the __local_fixups__ node
+that would be in a true overlay.  The __local_fixups__ node
+is at the root level of the testcases.dtb tree, and fixups
+for the entire tree are done in one step, instead of fixing
+up each overlay separately.  So when of_resolve_phandles()
+is called on each overlay tree, there is no __local_fixups__
+node visible, and a second fixup is not attempted.  The
+second result is that the overlay trees are not detached,
+so I temporarily disabled one the detached check in
+of_resolve_phandles() so overlay_apply() will not fail
+for these overlays.
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+I'll have to rework the old style overlay tests to use true
+overlays soon.  But that is another activity that I would
+like to do as a subsequent step to this patch set.
+
+-Frank
