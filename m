@@ -1,92 +1,72 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [PATCH v4 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Wed, 11 Oct 2017 08:22:59 -0500
-Message-ID: <20171011132258.GB25400@ti.com>
-References: <20170922100823.18184-1-maxime.ripard@free-electrons.com>
- <20170922100823.18184-3-maxime.ripard@free-electrons.com>
- <20170929172709.GA3163@ti.com>
- <20171011092409.ndtr3fdo2oj3zueb@flea.lan>
+From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
+Date: Wed, 11 Oct 2017 16:26:53 +0300
+Message-ID: <87sheplsrm.fsf@linux.intel.com>
+References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com> <878tgim24i.fsf@linux.intel.com> <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com> <87vajllx8t.fsf@linux.intel.com> <1c4180ef-2da6-b420-7c6e-41769608384a@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171011092409.ndtr3fdo2oj3zueb@flea.lan>
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1c4180ef-2da6-b420-7c6e-41769608384a-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Wed [2017-Oct-11 11:24:09 +0200]:
-> Hi Benoit,
-> 
-> On Fri, Sep 29, 2017 at 05:27:09PM +0000, Benoit Parrot wrote:
-> > > +static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
-> > > +				struct platform_device *pdev)
-> > > +{
-> > > +	struct resource *res;
-> > > +	unsigned char i;
-> > > +	u32 reg;
-> > > +
-> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
-> > > +	if (IS_ERR(csi2rx->base))
-> > > +		return PTR_ERR(csi2rx->base);
-> > > +
-> > > +	csi2rx->sys_clk = devm_clk_get(&pdev->dev, "sys_clk");
-> > > +	if (IS_ERR(csi2rx->sys_clk)) {
-> > > +		dev_err(&pdev->dev, "Couldn't get sys clock\n");
-> > > +		return PTR_ERR(csi2rx->sys_clk);
-> > > +	}
-> > > +
-> > > +	csi2rx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
-> > > +	if (IS_ERR(csi2rx->p_clk)) {
-> > > +		dev_err(&pdev->dev, "Couldn't get P clock\n");
-> > > +		return PTR_ERR(csi2rx->p_clk);
-> > > +	}
-> > > +
-> > > +	csi2rx->dphy = devm_phy_optional_get(&pdev->dev, "dphy");
-> > > +	if (IS_ERR(csi2rx->dphy)) {
-> > > +		dev_err(&pdev->dev, "Couldn't get external D-PHY\n");
-> > > +		return PTR_ERR(csi2rx->dphy);
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * FIXME: Once we'll have external D-PHY support, the check
-> > > +	 * will need to be removed.
-> > > +	 */
-> > > +	if (csi2rx->dphy) {
-> > > +		dev_err(&pdev->dev, "External D-PHY not supported yet\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > 
-> > I understand that in your current environment you do not have a
-> > DPHY. But I am wondering in a real setup where you will have either
-> > an internal or an external DPHY, how are they going to interact with
-> > this driver or vice-versa?
-> 
-> It's difficult to give an answer with so little details. How would you
-> choose between those two PHYs? Is there a mux, or should we just power
-> one of the two? If that's the case, is there any use case were we
-> might want to power both? If not, which one should we favor, in which
-> situations?
+Hi,
 
-Oops, I guess I should clarify, in this case I did not mean we would
-have both an internal and an external DPHY. I just meant one or the other.
-Basically just want to see how you would actually handle a DPHY here whether
-it's internal or external?
+Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org> writes:
+> Hi
+>
+> On 10/11/2017 01:50 PM, Felipe Balbi wrote:
+>> 
+>> Hi,
+>> 
+>> Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org> writes:
+>>> Hi Felip
+>>>
+>>> On 10/11/2017 12:04 PM, Felipe Balbi wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org> writes:
+>>>>> The STM32F7 MCU family embeds two DWC2 USB OTG cores. One core is USB
+>>>>> OTG FS and the other is USB OTG HS. The USB FS core only works with its
+>>>>> internal phy whilst the USB HS core can work in HS with external ULPI phy
+>>>>> or in FS/LS with the on-chip FS phy.
+>>>>>
+>>>>> Amelie Delaunay (7):
+>>>>>     dt-bindings: usb: Document the STM32F7 DWC2 USB OTG HS core binding
+>>>>>     usb: dwc2: add support for STM32F7 USB OTG HS
+>>>>>     ARM: dts: stm32: Add USB HS support for STM32F746 MCU
+>>>>
+>>>> I have applied these three patches. Should I take the rest? They seems
+>>>> like they could go upstream through the ARM maintainers.
+>>>>
+>>>
+>>> I will take other DT patches in my PR.
+>>>
+>>> Concerning "ARM: dts: stm32: Add USB HS support for STM32F746 MCU" patch
+>>> I prefer also to take it. This patch adds some pinctrl groups but stm32
+>>> pinctrl bindings will change in my next PR (we will use a macro to
+>>> define pins instead of using defined values). So if you push the DT
+>>> patch through your pull request there will be a merge issue.
+>>> It is possible that I take also this one ?
+>> 
+>> In that case, it's best if you take them all :-) Here's my Ack:
+>> 
+>> Acked-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> 
+>> I'll drop them from my tree now
+>
+> Ok perfect, I will take DT patches (3 to 7) and I let you take patch 1&2 
+> in your tree.
 
-For instance, using direct register access from within this driver or make
-use of an separate phy driver...
+Well, I have dropped them from my tree. Please two 1-7 through yours.
 
-> 
-> I guess all those questions actually depend on the way the integration
-> has been done, and we're not quite there yet. I guess we could do
-> either a platform specific structure or a glue, depending on the
-> complexity. The platform specific compatible will allow us to do that
-> as we see fit anyway.
-> 
-
-Regards,
-Benoit
+-- 
+balbi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
