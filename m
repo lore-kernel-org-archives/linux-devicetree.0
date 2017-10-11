@@ -1,211 +1,134 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [Patch v6 2/7] slimbus: Add messaging APIs to
- slimbus framework
-Date: Wed, 11 Oct 2017 10:42:28 +0100
-Message-ID: <aa117cb8-ba59-894c-5a82-1b38facfa841@linaro.org>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-3-srinivas.kandagatla@linaro.org>
- <20171011043814.GF30097@localhost>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+Date: Wed, 11 Oct 2017 11:47:21 +0200
+Message-ID: <20171011094721.hwbsk736ncx5wstt@flea.lan>
+References: <20170922114703.30511-1-maxime.ripard@free-electrons.com>
+ <20170922114703.30511-3-maxime.ripard@free-electrons.com>
+ <20170922123849.hcm76tlplnvd44mt@valkosipuli.retiisi.org.uk>
+ <20170922153036.u7k3wmuldphkk6w3@flea.lan>
+ <20170926080014.7a3lbe23rvzpcmkq@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171011043814.GF30097@localhost>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, gregkh@linuxfoundation.org, joe@perches.com, davem@davemloft.net
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="br4mtgjntl4dx72l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170926080014.7a3lbe23rvzpcmkq-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--br4mtgjntl4dx72l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 11/10/17 05:38, Vinod Koul wrote:
-> On Fri, Oct 06, 2017 at 05:51:31PM +0200, srinivas.kandagatla@linaro.org wrote:
-> 
->>   	mutex_init(&ctrl->m_ctrl);
->> +	spin_lock_init(&ctrl->tx.lock);
->> +	spin_lock_init(&ctrl->rx.lock);
-> 
-> locks galore :) My assumption is that you want to optimize these? But given
-> that audio user is going to be serialized do we practically need two locks?
-> 
-If we remove the locking, It will be issue if we have multiple devices 
-in a component, which is common atleast with the codec which am looking at.
+Hi Sakari,
 
+Sorry for the belated answer.
 
->> +
->> +	ctrl->pending_wr = kcalloc((ctrl->tx.n - 1),
->> +				   sizeof(struct slim_pending),
->> +				   GFP_KERNEL);
->> +	if (!ctrl->pending_wr) {
->> +		ret = -ENOMEM;
->> +		goto wr_alloc_failed;
->> +	}
->> +
->> +	sema_init(&ctrl->tx_sem, (ctrl->tx.n - 1));
-> 
-> i though v5 comment from Arnd was not to use semaphores..
+On Tue, Sep 26, 2017 at 08:00:14AM +0000, Sakari Ailus wrote:
+> > On Fri, Sep 22, 2017 at 12:38:49PM +0000, Sakari Ailus wrote:
+> > > > +	/*
+> > > > +	 * Create a static mapping between the CSI virtual channels
+> > > > +	 * and the input streams.
+> > >=20
+> > > Which virtual channel is used here?
+> >=20
+> > Like I was trying to explain in the cover letter, the virtual channel
+> > is not under that block's control. The input video interfaces have an
+> > additional signal that comes from the upstream device which sets the
+> > virtual channel.
+>=20
+> Oh, I missed while reviewing the set.
+>=20
+> Presumably either driver would be in control of that then (this one or the
+> upstream sub-device).
 
-I will revisit this area once again and get rid of this semaphore all 
-together in next version.
+I don't really see how this driver could be under such control. I
+guess it would depend on the integreation, but the upstream (sub-)
+device is very likely to be under control of that signal, so I guess
+it should be its role to change that. But we should also have that
+information available so that the mixing in the CSI link is reported
+properly in the media API (looking at Niklas' initial implementation).
 
-> 
->> +/* Copyright (c) 2011-2016, The Linux Foundation. All rights reserved.
-> 
-> 2017?
-Yep.
-> 
->> +int slim_processtxn(struct slim_controller *ctrl,
-> 
-> slim_process_txn seems more readable to me
-> 
-I can change it in next version.
+> > >=20
+> > > > +		 */
+> > > > +		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
+> > > > +		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
+> > > > +	}
+> > > > +
+> > > > +	/* Disable the configuration mode */
+> > > > +	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
+> > >=20
+> > > Shouldn't you start streaming on the downstream sub-device as well?
+> >=20
+> > I appreciate it's a pretty weak argument, but the current setup we
+> > have is in the FPGA is:
+> >=20
+> > capture <- CSI2-RX <- CSI2-TX <- pattern generator
+> >=20
+> > So far, the CSI2-RX block is calling its remote sub-device, which is
+> > CSI2-TX. If CSI2-RX is calling its remote sub-device (CSI2-RX), we
+> > just found ourselves in an endless loop.
+> >=20
+> > I guess it should be easier, and fixable, when we'll have an actual
+> > device without such a loopback.
+>=20
+> What's the intended use case of the device, capture or output?
 
->> +				struct slim_msg_txn *txn)
->> +{
->> +	int ret, i = 0;
->> +	unsigned long flags;
->> +	u8 *buf;
->> +	bool async = false;
->> +	struct slim_cb_data cbd;
->> +	DECLARE_COMPLETION_ONSTACK(done);
->> +	bool need_tid = slim_tid_txn(txn->mt, txn->mc);
->> +
->> +	if (!txn->msg->comp_cb) {
->> +		txn->msg->comp_cb = slim_sync_default_cb;
->> +		cbd.comp = &done;
->> +		txn->msg->ctx = &cbd;
->> +	} else {
->> +		async = true;
->> +	}
->> +
->> +	buf = slim_get_tx(ctrl, txn, need_tid);
->> +	if (!buf)
->> +		return -ENOMEM;
->> +
->> +	if (need_tid) {
->> +		spin_lock_irqsave(&ctrl->txn_lock, flags);
->> +		for (i = 0; i < ctrl->last_tid; i++) {
->> +			if (ctrl->tid_tbl[i] == NULL)
->> +				break;
->> +		}
->> +		if (i >= ctrl->last_tid) {
->> +			if (ctrl->last_tid == (SLIM_MAX_TIDS - 1)) {
->> +				spin_unlock_irqrestore(&ctrl->txn_lock, flags);
->> +				slim_return_tx(ctrl, -ENOMEM);
->> +				return -ENOMEM;
->> +			}
->> +			ctrl->last_tid++;
->> +		}
->> +		ctrl->tid_tbl[i] = txn->msg;
->> +		txn->tid = i;
->> +		spin_unlock_irqrestore(&ctrl->txn_lock, flags);
->> +	}
->> +
->> +	ret = ctrl->xfer_msg(ctrl, txn, buf);
->> +
->> +	if (!ret && !async) { /* sync transaction */
->> +		/* Fine-tune calculation after bandwidth management */
->> +		unsigned long ms = txn->rl + 100;
->> +
->> +		ret = wait_for_completion_timeout(&done,
->> +						  msecs_to_jiffies(ms));
->> +		if (!ret)
->> +			slim_return_tx(ctrl, -ETIMEDOUT);
->> +
->> +		ret = cbd.ret;
->> +	}
->> +
->> +	if (ret && need_tid) {
->> +		spin_lock_irqsave(&ctrl->txn_lock, flags);
->> +		/* Invalidate the transaction */
->> +		ctrl->tid_tbl[txn->tid] = NULL;
->> +		spin_unlock_irqrestore(&ctrl->txn_lock, flags);
->> +	}
->> +	if (ret)
->> +		dev_err(&ctrl->dev, "Tx:MT:0x%x, MC:0x%x, LA:0x%x failed:%d\n",
->> +			txn->mt, txn->mc, txn->la, ret);
->> +	if (!async) {
->> +		txn->msg->comp_cb = NULL;
->> +		txn->msg->ctx = NULL;
->> +	}
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(slim_processtxn);
-> 
-> that is interesting, I was expecting this to be internal API. So users are
-> expected to use this which is not very convenient IMO. Can we hide the gory
-> details and give users simple tx/rx or read/write APIs. FWIW most of the
-> usage would be thru regmap where people would call regmap_read/write()
-> 
+By device, you mean the CSI2-TX block, or something else?
 
-Currently the only user of the api is qcom slim controller. May be the 
-reason for it to use this api is to fit in with all the locking and 
-sequencing mechanism with in the core.
+If CSI2-TX, I guess it's more likely to be for output, but that might
+be used for capture as well.
 
-I will be revisiting the semaphore thingy before I send next version, 
-hopefully I can to align with your above comments.
+> How do you currently start the pipeline?
 
+The capture device is the v4l2 device, and when the capture starts, it
+enables the CSI2-RX which in turn enables CSI2-TX. The pattern
+generator is enabled all the time.
 
+> We have a few corner cases in V4L2 for such devices in graph parsing and
+> stream control. The parsing of the device's fwnode graph endpoints are wh=
+at
+> the device can do, but it doesn't know where the parsing should continue
+> and which part of the graph is already parsed.
+>=20
+> That will be addressed but right now a driver just needs to know.
 
->> +
->> +static int slim_val_inf_sanity(struct slim_controller *ctrl,
->> +			       struct slim_val_inf *msg, u8 mc)
->> +{
->> +	if (!msg || msg->num_bytes > 16 ||
->> +	    (msg->start_offset + msg->num_bytes) > 0xC00)
->> +		goto reterr;
-> 
-> line break here
+I'm not quite sure I got what you wanted me to fix or change.
 
-I agree.
+Thanks!
+Maxime
 
-> 
->> +	switch (mc) {
->> +	case SLIM_MSG_MC_REQUEST_VALUE:
->> +	case SLIM_MSG_MC_REQUEST_INFORMATION:
-> 
-> what does MC refer to?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Message Code.
+--br4mtgjntl4dx72l
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->> +		if (msg->rbuf != NULL)
->> +			return 0;
->> +		break;
-> 
-> after each break too
-> 
-Sure, will fix it in next version.
+-----BEGIN PGP SIGNATURE-----
 
->> +static u16 slim_slicecodefromsize(u16 req)
-> 
-> hmmm Linux code doesnt prefernamesnames like this :)
-Yep, this function is unused, am going to delete this in next version.
-> 
->> +EXPORT_SYMBOL_GPL(slim_request_inf_element);
->> +
->> +
-> 
-> unnecessary double space
-> 
->> +struct slim_val_inf {
->> +	u16			start_offset;
->> +	u8			num_bytes;
->> +	u8			*rbuf;
->> +	const u8		*wbuf;
-> 
-> can we do read and write, if not it can be a buf which maybe rbuf or wbug
-> based on type
-With REQUEST_CHANGE_VALUE single command we can read old value at the 
-same time we can write new value.
+iQIcBAEBAgAGBQJZ3eipAAoJEBx+YmzsjxAgvwIP/RTouIM3Qsirj66axjyQevkG
+NWcKcYRNgOBHyztFd/0zAcs7eGYtQapollKJo3Bd6+shsfHYIBZcma4zP0K9N+LG
+5efgI4/7UjAf4cTXEw1Az4S+dN7UDEULFlhUik+ffNmXbOG1fuhgeWhvMLRyln72
+hpOv/FMQMXE5JPUFQB9EYxxVzjNoVqLPZeqfsSTAUYCWz3wm/tRvTvk3kX9tquL9
+sf4lZrbDtQf8gvOE75A5+zY61a2+mVXVJdaNuxVAALK+Hr43CLfxXAJglZUQIO41
+wc5kofJahhJpVpzuqfI3uV4gkegusYu1jwFLePzHKJCTAwMWzMWMibLCejbd2Q17
+sMCRewbuhLmmAPl58bUPyfbML2jD1x9JHpQzowkSh1F+MMkOTvXWKyjvPdyCBHoV
+Wbn5AUaem1t/Ti+rm9jxE5nHqZ527n7KdFoBr2yJ1oDnK6TCL3EkyW0vK2bP9iN1
+hyDWH/TRoeyFDlIgf8zYSfSCzDiNXyktbGAncFaHoKFwbs3oeVcNlD1QxyZyu4BC
+gcLV2JJsGcdL0dNamr8BRCxYRL0JIKM6lUWvd5EhkxXAetK/nm1GNN5KYo0D/kzZ
+tC221s66xtMDQKSGZWA9uKe+hJ5khn2GVGtGLvFYwlKRAGn39NxRbo74TvSHvY81
+Q5xudEVE4YyXPX5PL1hC
+=lJDC
+-----END PGP SIGNATURE-----
 
-> 
+--br4mtgjntl4dx72l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
