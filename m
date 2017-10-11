@@ -1,60 +1,191 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 01/12] ARM: dts: imx6-tx6: update model property to match
- current module HW revision
-Date: Wed, 11 Oct 2017 13:50:24 +0200
-Message-ID: <1507722635-30801-2-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 02/12] ARM: dts: imx6-tx6: remove obsolete eeti,egalax_ts
+Date: Wed, 11 Oct 2017 13:50:25 +0200
+Message-ID: <1507722635-30801-3-git-send-email-LW@KARO-electronics.de>
 References: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1507722635-30801-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGN1cnJlbnQgVFg2USBtb2R1bGUgSFcgcmV2aXNpb24gaXMgMyByZWZsZWN0ZWQgaW4gdGhl
-IG1vZHVsZSBuYW1lCnN1ZmZpeCAnLTEwMzAnICgtMTEzMCBmb3IgTFZEUykuCkNoYW5nZSB0aGUg
-bW9kZWwgc3RyaW5nIHRvIHByZXZlbnQgY29uZnVzaW9uIGFib3V0IHdoYXQgRFRTIGZpbGUgdG8K
-dXNlIGZvciB0aGVzZSBtb2R1bGVzLgoKU2lnbmVkLW9mZi1ieTogTG90aGFyIFdhw59tYW5uIDxM
-V0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEt
-MTAxMC5kdHMgfCA0ICsrLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTExMC5kdHMg
-fCA0ICsrLS0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygt
-KQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTAxMC5kdHMgYi9h
-cmNoL2FybS9ib290L2R0cy9pbXg2cS10eDZxLTEwMTAuZHRzCmluZGV4IGY5Y2QyMWEuLjU0YmM0
-NDIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTAxMC5kdHMKKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtdHg2cS0xMDEwLmR0cwpAQCAtMSw1ICsxLDUgQEAK
-IC8qCi0gKiBDb3B5cmlnaHQgMjAxNC0yMDE2IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVj
-dHJvbmljcy5kZT4KKyAqIENvcHlyaWdodCAyMDE0LTIwMTcgTG90aGFyIFdhw59tYW5uIDxMV0BL
-QVJPLWVsZWN0cm9uaWNzLmRlPgogICoKICAqIFRoaXMgZmlsZSBpcyBkdWFsLWxpY2Vuc2VkOiB5
-b3UgY2FuIHVzZSBpdCBlaXRoZXIgdW5kZXIgdGhlIHRlcm1zCiAgKiBvZiB0aGUgR1BMIG9yIHRo
-ZSBYMTEgbGljZW5zZSwgYXQgeW91ciBvcHRpb24uIE5vdGUgdGhhdCB0aGlzIGR1YWwKQEAgLTQ0
-LDcgKzQ0LDcgQEAKICNpbmNsdWRlICJpbXg2cWRsLXR4Ni5kdHNpIgogCiAvIHsKLQltb2RlbCA9
-ICJLYS1SbyBlbGVjdHJvbmljcyBUWDZRLTEwMTAgTW9kdWxlIjsKKwltb2RlbCA9ICJLYS1SbyBl
-bGVjdHJvbmljcyBUWDZRLTEwMTAvLTEwMzAgTW9kdWxlIjsKIAljb21wYXRpYmxlID0gImthcm8s
-aW14NnEtdHg2cSIsICJmc2wsaW14NnEiOwogCiAJYWxpYXNlcyB7CmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExMTAuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnEtdHg2cS0xMTEwLmR0cwppbmRleCAwNDMzZTIyLi4wZjVlNjM4IDEwMDY0NAotLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExMTAuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZxLXR4NnEtMTExMC5kdHMKQEAgLTEsNSArMSw1IEBACiAvKgotICogQ29weXJpZ2h0IDIw
-MTQtMjAxNiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+CisgKiBDb3B5
-cmlnaHQgMjAxNC0yMDE3IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4K
-ICAqCiAgKiBUaGlzIGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNhbiB1c2UgaXQgZWl0aGVy
-IHVuZGVyIHRoZSB0ZXJtcwogICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlv
-dXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsCkBAIC00NCw3ICs0NCw3IEBACiAjaW5jbHVk
-ZSAiaW14NnFkbC10eDYuZHRzaSIKIAogLyB7Ci0JbW9kZWwgPSAiS2EtUm8gZWxlY3Ryb25pY3Mg
-VFg2US0xMTEwIE1vZHVsZSI7CisJbW9kZWwgPSAiS2EtUm8gZWxlY3Ryb25pY3MgVFg2US0xMTEw
-Ly0xMTMwIE1vZHVsZSI7CiAJY29tcGF0aWJsZSA9ICJrYXJvLGlteDZxLXR4NnEiLCAiZnNsLGlt
-eDZxIjsKIAogCWFsaWFzZXMgewotLSAKMi4xLjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+The display, that incorporates this touchpanel is obsolete and won't
+be supported any more.
+
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+---
+ arch/arm/boot/dts/imx6dl-tx6u-811x.dts     | 23 +----------------------
+ arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts | 22 +---------------------
+ arch/arm/boot/dts/imx6q-tx6q-1110.dts      | 21 ---------------------
+ arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts  | 22 +---------------------
+ 4 files changed, 3 insertions(+), 85 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6dl-tx6u-811x.dts b/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
+index 5e0c6bb..f0f759a 100644
+--- a/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
++++ b/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2014-2016 Lothar Waßmann <LW@KARO-electronics.de>
++ * Copyright 2014-2017 Lothar Waßmann <LW@KARO-electronics.de>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPL or the X11 license, at your option. Note that this dual
+@@ -98,19 +98,6 @@
+ 	};
+ };
+ 
+-&i2c3 {
+-	polytouch2: eeti@04 {
+-		compatible = "eeti,egalax_ts";
+-		reg = <0x04>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_eeti>;
+-		interrupt-parent = <&gpio3>;
+-		interrupts = <22 0>;
+-		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+-		wakeup-source;
+-	};
+-};
+-
+ &kpp {
+ 	status = "disabled"; /* pad conflict with backlight1 PWM */
+ };
+@@ -168,11 +155,3 @@
+ &pwm1 {
+ 	status = "okay";
+ };
+-
+-&iomuxc {
+-	pinctrl_eeti: eetigrp {
+-		fsl,pins = <
+-			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
+-		>;
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
+index b9a783f..c817324 100644
+--- a/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
++++ b/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2016 Lothar Waßmann <LW@KARO-electronics.de>
++ * Copyright 2016-2017 Lothar Waßmann <LW@KARO-electronics.de>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPL or the X11 license, at your option. Note that this dual
+@@ -106,18 +106,6 @@
+ 	xceiver-supply = <&reg_3v3>;
+ };
+ 
+-&i2c3 {
+-	polytouch1: eeti@04 {
+-		compatible = "eeti,egalax_ts";
+-		reg = <0x04>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_eeti>;
+-		interrupts-extended = <&gpio3 22 IRQ_TYPE_EDGE_FALLING>;
+-		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+-		wakeup-source;
+-	};
+-};
+-
+ &kpp {
+ 	status = "disabled"; /* pads partially clash with backlight1 PWM */
+ };
+@@ -245,11 +233,3 @@
+ &pwm1 {
+ 	status = "okay";
+ };
+-
+-&iomuxc {
+-	pinctrl_eeti: eetigrp {
+-		fsl,pins = <
+-			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
+-		>;
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx6q-tx6q-1110.dts b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
+index 0f5e638..900557d 100644
+--- a/arch/arm/boot/dts/imx6q-tx6q-1110.dts
++++ b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
+@@ -98,19 +98,6 @@
+ 	};
+ };
+ 
+-&i2c3 {
+-	polytouch1: eeti@04 {
+-		compatible = "eeti,egalax_ts";
+-		reg = <0x04>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_eeti>;
+-		interrupt-parent = <&gpio3>;
+-		interrupts = <22 0>;
+-		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+-		wakeup-source;
+-	};
+-};
+-
+ &kpp {
+ 	status = "disabled"; /* pad conflict with backlight1 PWM */
+ };
+@@ -172,11 +159,3 @@
+ &sata {
+ 	status = "okay";
+ };
+-
+-&iomuxc {
+-	pinctrl_eeti: eetigrp {
+-		fsl,pins = <
+-			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
+-		>;
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts b/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
+index d78b129..6b42c44 100644
+--- a/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
++++ b/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2016 Lothar Waßmann <LW@KARO-electronics.de>
++ * Copyright 2016-2017 Lothar Waßmann <LW@KARO-electronics.de>
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPL or the X11 license, at your option. Note that this dual
+@@ -107,18 +107,6 @@
+ 	xceiver-supply = <&reg_3v3>;
+ };
+ 
+-&i2c3 {
+-	polytouch1: eeti@04 {
+-		compatible = "eeti,egalax_ts";
+-		reg = <0x04>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_eeti>;
+-		interrupts-extended = <&gpio3 22 IRQ_TYPE_EDGE_FALLING>;
+-		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+-		wakeup-source;
+-	};
+-};
+-
+ &ipu2 {
+ 	status = "disabled";
+ };
+@@ -254,11 +242,3 @@
+ &sata {
+ 	status = "okay";
+ };
+-
+-&iomuxc {
+-	pinctrl_eeti: eetigrp {
+-		fsl,pins = <
+-			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
+-		>;
+-	};
+-};
+-- 
+2.1.4
