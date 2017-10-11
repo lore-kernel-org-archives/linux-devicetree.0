@@ -1,29 +1,60 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: pinctrl: add mcp23018 to mcp23s08 documentation
-Date: Wed, 11 Oct 2017 10:04:16 +0200
-Message-ID: <CACRpkdZ_s0Q4tF+n+ezF3_4X=EfDf20Ywz_5wXFPfYvW0UQ4Bg@mail.gmail.com>
-References: <1507266491-73971-1-git-send-email-preid@electromag.com.au> <1507266491-73971-3-git-send-email-preid@electromag.com.au>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH] ARM: dts: dra7-evm: Move pcie RC node to common file
+Date: Wed, 11 Oct 2017 13:34:30 +0530
+Message-ID: <20171011080430.13160-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507266491-73971-3-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, nsekhar@ti.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Ravikumar Kattekola <rk@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 7:08 AM, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
+From: Ravikumar Kattekola <rk@ti.com>
 
-> This adds the compatible string for the mcp23018, which is the i2c variant
-> of the mcp23s18.
->
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Move the pcie_rc node to common file so that it can be
+used by dra76-evm as well.
 
-Patch applied with Sebastian's tag.
+Signed-off-by: Ravikumar Kattekola <rk@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/boot/dts/dra7-evm-common.dtsi | 4 ++++
+ arch/arm/boot/dts/dra7-evm.dts         | 4 ----
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
+index 343e95f9a001..e088bb93636a 100644
+--- a/arch/arm/boot/dts/dra7-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
+@@ -256,3 +256,7 @@
+ 		status = "okay";
+ 	};
+ };
++
++&pcie1_rc {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index aa426dabb6c3..ef9c90daa74b 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -497,7 +497,3 @@
+ 	pinctrl-1 = <&dcan1_pins_sleep>;
+ 	pinctrl-2 = <&dcan1_pins_default>;
+ };
+-
+-&pcie1_rc {
+-	status = "okay";
+-};
+-- 
+2.11.0
