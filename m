@@ -1,60 +1,37 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of: Devices with pci_epf_bus_type require DMA configuration
-Date: Wed, 11 Oct 2017 08:07:21 -0500
-Message-ID: <CAL_JsqLLgCt+wS5uFmLXB5Z-_vb-akme0hXjemtc_gzQwpwPYA@mail.gmail.com>
-References: <20171011080041.12918-1-kishon@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARM: dts: r8a7745: Link PCI USB devices to USB PHY
+Date: Wed, 11 Oct 2017 15:12:54 +0200
+Message-ID: <CAMuHMdX+pZMnXi_CNYzVfnzTUNkYDrKcr-E1Qn7J43-uT=ThgA@mail.gmail.com>
+References: <1507557541-46560-1-git-send-email-biju.das@bp.renesas.com> <1507557541-46560-4-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171011080041.12918-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Mark Rutland <mark.rutland@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507557541-46560-4-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 3:00 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> pci-epc-core.c invokes of_dma_configure in order to configure
-> the coherent_dma_mask/dma_mask of endpoint function device. This is
-> required for dma_alloc_coherent to succeed in pci function driver
-> (pci-epf-test.c). However after
-> commit 723288836628bc1c08 ("of: restrict DMA configuration"),
-> of_dma_configure doesn't configure the coherent_dma_mask/dma_mask
-> of endpoint function device (since it doesn't have dma-ranges
-> property), resulting in dma_alloc_coherent in pci endpoint function
-> driver to to fail. Fix it by making sure of_dma_configure configures
-> coherent_dma_mask/dma_mask irrespective of whether the node has
-> dma-ranges property or not.
+On Mon, Oct 9, 2017 at 3:58 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Describe the PCI USB devices that are behind the PCI bridges, adding
+> necessary links to the USB PHY device.
 >
-> Fixes: 723288836628bc1c08 ("of: restrict DMA configuration")
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/of/device.c                 | 4 +++-
->  drivers/pci/endpoint/pci-epf-core.c | 3 +--
->  include/linux/pci-epf.h             | 1 +
->  3 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 64b710265d39..881cf80a3d69 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -10,6 +10,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/slab.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-epf.h>
->  #include <linux/platform_device.h>
->  #include <linux/amba/bus.h>
->
-> @@ -105,7 +106,8 @@ int of_dma_configure(struct device *dev, struct device_node *np)
->  #ifdef CONFIG_ARM_AMBA
->                     dev->bus != &amba_bustype &&
->  #endif
-> -                   dev->bus != &platform_bus_type)
-> +                   dev->bus != &platform_bus_type &&
-> +                   dev->bus != &pci_epf_bus_type)
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-This is going to fail when this PCI is disabled. There's some
-restructuring of this code proposed that will help you that I copied
-you on.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Rob
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
