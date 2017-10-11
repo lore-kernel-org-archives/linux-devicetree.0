@@ -1,38 +1,44 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 4/4] ARM: dts: imx28-tx28: add trickle-charge config for DS1339
-Date: Wed, 11 Oct 2017 13:05:39 +0200
-Message-ID: <1507719939-27250-5-git-send-email-LW@KARO-electronics.de>
-References: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [Patch v6 1/7] slimbus: Device management on SLIMbus
+Date: Wed, 11 Oct 2017 12:23:13 +0100
+Message-ID: <d6c8f7f8-202c-37e5-7070-a8f141d2b93a@linaro.org>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
+ <20171010104509.GC30097@localhost>
+ <fd966acd-a86c-5021-8a8b-ddf1508ab63e@linaro.org>
+ <20171010164930.GD30097@localhost>
+ <9e2bb2fa-b391-055e-407e-c93f43428840@linaro.org>
+ <20171011040741.GE30097@localhost>
+ <c777820e-fd60-f8d1-4fc1-5934ff18af1b@linaro.org>
+ <20171011102132.GG30097@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171011102132.GG30097@localhost>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, gong.chen@linux.intel.com, arnd@arndb.de, kheitke@audience.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, daniel@ffwll.ch, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-QXMgdGhlIERTMTMzOSBkcml2ZXIgbm93IHN1cHBvcnRzIGVuYWJsaW5nIHRoZSB0cmlja2xlIGNo
-YXJnZSBmZWF0dXJlCnZpYSBEVEIsIGFkZCB0aGUgYXBwcm9wcmlhdGUgcHJvcGVydGllcyB0byB1
-dGlsaXplIHRoaXMgZmVhdHVyZS4KClNpZ25lZC1vZmYtYnk6IExvdGhhciBXYcOfbWFubiA8TFdA
-S0FSTy1lbGVjdHJvbmljcy5kZT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0
-cyB8IDIgKysKIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI4
-LXR4MjguZHRzCmluZGV4IDNjODUyZjcuLjQ2ODRkMmYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2lteDI4LXR4MjguZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI4LXR4Mjgu
-ZHRzCkBAIC0zNTgsNiArMzU4LDggQEAKIAlkczEzMzk6IHJ0Y0A2OCB7CiAJCWNvbXBhdGlibGUg
-PSAibXhpbSxkczEzMzkiOwogCQlyZWcgPSA8MHg2OD47CisJCXRyaWNrbGUtcmVzaXN0b3Itb2ht
-cyA9IDwyNTA+OworCQl0cmlja2xlLWRpb2RlLWRpc2FibGU7CiAJfTsKIH07CiAKLS0gCjIuMS40
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
-YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
-LWtlcm5lbAo=
+
+
+On 11/10/17 11:21, Vinod Koul wrote:
+>>> ah which cases would those be. I was expecting that you would have a
+>>> platform_device as a slimbus controller which would call slim_register?
+>> As of now there is only one controller which uses platform driver, but in
+>> future there might be more, but this is something which makes the slimbus
+>> core more flexible.
+> even if you have more controllers wouldn't we have similar number of platform
+> devices. Each instance of the link/controller would have its device node.
+>
+Yep, I will give at try and see in next version!
+
+
+thanks,
+srini
+
+
+> Thanks
+> -- ~Vinod
