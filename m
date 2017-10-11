@@ -1,52 +1,38 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 0/5] arm64: add ls1012a and ls1046a pcie support
-Date: Wed, 11 Oct 2017 13:57:19 -0500
-Message-ID: <20171011185719.GL25517@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, shawnguo@kernel.org, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, roy.zang@nxp.com, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+From: Tom McLeod <tom.mcleod-i/fjllWUydfqlBn2x/YWAg@public.gmane.org>
+Subject: [PATCH] dt-bindings: Add vendor prefix for Opal Kelly Inc
+Date: Wed, 11 Oct 2017 11:57:50 -0700
+Message-ID: <1507748270-13354-1-git-send-email-tom.mcleod@opalkelly.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tom McLeod <tom.mcleod-i/fjllWUydfqlBn2x/YWAg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 19, 2017 at 05:26:53PM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> This patch set adds ls1012a MSI and PCIe support, including driver
-> and device tree nodes. The ls1046a's MSI support patch and PCIe
-> driver patch has been applied, so only adds the PCIe device tree
-> nodes.
-> 
-> Hou Zhiqiang (5):
->   irqchip/ls-scfg-msi: add LS1012a MSI support
->   arm64: dts: ls1012a: Add MSI controller DT node
->   PCI: layerscape: Add support for ls1012a
->   arm64: dts: ls1012a: Add PCIe controller DT node
->   arm64: dts: ls1046a: add PCIe controller DT nodes
-> 
->  .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
->  .../devicetree/bindings/pci/layerscape-pci.txt     |  1 +
->  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 31 +++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 75 ++++++++++++++++++++++
->  drivers/irqchip/irq-ls-scfg-msi.c                  |  1 +
->  drivers/pci/dwc/pci-layerscape.c                   |  1 +
->  6 files changed, 110 insertions(+)
+Opal Kelly is a manufacturer of FPGA Integration Modules.
 
-I'm not 100% sure who should take these.  They trivially touch PCI and
-I haven't seen anybody else respond, so I put them on
-pci/host-layerscape with Rob's acks.
+Signed-off-by: Tom McLeod <tom.mcleod-i/fjllWUydfqlBn2x/YWAg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-If somebody else wants to take them, just let me know and I'll drop
-them.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 1afd298..f0c0584 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -245,6 +245,7 @@ olimex	OLIMEX Ltd.
+ onion	Onion Corporation
+ onnn	ON Semiconductor Corp.
+ ontat	On Tat Industrial Company
++opalkelly	Opal Kelly Incorporated
+ opencores	OpenCores.org
+ option	Option NV
+ ORCL	Oracle Corporation
+-- 
+2.7.4
 
-They really should be acked by Minghuan or Mingkai, who are listed as
-the maintainers of drivers/pci/dwc/pci-layerscape.c and are presumably
-responsible for the related dtsi files, too.
-
-Thomas, Jason, and Marc are listed as maintainers of
-drivers/irqchip/irq-ls-scfg-msi.c.  It's a trivial change, but I added
-them to the cc list.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
