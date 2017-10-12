@@ -1,59 +1,41 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
-Date: Thu, 12 Oct 2017 09:49:04 +0100
-Message-ID: <f18b6a72-e255-9aa4-6ebd-852ce1a27a4e@nvidia.com>
-References: <cover.1507752381.git.digetx@gmail.com>
- <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] pinctrl: mcp23s08: remove hardcoded irq polarity
+ in irq_setup
+Date: Thu, 12 Oct 2017 11:04:52 +0200
+Message-ID: <CACRpkdaWNthg5OU3ZiSKjPe59cJF5A6jucQ=3bQdz3uAsJ=3dQ@mail.gmail.com>
+References: <1507266491-73971-1-git-send-email-preid@electromag.com.au> <1507266491-73971-7-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507266491-73971-7-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 6, 2017 at 7:08 AM, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
 
-On 11/10/17 21:08, Dmitry Osipenko wrote:
-> Add a device node for the video decoder engine found on Tegra20.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index 7c85f97f72ea..1b5d54b6c0cb 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -249,6 +249,23 @@
->  		*/
->  	};
->  
-> +	vde@6001a000 {
-> +		compatible = "nvidia,tegra20-vde";
-> +		reg = <0x6001a000 0x3D00    /* VDE registers */
-> +		       0x40000400 0x3FC00>; /* IRAM region */
-> +		reg-names = "regs", "iram";
-> +		interrupts = <GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>, /* UCQ error interrupt */
-> +			     <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>, /* Sync token interrupt */
-> +			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>, /* BSE-V interrupt */
-> +			     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>, /* BSE-A interrupt */
-> +			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>; /* SXE interrupt */
-> +		interrupt-names = "ucq-error", "sync-token", "bsev", "bsea", "sxe";
-> +		clocks = <&tegra_car TEGRA20_CLK_VDE>;
-> +		clock-names = "vde";
-> +		resets = <&tegra_car 61>;
-> +		reset-names = "vde";
-> +	};
-> +
+> The polarity of the irq could be altered
+> by additional logic (eg inverters) between the device and irq input device.
 
-I don't see any binding documentation for this node. We need to make
-sure we add this.
+Marc Zyngier has pointed out that inverters should be modeled
+using hierarchichal irq domains. You would need to add a new
+irqchip to invert the line.
 
-Jon
+See this PDF:
+https://elinux.org/images/8/8c/Zyngier.pdf
 
--- 
-nvpublic
+drivers/irqchips/irq-uniphier-aidet.c supports inversion of IRQs
+for example. For this it uses irq_domain_create_hierarchy()
+
+I guess it would be helpful with a reusable generic "inverter
+irq chip", that you can just enable and slam into your device
+tree to tell the system that a line is statically inverted, i.e.
+non-programmable logic on the board.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
