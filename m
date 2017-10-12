@@ -1,61 +1,67 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] nvmem: meson: use generic compatible
-Date: Thu, 12 Oct 2017 17:24:50 +0200
-Message-ID: <20171012152450.12454-1-jbrunet@baylibre.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 00/36] Process management for IOMMU + SVM for SMMUv3
+Date: Thu, 12 Oct 2017 09:28:03 -0600
+Message-ID: <20171012152803.GA3027@jcrouse-lnx.qualcomm.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
+ <0fecd29e-eaf7-9503-b087-7bfbc251da88@arm.com>
+ <c6b7fb4b-4f2b-0d81-8bb5-8fa6b62aca3a@huawei.com>
+ <8a1e090d-22e8-0295-a53f-bc3b5b7d7971@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8a1e090d-22e8-0295-a53f-bc3b5b7d7971-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dwmw2@infradea
 List-Id: devicetree@vger.kernel.org
 
-The meson efuse driver seems to be compatible with more SoCs than
-initially thought. Let's use the most generic compatible he have in
-DT instead of the gxbb specific one
+On Thu, Oct 12, 2017 at 01:55:32PM +0100, Jean-Philippe Brucker wrote:
+> On 12/10/17 13:05, Yisheng Xie wrote:
+> [...]
+> >>>> * An iommu_process can be bound to multiple domains, and a domain can have
+> >>>>   multiple iommu_process.
+> >>> when bind a task to device, can we create a single domain for it? I am thinking
+> >>> about process management without shared PT(for some device only support PASID
+> >>> without pri ability), it seems hard to expand if a domain have multiple iommu_process?
+> >>> Do you have any idea about this?
+> >>
+> >> A device always has to be in a domain, as far as I know. Not supporting
+> >> PRI forces you to pin down all user mappings (or just the ones you use for
+> >> DMA) but you should sill be able to share PT. Now if you don't support
+> >> shared PT either, but only PASID, then you'll have to use io-pgtable and a
+> >> new map/unmap API on an iommu_process. I don't understand your concern
+> >> though, how would the link between process and domains prevent this use-case?
+> >>
+> > So you mean that if an iommu_process bind to multiple devices it should create
+> > multiple io-pgtables? or just share the same io-pgtable?
+> 
+> I don't know to be honest, I haven't thought much about the io-pgtable
+> case, I'm all about sharing the mm :)
+> 
+> It really depends on what the user (GPU driver I assume) wants. I think
+> that if you're not sharing an mm with the device, then you're trying to
+> hide parts of the process to the device, so you'd also want the
+> flexibility of having different io-pgtables between devices. Different
+> devices accessing isolated parts of the process requires separate io-pgtables.
 
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
- drivers/nvmem/meson-efuse.c                               | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+In our specific Snapdragon use case the GPU is the only entity that cares about
+process specific io-pgtables.  Everything else (display, video, camera) is happy
+using a global io-ptgable.  The reasoning is that the GPU is programmable from
+user space and can be easily used to copy data whereas the other use cases have
+mostly fixed functions.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-index fafd85bd67a6..0260524292fe 100644
---- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-+++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-@@ -1,7 +1,7 @@
- = Amlogic eFuse device tree bindings =
- 
- Required properties:
--- compatible: should be "amlogic,meson-gxbb-efuse"
-+- compatible: should be "amlogic,meson-gx-efuse"
- 
- = Data cells =
- Are child nodes of eFuse, bindings of which as described in
-@@ -10,7 +10,7 @@ bindings/nvmem/nvmem.txt
- Example:
- 
- 	efuse: efuse {
--		compatible = "amlogic,meson-gxbb-efuse";
-+		compatible = "amlogic,meson-gx-efuse";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-index 70bfc9839bb2..e90c6d68a263 100644
---- a/drivers/nvmem/meson-efuse.c
-+++ b/drivers/nvmem/meson-efuse.c
-@@ -44,7 +44,7 @@ static struct nvmem_config econfig = {
- };
- 
- static const struct of_device_id meson_efuse_match[] = {
--	{ .compatible = "amlogic,meson-gxbb-efuse", },
-+	{ .compatible = "amlogic,meson-gx-efuse", },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, meson_efuse_match);
+Even if different devices did want to have a process specific io-pgtable I doubt
+we would share them.  Every device uses the IOMMU differently and the magic
+needed to share a io-pgtable between (for example) a GPU and a DSP would be
+prohibitively complicated.
+
+Jordan
+
 -- 
-2.13.6
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
