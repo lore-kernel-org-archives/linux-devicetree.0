@@ -1,39 +1,47 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 01/13] dt-bindings: clk: r7s72100: Add missing I and G clocks
-Date: Thu, 12 Oct 2017 11:35:04 +0200
-Message-ID: <1507800916-11509-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 13/13] ARM: dts: sh73a0: Add clocks for CA9 CPU cores
+Date: Thu, 12 Oct 2017 11:35:16 +0200
+Message-ID: <1507800916-11509-14-git-send-email-geert+renesas@glider.be>
 References: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507800916-11509-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing definitions for the I (CPU) and G (Image Processing)
-clocks, so these clocks can be referred to from device nodes in DT.
+Improve hardware description by adding clocks properties to the device
+nodes corresponding to the CA9 CPU cores.
 
-Note that these clocks are already fully supported otherwise (DT
-bindings, Linux driver, r7s72100.dtsi), they were just omitted from the
-header file.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- include/dt-bindings/clock/r7s72100-clock.h | 2 ++
+ arch/arm/boot/dts/sh73a0.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index 7dd8bc0c3cd0d6e2..0dcb3e87d44c121e 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -11,6 +11,8 @@
- #define __DT_BINDINGS_CLOCK_R7S72100_H__
- 
- #define R7S72100_CLK_PLL	0
-+#define R7S72100_CLK_I		1
-+#define R7S72100_CLK_G		2
- 
- /* MSTP2 */
- #define R7S72100_CLK_CORESIGHT	0
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index f841895e5adc615a..a074106839a62e37 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -27,6 +27,7 @@
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+ 			clock-frequency = <1196000000>;
++			clocks = <&cpg_clocks SH73A0_CLK_Z>;
+ 			power-domains = <&pd_a2sl>;
+ 			next-level-cache = <&L2>;
+ 		};
+@@ -35,6 +36,7 @@
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+ 			clock-frequency = <1196000000>;
++			clocks = <&cpg_clocks SH73A0_CLK_Z>;
+ 			power-domains = <&pd_a2sl>;
+ 			next-level-cache = <&L2>;
+ 		};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
