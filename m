@@ -1,55 +1,136 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
-Date: Thu, 12 Oct 2017 14:01:41 +0200
-Message-ID: <ed37c11b-7518-9344-6598-c4e4f6301806@st.com>
-References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
- <878tgim24i.fsf@linux.intel.com>
- <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com>
- <87vajllx8t.fsf@linux.intel.com>
- <1c4180ef-2da6-b420-7c6e-41769608384a@st.com>
- <87sheplsrm.fsf@linux.intel.com>
- <3c36db6d-75fd-1be6-e946-b75a04e3760e@st.com>
- <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
- <87efq821tz.fsf@linux.intel.com>
- <d6e8be43-cbb9-89cd-eb3f-b34ac23ad99f@st.com>
- <878tgg1t5a.fsf@linux.intel.com> <8760bk1t1l.fsf@linux.intel.com>
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
+Date: Thu, 12 Oct 2017 15:06:17 +0300
+Message-ID: <81f39096-dc66-c98b-50f6-fc81ee1804ec@gmail.com>
+References: <cover.1507752381.git.digetx@gmail.com>
+ <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
+ <0b6150a7-5b2b-ca4d-eb34-b6614e4833df@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8760bk1t1l.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0b6150a7-5b2b-ca4d-eb34-b6614e4833df-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Vladimir,
 
-
-On 10/12/2017 01:53 PM, Felipe Balbi wrote:
+On 12.10.2017 10:43, Vladimir Zapolskiy wrote:
+> Hello Dmitry,
 > 
-> Hi,
-> 
-> Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> writes:
->>>>> I thought that patches 1 and 2, as they are "driver" patches, had to be
->>>>> applied on USB tree (so Felipe's one), and the others (3 to 7) had to be
->>>>> applied on STM32-DT tree (Alex's one). Did I miss something?
->>>>
->>>> patch 1 is documentation, right? Without the documentation patch,
->>>> checkpatch will cringe :-) So either way works.
->>>>
->>>> If you insist, I can take 1-2 through my tree. No worries.
->>>
->>> I don't want to insist :) but for me it is better (and more safe) if you
->>> take patch 1&2 in your tree, and will take others in mine.
+> On 10/11/2017 11:08 PM, Dmitry Osipenko wrote:
+>> Add a device node for the video decoder engine found on Tegra20.
 >>
->> Okay, I'll apply 1&2
+>> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+>> index 7c85f97f72ea..1b5d54b6c0cb 100644
+>> --- a/arch/arm/boot/dts/tegra20.dtsi
+>> +++ b/arch/arm/boot/dts/tegra20.dtsi
+>> @@ -249,6 +249,23 @@
+>>  		*/
+>>  	};
+>>  
+>> +	vde@6001a000 {
+>> +		compatible = "nvidia,tegra20-vde";
+>> +		reg = <0x6001a000 0x3D00    /* VDE registers */
+>> +		       0x40000400 0x3FC00>; /* IRAM region */
 > 
-> they are now in my testing/next and next branches.
+> this notation of a used region in IRAM is non-standard and potentially it
+> may lead to conflicts for IRAM resource between users.
+> 
+> My proposal is to add a valid device tree node to describe an IRAM region
+> firstly, then reserve a subregion in it by using a new "iram" property.
+> 
 
-Thanks Felipe
+The defined in DT IRAM region used by VDE isn't exactly correct, actually it
+should be much smaller. I don't know exactly what parts of IRAM VDE uses, for
+now it is just safer to assign the rest of the IRAM region to VDE.
+
+I'm not sure whether it really worthy to use a dynamic allocator for a single
+static allocation, but maybe it would come handy later.. Stephen / Jon /
+Thierry, what do you think?
+
+> ----8<----
+> From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> Date: Thu, 12 Oct 2017 10:25:45 +0300
+> Subject: [PATCH] ARM: tegra: add device tree node to describe IRAM on Tegra20
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> All Tegra20 SoCs contain 256KiB IRAM, which is used to store
+> resume code and by a video decoder engine.
+> 
+> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra20.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 7c85f97f72ea..fd2843c90920 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -9,6 +9,14 @@
+>  	compatible = "nvidia,tegra20";
+>  	interrupt-parent = <&lic>;
+>  
+> +	iram@40000000 {
+> +		compatible = "mmio-sram";
+> +		reg = <0x40000000 0x40000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x40000000 0x40000>;
+> +	};
+> +
+>  	host1x@50000000 {
+>  		compatible = "nvidia,tegra20-host1x", "simple-bus";
+>  		reg = <0x50000000 0x00024000>;
+> ----8<----
+> 
+> Please add the change above to your next version of the series, or
+> if you wish I can send it separately for review by Thierry.
+> 
+> After applying that change you do define a region in IRAM for the exclusive
+> usage by a video decoder engine and add an 'iram' property:
+> 
+
+Newer Tegra generations also have the IRAM, so I think Tegra30/114/124 DT's
+should also include the same IRAM node for consistency. I'll extend your patch
+to cover other Tegra's and include it in v4 if you don't mind and if Stephen /
+Jon / Thierry would approve your proposal.
+
+> ----8<----
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index fd2843c90920..5133fbac2185 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -15,6 +15,11 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  		ranges = <0 0x40000000 0x40000>;
+> +
+> +		vde_pool: vde {
+> +			reg = <0x400 0x3fc00>;
+> +			pool;
+> +		};
+>  	};
+>  
+>  	host1x@50000000 {
+> [snip]
+> 
+> +	vde@6001a000 {
+> +		compatible = "nvidia,tegra20-vde";
+> +		reg = <0x6001a000 0x3d00>;	/* VDE registers */
+> +		iram = <&vde_pool>;		/* IRAM region */
+> [snip]
+> ----8<----
+> 
+> And finally in the driver you'll use genalloc API to access the IRAM
+> region, for that you can find ready examples in the kernel source code.
+> 
+
+Thank you very much for taking a look at the patch!
