@@ -1,92 +1,145 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
-Date: Thu, 12 Oct 2017 18:43:32 +0300
-Message-ID: <22ad307f-99d6-0760-7cc0-adbca25ac7b5@gmail.com>
-References: <cover.1507752381.git.digetx@gmail.com>
- <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
- <0b6150a7-5b2b-ca4d-eb34-b6614e4833df@mentor.com>
- <81f39096-dc66-c98b-50f6-fc81ee1804ec@gmail.com> <20171012132543.GB4453@ulmo>
- <485a1192-8ef2-5ae1-a45f-d9b7167d8241@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <485a1192-8ef2-5ae1-a45f-d9b7167d8241@nvidia.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linux-tegra@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] drivers: Flag buses which demand DMA configuration
+Date: Thu, 12 Oct 2017 16:56:14 +0100
+Message-ID: <bd1c6061a6a16f720e992a0f12933bdee6591aea.1507823375.git.robin.murphy@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, hch@lst.de, robh+dt@kernel.org
+Cc: m.szyprowski@samsung.com, mperttunen@nvidia.com, jonathanh@nvidia.com, thierry.reding@gmail.com, kishon@ti.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12.10.2017 16:45, Jon Hunter wrote:
-> 
-> On 12/10/17 14:25, Thierry Reding wrote:
->> * PGP Signed by an unknown key
->>
->> On Thu, Oct 12, 2017 at 03:06:17PM +0300, Dmitry Osipenko wrote:
->>> Hello Vladimir,
->>>
->>> On 12.10.2017 10:43, Vladimir Zapolskiy wrote:
->>>> Hello Dmitry,
->>>>
->>>> On 10/11/2017 11:08 PM, Dmitry Osipenko wrote:
->>>>> Add a device node for the video decoder engine found on Tegra20.
->>>>>
->>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>> ---
->>>>>  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
->>>>>  1 file changed, 17 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
->>>>> index 7c85f97f72ea..1b5d54b6c0cb 100644
->>>>> --- a/arch/arm/boot/dts/tegra20.dtsi
->>>>> +++ b/arch/arm/boot/dts/tegra20.dtsi
->>>>> @@ -249,6 +249,23 @@
->>>>>  		*/
->>>>>  	};
->>>>>  
->>>>> +	vde@6001a000 {
->>>>> +		compatible = "nvidia,tegra20-vde";
->>>>> +		reg = <0x6001a000 0x3D00    /* VDE registers */
->>>>> +		       0x40000400 0x3FC00>; /* IRAM region */
->>>>
->>>> this notation of a used region in IRAM is non-standard and potentially it
->>>> may lead to conflicts for IRAM resource between users.
->>>>
->>>> My proposal is to add a valid device tree node to describe an IRAM region
->>>> firstly, then reserve a subregion in it by using a new "iram" property.
->>>>
->>>
->>> The defined in DT IRAM region used by VDE isn't exactly correct, actually it
->>> should be much smaller. I don't know exactly what parts of IRAM VDE uses, for
->>> now it is just safer to assign the rest of the IRAM region to VDE.
->>>
->>> I'm not sure whether it really worthy to use a dynamic allocator for a single
->>> static allocation, but maybe it would come handy later.. Stephen / Jon /
->>> Thierry, what do you think?
->>
->> This sounds like a good idea. I agree that this currently doesn't seem
->> to be warranted, but consider what would happen if at some point we have
->> more devices requiring access to the IRAM. Spreading individual reg
->> properties all across the DT will make it very difficult to ensure they
->> don't overlap.
->>
->> Presumably the mmio-sram driver will check that pool don't overlap. Or
->> even if it doesn't it will make it a lot easier to verify because it's
->> all in the same DT node and then consumers only reference it.
->>
->> I like Vladimir's proposal. I also suspect that Rob may want us to stick
->> to a standardized way referencing such external memory.
-> 
-> FWIW I agree. Seems like a nice approach and describes the h/w accurately.
-> 
+We do not want the common dma_configure() pathway to apply
+indiscriminately to all devices, since there are plenty of buses which
+do not have DMA capability, and if their child devices were used for
+DMA API calls it would only be indicative of a driver bug. However,
+there are a number of buses for which DMA is implicitly expected even
+when not described by firmware - those we whitelist with an automatic
+opt-in to dma_configure(), assuming that the DMA address space and the
+physical address space are equivalent if not otherwise specified.
 
-Alright :)
+Commit 723288836628 ("of: restrict DMA configuration") introduced a
+short-term fix by comparing explicit bus types, but this approach is far
+from pretty, doesn't scale well, and fails to cope at all with bus
+drivers which may be built as modules, like host1x. Let's refine things
+by making that opt-in a property of the bus type, which neatly addresses
+those problems and lets the decision of whether firmware description of
+DMA capability should be optional or mandatory stay internal to the bus
+drivers themselves.
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+
+I've not included the pci_epf change here as it's dubious whether that's
+doing the right thing to begin with.
+
+Robin.
+
+ drivers/amba/bus.c       | 1 +
+ drivers/base/platform.c  | 1 +
+ drivers/gpu/host1x/bus.c | 1 +
+ drivers/of/device.c      | 8 +-------
+ drivers/pci/pci-driver.c | 1 +
+ include/linux/device.h   | 4 ++++
+ 6 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index e0f74ddc22b7..594c228d2f02 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -195,6 +195,7 @@ struct bus_type amba_bustype = {
+ 	.match		= amba_match,
+ 	.uevent		= amba_uevent,
+ 	.pm		= &amba_pm,
++	.force_dma	= true,
+ };
+ 
+ static int __init amba_init(void)
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index d1bd99271066..9c95c8db00f8 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1142,6 +1142,7 @@ struct bus_type platform_bus_type = {
+ 	.match		= platform_match,
+ 	.uevent		= platform_uevent,
+ 	.pm		= &platform_dev_pm_ops,
++	.force_dma	= true,
+ };
+ EXPORT_SYMBOL_GPL(platform_bus_type);
+ 
+diff --git a/drivers/gpu/host1x/bus.c b/drivers/gpu/host1x/bus.c
+index f9cde03030fd..ed03b3243195 100644
+--- a/drivers/gpu/host1x/bus.c
++++ b/drivers/gpu/host1x/bus.c
+@@ -320,6 +320,7 @@ struct bus_type host1x_bus_type = {
+ 	.name = "host1x",
+ 	.match = host1x_device_match,
+ 	.pm = &host1x_device_pm_ops,
++	.force_dma = true,
+ };
+ 
+ static void __host1x_device_del(struct host1x_device *device)
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 64b710265d39..25bddf9c9fe1 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -9,9 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/slab.h>
+-#include <linux/pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/amba/bus.h>
+ 
+ #include <asm/errno.h>
+ #include "of_private.h"
+@@ -101,11 +99,7 @@ int of_dma_configure(struct device *dev, struct device_node *np)
+ 		 * DMA configuration regardless of whether "dma-ranges" is
+ 		 * correctly specified or not.
+ 		 */
+-		if (!dev_is_pci(dev) &&
+-#ifdef CONFIG_ARM_AMBA
+-		    dev->bus != &amba_bustype &&
+-#endif
+-		    dev->bus != &platform_bus_type)
++		if (!dev->bus->force_dma)
+ 			return ret == -ENODEV ? 0 : ret;
+ 
+ 		dma_addr = offset = 0;
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 11bd267fc137..38bdb97b6dc6 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1466,6 +1466,7 @@ struct bus_type pci_bus_type = {
+ 	.drv_groups	= pci_drv_groups,
+ 	.pm		= PCI_PM_OPS_PTR,
+ 	.num_vf		= pci_bus_num_vf,
++	.force_dma	= true,
+ };
+ EXPORT_SYMBOL(pci_bus_type);
+ 
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 1d2607923a24..357982fb85eb 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -97,6 +97,8 @@ extern void bus_remove_file(struct bus_type *, struct bus_attribute *);
+  * @p:		The private data of the driver core, only the driver core can
+  *		touch this.
+  * @lock_key:	Lock class key for use by the lock validator
++ * @force_dma:	Assume devices on this bus should be set up by dma_configure()
++ * 		even if DMA capability is not explicitly described by firmware.
+  *
+  * A bus is a channel between the processor and one or more devices. For the
+  * purposes of the device model, all devices are connected via a bus, even if
+@@ -135,6 +137,8 @@ struct bus_type {
+ 
+ 	struct subsys_private *p;
+ 	struct lock_class_key lock_key;
++
++	bool force_dma;
+ };
+ 
+ extern int __must_check bus_register(struct bus_type *bus);
+-- 
+2.13.4.dirty
