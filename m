@@ -1,74 +1,56 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 00/13] ARM: dts: renesas: Add missing clocks for ARM CPU cores
-Date: Thu, 12 Oct 2017 11:35:03 +0200
-Message-ID: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 07/13] ARM: dts: r8a7790: Add missing clocks for secondary CA15 CPU cores
+Date: Thu, 12 Oct 2017 11:35:10 +0200
+Message-ID: <1507800916-11509-8-git-send-email-geert+renesas@glider.be>
+References: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507800916-11509-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Currently only the primary CPU in the CA15 cluster has a clocks
+property, while the secondary CPU cores are driven by the same clock.
+Add the missing clocks properties to fix this.
 
-This series improves DT hardware descriptions for Renesas arm32 SoCs by
-adding missing clocks properties to the device nodes corresponding to
-ARM CPU cores.
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Notes:
-  - This series should have no functional impact, except perhaps on
-    big.LITTLE SoCs, when using a firmware that enables both big and
-    little CPU cores (see also Sudeep Holla's comments for R-Car Gen3 in
-    "Re: [PATCH v2 2/2] arm64: dts: r8a7796: Add OPPs table for cpu
-    devices" (https://www.spinics.net/lists/arm-kernel/msg610489.html),
-  - The clocks for CA9 CPU cores on R-Mobile A1 and EMMA Mobile EV2 are
-    still missing, as these clocks are not supported by the DT bindings
-    and drivers, and cannot be referenced yet.
-
-Tested on r8a73a4/ape6evm, r8a7791/koelsch, and sh73a0/kzm9g.
-
-Testing on r8a7790/lager would be appreciated.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (13):
-  dt-bindings: clk: r7s72100: Add missing I and G clocks
-  ARM: dts: r7s72100: Add clock for CA9 CPU core
-  ARM: dts: r8a73a4: Add clock for CA15 CPU0 core
-  ARM: dts: r8a7743: Add missing clock for secondary CA15 CPU core
-  ARM: dts: r8a7778: Add clock for CA9 CPU core
-  ARM: dts: r8a7779: Add clocks for CA9 CPU cores
-  ARM: dts: r8a7790: Add missing clocks for secondary CA15 CPU cores
-  ARM: dts: r8a7790: Add clocks for CA7 CPU cores
-  ARM: dts: r8a7791: Add missing clock for secondary CA15 CPU core
-  ARM: dts: r8a7792: Add missing clock for secondary CA15 CPU core
-  ARM: dts: r8a7793: Add missing clock for secondary CA15 CPU core
-  ARM: dts: r8a7794: Add missing clock for secondary CA7 CPU core
-  ARM: dts: sh73a0: Add clocks for CA9 CPU cores
-
- arch/arm/boot/dts/r7s72100.dtsi            | 1 +
- arch/arm/boot/dts/r8a73a4.dtsi             | 1 +
- arch/arm/boot/dts/r8a7743.dtsi             | 1 +
- arch/arm/boot/dts/r8a7778.dtsi             | 1 +
- arch/arm/boot/dts/r8a7779.dtsi             | 4 ++++
- arch/arm/boot/dts/r8a7790.dtsi             | 7 +++++++
- arch/arm/boot/dts/r8a7791.dtsi             | 1 +
- arch/arm/boot/dts/r8a7792.dtsi             | 1 +
- arch/arm/boot/dts/r8a7793.dtsi             | 1 +
- arch/arm/boot/dts/r8a7794.dtsi             | 1 +
- arch/arm/boot/dts/sh73a0.dtsi              | 2 ++
- include/dt-bindings/clock/r7s72100-clock.h | 2 ++
- 12 files changed, 23 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index ffa57bfe4873415c..7f86cb9f634fbed7 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -71,6 +71,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 			clock-frequency = <1300000000>;
++			clocks = <&cpg CPG_CORE R8A7790_CLK_Z>;
+ 			power-domains = <&sysc R8A7790_PD_CA15_CPU1>;
+ 			next-level-cache = <&L2_CA15>;
+ 		};
+@@ -80,6 +81,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <2>;
+ 			clock-frequency = <1300000000>;
++			clocks = <&cpg CPG_CORE R8A7790_CLK_Z>;
+ 			power-domains = <&sysc R8A7790_PD_CA15_CPU2>;
+ 			next-level-cache = <&L2_CA15>;
+ 		};
+@@ -89,6 +91,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <3>;
+ 			clock-frequency = <1300000000>;
++			clocks = <&cpg CPG_CORE R8A7790_CLK_Z>;
+ 			power-domains = <&sysc R8A7790_PD_CA15_CPU3>;
+ 			next-level-cache = <&L2_CA15>;
+ 		};
 -- 
 2.7.4
 
-Gr{oetje,eeting}s,
-
-						Geert
-
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
