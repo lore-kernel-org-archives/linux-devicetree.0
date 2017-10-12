@@ -1,40 +1,49 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 04/13] ARM: dts: r8a7743: Add missing clock for secondary CA15 CPU core
-Date: Thu, 12 Oct 2017 11:35:07 +0200
-Message-ID: <1507800916-11509-5-git-send-email-geert+renesas@glider.be>
-References: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507800916-11509-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] clk: renesas: rz: clk-rz is meant for RZ/A1
+Date: Thu, 12 Oct 2017 11:37:48 +0200
+Message-ID: <1507801068-12024-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Currently only the primary CPU in the CA15 cluster has a clocks
-property, while the secondary CPU core is driven by the same clock.
-Add the missing clocks property to fix this.
+The RZ family of Renesas SoCs has several different subfamilies (RZ/A,
+RZ/G, RZ/N, and RZ/T).  Clarify that the renesas,rz-cpg-clocks DT
+bindings and clk-rz driver apply to RZ/A1 only.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7743.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+To be queued in clk-renesas-for-v4.15.
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index d541fd9ffafb34ce..e09517bce30db2e8 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -63,6 +63,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <1>;
- 			clock-frequency = <1500000000>;
-+			clocks = <&cpg CPG_CORE R8A7743_CLK_Z>;
- 			power-domains = <&sysc R8A7743_PD_CA15_CPU1>;
- 			next-level-cache = <&L2_CA15>;
- 		};
+ Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt | 4 ++--
+ drivers/clk/renesas/clk-rz.c                                      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt
+index bb5d942075fbf0bf..8ff3e2774ed8d1d0 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt
+@@ -1,6 +1,6 @@
+-* Renesas RZ Clock Pulse Generator (CPG)
++* Renesas RZ/A1 Clock Pulse Generator (CPG)
+ 
+-The CPG generates core clocks for the RZ SoCs. It includes the PLL, variable
++The CPG generates core clocks for the RZ/A1 SoCs. It includes the PLL, variable
+ CPU and GPU clocks, and several fixed ratio dividers.
+ The CPG also provides a Clock Domain for SoC devices, in combination with the
+ CPG Module Stop (MSTP) Clocks.
+diff --git a/drivers/clk/renesas/clk-rz.c b/drivers/clk/renesas/clk-rz.c
+index 5adb934326d1f5be..127c58135c8fec76 100644
+--- a/drivers/clk/renesas/clk-rz.c
++++ b/drivers/clk/renesas/clk-rz.c
+@@ -1,5 +1,5 @@
+ /*
+- * rz Core CPG Clocks
++ * RZ/A1 Core CPG Clocks
+  *
+  * Copyright (C) 2013 Ideas On Board SPRL
+  * Copyright (C) 2014 Wolfram Sang, Sang Engineering <wsa@sang-engineering.com>
 -- 
 2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
