@@ -1,72 +1,101 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
-Date: Thu, 12 Oct 2017 14:11:54 +0300
-Message-ID: <fe0e4bc2-3eef-f6f0-4afb-0cdcab797d7b@gmail.com>
-References: <cover.1507752381.git.digetx@gmail.com>
- <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
- <f18b6a72-e255-9aa4-6ebd-852ce1a27a4e@nvidia.com>
- <6fe375ea-4d8d-5dc2-2d17-c13aa1f46d71@gmail.com>
- <694edb38-ca8f-2580-5207-0ea2414f37ba@nvidia.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 16/16] arm64: dts: marvell: armada-3720-espressobin: fill UART nodes
+Date: Thu, 12 Oct 2017 13:24:42 +0200
+Message-ID: <87zi8wbocl.fsf@free-electrons.com>
+References: <20171006101344.15590-1-miquel.raynal@free-electrons.com>
+        <20171006101344.15590-17-miquel.raynal@free-electrons.com>
+        <87fuawe8gx.fsf@free-electrons.com>
+        <20171006151521.440418a2@windsurf.lan> <20171009093025.78d45a9a@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <694edb38-ca8f-2580-5207-0ea2414f37ba@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171009093025.78d45a9a@xps13> (Miquel RAYNAL's message of "Mon,
+        9 Oct 2017 09:30:25 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12.10.2017 13:57, Jon Hunter wrote:
-> 
-> On 12/10/17 11:51, Dmitry Osipenko wrote:
->> On 12.10.2017 11:49, Jon Hunter wrote:
->>>
->>> On 11/10/17 21:08, Dmitry Osipenko wrote:
->>>> Add a device node for the video decoder engine found on Tegra20.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
->>>>  1 file changed, 17 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
->>>> index 7c85f97f72ea..1b5d54b6c0cb 100644
->>>> --- a/arch/arm/boot/dts/tegra20.dtsi
->>>> +++ b/arch/arm/boot/dts/tegra20.dtsi
->>>> @@ -249,6 +249,23 @@
->>>>  		*/
->>>>  	};
->>>>  
->>>> +	vde@6001a000 {
->>>> +		compatible = "nvidia,tegra20-vde";
->>>> +		reg = <0x6001a000 0x3D00    /* VDE registers */
->>>> +		       0x40000400 0x3FC00>; /* IRAM region */
->>>> +		reg-names = "regs", "iram";
->>>> +		interrupts = <GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>, /* UCQ error interrupt */
->>>> +			     <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>, /* Sync token interrupt */
->>>> +			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>, /* BSE-V interrupt */
->>>> +			     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>, /* BSE-A interrupt */
->>>> +			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>; /* SXE interrupt */
->>>> +		interrupt-names = "ucq-error", "sync-token", "bsev", "bsea", "sxe";
->>>> +		clocks = <&tegra_car TEGRA20_CLK_VDE>;
->>>> +		clock-names = "vde";
->>>> +		resets = <&tegra_car 61>;
->>>> +		reset-names = "vde";
->>>> +	};
->>>> +
->>>
->>> I don't see any binding documentation for this node. We need to make
->>> sure we add this.
->>>
->>
->> It's in the first patch.
->>
->> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
->>
-> 
-> Ah yes indeed, then that needs to be a separate patch.
-> 
+Hi Miquel,
+ 
+ On lun., oct. 09 2017, Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Okay
+> Hi Thomas, Gregory,
+>
+> On Fri, 6 Oct 2017 15:15:21 +0200
+> Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>
+>> Hello,
+>> 
+>> On Fri, 06 Oct 2017 15:01:18 +0200, Gregory CLEMENT wrote:
+>> 
+>> >  /*
+>> >   * To enable the second UART on J17 (pins 24,26) refer to the uart1
+>> >   * node from armada-3720-db.dts.
+>> >   * Note that TX and RX signal are the ones coming directly from
+>> > the SoC:
+>> >   * 1.8V TTL.
+>> >   */  
+>> 
+>> One issue with this comment (and Miquèl's version as well) is that it
+>> does not explain why you don't enable this UART by default.
+>> 
+>> The real reason is in the commit log from Miquèl, and should probably
+>> be part of the comment. Perhaps something like:
+>> 
+>> /*
+>> 
+>>  * Connector J17 (pins X, Y, Z) exposes a number of different
+>>  * features:
+>>  *  - UART1 (pins 24 = RX, pins 26 = TX), see armada-3720-db.dts for
+>> an
+>>  *    example on how to enable UART1. Beware that the signals are 1.8V
+>>  *    TTL.
+>>  *  - SPIxyz
+>>  *  - I2Cxyz
+>>  */
+>
+> Thanks for both your comments, there is my version, inspired from both
+> comments:
+>
+> /*
+>  * Connector J17 exposes a number of different features. Some pins are
+>  * multiplexed. This is the case for the UART1 feature (pins 24 = RX,
+>  * pins 26 = TX). See armada-3720-db.dts for an example of how to enable it.
+>  * Beware that the signals are 1.8V TTL.
+>  */
+
+Seems good for me however I prefer Thomas version, easier to read and to
+extend latter with the description of other pins if needed.
+
+Gregory
+
+>
+> Thanks,
+> Miquèl
+>
+>> 
+>> Otherwise, it's not clear at all why you don't just enable UART1. Or
+>> perhaps I misunderstood Miquèl's commit log ?
+>> 
+>> Best regards,
+>> 
+>> Thomas
+>
+>
+>
+> -- 
+> Miquel Raynal, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
