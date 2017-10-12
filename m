@@ -1,104 +1,43 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
-Date: Thu, 12 Oct 2017 13:46:14 +0200
-Message-ID: <d6e8be43-cbb9-89cd-eb3f-b34ac23ad99f@st.com>
-References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
- <878tgim24i.fsf@linux.intel.com>
- <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com>
- <87vajllx8t.fsf@linux.intel.com>
- <1c4180ef-2da6-b420-7c6e-41769608384a@st.com>
- <87sheplsrm.fsf@linux.intel.com>
- <3c36db6d-75fd-1be6-e946-b75a04e3760e@st.com>
- <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
- <87efq821tz.fsf@linux.intel.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH  0/4] ARM: dts: Add USB function support
+Date: Thu, 12 Oct 2017 13:47:51 +0200
+Message-ID: <20171012114751.lyx7jrgjbhy2d47j@verge.net.au>
+References: <1507555281-57845-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87efq821tz.fsf@linux.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, John Youn <johnyoun@synopsys.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507555281-57845-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe
+On Mon, Oct 09, 2017 at 02:21:17PM +0100, Biju Das wrote:
+> Hello,
+> 
+> This series aims to add USB function support for iWave RZ/G1M (R8A7743) board.
+> This series has been tested against renesas-dev tag 201710109-v4.14-rc4.
+> 
+> This patch has documentation dependency on below patches
+> 
+> * [v2] usb: renesas_usbhs: Add compatible string for r8a7743/5
+> https://patchwork.kernel.org/patch/9990063/
+> * [v2] dmaengine: usb-dmac: Add compatible string for r8a7743/5
+> https://patchwork.kernel.org/patch/9990113/
+> 
+> Regards,
+> 
+> Biju Das (4):
+>   ARM: dts: r8a7743: Add HS-USB device node
+>   ARM: dts: iwg20d-q7: Enable HS-USB
+>   ARM: dts: r8a7743: Add USB-DMAC device nodes
+>   ARM: dts: r8a7743: Enable DMA for HSUSB
 
-On 10/12/2017 10:43 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
->>>>>>>
->>>>>>> On 10/11/2017 12:04 PM, Felipe Balbi wrote:
->>>>>>>>
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> Amelie Delaunay <amelie.delaunay@st.com> writes:
->>>>>>>>> The STM32F7 MCU family embeds two DWC2 USB OTG cores. One core is
->>>>>>>>> USB
->>>>>>>>> OTG FS and the other is USB OTG HS. The USB FS core only works
->>>>>>>>> with its
->>>>>>>>> internal phy whilst the USB HS core can work in HS with external
->>>>>>>>> ULPI phy
->>>>>>>>> or in FS/LS with the on-chip FS phy.
->>>>>>>>>
->>>>>>>>> Amelie Delaunay (7):
->>>>>>>>>       dt-bindings: usb: Document the STM32F7 DWC2 USB OTG HS core
->>>>>>>>> binding
->>>>>>>>>       usb: dwc2: add support for STM32F7 USB OTG HS
->>>>>>>>>       ARM: dts: stm32: Add USB HS support for STM32F746 MCU
->>>>>>>>
->>>>>>>> I have applied these three patches. Should I take the rest? They
->>>>>>>> seems
->>>>>>>> like they could go upstream through the ARM maintainers.
->>>>>>>>
->>>>>>>
->>>>>>> I will take other DT patches in my PR.
->>>>>>>
->>>>>>> Concerning "ARM: dts: stm32: Add USB HS support for STM32F746 MCU"
->>>>>>> patch
->>>>>>> I prefer also to take it. This patch adds some pinctrl groups but
->>>>>>> stm32
->>>>>>> pinctrl bindings will change in my next PR (we will use a macro to
->>>>>>> define pins instead of using defined values). So if you push the DT
->>>>>>> patch through your pull request there will be a merge issue.
->>>>>>> It is possible that I take also this one ?
->>>>>>
->>>>>> In that case, it's best if you take them all :-) Here's my Ack:
->>>>>>
->>>>>> Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
->>>>>>
->>>>>> I'll drop them from my tree now
->>>>>
->>>>> Ok perfect, I will take DT patches (3 to 7) and I let you take patch 1&2
->>>>> in your tree.
->>>>
->>>> Well, I have dropped them from my tree. Please two 1-7 through yours.
->>>
->>> Hum, ok for this patchset but IMO it is better (next time) that you take
->>> driver pacthes in your tree and I take only DT patches in mine.
->>> No ?
->>>
->>> Regards
->>> Alex
->>>
->>>>
->>
->> I thought that patches 1 and 2, as they are "driver" patches, had to be
->> applied on USB tree (so Felipe's one), and the others (3 to 7) had to be
->> applied on STM32-DT tree (Alex's one). Did I miss something?
-> 
-> patch 1 is documentation, right? Without the documentation patch,
-> checkpatch will cringe :-) So either way works.
-> 
-> If you insist, I can take 1-2 through my tree. No worries.
+Thanks, applied v1 of patches 1, 3 and 4, and v2 of patch 2.
 
-I don't want to insist :) but for me it is better (and more safe) if you 
-take patch 1&2 in your tree, and will take others in mine.
+In future when reposting a patch of a series please repost the
+entire series anew, in this case it would have been v2 for the whole
+series.
 
-Thanks in advance.
-Alex
-
-> 
-> let me know
-> 
+Thanks!
