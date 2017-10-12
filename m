@@ -1,71 +1,49 @@
-From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
-Date: Thu, 12 Oct 2017 08:32:49 +0000
-Message-ID: <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
-References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
- <878tgim24i.fsf@linux.intel.com>
- <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com>
- <87vajllx8t.fsf@linux.intel.com>
- <1c4180ef-2da6-b420-7c6e-41769608384a@st.com>
- <87sheplsrm.fsf@linux.intel.com>
- <3c36db6d-75fd-1be6-e946-b75a04e3760e@st.com>
+From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/7] ARM: dts: Add nodes for missing omap4 interconnect
+ target modules
+Date: Thu, 12 Oct 2017 10:40:30 +0200
+Message-ID: <20171012084030.lshobr3ewu3t5goc@squirrel.local>
+References: <20170929223411.9691-1-tony@atomide.com>
+ <20170929223411.9691-6-tony@atomide.com>
+ <f5c57f0b-1423-c362-0fda-4069b77a2e38@ti.com>
+ <20171011165850.jnaievrgcszcawh3@earth>
+ <da8d1d7f-f16d-8d71-cf49-acff79614610@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3c36db6d-75fd-1be6-e946-b75a04e3760e-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Content-ID: <986FF4D5E7B95E4BB9F51888DCC58894-qxv4g6HH51o@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <da8d1d7f-f16d-8d71-cf49-acff79614610-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmVsaXBlLCBBbGV4LA0KDQpPbiAxMC8xMS8yMDE3IDA0OjM4IFBNLCBBbGV4YW5kcmUgVG9y
-Z3VlIHdyb3RlOg0KPiANCj4gDQo+IE9uIDEwLzExLzIwMTcgMDM6MjYgUE0sIEZlbGlwZSBCYWxi
-aSB3cm90ZToNCj4+DQo+PiBIaSwNCj4+DQo+PiBBbGV4YW5kcmUgVG9yZ3VlIDxhbGV4YW5kcmUu
-dG9yZ3VlQHN0LmNvbT4gd3JpdGVzOg0KPj4+IEhpDQo+Pj4NCj4+PiBPbiAxMC8xMS8yMDE3IDAx
-OjUwIFBNLCBGZWxpcGUgQmFsYmkgd3JvdGU6DQo+Pj4+DQo+Pj4+IEhpLA0KPj4+Pg0KPj4+PiBB
-bGV4YW5kcmUgVG9yZ3VlIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNvbT4gd3JpdGVzOg0KPj4+Pj4g
-SGkgRmVsaXANCj4+Pj4+DQo+Pj4+PiBPbiAxMC8xMS8yMDE3IDEyOjA0IFBNLCBGZWxpcGUgQmFs
-Ymkgd3JvdGU6DQo+Pj4+Pj4NCj4+Pj4+PiBIaSwNCj4+Pj4+Pg0KPj4+Pj4+IEFtZWxpZSBEZWxh
-dW5heSA8YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4gd3JpdGVzOg0KPj4+Pj4+PiBUaGUgU1RNMzJG
-NyBNQ1UgZmFtaWx5IGVtYmVkcyB0d28gRFdDMiBVU0IgT1RHIGNvcmVzLiBPbmUgY29yZSBpcyAN
-Cj4+Pj4+Pj4gVVNCDQo+Pj4+Pj4+IE9URyBGUyBhbmQgdGhlIG90aGVyIGlzIFVTQiBPVEcgSFMu
-IFRoZSBVU0IgRlMgY29yZSBvbmx5IHdvcmtzIA0KPj4+Pj4+PiB3aXRoIGl0cw0KPj4+Pj4+PiBp
-bnRlcm5hbCBwaHkgd2hpbHN0IHRoZSBVU0IgSFMgY29yZSBjYW4gd29yayBpbiBIUyB3aXRoIGV4
-dGVybmFsIA0KPj4+Pj4+PiBVTFBJIHBoeQ0KPj4+Pj4+PiBvciBpbiBGUy9MUyB3aXRoIHRoZSBv
-bi1jaGlwIEZTIHBoeS4NCj4+Pj4+Pj4NCj4+Pj4+Pj4gQW1lbGllIERlbGF1bmF5ICg3KToNCj4+
-Pj4+Pj4gwqDCoMKgwqAgZHQtYmluZGluZ3M6IHVzYjogRG9jdW1lbnQgdGhlIFNUTTMyRjcgRFdD
-MiBVU0IgT1RHIEhTIGNvcmUgDQo+Pj4+Pj4+IGJpbmRpbmcNCj4+Pj4+Pj4gwqDCoMKgwqAgdXNi
-OiBkd2MyOiBhZGQgc3VwcG9ydCBmb3IgU1RNMzJGNyBVU0IgT1RHIEhTDQo+Pj4+Pj4+IMKgwqDC
-oMKgIEFSTTogZHRzOiBzdG0zMjogQWRkIFVTQiBIUyBzdXBwb3J0IGZvciBTVE0zMkY3NDYgTUNV
-DQo+Pj4+Pj4NCj4+Pj4+PiBJIGhhdmUgYXBwbGllZCB0aGVzZSB0aHJlZSBwYXRjaGVzLiBTaG91
-bGQgSSB0YWtlIHRoZSByZXN0PyBUaGV5IA0KPj4+Pj4+IHNlZW1zDQo+Pj4+Pj4gbGlrZSB0aGV5
-IGNvdWxkIGdvIHVwc3RyZWFtIHRocm91Z2ggdGhlIEFSTSBtYWludGFpbmVycy4NCj4+Pj4+Pg0K
-Pj4+Pj4NCj4+Pj4+IEkgd2lsbCB0YWtlIG90aGVyIERUIHBhdGNoZXMgaW4gbXkgUFIuDQo+Pj4+
-Pg0KPj4+Pj4gQ29uY2VybmluZyAiQVJNOiBkdHM6IHN0bTMyOiBBZGQgVVNCIEhTIHN1cHBvcnQg
-Zm9yIFNUTTMyRjc0NiBNQ1UiIA0KPj4+Pj4gcGF0Y2gNCj4+Pj4+IEkgcHJlZmVyIGFsc28gdG8g
-dGFrZSBpdC4gVGhpcyBwYXRjaCBhZGRzIHNvbWUgcGluY3RybCBncm91cHMgYnV0IA0KPj4+Pj4g
-c3RtMzINCj4+Pj4+IHBpbmN0cmwgYmluZGluZ3Mgd2lsbCBjaGFuZ2UgaW4gbXkgbmV4dCBQUiAo
-d2Ugd2lsbCB1c2UgYSBtYWNybyB0bw0KPj4+Pj4gZGVmaW5lIHBpbnMgaW5zdGVhZCBvZiB1c2lu
-ZyBkZWZpbmVkIHZhbHVlcykuIFNvIGlmIHlvdSBwdXNoIHRoZSBEVA0KPj4+Pj4gcGF0Y2ggdGhy
-b3VnaCB5b3VyIHB1bGwgcmVxdWVzdCB0aGVyZSB3aWxsIGJlIGEgbWVyZ2UgaXNzdWUuDQo+Pj4+
-PiBJdCBpcyBwb3NzaWJsZSB0aGF0IEkgdGFrZSBhbHNvIHRoaXMgb25lID8NCj4+Pj4NCj4+Pj4g
-SW4gdGhhdCBjYXNlLCBpdCdzIGJlc3QgaWYgeW91IHRha2UgdGhlbSBhbGwgOi0pIEhlcmUncyBt
-eSBBY2s6DQo+Pj4+DQo+Pj4+IEFja2VkLWJ5OiBGZWxpcGUgQmFsYmkgPGZlbGlwZS5iYWxiaUBs
-aW51eC5pbnRlbC5jb20+DQo+Pj4+DQo+Pj4+IEknbGwgZHJvcCB0aGVtIGZyb20gbXkgdHJlZSBu
-b3cNCj4+Pg0KPj4+IE9rIHBlcmZlY3QsIEkgd2lsbCB0YWtlIERUIHBhdGNoZXMgKDMgdG8gNykg
-YW5kIEkgbGV0IHlvdSB0YWtlIHBhdGNoIDEmMg0KPj4+IGluIHlvdXIgdHJlZS4NCj4+DQo+PiBX
-ZWxsLCBJIGhhdmUgZHJvcHBlZCB0aGVtIGZyb20gbXkgdHJlZS4gUGxlYXNlIHR3byAxLTcgdGhy
-b3VnaCB5b3Vycy4NCj4gDQo+IEh1bSwgb2sgZm9yIHRoaXMgcGF0Y2hzZXQgYnV0IElNTyBpdCBp
-cyBiZXR0ZXIgKG5leHQgdGltZSkgdGhhdCB5b3UgdGFrZSANCj4gZHJpdmVyIHBhY3RoZXMgaW4g
-eW91ciB0cmVlIGFuZCBJIHRha2Ugb25seSBEVCBwYXRjaGVzIGluIG1pbmUuDQo+IE5vID8NCj4g
-DQo+IFJlZ2FyZHMNCj4gQWxleA0KPiANCj4+DQoNCkkgdGhvdWdodCB0aGF0IHBhdGNoZXMgMSBh
-bmQgMiwgYXMgdGhleSBhcmUgImRyaXZlciIgcGF0Y2hlcywgaGFkIHRvIGJlIA0KYXBwbGllZCBv
-biBVU0IgdHJlZSAoc28gRmVsaXBlJ3Mgb25lKSwgYW5kIHRoZSBvdGhlcnMgKDMgdG8gNykgaGFk
-IHRvIGJlIA0KYXBwbGllZCBvbiBTVE0zMi1EVCB0cmVlIChBbGV4J3Mgb25lKS4gRGlkIEkgbWlz
-cyBzb21ldGhpbmc/DQoNClJlZ2FyZHMsDQpBbWVsaWU=
+On Thu, Oct 12, 2017 at 09:07:55AM +0300, Peter Ujfalusi wrote:
+> I don't see much benefit of using McASP on OMAP4, only drawbacks... It
+> lacks AFIFO so it is prone to underrun and if it underruns you need to
+> reset McASP. Been there with the Samsung Galaxy Nexus.
+
+AESS/ATC isn't able to consistently respond to a DMA request within 20
+us ?  Strange.. I would have expected it to have no trouble with that.
+(And presumably so did TI, or they would have included AFIFO?)
+
+> I wonder how Motorola is using the McASP as the OMAP4 version
+> (officially) does not support I2S.
+
+Hmm? I checked the omap4430 TRM and I don't see that mentioned. It seems
+to have pins for i2s transmit:
+
+	abe_mcasp_axr              O     Audio transmit data
+	abe_mcasp_aclkx            O     Transmit bit clock
+	abe_mcasp_ahclkx           O     Transmit high-frequency master clock
+	abe_mcasp_afsx             O     Transmit frame synchronization
+	abe_mcasp_amute            O     Mute out to external
+	abe_mcasp_amutein          I     Mute in from external
+
+If it supported s/pdif tx only, then all of these except axr would be
+useless.
+
+Matthijs
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
