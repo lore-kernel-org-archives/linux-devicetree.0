@@ -1,79 +1,104 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 09/18] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
-Date: Thu, 12 Oct 2017 11:41:35 +0000
-Message-ID: <TY1PR06MB09924AF4CBC4D1F39FD38926D84B0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1504737377-23191-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX1FZ3_iKCMRkDozsn7QzEmmvuUzkjq5Hn9+L42F=X7sQ@mail.gmail.com>
- <806c5e8e-af85-e73b-a7a4-44ebf82dee7e@cogentembedded.com>
- <CAMuHMdXL1P5vhoBU9W+S1qX8maXLRmyg88cjgbYpCGZSQ1FBtQ@mail.gmail.com>
- <1c5fc090-af98-0041-be8b-b06dc81d4670@cogentembedded.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
+Date: Thu, 12 Oct 2017 13:46:14 +0200
+Message-ID: <d6e8be43-cbb9-89cd-eb3f-b34ac23ad99f@st.com>
+References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
+ <878tgim24i.fsf@linux.intel.com>
+ <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com>
+ <87vajllx8t.fsf@linux.intel.com>
+ <1c4180ef-2da6-b420-7c6e-41769608384a@st.com>
+ <87sheplsrm.fsf@linux.intel.com>
+ <3c36db6d-75fd-1be6-e946-b75a04e3760e@st.com>
+ <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
+ <87efq821tz.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1c5fc090-af98-0041-be8b-b06dc81d4670-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: ja-JP
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: batareich batareich <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87efq821tz.fsf@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, John Youn <johnyoun@synopsys.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLCBWbGFkaW1pci1zYW4sDQoNCj4gRnJvbTogVmxhZGltaXIgQmFyaW5vdiwg
-U2VudDogU2F0dXJkYXksIE9jdG9iZXIgNywgMjAxNyAyOjI5IEFNDQo+IA0KPiBIaSBHZWVydCwN
-Cj4gDQo+IE9uIDA2LjEwLjIwMTcgMTA6MTUsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4g
-PiBIaSBWbGFkaW1pciwNCj4gPg0KPiA+IENDIFNoaW1vZGEtc2FuDQo+ID4NCj4gPiBPbiBGcmks
-IE9jdCA2LCAyMDE3IGF0IDQ6MzggQU0sIFZsYWRpbWlyIEJhcmlub3YNCj4gPiA8dmxhZGltaXIu
-YmFyaW5vdkBjb2dlbnRlbWJlZGRlZC5jb20+IHdyb3RlOg0KPiA+PiBPbiAyMC4wOS4yMDE3IDE1
-OjU5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4+PiBPbiBUaHUsIFNlcCA3LCAyMDE3
-IGF0IDEyOjM2IEFNLCBWbGFkaW1pciBCYXJpbm92DQo+ID4+PiA8dmxhZGltaXIuYmFyaW5vdkBj
-b2dlbnRlbWJlZGRlZC5jb20+IHdyb3RlOg0KPiA+Pj4+IFRoaXMgc3VwcG9ydHMgVVNCMiBQSFkg
-Y2hhbm5lbCAjMCBvbiBVTENCIEtpbmdmaXNoZXIgYm9hcmQNCj4gPj4+Pg0KPiA+Pj4+IFNpZ25l
-ZC1vZmYtYnk6IFZsYWRpbWlyIEJhcmlub3YgPHZsYWRpbWlyLmJhcmlub3ZAY29nZW50ZW1iZWRk
-ZWQuY29tPg0KPiA+Pj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVu
-ZXNhc0BnbGlkZXIuYmU+DQo+ID4+Pg0KPiA+Pj4+IGluZGV4IGNhOGRlMWEuLjA4NTQ2MDAgMTAw
-NjQ0DQo+ID4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3VsY2Ita2YuZHRz
-aQ0KPiA+Pj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy91bGNiLWtmLmR0c2kN
-Cj4gPj4+PiBAQCAtNjAsNiArNjAsMTEgQEANCj4gPj4+PiAgICAgICAgICAgICAgICAgICBncm91
-cHMgPSAic2NpZjFfZGF0YV9iIjsNCj4gPj4+PiAgICAgICAgICAgICAgICAgICBmdW5jdGlvbiA9
-ICJzY2lmMSI7DQo+ID4+Pj4gICAgICAgICAgIH07DQo+ID4+Pj4gKw0KPiA+Pj4+ICsgICAgICAg
-dXNiMF9waW5zOiB1c2IwIHsNCj4gPj4+PiArICAgICAgICAgICAgICAgZ3JvdXBzID0gInVzYjAi
-Ow0KPiA+Pj4+ICsgICAgICAgICAgICAgICBmdW5jdGlvbiA9ICJ1c2IwIjsNCj4gPj4+PiArICAg
-ICAgIH07DQo+ID4+Pj4gICAgfTsNCj4gPj4+Pg0KPiA+Pj4+ICAgICZzY2lmMSB7DQo+ID4+Pj4g
-QEAgLTY4LDMgKzczLDEwIEBADQo+ID4+Pj4NCj4gPj4+PiAgICAgICAgICAgc3RhdHVzID0gIm9r
-YXkiOw0KPiA+Pj4+ICAgIH07DQo+ID4+Pj4gKw0KPiA+Pj4+ICsmdXNiMl9waHkwIHsNCj4gPj4+
-PiArICAgICAgIHBpbmN0cmwtMCA9IDwmdXNiMF9waW5zPjsNCj4gPj4+PiArICAgICAgIHBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4+Pj4gKw0KPiA+Pj4gRG9uJ3QgeW91IG5lZWQNCj4g
-Pj4+DQo+ID4+PiAgICAgICB2YnVzLXN1cHBseSA9IDwmdmJ1czBfdXNiMj47DQo+ID4+Pg0KPiA+
-Pj4gd2l0aCB2YnVzMF91c2IyIGEgZml4ZWQgcmVndWxhdG9yIGNvbnRyb2xsZWQgYnkgR1BJTyBQ
-MTEgKE9UR19FWFRMUG4pIGZyb20NCj4gPj4+IEdQSU8gZXhwYW5kZXIgVTExIChUQ0E5NTM5KT8N
-Cj4gPj4+IE1heSBiZSBvcHRpb25hbCwgdGhvdWdoLiBzYWx2YXRvci1jb21tb24uZHRzaSBoYXMg
-aXQuDQo+ID4+IFllcywgSSBuZWVkIHRoaXMgZ3Bpby4NCj4gPj4gSSBuZWVkIGJvdGggT1RHX0VY
-VExQbiBhbmQgT1RHX09GRlZCVVNuIGZyb20gdGhlIHNhbWUgZ3BpbyBleHBhbmRlci4NCj4gPj4N
-Cj4gPj4gSSd2ZSBiZWVuIGNvbnNpZGVyaW5nIHRvIHVzZSBlaXRoZXIgdmJ1cy1zdXBwbHkgKyBn
-cGlvIGhvZyBvciB1c2UgZ3BpbyBob2cNCj4gPj4gZm9yIGJvdGggb2YgdGhlbSBmb3IgY29uc2lz
-dGVuY3kuDQo+ID4+IFdoYXQgZG8geW91IHRoaW5rIGFib3V0IHRoaXM/DQo+ID4gRm9yIE9UR19F
-WFRMUG4geW91IGRvbid0IHJlYWxseSBuZWVkIGEgaG9nLCBhcyBpdCB3aWxsIGJlIGNvbnRyb2xs
-ZWQgYnkgdGhlDQo+ID4gVVNCIGRyaXZlci9zdWJzeXN0ZW0sIGxpa2Ugb24gU2FsdmF0b3ItWChT
-KSwgcmlnaHQ/DQo+IEFncmVlZC4NCj4gPg0KPiA+IEZvciBPVEdfT0ZGVkJVU24sIHdoaWNoIGlz
-IChvcHRpb25hbGx5KSBkcml2ZW4gZnJvbSBVU0IwX1BXRU4gb24NCj4gPiBTYWx2YXRvci1YKFMp
-IEkgZG9uJ3Qga25vdyBpZiB5b3UgbmVlZCBhIEdQSU8gaG9nIG9yIG5vdC4gSSBoYXZlIHRvIGRl
-ZmVyIHlvdXINCj4gPiBxdWVzdGlvbiB0byBTaGltb2RhLXNhbi4NCg0KSSdtIHNvcnJ5IGZvciB0
-aGUgZGVsYXllZCByZXNwb25zZS4NCkkgdGhpbmsgT1RHX09GRlZCVVNuIHNob3VsZCBiZSBsb3cg
-bGV2ZWwgdG8gYXZvaWQgY29uZmxpY3QgNVYgc3VwcGx5IGZyb20gVTEzJ3MgT1VUIHBpbnMuDQoN
-Cj4gVGhpcyBwaW4gc2hvdWxkIGJlIHRpZWQgcGVybWFuZW50bHkgbG93IHRvIGRpc2FibGUgaW50
-ZXJuYWwgTUFYMzM1NQ0KPiBpbnRlcm5hbCBWQlVTIGNoYXJnZSBwdW1wLg0KDQpJIGFncmVlLg0K
-DQo+IEhlbmNlIHByb2JhYmx5IGdwaW8gaG9nIGlzIGVub3VnaCBmb3IgT1RHX09GRlZCVVNuLg0K
-DQpJJ20gYWZyYWlkIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQgdGhpcyAiZ3BpbyBob2ciIG1lYW5z
-Lg0KDQo+IEtGIGhhcyBkZWRpY2F0ZWQgVkJVUyBwb3dlciBzdXBwbHkgY29udHJvbGxlZCBieSBV
-U0IwX1BXRU4uDQoNCkkgYWdyZWUuDQpJIGRvbuKAmXQgd3JpdGUgYW55IGRvY3VtZW50YXRpb25z
-IHRob3VnaCwgYnV0IEkgYXNzdW1lZCBTVzE1IGlzIHBpbiAzIHNpZGUNCnRvIHVzZSBNQVgzMzU1
-J3MgY2hhcmdlIHB1bXAuIFNvLCBJIGFkZGVkICJ2YnVzLXN1cHBseSIgdG8gZGlzYWJsZSBTSERO
-IyBvZiBNQVgzMzU1Lg0KQnV0LCB3ZSBjYW4gYWxzbyB1c2UgVTEzIGZvciBwb3dlciBzdXBwbHkg
-b24gdGhlIFNhbHZhdG9yLVhbU10gd2l0aG91dCAidmJ1cy1zdXBwbHkiLg0KDQpCZXN0IHJlZ2Fy
-ZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiBWbGFkaW1p
-cg0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Felipe
+
+On 10/12/2017 10:43 AM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+>>>>>>>
+>>>>>>> On 10/11/2017 12:04 PM, Felipe Balbi wrote:
+>>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> Amelie Delaunay <amelie.delaunay@st.com> writes:
+>>>>>>>>> The STM32F7 MCU family embeds two DWC2 USB OTG cores. One core is
+>>>>>>>>> USB
+>>>>>>>>> OTG FS and the other is USB OTG HS. The USB FS core only works
+>>>>>>>>> with its
+>>>>>>>>> internal phy whilst the USB HS core can work in HS with external
+>>>>>>>>> ULPI phy
+>>>>>>>>> or in FS/LS with the on-chip FS phy.
+>>>>>>>>>
+>>>>>>>>> Amelie Delaunay (7):
+>>>>>>>>>       dt-bindings: usb: Document the STM32F7 DWC2 USB OTG HS core
+>>>>>>>>> binding
+>>>>>>>>>       usb: dwc2: add support for STM32F7 USB OTG HS
+>>>>>>>>>       ARM: dts: stm32: Add USB HS support for STM32F746 MCU
+>>>>>>>>
+>>>>>>>> I have applied these three patches. Should I take the rest? They
+>>>>>>>> seems
+>>>>>>>> like they could go upstream through the ARM maintainers.
+>>>>>>>>
+>>>>>>>
+>>>>>>> I will take other DT patches in my PR.
+>>>>>>>
+>>>>>>> Concerning "ARM: dts: stm32: Add USB HS support for STM32F746 MCU"
+>>>>>>> patch
+>>>>>>> I prefer also to take it. This patch adds some pinctrl groups but
+>>>>>>> stm32
+>>>>>>> pinctrl bindings will change in my next PR (we will use a macro to
+>>>>>>> define pins instead of using defined values). So if you push the DT
+>>>>>>> patch through your pull request there will be a merge issue.
+>>>>>>> It is possible that I take also this one ?
+>>>>>>
+>>>>>> In that case, it's best if you take them all :-) Here's my Ack:
+>>>>>>
+>>>>>> Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+>>>>>>
+>>>>>> I'll drop them from my tree now
+>>>>>
+>>>>> Ok perfect, I will take DT patches (3 to 7) and I let you take patch 1&2
+>>>>> in your tree.
+>>>>
+>>>> Well, I have dropped them from my tree. Please two 1-7 through yours.
+>>>
+>>> Hum, ok for this patchset but IMO it is better (next time) that you take
+>>> driver pacthes in your tree and I take only DT patches in mine.
+>>> No ?
+>>>
+>>> Regards
+>>> Alex
+>>>
+>>>>
+>>
+>> I thought that patches 1 and 2, as they are "driver" patches, had to be
+>> applied on USB tree (so Felipe's one), and the others (3 to 7) had to be
+>> applied on STM32-DT tree (Alex's one). Did I miss something?
+> 
+> patch 1 is documentation, right? Without the documentation patch,
+> checkpatch will cringe :-) So either way works.
+> 
+> If you insist, I can take 1-2 through my tree. No worries.
+
+I don't want to insist :) but for me it is better (and more safe) if you 
+take patch 1&2 in your tree, and will take others in mine.
+
+Thanks in advance.
+Alex
+
+> 
+> let me know
+> 
