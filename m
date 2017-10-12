@@ -1,124 +1,117 @@
 From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] soc: mediatek: pwrap: add pwrap_write32 for
- writing in 32-bit mode
-Date: Thu, 12 Oct 2017 11:19:55 +0800
-Message-ID: <1507778395.21840.15.camel@mtkswgap22>
+Subject: Re: [PATCH v3 7/9] soc: mediatek: pwrap: add MediaTek MT6380 as one
+ slave of pwrap
+Date: Thu, 12 Oct 2017 11:44:57 +0800
+Message-ID: <1507779897.21840.19.camel@mtkswgap22>
 References: <cover.1502779753.git.sean.wang@mediatek.com>
-         <236a04acb383fc655549bc345a16a2d015e5727d.1502779753.git.sean.wang@mediatek.com>
-         <d34460e3-9233-3c31-578d-cf2fe91a4316@gmail.com>
+         <398d87c6ae2b414016fc0c0a9c6bada3ce746118.1502779753.git.sean.wang@mediatek.com>
+         <0491f3fc-0404-c775-70f3-8bc86b3cf6c8@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d34460e3-9233-3c31-578d-cf2fe91a4316-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <0491f3fc-0404-c775-70f3-8bc86b3cf6c8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-10-10 at 11:38 +0200, Matthias Brugger wrote:
+On Tue, 2017-10-10 at 12:02 +0200, Matthias Brugger wrote:
 > 
 > On 08/15/2017 11:09 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
 > > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > 
-> > Some regulators such as MediaTek MT6380 also has to be written in
-> > 32-bit mode. So the patch adds pwrap_write32, rename old pwrap_write
-> > into pwrap_write16 and one additional function pointer is introduced
-> > for increasing flexibility allowing the determination which mode is
-> > used by the pwrap slave detection through device tree.
+> > Add MediaTek MT6380 regulator becoming one of PMIC wrapper slave
+> > and also add extra new regmap_config of 32-bit mode for MT6380
+> > since old regmap_config of 16-bit mode can't be fit into the need.
 > > 
 > > Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > ---
-> >   drivers/soc/mediatek/mtk-pmic-wrap.c | 63 +++++++++++++++++++++++++++---------
-> >   1 file changed, 47 insertions(+), 16 deletions(-)
+> >   drivers/soc/mediatek/mtk-pmic-wrap.c | 25 ++++++++++++++++++++++---
+> >   1 file changed, 22 insertions(+), 3 deletions(-)
 > > 
 > > diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > index 7cd581b..9d1f4c6 100644
+> > index 1f8b69a..047e3d9 100644
 > > --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
 > > +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> > @@ -506,6 +506,7 @@ struct pwrap_slv_type {
+> > @@ -501,6 +501,7 @@ struct pmic_wrapper;
+> >   struct pwrap_slv_type {
+> >   	const u32 *dew_regs;
+> >   	enum pmic_type type;
+> > +	const struct regmap_config *regmap;
+> >   	/* pwrap operations are highly associated with the PMIC types,
+> >   	 * so the pointers added increases flexibility allowing determination
 > >   	 * which type is used by the detection through device tree.
-> >   	 */
-> >   	int (*pwrap_read)(struct pmic_wrapper *wrp, u32 adr, u32 *rdata);
-> > +	int (*pwrap_write)(struct pmic_wrapper *wrp, u32 adr, u32 wdata);
+> > @@ -1109,7 +1110,7 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
+> >   	return IRQ_HANDLED;
+> >   }
+> >   
+> > -static const struct regmap_config pwrap_regmap_config = {
+> > +static const struct regmap_config pwrap_regmap_config16 = {
+> >   	.reg_bits = 16,
+> >   	.val_bits = 16,
+> >   	.reg_stride = 2,
+> > @@ -1118,9 +1119,19 @@ static const struct regmap_config pwrap_regmap_config = {
+> >   	.max_register = 0xffff,
 > >   };
 > >   
-> >   struct pmic_wrapper {
-> > @@ -600,22 +601,6 @@ static int pwrap_wait_for_state(struct pmic_wrapper *wrp,
-> >   	} while (1);
-> >   }
-> >   
-> > -static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
-> > -{
-> > -	int ret;
-> > -
-> > -	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
-> > -	if (ret) {
-> > -		pwrap_leave_fsm_vldclr(wrp);
-> > -		return ret;
-> > -	}
-> > -
-> > -	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
-> > -			PWRAP_WACS2_CMD);
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >   static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
-> >   {
-> >   	int ret;
-> > @@ -672,6 +657,49 @@ static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
-> >   	return wrp->slave->pwrap_read(wrp, adr, rdata);
-> >   }
-> >   
-> > +static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
-> > +{
-> > +	int ret;
+> > +static const struct regmap_config pwrap_regmap_config32 = {
+> > +	.reg_bits = 32,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +	.reg_read = pwrap_regmap_read,
+> > +	.reg_write = pwrap_regmap_write,
+> > +	.max_register = 0xffff,
+> > +};
 > > +
-> > +	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
-> > +	if (ret) {
-> > +		pwrap_leave_fsm_vldclr(wrp);
-> > +		return ret;
-> > +	}
-> > +
-> > +	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
-> > +		     PWRAP_WACS2_CMD);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pwrap_write32(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
-> > +{
-> > +	int ret, msb, rdata;
-> > +
-> > +	for (msb = 0; msb < 2; msb++) {
-> > +		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
-> > +		if (ret) {
-> > +			pwrap_leave_fsm_vldclr(wrp);
-> > +			return ret;
-> > +		}
-> > +
-> > +		pwrap_writel(wrp, (1 << 31) | (msb << 30) | (adr << 16) |
-> > +			     ((wdata >> (msb * 16)) & 0xffff),
-> > +			     PWRAP_WACS2_CMD);
-> > +
-> > +		if (!msb)
-> > +			pwrap_read(wrp, adr, &rdata);
+> >   static const struct pwrap_slv_type pmic_mt6323 = {
+> >   	.dew_regs = mt6323_regs,
+> >   	.type = PMIC_MT6323,
+> > +	.regmap = &pwrap_regmap_config16,
+> >   	.pwrap_read = pwrap_read16,
+> >   	.pwrap_write = pwrap_write16,
+> >   };
+> > @@ -1128,6 +1139,7 @@ static const struct pwrap_slv_type pmic_mt6323 = {
+> >   static const struct pwrap_slv_type pmic_mt6380 = {
+> >   	.dew_regs = NULL,
+> >   	.type = PMIC_MT6380,
+> > +	.regmap = &pwrap_regmap_config32,
+> >   	.pwrap_read = pwrap_read32,
+> >   	.pwrap_write = pwrap_write32,
+> >   };
+> > @@ -1135,6 +1147,7 @@ static const struct pwrap_slv_type pmic_mt6380 = {
+> >   static const struct pwrap_slv_type pmic_mt6397 = {
+> >   	.dew_regs = mt6397_regs,
+> >   	.type = PMIC_MT6397,
+> > +	.regmap = &pwrap_regmap_config16,
+> >   	.pwrap_read = pwrap_read16,
+> >   	.pwrap_write = pwrap_write16,
+> >   };
+> > @@ -1144,9 +1157,15 @@ static const struct of_device_id of_slave_match_tbl[] = {
+> >   		.compatible = "mediatek,mt6323",
+> >   		.data = &pmic_mt6323,
+> >   	}, {
+> > +		/* The MT6380 slave device is directly pointed to the regulator
+> > +		 * device which is different from the cases MT6323 and MT6397
+> > +		 * where they're one kind of MFDs.
+> > +		 */
+> > +		.compatible = "mediatek,mt6380-regulator",
+> > +		.data = &pmic_mt6380,
 > 
-> Just so that I understand, you have to read back the half-written register 
-> before you can write the second part?
+> I understand that mt6380 only provides a regulator and no other function other 
+> PMICs provide, right?
+
+> Then maybe write a comment like:
+> The MT6380 PMIC only implements a regulator, so we bind it directly instead of 
+> using a MFD. If so, we should state that in the pwrap bindings document, I think.
 > 
 
-Yup, the pwrap_read operation is the requirement of hardware used for
-the synchronization between two successive 16-bit pwrap_writel
-operations composing one 32-bit bus writing. Otherwise, we'll find the
-result fails for the lower 16-bit pwrap writing.
+You're right. It is worth making them better in both comments and the
+bindings document. I'll do it in the next version.
 
 
-> Other then that it looks fine to me.
-> 
 > Regards,
 > Matthias
 
