@@ -1,75 +1,152 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 15/22] firmware: arm_scmi: abstract mailbox interface
-Date: Thu, 12 Oct 2017 14:20:12 -0700
-Message-ID: <CAOCOHw7HOfnFZBpy6XmzGhDzbAczPJ0t8z_dyTYFz25U=Y9uEA@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-16-git-send-email-sudeep.holla@arm.com> <CAK8P3a0EUr_aEZdOrjHixzp44yXqsNxTMzBceSBTmk-x8x2MAg@mail.gmail.com>
- <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Thu, 12 Oct 2017 23:20:52 +0200
+Message-ID: <20171012212052.xkhbgdjrghmnvcfe@piout.net>
+References: <cover.1506049341.git.sean.wang@mediatek.com>
+ <5b2a7e5c9c5bc179f89e48fb614b2ae789be4254.1506049341.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com>
+Content-Disposition: inline
+In-Reply-To: <5b2a7e5c9c5bc179f89e48fb614b2ae789be4254.1506049341.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+To: sean.wang@mediatek.com
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 4:32 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
->
-> On 04/10/17 12:24, Arnd Bergmann wrote:
->> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> Some of the mailbox controller expects controller specific data in order
->>> to implement simple doorbell mechanism as expected by SCMI specification.
->>>
->>> This patch creates a shim layer to abstract the mailbox interface so
->>> that it can support any mailbox controller. It also provides default
->>> implementation which maps to standard mailbox client APIs, so that
->>> controllers implementing doorbell mechanism need not require any
->>> additional layer.
->>>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->>
->> Another level? Now we have three levels of stacked mailboxes, with
->> the highest level being the combined mailbox/memory, then the shim,
->> and below it the hardware mailbox.
->>
->> Can you try to come up with a way to do this with fewer abstractions?
->>
->
-> I completely agree with you. I was against this but Jassi recommended
-> this. I just wanted this SCMI to work with mailbox controllers that
-> support simple doorbell mechanism as specified in the specification but
-> Jassi disagrees with that.
->
->> Maybe you could assume that the mailbox itself can take variable-length
->> data packets, and then use the shim here for those that require
->> something else?
->>
->
-> As per SCMI specification, we pass all the data in shared memory and it
-> just expects to use a simple doorbell feature from hardware mailbox
-> controllers. It's done that way intentionally to avoid dependency on h/w
-> and we for sure will have variety of it and that defeats the purpose
-> of this standard specification.
->
-> Also, I have added shim only for specific controllers that need them.
-> E.g. ARM MHU as Jassi disagreed to add doorbell mechanism to that.
-> mbox_if provides default implementation that just calls direct mailbox
-> APIs.
->
+Hi,
 
-drivers/mailbox is a framework for interfacing/abstracting hardware
-mailboxes. If you're starting to layer mailboxes ontop of each-other
-chances are very high that you're confusing it with the computer
-science term "mailbox".
+On 22/09/2017 at 11:33:15 +0800, sean.wang@mediatek.com wrote:
+> diff --git a/drivers/rtc/rtc-mediatek.c b/drivers/rtc/rtc-mediatek.c
 
-Abstracting a doorbell-like piece of hardware behind the mbox
-framework makes a lot of sense, but the interface between your clients
-and the code that fills out shared memory and then invokes said
-doorbell is a higher level of "mailbox" and is probably better
-implemented using a direct function call.
+I'm pretty sure this should be named rtc-mt7622.c instead of
+rtc-mediatek.c, exactly for the same reason you have patch 3/4.
 
-Regards,
-Bjorn
+> +static void mtk_w32(struct mtk_rtc *rtc, u32 reg, u32 val)
+> +{
+> +	__raw_writel(val, rtc->base + reg);
+
+Do you really need the __raw accessors? What about running your SoC in
+BE mode? I guess the _relaxed version are fast enough.
+
+> +}
+> +
+> +static u32 mtk_r32(struct mtk_rtc *rtc, u32 reg)
+> +{
+> +	return __raw_readl(rtc->base + reg);
+> +}
+> +
+
+
+> +static void mtk_rtc_hw_init(struct mtk_rtc *hw)
+> +{
+> +	/* The setup of the init sequence is for allowing RTC got to work */
+> +	mtk_w32(hw, MTK_RTC_PWRCHK1, RTC_PWRCHK1_MAGIC);
+> +	mtk_w32(hw, MTK_RTC_PWRCHK2, RTC_PWRCHK2_MAGIC);
+> +	mtk_w32(hw, MTK_RTC_KEY, RTC_KEY_MAGIC);
+> +	mtk_w32(hw, MTK_RTC_PROT1, RTC_PROT1_MAGIC);
+> +	mtk_w32(hw, MTK_RTC_PROT2, RTC_PROT2_MAGIC);
+> +	mtk_w32(hw, MTK_RTC_PROT3, RTC_PROT3_MAGIC);
+> +	mtk_w32(hw, MTK_RTC_PROT4, RTC_PROT4_MAGIC);
+> +	mtk_rmw(hw, MTK_RTC_DEBNCE, RTC_DEBNCE_MASK, 0);
+> +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> +}
+> +
+> +static void mtk_rtc_get_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
+> +				      int time_alarm)
+> +{
+> +	u32 year, mon, mday, wday, hour, min, sec;
+> +
+> +	/*
+> +	 * Read again until all fields are not changed for all fields in the
+> +	 * consistent state.
+> +	 */
+> +	do {
+> +		year = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA));
+> +		mon = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON));
+> +		wday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW));
+> +		mday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM));
+> +		hour = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU));
+> +		min = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN));
+> +		sec = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC));
+> +	} while (year != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA)) ||
+> +		 mon != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON))  ||
+> +		 mday != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM))	||
+> +		 wday != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW))	||
+> +		 hour != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU))	||
+> +		 min != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN))	||
+> +		 sec != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC))
+> +		);
+
+I'm pretty sure only checking sec is enough because it is highly
+unlikely that 7 reads take a minute.
+
+> +static irqreturn_t mtk_rtc_alarmirq(int irq, void *id)
+> +{
+> +	struct mtk_rtc *hw = (struct mtk_rtc *)id;
+> +	u32 irq_sta;
+> +
+> +	/* Stop alarm also implicitly disable the alarm interrupt */
+> +	mtk_w32(hw, MTK_RTC_AL_CTL, 0);
+
+You stop the alarm here, before testing whether the alarm really
+happened.
+
+> +	irq_sta = mtk_r32(hw, MTK_RTC_INT);
+> +	if (irq_sta & RTC_INT_AL_STA) {
+> +		rtc_update_irq(hw->rtc, 1, RTC_IRQF | RTC_AF);
+> +
+> +		/* Ack alarm interrupt status */
+> +		mtk_w32(hw, MTK_RTC_INT, RTC_INT_AL_STA);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	return IRQ_NONE;
+> +}
+> +
+> +static int mtk_rtc_gettime(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> +
+> +	mtk_rtc_get_alarm_or_time(hw, tm, MTK_TC);
+> +
+> +	return rtc_valid_tm(tm);
+> +}
+> +
+> +static int mtk_rtc_settime(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> +
+> +	/* Stop time counter before setting a new one*/
+> +	mtk_set(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> +
+> +	/* Epoch == 1900 */
+> +	if (tm->tm_year < 100 || tm->tm_year > 199)
+> +		return -EINVAL;
+
+Year is a 32 bits register, what makes the RTC fail in 2100? Is it
+because of the leap year handling?
+
+> +static int mtk_rtc_setalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
+> +{
+> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> +	struct rtc_time *alrm_tm = &wkalrm->time;
+> +
+> +	/* Epoch == 1900 */
+> +	if (alrm_tm->tm_year < 100 || alrm_tm->tm_year > 199)
+> +		return -EINVAL;
+> +
+
+Ditto.
+
+> +
+> +	dev_info(&pdev->dev, "MediaTek SoC based RTC enabled\n");
+> +
+
+I think the rtc core is verbose enough that this message is not needed.
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
