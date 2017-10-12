@@ -1,160 +1,45 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/9] PCI: host: brcmstb: add DT docs for Brcmstb PCIe
- device
-Date: Wed, 11 Oct 2017 17:55:20 -0700
-Message-ID: <20171012005520.GA111185@google.com>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
- <1507761269-7017-3-git-send-email-jim2101024@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 12/12] ARM: dtsi: axp81x: set pinmux for
+ GPIO0/1 when used as LDOs
+Date: Thu, 12 Oct 2017 10:22:28 +0800
+Message-ID: <CAGb2v67c_67iS4MdR6kcB_To-wzUoTudpKgb6ZGPOHgsB5Jh=g@mail.gmail.com>
+References: <20171002120854.5212-1-quentin.schulz@free-electrons.com>
+ <20171002120854.5212-13-quentin.schulz@free-electrons.com>
+ <CACRpkdZYcSuhvn0b0qa0k1PQHoyXjNyjoyhR2sPme_t1pF12Dg@mail.gmail.com>
+ <20171003144737.rhgtp3uwckhvoqdw@flea> <CAGb2v64=XL34x7iGJcEmmVnmzkA5wmyZJd-g827bY=kdHcZOMA@mail.gmail.com>
+ <8be22e47-8071-be4c-0bd4-38fa51cbe3ff@free-electrons.com> <CAGb2v65-_MjUsfTHMoyzvczs_280p7NXEsStSaoR6wnvTCq5+A@mail.gmail.com>
+ <20171011120036.bvw5dpz4myngtwu7@flea> <CACRpkdY0GWqjkbxm=OBfRsTmkQ7kc86Dw96XUT08azSbD57Xrw@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1507761269-7017-3-git-send-email-jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7VD7PHAKGQESNLTG4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CACRpkdY0GWqjkbxm=OBfRsTmkQ7kc86Dw96XUT08azSbD57Xrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jim,
+On Thu, Oct 12, 2017 at 3:09 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Oct 11, 2017 at 2:00 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>
+>> What about not enforcing any muxing state when we want to mux to the
+>> "ldo" function? We just leave it to whatever value it is, that way we
+>> keep it under the regulator framework's control, and we don't disrupt
+>> anything when the pin is requested.
+>
+> In a way since setting the bits one way means "LDO on" and another
+> setting means "LDO off" those bits should be handled by the
+> regulator framework when used as a regulator, not pin control.
+>
+> So I would say yes.
 
-On Wed, Oct 11, 2017 at 06:34:22PM -0400, Jim Quinlan wrote:
-> The DT bindings description of the Brcmstb PCIe device is described.  This
-> node can be used by almost all Broadcom settop box chips, using
-> ARM, ARM64, or MIPS CPU architectures.
-> 
-> Signed-off-by: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/pci/brcmstb-pci.txt        | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/brcmstb-pci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcmstb-pci.txt b/Documentation/devicetree/bindings/pci/brcmstb-pci.txt
-> new file mode 100644
-> index 0000000..2f699da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcmstb-pci.txt
-> @@ -0,0 +1,106 @@
-> +Brcmstb PCIe Host Controller Device Tree Bindings
-> +
-> +Introduction:
-> +  The brcmstb host controller closely follows the example set in
-> +
-> +	[1] http://devicetree.org/Device_Tree_Usage#PCI_Host_Bridge
-> +
-> +  The rest of this document explains some added customizations and
-> +  offers an example Brcmstb PCIe host controller DT node.
-> +
-> +Required Properties:
-> +  reg -- the register start address and length for the PCIe block.
-> +      Additional start,length pairs may be specified for clock addresses.
-> +  interrupts -- two interrupts are specified; the first interrupt is for
-> +      the PCI host controller and the second is for MSI if the built-in
-> +      MSI controller is to be used.
-> +  interrupt-names -- names of the interrupts (above): "pcie" and "msi".
-> +  compatible -- must be one of: "brcm,bcm7425-pcie", "brcm,bcm7435-pcie",
-> +      or "brcm,bcm7278-pcie".
-> +  #address-cells -- the number of address cells for PCI-space.
-> +  #size-cells -- the number of size cells for PCI-space.
-> +  ranges -- See [1]; a specification of the outbound windows for the host
-> +      controller.  Each outbound window is described by a n-tuple:
-> +          (3 cells) -- PCIe space start address; one cell for attributes
-> +                       and two cells for the 64-bit PCIe address.
-> +          (x cells) -- CPU/System start address, number of cells is determined
-> +                       by the parent node's #address-cells.
-> +          (y cells) -- Size of region, number of cells determined by the
-> +                       parent node's #size-cells.
-> +      Due to hardware limitations, there may be a maximum of four
-> +      non-contiguous ranges specified.
-> +  #interrupt-cells -- number of cells used to describe the interrupt.
-> +  interrupt-map-mask -- see [1]; four cells, the first three are zero
-> +      for our uses and the fourth cell is the mask (val = 0x7) for
-> +      the legacy interrupt number [1..4].
-> +  interrupt-map -- See [1]; there are four interrupts (INTA, INTB,
-> +      INTC, and INTD) to be mapped; each interrupt requires 5 cells
-> +      plus the size of the interrupt specifier.
-> +  linux,pci-domain -- the domain of the host controller.
-> +
-> +Optional Properties:
-> +  clocks -- list of clock phandles.  If specified, this should list one
-> +      clock.
-> +  clock-names -- the "local" names of the clocks specified in 'clocks'.  Note
-> +      that if the 'clocks' property is given, 'clock-names' is mandatory,
-> +      and the name of the clock is expected to be "sw_pcie".
-> +  dma-ranges -- Similar in structure to ranges, each dma region is
-> +      specified with a n-tuple.  Dma-regions describe the inbound
-> +      accesses from EP to RC; it translates the pci address that the
-> +      EP "sees" to the CPU address in memory.  This property is needed
-> +      because the design of the Brcmstb memory subsystem often precludes
-> +      idenity-mapping between CPU address space and PCIe address space.
-> +      Each range is described by a n-tuple:
-> +          (3 cells) -- PCIe space start address; one cell for attributes
-> +                       and two cells for the 64-bit PCIe address.
-> +          (x cells) -- CPU/System start address, number of cells is determined
-> +                       by the parent node's #address-cells.
-> +          (y cells) -- Size of region, number of cells determined by the
-> +                       parent node's #size-cells.
-> +  msi-parent -- if MSI is to be used, this must be a phandle to the
-> +      msi-parent.  If this prop is set to the phandle of the PCIe
-> +      node, or if the msi-parent prop is missing, the PCIE controller
-> +      will attempt to use its built in MSI controller.
-> +  msi-controller -- this property should only be specified if the
-> +      PCIe controller is using its internal MSI controller.
-> +  brcm,ssc -- (boolean) indicates usage of spread-spectrum clocking.
-> +  brcm,gen --  (integer) indicates desired generation of link:
-> +      1 => 2.5 Gbps, 2 => 5.0 Gbps, 3 => 8.0 Gbps.
+I agree. That would be the best solution.
 
-Does this differ from the 'max-link-speed' now documented in
-Documentation/devicetree/bindings/pci/pci.txt? If not, might as well use
-it, and of_pci_get_max_link_speed().
-
-> +  supply-names -- the names of voltage regulators that the root
-> +      complex should turn off/on/on on suspend/resume/boot.  This
-> +      is a string list.
-> +  supplies -- A collection of phandles to a regulator nodes, see
-> +      Documentation/devicetree/bindings/regulator/ for specific
-> +      bindings. The number and order of phandles must match
-> +      exactly the number of strings in the "supply-names" property.
-> +
-> +Example Node:
-> +
-> +pcie0:	pcie@f0460000 {
-
-^^ You've got a tab after the colon. Makes this look funky in my
-vim/mutt :)
-
-Brian
-
-> +		reg = <0x0 0xf0460000 0x0 0x9310>;
-> +		interrupts = <0x0 0x0 0x4>;
-> +		compatible = "brcm,pci-plat-dev";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000
-> +			  0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-map = <0 0 0 1 &intc 0 47 3
-> +				 0 0 0 2 &intc 0 48 3
-> +				 0 0 0 3 &intc 0 49 3
-> +				 0 0 0 4 &intc 0 50 3>;
-> +		interrupt-names = "pcie_0_inta",
-> +				  "pcie_0_intb",
-> +				  "pcie_0_intc",
-> +				  "pcie_0_intd";
-> +		clocks = <&sw_pcie0>;
-> +		clock-names = "sw_pcie";
-> +		msi-parent = <&pcie0>;  /* use PCIe's internal MSI controller */
-> +		msi-controller;         /* use PCIe's internal MSI controller */
-> +		brcm,ssc;
-> +		brcm,gen = <1>;
-> +		supply-names = "vreg-wifi-pwr";
-> +		supplies = <&vreg-wifi-pwr>;
-> +		linux,pci-domain = <0>;
-> +	};
-> -- 
-> 1.9.0.138.g2de3478
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
