@@ -1,63 +1,35 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] arm64: dts: renesas: salvator-common: add dr_mode property for USB2.0 channel 0
-Date: Thu, 12 Oct 2017 18:23:30 +0900
-Message-ID: <1507800210-13403-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 11/13] ARM: dts: r8a7793: Add missing clock for secondary CA15 CPU core
+Date: Thu, 12 Oct 2017 11:35:14 +0200
+Message-ID: <1507800916-11509-12-git-send-email-geert+renesas@glider.be>
+References: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Since Salvator-X[S] have a USB2.0 dual-role channel (CN9), this patch
-adds dr_mode property for USB2.0 channel 0 (EHCI/OHCI and HS-USB)
-as "otg".
+Currently only the primary CPU in the CA15 cluster has a clocks
+property, while the secondary CPU core is driven by the same clock.
+Add the missing clocks property to fix this.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- This patch based on the renesas.git / renesas-devel-20171011-v4.14-rc4 tag.
+ arch/arm/boot/dts/r8a7793.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
- Using dual-role channel (or not) is related to the type of USB receptor on
- board specification. So, I added the property into the salvator-common.dtsi.
-
- This property will be used by phy-rcar-gen3-usb2 driver in the future [1].
- However, adding this property without the [1] patch will not cause any
- side-effects.
-
- [1] : https://patchwork.kernel.org/patch/10001113/
-
-
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 3dcb26b..9bd409b 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -282,6 +282,7 @@
- };
- 
- &ehci0 {
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
-@@ -294,6 +295,7 @@
- };
- 
- &hsusb {
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
-@@ -356,6 +358,7 @@
- };
- 
- &ohci0 {
-+	dr_mode = "otg";
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
+index af91c88e3b5b2482..33a1b79f9b25f30c 100644
+--- a/arch/arm/boot/dts/r8a7793.dtsi
++++ b/arch/arm/boot/dts/r8a7793.dtsi
+@@ -62,6 +62,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 			clock-frequency = <1500000000>;
++			clocks = <&cpg CPG_CORE R8A7793_CLK_Z>;
+ 			power-domains = <&sysc R8A7793_PD_CA15_CPU1>;
+ 		};
  
 -- 
-1.9.1
+2.7.4
