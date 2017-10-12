@@ -1,62 +1,70 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v6 0/4] phy: rcar-gen3-usb2: add support for r8a77995
-Date: Thu, 12 Oct 2017 15:34:44 +0900
-Message-ID: <1507790088-26010-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v6 1/4] phy: rcar-gen3-usb2: check dr_mode for otg mode
+Date: Thu, 12 Oct 2017 15:34:45 +0900
+Message-ID: <1507790088-26010-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1507790088-26010-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507790088-26010-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on the latest phy.git / next branch
-(the commit id = 415060b21f318e009d865b4bcbf8f220ebc36964)
+The previous code assumed a channel has otg capability if a channel
+has interrupt property. But, it is not good because:
+ - Battery charging feature also needs interrupt property.
+ - Some R-Car Gen3 SoCs (e.g. R-Car D3) don't have OTG capability.
 
-After this patch set is applied, a usb 2.0 host node that is combined
-with usb 2.0 peripheral needs 'dr_mode = "otg";' property.
+So, this patch checks whether usb 2.0 host node has dr_mode property or
+not. If it has 'dr_mode = "otg";', this driver enables otg capability.
 
-Changes from v5:
- - Add "Reviewed-by:" into patch 2. (Simon-san, Thanks!)
- - Remove unnecessary "else" in rcar_gen3_get_phy_mode() in patch 2.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Changes from v4:
- - Remove the role_show() modification in patch 2.
- - Remove a new function rcar_gen3_otg_change_role() in patch 2 because adding
-   this will be complecated patch code and this is unnecessary for now.
- - Add a new function rcar_gen3_get_phy_mode() to get current phy mode
-   for comparing the new mode into a line in patch 2.
- - Rebase patch 3.
-
-Changes from v3:
- - Use enum phy_mode in patch 2.
- - Remove "can_role_swap" parameter and revise the commit log in patch 2
-   because a case of "can_role_swap = true" and "has_otg = false" is
-   not supported for role swap at the moment.
- - Changes the name of "has_otg" to "has_otg_pins" in patch 3.
- - Use of_device_get_match_data() instead of of_match_device()
- - Add "Reviewed-by:" into patch No.1, 3 and 4. (Simon-san, Thanks!)
-  - Since patch No.2 is changed in big at v4, I dropped his "Reviewed-by".
-
-Changes from v2:
- - Revise the commit log ("SoCs" is not third-person singular present).
-
-Changes from v1:
- - Revise typo "wronly" to "wrongly".
- - Remove RCAR_GEN3_PHY_HAS_DEDICATED_PINS from generic gen3 entry in
-   patch 3/4
- - Remove the driver change from patch 4/4.
- - Revise the commit log of patch 4/4.
-
-Yoshihiro Shimoda (4):
-  phy: rcar-gen3-usb2: check dr_mode for otg mode
-  phy: rcar-gen3-usb2: use enum phy_mode in the role_store()
-  phy: rcar-gen3-usb2: add SoC-specific parameter for dedicated pins
-  phy: rcar-gen3-usb2: add binding for r8a77995
-
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 70 ++++++++++++++--------
- 2 files changed, 48 insertions(+), 24 deletions(-)
-
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 54c3429..e00e99a 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -1,7 +1,7 @@
+ /*
+  * Renesas R-Car Gen3 for USB2.0 PHY driver
+  *
+- * Copyright (C) 2015 Renesas Electronics Corporation
++ * Copyright (C) 2015-2017 Renesas Electronics Corporation
+  *
+  * This is based on the phy-rcar-gen2 driver:
+  * Copyright (C) 2014 Renesas Solutions Corp.
+@@ -22,6 +22,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/usb/of.h>
+ #include <linux/workqueue.h>
+ 
+ /******* USB2.0 Host registers (original offset is +0x200) *******/
+@@ -415,13 +416,16 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	/* call request_irq for OTG */
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq >= 0) {
+-		int ret;
+-
+ 		INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
+ 		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
+ 				       IRQF_SHARED, dev_name(dev), channel);
+ 		if (irq < 0)
+ 			dev_err(dev, "No irq handler (%d)\n", irq);
++	}
++
++	if (of_usb_get_dr_mode_by_phy(dev->of_node, 0) == USB_DR_MODE_OTG) {
++		int ret;
++
+ 		channel->has_otg = true;
+ 		channel->extcon = devm_extcon_dev_allocate(dev,
+ 							rcar_gen3_phy_cable);
 -- 
 1.9.1
