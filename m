@@ -1,69 +1,50 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: mvebu: dts: connect interrupt for WD on armada-38x
-Date: Thu, 12 Oct 2017 16:16:58 +0200
-Message-ID: <874lr4bgdh.fsf@free-electrons.com>
-References: <20171011022958.31268-1-chris.packham@alliedtelesis.co.nz>
-        <20171011022958.31268-4-chris.packham@alliedtelesis.co.nz>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] pinctrl: mcp23s08: remove hardcoded irq polarity
+ in irq_setup
+Date: Thu, 12 Oct 2017 22:27:15 +0800
+Message-ID: <de907c7d-23e0-e139-654c-f1b83e93d5ec@electromag.com.au>
+References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
+ <1507266491-73971-7-git-send-email-preid@electromag.com.au>
+ <CACRpkdaWNthg5OU3ZiSKjPe59cJF5A6jucQ=3bQdz3uAsJ=3dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171011022958.31268-4-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
-        Packham's message of "Wed, 11 Oct 2017 15:29:58 +1300")
+In-Reply-To: <CACRpkdaWNthg5OU3ZiSKjPe59cJF5A6jucQ=3bQdz3uAsJ=3dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-AU
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On mer., oct. 11 2017, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
+On 12/10/2017 17:04, Linus Walleij wrote:
+> On Fri, Oct 6, 2017 at 7:08 AM, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
+> 
+>> The polarity of the irq could be altered
+>> by additional logic (eg inverters) between the device and irq input device.
+> 
+> Marc Zyngier has pointed out that inverters should be modeled
+> using hierarchichal irq domains. You would need to add a new
+> irqchip to invert the line.
+> 
+> See this PDF:
+> https://elinux.org/images/8/8c/Zyngier.pdf
+> 
+> drivers/irqchips/irq-uniphier-aidet.c supports inversion of IRQs
+> for example. For this it uses irq_domain_create_hierarchy()
+> 
+> I guess it would be helpful with a reusable generic "inverter
+> irq chip", that you can just enable and slam into your device
+> tree to tell the system that a line is statically inverted, i.e.
+> non-programmable logic on the board.
+> 
+G'day Linus.
+Thanks for the pointers, I'll see what I can come up with.
 
-> The watchdog timer interrupt is available internally on the Armada-38x
-> SoCs. Connect it so that we can have the orion_wdt_irq generate debug
-> information when a watchdog timeout occurs.
-
-Given the patch 2, when an interrupt is provided by the dt, then the
-behavior of the watchdog changes. So we can't do it for all the
-platform.
-
-As you propose on your cover letter it is better to set it at board
-level.
-
-So instead of this patch you should update the binding documentation
-with this new resources. Thanks to this each board developer will be
-able to decide to use this feature or not.
-
-Thanks,
-
-Gregory
-
->
-> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-38x.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 7ff0811e61db..9ac76c54c9e5 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -408,6 +408,7 @@
->  				reg = <0x20300 0x34>, <0x20704 0x4>, <0x18260 0x4>;
->  				clocks = <&coreclk 2>, <&refclk>;
->  				clock-names = "nbclk", "fixed";
-> +				interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
->  			};
->  
->  			cpurst: cpurst@20800 {
-> -- 
-> 2.14.2
->
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Regards
+Phil Reid
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
