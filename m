@@ -1,78 +1,128 @@
-From: "M.h. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 0/5] arm64: add ls1012a and ls1046a pcie support
-Date: Thu, 12 Oct 2017 03:12:47 +0000
-Message-ID: <VI1PR04MB16157ABDE174A8DD1567173CE84B0@VI1PR04MB1615.eurprd04.prod.outlook.com>
-References: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com>
- <20171011185719.GL25517@bhelgaas-glaptop.roam.corp.google.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 5/9] soc: mediatek: pwrap: add pwrap_write32 for
+ writing in 32-bit mode
+Date: Thu, 12 Oct 2017 11:19:55 +0800
+Message-ID: <1507778395.21840.15.camel@mtkswgap22>
+References: <cover.1502779753.git.sean.wang@mediatek.com>
+         <236a04acb383fc655549bc345a16a2d015e5727d.1502779753.git.sean.wang@mediatek.com>
+         <d34460e3-9233-3c31-578d-cf2fe91a4316@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171011185719.GL25517-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <d34460e3-9233-3c31-578d-cf2fe91a4316-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Tue, 2017-10-10 at 11:38 +0200, Matthias Brugger wrote:
+> 
+> On 08/15/2017 11:09 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Some regulators such as MediaTek MT6380 also has to be written in
+> > 32-bit mode. So the patch adds pwrap_write32, rename old pwrap_write
+> > into pwrap_write16 and one additional function pointer is introduced
+> > for increasing flexibility allowing the determination which mode is
+> > used by the pwrap slave detection through device tree.
+> > 
+> > Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   drivers/soc/mediatek/mtk-pmic-wrap.c | 63 +++++++++++++++++++++++++++---------
+> >   1 file changed, 47 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > index 7cd581b..9d1f4c6 100644
+> > --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > @@ -506,6 +506,7 @@ struct pwrap_slv_type {
+> >   	 * which type is used by the detection through device tree.
+> >   	 */
+> >   	int (*pwrap_read)(struct pmic_wrapper *wrp, u32 adr, u32 *rdata);
+> > +	int (*pwrap_write)(struct pmic_wrapper *wrp, u32 adr, u32 wdata);
+> >   };
+> >   
+> >   struct pmic_wrapper {
+> > @@ -600,22 +601,6 @@ static int pwrap_wait_for_state(struct pmic_wrapper *wrp,
+> >   	} while (1);
+> >   }
+> >   
+> > -static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+> > -{
+> > -	int ret;
+> > -
+> > -	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
+> > -	if (ret) {
+> > -		pwrap_leave_fsm_vldclr(wrp);
+> > -		return ret;
+> > -	}
+> > -
+> > -	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
+> > -			PWRAP_WACS2_CMD);
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >   static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+> >   {
+> >   	int ret;
+> > @@ -672,6 +657,49 @@ static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+> >   	return wrp->slave->pwrap_read(wrp, adr, rdata);
+> >   }
+> >   
+> > +static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
+> > +	if (ret) {
+> > +		pwrap_leave_fsm_vldclr(wrp);
+> > +		return ret;
+> > +	}
+> > +
+> > +	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
+> > +		     PWRAP_WACS2_CMD);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int pwrap_write32(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+> > +{
+> > +	int ret, msb, rdata;
+> > +
+> > +	for (msb = 0; msb < 2; msb++) {
+> > +		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
+> > +		if (ret) {
+> > +			pwrap_leave_fsm_vldclr(wrp);
+> > +			return ret;
+> > +		}
+> > +
+> > +		pwrap_writel(wrp, (1 << 31) | (msb << 30) | (adr << 16) |
+> > +			     ((wdata >> (msb * 16)) & 0xffff),
+> > +			     PWRAP_WACS2_CMD);
+> > +
+> > +		if (!msb)
+> > +			pwrap_read(wrp, adr, &rdata);
+> 
+> Just so that I understand, you have to read back the half-written register 
+> before you can write the second part?
+> 
 
-I greatly appreciate for your review and picking up them.
+Yup, the pwrap_read operation is the requirement of hardware used for
+the synchronization between two successive 16-bit pwrap_writel
+operations composing one 32-bit bus writing. Otherwise, we'll find the
+result fails for the lower 16-bit pwrap writing.
 
-Acked-by: Minghuan Lian <minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
+
+> Other then that it looks fine to me.
+> 
+> Regards,
+> Matthias
 
 
-> -----Original Message-----
-> From: Bjorn Helgaas [mailto:helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, October 12, 2017 2:57 AM
-> To: Z.q. Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linuxppc-
-> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; marc.zyngier-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> mark.rutland-5wv7dgnIgG8@public.gmane.org; bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>; M.h. Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>; Roy
-> Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>; Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>; Jason
-> Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Subject: Re: [PATCH 0/5] arm64: add ls1012a and ls1046a pcie support
->=20
-> On Tue, Sep 19, 2017 at 05:26:53PM +0800, Zhiqiang Hou wrote:
-> > From: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-> >
-> > This patch set adds ls1012a MSI and PCIe support, including driver and
-> > device tree nodes. The ls1046a's MSI support patch and PCIe driver
-> > patch has been applied, so only adds the PCIe device tree nodes.
-> >
-> > Hou Zhiqiang (5):
-> >   irqchip/ls-scfg-msi: add LS1012a MSI support
-> >   arm64: dts: ls1012a: Add MSI controller DT node
-> >   PCI: layerscape: Add support for ls1012a
-> >   arm64: dts: ls1012a: Add PCIe controller DT node
-> >   arm64: dts: ls1046a: add PCIe controller DT nodes
-> >
-> >  .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
-> >  .../devicetree/bindings/pci/layerscape-pci.txt     |  1 +
-> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 31 +++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 75
-> ++++++++++++++++++++++
-> >  drivers/irqchip/irq-ls-scfg-msi.c                  |  1 +
-> >  drivers/pci/dwc/pci-layerscape.c                   |  1 +
-> >  6 files changed, 110 insertions(+)
->=20
-> I'm not 100% sure who should take these.  They trivially touch PCI and I =
-haven't
-> seen anybody else respond, so I put them on pci/host-layerscape with Rob'=
-s acks.
->=20
-> If somebody else wants to take them, just let me know and I'll drop them.
->=20
-> They really should be acked by Minghuan or Mingkai, who are listed as the
-> maintainers of drivers/pci/dwc/pci-layerscape.c and are presumably respon=
-sible
-> for the related dtsi files, too.
->=20
-> Thomas, Jason, and Marc are listed as maintainers of drivers/irqchip/irq-=
-ls-scfg-
-> msi.c.  It's a trivial change, but I added them to the cc list.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
