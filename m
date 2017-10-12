@@ -1,148 +1,62 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: media: Binding document for Qualcomm
- Camera Control Interface driver
-Date: Thu, 12 Oct 2017 17:50:03 +0300
-Message-ID: <e8bbc79a-6224-8ae3-78de-e1207c7718a4@linaro.org>
-References: <1506953613-23875-1-git-send-email-todor.tomov@linaro.org>
- <1506953613-23875-2-git-send-email-todor.tomov@linaro.org>
- <20171006052954.GC1575@tuxbook>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20171006052954.GC1575@tuxbook>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] nvmem: meson: use generic compatible
+Date: Thu, 12 Oct 2017 17:24:50 +0200
+Message-ID: <20171012152450.12454-1-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+The meson efuse driver seems to be compatible with more SoCs than
+initially thought. Let's use the most generic compatible he have in
+DT instead of the gxbb specific one
 
-Thank you for the review.
+Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
+ drivers/nvmem/meson-efuse.c                               | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-On  6.10.2017 08:29, Bjorn Andersson wrote:
-> On Mon 02 Oct 07:13 PDT 2017, Todor Tomov wrote:
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
->> new file mode 100644
->> index 0000000..f4c5338
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
->> @@ -0,0 +1,55 @@
->> +Qualcomm Camera Control Interface I2C controller
-> 
-> Well, it's not a I2C controller, it is a MIPI CCI controller.
-> 
->> +
->> +Required properties:
->> + - compatible: Should be one of:
->> +   - "qcom,cci-v1.0.8" for 8916;
->> +   - "qcom,cci-v1.4.0" for 8996.
->> + - #address-cells: Should be <1>.
->> + - #size-cells: Should be <0>.
->> + - reg: Base address of the controller and length of memory mapped region.
->> + - reg-names: Should be "cci".
-> 
-> No need for reg-names, as we only have one.
-> 
->> + - interrupts: Specifier for CCI interrupt.
->> + - interrupt-names: Should be "cci".
-> 
-> No need for interrupt-names, as we only have one.
-> 
->> + - clocks: List of clock specifiers, one for each entry in clock-names.
->> + - clock-names: Should contain:
->> +   - "mmss_mmagic_ahb" - on 8996 only;
->> +   - "camss_top_ahb";
->> +   - "cci_ahb";
->> +   - "cci";
->> +   - "camss_ahb".
->> + - pinctrl-names: Should contain only one value - "default".
->> + - pinctrl-0: Pin control group to be used for this controller.
-> 
-> No need to document that the node can have the default pinctrl
-> properties.
-> 
->> +
->> +
->> +Required properties on 8996:
->> + - power-domains: Power domain specifier.
->> +
->> +Optional:
->> + - clock-frequency: Desired I2C bus clock frequency in Hz, defaults to 100 kHz
->> +   if omitted.
->> +
->> +Example:
->> +
->> +                cci: qcom,cci@a0c000 {
-> 
-> Don't do qcom, in the node name, and there's probably no reason to have
-> a label for this node either. So just make it
-> 
-> 		   cci@a0c000 {
-> 
->> +                        compatible = "qcom,cci-v1.4.0";
->> +                        #address-cells = <1>;
->> +                        #size-cells = <0>;
->> +                        reg = <0xa0c000 0x1000>;
->> +                        reg-names = "cci";
->> +                        interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
->> +                        interrupt-names = "cci";
->> +                        power-domains = <&mmcc CAMSS_GDSC>;
->> +                        clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
->> +                                        <&mmcc CAMSS_TOP_AHB_CLK>,
->> +                                        <&mmcc CAMSS_CCI_AHB_CLK>,
->> +                                        <&mmcc CAMSS_CCI_CLK>,
->> +                                        <&mmcc CAMSS_AHB_CLK>;
->> +                        clock-names = "mmss_mmagic_ahb",
->> +                                        "camss_top_ahb",
->> +                                        "cci_ahb",
->> +                                        "cci",
->> +                                        "camss_ahb";
->> +                        pinctrl-names = "default";
->> +                        pinctrl-0 = <&cci0_default>;
->> +                        clock-frequency = <400000>;
->> +                };
-> 
-> In the case of this single cci block having two masters we need a way to
-> describe the two sets of clients. I think the two options we have are:
-> 
-> cci {
-> 	client {
-> 		reg = <0 0x2c>;
-> 	};
-> };
-> 
-> The reg here being <master address>
-> 
-> or:
-> 
-> cci {
-> 	master0 {
-> 		client {
-> 			reg = <0x2c>;
-> 		};
-> 	};
-> };
-> 
-> The name "master0" could be made significant and picked up by name, and
-> in the case of single-master this level could be omitted.
-> 
-> 
-> I like the first one, but it looks really hard to get implemented in
-> Linux, based on the i2c core's expectation that #address-cells is 1. So
-> I think the latter is the favourable option.
-
-Yes, I'll try this for the version which supports the second bus. Thank
-you for this suggestion.
-
-The rest of the points I'll fix now and send a v2.
-
-> 
-> Regards,
-> Bjorn
-> 
-
+diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+index fafd85bd67a6..0260524292fe 100644
+--- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
++++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+@@ -1,7 +1,7 @@
+ = Amlogic eFuse device tree bindings =
+ 
+ Required properties:
+-- compatible: should be "amlogic,meson-gxbb-efuse"
++- compatible: should be "amlogic,meson-gx-efuse"
+ 
+ = Data cells =
+ Are child nodes of eFuse, bindings of which as described in
+@@ -10,7 +10,7 @@ bindings/nvmem/nvmem.txt
+ Example:
+ 
+ 	efuse: efuse {
+-		compatible = "amlogic,meson-gxbb-efuse";
++		compatible = "amlogic,meson-gx-efuse";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
+index 70bfc9839bb2..e90c6d68a263 100644
+--- a/drivers/nvmem/meson-efuse.c
++++ b/drivers/nvmem/meson-efuse.c
+@@ -44,7 +44,7 @@ static struct nvmem_config econfig = {
+ };
+ 
+ static const struct of_device_id meson_efuse_match[] = {
+-	{ .compatible = "amlogic,meson-gxbb-efuse", },
++	{ .compatible = "amlogic,meson-gx-efuse", },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, meson_efuse_match);
 -- 
-Best regards,
-Todor Tomov
+2.13.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
