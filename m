@@ -1,24 +1,38 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-gxm: enable HS400 on the vim2
-Date: Wed, 11 Oct 2017 17:22:24 -0700
-Message-ID: <7hk201fc5b.fsf@baylibre.com>
-References: <20171010141822.16266-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171010141822.16266-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Tue, 10 Oct 2017 16:18:22 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] phy: brcm-sata: Allow RX equalizer tuning
+Date: Wed, 11 Oct 2017 17:53:09 -0700
+Message-ID: <20171012005312.17363-1-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+Hi Kishon,
 
-> Enable HS400 high speed eMMC mode on the khadas vim2
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+This patch series allows the tuning of the PHY RX equalizer which may
+be necessary for particular board designs to pass compliance testing.
 
-Applied to v4.15/dt64,
+This is based off your next branch.
 
-Kevin
+Please apply!
+
+Thank you
+
+Florian Fainelli (3):
+  dt-bindings: phy: Add RX equalizer properties for Broadcom SATA PHY
+  phy: brcm-sata: Prepare for doing more tuning
+  phy: brcm-sata: Allow RX equalizer tuning
+
+ .../devicetree/bindings/phy/brcm-sata-phy.txt      | 11 +++-
+ drivers/phy/broadcom/phy-brcm-sata.c               | 74 +++++++++++++++++++++-
+ 2 files changed, 83 insertions(+), 2 deletions(-)
+
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
