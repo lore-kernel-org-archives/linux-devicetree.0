@@ -1,149 +1,108 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/16] serial: mvebu-uart: support probe of multiple ports
-Date: Thu, 12 Oct 2017 14:22:18 +0200
-Message-ID: <87vajkblol.fsf@free-electrons.com>
-References: <20171006101344.15590-1-miquel.raynal@free-electrons.com>
-        <20171006101344.15590-5-miquel.raynal@free-electrons.com>
-        <87poa0foro.fsf@free-electrons.com> <20171009091711.528adddd@xps13>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 09/18] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
+Date: Thu, 12 Oct 2017 14:27:01 +0200
+Message-ID: <CAMuHMdWSa2tOoSxnc+4gY3gnmQ8s-w=4UEVF3Z+F3DekBbJ2Ow@mail.gmail.com>
+References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1504737377-23191-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX1FZ3_iKCMRkDozsn7QzEmmvuUzkjq5Hn9+L42F=X7sQ@mail.gmail.com>
+ <806c5e8e-af85-e73b-a7a4-44ebf82dee7e@cogentembedded.com> <CAMuHMdXL1P5vhoBU9W+S1qX8maXLRmyg88cjgbYpCGZSQ1FBtQ@mail.gmail.com>
+ <1c5fc090-af98-0041-be8b-b06dc81d4670@cogentembedded.com> <TY1PR06MB09924AF4CBC4D1F39FD38926D84B0@TY1PR06MB0992.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171009091711.528adddd@xps13> (Miquel RAYNAL's message of "Mon,
-        9 Oct 2017 09:17:11 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB09924AF4CBC4D1F39FD38926D84B0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: batareich batareich <vladimir.barinov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On lun., oct. 09 2017, Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hi Shimoda-san,
 
-> On Fri, 06 Oct 2017 14:23:55 +0200
-> Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->
->> Hi Miquel,
->>  
->>  On ven., oct. 06 2017, Miquel Raynal
->> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> 
->> > From: Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Thu, Oct 12, 2017 at 1:41 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>> From: Vladimir Barinov, Sent: Saturday, October 7, 2017 2:29 AM
+>> On 06.10.2017 10:15, Geert Uytterhoeven wrote:
+>> > CC Shimoda-san
 >> >
->> > Until now, the mvebu-uart driver only supported probing a single
->> > UART port. However, some platforms have multiple instances of this
->> > UART controller, and therefore the driver should support multiple
->> > ports.
+>> > On Fri, Oct 6, 2017 at 4:38 AM, Vladimir Barinov
+>> > <vladimir.barinov@cogentembedded.com> wrote:
+>> >> On 20.09.2017 15:59, Geert Uytterhoeven wrote:
+>> >>> On Thu, Sep 7, 2017 at 12:36 AM, Vladimir Barinov
+>> >>> <vladimir.barinov@cogentembedded.com> wrote:
+>> >>>> This supports USB2 PHY channel #0 on ULCB Kingfisher board
+>> >>>>
+>> >>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> >>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> >>>
+>> >>>> index ca8de1a..0854600 100644
+>> >>>> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+>> >>>> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+>> >>>> @@ -60,6 +60,11 @@
+>> >>>>                   groups = "scif1_data_b";
+>> >>>>                   function = "scif1";
+>> >>>>           };
+>> >>>> +
+>> >>>> +       usb0_pins: usb0 {
+>> >>>> +               groups = "usb0";
+>> >>>> +               function = "usb0";
+>> >>>> +       };
+>> >>>>    };
+>> >>>>
+>> >>>>    &scif1 {
+>> >>>> @@ -68,3 +73,10 @@
+>> >>>>
+>> >>>>           status = "okay";
+>> >>>>    };
+>> >>>> +
+>> >>>> +&usb2_phy0 {
+>> >>>> +       pinctrl-0 = <&usb0_pins>;
+>> >>>> +       pinctrl-names = "default";
+>> >>>> +
+>> >>> Don't you need
+>> >>>
+>> >>>       vbus-supply = <&vbus0_usb2>;
+>> >>>
+>> >>> with vbus0_usb2 a fixed regulator controlled by GPIO P11 (OTG_EXTLPn) from
+>> >>> GPIO expander U11 (TCA9539)?
+>> >>> May be optional, though. salvator-common.dtsi has it.
+>> >> Yes, I need this gpio.
+>> >> I need both OTG_EXTLPn and OTG_OFFVBUSn from the same gpio expander.
+>> >>
+>> >> I've been considering to use either vbus-supply + gpio hog or use gpio hog
+>> >> for both of them for consistency.
+>> >> What do you think about this?
+>> > For OTG_EXTLPn you don't really need a hog, as it will be controlled by the
+>> > USB driver/subsystem, like on Salvator-X(S), right?
+>> Agreed.
 >> >
->> > In order to achieve this, we make sure to assign port->line
->> > properly, instead of hardcoding it to zero.
->> >
->> > Signed-off-by: Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> > ---
->> >  drivers/tty/serial/mvebu-uart.c | 13 +++++++++++--
->> >  1 file changed, 11 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/tty/serial/mvebu-uart.c
->> > b/drivers/tty/serial/mvebu-uart.c index 7e0a3e9fee15..25b11ede3a97
->> > 100644 --- a/drivers/tty/serial/mvebu-uart.c
->> > +++ b/drivers/tty/serial/mvebu-uart.c
->> > @@ -560,7 +560,16 @@ static int mvebu_uart_probe(struct
->> > platform_device *pdev) return -EINVAL;
->> >  	}
->> >  
->> > -	port = &mvebu_uart_ports[0];
->> > +	if (pdev->dev.of_node)
->> > +		pdev->id = of_alias_get_id(pdev->dev.of_node,
->> > "serial");  
->> 
->> If the id is retrieved using an of_ function, then I think that the
->> driver would depend on OF_CONFIG.
+>> > For OTG_OFFVBUSn, which is (optionally) driven from USB0_PWEN on
+>> > Salvator-X(S) I don't know if you need a GPIO hog or not. I have to defer your
+>> > question to Shimoda-san.
 >
-> Is this okay?
+> I'm sorry for the delayed response.
+> I think OTG_OFFVBUSn should be low level to avoid conflict 5V supply from U13's OUT pins.
 >
-> if (pdev->dev.of_node && IS_ENABLED(CONFIG_OF))
->         pdev->id = of_alias_get_id(pdev->dev.of_node, "serial");
-
-Actually if CONFIG_OF is not enabled, then dev->dev.of_node. So you can
-keep the test but just remove the test on IS_ENABLED(CONFIG_OF).
-
-But my remark about CONFIG_OF, was more to point that if there is no
-device tree support then this part of code won't work well if you have
-several ports using the same driver.
-
-So either you keep your driver as is but make it depends on CONFIG_OF to
-make it clear that it won't work with ACPI. Or you add the case for
-ACPI, but I think you don't have a board with ACPI support so you won't
-be able to test it.
-
-A third solution would be to have a fallback when of_alias_get_id failed
-(either because there is no alias in the device tree or there is no
-device tree at all). In this case you can just increment the id for each
-new port.
-
-Gregory
-
-
-> else
->         pdev->id = 0;
+>> This pin should be tied permanently low to disable internal MAX3355
+>> internal VBUS charge pump.
 >
-> BTW, I could not test without CONFIG_OF as it is defined by default in
-> our case: Selected by: ARM64 [=y]
-> I don't think there will be a 32-bit SoC with this UART IP?
->
-> Thanks,
-> Miquèl
->
->> 
->> Gregory
->> 
->> 
->> > +
->> > +	if (pdev->id >= MVEBU_NR_UARTS) {
->> > +		dev_err(&pdev->dev, "cannot have more than %d UART
->> > ports\n",
->> > +			MVEBU_NR_UARTS);
->> > +		return -EINVAL;
->> > +	}
->> > +
->> > +	port = &mvebu_uart_ports[pdev->id];
->> >  
->> >  	spin_lock_init(&port->lock);
->> >  
->> > @@ -572,7 +581,7 @@ static int mvebu_uart_probe(struct
->> > platform_device *pdev) port->fifosize   = 32;
->> >  	port->iotype     = UPIO_MEM32;
->> >  	port->flags      = UPF_FIXED_PORT;
->> > -	port->line       = 0; /* single port: force line number
->> > to  0 */
->> > +	port->line       = pdev->id;
->> >  
->> >  	port->irq        = irq->start;
->> >  	port->irqflags   = 0;
->> > -- 
->> > 2.11.0
->> >
->> >
->> > _______________________________________________
->> > linux-arm-kernel mailing list
->> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel  
->> 
->
->
->
-> -- 
-> Miquel Raynal, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+> I agree.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+OK.
+
+>> Hence probably gpio hog is enough for OTG_OFFVBUSn.
+>
+> I'm afraid but I don't understand this "gpio hog" means.
+
+"gpio hog" is a means to tie a GPIO to a specific level, cfr.
+Documentation/devicetree/bindings/gpio/gpio.txt.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
