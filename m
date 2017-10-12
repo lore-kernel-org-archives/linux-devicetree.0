@@ -1,35 +1,42 @@
 From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH 0/3] PCI: rockchip: assert PERST# in S3
-Date: Thu, 12 Oct 2017 13:52:17 -0700
-Message-ID: <20171012205220.130048-1-briannorris@chromium.org>
+Subject: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend property
+Date: Thu, 12 Oct 2017 13:52:18 -0700
+Message-ID: <20171012205220.130048-2-briannorris@chromium.org>
+References: <20171012205220.130048-1-briannorris@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171012205220.130048-1-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Rajat Jain <rajatja@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The patch is self-descriptive. I've found that we may need
+platform-specific behavior for the PERST# signal in system suspend,
+depending on the type of PCIe endpoints are attached.
 
-This patch series should mostly be self-descriptive, but it's motivated by the
-fact that I've found differing requirements from PCIe endpoint makers regarding
-the state of PERST# when in system suspend (S3). Additionally, some existing
-boards are not especially well suited for holding PERST# low in S3 (e.g., the
-pin is driven by a non-PMU GPIO, so it's hard or impossible to keep it
-asserted). So the solution is...give it a device tree property!
-
-Brian
-
-Brian Norris (3):
-  Documentation/devicetree: Add pcie-reset-suspend property
-  of/pci: Add of_pci_get_pcie_reset_suspend() to parse
-    pcie-reset-suspend
-  PCI: rockchip: Support configuring PERST# state via DT
-
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
- drivers/of/of_pci.c                           | 25 +++++++++++++++++++++++++
- drivers/pci/host/pcie-rockchip.c              |  7 +++++++
- include/linux/of_pci.h                        |  7 +++++++
- 4 files changed, 50 insertions(+)
+ 1 file changed, 11 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+index c77981c5dd18..91339b6d0652 100644
+--- a/Documentation/devicetree/bindings/pci/pci.txt
++++ b/Documentation/devicetree/bindings/pci/pci.txt
+@@ -24,3 +24,14 @@ driver implementation may support the following properties:
+    unsupported link speed, for instance, trying to do training for
+    unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+    for gen2, and '1' for gen1. Any other values are invalid.
++- pcie-reset-suspend:
++   If present this property defines whether the PCIe Reset signal (referred to
++   as PERST#) should be asserted when the system enters low-power suspend modes
++   (e.g., S3). Depending on the form factor, the associated PCIe
++   electromechanical specification may specify a particular behavior (e.g.,
++   "PERST# is asserted in advance of the power being switched off in a
++   power-managed state like S3") or it may be less clear. The net result is
++   that some endpoints perform better (e.g., lower power consumption) with
++   PERST# asserted, and others prefer PERST# deasserted. The value must be '0'
++   or '1', where '0' means do not assert PERST# and '1' means assert PERST#.
++   When absent, behavior may be platform-specific.
 -- 
 2.15.0.rc0.271.g36b669edcc-goog
