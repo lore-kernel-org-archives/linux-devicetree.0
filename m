@@ -1,39 +1,113 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt-bindings: media: xilinx: fix typo in example
-Date: Fri, 13 Oct 2017 01:03:34 +0900
-Message-ID: <1507824214-17744-1-git-send-email-akinobu.mita@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/9] SOC: brcmstb: add memory API
+Date: Thu, 12 Oct 2017 09:53:36 -0700
+Message-ID: <425b3363-1977-87e1-644e-68a28f648fb0@gmail.com>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+ <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
+ <b6be2073-7a90-f83f-4e25-79ef04827bd7@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b6be2073-7a90-f83f-4e25-79ef04827bd7@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julien Thierry <julien.thierry@arm.com>, Jim Quinlan <jim2101024@gmail.com>, linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix typo s/:/;/
+On 10/12/2017 07:41 AM, Julien Thierry wrote:
+> Hi Jim,
+> 
+> On 11/10/17 23:34, Jim Quinlan wrote:
+>> From: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> This commit adds a memory API suitable for ascertaining the sizes of
+>> each of the N memory controllers in a Broadcom STB chip.  Its first
+>> user will be the Broadcom STB PCIe root complex driver, which needs
+>> to know these sizes to properly set up DMA mappings for inbound
+>> regions.
+>>
+>> We cannot use memblock here or anything like what Linux provides
+>> because it collapses adjacent regions within a larger block, and here
+>> we actually need per-memory controller addresses and sizes, which is
+>> why we resort to manual DT parsing.
+>>
+>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+>> ---
+>>   drivers/soc/bcm/brcmstb/Makefile |   2 +-
+>>   drivers/soc/bcm/brcmstb/memory.c | 183
+>> +++++++++++++++++++++++++++++++++++++++
+>>   include/soc/brcmstb/memory_api.h |  25 ++++++
+>>   3 files changed, 209 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/soc/bcm/brcmstb/memory.c
+>>   create mode 100644 include/soc/brcmstb/memory_api.h
+>>
+>> diff --git a/drivers/soc/bcm/brcmstb/Makefile
+>> b/drivers/soc/bcm/brcmstb/Makefile
+>> index 9120b27..4cea7b6 100644
+>> --- a/drivers/soc/bcm/brcmstb/Makefile
+>> +++ b/drivers/soc/bcm/brcmstb/Makefile
+>> @@ -1 +1 @@
+>> -obj-y                += common.o biuctrl.o
+>> +obj-y                += common.o biuctrl.o memory.o
+>> diff --git a/drivers/soc/bcm/brcmstb/memory.c
+>> b/drivers/soc/bcm/brcmstb/memory.c
+>> new file mode 100644
+>> index 0000000..cb6bf73
+>> --- /dev/null
+>> +++ b/drivers/soc/bcm/brcmstb/memory.c
+>> @@ -0,0 +1,183 @@
+>> +/*
+>> + * Copyright © 2015-2017 Broadcom
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * A copy of the GPL is available at
+>> + * http://www.broadcom.com/licenses/GPLv2.php or from the Free Software
+>> + * Foundation at https://www.gnu.org/licenses/ .
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/io.h>
+>> +#include <linux/libfdt.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_fdt.h>
+>> +#include <linux/sizes.h>
+>> +#include <soc/brcmstb/memory_api.h>
+>> +
+>> +/* -------------------- Constants -------------------- */
+>> +
+>> +/* Macros to help extract property data */
+>> +#define U8TOU32(b, offs) \
+>> +    ((((u32)b[0 + offs] << 0)  & 0x000000ff) | \
+>> +     (((u32)b[1 + offs] << 8)  & 0x0000ff00) | \
+>> +     (((u32)b[2 + offs] << 16) & 0x00ff0000) | \
+>> +     (((u32)b[3 + offs] << 24) & 0xff000000))
+>> +
+>> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(U8TOU32(b, offs)))
+>> +
+> 
+> I fail to understand why this is not:
+> 
+> #define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(*(u32*)(b + offs)))
+> 
+> 
+> If I understand correctly, fdt data is in big endian, the macro U8TOU32
+> reads it as little endian. My guess is that this won't work on big
+> endian kernels but should work on little endian since fdt32_to_cpu will
+> revert the bytes again.
+> 
+> Am I missing something?
 
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
-index 9dd86b3..439351a 100644
---- a/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
-+++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,v-tpg.txt
-@@ -66,6 +66,6 @@ Example:
- 				tpg1_out: endpoint {
- 					remote-endpoint = <&switch_in0>;
- 				};
--			}:
-+			};
- 		};
- 	};
+No, your point is valid, there is no reason why this cannot be
+fdt32_to_cpu() here.
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
