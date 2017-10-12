@@ -1,90 +1,99 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v2 3/5] dt-bindings: Document common property for
- daisy-chained devices
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 4/5] dt-bindings: gpio: max3191x: Document new driver
 Date: Thu, 12 Oct 2017 12:40:10 +0200
-Message-ID: <f0c3b0c5514f74717c5783360b60062dfe9b8c0f.1507797496.git.lukas@wunner.de>
+Message-ID: <57660f421f2080914940806394a9365ac959f5a8.1507797496.git.lukas@wunner.de>
 References: <cover.1507797496.git.lukas@wunner.de>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.1507797496.git.lukas@wunner.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1507797496.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Many serially-attached GPIO and IIO devices are daisy-chainable.
+Add device tree bindings for Maxim MAX3191x industrial serializer.
 
-    Examples for GPIO devices are Maxim MAX3191x and TI SN65HVS88x:
-    https://datasheets.maximintegrated.com/en/ds/MAX31913.pdf
-    http://www.ti.com/lit/ds/symlink/sn65hvs880.pdf
-
-    Examples for IIO devices are TI DAC128S085 and TI DAC161S055:
-    http://www.ti.com/lit/ds/symlink/dac128s085.pdf
-    http://www.ti.com/lit/ds/symlink/dac161s055.pdf
-
-We already have drivers for daisy-chainable devices in the tree but
-their devicetree bindings are somewhat inconsistent and ill-named:
-
-    The gpio-74x164.c driver uses "registers-number" to convey the
-    number of devices in the daisy-chain.  (Sans vendor prefix,
-    multiple vendors sell compatible versions of this chip.)
-
-    The gpio-pisosr.c driver takes a different approach and calculates
-    the number of devices in the daisy-chain by dividing the common
-    "ngpios" property (Documentation/devicetree/bindings/gpio/gpio.txt)
-    by 8 (which assumes that each chip has 8 inputs).
-
-Let's standardize on a common "#daisy-chained-devices" property.
-That name was chosen because it's the term most frequently used in
-datasheets.  (A less frequently used synonym is "cascaded devices".)
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
 ---
 Changes v1 -> v2:
 
-- Newly inserted patch.
+- Add vendor prefix to GPIO identifiers, use boolean instead of
+  integer to select mode, rename boolean to ignore undervoltage
+  alarms, separate compatible strings with newlines. (Rob Herring)
 
- .../devicetree/bindings/common-properties.txt      | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../devicetree/bindings/gpio/gpio-max3191x.txt     | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
 
-diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
-index 697714f8d75c..a3448bfa1c82 100644
---- a/Documentation/devicetree/bindings/common-properties.txt
-+++ b/Documentation/devicetree/bindings/common-properties.txt
-@@ -1,4 +1,8 @@
- Common properties
-+=================
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+new file mode 100644
+index 000000000000..b3a6444b8f45
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-max3191x.txt
+@@ -0,0 +1,59 @@
++GPIO driver for Maxim MAX3191x industrial serializer
 +
-+Endianness
-+----------
- 
- The Devicetree Specification does not define any properties related to hardware
- byteswapping, but endianness issues show up frequently in porting Linux to
-@@ -58,3 +62,25 @@ dev: dev@40031000 {
- 	      ...
- 	      little-endian;
- };
-+
-+Daisy-chained devices
-+---------------------
-+
-+Many serially-attached GPIO and IIO devices are daisy-chainable.  To the
-+host controller, a daisy-chain appears as a single device, but the number
-+of inputs and outputs it provides is the sum of inputs and outputs provided
-+by all of its devices.  The driver needs to know how many devices the
-+daisy-chain comprises to determine the amount of data exchanged, how many
-+inputs and outputs to register and so on.
++Required properties:
++ - compatible:		Must be one of:
++			"maxim,max31910"
++			"maxim,max31911"
++			"maxim,max31912"
++			"maxim,max31913"
++			"maxim,max31953"
++			"maxim,max31963"
++ - reg: 		Chip select number.
++ - gpio-controller:	Marks the device node as a GPIO controller.
++ - #gpio-cells: 	Should be two. For consumer use see gpio.txt.
 +
 +Optional properties:
-+ - #daisy-chained-devices: Number of devices in the daisy-chain (default is 1).
++ - #daisy-chained-devices:
++			Number of chips in the daisy-chain (default is 1).
++ - maxim,modesel-gpios: GPIO pins to configure modesel of each chip.
++			The number of GPIOs must equal "#daisy-chained-devices"
++			(if each chip is driven by a separate pin) or 1
++			(if all chips are wired to the same pin).
++ - maxim,fault-gpios: 	GPIO pins to read fault of each chip.
++			The number of GPIOs must equal "#daisy-chained-devices"
++			or 1.
++ - maxim,db0-gpios:	GPIO pins to configure debounce of each chip.
++			The number of GPIOs must equal "#daisy-chained-devices"
++			or 1.
++ - maxim,db1-gpios:	GPIO pins to configure debounce of each chip.
++			The number of GPIOs must equal "maxim,db0-gpios".
++ - maxim,modesel-8bit:	Boolean whether the modesel pin of the chips is
++			pulled high (8-bit mode).  Use this if the modesel pin
++			is hardwired and consequently "maxim,modesel-gpios"
++			cannot be specified.  By default if neither this nor
++			"maxim,modesel-gpios" is given, the driver assumes
++			that modesel is pulled low (16-bit mode).
++ - maxim,ignore-undervoltage:
++			Boolean whether to ignore undervoltage alarms signaled
++			by the "maxim,fault-gpios" or by the status byte
++			(in 16-bit mode).  Use this if the chips are powered
++			through 5VOUT instead of VCC24V, in which case they
++			will constantly signal undervoltage.
++
++For other required and optional properties of SPI slave nodes please refer to
++../spi/spi-bus.txt.
 +
 +Example:
-+gpio@0 {
-+	      compatible = "name";
-+	      reg = <0>;
-+	      gpio-controller;
-+	      #gpio-cells = <2>;
-+	      #daisy-chained-devices = <3>;
-+};
++	gpio@0 {
++		compatible = "maxim,max31913";
++		reg = <0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		maxim,modesel-gpios = <&gpio2 23>;
++		maxim,fault-gpios   = <&gpio2 24 GPIO_ACTIVE_LOW>;
++		maxim,db0-gpios     = <&gpio2 25>;
++		maxim,db1-gpios     = <&gpio2 26>;
++
++		spi-max-frequency = <25000000>;
++	};
 -- 
 2.11.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
