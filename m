@@ -1,100 +1,79 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v8 0/2] gpio: uniphier: UniPhier GPIO driver
-Date: Thu, 12 Oct 2017 20:36:14 +0900
-Message-ID: <1507808176-5223-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 09/18] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
+Date: Thu, 12 Oct 2017 11:41:35 +0000
+Message-ID: <TY1PR06MB09924AF4CBC4D1F39FD38926D84B0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1504737267-22829-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1504737377-23191-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdX1FZ3_iKCMRkDozsn7QzEmmvuUzkjq5Hn9+L42F=X7sQ@mail.gmail.com>
+ <806c5e8e-af85-e73b-a7a4-44ebf82dee7e@cogentembedded.com>
+ <CAMuHMdXL1P5vhoBU9W+S1qX8maXLRmyg88cjgbYpCGZSQ1FBtQ@mail.gmail.com>
+ <1c5fc090-af98-0041-be8b-b06dc81d4670@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1c5fc090-af98-0041-be8b-b06dc81d4670-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: batareich batareich <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds UniPhier GPIO driver.
-
-The interrupt controller part is implemented by using hierarchy irqdomain.
-
-IMHO, the problem of the hierarchy irqdomain is that drivers must hard-code
-the fwspec of the interrupt parent.  We will never know the DT binding of
-the parent unless we parse #interrupt-cell, etc.
-
-I asked about this:
-https://lkml.org/lkml/2017/7/6/758
-
-Apparently, the current kernel does not provide a systematic way to
-describe it.
-
-In v1-v3, I hard-coded the parent hwirq numbers in the driver because
-irqchip drivers are forced to hard-code more or less about the parent.
-This was not accepted by Linus Walleij.
-
-In v4, I tried to use the new API irq_domain_push_irq().  I needed to
-change the irqdomain framework to make it work for DT, but seemed
-controversial in the irqdomain subsystem review.
-
-In v5, I tried another solution.  At first I thought it worked, but
-I found a dead-lock if an irq is disposed from the .alloc hook.
-
-After I considered more, I thought "interrupts" property does not
-make much sense here because the last cell (which usually specifies
-the trigger type) is useless for the hierarchy irqdomain.
-
-I decided to use a vendor-specific property.  This is what some drivers
-actually do.
-
-
-Changes in v8:
-  - Move dt-binding header to binding commit
-  - Add MAINTAINERS entry for the binding doc
-  - Add a consumer example to the binding doc
-
-Changes in v7:
-  - Rename uniphier_gpio_irq_get_hwirq()
-    (I just missed to "git commit" before "git send-email")
-
-Changes in v6:
-  - Add "socionext,interrupt-ranges"
-
-Changes in v5:
-  - Split into a separate patch for DT binding
-  - Add a new patch to export of_phandle_args_to_fwspec
-  - Split DT binding into a separate file
-  - v4 depends on some patches that change irq_domain_push_irq(), but
-    they got negative feedback in the irqdomain subsystem review.
-    Yet another approach here.  Parse "interrupts" property in
-    .alloc() hook.  If the parent IRQ is already mapped, dispose it
-    and re-alloc in irqdomain manner.
-
-Changes in v4:
-  - Add COMPILE_TEST and select IRQ_DOMAIN_HIERARCHY
-  - Reimplement irqchip part by using irq_domain_push_irq()
-
-Changes in v3:
-  - Add .irq_set_affinity() hook
-  - Use irq_domain_create_hierarchy() instead of legacy
-    irq_domain_add_hierarchy()
-
-Changes in v2:
-  - Remove +32 offset for parent interrupts to follow the GIC
-    binding convention
-  - Let uniphier_gpio_irq_alloc() fail if nr_irqs != 1
-  - Allocate gpio_chip statically because just one instance is
-    supported
-  - Fix suspend and resume hooks
-
-Masahiro Yamada (2):
-  dt-bindings: gpio: uniphier: add UniPhier GPIO binding
-  gpio: uniphier: add UniPhier GPIO controller driver
-
- .../devicetree/bindings/gpio/gpio-uniphier.txt     |  52 +++
- MAINTAINERS                                        |   2 +
- drivers/gpio/Kconfig                               |   8 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-uniphier.c                       | 507 +++++++++++++++++++++
- include/dt-bindings/gpio/uniphier-gpio.h           |  18 +
- 6 files changed, 588 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
- create mode 100644 drivers/gpio/gpio-uniphier.c
- create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
-
--- 
-2.7.4
-
+SGkgR2VlcnQtc2FuLCBWbGFkaW1pci1zYW4sDQoNCj4gRnJvbTogVmxhZGltaXIgQmFyaW5vdiwg
+U2VudDogU2F0dXJkYXksIE9jdG9iZXIgNywgMjAxNyAyOjI5IEFNDQo+IA0KPiBIaSBHZWVydCwN
+Cj4gDQo+IE9uIDA2LjEwLjIwMTcgMTA6MTUsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4g
+PiBIaSBWbGFkaW1pciwNCj4gPg0KPiA+IENDIFNoaW1vZGEtc2FuDQo+ID4NCj4gPiBPbiBGcmks
+IE9jdCA2LCAyMDE3IGF0IDQ6MzggQU0sIFZsYWRpbWlyIEJhcmlub3YNCj4gPiA8dmxhZGltaXIu
+YmFyaW5vdkBjb2dlbnRlbWJlZGRlZC5jb20+IHdyb3RlOg0KPiA+PiBPbiAyMC4wOS4yMDE3IDE1
+OjU5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4+PiBPbiBUaHUsIFNlcCA3LCAyMDE3
+IGF0IDEyOjM2IEFNLCBWbGFkaW1pciBCYXJpbm92DQo+ID4+PiA8dmxhZGltaXIuYmFyaW5vdkBj
+b2dlbnRlbWJlZGRlZC5jb20+IHdyb3RlOg0KPiA+Pj4+IFRoaXMgc3VwcG9ydHMgVVNCMiBQSFkg
+Y2hhbm5lbCAjMCBvbiBVTENCIEtpbmdmaXNoZXIgYm9hcmQNCj4gPj4+Pg0KPiA+Pj4+IFNpZ25l
+ZC1vZmYtYnk6IFZsYWRpbWlyIEJhcmlub3YgPHZsYWRpbWlyLmJhcmlub3ZAY29nZW50ZW1iZWRk
+ZWQuY29tPg0KPiA+Pj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVu
+ZXNhc0BnbGlkZXIuYmU+DQo+ID4+Pg0KPiA+Pj4+IGluZGV4IGNhOGRlMWEuLjA4NTQ2MDAgMTAw
+NjQ0DQo+ID4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3VsY2Ita2YuZHRz
+aQ0KPiA+Pj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy91bGNiLWtmLmR0c2kN
+Cj4gPj4+PiBAQCAtNjAsNiArNjAsMTEgQEANCj4gPj4+PiAgICAgICAgICAgICAgICAgICBncm91
+cHMgPSAic2NpZjFfZGF0YV9iIjsNCj4gPj4+PiAgICAgICAgICAgICAgICAgICBmdW5jdGlvbiA9
+ICJzY2lmMSI7DQo+ID4+Pj4gICAgICAgICAgIH07DQo+ID4+Pj4gKw0KPiA+Pj4+ICsgICAgICAg
+dXNiMF9waW5zOiB1c2IwIHsNCj4gPj4+PiArICAgICAgICAgICAgICAgZ3JvdXBzID0gInVzYjAi
+Ow0KPiA+Pj4+ICsgICAgICAgICAgICAgICBmdW5jdGlvbiA9ICJ1c2IwIjsNCj4gPj4+PiArICAg
+ICAgIH07DQo+ID4+Pj4gICAgfTsNCj4gPj4+Pg0KPiA+Pj4+ICAgICZzY2lmMSB7DQo+ID4+Pj4g
+QEAgLTY4LDMgKzczLDEwIEBADQo+ID4+Pj4NCj4gPj4+PiAgICAgICAgICAgc3RhdHVzID0gIm9r
+YXkiOw0KPiA+Pj4+ICAgIH07DQo+ID4+Pj4gKw0KPiA+Pj4+ICsmdXNiMl9waHkwIHsNCj4gPj4+
+PiArICAgICAgIHBpbmN0cmwtMCA9IDwmdXNiMF9waW5zPjsNCj4gPj4+PiArICAgICAgIHBpbmN0
+cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4+Pj4gKw0KPiA+Pj4gRG9uJ3QgeW91IG5lZWQNCj4g
+Pj4+DQo+ID4+PiAgICAgICB2YnVzLXN1cHBseSA9IDwmdmJ1czBfdXNiMj47DQo+ID4+Pg0KPiA+
+Pj4gd2l0aCB2YnVzMF91c2IyIGEgZml4ZWQgcmVndWxhdG9yIGNvbnRyb2xsZWQgYnkgR1BJTyBQ
+MTEgKE9UR19FWFRMUG4pIGZyb20NCj4gPj4+IEdQSU8gZXhwYW5kZXIgVTExIChUQ0E5NTM5KT8N
+Cj4gPj4+IE1heSBiZSBvcHRpb25hbCwgdGhvdWdoLiBzYWx2YXRvci1jb21tb24uZHRzaSBoYXMg
+aXQuDQo+ID4+IFllcywgSSBuZWVkIHRoaXMgZ3Bpby4NCj4gPj4gSSBuZWVkIGJvdGggT1RHX0VY
+VExQbiBhbmQgT1RHX09GRlZCVVNuIGZyb20gdGhlIHNhbWUgZ3BpbyBleHBhbmRlci4NCj4gPj4N
+Cj4gPj4gSSd2ZSBiZWVuIGNvbnNpZGVyaW5nIHRvIHVzZSBlaXRoZXIgdmJ1cy1zdXBwbHkgKyBn
+cGlvIGhvZyBvciB1c2UgZ3BpbyBob2cNCj4gPj4gZm9yIGJvdGggb2YgdGhlbSBmb3IgY29uc2lz
+dGVuY3kuDQo+ID4+IFdoYXQgZG8geW91IHRoaW5rIGFib3V0IHRoaXM/DQo+ID4gRm9yIE9UR19F
+WFRMUG4geW91IGRvbid0IHJlYWxseSBuZWVkIGEgaG9nLCBhcyBpdCB3aWxsIGJlIGNvbnRyb2xs
+ZWQgYnkgdGhlDQo+ID4gVVNCIGRyaXZlci9zdWJzeXN0ZW0sIGxpa2Ugb24gU2FsdmF0b3ItWChT
+KSwgcmlnaHQ/DQo+IEFncmVlZC4NCj4gPg0KPiA+IEZvciBPVEdfT0ZGVkJVU24sIHdoaWNoIGlz
+IChvcHRpb25hbGx5KSBkcml2ZW4gZnJvbSBVU0IwX1BXRU4gb24NCj4gPiBTYWx2YXRvci1YKFMp
+IEkgZG9uJ3Qga25vdyBpZiB5b3UgbmVlZCBhIEdQSU8gaG9nIG9yIG5vdC4gSSBoYXZlIHRvIGRl
+ZmVyIHlvdXINCj4gPiBxdWVzdGlvbiB0byBTaGltb2RhLXNhbi4NCg0KSSdtIHNvcnJ5IGZvciB0
+aGUgZGVsYXllZCByZXNwb25zZS4NCkkgdGhpbmsgT1RHX09GRlZCVVNuIHNob3VsZCBiZSBsb3cg
+bGV2ZWwgdG8gYXZvaWQgY29uZmxpY3QgNVYgc3VwcGx5IGZyb20gVTEzJ3MgT1VUIHBpbnMuDQoN
+Cj4gVGhpcyBwaW4gc2hvdWxkIGJlIHRpZWQgcGVybWFuZW50bHkgbG93IHRvIGRpc2FibGUgaW50
+ZXJuYWwgTUFYMzM1NQ0KPiBpbnRlcm5hbCBWQlVTIGNoYXJnZSBwdW1wLg0KDQpJIGFncmVlLg0K
+DQo+IEhlbmNlIHByb2JhYmx5IGdwaW8gaG9nIGlzIGVub3VnaCBmb3IgT1RHX09GRlZCVVNuLg0K
+DQpJJ20gYWZyYWlkIGJ1dCBJIGRvbid0IHVuZGVyc3RhbmQgdGhpcyAiZ3BpbyBob2ciIG1lYW5z
+Lg0KDQo+IEtGIGhhcyBkZWRpY2F0ZWQgVkJVUyBwb3dlciBzdXBwbHkgY29udHJvbGxlZCBieSBV
+U0IwX1BXRU4uDQoNCkkgYWdyZWUuDQpJIGRvbuKAmXQgd3JpdGUgYW55IGRvY3VtZW50YXRpb25z
+IHRob3VnaCwgYnV0IEkgYXNzdW1lZCBTVzE1IGlzIHBpbiAzIHNpZGUNCnRvIHVzZSBNQVgzMzU1
+J3MgY2hhcmdlIHB1bXAuIFNvLCBJIGFkZGVkICJ2YnVzLXN1cHBseSIgdG8gZGlzYWJsZSBTSERO
+IyBvZiBNQVgzMzU1Lg0KQnV0LCB3ZSBjYW4gYWxzbyB1c2UgVTEzIGZvciBwb3dlciBzdXBwbHkg
+b24gdGhlIFNhbHZhdG9yLVhbU10gd2l0aG91dCAidmJ1cy1zdXBwbHkiLg0KDQpCZXN0IHJlZ2Fy
+ZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IA0KPiAtLQ0KPiBSZWdhcmRzLA0KPiBWbGFkaW1p
+cg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
