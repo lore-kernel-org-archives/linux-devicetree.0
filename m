@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 02/13] ARM: dts: r7s72100: Add clock for CA9 CPU core
-Date: Thu, 12 Oct 2017 11:35:05 +0200
-Message-ID: <1507800916-11509-3-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 09/13] ARM: dts: r8a7791: Add missing clock for secondary CA15 CPU core
+Date: Thu, 12 Oct 2017 11:35:12 +0200
+Message-ID: <1507800916-11509-10-git-send-email-geert+renesas@glider.be>
 References: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1507800916-11509-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -10,26 +10,27 @@ To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <m
 Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Improve hardware description by adding a clock property to the device
-node corresponding to the CA9 CPU core.
+Currently only the primary CPU in the CA15 cluster has a clocks
+property, while the secondary CPU core is driven by the same clock.
+Add the missing clocks property to fix this.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r7s72100.dtsi | 1 +
+ arch/arm/boot/dts/r8a7791.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 4ed12a4d9d513821..ab9645a42eca3811 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -203,6 +203,7 @@
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			clock-frequency = <400000000>;
-+			clocks = <&cpg_clocks R7S72100_CLK_I>;
- 			next-level-cache = <&L2>;
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index 842592f12f428399..af97792c9fddd970 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -70,6 +70,7 @@
+ 			compatible = "arm,cortex-a15";
+ 			reg = <1>;
+ 			clock-frequency = <1500000000>;
++			clocks = <&cpg CPG_CORE R8A7791_CLK_Z>;
+ 			power-domains = <&sysc R8A7791_PD_CA15_CPU1>;
+ 			next-level-cache = <&L2_CA15>;
  		};
- 	};
 -- 
 2.7.4
 
