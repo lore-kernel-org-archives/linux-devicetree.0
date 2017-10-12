@@ -1,152 +1,58 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
-Date: Thu, 12 Oct 2017 23:20:52 +0200
-Message-ID: <20171012212052.xkhbgdjrghmnvcfe@piout.net>
-References: <cover.1506049341.git.sean.wang@mediatek.com>
- <5b2a7e5c9c5bc179f89e48fb614b2ae789be4254.1506049341.git.sean.wang@mediatek.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for
+ Synquacer pre-ITS
+Date: Thu, 12 Oct 2017 16:34:46 -0500
+Message-ID: <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg@mail.gmail.com>
+References: <20171012183247.23679-1-ard.biesheuvel@linaro.org> <20171012183247.23679-3-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5b2a7e5c9c5bc179f89e48fb614b2ae789be4254.1506049341.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171012183247.23679-3-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 12, 2017 at 1:32 PM, Ard Biesheuvel
+<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
+> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
+> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
+> ID taken from bits [device_id_bits + 1:2] of the window offset.
+> Writes that target GITS_TRANSLATER directly are reported as originating
+> from device ID #0.
+>
+> So add a workaround for this. Given that this breaks isolation, clear
+> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
+>  arch/arm64/Kconfig                                                    |  8 +++
+>  drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
+>  3 files changed, 72 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> index 4c29cdab0ea5..0798a61bbf99 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> @@ -75,6 +75,10 @@ These nodes must have the following properties:
+>  - reg: Specifies the base physical address and size of the ITS
+>    registers.
+>
+> +Optional:
+> +- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
+> +  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
 
-On 22/09/2017 at 11:33:15 +0800, sean.wang@mediatek.com wrote:
-> diff --git a/drivers/rtc/rtc-mediatek.c b/drivers/rtc/rtc-mediatek.c
+Sounds like a separate h/w block to me and addresses should be in
+"reg". I would suggest you define a separate node for the pre-its
+block and then use of_find_compatible_node() from the GIC driver to
+retrieve the node and whatever you need from it. Or do an SoC specific
+compatible string for the GIC and let that imply whatever information
+you need. Then the next quirk doesn't need a DT update.
 
-I'm pretty sure this should be named rtc-mt7622.c instead of
-rtc-mediatek.c, exactly for the same reason you have patch 3/4.
-
-> +static void mtk_w32(struct mtk_rtc *rtc, u32 reg, u32 val)
-> +{
-> +	__raw_writel(val, rtc->base + reg);
-
-Do you really need the __raw accessors? What about running your SoC in
-BE mode? I guess the _relaxed version are fast enough.
-
-> +}
-> +
-> +static u32 mtk_r32(struct mtk_rtc *rtc, u32 reg)
-> +{
-> +	return __raw_readl(rtc->base + reg);
-> +}
-> +
-
-
-> +static void mtk_rtc_hw_init(struct mtk_rtc *hw)
-> +{
-> +	/* The setup of the init sequence is for allowing RTC got to work */
-> +	mtk_w32(hw, MTK_RTC_PWRCHK1, RTC_PWRCHK1_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PWRCHK2, RTC_PWRCHK2_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_KEY, RTC_KEY_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT1, RTC_PROT1_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT2, RTC_PROT2_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT3, RTC_PROT3_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT4, RTC_PROT4_MAGIC);
-> +	mtk_rmw(hw, MTK_RTC_DEBNCE, RTC_DEBNCE_MASK, 0);
-> +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
-> +}
-> +
-> +static void mtk_rtc_get_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
-> +				      int time_alarm)
-> +{
-> +	u32 year, mon, mday, wday, hour, min, sec;
-> +
-> +	/*
-> +	 * Read again until all fields are not changed for all fields in the
-> +	 * consistent state.
-> +	 */
-> +	do {
-> +		year = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA));
-> +		mon = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON));
-> +		wday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW));
-> +		mday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM));
-> +		hour = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU));
-> +		min = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN));
-> +		sec = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC));
-> +	} while (year != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA)) ||
-> +		 mon != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON))  ||
-> +		 mday != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM))	||
-> +		 wday != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW))	||
-> +		 hour != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU))	||
-> +		 min != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN))	||
-> +		 sec != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC))
-> +		);
-
-I'm pretty sure only checking sec is enough because it is highly
-unlikely that 7 reads take a minute.
-
-> +static irqreturn_t mtk_rtc_alarmirq(int irq, void *id)
-> +{
-> +	struct mtk_rtc *hw = (struct mtk_rtc *)id;
-> +	u32 irq_sta;
-> +
-> +	/* Stop alarm also implicitly disable the alarm interrupt */
-> +	mtk_w32(hw, MTK_RTC_AL_CTL, 0);
-
-You stop the alarm here, before testing whether the alarm really
-happened.
-
-> +	irq_sta = mtk_r32(hw, MTK_RTC_INT);
-> +	if (irq_sta & RTC_INT_AL_STA) {
-> +		rtc_update_irq(hw->rtc, 1, RTC_IRQF | RTC_AF);
-> +
-> +		/* Ack alarm interrupt status */
-> +		mtk_w32(hw, MTK_RTC_INT, RTC_INT_AL_STA);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-> +static int mtk_rtc_gettime(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +
-> +	mtk_rtc_get_alarm_or_time(hw, tm, MTK_TC);
-> +
-> +	return rtc_valid_tm(tm);
-> +}
-> +
-> +static int mtk_rtc_settime(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +
-> +	/* Stop time counter before setting a new one*/
-> +	mtk_set(hw, MTK_RTC_CTL, RTC_RC_STOP);
-> +
-> +	/* Epoch == 1900 */
-> +	if (tm->tm_year < 100 || tm->tm_year > 199)
-> +		return -EINVAL;
-
-Year is a 32 bits register, what makes the RTC fail in 2100? Is it
-because of the leap year handling?
-
-> +static int mtk_rtc_setalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +	struct rtc_time *alrm_tm = &wkalrm->time;
-> +
-> +	/* Epoch == 1900 */
-> +	if (alrm_tm->tm_year < 100 || alrm_tm->tm_year > 199)
-> +		return -EINVAL;
-> +
-
-Ditto.
-
-> +
-> +	dev_info(&pdev->dev, "MediaTek SoC based RTC enabled\n");
-> +
-
-I think the rtc core is verbose enough that this message is not needed.
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
