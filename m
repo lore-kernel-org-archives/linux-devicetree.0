@@ -1,60 +1,79 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
-Date: Thu, 12 Oct 2017 14:03:56 -0700
-Message-ID: <CAOCOHw54mQUVxVyLRWbV5Ty7trK99MM6zgXsuuxQEHnD3qvKVA@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-17-git-send-email-sudeep.holla@arm.com> <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
- <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
- <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com> <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
- <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [RFC usb-next v5 3/3] usb: core: hcd: integrate the PHY roothub wrapper
+Date: Thu, 12 Oct 2017 23:05:14 +0200
+Message-ID: <CAFBinCC4qseHoEkTtNa4NtVXgrcV=NRrOf2BBKvQRbhaZeEzsw@mail.gmail.com>
+References: <20171008211713.18696-4-martin.blumenstingl@googlemail.com> <Pine.LNX.4.44L0.1710091316170.6996-100000@netrider.rowland.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1710091316170.6996-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 6, 2017 at 6:51 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+Hi Alan,
+
+On Mon, Oct 9, 2017 at 7:18 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> On Sun, 8 Oct 2017, Martin Blumenstingl wrote:
 >
->
-> On 06/10/17 14:47, Jassi Brar wrote:
->> On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-[..]
->>> Again that's not the point, doorbell is more common feature and that can
->>> be supported. As SCMI expects doorbell feature in the specification, it
->>> just need to support that class of controllers.
->>>
->> NO.  All SCMI expects is SHMEM and a signal reaching the other end.
->> The signal mechanism need not necessarily be "doorbell".
+>> This integrates the PHY roothub wrapper into the core hcd
+>> infrastructure. Multiple PHYs which are part of the roothub devicetree
+>> node (which is a sub-node of the sysdev's node) are now managed
+>> (= powered on/off when needed), by the new usb_phy_roothub code.
 >>
+>> One example where this is required is the Amlogic GXL and GXM SoCs:
+>> They are using a dwc3 USB controller with up to three ports enabled on
+>> the internal roothub. Using only the top-level "phy" properties does not
+>> work here since one can only specify one "usb2-phy" and one "usb3-phy",
+>> while actually at least two "usb2-phy" have to be specified.
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> ---
+>>  drivers/usb/core/hcd.c  | 30 +++++++++++++++++++++++++++++-
+>>  include/linux/usb/hcd.h |  1 +
+>>  2 files changed, 30 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+>> index 67aa3d039b9b..56704dd10c15 100644
+>> --- a/drivers/usb/core/hcd.c
+>> +++ b/drivers/usb/core/hcd.c
+>> @@ -50,6 +50,7 @@
+>>  #include <linux/usb/otg.h>
+>>
+>>  #include "usb.h"
+>> +#include "phy.h"
+>>
+>>
+>>  /*-------------------------------------------------------------------------*/
+>> @@ -2292,7 +2293,11 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
+>>               dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
+>>                               "suspend", status);
+>>       }
+>> -     return status;
+>> +
+>> +     if (status == 0)
+>> +             return usb_phy_roothub_power_off(hcd->phy_roothub);
 >
-> Agreed, but creating an abstraction ro do something as generic as
-> doorbell and writing shim layer for each controller to use SCMI also
-> sounds bad.
+> Is this really the right thing to do?  If usb_phy_roothub_power_off()
+> fails, what condition does this leave the bus in?  And what condition
+> does the kernel _think_ the bus is in?
+indeed, thank you for spotting this!
+
+do you have any suggestions how to improve this?
+maybe I should move usb_phy_roothub_power_off a few lines up and only
+call it after the "rhdev->do_remote_wakeup" block if status is 0. if
+usb_phy_roothub_power_off then returns an error I could call
+"hcd_bus_resume(rhdev, PMSG_AUTO_RESUME);". what do you think about
+this?
+
+> Alan Stern
 >
 
-In the Qualcomm platform we have a single register that exposes 32
-doorbells, wired to interrupts on the various processors/co-processors
-in the SoC.
-
-There is a handful of different clients each using these doorbells to
-inform the other side that something has happened (often that some
-piece of shared memory has been filled with data). Over the years
-(platforms) this register has moved around as such multiple
-implementations exists.
-
-You can see an example of this in
-drivers/mailbox/qcom-apcs-ipc-mailbox.c and e.g.
-drivers/rpmsg/qcom_glink_native.c (qcom_glink_rpm.c prior to v4.14).
-
-
-
-I'm struggling to figure out exactly how your case looks like, but if
-your doorbell exists in only one instance and there is only one client
-then I would suggest that it's overkill to create another driver for
-it.
 
 Regards,
-Bjorn
+Martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
