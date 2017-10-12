@@ -1,101 +1,137 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 16/16] arm64: dts: marvell: armada-3720-espressobin: fill UART nodes
-Date: Thu, 12 Oct 2017 13:24:42 +0200
-Message-ID: <87zi8wbocl.fsf@free-electrons.com>
-References: <20171006101344.15590-1-miquel.raynal@free-electrons.com>
-        <20171006101344.15590-17-miquel.raynal@free-electrons.com>
-        <87fuawe8gx.fsf@free-electrons.com>
-        <20171006151521.440418a2@windsurf.lan> <20171009093025.78d45a9a@xps13>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v8 1/2] dt-bindings: gpio: uniphier: add UniPhier GPIO binding
+Date: Thu, 12 Oct 2017 20:36:15 +0900
+Message-ID: <1507808176-5223-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1507808176-5223-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171009093025.78d45a9a@xps13> (Miquel RAYNAL's message of "Mon,
-        9 Oct 2017 09:30:25 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1507808176-5223-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-gpio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On lun., oct. 09 2017, Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+This GPIO controller is used on UniPhier SoC family.
 
-> Hi Thomas, Gregory,
->
-> On Fri, 6 Oct 2017 15:15:21 +0200
-> Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->
->> Hello,
->> 
->> On Fri, 06 Oct 2017 15:01:18 +0200, Gregory CLEMENT wrote:
->> 
->> >  /*
->> >   * To enable the second UART on J17 (pins 24,26) refer to the uart1
->> >   * node from armada-3720-db.dts.
->> >   * Note that TX and RX signal are the ones coming directly from
->> > the SoC:
->> >   * 1.8V TTL.
->> >   */  
->> 
->> One issue with this comment (and Miquèl's version as well) is that it
->> does not explain why you don't enable this UART by default.
->> 
->> The real reason is in the commit log from Miquèl, and should probably
->> be part of the comment. Perhaps something like:
->> 
->> /*
->> 
->>  * Connector J17 (pins X, Y, Z) exposes a number of different
->>  * features:
->>  *  - UART1 (pins 24 = RX, pins 26 = TX), see armada-3720-db.dts for
->> an
->>  *    example on how to enable UART1. Beware that the signals are 1.8V
->>  *    TTL.
->>  *  - SPIxyz
->>  *  - I2Cxyz
->>  */
->
-> Thanks for both your comments, there is my version, inspired from both
-> comments:
->
-> /*
->  * Connector J17 exposes a number of different features. Some pins are
->  * multiplexed. This is the case for the UART1 feature (pins 24 = RX,
->  * pins 26 = TX). See armada-3720-db.dts for an example of how to enable it.
->  * Beware that the signals are 1.8V TTL.
->  */
+The vendor specific property "socionext,interrupt-ranges" is for
+specifying interrupt mapping to the parent interrupt controller
+because the mapping is not contiguous.  It works like "ranges",
+but transforms "interrupts" instead of "reg".
 
-Seems good for me however I prefer Thomas version, easier to read and to
-extend latter with the description of other pins if needed.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Gregory
+ .../devicetree/bindings/gpio/gpio-uniphier.txt     | 52 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ include/dt-bindings/gpio/uniphier-gpio.h           | 18 ++++++++
+ 3 files changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ create mode 100644 include/dt-bindings/gpio/uniphier-gpio.h
 
->
-> Thanks,
-> Miquèl
->
->> 
->> Otherwise, it's not clear at all why you don't just enable UART1. Or
->> perhaps I misunderstood Miquèl's commit log ?
->> 
->> Best regards,
->> 
->> Thomas
->
->
->
-> -- 
-> Miquel Raynal, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+new file mode 100644
+index 0000000..fed9158
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+@@ -0,0 +1,52 @@
++UniPhier GPIO controller
++
++Required properties:
++- compatible: Should be "socionext,uniphier-gpio".
++- reg: Specifies offset and length of the register set for the device.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be 2.  The first cell is the pin number and the second
++  cell is used to specify optional parameters.
++- interrupt-parent: Specifies the parent interrupt controller.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
++  The second cell bits[3:0] is used to specify trigger type as follows:
++    1 = low-to-high edge triggered
++    2 = high-to-low edge triggered
++    4 = active high level-sensitive
++    8 = active low level-sensitive
++  Valid combinations are 1, 2, 3, 4, 8.
++- ngpios: Specifies the number of GPIO lines.
++- gpio-ranges: Mapping to pin controller pins (as described in gpio.txt)
++- socionext,interrupt-ranges: Specifies an interrupt number mapping between
++  this GPIO controller and its interrupt parent, in the form of arbitrary
++  number of <child-interrupt-base parent-interrupt-base length> triplets.
++
++Optional properties:
++- gpio-ranges-group-names: Used for named gpio ranges (as described in gpio.txt)
++
++Example:
++	gpio: gpio@55000000 {
++		compatible = "socionext,uniphier-gpio";
++		reg = <0x55000000 0x200>;
++		interrupt-parent = <&aidet>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-ranges = <&pinctrl 0 0 0>;
++		gpio-ranges-group-names = "gpio_range";
++		ngpios = <248>;
++		socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
++	};
++
++Consumer Example:
++
++	sdhci0_pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio UNIPHIER_GPIO_PORT(29, 4) GPIO_ACTIVE_LOW>;
++	};
++
++Please note UNIPHIER_GPIO_PORT(29, 4) represents PORT294 in the SoC document.
++Unfortunately, only the one's place is octal in the port numbering.  (That is,
++PORT 8, 9, 18, 19, 28, 29, ... are missing.)  UNIPHIER_GPIO_PORT() is a helper
++macro to calculate 29 * 8 + 4.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index caacc88..2474032 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2029,6 +2029,7 @@ M:	Masahiro Yamada <yamada.masahiro@socionext.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+ S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ F:	arch/arm/boot/dts/uniphier*
+ F:	arch/arm/include/asm/hardware/cache-uniphier.h
+ F:	arch/arm/mach-uniphier/
+diff --git a/include/dt-bindings/gpio/uniphier-gpio.h b/include/dt-bindings/gpio/uniphier-gpio.h
+new file mode 100644
+index 0000000..9f0ad17
+--- /dev/null
++++ b/include/dt-bindings/gpio/uniphier-gpio.h
+@@ -0,0 +1,18 @@
++/*
++ * Copyright (C) 2017 Socionext Inc.
++ *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
++ */
++
++#ifndef _DT_BINDINGS_GPIO_UNIPHIER_H
++#define _DT_BINDINGS_GPIO_UNIPHIER_H
++
++#define UNIPHIER_GPIO_LINES_PER_BANK	8
++
++#define UNIPHIER_GPIO_IRQ_OFFSET	((UNIPHIER_GPIO_LINES_PER_BANK) * 15)
++
++#define UNIPHIER_GPIO_PORT(bank, line)	\
++			((UNIPHIER_GPIO_LINES_PER_BANK) * (bank) + (line))
++
++#define UNIPHIER_GPIO_IRQ(n)		((UNIPHIER_GPIO_IRQ_OFFSET) + (n))
++
++#endif /* _DT_BINDINGS_GPIO_UNIPHIER_H */
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
