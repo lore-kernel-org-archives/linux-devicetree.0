@@ -1,39 +1,24 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH  0/4] ARM: dts: Add USB function support
-Date: Thu, 12 Oct 2017 12:01:10 +0000
-Message-ID: <KL1PR06MB1702B059DA4DCFD9C0309CB0B84B0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1507555281-57845-1-git-send-email-biju.das@bp.renesas.com>
- <20171012114751.lyx7jrgjbhy2d47j@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] clk: renesas: rz: clk-rz is meant for RZ/A1
+Date: Thu, 12 Oct 2017 14:01:05 +0200
+Message-ID: <20171012120105.jwgf6brveumg2kku@verge.net.au>
+References: <1507801068-12024-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171012114751.lyx7jrgjbhy2d47j@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507801068-12024-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chris Brandt <chris.brandt@renesas.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Biju Das (4):
-> >   ARM: dts: r8a7743: Add HS-USB device node
-> >   ARM: dts: iwg20d-q7: Enable HS-USB
-> >   ARM: dts: r8a7743: Add USB-DMAC device nodes
-> >   ARM: dts: r8a7743: Enable DMA for HSUSB
->
-> Thanks, applied v1 of patches 1, 3 and 4, and v2 of patch 2.
->
-> In future when reposting a patch of a series please repost the entire ser=
-ies anew,
-> in this case it would have been v2 for the whole series.
+On Thu, Oct 12, 2017 at 11:37:48AM +0200, Geert Uytterhoeven wrote:
+> The RZ family of Renesas SoCs has several different subfamilies (RZ/A,
+> RZ/G, RZ/N, and RZ/T).  Clarify that the renesas,rz-cpg-clocks DT
+> bindings and clk-rz driver apply to RZ/A1 only.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks. I will take care this in future.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Regards,
-Biju
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
