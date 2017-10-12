@@ -1,69 +1,108 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: hwmon: Add ti-max-expected-current-microamp
- property to ina2xx
-Date: Thu, 12 Oct 2017 14:39:46 +0200
-Message-ID: <CAJKOXPc1B1uqravtmHrh4eUK5JiQRiZLeoveSMk5qVyF-mK7Kw@mail.gmail.com>
-References: <CGME20171012123635eucas1p1ff9a982db9d541cd0475d44d114ff92a@eucas1p1.samsung.com>
- <1507811765-31005-1-git-send-email-m.purski@samsung.com> <1507811765-31005-4-git-send-email-m.purski@samsung.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to
+ and from devices
+Date: Thu, 12 Oct 2017 14:47:38 +0200
+Message-ID: <20171012124738.r5lihlxaedwkw4oq@8bytes.org>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-6-jean-philippe.brucker@arm.com>
+ <20171011113348.GE30803@8bytes.org>
+ <ee7f80e3-ca30-0ee7-53f3-3e57b2b58df6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1507811765-31005-4-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ee7f80e3-ca30-0ee7-53f3-3e57b2b58df6-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas@goog>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 2:36 PM, Maciej Purski <m.purski@samsung.com> wrote:
-> Add optional max expected current property which allows calibrating
-> the ina sensor in order to achieve requested measure scale. Document
-> the changes in Documentation/hwmon/ina2xx.
->
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 4 +++-
->  Documentation/hwmon/ina2xx                         | 3 +++
->  2 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> index 02af0d9..49ef0be 100644
-> --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> @@ -14,11 +14,13 @@ Optional properties:
->
->  - shunt-resistor
->         Shunt resistor value in micro-Ohm
-> -
-> +- ti-max-expected-current-microamp
-> +       Max expected current value in mA
->  Example:
->
->  ina220@44 {
->         compatible = "ti,ina220";
->         reg = <0x44>;
->         shunt-resistor = <1000>;
-> +       ti-max-expected-current-microamp = <3000>;
->  };
-> diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
-> index cfd31d9..30620e8 100644
-> --- a/Documentation/hwmon/ina2xx
-> +++ b/Documentation/hwmon/ina2xx
-> @@ -55,6 +55,9 @@ The shunt value in micro-ohms can be set via platform data or device tree at
->  compile-time or via the shunt_resistor attribute in sysfs at run-time. Please
->  refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
->  if the device tree is used.
-> +The max expected current value in miliamp can be set via platform data
+Hi Jean-Philippe,
 
-mili or micro?
+On Thu, Oct 12, 2017 at 12:13:20PM +0100, Jean-Philippe Brucker wrote:
+> On 11/10/17 12:33, Joerg Roedel wrote:
+> > Here is how I think the base API should look like:
+> > 
+> > 	* iommu_iovm_device_init(struct device *dev);
+> > 	  iommu_iovm_device_shutdown(struct device *dev);
+> > 
+> > 	  These two functions do the device specific setup/shutdown. For
+> > 	  PCI this would include enabling the PRI, PASID, and ATS
+> > 	  capabilities and setting up a PASID table for the device.
+> 
+> Ok. On SMMU the PASID table also hosts the non-PASID page table pointer,
+> so the table and capability cannot be setup later than attach_device (and
+> we'll probably have to enable PASID in add_device). But I suppose it's an
+> implementation detail.
 
-BR,
-Krzysztof
+Right, when the capabilities are enabled is an implementation detail of
+the iommu-drivers. 
 
-> +or device tree at compile-time or via currX_max attribute in sysfs
-> +at run-time.
->
->  Additionally ina226 supports update_interval attribute as described in
->  Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
-> --
-> 2.7.4
->
+> Some device drivers will want to use ATS alone, for accelerating IOVA
+> traffic. Should we enable it automatically, or provide device drivers with
+> a way to enable it manually? According to the PCI spec, PASID has to be
+> enabled before ATS, so device_init would have to first disable ATS in that
+> case.
+
+Yes, driver can enable ATS for normal use of a device, and
+disable/re-enable it when the driver requests PASID/PRI functionality.
+That is also an implementation detail. You should probably also document
+that the init/shutdown functions may interrupt device operation, so that
+driver writers are aware of that.
+
+> 
+> > 	* iommu_iovm_bind_mm(struct device *dev, struct mm_struct *mm,
+> > 			     iovm_shutdown_cb *cb);
+> > 	  iommu_iovm_unbind_mm(struct device *dev, struct mm_struct *mm);
+> > 
+> > 	  These functions add and delete the entries in the PASID table
+> > 	  for the device and setup mmu_notifiers for the mm_struct to
+> > 	  keep IOMMU TLBs in sync with the CPU TLBs.
+> > 
+> > 	  The shutdown_cb is invoked by the IOMMU core code when the
+> > 	  mm_struct goes away, for example because the process
+> > 	  segfaults.
+> > 
+> > 	The PASID handling is best done these functions as well, unless
+> > 	there is a strong reason to allow device drivers to do the
+> > 	handling themselves.
+> > 
+> > The context data can be stored directly in mm_struct, including the
+> > PASID for that mm.
+> 
+> Changing mm_struct probably isn't required at the moment, since the mm
+> subsystem won't use the context data or the PASID. Outside of
+> drivers/iommu/, only the caller of bind_mm needs the PASID in order to
+> program it into the device. The only advantage I see would be slightly
+> faster bind(), when finding out if a mm is already bound to devices. But
+> we don't really need fast bind(), so I don't think we'd have enough
+> material to argue for a change in mm_struct.
+
+The idea behind storing the PASID in mm_struct is that we have a
+system-wide PASID-allocator and only one PASID per address space, even
+when accessed from multiple devices.
+
+There will be hardware implemenations where this is required, afaik. It
+doesn't mean that it _needs_ to be part of mm_struct, but it is
+certainly easier than tracking this 1-1 relation separatly.
+
+> We do need to allocate a separate "iommu_mm_struct" wrapper to store the
+> mmu_notifier. Maybe bind() could return this structure (that contains the
+> PASID), and unbind() would take this iommu_mm_struct as argument?
+
+I'd like to track this iommu_mm_struct only in iommu-code, otherwise
+drivers need to track the pointer somewhere. And we need to track the
+mm_struct->iommu_mm_struct relation anyway in core-code to handle events
+like segfaults, when the whole mm_struct goes away under us. So when we
+track this in core code, there is no need to track this again in the
+device drivers.
+
+
+Regards,
+
+	Joerg
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
