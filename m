@@ -1,292 +1,148 @@
-From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/9] SOC: brcmstb: add memory API
-Date: Thu, 12 Oct 2017 15:41:42 +0100
-Message-ID: <b6be2073-7a90-f83f-4e25-79ef04827bd7@arm.com>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
- <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: Re: [PATCH 1/4] dt-bindings: media: Binding document for Qualcomm
+ Camera Control Interface driver
+Date: Thu, 12 Oct 2017 17:50:03 +0300
+Message-ID: <e8bbc79a-6224-8ae3-78de-e1207c7718a4@linaro.org>
+References: <1506953613-23875-1-git-send-email-todor.tomov@linaro.org>
+ <1506953613-23875-2-git-send-email-todor.tomov@linaro.org>
+ <20171006052954.GC1575@tuxbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507761269-7017-2-git-send-email-jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171006052954.GC1575@tuxbook>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jim,
+Hi Bjorn,
 
-On 11/10/17 23:34, Jim Quinlan wrote:
-> From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Thank you for the review.
+
+On  6.10.2017 08:29, Bjorn Andersson wrote:
+> On Mon 02 Oct 07:13 PDT 2017, Todor Tomov wrote:
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+>> new file mode 100644
+>> index 0000000..f4c5338
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+>> @@ -0,0 +1,55 @@
+>> +Qualcomm Camera Control Interface I2C controller
 > 
-> This commit adds a memory API suitable for ascertaining the sizes of
-> each of the N memory controllers in a Broadcom STB chip.  Its first
-> user will be the Broadcom STB PCIe root complex driver, which needs
-> to know these sizes to properly set up DMA mappings for inbound
-> regions.
+> Well, it's not a I2C controller, it is a MIPI CCI controller.
 > 
-> We cannot use memblock here or anything like what Linux provides
-> because it collapses adjacent regions within a larger block, and here
-> we actually need per-memory controller addresses and sizes, which is
-> why we resort to manual DT parsing.
+>> +
+>> +Required properties:
+>> + - compatible: Should be one of:
+>> +   - "qcom,cci-v1.0.8" for 8916;
+>> +   - "qcom,cci-v1.4.0" for 8996.
+>> + - #address-cells: Should be <1>.
+>> + - #size-cells: Should be <0>.
+>> + - reg: Base address of the controller and length of memory mapped region.
+>> + - reg-names: Should be "cci".
 > 
-> Signed-off-by: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->   drivers/soc/bcm/brcmstb/Makefile |   2 +-
->   drivers/soc/bcm/brcmstb/memory.c | 183 +++++++++++++++++++++++++++++++++++++++
->   include/soc/brcmstb/memory_api.h |  25 ++++++
->   3 files changed, 209 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/soc/bcm/brcmstb/memory.c
->   create mode 100644 include/soc/brcmstb/memory_api.h
+> No need for reg-names, as we only have one.
 > 
-> diff --git a/drivers/soc/bcm/brcmstb/Makefile b/drivers/soc/bcm/brcmstb/Makefile
-> index 9120b27..4cea7b6 100644
-> --- a/drivers/soc/bcm/brcmstb/Makefile
-> +++ b/drivers/soc/bcm/brcmstb/Makefile
-> @@ -1 +1 @@
-> -obj-y				+= common.o biuctrl.o
-> +obj-y				+= common.o biuctrl.o memory.o
-> diff --git a/drivers/soc/bcm/brcmstb/memory.c b/drivers/soc/bcm/brcmstb/memory.c
-> new file mode 100644
-> index 0000000..cb6bf73
-> --- /dev/null
-> +++ b/drivers/soc/bcm/brcmstb/memory.c
-> @@ -0,0 +1,183 @@
-> +/*
-> + * Copyright © 2015-2017 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + *
-> + * A copy of the GPL is available at
-> + * http://www.broadcom.com/licenses/GPLv2.php or from the Free Software
-> + * Foundation at https://www.gnu.org/licenses/ .
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/sizes.h>
-> +#include <soc/brcmstb/memory_api.h>
-> +
-> +/* -------------------- Constants -------------------- */
-> +
-> +/* Macros to help extract property data */
-> +#define U8TOU32(b, offs) \
-> +	((((u32)b[0 + offs] << 0)  & 0x000000ff) | \
-> +	 (((u32)b[1 + offs] << 8)  & 0x0000ff00) | \
-> +	 (((u32)b[2 + offs] << 16) & 0x00ff0000) | \
-> +	 (((u32)b[3 + offs] << 24) & 0xff000000))
-> +
-> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(U8TOU32(b, offs)))
-> +
+>> + - interrupts: Specifier for CCI interrupt.
+>> + - interrupt-names: Should be "cci".
+> 
+> No need for interrupt-names, as we only have one.
+> 
+>> + - clocks: List of clock specifiers, one for each entry in clock-names.
+>> + - clock-names: Should contain:
+>> +   - "mmss_mmagic_ahb" - on 8996 only;
+>> +   - "camss_top_ahb";
+>> +   - "cci_ahb";
+>> +   - "cci";
+>> +   - "camss_ahb".
+>> + - pinctrl-names: Should contain only one value - "default".
+>> + - pinctrl-0: Pin control group to be used for this controller.
+> 
+> No need to document that the node can have the default pinctrl
+> properties.
+> 
+>> +
+>> +
+>> +Required properties on 8996:
+>> + - power-domains: Power domain specifier.
+>> +
+>> +Optional:
+>> + - clock-frequency: Desired I2C bus clock frequency in Hz, defaults to 100 kHz
+>> +   if omitted.
+>> +
+>> +Example:
+>> +
+>> +                cci: qcom,cci@a0c000 {
+> 
+> Don't do qcom, in the node name, and there's probably no reason to have
+> a label for this node either. So just make it
+> 
+> 		   cci@a0c000 {
+> 
+>> +                        compatible = "qcom,cci-v1.4.0";
+>> +                        #address-cells = <1>;
+>> +                        #size-cells = <0>;
+>> +                        reg = <0xa0c000 0x1000>;
+>> +                        reg-names = "cci";
+>> +                        interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
+>> +                        interrupt-names = "cci";
+>> +                        power-domains = <&mmcc CAMSS_GDSC>;
+>> +                        clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
+>> +                                        <&mmcc CAMSS_TOP_AHB_CLK>,
+>> +                                        <&mmcc CAMSS_CCI_AHB_CLK>,
+>> +                                        <&mmcc CAMSS_CCI_CLK>,
+>> +                                        <&mmcc CAMSS_AHB_CLK>;
+>> +                        clock-names = "mmss_mmagic_ahb",
+>> +                                        "camss_top_ahb",
+>> +                                        "cci_ahb",
+>> +                                        "cci",
+>> +                                        "camss_ahb";
+>> +                        pinctrl-names = "default";
+>> +                        pinctrl-0 = <&cci0_default>;
+>> +                        clock-frequency = <400000>;
+>> +                };
+> 
+> In the case of this single cci block having two masters we need a way to
+> describe the two sets of clients. I think the two options we have are:
+> 
+> cci {
+> 	client {
+> 		reg = <0 0x2c>;
+> 	};
+> };
+> 
+> The reg here being <master address>
+> 
+> or:
+> 
+> cci {
+> 	master0 {
+> 		client {
+> 			reg = <0x2c>;
+> 		};
+> 	};
+> };
+> 
+> The name "master0" could be made significant and picked up by name, and
+> in the case of single-master this level could be omitted.
+> 
+> 
+> I like the first one, but it looks really hard to get implemented in
+> Linux, based on the i2c core's expectation that #address-cells is 1. So
+> I think the latter is the favourable option.
 
-I fail to understand why this is not:
+Yes, I'll try this for the version which supports the second bus. Thank
+you for this suggestion.
 
-#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(*(u32*)(b + offs)))
+The rest of the points I'll fix now and send a v2.
 
-
-If I understand correctly, fdt data is in big endian, the macro U8TOU32 
-reads it as little endian. My guess is that this won't work on big 
-endian kernels but should work on little endian since fdt32_to_cpu will 
-revert the bytes again.
-
-Am I missing something?
-
-Cheers,
-
-> +/* Constants used when retrieving memc info */
-> +#define NUM_BUS_RANGES 10
-> +#define BUS_RANGE_ULIMIT_SHIFT 4
-> +#define BUS_RANGE_LLIMIT_SHIFT 4
-> +#define BUS_RANGE_PA_SHIFT 12
-> +
-> +enum {
-> +	BUSNUM_MCP0 = 0x4,
-> +	BUSNUM_MCP1 = 0x5,
-> +	BUSNUM_MCP2 = 0x6,
-> +};
-> +
-> +/* -------------------- Functions -------------------- */
-> +
-> +/*
-> + * If the DT nodes are handy, determine which MEMC holds the specified
-> + * physical address.
-> + */
-> +#ifdef CONFIG_ARCH_BRCMSTB
-> +int __brcmstb_memory_phys_addr_to_memc(phys_addr_t pa, void __iomem *base)
-> +{
-> +	int memc = -1;
-> +	int i;
-> +
-> +	for (i = 0; i < NUM_BUS_RANGES; i++, base += 8) {
-> +		const u64 ulimit_raw = readl(base);
-> +		const u64 llimit_raw = readl(base + 4);
-> +		const u64 ulimit =
-> +			((ulimit_raw >> BUS_RANGE_ULIMIT_SHIFT)
-> +			 << BUS_RANGE_PA_SHIFT) | 0xfff;
-> +		const u64 llimit = (llimit_raw >> BUS_RANGE_LLIMIT_SHIFT)
-> +				   << BUS_RANGE_PA_SHIFT;
-> +		const u32 busnum = (u32)(ulimit_raw & 0xf);
-> +
-> +		if (pa >= llimit && pa <= ulimit) {
-> +			if (busnum >= BUSNUM_MCP0 && busnum <= BUSNUM_MCP2) {
-> +				memc = busnum - BUSNUM_MCP0;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
-> +	return memc;
-> +}
-> +
-> +int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
-> +{
-> +	int memc = -1;
-> +	struct device_node *np;
-> +	void __iomem *cpubiuctrl;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "brcm,brcmstb-cpu-biu-ctrl");
-> +	if (!np)
-> +		return memc;
-> +
-> +	cpubiuctrl = of_iomap(np, 0);
-> +	if (!cpubiuctrl)
-> +		goto cleanup;
-> +
-> +	memc = __brcmstb_memory_phys_addr_to_memc(pa, cpubiuctrl);
-> +	iounmap(cpubiuctrl);
-> +
-> +cleanup:
-> +	of_node_put(np);
-> +
-> +	return memc;
-> +}
-> +
-> +#elif defined(CONFIG_MIPS)
-> +int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
-> +{
-> +	/* The logic here is fairly simple and hardcoded: if pa <= 0x5000_0000,
-> +	 * then this is MEMC0, else MEMC1.
-> +	 *
-> +	 * For systems with 2GB on MEMC0, MEMC1 starts at 9000_0000, with 1GB
-> +	 * on MEMC0, MEMC1 starts at 6000_0000.
-> +	 */
-> +	if (pa >= 0x50000000ULL)
-> +		return 1;
-> +	else
-> +		return 0;
-> +}
-> +#endif
-> +EXPORT_SYMBOL(brcmstb_memory_phys_addr_to_memc);
-> +
-> +u64 brcmstb_memory_memc_size(int memc)
-> +{
-> +	const void *fdt = initial_boot_params;
-> +	const int mem_offset = fdt_path_offset(fdt, "/memory");
-> +	int addr_cells = 1, size_cells = 1;
-> +	const struct fdt_property *prop;
-> +	int proplen, cellslen;
-> +	u64 memc_size = 0;
-> +	int i;
-> +
-> +	/* Get root size and address cells if specified */
-> +	prop = fdt_get_property(fdt, 0, "#size-cells", &proplen);
-> +	if (prop)
-> +		size_cells = DT_PROP_DATA_TO_U32(prop->data, 0);
-> +
-> +	prop = fdt_get_property(fdt, 0, "#address-cells", &proplen);
-> +	if (prop)
-> +		addr_cells = DT_PROP_DATA_TO_U32(prop->data, 0);
-> +
-> +	if (mem_offset < 0)
-> +		return -1;
-> +
-> +	prop = fdt_get_property(fdt, mem_offset, "reg", &proplen);
-> +	cellslen = (int)sizeof(u32) * (addr_cells + size_cells);
-> +	if ((proplen % cellslen) != 0)
-> +		return -1;
-> +
-> +	for (i = 0; i < proplen / cellslen; ++i) {
-> +		u64 addr = 0;
-> +		u64 size = 0;
-> +		int memc_idx;
-> +		int j;
-> +
-> +		for (j = 0; j < addr_cells; ++j) {
-> +			int offset = (cellslen * i) + (sizeof(u32) * j);
-> +
-> +			addr |= (u64)DT_PROP_DATA_TO_U32(prop->data, offset) <<
-> +				((addr_cells - j - 1) * 32);
-> +		}
-> +		for (j = 0; j < size_cells; ++j) {
-> +			int offset = (cellslen * i) +
-> +				(sizeof(u32) * (j + addr_cells));
-> +
-> +			size |= (u64)DT_PROP_DATA_TO_U32(prop->data, offset) <<
-> +				((size_cells - j - 1) * 32);
-> +		}
-> +
-> +		if ((phys_addr_t)addr != addr) {
-> +			pr_err("phys_addr_t is smaller than provided address 0x%llx!\n",
-> +			       addr);
-> +			return -1;
-> +		}
-> +
-> +		memc_idx = brcmstb_memory_phys_addr_to_memc((phys_addr_t)addr);
-> +		if (memc_idx == memc)
-> +			memc_size += size;
-> +	}
-> +
-> +	return memc_size;
-> +}
-> +EXPORT_SYMBOL(brcmstb_memory_memc_size);
-> +
-> diff --git a/include/soc/brcmstb/memory_api.h b/include/soc/brcmstb/memory_api.h
-> new file mode 100644
-> index 0000000..d922906
-> --- /dev/null
-> +++ b/include/soc/brcmstb/memory_api.h
-> @@ -0,0 +1,25 @@
-> +#ifndef __MEMORY_API_H
-> +#define __MEMORY_API_H
-> +
-> +/*
-> + * Bus Interface Unit control register setup, must happen early during boot,
-> + * before SMP is brought up, called by machine entry point.
-> + */
-> +void brcmstb_biuctrl_init(void);
-> +
-> +#ifdef CONFIG_SOC_BRCMSTB
-> +int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa);
-> +u64 brcmstb_memory_memc_size(int memc);
-> +#else
-> +static inline int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline u64 brcmstb_memory_memc_size(int memc)
-> +{
-> +	return -1;
-> +}
-> +#endif
-> +
-> +#endif /* __MEMORY_API_H */
+> 
+> Regards,
+> Bjorn
 > 
 
 -- 
-Julien Thierry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Todor Tomov
