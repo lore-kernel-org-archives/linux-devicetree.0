@@ -1,56 +1,106 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/5] arm64: add ls1012a and ls1046a pcie support
-Date: Thu, 12 Oct 2017 10:41:18 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1710121040550.1930@nanos>
-References: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com> <20171011185719.GL25517@bhelgaas-glaptop.roam.corp.google.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
+Date: Thu, 12 Oct 2017 11:43:36 +0300
+Message-ID: <87efq821tz.fsf@linux.intel.com>
+References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com> <878tgim24i.fsf@linux.intel.com> <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com> <87vajllx8t.fsf@linux.intel.com> <1c4180ef-2da6-b420-7c6e-41769608384a@st.com> <87sheplsrm.fsf@linux.intel.com> <3c36db6d-75fd-1be6-e946-b75a04e3760e@st.com> <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171011185719.GL25517@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, shawnguo@kernel.org, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, roy.zang@nxp.com, Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, John Youn <johnyoun@synopsys.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Oct 2017, Bjorn Helgaas wrote:
-> On Tue, Sep 19, 2017 at 05:26:53PM +0800, Zhiqiang Hou wrote:
-> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > 
-> > This patch set adds ls1012a MSI and PCIe support, including driver
-> > and device tree nodes. The ls1046a's MSI support patch and PCIe
-> > driver patch has been applied, so only adds the PCIe device tree
-> > nodes.
-> > 
-> > Hou Zhiqiang (5):
-> >   irqchip/ls-scfg-msi: add LS1012a MSI support
-> >   arm64: dts: ls1012a: Add MSI controller DT node
-> >   PCI: layerscape: Add support for ls1012a
-> >   arm64: dts: ls1012a: Add PCIe controller DT node
-> >   arm64: dts: ls1046a: add PCIe controller DT nodes
-> > 
-> >  .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
-> >  .../devicetree/bindings/pci/layerscape-pci.txt     |  1 +
-> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 31 +++++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 75 ++++++++++++++++++++++
-> >  drivers/irqchip/irq-ls-scfg-msi.c                  |  1 +
-> >  drivers/pci/dwc/pci-layerscape.c                   |  1 +
-> >  6 files changed, 110 insertions(+)
-> 
-> I'm not 100% sure who should take these.  They trivially touch PCI and
-> I haven't seen anybody else respond, so I put them on
-> pci/host-layerscape with Rob's acks.
-> 
-> If somebody else wants to take them, just let me know and I'll drop
-> them.
-> 
-> They really should be acked by Minghuan or Mingkai, who are listed as
-> the maintainers of drivers/pci/dwc/pci-layerscape.c and are presumably
-> responsible for the related dtsi files, too.
-> 
-> Thomas, Jason, and Marc are listed as maintainers of
-> drivers/irqchip/irq-ls-scfg-msi.c.  It's a trivial change, but I added
-> them to the cc list.
 
-Feel free to pick them up.
+Hi,
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Amelie DELAUNAY <amelie.delaunay@st.com> writes:
+> Hi Felipe, Alex,
+>
+> On 10/11/2017 04:38 PM, Alexandre Torgue wrote:
+>> 
+>> 
+>> On 10/11/2017 03:26 PM, Felipe Balbi wrote:
+>>>
+>>> Hi,
+>>>
+>>> Alexandre Torgue <alexandre.torgue@st.com> writes:
+>>>> Hi
+>>>>
+>>>> On 10/11/2017 01:50 PM, Felipe Balbi wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> Alexandre Torgue <alexandre.torgue@st.com> writes:
+>>>>>> Hi Felip
+>>>>>>
+>>>>>> On 10/11/2017 12:04 PM, Felipe Balbi wrote:
+>>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> Amelie Delaunay <amelie.delaunay@st.com> writes:
+>>>>>>>> The STM32F7 MCU family embeds two DWC2 USB OTG cores. One core is 
+>>>>>>>> USB
+>>>>>>>> OTG FS and the other is USB OTG HS. The USB FS core only works 
+>>>>>>>> with its
+>>>>>>>> internal phy whilst the USB HS core can work in HS with external 
+>>>>>>>> ULPI phy
+>>>>>>>> or in FS/LS with the on-chip FS phy.
+>>>>>>>>
+>>>>>>>> Amelie Delaunay (7):
+>>>>>>>>      dt-bindings: usb: Document the STM32F7 DWC2 USB OTG HS core 
+>>>>>>>> binding
+>>>>>>>>      usb: dwc2: add support for STM32F7 USB OTG HS
+>>>>>>>>      ARM: dts: stm32: Add USB HS support for STM32F746 MCU
+>>>>>>>
+>>>>>>> I have applied these three patches. Should I take the rest? They 
+>>>>>>> seems
+>>>>>>> like they could go upstream through the ARM maintainers.
+>>>>>>>
+>>>>>>
+>>>>>> I will take other DT patches in my PR.
+>>>>>>
+>>>>>> Concerning "ARM: dts: stm32: Add USB HS support for STM32F746 MCU" 
+>>>>>> patch
+>>>>>> I prefer also to take it. This patch adds some pinctrl groups but 
+>>>>>> stm32
+>>>>>> pinctrl bindings will change in my next PR (we will use a macro to
+>>>>>> define pins instead of using defined values). So if you push the DT
+>>>>>> patch through your pull request there will be a merge issue.
+>>>>>> It is possible that I take also this one ?
+>>>>>
+>>>>> In that case, it's best if you take them all :-) Here's my Ack:
+>>>>>
+>>>>> Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+>>>>>
+>>>>> I'll drop them from my tree now
+>>>>
+>>>> Ok perfect, I will take DT patches (3 to 7) and I let you take patch 1&2
+>>>> in your tree.
+>>>
+>>> Well, I have dropped them from my tree. Please two 1-7 through yours.
+>> 
+>> Hum, ok for this patchset but IMO it is better (next time) that you take 
+>> driver pacthes in your tree and I take only DT patches in mine.
+>> No ?
+>> 
+>> Regards
+>> Alex
+>> 
+>>>
+>
+> I thought that patches 1 and 2, as they are "driver" patches, had to be 
+> applied on USB tree (so Felipe's one), and the others (3 to 7) had to be 
+> applied on STM32-DT tree (Alex's one). Did I miss something?
+
+patch 1 is documentation, right? Without the documentation patch,
+checkpatch will cringe :-) So either way works.
+
+If you insist, I can take 1-2 through my tree. No worries.
+
+let me know
+
+-- 
+balbi
