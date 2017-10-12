@@ -1,50 +1,75 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [RFC usb-next v5 1/3] dt-bindings: usb: add the documentation
- for USB root-hub
-Date: Thu, 12 Oct 2017 17:17:01 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1710121715390.1278-100000@iolanthe.rowland.org>
-References: <CAFBinCCc+Fj6wwGk+OLNQTHEYU8xBPe7OGHVSQ82kMew3xUsww@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 15/22] firmware: arm_scmi: abstract mailbox interface
+Date: Thu, 12 Oct 2017 14:20:12 -0700
+Message-ID: <CAOCOHw7HOfnFZBpy6XmzGhDzbAczPJ0t8z_dyTYFz25U=Y9uEA@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-16-git-send-email-sudeep.holla@arm.com> <CAK8P3a0EUr_aEZdOrjHixzp44yXqsNxTMzBceSBTmk-x8x2MAg@mail.gmail.com>
+ <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCCc+Fj6wwGk+OLNQTHEYU8xBPe7OGHVSQ82kMew3xUsww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f316b938-c6d5-3aa9-4f03-6b5c6ad4bfa7@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
+On Wed, Oct 4, 2017 at 4:32 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+>
+> On 04/10/17 12:24, Arnd Bergmann wrote:
+>> On Thu, Sep 28, 2017 at 3:11 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>> Some of the mailbox controller expects controller specific data in order
+>>> to implement simple doorbell mechanism as expected by SCMI specification.
+>>>
+>>> This patch creates a shim layer to abstract the mailbox interface so
+>>> that it can support any mailbox controller. It also provides default
+>>> implementation which maps to standard mailbox client APIs, so that
+>>> controllers implementing doorbell mechanism need not require any
+>>> additional layer.
+>>>
+>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>>
+>> Another level? Now we have three levels of stacked mailboxes, with
+>> the highest level being the combined mailbox/memory, then the shim,
+>> and below it the hardware mailbox.
+>>
+>> Can you try to come up with a way to do this with fewer abstractions?
+>>
+>
+> I completely agree with you. I was against this but Jassi recommended
+> this. I just wanted this SCMI to work with mailbox controllers that
+> support simple doorbell mechanism as specified in the specification but
+> Jassi disagrees with that.
+>
+>> Maybe you could assume that the mailbox itself can take variable-length
+>> data packets, and then use the shim here for those that require
+>> something else?
+>>
+>
+> As per SCMI specification, we pass all the data in shared memory and it
+> just expects to use a simple doorbell feature from hardware mailbox
+> controllers. It's done that way intentionally to avoid dependency on h/w
+> and we for sure will have variety of it and that defeats the purpose
+> of this standard specification.
+>
+> Also, I have added shim only for specific controllers that need them.
+> E.g. ARM MHU as Jassi disagreed to add doorbell mechanism to that.
+> mbox_if provides default implementation that just calls direct mailbox
+> APIs.
+>
 
-> I haven't tested the described use-case. however, this patch is not
-> supposed to change the binding for actual devices.
-> USB device numbering starts at 1, while 0 is reserved for the root-hub
-> (at least from what I know).
+drivers/mailbox is a framework for interfacing/abstracting hardware
+mailboxes. If you're starting to layer mailboxes ontop of each-other
+chances are very high that you're confusing it with the computer
+science term "mailbox".
 
-Actually 1 is reserved for the root hub.  External devices are numbered 
-starting from 2.  (We can't use 0 for the root hub because, as you 
-said, USB device numbering starts at 1!)
+Abstracting a doorbell-like piece of hardware behind the mbox
+framework makes a lot of sense, but the interface between your clients
+and the code that fills out shared memory and then invokes said
+doorbell is a higher level of "mailbox" and is probably better
+implemented using a direct function call.
 
-Alan Stern
-
-> before this patch there was no way to
-> describe the root-hub via .dts. this however is required for some
-> platforms that need to set up a PHY for each port on the root-hub
-> (Amlogic Meson GXL platform is one example: there are two ports
-> enabled on dwc3's root-hub with 2x USB2 and 1x USB3 PHYs) - so this
-> patch uses a similar binding as we already have (to describe the
-> devices) to describe the root-hub
-> 
-> 
-> Regards,
-> Martin
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
