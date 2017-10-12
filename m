@@ -1,105 +1,72 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to and
- from devices
-Date: Thu, 12 Oct 2017 12:13:20 +0100
-Message-ID: <ee7f80e3-ca30-0ee7-53f3-3e57b2b58df6@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-6-jean-philippe.brucker@arm.com>
- <20171011113348.GE30803@8bytes.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
+Date: Thu, 12 Oct 2017 14:11:54 +0300
+Message-ID: <fe0e4bc2-3eef-f6f0-4afb-0cdcab797d7b@gmail.com>
+References: <cover.1507752381.git.digetx@gmail.com>
+ <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
+ <f18b6a72-e255-9aa4-6ebd-852ce1a27a4e@nvidia.com>
+ <6fe375ea-4d8d-5dc2-2d17-c13aa1f46d71@gmail.com>
+ <694edb38-ca8f-2580-5207-0ea2414f37ba@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171011113348.GE30803@8bytes.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <694edb38-ca8f-2580-5207-0ea2414f37ba@nvidia.com>
 Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@goog>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
+On 12.10.2017 13:57, Jon Hunter wrote:
+> 
+> On 12/10/17 11:51, Dmitry Osipenko wrote:
+>> On 12.10.2017 11:49, Jon Hunter wrote:
+>>>
+>>> On 11/10/17 21:08, Dmitry Osipenko wrote:
+>>>> Add a device node for the video decoder engine found on Tegra20.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
+>>>>  1 file changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+>>>> index 7c85f97f72ea..1b5d54b6c0cb 100644
+>>>> --- a/arch/arm/boot/dts/tegra20.dtsi
+>>>> +++ b/arch/arm/boot/dts/tegra20.dtsi
+>>>> @@ -249,6 +249,23 @@
+>>>>  		*/
+>>>>  	};
+>>>>  
+>>>> +	vde@6001a000 {
+>>>> +		compatible = "nvidia,tegra20-vde";
+>>>> +		reg = <0x6001a000 0x3D00    /* VDE registers */
+>>>> +		       0x40000400 0x3FC00>; /* IRAM region */
+>>>> +		reg-names = "regs", "iram";
+>>>> +		interrupts = <GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>, /* UCQ error interrupt */
+>>>> +			     <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>, /* Sync token interrupt */
+>>>> +			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>, /* BSE-V interrupt */
+>>>> +			     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>, /* BSE-A interrupt */
+>>>> +			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>; /* SXE interrupt */
+>>>> +		interrupt-names = "ucq-error", "sync-token", "bsev", "bsea", "sxe";
+>>>> +		clocks = <&tegra_car TEGRA20_CLK_VDE>;
+>>>> +		clock-names = "vde";
+>>>> +		resets = <&tegra_car 61>;
+>>>> +		reset-names = "vde";
+>>>> +	};
+>>>> +
+>>>
+>>> I don't see any binding documentation for this node. We need to make
+>>> sure we add this.
+>>>
+>>
+>> It's in the first patch.
+>>
+>> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+>>
+> 
+> Ah yes indeed, then that needs to be a separate patch.
+> 
 
-On 11/10/17 12:33, Joerg Roedel wrote:
-> Hi Jean-Philipe,
-> 
-> Thanks for your patches, this is definitly a step in the right direction
-> to get generic support for IO virtual memory into the IOMMU core code.
-> 
-> But I see an issue with the design around task_struct, please see
-> below.
-> 
-> On Fri, Oct 06, 2017 at 02:31:32PM +0100, Jean-Philippe Brucker wrote:
->> +int iommu_process_bind_device(struct device *dev, struct task_struct *task,
->> +			      int *pasid, int flags)
-> 
-> I just took this patch as an example, it is in the other patches as
-> well. The code is designed around 'struct task_struct' while it should
-> really be designed around 'struct mm_struct'. You are not attaching a
-> specific process to a device, but the address-space of one or more
-> processes. And that should be reflected in the design.
-
-Agreed. The task struct is only really needed for obtaining the mm in my
-code. It also keeps hold of a pid, but that's wrong and easy to remove.
-
-> There are several bad implications of building it around task_struct,
-> one is the life-time of the binding. If the address space is detached
-> from the device when the process exits, only the thread that did the
-> setup can can safely make use of the device, because if the device is
-> accessed from another thread it will crash when the setup-thread exits.
-> 
-> There are other benefits of using mm_struct, for example that you can
-> use mmu_notifiers to exit-handling.
-> 
-> Here is how I think the base API should look like:
-> 
-> 	* iommu_iovm_device_init(struct device *dev);
-> 	  iommu_iovm_device_shutdown(struct device *dev);
-> 
-> 	  These two functions do the device specific setup/shutdown. For
-> 	  PCI this would include enabling the PRI, PASID, and ATS
-> 	  capabilities and setting up a PASID table for the device.
-
-Ok. On SMMU the PASID table also hosts the non-PASID page table pointer,
-so the table and capability cannot be setup later than attach_device (and
-we'll probably have to enable PASID in add_device). But I suppose it's an
-implementation detail.
-
-Some device drivers will want to use ATS alone, for accelerating IOVA
-traffic. Should we enable it automatically, or provide device drivers with
-a way to enable it manually? According to the PCI spec, PASID has to be
-enabled before ATS, so device_init would have to first disable ATS in that
-case.
-
-> 	* iommu_iovm_bind_mm(struct device *dev, struct mm_struct *mm,
-> 			     iovm_shutdown_cb *cb);
-> 	  iommu_iovm_unbind_mm(struct device *dev, struct mm_struct *mm);
-> 
-> 	  These functions add and delete the entries in the PASID table
-> 	  for the device and setup mmu_notifiers for the mm_struct to
-> 	  keep IOMMU TLBs in sync with the CPU TLBs.
-> 
-> 	  The shutdown_cb is invoked by the IOMMU core code when the
-> 	  mm_struct goes away, for example because the process
-> 	  segfaults.
-> 
-> 	The PASID handling is best done these functions as well, unless
-> 	there is a strong reason to allow device drivers to do the
-> 	handling themselves.
-> 
-> The context data can be stored directly in mm_struct, including the
-> PASID for that mm.
-
-Changing mm_struct probably isn't required at the moment, since the mm
-subsystem won't use the context data or the PASID. Outside of
-drivers/iommu/, only the caller of bind_mm needs the PASID in order to
-program it into the device. The only advantage I see would be slightly
-faster bind(), when finding out if a mm is already bound to devices. But
-we don't really need fast bind(), so I don't think we'd have enough
-material to argue for a change in mm_struct.
-
-We do need to allocate a separate "iommu_mm_struct" wrapper to store the
-mmu_notifier. Maybe bind() could return this structure (that contains the
-PASID), and unbind() would take this iommu_mm_struct as argument?
-
-Thanks
-Jean
+Okay
