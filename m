@@ -1,106 +1,59 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
-Date: Thu, 12 Oct 2017 11:43:36 +0300
-Message-ID: <87efq821tz.fsf@linux.intel.com>
-References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com> <878tgim24i.fsf@linux.intel.com> <04a49088-b615-d7b8-0387-e7bfa32ee19f@st.com> <87vajllx8t.fsf@linux.intel.com> <1c4180ef-2da6-b420-7c6e-41769608384a@st.com> <87sheplsrm.fsf@linux.intel.com> <3c36db6d-75fd-1be6-e946-b75a04e3760e@st.com> <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
+Date: Thu, 12 Oct 2017 09:49:04 +0100
+Message-ID: <f18b6a72-e255-9aa4-6ebd-852ce1a27a4e@nvidia.com>
+References: <cover.1507752381.git.digetx@gmail.com>
+ <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <21df4d0c-075c-0c5a-c39b-b1dd94fe819d@st.com>
+In-Reply-To: <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, John Youn <johnyoun@synopsys.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-Hi,
+On 11/10/17 21:08, Dmitry Osipenko wrote:
+> Add a device node for the video decoder engine found on Tegra20.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 7c85f97f72ea..1b5d54b6c0cb 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -249,6 +249,23 @@
+>  		*/
+>  	};
+>  
+> +	vde@6001a000 {
+> +		compatible = "nvidia,tegra20-vde";
+> +		reg = <0x6001a000 0x3D00    /* VDE registers */
+> +		       0x40000400 0x3FC00>; /* IRAM region */
+> +		reg-names = "regs", "iram";
+> +		interrupts = <GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>, /* UCQ error interrupt */
+> +			     <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>, /* Sync token interrupt */
+> +			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>, /* BSE-V interrupt */
+> +			     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>, /* BSE-A interrupt */
+> +			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>; /* SXE interrupt */
+> +		interrupt-names = "ucq-error", "sync-token", "bsev", "bsea", "sxe";
+> +		clocks = <&tegra_car TEGRA20_CLK_VDE>;
+> +		clock-names = "vde";
+> +		resets = <&tegra_car 61>;
+> +		reset-names = "vde";
+> +	};
+> +
 
-Amelie DELAUNAY <amelie.delaunay@st.com> writes:
-> Hi Felipe, Alex,
->
-> On 10/11/2017 04:38 PM, Alexandre Torgue wrote:
->> 
->> 
->> On 10/11/2017 03:26 PM, Felipe Balbi wrote:
->>>
->>> Hi,
->>>
->>> Alexandre Torgue <alexandre.torgue@st.com> writes:
->>>> Hi
->>>>
->>>> On 10/11/2017 01:50 PM, Felipe Balbi wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> Alexandre Torgue <alexandre.torgue@st.com> writes:
->>>>>> Hi Felip
->>>>>>
->>>>>> On 10/11/2017 12:04 PM, Felipe Balbi wrote:
->>>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> Amelie Delaunay <amelie.delaunay@st.com> writes:
->>>>>>>> The STM32F7 MCU family embeds two DWC2 USB OTG cores. One core is 
->>>>>>>> USB
->>>>>>>> OTG FS and the other is USB OTG HS. The USB FS core only works 
->>>>>>>> with its
->>>>>>>> internal phy whilst the USB HS core can work in HS with external 
->>>>>>>> ULPI phy
->>>>>>>> or in FS/LS with the on-chip FS phy.
->>>>>>>>
->>>>>>>> Amelie Delaunay (7):
->>>>>>>>      dt-bindings: usb: Document the STM32F7 DWC2 USB OTG HS core 
->>>>>>>> binding
->>>>>>>>      usb: dwc2: add support for STM32F7 USB OTG HS
->>>>>>>>      ARM: dts: stm32: Add USB HS support for STM32F746 MCU
->>>>>>>
->>>>>>> I have applied these three patches. Should I take the rest? They 
->>>>>>> seems
->>>>>>> like they could go upstream through the ARM maintainers.
->>>>>>>
->>>>>>
->>>>>> I will take other DT patches in my PR.
->>>>>>
->>>>>> Concerning "ARM: dts: stm32: Add USB HS support for STM32F746 MCU" 
->>>>>> patch
->>>>>> I prefer also to take it. This patch adds some pinctrl groups but 
->>>>>> stm32
->>>>>> pinctrl bindings will change in my next PR (we will use a macro to
->>>>>> define pins instead of using defined values). So if you push the DT
->>>>>> patch through your pull request there will be a merge issue.
->>>>>> It is possible that I take also this one ?
->>>>>
->>>>> In that case, it's best if you take them all :-) Here's my Ack:
->>>>>
->>>>> Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
->>>>>
->>>>> I'll drop them from my tree now
->>>>
->>>> Ok perfect, I will take DT patches (3 to 7) and I let you take patch 1&2
->>>> in your tree.
->>>
->>> Well, I have dropped them from my tree. Please two 1-7 through yours.
->> 
->> Hum, ok for this patchset but IMO it is better (next time) that you take 
->> driver pacthes in your tree and I take only DT patches in mine.
->> No ?
->> 
->> Regards
->> Alex
->> 
->>>
->
-> I thought that patches 1 and 2, as they are "driver" patches, had to be 
-> applied on USB tree (so Felipe's one), and the others (3 to 7) had to be 
-> applied on STM32-DT tree (Alex's one). Did I miss something?
+I don't see any binding documentation for this node. We need to make
+sure we add this.
 
-patch 1 is documentation, right? Without the documentation patch,
-checkpatch will cringe :-) So either way works.
-
-If you insist, I can take 1-2 through my tree. No worries.
-
-let me know
+Jon
 
 -- 
-balbi
+nvpublic
