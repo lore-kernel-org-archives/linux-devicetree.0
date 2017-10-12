@@ -1,46 +1,35 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 4/9] arm64: dma-mapping: export symbol arch_setup_dma_ops
-Date: Thu, 12 Oct 2017 18:06:48 +0100
-Message-ID: <a8fa87e4-4d70-eb60-f1c5-94071d6394aa@arm.com>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
- <1507761269-7017-5-git-send-email-jim2101024@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: do not leak console options
+Date: Thu, 12 Oct 2017 12:24:53 -0500
+Message-ID: <CAL_JsqJxPKjJPO_ykzac_L7rj2mR69OpmbLtdZiATg1iGQxwvg@mail.gmail.com>
+References: <20170926062510.4948-1-sergey.senozhatsky@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507761269-7017-5-git-send-email-jim2101024@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20170926062510.4948-1-sergey.senozhatsky@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/17 23:34, Jim Quinlan wrote:
-> The BrcmSTB driver needs to get ahold of a pointer to swiotlb_dma_ops.
-> However, that variable is defined as static.  Instead, we use
-> arch_setup_dma_ops() to get the pointer to swiotlb_dma_ops.  Since
-> we also want our driver to be a separate module, we need to
-> export this function.
-
-NAK. Retrieve the platform-assigned ops from the device via
-get_dma_ops() and stash them in your drvdata or wherever before you
-replace them. Don't go poking around arch code internals directly from a
-driver.
-
-Robin.
-
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+On Tue, Sep 26, 2017 at 1:25 AM, Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
+> Do not strdup() console options. It seems that the only reason for
+> it to be strdup()-ed was a compilation warning: printk, UART and
+> console drivers, for some reason, expect char pointer instead of
+> const char pointer. So we can just pass `of_stdout_options', but
+> need to cast it to char pointer. A better fix would be to change
+> printk, console drivers and UART to accept const char `options';
+> but that will take time - there are lots of drivers to update.
+>
+> The patch also fixes a possible memory leak: add_preferred_console()
+> can fail, but we don't kfree() options.
+>
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 > ---
->  arch/arm64/mm/dma-mapping.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-> index 614af88..dae572f 100644
-> --- a/arch/arm64/mm/dma-mapping.c
-> +++ b/arch/arm64/mm/dma-mapping.c
-> @@ -936,3 +936,4 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
->  	}
->  #endif
->  }
-> +EXPORT_SYMBOL(arch_setup_dma_ops);
-> 
+>  drivers/of/base.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+
+Applied.
+
+Rob
