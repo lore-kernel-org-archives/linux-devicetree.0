@@ -1,50 +1,56 @@
-From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/7] ARM: dts: Add nodes for missing omap4 interconnect
- target modules
-Date: Thu, 12 Oct 2017 10:40:30 +0200
-Message-ID: <20171012084030.lshobr3ewu3t5goc@squirrel.local>
-References: <20170929223411.9691-1-tony@atomide.com>
- <20170929223411.9691-6-tony@atomide.com>
- <f5c57f0b-1423-c362-0fda-4069b77a2e38@ti.com>
- <20171011165850.jnaievrgcszcawh3@earth>
- <da8d1d7f-f16d-8d71-cf49-acff79614610@ti.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/5] arm64: add ls1012a and ls1046a pcie support
+Date: Thu, 12 Oct 2017 10:41:18 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1710121040550.1930@nanos>
+References: <20170919092658.22482-1-Zhiqiang.Hou@nxp.com> <20171011185719.GL25517@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <da8d1d7f-f16d-8d71-cf49-acff79614610-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171011185719.GL25517@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, shawnguo@kernel.org, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, roy.zang@nxp.com, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 09:07:55AM +0300, Peter Ujfalusi wrote:
-> I don't see much benefit of using McASP on OMAP4, only drawbacks... It
-> lacks AFIFO so it is prone to underrun and if it underruns you need to
-> reset McASP. Been there with the Samsung Galaxy Nexus.
+On Wed, 11 Oct 2017, Bjorn Helgaas wrote:
+> On Tue, Sep 19, 2017 at 05:26:53PM +0800, Zhiqiang Hou wrote:
+> > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > 
+> > This patch set adds ls1012a MSI and PCIe support, including driver
+> > and device tree nodes. The ls1046a's MSI support patch and PCIe
+> > driver patch has been applied, so only adds the PCIe device tree
+> > nodes.
+> > 
+> > Hou Zhiqiang (5):
+> >   irqchip/ls-scfg-msi: add LS1012a MSI support
+> >   arm64: dts: ls1012a: Add MSI controller DT node
+> >   PCI: layerscape: Add support for ls1012a
+> >   arm64: dts: ls1012a: Add PCIe controller DT node
+> >   arm64: dts: ls1046a: add PCIe controller DT nodes
+> > 
+> >  .../interrupt-controller/fsl,ls-scfg-msi.txt       |  1 +
+> >  .../devicetree/bindings/pci/layerscape-pci.txt     |  1 +
+> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 31 +++++++++
+> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 75 ++++++++++++++++++++++
+> >  drivers/irqchip/irq-ls-scfg-msi.c                  |  1 +
+> >  drivers/pci/dwc/pci-layerscape.c                   |  1 +
+> >  6 files changed, 110 insertions(+)
+> 
+> I'm not 100% sure who should take these.  They trivially touch PCI and
+> I haven't seen anybody else respond, so I put them on
+> pci/host-layerscape with Rob's acks.
+> 
+> If somebody else wants to take them, just let me know and I'll drop
+> them.
+> 
+> They really should be acked by Minghuan or Mingkai, who are listed as
+> the maintainers of drivers/pci/dwc/pci-layerscape.c and are presumably
+> responsible for the related dtsi files, too.
+> 
+> Thomas, Jason, and Marc are listed as maintainers of
+> drivers/irqchip/irq-ls-scfg-msi.c.  It's a trivial change, but I added
+> them to the cc list.
 
-AESS/ATC isn't able to consistently respond to a DMA request within 20
-us ?  Strange.. I would have expected it to have no trouble with that.
-(And presumably so did TI, or they would have included AFIFO?)
+Feel free to pick them up.
 
-> I wonder how Motorola is using the McASP as the OMAP4 version
-> (officially) does not support I2S.
-
-Hmm? I checked the omap4430 TRM and I don't see that mentioned. It seems
-to have pins for i2s transmit:
-
-	abe_mcasp_axr              O     Audio transmit data
-	abe_mcasp_aclkx            O     Transmit bit clock
-	abe_mcasp_ahclkx           O     Transmit high-frequency master clock
-	abe_mcasp_afsx             O     Transmit frame synchronization
-	abe_mcasp_amute            O     Mute out to external
-	abe_mcasp_amutein          I     Mute in from external
-
-If it supported s/pdif tx only, then all of these except axr would be
-useless.
-
-Matthijs
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
