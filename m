@@ -1,7 +1,7 @@
 From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for Synquacer pre-ITS
-Date: Thu, 12 Oct 2017 19:32:47 +0100
-Message-ID: <20171012183247.23679-3-ard.biesheuvel@linaro.org>
+Subject: [PATCH v3 1/2] drivers/irqchip: gicv3: probe device ID space before quirks handling
+Date: Thu, 12 Oct 2017 19:32:46 +0100
+Message-ID: <20171012183247.23679-2-ard.biesheuvel@linaro.org>
 References: <20171012183247.23679-1-ard.biesheuvel@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171012183247.23679-1-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,177 +10,65 @@ To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.g
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, daniel.thompson-vY8bQiOPoHsdnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Socionext Synquacer SoC's implementation of GICv3 has a so-called
-'pre-ITS', which maps 32-bit writes targeted at a separate window of
-size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
-ID taken from bits [device_id_bits + 1:2] of the window offset.
-Writes that target GITS_TRANSLATER directly are reported as originating
-from device ID #0.
-
-So add a workaround for this. Given that this breaks isolation, clear
-the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+Before adding another SoC whose device ID space deviates from the
+value presented in the GIC ID registers, let's slightly refactor
+the code so that the ID registers are probed before that quirks
+handling executes. This allows us to move the device ID override
+into the quirk handler itself.
 
 Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
- arch/arm64/Kconfig                                                    |  8 +++
- drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
- 3 files changed, 72 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-index 4c29cdab0ea5..0798a61bbf99 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-@@ -75,6 +75,10 @@ These nodes must have the following properties:
- - reg: Specifies the base physical address and size of the ITS
-   registers.
- 
-+Optional:
-+- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
-+  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
-+
- The main GIC node must contain the appropriate #address-cells,
- #size-cells and ranges properties for the reg property of all ITS
- nodes.
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0df64a6a56d4..c4361dff2b74 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -539,6 +539,14 @@ config QCOM_QDF2400_ERRATUM_0065
- 
- 	  If unsure, say Y.
- 
-+config SOCIONEXT_SYNQUACER_PREITS
-+	bool "Socionext Synquacer: Workaround for GICv3 pre-ITS"
-+	default y
-+	help
-+	  Socionext Synquacer SoCs implement a separate h/w block to generate
-+	  MSI doorbell writes with non-zero values for the device ID.
-+
-+	  If unsure, say Y.
- endmenu
- 
- 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 891de07fd4cc..2fc4fba0cc4c 100644
+index e8d89343d613..891de07fd4cc 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -97,12 +97,18 @@ struct its_node {
- 	struct its_cmd_block	*cmd_write;
- 	struct its_baser	tables[GITS_BASER_NR_REGS];
- 	struct its_collection	*collections;
-+	struct fwnode_handle	*fwnode_handle;
- 	struct list_head	its_device_list;
- 	u64			flags;
- 	u32			ite_size;
- 	u32			device_ids;
- 	int			numa_node;
-+	unsigned int		msi_domain_flag_mask;
- 	bool			is_v4;
-+
-+	/* for Socionext Synquacer pre-ITS */
-+	u32			pre_its_base;
-+	u32			pre_its_size;
- };
+@@ -1650,23 +1650,14 @@ static void its_free_tables(struct its_node *its)
  
- #define ITS_ITT_ALIGN		SZ_256
-@@ -1095,14 +1101,29 @@ static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	return IRQ_SET_MASK_OK_DONE;
- }
- 
-+static u64 its_irq_get_msi_base(struct its_device *its_dev)
-+{
-+	struct its_node *its = its_dev->its;
-+
-+	if (unlikely(its->pre_its_size > 0))
-+		/*
-+		 * The Socionext Synquacer SoC has a so-called 'pre-ITS',
-+		 * which maps 32-bit writes targeted at a separate window of
-+		 * size '4 << device_id_bits' onto writes to GITS_TRANSLATER
-+		 * with device ID taken from bits [device_id_bits + 1:2] of
-+		 * the window offset.
-+		 */
-+		return its->pre_its_base + (its_dev->device_id << 2);
-+
-+	return its->phys_base + GITS_TRANSLATER;
-+}
-+
- static void its_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
+ static int its_alloc_tables(struct its_node *its)
  {
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
--	struct its_node *its;
- 	u64 addr;
+-	u64 typer = gic_read_typer(its->base + GITS_TYPER);
+-	u32 ids = GITS_TYPER_DEVBITS(typer);
+ 	u64 shr = GITS_BASER_InnerShareable;
+ 	u64 cache = GITS_BASER_RaWaWb;
+ 	u32 psz = SZ_64K;
+ 	int err, i;
  
--	its = its_dev->its;
--	addr = its->phys_base + GITS_TRANSLATER;
-+	addr = its_irq_get_msi_base(its_dev);
+-	if (its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_22375) {
+-		/*
+-		* erratum 22375: only alloc 8MB table size
+-		* erratum 24313: ignore memory access type
+-		*/
+-		cache   = GITS_BASER_nCnB;
+-		ids     = 0x14;                 /* 20 bits, 8MB */
+-	}
+-
+-	its->device_ids = ids;
++	if (its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_22375)
++		/* erratum 24313: ignore memory access type */
++		cache = GITS_BASER_nCnB;
  
- 	msg->address_lo		= lower_32_bits(addr);
- 	msg->address_hi		= upper_32_bits(addr);
-@@ -2752,6 +2773,27 @@ static void __maybe_unused its_enable_quirk_qdf2400_e0065(void *data)
- 	its->ite_size = 16;
+ 	for (i = 0; i < GITS_BASER_NR_REGS; i++) {
+ 		struct its_baser *baser = its->tables + i;
+@@ -2741,6 +2732,8 @@ static void __maybe_unused its_enable_quirk_cavium_22375(void *data)
+ {
+ 	struct its_node *its = data;
+ 
++	/* erratum 22375: only alloc 8MB table size */
++	its->device_ids = 0x14;		/* 20 bits, 8MB */
+ 	its->flags |= ITS_FLAGS_WORKAROUND_CAVIUM_22375;
  }
  
-+static void __maybe_unused its_enable_quirk_socionext_synquacer(void *data)
-+{
-+	struct its_node *its = data;
-+	u32 pre_its_window[2];
-+	u32 ids;
-+
-+	if (!fwnode_property_read_u32_array(its->fwnode_handle,
-+					    "socionext,synquacer-pre-its",
-+					    pre_its_window,
-+					    ARRAY_SIZE(pre_its_window))) {
-+		its->pre_its_base = pre_its_window[0];
-+		its->pre_its_size = pre_its_window[1];
-+
-+		ids = ilog2(its->pre_its_size) - 2;
-+		if (its->device_ids > ids)
-+			its->device_ids = ids;
-+
-+		its->msi_domain_flag_mask = ~IRQ_DOMAIN_FLAG_MSI_REMAP;
-+	}
-+}
-+
- static const struct gic_quirk its_quirks[] = {
- #ifdef CONFIG_CAVIUM_ERRATUM_22375
- 	{
-@@ -2777,6 +2819,19 @@ static const struct gic_quirk its_quirks[] = {
- 		.init	= its_enable_quirk_qdf2400_e0065,
- 	},
- #endif
-+#ifdef CONFIG_SOCIONEXT_SYNQUACER_PREITS
-+	{
-+		/*
-+		 * The Socionext Synquacer SoC incorporates ARM's own GIC-500
-+		 * implementation, but with a 'pre-ITS' added that requires
-+		 * special handling in software.
-+		 */
-+		.desc	= "ITS: Socionext Synquacer pre-ITS",
-+		.iidr	= 0x0001143b,
-+		.mask	= 0xffffffff,
-+		.init	= its_enable_quirk_socionext_synquacer,
-+	},
-+#endif
- 	{
- 	}
- };
-@@ -2806,6 +2861,7 @@ static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
- 	inner_domain->parent = its_parent;
- 	irq_domain_update_bus_token(inner_domain, DOMAIN_BUS_NEXUS);
- 	inner_domain->flags |= IRQ_DOMAIN_FLAG_MSI_REMAP;
-+	inner_domain->flags &= its->msi_domain_flag_mask;
- 	info->ops = &its_msi_domain_ops;
- 	info->data = its;
- 	inner_domain->host_data = info;
-@@ -2959,6 +3015,7 @@ static int __init its_probe_one(struct resource *res,
- 		goto out_free_its;
- 	}
- 	its->cmd_write = its->cmd_base;
-+	its->fwnode_handle = handle;
- 
- 	its_enable_quirks(its);
- 
+@@ -2942,6 +2935,7 @@ static int __init its_probe_one(struct resource *res,
+ 	its->base = its_base;
+ 	its->phys_base = res->start;
+ 	its->ite_size = GITS_TYPER_ITT_ENTRY_SIZE(typer);
++	its->device_ids = GITS_TYPER_DEVBITS(typer);
+ 	its->is_v4 = !!(typer & GITS_TYPER_VLPIS);
+ 	if (its->is_v4) {
+ 		if (!(typer & GITS_TYPER_VMOVP)) {
 -- 
 2.11.0
 
