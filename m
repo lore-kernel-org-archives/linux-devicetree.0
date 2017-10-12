@@ -1,67 +1,49 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 00/36] Process management for IOMMU + SVM for SMMUv3
-Date: Thu, 12 Oct 2017 09:28:03 -0600
-Message-ID: <20171012152803.GA3027@jcrouse-lnx.qualcomm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
- <0fecd29e-eaf7-9503-b087-7bfbc251da88@arm.com>
- <c6b7fb4b-4f2b-0d81-8bb5-8fa6b62aca3a@huawei.com>
- <8a1e090d-22e8-0295-a53f-bc3b5b7d7971@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: [PATCH 2/2] Input: goodix - add more entries in i2c_device_id
+Date: Thu, 12 Oct 2017 17:04:43 +0200
+Message-ID: <20171012150443.27542-2-m.niestroj@grinn-global.com>
+References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8a1e090d-22e8-0295-a53f-bc3b5b7d7971-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20171012150443.27542-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, dwmw2@infradea
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 01:55:32PM +0100, Jean-Philippe Brucker wrote:
-> On 12/10/17 13:05, Yisheng Xie wrote:
-> [...]
-> >>>> * An iommu_process can be bound to multiple domains, and a domain can have
-> >>>>   multiple iommu_process.
-> >>> when bind a task to device, can we create a single domain for it? I am thinking
-> >>> about process management without shared PT(for some device only support PASID
-> >>> without pri ability), it seems hard to expand if a domain have multiple iommu_process?
-> >>> Do you have any idea about this?
-> >>
-> >> A device always has to be in a domain, as far as I know. Not supporting
-> >> PRI forces you to pin down all user mappings (or just the ones you use for
-> >> DMA) but you should sill be able to share PT. Now if you don't support
-> >> shared PT either, but only PASID, then you'll have to use io-pgtable and a
-> >> new map/unmap API on an iommu_process. I don't understand your concern
-> >> though, how would the link between process and domains prevent this use-case?
-> >>
-> > So you mean that if an iommu_process bind to multiple devices it should create
-> > multiple io-pgtables? or just share the same io-pgtable?
-> 
-> I don't know to be honest, I haven't thought much about the io-pgtable
-> case, I'm all about sharing the mm :)
-> 
-> It really depends on what the user (GPU driver I assume) wants. I think
-> that if you're not sharing an mm with the device, then you're trying to
-> hide parts of the process to the device, so you'd also want the
-> flexibility of having different io-pgtables between devices. Different
-> devices accessing isolated parts of the process requires separate io-pgtables.
+Add corresponding entry in i2c_device_id table for each of_device_id
+entry. This makes it possible to autoload module for goodix
+touchscreen device-tree entry, based on modalias (which is generated
+by stripping manufacturer prefix from compatible string).
 
-In our specific Snapdragon use case the GPU is the only entity that cares about
-process specific io-pgtables.  Everything else (display, video, camera) is happy
-using a global io-ptgable.  The reasoning is that the GPU is programmable from
-user space and can be easily used to copy data whereas the other use cases have
-mostly fixed functions.
+Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+---
+ drivers/input/touchscreen/goodix.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Even if different devices did want to have a process specific io-pgtable I doubt
-we would share them.  Every device uses the IOMMU differently and the magic
-needed to share a io-pgtable between (for example) a GPU and a DSP would be
-prohibitively complicated.
-
-Jordan
-
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 9d50d9688975..4b702b363677 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -902,7 +902,15 @@ static int __maybe_unused goodix_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(goodix_pm_ops, goodix_suspend, goodix_resume);
+ 
+ static const struct i2c_device_id goodix_ts_id[] = {
+-	{ "GDIX1001:00", 0 },
++	{ "GDIX1001:00" },
++	{ "gt1151" },
++	{ "gt911" },
++	{ "gt9110" },
++	{ "gt912" },
++	{ "gt927" },
++	{ "gt9271" },
++	{ "gt928" },
++	{ "gt967" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, goodix_ts_id);
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.14.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
