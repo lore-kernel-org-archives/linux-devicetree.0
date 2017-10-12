@@ -1,136 +1,182 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: tegra20: Add video decoder node
-Date: Thu, 12 Oct 2017 15:06:17 +0300
-Message-ID: <81f39096-dc66-c98b-50f6-fc81ee1804ec@gmail.com>
-References: <cover.1507752381.git.digetx@gmail.com>
- <f58be69f6004393711c9ff3cb4b52aed33e2611a.1507752381.git.digetx@gmail.com>
- <0b6150a7-5b2b-ca4d-eb34-b6614e4833df@mentor.com>
+From: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 00/36] Process management for IOMMU + SVM for SMMUv3
+Date: Thu, 12 Oct 2017 20:05:38 +0800
+Message-ID: <c6b7fb4b-4f2b-0d81-8bb5-8fa6b62aca3a@huawei.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
+ <0fecd29e-eaf7-9503-b087-7bfbc251da88@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0b6150a7-5b2b-ca4d-eb34-b6614e4833df-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0fecd29e-eaf7-9503-b087-7bfbc251da88-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org" <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, nwatters@c
 List-Id: devicetree@vger.kernel.org
 
-Hello Vladimir,
+Hi Jean,
 
-On 12.10.2017 10:43, Vladimir Zapolskiy wrote:
-> Hello Dmitry,
+Thanks for replying.
+On 2017/10/9 19:36, Jean-Philippe Brucker wrote:
+> Hi,
 > 
-> On 10/11/2017 11:08 PM, Dmitry Osipenko wrote:
->> Add a device node for the video decoder engine found on Tegra20.
+> On 09/10/17 10:49, Yisheng Xie wrote:
+>> Hi Jean,
 >>
->> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/tegra20.dtsi | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
->> index 7c85f97f72ea..1b5d54b6c0cb 100644
->> --- a/arch/arm/boot/dts/tegra20.dtsi
->> +++ b/arch/arm/boot/dts/tegra20.dtsi
->> @@ -249,6 +249,23 @@
->>  		*/
->>  	};
->>  
->> +	vde@6001a000 {
->> +		compatible = "nvidia,tegra20-vde";
->> +		reg = <0x6001a000 0x3D00    /* VDE registers */
->> +		       0x40000400 0x3FC00>; /* IRAM region */
+>> On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
+>>> Following discussions at plumbers and elsewhere, it seems like we need to
+>>> unify some of the Shared Virtual Memory (SVM) code, in order to define
+>>> clear semantics for the SVM API.
+>>>
+>>> My previous RFC [1] was centered on the SMMUv3, but some of this code will
+>>> need to be reused by the SMMUv2 and virtio-iommu drivers. This second
+>>> proposal focuses on abstracting a little more into the core IOMMU API, and
+>>> also trying to find common ground for all SVM-capable IOMMUs.
+>>>
+>>> SVM is, in the context of the IOMMU, sharing page tables between a process
+>>> and a device. Traditionally it requires IO Page Fault and Process Address
+>>> Space ID capabilities in device and IOMMU.
+>>>
+>>> * A device driver can bind a process to a device, with iommu_process_bind.
+>>>   Internally we hold on to the mm and get notified of its activity with an
+>>>   mmu_notifier. The bond is removed by exit_mm, by a call to
+>>>   iommu_process_unbind or iommu_detach_device.
+>>>
+>>> * iommu_process_bind returns a 20-bit PASID (PCI terminology) to the
+>>>   device driver, which programs it into the device to access the process
+>>>   address space.
+>>>
+>>> * The device and the IOMMU support recoverable page faults. This can be
+>>>   either ATS+PRI for PCI, or platform-specific mechanisms such as Stall
+>>>   for SMMU.
+>>>
+>>> Ideally systems wanting to use SVM have to support these three features,
+>>> but in practice we'll see implementations supporting just a subset of
+>>> them, especially in validation environments. So even if this particular
+>>> patchset assumes all three capabilities, it should also be possible to
+>>> support PASID without IOPF (by pinning everything, see non-system SVM in
+>>> OpenCL)
+>> How to pin everything? If user malloc anything we should pin it. It should
+>> from user or driver?
 > 
-> this notation of a used region in IRAM is non-standard and potentially it
-> may lead to conflicts for IRAM resource between users.
+> For userspace drivers, I guess it would be via a VFIO ioctl, that does the
+> same preparatory work as VFIO_IOMMU_MAP_DMA, but doesn't call iommu_map.
+> For things like OpenCL SVM buffers, it's the kernel driver that does the
+> pinning, just like VFIO does it, before launching the work on a SVM buffer.
 > 
-> My proposal is to add a valid device tree node to describe an IRAM region
-> firstly, then reserve a subregion in it by using a new "iram" property.
+>>> , or IOPF without PASID (sharing the single device address space
+>>> with a process, could be useful for DPDK+VFIO).
+>>>
+>>> Implementing both these cases would enable PT sharing alone. Some people
+>>> would also like IOPF alone without SVM (covered by this series) or process
+>>> management without shared PT (not covered). Using these features
+>>> individually is also important for testing, as SVM is in its infancy and
+>>> providing easy ways to test is essential to reduce the number of quirks
+>>> down the line.
+>>>
+>>>   Process management
+>>>   ==================
+>>>
+>>> The first part of this series introduces boilerplate code for managing
+>>> PASIDs and processes bound to devices. It's something any IOMMU driver
+>>> that wants to support bind/unbind will have to do, and it is difficult to
+>>> get right.
+>>>
+>>> Patches
+>>> 1: iommu_process and PASID allocation, attach and release
+>>> 2: process_exit callback for device drivers
+>>> 3: iommu_process search by PASID
+>>> 4: track process changes with an MMU notifiers
+>>> 5: bind and unbind operations
+>>>
+>>> My proposal uses the following model:
+>>>
+>>> * The PASID space is system-wide. This means that a Linux process will
+>>>   have a single PASID. I introduce the iommu_process structure and a
+>>>   global IDR to manage this.
+>>>
+>>> * An iommu_process can be bound to multiple domains, and a domain can have
+>>>   multiple iommu_process.
+>> when bind a task to device, can we create a single domain for it? I am thinking
+>> about process management without shared PT(for some device only support PASID
+>> without pri ability), it seems hard to expand if a domain have multiple iommu_process?
+>> Do you have any idea about this?
+> 
+> A device always has to be in a domain, as far as I know. Not supporting
+> PRI forces you to pin down all user mappings (or just the ones you use for
+> DMA) but you should sill be able to share PT. Now if you don't support
+> shared PT either, but only PASID, then you'll have to use io-pgtable and a
+> new map/unmap API on an iommu_process. I don't understand your concern
+> though, how would the link between process and domains prevent this use-case?
+> 
+So you mean that if an iommu_process bind to multiple devices it should create
+multiple io-pgtables? or just share the same io-pgtable?
+
+>>> * IOMMU groups share same PASID table. IOMMU groups are a convenient way
+>>>   to cover various hardware weaknesses that prevent a group of device to
+>>>   be isolated by the IOMMU (untrusted bridge, for instance). It's foolish
+>>>   to assume that all PASID implementations will perfectly isolate devices
+>>>   within a bus and functions within a device, so let's assume all devices
+>>>   within an IOMMU group have to share PASID traffic as well. In general
+>>>   there will be a single device per group.
+>>>
+>>> * It's up to the driver implementation to decide where to implement the
+>>>   PASID tables. For SMMU it's more convenient to have a single PASID table
+>>>   per domain. And I think the model fits better with the existing IOMMU
+>>>   API: IOVA traffic is shared by all devices in a domain, so should PASID
+>>>   traffic.
+>> What's the meaning of "share PASID traffic"? PASID space is system-wide,
+>> and a domain can have multiple iommu_process , so a domain can have multiple
+>> PASIDs , one PASID for a iommu_process, right?
+I get what your mean now, thanks for your explain.
+
+> 
+> Yes, I meant that if a device can access mappings for a specific PASID,
+> then other devices in that same domain are also able to access them.
+> 
+> A few reasons for this choice in the SMMU:
+> * As all devices in an IOMMU group will be in the same domain and share
+> the same PASID traffic, it encompasses that case. Groups are the smallest
+> isolation granularity, then users are free to choose to put different
+> IOMMU groups in different domains.
+> * For architectures that can have both non-PASID and PASID traffic
+> simultaneously, like the SMMU, it is simpler to reason about PASID tables
+> being a domain, rather than sharing PASID0 within the domain and handling
+> all others per device.
+> * It's the same principle as non-PASID mappings (iommu_map/unmap is on a
+> domain).
+> * It implement the classic example of IOMMU architectures where multiple
+> device descriptors point to the same PASID tables.
+> * It may be desirable for drivers to share PASIDs within a domain, if they
+> are actually using domains for conveniently sharing address spaces between
+> devices. I'm not sure how much this is used as a feature. It does model a
+> shared bus where each device can snoop DMA, so it may be useful.
 > 
 
-The defined in DT IRAM region used by VDE isn't exactly correct, actually it
-should be much smaller. I don't know exactly what parts of IRAM VDE uses, for
-now it is just safer to assign the rest of the IRAM region to VDE.
+I get another question about this design, thinking about the following case:
 
-I'm not sure whether it really worthy to use a dynamic allocator for a single
-static allocation, but maybe it would come handy later.. Stephen / Jon /
-Thierry, what do you think?
+If a platform device with PASID ability, e.g. accelerator, which have multiple
+accelerator process units(APUs), it may create multiple virtual devices, one
+virtual device represent for an APU, with the same sid.
 
-> ----8<----
-> From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> Date: Thu, 12 Oct 2017 10:25:45 +0300
-> Subject: [PATCH] ARM: tegra: add device tree node to describe IRAM on Tegra20
+They can be in different groups, however must be in the same domain as this
+design, for domain held the PASID table, right? So how could they be used by
+different guest OS?
+
+Thanks
+Yisheng Xie
+
+> bind/unbind operations are done on devices and not domains, though,
+> because it allows users to know which device supports PASID, PRI, etc.
 > 
-> All Tegra20 SoCs contain 256KiB IRAM, which is used to store
-> resume code and by a video decoder engine.
+> Thanks,
+> Jean
 > 
-> Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra20.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index 7c85f97f72ea..fd2843c90920 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -9,6 +9,14 @@
->  	compatible = "nvidia,tegra20";
->  	interrupt-parent = <&lic>;
->  
-> +	iram@40000000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x40000000 0x40000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x40000000 0x40000>;
-> +	};
-> +
->  	host1x@50000000 {
->  		compatible = "nvidia,tegra20-host1x", "simple-bus";
->  		reg = <0x50000000 0x00024000>;
-> ----8<----
-> 
-> Please add the change above to your next version of the series, or
-> if you wish I can send it separately for review by Thierry.
-> 
-> After applying that change you do define a region in IRAM for the exclusive
-> usage by a video decoder engine and add an 'iram' property:
+> .
 > 
 
-Newer Tegra generations also have the IRAM, so I think Tegra30/114/124 DT's
-should also include the same IRAM node for consistency. I'll extend your patch
-to cover other Tegra's and include it in v4 if you don't mind and if Stephen /
-Jon / Thierry would approve your proposal.
-
-> ----8<----
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index fd2843c90920..5133fbac2185 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -15,6 +15,11 @@
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		ranges = <0 0x40000000 0x40000>;
-> +
-> +		vde_pool: vde {
-> +			reg = <0x400 0x3fc00>;
-> +			pool;
-> +		};
->  	};
->  
->  	host1x@50000000 {
-> [snip]
-> 
-> +	vde@6001a000 {
-> +		compatible = "nvidia,tegra20-vde";
-> +		reg = <0x6001a000 0x3d00>;	/* VDE registers */
-> +		iram = <&vde_pool>;		/* IRAM region */
-> [snip]
-> ----8<----
-> 
-> And finally in the driver you'll use genalloc API to access the IRAM
-> region, for that you can find ready examples in the kernel source code.
-> 
-
-Thank you very much for taking a look at the patch!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
