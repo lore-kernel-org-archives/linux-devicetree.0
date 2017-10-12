@@ -1,29 +1,98 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2] rtc: add support for NXP PCF85363 real-time clock
-Date: Thu, 12 Oct 2017 18:55:35 -0300
-Message-ID: <CAOMZO5DDy9xEpJ9bn1F+0668PRAmp_n5ZweB=7EXtQQRd2=eMA@mail.gmail.com>
-References: <CAOMZO5C_boginn88C7zgXSBaikx==5FHJrgaE1ewYUyUgGfnFQ@mail.gmail.com>
- <1507737390-27818-1-git-send-email-eric@nelint.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for
+ Synquacer pre-ITS
+Date: Thu, 12 Oct 2017 23:24:21 +0100
+Message-ID: <CAKv+Gu-rZNhMMU4PoD8V0nBtwEEu+HE71wvaAZk2PWshoeTi4g@mail.gmail.com>
+References: <20171012183247.23679-1-ard.biesheuvel@linaro.org>
+ <20171012183247.23679-3-ard.biesheuvel@linaro.org> <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507737390-27818-1-git-send-email-eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Otavio Salvador <otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 12:56 PM, Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org> wrote:
-> Note that alarms are not currently implemented.
+On 12 October 2017 at 22:34, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Oct 12, 2017 at 1:32 PM, Ard Biesheuvel
+> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
+>> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
+>> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
+>> ID taken from bits [device_id_bits + 1:2] of the window offset.
+>> Writes that target GITS_TRANSLATER directly are reported as originating
+>> from device ID #0.
+>>
+>> So add a workaround for this. Given that this breaks isolation, clear
+>> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+>>
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
+>>  arch/arm64/Kconfig                                                    |  8 +++
+>>  drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
+>>  3 files changed, 72 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>> index 4c29cdab0ea5..0798a61bbf99 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>> @@ -75,6 +75,10 @@ These nodes must have the following properties:
+>>  - reg: Specifies the base physical address and size of the ITS
+>>    registers.
+>>
+>> +Optional:
+>> +- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
+>> +  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
 >
-> 64 bytes of nvmem is supported and exposed in
-> sysfs (# is the instance number, starting with 0):
+> Sounds like a separate h/w block to me and addresses should be in
+> "reg". I would suggest you define a separate node for the pre-its
+> block and then use of_find_compatible_node() from the GIC driver to
+> retrieve the node and whatever you need from it. Or do an SoC specific
+> compatible string for the GIC and let that imply whatever information
+> you need. Then the next quirk doesn't need a DT update.
 >
->         /sys/bus/nvmem/devices/pcf85363-#/nvmem
->
-> Signed-off-by: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+For my understanding, you mean either
+
+    gic: interrupt-controller@30000000 {
+        compatible = "arm,gic-v3";
+        ...
+
+        its: gic-its@30020000 {
+            compatible = "arm,gic-v3-its";
+            reg = <0x0 0x30020000 0x0 0x20000>;
+            #msi-cells = <1>;
+            msi-controller;
+        };
+    };
+
+    preits@58000000 {
+        compatible = "socionext,synquacer-pre-its";
+        reg = <0x0 0x58000000 0x0 0x200000>;
+        msi-slave = <&its>;
+    };
+
+or
+
+    gic: interrupt-controller@30000000 {
+        compatible = "arm,gic-v3";
+        ...
+
+        its: gic-its@30020000 {
+            compatible = "socionext,synquacer-pre-its", "arm,gic-v3-its";
+            reg = <0x0 0x30020000 0x0 0x20000>,
+                  <0x0 0x58000000 0x0 0x200000>;
+            #msi-cells = <1>;
+            msi-controller;
+        };
+    };
+
+right?
+
+Marc, what do you think? IIRC we did discuss option #2 at some point,
+but I don't remember if/why we rejected it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
