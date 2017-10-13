@@ -1,50 +1,86 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH 0/2] Add support for Hi6220 coresight
-Date: Fri, 13 Oct 2017 09:57:02 +0100
-Message-ID: <59E07FDE.40307@hisilicon.com>
-References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
- <20170901013301.GN21656@codeaurora.org> <20171007121802.GC23080@leoy-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171007121802.GC23080@leoy-linaro>
-Sender: linux-clk-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+From: Miquel Raynal <miquel.raynal@free-electrons.com>
+Subject: [PATCH v2 04/16] serial: mvebu-uart: support probe of multiple ports
+Date: Fri, 13 Oct 2017 11:01:48 +0200
+Message-ID: <20171013090200.31034-5-miquel.raynal@free-electrons.com>
+References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jiri Slaby <jslaby@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Wilson Ding <dingwei@marvell.com>, Allen Yan <yanwei@marvell.com>, Miquel Raynal <miquel.raynal@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
+From: Allen Yan <yanwei@marvell.com>
 
-On 2017/10/7 13:18, Leo Yan wrote:
-> Hi Stephen, Wei,
-> 
-> On Thu, Aug 31, 2017 at 06:33:01PM -0700, Stephen Boyd wrote:
->> On 09/01, Leo Yan wrote:
->>> This patch series adds support for coresight on Hi6220; the first patch
->>> is to fix coresight PLL so can avoid system hang after we enable
->>> coresight, the second patch is to add DT binding according to coresight
->>> topology.
->>>
->>> The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
->>> can successfully decode ETF and ETB trace data.
->>>
->>
->> I can take the first one and second one goes through arm-soc?
-> 
-> Could you pick these two patches for Hi6220 coresight enabling for
-> this merge window? Or need me resend these two patches?
+Until now, the mvebu-uart driver only supported probing a single UART
+port. However, some platforms have multiple instances of this UART
+controller, and therefore the driver should support multiple ports.
 
-Applied patch 2 into hisilicon dt tree with slight fix.
-Thanks!
+In order to achieve this, we make sure to assign port->line properly,
+instead of hardcoding it to zero.
 
-BR,
-Wei
+Signed-off-by: Allen Yan <yanwei@marvell.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+---
 
-> 
-> Thanks,
-> Leo Yan
-> 
-> .
-> 
+Changes since v1: using multiple UART ports with this driver is not a
+problem anymore if not using a device tree.
+
+ drivers/tty/serial/mvebu-uart.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
+index 7e0a3e9fee15..f3c7271db32b 100644
+--- a/drivers/tty/serial/mvebu-uart.c
++++ b/drivers/tty/serial/mvebu-uart.c
+@@ -547,20 +547,36 @@ static struct uart_driver mvebu_uart_driver = {
+ #endif
+ };
+ 
++/* Counter to keep track of each UART port id when not using CONFIG_OF */
++static int uart_num_counter;
++
+ static int mvebu_uart_probe(struct platform_device *pdev)
+ {
+ 	struct resource *reg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ 	struct uart_port *port;
+ 	struct mvebu_uart_data *data;
+-	int ret;
++	int ret, id;
+ 
+ 	if (!reg || !irq) {
+ 		dev_err(&pdev->dev, "no registers/irq defined\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	port = &mvebu_uart_ports[0];
++	/* Assume that all UART ports have a DT alias or none has */
++	id = of_alias_get_id(pdev->dev.of_node, "serial");
++	if (!pdev->dev.of_node || id < 0)
++		pdev->id = uart_num_counter++;
++	else
++		pdev->id = id;
++
++	if (pdev->id >= MVEBU_NR_UARTS) {
++		dev_err(&pdev->dev, "cannot have more than %d UART ports\n",
++			MVEBU_NR_UARTS);
++		return -EINVAL;
++	}
++
++	port = &mvebu_uart_ports[pdev->id];
+ 
+ 	spin_lock_init(&port->lock);
+ 
+@@ -572,7 +588,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
+ 	port->fifosize   = 32;
+ 	port->iotype     = UPIO_MEM32;
+ 	port->flags      = UPF_FIXED_PORT;
+-	port->line       = 0; /* single port: force line number to  0 */
++	port->line       = pdev->id;
+ 
+ 	port->irq        = irq->start;
+ 	port->irqflags   = 0;
+-- 
+2.11.0
 
