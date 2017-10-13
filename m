@@ -1,59 +1,112 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] DeviceTree fixes for 4.14, round 2
-Date: Fri, 13 Oct 2017 08:25:00 -0500
-Message-ID: <CAL_JsqJNLUc+sHtxfQUaR9mZJGXL3=U4sG9fUVzx_dzQ293ETQ@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [RESEND PATCH 2/2] arm64: dts: rockchip: Enable edp disaplay on kevin
+Date: Fri, 13 Oct 2017 15:25:24 +0200
+Message-ID: <3037285.0MAZvLKA4I@phil>
+References: <20171013104138.3216-1-jeffy.chen@rock-chips.com> <20171013104138.3216-3-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171013104138.3216-3-jeffy.chen@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
+To: Jeffy Chen <jeffy.chen@rock-chips.com>, Sean Paul <seanpaul@chromium.org>
+Cc: linux-kernel@vger.kernel.org, briannorris@chromium.org, broonie@kernel.org, dianders@chromium.org, Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Jeffy,
 
-Please pull a couple more DT fixes for 4.14.
+Am Freitag, 13. Oktober 2017, 18:41:38 CEST schrieb Jeffy Chen:
+> Add edp panel and enable related nodes on kevin.
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 
-Rob
+does this actually work with mainline kernel sources?
 
-The following changes since commit 8a5776a5f49812d29fe4b2d0a2d71675c3facf3f=
-:
+Sean Paul did look at making the edp work on Chromebooks recently,
+but it seemed there were still parts missing to make it actually display
+something.
 
-  Linux 4.14-rc4 (2017-10-08 20:53:29 -0700)
 
-are available in the git repository at:
+Heiko
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.14-2
-
-for you to fetch changes up to 3314c6bdd26880e0dfbcb0cb85a1b36d185ce47c:
-
-  device property: preserve usecount for node passed to
-of_fwnode_graph_get_port_parent() (2017-10-12 12:26:14 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for 4.14:
-
-- Fix memory leak in error case of of_console_check
-
-- Increase number of reserved memory regions to 32. 16 was not enough on
-  some Power systems.
-
-- Fix OF node refcounting for of_fwnode_graph_get_port_parent
-
-----------------------------------------------------------------
-Niklas S=C3=B6derlund (1):
-      device property: preserve usecount for node passed to
-of_fwnode_graph_get_port_parent()
-
-Sergey Senozhatsky (1):
-      of: do not leak console options
-
-Stewart Smith (1):
-      drivers: of: increase MAX_RESERVED_REGIONS to 32
-
- drivers/of/base.c            | 8 ++++++--
- drivers/of/of_reserved_mem.c | 2 +-
- drivers/of/property.c        | 2 +-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+> ---
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> index a3d3cea7dc4f..bc67b19f0af5 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> @@ -93,6 +93,18 @@
+>  		pwm-delay-us = <10000>;
+>  	};
+>  
+> +	edp_panel: edp-panel {
+> +		compatible = "sharp,lq123p1jx31", "simple-panel";
+> +		backlight = <&backlight>;
+> +		power-supply = <&pp3300_disp>;
+> +
+> +		ports {
+> +			panel_in_edp: endpoint {
+> +				remote-endpoint = <&edp_out_panel>;
+> +			};
+> +		};
+> +	};
+> +
+>  	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
+>  		compatible = "murata,ncp15wb473";
+>  		pullup-uv = <1800000>;
+> @@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
+>  	};
+>  };
+>  
+> +&edp {
+> +	status = "okay";
+> +
+> +	ports {
+> +		edp_out: port@1 {
+> +			reg = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			edp_out_panel: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&panel_in_edp>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &ppvar_bigcpu_pwm {
+>  	regulator-min-microvolt = <798674>;
+>  	regulator-max-microvolt = <1302172>;
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> index 5772c52fbfd3..470105d651c2 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> @@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
+>  	dr_mode = "host";
+>  };
+>  
+> +&vopb {
+> +	status = "okay";
+> +};
+> +
+> +&vopb_mmu {
+> +	status = "okay";
+> +};
+> +
+> +&vopl {
+> +	status = "okay";
+> +};
+> +
+> +&vopl_mmu {
+> +	status = "okay";
+> +};
+> +
+>  #include <arm/cros-ec-keyboard.dtsi>
+>  #include <arm/cros-ec-sbs.dtsi>
+>  
+> 
