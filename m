@@ -1,137 +1,131 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] mtd: spi-nor: Altera ASMI Parallel II IP Core
-Date: Fri, 13 Oct 2017 22:34:27 +0200
-Message-ID: <089bb472-f824-26d7-0d72-66e64c2f24c4@gmail.com>
-References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1505932139-2905-3-git-send-email-matthew.gerlach@linux.intel.com>
- <deae5a9f-4301-c7de-b265-b09292f8da15@gmail.com>
- <alpine.DEB.2.20.1710110956260.2194@mgerlach-VirtualBox>
- <ca36c177-0e7c-647d-f821-ab4bb7d85b10@gmail.com>
- <alpine.DEB.2.20.1710131215370.1541@mgerlach-VirtualBox>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
+ timeout
+Date: Fri, 13 Oct 2017 13:35:27 -0700
+Message-ID: <20171013203527.GA14166@roeck-us.net>
+References: <20171013092705.7038-1-peda@axentia.se>
+ <20171013092705.7038-2-peda@axentia.se>
+ <554a4494-14c9-7743-898c-5f83e3de227d@roeck-us.net>
+ <2d1bf447-489f-9e15-3b1e-d2f4a2c1dcfe@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1710131215370.1541@mgerlach-VirtualBox>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <2d1bf447-489f-9e15-3b1e-d2f4a2c1dcfe-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2017 09:24 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-
-[ culling the ridiculous cc list ]
-
-> On Wed, 11 Oct 2017, Marek Vasut wrote:
+On Fri, Oct 13, 2017 at 04:26:57PM +0200, Peter Rosin wrote:
+> On 2017-10-13 15:50, Guenter Roeck wrote:
+> > On 10/13/2017 02:27 AM, Peter Rosin wrote:
+> >> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
+> >> is not always capable of avoiding the 25-35 ms timeout as specified by
+> >> the SMBUS protocol. This may cause silent corruption of the last bit of
+> >> any transfer, e.g. a one is read instead of a zero if the sensor chip
+> >> times out. This also affects the eeprom half of the nxp-se97 chip, where
+> >> this silent corruption was originally noticed. Other I2C adapters probably
+> >> suffer similar issues, e.g. bit-banging comes to mind as risky...
+> >>
+> >> The SMBUS register in the nxp chip is not a standard Jedec register, but
+> >> it is not special to the nxp chips either, at least the atmel chips
+> >> have the same mechanism. Therefore, do not special case this on the
+> >> manufacturer, it is opt-in via the device property anyway.
+> >>
+> >> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> >> ---
+> >>   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
+> >>   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
+> >>   2 files changed, 24 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> >> index 07a250498fbb..f569db58f64a 100644
+> >> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
+> >> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> >> @@ -34,6 +34,10 @@ Required properties:
+> >>   
+> >>   - reg: I2C address
+> >>   
+> >> +Optional properties:
+> >> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
+> >> +			 This is not supported on all chips.
+> >> +
+> >>   Example:
+> >>   
+> >>   temp-sensor@1a {
+> >> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+> >> index 1bf22eff0b08..fd816902fa30 100644
+> >> --- a/drivers/hwmon/jc42.c
+> >> +++ b/drivers/hwmon/jc42.c
+> >> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
+> >>   #define JC42_REG_TEMP		0x05
+> >>   #define JC42_REG_MANID		0x06
+> >>   #define JC42_REG_DEVICEID	0x07
+> >> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
+> >>   
+> >>   /* Status bits in temperature register */
+> >>   #define JC42_ALARM_CRIT_BIT	15
+> >> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
+> >>   #define ONS_MANID		0x1b09  /* ON Semiconductor */
+> >>   #define STM_MANID		0x104a  /* ST Microelectronics */
+> >>   
+> >> +/* SMBUS register */
+> >> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
+> >> +
+> >>   /* Supported chips */
+> >>   
+> >>   /* Analog Devices */
+> >> @@ -476,6 +480,22 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
+> >>   
+> >>   	data->extended = !!(cap & JC42_CAP_RANGE);
+> >>   
+> >> +	if (device_property_read_bool(dev, "smbus-timeout-disable")) {
+> >> +		int smbus;
+> >> +
+> >> +		/*
+> >> +		 * Not all chips support this register, but from a
+> >> +		 * quick read of various datasheets no chip appears
+> >> +		 * incompatible with the below attempt to disable
+> >> +		 * the timeout. And the whole thing is opt-in...
+> >> +		 */
+> >> +		smbus = i2c_smbus_read_word_swapped(client, JC42_REG_SMBUS);
+> >> +		if (smbus < 0)
+> >> +			return smbus;
+> >> +		i2c_smbus_write_word_swapped(client, JC42_REG_SMBUS,
+> >> +					     smbus | SMBUS_STMOUT);
+> > 
+> > Looking into the SE97 datasheet, the bit is only writable if the alarm bits
+> > are not locked. Should we take this into account and unlock the alarm bits
+> > if necessary ?
 > 
->> On 10/11/2017 07:00 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>
->>>
->>> On Tue, 10 Oct 2017, Marek Vasut wrote:
->>>
->>>> On 09/20/2017 08:28 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>>
->>>>> This patch adds support for a spi-nor, platform driver for the
->>>>> Altera ASMI Parallel II IP Core.  The intended use case is to be able
->>>>> to update the flash used to load a FPGA at power up with mtd-utils.
->>>>>
->>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>> ---
->>>>> v2:
->>>>>     minor checkpatch fixing by Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->>>>>     Use read_dummy value as suggested by Cyrille Pitchen.
->>>>>     Don't assume 4 byte addressing (Cryille Pichecn and Marek Vasut).
->>>>>     Fixed #define indenting as suggested by Marek Vasut.
->>>>>     Added units to timer values as suggested by Marek Vasut.
->>>>>     Use io(read|write)8_rep() as suggested by Marek Vasut.
->>>>>     Renamed function prefixed with __ as suggested by Marek Vasut.
->>>>
->>>> [...]
->>>>
->>>>> +#define QSPI_ACTION_REG            0
->>>>> +#define QSPI_ACTION_RST            BIT(0)
->>>>> +#define QSPI_ACTION_EN            BIT(1)
->>>>> +#define QSPI_ACTION_SC            BIT(2)
->>>>> +#define QSPI_ACTION_CHIP_SEL_SFT    4
->>>>> +#define QSPI_ACTION_DUMMY_SFT        8
->>>>> +#define QSPI_ACTION_READ_BACK_SFT    16
->>>>> +
->>>>> +#define QSPI_FIFO_CNT_REG        4
->>>>> +#define QSPI_FIFO_DEPTH            0x200
->>>>> +#define QSPI_FIFO_CNT_MSK        0x3ff
->>>>> +#define QSPI_FIFO_CNT_RX_SFT        0
->>>>> +#define QSPI_FIFO_CNT_TX_SFT        12
->>>>> +
->>>>> +#define QSPI_DATA_REG            0x8
->>>>> +
->>>>> +#define QSPI_POLL_TIMEOUT_US        10000000
->>>>
->>>> 10 s poll timeout ? :)
->>>
->>> Hi Marek,
->>>
->>> The 10s timeout is fairly arbitrary.  In other words, I pulled it out of
->>> thin air.  Can you suggest a better timeout?  From a practical
->>> standpoint 10s seemed to be much better than no timeout when I was
->>> debugging bad FPGA images.  Without a timeout I was hanging the system
->>> when the FPGA image failed.  With this timeout, we get a nice message
->>> and Linux keeps running happily.
->> AFAIK the SPI subsystem has a timeout which is adaptive to the bus
->> clock, maybe that's what you want to use here ?
-> 
-> Hi Marek,
-> 
-> I looked in spi-nor.c, and I see the following two macros:
-> #define DEFAULT_READY_WAIT_JIFFIES        (40UL * HZ)
-> #define CHIP_ERASE_2MB_READY_WAIT_JIFFIES    (40UL * HZ)
-> 
-> These timers values are used at the spi-nor layer for waiting for an
-> operation to complete.  It is the time spent waiting for Work In Progress
-> to clear.
-> 
-> The timer value I'm using, QSPI_POLL_TIMEOUT_US, is used at a lower layer.
-> This timer value is used for the time it takes to send the opcode and tx
-> data and receive any bytes from the flash.  While 10 seconds may seem
-> long, I am just trying to avoid a system hang when there is a catastrophic
-> failure with the flash controller in the FPGA or the flash part itself.
+> Right. And I thought about the case when the timeout was disabled before
+> probing but with the property not present (perhaps by someone trying things
+> out, like I have). Should the timeout be re-enabled in that case?
 
-It takes 10s to detect catastrophic failure ? I'd expect you can scale
-that timeout value by the bus clock speed.
+No, because the property only states that the timeout should be disabled.
+It does not say that it should be _enabled_ if the property is not there.
+That would require a different property. A -> B does not imply B -> A.
 
-We have ie. this in drivers/spi/spi.c:
-
-9                                 ret = 0;
-1040                                 ms = 8LL * 1000LL * xfer->len;
-1041                                 do_div(ms, xfer->speed_hz);
-1042                                 ms += ms + 200; /* some tolerance */
-1043
-1044                                 if (ms > UINT_MAX)
-1045                                         ms = UINT_MAX;
-1046
-1047                                 ms =
-wait_for_completion_timeout(&master->xfer_completion,
-1048
-msecs_to_jiffies(ms));
-
-> I certainly could be missing something with regards to the timeouts, but
-> I think 10s for QSPI_POLL_TIMEOUT_US doesn't hurt, and it definately
-> helps when something goes wrong.
+> But, someone might have disabled the timeout by some previous arrangement
+> (e.g. in a boot-loader) but without having this newfangled property in the
+> device tree. Re-enabling the timeout in that case would break things. Slim
+> chance for that to be an issue, but perhaps not?
 > 
-> Thanks for the feedback,
-> Matthew Gerlach
+> Unlocking the alarm bits is somewhat similar, since it should only be an
+> issue for warm starts. But the risk of breakage is perhaps not there at
+> all?
 > 
->>
->> -- 
->> Best regards,
->> Marek Vasut
->>
+We would have to lock the alarm bits again, leaving them in a consistent
+state.
 
+> Your call, I can fix thing however you like...
+> 
 
--- 
-Best regards,
-Marek Vasut
+Let's just leave it as-is. If we encounter a problem later we can always
+add code to unlock/lock the alarm bits.
+
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
