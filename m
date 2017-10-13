@@ -1,98 +1,127 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 5/9] usb: xhci-mtk: remove dummy wakeup debounce clocks
-Date: Fri, 13 Oct 2017 16:26:37 +0800
-Message-ID: <ff9ee49a872084b4fc8c7fbabddc820058acb9b7.1507882470.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 6/9] usb: xhci-mtk: add optional mcu and dma bus clocks
+Date: Fri, 13 Oct 2017 16:26:38 +0800
+Message-ID: <3f81e076f513ef7d3e3e20ba2f752ed5bd48c9a2.1507882470.git.chunfeng.yun@mediatek.com>
 References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The wakeup debounce clocks for each ports in fact are not
-needed, so remove them.
+There are mcu_bus and dma_bus clocks needed to be controlled by
+driver on some SoCs, so add them as optional ones
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/usb/host/xhci-mtk.c |   33 ---------------------------------
- drivers/usb/host/xhci-mtk.h |    2 --
- 2 files changed, 35 deletions(-)
+ drivers/usb/host/xhci-mtk.c |   79 ++++++++++++++++++++++++++++++++-----------
+ drivers/usb/host/xhci-mtk.h |    2 ++
+ 2 files changed, 62 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 97ba51e..d60463c 100644
+index d60463c..e5caabe 100644
 --- a/drivers/usb/host/xhci-mtk.c
 +++ b/drivers/usb/host/xhci-mtk.c
-@@ -237,25 +237,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+@@ -221,6 +221,44 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+ 	return xhci_mtk_host_enable(mtk);
+ }
+ 
++/* ignore the error if the clock does not exist */
++static struct clk *optional_clk_get(struct device *dev, const char *id)
++{
++	struct clk *opt_clk;
++
++	opt_clk = devm_clk_get(dev, id);
++	/* ignore error number except EPROBE_DEFER */
++	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
++		opt_clk = NULL;
++
++	return opt_clk;
++}
++
++static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
++{
++	struct device *dev = mtk->dev;
++
++	mtk->sys_clk = devm_clk_get(dev, "sys_ck");
++	if (IS_ERR(mtk->sys_clk)) {
++		dev_err(dev, "fail to get sys_ck\n");
++		return PTR_ERR(mtk->sys_clk);
++	}
++
++	mtk->ref_clk = optional_clk_get(dev, "ref_ck");
++	if (IS_ERR(mtk->ref_clk))
++		return PTR_ERR(mtk->ref_clk);
++
++	mtk->mcu_clk = optional_clk_get(dev, "mcu_ck");
++	if (IS_ERR(mtk->mcu_clk))
++		return PTR_ERR(mtk->mcu_clk);
++
++	mtk->dma_clk = optional_clk_get(dev, "dma_ck");
++	if (IS_ERR(mtk->dma_clk))
++		return PTR_ERR(mtk->dma_clk);
++
++	return 0;
++}
++
+ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+ {
+ 	int ret;
+@@ -237,16 +275,34 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
  		goto sys_clk_err;
  	}
  
--	if (mtk->wakeup_src) {
--		ret = clk_prepare_enable(mtk->wk_deb_p0);
--		if (ret) {
--			dev_err(mtk->dev, "failed to enable wk_deb_p0\n");
--			goto usb_p0_err;
--		}
--
--		ret = clk_prepare_enable(mtk->wk_deb_p1);
--		if (ret) {
--			dev_err(mtk->dev, "failed to enable wk_deb_p1\n");
--			goto usb_p1_err;
--		}
--	}
++	ret = clk_prepare_enable(mtk->mcu_clk);
++	if (ret) {
++		dev_err(mtk->dev, "failed to enable mcu_clk\n");
++		goto mcu_clk_err;
++	}
++
++	ret = clk_prepare_enable(mtk->dma_clk);
++	if (ret) {
++		dev_err(mtk->dev, "failed to enable dma_clk\n");
++		goto dma_clk_err;
++	}
++
  	return 0;
  
--usb_p1_err:
--	clk_disable_unprepare(mtk->wk_deb_p0);
--usb_p0_err:
--	clk_disable_unprepare(mtk->sys_clk);
++dma_clk_err:
++	clk_disable_unprepare(mtk->mcu_clk);
++mcu_clk_err:
++	clk_disable_unprepare(mtk->sys_clk);
  sys_clk_err:
  	clk_disable_unprepare(mtk->ref_clk);
  ref_clk_err:
-@@ -264,10 +247,6 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+-	return -EINVAL;
++	return ret;
+ }
  
  static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
  {
--	if (mtk->wakeup_src) {
--		clk_disable_unprepare(mtk->wk_deb_p1);
--		clk_disable_unprepare(mtk->wk_deb_p0);
--	}
++	clk_disable_unprepare(mtk->dma_clk);
++	clk_disable_unprepare(mtk->mcu_clk);
  	clk_disable_unprepare(mtk->sys_clk);
  	clk_disable_unprepare(mtk->ref_clk);
  }
-@@ -371,18 +350,6 @@ static int usb_wakeup_of_property_parse(struct xhci_hcd_mtk *mtk,
- 	if (!mtk->wakeup_src)
- 		return 0;
+@@ -529,24 +585,9 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(mtk->vusb33);
+ 	}
  
--	mtk->wk_deb_p0 = devm_clk_get(dev, "wakeup_deb_p0");
--	if (IS_ERR(mtk->wk_deb_p0)) {
--		dev_err(dev, "fail to get wakeup_deb_p0\n");
--		return PTR_ERR(mtk->wk_deb_p0);
+-	mtk->sys_clk = devm_clk_get(dev, "sys_ck");
+-	if (IS_ERR(mtk->sys_clk)) {
+-		dev_err(dev, "fail to get sys_ck\n");
+-		return PTR_ERR(mtk->sys_clk);
 -	}
 -
--	mtk->wk_deb_p1 = devm_clk_get(dev, "wakeup_deb_p1");
--	if (IS_ERR(mtk->wk_deb_p1)) {
--		dev_err(dev, "fail to get wakeup_deb_p1\n");
--		return PTR_ERR(mtk->wk_deb_p1);
--	}
--
- 	mtk->pericfg = syscon_regmap_lookup_by_phandle(dn,
- 						"mediatek,syscon-wakeup");
- 	if (IS_ERR(mtk->pericfg)) {
-diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
-index db55a12..67783a7 100644
---- a/drivers/usb/host/xhci-mtk.h
-+++ b/drivers/usb/host/xhci-mtk.h
-@@ -126,8 +126,6 @@ struct xhci_hcd_mtk {
- 	struct regulator *vbus;
- 	struct clk *sys_clk;	/* sys and mac clock */
- 	struct clk *ref_clk;
--	struct clk *wk_deb_p0;	/* port0's wakeup debounce clock */
--	struct clk *wk_deb_p1;
- 	struct regmap *pericfg;
- 	struct phy **phys;
- 	int num_phys;
--- 
-1.7.9.5
+-	/*
+-	 * reference clock is usually a "fixed-clock", make it optional
+-	 * for backward compatibility and ignore the error if it does
+-	 * not exist.
+-	 */
+-	mtk->ref_clk = devm_clk_get(dev, "ref_ck");
+-	if (IS_ERR(mtk->ref_clk)) {
+-		if (PTR_ERR(mtk->ref_clk) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
