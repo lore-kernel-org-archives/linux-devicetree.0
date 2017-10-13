@@ -1,54 +1,56 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 0/3] PCI: rockchip: assert PERST# in S3
-Date: Thu, 12 Oct 2017 22:15:23 -0500
-Message-ID: <20171013031523.GB25517@bhelgaas-glaptop.roam.corp.google.com>
-References: <20171012205220.130048-1-briannorris@chromium.org>
+From: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+Subject: [PATCH] of: dynamic: fix memory leak related to properties of __of_node_dup
+Date: Fri, 13 Oct 2017 11:25:18 +0800
+Message-ID: <1507865118-27744-1-git-send-email-alan.1.wang@nokia-sbell.com>
+References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171012205220.130048-1-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Rajat Jain <rajatja@google.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507858967-40416-1-git-send-email-alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 01:52:17PM -0700, Brian Norris wrote:
-> Hi,
-> 
-> This patch series should mostly be self-descriptive, but it's motivated by the
-> fact that I've found differing requirements from PCIe endpoint makers regarding
-> the state of PERST# when in system suspend (S3). Additionally, some existing
-> boards are not especially well suited for holding PERST# low in S3 (e.g., the
-> pin is driven by a non-PMU GPIO, so it's hard or impossible to keep it
-> asserted). So the solution is...give it a device tree property!
+Hello,
 
-How do ACPI systems solve this problem?
+Sorry It was my fault that used the wrong sign off name in last email.
+Here I correct it.
+Thanks
+---
 
-Can you point to any relevant sections in the PCI specs?
+It is possible a node was dynamically allocated but without any
+property. The properies will be got from devices and added to the
+node when devices got connected.
+When release this node, all properties of which had been moved to
+deadprops.
+In this case, the properties in the deadprops list are never
+deallocated.
 
-Is this a hole in those specs?  Is this something that needs to be
-clarified by the PCI-SIG to improve interoperability?
+Signed-off-by: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+---
+ drivers/of/dynamic.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Why is this problem only showing up now?
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 301b6db..465d43b 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -335,6 +335,10 @@ void of_node_release(struct kobject *kobj)
+ 	if (!of_node_check_flag(node, OF_DYNAMIC))
+ 		return;
+ 
++	if (!prop) {
++		prop = node->deadprops;
++		node->deadprops = NULL;
++	}
+ 	while (prop) {
+ 		struct property *next = prop->next;
+ 		kfree(prop->name);
+-- 
+2.6.2
 
-> Brian Norris (3):
->   Documentation/devicetree: Add pcie-reset-suspend property
->   of/pci: Add of_pci_get_pcie_reset_suspend() to parse
->     pcie-reset-suspend
->   PCI: rockchip: Support configuring PERST# state via DT
-> 
->  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
->  drivers/of/of_pci.c                           | 25 +++++++++++++++++++++++++
->  drivers/pci/host/pcie-rockchip.c              |  7 +++++++
->  include/linux/of_pci.h                        |  7 +++++++
->  4 files changed, 50 insertions(+)
-> 
-> -- 
-> 2.15.0.rc0.271.g36b669edcc-goog
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
