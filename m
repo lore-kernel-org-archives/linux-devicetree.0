@@ -1,44 +1,53 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/fdt: Document detached argument to
- __unflatten_device_tree()
-Date: Fri, 13 Oct 2017 15:06:51 -0700
-Message-ID: <59E138FB.3020004@gmail.com>
-References: <20171013074129.13109-1-stephen.boyd@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: unittest: Remove redundant OF_DETACHED flag setting
+Date: Fri, 13 Oct 2017 15:12:15 -0700
+Message-ID: <59E13A3F.5070509@gmail.com>
+References: <20171013074451.14176-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013074129.13109-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171013074451.14176-1-stephen.boyd@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/17 00:41, Stephen Boyd wrote:
-> This wasn't documented.
+On 10/13/17 00:44, Stephen Boyd wrote:
+> of_fdt_unflatten_tree() already sets the flag on the node to
+> OF_DETACHED, because of_fdt_unflatten_tree() calls
+> __unflatten_device_tree() with the detached bool set to true.
 > 
-> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
 > ---
->  drivers/of/fdt.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/of/unittest.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index ce30c9a588a4..4ea4dad13707 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -467,6 +467,7 @@ static int unflatten_dt_nodes(const void *blob,
->   * @mynodes: The device_node tree created by the call
->   * @dt_alloc: An allocator that provides a virtual address to memory
->   * for the resulting tree
-> + * @detached: if true set OF_DETACHED on @mynodes
->   *
->   * Returns NULL on failure or the memory chunk containing the unflattened
->   * device tree on success.
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 35bf9617ae59..8795478a4754 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -1112,7 +1112,6 @@ static int __init unittest_data_add(void)
+>  		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+>  		return -ENODATA;
+>  	}
+> -	of_node_set_flag(unittest_data_node, OF_DETACHED);
+>  	rc = of_resolve_phandles(unittest_data_node);
+>  	if (rc) {
+>  		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
+> @@ -2262,7 +2261,6 @@ static int __init overlay_data_add(int onum)
+>  		ret = 0;
+>  		goto out_free_data;
+>  	}
+> -	of_node_set_flag(info->np_overlay, OF_DETACHED);
+>  
+>  	ret = of_resolve_phandles(info->np_overlay);
+>  	if (ret) {
 > 
 
-Reviewed-by: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Should be no conflict with  my patch series "[PATCH 00/12] of: overlay: clean up
+device tree overlay code" [1], just a line offset.
+
+[1] https://lkml.org/lkml/2017/10/2/679
