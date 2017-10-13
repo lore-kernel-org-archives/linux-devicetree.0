@@ -1,279 +1,132 @@
-From: Yixun Lan <dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: meson-axg: add initial A113D SoC DT support
-Date: Sat, 14 Oct 2017 07:13:13 +0800
-Message-ID: <20171013231313.22850-3-dlan@gentoo.org>
-References: <20171013231313.22850-1-dlan@gentoo.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013231313.22850-1-dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Yixun Lan <dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
+ timeout
+Date: Fri, 13 Oct 2017 16:44:43 -0700
+Message-ID: <20171013234443.GA31590@roeck-us.net>
+References: <20171013092705.7038-1-peda@axentia.se>
+ <20171013092705.7038-2-peda@axentia.se>
+ <554a4494-14c9-7743-898c-5f83e3de227d@roeck-us.net>
+ <2d1bf447-489f-9e15-3b1e-d2f4a2c1dcfe@axentia.se>
+ <20171013203527.GA14166@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171013203527.GA14166@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Try to add basic DT support for the Amlogic's Meson-AXG A113D SoC,
-which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-Timer, UART. It's capable of booting up into the serial console.
+[ resending - looks like my primary email provider ended up on a spam list
+  and almost all of my e-mail gets dropped ]
 
-Signed-off-by: Yixun Lan <dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/Makefile           |   1 +
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  22 +++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 204 +++++++++++++++++++++++++
- 3 files changed, 227 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+On Fri, Oct 13, 2017 at 04:26:57PM +0200, Peter Rosin wrote:
+> On 2017-10-13 15:50, Guenter Roeck wrote:
+> > On 10/13/2017 02:27 AM, Peter Rosin wrote:
+> >> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
+> >> is not always capable of avoiding the 25-35 ms timeout as specified by
+> >> the SMBUS protocol. This may cause silent corruption of the last bit of
+> >> any transfer, e.g. a one is read instead of a zero if the sensor chip
+> >> times out. This also affects the eeprom half of the nxp-se97 chip, where
+> >> this silent corruption was originally noticed. Other I2C adapters probably
+> >> suffer similar issues, e.g. bit-banging comes to mind as risky...
+> >>
+> >> The SMBUS register in the nxp chip is not a standard Jedec register, but
+> >> it is not special to the nxp chips either, at least the atmel chips
+> >> have the same mechanism. Therefore, do not special case this on the
+> >> manufacturer, it is opt-in via the device property anyway.
+> >>
+> >> Signed-off-by: Peter Rosin <peda@axentia.se>
+> >> ---
+> >>   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
+> >>   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
+> >>   2 files changed, 24 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> >> index 07a250498fbb..f569db58f64a 100644
+> >> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
+> >> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> >> @@ -34,6 +34,10 @@ Required properties:
+> >>   
+> >>   - reg: I2C address
+> >>   
+> >> +Optional properties:
+> >> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
+> >> +			 This is not supported on all chips.
+> >> +
+> >>   Example:
+> >>   
+> >>   temp-sensor@1a {
+> >> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+> >> index 1bf22eff0b08..fd816902fa30 100644
+> >> --- a/drivers/hwmon/jc42.c
+> >> +++ b/drivers/hwmon/jc42.c
+> >> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
+> >>   #define JC42_REG_TEMP		0x05
+> >>   #define JC42_REG_MANID		0x06
+> >>   #define JC42_REG_DEVICEID	0x07
+> >> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
+> >>   
+> >>   /* Status bits in temperature register */
+> >>   #define JC42_ALARM_CRIT_BIT	15
+> >> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
+> >>   #define ONS_MANID		0x1b09  /* ON Semiconductor */
+> >>   #define STM_MANID		0x104a  /* ST Microelectronics */
+> >>   
+> >> +/* SMBUS register */
+> >> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
+> >> +
+> >>   /* Supported chips */
+> >>   
+> >>   /* Analog Devices */
+> >> @@ -476,6 +480,22 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
+> >>   
+> >>   	data->extended = !!(cap & JC42_CAP_RANGE);
+> >>   
+> >> +	if (device_property_read_bool(dev, "smbus-timeout-disable")) {
+> >> +		int smbus;
+> >> +
+> >> +		/*
+> >> +		 * Not all chips support this register, but from a
+> >> +		 * quick read of various datasheets no chip appears
+> >> +		 * incompatible with the below attempt to disable
+> >> +		 * the timeout. And the whole thing is opt-in...
+> >> +		 */
+> >> +		smbus = i2c_smbus_read_word_swapped(client, JC42_REG_SMBUS);
+> >> +		if (smbus < 0)
+> >> +			return smbus;
+> >> +		i2c_smbus_write_word_swapped(client, JC42_REG_SMBUS,
+> >> +					     smbus | SMBUS_STMOUT);
+> > 
+> > Looking into the SE97 datasheet, the bit is only writable if the alarm bits
+> > are not locked. Should we take this into account and unlock the alarm bits
+> > if necessary ?
+> 
+> Right. And I thought about the case when the timeout was disabled before
+> probing but with the property not present (perhaps by someone trying things
+> out, like I have). Should the timeout be re-enabled in that case?
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 7a9f48c27b1f..aedecf088272 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-new file mode 100644
-index 000000000000..70eca1f8736a
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-axg.dtsi"
-+
-+/ {
-+	compatible = "amlogic,s400", "amlogic,a113d", "amlogic,meson-axg";
-+	model = "Amlogic Meson AXG S400 Development Board";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-new file mode 100644
-index 000000000000..003832890d2b
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -0,0 +1,204 @@
-+/*
-+ * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "amlogic,meson-axg";
-+
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 16 MiB reserved for Hardware ROM Firmware */
-+		hwrom_reserved: hwrom@0 {
-+			reg = <0x0 0x0 0x0 0x1000000>;
-+			no-map;
-+		};
-+
-+		/* Alternate 3 MiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@05000000 {
-+			reg = <0x0 0x05000000 0x0 0x300000>;
-+			no-map;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <0x2>;
-+		#size-cells = <0x0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache0 {
-+			compatible = "cache";
-+		};
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	xtal: xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xtal";
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		cbus: cbus@ffd00000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xffd00000 0x0 0x25000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
-+
-+			uart_A: serial@24000 {
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
-+				reg = <0x0 0x24000 0x0 0x14>;
-+				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-+				status = "disabled";
-+			};
-+
-+			uart_B: serial@23000 {
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
-+				reg = <0x0 0x23000 0x0 0x14>;
-+				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		gic: interrupt-controller@ffc01000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x0 0xffc01000 0 0x1000>,
-+			      <0x0 0xffc02000 0 0x2000>,
-+			      <0x0 0xffc04000 0 0x2000>,
-+			      <0x0 0xffc06000 0 0x2000>;
-+			interrupt-controller;
-+			interrupts = <GIC_PPI 9
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+		};
-+
-+		mailbox: mailbox@ff63dc00 {
-+			compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
-+			reg = <0 0xff63dc00 0 0x400>;
-+			interrupts = <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 209 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 210 IRQ_TYPE_EDGE_RISING>;
-+			#mbox-cells = <1>;
-+		};
-+
-+		sram: sram@fffc0000 {
-+			compatible = "amlogic,meson-axg-sram", "mmio-sram";
-+			reg = <0x0 0xfffc0000 0x0 0x20000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x0 0xfffc0000 0x20000>;
-+
-+			cpu_scp_lpri: scp-shmem@0 {
-+				compatible = "amlogic,meson-axg-scp-shmem";
-+				reg = <0x13000 0x400>;
-+			};
-+
-+			cpu_scp_hpri: scp-shmem@200 {
-+				compatible = "amlogic,meson-axg-scp-shmem";
-+				reg = <0x13400 0x400>;
-+			};
-+		};
-+
-+		aobus: aobus@ff800000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff800000 0x0 0x100000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
-+
-+			uart_AO: serial@3000 {
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
-+				reg = <0x0 0x3000 0x0 0x18>;
-+				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_AO_B: serial@4000 {
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
-+				reg = <0x0 0x4000 0x0 0x18>;
-+				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+		};
-+	};
-+};
--- 
-2.14.1
+No, because the property only states that the timeout should be disabled.
+It does not say that it should be _enabled_ if the property is not there.
+That would require a different property. A -> B does not imply B -> A.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> But, someone might have disabled the timeout by some previous arrangement
+> (e.g. in a boot-loader) but without having this newfangled property in the
+> device tree. Re-enabling the timeout in that case would break things. Slim
+> chance for that to be an issue, but perhaps not?
+> 
+> Unlocking the alarm bits is somewhat similar, since it should only be an
+> issue for warm starts. But the risk of breakage is perhaps not there at
+> all?
+> 
+We would have to lock the alarm bits again, leaving them in a consistent
+state.
+
+> Your call, I can fix thing however you like...
+> 
+
+Let's just leave it as-is. If we encounter a problem later we can always
+add code to unlock/lock the alarm bits.
+
+Guenter
