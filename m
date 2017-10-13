@@ -1,74 +1,95 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v5 0/2] memory: Introduce ti-emif-sram driver
-Date: Fri, 13 Oct 2017 15:59:13 -0500
-Message-ID: <20171013205915.9652-1-d-gerlach@ti.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 1/4] [media] v4l2-common: Add helper function for
+ fourcc to string
+Date: Sat, 14 Oct 2017 00:09:37 +0300
+Message-ID: <20171013210937.pzgmozz7elsb3yo5@valkosipuli.retiisi.org.uk>
+References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
+ <e6dfbe4afd3f1db4c3f8a81c0813dc418896f5e1.1505916622.git.dave.stevenson@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e6dfbe4afd3f1db4c3f8a81c0813dc418896f5e1.1505916622.git.dave.stevenson@raspberrypi.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This is v5 of the series introduces a ti-emif-sram driver to be used on
-am335x and am437x. The previous version of this 
-series can be found here [1].
+Hi Dave,
 
-The only change to this version is to greatly simplify the makefile rules
-used to generate the emif-asm-offsets header to fix some build issues
-caught by the kbuild robot. The file has been renamed as ti-emif-asm-offsets.h
-and is also now placed under include/generated so that it is handled along
-with the other generated headers.
+On Wed, Sep 20, 2017 at 05:07:54PM +0100, Dave Stevenson wrote:
+> New helper function char *v4l2_fourcc2s(u32 fourcc, char *buf)
+> that converts a fourcc into a nice printable version.
+> 
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+> ---
+> 
+> No changes from v2 to v3
+> 
+>  drivers/media/v4l2-core/v4l2-common.c | 18 ++++++++++++++++++
+>  include/media/v4l2-common.h           |  3 +++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index a5ea1f5..0219895 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -405,3 +405,21 @@ void v4l2_get_timestamp(struct timeval *tv)
+>  	tv->tv_usec = ts.tv_nsec / NSEC_PER_USEC;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_get_timestamp);
+> +
+> +char *v4l2_fourcc2s(u32 fourcc, char *buf)
+> +{
+> +	buf[0] = fourcc & 0x7f;
+> +	buf[1] = (fourcc >> 8) & 0x7f;
+> +	buf[2] = (fourcc >> 16) & 0x7f;
+> +	buf[3] = (fourcc >> 24) & 0x7f;
+> +	if (fourcc & (1 << 31)) {
+> +		buf[4] = '-';
+> +		buf[5] = 'B';
+> +		buf[6] = 'E';
+> +		buf[7] = '\0';
+> +	} else {
+> +		buf[4] = '\0';
+> +	}
+> +	return buf;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_fourcc2s);
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index aac8b7b..5b0fff9 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -264,4 +264,7 @@ const struct v4l2_frmsize_discrete *v4l2_find_nearest_format(
+>  
+>  void v4l2_get_timestamp(struct timeval *tv);
+>  
+> +#define V4L2_FOURCC_MAX_SIZE 8
+> +char *v4l2_fourcc2s(u32 fourcc, char *buf);
+> +
+>  #endif /* V4L2_COMMON_H_ */
 
-The macros were left inside the "ti_emif_offsets" inline function in the
-ti-emif-sram header as they are also needed by the sleep33xx and sleep43xx
-from the "code (seen here [2]), and describing the build depency on the
-generated ti-emif-asm-offsets.h file got messy. Just including the macros in
-the asm-offsets file generated for the arch/arm/mach-omap2 was the cleanest
-way I could come up with, otherwise ensuring that ti-emif-asm-offsets.h is
-generated before sleep33/43xx.S gets built was problematic. Of course,
-I am open to a better idea if someone has one.
+I like the idea but the use of a character pointer and assuming a length
+looks a bit scary.
 
-This code is required for low-power modes to work on AM335x and AM437x and a
-forthcoming PM series for those platforms will depend on this series. After
-both this and the PM series are reviewed I will send the necessary device tree
-changes for both, but in the meantime all remaining patches for am335x and
-am437x PM can be found here [3].
+As this seems to be used uniquely for printing stuff, a couple of macros
+could be used instead. Something like
 
-Regards,
-Dave
+#define V4L2_FOURCC_CONV "%c%c%c%c%s"
+#define V4L2_FOURCC_TO_CONV(fourcc) \
+	fourcc & 0x7f, (fourcc >> 8) & 0x7f, (fourcc >> 16) & 0x7f, \
+	(fourcc >> 24) & 0x7f, fourcc & BIT(31) ? "-BE" : ""
 
-[1] https://www.spinics.net/lists/arm-kernel/msg607959.html
-[2] https://www.spinics.net/lists/arm-kernel/msg595934.html
-[3] https://github.com/dgerlach/linux-pm/tree/upstream/v4.14/amx3-suspend-v5
+You could use it with printk-style functions, e.g.
 
-Dave Gerlach (2):
-  Documentation: dt: Update ti,emif bindings
-  memory: ti-emif-sram: introduce relocatable suspend/resume handlers
+	printk("blah fourcc " V4L2_FOURCC_CONV " is a nice format",
+	       V4L2_FOURCC_TO_CONV(fourcc));
 
- .../bindings/memory-controllers/ti/emif.txt        |  18 +-
- drivers/memory/Kconfig                             |  10 +
- drivers/memory/Makefile                            |  13 +
- drivers/memory/emif-asm-offsets.c                  |  22 ++
- drivers/memory/emif.h                              |  17 ++
- drivers/memory/ti-emif-pm.c                        | 339 +++++++++++++++++++++
- drivers/memory/ti-emif-sram-pm.S                   | 334 ++++++++++++++++++++
- include/linux/ti-emif-sram.h                       | 144 +++++++++
- 8 files changed, 896 insertions(+), 1 deletion(-)
- create mode 100644 drivers/memory/emif-asm-offsets.c
- create mode 100644 drivers/memory/ti-emif-pm.c
- create mode 100644 drivers/memory/ti-emif-sram-pm.S
- create mode 100644 include/linux/ti-emif-sram.h
+I guess it'd be better to add more parentheses around "fourcc" but it'd be
+less clear here that way.
 
 -- 
-2.13.4
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
