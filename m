@@ -1,69 +1,49 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
-Date: Fri, 13 Oct 2017 19:42:11 +0530
-Message-ID: <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-17-git-send-email-sudeep.holla@arm.com> <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
- <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
- <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com> <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
- <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com> <CAOCOHw54mQUVxVyLRWbV5Ty7trK99MM6zgXsuuxQEHnD3qvKVA@mail.gmail.com>
- <0b65a3fd-32ff-f708-7dce-8e3a5cabf908@arm.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [RFC usb-next v5 1/3] dt-bindings: usb: add the documentation
+ for USB root-hub
+Date: Fri, 13 Oct 2017 10:15:05 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1710131008390.1364-100000@iolanthe.rowland.org>
+References: <CAFBinCBwzzzj-ew-VTb9zojfzC9gedHd0uu0ez4WejBRTpnsWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0b65a3fd-32ff-f708-7dce-8e3a5cabf908-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCBwzzzj-ew-VTb9zojfzC9gedHd0uu0ez4WejBRTpnsWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 7:12 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> Hi Bjorn,
->
-> Thanks for taking a look at this. Much appreciated.
->
-> On 12/10/17 22:03, Bjorn Andersson wrote:
->> On Fri, Oct 6, 2017 at 6:51 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>
->>>
->>> On 06/10/17 14:47, Jassi Brar wrote:
->>>> On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> [..]
->>>>> Again that's not the point, doorbell is more common feature and that can
->>>>> be supported. As SCMI expects doorbell feature in the specification, it
->>>>> just need to support that class of controllers.
->>>>>
->>>> NO.  All SCMI expects is SHMEM and a signal reaching the other end.
->>>> The signal mechanism need not necessarily be "doorbell".
->>>>
->>>
->>> Agreed, but creating an abstraction ro do something as generic as
->>> doorbell and writing shim layer for each controller to use SCMI also
->>> sounds bad.
->>>
->>
->> In the Qualcomm platform we have a single register that exposes 32
->> doorbells, wired to interrupts on the various processors/co-processors
->> in the SoC.
->>
->
-> It's exactly same even on ARM MHU controller.
->
-This has been a big problem in our communication. You start with
-"exactly same..." and go on telling the difference.
-And that difference is important.
+On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
 
-In MHU the 32bits are tied together and all go to one target
-processor. Whereas on QCom, each bit corresponds to independent signal
-going to a different target processor.
+> Hi Alan,
+> 
+> On Thu, Oct 12, 2017 at 11:17 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> > On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
+> >
+> >> I haven't tested the described use-case. however, this patch is not
+> >> supposed to change the binding for actual devices.
+> >> USB device numbering starts at 1, while 0 is reserved for the root-hub
+> >> (at least from what I know).
+> >
+> > Actually 1 is reserved for the root hub.  External devices are numbered
+> > starting from 2.  (We can't use 0 for the root hub because, as you
+> > said, USB device numbering starts at 1!)
+> I just had a look at lsusb again:
+> $ lsusb -t
+> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
+> 
+> however, for the devicetree bindings the devices are supposed to use 1-31: [0]
+> 
+> Alan: just to make sure I understood you correctly: do you agree with
+> this patch?
 
-IOW, QCom has 32 channels per register whereas MHU has one. The
-current drivers reflect that reality and hence I am against any change
-in MHU driver.  Not to mean even changing the MHU driver will fix the
-core issue - which is https://lkml.org/lkml/2017/7/7/465 and this
-patchset tries to address that.
+I have no idea.  I haven't read the patch and I'm not familiar with the
+details of DeviceTree.  I was just trying to clear up your
+misunderstanding of USB device numbering.
+
+Alan Stern
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
