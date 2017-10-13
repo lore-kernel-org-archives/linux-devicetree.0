@@ -1,42 +1,50 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH/RFC 3/5] mfd: bd9571mwv: Allow DDR Backup Power register
- access
-Date: Fri, 13 Oct 2017 09:58:51 +0100
-Message-ID: <20171013085851.ljvgmyd6ei2tv5fw@dell>
-References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
- <1507649178-31473-4-git-send-email-geert+renesas@glider.be>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 0/2] Add support for Hi6220 coresight
+Date: Fri, 13 Oct 2017 09:57:02 +0100
+Message-ID: <59E07FDE.40307@hisilicon.com>
+References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
+ <20170901013301.GN21656@codeaurora.org> <20171007121802.GC23080@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1507649178-31473-4-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171007121802.GC23080@leoy-linaro>
+Sender: linux-clk-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Oct 2017, Geert Uytterhoeven wrote:
+Hi Leo,
 
-> Enable read/write access to the BD9571MWV_BKUP_MODE_CNT register, which
-> is a.o. used to configure DDR Backup Power.
+On 2017/10/7 13:18, Leo Yan wrote:
+> Hi Stephen, Wei,
+> 
+> On Thu, Aug 31, 2017 at 06:33:01PM -0700, Stephen Boyd wrote:
+>> On 09/01, Leo Yan wrote:
+>>> This patch series adds support for coresight on Hi6220; the first patch
+>>> is to fix coresight PLL so can avoid system hang after we enable
+>>> coresight, the second patch is to add DT binding according to coresight
+>>> topology.
+>>>
+>>> The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
+>>> can successfully decode ETF and ETB trace data.
+>>>
+>>
+>> I can take the first one and second one goes through arm-soc?
+> 
+> Could you pick these two patches for Hi6220 coresight enabling for
+> this merge window? Or need me resend these two patches?
 
-a.o.?  That's a new one on me.
+Applied patch 2 into hisilicon dt tree with slight fix.
+Thanks!
 
-Please ensure commit logs are clear for *everyone* to read/understand
-by using descriptive and expanded (rather than shorten) terms.
+BR,
+Wei
 
-Code looks fine though, so once fixed:
+> 
+> Thanks,
+> Leo Yan
+> 
+> .
+> 
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
