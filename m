@@ -1,66 +1,32 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH] drm: panel: simple: add Toshiba LT089AC19000
-Date: Fri, 13 Oct 2017 19:01:27 +0200
-Message-ID: <20171013170127.16042-1-l.stach@pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [Patch 5/6] ARM: DRA7: hwmod: Add VPE nodes
+Date: Fri, 13 Oct 2017 10:05:13 -0700
+Message-ID: <20171013170513.GM4394@atomide.com>
+References: <20171012192719.15193-1-bparrot@ti.com>
+ <20171012192719.15193-6-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171012192719.15193-6-bparrot@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T25seSBleHBvc2VzIGEgc2luZ2xlIG1vZGUgYW5kIG5vdCBhIGNvbXBsZXRlIGRpc3BsYXkgdGlt
-aW5nLCBhcwp0aGUgZGF0YXNoZWV0IGlzIHJhdGhlciB2YWd1ZSBhYm91dCB0aGUgbWluaW11bS9t
-YXhpbXVtIHZhbHVlcy4KClNpZ25lZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1
-dHJvbml4LmRlPgotLS0KIC4uLi9kaXNwbGF5L3BhbmVsL3Rvc2hpYmEsbHQwODlhYzI5MDAwLnR4
-dCAgICAgICAgIHwgIDggKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jICAgICAgICAgICAgICAgfCAyNiArKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNo
-YW5nZWQsIDM0IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90b3NoaWJhLGx0MDg5YWMyOTAwMC50
-eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC90b3NoaWJhLGx0MDg5YWMyOTAwMC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90b3NoaWJhLGx0MDg5YWMyOTAwMC50eHQKbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5lNWNiMWFkMjNjZDUKLS0tIC9kZXYv
-bnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC90b3NoaWJhLGx0MDg5YWMyOTAwMC50eHQKQEAgLTAsMCArMSw4IEBACitUb3NoaWJhIDguNCIg
-V1hHQSAoMTI4MHg3NjgpIFRGVCBMQ0QgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0g
-Y29tcGF0aWJsZTogc2hvdWxkIGJlICJ0b3NoaWJhLGx0MDg5YWMyOTAwMC50eHQiCistIHBvd2Vy
-LXN1cHBseTogYXMgc3BlY2lmaWVkIGluIHRoZSBiYXNlIGJpbmRpbmcKKworVGhpcyBiaW5kaW5n
-IGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNw
-ZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCA0NzRmYTc1OWUwNmUuLmNhYmQ4ZWEwNmQ4YiAx
-MDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtMTgzMSw2ICsxODMxLDI5IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyB0aWFubWFfdG0wNzBqZGhnMzAgPSB7CiAJ
-LmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHLAogfTsKIAorc3Rh
-dGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIHRvc2hpYmFfbHQwODlhYzI5MDAwX21v
-ZGUgPSB7CisJLmNsb2NrID0gNzk1MDAsCisJLmhkaXNwbGF5ID0gMTI4MCwKKwkuaHN5bmNfc3Rh
-cnQgPSAxMjgwICsgMTkyLAorCS5oc3luY19lbmQgPSAxMjgwICsgMTkyICsgMTI4LAorCS5odG90
-YWwgPSAxMjgwICsgMTkyICsgMTI4ICsgNjQsCisJLnZkaXNwbGF5ID0gNzY4LAorCS52c3luY19z
-dGFydCA9IDc2OCArIDIwLAorCS52c3luY19lbmQgPSA3NjggKyAyMCArIDcsCisJLnZ0b3RhbCA9
-IDc2OCArIDIwICsgNyArIDMsCisJLnZyZWZyZXNoID0gNjAsCit9OworCitzdGF0aWMgY29uc3Qg
-c3RydWN0IHBhbmVsX2Rlc2MgdG9zaGliYV9sdDA4OWFjMjkwMDAgPSB7CisJLm1vZGVzID0gJnRv
-c2hpYmFfbHQwODlhYzI5MDAwX21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLnNpemUgPSB7CisJ
-CS53aWR0aCA9IDE5NCwKKwkJLmhlaWdodCA9IDExNiwKKwl9LAorCS5idXNfZm9ybWF0ID0gTUVE
-SUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rp
-c3BsYXlfbW9kZSB0cGtfZjA3YV8wMTAyX21vZGUgPSB7CiAJLmNsb2NrID0gMzMyNjAsCiAJLmhk
-aXNwbGF5ID0gODAwLApAQCAtMjExMyw2ICsyMTM2LDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgcGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAkJLmNvbXBhdGlibGUgPSAidGlh
-bm1hLHRtMDcwamRoZzMwIiwKIAkJLmRhdGEgPSAmdGlhbm1hX3RtMDcwamRoZzMwLAogCX0sIHsK
-KwkJLmNvbXBhdGlibGUgPSAidG9zaGliYSxsdDA4OWFjMjkwMDAiLAorCQkuZGF0YSA9ICZ0b3No
-aWJhX2x0MDg5YWMyOTAwMCwKKwl9LCB7CiAJCS5jb21wYXRpYmxlID0gInRwayxmMDdhLTAxMDIi
-LAogCQkuZGF0YSA9ICZ0cGtfZjA3YV8wMTAyLAogCX0sIHsKLS0gCjIuMTEuMAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+* Benoit Parrot <bparrot@ti.com> [171012 12:28]:
+> +static struct omap_hwmod_class_sysconfig dra7xx_vpe_sysc = {
+> +	.sysc_offs	= 0x0010,
+> +	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE),
+> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+> +			   MSTANDBY_FORCE | MSTANDBY_NO |
+> +			   MSTANDBY_SMART),
+> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+> +};
+
+I think checkpatch.pl --strict would complain about unnecessary
+parentheses, might as well check the whole series while at it.
+
+Regards,
+
+Tony
