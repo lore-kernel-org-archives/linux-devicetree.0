@@ -1,78 +1,109 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH] nvmem: meson: use generic compatible
-Date: Fri, 13 Oct 2017 21:14:59 +0200
-Message-ID: <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
-References: <20171012152450.12454-1-jbrunet@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [Patch v6 3/7] slimbus: qcom: Add Qualcomm Slimbus controller
+ driver
+Date: Fri, 13 Oct 2017 14:17:47 -0500
+Message-ID: <20171013191747.o7bvb5urs5jt2x4l@rob-hp-laptop>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-4-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171012152450.12454-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171006155136.4682-4-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org
+Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, linux-arm-msm@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
-
-On Thu, Oct 12, 2017 at 5:24 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> The meson efuse driver seems to be compatible with more SoCs than
-> initially thought. Let's use the most generic compatible he have in
-> DT instead of the gxbb specific one
->
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Fri, Oct 06, 2017 at 05:51:32PM +0200, srinivas.kandagatla@linaro.org wrote:
+> From: Sagar Dharia <sdharia@codeaurora.org>
+> 
+> This controller driver programs manager, interface, and framer
+> devices for Qualcomm's slimbus HW block.
+> Manager component currently implements logical address setting,
+> and messaging interface.
+> Interface device reports bus synchronization information, and framer
+> device clocks the bus from the time it's woken up, until clock-pause
+> is executed by the manager device.
+> 
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
->  drivers/nvmem/meson-efuse.c                               | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> index fafd85bd67a6..0260524292fe 100644
-> --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> @@ -1,7 +1,7 @@
->  = Amlogic eFuse device tree bindings =
->
->  Required properties:
-> -- compatible: should be "amlogic,meson-gxbb-efuse"
-> +- compatible: should be "amlogic,meson-gx-efuse"
-have you checked with the devicetree maintainers how they want the
-documentation to look like in this case?
-(I don't know if the old one should be kept instead of removing it)
+>  .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  43 ++
 
->
->  = Data cells =
->  Are child nodes of eFuse, bindings of which as described in
-> @@ -10,7 +10,7 @@ bindings/nvmem/nvmem.txt
->  Example:
->
->         efuse: efuse {
-> -               compatible = "amlogic,meson-gxbb-efuse";
-> +               compatible = "amlogic,meson-gx-efuse";
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->
-> diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-> index 70bfc9839bb2..e90c6d68a263 100644
-> --- a/drivers/nvmem/meson-efuse.c
-> +++ b/drivers/nvmem/meson-efuse.c
-> @@ -44,7 +44,7 @@ static struct nvmem_config econfig = {
->  };
->
->  static const struct of_device_id meson_efuse_match[] = {
-> -       { .compatible = "amlogic,meson-gxbb-efuse", },
-> +       { .compatible = "amlogic,meson-gx-efuse", },
->         { /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, meson_efuse_match);
-> --
-> 2.13.6
->
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Version 6 and this is the first I see it? Where's the version history? 
+
+Please split to separate patch.
+
+>  drivers/slimbus/Kconfig                            |   9 +
+>  drivers/slimbus/Makefile                           |   3 +
+>  drivers/slimbus/slim-qcom-ctrl.c                   | 594 +++++++++++++++++++++
+>  drivers/slimbus/slim-qcom.h                        |  63 +++
+>  5 files changed, 712 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+>  create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
+>  create mode 100644 drivers/slimbus/slim-qcom.h
+> 
+> diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+> new file mode 100644
+> index 0000000..081110d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+> @@ -0,0 +1,43 @@
+> +Qualcomm SLIMBUS controller
+> +This controller is used if applications processor driver controls slimbus
+> +master component.
+> +
+> +Required properties:
+> +
+> + - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
+> + - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
+> +
+> + - reg : Offset and length of the register region(s) for the device
+> + - reg-names : Register region name(s) referenced in reg above
+> +	 Required register resource entries are:
+> +	 "ctrl": Physical adderess of controller register blocks
+> + - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible or
+> + 		"qcom,slim" if using generic qcom SLIM IP.
+
+No such thing as generic IP.
+
+Fine as a fallback, but not by itself.
+
+> + - interrupts : Interrupt number used by this controller
+> + - clocks : Interface and core clocks used by this slimbus controller
+> + - clock-names : Required clock-name entries are:
+> +	"iface_clk" : Interface clock for this controller
+> +	"core_clk" : Interrupt for controller core's BAM
+
+_clk is redundant.
+
+> +
+> +
+> +Optional property:
+> + - reg entry for slew rate : If slew rate control register is provided, this
+> +	entry should be used.
+> + - reg-name for slew rate: "slew"
+
+Pointless to have -name when there is only one.
+
+> +
+> +Example:
+> +	slim@28080000 {
+> +		compatible = "qcom,slim";
+> +		#address-cells = <4>;
+> +		#size-cells = <0>;
+> +		reg = <0x28080000 0x2000>, <0x80207C 4>;
+> +		reg-names = "ctrl", "slew";
+> +		interrupts = <0 33 0>;
+> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+> +		clock-names = "iface_clk", "core_clk";
+> +
+> +		codec: wcd9310@1{
+> +			compatible = "slim217,60";
+> +			reg = <1 0>;
+
+This would not compile. You don't have 4 cells here.
+
+> +		};
+> +	};
