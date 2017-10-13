@@ -1,50 +1,92 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 0/2] Sluggish AT91 I2C driver causes SMBus timeouts
-Date: Fri, 13 Oct 2017 11:27:03 +0200
-Message-ID: <20171013092705.7038-1-peda@axentia.se>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC documentation
+Date: Fri, 13 Oct 2017 17:28:59 +0800
+Message-ID: <CAMz4kuKpnH8_LwjN_qr4sbyWh6_03U_a9FH60B_-Gy77CQZiOQ@mail.gmail.com>
+References: <73965e7fb34d6a96529589cdf48e54e95ed666b8.1507723345.git.baolin.wang@spreadtrum.com>
+ <20171013090726.y6mzuf7fdynnp2rj@dell>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171013090726.y6mzuf7fdynnp2rj@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hi Lee,
 
-This is a workaround for a problem in the AT91 I2C adapter driver
-(or perhaps the hardware?) when it drives the TWI peripheral on an
-Atmel sama5d3 chip as I2C.
+On 13 October 2017 at 17:07, Lee Jones <lee.jones@linaro.org> wrote:
+> On Wed, 11 Oct 2017, Baolin Wang wrote:
+>
+>> This patch adds the binding documentation for Spreadtrum SC27xx series
+>> PMIC device.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+>> ---
+>>  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   23 ++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+>> new file mode 100644
+>> index 0000000..333c818
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+>> @@ -0,0 +1,23 @@
+>> +Spreadtrum SC27xx Power Management Integrated Circuit (PMIC)
+>
+> More info please.
+>
+> What does the ship do and what other devices are available.
 
-Apparently, that driver can delay in excess of 100 ms just after
-the transfer of the 7th bit of the last byte. When it does this
-the I2C bus, when viewed from SMBUS client devices, appears
-stuck with SCL low. Some SMBUS devices times out under these
-conditions, in particular temperature sensors. The I2C adapter
-driver does however not notice the timeout, and thinks the transfer
-completed successfully when it finally desides to finish the
-transaction. When this happens, the 8th bit of the last byte is
-always set, and thus quite possibly corrupted.
+OK. I will add more information in next version.
 
-The chip this was observed with (an nxp SE97) has a means to disable
-the SMBUS timeout detector, which "fixes" things. Do that.
+>
+>> +Required properties:
+>> +- compatible: Should be "sprd,sc2731".
+>> +- reg: SPI chip select.
+>
+> Really?  Not an address?
 
-This should probably go to stable?
+Yes, it should be device address.
 
-Previous discussion: https://lkml.org/lkml/2017/10/12/227
+>
+> What is the range?
+>
+>> +- spi-max-frequency: Typically set to 26000000.
+>> +- interrupts: The interrupt line the device is connected to.
+>> +- interrupt-controller: Marks the device node as an interrupt controller.
+>> +- #interrupt-cells: The number of cells to describe an PMIC IRQ, should be 2.
+>
+> What if it's not 2?  Will it still work?
 
-Cheers,
-Peter
+Must be 2, if not it can not work well. Will update in next version.
 
-Peter Rosin (2):
-  hwmon: (jc42) optionally try to disable the SMBUS timeout
-  ARM: dts: at91: disable the nxp,se97b SMBUS timeout on the TSE-850
+>
+>> +- #address-cells: Child device offset number of cells, should be 1.
+>
+> Same.
 
- Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
- arch/arm/boot/dts/at91-tse850-3.dts              |  1 +
- drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
- 3 files changed, 25 insertions(+)
+OK.
+
+>
+>> +- #size-cells: Child device size number of cells, should be 0.
+>
+> Same.
+
+OK.
+
+>
+>> +
+>> +Example:
+>> +pmic: pmic@0 {
+>
+> What other nodes are you referencing this one from?
+
+This node should be under our ADI/SPI master device node, as one SPI
+device. I will add the SPI master node in next version. Very
+appreciated for your comments.
 
 -- 
-2.11.0
-
+Baolin.wang
+Best Regards
