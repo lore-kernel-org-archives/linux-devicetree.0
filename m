@@ -1,255 +1,253 @@
-From: Antonio Ospite <ao2@ao2.it>
-Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
-Date: Fri, 13 Oct 2017 18:02:21 +0200
-Message-ID: <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
-References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/4] dt-bindings: pci: tegra: Document Tegra186 PCIe DT
+Date: Fri, 13 Oct 2017 18:37:12 +0200
+Message-ID: <20171013163712.GA8761@ulmo>
+References: <1506513517-25870-1-git-send-email-mmaddireddy@nvidia.com>
+ <1506513517-25870-2-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20171012150443.27542-1-m.niestroj@grinn-global.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1506513517-25870-2-git-send-email-mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Oct 2017 17:04:42 +0200
-Marcin Niestroj <m.niestroj@grinn-global.com> wrote:
 
-> Support was added based on Goodix GitHub repo [1]. There are two major
-> differences between gt1151 and currently supported devices (gt9x):
->  * CONFIG_DATA register has 0x8050 address instead of 0x8047,
->  * config data checksum has 16-bit width instead of 8-bit.
-> 
-> Also update goodix_i2c_test() function, so it reads ID register (which
-> has the same address for all devices) instead of CONFIG_DATA (because
-> its address is known only after reading ID of the device).
-> 
-> [1] https://github.com/goodix/gt1x_driver_generic
-> 
-> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 27, 2017 at 05:28:34PM +0530, Manikanta Maddireddy wrote:
+> Tegra186 PCIe controller DT properties has couple of differences
+> wrt Tegra210 PCIe, rest of the DT properties are same.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Tested-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
-> Patch was developed and tested on top of 4.14-rc4 using custom board.
->
+> V2: No change in this patch
+>  .../bindings/pci/nvidia,tegra20-pcie.txt           | 134 +++++++++++++++=
++++++-
+>  1 file changed, 130 insertions(+), 4 deletions(-)
 
-Just a suggestion, you could use a function pointer for the
-device-specific checksum routines and have the check on the device id
-only once in goodix_ts_probe(), see below.
+Hi Rob,
 
->  .../bindings/input/touchscreen/goodix.txt          |  3 +-
->  drivers/input/touchscreen/goodix.c                 | 88 +++++++++++++++++-----
->  2 files changed, 70 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index c98757a69110..0c369d8ebcab 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -2,7 +2,8 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
->  
+Manikanta forgot to add you on Cc on this one. Can you take a look or
+should Manikanta resend the series to include you and the device tree
+mailing list?
+
+FWIW, this looks good to me, so:
+
+Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+Bjorn,
+
+I take it that you'd pull this into the PCI tree along with the host
+controller driver changes? I can take patches 3 and 4 through the Tegra
+tree.
+
+Thierry
+
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.tx=
+t b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> index 982a74ea6df9..753b67327373 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+> @@ -1,10 +1,15 @@
+>  NVIDIA Tegra PCIe controller
+> =20
 >  Required properties:
->  
-> - - compatible		: Should be "goodix,gt911"
-> + - compatible		: Should be "goodix,gt1151"
-> +				 or "goodix,gt911"
->  				 or "goodix,gt9110"
->  				 or "goodix,gt912"
->  				 or "goodix,gt927"
-> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-> index 32d2762448aa..9d50d9688975 100644
-> --- a/drivers/input/touchscreen/goodix.c
-> +++ b/drivers/input/touchscreen/goodix.c
-> @@ -41,6 +41,7 @@ struct goodix_ts_data {
->  	bool inverted_y;
->  	unsigned int max_touch_num;
->  	unsigned int int_trigger_type;
-> +	u16 reg_config_data;
-
-Add a function pointer here.
-
->  	int cfg_len;
->  	struct gpio_desc *gpiod_int;
->  	struct gpio_desc *gpiod_rst;
-> @@ -69,7 +70,8 @@ struct goodix_ts_data {
->  #define GOODIX_CMD_SCREEN_OFF		0x05
->  
->  #define GOODIX_READ_COOR_ADDR		0x814E
-> -#define GOODIX_REG_CONFIG_DATA		0x8047
-> +#define GOODIX_GT1X_REG_CONFIG_DATA	0x8050
-> +#define GOODIX_GT9X_REG_CONFIG_DATA	0x8047
->  #define GOODIX_REG_ID			0x8140
->  
->  #define RESOLUTION_LOC		1
-> @@ -193,6 +195,16 @@ static int goodix_get_cfg_len(u16 id)
->  	}
->  }
->  
-> +static int goodix_get_reg_config_data(u16 id)
-> +{
-> +	switch (id) {
-> +	case 1151:
-> +		return GOODIX_GT1X_REG_CONFIG_DATA;
-> +	default:
-> +		return GOODIX_GT9X_REG_CONFIG_DATA;
-> +	}
-> +}
+> -- compatible: For Tegra20, must contain "nvidia,tegra20-pcie".  For Tegr=
+a30,
+> -  "nvidia,tegra30-pcie".  For Tegra124, must contain "nvidia,tegra124-pc=
+ie".
+> -  Otherwise, must contain "nvidia,<chip>-pcie", plus one of the above, w=
+here
+> -  <chip> is tegra132 or tegra210.
+> +- compatible: Must be:
+> +  - "nvidia,tegra20-pcie": for Tegra20
+> +  - "nvidia,tegra30-pcie": for Tegra30
+> +  - "nvidia,tegra124-pcie": for Tegra124 and Tegra132
+> +  - "nvidia,tegra210-pcie": for Tegra210
+> +  - "nvidia,tegra186-pcie": for Tegra186
+> +- power-domains: To ungate power partition by BPMP powergate driver. Must
+> +contain BPMP phandle and PCIe power partition ID. This is required only
+> +for Tegra186.
+>  - device_type: Must be "pci"
+>  - reg: A list of physical base address and length for each set of contro=
+ller
+>    registers. Must contain an entry for each entry in the reg-names prope=
+rty.
+> @@ -124,6 +129,16 @@ Power supplies for Tegra210:
+>    - vddio-pex-ctl-supply: Power supply for PCIe control I/O partition. M=
+ust
+>      supply 1.8 V.
+> =20
+> +Power supplies for Tegra186:
+> +- Required:
+> +  - dvdd-pex-supply: Power supply for digital PCIe I/O. Must supply 1.05=
+ V.
+> +  - hvdd-pex-pll-supply: High-voltage supply for PLLE (shared with USB3)=
+=2E Must
+> +    supply 1.8 V.
+> +  - hvdd-pex-supply: High-voltage supply for PCIe I/O and PCIe output cl=
+ocks.
+> +    Must supply 1.8 V.
+> +  - vddio-pexctl-aud-supply: Power supply for PCIe side band signals. Mu=
+st
+> +    supply 1.8 V.
 > +
-
-This goodix_get_reg_config_data() is called only once, it could
-go away if you assign ts->reg_config_data directly in the probe
-function.
-
->  static int goodix_ts_read_input_report(struct goodix_ts_data *ts, u8 *data)
->  {
->  	int touch_num;
-> @@ -311,25 +323,12 @@ static int goodix_request_irq(struct goodix_ts_data *ts)
->  					 ts->irq_flags, ts->client->name, ts);
->  }
->  
-> -/**
-> - * goodix_check_cfg - Checks if config fw is valid
-> - *
-> - * @ts: goodix_ts_data pointer
-> - * @cfg: firmware config data
-> - */
-> -static int goodix_check_cfg(struct goodix_ts_data *ts,
-> -			    const struct firmware *cfg)
-> +static int goodix_check_cfg_8(struct goodix_ts_data *ts,
-> +			const struct firmware *cfg)
->  {
-> -	int i, raw_cfg_len;
-> +	int i, raw_cfg_len = cfg->size - 2;
->  	u8 check_sum = 0;
->  
-> -	if (cfg->size > GOODIX_CONFIG_MAX_LENGTH) {
-> -		dev_err(&ts->client->dev,
-> -			"The length of the config fw is not correct");
-> -		return -EINVAL;
-> -	}
-> -
-> -	raw_cfg_len = cfg->size - 2;
->  	for (i = 0; i < raw_cfg_len; i++)
->  		check_sum += cfg->data[i];
->  	check_sum = (~check_sum) + 1;
-> @@ -348,6 +347,53 @@ static int goodix_check_cfg(struct goodix_ts_data *ts,
->  	return 0;
->  }
->  
-> +static int goodix_check_cfg_16(struct goodix_ts_data *ts,
-> +			const struct firmware *cfg)
-> +{
-> +	int i, raw_cfg_len = cfg->size - 3;
-> +	u16 check_sum = 0;
+>  Root ports are defined as subnodes of the PCIe controller node.
+> =20
+>  Required properties:
+> @@ -546,3 +561,114 @@ Board DTS:
+>  			status =3D "okay";
+>  		};
+>  	};
 > +
-> +	for (i = 0; i < raw_cfg_len; i += 2)
-> +		check_sum += get_unaligned_be16(&cfg->data[i]);
-> +	check_sum = (~check_sum) + 1;
-> +	if (check_sum != get_unaligned_be16(&cfg->data[raw_cfg_len])) {
-> +		dev_err(&ts->client->dev,
-> +			"The checksum of the config fw is not correct");
-> +		return -EINVAL;
-> +	}
+> +Tegra186:
+> +---------
 > +
-> +	if (cfg->data[raw_cfg_len + 2] != 1) {
-> +		dev_err(&ts->client->dev,
-> +			"Config fw must have Config_Fresh register set");
-> +		return -EINVAL;
-> +	}
+> +SoC DTSI:
 > +
-> +	return 0;
-> +}
+> +	pcie@10003000 {
+> +		compatible =3D "nvidia,tegra186-pcie";
+> +		power-domains =3D <&bpmp TEGRA186_POWER_DOMAIN_PCX>;
+> +		device_type =3D "pci";
+> +		reg =3D <0x0 0x10003000 0x0 0x00000800   /* PADS registers */
+> +		       0x0 0x10003800 0x0 0x00000800   /* AFI registers */
+> +		       0x0 0x40000000 0x0 0x10000000>; /* configuration space */
+> +		reg-names =3D "pads", "afi", "cs";
 > +
-> +/**
-> + * goodix_check_cfg - Checks if config fw is valid
-> + *
-> + * @ts: goodix_ts_data pointer
-> + * @cfg: firmware config data
-> + */
-> +static int goodix_check_cfg(struct goodix_ts_data *ts,
-> +			    const struct firmware *cfg)
-> +{
-> +	if (cfg->size > GOODIX_CONFIG_MAX_LENGTH) {
-> +		dev_err(&ts->client->dev,
-> +			"The length of the config fw is not correct");
-> +		return -EINVAL;
-> +	}
+> +		interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>, /* controller interru=
+pt */
+> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>; /* MSI interrupt */
+> +		interrupt-names =3D "intr", "msi";
 > +
-> +	switch (ts->id) {
-> +	case 1151:
-> +		return goodix_check_cfg_16(ts, cfg);
-> +	default:
-> +		return goodix_check_cfg_8(ts, cfg);
-> +	}
-
-call the function pointer here instead of having a switch.
-
-> +}
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-map-mask =3D <0 0 0 0>;
+> +		interrupt-map =3D <0 0 0 0 &gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
 > +
->  /**
->   * goodix_send_cfg - Write fw config to device
->   *
-> @@ -363,7 +409,7 @@ static int goodix_send_cfg(struct goodix_ts_data *ts,
->  	if (error)
->  		return error;
->  
-> -	error = goodix_i2c_write(ts->client, GOODIX_REG_CONFIG_DATA, cfg->data,
-> +	error = goodix_i2c_write(ts->client, ts->reg_config_data, cfg->data,
->  				 cfg->size);
->  	if (error) {
->  		dev_err(&ts->client->dev, "Failed to write config data: %d",
-> @@ -490,7 +536,7 @@ static void goodix_read_config(struct goodix_ts_data *ts)
->  	u8 config[GOODIX_CONFIG_MAX_LENGTH];
->  	int error;
->  
-> -	error = goodix_i2c_read(ts->client, GOODIX_REG_CONFIG_DATA,
-> +	error = goodix_i2c_read(ts->client, ts->reg_config_data,
->  				config, ts->cfg_len);
->  	if (error) {
->  		dev_warn(&ts->client->dev,
-> @@ -571,7 +617,7 @@ static int goodix_i2c_test(struct i2c_client *client)
->  	u8 test;
->  
->  	while (retry++ < 2) {
-> -		error = goodix_i2c_read(client, GOODIX_REG_CONFIG_DATA,
-> +		error = goodix_i2c_read(client, GOODIX_REG_ID,
->  					&test, 1);
->  		if (!error)
->  			return 0;
-> @@ -741,6 +787,7 @@ static int goodix_ts_probe(struct i2c_client *client,
->  		return error;
->  	}
->  
-> +	ts->reg_config_data = goodix_get_reg_config_data(ts->id);
+> +		bus-range =3D <0x00 0xff>;
+> +		#address-cells =3D <3>;
+> +		#size-cells =3D <2>;
+> +
+> +		ranges =3D <0x82000000 0 0x10000000 0x0 0x10000000 0 0x00001000   /* p=
+ort 0 configuration space */
+> +			  0x82000000 0 0x10001000 0x0 0x10001000 0 0x00001000   /* port 1 con=
+figuration space */
+> +			  0x82000000 0 0x10004000 0x0 0x10004000 0 0x00001000   /* port 2 con=
+figuration space */
+> +			  0x81000000 0 0x0        0x0 0x50000000 0 0x00010000   /* downstream=
+ I/O (64 KiB) */
+> +			  0x82000000 0 0x50100000 0x0 0x50100000 0 0x07F00000   /* non-prefet=
+chable memory (127 MiB) */
+> +			  0xc2000000 0 0x58000000 0x0 0x58000000 0 0x28000000>; /* prefetchab=
+le memory (640 MiB) */
+> +
+> +		clocks =3D <&bpmp TEGRA186_CLK_AFI>,
+> +			 <&bpmp TEGRA186_CLK_PCIE>,
+> +			 <&bpmp TEGRA186_CLK_PLLE>;
+> +		clock-names =3D "afi", "pex", "pll_e";
+> +
+> +		resets =3D <&bpmp TEGRA186_RESET_AFI>,
+> +			 <&bpmp TEGRA186_RESET_PCIE>,
+> +			 <&bpmp TEGRA186_RESET_PCIEXCLK>;
+> +		reset-names =3D "afi", "pex", "pcie_x";
+> +
+> +		status =3D "disabled";
+> +
+> +		pci@1,0 {
+> +			device_type =3D "pci";
+> +			assigned-addresses =3D <0x82000800 0 0x10000000 0 0x1000>;
+> +			reg =3D <0x000800 0 0 0 0>;
+> +			status =3D "disabled";
+> +
+> +			#address-cells =3D <3>;
+> +			#size-cells =3D <2>;
+> +			ranges;
+> +
+> +			nvidia,num-lanes =3D <2>;
+> +		};
+> +
+> +		pci@2,0 {
+> +			device_type =3D "pci";
+> +			assigned-addresses =3D <0x82001000 0 0x10001000 0 0x1000>;
+> +			reg =3D <0x001000 0 0 0 0>;
+> +			status =3D "disabled";
+> +
+> +			#address-cells =3D <3>;
+> +			#size-cells =3D <2>;
+> +			ranges;
+> +
+> +			nvidia,num-lanes =3D <1>;
+> +		};
+> +
+> +		pci@3,0 {
+> +			device_type =3D "pci";
+> +			assigned-addresses =3D <0x82001800 0 0x10004000 0 0x1000>;
+> +			reg =3D <0x001800 0 0 0 0>;
+> +			status =3D "disabled";
+> +
+> +			#address-cells =3D <3>;
+> +			#size-cells =3D <2>;
+> +			ranges;
+> +
+> +			nvidia,num-lanes =3D <1>;
+> +		};
+> +	};
+> +
+> +Board DTS:
+> +
+> +	pcie@10003000 {
+> +		status =3D "okay";
+> +
+> +		dvdd-pex-supply =3D <&vdd_pex>;
+> +		hvdd-pex-pll-supply =3D <&vdd_1v8>;
+> +		hvdd-pex-supply =3D <&vdd_1v8>;
+> +		vddio-pexctl-aud-supply =3D <&vdd_1v8>;
+> +
+> +		pci@1,0 {
+> +			nvidia,num-lanes =3D <4>;
+> +			status =3D "okay";
+> +		};
+> +
+> +		pci@2,0 {
+> +			nvidia,num-lanes =3D <0>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		pci@3,0 {
+> +			nvidia,num-lanes =3D <1>;
+> +			status =3D "disabled";
+> +		};
+> +	};
+> --=20
+> 2.1.4
+>=20
 
-Add the switch only here and assign ts->reg_config_data and the
-function pointer, depending on the device.
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  	ts->cfg_len = goodix_get_cfg_len(ts->id);
->  
->  	if (ts->gpiod_int && ts->gpiod_rst) {
-> @@ -870,6 +917,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
->  
->  #ifdef CONFIG_OF
->  static const struct of_device_id goodix_of_match[] = {
-> +	{ .compatible = "goodix,gt1151" },
->  	{ .compatible = "goodix,gt911" },
->  	{ .compatible = "goodix,gt9110" },
->  	{ .compatible = "goodix,gt912" },
-> -- 
-> 2.14.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
 
-Ciao,
-   Antonio
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlng67QACgkQ3SOs138+
+s6Em+A//aBq9fFyL/g/sWzR6PHzISGJ1s8F+gEgwcF5YqhQY11WOO9RV7azk7sDL
+gDW4xBdnRZO+vtL3rH89n+Gdjbi4psdF5ZdePewU7yly3HEbG66sgzjSH3OaXT1y
+47rKUxVR928TAFrJV6fg0HkiqUHVTSzj4Ig2QYLr9rdT5kkS2i4FuUSXeWWqNn4f
+uh8r8ILm74/daDleLqg+yBuC7fMh3gKloTpcYeGP+Z5etVXJM8L1HL6ESxIw3i1v
+Z2KbZ8rMxDPxayEtk2kNJ01b7LOix2uGhX4BhRNRHpvD1tk9qYoJW0fvciB8zOLE
++HhkjngdKdNR7qdfzv2CsSaJoBiIkPTliEShgz4XbzDPmZubp1p8bUjlwcpZ5G8v
+ewPT5DZK+J177PpLCM3dAckl90/OFO6yy5q9EVLjZdSREqX51Eu/kT/Cd2Oob+TU
+r5m154haql525qPsYBqmUUBy3R36fGoj0O8ATWkhNmljdToWSIc6xRAu9Vw9uhTi
+krBre0Efe6D6NkhGF/jpsbsGo5Xfrb0qjddEtq3aXabCDtWXCq9Jok65WjNuyTgv
+bC+DlrIK6ECGEJ3P55MUDVdte+YxLWUzyoLfIdKLukP928+oHnjkConExj3OeMWT
+AsEuERdOkH3Icg12wPgj3A9GDUtJSC/FYwNxbAzCnIN8WR4bAng=
+=MFpZ
+-----END PGP SIGNATURE-----
 
--- 
-Antonio Ospite
-https://ao2.it
-https://twitter.com/ao2it
-
-A: Because it messes up the order in which people normally read text.
-   See http://en.wikipedia.org/wiki/Posting_style
-Q: Why is top-posting such a bad thing?
+--u3/rZRmxL6MmkK24--
