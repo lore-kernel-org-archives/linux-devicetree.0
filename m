@@ -1,84 +1,29 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC
- documentation
-Date: Fri, 13 Oct 2017 10:07:26 +0100
-Message-ID: <20171013090726.y6mzuf7fdynnp2rj@dell>
-References: <73965e7fb34d6a96529589cdf48e54e95ed666b8.1507723345.git.baolin.wang@spreadtrum.com>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Subject: Re: [PATCH v4 02/12] [media] cxd2880-spi: Add support for CXD2880 SPI
+ interface
+Date: Fri, 13 Oct 2017 18:10:31 +0900
+Message-ID: <eab5bd7b-d909-343d-7078-842e3d0d9ab9@sony.com>
+References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
+ <20171013055928.21132-1-Yasunari.Takiguchi@sony.com>
+ <CAJbz7-0T=LUSTr59kPDk4kVkHLh5XEeNEkA2T=hG=P_fXrrU=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <73965e7fb34d6a96529589cdf48e54e95ed666b8.1507723345.git.baolin.wang@spreadtrum.com>
+In-Reply-To: <CAJbz7-0T=LUSTr59kPDk4kVkHLh5XEeNEkA2T=hG=P_fXrrU=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+To: =?UTF-8?Q?Honza_Petrou=c5=a1?= <jpetrous@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Oct 2017, Baolin Wang wrote:
+Hi Honza
 
-> This patch adds the binding documentation for Spreadtrum SC27xx series
-> PMIC device.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> ---
->  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   23 ++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-> new file mode 100644
-> index 0000000..333c818
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-> @@ -0,0 +1,23 @@
-> +Spreadtrum SC27xx Power Management Integrated Circuit (PMIC)
+> If I understand it right, it uses SPI bus also for passing transport stream
+> to the host system (also having some pid piltering inside!), isn't it?
+> It would be interesting to know what is the max throughput of the CXD's SPI?
 
-More info please.
+Yes, max clock rate of spi is written in sony-cxd2880.txt of [patch v4 01/12].
 
-What does the ship do and what other devices are available.
+  spi-max-frequency = <55000000>; /* 55MHz */
 
-> +Required properties:
-> +- compatible: Should be "sprd,sc2731".
-> +- reg: SPI chip select.
-
-Really?  Not an address?
-
-What is the range?
-
-> +- spi-max-frequency: Typically set to 26000000.
-> +- interrupts: The interrupt line the device is connected to.
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells: The number of cells to describe an PMIC IRQ, should be 2.
-
-What if it's not 2?  Will it still work?
-
-> +- #address-cells: Child device offset number of cells, should be 1.
-
-Same.
-
-> +- #size-cells: Child device size number of cells, should be 0.
-
-Same.
-
-> +
-> +Example:
-> +pmic: pmic@0 {
-
-What other nodes are you referencing this one from?
-
-> +	compatible = "sprd,sc2731";
-> +	reg = <0>;
-> +	spi-max-frequency = <26000000>;
-> +	interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +};
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Takiguchi 
