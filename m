@@ -1,85 +1,105 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [RFC usb-next v5 3/3] usb: core: hcd: integrate the PHY roothub
- wrapper
-Date: Fri, 13 Oct 2017 10:07:55 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1710131005420.1364-100000@iolanthe.rowland.org>
-References: <CAFBinCC4qseHoEkTtNa4NtVXgrcV=NRrOf2BBKvQRbhaZeEzsw@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 4/7] soc: mediatek: pwrap: update pwrap_init without
+ slave programming
+Date: Fri, 13 Oct 2017 16:07:57 +0200
+Message-ID: <fe0952f1-c018-8492-7336-149f917463e1@gmail.com>
+References: <cover.1505980364.git.sean.wang@mediatek.com>
+ <604078485ca9ab04cea5bc531425d6035b27bc88.1505980364.git.sean.wang@mediatek.com>
+ <f3a04159-8491-6ca6-d2ad-7df1dfd64331@gmail.com>
+ <1507887704.21840.32.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCC4qseHoEkTtNa4NtVXgrcV=NRrOf2BBKvQRbhaZeEzsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507887704.21840.32.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
 
-> Hi Alan,
+
+On 10/13/2017 11:41 AM, Sean Wang wrote:
+> On Tue, 2017-10-10 at 20:00 +0200, Matthias Brugger wrote:
+>>
+>> On 09/21/2017 10:26 AM, sean.wang@mediatek.com wrote:
+>>> From: Sean Wang <sean.wang@mediatek.com>
+>>>
+>>> pwrap initialization is highly associated with the base SoC, so
+>>> update here for allowing pwrap_init without slave program which would be
+>>> used to those PMICs without extra encryption on bus such as MT6380.
+>>>
+>>> Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
+>>> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>>> ---
+>>>    drivers/soc/mediatek/mtk-pmic-wrap.c | 91 +++++++++++++++++++++---------------
+>>>    1 file changed, 54 insertions(+), 37 deletions(-)
+>>>
+>>> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+>>> index 27d7ccc..9c6d855 100644
+>>> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+>>> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+>>> @@ -531,6 +531,7 @@ struct pmic_wrapper_type {
+>>>    	u32 spi_w;
+>>>    	u32 wdt_src;
+>>>    	int has_bridge:1;
+>>> +	int slv_program:1;
+>>>    	int (*init_reg_clock)(struct pmic_wrapper *wrp);
+>>>    	int (*init_soc_specific)(struct pmic_wrapper *wrp);
+>>>    };
+>>> @@ -999,9 +1000,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+>>>    	}
+>>>    
+>>>    	/* Reset SPI slave */
+>>> -	ret = pwrap_reset_spislave(wrp);
+>>> -	if (ret)
+>>> -		return ret;
+>>> +
+>>> +	if (wrp->master->slv_program) {
+>>> +		ret = pwrap_reset_spislave(wrp);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +	}
+>>>    
+>>>    	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
+>>>    
+>>> @@ -1013,45 +1017,52 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+>>>    	if (ret)
+>>>    		return ret;
+>>>    
+>>> -	/* Setup serial input delay */
+>>> -	ret = pwrap_init_sidly(wrp);
+>>> -	if (ret)
+>>> -		return ret;
+>>> +	if (wrp->master->slv_program) {
+>>
+>> This if branch is really long and complex enough to put it into function apart.
+>>
+>> Thanks,
+>> Matthias
+>>
+>> PD please take into account the comments I made on v3 of the series.
+>>
 > 
-> On Mon, Oct 9, 2017 at 7:18 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
-> > On Sun, 8 Oct 2017, Martin Blumenstingl wrote:
-> >
-> >> This integrates the PHY roothub wrapper into the core hcd
-> >> infrastructure. Multiple PHYs which are part of the roothub devicetree
-> >> node (which is a sub-node of the sysdev's node) are now managed
-> >> (= powered on/off when needed), by the new usb_phy_roothub code.
-> >>
-> >> One example where this is required is the Amlogic GXL and GXM SoCs:
-> >> They are using a dwc3 USB controller with up to three ports enabled on
-> >> the internal roothub. Using only the top-level "phy" properties does not
-> >> work here since one can only specify one "usb2-phy" and one "usb3-phy",
-> >> while actually at least two "usb2-phy" have to be specified.
-> >>
-> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> >> ---
-> >>  drivers/usb/core/hcd.c  | 30 +++++++++++++++++++++++++++++-
-> >>  include/linux/usb/hcd.h |  1 +
-> >>  2 files changed, 30 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-> >> index 67aa3d039b9b..56704dd10c15 100644
-> >> --- a/drivers/usb/core/hcd.c
-> >> +++ b/drivers/usb/core/hcd.c
-> >> @@ -50,6 +50,7 @@
-> >>  #include <linux/usb/otg.h>
-> >>
-> >>  #include "usb.h"
-> >> +#include "phy.h"
-> >>
-> >>
-> >>  /*-------------------------------------------------------------------------*/
-> >> @@ -2292,7 +2293,11 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
-> >>               dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
-> >>                               "suspend", status);
-> >>       }
-> >> -     return status;
-> >> +
-> >> +     if (status == 0)
-> >> +             return usb_phy_roothub_power_off(hcd->phy_roothub);
-> >
-> > Is this really the right thing to do?  If usb_phy_roothub_power_off()
-> > fails, what condition does this leave the bus in?  And what condition
-> > does the kernel _think_ the bus is in?
-> indeed, thank you for spotting this!
+> I'll try to breakdown the long logic into the short one and use a flag
+> indicating the slave capability decides whether the functions is
+> required being enabled for the slave instead of slv_program which is
+> less meaningful. In this way, pmic_init will be more extensible when
+> more different SoCs and target slaves with various flavors into the
+> driver. And also take into accounts those suggestions you made in v3 in
+> the next version.
 > 
-> do you have any suggestions how to improve this?
-> maybe I should move usb_phy_roothub_power_off a few lines up and only
-> call it after the "rhdev->do_remote_wakeup" block if status is 0. if
-> usb_phy_roothub_power_off then returns an error I could call
-> "hcd_bus_resume(rhdev, PMSG_AUTO_RESUME);". what do you think about
-> this?
+> 	Sean
+> 
 
-Or you could just throw away the return code from 
-usb_phy_roothub_power_off().  Maybe print it out in a warning message, 
-but do not report it to the caller.
+I totally agree, but I wanted to underline that right now the if branch under
+"if (wrp->master->slv_program)" is around 30 lines, so I think it would be a 
+good candidate to put it into it's own function. For example: 
+pwrap_init_encryption()
+As from what I understand from the commit log, slv_program in the end enables 
+encryption of the communication, right?
 
-After all, given the choice between leaving the entire USB bus at full 
-power and leaving just the phy at full power, which would you prefer?
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Matthias
