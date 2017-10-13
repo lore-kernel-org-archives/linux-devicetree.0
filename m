@@ -1,110 +1,99 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] usb: xhci-mtk: remove dummy wakeup debounce clocks
-Date: Fri, 13 Oct 2017 15:49:42 +0200
-Message-ID: <b090b7b5-5c2f-0fa3-34bd-80bace198718@gmail.com>
-References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
- <ff9ee49a872084b4fc8c7fbabddc820058acb9b7.1507882470.git.chunfeng.yun@mediatek.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
+ timeout
+Date: Fri, 13 Oct 2017 06:50:35 -0700
+Message-ID: <554a4494-14c9-7743-898c-5f83e3de227d@roeck-us.net>
+References: <20171013092705.7038-1-peda@axentia.se>
+ <20171013092705.7038-2-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ff9ee49a872084b4fc8c7fbabddc820058acb9b7.1507882470.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171013092705.7038-2-peda@axentia.se>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/13/2017 10:26 AM, Chunfeng Yun wrote:
-> The wakeup debounce clocks for each ports in fact are not
-> needed, so remove them.
+On 10/13/2017 02:27 AM, Peter Rosin wrote:
+> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
+> is not always capable of avoiding the 25-35 ms timeout as specified by
+> the SMBUS protocol. This may cause silent corruption of the last bit of
+> any transfer, e.g. a one is read instead of a zero if the sensor chip
+> times out. This also affects the eeprom half of the nxp-se97 chip, where
+> this silent corruption was originally noticed. Other I2C adapters probably
+> suffer similar issues, e.g. bit-banging comes to mind as risky...
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> The SMBUS register in the nxp chip is not a standard Jedec register, but
+> it is not special to the nxp chips either, at least the atmel chips
+> have the same mechanism. Therefore, do not special case this on the
+> manufacturer, it is opt-in via the device property anyway.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
-
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
->   drivers/usb/host/xhci-mtk.c |   33 ---------------------------------
->   drivers/usb/host/xhci-mtk.h |    2 --
->   2 files changed, 35 deletions(-)
+>   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
+>   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
+>   2 files changed, 24 insertions(+)
 > 
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index 97ba51e..d60463c 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -237,25 +237,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
->   		goto sys_clk_err;
->   	}
+> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> index 07a250498fbb..f569db58f64a 100644
+> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> @@ -34,6 +34,10 @@ Required properties:
 >   
-> -	if (mtk->wakeup_src) {
-> -		ret = clk_prepare_enable(mtk->wk_deb_p0);
-> -		if (ret) {
-> -			dev_err(mtk->dev, "failed to enable wk_deb_p0\n");
-> -			goto usb_p0_err;
-> -		}
-> -
-> -		ret = clk_prepare_enable(mtk->wk_deb_p1);
-> -		if (ret) {
-> -			dev_err(mtk->dev, "failed to enable wk_deb_p1\n");
-> -			goto usb_p1_err;
-> -		}
-> -	}
->   	return 0;
+>   - reg: I2C address
 >   
-> -usb_p1_err:
-> -	clk_disable_unprepare(mtk->wk_deb_p0);
-> -usb_p0_err:
-> -	clk_disable_unprepare(mtk->sys_clk);
->   sys_clk_err:
->   	clk_disable_unprepare(mtk->ref_clk);
->   ref_clk_err:
-> @@ -264,10 +247,6 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+> +Optional properties:
+> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
+> +			 This is not supported on all chips.
+> +
+>   Example:
 >   
->   static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
->   {
-> -	if (mtk->wakeup_src) {
-> -		clk_disable_unprepare(mtk->wk_deb_p1);
-> -		clk_disable_unprepare(mtk->wk_deb_p0);
-> -	}
->   	clk_disable_unprepare(mtk->sys_clk);
->   	clk_disable_unprepare(mtk->ref_clk);
->   }
-> @@ -371,18 +350,6 @@ static int usb_wakeup_of_property_parse(struct xhci_hcd_mtk *mtk,
->   	if (!mtk->wakeup_src)
->   		return 0;
+>   temp-sensor@1a {
+> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+> index 1bf22eff0b08..fd816902fa30 100644
+> --- a/drivers/hwmon/jc42.c
+> +++ b/drivers/hwmon/jc42.c
+> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
+>   #define JC42_REG_TEMP		0x05
+>   #define JC42_REG_MANID		0x06
+>   #define JC42_REG_DEVICEID	0x07
+> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
 >   
-> -	mtk->wk_deb_p0 = devm_clk_get(dev, "wakeup_deb_p0");
-> -	if (IS_ERR(mtk->wk_deb_p0)) {
-> -		dev_err(dev, "fail to get wakeup_deb_p0\n");
-> -		return PTR_ERR(mtk->wk_deb_p0);
-> -	}
-> -
-> -	mtk->wk_deb_p1 = devm_clk_get(dev, "wakeup_deb_p1");
-> -	if (IS_ERR(mtk->wk_deb_p1)) {
-> -		dev_err(dev, "fail to get wakeup_deb_p1\n");
-> -		return PTR_ERR(mtk->wk_deb_p1);
-> -	}
-> -
->   	mtk->pericfg = syscon_regmap_lookup_by_phandle(dn,
->   						"mediatek,syscon-wakeup");
->   	if (IS_ERR(mtk->pericfg)) {
-> diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
-> index db55a12..67783a7 100644
-> --- a/drivers/usb/host/xhci-mtk.h
-> +++ b/drivers/usb/host/xhci-mtk.h
-> @@ -126,8 +126,6 @@ struct xhci_hcd_mtk {
->   	struct regulator *vbus;
->   	struct clk *sys_clk;	/* sys and mac clock */
->   	struct clk *ref_clk;
-> -	struct clk *wk_deb_p0;	/* port0's wakeup debounce clock */
-> -	struct clk *wk_deb_p1;
->   	struct regmap *pericfg;
->   	struct phy **phys;
->   	int num_phys;
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   /* Status bits in temperature register */
+>   #define JC42_ALARM_CRIT_BIT	15
+> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
+>   #define ONS_MANID		0x1b09  /* ON Semiconductor */
+>   #define STM_MANID		0x104a  /* ST Microelectronics */
+>   
+> +/* SMBUS register */
+> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
+> +
+>   /* Supported chips */
+>   
+>   /* Analog Devices */
+> @@ -476,6 +480,22 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>   
+>   	data->extended = !!(cap & JC42_CAP_RANGE);
+>   
+> +	if (device_property_read_bool(dev, "smbus-timeout-disable")) {
+> +		int smbus;
+> +
+> +		/*
+> +		 * Not all chips support this register, but from a
+> +		 * quick read of various datasheets no chip appears
+> +		 * incompatible with the below attempt to disable
+> +		 * the timeout. And the whole thing is opt-in...
+> +		 */
+> +		smbus = i2c_smbus_read_word_swapped(client, JC42_REG_SMBUS);
+> +		if (smbus < 0)
+> +			return smbus;
+> +		i2c_smbus_write_word_swapped(client, JC42_REG_SMBUS,
+> +					     smbus | SMBUS_STMOUT);
+
+Looking into the SE97 datasheet, the bit is only writable if the alarm bits
+are not locked. Should we take this into account and unlock the alarm bits
+if necessary ?
+
+Guenter
