@@ -1,32 +1,81 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 0/4] rcar-du: add R8A774[35] DU driver(s) support
-Date: Fri, 13 Oct 2017 16:22:18 +0100
-Message-ID: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 1/4] dt-bindings: display: rcar-du: Document R8A774[35] DU
+Date: Fri, 13 Oct 2017 16:22:19 +0100
+Message-ID: <1507908142-13142-2-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to be able to define du nodes in r8a7743 and r8a7745 device
-trees, we need to define data structures, compatible strings, missing
-clock, and update the dt-bindings.
-I'll send out the patches to add the du nodes in r8a774[35] device trees
-once the patches in this series get accepted.
+Add device tree bindings for r8a7743 and r8a7745 DUs.
+r8a7743 DU is similar to the one from r8a7791, r8a7745 DU is similar
+to the one from r8a7794.
 
-Best regards,
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+---
+ .../devicetree/bindings/display/renesas,du.txt     | 30 ++++++++++++----------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-Fabrizio Castro (4):
-  dt-bindings: display: rcar-du: Document R8A774[35] DU
-  drm: rcar-du: Add R8A7743 support
-  clk: renesas: cpg-mssr: Add du1 clock to R8A7745
-  drm: rcar-du: Add R8A7745 support
-
- .../devicetree/bindings/display/renesas,du.txt     | 30 ++++++++-------
- drivers/clk/renesas/r8a7745-cpg-mssr.c             |  1 +
- drivers/gpu/drm/rcar-du/rcar_du_drv.c              | 44 ++++++++++++++++++++++
- 3 files changed, 62 insertions(+), 13 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index 4bbd1e9..c520226 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -3,6 +3,8 @@
+ Required Properties:
+ 
+   - compatible: must be one of the following.
++    - "renesas,du-r8a7743" for R8A7743 (RZ/G1M) compatible DU
++    - "renesas,du-r8a7745" for R8A7745 (RZ/G1E) compatible DU
+     - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+     - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+     - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+@@ -27,10 +29,10 @@ Required Properties:
+   - clock-names: Name of the clocks. This property is model-dependent.
+     - R8A7779 uses a single functional clock. The clock doesn't need to be
+       named.
+-    - R8A779[0123456] use one functional clock per channel and one clock per
+-      LVDS encoder (if available). The functional clocks must be named "du.x"
+-      with "x" being the channel numerical index. The LVDS clocks must be
+-      named "lvds.x" with "x" being the LVDS encoder numerical index.
++    - R8A779[0123456] and R8A774[35] use one functional clock per channel and
++      one clock per LVDS encoder (if available). The functional clocks must be
++      named "du.x" with "x" being the channel numerical index. The LVDS clocks
++      must be named "lvds.x" with "x" being the LVDS encoder numerical index.
+     - In addition to the functional and encoder clocks, all DU versions also
+       support externally supplied pixel clocks. Those clocks are optional.
+       When supplied they must be named "dclkin.x" with "x" being the input
+@@ -49,16 +51,18 @@ bindings specified in Documentation/devicetree/bindings/graph.txt.
+ The following table lists for each supported model the port number
+ corresponding to each DU output.
+ 
+-		Port 0		Port1		Port2		Port3
++                      Port0          Port1          Port2          Port3
+ -----------------------------------------------------------------------------
+- R8A7779 (H1)	DPAD 0		DPAD 1		-		-
+- R8A7790 (H2)	DPAD		LVDS 0		LVDS 1		-
+- R8A7791 (M2-W)	DPAD		LVDS 0		-		-
+- R8A7792 (V2H)	DPAD 0		DPAD 1		-		-
+- R8A7793 (M2-N)	DPAD		LVDS 0		-		-
+- R8A7794 (E2)	DPAD 0		DPAD 1		-		-
+- R8A7795 (H3)	DPAD		HDMI 0		HDMI 1		LVDS
+- R8A7796 (M3-W)	DPAD		HDMI		LVDS		-
++ R8A7743 (RZ/G1M)     DPAD 0         LVDS 0         -              -
++ R8A7745 (RZ/G1E)     DPAD 0         DPAD 1         -              -
++ R8A7779 (R-Car H1)   DPAD 0         DPAD 1         -              -
++ R8A7790 (R-Car H2)   DPAD           LVDS 0         LVDS 1         -
++ R8A7791 (R-Car M2-W) DPAD           LVDS 0         -              -
++ R8A7792 (R-Car V2H)  DPAD 0         DPAD 1         -              -
++ R8A7793 (R-Car M2-N) DPAD           LVDS 0         -              -
++ R8A7794 (R-Car E2)   DPAD 0         DPAD 1         -              -
++ R8A7795 (R-Car H3)   DPAD           HDMI 0         HDMI 1         LVDS
++ R8A7796 (R-Car M3-W) DPAD           HDMI           LVDS           -
+ 
+ 
+ Example: R8A7795 (R-Car H3) ES2.0 DU
 -- 
 2.7.4
 
