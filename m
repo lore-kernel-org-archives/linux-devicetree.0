@@ -1,81 +1,85 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] dt-bindings: usb: mtk-xhci: remove dummy clocks
- and add optional ones
-Date: Fri, 13 Oct 2017 15:56:12 +0200
-Message-ID: <7378e644-a44d-d83f-44a4-64b0e7c00e2e@gmail.com>
-References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
- <6a5d01f35d7df6a49d0442c8326c3daa9bcda9d3.1507882470.git.chunfeng.yun@mediatek.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [RFC usb-next v5 3/3] usb: core: hcd: integrate the PHY roothub
+ wrapper
+Date: Fri, 13 Oct 2017 10:07:55 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1710131005420.1364-100000@iolanthe.rowland.org>
+References: <CAFBinCC4qseHoEkTtNa4NtVXgrcV=NRrOf2BBKvQRbhaZeEzsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6a5d01f35d7df6a49d0442c8326c3daa9bcda9d3.1507882470.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCC4qseHoEkTtNa4NtVXgrcV=NRrOf2BBKvQRbhaZeEzsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
 
-
-On 10/13/2017 10:26 AM, Chunfeng Yun wrote:
-> Remove dummy clocks for usb wakeup and add optional ones for
-> MCU_BUS_CK and DMA_BUS_CK.
+> Hi Alan,
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-
-Reviewed-by: <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
->   .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |   18 ++++++++----------
->   1 file changed, 8 insertions(+), 10 deletions(-)
+> On Mon, Oct 9, 2017 at 7:18 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> > On Sun, 8 Oct 2017, Martin Blumenstingl wrote:
+> >
+> >> This integrates the PHY roothub wrapper into the core hcd
+> >> infrastructure. Multiple PHYs which are part of the roothub devicetree
+> >> node (which is a sub-node of the sysdev's node) are now managed
+> >> (= powered on/off when needed), by the new usb_phy_roothub code.
+> >>
+> >> One example where this is required is the Amlogic GXL and GXM SoCs:
+> >> They are using a dwc3 USB controller with up to three ports enabled on
+> >> the internal roothub. Using only the top-level "phy" properties does not
+> >> work here since one can only specify one "usb2-phy" and one "usb3-phy",
+> >> while actually at least two "usb2-phy" have to be specified.
+> >>
+> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> >> ---
+> >>  drivers/usb/core/hcd.c  | 30 +++++++++++++++++++++++++++++-
+> >>  include/linux/usb/hcd.h |  1 +
+> >>  2 files changed, 30 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> >> index 67aa3d039b9b..56704dd10c15 100644
+> >> --- a/drivers/usb/core/hcd.c
+> >> +++ b/drivers/usb/core/hcd.c
+> >> @@ -50,6 +50,7 @@
+> >>  #include <linux/usb/otg.h>
+> >>
+> >>  #include "usb.h"
+> >> +#include "phy.h"
+> >>
+> >>
+> >>  /*-------------------------------------------------------------------------*/
+> >> @@ -2292,7 +2293,11 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
+> >>               dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
+> >>                               "suspend", status);
+> >>       }
+> >> -     return status;
+> >> +
+> >> +     if (status == 0)
+> >> +             return usb_phy_roothub_power_off(hcd->phy_roothub);
+> >
+> > Is this really the right thing to do?  If usb_phy_roothub_power_off()
+> > fails, what condition does this leave the bus in?  And what condition
+> > does the kernel _think_ the bus is in?
+> indeed, thank you for spotting this!
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> index 2d9b459..3059596 100644
-> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> @@ -26,10 +26,11 @@ Required properties:
->    - clocks : a list of phandle + clock-specifier pairs, one for each
->   	entry in clock-names
->    - clock-names : must contain
-> -	"sys_ck": for clock of xHCI MAC
-> -	"ref_ck": for reference clock of xHCI MAC
-> -	"wakeup_deb_p0": for USB wakeup debounce clock of port0
-> -	"wakeup_deb_p1": for USB wakeup debounce clock of port1
-> +	"sys_ck": controller clock used by normal mode,
-> +	the following ones are optional:
-> +	"ref_ck": reference clock used by low power mode etc,
-> +	"mcu_ck": mcu_bus clock for register access,
-> +	"dma_ck": dma_bus clock for data transfer by DMA
->   
->    - phys : a list of phandle + phy specifier pairs
->   
-> @@ -57,9 +58,7 @@ usb30: usb@11270000 {
->   	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
->   		 <&pericfg CLK_PERI_USB0>,
->   		 <&pericfg CLK_PERI_USB1>;
-> -	clock-names = "sys_ck", "ref_ck",
-> -		      "wakeup_deb_p0",
-> -		      "wakeup_deb_p1";
-> +	clock-names = "sys_ck", "ref_ck";
->   	phys = <&phy_port0 PHY_TYPE_USB3>,
->   	       <&phy_port1 PHY_TYPE_USB2>;
->   	vusb33-supply = <&mt6397_vusb_reg>;
-> @@ -91,9 +90,8 @@ Required properties:
->   
->    - clocks : a list of phandle + clock-specifier pairs, one for each
->   	entry in clock-names
-> - - clock-names : must be
-> -	"sys_ck": for clock of xHCI MAC
-> -	"ref_ck": for reference clock of xHCI MAC
-> + - clock-names : must contain "sys_ck", and the following ones are optional:
-> +	"ref_ck", "mcu_ck" and "dma_ck"
->   
->   Optional properties:
->    - vbus-supply : reference to the VBUS regulator;
-> 
+> do you have any suggestions how to improve this?
+> maybe I should move usb_phy_roothub_power_off a few lines up and only
+> call it after the "rhdev->do_remote_wakeup" block if status is 0. if
+> usb_phy_roothub_power_off then returns an error I could call
+> "hcd_bus_resume(rhdev, PMSG_AUTO_RESUME);". what do you think about
+> this?
+
+Or you could just throw away the return code from 
+usb_phy_roothub_power_off().  Maybe print it out in a warning message, 
+but do not report it to the caller.
+
+After all, given the choice between leaving the entire USB bus at full 
+power and leaving just the phy at full power, which would you prefer?
+
+Alan Stern
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
