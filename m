@@ -1,48 +1,27 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] usb: renesas_usbhs: Add compatible string for
- r8a7743/5
-Date: Fri, 13 Oct 2017 14:27:47 -0500
-Message-ID: <20171013192747.pp7za277x5dbq5m5@rob-hp-laptop>
-References: <1507308574-32047-1-git-send-email-biju.das@bp.renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/9] Revert "Documentation: dw-mshc: deprecate num-slots"
+Date: Fri, 13 Oct 2017 14:28:41 -0500
+Message-ID: <20171013192841.6axxu5uvotohbbik@rob-hp-laptop>
+References: <cover.1507315433.git.lsun@mellanox.com>
+ <7deccd8a59339ef0ca5c1d54eb453d040b7df594.1507315433.git.lsun@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1507308574-32047-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <7deccd8a59339ef0ca5c1d54eb453d040b7df594.1507315433.git.lsun@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 06, 2017 at 05:49:34PM +0100, Biju Das wrote:
-> This patch adds support for r8a7743/5 SoCs. The Renesas RZ/G1[ME]
-> (R8A7743/5) usbhs is identical to the R-Car Gen2 family.
+On Fri, Oct 06, 2017 at 03:21:24PM -0400, Liming Sun wrote:
+> This reverts commit 3f5b4b79d4c0fa71fd7d74c2a44bbc0869c04c9b.
 > 
-> No driver change is needed due to the fallback compatible value
-> "renesas,rcar-gen2-usbhs".
-> Adding the SoC-specific compatible values here has two purposes:
->   1. Document which SoCs have this hardware module,
->   2. Allow checkpatch to validate compatible values.
+> The Mellanox BlueField SoC requires multiple slot dw-mmc support.
 > 
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
 > ---
-> v1-->v2
->    * Modified the patch description
->    * Rebased on the below R-Car D3 patch
->      https://patchwork.kernel.org/patch/9982267/
-> 
-> This patch is tested against Linux next tag next-20170929 +
->   https://patchwork.kernel.org/patch/9982267/
-> 
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt         | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
