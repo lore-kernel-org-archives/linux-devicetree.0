@@ -1,150 +1,76 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: nvmem: add description for UniPhier eFuse
-Date: Sat, 14 Oct 2017 01:04:17 +0900
-Message-ID: <CAK7LNARg6G152joHq06RkPab=NoWEkFArvF+Ccc1behdXFokmg@mail.gmail.com>
-References: <1507266180-11840-1-git-send-email-hayashibara.keiji@socionext.com>
- <1507266180-11840-2-git-send-email-hayashibara.keiji@socionext.com> <20171013134902.7gvmkvxvwnjlmstp@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: r8a7745: Add IIC cores to dtsi
+Date: Fri, 13 Oct 2017 17:06:33 +0100
+Message-ID: <1507910793-13919-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013134902.7gvmkvxvwnjlmstp@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Kiyoshi Owada <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Reviewed-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7745.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-
-2017-10-13 22:49 GMT+09:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Fri, Oct 06, 2017 at 02:02:58PM +0900, Keiji Hayashibara wrote:
->> Add uniphier-efuse dt-bindings documentation.
->>
->> Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 49 ++++++++++++++++++++++
->>  1 file changed, 49 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
->> new file mode 100644
->> index 0000000..1a394e5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
->> @@ -0,0 +1,49 @@
->> += UniPhier eFuse device tree bindings =
->> +
->> +This UniPhier eFuse must be under soc-glue.
->> +
->> +Required properties:
->> +- compatible: should be "socionext,uniphier-efuse"
->> +- reg: should contain the register location and length
->> +
->> += Data cells =
->> +Are child nodes of efuse, bindings of which as described in
->> +bindings/nvmem/nvmem.txt
->> +
->> +Example:
->> +
->> +     soc-glue@5f900000 {
->> +             compatible = "socionext,uniphier-ld20-soc-glue-debug",
->> +                          "simple-mfd";
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges = <0x0 0x5f900000 0x2000>;
->> +
->> +             efuse@100 {
->> +                     compatible = "socionext,uniphier-efuse";
->> +                     reg = <0x100 0x28>;
->> +             };
->> +
->> +             efuse@200 {
->> +                     compatible = "socionext,uniphier-efuse";
->> +                     reg = <0x200 0x68>;
->> +                     #address-cells = <1>;
->> +                     #size-cells = <1>;
->> +
->> +                     /* Data cells */
->> +                     usb_mon: usb_mon {
->
-> Don't use '_' and needs a unit-address. Build your dtb with W=2 option
-> and you'll get these warnings.
-
-
-Do you mean "usb_mon: usb-mon@54" ?
-
-
-DT files in kernel sprinkle tons of warnings even with W=1.
-
-I always eliminate W=1, so I agree with "@54".
-
-I do not care W=2 much.
-If you see arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi,
-yeah, I generally use '-' for node names, but I see some exceptions.
-
-You admitted -Wnode_name_chars_strict is "subjective"
-in commit 8654cb8d0371.
-
-If you are unhappy about it, we can fix,
-but I am not sure how picky we should be.
-
-
-
-
-
->> +                             reg = <0x54 0xc>;
->
-> Without ranges above, this is address 5f900054. I think you want
-> 5f900254. You need:
->
-> ranges = <0x0 0x200 0x68>;
-
-
-I do not get it.
-
-The parent is an efuse, not any kind of bus.
-
-<0x54, 0c> just represents the offset and size
-within the efuse device, so this is not mapped in
-CPU address view.
-The is apparent from of_nvmem_cell_get().
-
-Some efuse devices _may_ be directly accessed
-as MMIO from CPU, but it is abstracted under an efuse driver.
-
-I believe missing "ranges" is correct.
-
-
-
-
-
->> +                     };
->> +             };
->> +     };
->> +
->> += Data consumers =
->> +Are device nodes which consume nvmem data cells.
->> +
->> +Example:
->> +
->> +     usb {
->> +             ...
->> +             nvmem-cells = <&usb_mon>;
->> +             nvmem-cell-names = "usb_mon";
->> +     }
->> --
->> 2.7.4
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index fd40daf..cfba7af 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -25,6 +25,8 @@
+ 		i2c3 = &i2c3;
+ 		i2c4 = &i2c4;
+ 		i2c5 = &i2c5;
++		i2c6 = &iic0;
++		i2c7 = &iic1;
+ 		spi0 = &qspi;
+ 		spi1 = &msiof0;
+ 		spi2 = &msiof1;
+@@ -768,6 +770,40 @@
+ 			status = "disabled";
+ 		};
+ 
++		iic0: i2c@e6500000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,iic-r8a7745",
++				     "renesas,rcar-gen2-iic",
++				     "renesas,rmobile-iic";
++			reg = <0 0xe6500000 0 0x425>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 318>;
++			dmas = <&dmac0 0x61>, <&dmac0 0x62>,
++			       <&dmac1 0x61>, <&dmac1 0x62>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 318>;
++			status = "disabled";
++		};
++
++		iic1: i2c@e6510000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,iic-r8a7745",
++				     "renesas,rcar-gen2-iic",
++				     "renesas,rmobile-iic";
++			reg = <0 0xe6510000 0 0x425>;
++			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 323>;
++			dmas = <&dmac0 0x65>, <&dmac0 0x66>,
++			       <&dmac1 0x65>, <&dmac1 0x66>;
++			dma-names = "tx", "rx", "tx", "rx";
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 323>;
++			status = "disabled";
++		};
++
+ 		mmcif0: mmc@ee200000 {
+ 			compatible = "renesas,mmcif-r8a7745",
+ 				     "renesas,sh-mmcif";
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
