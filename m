@@ -1,65 +1,37 @@
-From: Lixin Wang <alan.1.wang@nokia-sbell.com>
-Subject: [PATCH] of: overlay: fix memory leak related to duplicated property
-Date: Fri, 13 Oct 2017 11:07:36 +0800
-Message-ID: <1507864056-52089-1-git-send-email-alan.1.wang@nokia-sbell.com>
-References: <1507859591-2337-1-git-send-email-alan.1.wang@nokia-sbell.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: ventana: remove container node from
+ iomuxc nodes
+Date: Fri, 13 Oct 2017 11:11:31 +0800
+Message-ID: <20171013031129.GB8833@dragon>
+References: <1505765461-12977-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507859591-2337-1-git-send-email-alan.1.wang@nokia-sbell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alawang <alan.1.wang@nokia-sbell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1505765461-12977-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: alawang <alan.1.wang@nokia-sbell.com>
+On Mon, Sep 18, 2017 at 01:11:01PM -0700, Tim Harvey wrote:
+> The container node in the iomuxc node is no longer necessary and causes
+> pinctl errors on the Ventana boards with analog video capture
+> since aa12693e4156adafdef80a8bd134123a6419621b:
+> 
+> pinctrl core: initialized pinctrl subsystem
+> imx6q-pinctrl 20e0000.iomuxc: no groups defined in /soc/aips-bus@02000000/iomuxc@020e0000/adv7180grp
+> imx6q-pinctrl 20e0000.iomuxc: no groups defined in /soc/aips-bus@02000000/iomuxc@020e0000/ipu2_csi1grp
+> imx6q-pinctrl 20e0000.iomuxc: initialized IMX pinctrl driver
+> imx6q-pinctrl 20e0000.iomuxc: function 'iomuxc' not supported
+> imx6q-pinctrl 20e0000.iomuxc: invalid function iomuxc in map table
+> imx6q-pinctrl 20e0000.iomuxc: function 'iomuxc' not supported
+> imx6q-pinctrl 20e0000.iomuxc: invalid function iomuxc in map table
+> 
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 
-Hello,
-
-Sorry It was my fault in last email that wrote the wrong subject and sign off name.
-Correct them this time.
-Thanks
-
-Function of_changeset_add_property or of_changeset_update_property may
-fails. In this case the property just allocated is never deallocated.
-
-Signed-off-by: Lixin Wang <alan.1.wang@nokia-sbell.com>
----
- drivers/of/overlay.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 8ecfee3..af3b9a1 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -162,6 +162,7 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
- 		bool is_symbols_node)
- {
- 	struct property *propn = NULL, *tprop;
-+	int ret = 0;
- 
- 	/* NOTE: Multiple changes of single properties not supported */
- 	tprop = of_find_property(target, prop->name, NULL);
-@@ -186,10 +187,16 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
- 
- 	/* not found? add */
- 	if (tprop == NULL)
--		return of_changeset_add_property(&ov->cset, target, propn);
--
--	/* found? update */
--	return of_changeset_update_property(&ov->cset, target, propn);
-+		ret = of_changeset_add_property(&ov->cset, target, propn);
-+	else /* found? update */
-+		ret = of_changeset_update_property(&ov->cset, target, propn);
-+
-+	if (ret) {
-+		kfree(propn->name);
-+		kfree(propn->value);
-+		kfree(propn);
-+	}
-+	return ret;
- }
- 
- static int of_overlay_apply_single_device_node(struct of_overlay *ov,
--- 
-2.6.2
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
