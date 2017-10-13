@@ -1,56 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 03/13] mmc: dt-bindings: make compatible explicit
-Date: Fri, 13 Oct 2017 15:14:12 -0500
-Message-ID: <20171013201412.ces7ttqfwfuj4mnn@rob-hp-laptop>
-References: <1507548926-9555-1-git-send-email-chaotian.jing@mediatek.com>
- <1507548926-9555-4-git-send-email-chaotian.jing@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add vendor-prefix for DH electronics GmbH
+Date: Fri, 13 Oct 2017 15:15:44 -0500
+Message-ID: <20171013201544.rhcw6ycs6dmgzt4r@rob-hp-laptop>
+References: <20171009181833.2256-1-marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1507548926-9555-4-git-send-email-chaotian.jing@mediatek.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+In-Reply-To: <20171009181833.2256-1-marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 09, 2017 at 07:35:16PM +0800, Chaotian Jing wrote:
-> the driver has updated to have an explicit compatible, so update
-> binding file according to the driver change.
-
-Normally, that's not a reason for a binding change. An old kernel 
-without the driver change is still valid.
-
+On Mon, Oct 09, 2017 at 08:18:33PM +0200, Marek Vasut wrote:
+> Add vendor prefix for DH electronics GmbH, https://www.dh-electronics.com .
+> The company is a SoM and evaluation board manufacturer.
 > 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 3e0a97c..2bb585b 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -8,8 +8,8 @@ and the properties used by the msdc driver.
->  
->  Required properties:
->  - compatible: value should be either of the following.
-> -	"mediatek,mt8173-mmc","mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Except this one didn't really make sense. "mediatek,mt8135-mmc" should 
-be the most specific compatible on a MT8135.
+Applied.
 
-> -	"mediatek,mt8173-mmc","mediatek,mt8135-mmc": for mmc host ip compatible with mt8173
-
-Why is the version in MT8173 no longer compatible with a driver that 
-supports "mediatek,mt8135-mmc"? Your commit msg needs to answer that 
-question.
-
-> +	"mediatek,mt8135-mmc": for mmc host ip compatible with mt8135
-> +	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
->  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
->  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
->  - reg: physical base address of the controller and length
-> -- 
-> 1.8.1.1.dirty
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
