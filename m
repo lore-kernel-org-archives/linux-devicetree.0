@@ -1,96 +1,108 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: nvmem: add description for UniPhier
- eFuse
-Date: Fri, 13 Oct 2017 08:49:02 -0500
-Message-ID: <20171013134902.7gvmkvxvwnjlmstp@rob-hp-laptop>
-References: <1507266180-11840-1-git-send-email-hayashibara.keiji@socionext.com>
- <1507266180-11840-2-git-send-email-hayashibara.keiji@socionext.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] usb: xhci-mtk: remove dummy wakeup debounce clocks
+Date: Fri, 13 Oct 2017 15:49:42 +0200
+Message-ID: <b090b7b5-5c2f-0fa3-34bd-80bace198718@gmail.com>
+References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
+ <ff9ee49a872084b4fc8c7fbabddc820058acb9b7.1507882470.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1507266180-11840-2-git-send-email-hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <ff9ee49a872084b4fc8c7fbabddc820058acb9b7.1507882470.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 06, 2017 at 02:02:58PM +0900, Keiji Hayashibara wrote:
-> Add uniphier-efuse dt-bindings documentation.
+
+
+On 10/13/2017 10:26 AM, Chunfeng Yun wrote:
+> The wakeup debounce clocks for each ports in fact are not
+> needed, so remove them.
 > 
-> Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+>   drivers/usb/host/xhci-mtk.c |   33 ---------------------------------
+>   drivers/usb/host/xhci-mtk.h |    2 --
+>   2 files changed, 35 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> new file mode 100644
-> index 0000000..1a394e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
-> @@ -0,0 +1,49 @@
-> += UniPhier eFuse device tree bindings =
-> +
-> +This UniPhier eFuse must be under soc-glue.
-> +
-> +Required properties:
-> +- compatible: should be "socionext,uniphier-efuse"
-> +- reg: should contain the register location and length
-> +
-> += Data cells =
-> +Are child nodes of efuse, bindings of which as described in
-> +bindings/nvmem/nvmem.txt
-> +
-> +Example:
-> +
-> +	soc-glue@5f900000 {
-> +		compatible = "socionext,uniphier-ld20-soc-glue-debug",
-> +			     "simple-mfd";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x5f900000 0x2000>;
-> +
-> +		efuse@100 {
-> +			compatible = "socionext,uniphier-efuse";
-> +			reg = <0x100 0x28>;
-> +		};
-> +
-> +		efuse@200 {
-> +			compatible = "socionext,uniphier-efuse";
-> +			reg = <0x200 0x68>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			/* Data cells */
-> +			usb_mon: usb_mon {
-
-Don't use '_' and needs a unit-address. Build your dtb with W=2 option 
-and you'll get these warnings.
-
-> +				reg = <0x54 0xc>;
-
-Without ranges above, this is address 5f900054. I think you want 
-5f900254. You need:
-
-ranges = <0x0 0x200 0x68>; 
-
-> +			};
-> +		};
-> +	};
-> +
-> += Data consumers =
-> +Are device nodes which consume nvmem data cells.
-> +
-> +Example:
-> +
-> +	usb {
-> +		...
-> +		nvmem-cells = <&usb_mon>;
-> +		nvmem-cell-names = "usb_mon";
-> +	}
-> -- 
-> 2.7.4
+> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> index 97ba51e..d60463c 100644
+> --- a/drivers/usb/host/xhci-mtk.c
+> +++ b/drivers/usb/host/xhci-mtk.c
+> @@ -237,25 +237,8 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+>   		goto sys_clk_err;
+>   	}
+>   
+> -	if (mtk->wakeup_src) {
+> -		ret = clk_prepare_enable(mtk->wk_deb_p0);
+> -		if (ret) {
+> -			dev_err(mtk->dev, "failed to enable wk_deb_p0\n");
+> -			goto usb_p0_err;
+> -		}
+> -
+> -		ret = clk_prepare_enable(mtk->wk_deb_p1);
+> -		if (ret) {
+> -			dev_err(mtk->dev, "failed to enable wk_deb_p1\n");
+> -			goto usb_p1_err;
+> -		}
+> -	}
+>   	return 0;
+>   
+> -usb_p1_err:
+> -	clk_disable_unprepare(mtk->wk_deb_p0);
+> -usb_p0_err:
+> -	clk_disable_unprepare(mtk->sys_clk);
+>   sys_clk_err:
+>   	clk_disable_unprepare(mtk->ref_clk);
+>   ref_clk_err:
+> @@ -264,10 +247,6 @@ static int xhci_mtk_clks_enable(struct xhci_hcd_mtk *mtk)
+>   
+>   static void xhci_mtk_clks_disable(struct xhci_hcd_mtk *mtk)
+>   {
+> -	if (mtk->wakeup_src) {
+> -		clk_disable_unprepare(mtk->wk_deb_p1);
+> -		clk_disable_unprepare(mtk->wk_deb_p0);
+> -	}
+>   	clk_disable_unprepare(mtk->sys_clk);
+>   	clk_disable_unprepare(mtk->ref_clk);
+>   }
+> @@ -371,18 +350,6 @@ static int usb_wakeup_of_property_parse(struct xhci_hcd_mtk *mtk,
+>   	if (!mtk->wakeup_src)
+>   		return 0;
+>   
+> -	mtk->wk_deb_p0 = devm_clk_get(dev, "wakeup_deb_p0");
+> -	if (IS_ERR(mtk->wk_deb_p0)) {
+> -		dev_err(dev, "fail to get wakeup_deb_p0\n");
+> -		return PTR_ERR(mtk->wk_deb_p0);
+> -	}
+> -
+> -	mtk->wk_deb_p1 = devm_clk_get(dev, "wakeup_deb_p1");
+> -	if (IS_ERR(mtk->wk_deb_p1)) {
+> -		dev_err(dev, "fail to get wakeup_deb_p1\n");
+> -		return PTR_ERR(mtk->wk_deb_p1);
+> -	}
+> -
+>   	mtk->pericfg = syscon_regmap_lookup_by_phandle(dn,
+>   						"mediatek,syscon-wakeup");
+>   	if (IS_ERR(mtk->pericfg)) {
+> diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
+> index db55a12..67783a7 100644
+> --- a/drivers/usb/host/xhci-mtk.h
+> +++ b/drivers/usb/host/xhci-mtk.h
+> @@ -126,8 +126,6 @@ struct xhci_hcd_mtk {
+>   	struct regulator *vbus;
+>   	struct clk *sys_clk;	/* sys and mac clock */
+>   	struct clk *ref_clk;
+> -	struct clk *wk_deb_p0;	/* port0's wakeup debounce clock */
+> -	struct clk *wk_deb_p1;
+>   	struct regmap *pericfg;
+>   	struct phy **phys;
+>   	int num_phys;
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
