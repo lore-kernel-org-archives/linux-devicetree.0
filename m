@@ -1,51 +1,58 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH  1/4] ARM: dts: r8a7745: Add HS-USB device node
-Date: Fri, 13 Oct 2017 16:50:40 +0100
-Message-ID: <1507909843-52034-2-git-send-email-biju.das@bp.renesas.com>
-References: <1507909843-52034-1-git-send-email-biju.das@bp.renesas.com>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/3]  implement workaround for Socionext Synquacer pre-ITS
+Date: Fri, 13 Oct 2017 16:56:04 +0100
+Message-ID: <20171013155607.5211-1-ard.biesheuvel@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507909843-52034-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, daniel.thompson-vY8bQiOPoHsdnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the R8A7745 generic part of the HS-USB device node. It is up to the
-board file to enable the device.
+>From patch 3/3:
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7745.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+  The Socionext Synquacer SoC's implementation of GICv3 has a so-called
+  'pre-ITS', which maps 32-bit writes targeted at a separate window of
+  size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
+  ID taken from bits [device_id_bits + 1:2] of the window offset.
+  Writes that target GITS_TRANSLATER directly are reported as originating
+  from device ID #0.
 
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 3a50f70..40048da 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -916,6 +916,20 @@
- 			};
- 		};
- 
-+		hsusb: usb@e6590000 {
-+			compatible = "renesas,usbhs-r8a7745",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			renesas,buswait = <4>;
-+			phys = <&usb0 1>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		usbphy: usb-phy@e6590100 {
- 			compatible = "renesas,usb-phy-r8a7745",
- 				     "renesas,rcar-gen2-usb-phy";
+  So add a workaround for this. Given that this breaks isolation, clear
+  the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+
+v4: - add patch to allow the quirk hook to signal whether it was applied or
+      not; this is necessary for hardware whose IIDR is not sufficient to
+      identify it
+    - use DT sub-node rather than property to describe the quirk
+    - remove pre_its_size field, and use get_msi_base() function pointer
+      instead
+v3: - add patch to pull device ID space discovery forward, so we can quirk
+      it as well (as we already do for Cavium)
+    - use existing quirks framework as much as possible
+    - get rid of ITS_WORKAROUND_xxx flag: it is no longer needed after the
+      refactoring
+
+v2: - use a 32-bit host address/size rather than a PCI address, to factor
+      out the involvement of an SMMU (which the platform does have, but it
+      is unclear atm if it can be exposed to the OS)
+    - add msi_domain_flags member to move the quirk flag checks out of the
+      common code path
+
+Ard Biesheuvel (3):
+  drivers/irqchip: gicv3: probe device ID space before quirks handling
+  drivers/irqchip: gic: make quirks matching conditional on init return
+    value
+  drivers/irqchip: gicv3: add workaround for Synquacer pre-ITS
+
+ Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |   4 +
+ arch/arm64/Kconfig                                                    |   8 ++
+ drivers/irqchip/irq-gic-common.c                                      |   5 +-
+ drivers/irqchip/irq-gic-common.h                                      |   2 +-
+ drivers/irqchip/irq-gic-v3-its.c                                      | 113 ++++++++++++++++----
+ 5 files changed, 110 insertions(+), 22 deletions(-)
+
 -- 
-1.9.1
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
