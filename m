@@ -1,43 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: at91-sama5d2_adc: add optional
- dma property
-Date: Fri, 13 Oct 2017 16:51:42 -0500
-Message-ID: <20171013215142.vlfhzzzetmc7resq@rob-hp-laptop>
-References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
- <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: health: Fix max30100 I2C chip
+ address in example
+Date: Fri, 13 Oct 2017 16:54:38 -0500
+Message-ID: <20171013215438.fqb3qvevxmwb6i2z@rob-hp-laptop>
+References: <1507712948-29300-1-git-send-email-pmeerw@pmeerw.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, jic23@kernel.org
+In-Reply-To: <1507712948-29300-1-git-send-email-pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 09:35:28AM +0300, Eugen Hristev wrote:
-> Added property for DMA configuration of the device.
+On Wed, Oct 11, 2017 at 11:09:07AM +0200, Peter Meerwald-Stadler wrote:
+> Should be in hex, not decimal or even octal
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> Signed-off-by: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> index 552e7a8..5f94d479 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> @@ -17,6 +17,11 @@ Required properties:
->    This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
->    IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
->  
-> +Optional properties:
-> +  - dmas: Phandle to dma channel for the ADC.
-> +  See ../../dma/dma.txt for details.
-> +  - dma-names: Must be "rx" when dmas property is being used.
+>  Documentation/devicetree/bindings/iio/health/max30100.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
--names is pointless when there is only one.
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
