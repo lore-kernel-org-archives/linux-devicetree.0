@@ -1,75 +1,71 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 1/5] dt-bindings: mfd: bd9571mwv: Document rohm,ddr-backup-power
-Date: Fri, 13 Oct 2017 11:02:56 +0200
-Message-ID: <CAMuHMdWOzgHeB9bSbaz69_xDCY7YbLRSct4gs6fCnYc_Q_eUyw@mail.gmail.com>
-References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
- <1507649178-31473-2-git-send-email-geert+renesas@glider.be> <20171013085504.i65ohil6dqdzrd2q@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171013085504.i65ohil6dqdzrd2q@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 14/16] arm64: dts: marvell: armada-37xx: add second UART port
+Date: Fri, 13 Oct 2017 11:01:58 +0200
+Message-ID: <20171013090200.31034-15-miquel.raynal@free-electrons.com>
+References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171013090200.31034-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Add a node in Armada 37xx DTSI file for the second UART, with a
+different compatible due to its extended IP which has some
+differences with the first UART already in place.
 
-On Fri, Oct 13, 2017 at 10:55 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Tue, 10 Oct 2017, Geert Uytterhoeven wrote:
->> Document the new optional "rohm,ddr-backup-power" property.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->>  Documentation/devicetree/bindings/mfd/bd9571mwv.txt | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
->> index 9ab216a851d5619b..7ea3f2db41d4e501 100644
->> --- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
->> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
->> @@ -25,6 +25,12 @@ Required properties:
->>                           Each child node is defined using the standard
->>                           binding for regulators.
->>
->> +Optional properties:
->> +  - rohm,ddr-backup-power : Value to use for DDR-Backup Power.  This controls
->> +                         which DDR rails need to be kept powered when backup
->> +                         mode is enabled, cfr. the KEEPON_DDR* bits in the
->
-> Perhaps it's just me, but I'm confused by this line.
->
-> Can you word it another way?
+Make use of this commit to also fully describe the first port and
+use the same clear and named interrupt bindings for both ports.
 
-I'll ttry... Let me think a bit about it...
+The standard UART (UART0) uses level-interrupts while the extended
+UART (UART1) uses edge-triggered interrupts.
 
->> +                         documentation for the "BKUP Mode Cnt" register.
->> +
->>  Example:
->>
->>       pmic: pmic@30 {
->> @@ -36,6 +42,7 @@ Example:
->>               #interrupt-cells = <2>;
->>               gpio-controller;
->>               #gpio-cells = <2>;
->> +             rohm,ddr-backup-power = <15>;
->
-> Can you explain what this means?  Is it a mask, or does line 15 need
-> to be kept on?  What is the range?  Is 0 acceptable?  Clarification
-> required please.
+Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-It's a mask (OR of (in this case all four) needed KEEPON_DDR* bits).
-Unfortunately the datasheet is not publicly available.
-
-0 is acceptable, but as the property is optional, you better just leave it out.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index a36d667f770e..72b68f23c001 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -55,6 +55,7 @@
+ 
+ 	aliases {
+ 		serial0 = &uart0;
++		serial1 = &uart1;
+ 	};
+ 
+ 	cpus {
+@@ -136,7 +137,22 @@
+ 				compatible = "marvell,armada-3700-uart";
+ 				reg = <0x12000 0x200>;
+ 				clocks = <&xtalclk>;
+-				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts =
++				<GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "uart-sum", "uart-tx", "uart-rx";
++				status = "disabled";
++			};
++
++			uart1: serial@12200 {
++				compatible = "marvell,armada-3700-uart-ext";
++				reg = <0x12200 0x30>;
++				clocks = <&xtalclk>;
++				interrupts =
++				<GIC_SPI 30 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 31 IRQ_TYPE_EDGE_RISING>;
++				interrupt-names = "uart-tx", "uart-rx";
+ 				status = "disabled";
+ 			};
+ 
+-- 
+2.11.0
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
