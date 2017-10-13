@@ -1,32 +1,44 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [Patch 5/6] ARM: DRA7: hwmod: Add VPE nodes
-Date: Fri, 13 Oct 2017 10:05:13 -0700
-Message-ID: <20171013170513.GM4394@atomide.com>
-References: <20171012192719.15193-1-bparrot@ti.com>
- <20171012192719.15193-6-bparrot@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171012192719.15193-6-bparrot@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-media@vger.kernel.org
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: Enable thermal on rk3288-vyasa board
+Date: Fri, 13 Oct 2017 23:03:32 +0530
+Message-ID: <1507916012-3980-1-git-send-email-jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Parrot <bparrot@ti.com> [171012 12:28]:
-> +static struct omap_hwmod_class_sysconfig dra7xx_vpe_sysc = {
-> +	.sysc_offs	= 0x0010,
-> +	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE),
-> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-> +			   MSTANDBY_FORCE | MSTANDBY_NO |
-> +			   MSTANDBY_SMART),
-> +	.sysc_fields	= &omap_hwmod_sysc_type2,
-> +};
+From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-I think checkpatch.pl --strict would complain about unnecessary
-parentheses, might as well check the whole series while at it.
+Enable thermal on rk3288-vyasa board, TSHUT is high active.
 
-Regards,
+Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-vyasa.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Tony
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index 932311c..3546eb8 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -302,6 +302,12 @@
+ 	status = "okay";
+ };
+ 
++&tsadc {
++	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
++	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
++	status = "okay";
++};
++
+ &uart2 {
+ 	status = "okay";
+ };
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
