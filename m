@@ -1,50 +1,31 @@
-From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Subject: Re: [Patch 5/6] ARM: DRA7: hwmod: Add VPE nodes
-Date: Fri, 13 Oct 2017 13:05:34 -0500
-Message-ID: <20171013180534.GI25400@ti.com>
-References: <20171012192719.15193-1-bparrot@ti.com>
- <20171012192719.15193-6-bparrot@ti.com>
- <20171013170513.GM4394@atomide.com>
+From: jeffy <jeffy.chen@rock-chips.com>
+Subject: Re: [RESEND PATCH 2/2] arm64: dts: rockchip: Enable edp disaplay
+ on kevin
+Date: Sat, 14 Oct 2017 02:12:41 +0800
+Message-ID: <59E10219.3060009@rock-chips.com>
+References: <20171013104138.3216-1-jeffy.chen@rock-chips.com> <20171013104138.3216-3-jeffy.chen@rock-chips.com> <3037285.0MAZvLKA4I@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171013170513.GM4394-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3037285.0MAZvLKA4I@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Sean Paul <seanpaul@chromium.org>
+Cc: linux-kernel@vger.kernel.org, briannorris@chromium.org, broonie@kernel.org, dianders@chromium.org, Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote on Fri [2017-Oct-13 10:05:13 -0700]:
-> * Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> [171012 12:28]:
-> > +static struct omap_hwmod_class_sysconfig dra7xx_vpe_sysc = {
-> > +	.sysc_offs	= 0x0010,
-> > +	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE),
-> > +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-> > +			   MSTANDBY_FORCE | MSTANDBY_NO |
-> > +			   MSTANDBY_SMART),
-> > +	.sysc_fields	= &omap_hwmod_sysc_type2,
-> > +};
-> 
-> I think checkpatch.pl --strict would complain about unnecessary
-> parentheses, might as well check the whole series while at it.
+Hi heiko,
 
-I actually ran the whole series through "checkpatch.pl --strict"
-before posting. And other then the usual MAINTAINER file needing
-update warning for the binding patch it no other warning or error.
+On 10/13/2017 09:25 PM, Heiko Stuebner wrote:
+> does this actually work with mainline kernel sources?
+>
+> Sean Paul did look at making the edp work on Chromebooks recently,
+> but it seemed there were still parts missing to make it actually display
+> something.
 
-Based on the rest of the file I believe the parentheses around those
-flags are at least consistent.
-
-Now, would the .rev_offs comment also apply here?
-
-Benoit
-
-> 
-> Regards,
-> 
-> Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+yes, it works, but only for boot-splash(boot animation). we still need 
+mali gru stuff to bring chrome browser up...i think caesar tried that 
+before(but i don't think he would submit that)
+>
+>
+> Heiko
