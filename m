@@ -1,65 +1,88 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend
- property
-Date: Fri, 13 Oct 2017 11:51:52 -0500
-Message-ID: <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
-References: <20171012205220.130048-1-briannorris@chromium.org>
- <20171012205220.130048-2-briannorris@chromium.org>
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 04/13] arm64: alternatives: use tpidr_el2 on VHE hosts
+Date: Fri, 13 Oct 2017 17:50:45 +0100
+Message-ID: <59E0EEE5.2020208@arm.com>
+References: <20170922182614.27885-1-james.morse@arm.com> <20170922182614.27885-5-james.morse@arm.com> <20171013153148.dnejsvhxeui6opfw@armageddon.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171012205220.130048-2-briannorris@chromium.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171013153148.dnejsvhxeui6opfw-+1aNUgJU5qkijLcmloz0ER/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Doug]
+Hi Catalin,
 
-On Thu, Oct 12, 2017 at 01:52:18PM -0700, Brian Norris wrote:
-> The patch is self-descriptive. I've found that we may need
-> platform-specific behavior for the PERST# signal in system suspend,
-> depending on the type of PCIe endpoints are attached.
+On 13/10/17 16:31, Catalin Marinas wrote:
+> On Fri, Sep 22, 2017 at 07:26:05PM +0100, James Morse wrote:
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index cd52d365d1f0..8e4c7da2b126 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+
+>> @@ -1308,3 +1309,25 @@ static int __init enable_mrs_emulation(void)
+>>  }
+>>  
+>>  late_initcall(enable_mrs_emulation);
+>> +
+>> +int cpu_copy_el2regs(void *__unused)
+>> +{
+>> +	int do_copyregs = 0;
+>> +
+>> +	/*
+>> +	 * Copy register values that aren't redirected by hardware.
+>> +	 *
+>> +	 * Before code patching, we only set tpidr_el1, all CPUs need to copy
+>> +	 * this value to tpidr_el2 before we patch the code. Once we've done
+>> +	 * that, freshly-onlined CPUs will set tpidr_el2, so we don't need to
+>> +	 * do anything here.
+>> +	 */
+>> +	asm volatile(ALTERNATIVE("mov %0, #1", "mov %0, #0",
+>> +				 ARM64_HAS_VIRT_HOST_EXTN)
+>> +		    : "=r" (do_copyregs) : : );
 > 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> Can you just do:
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index c77981c5dd18..91339b6d0652 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -24,3 +24,14 @@ driver implementation may support the following properties:
->     unsupported link speed, for instance, trying to do training for
->     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->     for gen2, and '1' for gen1. Any other values are invalid.
-> +- pcie-reset-suspend:
-> +   If present this property defines whether the PCIe Reset signal (referred to
-> +   as PERST#) should be asserted when the system enters low-power suspend modes
-> +   (e.g., S3). Depending on the form factor, the associated PCIe
-> +   electromechanical specification may specify a particular behavior (e.g.,
-> +   "PERST# is asserted in advance of the power being switched off in a
-> +   power-managed state like S3") or it may be less clear. The net result is
-> +   that some endpoints perform better (e.g., lower power consumption) with
-> +   PERST# asserted, and others prefer PERST# deasserted. The value must be '0'
-> +   or '1', where '0' means do not assert PERST# and '1' means assert PERST#.
-> +   When absent, behavior may be platform-specific.
+> 	if (cpu_have_const_cap(ARM64_HAS_VIRT_HOST_EXTN))
+> 		write_sysreg(read_sysreg(tpidr_el1), tpidr_el2);
+> 
+> At this point the capability bits should be set and the jump labels
+> enabled.
 
-I don't understand this at all.  Are you suggesting that we need
-different "pcie-reset-suspend" values based on what sort of endpoint
-the user plugs in?
+These are enabled too early, we haven't done patching yet.
 
-If so, I really don't want to get involved in that, because that's an
-issue that needs to be resolved by the vendors and the PCI-SIG.  If we
-put in a tweak like this, I think it would be a band-aid that only
-delays getting a real solution figured out.
+We need to copy tpidr_el1 -> tpidr_el2 on all CPUs that are online before code
+patching.
 
-If you want a quirk to tune this based on specific devices, that might
-make sense.  It would still sound like an interoperability issue and
-an ongoing maintenance problem, but at least we would have specific
-details about which devices are involved, and we'd have a chance to
-make them work on more controllers than just Rockchip.
+After code patching new CPUs set tpidr_el2 when they come online, so we don't
+need to do the copy... but this enable method is still called. There is nothing
+for us to do, and tpidr_el1 now contains junk, so the copy
 
-Bjorn
+
+cpu_have_const_cap() is great for knowing if we have a feature, here we want to
+know if we've done the patching for this feature.
+
+I can wrap the ALTERNATIVE() into a helper, something like:
+> arm64_alternatives_applied(ARM64_HAS_VIRT_HOST_EXTN)
+
+which should make it clearer.
+
+Christoffer had the same question at connect, so I evidently haven't found the
+right way of describing this yet.
+
+
+> Otherwise:
+> 
+> Reviewed-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+
+Thanks for taking a look, I'll leave this RB until your happy with the
+ALTERNATIVE() hackery above.
+
+
+James
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
