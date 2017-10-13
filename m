@@ -1,32 +1,48 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH  0/4] ARM: dts: Add USB function support
-Date: Fri, 13 Oct 2017 10:04:27 +0200
-Message-ID: <20171013080426.czlqrfcfufv7mlqd@verge.net.au>
-References: <1507555281-57845-1-git-send-email-biju.das@bp.renesas.com>
- <20171012114751.lyx7jrgjbhy2d47j@verge.net.au>
- <KL1PR06MB1702B059DA4DCFD9C0309CB0B84B0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <KL1PR06MB1702B059DA4DCFD9C0309CB0B84B0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] i2c: meson: use generic compatible
+Date: Fri, 13 Oct 2017 10:22:06 +0200
+Message-ID: <20171013082206.31632-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 12:01:10PM +0000, Biju Das wrote:
-> > > Biju Das (4):
-> > >   ARM: dts: r8a7743: Add HS-USB device node
-> > >   ARM: dts: iwg20d-q7: Enable HS-USB
-> > >   ARM: dts: r8a7743: Add USB-DMAC device nodes
-> > >   ARM: dts: r8a7743: Enable DMA for HSUSB
-> >
-> > Thanks, applied v1 of patches 1, 3 and 4, and v2 of patch 2.
-> >
-> > In future when reposting a patch of a series please repost the entire series anew,
-> > in this case it would have been v2 for the whole series.
-> 
-> Thanks. I will take care this in future.
+The meson i2c driver seems to be compatible with more SoCs than
+initially thought. Let's use the most generic compatible he have in
+DT instead of the gxbb specific one
 
-Thanks, much appreciated.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-meson.txt | 2 +-
+ drivers/i2c/busses/i2c-meson.c                      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-meson.txt b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+index 611b934c7e10..e6a563443e26 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-meson.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+@@ -1,7 +1,7 @@
+ Amlogic Meson I2C controller
+ 
+ Required properties:
+- - compatible: must be "amlogic,meson6-i2c" or "amlogic,meson-gxbb-i2c"
++ - compatible: must be "amlogic,meson6-i2c" or "amlogic,meson-gx-i2c"
+  - reg: physical address and length of the device registers
+  - interrupts: a single interrupt specifier
+  - clocks: clock for the device
+diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
+index 88d15b92ec35..7b238d8c19af 100644
+--- a/drivers/i2c/busses/i2c-meson.c
++++ b/drivers/i2c/busses/i2c-meson.c
+@@ -442,7 +442,7 @@ static int meson_i2c_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id meson_i2c_match[] = {
+ 	{ .compatible = "amlogic,meson6-i2c" },
+-	{ .compatible = "amlogic,meson-gxbb-i2c" },
++	{ .compatible = "amlogic,meson-gx-i2c" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, meson_i2c_match);
+-- 
+2.13.6
