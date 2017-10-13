@@ -1,105 +1,69 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 4/7] soc: mediatek: pwrap: update pwrap_init without
- slave programming
-Date: Fri, 13 Oct 2017 16:07:57 +0200
-Message-ID: <fe0952f1-c018-8492-7336-149f917463e1@gmail.com>
-References: <cover.1505980364.git.sean.wang@mediatek.com>
- <604078485ca9ab04cea5bc531425d6035b27bc88.1505980364.git.sean.wang@mediatek.com>
- <f3a04159-8491-6ca6-d2ad-7df1dfd64331@gmail.com>
- <1507887704.21840.32.camel@mtkswgap22>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
+Date: Fri, 13 Oct 2017 19:42:11 +0530
+Message-ID: <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-17-git-send-email-sudeep.holla@arm.com> <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
+ <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
+ <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com> <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
+ <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com> <CAOCOHw54mQUVxVyLRWbV5Ty7trK99MM6zgXsuuxQEHnD3qvKVA@mail.gmail.com>
+ <0b65a3fd-32ff-f708-7dce-8e3a5cabf908@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507887704.21840.32.camel@mtkswgap22>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0b65a3fd-32ff-f708-7dce-8e3a5cabf908-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/13/2017 11:41 AM, Sean Wang wrote:
-> On Tue, 2017-10-10 at 20:00 +0200, Matthias Brugger wrote:
->>
->> On 09/21/2017 10:26 AM, sean.wang@mediatek.com wrote:
->>> From: Sean Wang <sean.wang@mediatek.com>
+On Fri, Oct 13, 2017 at 7:12 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> Hi Bjorn,
+>
+> Thanks for taking a look at this. Much appreciated.
+>
+> On 12/10/17 22:03, Bjorn Andersson wrote:
+>> On Fri, Oct 6, 2017 at 6:51 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 >>>
->>> pwrap initialization is highly associated with the base SoC, so
->>> update here for allowing pwrap_init without slave program which would be
->>> used to those PMICs without extra encryption on bus such as MT6380.
 >>>
->>> Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
->>> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
->>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->>> ---
->>>    drivers/soc/mediatek/mtk-pmic-wrap.c | 91 +++++++++++++++++++++---------------
->>>    1 file changed, 54 insertions(+), 37 deletions(-)
+>>> On 06/10/17 14:47, Jassi Brar wrote:
+>>>> On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> [..]
+>>>>> Again that's not the point, doorbell is more common feature and that can
+>>>>> be supported. As SCMI expects doorbell feature in the specification, it
+>>>>> just need to support that class of controllers.
+>>>>>
+>>>> NO.  All SCMI expects is SHMEM and a signal reaching the other end.
+>>>> The signal mechanism need not necessarily be "doorbell".
+>>>>
 >>>
->>> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
->>> index 27d7ccc..9c6d855 100644
->>> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
->>> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
->>> @@ -531,6 +531,7 @@ struct pmic_wrapper_type {
->>>    	u32 spi_w;
->>>    	u32 wdt_src;
->>>    	int has_bridge:1;
->>> +	int slv_program:1;
->>>    	int (*init_reg_clock)(struct pmic_wrapper *wrp);
->>>    	int (*init_soc_specific)(struct pmic_wrapper *wrp);
->>>    };
->>> @@ -999,9 +1000,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
->>>    	}
->>>    
->>>    	/* Reset SPI slave */
->>> -	ret = pwrap_reset_spislave(wrp);
->>> -	if (ret)
->>> -		return ret;
->>> +
->>> +	if (wrp->master->slv_program) {
->>> +		ret = pwrap_reset_spislave(wrp);
->>> +		if (ret)
->>> +			return ret;
->>> +	}
->>>    
->>>    	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
->>>    
->>> @@ -1013,45 +1017,52 @@ static int pwrap_init(struct pmic_wrapper *wrp)
->>>    	if (ret)
->>>    		return ret;
->>>    
->>> -	/* Setup serial input delay */
->>> -	ret = pwrap_init_sidly(wrp);
->>> -	if (ret)
->>> -		return ret;
->>> +	if (wrp->master->slv_program) {
+>>> Agreed, but creating an abstraction ro do something as generic as
+>>> doorbell and writing shim layer for each controller to use SCMI also
+>>> sounds bad.
+>>>
 >>
->> This if branch is really long and complex enough to put it into function apart.
+>> In the Qualcomm platform we have a single register that exposes 32
+>> doorbells, wired to interrupts on the various processors/co-processors
+>> in the SoC.
 >>
->> Thanks,
->> Matthias
->>
->> PD please take into account the comments I made on v3 of the series.
->>
-> 
-> I'll try to breakdown the long logic into the short one and use a flag
-> indicating the slave capability decides whether the functions is
-> required being enabled for the slave instead of slv_program which is
-> less meaningful. In this way, pmic_init will be more extensible when
-> more different SoCs and target slaves with various flavors into the
-> driver. And also take into accounts those suggestions you made in v3 in
-> the next version.
-> 
-> 	Sean
-> 
+>
+> It's exactly same even on ARM MHU controller.
+>
+This has been a big problem in our communication. You start with
+"exactly same..." and go on telling the difference.
+And that difference is important.
 
-I totally agree, but I wanted to underline that right now the if branch under
-"if (wrp->master->slv_program)" is around 30 lines, so I think it would be a 
-good candidate to put it into it's own function. For example: 
-pwrap_init_encryption()
-As from what I understand from the commit log, slv_program in the end enables 
-encryption of the communication, right?
+In MHU the 32bits are tied together and all go to one target
+processor. Whereas on QCom, each bit corresponds to independent signal
+going to a different target processor.
 
-Regards,
-Matthias
+IOW, QCom has 32 channels per register whereas MHU has one. The
+current drivers reflect that reality and hence I am against any change
+in MHU driver.  Not to mean even changing the MHU driver will fix the
+core issue - which is https://lkml.org/lkml/2017/7/7/465 and this
+patchset tries to address that.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
