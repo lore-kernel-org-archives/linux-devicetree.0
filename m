@@ -1,56 +1,77 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 5/7] ARM: dts: imx6ul-txul: use interrupts-extended property
-Date: Fri, 13 Oct 2017 12:43:01 +0200
-Message-ID: <1507891383-15452-6-git-send-email-LW@KARO-electronics.de>
-References: <1507891383-15452-1-git-send-email-LW@KARO-electronics.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507891383-15452-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH v2 1/4] dt-bindings: media: Binding document for Qualcomm Camera Control Interface driver
+Date: Fri, 13 Oct 2017 13:56:40 +0300
+Message-ID: <1507892203-17033-2-git-send-email-todor.tomov@linaro.org>
+References: <1507892203-17033-1-git-send-email-todor.tomov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507892203-17033-1-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, linux-i2c@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VXNlIHRoZSAnaW50ZXJydXB0cy1leHRlbmRlZCcgcHJvcGVydHkgaW5zdGVhZCBvZiBwYWlycyBv
-ZgonaW50ZXJydXB0LXBhcmVudCcsICdpbnRlcnJ1cHRzJyBwcm9wZXJ0aWVzLgoKU2lnbmVkLW9m
-Zi1ieTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIGFyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1bC5kdHNpIHwgMTIgKysrKy0tLS0tLS0tCiAxIGZpbGUg
-Y2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC10eDZ1bC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnVsLXR4NnVsLmR0c2kKaW5kZXggZjhmNzY4NS4uOTdjNzA0NyAxMDA2NDQKLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnVsLXR4NnVsLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnVsLXR4NnVsLmR0c2kKQEAgLTMyNSw4ICszMjUsNyBAQAogCQkJcmVnID0gPDA+OwogCQkJcGlu
-Y3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAkJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ldG5waHkw
-X2ludD47Ci0JCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvNT47Ci0JCQlpbnRlcnJ1cHRzID0g
-PDUgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsKKwkJCWludGVycnVwdHMtZXh0ZW5kZWQgPSA8Jmdw
-aW81IDUgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsKIAkJCXN0YXR1cyA9ICJva2F5IjsKIAkJfTsK
-IApAQCAtMzM1LDggKzMzNCw3IEBACiAJCQlyZWcgPSA8Mj47CiAJCQlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOwogCQkJcGluY3RybC0wID0gPCZwaW5jdHJsX2V0bnBoeTFfaW50PjsKLQkJCWlu
-dGVycnVwdC1wYXJlbnQgPSA8JmdwaW80PjsKLQkJCWludGVycnVwdHMgPSA8MjcgSVJRX1RZUEVf
-RURHRV9GQUxMSU5HPjsKKwkJCWludGVycnVwdHMtZXh0ZW5kZWQgPSA8JmdwaW80IDI3IElSUV9U
-WVBFX0VER0VfRkFMTElORz47CiAJCQlzdGF0dXMgPSAib2theSI7CiAJCX07CiAJfTsKQEAgLTM4
-Myw4ICszODEsNyBAQAogCQlyZWcgPSA8MHgzOD47CiAJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7CiAJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9lZHRfZnQ1eDA2PjsKLQkJaW50ZXJydXB0LXBh
-cmVudCA9IDwmZ3BpbzU+OwotCQlpbnRlcnJ1cHRzID0gPDIgSVJRX1RZUEVfRURHRV9GQUxMSU5H
-PjsKKwkJaW50ZXJydXB0cy1leHRlbmRlZCA9IDwmZ3BpbzUgMiBJUlFfVFlQRV9FREdFX0ZBTExJ
-Tkc+OwogCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzUgMyBHUElPX0FDVElWRV9MT1c+OwogCQl3YWtl
-LWdwaW9zID0gPCZncGlvNSA4IEdQSU9fQUNUSVZFX0hJR0g+OwogCQl3YWtldXAtc291cmNlOwpA
-QCAtMzk1LDggKzM5Miw3IEBACiAJCXJlZyA9IDwweDQ4PjsKIAkJcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsKIAkJcGluY3RybC0wID0gPCZwaW5jdHJsX3RzYzIwMDc+OwotCQlpbnRlcnJ1cHQt
-cGFyZW50ID0gPCZncGlvMz47Ci0JCWludGVycnVwdHMgPSA8MjYgSVJRX1RZUEVfTk9ORT47CisJ
-CWludGVycnVwdHMtZXh0ZW5kZWQgPSA8JmdwaW8zIDI2IElSUV9UWVBFX05PTkU+OwogCQlncGlv
-cyA9IDwmZ3BpbzMgMjYgR1BJT19BQ1RJVkVfTE9XPjsKIAkJdGkseC1wbGF0ZS1vaG1zID0gPDY2
-MD47CiAJCXdha2V1cC1zb3VyY2U7Ci0tIAoyLjEuNAoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Add DT binding document for Qualcomm Camera Control Interface driver
+
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+---
+ .../devicetree/bindings/i2c/i2c-qcom-cci.txt       | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+new file mode 100644
+index 0000000..cb1fe15
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+@@ -0,0 +1,46 @@
++Qualcomm Camera Control Interface controller
++
++Required properties:
++ - compatible: Should be one of:
++   - "qcom,cci-v1.0.8" for 8916;
++   - "qcom,cci-v1.4.0" for 8996.
++ - #address-cells: Should be <1>.
++ - #size-cells: Should be <0>.
++ - reg: Base address of the controller and length of memory mapped region.
++ - interrupts: Specifier for CCI interrupt.
++ - clocks: List of clock specifiers, one for each entry in clock-names.
++ - clock-names: Should contain:
++   - "mmss_mmagic_ahb" - on 8996 only;
++   - "camss_top_ahb";
++   - "cci_ahb";
++   - "cci";
++   - "camss_ahb".
++
++Required properties on 8996:
++ - power-domains: Power domain specifier.
++
++Optional:
++ - clock-frequency: Desired I2C bus clock frequency in Hz, defaults to 100 kHz
++   if omitted.
++
++Example:
++
++                cci@a0c000 {
++                        compatible = "qcom,cci-v1.4.0";
++                        #address-cells = <1>;
++                        #size-cells = <0>;
++                        reg = <0xa0c000 0x1000>;
++                        interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
++                        power-domains = <&mmcc CAMSS_GDSC>;
++                        clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
++                                        <&mmcc CAMSS_TOP_AHB_CLK>,
++                                        <&mmcc CAMSS_CCI_AHB_CLK>,
++                                        <&mmcc CAMSS_CCI_CLK>,
++                                        <&mmcc CAMSS_AHB_CLK>;
++                        clock-names = "mmss_mmagic_ahb",
++                                        "camss_top_ahb",
++                                        "cci_ahb",
++                                        "cci",
++                                        "camss_ahb";
++                        clock-frequency = <400000>;
++                };
+-- 
+2.7.4
