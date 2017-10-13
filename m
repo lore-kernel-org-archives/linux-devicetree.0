@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 12/13] dt-bindings: usb: mtu3: remove dummy clocks and add optional ones
-Date: Fri, 13 Oct 2017 17:10:48 +0800
-Message-ID: <48c53d912c219ffb129f443493bda938b81c8279.1507885127.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 13/13] dt-bindings: usb: mtu3: remove optional pinctrls
+Date: Fri, 13 Oct 2017 17:10:49 +0800
+Message-ID: <7829c4747d35a24cfc1497268a3642435ccfc2a2.1507885127.git.chunfeng.yun@mediatek.com>
 References: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,31 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@
 Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove dummy clocks for usb wakeup and add optional ones for
-mcu_bus and dma_bus bus.
+Remove optional pinctrls due to using FORCE/RG_IDDIG to implement
+manual switch function.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/usb/mediatek,mtu3.txt      |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/usb/mediatek,mtu3.txt      |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 7c611d1..49c982b 100644
+index 49c982b..b2271d8 100644
 --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
 +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -14,9 +14,9 @@ Required properties:
-  - vusb33-supply : regulator of USB avdd3.3v
-  - clocks : a list of phandle + clock-specifier pairs, one for each
- 	entry in clock-names
-- - clock-names : must contain "sys_ck" and "ref_ck" for clock of controller;
--	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
--	depends on "mediatek,enable-wakeup"
-+ - clock-names : must contain "sys_ck" for clock of controller,
-+	the following clocks are optional:
-+	"ref_ck", "mcu_ck" and "dam_ck";
-  - phys : a list of phandle + phy specifier pairs
-  - dr_mode : should be one of "host", "peripheral" or "otg",
- 	refer to usb/generic.txt
-@@ -65,9 +65,7 @@ ssusb: usb@11271000 {
- 	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
- 		 <&pericfg CLK_PERI_USB0>,
- 		 <&pericfg CLK_PERI_USB1>;
--	clock-names = "sys_ck", "ref_ck",
--		      "wakeup_deb_p0",
--		      "wakeup_deb_p1";
-+	clock-names = "sys_ck", "ref_ck";
- 	vusb33-supply = <&mt6397_vusb_reg>;
- 	vbus-supply = <&usb_p0_vbus>;
- 	extcon = <&extcon_usb>;
+@@ -30,9 +30,10 @@ Optional properties:
+ 	when supports dual-role mode.
+  - vbus-supply : reference to the VBUS regulator, needed when supports
+ 	dual-role mode.
+- - pinctl-names : a pinctrl state named "default" must be defined,
+-	"id_float" and "id_ground" are optinal which depends on
+-	"mediatek,enable-manual-drd"
++ - pinctrl-names : a pinctrl state named "default" is optional, and need be
++	defined if auto drd switch is enabled, that means the property dr_mode
++	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
++	is not set.
+  - pinctrl-0 : pin control group
+ 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+ 
 -- 
 1.7.9.5
