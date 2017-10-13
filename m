@@ -1,89 +1,83 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH] nvmem: meson: use generic compatible
-Date: Fri, 13 Oct 2017 21:39:13 +0200
-Message-ID: <1507923553.30658.10.camel@baylibre.com>
-References: <20171012152450.12454-1-jbrunet@baylibre.com>
-         <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add binding for Allwinner
+ R40 SATA AHCI controller
+Date: Fri, 13 Oct 2017 14:42:52 -0500
+Message-ID: <20171013194252.yt2zv3xpjgvzonvk@rob-hp-laptop>
+References: <20171008043541.48564-1-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sunxi+bncBDJIP47K7MERBPVOQTHQKGQEF4G7DYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171008043541.48564-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-10-13 at 21:14 +0200, Martin Blumenstingl wrote:
-> Hi Jerome,
+On Sun, Oct 08, 2017 at 12:35:40PM +0800, Icenowy Zheng wrote:
+> The Allwinner R40 SoC contains a SATA AHCI controller like the one in
+> A10/A20 SoCs, however a reset control and two power supplies are added
+> to it.
 > 
-> On Thu, Oct 12, 2017 at 5:24 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > The meson efuse driver seems to be compatible with more SoCs than
-> > initially thought. Let's use the most generic compatible he have in
-> > DT instead of the gxbb specific one
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> >  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
-> >  drivers/nvmem/meson-efuse.c                               | 2 +-
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > index fafd85bd67a6..0260524292fe 100644
-> > --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > @@ -1,7 +1,7 @@
-> >  = Amlogic eFuse device tree bindings =
-> > 
-> >  Required properties:
-> > -- compatible: should be "amlogic,meson-gxbb-efuse"
-> > +- compatible: should be "amlogic,meson-gx-efuse"
+> Add a binding document for it.
 > 
-> have you checked with the devicetree maintainers how they want the
-> documentation to look like in this case?
-
-You mean "Should we put every compatible existing (in DT) in the documentation"
->From what I've seen, at least in meson drivers, only the matched ones are
-listed.
-
-That's a good question though.
-We tend to put soc specific compatible "in case"  we need them later on. Should
-we document those ?
-
-
-> (I don't know if the old one should be kept instead of removing it)
+> As a dedicated binding document is needed now for the A10/A20/R40 AHCI
+> controller, drop the A10 compatible line from generic platform AHCI
+> controller binding document.
 > 
-> > 
-> >  = Data cells =
-> >  Are child nodes of eFuse, bindings of which as described in
-> > @@ -10,7 +10,7 @@ bindings/nvmem/nvmem.txt
-> >  Example:
-> > 
-> >         efuse: efuse {
-> > -               compatible = "amlogic,meson-gxbb-efuse";
-> > +               compatible = "amlogic,meson-gx-efuse";
-> >                 #address-cells = <1>;
-> >                 #size-cells = <1>;
-> > 
-> > diff --git a/drivers/nvmem/meson-efuse.c b/drivers/nvmem/meson-efuse.c
-> > index 70bfc9839bb2..e90c6d68a263 100644
-> > --- a/drivers/nvmem/meson-efuse.c
-> > +++ b/drivers/nvmem/meson-efuse.c
-> > @@ -44,7 +44,7 @@ static struct nvmem_config econfig = {
-> >  };
-> > 
-> >  static const struct of_device_id meson_efuse_match[] = {
-> > -       { .compatible = "amlogic,meson-gxbb-efuse", },
-> > +       { .compatible = "amlogic,meson-gx-efuse", },
-> >         { /* sentinel */ },
-> >  };
-> >  MODULE_DEVICE_TABLE(of, meson_efuse_match);
-> > --
-> > 2.13.6
-> > 
-> > 
-> > _______________________________________________
-> > linux-amlogic mailing list
-> > linux-amlogic@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../devicetree/bindings/ata/ahci-platform.txt      |  1 -
+>  .../bindings/ata/allwinner,sun4i-a10-ahci.txt      | 40 ++++++++++++++++++++++
+>  2 files changed, 40 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index fedc213b5f1a..da6818b2c204 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -9,7 +9,6 @@ PHYs.
+>  
+>  Required properties:
+>  - compatible        : compatible string, one of:
+> -  - "allwinner,sun4i-a10-ahci"
+>    - "brcm,iproc-ahci"
+>    - "hisilicon,hisi-ahci"
+>    - "cavium,octeon-7130-ahci"
+> diff --git a/Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.txt b/Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.txt
+> new file mode 100644
+> index 000000000000..0eea78c14ad3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/allwinner,sun4i-a10-ahci.txt
+> @@ -0,0 +1,40 @@
+> +Allwinner A10/A20/R40 SoC SATA AHCI Controller
+> +
+> +Required properties:
+> +- compatible        : compatible string, one of:
+> +  - "allwinner,sun4i-a10-ahci"
+> +  - "allwinner,sun8i-r40-ahci"
+> +- interrupts        : the SATA IRQ
+> +- reg               : the register mapping
+> +- clocks            : the clocks needed by SATA controller, usually contains
+> +		      an AHB clock and a mod clock
+> +
+> +Optional properties:
+> +- target-supply     : regulator for SATA target power
+> +
+> +Required properties for the following compatibles:
+> +  - "allwinner,sun8i-r40-ahci"
+> +- resets            : the reset control needed by SATA controller
+> +- vdd1v2-supply     : regulator for SATA controller's 1.2V VDD
+> +- vdd2v5-supply     : regulator for SATA controller's 2.5V VDD
+
+I have to wonder, are these really for the controller and not the phy? 
+You don't have any phy?
+
+Rob
