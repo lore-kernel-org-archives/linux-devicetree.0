@@ -1,79 +1,78 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: overlay: fix memory leak related to duplicated property
-Date: Fri, 13 Oct 2017 15:49:20 -0500
-Message-ID: <CAL_JsqJK2pEQOY68iin6MxLXiMnVHp6+SW17GNp=bWaoJ2RGbw@mail.gmail.com>
-References: <1507859591-2337-1-git-send-email-alan.1.wang@nokia-sbell.com> <1507864056-52089-1-git-send-email-alan.1.wang@nokia-sbell.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v5 1/2] Documentation: dt: Update ti,emif bindings
+Date: Fri, 13 Oct 2017 15:59:14 -0500
+Message-ID: <20171013205915.9652-2-d-gerlach@ti.com>
+References: <20171013205915.9652-1-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507864056-52089-1-git-send-email-alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+In-Reply-To: <20171013205915.9652-1-d-gerlach-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 10:07 PM, Lixin Wang
-<alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org> wrote:
-> From: alawang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
->
-> Hello,
->
-> Sorry It was my fault in last email that wrote the wrong subject and sign off name.
-> Correct them this time.
-> Thanks
+Update the Texas Instruments EMIF binding document to include the device
+tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
+the ti-emif-sram driver to provide low-level PM functionality.
 
-This has to go below the '---' or it ends up in the commit message.
-Please resend.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
->
-> Function of_changeset_add_property or of_changeset_update_property may
-> fails. In this case the property just allocated is never deallocated.
->
-> Signed-off-by: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-> ---
->  drivers/of/overlay.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 8ecfee3..af3b9a1 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -162,6 +162,7 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
->                 bool is_symbols_node)
->  {
->         struct property *propn = NULL, *tprop;
-> +       int ret = 0;
->
->         /* NOTE: Multiple changes of single properties not supported */
->         tprop = of_find_property(target, prop->name, NULL);
-> @@ -186,10 +187,16 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
->
->         /* not found? add */
->         if (tprop == NULL)
-> -               return of_changeset_add_property(&ov->cset, target, propn);
-> -
-> -       /* found? update */
-> -       return of_changeset_update_property(&ov->cset, target, propn);
-> +               ret = of_changeset_add_property(&ov->cset, target, propn);
-> +       else /* found? update */
-> +               ret = of_changeset_update_property(&ov->cset, target, propn);
-> +
-> +       if (ret) {
-> +               kfree(propn->name);
-> +               kfree(propn->value);
-> +               kfree(propn);
-> +       }
-> +       return ret;
->  }
->
->  static int of_overlay_apply_single_device_node(struct of_overlay *ov,
-> --
-> 2.6.2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+index 0db60470ebb6..8c0214b17c2b 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+@@ -8,6 +8,7 @@ of the EMIF IP and memory parts attached to it.
+ Required properties:
+ - compatible	: Should be of the form "ti,emif-<ip-rev>" where <ip-rev>
+   is the IP revision of the specific EMIF instance.
++		  For am335x should be ti,emif-am3352.
+ 		  For am437x should be ti,emif-am4372.
+ 
+ - phy-type	: <u32> indicating the DDR phy type. Following are the
+@@ -21,6 +22,13 @@ Required properties:
+   the value shall be "emif<n>" where <n> is the number of the EMIF
+   instance with base 1.
+ 
++Required only for "ti,emif-am3352" and "ti,emif-am4372":
++- sram			: Phandles for generic sram driver nodes,
++  first should be type 'protect-exec' for the driver to use to copy
++  and run PM functions, second should be regular pool to be used for
++  data region for code. See Documentation/devicetree/bindings/sram/sram.txt
++  for more details.
++
+ Optional properties:
+ - cs1-used		: Have this property if CS1 of this EMIF
+   instance has a memory part attached to it. If there is a memory
+@@ -42,7 +50,7 @@ Optional properties:
+ - hw-caps-temp-alert	: Have this property if the controller
+   has capability for generating SDRAM temperature alerts
+ 
+-Example:
++-Examples:
+ 
+ emif1: emif@0x4c000000 {
+ 	compatible	= "ti,emif-4d";
+@@ -54,3 +62,11 @@ emif1: emif@0x4c000000 {
+ 	hw-caps-ll-interface;
+ 	hw-caps-temp-alert;
+ };
++
++/* From am33xx.dtsi */
++emif: emif@4c000000 {
++        compatible = "ti,emif-am3352";
++        reg =   <0x4C000000 0x1000>;
++        sram = <&pm_sram_code
++                &pm_sram_data>;
++};
+-- 
+2.13.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
