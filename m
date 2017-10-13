@@ -1,131 +1,131 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
- timeout
-Date: Fri, 13 Oct 2017 13:35:27 -0700
-Message-ID: <20171013203527.GA14166@roeck-us.net>
-References: <20171013092705.7038-1-peda@axentia.se>
- <20171013092705.7038-2-peda@axentia.se>
- <554a4494-14c9-7743-898c-5f83e3de227d@roeck-us.net>
- <2d1bf447-489f-9e15-3b1e-d2f4a2c1dcfe@axentia.se>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for
+ Synquacer pre-ITS
+Date: Fri, 13 Oct 2017 21:38:02 +0100
+Message-ID: <CAKv+Gu_3zWqiUOhr+GOFZY5SWfJpo+y0DVsA8tYpVLjsN6hnrw@mail.gmail.com>
+References: <20171012183247.23679-1-ard.biesheuvel@linaro.org>
+ <20171012183247.23679-3-ard.biesheuvel@linaro.org> <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg@mail.gmail.com>
+ <CAKv+Gu-rZNhMMU4PoD8V0nBtwEEu+HE71wvaAZk2PWshoeTi4g@mail.gmail.com>
+ <c6c00e64-ecc8-0404-5ffc-602626e5cc6d@arm.com> <CAL_Jsq+dsEW3M374e_ivwcBnk7s8rQToagWLx3EsBof8bK__JQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2d1bf447-489f-9e15-3b1e-d2f4a2c1dcfe-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <CAL_Jsq+dsEW3M374e_ivwcBnk7s8rQToagWLx3EsBof8bK__JQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 04:26:57PM +0200, Peter Rosin wrote:
-> On 2017-10-13 15:50, Guenter Roeck wrote:
-> > On 10/13/2017 02:27 AM, Peter Rosin wrote:
-> >> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
-> >> is not always capable of avoiding the 25-35 ms timeout as specified by
-> >> the SMBUS protocol. This may cause silent corruption of the last bit of
-> >> any transfer, e.g. a one is read instead of a zero if the sensor chip
-> >> times out. This also affects the eeprom half of the nxp-se97 chip, where
-> >> this silent corruption was originally noticed. Other I2C adapters probably
-> >> suffer similar issues, e.g. bit-banging comes to mind as risky...
-> >>
-> >> The SMBUS register in the nxp chip is not a standard Jedec register, but
-> >> it is not special to the nxp chips either, at least the atmel chips
-> >> have the same mechanism. Therefore, do not special case this on the
-> >> manufacturer, it is opt-in via the device property anyway.
-> >>
-> >> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> >> ---
-> >>   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
-> >>   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
-> >>   2 files changed, 24 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
-> >> index 07a250498fbb..f569db58f64a 100644
-> >> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
-> >> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
-> >> @@ -34,6 +34,10 @@ Required properties:
-> >>   
-> >>   - reg: I2C address
-> >>   
-> >> +Optional properties:
-> >> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
-> >> +			 This is not supported on all chips.
-> >> +
-> >>   Example:
-> >>   
-> >>   temp-sensor@1a {
-> >> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
-> >> index 1bf22eff0b08..fd816902fa30 100644
-> >> --- a/drivers/hwmon/jc42.c
-> >> +++ b/drivers/hwmon/jc42.c
-> >> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
-> >>   #define JC42_REG_TEMP		0x05
-> >>   #define JC42_REG_MANID		0x06
-> >>   #define JC42_REG_DEVICEID	0x07
-> >> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
-> >>   
-> >>   /* Status bits in temperature register */
-> >>   #define JC42_ALARM_CRIT_BIT	15
-> >> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
-> >>   #define ONS_MANID		0x1b09  /* ON Semiconductor */
-> >>   #define STM_MANID		0x104a  /* ST Microelectronics */
-> >>   
-> >> +/* SMBUS register */
-> >> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
-> >> +
-> >>   /* Supported chips */
-> >>   
-> >>   /* Analog Devices */
-> >> @@ -476,6 +480,22 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> >>   
-> >>   	data->extended = !!(cap & JC42_CAP_RANGE);
-> >>   
-> >> +	if (device_property_read_bool(dev, "smbus-timeout-disable")) {
-> >> +		int smbus;
-> >> +
-> >> +		/*
-> >> +		 * Not all chips support this register, but from a
-> >> +		 * quick read of various datasheets no chip appears
-> >> +		 * incompatible with the below attempt to disable
-> >> +		 * the timeout. And the whole thing is opt-in...
-> >> +		 */
-> >> +		smbus = i2c_smbus_read_word_swapped(client, JC42_REG_SMBUS);
-> >> +		if (smbus < 0)
-> >> +			return smbus;
-> >> +		i2c_smbus_write_word_swapped(client, JC42_REG_SMBUS,
-> >> +					     smbus | SMBUS_STMOUT);
-> > 
-> > Looking into the SE97 datasheet, the bit is only writable if the alarm bits
-> > are not locked. Should we take this into account and unlock the alarm bits
-> > if necessary ?
-> 
-> Right. And I thought about the case when the timeout was disabled before
-> probing but with the property not present (perhaps by someone trying things
-> out, like I have). Should the timeout be re-enabled in that case?
+On 13 October 2017 at 19:50, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Oct 13, 2017 at 4:47 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> [+Mark]
+>>
+>> On 12/10/17 23:24, Ard Biesheuvel wrote:
+>>> On 12 October 2017 at 22:34, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Thu, Oct 12, 2017 at 1:32 PM, Ard Biesheuvel
+>>>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
+>>>>> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
+>>>>> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
+>>>>> ID taken from bits [device_id_bits + 1:2] of the window offset.
+>>>>> Writes that target GITS_TRANSLATER directly are reported as originating
+>>>>> from device ID #0.
+>>>>>
+>>>>> So add a workaround for this. Given that this breaks isolation, clear
+>>>>> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+>>>>>
+>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
+>>>>>  arch/arm64/Kconfig                                                    |  8 +++
+>>>>>  drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
+>>>>>  3 files changed, 72 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>>>> index 4c29cdab0ea5..0798a61bbf99 100644
+>>>>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>>>> @@ -75,6 +75,10 @@ These nodes must have the following properties:
+>>>>>  - reg: Specifies the base physical address and size of the ITS
+>>>>>    registers.
+>>>>>
+>>>>> +Optional:
+>>>>> +- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
+>>>>> +  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
+>>>>
+>>>> Sounds like a separate h/w block to me and addresses should be in
+>>>> "reg". I would suggest you define a separate node for the pre-its
+>>>> block and then use of_find_compatible_node() from the GIC driver to
+>>>> retrieve the node and whatever you need from it. Or do an SoC specific
+>>>> compatible string for the GIC and let that imply whatever information
+>>>> you need. Then the next quirk doesn't need a DT update.
+>>>>
+>>>
+>>> For my understanding, you mean either
+>>>
+>>>     gic: interrupt-controller@30000000 {
+>>>         compatible = "arm,gic-v3";
+>>>         ...
+>>>
+>>>         its: gic-its@30020000 {
+>>>             compatible = "arm,gic-v3-its";
+>>>             reg = <0x0 0x30020000 0x0 0x20000>;
+>>>             #msi-cells = <1>;
+>>>             msi-controller;
+>>>         };
+>>>     };
+>>>
+>>>     preits@58000000 {
+>>>         compatible = "socionext,synquacer-pre-its";
+>>>         reg = <0x0 0x58000000 0x0 0x200000>;
+>>>         msi-slave = <&its>;
+>>>     };
+>>>
+>>> or
+>>>
+>>>     gic: interrupt-controller@30000000 {
+>>>         compatible = "arm,gic-v3";
+>>>         ...
+>>>
+>>>         its: gic-its@30020000 {
+>>>             compatible = "socionext,synquacer-pre-its", "arm,gic-v3-its";
+>>>             reg = <0x0 0x30020000 0x0 0x20000>,
+>>>                   <0x0 0x58000000 0x0 0x200000>;
+>>>             #msi-cells = <1>;
+>>>             msi-controller;
+>>>         };
+>>>     };
+>>>
+>>> right?
+>>>
+>>> Marc, what do you think? IIRC we did discuss option #2 at some point,
+>>> but I don't remember if/why we rejected it.
+>>
+>> I dislike #2 because these registers are not part of the regular ITS,
+>> and would get in the way of potential extensions of the ITS (I don't
+>> know of any, but just in case...).
+>>
+>> I also dislike #1 as the "msi-slave" part is both ugly and confusing
+>> (are we writing to the ITS? to the pre-ITS?).
+>
+> Why do you need this? Are you ever going to have multiple pre-its's?
 
-No, because the property only states that the timeout should be disabled.
-It does not say that it should be _enabled_ if the property is not there.
-That would require a different property. A -> B does not imply B -> A.
+The question is really whether we are ever going to have multiple
+ITSes, in which case we will need to identify which ITS this single
+pre-ITS is associated with, given that it can only target one. And
+while I would prefer zero pre-ITSes in all cases [as would Marc, I'm
+sure], having a pre-ITS for each ITS frame is not unimaginable either.
+So yes, we need to record this information in one way or the other.
 
-> But, someone might have disabled the timeout by some previous arrangement
-> (e.g. in a boot-loader) but without having this newfangled property in the
-> device tree. Re-enabling the timeout in that case would break things. Slim
-> chance for that to be an issue, but perhaps not?
-> 
-> Unlocking the alarm bits is somewhat similar, since it should only be an
-> issue for warm starts. But the risk of breakage is perhaps not there at
-> all?
-> 
-We would have to lock the alarm bits again, leaving them in a consistent
-state.
-
-> Your call, I can fix thing however you like...
-> 
-
-Let's just leave it as-is. If we encounter a problem later we can always
-add code to unlock/lock the alarm bits.
-
-Guenter
+> That's why I suggested just using of_find_compatible_node().
+>
+>> How about putting the pre-its node *inside* the its node itself? It
+>> makes it obvious which pre-ITS corresponds to which ITS, and it leaves
+>> the ITS regs untouched.
+>
+> Not wild about this, but it's fine if you do need to handle multiple instances.
+>
+> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
