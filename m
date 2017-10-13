@@ -1,78 +1,32 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
- timeout
-Date: Fri, 13 Oct 2017 05:51:27 -0700
-Message-ID: <3aae0c68-f001-50fa-8db7-3090978cf16d@roeck-us.net>
-References: <20171013092705.7038-1-peda@axentia.se>
- <20171013092705.7038-2-peda@axentia.se>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx: Fix incorrect display nodes
+ notation
+Date: Fri, 13 Oct 2017 21:00:39 +0800
+Message-ID: <20171013130037.GM8833@dragon>
+References: <1507213901-1349-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171013092705.7038-2-peda@axentia.se>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1507213901-1349-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2017 02:27 AM, Peter Rosin wrote:
-> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
-> is not always capable of avoiding the 25-35 ms timeout as specified by
-> the SMBUS protocol. This may cause silent corruption of the last bit of
-> any transfer, e.g. a one is read instead of a zero if the sensor chip
-> times out. This also affects the eeprom half of the nxp-se97 chip, where
-> this silent corruption was originally noticed. Other I2C adapters probably
-> suffer similar issues, e.g. bit-banging comes to mind as risky...
+On Thu, Oct 05, 2017 at 11:31:40AM -0300, Marco Franchi wrote:
+> The following build warnings are seen with W=1:
 > 
-> The SMBUS register in the nxp chip is not a standard Jedec register, but
-> it is not special to the nxp chips either, at least the atmel chips
-> have the same mechanism. Therefore, do not special case this on the
-> manufacturer, it is opt-in via the device property anyway.
+> Warning (unit_address_vs_reg): Node /display@di0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /display@di1 has a unit name, but no reg property
 > 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
->   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
->   2 files changed, 24 insertions(+)
+> Fix all these warnings by changing 'display@diX' to 'dispX'.
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
-> index 07a250498fbb..f569db58f64a 100644
-> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
-> @@ -34,6 +34,10 @@ Required properties:
->   
->   - reg: I2C address
->   
-> +Optional properties:
-> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
-> +			 This is not supported on all chips.
-> +
->   Example:
->   
->   temp-sensor@1a {
-> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
-> index 1bf22eff0b08..fd816902fa30 100644
-> --- a/drivers/hwmon/jc42.c
-> +++ b/drivers/hwmon/jc42.c
-> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
->   #define JC42_REG_TEMP		0x05
->   #define JC42_REG_MANID		0x06
->   #define JC42_REG_DEVICEID	0x07
-> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
->   
->   /* Status bits in temperature register */
->   #define JC42_ALARM_CRIT_BIT	15
-> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
->   #define ONS_MANID		0x1b09  /* ON Semiconductor */
->   #define STM_MANID		0x104a  /* ST Microelectronics */
->   
-> +/* SMBUS register */
-> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
+> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Requires bitops.h.
-
-Otherwise looks good, though we'll have to wait for Rob's ack.
-
-Thanks,
-Guenter
+Applied both, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
