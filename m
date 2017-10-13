@@ -1,34 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] ARM: dts: qcom: msm8974: Add Sony Xperia Z2 Tablet
-Date: Fri, 13 Oct 2017 14:05:08 +0200
-Message-ID: <CACRpkdba8+NibBQ35Yupwy6aFcHwbyoF+gw_ZyYsc1=jAt0kpA@mail.gmail.com>
-References: <20171004185857.24510-1-bjorn.andersson@linaro.org> <20171004185857.24510-2-bjorn.andersson@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] i2c: rcar: document R8A77970 bindings
+Date: Fri, 13 Oct 2017 15:23:55 +0300
+Message-ID: <20171013122401.540656908@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171004185857.24510-2-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline; filename=i2c-rcar-document-R8A77970-bindings.patch
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 4, 2017 at 8:58 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+R-Car V3M (R8A77970) SoC also has the R-Car gen3 compatible I2C controller,
+so document  the SoC specific bindings.
 
-> From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->
-> This adds a basic DTS file for the Sony Xperia Z2 Tablet, containing
-> definitions for regulators, eMMC/SD-card, USB, WiFi, Touchscreen,
-> charger, backlight, coincell and buttons.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-This looks like a nice start to me!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-rcar.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-Just bluetooth, audio and a panel driver for the graphics and
-you're there, right? Piece if cake ;)
-
-Yours,
-Linus Walleij
+Index: linux/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+===================================================================
+--- linux.orig/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
++++ linux/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 	"renesas,i2c-r8a7794" if the device is a part of a R8A7794 SoC.
+ 	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
+ 	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
++	"renesas,i2c-r8a77970" if the device is a part of a R8A77970 SoC.
+ 	"renesas,rcar-gen1-i2c" for a generic R-Car Gen1 compatible device.
+ 	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 or RZ/G1 compatible
+ 				device.
