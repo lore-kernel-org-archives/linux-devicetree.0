@@ -1,18 +1,18 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC 3/5] mfd: bd9571mwv: Allow DDR Backup Power register
- access
-Date: Fri, 13 Oct 2017 10:56:09 +0100
-Message-ID: <20171013095609.7ievqlwa2e4pnuge@dell>
+Subject: Re: [PATCH/RFC 1/5] dt-bindings: mfd: bd9571mwv: Document
+ rohm,ddr-backup-power
+Date: Fri, 13 Oct 2017 11:00:16 +0100
+Message-ID: <20171013100016.a5s3plq7m5c6h5xo@dell>
 References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
- <1507649178-31473-4-git-send-email-geert+renesas@glider.be>
- <20171013085851.ljvgmyd6ei2tv5fw@dell>
- <CAMuHMdVZiaq40r0Su01n9C7oXR7i_QWmNhZtY7Udhy9gdYHVRA@mail.gmail.com>
+ <1507649178-31473-2-git-send-email-geert+renesas@glider.be>
+ <20171013085504.i65ohil6dqdzrd2q@dell>
+ <CAMuHMdWOzgHeB9bSbaz69_xDCY7YbLRSct4gs6fCnYc_Q_eUyw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVZiaq40r0Su01n9C7oXR7i_QWmNhZtY7Udhy9gdYHVRA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWOzgHeB9bSbaz69_xDCY7YbLRSct4gs6fCnYc_Q_eUyw@mail.gmail.com>
 Sender: linux-pm-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -22,17 +22,59 @@ On Fri, 13 Oct 2017, Geert Uytterhoeven wrote:
 
 > Hi Lee,
 > 
-> On Fri, Oct 13, 2017 at 10:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Fri, Oct 13, 2017 at 10:55 AM, Lee Jones <lee.jones@linaro.org> wrote:
 > > On Tue, 10 Oct 2017, Geert Uytterhoeven wrote:
+> >> Document the new optional "rohm,ddr-backup-power" property.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> ---
+> >>  Documentation/devicetree/bindings/mfd/bd9571mwv.txt | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> >> index 9ab216a851d5619b..7ea3f2db41d4e501 100644
+> >> --- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> >> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+> >> @@ -25,6 +25,12 @@ Required properties:
+> >>                           Each child node is defined using the standard
+> >>                           binding for regulators.
+> >>
+> >> +Optional properties:
+> >> +  - rohm,ddr-backup-power : Value to use for DDR-Backup Power.  This controls
+> >> +                         which DDR rails need to be kept powered when backup
+> >> +                         mode is enabled, cfr. the KEEPON_DDR* bits in the
 > >
-> >> Enable read/write access to the BD9571MWV_BKUP_MODE_CNT register, which
-> >> is a.o. used to configure DDR Backup Power.
+> > Perhaps it's just me, but I'm confused by this line.
 > >
-> > a.o.?  That's a new one on me.
+> > Can you word it another way?
 > 
-> among(st) others
+> I'll ttry... Let me think a bit about it...
 
-Please just write that instead. :)
+I think it's just the "cfr" which is throwing me.
+
+> >> +                         documentation for the "BKUP Mode Cnt" register.
+> >> +
+> >>  Example:
+> >>
+> >>       pmic: pmic@30 {
+> >> @@ -36,6 +42,7 @@ Example:
+> >>               #interrupt-cells = <2>;
+> >>               gpio-controller;
+> >>               #gpio-cells = <2>;
+> >> +             rohm,ddr-backup-power = <15>;
+> >
+> > Can you explain what this means?  Is it a mask, or does line 15 need
+> > to be kept on?  What is the range?  Is 0 acceptable?  Clarification
+> > required please.
+> 
+> It's a mask (OR of (in this case all four) needed KEEPON_DDR* bits).
+> Unfortunately the datasheet is not publicly available.
+> 
+> 0 is acceptable, but as the property is optional, you better just leave it out.
+
+Would you mind reflecting that in the doc please?
+
+Maybe a few more examples will help?
 
 -- 
 Lee Jones
