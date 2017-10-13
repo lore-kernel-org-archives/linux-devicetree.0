@@ -1,55 +1,105 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of/resolver: Simplify to be32_add_cpu()
-Date: Fri, 13 Oct 2017 15:52:59 -0700
-Message-ID: <59E143CB.1010802@gmail.com>
-References: <20171013073558.11518-1-stephen.boyd@linaro.org>
- <20171013073558.11518-2-stephen.boyd@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
+Date: Fri, 13 Oct 2017 15:58:43 -0700
+Message-ID: <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
+References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
+ <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
+ <1507912842.5910.39.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013073558.11518-2-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507912842.5910.39.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>
+Cc: Antonio Ospite <ao2@ao2.it>, Marcin Niestroj <m.niestroj@grinn-global.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/17 00:35, Stephen Boyd wrote:
-> This is the same as be32_add_cpu(), so simplify the code and
-> remove the now unused local variable.
+On Fri, Oct 13, 2017 at 06:40:42PM +0200, Bastien Nocera wrote:
+> On Fri, 2017-10-13 at 18:02 +0200, Antonio Ospite wrote:
+> > On Thu, 12 Oct 2017 17:04:42 +0200
+> > Marcin Niestroj <m.niestroj@grinn-global.com> wrote:
+> > 
+> > > Support was added based on Goodix GitHub repo [1]. There are two
+> > > major
+> > > differences between gt1151 and currently supported devices (gt9x):
+> > >  * CONFIG_DATA register has 0x8050 address instead of 0x8047,
+> > >  * config data checksum has 16-bit width instead of 8-bit.
+> > > 
+> > > Also update goodix_i2c_test() function, so it reads ID register
+> > > (which
+> > > has the same address for all devices) instead of CONFIG_DATA
+> > > (because
+> > > its address is known only after reading ID of the device).
+> > > 
+> > > [1] https://github.com/goodix/gt1x_driver_generic
+> > > 
+> > > Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+> > > ---
+> > > Patch was developed and tested on top of 4.14-rc4 using custom
+> > > board.
+> > > 
+> > 
+> > Just a suggestion, you could use a function pointer for the
+> > device-specific checksum routines and have the check on the device id
+> > only once in goodix_ts_probe(), see below.
 > 
-> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/of/resolver.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> Function pointer is fine, but this is how I'd implement it:
 > 
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 99309cb7d372..2d58253bf2f7 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -165,7 +165,6 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
->  	struct property *prop_fix, *prop;
->  	int err, i, count;
->  	unsigned int off;
-> -	phandle phandle;
->  
->  	if (!local_fixups)
->  		return 0;
-> @@ -195,9 +194,7 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
->  			if ((off + 4) > prop->length)
->  				return -EINVAL;
->  
-> -			phandle = be32_to_cpu(*(__be32 *)(prop->value + off));
-> -			phandle += phandle_delta;
-> -			*(__be32 *)(prop->value + off) = cpu_to_be32(phandle);
-> +			be32_add_cpu(prop->value + off, phandle_delta);
->  		}
->  	}
->  
+> typedef enum {
+>   GOODIX_CONFIG_TYPE_GT911 = 0,
+>   GOODIX_CONFIG_TYPE_GT1151
+> } GoodixConfigType;
 > 
+> static func_pointer config_funcs[] = {
+>   goodix_gt911_get_config,
+>   goodix_gt1151_get_config
+> };
+> 
+> Store the GoodixConfigType in the device structure, and access the
+> function pointer as:
+> config_funcs[config_type] (...
+> 
+> That's what I'd prefer, but whatever Dmitry prefers style-wise. This
+> seems more extensible in case we have different functions needing
+> similar changes in the future, allowing us to either extend the
+> function pointer array, or use switch/case statements for smaller
+> functions.
 
-Reviewed-by: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My preference would be to assign constant chip data, such as register,
+to the relevant device ID structure (I2C or OF or ACPI) and reference it
+form where it is needed.
+
+struct goodix_chip_data {
+	u16	config_addr; 
+};
+
+...
+
+struct goodix_ts_data {
+	...
+	const struct goodix_chip_data *chip;
+	...
+};
+
+...
+
+static const goodix_chip_data gt1x_chip_data = {
+	.config_addr	= GOODIX_GT1X_REG_CONFIG_DATA,
+};
+
+static const goodix_chip_data gt9x_chip_data = {
+	.config_addr	= GOODIX_GT9X_REG_CONFIG_DATA,
+};
+
+static const struct of_device_id goodix_of_match[] = {
+	{ .compatible = "goodix,gt1151", .data = &gt1x_chip_data },
+	...
+};
+
+and so on...
+
+Thanks.
+
+-- 
+Dmitry
