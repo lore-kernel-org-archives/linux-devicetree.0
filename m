@@ -1,121 +1,38 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for
- Synquacer pre-ITS
-Date: Fri, 13 Oct 2017 13:50:06 -0500
-Message-ID: <CAL_Jsq+dsEW3M374e_ivwcBnk7s8rQToagWLx3EsBof8bK__JQ@mail.gmail.com>
-References: <20171012183247.23679-1-ard.biesheuvel@linaro.org>
- <20171012183247.23679-3-ard.biesheuvel@linaro.org> <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg@mail.gmail.com>
- <CAKv+Gu-rZNhMMU4PoD8V0nBtwEEu+HE71wvaAZk2PWshoeTi4g@mail.gmail.com> <c6c00e64-ecc8-0404-5ffc-602626e5cc6d@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Add I2C attached EETI EXC3000 bindings
+Date: Fri, 13 Oct 2017 13:58:22 -0500
+Message-ID: <20171013185822.ib4wegqdn5masfzi@rob-hp-laptop>
+References: <20171006073728.14724-1-inan@distec.de>
+ <20171006073728.14724-2-inan@distec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c6c00e64-ecc8-0404-5ffc-602626e5cc6d-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171006073728.14724-2-inan-T/gOFcTbiWqzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+To: Ahmet Inan <inan-T/gOFcTbiWqzQB+pC5nmwQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ahmet Inan <xdsopl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 4:47 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> [+Mark]
->
-> On 12/10/17 23:24, Ard Biesheuvel wrote:
->> On 12 October 2017 at 22:34, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Thu, Oct 12, 2017 at 1:32 PM, Ard Biesheuvel
->>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
->>>> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
->>>> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
->>>> ID taken from bits [device_id_bits + 1:2] of the window offset.
->>>> Writes that target GITS_TRANSLATER directly are reported as originating
->>>> from device ID #0.
->>>>
->>>> So add a workaround for this. Given that this breaks isolation, clear
->>>> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
->>>>
->>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
->>>>  arch/arm64/Kconfig                                                    |  8 +++
->>>>  drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
->>>>  3 files changed, 72 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->>>> index 4c29cdab0ea5..0798a61bbf99 100644
->>>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->>>> @@ -75,6 +75,10 @@ These nodes must have the following properties:
->>>>  - reg: Specifies the base physical address and size of the ITS
->>>>    registers.
->>>>
->>>> +Optional:
->>>> +- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
->>>> +  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
->>>
->>> Sounds like a separate h/w block to me and addresses should be in
->>> "reg". I would suggest you define a separate node for the pre-its
->>> block and then use of_find_compatible_node() from the GIC driver to
->>> retrieve the node and whatever you need from it. Or do an SoC specific
->>> compatible string for the GIC and let that imply whatever information
->>> you need. Then the next quirk doesn't need a DT update.
->>>
->>
->> For my understanding, you mean either
->>
->>     gic: interrupt-controller@30000000 {
->>         compatible = "arm,gic-v3";
->>         ...
->>
->>         its: gic-its@30020000 {
->>             compatible = "arm,gic-v3-its";
->>             reg = <0x0 0x30020000 0x0 0x20000>;
->>             #msi-cells = <1>;
->>             msi-controller;
->>         };
->>     };
->>
->>     preits@58000000 {
->>         compatible = "socionext,synquacer-pre-its";
->>         reg = <0x0 0x58000000 0x0 0x200000>;
->>         msi-slave = <&its>;
->>     };
->>
->> or
->>
->>     gic: interrupt-controller@30000000 {
->>         compatible = "arm,gic-v3";
->>         ...
->>
->>         its: gic-its@30020000 {
->>             compatible = "socionext,synquacer-pre-its", "arm,gic-v3-its";
->>             reg = <0x0 0x30020000 0x0 0x20000>,
->>                   <0x0 0x58000000 0x0 0x200000>;
->>             #msi-cells = <1>;
->>             msi-controller;
->>         };
->>     };
->>
->> right?
->>
->> Marc, what do you think? IIRC we did discuss option #2 at some point,
->> but I don't remember if/why we rejected it.
->
-> I dislike #2 because these registers are not part of the regular ITS,
-> and would get in the way of potential extensions of the ITS (I don't
-> know of any, but just in case...).
->
-> I also dislike #1 as the "msi-slave" part is both ugly and confusing
-> (are we writing to the ITS? to the pre-ITS?).
+On Fri, Oct 06, 2017 at 09:37:28AM +0200, Ahmet Inan wrote:
+> This documents the use of the dt-bindings for the EETI EXC3000 driver
+> with the following example configuration:
+> 
+> Using the I2C address 0x2a of the touch controller in the driver.
+> 
+> Using pin 9 as low level-sensitive interrupt to signal the driver.
+> 
+> Using a 4096x4096 touch screen resolution.
+> 
+> Inverting the x-axis and swapping the result with the y-axis.
+> 
+> Signed-off-by: Ahmet Inan <inan-T/gOFcTbiWqzQB+pC5nmwQ@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/exc3000.txt         | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
 
-Why do you need this? Are you ever going to have multiple pre-its's?
-That's why I suggested just using of_find_compatible_node().
-
-> How about putting the pre-its node *inside* the its node itself? It
-> makes it obvious which pre-ITS corresponds to which ITS, and it leaves
-> the ITS regs untouched.
-
-Not wild about this, but it's fine if you do need to handle multiple instances.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
