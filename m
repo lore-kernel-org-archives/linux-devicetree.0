@@ -1,116 +1,93 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
- timeout
-Date: Fri, 13 Oct 2017 16:26:57 +0200
-Message-ID: <2d1bf447-489f-9e15-3b1e-d2f4a2c1dcfe@axentia.se>
-References: <20171013092705.7038-1-peda@axentia.se>
- <20171013092705.7038-2-peda@axentia.se>
- <554a4494-14c9-7743-898c-5f83e3de227d@roeck-us.net>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox
+ interface
+Date: Fri, 13 Oct 2017 15:47:22 +0100
+Message-ID: <94004135-8ce2-8006-21f6-f8d219c0430d@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
+ <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
+ <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com>
+ <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
+ <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com>
+ <CAOCOHw54mQUVxVyLRWbV5Ty7trK99MM6zgXsuuxQEHnD3qvKVA@mail.gmail.com>
+ <0b65a3fd-32ff-f708-7dce-8e3a5cabf908@arm.com>
+ <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <554a4494-14c9-7743-898c-5f83e3de227d@roeck-us.net>
+In-Reply-To: <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-10-13 15:50, Guenter Roeck wrote:
-> On 10/13/2017 02:27 AM, Peter Rosin wrote:
->> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
->> is not always capable of avoiding the 25-35 ms timeout as specified by
->> the SMBUS protocol. This may cause silent corruption of the last bit of
->> any transfer, e.g. a one is read instead of a zero if the sensor chip
->> times out. This also affects the eeprom half of the nxp-se97 chip, where
->> this silent corruption was originally noticed. Other I2C adapters probably
->> suffer similar issues, e.g. bit-banging comes to mind as risky...
+
+
+On 13/10/17 15:12, Jassi Brar wrote:
+> On Fri, Oct 13, 2017 at 7:12 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
 >>
->> The SMBUS register in the nxp chip is not a standard Jedec register, but
->> it is not special to the nxp chips either, at least the atmel chips
->> have the same mechanism. Therefore, do not special case this on the
->> manufacturer, it is opt-in via the device property anyway.
+>> Hi Bjorn,
 >>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
->>   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
->>   2 files changed, 24 insertions(+)
+>> Thanks for taking a look at this. Much appreciated.
 >>
->> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
->> index 07a250498fbb..f569db58f64a 100644
->> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
->> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
->> @@ -34,6 +34,10 @@ Required properties:
->>   
->>   - reg: I2C address
->>   
->> +Optional properties:
->> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
->> +			 This is not supported on all chips.
->> +
->>   Example:
->>   
->>   temp-sensor@1a {
->> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
->> index 1bf22eff0b08..fd816902fa30 100644
->> --- a/drivers/hwmon/jc42.c
->> +++ b/drivers/hwmon/jc42.c
->> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
->>   #define JC42_REG_TEMP		0x05
->>   #define JC42_REG_MANID		0x06
->>   #define JC42_REG_DEVICEID	0x07
->> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
->>   
->>   /* Status bits in temperature register */
->>   #define JC42_ALARM_CRIT_BIT	15
->> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
->>   #define ONS_MANID		0x1b09  /* ON Semiconductor */
->>   #define STM_MANID		0x104a  /* ST Microelectronics */
->>   
->> +/* SMBUS register */
->> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
->> +
->>   /* Supported chips */
->>   
->>   /* Analog Devices */
->> @@ -476,6 +480,22 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>   
->>   	data->extended = !!(cap & JC42_CAP_RANGE);
->>   
->> +	if (device_property_read_bool(dev, "smbus-timeout-disable")) {
->> +		int smbus;
->> +
->> +		/*
->> +		 * Not all chips support this register, but from a
->> +		 * quick read of various datasheets no chip appears
->> +		 * incompatible with the below attempt to disable
->> +		 * the timeout. And the whole thing is opt-in...
->> +		 */
->> +		smbus = i2c_smbus_read_word_swapped(client, JC42_REG_SMBUS);
->> +		if (smbus < 0)
->> +			return smbus;
->> +		i2c_smbus_write_word_swapped(client, JC42_REG_SMBUS,
->> +					     smbus | SMBUS_STMOUT);
+>> On 12/10/17 22:03, Bjorn Andersson wrote:
+>>> On Fri, Oct 6, 2017 at 6:51 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>>>
+>>>>
+>>>> On 06/10/17 14:47, Jassi Brar wrote:
+>>>>> On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>> [..]
+>>>>>> Again that's not the point, doorbell is more common feature and that can
+>>>>>> be supported. As SCMI expects doorbell feature in the specification, it
+>>>>>> just need to support that class of controllers.
+>>>>>>
+>>>>> NO.  All SCMI expects is SHMEM and a signal reaching the other end.
+>>>>> The signal mechanism need not necessarily be "doorbell".
+>>>>>
+>>>>
+>>>> Agreed, but creating an abstraction ro do something as generic as
+>>>> doorbell and writing shim layer for each controller to use SCMI also
+>>>> sounds bad.
+>>>>
+>>>
+>>> In the Qualcomm platform we have a single register that exposes 32
+>>> doorbells, wired to interrupts on the various processors/co-processors
+>>> in the SoC.
+>>>
+>>
+>> It's exactly same even on ARM MHU controller.
+>>
+> This has been a big problem in our communication. You start with
+> "exactly same..." and go on telling the difference.
+> And that difference is important.
 > 
-> Looking into the SE97 datasheet, the bit is only writable if the alarm bits
-> are not locked. Should we take this into account and unlock the alarm bits
-> if necessary ?
 
-Right. And I thought about the case when the timeout was disabled before
-probing but with the property not present (perhaps by someone trying things
-out, like I have). Should the timeout be re-enabled in that case?
-But, someone might have disabled the timeout by some previous arrangement
-(e.g. in a boot-loader) but without having this newfangled property in the
-device tree. Re-enabling the timeout in that case would break things. Slim
-chance for that to be an issue, but perhaps not?
+Sure and sorry for that.
 
-Unlocking the alarm bits is somewhat similar, since it should only be an
-issue for warm starts. But the risk of breakage is perhaps not there at
-all?
+> In MHU the 32bits are tied together and all go to one target
+> processor. Whereas on QCom, each bit corresponds to independent signal
+> going to a different target processor.
+> 
 
-Your call, I can fix thing however you like...
+I was not aware of that. Thanks for clarifying the differences.
 
-Cheers,
-Peter
+> IOW, QCom has 32 channels per register whereas MHU has one. The
+
+OK, that depends on how we consider it. As you said yes it just goes to
+single target processor, but hardware designers consider it still 32
+channels are they can be controller independently without any locking.
+
+> current drivers reflect that reality and hence I am against any change
+> in MHU driver.  Not to mean even changing the MHU driver will fix the
+> core issue - which is https://lkml.org/lkml/2017/7/7/465 and this
+> patchset tries to address that.
+> 
+
+Sure, that's the reason I have this abstraction now.
+
+-- 
+Regards,
+Sudeep
