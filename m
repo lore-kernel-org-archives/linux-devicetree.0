@@ -1,44 +1,78 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/5] GPIO driver for Maxim MAX3191x
-Date: Fri, 13 Oct 2017 14:48:43 +0200
-Message-ID: <CACRpkdbEeq3qeF41Mn1vE=DgdkrGJ1P91Yff4cAW98FhBJO-nw@mail.gmail.com>
-References: <cover.1507797496.git.lukas@wunner.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] hwmon: (jc42) optionally try to disable the SMBUS
+ timeout
+Date: Fri, 13 Oct 2017 05:51:27 -0700
+Message-ID: <3aae0c68-f001-50fa-8db7-3090978cf16d@roeck-us.net>
+References: <20171013092705.7038-1-peda@axentia.se>
+ <20171013092705.7038-2-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <cover.1507797496.git.lukas@wunner.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Bart Van Assche <bart.vanassche@wdc.com>, Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Neil Brown <neilb@suse.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Theodore Ts'o <tytso@mit.edu>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Denys Vlasenko <dvlasenk@redhat.com>, linux-kernel@vger.kerne
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171013092705.7038-2-peda@axentia.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 12:40 PM, Lukas Wunner <lukas@wunner.de> wrote:
+On 10/13/2017 02:27 AM, Peter Rosin wrote:
+> With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
+> is not always capable of avoiding the 25-35 ms timeout as specified by
+> the SMBUS protocol. This may cause silent corruption of the last bit of
+> any transfer, e.g. a one is read instead of a zero if the sensor chip
+> times out. This also affects the eeprom half of the nxp-se97 chip, where
+> this silent corruption was originally noticed. Other I2C adapters probably
+> suffer similar issues, e.g. bit-banging comes to mind as risky...
+> 
+> The SMBUS register in the nxp chip is not a standard Jedec register, but
+> it is not special to the nxp chips either, at least the atmel chips
+> have the same mechanism. Therefore, do not special case this on the
+> manufacturer, it is opt-in via the device property anyway.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>   Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
+>   drivers/hwmon/jc42.c                             | 20 ++++++++++++++++++++
+>   2 files changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> index 07a250498fbb..f569db58f64a 100644
+> --- a/Documentation/devicetree/bindings/hwmon/jc42.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
+> @@ -34,6 +34,10 @@ Required properties:
+>   
+>   - reg: I2C address
+>   
+> +Optional properties:
+> +- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
+> +			 This is not supported on all chips.
+> +
+>   Example:
+>   
+>   temp-sensor@1a {
+> diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+> index 1bf22eff0b08..fd816902fa30 100644
+> --- a/drivers/hwmon/jc42.c
+> +++ b/drivers/hwmon/jc42.c
+> @@ -45,6 +45,7 @@ static const unsigned short normal_i2c[] = {
+>   #define JC42_REG_TEMP		0x05
+>   #define JC42_REG_MANID		0x06
+>   #define JC42_REG_DEVICEID	0x07
+> +#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
+>   
+>   /* Status bits in temperature register */
+>   #define JC42_ALARM_CRIT_BIT	15
+> @@ -73,6 +74,9 @@ static const unsigned short normal_i2c[] = {
+>   #define ONS_MANID		0x1b09  /* ON Semiconductor */
+>   #define STM_MANID		0x104a  /* ST Microelectronics */
+>   
+> +/* SMBUS register */
+> +#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
 
-> - Patch [1/5]: Change the argument order of assign_bit() to reflect
->   traditional "dst = src" in C. (Peter Zijlstra)
->
-> - Patch [2/5]: Update documentation. (Linus Walleij)
->   Drop const qualifier from struct gpio_desc ** in all function
->   signatures to avoid a cast when passing a non-const array created
->   with gpiod_get_array(), which is likely the most common use case.
+Requires bitops.h.
 
-Applied these two so we get the infrastructure in place so others
-can use it too.
+Otherwise looks good, though we'll have to wait for Rob's ack.
 
-> - Patch [3/5]: Newly inserted patch to introduce common property for
->   number of daisy-chained devices.
->
-> - Patch [4/5]: Add vendor prefix to GPIO identifiers, use boolean
->   instead of integer to select mode, rename boolean to ignore
->   undervoltage alarms, separate compatible strings with newlines.
->   (Rob Herring)
->
-> - Patch [5/5]: Optimize algorithm in max3191x_get_multiple() to
->   iterate over the bits in the mask, instead of iterating over every
->   chip, thus implicitly skipping chips which are not selected at all
->   by the mask.
-
-These are pending device tree maintainer review.
-
-Yours,
-Linus Walleij
+Thanks,
+Guenter
