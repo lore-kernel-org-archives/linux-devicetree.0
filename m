@@ -1,377 +1,69 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] mfd: Add Spreadtrum SC27xx series PMICs driver
-Date: Fri, 13 Oct 2017 17:37:13 +0800
-Message-ID: <CAMz4ku+EMtH8MU4-7Pm3gFDyn_0nXW_-LTRbh2n=NcrhRYikbg@mail.gmail.com>
-References: <73965e7fb34d6a96529589cdf48e54e95ed666b8.1507723345.git.baolin.wang@spreadtrum.com>
- <9c80fb5606b7d9dbaf4873aed8a72c6bea0b9910.1507723345.git.baolin.wang@spreadtrum.com>
- <20171013092657.7zeddqbkpoh73ou4@dell>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 04/16] serial: mvebu-uart: support probe of multiple ports
+Date: Fri, 13 Oct 2017 11:40:32 +0200
+Message-ID: <877evz9yi7.fsf@free-electrons.com>
+References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
+        <20171013090200.31034-5-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013092657.7zeddqbkpoh73ou4@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20171013090200.31034-5-miquel.raynal@free-electrons.com> (Miquel
+        Raynal's message of "Fri, 13 Oct 2017 11:01:48 +0200")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@free-electrons.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jiri Slaby <jslaby@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Wilson Ding <dingwei@marvell.com>, Allen Yan <yanwei@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Miquel,
+ 
+ On ven., oct. 13 2017, Miquel Raynal <miquel.raynal@free-electrons.com> wrote:
 
-On 13 October 2017 at 17:26, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 11 Oct 2017, Baolin Wang wrote:
->
->> This patch adds support for Spreadtrum SC27xx series PMIC MFD core, and It
->> provides communication through the SPI interfaces. The SC27xx series PMICs
->> contains the following 6 major components:
->> - DCDCs
->> - LDOs
->> - Battery management system
->> - Audio codec
->> - User interface function, such as indicator, flash LED
->> - IC level function, such as power on/off, type-c
->>
->> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->>  drivers/mfd/Kconfig           |   10 ++
->>  drivers/mfd/Makefile          |    1 +
->>  drivers/mfd/sprd-sc27xx-spi.c |  273 +++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 284 insertions(+)
->>  create mode 100644 drivers/mfd/sprd-sc27xx-spi.c
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index fc5e4fe..4753cd5 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -1057,6 +1057,16 @@ config MFD_SMSC
->>          To compile this driver as a module, choose M here: the
->>          module will be called smsc.
->>
->> +config MFD_SC27XX_PMIC
->> +     tristate "Spreadtrum SC27xx PMICs"
->> +     depends on ARCH_SPRD || COMPILE_TEST
->> +     depends on SPI_MASTER
->> +     select MFD_CORE
->> +     select REGMAP_SPI
->> +     select REGMAP_IRQ
->> +     help
->> +       This enables support for the Spreadtrum SC27xx PMICs.
->> +
->>  config ABX500_CORE
->>       bool "ST-Ericsson ABX500 Mixed Signal Circuit register functions"
->>       default y if ARCH_U300 || ARCH_U8500 || COMPILE_TEST
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index c3d0a1b..a377e0f 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -226,3 +226,4 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)     += sun4i-gpadc.o
->>  obj-$(CONFIG_MFD_STM32_LPTIMER)      += stm32-lptimer.o
->>  obj-$(CONFIG_MFD_STM32_TIMERS)       += stm32-timers.o
->>  obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
->> +obj-$(CONFIG_MFD_SC27XX_PMIC)        += sprd-sc27xx-spi.o
->> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
->> new file mode 100644
->> index 0000000..2b3f2bc
->> --- /dev/null
->> +++ b/drivers/mfd/sprd-sc27xx-spi.c
->> @@ -0,0 +1,273 @@
->> +/*
->> + * Copyright (C) 2017 Spreadtrum Communications Inc.
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/of_device.h>
->> +#include <linux/spi/spi.h>
->> +#include <linux/regmap.h>
->
-> Alphabetical.
+> -	port = &mvebu_uart_ports[0];
+> +	/* Assume that all UART ports have a DT alias or none has */
+> +	id = of_alias_get_id(pdev->dev.of_node, "serial");
 
-Ah, sorry. Will fix in next version.
+You stil need to check the pdev->dev.of_node before calling
+of_alias_get_id.
 
->
->> +#define SPRD_PMIC_INT_MASK_STATUS    0x0
->> +#define SPRD_PMIC_INT_RAW_STATU              0x4
->> +#define SPRD_PMIC_INT_EN             0x8
->> +
->> +struct sprd_pmic {
->> +     struct regmap *regmap;
->> +     struct device *dev;
->> +     struct regmap_irq *irqs;
->> +     struct regmap_irq_chip irq_chip;
->> +     struct regmap_irq_chip_data *irq_data;
->> +     int irq;
->> +};
->> +
->> +struct sprd_pmic_data {
->> +     u32 irq_base;
->> +     u32 num_irqs;
->> +};
->> +
->> +static const struct sprd_pmic_data sc2731_data = {
->> +     .irq_base = 0x140,
->> +     .num_irqs = 16,
->> +};
->> +
->> +static const struct mfd_cell sprd_pmic_devs[] = {
->> +     {
->> +             .name = "sc27xx-wdt",
->> +             .of_compatible = "sprd,sc27xx-wdt",
->> +     },
->> +     {
->
-> Nit: You can save a few lines here by using the format:
+Once it will be fixed, you can add:
 
-OK.
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
->
->> +     }, {
->
->> +             .name = "sc27xx-rtc",
->> +             .of_compatible = "sprd,sc27xx-rtc",
->> +     },
->> +     {
->> +             .name = "sc27xx-charger",
->> +             .of_compatible = "sprd,sc27xx-charger",
->> +     },
->> +     {
->> +             .name = "sc27xx-chg-timer",
->> +             .of_compatible = "sprd,sc27xx-chg-timer",
->> +     },
->> +     {
->> +             .name = "sc27xx-fast-chg",
->> +             .of_compatible = "sprd,sc27xx-fast-chg",
->> +     },
->> +     {
->> +             .name = "sc27xx-chg-wdt",
->> +             .of_compatible = "sprd,sc27xx-chg-wdt",
->> +     },
->> +     {
->> +             .name = "sc27xx-typec",
->> +             .of_compatible = "sprd,sc27xx-typec",
->> +     },
->> +     {
->> +             .name = "sc27xx-flash",
->> +             .of_compatible = "sprd,sc27xx-flash",
->> +     },
->> +     {
->> +             .name = "sc27xx-eic",
->> +             .of_compatible = "sprd,sc27xx-eic",
->> +     },
->> +     {
->> +             .name = "sc27xx-efuse",
->> +             .of_compatible = "sprd,sc27xx-efuse",
->> +     },
->> +     {
->> +             .name = "sc27xx-thermal",
->> +             .of_compatible = "sprd,sc27xx-thermal",
->> +     },
->> +     {
->> +             .name = "sc27xx-adc",
->> +             .of_compatible = "sprd,sc27xx-adc",
->> +     },
->> +     {
->> +             .name = "sc27xx-audio-codec",
->> +             .of_compatible = "sprd,sc27xx-audio-codec",
->> +     },
->> +     {
->> +             .name = "sc27xx-regulator",
->> +             .of_compatible = "sprd,sc27xx-regulator",
->> +     },
->> +     {
->> +             .name = "sc27xx-vibrator",
->> +             .of_compatible = "sprd,sc27xx-vibrator",
->> +     },
->> +     {
->> +             .name = "sc27xx-keypad-led",
->> +             .of_compatible = "sprd,sc27xx-keypad-led",
->> +     },
->> +     {
->> +             .name = "sc27xx-bltc",
->> +             .of_compatible = "sprd,sc27xx-bltc",
->> +     },
->> +     {
->> +             .name = "sc27xx-fgu",
->> +             .of_compatible = "sprd,sc27xx-fgu",
->> +     },
->> +     {
->> +             .name = "sc27xx-7sreset",
->> +             .of_compatible = "sprd,sc27xx-7sreset",
->> +     },
->> +     {
->> +             .name = "sc27xx-poweroff",
->> +             .of_compatible = "sprd,sc27xx-poweroff",
->> +     },
->> +};
->> +
->> +static int sprd_pmic_spi_write(void *context, const void *data, size_t count)
->> +{
->> +     struct device *dev = context;
->> +     struct spi_device *spi = to_spi_device(dev);
->> +
->> +     return spi_write(spi, data, count);
->> +}
->> +
->> +static int sprd_pmic_spi_read(void *context,
->> +                           const void *reg, size_t reg_size,
->> +                           void *val, size_t val_size)
->> +{
->> +     struct device *dev = context;
->> +     struct spi_device *spi = to_spi_device(dev);
->> +     u32 rx_buf[2] = { 0 };
->> +     int ret;
->> +
->> +     rx_buf[0] = *(u32 *)reg;
->> +     ret = spi_read(spi, rx_buf, 1);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     memcpy(val, rx_buf, val_size);
->
-> This looks like you're asking for trouble.
->
-> What if val_size > sizeof(rx_buf)?
->
-> You should probably check for that.
+Thanks,
 
-Since we always read one register every time, which means the reg_size
-and val_size are always 4. But it will be more helpful to check
-incorrect parameters by adding one check here.
+Gregory
 
->
->> +     return 0;
->> +}
->> +
->> +static struct regmap_bus sprd_pmic_regmap = {
->> +     .write = sprd_pmic_spi_write,
->> +     .read = sprd_pmic_spi_read,
->> +     .reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
->> +     .val_format_endian_default = REGMAP_ENDIAN_NATIVE,
->> +};
->> +
->> +static const struct regmap_config sprd_pmic_config = {
->> +     .reg_bits = 32,
->> +     .val_bits = 32,
->> +     .reg_stride = 4,
->> +     .max_register = 0xffff,
->> +};
->> +
->> +static int sprd_pmic_probe(struct spi_device *spi)
->> +{
->> +     struct sprd_pmic *sprd_pmic;
->> +     const struct sprd_pmic_data *data;
->> +     int ret, i;
->> +
->> +     data = of_device_get_match_data(&spi->dev);
->> +     if (!data) {
->> +             dev_err(&spi->dev, "No matching driver data found\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     sprd_pmic = devm_kzalloc(&spi->dev, sizeof(*sprd_pmic), GFP_KERNEL);
->> +     if (!sprd_pmic)
->> +             return -ENOMEM;
->> +
->> +     sprd_pmic->regmap = devm_regmap_init(&spi->dev, &sprd_pmic_regmap,
->> +                                          &spi->dev, &sprd_pmic_config);
->> +     if (IS_ERR(sprd_pmic->regmap)) {
->> +             ret = PTR_ERR(sprd_pmic->regmap);
->> +             dev_err(&spi->dev, "Failed to allocate register map %d\n", ret);
->> +             return ret;
->> +     }
->> +
->> +     spi_set_drvdata(spi, sprd_pmic);
->> +     sprd_pmic->dev = &spi->dev;
->> +     sprd_pmic->irq = spi->irq;
->> +
->> +     sprd_pmic->irq_chip.name = dev_name(&spi->dev);
->> +     sprd_pmic->irq_chip.status_base =
->> +             data->irq_base + SPRD_PMIC_INT_MASK_STATUS;
->> +     sprd_pmic->irq_chip.mask_base = data->irq_base + SPRD_PMIC_INT_EN;
->> +     sprd_pmic->irq_chip.ack_base = 0;
->> +     sprd_pmic->irq_chip.num_regs = 1;
->> +     sprd_pmic->irq_chip.num_irqs = data->num_irqs;
->> +     sprd_pmic->irq_chip.mask_invert = true;
->> +
->> +     sprd_pmic->irqs = devm_kzalloc(&spi->dev, sizeof(struct regmap_irq) *
->> +                                    data->num_irqs, GFP_KERNEL);
->> +     if (!sprd_pmic->irqs)
->> +             return -ENOMEM;
->> +
->> +     sprd_pmic->irq_chip.irqs = sprd_pmic->irqs;
->> +     for (i = 0; i < data->num_irqs; i++) {
->> +             sprd_pmic->irqs[i].reg_offset = i / data->num_irqs;
->> +             sprd_pmic->irqs[i].mask = BIT(i % data->num_irqs);
->> +     }
->
-> Why don't you do this live, instead of pre-calculating?
 
-Since the SC27xx series PMICs have different interrupts number (such
-as SC2731 has 16 interrupts and SC2720 has 6 interrupts).
-
+> +	if (!pdev->dev.of_node || id < 0)
+> +		pdev->id = uart_num_counter++;
+> +	else
+> +		pdev->id = id;
+> +
+> +	if (pdev->id >= MVEBU_NR_UARTS) {
+> +		dev_err(&pdev->dev, "cannot have more than %d UART ports\n",
+> +			MVEBU_NR_UARTS);
+> +		return -EINVAL;
+> +	}
+> +
+> +	port = &mvebu_uart_ports[pdev->id];
+>  
+>  	spin_lock_init(&port->lock);
+>  
+> @@ -572,7 +588,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
+>  	port->fifosize   = 32;
+>  	port->iotype     = UPIO_MEM32;
+>  	port->flags      = UPF_FIXED_PORT;
+> -	port->line       = 0; /* single port: force line number to  0 */
+> +	port->line       = pdev->id;
+>  
+>  	port->irq        = irq->start;
+>  	port->irqflags   = 0;
+> -- 
+> 2.11.0
 >
->> +     ret = devm_regmap_add_irq_chip(&spi->dev, sprd_pmic->regmap,
->> +                                    sprd_pmic->irq,
->> +                                    IRQF_ONESHOT | IRQF_NO_SUSPEND, 0,
->> +                                    &sprd_pmic->irq_chip,
->> +                                    &sprd_pmic->irq_data);
->> +     if (ret) {
->> +             dev_err(&spi->dev, "Failed to add PMIC irq chip %d\n", ret);
->> +             return ret;
->> +     }
->> +
->> +     ret = mfd_add_devices(&spi->dev, PLATFORM_DEVID_AUTO, sprd_pmic_devs,
->> +                           ARRAY_SIZE(sprd_pmic_devs), NULL, 0,
->> +                           regmap_irq_get_domain(sprd_pmic->irq_data));
->> +     if (ret) {
->> +             dev_err(&spi->dev, "Failed to register device %d\n", ret);
->> +             return ret;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int sprd_pmic_remove(struct spi_device *spi)
->> +{
->> +     mfd_remove_devices(&spi->dev);
->
-> '\n' here please.
-
-OK.
-
->
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id sprd_pmic_match[] = {
->> +     { .compatible = "sprd,sc2731", .data = &sc2731_data },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(of, sprd_pmic_match);
->> +
->> +static struct spi_driver sprd_pmic_driver = {
->> +     .driver = {
->> +                .name = "sc27xx-pmic",
->> +                .bus = &spi_bus_type,
->> +                .of_match_table = sprd_pmic_match,
->
-> Odd tabbing here.  Should be 8 chars.
-
-I will fix this mistake in next version. Thanks for your comments.
 
 -- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
