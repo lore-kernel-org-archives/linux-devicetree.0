@@ -1,129 +1,119 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: nvmem: add description for UniPhier eFuse
-Date: Fri, 13 Oct 2017 13:42:18 -0500
-Message-ID: <CAL_JsqJdbLFHqEU8+1e_hvA3Hd1MLJHETWAkd2pcsXpDKwONog@mail.gmail.com>
-References: <1507266180-11840-1-git-send-email-hayashibara.keiji@socionext.com>
- <1507266180-11840-2-git-send-email-hayashibara.keiji@socionext.com>
- <20171013134902.7gvmkvxvwnjlmstp@rob-hp-laptop> <CAK7LNARg6G152joHq06RkPab=NoWEkFArvF+Ccc1behdXFokmg@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for
+ Synquacer pre-ITS
+Date: Fri, 13 Oct 2017 13:50:06 -0500
+Message-ID: <CAL_Jsq+dsEW3M374e_ivwcBnk7s8rQToagWLx3EsBof8bK__JQ@mail.gmail.com>
+References: <20171012183247.23679-1-ard.biesheuvel@linaro.org>
+ <20171012183247.23679-3-ard.biesheuvel@linaro.org> <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg@mail.gmail.com>
+ <CAKv+Gu-rZNhMMU4PoD8V0nBtwEEu+HE71wvaAZk2PWshoeTi4g@mail.gmail.com> <c6c00e64-ecc8-0404-5ffc-602626e5cc6d@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARg6G152joHq06RkPab=NoWEkFArvF+Ccc1behdXFokmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <c6c00e64-ecc8-0404-5ffc-602626e5cc6d-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Kiyoshi Owada <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 11:04 AM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> Hi Rob,
+On Fri, Oct 13, 2017 at 4:47 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+> [+Mark]
 >
->
-> 2017-10-13 22:49 GMT+09:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> On Fri, Oct 06, 2017 at 02:02:58PM +0900, Keiji Hayashibara wrote:
->>> Add uniphier-efuse dt-bindings documentation.
+> On 12/10/17 23:24, Ard Biesheuvel wrote:
+>> On 12 October 2017 at 22:34, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Thu, Oct 12, 2017 at 1:32 PM, Ard Biesheuvel
+>>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
+>>>> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
+>>>> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
+>>>> ID taken from bits [device_id_bits + 1:2] of the window offset.
+>>>> Writes that target GITS_TRANSLATER directly are reported as originating
+>>>> from device ID #0.
+>>>>
+>>>> So add a workaround for this. Given that this breaks isolation, clear
+>>>> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+>>>>
+>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
+>>>>  arch/arm64/Kconfig                                                    |  8 +++
+>>>>  drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
+>>>>  3 files changed, 72 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>>> index 4c29cdab0ea5..0798a61bbf99 100644
+>>>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+>>>> @@ -75,6 +75,10 @@ These nodes must have the following properties:
+>>>>  - reg: Specifies the base physical address and size of the ITS
+>>>>    registers.
+>>>>
+>>>> +Optional:
+>>>> +- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
+>>>> +  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
 >>>
->>> Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/nvmem/uniphier-efuse.txt   | 49 ++++++++++++++++++++++
->>>  1 file changed, 49 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
+>>> Sounds like a separate h/w block to me and addresses should be in
+>>> "reg". I would suggest you define a separate node for the pre-its
+>>> block and then use of_find_compatible_node() from the GIC driver to
+>>> retrieve the node and whatever you need from it. Or do an SoC specific
+>>> compatible string for the GIC and let that imply whatever information
+>>> you need. Then the next quirk doesn't need a DT update.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
->>> new file mode 100644
->>> index 0000000..1a394e5
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt
->>> @@ -0,0 +1,49 @@
->>> += UniPhier eFuse device tree bindings =
->>> +
->>> +This UniPhier eFuse must be under soc-glue.
->>> +
->>> +Required properties:
->>> +- compatible: should be "socionext,uniphier-efuse"
->>> +- reg: should contain the register location and length
->>> +
->>> += Data cells =
->>> +Are child nodes of efuse, bindings of which as described in
->>> +bindings/nvmem/nvmem.txt
->>> +
->>> +Example:
->>> +
->>> +     soc-glue@5f900000 {
->>> +             compatible = "socionext,uniphier-ld20-soc-glue-debug",
->>> +                          "simple-mfd";
->>> +             #address-cells = <1>;
->>> +             #size-cells = <1>;
->>> +             ranges = <0x0 0x5f900000 0x2000>;
->>> +
->>> +             efuse@100 {
->>> +                     compatible = "socionext,uniphier-efuse";
->>> +                     reg = <0x100 0x28>;
->>> +             };
->>> +
->>> +             efuse@200 {
->>> +                     compatible = "socionext,uniphier-efuse";
->>> +                     reg = <0x200 0x68>;
->>> +                     #address-cells = <1>;
->>> +                     #size-cells = <1>;
->>> +
->>> +                     /* Data cells */
->>> +                     usb_mon: usb_mon {
 >>
->> Don't use '_' and needs a unit-address. Build your dtb with W=2 option
->> and you'll get these warnings.
->
->
-> Do you mean "usb_mon: usb-mon@54" ?
-
-Yes.
-
-> DT files in kernel sprinkle tons of warnings even with W=1.
->
-> I always eliminate W=1, so I agree with "@54".
->
-> I do not care W=2 much.
-> If you see arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi,
-> yeah, I generally use '-' for node names, but I see some exceptions.
->
-> You admitted -Wnode_name_chars_strict is "subjective"
-> in commit 8654cb8d0371.
-
-Yes, meaning fixing existing cases is questionable and I'd put doing
-so at a lower priority. I didn't mean it is up to each person to
-decide whether they like to use '_' or not.
-
-> If you are unhappy about it, we can fix,
-> but I am not sure how picky we should be.
-
-Let me put it clearly: Don't add new warnings with W=2.
-
-
->
->
->>> +                             reg = <0x54 0xc>;
+>> For my understanding, you mean either
 >>
->> Without ranges above, this is address 5f900054. I think you want
->> 5f900254. You need:
+>>     gic: interrupt-controller@30000000 {
+>>         compatible = "arm,gic-v3";
+>>         ...
 >>
->> ranges = <0x0 0x200 0x68>;
+>>         its: gic-its@30020000 {
+>>             compatible = "arm,gic-v3-its";
+>>             reg = <0x0 0x30020000 0x0 0x20000>;
+>>             #msi-cells = <1>;
+>>             msi-controller;
+>>         };
+>>     };
+>>
+>>     preits@58000000 {
+>>         compatible = "socionext,synquacer-pre-its";
+>>         reg = <0x0 0x58000000 0x0 0x200000>;
+>>         msi-slave = <&its>;
+>>     };
+>>
+>> or
+>>
+>>     gic: interrupt-controller@30000000 {
+>>         compatible = "arm,gic-v3";
+>>         ...
+>>
+>>         its: gic-its@30020000 {
+>>             compatible = "socionext,synquacer-pre-its", "arm,gic-v3-its";
+>>             reg = <0x0 0x30020000 0x0 0x20000>,
+>>                   <0x0 0x58000000 0x0 0x200000>;
+>>             #msi-cells = <1>;
+>>             msi-controller;
+>>         };
+>>     };
+>>
+>> right?
+>>
+>> Marc, what do you think? IIRC we did discuss option #2 at some point,
+>> but I don't remember if/why we rejected it.
 >
+> I dislike #2 because these registers are not part of the regular ITS,
+> and would get in the way of potential extensions of the ITS (I don't
+> know of any, but just in case...).
 >
-> I do not get it.
->
-> The parent is an efuse, not any kind of bus.
->
-> <0x54, 0c> just represents the offset and size
-> within the efuse device, so this is not mapped in
-> CPU address view.
-> The is apparent from of_nvmem_cell_get().
->
-> Some efuse devices _may_ be directly accessed
-> as MMIO from CPU, but it is abstracted under an efuse driver.
->
-> I believe missing "ranges" is correct.
+> I also dislike #1 as the "msi-slave" part is both ugly and confusing
+> (are we writing to the ITS? to the pre-ITS?).
 
-Okay, you're right. If those are not memory mapped then it is fine.
+Why do you need this? Are you ever going to have multiple pre-its's?
+That's why I suggested just using of_find_compatible_node().
+
+> How about putting the pre-its node *inside* the its node itself? It
+> makes it obvious which pre-ITS corresponds to which ITS, and it leaves
+> the ITS regs untouched.
+
+Not wild about this, but it's fine if you do need to handle multiple instances.
 
 Rob
 --
