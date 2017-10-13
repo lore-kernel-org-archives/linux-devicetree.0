@@ -1,105 +1,54 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
-Date: Fri, 13 Oct 2017 15:58:43 -0700
-Message-ID: <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
-References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
- <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
- <1507912842.5910.39.camel@hadess.net>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
+Date: Fri, 13 Oct 2017 16:08:45 -0700
+Message-ID: <59E1477D.6060700@gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
+ <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKZ5JcunaY9K5MEjyS-sxargKtJq11x+DVMwHs8WrnH+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1507912842.5910.39.camel@hadess.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>
-Cc: Antonio Ospite <ao2@ao2.it>, Marcin Niestroj <m.niestroj@grinn-global.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKZ5JcunaY9K5MEjyS-sxargKtJq11x+DVMwHs8WrnH+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 06:40:42PM +0200, Bastien Nocera wrote:
-> On Fri, 2017-10-13 at 18:02 +0200, Antonio Ospite wrote:
-> > On Thu, 12 Oct 2017 17:04:42 +0200
-> > Marcin Niestroj <m.niestroj@grinn-global.com> wrote:
-> > 
-> > > Support was added based on Goodix GitHub repo [1]. There are two
-> > > major
-> > > differences between gt1151 and currently supported devices (gt9x):
-> > >  * CONFIG_DATA register has 0x8050 address instead of 0x8047,
-> > >  * config data checksum has 16-bit width instead of 8-bit.
-> > > 
-> > > Also update goodix_i2c_test() function, so it reads ID register
-> > > (which
-> > > has the same address for all devices) instead of CONFIG_DATA
-> > > (because
-> > > its address is known only after reading ID of the device).
-> > > 
-> > > [1] https://github.com/goodix/gt1x_driver_generic
-> > > 
-> > > Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> > > ---
-> > > Patch was developed and tested on top of 4.14-rc4 using custom
-> > > board.
-> > > 
-> > 
-> > Just a suggestion, you could use a function pointer for the
-> > device-specific checksum routines and have the check on the device id
-> > only once in goodix_ts_probe(), see below.
+Hi Rob,
+
+On 07/25/17 13:36, Rob Herring wrote:
+> On Tue, Apr 25, 2017 at 7:09 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>
+>> Existing overlay unit tests examine individual pieces of the overlay
+>> code.  The new tests target the entire process of applying an overlay.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>> ---
 > 
-> Function pointer is fine, but this is how I'd implement it:
+> [...]
 > 
-> typedef enum {
->   GOODIX_CONFIG_TYPE_GT911 = 0,
->   GOODIX_CONFIG_TYPE_GT1151
-> } GoodixConfigType;
+>> @@ -1261,6 +1263,8 @@ void __init unflatten_device_tree(void)
+>>
+>>         /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+>>         of_alias_scan(early_init_dt_alloc_memory_arch);
+>> +
+>> +       unittest_unflatten_overlay_base();
 > 
-> static func_pointer config_funcs[] = {
->   goodix_gt911_get_config,
->   goodix_gt1151_get_config
-> };
+> This breaks on systems that don't boot with FDT and call
+> unflatten_device_tree, namely x86 and UML (UML needs a few hacks to
+> work) which was a feature of the unittest. Considering applying
+> overlays on x86 is something we'll want to support, the unittest
+> should support that case.
 > 
-> Store the GoodixConfigType in the device structure, and access the
-> function pointer as:
-> config_funcs[config_type] (...
-> 
-> That's what I'd prefer, but whatever Dmitry prefers style-wise. This
-> seems more extensible in case we have different functions needing
-> similar changes in the future, allowing us to either extend the
-> function pointer array, or use switch/case statements for smaller
-> functions.
+> Rob
 
-My preference would be to assign constant chip data, such as register,
-to the relevant device ID structure (I2C or OF or ACPI) and reference it
-form where it is needed.
+What is the symptom of the breakage?  Or what is causing breakage?
 
-struct goodix_chip_data {
-	u16	config_addr; 
-};
+-Frank
 
-...
-
-struct goodix_ts_data {
-	...
-	const struct goodix_chip_data *chip;
-	...
-};
-
-...
-
-static const goodix_chip_data gt1x_chip_data = {
-	.config_addr	= GOODIX_GT1X_REG_CONFIG_DATA,
-};
-
-static const goodix_chip_data gt9x_chip_data = {
-	.config_addr	= GOODIX_GT9X_REG_CONFIG_DATA,
-};
-
-static const struct of_device_id goodix_of_match[] = {
-	{ .compatible = "goodix,gt1151", .data = &gt1x_chip_data },
-	...
-};
-
-and so on...
-
-Thanks.
-
--- 
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
