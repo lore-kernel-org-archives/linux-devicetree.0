@@ -1,96 +1,38 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC
- documentation
-Date: Fri, 13 Oct 2017 10:55:33 +0100
-Message-ID: <20171013095533.fwbphvrdbuvyr5xo@dell>
-References: <73965e7fb34d6a96529589cdf48e54e95ed666b8.1507723345.git.baolin.wang@spreadtrum.com>
- <20171013090726.y6mzuf7fdynnp2rj@dell>
- <CAMz4kuKpnH8_LwjN_qr4sbyWh6_03U_a9FH60B_-Gy77CQZiOQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC 3/5] mfd: bd9571mwv: Allow DDR Backup Power register
+ access
+Date: Fri, 13 Oct 2017 10:56:09 +0100
+Message-ID: <20171013095609.7ievqlwa2e4pnuge@dell>
+References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
+ <1507649178-31473-4-git-send-email-geert+renesas@glider.be>
+ <20171013085851.ljvgmyd6ei2tv5fw@dell>
+ <CAMuHMdVZiaq40r0Su01n9C7oXR7i_QWmNhZtY7Udhy9gdYHVRA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMz4kuKpnH8_LwjN_qr4sbyWh6_03U_a9FH60B_-Gy77CQZiOQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+In-Reply-To: <CAMuHMdVZiaq40r0Su01n9C7oXR7i_QWmNhZtY7Udhy9gdYHVRA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Oct 2017, Baolin Wang wrote:
-> On 13 October 2017 at 17:07, Lee Jones <lee.jones@linaro.org> wrote:
-> > On Wed, 11 Oct 2017, Baolin Wang wrote:
-> >
-> >> This patch adds the binding documentation for Spreadtrum SC27xx series
-> >> PMIC device.
-> >>
-> >> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> >> ---
-> >>  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   23 ++++++++++++++++++++
-> >>  1 file changed, 23 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-> >> new file mode 100644
-> >> index 0000000..333c818
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-> >> @@ -0,0 +1,23 @@
-> >> +Spreadtrum SC27xx Power Management Integrated Circuit (PMIC)
-> >
-> > More info please.
-> >
-> > What does the ship do and what other devices are available.
-> 
-> OK. I will add more information in next version.
-> 
-> >
-> >> +Required properties:
-> >> +- compatible: Should be "sprd,sc2731".
-> >> +- reg: SPI chip select.
-> >
-> > Really?  Not an address?
-> 
-> Yes, it should be device address.
-> 
-> >
-> > What is the range?
-> >
-> >> +- spi-max-frequency: Typically set to 26000000.
-> >> +- interrupts: The interrupt line the device is connected to.
-> >> +- interrupt-controller: Marks the device node as an interrupt controller.
-> >> +- #interrupt-cells: The number of cells to describe an PMIC IRQ, should be 2.
-> >
-> > What if it's not 2?  Will it still work?
-> 
-> Must be 2, if not it can not work well. Will update in next version.
-> 
-> >
-> >> +- #address-cells: Child device offset number of cells, should be 1.
-> >
-> > Same.
-> 
-> OK.
-> 
-> >
-> >> +- #size-cells: Child device size number of cells, should be 0.
-> >
-> > Same.
-> 
-> OK.
-> 
-> >
-> >> +
-> >> +Example:
-> >> +pmic: pmic@0 {
-> >
-> > What other nodes are you referencing this one from?
-> 
-> This node should be under our ADI/SPI master device node, as one SPI
-> device. I will add the SPI master node in next version. Very
-> appreciated for your comments.
+On Fri, 13 Oct 2017, Geert Uytterhoeven wrote:
 
-Sorry, what I'm getting at is; is the 'pmic:' label really required?
+> Hi Lee,
+> 
+> On Fri, Oct 13, 2017 at 10:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> > On Tue, 10 Oct 2017, Geert Uytterhoeven wrote:
+> >
+> >> Enable read/write access to the BD9571MWV_BKUP_MODE_CNT register, which
+> >> is a.o. used to configure DDR Backup Power.
+> >
+> > a.o.?  That's a new one on me.
+> 
+> among(st) others
+
+Please just write that instead. :)
 
 -- 
 Lee Jones
