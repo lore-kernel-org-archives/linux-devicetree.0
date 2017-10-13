@@ -1,8 +1,8 @@
 From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 8/9] dt-bindings: usb: mtk-xhci: add a optional property to
- disable u3ports
-Date: Fri, 13 Oct 2017 16:26:40 +0800
-Message-ID: <fd8b6099192ddee3b277f5ca3a699c20fb273ffe.1507882470.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 9/9] dt-bindings: usb: mtk-xhci: remove dummy clocks and
+ add optional ones
+Date: Fri, 13 Oct 2017 16:26:41 +0800
+Message-ID: <6a5d01f35d7df6a49d0442c8326c3daa9bcda9d3.1507882470.git.chunfeng.yun@mediatek.com>
 References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,25 +22,57 @@ To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg 
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new optional property to disable u3ports
+Remove dummy clocks for usb wakeup and add optional ones for
+MCU_BUS_CK and DMA_BUS_CK.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |    2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |   18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-index 5611a2e..2d9b459 100644
+index 2d9b459..3059596 100644
 --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
 +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-@@ -38,6 +38,8 @@ Optional properties:
- 	mode;
-  - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
- 	control register, it depends on "mediatek,wakeup-src".
-+ - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
-+	bit1 for u3port1, ... etc;
+@@ -26,10 +26,11 @@ Required properties:
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+  - clock-names : must contain
+-	"sys_ck": for clock of xHCI MAC
+-	"ref_ck": for reference clock of xHCI MAC
+-	"wakeup_deb_p0": for USB wakeup debounce clock of port0
+-	"wakeup_deb_p1": for USB wakeup debounce clock of port1
++	"sys_ck": controller clock used by normal mode,
++	the following ones are optional:
++	"ref_ck": reference clock used by low power mode etc,
++	"mcu_ck": mcu_bus clock for register access,
++	"dma_ck": dma_bus clock for data transfer by DMA
+ 
+  - phys : a list of phandle + phy specifier pairs
+ 
+@@ -57,9 +58,7 @@ usb30: usb@11270000 {
+ 	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
+ 		 <&pericfg CLK_PERI_USB0>,
+ 		 <&pericfg CLK_PERI_USB1>;
+-	clock-names = "sys_ck", "ref_ck",
+-		      "wakeup_deb_p0",
+-		      "wakeup_deb_p1";
++	clock-names = "sys_ck", "ref_ck";
+ 	phys = <&phy_port0 PHY_TYPE_USB3>,
+ 	       <&phy_port1 PHY_TYPE_USB2>;
+ 	vusb33-supply = <&mt6397_vusb_reg>;
+@@ -91,9 +90,8 @@ Required properties:
+ 
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+- - clock-names : must be
+-	"sys_ck": for clock of xHCI MAC
+-	"ref_ck": for reference clock of xHCI MAC
++ - clock-names : must contain "sys_ck", and the following ones are optional:
++	"ref_ck", "mcu_ck" and "dma_ck"
+ 
+ Optional properties:
   - vbus-supply : reference to the VBUS regulator;
-  - usb3-lpm-capable : supports USB3.0 LPM
-  - pinctrl-names : a pinctrl state named "default" must be defined
 -- 
 1.7.9.5
