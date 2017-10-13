@@ -1,136 +1,59 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Fri, 13 Oct 2017 13:48:22 +0200
-Message-ID: <20171013114822.vem6bbgy4vw2lx77@flea.lan>
-References: <20170922100823.18184-1-maxime.ripard@free-electrons.com>
- <20170922100823.18184-3-maxime.ripard@free-electrons.com>
- <20170929172709.GA3163@ti.com>
- <20171011092409.ndtr3fdo2oj3zueb@flea.lan>
- <20171011132258.GB25400@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="shlcvjfyecllhxq3"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171011132258.GB25400@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v3] clk: qcom: Update DT bindings for the MSM8660/APQ8060 RPMCC
+Date: Fri, 13 Oct 2017 13:59:16 +0200
+Message-ID: <20171013115917.9318-1-linus.walleij@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+These compatible strings need to be added to extend support
+for the RPM CC to cover MSM8660/APQ8060. We also need to add
+enumberators to the include file for a few clocks that were
+missing.
 
---shlcvjfyecllhxq3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v2->v3:
+- Move PLL4 last, and do not provide an enumerator for the
+  "active" variant, we don't do that on PLL4.
+ChangeLog v1->v2:
+- Collect Rob's ACK
+---
+ Documentation/devicetree/bindings/clock/qcom,rpmcc.txt | 2 ++
+ include/dt-bindings/clock/qcom,rpmcc.h                 | 3 +++
+ 2 files changed, 5 insertions(+)
 
-Hi Benoit,
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 32c6e9ce64c3..833a89f06ae0 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -10,6 +10,8 @@ Required properties :
+ - compatible : shall contain only one of the following. The generic
+                compatible "qcom,rpmcc" should be also included.
+ 
++			"qcom,rpmcc-msm8660", "qcom,rpmcc"
++			"qcom,rpmcc-apq8060", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8916", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index 96b63c00249e..29dad206a74b 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -37,6 +37,9 @@
+ #define RPM_SYS_FABRIC_A_CLK			19
+ #define RPM_SFPB_CLK				20
+ #define RPM_SFPB_A_CLK				21
++#define RPM_SMI_CLK				22
++#define RPM_SMI_A_CLK				23
++#define RPM_PLL4_CLK				24
+ 
+ /* SMD RPM clocks */
+ #define RPM_SMD_XO_CLK_SRC				0
+-- 
+2.13.5
 
-On Wed, Oct 11, 2017 at 01:22:59PM +0000, Benoit Parrot wrote:
-> Maxime Ripard <maxime.ripard@free-electrons.com> wrote on Wed [2017-Oct-1=
-1 11:24:09 +0200]:
-> > On Fri, Sep 29, 2017 at 05:27:09PM +0000, Benoit Parrot wrote:
-> > > > +static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
-> > > > +				struct platform_device *pdev)
-> > > > +{
-> > > > +	struct resource *res;
-> > > > +	unsigned char i;
-> > > > +	u32 reg;
-> > > > +
-> > > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > > +	csi2rx->base =3D devm_ioremap_resource(&pdev->dev, res);
-> > > > +	if (IS_ERR(csi2rx->base))
-> > > > +		return PTR_ERR(csi2rx->base);
-> > > > +
-> > > > +	csi2rx->sys_clk =3D devm_clk_get(&pdev->dev, "sys_clk");
-> > > > +	if (IS_ERR(csi2rx->sys_clk)) {
-> > > > +		dev_err(&pdev->dev, "Couldn't get sys clock\n");
-> > > > +		return PTR_ERR(csi2rx->sys_clk);
-> > > > +	}
-> > > > +
-> > > > +	csi2rx->p_clk =3D devm_clk_get(&pdev->dev, "p_clk");
-> > > > +	if (IS_ERR(csi2rx->p_clk)) {
-> > > > +		dev_err(&pdev->dev, "Couldn't get P clock\n");
-> > > > +		return PTR_ERR(csi2rx->p_clk);
-> > > > +	}
-> > > > +
-> > > > +	csi2rx->dphy =3D devm_phy_optional_get(&pdev->dev, "dphy");
-> > > > +	if (IS_ERR(csi2rx->dphy)) {
-> > > > +		dev_err(&pdev->dev, "Couldn't get external D-PHY\n");
-> > > > +		return PTR_ERR(csi2rx->dphy);
-> > > > +	}
-> > > > +
-> > > > +	/*
-> > > > +	 * FIXME: Once we'll have external D-PHY support, the check
-> > > > +	 * will need to be removed.
-> > > > +	 */
-> > > > +	if (csi2rx->dphy) {
-> > > > +		dev_err(&pdev->dev, "External D-PHY not supported yet\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > >=20
-> > > I understand that in your current environment you do not have a
-> > > DPHY. But I am wondering in a real setup where you will have either
-> > > an internal or an external DPHY, how are they going to interact with
-> > > this driver or vice-versa?
-> >=20
-> > It's difficult to give an answer with so little details. How would you
-> > choose between those two PHYs? Is there a mux, or should we just power
-> > one of the two? If that's the case, is there any use case were we
-> > might want to power both? If not, which one should we favor, in which
-> > situations?
->=20
-> Oops, I guess I should clarify, in this case I did not mean we would
-> have both an internal and an external DPHY. I just meant one or the other.
-
-Ok, my bad :)
-
-> Basically just want to see how you would actually handle a DPHY here
-> whether it's internal or external?
->=20
-> For instance, using direct register access from within this driver
-> or make use of an separate phy driver...
-
-So internal would be easy, the only internal D-PHY that is supposed to
-be integrated is Cadence's, and its registers would be located in the
-same memory region, so that driver would handle it.
-
-In the external case, the ideal solution would be to extend the phy
-framework to deal with more phy types. CSI would be a good candidate,
-but we also have that issue with the DSI patches Boris has been
-sending, and other phy types like USB.
-
-The idea would be to extend it (or subclass it) to allow to pass more
-configuration data that would allow to implement a D-PHY driver of its
-own. That's the long term goal obviously, and we haven't started
-working on that. So we might have to settle for in-drivers quirks
-short term.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---shlcvjfyecllhxq3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ4KgGAAoJEBx+YmzsjxAgUDoP/0yQCqxc7xkRVvtQZQgy+iA5
-3aiqOEdjASK0qLX1kEaL0mg7CWw6Tzum6iJPWhcMNeErtgLk489SDIZpPSxDKdFf
-ZFAoTaxxRL5V2RoNDX2lj1RQSk4frW5GDjyK1G0oL8tP45G40UfihhVa+bErviY1
-Q3uFYXtQwRuLRw8VUz52h4YUYbJZcHL+vAnNm8Sqw9gi87dr1953hUw+8WUqeb5x
-/T5mowk9xeG/z3f6+o99036rFVM5GJLAAvN8SKgLZBE/zDIFRHnY0h6ydmB5JFhN
-lN0zkPesgIXLEsVdCNaYTlFXC2QbzeowffN80BE9J+six6XmN/BOw9bJAYGv9aGE
-dpnHOCkKka9ne1J6g1Ti/NUGoqobxQ5iJiLoyJgHNKgBqu4uveEeedY8QGZz1HfU
-XvOvnVQM1ftEM6UhNUKbx1KBx3xh47pUM8CIivGWJaGjX8Adnvk+GQSlnsZHdg6W
-ECtnLIP1YJaa12b1XQ4TCDRCWkmStBd1s9TzLVHbYNG+eSfsSOM1lB+QRdaEFCTm
-yNcZc7Bm0/0OSxOWhNnbvugifqBZ0ESrSjW65byoHgiiHGxTsnYC4QuT5BB91eIS
-MwNMN5kaJRnmBl/4kaVYnhCXocE24+ud7qgde8PK8H9Fm+a9wX6GMDra+dBc74Ar
-3GvY/oKn/PkwI/NcYKzz
-=qpdm
------END PGP SIGNATURE-----
-
---shlcvjfyecllhxq3--
