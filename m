@@ -1,48 +1,37 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] i2c: meson: use generic compatible
-Date: Fri, 13 Oct 2017 10:22:06 +0200
-Message-ID: <20171013082206.31632-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/9] usb: xhci-mtk: use dma_set_mask_and_coherent() in probe function
+Date: Fri, 13 Oct 2017 16:26:33 +0800
+Message-ID: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The meson i2c driver seems to be compatible with more SoCs than
-initially thought. Let's use the most generic compatible he have in
-DT instead of the gxbb specific one
+This patch uses the simpler dma_set_mask_and_coherent() instead of
+doing these as separate steps
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/i2c/i2c-meson.txt | 2 +-
- drivers/i2c/busses/i2c-meson.c                      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-mtk.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-meson.txt b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
-index 611b934c7e10..e6a563443e26 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-meson.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
-@@ -1,7 +1,7 @@
- Amlogic Meson I2C controller
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 8fb6065..c197a6d 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -606,15 +606,10 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 	}
  
- Required properties:
-- - compatible: must be "amlogic,meson6-i2c" or "amlogic,meson-gxbb-i2c"
-+ - compatible: must be "amlogic,meson6-i2c" or "amlogic,meson-gx-i2c"
-  - reg: physical address and length of the device registers
-  - interrupts: a single interrupt specifier
-  - clocks: clock for the device
-diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
-index 88d15b92ec35..7b238d8c19af 100644
---- a/drivers/i2c/busses/i2c-meson.c
-+++ b/drivers/i2c/busses/i2c-meson.c
-@@ -442,7 +442,7 @@ static int meson_i2c_remove(struct platform_device *pdev)
+ 	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
+-	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+ 	if (ret)
+ 		goto disable_clk;
  
- static const struct of_device_id meson_i2c_match[] = {
- 	{ .compatible = "amlogic,meson6-i2c" },
--	{ .compatible = "amlogic,meson-gxbb-i2c" },
-+	{ .compatible = "amlogic,meson-gx-i2c" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, meson_i2c_match);
--- 
-2.13.6
+-	if (!dev->dma_mask)
+-		dev->dma_mask = &dev->coherent_dma_mask;
+-	else
+-		dma_set_mask(dev, DMA_BIT_MASK(32));
