@@ -1,97 +1,75 @@
-From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 12/16] serial: mvebu-uart: support extended port registers layout
-Date: Fri, 13 Oct 2017 11:01:56 +0200
-Message-ID: <20171013090200.31034-13-miquel.raynal@free-electrons.com>
-References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013090200.31034-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 1/5] dt-bindings: mfd: bd9571mwv: Document rohm,ddr-backup-power
+Date: Fri, 13 Oct 2017 11:02:56 +0200
+Message-ID: <CAMuHMdWOzgHeB9bSbaz69_xDCY7YbLRSct4gs6fCnYc_Q_eUyw@mail.gmail.com>
+References: <1507649178-31473-1-git-send-email-geert+renesas@glider.be>
+ <1507649178-31473-2-git-send-email-geert+renesas@glider.be> <20171013085504.i65ohil6dqdzrd2q@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171013085504.i65ohil6dqdzrd2q@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the missing register offsets and bit fields for the extended
-UART port. Add a second driver data structure filled with its port data,
-selected with the right compatible (marvell,armada-3700-uart-ext).
+Hi Lee,
 
-Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/tty/serial/mvebu-uart.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+On Fri, Oct 13, 2017 at 10:55 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 10 Oct 2017, Geert Uytterhoeven wrote:
+>> Document the new optional "rohm,ddr-backup-power" property.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/bd9571mwv.txt | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>> index 9ab216a851d5619b..7ea3f2db41d4e501 100644
+>> --- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+>> @@ -25,6 +25,12 @@ Required properties:
+>>                           Each child node is defined using the standard
+>>                           binding for regulators.
+>>
+>> +Optional properties:
+>> +  - rohm,ddr-backup-power : Value to use for DDR-Backup Power.  This controls
+>> +                         which DDR rails need to be kept powered when backup
+>> +                         mode is enabled, cfr. the KEEPON_DDR* bits in the
+>
+> Perhaps it's just me, but I'm confused by this line.
+>
+> Can you word it another way?
 
-diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
-index 1074054ee5be..16b0a5aa14e2 100644
---- a/drivers/tty/serial/mvebu-uart.c
-+++ b/drivers/tty/serial/mvebu-uart.c
-@@ -39,10 +39,13 @@
- 
- /* Register Map */
- #define UART_STD_RBR		0x00
-+#define UART_EXT_RBR		0x18
- 
- #define UART_STD_TSH		0x04
-+#define UART_EXT_TSH		0x1C
- 
- #define UART_STD_CTRL1		0x08
-+#define UART_EXT_CTRL1		0x04
- #define  CTRL_SOFT_RST		BIT(31)
- #define  CTRL_TXFIFO_RST	BIT(15)
- #define  CTRL_RXFIFO_RST	BIT(14)
-@@ -55,15 +58,20 @@
- 				CTRL_PAR_ERR_INT | CTRL_OVR_ERR_INT)
- 
- #define UART_STD_CTRL2		UART_STD_CTRL1
-+#define UART_EXT_CTRL2		0x20
- #define  CTRL_STD_TX_RDY_INT	BIT(5)
-+#define  CTRL_EXT_TX_RDY_INT	BIT(6)
- #define  CTRL_STD_RX_RDY_INT	BIT(4)
-+#define  CTRL_EXT_RX_RDY_INT	BIT(5)
- 
- #define UART_STAT		0x0C
- #define  STAT_TX_FIFO_EMP	BIT(13)
- #define  STAT_TX_FIFO_FUL	BIT(11)
- #define  STAT_TX_EMP		BIT(6)
- #define  STAT_STD_TX_RDY	BIT(5)
-+#define  STAT_EXT_TX_RDY	BIT(15)
- #define  STAT_STD_RX_RDY	BIT(4)
-+#define  STAT_EXT_RX_RDY	BIT(14)
- #define  STAT_BRK_DET		BIT(3)
- #define  STAT_FRM_ERR		BIT(2)
- #define  STAT_PAR_ERR		BIT(1)
-@@ -865,12 +873,28 @@ static struct mvebu_uart_driver_data uart_std_driver_data = {
- 	.flags.stat_rx_rdy = STAT_STD_RX_RDY,
- };
- 
-+static struct mvebu_uart_driver_data uart_ext_driver_data = {
-+	.is_ext = true,
-+	.regs.rbr = UART_EXT_RBR,
-+	.regs.tsh = UART_EXT_TSH,
-+	.regs.ctrl = UART_EXT_CTRL1,
-+	.regs.intr = UART_EXT_CTRL2,
-+	.flags.ctrl_tx_rdy_int = CTRL_EXT_TX_RDY_INT,
-+	.flags.ctrl_rx_rdy_int = CTRL_EXT_RX_RDY_INT,
-+	.flags.stat_tx_rdy = STAT_EXT_TX_RDY,
-+	.flags.stat_rx_rdy = STAT_EXT_RX_RDY,
-+};
-+
- /* Match table for of_platform binding */
- static const struct of_device_id mvebu_uart_of_match[] = {
- 	{
- 		.compatible = "marvell,armada-3700-uart",
- 		.data = (void *)&uart_std_driver_data,
- 	},
-+	{
-+		.compatible = "marvell,armada-3700-uart-ext",
-+		.data = (void *)&uart_ext_driver_data,
-+	},
- 	{}
- };
- 
--- 
-2.11.0
+I'll ttry... Let me think a bit about it...
+
+>> +                         documentation for the "BKUP Mode Cnt" register.
+>> +
+>>  Example:
+>>
+>>       pmic: pmic@30 {
+>> @@ -36,6 +42,7 @@ Example:
+>>               #interrupt-cells = <2>;
+>>               gpio-controller;
+>>               #gpio-cells = <2>;
+>> +             rohm,ddr-backup-power = <15>;
+>
+> Can you explain what this means?  Is it a mask, or does line 15 need
+> to be kept on?  What is the range?  Is 0 acceptable?  Clarification
+> required please.
+
+It's a mask (OR of (in this case all four) needed KEEPON_DDR* bits).
+Unfortunately the datasheet is not publicly available.
+
+0 is acceptable, but as the property is optional, you better just leave it out.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
