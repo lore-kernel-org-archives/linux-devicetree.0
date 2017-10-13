@@ -1,69 +1,89 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 04/16] serial: mvebu-uart: support probe of multiple ports
-Date: Fri, 13 Oct 2017 11:40:32 +0200
-Message-ID: <877evz9yi7.fsf@free-electrons.com>
-References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
-        <20171013090200.31034-5-miquel.raynal@free-electrons.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v4 4/7] soc: mediatek: pwrap: update pwrap_init without
+ slave programming
+Date: Fri, 13 Oct 2017 17:41:44 +0800
+Message-ID: <1507887704.21840.32.camel@mtkswgap22>
+References: <cover.1505980364.git.sean.wang@mediatek.com>
+         <604078485ca9ab04cea5bc531425d6035b27bc88.1505980364.git.sean.wang@mediatek.com>
+         <f3a04159-8491-6ca6-d2ad-7df1dfd64331@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20171013090200.31034-5-miquel.raynal@free-electrons.com> (Miquel
-        Raynal's message of "Fri, 13 Oct 2017 11:01:48 +0200")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jiri Slaby <jslaby@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Wilson Ding <dingwei@marvell.com>, Allen Yan <yanwei@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f3a04159-8491-6ca6-d2ad-7df1dfd64331@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On ven., oct. 13 2017, Miquel Raynal <miquel.raynal@free-electrons.com> wrote:
+On Tue, 2017-10-10 at 20:00 +0200, Matthias Brugger wrote:
+> 
+> On 09/21/2017 10:26 AM, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > pwrap initialization is highly associated with the base SoC, so
+> > update here for allowing pwrap_init without slave program which would be
+> > used to those PMICs without extra encryption on bus such as MT6380.
+> > 
+> > Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
+> > Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >   drivers/soc/mediatek/mtk-pmic-wrap.c | 91 +++++++++++++++++++++---------------
+> >   1 file changed, 54 insertions(+), 37 deletions(-)
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > index 27d7ccc..9c6d855 100644
+> > --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> > @@ -531,6 +531,7 @@ struct pmic_wrapper_type {
+> >   	u32 spi_w;
+> >   	u32 wdt_src;
+> >   	int has_bridge:1;
+> > +	int slv_program:1;
+> >   	int (*init_reg_clock)(struct pmic_wrapper *wrp);
+> >   	int (*init_soc_specific)(struct pmic_wrapper *wrp);
+> >   };
+> > @@ -999,9 +1000,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+> >   	}
+> >   
+> >   	/* Reset SPI slave */
+> > -	ret = pwrap_reset_spislave(wrp);
+> > -	if (ret)
+> > -		return ret;
+> > +
+> > +	if (wrp->master->slv_program) {
+> > +		ret = pwrap_reset_spislave(wrp);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> >   
+> >   	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
+> >   
+> > @@ -1013,45 +1017,52 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+> >   	if (ret)
+> >   		return ret;
+> >   
+> > -	/* Setup serial input delay */
+> > -	ret = pwrap_init_sidly(wrp);
+> > -	if (ret)
+> > -		return ret;
+> > +	if (wrp->master->slv_program) {
+> 
+> This if branch is really long and complex enough to put it into function apart.
+> 
+> Thanks,
+> Matthias
+> 
+> PD please take into account the comments I made on v3 of the series.
+> 
 
-> -	port = &mvebu_uart_ports[0];
-> +	/* Assume that all UART ports have a DT alias or none has */
-> +	id = of_alias_get_id(pdev->dev.of_node, "serial");
+I'll try to breakdown the long logic into the short one and use a flag
+indicating the slave capability decides whether the functions is
+required being enabled for the slave instead of slv_program which is
+less meaningful. In this way, pmic_init will be more extensible when
+more different SoCs and target slaves with various flavors into the
+driver. And also take into accounts those suggestions you made in v3 in
+the next version.
 
-You stil need to check the pdev->dev.of_node before calling
-of_alias_get_id.
-
-Once it will be fixed, you can add:
-
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-
-Thanks,
-
-Gregory
-
-
-> +	if (!pdev->dev.of_node || id < 0)
-> +		pdev->id = uart_num_counter++;
-> +	else
-> +		pdev->id = id;
-> +
-> +	if (pdev->id >= MVEBU_NR_UARTS) {
-> +		dev_err(&pdev->dev, "cannot have more than %d UART ports\n",
-> +			MVEBU_NR_UARTS);
-> +		return -EINVAL;
-> +	}
-> +
-> +	port = &mvebu_uart_ports[pdev->id];
->  
->  	spin_lock_init(&port->lock);
->  
-> @@ -572,7 +588,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
->  	port->fifosize   = 32;
->  	port->iotype     = UPIO_MEM32;
->  	port->flags      = UPF_FIXED_PORT;
-> -	port->line       = 0; /* single port: force line number to  0 */
-> +	port->line       = pdev->id;
->  
->  	port->irq        = irq->start;
->  	port->irqflags   = 0;
-> -- 
-> 2.11.0
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+	Sean
