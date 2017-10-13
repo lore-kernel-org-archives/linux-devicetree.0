@@ -1,109 +1,115 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch v6 3/7] slimbus: qcom: Add Qualcomm Slimbus controller
- driver
-Date: Fri, 13 Oct 2017 14:17:47 -0500
-Message-ID: <20171013191747.o7bvb5urs5jt2x4l@rob-hp-laptop>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-4-srinivas.kandagatla@linaro.org>
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: Altera ASMI Parallel II IP Core
+Date: Fri, 13 Oct 2017 12:24:29 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1710131215370.1541@mgerlach-VirtualBox>
+References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com> <1505932139-2905-3-git-send-email-matthew.gerlach@linux.intel.com> <deae5a9f-4301-c7de-b265-b09292f8da15@gmail.com> <alpine.DEB.2.20.1710110956260.2194@mgerlach-VirtualBox>
+ <ca36c177-0e7c-647d-f821-ab4bb7d85b10@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171006155136.4682-4-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: multipart/mixed; BOUNDARY="8323329-241464664-1507922672=:1541"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ca36c177-0e7c-647d-f821-ab4bb7d85b10-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 06, 2017 at 05:51:32PM +0200, srinivas.kandagatla@linaro.org wrote:
-> From: Sagar Dharia <sdharia@codeaurora.org>
-> 
-> This controller driver programs manager, interface, and framer
-> devices for Qualcomm's slimbus HW block.
-> Manager component currently implements logical address setting,
-> and messaging interface.
-> Interface device reports bus synchronization information, and framer
-> device clocks the bus from the time it's woken up, until clock-pause
-> is executed by the manager device.
-> 
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  43 ++
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Version 6 and this is the first I see it? Where's the version history? 
+--8323329-241464664-1507922672=:1541
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-Please split to separate patch.
 
->  drivers/slimbus/Kconfig                            |   9 +
->  drivers/slimbus/Makefile                           |   3 +
->  drivers/slimbus/slim-qcom-ctrl.c                   | 594 +++++++++++++++++++++
->  drivers/slimbus/slim-qcom.h                        |  63 +++
->  5 files changed, 712 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
->  create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
->  create mode 100644 drivers/slimbus/slim-qcom.h
-> 
-> diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-> new file mode 100644
-> index 0000000..081110d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-> @@ -0,0 +1,43 @@
-> +Qualcomm SLIMBUS controller
-> +This controller is used if applications processor driver controls slimbus
-> +master component.
-> +
-> +Required properties:
-> +
-> + - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
-> + - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
-> +
-> + - reg : Offset and length of the register region(s) for the device
-> + - reg-names : Register region name(s) referenced in reg above
-> +	 Required register resource entries are:
-> +	 "ctrl": Physical adderess of controller register blocks
-> + - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible or
-> + 		"qcom,slim" if using generic qcom SLIM IP.
 
-No such thing as generic IP.
+On Wed, 11 Oct 2017, Marek Vasut wrote:
 
-Fine as a fallback, but not by itself.
+> On 10/11/2017 07:00 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>
+>>
+>> On Tue, 10 Oct 2017, Marek Vasut wrote:
+>>
+>>> On 09/20/2017 08:28 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>
+>>>> This patch adds support for a spi-nor, platform driver for the
+>>>> Altera ASMI Parallel II IP Core.  The intended use case is to be able
+>>>> to update the flash used to load a FPGA at power up with mtd-utils.
+>>>>
+>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>> ---
+>>>> v2:
+>>>>     minor checkpatch fixing by Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>>>>     Use read_dummy value as suggested by Cyrille Pitchen.
+>>>>     Don't assume 4 byte addressing (Cryille Pichecn and Marek Vasut).
+>>>>     Fixed #define indenting as suggested by Marek Vasut.
+>>>>     Added units to timer values as suggested by Marek Vasut.
+>>>>     Use io(read|write)8_rep() as suggested by Marek Vasut.
+>>>>     Renamed function prefixed with __ as suggested by Marek Vasut.
+>>>
+>>> [...]
+>>>
+>>>> +#define QSPI_ACTION_REG            0
+>>>> +#define QSPI_ACTION_RST            BIT(0)
+>>>> +#define QSPI_ACTION_EN            BIT(1)
+>>>> +#define QSPI_ACTION_SC            BIT(2)
+>>>> +#define QSPI_ACTION_CHIP_SEL_SFT    4
+>>>> +#define QSPI_ACTION_DUMMY_SFT        8
+>>>> +#define QSPI_ACTION_READ_BACK_SFT    16
+>>>> +
+>>>> +#define QSPI_FIFO_CNT_REG        4
+>>>> +#define QSPI_FIFO_DEPTH            0x200
+>>>> +#define QSPI_FIFO_CNT_MSK        0x3ff
+>>>> +#define QSPI_FIFO_CNT_RX_SFT        0
+>>>> +#define QSPI_FIFO_CNT_TX_SFT        12
+>>>> +
+>>>> +#define QSPI_DATA_REG            0x8
+>>>> +
+>>>> +#define QSPI_POLL_TIMEOUT_US        10000000
+>>>
+>>> 10 s poll timeout ? :)
+>>
+>> Hi Marek,
+>>
+>> The 10s timeout is fairly arbitrary.  In other words, I pulled it out of
+>> thin air.  Can you suggest a better timeout?  From a practical
+>> standpoint 10s seemed to be much better than no timeout when I was
+>> debugging bad FPGA images.  Without a timeout I was hanging the system
+>> when the FPGA image failed.  With this timeout, we get a nice message
+>> and Linux keeps running happily.
+> AFAIK the SPI subsystem has a timeout which is adaptive to the bus
+> clock, maybe that's what you want to use here ?
 
-> + - interrupts : Interrupt number used by this controller
-> + - clocks : Interface and core clocks used by this slimbus controller
-> + - clock-names : Required clock-name entries are:
-> +	"iface_clk" : Interface clock for this controller
-> +	"core_clk" : Interrupt for controller core's BAM
+Hi Marek,
 
-_clk is redundant.
+I looked in spi-nor.c, and I see the following two macros:
+#define DEFAULT_READY_WAIT_JIFFIES		(40UL * HZ)
+#define CHIP_ERASE_2MB_READY_WAIT_JIFFIES	(40UL * HZ)
 
-> +
-> +
-> +Optional property:
-> + - reg entry for slew rate : If slew rate control register is provided, this
-> +	entry should be used.
-> + - reg-name for slew rate: "slew"
+These timers values are used at the spi-nor layer for waiting for an
+operation to complete.  It is the time spent waiting for Work In Progress
+to clear.
 
-Pointless to have -name when there is only one.
+The timer value I'm using, QSPI_POLL_TIMEOUT_US, is used at a lower layer.
+This timer value is used for the time it takes to send the opcode and tx 
+data and receive any bytes from the flash.  While 10 seconds may seem 
+long, I am just trying to avoid a system hang when there is a catastrophic
+failure with the flash controller in the FPGA or the flash part itself.
 
-> +
-> +Example:
-> +	slim@28080000 {
-> +		compatible = "qcom,slim";
-> +		#address-cells = <4>;
-> +		#size-cells = <0>;
-> +		reg = <0x28080000 0x2000>, <0x80207C 4>;
-> +		reg-names = "ctrl", "slew";
-> +		interrupts = <0 33 0>;
-> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-> +		clock-names = "iface_clk", "core_clk";
-> +
-> +		codec: wcd9310@1{
-> +			compatible = "slim217,60";
-> +			reg = <1 0>;
+I certainly could be missing something with regards to the timeouts, but I 
+think 10s for QSPI_POLL_TIMEOUT_US doesn't hurt, and it definately helps 
+when something goes wrong.
 
-This would not compile. You don't have 4 cells here.
+Thanks for the feedback,
+Matthew Gerlach
 
-> +		};
-> +	};
+>
+> -- 
+> Best regards,
+> Marek Vasut
+>
+--8323329-241464664-1507922672=:1541--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
