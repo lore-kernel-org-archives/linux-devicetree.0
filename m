@@ -1,29 +1,39 @@
-From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Subject: Re: [PATCH v4 02/12] [media] cxd2880-spi: Add support for CXD2880 SPI
- interface
-Date: Fri, 13 Oct 2017 18:10:31 +0900
-Message-ID: <eab5bd7b-d909-343d-7078-842e3d0d9ab9@sony.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
- <20171013055928.21132-1-Yasunari.Takiguchi@sony.com>
- <CAJbz7-0T=LUSTr59kPDk4kVkHLh5XEeNEkA2T=hG=P_fXrrU=g@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 01/13] usb: mtu3: fix error return code in ssusb_gadget_init()
+Date: Fri, 13 Oct 2017 17:10:37 +0800
+Message-ID: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJbz7-0T=LUSTr59kPDk4kVkHLh5XEeNEkA2T=hG=P_fXrrU=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Honza_Petrou=c5=a1?= <jpetrous@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Honza
+When failing to get IRQ number, platform_get_irq() may return
+-EPROBE_DEFER, but we ignore it and always return -ENODEV,
+so fix it.
 
-> If I understand it right, it uses SPI bus also for passing transport stream
-> to the host system (also having some pid piltering inside!), isn't it?
-> It would be interesting to know what is the max throughput of the CXD's SPI?
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/mtu3/mtu3_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes, max clock rate of spi is written in sony-cxd2880.txt of [patch v4 01/12].
-
-  spi-max-frequency = <55000000>; /* 55MHz */
-
-Takiguchi 
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index 99c65b0..9475798 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -774,9 +774,9 @@ int ssusb_gadget_init(struct ssusb_mtk *ssusb)
+ 		return -ENOMEM;
+ 
+ 	mtu->irq = platform_get_irq(pdev, 0);
+-	if (mtu->irq <= 0) {
++	if (mtu->irq < 0) {
+ 		dev_err(dev, "fail to get irq number\n");
+-		return -ENODEV;
++		return mtu->irq;
+ 	}
+ 	dev_info(dev, "irq %d\n", mtu->irq);
+ 
+-- 
+1.7.9.5
