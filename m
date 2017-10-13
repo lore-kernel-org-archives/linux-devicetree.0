@@ -1,166 +1,53 @@
-From: <Yasunari.Takiguchi@sony.com>
-Subject: [PATCH v4 12/12] [media] cxd2880: Add all Makefile, Kconfig files and Update MAINTAINERS file for the driver
-Date: Fri, 13 Oct 2017 15:17:20 +0900
-Message-ID: <20171013061720.22096-1-Yasunari.Takiguchi@sony.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH 04/13] ARM: dts: r8a7743: Add missing clock for secondary
+ CA15 CPU core
+Date: Fri, 13 Oct 2017 06:23:01 +0000
+Message-ID: <TY1PR06MB0702D56DCCEA688E8F643F5FB7480@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <1507800916-11509-1-git-send-email-geert+renesas@glider.be>
+ <1507800916-11509-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
-Cc: tbird20d@gmail.com, frowand.list@gmail.com, Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507800916-11509-5-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Hello Geert,
 
-This is the Makefile, Kconfig files of driver 
-and MAINTAINERS file update about the driver 
-for the Sony CXD2880 DVB-T2/T tuner + demodulator.
+> From: linux-renesas-soc-owner@vger.kernel.org [mailto:linux-renesas-soc-
+> owner@vger.kernel.org] On Behalf Of Geert Uytterhoeven
+> Sent: 12 October 2017 10:35
+>=20
+> Currently only the primary CPU in the CA15 cluster has a clocks property,
+> while the secondary CPU core is driven by the same clock.
+> Add the missing clocks property to fix this.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
-Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
-Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
-Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
-Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
-Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
----
+Looks okay to me, thanks.
 
-[Change list]
-Changes in V4
-   We put [PATCH v3 12/14], [PATCH v3 13/14] and [PATCH v3 14/14]
-   in [PATCH v4 12/12].
-   
-   drivers/media/dvb-frontends/cxd2880/Makefile
-      -removed cxd2880_integ_dvbt2.o and cxd2880_integ_dvbt.o 
+Reviewed-by: Chris Paterson <chris.paterson2@renesas.com
 
-Changes in V3
-   drivers/media/dvb-frontends/cxd2880/Makefile
-      -removed cxd2880_math.o  
-
- MAINTAINERS                                  |  9 +++++++++
- drivers/media/dvb-frontends/Kconfig          |  2 ++
- drivers/media/dvb-frontends/Makefile         |  1 +
- drivers/media/dvb-frontends/cxd2880/Kconfig  |  6 ++++++
- drivers/media/dvb-frontends/cxd2880/Makefile | 18 ++++++++++++++++++
- drivers/media/spi/Kconfig                    | 14 ++++++++++++++
- drivers/media/spi/Makefile                   |  5 +++++
- 7 files changed, 55 insertions(+)
- create mode 100644 drivers/media/dvb-frontends/cxd2880/Kconfig
- create mode 100644 drivers/media/dvb-frontends/cxd2880/Makefile
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a74227ad082e..9451def42ebe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8447,6 +8447,15 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Supported
- F:	drivers/media/dvb-frontends/cxd2841er*
- 
-+MEDIA DRIVERS FOR CXD2880
-+M:	Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
-+L:	linux-media@vger.kernel.org
-+W:	http://linuxtv.org/
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Supported
-+F:	drivers/media/dvb-frontends/cxd2880/*
-+F:	drivers/media/spi/cxd2880*
-+
- MEDIA DRIVERS FOR DIGITAL DEVICES PCIE DEVICES
- M:	Daniel Scheller <d.scheller.oss@gmail.com>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/media/dvb-frontends/Kconfig b/drivers/media/dvb-frontends/Kconfig
-index 2631d0e0a024..f29100832639 100644
---- a/drivers/media/dvb-frontends/Kconfig
-+++ b/drivers/media/dvb-frontends/Kconfig
-@@ -546,6 +546,8 @@ config DVB_GP8PSK_FE
- 	depends on DVB_CORE
- 	default DVB_USB_GP8PSK
- 
-+source "drivers/media/dvb-frontends/cxd2880/Kconfig"
-+
- comment "DVB-C (cable) frontends"
- 	depends on DVB_CORE
- 
-diff --git a/drivers/media/dvb-frontends/Makefile b/drivers/media/dvb-frontends/Makefile
-index f45f6a4a4371..e6b387284f6f 100644
---- a/drivers/media/dvb-frontends/Makefile
-+++ b/drivers/media/dvb-frontends/Makefile
-@@ -129,3 +129,4 @@ obj-$(CONFIG_DVB_HORUS3A) += horus3a.o
- obj-$(CONFIG_DVB_ASCOT2E) += ascot2e.o
- obj-$(CONFIG_DVB_HELENE) += helene.o
- obj-$(CONFIG_DVB_ZD1301_DEMOD) += zd1301_demod.o
-+obj-$(CONFIG_DVB_CXD2880) += cxd2880/
-diff --git a/drivers/media/dvb-frontends/cxd2880/Kconfig b/drivers/media/dvb-frontends/cxd2880/Kconfig
-new file mode 100644
-index 000000000000..36b8b6f7c4f7
---- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/Kconfig
-@@ -0,0 +1,6 @@
-+config DVB_CXD2880
-+	tristate "Sony CXD2880 DVB-T2/T tuner + demodulator"
-+	depends on DVB_CORE && SPI
-+	default m if !MEDIA_SUBDRV_AUTOSELECT
-+	help
-+	  Say Y when you want to support this frontend.
-\ No newline at end of file
-diff --git a/drivers/media/dvb-frontends/cxd2880/Makefile b/drivers/media/dvb-frontends/cxd2880/Makefile
-new file mode 100644
-index 000000000000..dddedd178cf7
---- /dev/null
-+++ b/drivers/media/dvb-frontends/cxd2880/Makefile
-@@ -0,0 +1,18 @@
-+cxd2880-objs := cxd2880_common.o \
-+		cxd2880_devio_spi.o \
-+		cxd2880_integ.o \
-+		cxd2880_io.o \
-+		cxd2880_spi_device.o \
-+		cxd2880_stopwatch_port.o \
-+		cxd2880_tnrdmd.o \
-+		cxd2880_tnrdmd_dvbt2.o \
-+		cxd2880_tnrdmd_dvbt2_mon.o \
-+		cxd2880_tnrdmd_dvbt.o \
-+		cxd2880_tnrdmd_dvbt_mon.o\
-+		cxd2880_tnrdmd_mon.o\
-+		cxd2880_top.o
-+
-+obj-$(CONFIG_DVB_CXD2880) += cxd2880.o
-+
-+ccflags-y += -Idrivers/media/dvb-core
-+ccflags-y += -Idrivers/media/dvb-frontends
-diff --git a/drivers/media/spi/Kconfig b/drivers/media/spi/Kconfig
-index a21f5a39a440..b07ac86fc53c 100644
---- a/drivers/media/spi/Kconfig
-+++ b/drivers/media/spi/Kconfig
-@@ -12,3 +12,17 @@ config VIDEO_GS1662
- endmenu
- 
- endif
-+
-+if SPI
-+menu "Media SPI Adapters"
-+
-+config CXD2880_SPI_DRV
-+	tristate "Sony CXD2880 SPI support"
-+	depends on DVB_CORE && SPI
-+	default m if !MEDIA_SUBDRV_AUTOSELECT
-+	help
-+	  Choose if you would like to have SPI interface support for Sony CXD2880.
-+
-+endmenu
-+
-+endif
-diff --git a/drivers/media/spi/Makefile b/drivers/media/spi/Makefile
-index ea64013d16cc..40e0f88d9f6c 100644
---- a/drivers/media/spi/Makefile
-+++ b/drivers/media/spi/Makefile
-@@ -1 +1,6 @@
- obj-$(CONFIG_VIDEO_GS1662) += gs1662.o
-+obj-$(CONFIG_CXD2880_SPI_DRV) += cxd2880-spi.o
-+
-+ccflags-y += -Idrivers/media/dvb-core
-+ccflags-y += -Idrivers/media/dvb-frontends
-+ccflags-y += -Idrivers/media/dvb-frontends/cxd2880
-\ No newline at end of file
--- 
-2.13.0
+> ---
+>  arch/arm/boot/dts/r8a7743.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm/boot/dts/r8a7743.dtsi
+> b/arch/arm/boot/dts/r8a7743.dtsi index
+> d541fd9ffafb34ce..e09517bce30db2e8 100644
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -63,6 +63,7 @@
+>  			compatible =3D "arm,cortex-a15";
+>  			reg =3D <1>;
+>  			clock-frequency =3D <1500000000>;
+> +			clocks =3D <&cpg CPG_CORE R8A7743_CLK_Z>;
+>  			power-domains =3D <&sysc R8A7743_PD_CA15_CPU1>;
+>  			next-level-cache =3D <&L2_CA15>;
+>  		};
+> --
+> 2.7.4
