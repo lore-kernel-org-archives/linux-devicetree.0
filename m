@@ -1,64 +1,65 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 4/4] drm: rcar-du: Add R8A7745 support
-Date: Fri, 13 Oct 2017 16:22:22 +0100
-Message-ID: <1507908142-13142-5-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 04/13] arm64: alternatives: use tpidr_el2 on VHE hosts
+Date: Fri, 13 Oct 2017 16:31:48 +0100
+Message-ID: <20171013153148.dnejsvhxeui6opfw@armageddon.cambridge.arm.com>
+References: <20170922182614.27885-1-james.morse@arm.com>
+ <20170922182614.27885-5-james.morse@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170922182614.27885-5-james.morse-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the R8A7745 DU (which is very similar to the R8A7794 DU);
-it has 2 RGB outputs.
+On Fri, Sep 22, 2017 at 07:26:05PM +0100, James Morse wrote:
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index cd52d365d1f0..8e4c7da2b126 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -865,6 +865,7 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		.capability = ARM64_HAS_VIRT_HOST_EXTN,
+>  		.def_scope = SCOPE_SYSTEM,
+>  		.matches = runs_at_el2,
+> +		.enable = cpu_copy_el2regs,
+>  	},
+>  	{
+>  		.desc = "32-bit EL0 Support",
+> @@ -1308,3 +1309,25 @@ static int __init enable_mrs_emulation(void)
+>  }
+>  
+>  late_initcall(enable_mrs_emulation);
+> +
+> +int cpu_copy_el2regs(void *__unused)
+> +{
+> +	int do_copyregs = 0;
+> +
+> +	/*
+> +	 * Copy register values that aren't redirected by hardware.
+> +	 *
+> +	 * Before code patching, we only set tpidr_el1, all CPUs need to copy
+> +	 * this value to tpidr_el2 before we patch the code. Once we've done
+> +	 * that, freshly-onlined CPUs will set tpidr_el2, so we don't need to
+> +	 * do anything here.
+> +	 */
+> +	asm volatile(ALTERNATIVE("mov %0, #1", "mov %0, #0",
+> +				 ARM64_HAS_VIRT_HOST_EXTN)
+> +		    : "=r" (do_copyregs) : : );
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- drivers/gpu/drm/rcar-du/rcar_du_drv.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Can you just do:
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-index 3db5e8d..faa5b32 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -55,6 +55,27 @@ static const struct rcar_du_device_info rzg1_du_r8a7743_info = {
- 	.num_lvds = 1,
- };
- 
-+static const struct rcar_du_device_info rzg1_du_r8a7745_info = {
-+	.gen = 2,
-+	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
-+		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
-+	.num_crtcs = 2,
-+	.routes = {
-+		/*
-+		 * R8A7745 has two RGB outputs
-+		 */
-+		[RCAR_DU_OUTPUT_DPAD0] = {
-+			.possible_crtcs = BIT(0),
-+			.port = 0,
-+		},
-+		[RCAR_DU_OUTPUT_DPAD1] = {
-+			.possible_crtcs = BIT(1),
-+			.port = 1,
-+		},
-+	},
-+	.num_lvds = 0,
-+};
-+
- static const struct rcar_du_device_info rcar_du_r8a7779_info = {
- 	.gen = 2,
- 	.features = 0,
-@@ -229,6 +250,7 @@ static const struct rcar_du_device_info rcar_du_r8a7796_info = {
- 
- static const struct of_device_id rcar_du_of_table[] = {
- 	{ .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
-+	{ .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
- 	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
- 	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
- 	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
--- 
-2.7.4
+	if (cpu_have_const_cap(ARM64_HAS_VIRT_HOST_EXTN))
+		write_sysreg(read_sysreg(tpidr_el1), tpidr_el2);
 
+At this point the capability bits should be set and the jump labels
+enabled.
+
+Otherwise:
+
+Reviewed-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
