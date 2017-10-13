@@ -1,306 +1,52 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 06/13] usb: mtu3: use FORCE/RG_IDDIG to implement manual
- DRD switch
-Date: Fri, 13 Oct 2017 17:10:42 +0800
-Message-ID: <9036d6031f6ec77a2ff17047b37d3408590441eb.1507885126.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 08/13] usb: mtu3: get optional vbus for host only mode
+Date: Fri, 13 Oct 2017 17:10:44 +0800
+Message-ID: <a0927da253e9994e9854d7bd3f486548f96a18f2.1507885127.git.chunfeng.yun@mediatek.com>
 References: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In order to keep manual DRD switch independent on IDDIG interrupt,
-make use of FORCE/RG_IDDIG instead of IDDIG EINT interrupt to
-implement manual DRD switch function.
+When dr_mode is set as USB_DR_MODE_HOST, it's better to try to
+get optional vbus, this can increase flexibility, although we
+can set vbus as always on for regulator or put it in host driver
+to turn it on.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3.h         |   18 ++++++++----
- drivers/usb/mtu3/mtu3_dr.c      |   61 +++++++++++++++++++++++++++++----------
- drivers/usb/mtu3/mtu3_dr.h      |    6 ++++
- drivers/usb/mtu3/mtu3_host.c    |    5 ++++
- drivers/usb/mtu3/mtu3_hw_regs.h |    2 ++
- drivers/usb/mtu3/mtu3_plat.c    |   38 ++----------------------
- 6 files changed, 74 insertions(+), 56 deletions(-)
+ drivers/usb/mtu3/mtu3_plat.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index ef2dc92..b0c2b5d 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -115,6 +115,19 @@ enum mtu3_g_ep0_state {
- };
- 
- /**
-+ * MTU3_DR_FORCE_NONE: automatically switch host and periperal mode
-+ *		by IDPIN signal.
-+ * MTU3_DR_FORCE_HOST: force to enter host mode and override OTG
-+ *		IDPIN signal.
-+ * MTU3_DR_FORCE_DEVICE: force to enter peripheral mode.
-+ */
-+enum mtu3_dr_force_mode {
-+	MTU3_DR_FORCE_NONE = 0,
-+	MTU3_DR_FORCE_HOST,
-+	MTU3_DR_FORCE_DEVICE,
-+};
-+
-+/**
-  * @base: the base address of fifo
-  * @limit: the bitmap size in bits
-  * @bitmap: fifo bitmap in unit of @MTU3_EP_FIFO_UNIT
-@@ -196,7 +209,6 @@ struct mtu3_gpd_ring {
- *		xHCI driver initialization, it's necessary for system bootup
- *		as device.
- * @is_u3_drd: whether port0 supports usb3.0 dual-role device or not
--* @id_*: used to maually switch between host and device modes by idpin
- * @manual_drd_enabled: it's true when supports dual-role device by debugfs
- *		to switch host/device modes depending on user input.
- */
-@@ -207,10 +219,6 @@ struct otg_switch_mtk {
- 	struct notifier_block id_nb;
- 	struct delayed_work extcon_reg_dwork;
- 	bool is_u3_drd;
--	/* dual-role switch by debugfs */
--	struct pinctrl *id_pinctrl;
--	struct pinctrl_state *id_float;
--	struct pinctrl_state *id_ground;
- 	bool manual_drd_enabled;
- };
- 
-diff --git a/drivers/usb/mtu3/mtu3_dr.c b/drivers/usb/mtu3/mtu3_dr.c
-index 5602561..ec442cd 100644
---- a/drivers/usb/mtu3/mtu3_dr.c
-+++ b/drivers/usb/mtu3/mtu3_dr.c
-@@ -261,21 +261,22 @@ static void extcon_register_dwork(struct work_struct *work)
-  * depending on user input.
-  * This is useful in special cases, such as uses TYPE-A receptacle but also
-  * wants to support dual-role mode.
-- * It generates cable state changes by pulling up/down IDPIN and
-- * notifies driver to switch mode by "extcon-usb-gpio".
-- * NOTE: when use MICRO receptacle, should not enable this interface.
-  */
- static void ssusb_mode_manual_switch(struct ssusb_mtk *ssusb, int to_host)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
- 
--	if (to_host)
--		pinctrl_select_state(otg_sx->id_pinctrl, otg_sx->id_ground);
--	else
--		pinctrl_select_state(otg_sx->id_pinctrl, otg_sx->id_float);
-+	if (to_host) {
-+		ssusb_set_force_mode(ssusb, MTU3_DR_FORCE_HOST);
-+		ssusb_set_mailbox(otg_sx, MTU3_VBUS_OFF);
-+		ssusb_set_mailbox(otg_sx, MTU3_ID_GROUND);
-+	} else {
-+		ssusb_set_force_mode(ssusb, MTU3_DR_FORCE_DEVICE);
-+		ssusb_set_mailbox(otg_sx, MTU3_ID_FLOAT);
-+		ssusb_set_mailbox(otg_sx, MTU3_VBUS_VALID);
-+	}
- }
- 
--
- static int ssusb_mode_show(struct seq_file *sf, void *unused)
- {
- 	struct ssusb_mtk *ssusb = sf->private;
-@@ -388,17 +389,45 @@ static void ssusb_debugfs_exit(struct ssusb_mtk *ssusb)
- 	debugfs_remove_recursive(ssusb->dbgfs_root);
- }
- 
-+void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
-+			  enum mtu3_dr_force_mode mode)
-+{
-+	u32 value;
-+
-+	value = mtu3_readl(ssusb->ippc_base, SSUSB_U2_CTRL(0));
-+	switch (mode) {
-+	case MTU3_DR_FORCE_DEVICE:
-+		value |= SSUSB_U2_PORT_FORCE_IDDIG | SSUSB_U2_PORT_RG_IDDIG;
-+		break;
-+	case MTU3_DR_FORCE_HOST:
-+		value |= SSUSB_U2_PORT_FORCE_IDDIG;
-+		value &= ~SSUSB_U2_PORT_RG_IDDIG;
-+		break;
-+	case MTU3_DR_FORCE_NONE:
-+		value &= ~(SSUSB_U2_PORT_FORCE_IDDIG | SSUSB_U2_PORT_RG_IDDIG);
-+		break;
-+	default:
-+		return;
-+	}
-+	mtu3_writel(ssusb->ippc_base, SSUSB_U2_CTRL(0), value);
-+}
-+
- int ssusb_otg_switch_init(struct ssusb_mtk *ssusb)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
- 
--	INIT_DELAYED_WORK(&otg_sx->extcon_reg_dwork, extcon_register_dwork);
--
--	if (otg_sx->manual_drd_enabled)
-+	if (otg_sx->manual_drd_enabled) {
- 		ssusb_debugfs_init(ssusb);
--
--	/* It is enough to delay 1s for waiting for host initialization */
--	schedule_delayed_work(&otg_sx->extcon_reg_dwork, HZ);
-+	} else {
-+		INIT_DELAYED_WORK(&otg_sx->extcon_reg_dwork,
-+				  extcon_register_dwork);
-+
-+		/*
-+		 * It is enough to delay 1s for waiting for
-+		 * host initialization
-+		 */
-+		schedule_delayed_work(&otg_sx->extcon_reg_dwork, HZ);
-+	}
- 
- 	return 0;
- }
-@@ -407,8 +436,8 @@ void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb)
- {
- 	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
- 
--	cancel_delayed_work(&otg_sx->extcon_reg_dwork);
--
- 	if (otg_sx->manual_drd_enabled)
- 		ssusb_debugfs_exit(ssusb);
-+	else
-+		cancel_delayed_work(&otg_sx->extcon_reg_dwork);
- }
-diff --git a/drivers/usb/mtu3/mtu3_dr.h b/drivers/usb/mtu3/mtu3_dr.h
-index 9b228b5..0f0cbac 100644
---- a/drivers/usb/mtu3/mtu3_dr.h
-+++ b/drivers/usb/mtu3/mtu3_dr.h
-@@ -87,6 +87,8 @@ static inline void ssusb_gadget_exit(struct ssusb_mtk *ssusb)
- int ssusb_otg_switch_init(struct ssusb_mtk *ssusb);
- void ssusb_otg_switch_exit(struct ssusb_mtk *ssusb);
- int ssusb_set_vbus(struct otg_switch_mtk *otg_sx, int is_on);
-+void ssusb_set_force_mode(struct ssusb_mtk *ssusb,
-+			  enum mtu3_dr_force_mode mode);
- 
- #else
- 
-@@ -103,6 +105,10 @@ static inline int ssusb_set_vbus(struct otg_switch_mtk *otg_sx, int is_on)
- 	return 0;
- }
- 
-+static inline void
-+ssusb_set_force_mode(struct ssusb_mtk *ssusb, enum mtu3_dr_force_mode mode)
-+{}
-+
- #endif
- 
- #endif		/* _MTU3_DR_H_ */
-diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
-index edcc591..ec76b86 100644
---- a/drivers/usb/mtu3/mtu3_host.c
-+++ b/drivers/usb/mtu3/mtu3_host.c
-@@ -189,6 +189,8 @@ int ssusb_host_disable(struct ssusb_mtk *ssusb, bool suspend)
- 
- static void ssusb_host_setup(struct ssusb_mtk *ssusb)
- {
-+	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
-+
- 	host_ports_num_get(ssusb);
- 
- 	/*
-@@ -197,6 +199,9 @@ static void ssusb_host_setup(struct ssusb_mtk *ssusb)
- 	 */
- 	ssusb_host_enable(ssusb);
- 
-+	if (otg_sx->manual_drd_enabled)
-+		ssusb_set_force_mode(ssusb, MTU3_DR_FORCE_HOST);
-+
- 	/* if port0 supports dual-role, works as host mode by default */
- 	ssusb_set_vbus(&ssusb->otg_switch, 1);
- }
-diff --git a/drivers/usb/mtu3/mtu3_hw_regs.h b/drivers/usb/mtu3/mtu3_hw_regs.h
-index b605975..a7e35f6 100644
---- a/drivers/usb/mtu3/mtu3_hw_regs.h
-+++ b/drivers/usb/mtu3/mtu3_hw_regs.h
-@@ -472,6 +472,8 @@
- #define SSUSB_U3_PORT_DIS		BIT(0)
- 
- /* U3D_SSUSB_U2_CTRL_0P */
-+#define SSUSB_U2_PORT_RG_IDDIG		BIT(12)
-+#define SSUSB_U2_PORT_FORCE_IDDIG	BIT(11)
- #define SSUSB_U2_PORT_VBUSVALID	BIT(9)
- #define SSUSB_U2_PORT_OTG_SEL		BIT(7)
- #define SSUSB_U2_PORT_HOST		BIT(2)
 diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index fb89920..1e473b0 100644
+index 1e473b0..7ca81f4e 100644
 --- a/drivers/usb/mtu3/mtu3_plat.c
 +++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -21,7 +21,6 @@
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
--#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
+@@ -300,10 +300,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	of_property_read_u32(node, "mediatek,u3p-dis-msk",
+ 			     &ssusb->u3p_dis_msk);
  
- #include "mtu3.h"
-@@ -212,33 +211,6 @@ static void ssusb_ip_sw_reset(struct ssusb_mtk *ssusb)
- 	mtu3_clrbits(ssusb->ippc_base, U3D_SSUSB_IP_PW_CTRL0, SSUSB_IP_SW_RST);
- }
- 
--static int get_iddig_pinctrl(struct ssusb_mtk *ssusb)
--{
--	struct otg_switch_mtk *otg_sx = &ssusb->otg_switch;
+-	if (ssusb->dr_mode != USB_DR_MODE_OTG)
+-		return 0;
 -
--	otg_sx->id_pinctrl = devm_pinctrl_get(ssusb->dev);
--	if (IS_ERR(otg_sx->id_pinctrl)) {
--		dev_err(ssusb->dev, "Cannot find id pinctrl!\n");
--		return PTR_ERR(otg_sx->id_pinctrl);
--	}
--
--	otg_sx->id_float =
--		pinctrl_lookup_state(otg_sx->id_pinctrl, "id_float");
--	if (IS_ERR(otg_sx->id_float)) {
--		dev_err(ssusb->dev, "Cannot find pinctrl id_float!\n");
--		return PTR_ERR(otg_sx->id_float);
--	}
--
--	otg_sx->id_ground =
--		pinctrl_lookup_state(otg_sx->id_pinctrl, "id_ground");
--	if (IS_ERR(otg_sx->id_ground)) {
--		dev_err(ssusb->dev, "Cannot find pinctrl id_ground!\n");
--		return PTR_ERR(otg_sx->id_ground);
--	}
--
--	return 0;
--}
--
- /* ignore the error if the clock does not exist */
- static struct clk *get_optional_clk(struct device *dev, const char *id)
- {
-@@ -349,15 +321,11 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 			dev_err(ssusb->dev, "couldn't get extcon device\n");
- 			return -EPROBE_DEFER;
- 		}
--		if (otg_sx->manual_drd_enabled) {
--			ret = get_iddig_pinctrl(ssusb);
--			if (ret)
--				return ret;
--		}
+-	/* if dual-role mode is supported */
+ 	vbus = devm_regulator_get(&pdev->dev, "vbus");
+ 	if (IS_ERR(vbus)) {
+ 		dev_err(dev, "failed to get vbus\n");
+@@ -311,6 +307,10 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
  	}
+ 	otg_sx->vbus = vbus;
  
--	dev_info(dev, "dr_mode: %d, is_u3_dr: %d, u3p_dis_msk:%x\n",
--		ssusb->dr_mode, otg_sx->is_u3_drd, ssusb->u3p_dis_msk);
-+	dev_info(dev, "dr_mode: %d, is_u3_dr: %d, u3p_dis_msk: %x, drd: %s\n",
-+		ssusb->dr_mode, otg_sx->is_u3_drd, ssusb->u3p_dis_msk,
-+		otg_sx->manual_drd_enabled ? "manual" : "auto");
- 
- 	return 0;
- }
++	if (ssusb->dr_mode == USB_DR_MODE_HOST)
++		return 0;
++
++	/* if dual-role mode is supported */
+ 	otg_sx->is_u3_drd = of_property_read_bool(node, "mediatek,usb3-drd");
+ 	otg_sx->manual_drd_enabled =
+ 		of_property_read_bool(node, "enable-manual-drd");
 -- 
 1.7.9.5
