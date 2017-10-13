@@ -1,50 +1,85 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 09/13] usb: mtu3: set invalid dr_mode as dual-role mode
-Date: Fri, 13 Oct 2017 17:10:45 +0800
-Message-ID: <64fa4eddb0dc3394e746eb02b5b395ee15626f86.1507885127.git.chunfeng.yun@mediatek.com>
-References: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] pwm: meson: use generic compatibles
+Date: Fri, 13 Oct 2017 11:16:42 +0200
+Message-ID: <20171013091642.31948-1-jbrunet@baylibre.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Treat dr_mode of USB_DR_MODE_UNKNOWN as USB_DR_MODE_OTG to
-enhance functional robustness.
+The meson pwm driver seems to be compatible with more SoCs than
+initially thought. Let's use the most generic compatibles he have in
+DT instead of the gxbb specific ones
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/usb/mtu3/mtu3_plat.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/pwm/pwm-meson.txt |  6 +++---
+ drivers/pwm/pwm-meson.c                             | 12 ++++++------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index 7ca81f4e..9ff3357 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -283,10 +283,8 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 		return PTR_ERR(ssusb->ippc_base);
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-meson.txt b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
+index 1ee81321c35e..439e05030553 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-meson.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
+@@ -3,8 +3,8 @@ Amlogic Meson PWM Controller
  
- 	ssusb->dr_mode = usb_get_dr_mode(dev);
--	if (ssusb->dr_mode == USB_DR_MODE_UNKNOWN) {
--		dev_err(dev, "dr_mode is error\n");
--		return -EINVAL;
--	}
-+	if (ssusb->dr_mode == USB_DR_MODE_UNKNOWN)
-+		ssusb->dr_mode = USB_DR_MODE_OTG;
+ Required properties:
+ - compatible: Shall contain "amlogic,meson8b-pwm"
+-                         or "amlogic,meson-gxbb-pwm"
+-                         or "amlogic,meson-gxbb-ao-pwm"
++                         or "amlogic,meson-gx-pwm"
++                         or "amlogic,meson-gx-ao-pwm"
+ - #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
+   the cells format.
  
- 	if (ssusb->dr_mode == USB_DR_MODE_PERIPHERAL)
- 		return 0;
+@@ -16,7 +16,7 @@ Optional properties:
+ Example:
+ 
+ 	pwm_ab: pwm@8550 {
+-		compatible = "amlogic,meson-gxbb-pwm";
++		compatible = "amlogic,meson-gx-pwm";
+ 		reg = <0x0 0x08550 0x0 0x10>;
+ 		#pwm-cells = <3>;
+ 		clocks = <&xtal>, <&xtal>;
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index d589331d1884..ababcc5ca3f1 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -393,7 +393,7 @@ static const char * const pwm_gxbb_parent_names[] = {
+ 	"xtal", "hdmi_pll", "fclk_div4", "fclk_div3"
+ };
+ 
+-static const struct meson_pwm_data pwm_gxbb_data = {
++static const struct meson_pwm_data pwm_gx_data = {
+ 	.parent_names = pwm_gxbb_parent_names,
+ 	.num_parents = ARRAY_SIZE(pwm_gxbb_parent_names),
+ };
+@@ -406,7 +406,7 @@ static const char * const pwm_gxbb_ao_parent_names[] = {
+ 	"xtal", "clk81"
+ };
+ 
+-static const struct meson_pwm_data pwm_gxbb_ao_data = {
++static const struct meson_pwm_data pwm_gx_ao_data = {
+ 	.parent_names = pwm_gxbb_ao_parent_names,
+ 	.num_parents = ARRAY_SIZE(pwm_gxbb_ao_parent_names),
+ };
+@@ -417,12 +417,12 @@ static const struct of_device_id meson_pwm_matches[] = {
+ 		.data = &pwm_meson8b_data
+ 	},
+ 	{
+-		.compatible = "amlogic,meson-gxbb-pwm",
+-		.data = &pwm_gxbb_data
++		.compatible = "amlogic,meson-gx-pwm",
++		.data = &pwm_gx_data
+ 	},
+ 	{
+-		.compatible = "amlogic,meson-gxbb-ao-pwm",
+-		.data = &pwm_gxbb_ao_data
++		.compatible = "amlogic,meson-gx-ao-pwm",
++		.data = &pwm_gx_ao_data
+ 	},
+ 	{},
+ };
 -- 
-1.7.9.5
+2.13.6
