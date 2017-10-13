@@ -1,42 +1,133 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 13/13] dt-bindings: usb: mtu3: remove optional pinctrls
-Date: Fri, 13 Oct 2017 17:10:49 +0800
-Message-ID: <7829c4747d35a24cfc1497268a3642435ccfc2a2.1507885127.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 02/13] usb: mtu3: support option to disable usb3 ports
+Date: Fri, 13 Oct 2017 17:10:38 +0800
+Message-ID: <61b4bd47ac6e2c3cc004d943a93bf9d2737a3610.1507885126.git.chunfeng.yun@mediatek.com>
 References: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <6dc39e99240f25c83f8c36d23361ec89dcfb33ce.1507885126.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove optional pinctrls due to using FORCE/RG_IDDIG to implement
-manual switch function.
+Add support to disable specific usb3 ports, it's useful when
+usb3 phy is shared with PCIe or SATA, because we should disable
+the corresponding usb3 port if the phy is used by PCIe or SATA.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../devicetree/bindings/usb/mediatek,mtu3.txt      |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/usb/mtu3/mtu3.h      |    3 +++
+ drivers/usb/mtu3/mtu3_host.c |   16 +++++++++++++---
+ drivers/usb/mtu3/mtu3_plat.c |    8 ++++++--
+ 3 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 49c982b..b2271d8 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -30,9 +30,10 @@ Optional properties:
- 	when supports dual-role mode.
-  - vbus-supply : reference to the VBUS regulator, needed when supports
- 	dual-role mode.
-- - pinctl-names : a pinctrl state named "default" must be defined,
--	"id_float" and "id_ground" are optinal which depends on
--	"mediatek,enable-manual-drd"
-+ - pinctrl-names : a pinctrl state named "default" is optional, and need be
-+	defined if auto drd switch is enabled, that means the property dr_mode
-+	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
-+	is not set.
-  - pinctrl-0 : pin control group
- 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
+index b26fffc..112723d 100644
+--- a/drivers/usb/mtu3/mtu3.h
++++ b/drivers/usb/mtu3/mtu3.h
+@@ -210,6 +210,8 @@ struct otg_switch_mtk {
+  *		host only, device only or dual-role mode
+  * @u2_ports: number of usb2.0 host ports
+  * @u3_ports: number of usb3.0 host ports
++ * @u3p_dis_msk: mask of disabling usb3 ports, for example, bit0==1 to
++ *		disable u3port0, bit1==1 to disable u3port1,... etc
+  * @dbgfs_root: only used when supports manual dual-role switch via debugfs
+  * @wakeup_en: it's true when supports remote wakeup in host mode
+  * @wk_deb_p0: port0's wakeup debounce clock
+@@ -232,6 +234,7 @@ struct ssusb_mtk {
+ 	bool is_host;
+ 	int u2_ports;
+ 	int u3_ports;
++	int u3p_dis_msk;
+ 	struct dentry *dbgfs_root;
+ 	/* usb wakeup for host mode */
+ 	bool wakeup_en;
+diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
+index e42d308..4dd9508 100644
+--- a/drivers/usb/mtu3/mtu3_host.c
++++ b/drivers/usb/mtu3/mtu3_host.c
+@@ -151,6 +151,7 @@ int ssusb_host_enable(struct ssusb_mtk *ssusb)
+ 	void __iomem *ibase = ssusb->ippc_base;
+ 	int num_u3p = ssusb->u3_ports;
+ 	int num_u2p = ssusb->u2_ports;
++	int u3_ports_disabed;
+ 	u32 check_clk;
+ 	u32 value;
+ 	int i;
+@@ -158,8 +159,14 @@ int ssusb_host_enable(struct ssusb_mtk *ssusb)
+ 	/* power on host ip */
+ 	mtu3_clrbits(ibase, U3D_SSUSB_IP_PW_CTRL1, SSUSB_IP_HOST_PDN);
  
+-	/* power on and enable all u3 ports */
++	/* power on and enable u3 ports except skipped ones */
++	u3_ports_disabed = 0;
+ 	for (i = 0; i < num_u3p; i++) {
++		if ((0x1 << i) & ssusb->u3p_dis_msk) {
++			u3_ports_disabed++;
++			continue;
++		}
++
+ 		value = mtu3_readl(ibase, SSUSB_U3_CTRL(i));
+ 		value &= ~(SSUSB_U3_PORT_PDN | SSUSB_U3_PORT_DIS);
+ 		value |= SSUSB_U3_PORT_HOST_SEL;
+@@ -175,7 +182,7 @@ int ssusb_host_enable(struct ssusb_mtk *ssusb)
+ 	}
+ 
+ 	check_clk = SSUSB_XHCI_RST_B_STS;
+-	if (num_u3p)
++	if (num_u3p > u3_ports_disabed)
+ 		check_clk = SSUSB_U3_MAC_RST_B_STS;
+ 
+ 	return ssusb_check_clocks(ssusb, check_clk);
+@@ -190,8 +197,11 @@ int ssusb_host_disable(struct ssusb_mtk *ssusb, bool suspend)
+ 	int ret;
+ 	int i;
+ 
+-	/* power down and disable all u3 ports */
++	/* power down and disable u3 ports except skipped ones */
+ 	for (i = 0; i < num_u3p; i++) {
++		if ((0x1 << i) & ssusb->u3p_dis_msk)
++			continue;
++
+ 		value = mtu3_readl(ibase, SSUSB_U3_CTRL(i));
+ 		value |= SSUSB_U3_PORT_PDN;
+ 		value |= suspend ? 0 : SSUSB_U3_PORT_DIS;
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index 088e3e6..9edad30 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -276,6 +276,10 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	if (ret)
+ 		return ret;
+ 
++	/* optional property, ignore the error if it does not exist */
++	of_property_read_u32(node, "mediatek,u3p-dis-msk",
++			     &ssusb->u3p_dis_msk);
++
+ 	if (ssusb->dr_mode != USB_DR_MODE_OTG)
+ 		return 0;
+ 
+@@ -304,8 +308,8 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 		}
+ 	}
+ 
+-	dev_info(dev, "dr_mode: %d, is_u3_dr: %d\n",
+-		ssusb->dr_mode, otg_sx->is_u3_drd);
++	dev_info(dev, "dr_mode: %d, is_u3_dr: %d, u3p_dis_msk:%x\n",
++		ssusb->dr_mode, otg_sx->is_u3_drd, ssusb->u3p_dis_msk);
+ 
+ 	return 0;
+ }
 -- 
 1.7.9.5
