@@ -1,82 +1,140 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: mt2712: Add auxadc device node.
-Date: Fri, 13 Oct 2017 17:11:32 +0200
-Message-ID: <0e1bac27-18ca-121c-f1d7-8063af177a8b@gmail.com>
-References: <1505957212-13402-1-git-send-email-zhiyong.tao@mediatek.com>
- <1505957212-13402-4-git-send-email-zhiyong.tao@mediatek.com>
- <20170924164705.78cbb856@archlinux>
+From: Emil Renner Berthing <emil.renner.berthing@gmail.com>
+Subject: Re: [RESEND PATCH 2/2] arm64: dts: rockchip: Enable edp disaplay on kevin
+Date: Fri, 13 Oct 2017 17:15:50 +0200
+Message-ID: <CANBLGczVi9=+3um-jMmRxbtG+WsJNDXeKTFQYCZ=e=gnNj67gA@mail.gmail.com>
+References: <20171013104138.3216-1-jeffy.chen@rock-chips.com>
+ <20171013104138.3216-3-jeffy.chen@rock-chips.com> <3037285.0MAZvLKA4I@phil> <CANBLGcyqbfmVJ75Nu_RtVD2TUJs_pXZ+jZBhQ7J0E9U4DvwtSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170924164705.78cbb856@archlinux>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANBLGcyqbfmVJ75Nu_RtVD2TUJs_pXZ+jZBhQ7J0E9U4DvwtSg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, Sean Paul <seanpaul@chromium.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, broonie@kernel.org, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/24/2017 05:47 PM, Jonathan Cameron wrote:
-> On Thu, 21 Sep 2017 09:26:52 +0800
-> Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> 
->> Add auxadc device node for MT2712.
+On 13 October 2017 at 15:42, Emil Renner Berthing
+<emil.renner.berthing@gmail.com> wrote:
+> On 13 October 2017 at 15:25, Heiko Stuebner <heiko@sntech.de> wrote:
+>> Am Freitag, 13. Oktober 2017, 18:41:38 CEST schrieb Jeffy Chen:
+>>> Add edp panel and enable related nodes on kevin.
+>>>
+>>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 >>
->> Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> I've applied the IIO patches to make this work, so assume this will get
-> picked up in due course.
-> 
-
-pushed now to v4.14-next/dts64
-Thanks.
-
-> Jonathan
-> 
->> ---
->> This patch dependents on "Mediatek MT2712 clock and scpsys support"[1].
->> Please accept this patch together with [1].
->> [1]http://lists.infradead.org/pipermail/linux-mediatek/2017-September/010461.html
->> ---
->>   arch/arm64/boot/dts/mediatek/mt2712-evb.dts |    4 ++++
->>   arch/arm64/boot/dts/mediatek/mt2712e.dtsi   |    9 +++++++++
->>   2 files changed, 13 insertions(+)
+>> does this actually work with mainline kernel sources?
 >>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
->> index 14163b9..76cbf4a 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
->> +++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
->> @@ -28,6 +28,10 @@
->>   	};
->>   };
->>   
->> +&auxadc {
->> +	status = "okay";
->> +};
->> +
->>   &uart0 {
->>   	status = "okay";
->>   };
->> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
->> index 3232e4e..bf65c92 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
->> @@ -225,6 +225,15 @@
->>   			 (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_HIGH)>;
->>   	};
->>   
->> +	auxadc: adc@11001000 {
->> +		compatible = "mediatek,mt2712-auxadc";
->> +		reg = <0 0x11001000 0 0x1000>;
->> +		clocks = <&pericfg CLK_PERI_AUXADC>;
->> +		clock-names = "main";
->> +		#io-channel-cells = <1>;
->> +		status = "disabled";
->> +	};
->> +
->>   	uart0: serial@11002000 {
->>   		compatible = "mediatek,mt2712-uart",
->>   			     "mediatek,mt6577-uart";
-> 
+>> Sean Paul did look at making the edp work on Chromebooks recently,
+>> but it seemed there were still parts missing to make it actually display
+>> something.
+>
+> That's funny. I've been using your own similar patch on my Chromebook
+> Plus for a while now and it works "fine":
+> https://github.com/esmil/linux/commits/kevin
+>
+> ..where fine means I can't get the armsoc X11 driver to work, but
+> modesetting works and screenblank seems to freeze the kernel.
+>
+> I'll test this version of the dts changes as soon as I'm near my
+> chrombook again.
+
+I've just tested this series and the internal screen works with this
+too. Screenblank still seems to freeze the kernel though. Eg.
+# setterm --powersave on
+# setterm --blank 1
+#  < wait 1 minute >
+
+But getting output on the screen is progress ;)
+
+As for the spi change suspend now works too, which it didn't before,
+but the screen just didn't come up properly after the suspend. I could
+still ssh into it after suspend though.
+
+/Emil
+
+>>>
+>>>  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
+>>>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
+>>>  2 files changed, 45 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+>>> index a3d3cea7dc4f..bc67b19f0af5 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+>>> @@ -93,6 +93,18 @@
+>>>               pwm-delay-us = <10000>;
+>>>       };
+>>>
+>>> +     edp_panel: edp-panel {
+>>> +             compatible = "sharp,lq123p1jx31", "simple-panel";
+>>> +             backlight = <&backlight>;
+>>> +             power-supply = <&pp3300_disp>;
+>>> +
+>>> +             ports {
+>>> +                     panel_in_edp: endpoint {
+>>> +                             remote-endpoint = <&edp_out_panel>;
+>>> +                     };
+>>> +             };
+>>> +     };
+>>> +
+>>>       thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
+>>>               compatible = "murata,ncp15wb473";
+>>>               pullup-uv = <1800000>;
+>>> @@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
+>>>       };
+>>>  };
+>>>
+>>> +&edp {
+>>> +     status = "okay";
+>>> +
+>>> +     ports {
+>>> +             edp_out: port@1 {
+>>> +                     reg = <1>;
+>>> +                     #address-cells = <1>;
+>>> +                     #size-cells = <0>;
+>>> +
+>>> +                     edp_out_panel: endpoint@0 {
+>>> +                             reg = <0>;
+>>> +                             remote-endpoint = <&panel_in_edp>;
+>>> +                     };
+>>> +             };
+>>> +     };
+>>> +};
+>>> +
+>>>  &ppvar_bigcpu_pwm {
+>>>       regulator-min-microvolt = <798674>;
+>>>       regulator-max-microvolt = <1302172>;
+>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+>>> index 5772c52fbfd3..470105d651c2 100644
+>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+>>> @@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
+>>>       dr_mode = "host";
+>>>  };
+>>>
+>>> +&vopb {
+>>> +     status = "okay";
+>>> +};
+>>> +
+>>> +&vopb_mmu {
+>>> +     status = "okay";
+>>> +};
+>>> +
+>>> +&vopl {
+>>> +     status = "okay";
+>>> +};
+>>> +
+>>> +&vopl_mmu {
+>>> +     status = "okay";
+>>> +};
+>>> +
+>>>  #include <arm/cros-ec-keyboard.dtsi>
+>>>  #include <arm/cros-ec-sbs.dtsi>
+>>>
+>>>
+>>
+>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
