@@ -1,97 +1,1429 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/7] bus: ti-sysc: Add minimal TI sysc interconnect
- target driver
-Date: Fri, 13 Oct 2017 10:51:44 -0700
-Message-ID: <20171013175144.GQ4394@atomide.com>
-References: <20170929223411.9691-1-tony@atomide.com>
- <20170929223411.9691-5-tony@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/2] arm64: dts: fix unit-address leading 0s
+Date: Fri, 13 Oct 2017 12:54:52 -0500
+Message-ID: <20171013175452.1198-2-robh@kernel.org>
+References: <20171013175452.1198-1-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170929223411.9691-5-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20171013175452.1198-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170929 15:35]:
-> +static struct platform_driver sysc_driver = {
-> +	.probe		= sysc_probe,
-> +	.driver         = {
-> +		.name   = "ti-sysc",
-> +		.of_match_table	= sysc_match,
-> +		.pm = &sysc_pm_ops,
-> +	},
-> +};
-> +module_platform_driver(sysc_driver);
+Fix dtc warnings for 'simple_bus_reg' due to leading 0s. Converted using
+the following command:
 
-We also need add remove() to have unbind and bind work
-properly, here's an incremental patch to add that.
+perl -p -i -e 's/\@0+([0-9a-f])/\@$1/g' `find arch/arm64/boot/dts -type -f -name '*.dts*'
 
-Regards,
-
-Tony
-
-8< -------------------------
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 13 Oct 2017 10:48:40 -0700
-Subject: [PATCH] bus: ti-sysc: Fix unbalanced pm_runtime_enable by adding
- remove
-
-Looks like we're missing remove() that's needed if a driver instance
-rebound. Otherwise we will get "Unbalanced pm_runtime_enable!".
-
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/bus/ti-sysc.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 16 +++---
+ arch/arm64/boot/dts/apm/apm-shadowcat.dtsi         |  6 +-
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |  4 +-
+ arch/arm64/boot/dts/arm/foundation-v8.dtsi         | 14 ++---
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts         |  2 +-
+ arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi   | 24 ++++----
+ .../boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts      |  2 +-
+ .../arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts |  2 +-
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |  4 +-
+ .../boot/dts/broadcom/stingray/stingray-clock.dtsi | 12 ++--
+ .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   |  4 +-
+ .../dts/broadcom/stingray/stingray-pinctrl.dtsi    |  4 +-
+ .../boot/dts/broadcom/stingray/stingray-sata.dtsi  | 32 +++++------
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 66 +++++++++++-----------
+ arch/arm64/boot/dts/cavium/thunder-88xx.dts        |  2 +-
+ arch/arm64/boot/dts/cavium/thunder-88xx.dtsi       | 32 +++++------
+ arch/arm64/boot/dts/hisilicon/hip05-d02.dts        |  2 +-
+ arch/arm64/boot/dts/hisilicon/hip06-d03.dts        |  2 +-
+ arch/arm64/boot/dts/marvell/armada-7040-db.dts     |  2 +-
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts     |  2 +-
+ arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts  |  2 +-
+ arch/arm64/boot/dts/marvell/armada-8080-db.dts     |  2 +-
+ arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi |  4 +-
+ arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi |  4 +-
+ .../dts/marvell/armada-ap810-ap0-octa-core.dtsi    |  4 +-
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi         |  6 +-
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          |  6 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       | 10 ++--
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  6 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 12 ++--
+ 30 files changed, 145 insertions(+), 145 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -529,6 +529,30 @@ static int sysc_probe(struct platform_device *pdev)
- 	return error;
- }
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 8c8db1b057df..0daad839f92c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -178,7 +178,7 @@
+ 			#size-cells = <0>;
+ 		};
  
-+static int sysc_remove(struct platform_device *pdev)
-+{
-+	struct sysc *ddata = platform_get_drvdata(pdev);
-+	int error;
-+
-+	error = pm_runtime_get_sync(ddata->dev);
-+	if (error < 0) {
-+		pm_runtime_put_noidle(ddata->dev);
-+		pm_runtime_disable(ddata->dev);
-+		goto unprepare;
-+	}
-+
-+	of_platform_depopulate(&pdev->dev);
-+
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+unprepare:
-+	sysc_unprepare(ddata);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id sysc_match[] = {
- 	{ .compatible = "ti,sysc-omap2" },
- 	{ .compatible = "ti,sysc-omap4" },
-@@ -546,6 +570,7 @@ MODULE_DEVICE_TABLE(of, sysc_match);
+-		usb_otg: usb@01c19000 {
++		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a33-musb";
+ 			reg = <0x01c19000 0x0400>;
+ 			clocks = <&ccu CLK_BUS_OTG>;
+@@ -191,7 +191,7 @@
+ 			status = "disabled";
+ 		};
  
- static struct platform_driver sysc_driver = {
- 	.probe		= sysc_probe,
-+	.remove		= sysc_remove,
- 	.driver         = {
- 		.name   = "ti-sysc",
- 		.of_match_table	= sysc_match,
+-		usbphy: phy@01c19400 {
++		usbphy: phy@1c19400 {
+ 			compatible = "allwinner,sun50i-a64-usb-phy";
+ 			reg = <0x01c19400 0x14>,
+ 			      <0x01c1a800 0x4>,
+@@ -211,7 +211,7 @@
+ 			#phy-cells = <1>;
+ 		};
+ 
+-		ehci0: usb@01c1a000 {
++		ehci0: usb@1c1a000 {
+ 			compatible = "allwinner,sun50i-a64-ehci", "generic-ehci";
+ 			reg = <0x01c1a000 0x100>;
+ 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+@@ -223,7 +223,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ohci0: usb@01c1a400 {
++		ohci0: usb@1c1a400 {
+ 			compatible = "allwinner,sun50i-a64-ohci", "generic-ohci";
+ 			reg = <0x01c1a400 0x100>;
+ 			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+@@ -233,7 +233,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ehci1: usb@01c1b000 {
++		ehci1: usb@1c1b000 {
+ 			compatible = "allwinner,sun50i-a64-ehci", "generic-ehci";
+ 			reg = <0x01c1b000 0x100>;
+ 			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+@@ -247,7 +247,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ohci1: usb@01c1b400 {
++		ohci1: usb@1c1b400 {
+ 			compatible = "allwinner,sun50i-a64-ohci", "generic-ohci";
+ 			reg = <0x01c1b400 0x100>;
+ 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+@@ -259,7 +259,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ccu: clock@01c20000 {
++		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun50i-a64-ccu";
+ 			reg = <0x01c20000 0x400>;
+ 			clocks = <&osc24M>, <&osc32k>;
+@@ -486,7 +486,7 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
+-		r_pio: pinctrl@01f02c00 {
++		r_pio: pinctrl@1f02c00 {
+ 			compatible = "allwinner,sun50i-a64-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+index c9ffffb96e43..d8ecd1661461 100644
+--- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+@@ -19,7 +19,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "apm,strega", "arm,armv8";
+ 			reg = <0x0 0x000>;
+@@ -29,7 +29,7 @@
+ 			#clock-cells = <1>;
+ 			clocks = <&pmd0clk 0>;
+ 		};
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "apm,strega", "arm,armv8";
+ 			reg = <0x0 0x001>;
+@@ -125,7 +125,7 @@
+ 		      <0x0 0x780a0000 0x0 0x20000>,	/* GIC CPU */
+ 		      <0x0 0x780c0000 0x0 0x10000>,	/* GIC VCPU Control */
+ 		      <0x0 0x780e0000 0x0 0x20000>;	/* GIC VCPU */
+-		v2m0: v2m@00000 {
++		v2m0: v2m@0 {
+ 			compatible = "arm,gic-v2m-frame";
+ 			msi-controller;
+ 			reg = <0x0 0x0 0x0 0x1000>;
+diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+index c09a36fed917..00e82b8e9a19 100644
+--- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+@@ -19,7 +19,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "apm,potenza", "arm,armv8";
+ 			reg = <0x0 0x000>;
+@@ -27,7 +27,7 @@
+ 			cpu-release-addr = <0x1 0x0000fff8>;
+ 			next-level-cache = <&xgene_L2_0>;
+ 		};
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "apm,potenza", "arm,armv8";
+ 			reg = <0x0 0x001>;
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+index 8ecdd4331980..21a7a575f02c 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
++++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+@@ -97,7 +97,7 @@
+ 		timeout-sec = <30>;
+ 	};
+ 
+-	smb@08000000 {
++	smb@8000000 {
+ 		compatible = "arm,vexpress,v2m-p1", "simple-bus";
+ 		arm,v2m-memory-map = "rs1";
+ 		#address-cells = <2>; /* SMB chipselect number and offset */
+@@ -189,12 +189,12 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 3 0 0x200000>;
+ 
+-			v2m_sysreg: sysreg@010000 {
++			v2m_sysreg: sysreg@10000 {
+ 				compatible = "arm,vexpress-sysreg";
+ 				reg = <0x010000 0x1000>;
+ 			};
+ 
+-			v2m_serial0: uart@090000 {
++			v2m_serial0: uart@90000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x090000 0x1000>;
+ 				interrupts = <5>;
+@@ -202,7 +202,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			v2m_serial1: uart@0a0000 {
++			v2m_serial1: uart@a0000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x0a0000 0x1000>;
+ 				interrupts = <6>;
+@@ -210,7 +210,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			v2m_serial2: uart@0b0000 {
++			v2m_serial2: uart@b0000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x0b0000 0x1000>;
+ 				interrupts = <7>;
+@@ -218,7 +218,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			v2m_serial3: uart@0c0000 {
++			v2m_serial3: uart@c0000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x0c0000 0x1000>;
+ 				interrupts = <8>;
+@@ -226,7 +226,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			virtio-block@0130000 {
++			virtio-block@130000 {
+ 				compatible = "virtio,mmio";
+ 				reg = <0x130000 0x200>;
+ 				interrupts = <42>;
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+index a83ed2c6bbf7..a1b73f46b625 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+@@ -104,7 +104,7 @@
+ 			     <0 63 4>;
+ 	};
+ 
+-	smb@08000000 {
++	smb@8000000 {
+ 		compatible = "simple-bus";
+ 
+ 		#address-cells = <2>;
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+index 528875c75598..6cadb779729d 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+@@ -60,14 +60,14 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 3 0 0x200000>;
+ 
+-			v2m_sysreg: sysreg@010000 {
++			v2m_sysreg: sysreg@10000 {
+ 				compatible = "arm,vexpress-sysreg";
+ 				reg = <0x010000 0x1000>;
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+ 			};
+ 
+-			v2m_sysctl: sysctl@020000 {
++			v2m_sysctl: sysctl@20000 {
+ 				compatible = "arm,sp810", "arm,primecell";
+ 				reg = <0x020000 0x1000>;
+ 				clocks = <&v2m_refclk32khz>, <&v2m_refclk1mhz>, <&v2m_clk24mhz>;
+@@ -78,7 +78,7 @@
+ 				assigned-clock-parents = <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>;
+ 			};
+ 
+-			aaci@040000 {
++			aaci@40000 {
+ 				compatible = "arm,pl041", "arm,primecell";
+ 				reg = <0x040000 0x1000>;
+ 				interrupts = <11>;
+@@ -86,7 +86,7 @@
+ 				clock-names = "apb_pclk";
+ 			};
+ 
+-			mmci@050000 {
++			mmci@50000 {
+ 				compatible = "arm,pl180", "arm,primecell";
+ 				reg = <0x050000 0x1000>;
+ 				interrupts = <9 10>;
+@@ -98,7 +98,7 @@
+ 				clock-names = "mclk", "apb_pclk";
+ 			};
+ 
+-			kmi@060000 {
++			kmi@60000 {
+ 				compatible = "arm,pl050", "arm,primecell";
+ 				reg = <0x060000 0x1000>;
+ 				interrupts = <12>;
+@@ -106,7 +106,7 @@
+ 				clock-names = "KMIREFCLK", "apb_pclk";
+ 			};
+ 
+-			kmi@070000 {
++			kmi@70000 {
+ 				compatible = "arm,pl050", "arm,primecell";
+ 				reg = <0x070000 0x1000>;
+ 				interrupts = <13>;
+@@ -114,7 +114,7 @@
+ 				clock-names = "KMIREFCLK", "apb_pclk";
+ 			};
+ 
+-			v2m_serial0: uart@090000 {
++			v2m_serial0: uart@90000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x090000 0x1000>;
+ 				interrupts = <5>;
+@@ -122,7 +122,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			v2m_serial1: uart@0a0000 {
++			v2m_serial1: uart@a0000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x0a0000 0x1000>;
+ 				interrupts = <6>;
+@@ -130,7 +130,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			v2m_serial2: uart@0b0000 {
++			v2m_serial2: uart@b0000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x0b0000 0x1000>;
+ 				interrupts = <7>;
+@@ -138,7 +138,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			v2m_serial3: uart@0c0000 {
++			v2m_serial3: uart@c0000 {
+ 				compatible = "arm,pl011", "arm,primecell";
+ 				reg = <0x0c0000 0x1000>;
+ 				interrupts = <8>;
+@@ -146,7 +146,7 @@
+ 				clock-names = "uartclk", "apb_pclk";
+ 			};
+ 
+-			wdt@0f0000 {
++			wdt@f0000 {
+ 				compatible = "arm,sp805", "arm,primecell";
+ 				reg = <0x0f0000 0x1000>;
+ 				interrupts = <0>;
+@@ -219,7 +219,7 @@
+ 				};
+ 			};
+ 
+-			virtio-block@0130000 {
++			virtio-block@130000 {
+ 				compatible = "virtio,mmio";
+ 				reg = <0x130000 0x200>;
+ 				interrupts = <42>;
+diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+index e3a171162bb4..124dceeada1f 100644
+--- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
++++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+@@ -128,7 +128,7 @@
+ 		};
+ 	};
+ 
+-	smb@08000000 {
++	smb@8000000 {
+ 		compatible = "simple-bus";
+ 
+ 		#address-cells = <2>;
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts b/arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts
+index ab4ae1a32fab..f00c21e0767e 100644
+--- a/arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts
++++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts
+@@ -114,7 +114,7 @@
+ 			reg = <0x04000000 0x06400000>; /*  100MB */
+ 		};
+ 
+-		partition@0a400000{
++		partition@a400000{
+ 			label = "ncustfs";
+ 			reg = <0x0a400000 0x35c00000>; /*  860MB */
+ 		};
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+index 35c8457e3d1f..4a2a6af8e752 100644
+--- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+@@ -77,7 +77,7 @@
+ 			next-level-cache = <&CLUSTER0_L2>;
+ 		};
+ 
+-		CLUSTER0_L2: l2-cache@000 {
++		CLUSTER0_L2: l2-cache@0 {
+ 			compatible = "cache";
+ 		};
+ 	};
+@@ -367,7 +367,7 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 0x652e0000 0x80000>;
+ 
+-			v2m0: v2m@00000 {
++			v2m0: v2m@0 {
+ 				compatible = "arm,gic-v2m-frame";
+ 				interrupt-parent = <&gic>;
+ 				msi-controller;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+index cbc43376e25e..3a4d4524b5ed 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-clock.dtsi
+@@ -46,7 +46,7 @@
+ 			clock-mult = <1>;
+ 		};
+ 
+-		genpll0: genpll0@0001d104 {
++		genpll0: genpll0@1d104 {
+ 			#clock-cells = <1>;
+ 			compatible = "brcm,sr-genpll0";
+ 			reg = <0x0001d104 0x32>,
+@@ -58,7 +58,7 @@
+ 					     "clk_paxc_axi";
+ 		};
+ 
+-		genpll3: genpll3@0001d1e0 {
++		genpll3: genpll3@1d1e0 {
+ 			#clock-cells = <1>;
+ 			compatible = "brcm,sr-genpll3";
+ 			reg = <0x0001d1e0 0x32>,
+@@ -68,7 +68,7 @@
+ 					     "clk_sdio";
+ 		};
+ 
+-		genpll4: genpll4@0001d214 {
++		genpll4: genpll4@1d214 {
+ 			#clock-cells = <1>;
+ 			compatible = "brcm,sr-genpll4";
+ 			reg = <0x0001d214 0x32>,
+@@ -80,7 +80,7 @@
+ 					     "clk_bridge_fscpu";
+ 		};
+ 
+-		genpll5: genpll5@0001d248 {
++		genpll5: genpll5@1d248 {
+ 			#clock-cells = <1>;
+ 			compatible = "brcm,sr-genpll5";
+ 			reg = <0x0001d248 0x32>,
+@@ -90,7 +90,7 @@
+ 					     "crypto_ae_clk", "raid_ae_clk";
+ 		};
+ 
+-		lcpll0: lcpll0@0001d0c4 {
++		lcpll0: lcpll0@1d0c4 {
+ 			#clock-cells = <1>;
+ 			compatible = "brcm,sr-lcpll0";
+ 			reg = <0x0001d0c4 0x3c>,
+@@ -101,7 +101,7 @@
+ 					     "clk_sata_500";
+ 		};
+ 
+-		lcpll1: lcpll1@0001d138 {
++		lcpll1: lcpll1@1d138 {
+ 			#clock-cells = <1>;
+ 			compatible = "brcm,sr-lcpll1";
+ 			reg = <0x0001d138 0x3c>,
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
+index 8bf1dc6b46ca..9666969c8c88 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
+@@ -36,7 +36,7 @@
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x67000000 0x00800000>;
+ 
+-		crypto_mbox: crypto_mbox@00000000 {
++		crypto_mbox: crypto_mbox@0 {
+ 			compatible = "brcm,iproc-flexrm-mbox";
+ 			reg = <0x00000000 0x200000>;
+ 			msi-parent = <&gic_its 0x4100>;
+@@ -44,7 +44,7 @@
+ 			dma-coherent;
+ 		};
+ 
+-		raid_mbox: raid_mbox@00400000 {
++		raid_mbox: raid_mbox@400000 {
+ 			compatible = "brcm,iproc-flexrm-mbox";
+ 			reg = <0x00400000 0x200000>;
+ 			dma-coherent;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+index 15214d05fec1..8a3a770e8f2c 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-pinctrl.dtsi
+@@ -32,7 +32,7 @@
+ 
+ #include <dt-bindings/pinctrl/brcm,pinctrl-stingray.h>
+ 
+-		pinconf: pinconf@00140000 {
++		pinconf: pinconf@140000 {
+ 			compatible = "pinconf-single";
+ 			reg = <0x00140000 0x250>;
+ 			pinctrl-single,register-width = <32>;
+@@ -40,7 +40,7 @@
+ 			/* pinconf functions */
+ 		};
+ 
+-		pinmux: pinmux@0014029c {
++		pinmux: pinmux@14029c {
+ 			compatible = "pinctrl-single";
+ 			reg = <0x0014029c 0x250>;
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+index a774709388df..4b5465da81d8 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
+@@ -36,7 +36,7 @@
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x67d00000 0x00800000>;
+ 
+-		sata0: ahci@00210000 {
++		sata0: ahci@210000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00210000 0x1000>;
+ 			reg-names = "ahci";
+@@ -52,7 +52,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy0: sata_phy@00212100 {
++		sata_phy0: sata_phy@212100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00212100 0x1000>;
+ 			reg-names = "phy";
+@@ -66,7 +66,7 @@
+ 			};
+ 		};
+ 
+-		sata1: ahci@00310000 {
++		sata1: ahci@310000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00310000 0x1000>;
+ 			reg-names = "ahci";
+@@ -82,7 +82,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy1: sata_phy@00312100 {
++		sata_phy1: sata_phy@312100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00312100 0x1000>;
+ 			reg-names = "phy";
+@@ -96,7 +96,7 @@
+ 			};
+ 		};
+ 
+-		sata2: ahci@00120000 {
++		sata2: ahci@120000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00120000 0x1000>;
+ 			reg-names = "ahci";
+@@ -112,7 +112,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy2: sata_phy@00122100 {
++		sata_phy2: sata_phy@122100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00122100 0x1000>;
+ 			reg-names = "phy";
+@@ -126,7 +126,7 @@
+ 			};
+ 		};
+ 
+-		sata3: ahci@00130000 {
++		sata3: ahci@130000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00130000 0x1000>;
+ 			reg-names = "ahci";
+@@ -142,7 +142,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy3: sata_phy@00132100 {
++		sata_phy3: sata_phy@132100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00132100 0x1000>;
+ 			reg-names = "phy";
+@@ -156,7 +156,7 @@
+ 			};
+ 		};
+ 
+-		sata4: ahci@00330000 {
++		sata4: ahci@330000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00330000 0x1000>;
+ 			reg-names = "ahci";
+@@ -172,7 +172,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy4: sata_phy@00332100 {
++		sata_phy4: sata_phy@332100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00332100 0x1000>;
+ 			reg-names = "phy";
+@@ -186,7 +186,7 @@
+ 			};
+ 		};
+ 
+-		sata5: ahci@00400000 {
++		sata5: ahci@400000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00400000 0x1000>;
+ 			reg-names = "ahci";
+@@ -202,7 +202,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy5: sata_phy@00402100 {
++		sata_phy5: sata_phy@402100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00402100 0x1000>;
+ 			reg-names = "phy";
+@@ -216,7 +216,7 @@
+ 			};
+ 		};
+ 
+-		sata6: ahci@00410000 {
++		sata6: ahci@410000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00410000 0x1000>;
+ 			reg-names = "ahci";
+@@ -232,7 +232,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy6: sata_phy@00412100 {
++		sata_phy6: sata_phy@412100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00412100 0x1000>;
+ 			reg-names = "phy";
+@@ -246,7 +246,7 @@
+ 			};
+ 		};
+ 
+-		sata7: ahci@00420000 {
++		sata7: ahci@420000 {
+ 			compatible = "brcm,iproc-ahci", "generic-ahci";
+ 			reg = <0x00420000 0x1000>;
+ 			reg-names = "ahci";
+@@ -262,7 +262,7 @@
+ 			};
+ 		};
+ 
+-		sata_phy7: sata_phy@00422100 {
++		sata_phy7: sata_phy@422100 {
+ 			compatible = "brcm,iproc-sr-sata-phy";
+ 			reg = <0x00422100 0x1000>;
+ 			reg-names = "phy";
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index e6f75c633623..99aaff0b6d72 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -42,7 +42,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x0 0x0>;
+@@ -50,7 +50,7 @@
+ 			next-level-cache = <&CLUSTER0_L2>;
+ 		};
+ 
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x0 0x1>;
+@@ -106,7 +106,7 @@
+ 			next-level-cache = <&CLUSTER3_L2>;
+ 		};
+ 
+-		CLUSTER0_L2: l2-cache@000 {
++		CLUSTER0_L2: l2-cache@0 {
+ 			compatible = "cache";
+ 		};
+ 
+@@ -152,13 +152,13 @@
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x61000000 0x05000000>;
+ 
+-		ccn: ccn@00000000 {
++		ccn: ccn@0 {
+ 			compatible = "arm,ccn-502";
+ 			reg = <0x00000000 0x900000>;
+ 			interrupts = <GIC_SPI 799 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-		gic: interrupt-controller@02c00000 {
++		gic: interrupt-controller@2c00000 {
+ 			compatible = "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			#address-cells = <1>;
+@@ -177,7 +177,7 @@
+ 			};
+ 		};
+ 
+-		smmu: mmu@03000000 {
++		smmu: mmu@3000000 {
+ 			compatible = "arm,mmu-500";
+ 			reg = <0x03000000 0x80000>;
+ 			#global-interrupts = <1>;
+@@ -258,7 +258,7 @@
+ 
+ 		#include "stingray-clock.dtsi"
+ 
+-		gpio_crmu: gpio@00024800 {
++		gpio_crmu: gpio@24800 {
+ 			compatible = "brcm,iproc-gpio";
+ 			reg = <0x00024800 0x4c>;
+ 			ngpios = <6>;
+@@ -278,7 +278,7 @@
+ 
+ 		#include "stingray-pinctrl.dtsi"
+ 
+-		mdio_mux_iproc: mdio-mux@0002023c {
++		mdio_mux_iproc: mdio-mux@2023c {
+ 			compatible = "brcm,mdio-mux-iproc";
+ 			reg = <0x0002023c 0x14>;
+ 			#address-cells = <1>;
+@@ -309,7 +309,7 @@
+ 			};
+ 		};
+ 
+-		pwm: pwm@00010000 {
++		pwm: pwm@10000 {
+ 			compatible = "brcm,iproc-pwm";
+ 			reg = <0x00010000 0x1000>;
+ 			clocks = <&crmu_ref25m>;
+@@ -317,7 +317,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer0: timer@00030000 {
++		timer0: timer@30000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00030000 0x1000>;
+ 			interrupts = <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+@@ -328,7 +328,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer1: timer@00040000 {
++		timer1: timer@40000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00040000 0x1000>;
+ 			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+@@ -338,7 +338,7 @@
+ 			clock-names = "timer1", "timer2", "apb_pclk";
+ 		};
+ 
+-		timer2: timer@00050000 {
++		timer2: timer@50000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00050000 0x1000>;
+ 			interrupts = <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>;
+@@ -349,7 +349,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer3: timer@00060000 {
++		timer3: timer@60000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00060000 0x1000>;
+ 			interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
+@@ -360,7 +360,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer4: timer@00070000 {
++		timer4: timer@70000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00070000 0x1000>;
+ 			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
+@@ -371,7 +371,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer5: timer@00080000 {
++		timer5: timer@80000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00080000 0x1000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+@@ -382,7 +382,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer6: timer@00090000 {
++		timer6: timer@90000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x00090000 0x1000>;
+ 			interrupts = <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+@@ -393,7 +393,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		timer7: timer@000a0000 {
++		timer7: timer@a0000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x000a0000 0x1000>;
+ 			interrupts = <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>;
+@@ -404,7 +404,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		i2c0: i2c@000b0000 {
++		i2c0: i2c@b0000 {
+ 			compatible = "brcm,iproc-i2c";
+ 			reg = <0x000b0000 0x100>;
+ 			#address-cells = <1>;
+@@ -414,7 +414,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		wdt0: watchdog@000c0000 {
++		wdt0: watchdog@c0000 {
+ 			compatible = "arm,sp805", "arm,primecell";
+ 			reg = <0x000c0000 0x1000>;
+ 			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
+@@ -422,7 +422,7 @@
+ 			clock-names = "wdogclk", "apb_pclk";
+ 		};
+ 
+-		gpio_hsls: gpio@000d0000 {
++		gpio_hsls: gpio@d0000 {
+ 			compatible = "brcm,iproc-gpio";
+ 			reg = <0x000d0000 0x864>;
+ 			ngpios = <151>;
+@@ -448,7 +448,7 @@
+ 					<&pinmux 151 91 4>;
+ 		};
+ 
+-		i2c1: i2c@000e0000 {
++		i2c1: i2c@e0000 {
+ 			compatible = "brcm,iproc-i2c";
+ 			reg = <0x000e0000 0x100>;
+ 			#address-cells = <1>;
+@@ -458,7 +458,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart0: uart@00100000 {
++		uart0: uart@100000 {
+ 			device_type = "serial";
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x00100000 0x1000>;
+@@ -469,7 +469,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart1: uart@00110000 {
++		uart1: uart@110000 {
+ 			device_type = "serial";
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x00110000 0x1000>;
+@@ -480,7 +480,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart2: uart@00120000 {
++		uart2: uart@120000 {
+ 			device_type = "serial";
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x00120000 0x1000>;
+@@ -491,7 +491,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		uart3: uart@00130000 {
++		uart3: uart@130000 {
+ 			device_type = "serial";
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x00130000 0x1000>;
+@@ -502,7 +502,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ssp0: ssp@00180000 {
++		ssp0: ssp@180000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x00180000 0x1000>;
+ 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
+@@ -514,7 +514,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ssp1: ssp@00190000 {
++		ssp1: ssp@190000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x00190000 0x1000>;
+ 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
+@@ -526,12 +526,12 @@
+ 			status = "disabled";
+ 		};
+ 
+-		hwrng: hwrng@00220000 {
++		hwrng: hwrng@220000 {
+ 			compatible = "brcm,iproc-rng200";
+ 			reg = <0x00220000 0x28>;
+ 		};
+ 
+-		dma0: dma@00310000 {
++		dma0: dma@310000 {
+ 			compatible = "arm,pl330", "arm,primecell";
+ 			reg = <0x00310000 0x1000>;
+ 			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>,
+@@ -551,7 +551,7 @@
+ 			iommus = <&smmu 0x6000 0x0000>;
+ 		};
+ 
+-		enet: ethernet@00340000{
++		enet: ethernet@340000{
+ 			compatible = "brcm,amac";
+ 			reg = <0x00340000 0x1000>;
+ 			reg-names = "amac_base";
+@@ -560,7 +560,7 @@
+ 			status= "disabled";
+ 		};
+ 
+-		nand: nand@00360000 {
++		nand: nand@360000 {
+ 			compatible = "brcm,nand-iproc", "brcm,brcmnand-v6.1";
+ 			reg = <0x00360000 0x600>,
+ 			      <0x0050a408 0x600>,
+@@ -573,7 +573,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		sdio0: sdhci@003f1000 {
++		sdio0: sdhci@3f1000 {
+ 			compatible = "brcm,sdhci-iproc";
+ 			reg = <0x003f1000 0x100>;
+ 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
+@@ -583,7 +583,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		sdio1: sdhci@003f2000 {
++		sdio1: sdhci@3f2000 {
+ 			compatible = "brcm,sdhci-iproc";
+ 			reg = <0x003f2000 0x100>;
+ 			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx.dts b/arch/arm64/boot/dts/cavium/thunder-88xx.dts
+index 800ba65991f7..5ec2bfa5f714 100644
+--- a/arch/arm64/boot/dts/cavium/thunder-88xx.dts
++++ b/arch/arm64/boot/dts/cavium/thunder-88xx.dts
+@@ -60,7 +60,7 @@
+ 		serial1 = &uaa1;
+ 	};
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x00000000 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+index 04dc8a8d1539..1a9103b269cb 100644
+--- a/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
++++ b/arch/arm64/boot/dts/cavium/thunder-88xx.dtsi
+@@ -62,97 +62,97 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x000>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x001>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@002 {
++		cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x002>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@003 {
++		cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x003>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@004 {
++		cpu@4 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x004>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@005 {
++		cpu@5 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x005>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@006 {
++		cpu@6 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x006>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@007 {
++		cpu@7 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x007>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@008 {
++		cpu@8 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x008>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@009 {
++		cpu@9 {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x009>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@00a {
++		cpu@a {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x00a>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@00b {
++		cpu@b {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x00b>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@00c {
++		cpu@c {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x00c>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@00d {
++		cpu@d {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x00d>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@00e {
++		cpu@e {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x00e>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@00f {
++		cpu@f {
+ 			device_type = "cpu";
+ 			compatible = "cavium,thunder", "arm,armv8";
+ 			reg = <0x0 0x00f>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+index abba750b87f8..3bbd017f088f 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
++++ b/arch/arm64/boot/dts/hisilicon/hip05-d02.dts
+@@ -18,7 +18,7 @@
+ 	model = "Hisilicon Hip05 D02 Development Board";
+ 	compatible = "hisilicon,hip05-d02";
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x00000000 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/hisilicon/hip06-d03.dts b/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
+index 7c4114a67753..9af633021a42 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
++++ b/arch/arm64/boot/dts/hisilicon/hip06-d03.dts
+@@ -17,7 +17,7 @@
+ 	model = "Hisilicon Hip06 D03 Development Board";
+ 	compatible = "hisilicon,hip06-d03";
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x00000000 0x0 0x40000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+index 9c3bdf87e543..8f79e8dae102 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+@@ -56,7 +56,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+index 0d7b2ae46610..46ec003eabb0 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -56,7 +56,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+index acf5c7d16d79..4fbb13d41451 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+@@ -57,7 +57,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-8080-db.dts b/arch/arm64/boot/dts/marvell/armada-8080-db.dts
+index 707af833832b..85b58a19a9fb 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8080-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8080-db.dts
+@@ -55,7 +55,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory@00000000 {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+index 95a1ff60f6c1..b98ea137371d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+@@ -54,13 +54,13 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x001>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+index ba43a4357b89..116164ff260f 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+@@ -54,13 +54,13 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x001>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap810-ap0-octa-core.dtsi b/arch/arm64/boot/dts/marvell/armada-ap810-ap0-octa-core.dtsi
+index bf1b22b70384..7f0661e12f5e 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap810-ap0-octa-core.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap810-ap0-octa-core.dtsi
+@@ -52,13 +52,13 @@
+ 		#size-cells = <0>;
+ 		compatible = "marvell,armada-ap810-octa";
+ 
+-		cpu@000 {
++		cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
+ 		};
+-		cpu@001 {
++		cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72", "arm,armv8";
+ 			reg = <0x001>;
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index d6b800fd26d0..d2f88b92d8e2 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -167,7 +167,7 @@
+ 			ranges = <0 0xe80000 0x10000>;
+ 			interrupt-parent = <&aic>;
+ 
+-			gpio0: gpio@0400 {
++			gpio0: gpio@400 {
+ 				compatible = "snps,dw-apb-gpio";
+ 				reg = <0x0400 0x400>;
+ 				#address-cells = <1>;
+@@ -185,7 +185,7 @@
+ 				};
+ 			};
+ 
+-			gpio1: gpio@0800 {
++			gpio1: gpio@800 {
+ 				compatible = "snps,dw-apb-gpio";
+ 				reg = <0x0800 0x400>;
+ 				#address-cells = <1>;
+@@ -203,7 +203,7 @@
+ 				};
+ 			};
+ 
+-			gpio2: gpio@0c00 {
++			gpio2: gpio@c00 {
+ 				compatible = "snps,dw-apb-gpio";
+ 				reg = <0x0c00 0x400>;
+ 				#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 1d63e6b879de..d294b3de3125 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -192,7 +192,7 @@
+ 			};
+ 		};
+ 
+-		sdhci@07824000 {
++		sdhci@7824000 {
+ 			vmmc-supply = <&pm8916_l8>;
+ 			vqmmc-supply = <&pm8916_l5>;
+ 
+@@ -202,7 +202,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		sdhci@07864000 {
++		sdhci@7864000 {
+ 			vmmc-supply = <&pm8916_l11>;
+ 			vqmmc-supply = <&pm8916_l12>;
+ 
+@@ -232,7 +232,7 @@
+ 			};
+ 		};
+ 
+-		lpass@07708000 {
++		lpass@7708000 {
+ 			status = "okay";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 789f3e87321e..b8dbb203b664 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -51,31 +51,31 @@
+ 			pinctrl-1 = <&blsp2_uart2_4pins_sleep>;
+ 		};
+ 
+-		i2c@07577000 {
++		i2c@7577000 {
+ 		/* On Low speed expansion */
+ 			label = "LS-I2C0";
+ 			status = "okay";
+ 		};
+ 
+-		i2c@075b6000 {
++		i2c@75b6000 {
+ 		/* On Low speed expansion */
+ 			label = "LS-I2C1";
+ 			status = "okay";
+ 		};
+ 
+-		spi@07575000 {
++		spi@7575000 {
+ 		/* On Low speed expansion */
+ 			label = "LS-SPI0";
+ 			status = "okay";
+ 		};
+ 
+-		i2c@075b5000 {
++		i2c@75b5000 {
+ 		/* On High speed expansion */
+ 			label = "HS-I2C2";
+ 			status = "okay";
+ 		};
+ 
+-		spi@075ba000{
++		spi@75ba000{
+ 		/* On High speed expansion */
+ 			label = "HS-SPI1";
+ 			status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index dc3817593e14..2c4159480be2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -495,7 +495,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		lpass: lpass@07708000 {
++		lpass: lpass@7708000 {
+ 			status = "disabled";
+ 			compatible = "qcom,lpass-cpu-apq8016";
+ 			clocks = <&gcc GCC_ULTAUDIO_AHBFABRIC_IXFABRIC_CLK>,
+@@ -530,7 +530,7 @@
+ 			#sound-dai-cells = <1>;
+                 };
+ 
+-		sdhc_1: sdhci@07824000 {
++		sdhc_1: sdhci@7824000 {
+ 			compatible = "qcom,sdhci-msm-v4";
+ 			reg = <0x07824900 0x11c>, <0x07824000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+@@ -547,7 +547,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		sdhc_2: sdhci@07864000 {
++		sdhc_2: sdhci@7864000 {
+ 			compatible = "qcom,sdhci-msm-v4";
+ 			reg = <0x07864900 0x11c>, <0x07864000 0x800>;
+ 			reg-names = "hc_mem", "core_mem";
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 887b61c872dd..b138414c248a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -395,7 +395,7 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
+-		blsp1_spi0: spi@07575000 {
++		blsp1_spi0: spi@7575000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			reg = <0x07575000 0x600>;
+ 			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+@@ -410,7 +410,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		blsp2_i2c0: i2c@075b5000 {
++		blsp2_i2c0: i2c@75b5000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x075b5000 0x1000>;
+ 			interrupts = <GIC_SPI 101 0>;
+@@ -441,7 +441,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		blsp2_i2c1: i2c@075b6000 {
++		blsp2_i2c1: i2c@75b6000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x075b6000 0x1000>;
+ 			interrupts = <GIC_SPI 102 0>;
+@@ -466,7 +466,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		blsp1_i2c2: i2c@07577000 {
++		blsp1_i2c2: i2c@7577000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+ 			reg = <0x07577000 0x1000>;
+ 			interrupts = <GIC_SPI 97 0>;
+@@ -481,7 +481,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		blsp2_spi5: spi@075ba000{
++		blsp2_spi5: spi@75ba000{
+ 			compatible = "qcom,spi-qup-v2.2.1";
+ 			reg = <0x075ba000 0x600>;
+ 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+@@ -522,7 +522,7 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
+-		timer@09840000 {
++		timer@9840000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
 -- 
-2.14.2
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
