@@ -1,151 +1,97 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH v2 4/4] arm64: dts: qcom: Add Camera Control Interface support
-Date: Fri, 13 Oct 2017 13:56:43 +0300
-Message-ID: <1507892203-17033-5-git-send-email-todor.tomov@linaro.org>
-References: <1507892203-17033-1-git-send-email-todor.tomov@linaro.org>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 04/16] serial: mvebu-uart: support probe of multiple
+ ports
+Date: Fri, 13 Oct 2017 13:17:11 +0200
+Message-ID: <20171013131711.4ef63ea0@xps13>
+References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
+        <20171013090200.31034-5-miquel.raynal@free-electrons.com>
+        <877evz9yi7.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1507892203-17033-1-git-send-email-todor.tomov@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wsa@the-dreams.de, linux-i2c@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <877evz9yi7.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Allen Yan <yanwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the CCI node for the CCI controller that resides on
-the Qualcomm MSM8916 and MSM8996 platforms.
+Hi Gregory,
 
-CC: Andy Gross <andy.gross@linaro.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-CC: linux-soc@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      | 19 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996-pins.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi      | 22 ++++++++++++++++++++++
- 4 files changed, 69 insertions(+)
+On Fri, 13 Oct 2017 11:40:32 +0200
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 4cb0b58..4fa6a72 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -733,4 +733,18 @@
- 			bias-pull-up;
- 		};
- 	};
-+
-+	cci_lines {
-+		cci0_default: cci0_default {
-+			pinmux {
-+				function = "cci_i2c";
-+				pins = "gpio29", "gpio30";
-+			};
-+			pinconf {
-+				pins = "gpio29", "gpio30";
-+				drive-strength = <16>;
-+				bias-disable;
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index dc38175..9f64130 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -1325,6 +1325,25 @@
- 				compatible = "venus-encoder";
- 			};
- 		};
-+
-+		cci: cci@1b0c000 {
-+			compatible = "qcom,cci-v1.0.8";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x1b0c000 0x1000>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
-+				<&gcc GCC_CAMSS_CCI_AHB_CLK>,
-+				<&gcc GCC_CAMSS_CCI_CLK>,
-+				<&gcc GCC_CAMSS_AHB_CLK>;
-+			clock-names = "camss_top_ahb",
-+				"cci_ahb",
-+				"cci",
-+				"camss_ahb";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&cci0_default>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	smd {
-diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-index 6599404..3faaa4c 100644
---- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-@@ -300,4 +300,18 @@
- 			drive-strength = <2>;	/* 2 MA */
- 		};
- 	};
-+
-+	cci_lines {
-+		cci0_default: cci0_default {
-+			pinmux {
-+				function = "cci_i2c";
-+				pins = "gpio17", "gpio18";
-+			};
-+			pinconf {
-+				pins = "gpio17", "gpio18";
-+				drive-strength = <16>;
-+				bias-disable;
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 887b61c..ae128d3 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -819,6 +819,28 @@
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
- 		};
-+
-+		cci: cci@a0c000 {
-+			compatible = "qcom,cci-v1.4.0";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0xa0c000 0x1000>;
-+			interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
-+			power-domains = <&mmcc CAMSS_GDSC>;
-+			clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
-+					<&mmcc CAMSS_TOP_AHB_CLK>,
-+					<&mmcc CAMSS_CCI_AHB_CLK>,
-+					<&mmcc CAMSS_CCI_CLK>,
-+					<&mmcc CAMSS_AHB_CLK>;
-+			clock-names = "mmss_mmagic_ahb",
-+					"camss_top_ahb",
-+					"cci_ahb",
-+					"cci",
-+					"camss_ahb";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&cci0_default>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	adsp-pil {
+> Hi Miquel,
+>  
+>  On ven., oct. 13 2017, Miquel Raynal
+> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > -	port = &mvebu_uart_ports[0];
+> > +	/* Assume that all UART ports have a DT alias or none has
+> > */
+> > +	id = of_alias_get_id(pdev->dev.of_node, "serial");  
+> 
+> You stil need to check the pdev->dev.of_node before calling
+> of_alias_get_id.
+
+Thanks for your feedback but I don't think we still need to check it,
+because the of_alias_get_id() function will either return -ENOSYS if
+CONFIG_OF is not defined, or -ENODEV if the node is not found. As the
+function does not dereference pdev->dev.of_node at any moment but
+instead compares the value with another pointer, I think this call is
+safe like this.
+
+Thanks,
+Miquèl
+
+> 
+> Once it will be fixed, you can add:
+> 
+> Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> 
+> > +	if (!pdev->dev.of_node || id < 0)
+> > +		pdev->id = uart_num_counter++;
+> > +	else
+> > +		pdev->id = id;
+> > +
+> > +	if (pdev->id >= MVEBU_NR_UARTS) {
+> > +		dev_err(&pdev->dev, "cannot have more than %d UART
+> > ports\n",
+> > +			MVEBU_NR_UARTS);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	port = &mvebu_uart_ports[pdev->id];
+> >  
+> >  	spin_lock_init(&port->lock);
+> >  
+> > @@ -572,7 +588,7 @@ static int mvebu_uart_probe(struct
+> > platform_device *pdev) port->fifosize   = 32;
+> >  	port->iotype     = UPIO_MEM32;
+> >  	port->flags      = UPF_FIXED_PORT;
+> > -	port->line       = 0; /* single port: force line number
+> > to  0 */
+> > +	port->line       = pdev->id;
+> >  
+> >  	port->irq        = irq->start;
+> >  	port->irqflags   = 0;
+> > -- 
+> > 2.11.0
+> >  
+> 
+
+
+
 -- 
-2.7.4
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
