@@ -1,55 +1,27 @@
-From: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-Subject: [PATCH] of: dynamic: fix memory leak related to properties of __of_node_dup
-Date: Fri, 13 Oct 2017 11:25:18 +0800
-Message-ID: <1507865118-27744-1-git-send-email-alan.1.wang@nokia-sbell.com>
-References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: add HDMI CEC pinctrl
+Date: Fri, 13 Oct 2017 11:40:42 +0800
+Message-ID: <20171013034041.GD8833@dragon>
+References: <8c5150c5-3aff-4068-a548-05eb02b73138@rwthex-s3-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507858967-40416-1-git-send-email-alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8c5150c5-3aff-4068-a548-05eb02b73138-gtPewvpZjL+4J1eExpnLBV5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Wed, Sep 20, 2017 at 06:48:34PM +0200, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
+> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+> 
+> On the Utilite Pro the CEC line is wired up to the HDMI connector.
+> Add the required pinctrl setting.
+> 
+> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 
-Sorry It was my fault that used the wrong sign off name in last email.
-Here I correct it.
-Thanks
----
-
-It is possible a node was dynamically allocated but without any
-property. The properies will be got from devices and added to the
-node when devices got connected.
-When release this node, all properties of which had been moved to
-deadprops.
-In this case, the properties in the deadprops list are never
-deallocated.
-
-Signed-off-by: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
----
- drivers/of/dynamic.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 301b6db..465d43b 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -335,6 +335,10 @@ void of_node_release(struct kobject *kobj)
- 	if (!of_node_check_flag(node, OF_DYNAMIC))
- 		return;
- 
-+	if (!prop) {
-+		prop = node->deadprops;
-+		node->deadprops = NULL;
-+	}
- 	while (prop) {
- 		struct property *next = prop->next;
- 		kfree(prop->name);
--- 
-2.6.2
-
+Applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
