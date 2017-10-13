@@ -1,14 +1,14 @@
-From: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>
-Subject: of/unittest fails on UML
-Date: Sat, 14 Oct 2017 00:36:34 +0200
-Message-ID: <20171013222838.ronel7dvwwnh6day@olymp>
+From: Thomas Meyer <thomas@m3y3r.de>
+Subject: of: unittest fails on UML
+Date: Sat, 14 Oct 2017 00:38:29 +0200
+Message-ID: <20171013223829.x2h55jl2l3mttepr@olymp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
@@ -88,7 +88,3 @@ any help is appreciated.
 
 with kind regards
 thomas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
