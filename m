@@ -1,45 +1,32 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox interface
-Date: Fri, 13 Oct 2017 20:49:13 +0530
-Message-ID: <CABb+yY3_FnckLSnGS5P5z1U-vukSrRz7RSXpJ6nxYL6B6itrZw@mail.gmail.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-17-git-send-email-sudeep.holla@arm.com> <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
- <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
- <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com> <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
- <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com> <CAOCOHw54mQUVxVyLRWbV5Ty7trK99MM6zgXsuuxQEHnD3qvKVA@mail.gmail.com>
- <0b65a3fd-32ff-f708-7dce-8e3a5cabf908@arm.com> <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
- <94004135-8ce2-8006-21f6-f8d219c0430d@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <94004135-8ce2-8006-21f6-f8d219c0430d-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/4] rcar-du: add R8A774[35] DU driver(s) support
+Date: Fri, 13 Oct 2017 16:22:18 +0100
+Message-ID: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 8:17 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 13/10/17 15:12, Jassi Brar wrote:
->
->> In MHU the 32bits are tied together and all go to one target
->> processor. Whereas on QCom, each bit corresponds to independent signal
->> going to a different target processor.
->>
->
-> I was not aware of that. Thanks for clarifying the differences.
->
->> IOW, QCom has 32 channels per register whereas MHU has one. The
->
-> OK, that depends on how we consider it. As you said yes it just goes to
-> single target processor, but hardware designers consider it still 32
-> channels are they can be controller independently without any locking.
->
-MHU spec says it has three channels.
-Locking is not a criterion for a channel. A signal and associated data
-transfer defines a channel.
+In order to be able to define du nodes in r8a7743 and r8a7745 device
+trees, we need to define data structures, compatible strings, missing
+clock, and update the dt-bindings.
+I'll send out the patches to add the du nodes in r8a774[35] device trees
+once the patches in this series get accepted.
 
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+
+Fabrizio Castro (4):
+  dt-bindings: display: rcar-du: Document R8A774[35] DU
+  drm: rcar-du: Add R8A7743 support
+  clk: renesas: cpg-mssr: Add du1 clock to R8A7745
+  drm: rcar-du: Add R8A7745 support
+
+ .../devicetree/bindings/display/renesas,du.txt     | 30 ++++++++-------
+ drivers/clk/renesas/r8a7745-cpg-mssr.c             |  1 +
+ drivers/gpu/drm/rcar-du/rcar_du_drv.c              | 44 ++++++++++++++++++++++
+ 3 files changed, 62 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
+
