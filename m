@@ -1,93 +1,32 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 16/22] firmware: arm_scmi: add arm_mhu specific mailbox
- interface
-Date: Fri, 13 Oct 2017 15:47:22 +0100
-Message-ID: <94004135-8ce2-8006-21f6-f8d219c0430d@arm.com>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-17-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a0XmiXqZ-z7WV+nk7B86p23Jmf31Q=pVovXVebhA28_0Q@mail.gmail.com>
- <CABb+yY1N6hmC6Kd2QteMw_oCf=-mYHf7p6RdhYPQK+QUO7VP4A@mail.gmail.com>
- <f142dac2-a27c-4c46-4d22-4df4f2e8cfb1@arm.com>
- <CABb+yY1w358uw2EoeioAvZy06LTuOO0krGFFXoQSNAR5m5ANmQ@mail.gmail.com>
- <25023d1a-a221-b131-5a1e-7d909b006d1b@arm.com>
- <CAOCOHw54mQUVxVyLRWbV5Ty7trK99MM6zgXsuuxQEHnD3qvKVA@mail.gmail.com>
- <0b65a3fd-32ff-f708-7dce-8e3a5cabf908@arm.com>
- <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 0/9] Mediatek MT2712 clock and scpsys support
+Date: Fri, 13 Oct 2017 16:50:43 +0200
+Message-ID: <ac7940d1-e23d-add2-b4b6-bd7cf66fea34@gmail.com>
+References: <1505793630-12590-1-git-send-email-weiyi.lu@mediatek.com>
+ <20171012224540.GE18706@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY0HxvLs51PmB7K-T2pp+OJE8ckiBAdBa=ss2rfUes=u2A@mail.gmail.com>
+In-Reply-To: <20171012224540.GE18706@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>
+To: Stephen Boyd <sboyd@codeaurora.org>, Weiyi Lu <weiyi.lu@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 13/10/17 15:12, Jassi Brar wrote:
-> On Fri, Oct 13, 2017 at 7:12 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>
->> Hi Bjorn,
->>
->> Thanks for taking a look at this. Much appreciated.
->>
->> On 12/10/17 22:03, Bjorn Andersson wrote:
->>> On Fri, Oct 6, 2017 at 6:51 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>>>
->>>>
->>>> On 06/10/17 14:47, Jassi Brar wrote:
->>>>> On Fri, Oct 6, 2017 at 7:02 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> [..]
->>>>>> Again that's not the point, doorbell is more common feature and that can
->>>>>> be supported. As SCMI expects doorbell feature in the specification, it
->>>>>> just need to support that class of controllers.
->>>>>>
->>>>> NO.  All SCMI expects is SHMEM and a signal reaching the other end.
->>>>> The signal mechanism need not necessarily be "doorbell".
->>>>>
->>>>
->>>> Agreed, but creating an abstraction ro do something as generic as
->>>> doorbell and writing shim layer for each controller to use SCMI also
->>>> sounds bad.
->>>>
->>>
->>> In the Qualcomm platform we have a single register that exposes 32
->>> doorbells, wired to interrupts on the various processors/co-processors
->>> in the SoC.
->>>
->>
->> It's exactly same even on ARM MHU controller.
->>
-> This has been a big problem in our communication. You start with
-> "exactly same..." and go on telling the difference.
-> And that difference is important.
+On 10/13/2017 12:45 AM, Stephen Boyd wrote:
+> On 09/19, Weiyi Lu wrote:
+>> This series is based on v4.14-rc1 and composed of
+>> clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
+> 
+> What's the merge plan? Can I apply the clk ones to clk tree and
+> ignore the rest?
 > 
 
-Sure and sorry for that.
+Yes, please do so. I'll take scpsys, which depends on the clock patches.
 
-> In MHU the 32bits are tied together and all go to one target
-> processor. Whereas on QCom, each bit corresponds to independent signal
-> going to a different target processor.
-> 
-
-I was not aware of that. Thanks for clarifying the differences.
-
-> IOW, QCom has 32 channels per register whereas MHU has one. The
-
-OK, that depends on how we consider it. As you said yes it just goes to
-single target processor, but hardware designers consider it still 32
-channels are they can be controller independently without any locking.
-
-> current drivers reflect that reality and hence I am against any change
-> in MHU driver.  Not to mean even changing the MHU driver will fix the
-> core issue - which is https://lkml.org/lkml/2017/7/7/465 and this
-> patchset tries to address that.
-> 
-
-Sure, that's the reason I have this abstraction now.
-
--- 
 Regards,
-Sudeep
+Matthias
