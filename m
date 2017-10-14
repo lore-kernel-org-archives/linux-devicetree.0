@@ -1,47 +1,66 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 0/3] PCI: rockchip: assert PERST# in S3
-Date: Fri, 13 Oct 2017 17:06:48 -0700
-Message-ID: <CA+ASDXM2UnoGOkyVy=y3XToTvLZ1djLNaDESkB89mf-mzqGHRg@mail.gmail.com>
-References: <20171012205220.130048-1-briannorris@chromium.org>
- <20171013031523.GB25517@bhelgaas-glaptop.roam.corp.google.com> <20171013062728.GA56763@google.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: dynamic: fix memory leak related to properties of
+ __of_node_dup
+Date: Fri, 13 Oct 2017 17:59:11 -0700
+Message-ID: <59E1615F.50901@gmail.com>
+References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
+ <CAL_JsqK0pc6sL+YR2U-J44fvwKivmxiULD5uc7bzTMEOZ_LKXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171013062728.GA56763@google.com>
+In-Reply-To: <CAL_JsqK0pc6sL+YR2U-J44fvwKivmxiULD5uc7bzTMEOZ_LKXg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, linux-kernel@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Rajat Jain <rajatja@google.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, furquan@chromium.org
+To: Rob Herring <robh+dt@kernel.org>, alawang <alan.1.wang@nokia-sbell.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On 10/13/17 13:47, Rob Herring wrote:
+> On Thu, Oct 12, 2017 at 8:42 PM, alawang <alan.1.wang@nokia-sbell.com> wrote:
+>> It is possible a node was dynamically allocated but without any
+>> property. The properies will be got from devices and added to the
+>> node when devices got connected.
+>> When release this node, all properties of which had been moved to
+>> deadprops.
+>> In this case, the properties in the deadprops list are never
+>> deallocated.
+> 
+> This is not new, right? Do you actually hit this case? If so, how?
+> 
+>>
+>> Signed-off-by: alawang <alan.1.wang@nokia-sbell.com>
+>> ---
+>>  drivers/of/dynamic.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index 301b6db..465d43b 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -335,6 +335,10 @@ void of_node_release(struct kobject *kobj)
+>>         if (!of_node_check_flag(node, OF_DYNAMIC))
+>>                 return;
+>>
+>> +       if (!prop) {
+>> +               prop = node->deadprops;
+>> +               node->deadprops = NULL;
+>> +       }
+>>         while (prop) {
+>>                 struct property *next = prop->next;
+>>                 kfree(prop->name);
+>> --
+>> 2.6.2
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-One piece of information to add:
+The code looks right to me.  The patch description is confusing to me.
 
-On Thu, Oct 12, 2017 at 11:27 PM, Brian Norris <briannorris@chromium.org> wrote:
-> On Thu, Oct 12, 2017 at 10:15:23PM -0500, Bjorn Helgaas wrote:
-> > Is this a hole in those specs?  Is this something that needs to be
-> > clarified by the PCI-SIG to improve interoperability?
->
-> After re-re-reading the specifications, I'm more convinced that the
-> first Wifi vendor got it wrong. I also don't trust them to get many
-> things right in general, so this is pretty much par for the course.
->
-> The only things I can suggest:
-> * "main power" is never defined, as far as I can tell. So "main" and
->   "auxiliary" power don't have much meaning for many M.2 cards, and so
->   I end up reading much of the spec with a grain of salt
+If a node with no properties is dynamically added, then a property is
+dynamically added to the node, then the property is dynamically removed,
+the result will be node->properties == NULL and node->deadprops != NULL.
 
-This part is where the first vendor seems to disagree. They claim that
-because power is not switched off, PERST# can remain asserted or
-deasserted -- whichever leads to least power consumption. (i.e., they
-don't consider they need to follow the parts that describe "when
-removing main power" (e.g., in S3) we must assert PERST#.
-
-> * S3 is never defined in the PCIe Card EM spec, but it's thrown around a
->   few times
-> * if possible, the PCIe base spec should mention something about the
->   fundamental reset which is expected with an L2 transition. It's not
->   clear what to do if you don't want to switch off power completely (and
->   so enter L3), but you also don't have "auxiliary" power
-
-Brian
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
