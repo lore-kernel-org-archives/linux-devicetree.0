@@ -1,139 +1,121 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] drivers/irqchip: gicv3: add workaround for Synquacer pre-ITS
-Date: Sat, 14 Oct 2017 10:13:13 +0100
-Message-ID: <86po9qks7q.fsf@arm.com>
-References: <20171012183247.23679-1-ard.biesheuvel@linaro.org>
-        <20171012183247.23679-3-ard.biesheuvel@linaro.org>
-        <CAL_Jsq+5L=gOzb=NzPJ8CSpqAbnwN3=LWvN2f07=AejwFMbOGg@mail.gmail.com>
-        <CAKv+Gu-rZNhMMU4PoD8V0nBtwEEu+HE71wvaAZk2PWshoeTi4g@mail.gmail.com>
-        <c6c00e64-ecc8-0404-5ffc-602626e5cc6d@arm.com>
-        <CAL_Jsq+dsEW3M374e_ivwcBnk7s8rQToagWLx3EsBof8bK__JQ@mail.gmail.com>
-        <CAKv+Gu_3zWqiUOhr+GOFZY5SWfJpo+y0DVsA8tYpVLjsN6hnrw@mail.gmail.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding for Allwinner
+ XR819 SDIO Wi-Fi
+Date: Sat, 14 Oct 2017 20:00:52 +0800
+Message-ID: <dba5f095f9f25f0726ee3a2852e01b88@aosc.io>
+References: <20171003165944.13056-1-icenowy@aosc.io>
+ <20171003165944.13056-2-icenowy@aosc.io>
+ <871smjxp46.fsf@kamboji.qca.qualcomm.com>
+ <E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
+ <59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea>
+ <C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io>
+ <878tgq5beu.fsf@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu_3zWqiUOhr+GOFZY5SWfJpo+y0DVsA8tYpVLjsN6hnrw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (Ard Biesheuvel's message of "Fri, 13 Oct 2017 21:38:02 +0100")
+In-Reply-To: <878tgq5beu.fsf-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13 2017 at  9:38:02 pm BST, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 13 October 2017 at 19:50, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Oct 13, 2017 at 4:47 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>> [+Mark]
->>>
->>> On 12/10/17 23:24, Ard Biesheuvel wrote:
->>>> On 12 October 2017 at 22:34, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>> On Thu, Oct 12, 2017 at 1:32 PM, Ard Biesheuvel
->>>>> <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
->>>>>> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
->>>>>> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
->>>>>> ID taken from bits [device_id_bits + 1:2] of the window offset.
->>>>>> Writes that target GITS_TRANSLATER directly are reported as originating
->>>>>> from device ID #0.
->>>>>>
->>>>>> So add a workaround for this. Given that this breaks isolation, clear
->>>>>> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
->>>>>>
->>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
->>>>>>  arch/arm64/Kconfig                                                    |  8 +++
->>>>>>  drivers/irqchip/irq-gic-v3-its.c                                      | 63 +++++++++++++++++++-
->>>>>>  3 files changed, 72 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->>>>>> index 4c29cdab0ea5..0798a61bbf99 100644
->>>>>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->>>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->>>>>> @@ -75,6 +75,10 @@ These nodes must have the following properties:
->>>>>>  - reg: Specifies the base physical address and size of the ITS
->>>>>>    registers.
->>>>>>
->>>>>> +Optional:
->>>>>> +- socionext,synquacer-pre-its: (u32, u32) tuple describing the host address
->>>>>> +  and size of the pre-ITS window, as implemented on the Socionext Synquacer SoC
->>>>>
->>>>> Sounds like a separate h/w block to me and addresses should be in
->>>>> "reg". I would suggest you define a separate node for the pre-its
->>>>> block and then use of_find_compatible_node() from the GIC driver to
->>>>> retrieve the node and whatever you need from it. Or do an SoC specific
->>>>> compatible string for the GIC and let that imply whatever information
->>>>> you need. Then the next quirk doesn't need a DT update.
->>>>>
->>>>
->>>> For my understanding, you mean either
->>>>
->>>>     gic: interrupt-controller@30000000 {
->>>>         compatible = "arm,gic-v3";
->>>>         ...
->>>>
->>>>         its: gic-its@30020000 {
->>>>             compatible = "arm,gic-v3-its";
->>>>             reg = <0x0 0x30020000 0x0 0x20000>;
->>>>             #msi-cells = <1>;
->>>>             msi-controller;
->>>>         };
->>>>     };
->>>>
->>>>     preits@58000000 {
->>>>         compatible = "socionext,synquacer-pre-its";
->>>>         reg = <0x0 0x58000000 0x0 0x200000>;
->>>>         msi-slave = <&its>;
->>>>     };
->>>>
->>>> or
->>>>
->>>>     gic: interrupt-controller@30000000 {
->>>>         compatible = "arm,gic-v3";
->>>>         ...
->>>>
->>>>         its: gic-its@30020000 {
->>>>             compatible = "socionext,synquacer-pre-its", "arm,gic-v3-its";
->>>>             reg = <0x0 0x30020000 0x0 0x20000>,
->>>>                   <0x0 0x58000000 0x0 0x200000>;
->>>>             #msi-cells = <1>;
->>>>             msi-controller;
->>>>         };
->>>>     };
->>>>
->>>> right?
->>>>
->>>> Marc, what do you think? IIRC we did discuss option #2 at some point,
->>>> but I don't remember if/why we rejected it.
->>>
->>> I dislike #2 because these registers are not part of the regular ITS,
->>> and would get in the way of potential extensions of the ITS (I don't
->>> know of any, but just in case...).
->>>
->>> I also dislike #1 as the "msi-slave" part is both ugly and confusing
->>> (are we writing to the ITS? to the pre-ITS?).
->>
->> Why do you need this? Are you ever going to have multiple pre-its's?
->
-> The question is really whether we are ever going to have multiple
-> ITSes, in which case we will need to identify which ITS this single
-> pre-ITS is associated with, given that it can only target one. And
-> while I would prefer zero pre-ITSes in all cases [as would Marc, I'm
-> sure], having a pre-ITS for each ITS frame is not unimaginable either.
-> So yes, we need to record this information in one way or the other.
+在 2017-10-05 14:58，Kalle Valo 写道：
+> Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
+> 
+>> 于 2017年10月4日 GMT+08:00 下午6:11:45, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 写到:
+>>> On Wed, Oct 04, 2017 at 10:02:48AM +0000, Arend van Spriel wrote:
+>>>> On 10/4/2017 11:03 AM, Icenowy Zheng wrote:
+>>>> >
+>>>> >
+>>>> > 于 2017年10月4日 GMT+08:00 下午5:02:17, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> 写到:
+>>>> > > Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
+>>>> > >
+>>>> > > > Allwinner XR819 is a SDIO Wi-Fi chip, which has the
+>>> functionality to
+>>>> > > use
+>>>> > > > an out-of-band interrupt pin instead of SDIO in-band interrupt.
+>>>> > > >
+>>>> > > > Add the device tree binding of this chip, in order to make it
+>>>> > > possible
+>>>> > > > to add this interrupt pin to device trees.
+>>>> > > >
+>>>> > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>>> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> > > > ---
+>>>> > > > Changes in v3:
+>>>> > > > - Renames the node name.
+>>>> > > > - Adds ACK from Rob.
+>>>> > > > Changes in v2:
+>>>> > > > - Removed status property in example.
+>>>> > > > - Added required property reg.
+>>>> > > >
+>>>> > > >   .../bindings/net/wireless/allwinner,xr819.txt      | 38
+>>>> > > ++++++++++++++++++++++
+>>>> > > >   1 file changed, 38 insertions(+)
+>>>> > > >   create mode 100644
+>>>> > >
+>>> Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+>>>> > >
+>>>> > > Like I asked already last time, AFAICS there is no upstream xr819
+>>>> > > wireless driver in drivers/net/wireless directory. Do we still
+>>> accept
+>>>> > > bindings like this for out-of-tree drivers?
+>>>> >
+>>>> > See esp8089.
+>>>> >
+>>>> > There's also no in-tree driver for it.
+>>>> 
+>>>> The question is whether we should. The above might be a precedent,
+>>> but it
+>>>> may not necessarily be the way to go. The commit message for esp8089
+>>> seems
+>>>> to hint that there is intent to have an in-tree driver:
+>>>> 
+>>>> """
+>>>>     Note that at this point there only is an out of tree driver for
+>>> this
+>>>>     hardware, there is no clear timeline / path for merging this.
+>>> Still
+>>>>     I believe it would be good to specify the binding for this in
+>>> tree
+>>>>     now, so that any future migration to an in tree driver will not
+>>> cause
+>>>>     compatiblity issues.
+>>>> 
+>>>>     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>>>>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>     Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> """
+>>>> 
+>>>> Regardless the bindings are in principle independent of the kernel
+>>> and just
+>>>> describing hardware. I think there have been discussions to move the
+>>>> bindings to their own repository, but apparently it was decided
+>>> otherwise.
+>>> 
+>>> Yeah, I guess especially how it could be merged with the cw1200 
+>>> driver
+>>> would be very relevant to that commit log.
+>> 
+>> The cw1200 driver seems to still have some legacy platform
+>> data. Maybe they should also be convert to DT.
+>> (Or maybe compatible = "allwinner,xr819" is enough, as
+>> xr819 is a specified variant of cw1200 family)
+> 
+> Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
+> that? Or does cw1200 more changes than just adding the DT support?
 
-Multi-ITS systems are out there. The box I'm using for a large part of
-my GICv4 testing has 8 of them. It is quite common to place ITSs close
-to the PCIe RC, and multi-socket systems usually have at least one per
-socket.
+The support of XR819 in CW1200 driver is far more difficult than I
+imagined -- the codedrop used in the mainlined CW1200 driver seems to
+be so old that it's before XR819 (which seems to be based on CW1160),
+and there's a large number of problems to adapt it to a modern CW1200
+variant.
 
-Hopefully the pre-ITS concept is a one-off nightmare, something we'll
-laugh about in two years from now. Maybe.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
+P.S. could you apply this device tree binding patch now?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
