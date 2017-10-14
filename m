@@ -1,101 +1,64 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 2/2] clk: sunxi-ng: add support for Allwinner A64 DE2 CCU
-Date: Sat, 14 Oct 2017 20:29:25 +0800
-Message-ID: <20171014122925.13220-2-icenowy@aosc.io>
-References: <20171014122925.13220-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171014122925.13220-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Sat, 14 Oct 2017 14:34:57 +0200
+Message-ID: <20171014143457.72df1f54@windsurf.home>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?R3LDqWdvcnk=?= Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64's DE2 needs to claim a section of SRAM (SRAM C) to work.
+Hello,
 
-Add support for it.
+On Mon, 9 Oct 2017 21:39:51 +0100, Grant Likely wrote:
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+> Here is my current list of topics in no particular order, including
+> the topic moderator:
+> 
+> Runtime memory consumption (Rob Herring)
+> Overlay maintenance plan (TBC)
+> Stable ABI for devicetree (TBC)
+> DT YAML encoding (Pantelis Antoniou)
+> DT Schema format - option 1 (Pantelis Antoniou)
+> DT Schema format - option 2 (Grant Likely)
+> Sharing Generic bindings (TBC)
+> devicetree.org update (Grant)
+> 
+> Reply to this email if you want to propose another topic.
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-index 5cdaf52669e4..2e3a3ca087f7 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-@@ -17,6 +17,7 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
-+#include <linux/soc/sunxi/sunxi_sram.h>
- 
- #include "ccu_common.h"
- #include "ccu_div.h"
-@@ -148,6 +149,11 @@ static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_desc = {
- 	.num_resets	= ARRAY_SIZE(sun8i_a83t_de2_resets),
- };
- 
-+static bool sunxi_de2_clk_has_sram(const struct device_node *node)
-+{
-+	return of_device_is_compatible(node, "allwinner,sun50i-a64-de2-clk");
-+}
-+
- static int sunxi_de2_clk_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -191,11 +197,20 @@ static int sunxi_de2_clk_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	if (sunxi_de2_clk_has_sram(pdev->dev.of_node)) {
-+		ret = sunxi_sram_claim(&pdev->dev);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Error couldn't map SRAM to device\n");
-+			return ret;
-+		}
-+	}
-+
- 	/* The clocks need to be enabled for us to access the registers */
- 	ret = clk_prepare_enable(bus_clk);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Couldn't enable bus clk: %d\n", ret);
--		return ret;
-+		goto err_release_sram;
- 	}
- 
- 	ret = clk_prepare_enable(mod_clk);
-@@ -224,6 +239,10 @@ static int sunxi_de2_clk_probe(struct platform_device *pdev)
- 	clk_disable_unprepare(mod_clk);
- err_disable_bus_clk:
- 	clk_disable_unprepare(bus_clk);
-+err_release_sram:
-+	if (sunxi_de2_clk_has_sram(pdev->dev.of_node))
-+		sunxi_sram_release(&pdev->dev);
-+
- 	return ret;
- }
- 
-@@ -237,16 +256,13 @@ static const struct of_device_id sunxi_de2_clk_ids[] = {
- 		.data = &sun8i_v3s_de2_clk_desc,
- 	},
- 	{
-+		.compatible = "allwinner,sun50i-a64-de2-clk",
-+		.data = &sun50i_a64_de2_clk_desc,
-+	},
-+	{
- 		.compatible = "allwinner,sun50i-h5-de2-clk",
- 		.data = &sun50i_a64_de2_clk_desc,
- 	},
--	/*
--	 * The Allwinner A64 SoC needs some bit to be poke in syscon to make
--	 * DE2 really working.
--	 * So there's currently no A64 compatible here.
--	 * H5 shares the same reset line with A64, so here H5 is using the
--	 * clock description of A64.
--	 */
- 	{ }
- };
- 
+I'd like to propose a quick discussion on how to avoid duplicating DT
+description when a SoC is composed of aggregations of IP blocks that
+are duplicated (in 2, 4 or 8 copies).
+
+As an example, we currently have
+arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi and
+arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi that are almost
+identical, because they represent the same aggregation of IP blocks,
+present two times in the same SoC (Marvell Armada 8K). As we are going
+to have SoCs with more than 2 copies in the future, we want to find a
+way to avoid duplicating the description of those aggregations.
+
+I'd like to present the problem scope, a possible solution solely based
+on C preprocessor macros, and then open the discussion to see what is
+the right approach to solve this problem.
+
+I don't think that more than 10-15 minutes is needed for presenting the
+problem scope and one possible solution. The following discussion may
+be longer though.
+
+I'll be attending on both the morning and afternoon, but I'll be
+leaving at ~4:30 PM.
+
+Best regards,
+
+Thomas Petazzoni
 -- 
-2.13.6
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
