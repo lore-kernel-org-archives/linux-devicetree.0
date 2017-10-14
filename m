@@ -1,88 +1,54 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCHv4 0/4] tegra-cec: add Tegra HDMI CEC support
-Date: Sat, 14 Oct 2017 14:08:31 +0200
-Message-ID: <9314614a-446d-b76d-640b-033cc74e3879@xs4all.nl>
-References: <20170911122952.33980-1-hverkuil@xs4all.nl>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: add binding for A64 DE2 CCU
+ with SRAM section
+Date: Sat, 14 Oct 2017 20:29:24 +0800
+Message-ID: <20171014122925.13220-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170911122952.33980-1-hverkuil@xs4all.nl>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSEGRDHQKGQE7ZKJK7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCk9uIDA5LzExLzIwMTcgMDI6MjkgUE0sIEhhbnMgVmVya3VpbCB3cm90ZToK
-PiBGcm9tOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4gCj4gVGhpcyBw
-YXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgVGVncmEgQ0VDIGZ1bmN0aW9uYWxpdHku
-Cj4gCj4gVGhpcyB2NCBoYXMgYmVlbiByZWJhc2VkIHRvIHRoZSBsYXRlc3QgNC4xNCBwcmUtcmMx
-IG1haW5saW5lLgo+IAo+IFBsZWFzZSByZXZpZXchIE90aGVyIHRoYW4gZm9yIHRoZSBiaW5kaW5n
-cyB0aGF0IGFyZSBub3cgQWNrZWQgSSBoYXZlIG5vdAo+IHJlY2VpdmVkIGFueSBmZWVkYmFjay4K
-CkNhbiB5b3Ugb3Igc29tZW9uZSBlbHNlIGZyb20gdGhlIFRlZ3JhIG1haW50YWluZXJzIHJldmll
-dyB0aGlzPwoKSSBoYXZlIG5vdCBoZWFyZCBhbnl0aGluZyBhYm91dCB0aGlzIHBhdGNoIHNlcmll
-cywgbm9yIG9mIHRoZSBwcmV2aW91cwp2ZXJzaW9ucyBvZiB0aGlzIHNlcmllcy4gV2hhdCdzIHRo
-ZSBob2xkLXVwPwoKUmVnYXJkcywKCglIYW5zCgo+IAo+IFRoZSBmaXJzdCBwYXRjaCBkb2N1bWVu
-dHMgdGhlIENFQyBiaW5kaW5ncywgdGhlIHNlY29uZCBhZGRzIHN1cHBvcnQKPiBmb3IgdGhpcyB0
-byB0ZWdyYTEyNC5kdHNpIGFuZCBlbmFibGVzIGl0IGZvciB0aGUgSmV0c29uIFRLMS4KPiAKPiBU
-aGUgdGhpcmQgcGF0Y2ggYWRkcyB0aGUgQ0VDIGRyaXZlciBpdHNlbGYgYW5kIHRoZSBmaW5hbCBw
-YXRjaCBhZGRzCj4gdGhlIGNlYyBub3RpZmllciBzdXBwb3J0IHRvIHRoZSBkcm0vdGVncmEgZHJp
-dmVyIGluIG9yZGVyIHRvIG5vdGlmeQo+IHRoZSBDRUMgZHJpdmVyIHdoZW5ldmVyIHRoZSBwaHlz
-aWNhbCBhZGRyZXNzIGNoYW5nZXMuCj4gCj4gSSBleHBlY3QgdGhhdCB0aGUgZHRzIGNoYW5nZXMg
-YXBwbHkgYXMgd2VsbCB0byB0aGUgVGVncmEgWDEvWDIgYW5kIHBvc3NpYmx5Cj4gb3RoZXIgVGVn
-cmEgU29DcywgYnV0IEkgY2FuIG9ubHkgdGVzdCB0aGlzIHdpdGggbXkgSmV0c29uIFRLMSBib2Fy
-ZC4KPiAKPiBUaGUgZHQtYmluZGluZ3MgYW5kIHRoZSB0ZWdyYS1jZWMgZHJpdmVyIHdvdWxkIGdv
-IGluIHRocm91Z2ggdGhlIG1lZGlhCj4gc3Vic3lzdGVtLCB0aGUgZHJtL3RlZ3JhIHBhcnQgdGhy
-b3VnaCB0aGUgZHJtIHN1YnN5c3RlbSBhbmQgdGhlIGR0cwo+IGNoYW5nZXMgdGhyb3VnaCAoSSBn
-dWVzcykgdGhlIGxpbnV4LXRlZ3JhIGRldmVsb3BlcnMuIEx1Y2tpbHkgdGhleSBhcmUKPiBhbGwg
-aW5kZXBlbmRlbnQgb2Ygb25lIGFub3RoZXIuCj4gCj4gVG8gdGVzdCB0aGlzIHlvdSBuZWVkIHRo
-ZSBDRUMgdXRpbGl0aWVzIGZyb20gZ2l0Oi8vbGludXh0di5vcmcvdjRsLXV0aWxzLmdpdC4KPiAK
-PiBUbyBidWlsZCB0aGlzOgo+IAo+IGdpdCBjbG9uZSBnaXQ6Ly9saW51eHR2Lm9yZy92NGwtdXRp
-bHMuZ2l0Cj4gY2QgdjRsLXV0aWxzCj4gLi9ib290c3RyYXAuc2g7IC4vY29uZmlndXJlCj4gbWFr
-ZQo+IHN1ZG8gbWFrZSBpbnN0YWxsICMgb3B0aW9uYWwsIHlvdSByZWFsbHkgb25seSBuZWVkIHV0
-aWxzL2NlYyoKPiAKPiBUbyB0ZXN0Ogo+IAo+IGNlYy1jdGwgLS1wbGF5YmFjayAjIGNvbmZpZ3Vy
-ZSBhcyBwbGF5YmFjayBkZXZpY2UKPiBjZWMtY3RsIC1TICMgZGV0ZWN0IGFsbCBjb25uZWN0ZWQg
-Q0VDIGRldmljZXMKPiAKPiBTZWUgaGVyZSBmb3IgdGhlIHB1YmxpYyBDRUMgQVBJOgo+IAo+IGh0
-dHBzOi8vaHZlcmt1aWwuaG9tZS54czRhbGwubmwvc3BlYy91YXBpL2NlYy9jZWMtYXBpLmh0bWwK
-PiAKPiBSZWdhcmRzLAo+IAo+IAlIYW5zCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MzoKPiAKPiAtIFVz
-ZSB0aGUgbmV3IENFQ19DQVBfREVGQVVMVFMgZGVmaW5lCj4gLSBVc2UgSVNfRVJSKGNlYy0+YWRh
-cCkgaW5zdGVhZCBvZiBJU19FUlJfT1JfTlVMTChjZWMtPmFkYXApCj4gICAoY2VjX2FsbG9jYXRl
-X2FkYXB0ZXIgbmV2ZXIgcmV0dXJucyBhIE5VTEwgcG9pbnRlcikKPiAtIERyb3AgdGhlIGRldmlj
-ZV9pbml0X3dha2V1cDogd2FrZXVwIGlzIG5vdCAoeWV0KSBzdXBwb3J0ZWQgYnkKPiAgIHRoZSBD
-RUMgZnJhbWV3b3JrIGFuZCBJIGhhdmUgbmV2ZXIgdGVzdGVkIGl0Lgo+IAo+IEhhbnMgVmVya3Vp
-bCAoNCk6Cj4gICBkdC1iaW5kaW5nczogZG9jdW1lbnQgdGhlIHRlZ3JhIENFQyBiaW5kaW5ncwo+
-ICAgQVJNOiB0ZWdyYTogYWRkIENFQyBzdXBwb3J0IHRvIHRlZ3JhMTI0LmR0c2kKPiAgIHRlZ3Jh
-LWNlYzogYWRkIFRlZ3JhIEhETUkgQ0VDIGRyaXZlcgo+ICAgZHJtL3RlZ3JhOiBhZGQgY2VjLW5v
-dGlmaWVyIHN1cHBvcnQKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdGVncmEt
-Y2VjLnR4dCAgICAgICAgfCAgMjcgKysKPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTEy
-NC1qZXRzb24tdGsxLmR0cyAgICAgICAgICB8ICAgNCArCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3Rl
-Z3JhMTI0LmR0c2kgICAgICAgICAgICAgICAgICAgIHwgIDEyICstCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS90ZWdyYS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9n
-cHUvZHJtL3RlZ3JhL2RybS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDMgKwo+ICBkcml2
-ZXJzL2dwdS9kcm0vdGVncmEvaGRtaS5jICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArCj4g
-IGRyaXZlcnMvZ3B1L2RybS90ZWdyYS9vdXRwdXQuYyAgICAgICAgICAgICAgICAgICAgIHwgICA2
-ICsKPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
-fCAgMTEgKwo+ICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICAgICB8ICAgMiArCj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdGVncmEtY2VjL01ha2VmaWxl
-ICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS90ZWdyYS1jZWMvdGVn
-cmFfY2VjLmMgICAgICAgfCA1MDEgKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvbWVk
-aWEvcGxhdGZvcm0vdGVncmEtY2VjL3RlZ3JhX2NlYy5oICAgICAgIHwgMTI3ICsrKysrKwo+ICAx
-MyBmaWxlcyBjaGFuZ2VkLCA3MTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3Rl
-Z3JhLWNlYy50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-dGVncmEtY2VjL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3Bs
-YXRmb3JtL3RlZ3JhLWNlYy90ZWdyYV9jZWMuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9tZWRpYS9wbGF0Zm9ybS90ZWdyYS1jZWMvdGVncmFfY2VjLmgKPiAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+A64's Display Engine 2.0 needs a section of SRAM (SRAM C) to be claimed.
+
+Add binding for this.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+index 631d27cd89d6..8b1f86080d3d 100644
+--- a/Documentation/devicetree/bindings/clock/sun8i-de2.txt
++++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+@@ -5,6 +5,7 @@ Required properties :
+ - compatible: must contain one of the following compatibles:
+ 		- "allwinner,sun8i-a83t-de2-clk"
+ 		- "allwinner,sun8i-v3s-de2-clk"
++		- "allwinner,sun50i-a64-de2-clk"
+ 		- "allwinner,sun50i-h5-de2-clk"
+ 
+ - reg: Must contain the registers base address and length
+@@ -17,6 +18,10 @@ Required properties :
+ - #clock-cells : must contain 1
+ - #reset-cells : must contain 1
+ 
++Additional required properties for "allwinner,sun50i-a64-de2-clk" :
++- allwinner,sram: See Documentation/devicetree/bindings/sram/sunxi-sram.txt,
++		  should be the SRAM C section on A64 SoC.
++
+ Example:
+ de2_clocks: clock@1000000 {
+ 	compatible = "allwinner,sun8i-a83t-de2-clk";
+-- 
+2.13.6
