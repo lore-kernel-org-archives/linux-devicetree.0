@@ -1,62 +1,81 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v4 00/11] dmaengine: sun6i: Fixes for
- H3/A83T, enable A64
-Date: Sat, 14 Oct 2017 11:21:51 +0800
-Message-ID: <CAGb2v647ZjWogvGTCJbdv93QGaguGv8A4YOyk87XRkYi2Bjd2w@mail.gmail.com>
-References: <3c78e966-2ece-4e67-94de-801aa569089f@rwthex-w2-a.rwth-ad.de> <20170928152646.jteewxaqqbkw777s@flea>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
+Date: Sat, 14 Oct 2017 06:40:49 +0200
+Message-ID: <1507956049.5910.47.camel@hadess.net>
+References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
+         <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
+         <1507912842.5910.39.camel@hadess.net>
+         <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170928152646.jteewxaqqbkw777s@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: =?UTF-8?Q?Stefan_Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>, linux-sunxi <linux-sunxi@googlegroups.com>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Andre Przywara <andre.przywara@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Code Kipper <codekipper@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Antonio Ospite <ao2@ao2.it>, Marcin Niestroj <m.niestroj@grinn-global.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Fri, 2017-10-13 at 15:58 -0700, Dmitry Torokhov wrote:
+> On Fri, Oct 13, 2017 at 06:40:42PM +0200, Bastien Nocera wrote:
+> > On Fri, 2017-10-13 at 18:02 +0200, Antonio Ospite wrote:
+> > > On Thu, 12 Oct 2017 17:04:42 +0200
+> > > Marcin Niestroj <m.niestroj@grinn-global.com> wrote:
+> > > 
+> > > > Support was added based on Goodix GitHub repo [1]. There are
+> > > > two
+> > > > major
+> > > > differences between gt1151 and currently supported devices
+> > > > (gt9x):
+> > > >  * CONFIG_DATA register has 0x8050 address instead of 0x8047,
+> > > >  * config data checksum has 16-bit width instead of 8-bit.
+> > > > 
+> > > > Also update goodix_i2c_test() function, so it reads ID register
+> > > > (which
+> > > > has the same address for all devices) instead of CONFIG_DATA
+> > > > (because
+> > > > its address is known only after reading ID of the device).
+> > > > 
+> > > > [1] https://github.com/goodix/gt1x_driver_generic
+> > > > 
+> > > > Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+> > > > ---
+> > > > Patch was developed and tested on top of 4.14-rc4 using custom
+> > > > board.
+> > > > 
+> > > 
+> > > Just a suggestion, you could use a function pointer for the
+> > > device-specific checksum routines and have the check on the
+> > > device id
+> > > only once in goodix_ts_probe(), see below.
+> > 
+> > Function pointer is fine, but this is how I'd implement it:
+> > 
+> > typedef enum {
+> >   GOODIX_CONFIG_TYPE_GT911 = 0,
+> >   GOODIX_CONFIG_TYPE_GT1151
+> > } GoodixConfigType;
+> > 
+> > static func_pointer config_funcs[] = {
+> >   goodix_gt911_get_config,
+> >   goodix_gt1151_get_config
+> > };
+> > 
+> > Store the GoodixConfigType in the device structure, and access the
+> > function pointer as:
+> > config_funcs[config_type] (...
+> > 
+> > That's what I'd prefer, but whatever Dmitry prefers style-wise.
+> > This
+> > seems more extensible in case we have different functions needing
+> > similar changes in the future, allowing us to either extend the
+> > function pointer array, or use switch/case statements for smaller
+> > functions.
+> 
+> My preference would be to assign constant chip data, such as
+> register,
+> to the relevant device ID structure (I2C or OF or ACPI) and reference
+> it
+> form where it is needed.
 
-On Thu, Sep 28, 2017 at 11:26 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Thu, Sep 28, 2017 at 01:49:17AM +0000, Stefan Brüns wrote:
->> Commit 3a03ea763a67 ("dmaengine: sun6i: Add support for Allwinner A83T
->> (sun8i) variant") and commit f008db8c00c1 ("dmaengine: sun6i: Add support for
->> Allwinner H3 (sun8i) variant") added support for the A83T resp. H3, but missed
->> some differences between the original A31 and A83T/H3.
->>
->> The first patch adds a callback to the controller config to set the clock
->> autogating register of different SoC generations, i.e. A31, A23+A83T, H3+later,
->> and uses it to for the correct clock autogating setting.
->>
->> The second patch adds a callback for the burst length setting in the channel
->> config register, which has different field offsets and new burst widths/lengths,
->> which differs between H3 and earlier generations
->>
->> The third patch restructures some code required for the fourth patch and adds the
->> burst lengths to the controller config.
->>
->> The fourth patch adds the burst widths to the config and adds the handling of the
->> H3 specific burst widths.
->>
->> Patch 5 restructures the code to decouple some controller details (e.g. channel
->> count) from the compatible string/the config.
->>
->> Patches 6, 7 and 8 introduce and use the "dma-chans" property for the A64. Although
->> register compatible to the H3, the channel count differs and thus it requires a
->> new compatible. To avoid introduction of new compatibles for each minor variation,
->> anything but the register model is moved to devicetree properties. There
->> is at least one SoC (R40) which can then reuse the A64 compatible, the same
->> would have worked for A83T+V3s.
->>
->> Patches 9 and 10 add the DMA controller node to the devicetree and add the DMA
->> controller reference to the SPI nodes.
->>
->> Patch 11 fixes a small error in the devicetree binding example.
->
-> Applied patches 9-11, thanks!
-> Maxime
-
-Can you pick up patches 1-8?
-
-Thanks!
-ChenYu
+That's much closer to the kernel style, yes. Thanks.
