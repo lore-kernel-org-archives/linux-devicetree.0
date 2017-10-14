@@ -1,85 +1,151 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 1/1] mtd: nand: pxa3xx: Set FORCE_CSX bit to
- ARMADA370 variants.
-Date: Sat, 14 Oct 2017 15:12:33 +0200
-Message-ID: <20171014151233.4e9ff319@bbrezillon>
-References: <20170928005756.3938-1-kalyan.kinthada@alliedtelesis.co.nz>
-        <20170928005756.3938-2-kalyan.kinthada@alliedtelesis.co.nz>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 0/4] tegra-cec: add Tegra HDMI CEC support
+Date: Sat, 14 Oct 2017 15:34:10 +0200
+Message-ID: <20171014133410.GA13205@ulmo>
+References: <20170911122952.33980-1-hverkuil@xs4all.nl>
+ <9314614a-446d-b76d-640b-033cc74e3879@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170928005756.3938-2-kalyan.kinthada@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, ezequiel.garcia@free-electrons.com, miquel.raynal@free-electrons.com, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, chris.packham@alliedtelesis.co.nz
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9314614a-446d-b76d-640b-033cc74e3879-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kalyan,
 
-On Thu, 28 Sep 2017 13:57:56 +1300
-Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz> wrote:
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> When the arbitration between NOR and NAND flash is enabled
-> the <FORCE_CSX> field bit[21] in the Data Flash Control Register
-> needs to be set to 1 according to guidleine GL-5830741 mentioned
-> in Marvell Errata document MV-S501377-00, Rev. D.
+On Sat, Oct 14, 2017 at 02:08:31PM +0200, Hans Verkuil wrote:
+> Hi Thierry,
+>=20
+> On 09/11/2017 02:29 PM, Hans Verkuil wrote:
+> > From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> >=20
+> > This patch series adds support for the Tegra CEC functionality.
+> >=20
+> > This v4 has been rebased to the latest 4.14 pre-rc1 mainline.
+> >=20
+> > Please review! Other than for the bindings that are now Acked I have not
+> > received any feedback.
+>=20
+> Can you or someone else from the Tegra maintainers review this?
+>=20
+> I have not heard anything about this patch series, nor of the previous
+> versions of this series. What's the hold-up?
 
-The real question is, is this patch fixing a real bug or are you just
-setting this bit because a guideline says it should be set? As far as I
-understand, noone fully understands what this bit does and why it needs
-to be set, so if you're not fixing a real bug, I'd prefer keeping the
-code unchanged code until someone complains for a good reason.
+Sorry about that. I've been meaning to look at this for a while now, but
+never got around to it. From a quick glance this looks good. Let me take
+this for a quick test-drive when I'm back at the office next week and
+I'll report back.
 
-Regards,
+Is there any particular ordering that we need to observe in order to
+merge this? Looks to me like it would be safe to merge patches 1 and 3
+through the CEC (media?) tree and take the others through DRM and Tegra
+separately without breaking anything.
 
-Boris
+Thierry
 
-> 
-> This commit sets the FORCE_CSX bit to 1 for all
-> ARMADA370 variants as the arbitration is always enabled by default.
-> This change does not apply for pxa3xx variants because the FORCE_CSX
-> bit does not exist/reserved on the NFCv1.
-> 
-> The NDCR_ND_MODE conflicts with the new NDCR_FORCE_CSX but is unused so
-> remove it along with NDCR_NAND_MODE.
-> 
-> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-> ---
->  drivers/mtd/nand/pxa3xx_nand.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
-> index 85cff68643e0..a6a7a5af7bed 100644
-> --- a/drivers/mtd/nand/pxa3xx_nand.c
-> +++ b/drivers/mtd/nand/pxa3xx_nand.c
-> @@ -67,8 +67,7 @@
->  #define NDCR_DWIDTH_M		(0x1 << 26)
->  #define NDCR_PAGE_SZ		(0x1 << 24)
->  #define NDCR_NCSX		(0x1 << 23)
-> -#define NDCR_ND_MODE		(0x3 << 21)
-> -#define NDCR_NAND_MODE   	(0x0)
-> +#define NDCR_FORCE_CSX		(0x1 << 21)
->  #define NDCR_CLR_PG_CNT		(0x1 << 20)
->  #define NFCV1_NDCR_ARB_CNTL	(0x1 << 19)
->  #define NFCV2_NDCR_STOP_ON_UNCOR	(0x1 << 19)
-> @@ -1464,6 +1463,9 @@ static int pxa3xx_nand_config_ident(struct pxa3xx_nand_info *info)
->  	info->chunk_size = PAGE_CHUNK_SIZE;
->  	info->reg_ndcr = 0x0; /* enable all interrupts */
->  	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN : 0;
-> +	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#: GL-5830741 */
-> +	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
-> +		info->reg_ndcr |= NDCR_FORCE_CSX;
->  	info->reg_ndcr |= NDCR_RD_ID_CNT(READ_ID_BYTES);
->  	info->reg_ndcr |= NDCR_SPARE_EN;
->  
-> @@ -1498,6 +1500,9 @@ static void pxa3xx_nand_detect_config(struct pxa3xx_nand_info *info)
->  	info->reg_ndcr = ndcr &
->  		~(NDCR_INT_MASK | NDCR_ND_ARB_EN | NFCV1_NDCR_ARB_CNTL);
->  	info->reg_ndcr |= (pdata->enable_arbiter) ? NDCR_ND_ARB_EN : 0;
-> +	/* Set FORCE_CSX bit for all ARMADA370 Variants. Ref#: GL-5830741 */
-> +	if (info->variant == PXA3XX_NAND_VARIANT_ARMADA370)
-> +		info->reg_ndcr |= NDCR_FORCE_CSX;
->  	info->ndtr0cs0 = nand_readl(info, NDTR0CS0);
->  	info->ndtr1cs0 = nand_readl(info, NDTR1CS0);
->  }
+> > The first patch documents the CEC bindings, the second adds support
+> > for this to tegra124.dtsi and enables it for the Jetson TK1.
+> >=20
+> > The third patch adds the CEC driver itself and the final patch adds
+> > the cec notifier support to the drm/tegra driver in order to notify
+> > the CEC driver whenever the physical address changes.
+> >=20
+> > I expect that the dts changes apply as well to the Tegra X1/X2 and poss=
+ibly
+> > other Tegra SoCs, but I can only test this with my Jetson TK1 board.
+> >=20
+> > The dt-bindings and the tegra-cec driver would go in through the media
+> > subsystem, the drm/tegra part through the drm subsystem and the dts
+> > changes through (I guess) the linux-tegra developers. Luckily they are
+> > all independent of one another.
+> >=20
+> > To test this you need the CEC utilities from git://linuxtv.org/v4l-util=
+s.git.
+> >=20
+> > To build this:
+> >=20
+> > git clone git://linuxtv.org/v4l-utils.git
+> > cd v4l-utils
+> > ./bootstrap.sh; ./configure
+> > make
+> > sudo make install # optional, you really only need utils/cec*
+> >=20
+> > To test:
+> >=20
+> > cec-ctl --playback # configure as playback device
+> > cec-ctl -S # detect all connected CEC devices
+> >=20
+> > See here for the public CEC API:
+> >=20
+> > https://hverkuil.home.xs4all.nl/spec/uapi/cec/cec-api.html
+> >=20
+> > Regards,
+> >=20
+> > 	Hans
+> >=20
+> > Changes since v3:
+> >=20
+> > - Use the new CEC_CAP_DEFAULTS define
+> > - Use IS_ERR(cec->adap) instead of IS_ERR_OR_NULL(cec->adap)
+> >   (cec_allocate_adapter never returns a NULL pointer)
+> > - Drop the device_init_wakeup: wakeup is not (yet) supported by
+> >   the CEC framework and I have never tested it.
+> >=20
+> > Hans Verkuil (4):
+> >   dt-bindings: document the tegra CEC bindings
+> >   ARM: tegra: add CEC support to tegra124.dtsi
+> >   tegra-cec: add Tegra HDMI CEC driver
+> >   drm/tegra: add cec-notifier support
+> >=20
+> >  .../devicetree/bindings/media/tegra-cec.txt        |  27 ++
+> >  MAINTAINERS                                        |   8 +
+> >  arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   4 +
+> >  arch/arm/boot/dts/tegra124.dtsi                    |  12 +-
+> >  drivers/gpu/drm/tegra/Kconfig                      |   1 +
+> >  drivers/gpu/drm/tegra/drm.h                        |   3 +
+> >  drivers/gpu/drm/tegra/hdmi.c                       |   9 +
+> >  drivers/gpu/drm/tegra/output.c                     |   6 +
+> >  drivers/media/platform/Kconfig                     |  11 +
+> >  drivers/media/platform/Makefile                    |   2 +
+> >  drivers/media/platform/tegra-cec/Makefile          |   1 +
+> >  drivers/media/platform/tegra-cec/tegra_cec.c       | 501 +++++++++++++=
+++++++++
+> >  drivers/media/platform/tegra-cec/tegra_cec.h       | 127 ++++++
+> >  13 files changed, 711 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/tegra-cec.t=
+xt
+> >  create mode 100644 drivers/media/platform/tegra-cec/Makefile
+> >  create mode 100644 drivers/media/platform/tegra-cec/tegra_cec.c
+> >  create mode 100644 drivers/media/platform/tegra-cec/tegra_cec.h
+> >=20
+>=20
+
+--tKW2IUtsqtDRztdT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlniElIACgkQ3SOs138+
+s6F6dhAAq1Lgh+s9MXcqzjD3KBI9713BD0n+g8+biXveQ6q1cFrEojiPc6UW9GpA
+VLEaT1T6bTi2p5tzD8TnWnxdXFi5tHLpnKX/t0YGcsXA1eebM2ZY4JcPARlZx9pr
+n16c6NwhGCHDaJwtVquE1TNd8u22Qz03xyEJrZZiXVAX9eQliHz6Qs8XE1AJItq6
+Pu/aT/v/P5KUvYMJsuUqxREVu2SCKWdX/+Hv6Ye9TEH6a7/9HCNW6/flCsonUFtC
+GHQnMhr1g3A0U29iM58q3s1+sUaFPRq3GfB7RXq7bEEGgnvS3YyWhzlZd16EJwX4
+TlcNJ/xJsTHo0HD3vAvTHJJwyOS7FCKYXbjI8AwWALXNJBJVcM51ojrnE37cf6Wb
+Hcavac286WktvU3C4NJUKTdLy7WVwu5TqeUYSW2QsqlCuM27SJl18ZqHQCOQbEDL
+Z09jVcUnzmvQqa3iIbjW2F1nC1Zjo/UEUGSBOMlGFsMjqYCVGtfmZl4r/ucNlGFx
+XgCUhvTReuGF0bPiJKRfbFo4edyT7Ko9LABqTY9fn4unfxDhM2UcbEJlSFK3EiA+
+9KB6LYd3owCJ98l/IbStlj9NOQ+Or0qCjOgAzbFni6kaKo52dLVmqKzaNFo2r9CQ
+kTNlNZtasZrdxELbmXq6X0sHl7iKMLwl9XBSTgaHgNbagfnV0a8=
+=fJV+
+-----END PGP SIGNATURE-----
+
+--tKW2IUtsqtDRztdT--
