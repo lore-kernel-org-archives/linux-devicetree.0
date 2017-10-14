@@ -1,25 +1,26 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] clk: rockchip: use new cif/vdpu clock ids on rk3188
-Date: Sat, 14 Oct 2017 23:03:59 +0200
-Message-ID: <3886973.ei8WaCr8Td@phil>
-References: <20170915083357.11296-1-heiko@sntech.de> <20170915083357.11296-3-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 2/4] clk: rockchip: export clock pclk_efuse_256 for RK3368 SoCs
+Date: Sat, 14 Oct 2017 23:29:07 +0200
+Message-ID: <2959871.y9lmPDGV1V@phil>
+References: <20170904085119.25981-1-romain.perier@collabora.com> <20170904085119.25981-3-romain.perier@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915083357.11296-3-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170904085119.25981-3-romain.perier@collabora.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Romain Perier <romain.perier@collabora.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, philipp.tomsich@theobroma-systems.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 15. September 2017, 10:33:50 CEST schrieb Heiko Stuebner:
-> Use the new clock-ids for cif, vdpu, vepu on rk3188
+Am Montag, 4. September 2017, 10:51:17 CEST schrieb Romain Perier:
+> This exports the clock for the pclk gate of the eFuse that is part of
+> the RK3368 SoCs. So we can use it from the dt-bindings.
 > 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Romain Perier <romain.perier@collabora.com>
 
 applied for 4.15
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+Thanks
+Heiko
