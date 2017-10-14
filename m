@@ -1,122 +1,88 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding for Allwinner
- XR819 SDIO Wi-Fi
-Date: Sat, 14 Oct 2017 20:00:52 +0800
-Message-ID: <dba5f095f9f25f0726ee3a2852e01b88@aosc.io>
-References: <20171003165944.13056-1-icenowy@aosc.io>
- <20171003165944.13056-2-icenowy@aosc.io>
- <871smjxp46.fsf@kamboji.qca.qualcomm.com>
- <E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
- <59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea>
- <C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io>
- <878tgq5beu.fsf@codeaurora.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCHv4 0/4] tegra-cec: add Tegra HDMI CEC support
+Date: Sat, 14 Oct 2017 14:08:31 +0200
+Message-ID: <9314614a-446d-b76d-640b-033cc74e3879@xs4all.nl>
+References: <20170911122952.33980-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <878tgq5beu.fsf-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170911122952.33980-1-hverkuil@xs4all.nl>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-在 2017-10-05 14:58，Kalle Valo 写道：
-> Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
-> 
->> 于 2017年10月4日 GMT+08:00 下午6:11:45, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 写到:
->>> On Wed, Oct 04, 2017 at 10:02:48AM +0000, Arend van Spriel wrote:
->>>> On 10/4/2017 11:03 AM, Icenowy Zheng wrote:
->>>> >
->>>> >
->>>> > 于 2017年10月4日 GMT+08:00 下午5:02:17, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> 写到:
->>>> > > Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
->>>> > >
->>>> > > > Allwinner XR819 is a SDIO Wi-Fi chip, which has the
->>> functionality to
->>>> > > use
->>>> > > > an out-of-band interrupt pin instead of SDIO in-band interrupt.
->>>> > > >
->>>> > > > Add the device tree binding of this chip, in order to make it
->>>> > > possible
->>>> > > > to add this interrupt pin to device trees.
->>>> > > >
->>>> > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> > > > ---
->>>> > > > Changes in v3:
->>>> > > > - Renames the node name.
->>>> > > > - Adds ACK from Rob.
->>>> > > > Changes in v2:
->>>> > > > - Removed status property in example.
->>>> > > > - Added required property reg.
->>>> > > >
->>>> > > >   .../bindings/net/wireless/allwinner,xr819.txt      | 38
->>>> > > ++++++++++++++++++++++
->>>> > > >   1 file changed, 38 insertions(+)
->>>> > > >   create mode 100644
->>>> > >
->>> Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
->>>> > >
->>>> > > Like I asked already last time, AFAICS there is no upstream xr819
->>>> > > wireless driver in drivers/net/wireless directory. Do we still
->>> accept
->>>> > > bindings like this for out-of-tree drivers?
->>>> >
->>>> > See esp8089.
->>>> >
->>>> > There's also no in-tree driver for it.
->>>> 
->>>> The question is whether we should. The above might be a precedent,
->>> but it
->>>> may not necessarily be the way to go. The commit message for esp8089
->>> seems
->>>> to hint that there is intent to have an in-tree driver:
->>>> 
->>>> """
->>>>     Note that at this point there only is an out of tree driver for
->>> this
->>>>     hardware, there is no clear timeline / path for merging this.
->>> Still
->>>>     I believe it would be good to specify the binding for this in
->>> tree
->>>>     now, so that any future migration to an in tree driver will not
->>> cause
->>>>     compatiblity issues.
->>>> 
->>>>     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>     Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> """
->>>> 
->>>> Regardless the bindings are in principle independent of the kernel
->>> and just
->>>> describing hardware. I think there have been discussions to move the
->>>> bindings to their own repository, but apparently it was decided
->>> otherwise.
->>> 
->>> Yeah, I guess especially how it could be merged with the cw1200 
->>> driver
->>> would be very relevant to that commit log.
->> 
->> The cw1200 driver seems to still have some legacy platform
->> data. Maybe they should also be convert to DT.
->> (Or maybe compatible = "allwinner,xr819" is enough, as
->> xr819 is a specified variant of cw1200 family)
-> 
-> Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
-> that? Or does cw1200 more changes than just adding the DT support?
-
-The support of XR819 in CW1200 driver is far more difficult than I
-imagined -- the codedrop used in the mainlined CW1200 driver seems to
-be so old that it's before XR819 (which seems to be based on CW1160),
-and there's a large number of problems to adapt it to a modern CW1200
-variant.
-
-P.S. could you apply this device tree binding patch now?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVGhpZXJyeSwKCk9uIDA5LzExLzIwMTcgMDI6MjkgUE0sIEhhbnMgVmVya3VpbCB3cm90ZToK
+PiBGcm9tOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4gCj4gVGhpcyBw
+YXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgVGVncmEgQ0VDIGZ1bmN0aW9uYWxpdHku
+Cj4gCj4gVGhpcyB2NCBoYXMgYmVlbiByZWJhc2VkIHRvIHRoZSBsYXRlc3QgNC4xNCBwcmUtcmMx
+IG1haW5saW5lLgo+IAo+IFBsZWFzZSByZXZpZXchIE90aGVyIHRoYW4gZm9yIHRoZSBiaW5kaW5n
+cyB0aGF0IGFyZSBub3cgQWNrZWQgSSBoYXZlIG5vdAo+IHJlY2VpdmVkIGFueSBmZWVkYmFjay4K
+CkNhbiB5b3Ugb3Igc29tZW9uZSBlbHNlIGZyb20gdGhlIFRlZ3JhIG1haW50YWluZXJzIHJldmll
+dyB0aGlzPwoKSSBoYXZlIG5vdCBoZWFyZCBhbnl0aGluZyBhYm91dCB0aGlzIHBhdGNoIHNlcmll
+cywgbm9yIG9mIHRoZSBwcmV2aW91cwp2ZXJzaW9ucyBvZiB0aGlzIHNlcmllcy4gV2hhdCdzIHRo
+ZSBob2xkLXVwPwoKUmVnYXJkcywKCglIYW5zCgo+IAo+IFRoZSBmaXJzdCBwYXRjaCBkb2N1bWVu
+dHMgdGhlIENFQyBiaW5kaW5ncywgdGhlIHNlY29uZCBhZGRzIHN1cHBvcnQKPiBmb3IgdGhpcyB0
+byB0ZWdyYTEyNC5kdHNpIGFuZCBlbmFibGVzIGl0IGZvciB0aGUgSmV0c29uIFRLMS4KPiAKPiBU
+aGUgdGhpcmQgcGF0Y2ggYWRkcyB0aGUgQ0VDIGRyaXZlciBpdHNlbGYgYW5kIHRoZSBmaW5hbCBw
+YXRjaCBhZGRzCj4gdGhlIGNlYyBub3RpZmllciBzdXBwb3J0IHRvIHRoZSBkcm0vdGVncmEgZHJp
+dmVyIGluIG9yZGVyIHRvIG5vdGlmeQo+IHRoZSBDRUMgZHJpdmVyIHdoZW5ldmVyIHRoZSBwaHlz
+aWNhbCBhZGRyZXNzIGNoYW5nZXMuCj4gCj4gSSBleHBlY3QgdGhhdCB0aGUgZHRzIGNoYW5nZXMg
+YXBwbHkgYXMgd2VsbCB0byB0aGUgVGVncmEgWDEvWDIgYW5kIHBvc3NpYmx5Cj4gb3RoZXIgVGVn
+cmEgU29DcywgYnV0IEkgY2FuIG9ubHkgdGVzdCB0aGlzIHdpdGggbXkgSmV0c29uIFRLMSBib2Fy
+ZC4KPiAKPiBUaGUgZHQtYmluZGluZ3MgYW5kIHRoZSB0ZWdyYS1jZWMgZHJpdmVyIHdvdWxkIGdv
+IGluIHRocm91Z2ggdGhlIG1lZGlhCj4gc3Vic3lzdGVtLCB0aGUgZHJtL3RlZ3JhIHBhcnQgdGhy
+b3VnaCB0aGUgZHJtIHN1YnN5c3RlbSBhbmQgdGhlIGR0cwo+IGNoYW5nZXMgdGhyb3VnaCAoSSBn
+dWVzcykgdGhlIGxpbnV4LXRlZ3JhIGRldmVsb3BlcnMuIEx1Y2tpbHkgdGhleSBhcmUKPiBhbGwg
+aW5kZXBlbmRlbnQgb2Ygb25lIGFub3RoZXIuCj4gCj4gVG8gdGVzdCB0aGlzIHlvdSBuZWVkIHRo
+ZSBDRUMgdXRpbGl0aWVzIGZyb20gZ2l0Oi8vbGludXh0di5vcmcvdjRsLXV0aWxzLmdpdC4KPiAK
+PiBUbyBidWlsZCB0aGlzOgo+IAo+IGdpdCBjbG9uZSBnaXQ6Ly9saW51eHR2Lm9yZy92NGwtdXRp
+bHMuZ2l0Cj4gY2QgdjRsLXV0aWxzCj4gLi9ib290c3RyYXAuc2g7IC4vY29uZmlndXJlCj4gbWFr
+ZQo+IHN1ZG8gbWFrZSBpbnN0YWxsICMgb3B0aW9uYWwsIHlvdSByZWFsbHkgb25seSBuZWVkIHV0
+aWxzL2NlYyoKPiAKPiBUbyB0ZXN0Ogo+IAo+IGNlYy1jdGwgLS1wbGF5YmFjayAjIGNvbmZpZ3Vy
+ZSBhcyBwbGF5YmFjayBkZXZpY2UKPiBjZWMtY3RsIC1TICMgZGV0ZWN0IGFsbCBjb25uZWN0ZWQg
+Q0VDIGRldmljZXMKPiAKPiBTZWUgaGVyZSBmb3IgdGhlIHB1YmxpYyBDRUMgQVBJOgo+IAo+IGh0
+dHBzOi8vaHZlcmt1aWwuaG9tZS54czRhbGwubmwvc3BlYy91YXBpL2NlYy9jZWMtYXBpLmh0bWwK
+PiAKPiBSZWdhcmRzLAo+IAo+IAlIYW5zCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MzoKPiAKPiAtIFVz
+ZSB0aGUgbmV3IENFQ19DQVBfREVGQVVMVFMgZGVmaW5lCj4gLSBVc2UgSVNfRVJSKGNlYy0+YWRh
+cCkgaW5zdGVhZCBvZiBJU19FUlJfT1JfTlVMTChjZWMtPmFkYXApCj4gICAoY2VjX2FsbG9jYXRl
+X2FkYXB0ZXIgbmV2ZXIgcmV0dXJucyBhIE5VTEwgcG9pbnRlcikKPiAtIERyb3AgdGhlIGRldmlj
+ZV9pbml0X3dha2V1cDogd2FrZXVwIGlzIG5vdCAoeWV0KSBzdXBwb3J0ZWQgYnkKPiAgIHRoZSBD
+RUMgZnJhbWV3b3JrIGFuZCBJIGhhdmUgbmV2ZXIgdGVzdGVkIGl0Lgo+IAo+IEhhbnMgVmVya3Vp
+bCAoNCk6Cj4gICBkdC1iaW5kaW5nczogZG9jdW1lbnQgdGhlIHRlZ3JhIENFQyBiaW5kaW5ncwo+
+ICAgQVJNOiB0ZWdyYTogYWRkIENFQyBzdXBwb3J0IHRvIHRlZ3JhMTI0LmR0c2kKPiAgIHRlZ3Jh
+LWNlYzogYWRkIFRlZ3JhIEhETUkgQ0VDIGRyaXZlcgo+ICAgZHJtL3RlZ3JhOiBhZGQgY2VjLW5v
+dGlmaWVyIHN1cHBvcnQKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdGVncmEt
+Y2VjLnR4dCAgICAgICAgfCAgMjcgKysKPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDggKwo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTEy
+NC1qZXRzb24tdGsxLmR0cyAgICAgICAgICB8ICAgNCArCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3Rl
+Z3JhMTI0LmR0c2kgICAgICAgICAgICAgICAgICAgIHwgIDEyICstCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS90ZWdyYS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9n
+cHUvZHJtL3RlZ3JhL2RybS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDMgKwo+ICBkcml2
+ZXJzL2dwdS9kcm0vdGVncmEvaGRtaS5jICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArCj4g
+IGRyaXZlcnMvZ3B1L2RybS90ZWdyYS9vdXRwdXQuYyAgICAgICAgICAgICAgICAgICAgIHwgICA2
+ICsKPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
+fCAgMTEgKwo+ICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICAgICB8ICAgMiArCj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdGVncmEtY2VjL01ha2VmaWxl
+ICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS90ZWdyYS1jZWMvdGVn
+cmFfY2VjLmMgICAgICAgfCA1MDEgKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvbWVk
+aWEvcGxhdGZvcm0vdGVncmEtY2VjL3RlZ3JhX2NlYy5oICAgICAgIHwgMTI3ICsrKysrKwo+ICAx
+MyBmaWxlcyBjaGFuZ2VkLCA3MTEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3Rl
+Z3JhLWNlYy50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+dGVncmEtY2VjL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlhL3Bs
+YXRmb3JtL3RlZ3JhLWNlYy90ZWdyYV9jZWMuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9tZWRpYS9wbGF0Zm9ybS90ZWdyYS1jZWMvdGVncmFfY2VjLmgKPiAKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
