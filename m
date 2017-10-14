@@ -1,81 +1,64 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
-Date: Sat, 14 Oct 2017 06:40:49 +0200
-Message-ID: <1507956049.5910.47.camel@hadess.net>
-References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
-         <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
-         <1507912842.5910.39.camel@hadess.net>
-         <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: net: add mt76 wireless device binding
+Date: Sat, 14 Oct 2017 09:20:46 +0200
+Message-ID: <3828919b-d634-9f03-22ad-1515219c31d4@nbd.name>
+References: <20171006110249.31013-1-nbd@nbd.name>
+ <20171006110249.31013-2-nbd@nbd.name>
+ <20171013190749.lzzw4zjzt7fkp3hs@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Antonio Ospite <ao2@ao2.it>, Marcin Niestroj <m.niestroj@grinn-global.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171013190749.lzzw4zjzt7fkp3hs@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-10-13 at 15:58 -0700, Dmitry Torokhov wrote:
-> On Fri, Oct 13, 2017 at 06:40:42PM +0200, Bastien Nocera wrote:
-> > On Fri, 2017-10-13 at 18:02 +0200, Antonio Ospite wrote:
-> > > On Thu, 12 Oct 2017 17:04:42 +0200
-> > > Marcin Niestroj <m.niestroj@grinn-global.com> wrote:
-> > > 
-> > > > Support was added based on Goodix GitHub repo [1]. There are
-> > > > two
-> > > > major
-> > > > differences between gt1151 and currently supported devices
-> > > > (gt9x):
-> > > >  * CONFIG_DATA register has 0x8050 address instead of 0x8047,
-> > > >  * config data checksum has 16-bit width instead of 8-bit.
-> > > > 
-> > > > Also update goodix_i2c_test() function, so it reads ID register
-> > > > (which
-> > > > has the same address for all devices) instead of CONFIG_DATA
-> > > > (because
-> > > > its address is known only after reading ID of the device).
-> > > > 
-> > > > [1] https://github.com/goodix/gt1x_driver_generic
-> > > > 
-> > > > Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> > > > ---
-> > > > Patch was developed and tested on top of 4.14-rc4 using custom
-> > > > board.
-> > > > 
-> > > 
-> > > Just a suggestion, you could use a function pointer for the
-> > > device-specific checksum routines and have the check on the
-> > > device id
-> > > only once in goodix_ts_probe(), see below.
-> > 
-> > Function pointer is fine, but this is how I'd implement it:
-> > 
-> > typedef enum {
-> >   GOODIX_CONFIG_TYPE_GT911 = 0,
-> >   GOODIX_CONFIG_TYPE_GT1151
-> > } GoodixConfigType;
-> > 
-> > static func_pointer config_funcs[] = {
-> >   goodix_gt911_get_config,
-> >   goodix_gt1151_get_config
-> > };
-> > 
-> > Store the GoodixConfigType in the device structure, and access the
-> > function pointer as:
-> > config_funcs[config_type] (...
-> > 
-> > That's what I'd prefer, but whatever Dmitry prefers style-wise.
-> > This
-> > seems more extensible in case we have different functions needing
-> > similar changes in the future, allowing us to either extend the
-> > function pointer array, or use switch/case statements for smaller
-> > functions.
+On 2017-10-13 21:07, Rob Herring wrote:
+> On Fri, Oct 06, 2017 at 01:02:47PM +0200, Felix Fietkau wrote:
+>> Add documentation describing how device tree can be used to configure
+>> wireless chips supported by the mt76 driver.
+>> 
+>> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+>> ---
+>>  .../bindings/net/wireless/mediatek,mt76.txt        | 24 ++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> new file mode 100644
+>> index 000000000000..19522ab97d62
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>> @@ -0,0 +1,24 @@
+>> +* MediaTek mt76xx devices
+>> +
+>> +This node provides properties for configuring the MediaTek mt76xx wireless
+>> +device. The node is expected to be specified as a child node of the PCI
+>> +controller to which the wireless chip is connected.
+>> +
+>> +Optional properties:
+>> +
+>> +- mac-address: See ethernet.txt in the parent directory
+>> +- local-mac-address: See ethernet.txt in the parent directory
+>> +- ieee80211-freq-limit: See ieee80211.txt
+>> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
 > 
-> My preference would be to assign constant chip data, such as
-> register,
-> to the relevant device ID structure (I2C or OF or ACPI) and reference
-> it
-> form where it is needed.
+> MTD is a Linuxism. And is an EEPROM the only supported device? I'd 
+> suggest naming if after what the data contains.
+PCI cards with this kind of wireless chip usually come with some form of
+EEPROM or use the on-chip OTP ROM.
+This property is for the case where the chip is built into an embedded
+device and the data that would otherwise be on an EEPROM is stored on a
+MTD partition instead.
+The EEPROM data itself contains multiple things: calibration data,
+hardware capabilities, MAC address, etc.
+I couldn't think of a better name for it, do you have any suggestions?
 
-That's much closer to the kernel style, yes. Thanks.
+- Felix
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
