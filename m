@@ -1,32 +1,22 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm64: dts: rockchip: default serial for Firefly-RK3399
-Date: Sat, 14 Oct 2017 21:20:03 +0200
-Message-ID: <2041727.0dCHrNDLFI@phil>
-References: <20170930040640.25526-1-xypron.glpk@gmx.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/4] clk: rockchip: add clock id for PCLK_EFUSE256 of RK3368 SoCs
+Date: Sat, 14 Oct 2017 21:27:25 +0200
+Message-ID: <1912374.Z4ZSI3ogOp@phil>
+References: <20170904085119.25981-1-romain.perier@collabora.com> <20170904085119.25981-2-romain.perier@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170930040640.25526-1-xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170904085119.25981-2-romain.perier@collabora.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Romain Perier <romain.perier@collabora.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, philipp.tomsich@theobroma-systems.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 30. September 2017, 06:06:40 CEST schrieb Heinrich Schuchardt:
-> The Firefly-RK3399 uses serial2 with 1,500,000 baud by default
-> for communication in U-Boot and in the vendor provided distros.
-> 
-> So let us set the same default in the Linux kernel.
-> 
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
+Am Montag, 4. September 2017, 10:51:16 CEST schrieb Romain Perier:
+> Signed-off-by: Romain Perier <romain.perier@collabora.com>
 
 applied for 4.15
 
-
 Thanks
 Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
