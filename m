@@ -1,248 +1,101 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] iio: adc: ina2xx: Make max expected current
- configurable
-Date: Sun, 15 Oct 2017 11:38:48 +0100
-Message-ID: <20171015113848.7f0d678f@archlinux>
-References: <1507814282-1486-1-git-send-email-m.purski@samsung.com>
-        <CGME20171012131814eucas1p172faad38314e077e3395befaceef77af@eucas1p1.samsung.com>
-        <1507814282-1486-2-git-send-email-m.purski@samsung.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: Document common property for
+ daisy-chained devices
+Date: Sun, 15 Oct 2017 12:30:53 +0100
+Message-ID: <20171015123053.383653a3@archlinux>
+References: <cover.1507797496.git.lukas@wunner.de>
+        <f0c3b0c5514f74717c5783360b60062dfe9b8c0f.1507797496.git.lukas@wunner.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507814282-1486-2-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f0c3b0c5514f74717c5783360b60062dfe9b8c0f.1507797496.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Oct 2017 15:17:59 +0200
-Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+On Thu, 12 Oct 2017 12:40:10 +0200
+Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
 
-> Max expected current is used for calculating calibration register value,
-> Current LSB and Power LSB according to equations found in ina datasheet:
-> current_lsb = max_expected_current / 2^15
-> calibration_register = 0.00512 / (current_lsb * r_shunt)
-> power_lsb = 25 * current_lsb (for ina231, 230, 226)
-> power_lsb = 20 * current_lsb (for older ones)
+> Many serially-attached GPIO and IIO devices are daisy-chainable.
 > 
-> Max expected current is now implicitly set to default value,
-> which is 2^15, thanks to which Current LSB is equal to 1 mA and
-> Power LSB is equal to 20000 uW or 25000 uW depending on ina model, but
-> users have no impact on the precision of the device.
+>     Examples for GPIO devices are Maxim MAX3191x and TI SN65HVS88x:
+>     https://datasheets.maximintegrated.com/en/ds/MAX31913.pdf
+>     http://www.ti.com/lit/ds/symlink/sn65hvs880.pdf
 > 
-> Make max expected current configurable from device tree or platform_data.
-> Allow changing current_lsb from sysfs. It is exposed in sysfs as
-> scale attribute for IIO current channel. Update calibration register and
-> power_lsb value on each scale change.
+>     Examples for IIO devices are TI DAC128S085 and TI DAC161S055:
+>     http://www.ti.com/lit/ds/symlink/dac128s085.pdf
+>     http://www.ti.com/lit/ds/symlink/dac161s055.pdf
 > 
-> Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-I'm going to hold off on this until the discussion around Stefan's
-point in the thread
-Re: [2/3] iio: adc: ina2xx: Adhere to documented ABI, use Ohm instead of uOhm
-is addressed.
-
-There he points out that current_lsb and presumably the calibration register
-are just conveniences, but that they result in lost precision.
-
-As I understand it, Stefan's suggestion is that we always use a fixed
-value and perform any 'calibration' by providing appropriate scale values
-to let it be done in userspace where floating point is available.
-
-Other than that fundamental question of whether this makes sense at all,
-the below looks good to me.
-
-Jonathan
+> We already have drivers for daisy-chainable devices in the tree but
+> their devicetree bindings are somewhat inconsistent and ill-named:
+> 
+>     The gpio-74x164.c driver uses "registers-number" to convey the
+>     number of devices in the daisy-chain.  (Sans vendor prefix,
+>     multiple vendors sell compatible versions of this chip.)
+> 
+>     The gpio-pisosr.c driver takes a different approach and calculates
+>     the number of devices in the daisy-chain by dividing the common
+>     "ngpios" property (Documentation/devicetree/bindings/gpio/gpio.txt)
+>     by 8 (which assumes that each chip has 8 inputs).
+> 
+> Let's standardize on a common "#daisy-chained-devices" property.
+> That name was chosen because it's the term most frequently used in
+> datasheets.  (A less frequently used synonym is "cascaded devices".)
+> 
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Makes sense to me.
+Acked-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/iio/adc/ina2xx-adc.c         | 96 ++++++++++++++++++++++++++----------
->  include/linux/platform_data/ina2xx.h |  2 +
->  2 files changed, 73 insertions(+), 25 deletions(-)
+> Changes v1 -> v2:
 > 
-> diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
-> index a16f8c6..be26dfc 100644
-> --- a/drivers/iio/adc/ina2xx-adc.c
-> +++ b/drivers/iio/adc/ina2xx-adc.c
-> @@ -56,6 +56,7 @@
->  #define INA226_DEFAULT_IT		1110
+> - Newly inserted patch.
+> 
+>  .../devicetree/bindings/common-properties.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
+> index 697714f8d75c..a3448bfa1c82 100644
+> --- a/Documentation/devicetree/bindings/common-properties.txt
+> +++ b/Documentation/devicetree/bindings/common-properties.txt
+> @@ -1,4 +1,8 @@
+>  Common properties
+> +=================
+> +
+> +Endianness
+> +----------
 >  
->  #define INA2XX_RSHUNT_DEFAULT           10000
-> +#define INA2XX_MAX_EXPECTED_MA_DEFAULT	BIT(15)	/* current_lsb = 1 mA */
->  
->  /*
->   * bit masks for reading the settings in the configuration register
-> @@ -114,7 +115,7 @@ struct ina2xx_config {
->  	int shunt_div;
->  	int bus_voltage_shift;
->  	int bus_voltage_lsb;	/* uV */
-> -	int power_lsb;		/* uW */
-> +	int power_lsb_factor;
->  	enum ina2xx_ids chip_id;
+>  The Devicetree Specification does not define any properties related to hardware
+>  byteswapping, but endianness issues show up frequently in porting Linux to
+> @@ -58,3 +62,25 @@ dev: dev@40031000 {
+>  	      ...
+>  	      little-endian;
 >  };
->  
-> @@ -123,7 +124,9 @@ struct ina2xx_chip_info {
->  	struct task_struct *task;
->  	const struct ina2xx_config *config;
->  	struct mutex state_lock;
-> -	unsigned int shunt_resistor;
-> +	unsigned int shunt_resistor;		/* uOhms */
-> +	int current_lsb;			/* uA */
-> +	int power_lsb;				/* uW */
->  	int avg;
->  	int int_time_vbus; /* Bus voltage integration time uS */
->  	int int_time_vshunt; /* Shunt voltage integration time uS */
-> @@ -137,7 +140,7 @@ static const struct ina2xx_config ina2xx_config[] = {
->  		.shunt_div = 100,
->  		.bus_voltage_shift = 3,
->  		.bus_voltage_lsb = 4000,
-> -		.power_lsb = 20000,
-> +		.power_lsb_factor = 20,
->  		.chip_id = ina219,
->  	},
->  	[ina226] = {
-> @@ -146,7 +149,7 @@ static const struct ina2xx_config ina2xx_config[] = {
->  		.shunt_div = 400,
->  		.bus_voltage_shift = 0,
->  		.bus_voltage_lsb = 1250,
-> -		.power_lsb = 25000,
-> +		.power_lsb_factor = 25,
->  		.chip_id = ina226,
->  	},
->  };
-> @@ -210,14 +213,15 @@ static int ina2xx_read_raw(struct iio_dev *indio_dev,
->  
->  		case INA2XX_POWER:
->  			/* processed (mW) = raw*lsb (uW) / 1000 */
-> -			*val = chip->config->power_lsb;
-> +			*val = chip->power_lsb;
->  			*val2 = 1000;
->  			return IIO_VAL_FRACTIONAL;
->  
->  		case INA2XX_CURRENT:
-> -			/* processed (mA) = raw (mA) */
-> -			*val = 1;
-> -			return IIO_VAL_INT;
-> +			/* processed (mA) = raw*lsb (uA) / 1000 */
-> +			*val = chip->current_lsb;
-> +			*val2 = 1000;
-> +			return IIO_VAL_FRACTIONAL;
->  		}
->  	}
->  
-> @@ -353,6 +357,36 @@ static int ina219_set_int_time_vshunt(struct ina2xx_chip_info *chip,
->  	return 0;
->  }
->  
-> +/*
-> + * Calculate calibration value according to equation 1 in ina226 datasheet
-> + * http://www.ti.com/lit/ds/symlink/ina226.pdf.
-> + * Current LSB is in uA and RShunt is in uOhms, so RShunt should be
-> + * converted to mOhms in order to keep the scale.
-> + * There is no need to expose the CALIBRATION register
-> + * to the user for now. But we need to reset this register
-> + * if the user updates RShunt or max expected current after driver
-> + * init, e.g upon reading an EEPROM/Probe-type value.
-> + */
-> +static int ina2xx_set_calibration(struct ina2xx_chip_info *chip)
-> +{
-> +	unsigned int rshunt = DIV_ROUND_CLOSEST(chip->shunt_resistor, 1000);
-> +	u16 regval = DIV_ROUND_CLOSEST(chip->config->calibration_factor,
-> +				     chip->current_lsb * rshunt);
 > +
-> +	return regmap_write(chip->regmap, INA2XX_CALIBRATION, regval);
-> +}
+> +Daisy-chained devices
+> +---------------------
 > +
-> +static int ina2xx_set_scale(struct ina2xx_chip_info *chip, unsigned int val)
-> +{
-> +	if (val <= 0 || val > chip->config->calibration_factor)
-> +		return -EINVAL;
+> +Many serially-attached GPIO and IIO devices are daisy-chainable.  To the
+> +host controller, a daisy-chain appears as a single device, but the number
+> +of inputs and outputs it provides is the sum of inputs and outputs provided
+> +by all of its devices.  The driver needs to know how many devices the
+> +daisy-chain comprises to determine the amount of data exchanged, how many
+> +inputs and outputs to register and so on.
 > +
-> +	chip->current_lsb = val;
-> +	chip->power_lsb = chip->current_lsb * chip->config->power_lsb_factor;
+> +Optional properties:
+> + - #daisy-chained-devices: Number of devices in the daisy-chain (default is 1).
 > +
-> +	return 0;
-> +}
-> +
->  static int ina2xx_write_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *chan,
->  			    int val, int val2, long mask)
-> @@ -394,7 +428,18 @@ static int ina2xx_write_raw(struct iio_dev *indio_dev,
->  							       &tmp);
->  		}
->  		break;
-> -
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->type) {
-> +		case IIO_CURRENT:
-> +			val = val * 1000 + DIV_ROUND_CLOSEST(val2, 1000);
-> +			ret = ina2xx_set_scale(chip, val);
-> +			if (!ret)
-> +				ret = ina2xx_set_calibration(chip);
-> +			break;
-> +		default:
-> +			ret = -EINVAL;
-> +		}
-> +		break;
->  	default:
->  		ret = -EINVAL;
->  	}
-> @@ -433,22 +478,6 @@ static ssize_t ina2xx_allow_async_readout_store(struct device *dev,
->  	return len;
->  }
->  
-> -/*
-> - * Set current LSB to 1mA, shunt is in uOhms
-> - * (equation 13 in datasheet). We hardcode a Current_LSB
-> - * of 1.0 x10-6. The only remaining parameter is RShunt.
-> - * There is no need to expose the CALIBRATION register
-> - * to the user for now. But we need to reset this register
-> - * if the user updates RShunt after driver init, e.g upon
-> - * reading an EEPROM/Probe-type value.
-> - */
-> -static int ina2xx_set_calibration(struct ina2xx_chip_info *chip)
-> -{
-> -	u16 regval = DIV_ROUND_CLOSEST(chip->config->calibration_factor,
-> -				   chip->shunt_resistor);
-> -
-> -	return regmap_write(chip->regmap, INA2XX_CALIBRATION, regval);
-> -}
->  
->  static int set_shunt_resistor(struct ina2xx_chip_info *chip, unsigned int val)
->  {
-> @@ -849,6 +878,23 @@ static int ina2xx_probe(struct i2c_client *client,
->  	if (ret)
->  		return ret;
->  
-> +	if (of_property_read_u32(client->dev.of_node,
-> +				"ti-max-expected-current-milliamp", &val) < 0) {
-> +		struct ina2xx_platform_data *pdata =
-> +		    dev_get_platdata(&client->dev);
-> +
-> +		if (pdata && pdata->max_mA != 0)
-> +			val = pdata->max_mA;
-> +		else
-> +			val = INA2XX_MAX_EXPECTED_MA_DEFAULT;
-> +	}
-> +
-> +	/* Calculate current_lsb: max-expected-current / 2^15 */
-> +	val = DIV_ROUND_CLOSEST(val * 1000, (1 << 15));
-> +	ret = ina2xx_set_scale(chip, val);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Patch the current config register with default. */
->  	val = chip->config->config_default;
->  
-> diff --git a/include/linux/platform_data/ina2xx.h b/include/linux/platform_data/ina2xx.h
-> index 9abc0ca..f02b1d8 100644
-> --- a/include/linux/platform_data/ina2xx.h
-> +++ b/include/linux/platform_data/ina2xx.h
-> @@ -13,7 +13,9 @@
->  /**
->   * struct ina2xx_platform_data - ina2xx info
->   * @shunt_uohms		shunt resistance in microohms
-> + * @max_mA		max expected current in mA
->   */
->  struct ina2xx_platform_data {
->  	long shunt_uohms;
-> +	int max_mA;
->  };
+> +Example:
+> +gpio@0 {
+> +	      compatible = "name";
+> +	      reg = <0>;
+> +	      gpio-controller;
+> +	      #gpio-cells = <2>;
+> +	      #daisy-chained-devices = <3>;
+> +};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
