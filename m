@@ -1,67 +1,42 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [RESEND PATCH v4 0/2] add thermal nodes for UniPhier SoCs
-Date: Mon, 16 Oct 2017 00:19:41 +0900
-Message-ID: <CAK7LNAQ7ebasO3nEs+w35JZ=fvHUV5BoQ4T4eWYQw0O6bKgVGw@mail.gmail.com>
-References: <1504508317-12076-1-git-send-email-hayashi.kunihiko@socionext.com> <CAK7LNATX2bNGDTgEHrv9gjah_4ZXrTjRg45hPVOze774RB1_wg@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Fix omap l4per idling with wlcore   edge
+ sensitive interrupt
+Date: Sun, 15 Oct 2017 09:22:31 -0700
+Message-ID: <20171015162230.GU4394@atomide.com>
+References: <8665E2433BC68541A24DFFCA87B70F5B3646AF81@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATX2bNGDTgEHrv9gjah_4ZXrTjRg45hPVOze774RB1_wg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B3646AF81-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Cc: "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Gerlach, Dave" <d-gerlach-l0cyMroinI0@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-09-18 21:10 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> 2017-09-04 15:58 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
->> This series adds thermal nodes for UniPhier PXs2 and LD20 SoCs.
->>
->> Resending the patches to apply the missing comments,
->> please ignore previous v4.
->>
->> Changes since v3:
->> - use the dt-bindings header to replace the limit values with THERMAL_NO_LIMIT
->> - add the calibration value to uniphier-pxs2.dtsi
->> - move the calibration value to uniphier-ld20.dtsi
->>
->> Changes since v2:
->> - add the calibration value to device tree for LD20 reference board
->>
->> Changes since v1:
->> - separate from driver's patchset[1]
->> - add cooling-maps nodes on the device tree
->> - fix an interrupt trigger to set 'level-triggered' according to
->>   hardware specification
->> - bring up threshold temperature for LD20 according to the spec sheet
->> - add cpuN labels for reference in cooling-device property on PXs2 dts
->>
->> [1] https://lkml.org/lkml/2017/6/28/170
->>
->> Kunihiko Hayashi (2):
->>   ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for
->>     PXs2
->>   arm64: dts: uniphier: add nodes of thermal monitor and thermal zone
->>     for LD20
->>
->>  arch/arm/boot/dts/uniphier-pxs2.dtsi             | 47 ++++++++++++++++++++++--
->>  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 45 +++++++++++++++++++++++
->>  2 files changed, 88 insertions(+), 4 deletions(-)
->>
->
-> Series, applied to linux-uniphier.  Thanks!
->
-> --
-> Best Regards
-> Masahiro Yamada
+* Reizer, Eyal <eyalr-l0cyMroinI0@public.gmane.org> [171014 23:55]:
+> > From: Tony Lindgren [mailto:tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org]
+> > 
+> > On omaps, if the wlcore interrupt is configured as level instead of edge,
+> > L4PER will stop doing hardware based idling after ifconfig wlan0 down is
+> > done and the WL_EN line is pulled down.
+> > 
+> Do we understand why omap is doing this? Is it a bug or a normal behavior?
+> 
+> AFAIK way back edge interrupts have been used. On some omaps based boards.
+> They have used level interrupts instead due to occasional interrupts being missed 
+> By the omap interrupts controller when using edge based interrupts which caused 
+> Issues. This was the reason many boards are set to using level based interrupts which 
+> Seemed much more robust.
 
+No idea yet why exactly the gpio modules won't idle after that. But for making
+edge interrupts behave, I suspect that Grygorii's patch "[RESEND PATCH] gpio:
+omap: Fix lost edge interrupts" fixes those issues.
 
-Both of the patches added W=2 warnings by '_' in the node names.
+Regards,
 
-I fixed them up locally, per Rob's comment:
-https://patchwork.kernel.org/patch/9988355/
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
