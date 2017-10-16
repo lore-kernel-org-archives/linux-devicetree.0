@@ -1,39 +1,53 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 10/13] firmware: arm_sdei: Add support for CPU and
- system power states
-Date: Mon, 16 Oct 2017 14:52:05 +0100
-Message-ID: <20171016135204.ncz6fzw5gh3gv57c@armageddon.cambridge.arm.com>
-References: <20170922182614.27885-1-james.morse@arm.com>
- <20170922182614.27885-11-james.morse@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Fix omap l4per idling with wlcore   edge
+ sensitive interrupt
+Date: Mon, 16 Oct 2017 07:01:47 -0700
+Message-ID: <20171016140147.GV4394@atomide.com>
+References: <8665E2433BC68541A24DFFCA87B70F5B3646AF81@DFRE01.ent.ti.com>
+ <20171015162230.GU4394@atomide.com>
+ <20171015221536.ybe7x52tenocel6c@lenoch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170922182614.27885-11-james.morse-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20171015221536.ybe7x52tenocel6c@lenoch>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Gerlach, Dave" <d-gerlach-l0cyMroinI0@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 07:26:11PM +0100, James Morse wrote:
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index f24bfb2b9a2d..466b949474df 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -88,6 +88,7 @@ enum cpuhp_state {
->  	CPUHP_AP_PERF_XTENSA_STARTING,
->  	CPUHP_AP_PERF_METAG_STARTING,
->  	CPUHP_AP_MIPS_OP_LOONGSON3_STARTING,
-> +	CPUHP_AP_SDEI_STARTING,
+* Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org> [171015 15:16]:
+> On Sun, Oct 15, 2017 at 09:22:31AM -0700, Tony Lindgren wrote:
+> > * Reizer, Eyal <eyalr-l0cyMroinI0@public.gmane.org> [171014 23:55]:
+> > > > From: Tony Lindgren [mailto:tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org]
+> > > > 
+> > > > On omaps, if the wlcore interrupt is configured as level instead of edge,
+> > > > L4PER will stop doing hardware based idling after ifconfig wlan0 down is
+> > > > done and the WL_EN line is pulled down.
+> > > > 
+> > > Do we understand why omap is doing this? Is it a bug or a normal behavior?
+> > > 
+> > > AFAIK way back edge interrupts have been used. On some omaps based boards.
+> > > They have used level interrupts instead due to occasional interrupts being missed 
+> > > By the omap interrupts controller when using edge based interrupts which caused 
+> > > Issues. This was the reason many boards are set to using level based interrupts which 
+> > > Seemed much more robust.
+> > 
+> > No idea yet why exactly the gpio modules won't idle after that. But for making
+> > edge interrupts behave, I suspect that Grygorii's patch "[RESEND PATCH] gpio:
+> > omap: Fix lost edge interrupts" fixes those issues.
+> 
+> Please note, that Grygorii's patch fixes occasional edge interrupts misses
+> only after your PM patch is applied. That said, edge interrupts are still
+> being missed in mainline.
 
-Nitpick: how generic is this as to apply to other architectures?
-Probably not, so shall we prefix this with ARM_?
+I think that's for omap2 and 3 based boards. Sounds like we may have a generic
+test case here on omap3 for that issue. I'll do some ping tests against wl12xx
+on omap3-evm today while it's idling.
 
-Not actually a strong preferences but similar question for the
-definitions in the sdei.h files (and maybe the filenames themselves).
+Regards,
 
--- 
-Catalin
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
