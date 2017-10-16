@@ -1,40 +1,63 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 3/4] nvmem: rockchip: add support for RK3368
-Date: Mon, 16 Oct 2017 10:09:34 +0100
-Message-ID: <fb1c4d16-afae-6401-4b4a-75a5aa61c101@linaro.org>
-References: <20170904085119.25981-1-romain.perier@collabora.com>
- <20170904085119.25981-4-romain.perier@collabora.com>
- <1634846.UTLyzHzuUI@phil>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun8i: r40: add watchdog device node
+Date: Mon, 16 Oct 2017 11:09:51 +0200
+Message-ID: <20171016090950.jqz5ekfwhjqvsxtm@flea.lan>
+References: <20171013112621.18932-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1634846.UTLyzHzuUI@phil>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Romain Perier <romain.perier@collabora.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, philipp.tomsich@theobroma-systems.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cooda2fochwq2ffo"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171013112621.18932-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--cooda2fochwq2ffo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 14/10/17 22:31, Heiko Stuebner wrote:
-> Hi Srinivas,
-> 
-> Am Montag, 4. September 2017, 10:51:18 CEST schrieb Romain Perier:
->> This adds the necessary function for handling support on RK3368 SoCs
->>
->> Signed-off-by: Romain Perier <romain.perier@collabora.com>
->> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> 
-> Srinivas, could you take a look at this patch and maybe pick it up?
-> 
-Its already sent to Greg KH for inclusion in 4.15.
+On Fri, Oct 13, 2017 at 07:26:21PM +0800, Icenowy Zheng wrote:
+> The R40 SoC has a watchdog like the one on A20, in the timer memory zone
+> (which is also the same on A20).
+>=20
+> Add the device tree node for it.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
---srini
-> 
-> Thanks
-> Heiko
-> 
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--cooda2fochwq2ffo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZ5HdeAAoJEBx+YmzsjxAgU4kP/RyXikVUkG0ld5MguAOpWkMB
+xv2KvswxWvmPHX+RKecHq8xVKLzNsV9ClJ8d/m+cSNIszfE/UHpu08jP08zs5LuU
+srg76KOU5cf43mvbBpb73LUb41g52ktvMzpyDYT2wIcYi4DHw/OT1fxCFFs3EGN4
+Q2zRZMOuHHI3f3zJxQs77nRaDt9otNWAo3K4No2qssr2MlgUrq70/PUatrUo5fyK
+wVJXeBRfauwDWzHkJE28fCB07JoIF/CUgu//7yF4O5lo0DpvllnOM1naf5hPGlYj
+38TUaN+zIPM58hUROwGs/GHW4snx/2mjgiWSy72DoWeATULIEm/d0uOpKo/VMq5m
+u+ciqrVcH4dEjoKEaYYuwHABgl/MYVMqUUzrPzUwtn2/+Kibq4F2lBNPawYI3arN
+71/ypKqBvuwNAy5ulOyeaBHU2YvHQ0MCoUvVE8kuzh53TyWdlM5xE4UuaI9S1KE0
+ZGOtHwnWUraXv/MbIp/+fKrIAUYOyp9w2abtwke2NcQhn2jljrxnFkqAvqJuIzCm
+iJdRl/vlZt/N1BOJ2Hz867S0lpb6If745gHowdOTZQjhoE3HdW30l6Mlr6z9ZkeI
+qfQ+OFX3Gu3B6XrAT0p/y9Kb/xdSIKrJBd06UCW4lKKXvXOHEvAWmGOuKT+x8zfk
+xkDNzgyHXU0I0dv7w67u
+=iXOt
+-----END PGP SIGNATURE-----
+
+--cooda2fochwq2ffo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
