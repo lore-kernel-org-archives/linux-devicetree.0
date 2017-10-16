@@ -1,59 +1,40 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
-Date: Mon, 16 Oct 2017 12:04:35 +0300
-Message-ID: <a064c008-2268-26ef-edee-47bda38b117b@cogentembedded.com>
-References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org>
- <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas@grenoble-inp.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 3/4] nvmem: rockchip: add support for RK3368
+Date: Mon, 16 Oct 2017 10:09:34 +0100
+Message-ID: <fb1c4d16-afae-6401-4b4a-75a5aa61c101@linaro.org>
+References: <20170904085119.25981-1-romain.perier@collabora.com>
+ <20170904085119.25981-4-romain.perier@collabora.com>
+ <1634846.UTLyzHzuUI@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1634846.UTLyzHzuUI@phil>
 Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-clk-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, Romain Perier <romain.perier@collabora.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, philipp.tomsich@theobroma-systems.com, klaus.goger@theobroma-systems.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
 
-On 10/16/2017 2:43 AM, Jules Maselbas wrote:
 
-> Adds bindings documentation for the max3421 driver.
+On 14/10/17 22:31, Heiko Stuebner wrote:
+> Hi Srinivas,
 > 
-> Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-> ---
->   .../devicetree/bindings/usb/maxim,max3421.txt      | 24 ++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
+> Am Montag, 4. September 2017, 10:51:18 CEST schrieb Romain Perier:
+>> This adds the necessary function for handling support on RK3368 SoCs
+>>
+>> Signed-off-by: Romain Perier <romain.perier@collabora.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-> new file mode 100644
-> index 000000000000..7536c3ab3e5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-> @@ -0,0 +1,24 @@
-> +Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
-> +
-> +Required properties:
-> + - compatible: "maxim,max3421"
-> + - spi-max-frequency: maximum frequency for this device must not exceed 26 MHz.
-> + - reg: chip select number to which this device is connected.
-> + - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
-> +   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
-> +   ACTIVE_LEVEL is 0 or 1.
-> + - interrupt-parent: the phandle of the associated interrupt controller.
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> 
+> Srinivas, could you take a look at this patch and maybe pick it up?
+> 
+Its already sent to Greg KH for inclusion in 4.15.
 
-    This is never a required prob, it may be inherited from the parent nodes.
-
-> + - interrupts: the interuption line description for the interrupt controller.
-
-    Interrupt.
-
-[...]
-
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--srini
+> 
+> Thanks
+> Heiko
+> 
