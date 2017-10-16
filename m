@@ -1,43 +1,97 @@
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH 0/5] rockchip: kevin: Enable edp display
-Date: Mon, 16 Oct 2017 17:59:13 +0800
-Message-ID: <20171016095918.25588-1-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH 1/5] arm64: dts: rockchip: Enable edp disaplay on kevin
+Date: Mon, 16 Oct 2017 17:59:14 +0800
+Message-ID: <20171016095918.25588-2-jeffy.chen@rock-chips.com>
+References: <20171016095918.25588-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016095918.25588-1-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Lee Jones <lee.jones@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, linux-samsung-soc@vger.kernel.org, briannorris@chromium.org, Krzysztof Kozlowski <krzk@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Caesar Wang <wxt@rock-chips.com>, linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jef
+Cc: dmitry.torokhov@gmail.com, heiko@sntech.de, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, tfiga@chromium.org, broonie@kernel.org, seanpaul@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Ck1ha2UgZWRwIGRpc3BsYXkgd29ya3Mgb24gY2hyb21lYm9vayBrZXZpbihhdCBsZWFzdCBmb3Ig
-Ym9vdCBhbmltYXRpb24pLgoKQWxzbyBzb2x2ZSBzb21lIGlzc3VlcyBpIG1lZXQgZHVyaW5nIHRo
-ZSBicmluZ3VwLgoKCkplZmZ5IENoZW4gKDQpOgogIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBFbmFi
-bGUgZWRwIGRpc2FwbGF5IG9uIGtldmluCiAgYmFja2xpZ2h0OiBwd21fYmw6IEFkZCBkZXZpY2Ug
-bGluayBmb3IgcHdtX2JsIGFuZCBwd20KICBkcm0vcm9ja2NoaXA6IEZpeCBlcnJvciBoYW5kbGlu
-ZyBwYXRoIGluIHJvY2tjaGlwX2RwX2JpbmQoKQogIGRybS9yb2NrY2hpcDogQWRkIGRldmljZSBs
-aW5rcyBmb3IgbWFzdGVyIGFuZCBjb21wb25lbnRzCgpUb21hc3ogRmlnYSAoMSk6CiAgZHJtL2Jy
-aWRnZS9hbmFsb2dpeDogRG8gbm90IHVzZSBkZXZpY2UncyBkcnZkYXRhCgogYXJjaC9hcm02NC9i
-b290L2R0cy9yb2NrY2hpcC9yazMzOTktZ3J1LWtldmluLmR0cyAgfCAyOSArKysrKysrKysrKwog
-YXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTktZ3J1LmR0c2kgICAgICAgfCAxNiAr
-KysrKysKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5j
-IHwgNTAgKysrKysrKystLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3Nf
-ZHAuYyAgICAgICAgICAgICAgICAgfCAyNiArKysrKy0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vcm9j
-a2NoaXAvYW5hbG9naXhfZHAtcm9ja2NoaXAuYyAgICB8IDU3ICsrKysrKysrKysrKysrLS0tLS0t
-LS0KIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMgICAgICAgIHwg
-MjQgKysrKysrKy0tCiBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9wd21fYmwuYyAgICAgICAgICAg
-ICAgICAgICB8ICAyICsKIGluY2x1ZGUvZHJtL2JyaWRnZS9hbmFsb2dpeF9kcC5oICAgICAgICAg
-ICAgICAgICAgIHwgMTkgKysrKystLS0KIDggZmlsZXMgY2hhbmdlZCwgMTUxIGluc2VydGlvbnMo
-KyksIDcyIGRlbGV0aW9ucygtKQoKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add edp panel and enable related nodes on kevin.
+
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
+
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index a3d3cea7dc4f..bc67b19f0af5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -93,6 +93,18 @@
+ 		pwm-delay-us = <10000>;
+ 	};
+ 
++	edp_panel: edp-panel {
++		compatible = "sharp,lq123p1jx31", "simple-panel";
++		backlight = <&backlight>;
++		power-supply = <&pp3300_disp>;
++
++		ports {
++			panel_in_edp: endpoint {
++				remote-endpoint = <&edp_out_panel>;
++			};
++		};
++	};
++
+ 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
+ 		compatible = "murata,ncp15wb473";
+ 		pullup-uv = <1800000>;
+@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
+ 	};
+ };
+ 
++&edp {
++	status = "okay";
++
++	ports {
++		edp_out: port@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			edp_out_panel: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
++
+ &ppvar_bigcpu_pwm {
+ 	regulator-min-microvolt = <798674>;
+ 	regulator-max-microvolt = <1302172>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+index 5772c52fbfd3..470105d651c2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
+ 	dr_mode = "host";
+ };
+ 
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
++};
++
+ #include <arm/cros-ec-keyboard.dtsi>
+ #include <arm/cros-ec-sbs.dtsi>
+ 
+-- 
+2.11.0
