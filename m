@@ -1,44 +1,53 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [RFCv2 PATCH 12/36] dt-bindings: document stall and PASID
- properties for IOMMU masters
-Date: Mon, 16 Oct 2017 11:23:02 +0100
-Message-ID: <e7288f51-1cfa-44ce-e3ce-e9f3daf91579@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-13-jean-philippe.brucker@arm.com>
- <20171013191051.lgxbcobkzzj5guhv@rob-hp-laptop>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 0/9] Mediatek MT2712 clock and scpsys support
+Date: Mon, 16 Oct 2017 12:29:25 +0200
+Message-ID: <4b2b1a94-2a0e-4c5e-030e-d35edb3ac2f1@gmail.com>
+References: <1505793630-12590-1-git-send-email-weiyi.lu@mediatek.com>
+ <20171012224540.GE18706@codeaurora.org>
+ <ac7940d1-e23d-add2-b4b6-bd7cf66fea34@gmail.com>
+ <1508136134.20464.49.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171013191051.lgxbcobkzzj5guhv@rob-hp-laptop>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1508136134.20464.49.camel@mtksdaap41>
 Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "joro@8bytes.org" <joro@8bytes.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Weiyi Lu <weiyi.lu@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 13/10/17 20:10, Rob Herring wrote:
-> On Fri, Oct 06, 2017 at 02:31:39PM +0100, Jean-Philippe Brucker wrote:
->> On ARM systems, some platform devices behind an IOMMU may support stall
->> and PASID features. Stall is the ability to recover from page faults and
->> PASID offers multiple process address spaces to the device. Together they
->> allow to do paging with a device. Let the firmware tell us when a device
->> supports stall and PASID.
+
+
+On 10/16/2017 08:42 AM, Weiyi Lu wrote:
+> On Fri, 2017-10-13 at 16:50 +0200, Matthias Brugger wrote:
+>>
+>> On 10/13/2017 12:45 AM, Stephen Boyd wrote:
+>>> On 09/19, Weiyi Lu wrote:
+>>>> This series is based on v4.14-rc1 and composed of
+>>>> clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
+>>>
+>>> What's the merge plan? Can I apply the clk ones to clk tree and
+>>> ignore the rest?
+>>>
+>>
+>> Yes, please do so. I'll take scpsys, which depends on the clock patches.
+>>
+>> Regards,
+>> Matthias
 > 
-> Can't these be implied by the compatible string of the devices?
+> Hi Stephen & Matthias,
+> 
+> I will start to separate this patch set into three series
+> (clk/scpsys/dts) when I send the next version.
+> 
 
-I think that PASID capacity can be deduced from the compatible string but
-don't know how these devices will be implemented (the only known example
-being a software model for testing). In any case implementing PASID based
-on the compatible string is tricky, because the IOMMU driver needs to know
-PASID capacity before the device driver has had time to probe the device.
-Maybe we could get away with a static table associating compatible string
-to PASID capacity, but it's not very nice.
+There are no comments on the clk patches, so no need to resend them, if Stephen 
+is ok with taking patch 1,2,3.
 
-For stall it's a property of the integration between device and IOMMU,
-much like the "iommus" property, so it can't be deduced only from the
-compatible string. It's crucial that the firmware validates that stalling
-is safe, because we don't have any other way to discover it.
+If you want you can split out patch 4 and 9, but for me it's ok if they go 
+together with the scpsys driver. When scpsys is ready I will take them all 
+through my tree.
 
-Thanks,
-Jean
+Regards,
+Matthias
