@@ -1,73 +1,54 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH 0/9] Enable dw-mmc multi-card support
-Date: Mon, 16 Oct 2017 14:35:48 +0000
-Message-ID: <AM2PR05MB0753A4A6B8227F6CD1D7E24DA14F0@AM2PR05MB0753.eurprd05.prod.outlook.com>
-References: <cover.1507315433.git.lsun@mellanox.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 2/2] memory: ti-emif-sram: introduce relocatable
+ suspend/resume handlers
+Date: Mon, 16 Oct 2017 07:54:44 -0700
+Message-ID: <20171016145444.GX4394@atomide.com>
+References: <20171013205915.9652-1-d-gerlach@ti.com>
+ <20171013205915.9652-3-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1507315433.git.lsun@mellanox.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20171013205915.9652-3-d-gerlach@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-So far I saw one comment (an ACK) on PATCH 1/9. There seems no comments on =
-other patches yet.=20
-Ulf, (or other maintainers), any comments or suggestions how to move forwar=
-d for this patch series?
+* Dave Gerlach <d-gerlach@ti.com> [171013 14:00]:
+> Certain SoCs like Texas Instruments AM335x and AM437x require parts
+> of the EMIF PM code to run late in the suspend sequence from SRAM,
+> such as saving and restoring the EMIF context and placing the memory
+> into self-refresh.
+> 
+> One requirement for these SoCs to suspend and enter its lowest power
+> mode, called DeepSleep0, is that the PER power domain must be shut off.
+> Because the EMIF (DDR Controller) resides within this power domain, it
+> will lose context during a suspend operation, so we must save it so we
+> can restore once we resume. However, we cannot execute this code from
+> external memory, as it is not available at this point, so the code must
+> be executed late in the suspend path from SRAM.
+> 
+> This patch introduces a ti-emif-sram driver that includes several
+> functions written in ARM ASM that are relocatable so the PM SRAM
+> code can use them. It also allocates a region of writable SRAM to
+> be used by the code running in the executable region of SRAM to save
+> and restore the EMIF context. It can export a table containing the
+> absolute addresses of the available PM functions so that other SRAM
+> code can branch to them. This code is required for suspend/resume on
+> AM335x and AM437x to work.
+> 
+> In addition to this, to be able to share data structures between C and
+> the ti-emif-sram-pm assembly code, we can automatically generate all of
+> the C struct member offsets and sizes as macros by processing
+> emif-asm-offsets.c into assembly code and then extracting the relevant
+> data as is done for the generated platform asm-offsets.h files.
+> 
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+> v4->v5:
+> * Simplify Makefile to generate include/generated/ti-emif-asm-offsets.h
 
-Thanks,
-Liming
+Looks good to me:
 
------Original Message-----
-From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-owner@vger.ke=
-rnel.org] On Behalf Of Liming Sun
-Sent: Friday, October 6, 2017 3:21 PM
-To: Ulf Hansson <ulf.hansson@linaro.org>; Rob Herring <robh+dt@kernel.org>;=
- Mark Rutland <mark.rutland@arm.com>; Jaehoon Chung <jh80.chung@samsung.com=
->; Kukjin Kim <kgene@kernel.org>; Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Liming Sun <lsun@mellanox.com>; linux-mmc@vger.kernel.org; devicetree@v=
-ger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infrad=
-ead.org; linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 0/9] Enable dw-mmc multi-card support
-
-This series of commits enables the multi-card support for the dw-mmc contro=
-ller. It includes two parts as below.
-
-The first part (patches 1-7) reverts the series of recent commits that remo=
-ved the multi-card support with comments saying there was no such use case =
-in the real world. Actually this feature is being used in Mellanox Bluefiel=
-d SoC and has been requested by customers.
-
-The second part (patches 8-9) fixes the DesignWare multi-card support accor=
-ding to the dw-mmc databook (synnopsys: DesignWare Cores Mobile Storage Hos=
-t Databook, 2.70a). It has changes to set the card number into the CMD regi=
-ster to multiplex requests to different cards when working in SD_MMC_CEATA =
-mode, set the CTYPE / CLKENA / CDTHRCTL registers properly according to the=
- spec, and parse the per-card configuration to match the Linux Documentatio=
-n (bindings/mmc/synopsys-dw-mshc.txt).
-
-Liming Sun (9):
-  Revert "Documentation: dw-mshc: deprecate num-slots"
-  Revert "mmc: dw_mmc: remove the unnecessary slot variable"
-  Revert "mmc: dw_mmc: use the 'slot' instead of 'cur_slot'"
-  Revert "mmc: dw_mmc: remove the 'id' arguments about functions
-    relevant to slot"
-  Revert "mmc: dw_mmc: change the array of slots"
-  Revert "mmc: dw_mmc: remove the loop about finding slots"
-  Revert "mmc: dw_mmc: deprecated the "num-slots" property"
-  mmc: dw_mmc: Support two SD_MMC_CE-ATA cards
-  mmc: dw_mmc: Parse slot-specific configuration
-
- .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  16 +-
- drivers/mmc/host/dw_mmc-exynos.c                   |   4 +-
- drivers/mmc/host/dw_mmc.c                          | 277 ++++++++++++++++-=
-----
- drivers/mmc/host/dw_mmc.h                          |  17 +-
- 4 files changed, 236 insertions(+), 78 deletions(-)
-
---
-1.8.3.1
+Acked-by: Tony Lindgren <tony@atomide.com>
