@@ -1,32 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: unittest: Remove redundant OF_DETACHED flag setting
-Date: Mon, 16 Oct 2017 16:50:37 -0500
-Message-ID: <20171016215037.qkjzrwyzca3zqcfv@rob-hp-laptop>
-References: <20171013074451.14176-1-stephen.boyd@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/9] drm/panel: simple: add support for overriding the
+ pixel clock polarity
+Date: Mon, 16 Oct 2017 17:13:29 -0500
+Message-ID: <CAL_Jsq+EcROz1OYK28y814+Q__F=1obXe7EuXRBta+BRFjBJFA@mail.gmail.com>
+References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
+ <1507721021-28174-5-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171013074451.14176-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1507721021-28174-5-git-send-email-LW@KARO-electronics.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 12:44:51AM -0700, Stephen Boyd wrote:
-> of_fdt_unflatten_tree() already sets the flag on the node to
-> OF_DETACHED, because of_fdt_unflatten_tree() calls
-> __unflatten_device_tree() with the detached bool set to true.
-> 
-> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/of/unittest.c | 2 --
->  1 file changed, 2 deletions(-)
-
-Applied.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBPY3QgMTEsIDIwMTcgYXQgNjoyMyBBTSwgTG90aGFyIFdhw59tYW5uIDxMV0BrYXJv
+LWVsZWN0cm9uaWNzLmRlPiB3cm90ZToKPiBUaGUgS2EtUm8gZWxlY3Ryb25pY3MgTUI3IGJhc2Vi
+b2FyZCBoYXMgYW4gb24tYm9hcmQgTENELT5MVkRTCj4gY29udmVydGVyIHRoYXQgcmVxdWlyZXMg
+YSBmaXhlZCBwaXhlbGNsayBwb2xhcml0eSwgbm8gbWF0dGVyIHdoYXQgdGhlCj4gcGFuZWwncyBk
+aXNwbGF5X21vZGUgc3BlY2lmaWVzLiBBZGQgYW4gb3B0aW9uIHRvIG92ZXJyaWRlIHRoZSBwaXhl
+bGNsawo+IHBvbGFyaXR5IGRlZmluZWQgaW4gdGhlIHBhbmVsJ3MgZGlzcGxheV9tb2RlIHZpYSBE
+VEIuCgpXb3VsZG4ndCB5b3Uga25vdyB0aGUgcG9sYXJpdHkgcmVxdWlyZWQgYmFzZWQgb24gdGhl
+IHR5cGUgb2YgTFZEUwpjb252ZXJ0ZXIgY2hpcCBpbiBmcm9udCBvZiB0aGUgcGFuZWw/IE9yIGlz
+IHRoYXQgbm90IGJlaW5nIGRlc2NyaWJlZApiZWNhdXNlIGl0IGlzICJ0cmFuc3BhcmVudCIuCgpS
+b2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
