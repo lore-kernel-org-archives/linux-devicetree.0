@@ -1,59 +1,27 @@
-From: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Subject: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
-Date: Mon, 16 Oct 2017 01:43:06 +0200
-Message-ID: <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas@grenoble-inp.org>
-References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1508108927.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-In-Reply-To: <cover.1508108927.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-References: <cover.1508108927.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Subject: Re: [PATCH v4 02/12] [media] cxd2880-spi: Add support for CXD2880 SPI
+ interface
+Date: Mon, 16 Oct 2017 10:35:57 +0900
+Message-ID: <3b9b0037-27bf-02e3-5dc5-367b2cbd982e@sony.com>
+References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
+ <20171013055928.21132-1-Yasunari.Takiguchi@sony.com>
+ <CAJbz7-0T=LUSTr59kPDk4kVkHLh5XEeNEkA2T=hG=P_fXrrU=g@mail.gmail.com>
+ <eab5bd7b-d909-343d-7078-842e3d0d9ab9@sony.com>
+ <CAJbz7-1Ad6L60KCmwtFDPzYH-vcBnzT5vDf-63YMRbyFQRDk+g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJbz7-1Ad6L60KCmwtFDPzYH-vcBnzT5vDf-63YMRbyFQRDk+g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Honza_Petrou=c5=a1?= <jpetrous@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
 List-Id: devicetree@vger.kernel.org
 
-Adds bindings documentation for the max3421 driver.
+Hi Honza,
 
-Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
----
- .../devicetree/bindings/usb/maxim,max3421.txt      | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
+> BTW, is there any device, preferable some devboard with this silicon
+> on the market?
+There is not devboard at this moment, but we are promoting this device.
 
-diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-new file mode 100644
-index 000000000000..7536c3ab3e5a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-@@ -0,0 +1,24 @@
-+Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
-+
-+Required properties:
-+ - compatible: "maxim,max3421"
-+ - spi-max-frequency: maximum frequency for this device must not exceed 26 MHz.
-+ - reg: chip select number to which this device is connected.
-+ - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
-+   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
-+   ACTIVE_LEVEL is 0 or 1.
-+ - interrupt-parent: the phandle of the associated interrupt controller.
-+ - interrupts: the interuption line description for the interrupt controller.
-+   The driver configures MAX3421E for active low level triggered interrupts,
-+   configure your interrupt line accordingly.
-+
-+Example:
-+
-+	usb@0 {
-+		compatible = "maxim,max3421";
-+		reg = <0>;
-+		maxim,vbus-en-pin = <3 1>;
-+		spi-max-frequency = <26000000>;
-+		interrupt-parent = <&PIC>;
-+		interrupts = <42>;
-+	};
--- 
-2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Takiguchi
