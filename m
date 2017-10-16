@@ -1,53 +1,43 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 0/9] Mediatek MT2712 clock and scpsys support
-Date: Mon, 16 Oct 2017 12:29:25 +0200
-Message-ID: <4b2b1a94-2a0e-4c5e-030e-d35edb3ac2f1@gmail.com>
-References: <1505793630-12590-1-git-send-email-weiyi.lu@mediatek.com>
- <20171012224540.GE18706@codeaurora.org>
- <ac7940d1-e23d-add2-b4b6-bd7cf66fea34@gmail.com>
- <1508136134.20464.49.camel@mtksdaap41>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ASoC: sgtl5000: add support for a fixed sysclk frequency
+Date: Mon, 16 Oct 2017 08:51:01 -0200
+Message-ID: <CAOMZO5D-2iFsAUk2Ldo4RD5Xg71Q5HOBuasYc0t=tV3hZbaO2g@mail.gmail.com>
+References: <20171006083449.24038-1-jakob.unterwurzacher@theobroma-systems.com>
+ <AM5PR0401MB2627DE7F266788214268424BE34E0@AM5PR0401MB2627.eurprd04.prod.outlook.com>
+ <EA6FEF1C-263E-4529-AC8E-16F50C27030F@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1508136134.20464.49.camel@mtksdaap41>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Weiyi Lu <weiyi.lu@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <EA6FEF1C-263E-4529-AC8E-16F50C27030F-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jakob Unterwurzacher <jakob.unterwurzacher-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Bhumika Goyal <bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jakob,
 
+On Mon, Oct 16, 2017 at 7:46 AM, Jakob Unterwurzacher
+<jakob.unterwurzacher-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org> wrote:
+> Hi Fabio, that=E2=80=99s interesting.
+>
+> Looks like the fsl,imx-audio-sgtl5000 sound card driver that is used on t=
+he imx51-babbage
+> does not try to adjust MCLK in response to the playback sample rate.
+>
+> The simple-audio-card driver does that (it calls snd_soc_dai_set_sysclk w=
+henever playback
+> starts).
 
-On 10/16/2017 08:42 AM, Weiyi Lu wrote:
-> On Fri, 2017-10-13 at 16:50 +0200, Matthias Brugger wrote:
->>
->> On 10/13/2017 12:45 AM, Stephen Boyd wrote:
->>> On 09/19, Weiyi Lu wrote:
->>>> This series is based on v4.14-rc1 and composed of
->>>> clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
->>>
->>> What's the merge plan? Can I apply the clk ones to clk tree and
->>> ignore the rest?
->>>
->>
->> Yes, please do so. I'll take scpsys, which depends on the clock patches.
->>
->> Regards,
->> Matthias
-> 
-> Hi Stephen & Matthias,
-> 
-> I will start to separate this patch set into three series
-> (clk/scpsys/dts) when I send the next version.
-> 
+Could you please test this with linux-next tree?
 
-There are no comments on the clk patches, so no need to resend them, if Stephen 
-is ok with taking patch 1,2,3.
-
-If you want you can split out patch 4 and 9, but for me it's ok if they go 
-together with the scpsys driver. When scpsys is ready I will take them all 
-through my tree.
+Looks like that the recent b0a7043d5c2c("ASoC: fsl_ssi: Caculate bit
+clock rate using slot number and width") would avoid the issue.
 
 Regards,
-Matthias
+
+Fabio Estevam
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
