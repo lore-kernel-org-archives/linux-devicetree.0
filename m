@@ -1,15 +1,15 @@
 From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt: extcon: add optional
- debounce-timeout-ms attribute
-Date: Tue, 17 Oct 2017 08:07:32 +0900
-Message-ID: <59E53BB4.3000601@samsung.com>
-References: <CGME20171016073506epcas2p41d359236602b4d601283504d152f4bbd@epcas2p4.samsung.com>
-        <1508139288-11114-1-git-send-email-raveendra.padasalagi@broadcom.com>
+Subject: Re: [PATCH 2/2] extcon: add optional debounce-timeout-ms attribute
+Date: Tue, 17 Oct 2017 08:20:04 +0900
+Message-ID: <59E53EA4.5020302@samsung.com>
+References: <1508139288-11114-1-git-send-email-raveendra.padasalagi@broadcom.com>
+        <CGME20171016073514epcas2p1dbcba68d0491b76af827d2d52da3b371@epcas2p1.samsung.com>
+        <1508139288-11114-2-git-send-email-raveendra.padasalagi@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1508139288-11114-1-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-reply-to: <1508139288-11114-2-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
@@ -18,42 +18,72 @@ List-Id: devicetree@vger.kernel.org
 Hi,
 
 On 2017년 10월 16일 16:34, Raveendra Padasalagi wrote:
-> Add documentation on optional dt attribute "debounce-timeout-ms"
-> in extcon node to capture user specified timeout value for id
-> and vbus gpio detection.
+> Add changes to capture optional dt attribute "debounce-timeout-ms"
+> provided in extcon node and used the same value if provided otherwise
+> default value of 20ms is used for id and vbus gpios debounce time.
 > 
 > Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/extcon/extcon-usb-gpio.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> index dfc14f7..6df6d69 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -10,6 +10,10 @@ Either one of id-gpio or vbus-gpio must be present. Both can be present as well.
->  - id-gpio: gpio for USB ID pin. See gpio binding.
->  - vbus-gpio: gpio for USB VBUS pin.
+> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+> index 9c925b0..090f65f 100644
+> --- a/drivers/extcon/extcon-usb-gpio.c
+> +++ b/drivers/extcon/extcon-usb-gpio.c
+> @@ -41,6 +41,7 @@ struct usb_extcon_info {
 >  
-> +Optional properties:
-> +- debounce-timeout-ms: debounce timeout value for id and vbus gpio in
-> +  milliseconds.
+>  	unsigned long debounce_jiffies;
+>  	struct delayed_work wq_detcable;
+> +	unsigned int gpio_debounce_timeout_ms;
 
-I recommend that you use the 'input-debounce' propery name
-instead of 'debounce-timeout-ms'.
+You better to use the "debounce_usecs" name
+because the unit of debounce time is usec.
 
-When I check the pinctrl-bindings.txt[1] in order to check
-the property name for debounce. The documentation[1] specify
-the generic pinconfig property name.
+>  };
+>  
+>  static const unsigned int usb_extcon_cable[] = {
+> @@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  	if (IS_ERR(info->vbus_gpiod))
+>  		return PTR_ERR(info->vbus_gpiod);
+>  
+> +	ret = of_property_read_u32(np, "debounce-timeout-ms",
+> +			     &info->gpio_debounce_timeout_ms);
+
+I prefer to use the 'input-debounce' property name
+Because the pinctrl-bindings.txt[1] gives the guide
+for the generic name of debounce.
 [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+- "debounce-timeout-ms" -> "input-debounce"
 
+> +	if (ret)
+> +		info->gpio_debounce_timeout_ms = USB_GPIO_DEBOUNCE_MS;
 > +
->  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
->  	extcon_usb1 {
->  		compatible = "linux,extcon-usb-gpio";
+>  	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+>  	if (IS_ERR(info->edev)) {
+>  		dev_err(dev, "failed to allocate extcon device\n");
+> @@ -147,13 +153,14 @@ static int usb_extcon_probe(struct platform_device *pdev)
+>  
+>  	if (info->id_gpiod)
+>  		ret = gpiod_set_debounce(info->id_gpiod,
+> -					 USB_GPIO_DEBOUNCE_MS * 1000);
+> +					 info->gpio_debounce_timeout_ms * 1000);
+>  	if (!ret && info->vbus_gpiod)
+>  		ret = gpiod_set_debounce(info->vbus_gpiod,
+> -					 USB_GPIO_DEBOUNCE_MS * 1000);
+> +					 info->gpio_debounce_timeout_ms * 1000);
+>  
+>  	if (ret < 0)
+> -		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
+> +		info->debounce_jiffies = msecs_to_jiffies(
+> +						info->gpio_debounce_timeout_ms);
+>  
+>  	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
+>  
 > 
+
 -- 
 Best Regards,
 Chanwoo Choi
