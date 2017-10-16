@@ -1,56 +1,60 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RESEND][PATCH 0/4] firmware: of: populate /firmware/ node during
- init
-Date: Mon, 16 Oct 2017 15:44:07 -0700
-Message-ID: <59E53637.8020502@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND][PATCH 1/4] of: platform: populate /firmware/ node from
+ of_platform_default_populate_init()
+Date: Mon, 16 Oct 2017 15:44:33 -0700
+Message-ID: <59E53651.5070704@gmail.com>
 References: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
+ <1506595562-10592-2-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506595562-10592-2-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 + me
 
 On 09/28/17 03:45, Sudeep Holla wrote:
-> Hi Rob, Arnd,
+> Since "/firmware" does not have its own "compatible" property as it's
+> just collection of nodes representing firmware interface, it's sub-nodes
+> are not populated during system initialization.
 > 
-> There's a push to place all firmware related device node under
-> /firmware/ node. However all the associated drivers are dealing with
-> device creation in their own ways. For example, qcom_scm, optee and
-> meson-sm drivers deal with the node in their own way. The SCMI drivers
-> I am about to add also needs to do the same. This small series is to
-> make it generic so that all the users of /firmware/ node need not
-> repeat the same.
+> Currently different firmware drivers search the /firmware/ node and
+> populate the sub-node devices selectively. Instead we can populate
+> the /firmware/ node during init to avoid more drivers continuing to
+> populate the devices selectively.
 > 
-> There was concern that /firmware in DT is fit for /sys/firmware in sysfs.
-> IMO anything exposed to userspace from such firmware interface must
-> be in "/sys/firmware", but I don't see any issue with kernel handling
-> them as platform device/driver internally.
+> To generalize the solution this patch populates the /firmware/ node
+> explicitly from of_platform_default_populate_init().
 > 
-> Sudeep Holla (4):
->   of: platform: populate /firmware/ node from
->     of_platform_default_populate_init()
->   firmware: qcom_scm: drop redandant of_platform_populate
->   drivers: tee: rework optee_driver_{init,exit} to use platform device
->   firmware: meson-sm: rework meson_sm_init to use
->     module_platform_driver_probe
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/of/platform.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
->  drivers/firmware/meson/meson_sm.c | 21 ++++++-----
->  drivers/firmware/qcom_scm.c       | 24 -------------
->  drivers/of/platform.c             |  4 +++
->  drivers/tee/optee/core.c          | 74 +++++++++++++--------------------------
->  4 files changed, 41 insertions(+), 82 deletions(-)
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index ac15d0e3d27d..3a213a6aee89 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -515,6 +515,10 @@ static int __init of_platform_default_populate_init(void)
+>  			of_platform_device_create(node, NULL, NULL);
+>  	}
+>  
+> +	node = of_find_node_by_path("/firmware");
+> +	if (node)
+> +		of_platform_populate(node, NULL, NULL, NULL);
+> +
+>  	/* Populate everything else. */
+>  	of_platform_default_populate(NULL, NULL, NULL);
+>  
 > 
-> --
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
