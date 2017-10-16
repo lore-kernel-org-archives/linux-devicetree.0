@@ -1,133 +1,114 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [Patch v6 3/7] slimbus: qcom: Add Qualcomm Slimbus controller
- driver
-Date: Mon, 16 Oct 2017 10:28:17 +0100
-Message-ID: <a6bc9ce9-4e08-41e5-4c3f-e8fb46bafa1c@linaro.org>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-4-srinivas.kandagatla@linaro.org>
- <20171013191747.o7bvb5urs5jt2x4l@rob-hp-laptop>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] dt-bindings: display: rcar-du: Document R8A774[35] DU
+Date: Mon, 16 Oct 2017 12:31:29 +0300
+Message-ID: <4307810.tuXz3FVuBl@avalon>
+References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com> <1507908142-13142-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171013191747.o7bvb5urs5jt2x4l@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1507908142-13142-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Fabrizio,
+
+Thank you for the patch.
+
+On Friday, 13 October 2017 18:22:19 EEST Fabrizio Castro wrote:
+> Add device tree bindings for r8a7743 and r8a7745 DUs.
+> r8a7743 DU is similar to the one from r8a7791, r8a7745 DU is similar
+> to the one from r8a7794.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/display/renesas,du.txt     | 30 ++++++++++---------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
+> b/Documentation/devicetree/bindings/display/renesas,du.txt index
+> 4bbd1e9..c520226 100644
+> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> @@ -3,6 +3,8 @@
+>  Required Properties:
+> 
+>    - compatible: must be one of the following.
+> +    - "renesas,du-r8a7743" for R8A7743 (RZ/G1M) compatible DU
+> +    - "renesas,du-r8a7745" for R8A7745 (RZ/G1E) compatible DU
+>      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+>      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+>      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> @@ -27,10 +29,10 @@ Required Properties:
+>    - clock-names: Name of the clocks. This property is model-dependent.
+>      - R8A7779 uses a single functional clock. The clock doesn't need to be
+>        named.
+> -    - R8A779[0123456] use one functional clock per channel and one clock
+> per
+> -      LVDS encoder (if available). The functional clocks must be named
+> "du.x"
+> -      with "x" being the channel numerical index. The LVDS clocks must be
+> -      named "lvds.x" with "x" being the LVDS encoder numerical index.
+> +    - R8A779[0123456] and R8A774[35] use one functional clock per channel
+
+How about "All other DU instances use one functional clock..." ? I expect more 
+entries to the added in the future, it would be nice not to have to modify 
+this paragraph.
+
+> and 
+> +      one clock per LVDS encoder (if available). The functional clocks must
+> be
+> +      named "du.x" with "x" being the channel numerical index. The LVDS
+> clocks
+> +      must be named "lvds.x" with "x" being the LVDS encoder numerical
+> index.
+> - In addition to the functional and encoder clocks, all DU versions also
+> support externally supplied pixel clocks. Those clocks are optional. When
+> supplied they must be named "dclkin.x" with "x" being the input
+> @@ -49,16 +51,18 @@ bindings specified
+> in Documentation/devicetree/bindings/graph.txt. The following table lists
+> for each supported model the port number corresponding to each DU output.
+> 
+> -		Port 0		Port1		Port2		Port3
+> +                      Port0          Port1          Port2          Port3
+>  ---------------------------------------------------------------------------
+> -- - R8A7779 (H1)	DPAD 0		DPAD 1		-		-
+> - R8A7790 (H2)	DPAD		LVDS 0		LVDS 1		-
+> - R8A7791 (M2-W)	DPAD		LVDS 0		-		-
+> - R8A7792 (V2H)	DPAD 0		DPAD 1		-		-
+> - R8A7793 (M2-N)	DPAD		LVDS 0		-		-
+> - R8A7794 (E2)	DPAD 0		DPAD 1		-		-
+> - R8A7795 (H3)	DPAD		HDMI 0		HDMI 1		LVDS
+> - R8A7796 (M3-W)	DPAD		HDMI		LVDS		-
+> + R8A7743 (RZ/G1M)     DPAD 0         LVDS 0         -              -
+
+When there's a single DPAD the table mentions "DPAD" instead of "DPAD 0". 
+There's no specific reason for that other than a historical one, but to keep 
+entries consistent I would either keep doing so, or rename DPAD to DPAD 0 in 
+all existing entries. What would you prefer ?
+
+If you're fine with these changes there's no need to submit a new version, I 
+can fix when applying the patch to my tree.
+
+> + R8A7745 (RZ/G1E)     DPAD 0         DPAD 1         -              -
+> + R8A7779 (R-Car H1)   DPAD 0         DPAD 1         -              -
+> + R8A7790 (R-Car H2)   DPAD           LVDS 0         LVDS 1         -
+> + R8A7791 (R-Car M2-W) DPAD           LVDS 0         -              -
+> + R8A7792 (R-Car V2H)  DPAD 0         DPAD 1         -              -
+> + R8A7793 (R-Car M2-N) DPAD           LVDS 0         -              -
+> + R8A7794 (R-Car E2)   DPAD 0         DPAD 1         -              -
+> + R8A7795 (R-Car H3)   DPAD           HDMI 0         HDMI 1         LVDS
+> + R8A7796 (R-Car M3-W) DPAD           HDMI           LVDS           -
+> 
+> 
+>  Example: R8A7795 (R-Car H3) ES2.0 DU
 
 
-On 13/10/17 20:17, Rob Herring wrote:
-> On Fri, Oct 06, 2017 at 05:51:32PM +0200, srinivas.kandagatla@linaro.org wrote:
->> From: Sagar Dharia <sdharia@codeaurora.org>
->>
->> This controller driver programs manager, interface, and framer
->> devices for Qualcomm's slimbus HW block.
->> Manager component currently implements logical address setting,
->> and messaging interface.
->> Interface device reports bus synchronization information, and framer
->> device clocks the bus from the time it's woken up, until clock-pause
->> is executed by the manager device.
->>
->> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt |  43 ++
-> 
-> Version 6 and this is the first I see it? Where's the version history?
+-- 
+Regards,
 
-Its been a very long time (18 months) from v5-v6, I will try see if I 
-can pull up some version history from past few year patches :-) before i 
-send next version. If it helps review process.
+Laurent Pinchart
 
-> 
-> Please split to separate patch.
-
-Will do that in next version.
-
-> 
->>   drivers/slimbus/Kconfig                            |   9 +
->>   drivers/slimbus/Makefile                           |   3 +
->>   drivers/slimbus/slim-qcom-ctrl.c                   | 594 +++++++++++++++++++++
->>   drivers/slimbus/slim-qcom.h                        |  63 +++
->>   5 files changed, 712 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
->>   create mode 100644 drivers/slimbus/slim-qcom-ctrl.c
->>   create mode 100644 drivers/slimbus/slim-qcom.h
->>
->> diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
->> new file mode 100644
->> index 0000000..081110d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
->> @@ -0,0 +1,43 @@
->> +Qualcomm SLIMBUS controller
->> +This controller is used if applications processor driver controls slimbus
->> +master component.
->> +
->> +Required properties:
->> +
->> + - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
->> + - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
->> +
->> + - reg : Offset and length of the register region(s) for the device
->> + - reg-names : Register region name(s) referenced in reg above
->> +	 Required register resource entries are:
->> +	 "ctrl": Physical adderess of controller register blocks
->> + - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible or
->> + 		"qcom,slim" if using generic qcom SLIM IP.
-> 
-> No such thing as generic IP.Yep, i though I removed such instances, but it looks like there are 
-still in more places, I will rescan for them before sending next version.
-> 
-> Fine as a fallback, but not by itself.
-> 
->> + - interrupts : Interrupt number used by this controller
->> + - clocks : Interface and core clocks used by this slimbus controller
->> + - clock-names : Required clock-name entries are:
->> +	"iface_clk" : Interface clock for this controller
->> +	"core_clk" : Interrupt for controller core's BAM
-> 
-> _clk is redundant.
-I agree, I will remove this suffixes in next version.
-
-> 
->> +
->> +
->> +Optional property:
->> + - reg entry for slew rate : If slew rate control register is provided, this
->> +	entry should be used.
->> + - reg-name for slew rate: "slew"
-> 
-> Pointless to have -name when there is only one.
-> 
-I agree if it was just one.
-
-Slew is optional resource, but as a whole there are 2 resources for the 
-controller, so we need -name as there are 2 resources.
-
->> +
->> +Example:
->> +	slim@28080000 {
->> +		compatible = "qcom,slim";
->> +		#address-cells = <4>;
->> +		#size-cells = <0>;
->> +		reg = <0x28080000 0x2000>, <0x80207C 4>;
->> +		reg-names = "ctrl", "slew";
->> +		interrupts = <0 33 0>;
->> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
->> +		clock-names = "iface_clk", "core_clk";
->> +
->> +		codec: wcd9310@1{
->> +			compatible = "slim217,60";
->> +			reg = <1 0>;
-> 
-> This would not compile. You don't have 4 cells here.
-
-Yep, the example needs fixing.. address cells are actually 2.
-
-> 
->> +		};
->> +	};
