@@ -1,89 +1,74 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/5 v2] watchdog: gemini/ftwdt010: rename DT bindings
-Date: Mon, 16 Oct 2017 22:54:23 +0200
-Message-ID: <20171016205427.4297-1-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
+Date: Mon, 16 Oct 2017 23:22:38 +0200 (CEST)
+Message-ID: <1452233455.381184.1508188958452.JavaMail.zimbra@grenoble-inp.org>
+References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org> <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas@grenoble-inp.org> <a064c008-2268-26ef-edee-47bda38b117b@cogentembedded.com> <6a3f35f1-dae9-063d-963e-812a7341f612@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6a3f35f1-dae9-063d-963e-812a7341f612-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, julia lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The device tree bindings are in two copies and also should be
-consolidated into a single Faraday Technology FTWDT010
-binding since we uncovered that this IP part is a standard
-IP from Faraday.
+Thanks Sergei,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Collect Rob's ACK.
----
- .../bindings/watchdog/cortina,gemini-watchdog.txt       | 17 -----------------
- ...{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} | 11 ++++++++---
- 2 files changed, 8 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
- rename Documentation/devicetree/bindings/watchdog/{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} (55%)
+Is it better if the documentation say:
+"
+Optional property:
+ - interrupt-parent: the phandle of the associated interrupt controller.
+"
+or should I also add that "it may be inherited from the parent nodes."?
 
-diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt b/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
-deleted file mode 100644
-index bc4b865d178b..000000000000
---- a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Cortina Systems Gemini SoC Watchdog
--
--Required properties:
--- compatible : must be "cortina,gemini-watchdog"
--- reg : shall contain base register location and length
--- interrupts : shall contain the interrupt for the watchdog
--
--Optional properties:
--- timeout-sec : the default watchdog timeout in seconds.
--
--Example:
--
--watchdog@41000000 {
--	compatible = "cortina,gemini-watchdog";
--	reg = <0x41000000 0x1000>;
--	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
--};
-diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
-similarity index 55%
-rename from Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
-rename to Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
-index bc4b865d178b..9ecdb502e605 100644
---- a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
-+++ b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
-@@ -1,7 +1,12 @@
--Cortina Systems Gemini SoC Watchdog
-+Faraday Technology FTWDT010 watchdog
-+
-+This is an IP part from Faraday Technology found in the Gemini
-+SoCs and others.
- 
- Required properties:
--- compatible : must be "cortina,gemini-watchdog"
-+- compatible : must be one of
-+  "faraday,ftwdt010"
-+  "cortina,gemini-watchdog", "faraday,ftwdt010"
- - reg : shall contain base register location and length
- - interrupts : shall contain the interrupt for the watchdog
- 
-@@ -11,7 +16,7 @@ Optional properties:
- Example:
- 
- watchdog@41000000 {
--	compatible = "cortina,gemini-watchdog";
-+	compatible = "faraday,ftwdt010";
- 	reg = <0x41000000 0x1000>;
- 	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
- };
--- 
-2.13.6
+Jules Maselbas.
 
+----- Mail original -----
+De: "Sergei Shtylyov" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+À: "Jules Maselbas" <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: "julia lawall" <julia.lawall-L2FTfq7BK8M@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "mark rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Envoyé: Lundi 16 Octobre 2017 22:21:53
+Objet: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
+
+On 10/16/2017 12:04 PM, Sergei Shtylyov wrote:
+
+>> Adds bindings documentation for the max3421 driver.
+>>
+>> Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/usb/maxim,max3421.txt      | 24 
+>> ++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt 
+>> b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+>> new file mode 100644
+>> index 000000000000..7536c3ab3e5a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+>> @@ -0,0 +1,24 @@
+>> +Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
+>> +
+>> +Required properties:
+>> + - compatible: "maxim,max3421"
+>> + - spi-max-frequency: maximum frequency for this device must not exceed 26 
+>> MHz.
+>> + - reg: chip select number to which this device is connected.
+>> + - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
+>> +   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
+>> +   ACTIVE_LEVEL is 0 or 1.
+>> + - interrupt-parent: the phandle of the associated interrupt controller.
+> 
+>     This is never a required prob, it may be inherited from the parent nodes.
+
+   Prop, sorry. :-)
+
+[...]
+
+MBR, Sergei
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
