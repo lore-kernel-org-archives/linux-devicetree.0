@@ -1,63 +1,39 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun8i: r40: add watchdog device node
-Date: Mon, 16 Oct 2017 11:09:51 +0200
-Message-ID: <20171016090950.jqz5ekfwhjqvsxtm@flea.lan>
-References: <20171013112621.18932-1-icenowy@aosc.io>
+Subject: Re: [PATCH 1/2] dt-bindings: add binding for A64 DE2
+ CCU with SRAM section
+Date: Mon, 16 Oct 2017 11:11:36 +0200
+Message-ID: <20171016091136.b4rnckh2tfi26shx@flea.lan>
+References: <20171014122925.13220-1-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cooda2fochwq2ffo"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="aadupgrlejlown63"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVPPSHHQKGQE2PIYEGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171013112621.18932-1-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171014122925.13220-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---cooda2fochwq2ffo
-Content-Type: text/plain; charset=us-ascii
+--aadupgrlejlown63
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 13, 2017 at 07:26:21PM +0800, Icenowy Zheng wrote:
-> The R40 SoC has a watchdog like the one on A20, in the timer memory zone
-> (which is also the same on A20).
->=20
-> Add the device tree node for it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+On Sat, Oct 14, 2017 at 08:29:24PM +0800, Icenowy Zheng wrote:
+> A64's Display Engine 2.0 needs a section of SRAM (SRAM C) to be claimed.
 
-Applied, thanks!
-Maxime
+Why?
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---cooda2fochwq2ffo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ5HdeAAoJEBx+YmzsjxAgU4kP/RyXikVUkG0ld5MguAOpWkMB
-xv2KvswxWvmPHX+RKecHq8xVKLzNsV9ClJ8d/m+cSNIszfE/UHpu08jP08zs5LuU
-srg76KOU5cf43mvbBpb73LUb41g52ktvMzpyDYT2wIcYi4DHw/OT1fxCFFs3EGN4
-Q2zRZMOuHHI3f3zJxQs77nRaDt9otNWAo3K4No2qssr2MlgUrq70/PUatrUo5fyK
-wVJXeBRfauwDWzHkJE28fCB07JoIF/CUgu//7yF4O5lo0DpvllnOM1naf5hPGlYj
-38TUaN+zIPM58hUROwGs/GHW4snx/2mjgiWSy72DoWeATULIEm/d0uOpKo/VMq5m
-u+ciqrVcH4dEjoKEaYYuwHABgl/MYVMqUUzrPzUwtn2/+Kibq4F2lBNPawYI3arN
-71/ypKqBvuwNAy5ulOyeaBHU2YvHQ0MCoUvVE8kuzh53TyWdlM5xE4UuaI9S1KE0
-ZGOtHwnWUraXv/MbIp/+fKrIAUYOyp9w2abtwke2NcQhn2jljrxnFkqAvqJuIzCm
-iJdRl/vlZt/N1BOJ2Hz867S0lpb6If745gHowdOTZQjhoE3HdW30l6Mlr6z9ZkeI
-qfQ+OFX3Gu3B6XrAT0p/y9Kb/xdSIKrJBd06UCW4lKKXvXOHEvAWmGOuKT+x8zfk
-xkDNzgyHXU0I0dv7w67u
-=iXOt
------END PGP SIGNATURE-----
-
---cooda2fochwq2ffo--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--aadupgrlejlown63--
