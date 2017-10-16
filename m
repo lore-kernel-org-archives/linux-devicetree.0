@@ -1,64 +1,138 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 0/5] arm64: dts: Initial RTD1293/RTD1296 and DS418j/DS418 support
-Date: Mon, 16 Oct 2017 06:01:45 +0200
-Message-ID: <20171016040150.23400-1-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 3/5] arm64: dts: realtek: Add RTD1293 and Synology DS418j
+Date: Mon, 16 Oct 2017 06:01:48 +0200
+Message-ID: <20171016040150.23400-4-afaerber@suse.de>
+References: <20171016040150.23400-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bizon <bizongod-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, info-UelDjCVBxVpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016040150.23400-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Bizon <bizongod@gmail.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, info@synology.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add Device Trees for RTD1293 SoC and Synology DiskStation DS481j NAS.
 
-This series adds Device Trees for the Realtek RTD1293 and RTD1296 SoCs and
-Synology DiskStation DS418j and DS418 NAS devices.
-
-To avoid too much duplication, a shared rtd129x.dtsi is introduced.
-
-More details at:
-https://en.opensuse.org/HCL:DS418j
-https://en.opensuse.org/HCL:DS418
-
-Latest experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-Cc: info-UelDjCVBxVpWk0Htik3J/w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Andreas Färber (5):
-  arm64: dts: realtek: Factor out common RTD129x parts
-  dt-bindings: arm: realtek: Document RTD1293 and Synology DS418j
-  arm64: dts: realtek: Add RTD1293 and Synology DS418j
-  dt-bindings: arm: realtek: Document RTD1296 and Synology DS418
-  arm64: dts: realtek: Add RTD1296 and Synology DS418
-
- Documentation/devicetree/bindings/arm/realtek.txt | 34 +++++++++++
- arch/arm64/boot/dts/realtek/Makefile              |  4 ++
- arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts    | 31 ++++++++++
- arch/arm64/boot/dts/realtek/rtd1293.dtsi          | 56 +++++++++++++++++
- arch/arm64/boot/dts/realtek/rtd1295.dtsi          | 65 ++------------------
- arch/arm64/boot/dts/realtek/rtd1296-ds418.dts     | 31 ++++++++++
- arch/arm64/boot/dts/realtek/rtd1296.dtsi          | 74 +++++++++++++++++++++++
- arch/arm64/boot/dts/realtek/rtd129x.dtsi          | 72 ++++++++++++++++++++++
- 8 files changed, 306 insertions(+), 61 deletions(-)
+Cc: info@synology.com
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm64/boot/dts/realtek/Makefile           |  2 +
+ arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts | 31 ++++++++++++++
+ arch/arm64/boot/dts/realtek/rtd1293.dtsi       | 56 ++++++++++++++++++++++++++
+ 3 files changed, 89 insertions(+)
  create mode 100644 arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
  create mode 100644 arch/arm64/boot/dts/realtek/rtd1293.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1296-ds418.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1296.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd129x.dtsi
 
+diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+index f43d0209ded7..25c795272507 100644
+--- a/arch/arm64/boot/dts/realtek/Makefile
++++ b/arch/arm64/boot/dts/realtek/Makefile
+@@ -1,3 +1,5 @@
++dtb-$(CONFIG_ARCH_REALTEK) += rtd1293-ds418j.dtb
++
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+ 
+diff --git a/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts b/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
+new file mode 100644
+index 000000000000..0f17bbb5aabb
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1293-ds418j.dts
+@@ -0,0 +1,31 @@
++/*
++ * Copyright (c) 2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++
++#include "rtd1293.dtsi"
++
++/ {
++	compatible = "synology,ds418j", "realtek,rtd1293";
++	model = "Synology DiskStation DS418j";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x40000000>;
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/realtek/rtd1293.dtsi b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
+new file mode 100644
+index 000000000000..403f0c55ace0
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1293.dtsi
+@@ -0,0 +1,56 @@
++/*
++ * Realtek RTD1293 SoC
++ *
++ * Copyright (c) 2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++#include "rtd129x.dtsi"
++
++/ {
++	compatible = "realtek,rtd1293";
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x9801aa44>;
++			next-level-cache = <&l2>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x9801aa44>;
++			next-level-cache = <&l2>;
++		};
++
++		l2: l2-cache {
++			compatible = "cache";
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++};
++
++&arm_pmu {
++	interrupt-affinity = <&cpu0>, <&cpu1>;
++};
 -- 
 2.13.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
