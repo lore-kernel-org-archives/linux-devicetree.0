@@ -1,95 +1,238 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: add device tree binding
- for Allwinner XR819 SDIO Wi-Fi
-Date: Mon, 16 Oct 2017 15:58:20 +0300
-Message-ID: <87o9p7meqb.fsf@kamboji.qca.qualcomm.com>
-References: <20171003165944.13056-1-icenowy@aosc.io>
-	<20171003165944.13056-2-icenowy@aosc.io>
-	<871smjxp46.fsf@kamboji.qca.qualcomm.com>
-	<E46F3A20-294A-497E-AF71-C77A67AFDB8C@aosc.io>
-	<59D4B1C8.8020105@broadcom.com> <20171004101145.kgjufpcktodppuy3@flea>
-	<C4895259-FCDE-4B21-BB15-8F150FC53BE3@aosc.io>
-	<878tgq5beu.fsf@codeaurora.org>
-	<dba5f095f9f25f0726ee3a2852e01b88@aosc.io>
-Reply-To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v14 20/28] v4l: fwnode: Add a helper function to obtain
+ device / integer references
+Date: Mon, 16 Oct 2017 16:02:45 +0300
+Message-ID: <20171016130244.stisr7g65hcbxwiz@paasikivi.fi.intel.com>
+References: <20170925222540.371-1-sakari.ailus@linux.intel.com>
+ <20170925222540.371-21-sakari.ailus@linux.intel.com>
+ <fbd2f71d-aa6d-08ef-1723-132864bde27b@xs4all.nl>
+ <20170926113029.eh5i4sp6we6lvgow@paasikivi.fi.intel.com>
+ <4363f544-d1ec-68e4-1edf-9a16b3cdb1ea@xs4all.nl>
+ <20171010112710.noq6a4ktjqzt5u22@valkosipuli.retiisi.org.uk>
+ <d8a48273-7a19-0f83-4a4d-8058b7a59e0e@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCQYFH77QIORB46ZSLHQKGQEYXCGGKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <dba5f095f9f25f0726ee3a2852e01b88-h8G6r0blFSE@public.gmane.org> (icenowy-h8G6r0blFSE@public.gmane.org's
-	message of "Sat, 14 Oct 2017 20:00:52 +0800")
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d8a48273-7a19-0f83-4a4d-8058b7a59e0e-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-icenowy-h8G6r0blFSE@public.gmane.org writes:
+Hi Hans,
 
->>>>> > > Like I asked already last time, AFAICS there is no upstream xr819
->>>>> > > wireless driver in drivers/net/wireless directory. Do we still
->>>> accept
->>>>> > > bindings like this for out-of-tree drivers?
->>>>> >
->>>>> > See esp8089.
->>>>> >
->>>>> > There's also no in-tree driver for it.
->>>>>
->>>>> The question is whether we should. The above might be a precedent,
->>>> but it
->>>>> may not necessarily be the way to go. The commit message for esp8089
->>>> seems
->>>>> to hint that there is intent to have an in-tree driver:
->>>>>
->>>>> """
->>>>>     Note that at this point there only is an out of tree driver for
->>>> this
->>>>>     hardware, there is no clear timeline / path for merging this.
->>>> Still
->>>>>     I believe it would be good to specify the binding for this in
->>>> tree
->>>>>     now, so that any future migration to an in tree driver will not
->>>> cause
->>>>>     compatiblity issues.
->>>>>
->>>>>     Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>>>     Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>     Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>> """
->>>>>
->>>>> Regardless the bindings are in principle independent of the kernel
->>>> and just
->>>>> describing hardware. I think there have been discussions to move the
->>>>> bindings to their own repository, but apparently it was decided
->>>> otherwise.
->>>>
->>>> Yeah, I guess especially how it could be merged with the cw1200
->>>> driver
->>>> would be very relevant to that commit log.
->>>
->>> The cw1200 driver seems to still have some legacy platform
->>> data. Maybe they should also be convert to DT.
->>> (Or maybe compatible = "allwinner,xr819" is enough, as
->>> xr819 is a specified variant of cw1200 family)
->>
->> Ah, so the upstream cw1200 driver supports xr819? Has anyone tested
->> that? Or does cw1200 more changes than just adding the DT support?
->
-> The support of XR819 in CW1200 driver is far more difficult than I
-> imagined -- the codedrop used in the mainlined CW1200 driver seems to
-> be so old that it's before XR819 (which seems to be based on CW1160),
-> and there's a large number of problems to adapt it to a modern CW1200
-> variant.
->
-> P.S. could you apply this device tree binding patch now?
+On Tue, Oct 10, 2017 at 03:07:29PM +0200, Hans Verkuil wrote:
+> On 10/10/2017 01:27 PM, Sakari Ailus wrote:
+> > Hi Hans,
+> > 
+> > On Mon, Oct 09, 2017 at 02:06:55PM +0200, Hans Verkuil wrote:
+> >> Hi Sakari,
+> >>
+> >> My reply here is also valid for v15.
+> >>
+> >> On 26/09/17 13:30, Sakari Ailus wrote:
+> >>> Hi Hans,
+> >>>
+> >>> Thanks for the review.
+> >>>
+> >>> On Tue, Sep 26, 2017 at 10:47:40AM +0200, Hans Verkuil wrote:
+> >>>> On 26/09/17 00:25, Sakari Ailus wrote:
+> >>>>> v4l2_fwnode_reference_parse_int_prop() will find an fwnode such that under
+> >>>>> the device's own fwnode, it will follow child fwnodes with the given
+> >>>>> property-value pair and return the resulting fwnode.
+> >>>>>
+> >>>>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >>>>> ---
+> >>>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 201 ++++++++++++++++++++++++++++++++++
+> >>>>>  1 file changed, 201 insertions(+)
+> >>>>>
+> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> >>>>> index f739dfd16cf7..f93049c361e4 100644
+> >>>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> >>>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> >>>>> @@ -578,6 +578,207 @@ static int v4l2_fwnode_reference_parse(
+> >>>>>  	return ret;
+> >>>>>  }
+> >>>>>  
+> >>>>> +/*
+> >>>>> + * v4l2_fwnode_reference_get_int_prop - parse a reference with integer
+> >>>>> + *					arguments
+> >>>>> + * @dev: struct device pointer
+> >>>>> + * @notifier: notifier for @dev
+> >>>>> + * @prop: the name of the property
+> >>>>> + * @index: the index of the reference to get
+> >>>>> + * @props: the array of integer property names
+> >>>>> + * @nprops: the number of integer property names in @nprops
+> >>>>> + *
+> >>>>> + * Find fwnodes referred to by a property @prop, then under that
+> >>>>> + * iteratively, @nprops times, follow each child node which has a
+> >>>>> + * property in @props array at a given child index the value of which
+> >>>>> + * matches the integer argument at an index.
+> >>>>
+> >>>> "at an index". Still makes no sense to me. Which index?
+> >>>
+> >>> How about this:
+> >>>
+> >>> First find an fwnode referred to by the reference at @index in @prop.
+> >>>
+> >>> Then under that fwnode, @nprops times, for each property in @props,
+> >>> iteratively follow child nodes starting from fwnode such that they have the
+> >>> property in @props array at the index of the child node distance from the
+> >>
+> >> distance? You mean 'instance'?
+> > 
+> > No. It's a tree structure: this is the distance between a node in the tree
+> > and the root node (i.e. device's fwnode).
+> > 
+> >>
+> >>> root node and the value of that property matching with the integer argument of
+> >>> the reference, at the same index.
+> >>
+> >> You've completely lost me. About halfway through this sentence my brain crashed :-)
+> > 
+> > :-D
+> > 
+> > Did keeping distance have any effect?
+> 
+> No :-)
+> 
+> "the index of the child node distance from the root node": I have absolutely
+> no idea how to interpret that.
 
-As I haven't seen any consensus that applying bindings document for
-out-of-tree drivers is ok so at least I'm not taking this. Though not
-sure what DT maintainers are planning to do.
+This index is referring to the properties array and its value is the same
+as the distance of the child node from the device's root node.
+
+> 
+> > 
+> >>
+> >>>
+> >>>>
+> >>>>> + *
+> >>>>> + * For example, if this function was called with arguments and values
+> >>>>> + * @dev corresponding to device "SEN", @prop == "flash-leds", @index
+> >>>>> + * == 1, @props == { "led" }, @nprops == 1, with the ASL snippet below
+> >>>>> + * it would return the node marked with THISONE. The @dev argument in
+> >>>>> + * the ASL below.
+> >>>>
+> >>>> I know I asked for this before, but can you change the example to one where
+> >>>> nprops = 2? I think that will help understanding this.
+> >>>
+> >>> I could do that but then the example no longer corresponds to any actual
+> >>> case that exists at the moment. LED nodes will use a single integer
+> >>> argument and lens-focus nodes none.
+> >>
+> >> So? The example is here to understand the code and it doesn't have to be
+> >> related to actual hardware for a mainlined driver.
+> > 
+> > This isn't about hardware, the definitions being parsed currently aren't
+> > specific to any single piece of hardware. I could add an example which does
+> > not exist, that's certainly possible. But I fail to see how it'd help
+> > while the contrary could well be the case.
+> 
+> It helps to relate the code (and the comments for that matter) to what is in
+> the ACPI. In fact, if you can make such an example, then I can see if I can
+> come up with a better description.
+
+Hmm. I thought about the example, and figured out the graph data structure
+could be parsed using this function as well. From
+Documentation/acpi/dsd/graph.txt:
+
+    Scope (\_SB.PCI0.I2C2)
+    {
+	Device (CAM0)
+	{
+	    Name (_DSD, Package () {
+		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+		Package () {
+		    Package () { "compatible", Package () { "nokia,smia" } },
+		},
+		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+		Package () {
+		    Package () { "port0", "PRT0" },
+		}
+	    })
+	    Name (PRT0, Package() {
+		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+		Package () {
+		    Package () { "port", 0 },
+		},
+		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+		Package () {
+		    Package () { "endpoint0", "EP00" },
+		}
+	    })
+	    Name (EP00, Package() {
+		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+		Package () {
+		    Package () { "endpoint", 0 },
+		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, 4, 0 } },
+		}
+	    })
+	}
+    }
+
+    Scope (\_SB.PCI0)
+    {
+	Device (ISP)
+	{
+	    Name (_DSD, Package () {
+		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+		Package () {
+		    Package () { "port4", "PRT4" },
+		}
+	    })
+
+	    Name (PRT4, Package() {
+		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+		Package () {
+		    Package () { "port", 4 }, /* CSI-2 port number */
+		},
+		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+		Package () {
+		    Package () { "endpoint0", "EP40" },
+		}
+	    })
+
+	    Name (EP40, Package() {
+		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+		Package () {
+		    Package () { "endpoint", 0 },
+		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, 0, 0 } },
+		}
+	    })
+	}
+    }
+
+>From the EP40 node under ISP device, you could parse the graph remote
+endpoint using v4l2_fwnode_reference_get_int_prop with these arguments (the
+argument dev changed to fwnode in an earlier version of the patch, I'll
+address that soon as well):
+
+ @fwnode: fwnode referring to EP40 under ISP.
+ @prop: "remote-endpoint"
+ @index: 0
+ @props: "port", "endpoint"
+ @nprops: 2
+
+And you'd get back fwnode referring to EP00 under CAM0.
+
+The same works the other way around: if you use EP00 under CAM0 as the
+fwnode, you'll get fwnode referring to EP40 under ISP.
+
+If the remote-endpoint property would have additional references beyond the
+first one, then incrementing index could be used to obtain them. The graph
+bindings don't allow this though.
+
+This function can be eventually moved to the ACPI framework, but doing that
+right now would probably one kernel release delay for the functionality.
 
 -- 
-Kalle Valo
+Regards,
+
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
