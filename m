@@ -1,97 +1,130 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH 1/5] arm64: dts: rockchip: Enable edp disaplay on kevin
-Date: Mon, 16 Oct 2017 17:59:14 +0800
-Message-ID: <20171016095918.25588-2-jeffy.chen@rock-chips.com>
-References: <20171016095918.25588-1-jeffy.chen@rock-chips.com>
+From: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+Subject: Re: [PATCH] ASoC: sgtl5000: add support for a fixed sysclk frequency
+Date: Mon, 16 Oct 2017 11:46:44 +0200
+Message-ID: <EA6FEF1C-263E-4529-AC8E-16F50C27030F@theobroma-systems.com>
+References: <20171006083449.24038-1-jakob.unterwurzacher@theobroma-systems.com>
+ <AM5PR0401MB2627DE7F266788214268424BE34E0@AM5PR0401MB2627.eurprd04.prod.outlook.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016095918.25588-1-jeffy.chen@rock-chips.com>
+In-Reply-To: <AM5PR0401MB2627DE7F266788214268424BE34E0@AM5PR0401MB2627.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, heiko@sntech.de, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, tfiga@chromium.org, broonie@kernel.org, seanpaul@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
+To: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Richard Leitner <richard.leitner@skidata.com>, Bhumika Goyal <bhumirks@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add edp panel and enable related nodes on kevin.
+Hi Fabio, that’s interesting.
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+Looks like the fsl,imx-audio-sgtl5000 sound card driver that is used on the imx51-babbage
+does not try to adjust MCLK in response to the playback sample rate.
 
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
- 2 files changed, 45 insertions(+)
+The simple-audio-card driver does that (it calls snd_soc_dai_set_sysclk whenever playback
+starts).
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index a3d3cea7dc4f..bc67b19f0af5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -93,6 +93,18 @@
- 		pwm-delay-us = <10000>;
- 	};
- 
-+	edp_panel: edp-panel {
-+		compatible = "sharp,lq123p1jx31", "simple-panel";
-+		backlight = <&backlight>;
-+		power-supply = <&pp3300_disp>;
-+
-+		ports {
-+			panel_in_edp: endpoint {
-+				remote-endpoint = <&edp_out_panel>;
-+			};
-+		};
-+	};
-+
- 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
- 		compatible = "murata,ncp15wb473";
- 		pullup-uv = <1800000>;
-@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
- 	};
- };
- 
-+&edp {
-+	status = "okay";
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			edp_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
- &ppvar_bigcpu_pwm {
- 	regulator-min-microvolt = <798674>;
- 	regulator-max-microvolt = <1302172>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 5772c52fbfd3..470105d651c2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
- 	dr_mode = "host";
- };
- 
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
-+
- #include <arm/cros-ec-keyboard.dtsi>
- #include <arm/cros-ec-sbs.dtsi>
- 
--- 
-2.11.0
+I think we can do without the new dts property when we fix sgtl5000_set_dai_sysclk to
+actually call clk_set_rate on the MCLK instead of blindly setting any requested value.
+
+On a fixed clock, clk_set_rate is a no-op if the requested rate matches the fixed rate
+and errors out otherwise.
+
+I think this would be the more correct fix, but it carries the risk of breaking existing
+boards that rely on the current behaviour. What do you think?
+
+Best regards,
+Jakob
+
+> On 16. Oct 2017, at 01:09, Fabio Estevam <fabio.estevam@nxp.com> wrote:
+> 
+> [Sorry for the top-posting. I did not see your message in the mailing list]
+> 
+> Hi Jakob,
+> 
+> arch/arm/boot/dts/imx51-babbage.dts has SYS_MCLK generated by an external fixed oscillator and it works fine.
+> 
+> Do you really need this new property?
+> From: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+> Sent: Friday, October 6, 2017 5:34:44 AM
+> To: linux-kernel@vger.kernel.org
+> Cc: Jakob Unterwurzacher; Klaus Goger; Liam Girdwood; Mark Brown; Rob Herring; Mark Rutland; Jaroslav Kysela; Takashi Iwai; Richard Leitner; Fabio Estevam; Bhumika Goyal; alsa-devel@alsa-project.org; devicetree@vger.kernel.org
+> Subject: [PATCH] ASoC: sgtl5000: add support for a fixed sysclk frequency
+>  
+> The system clock, also called SYS_MCLK in the SGTL5000 datasheet,
+> is usually generated by the I2S master with a frequency proportional
+> to the sample rate.
+> 
+> However, this is not always the case. Compute modules following
+> the Qseven specification, for example, do not even have a pin for
+> I2S SYS_MCLK on their board-to-board connector. Only I2S_WS, I2S_RST#
+> I2S_CLK, I2S_SDI and I2S_SDO are specified.
+> 
+> Instead, SYS_MCLK is usually generated by an external fixed oscillator.
+> 
+> Add support for this scenario, enabled by the new "sysclk-fixed"
+> devicetree property.
+> 
+> Tested on a "Puma" RK3399-Q7 compute module with a "Haikou" baseboard
+> that has a fixed 24.576 MHz oscillator connected to the codec's SYS_MCLK.
+> 
+> Signed-off-by: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+> Cc: Klaus Goger <klaus.goger@theobroma-systems.com>
+> ---
+>  Documentation/devicetree/bindings/sound/sgtl5000.txt |  5 +++++
+>  sound/soc/codecs/sgtl5000.c                          | 12 ++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/sgtl5000.txt b/Documentation/devicetree/bindings/sound/sgtl5000.txt
+> index 7a73a9d62015..0d0dd58b2d4a 100644
+> --- a/Documentation/devicetree/bindings/sound/sgtl5000.txt
+> +++ b/Documentation/devicetree/bindings/sound/sgtl5000.txt
+> @@ -35,6 +35,11 @@ VDDIO                1.8V            2.5V            3.3V
+>  2 =             3.33 mA         5.74 mA         8.03  mA
+>  3 =             4.99 mA         8.61 mA         12.05 mA
+>  
+> +- sysclk-fixed : If this property exists, the sysclk is considered to be
+> +       generated by a fixed-frequency oscillator. The frequency value is read
+> +       from the clock defined in the "clocks" property. set_sysclk requests
+> +       are ignored.
+> +
+>  Example:
+>  
+>  codec: sgtl5000@0a {
+> diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+> index f2bb4feba3b6..be3aea89371c 100644
+> --- a/sound/soc/codecs/sgtl5000.c
+> +++ b/sound/soc/codecs/sgtl5000.c
+> @@ -133,6 +133,7 @@ struct sgtl5000_priv {
+>          u8 micbias_resistor;
+>          u8 micbias_voltage;
+>          u8 lrclk_strength;
+> +       u8 sysclk_fixed; /* sysclk rate cannot be changed */
+>  };
+>  
+>  /*
+> @@ -613,6 +614,10 @@ static int sgtl5000_set_dai_sysclk(struct snd_soc_dai *codec_dai,
+>  
+>          switch (clk_id) {
+>          case SGTL5000_SYSCLK:
+> +               if (sgtl5000->sysclk_fixed) {
+> +                       dev_dbg(codec->dev, "sysclk-fixed: ignoring set_sysclk request\n");
+> +                       return 0;
+> +               }
+>                  sgtl5000->sysclk = freq;
+>                  break;
+>          default:
+> @@ -1444,6 +1449,13 @@ static int sgtl5000_i2c_probe(struct i2c_client *client,
+>                  } else {
+>                          sgtl5000->micbias_voltage = 0;
+>                  }
+> +               if (of_property_read_bool(np, "sysclk-fixed")) {
+> +                       sgtl5000->sysclk = clk_get_rate(sgtl5000->mclk);
+> +                       sgtl5000->sysclk_fixed = 1;
+> +                       dev_dbg(&client->dev,
+> +                               "sysclk-fixed: setting sysclk to fixed value %d\n",
+> +                               sgtl5000->sysclk);
+> +               }
+>          }
+>  
+>          sgtl5000->lrclk_strength = I2S_LRCLK_STRENGTH_LOW;
+> -- 
+> 2.11.0
