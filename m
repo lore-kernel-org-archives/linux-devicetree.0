@@ -1,99 +1,27 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RESEND PATCH v2 1/5] arm64: dts: rockchip: Enable edp disaplay on kevin
-Date: Mon, 16 Oct 2017 18:06:36 +0800
-Message-ID: <20171016100640.26575-2-jeffy.chen@rock-chips.com>
-References: <20171016100640.26575-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016100640.26575-1-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, heiko@sntech.de, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, tfiga@chromium.org, broonie@kernel.org, seanpaul@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  0/2] Add XHCI support
+Date: Mon, 16 Oct 2017 11:12:47 +0100
+Message-ID: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add edp panel and enable related nodes on kevin.
+Hello,
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+This series aims to add USB XHCI support for iWave RZ/G1M (R8A7743) board.
+This series has been tested against renesas-dev tag 20171013-v4.14-rc4.
 
-Changes in v2: None
+Regards,
 
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
- 2 files changed, 45 insertions(+)
+Fabrizio Castro (2):
+  dt-bindings: usb-xhci: Document r8a7743 support
+  ARM: dts: r8a7743: Add xhci support to SoC dtsi
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index a3d3cea7dc4f..bc67b19f0af5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -93,6 +93,18 @@
- 		pwm-delay-us = <10000>;
- 	};
- 
-+	edp_panel: edp-panel {
-+		compatible = "sharp,lq123p1jx31", "simple-panel";
-+		backlight = <&backlight>;
-+		power-supply = <&pp3300_disp>;
-+
-+		ports {
-+			panel_in_edp: endpoint {
-+				remote-endpoint = <&edp_out_panel>;
-+			};
-+		};
-+	};
-+
- 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
- 		compatible = "murata,ncp15wb473";
- 		pullup-uv = <1800000>;
-@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
- 	};
- };
- 
-+&edp {
-+	status = "okay";
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			edp_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
- &ppvar_bigcpu_pwm {
- 	regulator-min-microvolt = <798674>;
- 	regulator-max-microvolt = <1302172>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 5772c52fbfd3..470105d651c2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
- 	dr_mode = "host";
- };
- 
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
-+
- #include <arm/cros-ec-keyboard.dtsi>
- #include <arm/cros-ec-sbs.dtsi>
- 
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |  4 +++-
+ arch/arm/boot/dts/r8a7743.dtsi                     | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
 -- 
-2.11.0
+1.9.1
