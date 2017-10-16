@@ -1,55 +1,37 @@
-From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: imx53: Fix 'usbphy@x' node with unit name and no reg property
-Date: Mon, 16 Oct 2017 10:48:27 -0200
-Message-ID: <1508158110-5188-3-git-send-email-marco.franchi@nxp.com>
-References: <1508158110-5188-1-git-send-email-marco.franchi@nxp.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] drm: bridge: Add bindings for TI THS8134
+Date: Mon, 16 Oct 2017 14:52:23 +0200
+Message-ID: <CACRpkda2SDjG--zT+AbCJeqWyAcyNFs6h7AfUUKiDKHiQG2S3A@mail.gmail.com>
+References: <20170901094038.4312-1-linus.walleij@linaro.org> <2446705.uuxjYiEYNm@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508158110-5188-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <2446705.uuxjYiEYNm@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following build warnings are seen with W=1:
+On Wed, Sep 13, 2017 at 2:08 AM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 
-Warning (unit_address_vs_reg): Node /soc/aips@50000000/usbphy@0 has a unit
-name, but no reg property
-Warning (unit_address_vs_reg): Node /soc/aips@50000000/usbphy@1 has a unit
-name, but no reg property
+>> -- compatible: Must be "ti,ths8135"
+>> +- compatible: Must be one of
+>> +  "ti,ths8134a"
+>> +  "ti,ths8134b"
+>> +  "ti,ths8135"
+>
+> As mentioned in the review of patch 2/2, would it make sense to also introduce
+> a ti,ths813x compatible string ? I haven't checked the datasheets so the
+> answer might very well be no.
 
-Fix these warnings by changing '@' to '-'.
+That should be fine, compatible-properties from the most specific to the
+most generic should work just fine.
 
-Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm/boot/dts/imx53.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'll respin with a ths813x compatible.
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 8bf0d89..c937949 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -299,14 +299,14 @@
- 				reg = <0x53f00000 0x60>;
- 			};
- 
--			usbphy0: usbphy@0 {
-+			usbphy0: usbphy-0 {
- 				compatible = "usb-nop-xceiv";
- 				clocks = <&clks IMX5_CLK_USB_PHY1_GATE>;
- 				clock-names = "main_clk";
- 				status = "okay";
- 			};
- 
--			usbphy1: usbphy@1 {
-+			usbphy1: usbphy-1 {
- 				compatible = "usb-nop-xceiv";
- 				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
- 				clock-names = "main_clk";
--- 
-2.7.4
-
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
