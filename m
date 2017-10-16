@@ -1,7 +1,7 @@
 From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH 5/9] ARM: dts: rockchip: Add gmac support for rk3288-vyasa board
-Date: Mon, 16 Oct 2017 17:46:23 +0530
-Message-ID: <1508156187-27519-6-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH 6/9] ARM: dts: rockchip: Add usb host for rk3288-vyasa
+Date: Mon, 16 Oct 2017 17:46:24 +0530
+Message-ID: <1508156187-27519-7-git-send-email-jagan@amarulasolutions.com>
 References: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
@@ -10,75 +10,98 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
+Add usb host support for rk3288-vyasa, board support hub power
+through phy_pwr_en and usb2 host power through usb2_pwr_en and
+naming conversion followed as per schematic.
+
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/rk3288-vyasa.dts | 41 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ arch/arm/boot/dts/rk3288-vyasa.dts     | 48 ++++++++++++++++++++++++++++++++++
+ include/dt-bindings/pinctrl/rockchip.h |  1 +
+ 2 files changed, 49 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index 0fa447f..c79a4c7 100644
+index c79a4c7..c22d674 100644
 --- a/arch/arm/boot/dts/rk3288-vyasa.dts
 +++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -104,12 +104,35 @@
- 		regulator-boot-on;
+@@ -105,6 +105,30 @@
  		vin-supply = <&dc12_vbat>;
  	};
-+
-+	ext_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "ext_gmac";
+ 
++	vsus_5v: vsus-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "vsus_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vcc_io>;
 +	};
++
++	vusb2_5v: vusb2-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "vusb2_5v";
++		enable-active-high;
++		gpio = <&gpio8 RK_PB1 GPIO_ACTIVE_HIGH>; /* USB2_PWR_EN */
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb2_pwr_en>;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&vsus_5v>;
++	};
++
+ 	ext_gmac: external-gmac-clock {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -363,6 +387,20 @@
+ 	status = "okay";
  };
  
- &cpu0 {
- 	cpu0-supply = <&vdd_cpu>;
- };
- 
-+&gmac {
-+	assigned-clocks = <&cru SCLK_MAC>;
-+	assigned-clock-parents = <&ext_gmac>;
-+	clock_in_out = "input";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>, <&phy_rst>, <&phy_pmeb>, <&phy_int>;
-+	phy-supply = <&vcc_lan>;
-+	phy-mode = "rgmii";
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 1000000>;
-+	snps,reset-gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_LOW>;
-+	tx_delay = <0x30>;
-+	rx_delay = <0x10>;
-+	status = "ok";
++&usbphy {
++	status = "okay";
 +};
 +
- &gpu {
- 	mali-supply = <&vdd_gpu>;
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&phy_pwr_en>;
++	status = "okay";
++};
++
+ &vopb {
  	status = "okay";
-@@ -361,6 +384,24 @@
  };
- 
- &pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	gmac {
-+		phy_int: phy-int {
-+			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		phy_pmeb: phy-pmeb {
-+			rockchip,pins = <0 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		phy_rst: phy-rst {
-+			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+
- 	pmic {
- 		pmic_int: pmic-int {
+@@ -407,4 +445,14 @@
  			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
++
++	usb_host {
++		phy_pwr_en: phy-pwr-en {
++			rockchip,pins = <RK_GPIO2 RK_PB1 RK_FUNC_GPIO &pcfg_output_high>;
++		};
++
++		usb2_pwr_en: usb2-pwr-en {
++			rockchip,pins = <RK_GPIO8 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
+ };
+diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
+index aaec8ba..dc3d661 100644
+--- a/include/dt-bindings/pinctrl/rockchip.h
++++ b/include/dt-bindings/pinctrl/rockchip.h
+@@ -24,6 +24,7 @@
+ #define RK_GPIO3	3
+ #define RK_GPIO4	4
+ #define RK_GPIO6	6
++#define RK_GPIO8	8
+ 
+ #define RK_PA0		0
+ #define RK_PA1		1
 -- 
 2.7.4
