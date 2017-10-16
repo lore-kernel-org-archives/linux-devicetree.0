@@ -1,74 +1,49 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] K2G: Add QSPI support
-Date: Mon, 16 Oct 2017 11:28:47 +0200
-Message-ID: <6f507813-388a-13e5-31ba-736b419744fa@gmail.com>
-References: <20171003051925.8821-1-vigneshr@ti.com>
- <09cc0a61-3f73-4a10-2d67-32515a7da861@ti.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v3 04/13] arm64: alternatives: use tpidr_el2 on VHE hosts
+Date: Mon, 16 Oct 2017 11:17:37 +0100
+Message-ID: <20171016101736.fkaikxflyc46zczf@armageddon.cambridge.arm.com>
+References: <20170922182614.27885-1-james.morse@arm.com>
+ <20170922182614.27885-5-james.morse@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <09cc0a61-3f73-4a10-2d67-32515a7da861-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+Content-Disposition: inline
+In-Reply-To: <20170922182614.27885-5-james.morse@arm.com>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: James Morse <james.morse@arm.com>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Loc Ho <lho@apm.com>, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2017 08:15 AM, Vignesh R wrote:
-> 
-> 
-> On Tuesday 03 October 2017 10:49 AM, Vignesh R wrote:
->>
->>
->> This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
->> The patches enhance the existing cadence-quadspi driver to support
->> loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
-> 
-> Gentle ping on the series...
+On Fri, Sep 22, 2017 at 07:26:05PM +0100, James Morse wrote:
+> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+> index 29adab8138c3..8f2d0f7d193b 100644
+> --- a/arch/arm64/include/asm/processor.h
+> +++ b/arch/arm64/include/asm/processor.h
+> @@ -193,5 +193,6 @@ static inline void spin_lock_prefetch(const void *ptr)
+>  
+>  int cpu_enable_pan(void *__unused);
+>  int cpu_enable_cache_maint_trap(void *__unused);
+> +int cpu_copy_el2regs(void *__unused);
+>  
+>  #endif /* __ASM_PROCESSOR_H */
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index cd52d365d1f0..8e4c7da2b126 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+[...]
+> +int cpu_copy_el2regs(void *__unused)
 
-It's IMO OK, Cyrille, can you pick it ?
-
->>
->> Change log:
->>
->> v4:
->> * New patch to fix error handling sequence in probe.
->>
->> v3:
->> * Fix build warnings reported by kbuild test bot.
->>
->> Resend:
->> * Rebase to latest linux-next.
->> * Collect Acked-bys
->>
->> v2:
->> * Drop DT patches. Will be sent as separate series as requested by
->>  maintainer.
->> * Split binding docs into separate patches.
->> * Address comments by Rob Herring.
->>
->> Vignesh R (6):
->>   mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
->>   mtd: spi-nor: cadence-quadspi: add a delay in write sequence
->>   mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back
->>     circuit
->>   mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock
->>     circuit
->>   mtd: spi-nor: cadence-quadspi: Fix error path in probe
->>   mtd: spi-nor: cadence-quadspi: Add runtime PM support
->>
->>  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  7 ++-
->>  drivers/mtd/spi-nor/cadence-quadspi.c              | 55 +++++++++++++++++++---
->>  2 files changed, 55 insertions(+), 7 deletions(-)
->>
-> 
-
+Can this be static? I couldn't find it used anywhere else apart from
+cpufeature.c
 
 -- 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Catalin
