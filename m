@@ -1,52 +1,41 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 Subject: Re: [PATCH 9/9] ARM: multi_v7_defconfig: Statically build RTC_DRV_RK808
-Date: Mon, 16 Oct 2017 20:02:29 +0200
-Message-ID: <3238534.Bk1TS2fSCp@diego>
-References: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com> <1508156187-27519-10-git-send-email-jagan@amarulasolutions.com>
+Date: Mon, 16 Oct 2017 23:43:29 +0530
+Message-ID: <CAMty3ZBcBAHTk5eQU99rRqYm7tQAjtuEaTT_q6J5FYmY=ybvOA@mail.gmail.com>
+References: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
+ <1508156187-27519-10-git-send-email-jagan@amarulasolutions.com> <3238534.Bk1TS2fSCp@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508156187-27519-10-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3238534.Bk1TS2fSCp@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Jagan Teki <jagannadh.teki@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Oct 16, 2017 at 11:32 PM, Heiko St=C3=BCbner <heiko@sntech.de> wrot=
+e:
+> Hi,
+>
+> Am Montag, 16. Oktober 2017, 17:46:27 CEST schrieb Jagan Teki:
+>> RTC_DRV_RK808 need to have build statically for the platforms
+>> do use MFB_RK808 so replace module with statical link.
+>
+> why would you need this to be compiled on? MFD_RK808 will happily
+> just create the platform-devices which are then bound to the RTC
+> driver later once the module is ready.
 
-Am Montag, 16. Oktober 2017, 17:46:27 CEST schrieb Jagan Teki:
-> RTC_DRV_RK808 need to have build statically for the platforms
-> do use MFB_RK808 so replace module with statical link.
+Yeah, that can be true but seems like rk808 need rtc at the
+beginning(like boot time) because we observed the boot hang even with
+gmac (like one with HDMI [1]) eventually booting continue only when it
+linked statically.
 
-why would you need this to be compiled on? MFD_RK808 will happily
-just create the platform-devices which are then bound to the RTC
-driver later once the module is ready.
+[1] https://lkml.org/lkml/2017/9/4/224
 
-Heiko
-
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  arch/arm/configs/multi_v7_defconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/configs/multi_v7_defconfig
-> b/arch/arm/configs/multi_v7_defconfig index 2adef49..6ddc35c 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -768,7 +768,7 @@ CONFIG_RTC_DRV_MAX8907=y
->  CONFIG_RTC_DRV_MAX8998=m
->  CONFIG_RTC_DRV_MAX8997=m
->  CONFIG_RTC_DRV_MAX77686=y
-> -CONFIG_RTC_DRV_RK808=m
-> +CONFIG_RTC_DRV_RK808=y
->  CONFIG_RTC_DRV_RS5C372=m
->  CONFIG_RTC_DRV_BQ32K=m
->  CONFIG_RTC_DRV_PALMAS=y
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks!
+--=20
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
