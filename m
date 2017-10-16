@@ -1,50 +1,54 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH  1/2] dt-bindings: usb-xhci: Document r8a7743 support
-Date: Mon, 16 Oct 2017 11:12:48 +0100
-Message-ID: <1508148769-47488-2-git-send-email-biju.das@bp.renesas.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  2/2] ARM: dts: r8a7743: Add xhci support to SoC dtsi
+Date: Mon, 16 Oct 2017 11:12:49 +0100
+Message-ID: <1508148769-47488-3-git-send-email-biju.das@bp.renesas.com>
 References: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508148769-47488-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Document r8a7743 xhci support. The driver will use the fallback
-compatible string "renesas,rcar-gen2-xhci", therefore no driver
-change is needed.
+Add node for xhci. Boards DT files will enable it if needed.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 2d80b60..4125d02 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -7,12 +7,14 @@ Required properties:
-     - "marvell,armada3700-xhci" for Armada 37xx SoCs
-     - "marvell,armada-375-xhci" for Armada 375 SoCs
-     - "marvell,armada-380-xhci" for Armada 38x SoCs
-+    - "renesas,xhci-r8a7743" for r8a7743 SoC
-     - "renesas,xhci-r8a7790" for r8a7790 SoC
-     - "renesas,xhci-r8a7791" for r8a7791 SoC
-     - "renesas,xhci-r8a7793" for r8a7793 SoC
-     - "renesas,xhci-r8a7795" for r8a7795 SoC
-     - "renesas,xhci-r8a7796" for r8a7796 SoC
--    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 compatible device
-+    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
-+      device
-     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 compatible device
-     - "xhci-platform" (deprecated)
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 699c040..386bf07 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -931,6 +931,26 @@
+ 			status = "disabled";
+ 		};
  
++		/*
++		 * pci1 and xhci share the same phy, therefore only one of them
++		 * can be active at any one time. If both of them are enabled,
++		 * a race condition will determine who'll control the phy.
++		 * A firmware file is needed by the xhci driver in order for
++		 * USB 3.0 to work properly.
++		 */
++		xhci: usb@ee000000 {
++			compatible = "renesas,xhci-r8a7743",
++				     "renesas,rcar-gen2-xhci";
++			reg = <0 0xee000000 0 0xc00>;
++			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 328>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 328>;
++			phys = <&usb2 1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		sdhi0: sd@ee100000 {
+ 			compatible = "renesas,sdhi-r8a7743";
+ 			reg = <0 0xee100000 0 0x328>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
