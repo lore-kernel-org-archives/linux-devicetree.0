@@ -1,81 +1,59 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: interrupts-extended only allowed with different parents? [Was: Re:
- [PATCH 3/4] ARM: dts: imx28-tx28: fix interrupt flags and use
- interrupts-extended property]
-Date: Mon, 16 Oct 2017 11:03:56 +0200
-Message-ID: <20171016090356.yvg5omwl4i75viiw@pengutronix.de>
-References: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
- <1507719939-27250-4-git-send-email-LW@KARO-electronics.de>
- <20171016071726.gyzvalxzk4o3jsuz@pengutronix.de>
- <20171016105632.709e653c@karo-electronics.de>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
+Date: Mon, 16 Oct 2017 12:04:35 +0300
+Message-ID: <a064c008-2268-26ef-edee-47bda38b117b@cogentembedded.com>
+References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org>
+ <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas@grenoble-inp.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171016105632.709e653c-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 10:56:32AM +0200, Lothar Waßmann wrote:
-> Hi,
+Hello!
+
+On 10/16/2017 2:43 AM, Jules Maselbas wrote:
+
+> Adds bindings documentation for the max3421 driver.
 > 
-> On Mon, 16 Oct 2017 09:17:26 +0200 Uwe Kleine-König wrote:
-> > Hello,
-> > 
-> > On Wed, Oct 11, 2017 at 01:05:38PM +0200, Lothar Waßmann wrote:
-> > > diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
-> > > index 211e67d..3c852f7 100644
-> > > --- a/arch/arm/boot/dts/imx28-tx28.dts
-> > > +++ b/arch/arm/boot/dts/imx28-tx28.dts
-> > > @@ -328,8 +328,7 @@
-> > >  		reg = <0x20>;
-> > >  		pinctrl-names = "default";
-> > >  		pinctrl-0 = <&tx28_pca9554_pins>;
-> > > -		interrupt-parent = <&gpio3>;
-> > > -		interrupts = <28 0>;
-> > > +		interrupts-extended = <&gpio3 28 IRQ_TYPE_NONE>;
-> > >  		gpio-controller;
-> > >  		#gpio-cells = <2>;
-> > >  		interrupt-controller;
-> > 
-> > While interrupts-extended looks nice,
-> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > has:
-> > 
-> > 	"interrupts-extended" should only be used when a device has
-> > 	multiple interrupt parents.
-> > 
-> > If this is still true, this patch is wrong.
-> >
-> Thanks for the hint. It really helps to read the documentation
-> sometimes, rahter than relying on existing code only...
+> Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+> ---
+>   .../devicetree/bindings/usb/maxim,max3421.txt      | 24 ++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
 > 
-> A quick check shows, that more than 100 of the 130 uses of
-> interrupts-extended are wrong. :(
+> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+> new file mode 100644
+> index 000000000000..7536c3ab3e5a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+> @@ -0,0 +1,24 @@
+> +Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
+> +
+> +Required properties:
+> + - compatible: "maxim,max3421"
+> + - spi-max-frequency: maximum frequency for this device must not exceed 26 MHz.
+> + - reg: chip select number to which this device is connected.
+> + - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
+> +   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
+> +   ACTIVE_LEVEL is 0 or 1.
+> + - interrupt-parent: the phandle of the associated interrupt controller.
 
-That's why I honestly consider that these documentation bits are stale.
-I adapted the Subject to maybe catch the attention of the devicetree
-guys.
+    This is never a required prob, it may be inherited from the parent nodes.
 
-(BTW: The current wording is likely imprecise. I'd expect that it really
-should mean "Use interrupt-parent + interrupts if possible", but the
-following still fulfills the documented condition:
+> + - interrupts: the interuption line description for the interrupt controller.
 
-	interrupts-extended = <&gpio3 28 IRQ_TYPE_NONE &gpio3 29 IRQ_TYPE_NONE>
+    Interrupt.
 
-while it can be expressed without interrupts-extended.)
+[...]
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+MBR, Sergei
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
