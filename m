@@ -1,80 +1,62 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/4] drm: rcar-du: Add R8A7743 support
-Date: Mon, 16 Oct 2017 15:35:51 +0300
-Message-ID: <1768067.3dfX2lXuTT@avalon>
-References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com> <1507908142-13142-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH 4/4] drm: rcar-du: Add R8A7745 support
+Date: Mon, 16 Oct 2017 15:36:40 +0300
+Message-ID: <2922323.urz8JTfWKj@avalon>
+References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1507908142-13142-5-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1507908142-13142-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1507908142-13142-5-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-Thank you for the patch.
-
-On Friday, 13 October 2017 18:22:20 EEST Fabrizio Castro wrote:
-> Add support for the R8A7743 DU (which is very similar to the R8A7791 DU);
-> it has 1 DPAD (RGB) output and 1 LVDS output.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-and taken in my tree.
-
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> b/drivers/gpu/drm/rcar-du/rcar_du_drv.c index d2f29e6..3db5e8d 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> @@ -34,6 +34,27 @@
->   * Device Information
->   */
-> 
-> +static const struct rcar_du_device_info rzg1_du_r8a7743_info = {
-> +	.gen = 2,
-> +	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
-> +		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
-> +	.num_crtcs = 2,
-> +	.routes = {
-> +		/*
-> +		 * R8A7743 has one RGB output and one LVDS output
-> +		 */
-> +		[RCAR_DU_OUTPUT_DPAD0] = {
-> +			.possible_crtcs = BIT(1) | BIT(0),
-> +			.port = 0,
-> +		},
-> +		[RCAR_DU_OUTPUT_LVDS0] = {
-> +			.possible_crtcs = BIT(0),
-> +			.port = 1,
-> +		},
-> +	},
-> +	.num_lvds = 1,
-> +};
-> +
->  static const struct rcar_du_device_info rcar_du_r8a7779_info = {
->  	.gen = 2,
->  	.features = 0,
-> @@ -207,6 +228,7 @@ static const struct rcar_du_device_info
-> rcar_du_r8a7796_info = { };
-> 
->  static const struct of_device_id rcar_du_of_table[] = {
-> +	{ .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
->  	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
->  	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
->  	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
-
--- 
-Regards,
-
-Laurent Pinchart
-
+SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZyaWRheSwgMTMgT2N0
+b2JlciAyMDE3IDE4OjIyOjIyIEVFU1QgRmFicml6aW8gQ2FzdHJvIHdyb3RlOgo+IEFkZCBzdXBw
+b3J0IGZvciB0aGUgUjhBNzc0NSBEVSAod2hpY2ggaXMgdmVyeSBzaW1pbGFyIHRvIHRoZSBSOEE3
+Nzk0IERVKTsKPiBpdCBoYXMgMiBSR0Igb3V0cHV0cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBGYWJy
+aXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4KPiBSZXZpZXdlZC1i
+eTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJl
+bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCmFuZCB0YWtl
+biBpbiBteSB0cmVlLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9k
+cnYuYyB8IDIyICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGlu
+c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
+cl9kdV9kcnYuYwo+IGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyBpbmRl
+eCAzZGI1ZThkLi5mYWE1YjMyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Ry
+di5jCj4gQEAgLTU1LDYgKzU1LDI3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZp
+Y2VfaW5mbwo+IHJ6ZzFfZHVfcjhhNzc0M19pbmZvID0geyAubnVtX2x2ZHMgPSAxLAo+ICB9Owo+
+IAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8gcnpnMV9kdV9yOGE3
+NzQ1X2luZm8gPSB7Cj4gKwkuZ2VuID0gMiwKPiArCS5mZWF0dXJlcyA9IFJDQVJfRFVfRkVBVFVS
+RV9DUlRDX0lSUV9DTE9DSwo+ICsJCSAgfCBSQ0FSX0RVX0ZFQVRVUkVfRVhUX0NUUkxfUkVHUywK
+PiArCS5udW1fY3J0Y3MgPSAyLAo+ICsJLnJvdXRlcyA9IHsKPiArCQkvKgo+ICsJCSAqIFI4QTc3
+NDUgaGFzIHR3byBSR0Igb3V0cHV0cwo+ICsJCSAqLwo+ICsJCVtSQ0FSX0RVX09VVFBVVF9EUEFE
+MF0gPSB7Cj4gKwkJCS5wb3NzaWJsZV9jcnRjcyA9IEJJVCgwKSwKPiArCQkJLnBvcnQgPSAwLAo+
+ICsJCX0sCj4gKwkJW1JDQVJfRFVfT1VUUFVUX0RQQUQxXSA9IHsKPiArCQkJLnBvc3NpYmxlX2Ny
+dGNzID0gQklUKDEpLAo+ICsJCQkucG9ydCA9IDEsCj4gKwkJfSwKPiArCX0sCj4gKwkubnVtX2x2
+ZHMgPSAwLAo+ICt9Owo+ICsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCByY2FyX2R1X2RldmljZV9p
+bmZvIHJjYXJfZHVfcjhhNzc3OV9pbmZvID0gewo+ICAJLmdlbiA9IDIsCj4gIAkuZmVhdHVyZXMg
+PSAwLAo+IEBAIC0yMjksNiArMjUwLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCByY2FyX2R1X2Rl
+dmljZV9pbmZvCj4gcmNhcl9kdV9yOGE3Nzk2X2luZm8gPSB7Cj4gCj4gIHN0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHVfb2ZfdGFibGVbXSA9IHsKPiAgCXsgLmNvbXBhdGli
+bGUgPSAicmVuZXNhcyxkdS1yOGE3NzQzIiwgLmRhdGEgPSAmcnpnMV9kdV9yOGE3NzQzX2luZm8g
+fSwKPiArCXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3NzQ1IiwgLmRhdGEgPSAmcnpn
+MV9kdV9yOGE3NzQ1X2luZm8gfSwKPiAgCXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3
+Nzc5IiwgLmRhdGEgPSAmcmNhcl9kdV9yOGE3Nzc5X2luZm8gfSwKPiAgCXsgLmNvbXBhdGlibGUg
+PSAicmVuZXNhcyxkdS1yOGE3NzkwIiwgLmRhdGEgPSAmcmNhcl9kdV9yOGE3NzkwX2luZm8gfSwK
+PiAgCXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3NzkxIiwgLmRhdGEgPSAmcmNhcl9k
+dV9yOGE3NzkxX2luZm8gfSwKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
