@@ -1,47 +1,40 @@
-From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH 8/9] ARM: dts: rockchip: Add io domains for rk3288-vyasa
-Date: Mon, 16 Oct 2017 17:46:26 +0530
-Message-ID: <1508156187-27519-9-git-send-email-jagan@amarulasolutions.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 9/9] ARM: multi_v7_defconfig: Statically build RTC_DRV_RK808
+Date: Mon, 16 Oct 2017 17:46:27 +0530
+Message-ID: <1508156187-27519-10-git-send-email-jagan@amarulasolutions.com>
 References: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508156187-27519-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add io domains supported by rk3288-vyasa board.
+RTC_DRV_RK808 need to have build statically for the platforms
+do use MFB_RK808 so replace module with statical link.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288-vyasa.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index 2f1389a..0e0995f 100644
---- a/arch/arm/boot/dts/rk3288-vyasa.dts
-+++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -374,6 +374,21 @@
- 	};
- };
- 
-+&io_domains {
-+	status = "okay";
-+
-+	audio-supply = <&vcc_18>;
-+	bb-supply = <&vcc_io>;
-+	dvp-supply = <&vcc_io>;
-+	flash0-suuply = <&vcc_18>;
-+	flash1-supply = <&vcc_lan>;
-+	gpio30-supply = <&vcc_io>;
-+	gpio1830 = <&vcc_io>;
-+	lcdc-supply = <&vcc_io>;
-+	sdcard-supply = <&vccio_sd>;
-+	wifi-supply = <&vcc_18>;
-+};
-+
- &i2c2 {
- 	status = "okay";
- };
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 2adef49..6ddc35c 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -768,7 +768,7 @@ CONFIG_RTC_DRV_MAX8907=y
+ CONFIG_RTC_DRV_MAX8998=m
+ CONFIG_RTC_DRV_MAX8997=m
+ CONFIG_RTC_DRV_MAX77686=y
+-CONFIG_RTC_DRV_RK808=m
++CONFIG_RTC_DRV_RK808=y
+ CONFIG_RTC_DRV_RS5C372=m
+ CONFIG_RTC_DRV_BQ32K=m
+ CONFIG_RTC_DRV_PALMAS=y
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
