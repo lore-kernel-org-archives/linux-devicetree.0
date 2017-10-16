@@ -1,81 +1,89 @@
-From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: [PATCH v2 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC documentation
-Date: Mon, 16 Oct 2017 20:03:14 +0800
-Message-ID: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add binding for A64 DE2
+ CCU with SRAM section
+Date: Mon, 16 Oct 2017 14:09:12 +0200
+Message-ID: <20171016120912.lxu7rikhffxsu5o4@flea.lan>
+References: <20171014122925.13220-1-icenowy@aosc.io>
+ <20171016091136.b4rnckh2tfi26shx@flea.lan>
+ <d62ac8b8ff9073b886ceaa9ce54e6903@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mgc7dxp5vfh2imd6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5GCSLHQKGQEFDOVKBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <d62ac8b8ff9073b886ceaa9ce54e6903-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the binding documentation for Spreadtrum SC27xx series
-PMIC device.
 
-Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
----
-Changes since v1:
- - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
- - Modify compatile string property.
- - Modify reg property.
- - Remove redundant 'pmic' label.
- - Change 'should be' to 'must be' for cells properties.
----
- .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   40 ++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+--mgc7dxp5vfh2imd6
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-new file mode 100644
-index 0000000..21b9a89
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
-@@ -0,0 +1,40 @@
-+Spreadtrum SC27xx Power Management Integrated Circuit (PMIC)
-+
-+The Spreadtrum SC27xx series PMICs contain SC2720, SC2721, SC2723, SC2730
-+and SC2731. The Spreadtrum PMIC belonging to SC27xx series integrates all
-+mobile handset power management, audio codec, battery management and user
-+interface support function in a single chip. It has 6 major functional
-+blocks:
-+- DCDCs to support CPU, memory.
-+- LDOs to support both internal and external requirement.
-+- Battery management system, such as charger, fuel gauge.
-+- Audio codec.
-+- User interface function, such as indicator, flash LED and so on.
-+- IC level interface, such as power on/off control, RTC and typec and so on.
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+	"sprd,sc2720"
-+	"sprd,sc2721"
-+	"sprd,sc2723"
-+	"sprd,sc2730"
-+	"sprd,sc2731"
-+- reg: The address of the device chip select, should be 0.
-+- spi-max-frequency: Typically set to 26000000.
-+- interrupts: The interrupt line the device is connected to.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: The number of cells to describe an PMIC IRQ, must be 2.
-+- #address-cells: Child device offset number of cells, must be 1.
-+- #size-cells: Child device size number of cells, must be 0.
-+
-+Example:
-+pmic@0 {
-+	compatible = "sprd,sc2731";
-+	reg = <0>;
-+	spi-max-frequency = <26000000>;
-+	interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+};
--- 
-1.7.9.5
+On Mon, Oct 16, 2017 at 05:41:10PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> =E5=9C=A8 2017-10-16 17:11=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > On Sat, Oct 14, 2017 at 08:29:24PM +0800, Icenowy Zheng wrote:
+> > > A64's Display Engine 2.0 needs a section of SRAM (SRAM C) to be
+> > > claimed.
+> >=20
+> > Why?
+>=20
+> Allwinner didn't document this, but if the SRAM is not claimed, the
+> DE2 MMIO zone is totally not accessible.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not accessible how? It generates an abort when you access it? It
+returns 0?
+
+> It seems that Allwinner uses the SRAM C in the DE2 internally.
+
+Then shouldn't it be tied to all the DE2 devices then? So mixers
+too. Either way, this should be mentionned in your commit logs. How
+you're fixing things is much less interesting than why you're doing
+them. You can tell how you're doing them from your code already.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--mgc7dxp5vfh2imd6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZ5KFoAAoJEBx+YmzsjxAg1gMQAK5kHgVRFYhI0fS6sTf/Pofr
+gPXeNt3wOMyvVxJTAkSyTigpKK6b7iaOARbquuvw8Is5ditA1Fi6T6mOJOKGMm8G
+qxW+FlvrcB1qMAQXXN1AaLbKZz64P9XVM8dEG+rnTHAthVMFNhV/1xnjNCTH11Or
+7rMA4Ml060/Vc/fRixjK10MYFkFZaCtzHR4Mrbl2y0wp8mYSsj4wx5PY6QaaikDY
+9dSN5Ry8ALuH0eYk8UqCYwQYP/zc1+mU3WsxV+ky6OWJU6hR+Ufl2dlxFyWl/7HC
+C7f/+cMmXqnM6VF7tSRN81PV4IgQEHdhII6VVcNGs+bebr7/g8g8kO9VB8QjOUY4
+bOxRCKKamPUzHQX2mHi5z+mf0FLJS9yAc7xvRam/VS+bjL3yejiG/OWiPl3lq7Ff
+cK/yGyVOKgXlHk8rzjvja9cGsqMCqg6+kl4IognEngw/WoWL9YMoxq1r/IiygWJ4
+RdP9idFIIDXdIKQJxLyyJGoTm4Z7HzzQR//ULtzcTVu1Xgaw/gxqUe2KZYE7w314
+64mBhY82/6DiBEczoGaK+6J4vyOtZ76YyGoQ0qyq0yp7GfppOFuec6y4dw86IR13
+4sl4HiWah8pwp/n2S9fHm9oezLPp9uUzwuVLN6ZHbzEydOqGbaZhiM7fsqo+kxGE
+DBT3olbM9sOHhWiDUiwv
+=X0rk
+-----END PGP SIGNATURE-----
+
+--mgc7dxp5vfh2imd6--
