@@ -1,119 +1,52 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 4/7] soc: mediatek: pwrap: update pwrap_init without
- slave programming
-Date: Mon, 16 Oct 2017 14:22:19 +0800
-Message-ID: <1508134939.21840.39.camel@mtkswgap22>
-References: <cover.1505980364.git.sean.wang@mediatek.com>
-         <604078485ca9ab04cea5bc531425d6035b27bc88.1505980364.git.sean.wang@mediatek.com>
-         <f3a04159-8491-6ca6-d2ad-7df1dfd64331@gmail.com>
-         <1507887704.21840.32.camel@mtkswgap22>
-         <fe0952f1-c018-8492-7336-149f917463e1@gmail.com>
+From: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Subject: RE: Re: [PATCH] ARM: dts: Fix omap l4per idling with   wlcore
+   edge sensitive interrupt
+Date: Mon, 16 Oct 2017 06:22:30 +0000
+Message-ID: <8665E2433BC68541A24DFFCA87B70F5B3646C06C@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fe0952f1-c018-8492-7336-149f917463e1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Gerlach, Dave" <d-gerlach-l0cyMroinI0@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>, "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-10-13 at 16:07 +0200, Matthias Brugger wrote:
-> 
-> On 10/13/2017 11:41 AM, Sean Wang wrote:
-> > On Tue, 2017-10-10 at 20:00 +0200, Matthias Brugger wrote:
-> >>
-> >> On 09/21/2017 10:26 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> >>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>
-> >>> pwrap initialization is highly associated with the base SoC, so
-> >>> update here for allowing pwrap_init without slave program which would be
-> >>> used to those PMICs without extra encryption on bus such as MT6380.
-> >>>
-> >>> Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>    drivers/soc/mediatek/mtk-pmic-wrap.c | 91 +++++++++++++++++++++---------------
-> >>>    1 file changed, 54 insertions(+), 37 deletions(-)
-> >>>
-> >>> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> >>> index 27d7ccc..9c6d855 100644
-> >>> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> >>> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> >>> @@ -531,6 +531,7 @@ struct pmic_wrapper_type {
-> >>>    	u32 spi_w;
-> >>>    	u32 wdt_src;
-> >>>    	int has_bridge:1;
-> >>> +	int slv_program:1;
-> >>>    	int (*init_reg_clock)(struct pmic_wrapper *wrp);
-> >>>    	int (*init_soc_specific)(struct pmic_wrapper *wrp);
-> >>>    };
-> >>> @@ -999,9 +1000,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
-> >>>    	}
-> >>>    
-> >>>    	/* Reset SPI slave */
-> >>> -	ret = pwrap_reset_spislave(wrp);
-> >>> -	if (ret)
-> >>> -		return ret;
-> >>> +
-> >>> +	if (wrp->master->slv_program) {
-> >>> +		ret = pwrap_reset_spislave(wrp);
-> >>> +		if (ret)
-> >>> +			return ret;
-> >>> +	}
-> >>>    
-> >>>    	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
-> >>>    
-> >>> @@ -1013,45 +1017,52 @@ static int pwrap_init(struct pmic_wrapper *wrp)
-> >>>    	if (ret)
-> >>>    		return ret;
-> >>>    
-> >>> -	/* Setup serial input delay */
-> >>> -	ret = pwrap_init_sidly(wrp);
-> >>> -	if (ret)
-> >>> -		return ret;
-> >>> +	if (wrp->master->slv_program) {
-> >>
-> >> This if branch is really long and complex enough to put it into function apart.
-> >>
-> >> Thanks,
-> >> Matthias
-> >>
-> >> PD please take into account the comments I made on v3 of the series.
-> >>
-> > 
-> > I'll try to breakdown the long logic into the short one and use a flag
-> > indicating the slave capability decides whether the functions is
-> > required being enabled for the slave instead of slv_program which is
-> > less meaningful. In this way, pmic_init will be more extensible when
-> > more different SoCs and target slaves with various flavors into the
-> > driver. And also take into accounts those suggestions you made in v3 in
-> > the next version.
-> > 
-> > 	Sean
-> > 
-> 
-> I totally agree, but I wanted to underline that right now the if branch under
-> "if (wrp->master->slv_program)" is around 30 lines, so I think it would be a 
-> good candidate to put it into it's own function. For example: 
-> pwrap_init_encryption()
+> > >
+> > > On omaps, if the wlcore interrupt is configured as level instead of e=
+dge,
+> > > L4PER will stop doing hardware based idling after ifconfig wlan0 down=
+ is
+> > > done and the WL_EN line is pulled down.
+> > >
+> > Do we understand why omap is doing this? Is it a bug or a normal behavi=
+or?
+> >
+> > AFAIK way back edge interrupts have been used. On some omaps based
+> boards.
+> > They have used level interrupts instead due to occasional interrupts be=
+ing
+> missed
+> > By the omap interrupts controller when using edge based interrupts whic=
+h
+> caused
+> > Issues. This was the reason many boards are set to using level based in=
+terrupts
+> which
+> > Seemed much more robust.
+>=20
+> No idea yet why exactly the gpio modules won't idle after that. But for m=
+aking
+> edge interrupts behave, I suspect that Grygorii's patch "[RESEND PATCH] g=
+pio:
+> omap: Fix lost edge interrupts" fixes those issues.
+>=20
+Glad to see this patch fixing edge interrupts. Makes a lot of sense.
+Then, all looks good to me.
 
-understood. I'll try to turn the code block into a function.
-
-> As from what I understand from the commit log, slv_program in the end enables 
-> encryption of the communication, right?
-> 
-
-yes. slv_program in the end will enable the security feature over the
-bus such as the encryption and the signature for the data integrity when
-the pwrap slave can support it.
-
-
-> Regards,
-> Matthias
-
-
+Best Regards,
+Eyal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
