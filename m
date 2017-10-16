@@ -1,81 +1,188 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v5 02/12] mmc: mediatek: add support of mt2701/mt2712
-Date: Mon, 16 Oct 2017 09:49:33 +0200
-Message-ID: <a506506b-a326-6d54-9827-4fd82680700d@gmail.com>
-References: <1507689696-25928-1-git-send-email-chaotian.jing@mediatek.com>
- <1507689696-25928-3-git-send-email-chaotian.jing@mediatek.com>
- <1508055978.8978.5.camel@mtksdaap41>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Mon, 16 Oct 2017 16:17:56 +0800
+Message-ID: <1508141876.21840.75.camel@mtkswgap22>
+References: <cover.1506049341.git.sean.wang@mediatek.com>
+         <5b2a7e5c9c5bc179f89e48fb614b2ae789be4254.1506049341.git.sean.wang@mediatek.com>
+         <20171012212052.xkhbgdjrghmnvcfe@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1508055978.8978.5.camel@mtksdaap41>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, yong mao <yong.mao@mediatek.com>, Phong LE <ple@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171012212052.xkhbgdjrghmnvcfe@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Alexandre,
 
+Thanks for your valuable suggestions on the driver.
 
-On 10/15/2017 10:26 AM, CK Hu wrote:
-> Hi, Chaotian:
+I added comments inline and will have following-ups in the next version
+
+	Sean
+
+On Thu, 2017-10-12 at 23:20 +0200, Alexandre Belloni wrote:
+> Hi,
 > 
-> On Wed, 2017-10-11 at 10:41 +0800, Chaotian Jing wrote:
->> mt2701/mt2712 has 12bit clock div, which is not compatible with
->> mt8135/mt8173. and, some additional features will be added in
->> mt2701/mt2712, so that need distinguish it by comatibale name.
->>
->> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
->> ---
->>   drivers/mmc/host/mtk-sd.c | 82 +++++++++++++++++++++++++++++++++++++++--------
->>   1 file changed, 69 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
->> index 267f7ab..643c795 100644
->> --- a/drivers/mmc/host/mtk-sd.c
->> +++ b/drivers/mmc/host/mtk-sd.c
-[...]
->> @@ -350,6 +358,31 @@ struct msdc_host {
->>   	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
->>   };
->>   
->> +static const struct mtk_mmc_compatible mt8135_compat = {
->> +	.clk_div_bits = 8,
->> +};
->> +
->> +static const struct mtk_mmc_compatible mt8173_compat = {
->> +	.clk_div_bits = 8,
->> +};
->> +
->> +static const struct mtk_mmc_compatible mt2701_compat = {
->> +	.clk_div_bits = 12,
->> +};
->> +
->> +static const struct mtk_mmc_compatible mt2712_compat = {
->> +	.clk_div_bits = 12,
->> +};
->> +
->> +static const struct of_device_id msdc_of_ids[] = {
->> +	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
->> +	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+> On 22/09/2017 at 11:33:15 +0800, sean.wang@mediatek.com wrote:
+> > diff --git a/drivers/rtc/rtc-mediatek.c b/drivers/rtc/rtc-mediatek.c
 > 
-> Because mt8135_compat is equal to mt8173_compat, so I think the
-> compatible of "mediatek,mt8173-mmc" is redundant. You could just keep
-> compatible of "mediatek,mt8135-mmc" in driver, and use
-> "mediatek,mt8135-mmc" for both mt8135.dtsi and mt8173.dtsi.
+> I'm pretty sure this should be named rtc-mt7622.c instead of
+> rtc-mediatek.c, exactly for the same reason you have patch 3/4.
 > 
 
-Well thing is, that in the follow-up patches, new data types get added to the 
-different compat structures and in the end all four a different.
+It's okay for naming with rtc-mt7622.c at this moment. But if more SoCs
+support gets into the driver, I will consider again to give a more
+generic name for the driver.
 
->> +	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
->> +	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
+> > +static void mtk_w32(struct mtk_rtc *rtc, u32 reg, u32 val)
+> > +{
+> > +	__raw_writel(val, rtc->base + reg);
+> 
+> Do you really need the __raw accessors? What about running your SoC in
+> BE mode? I guess the _relaxed version are fast enough.
+> 
+
+SoC runs on LE mode. I also think it's fine and enough to use _relaxed
+version instead of __raw version.
+
+> > +}
+> > +
+> > +static u32 mtk_r32(struct mtk_rtc *rtc, u32 reg)
+> > +{
+> > +	return __raw_readl(rtc->base + reg);
+> > +}
+> > +
+> 
+> 
+> > +static void mtk_rtc_hw_init(struct mtk_rtc *hw)
+> > +{
+> > +	/* The setup of the init sequence is for allowing RTC got to work */
+> > +	mtk_w32(hw, MTK_RTC_PWRCHK1, RTC_PWRCHK1_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PWRCHK2, RTC_PWRCHK2_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_KEY, RTC_KEY_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT1, RTC_PROT1_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT2, RTC_PROT2_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT3, RTC_PROT3_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT4, RTC_PROT4_MAGIC);
+> > +	mtk_rmw(hw, MTK_RTC_DEBNCE, RTC_DEBNCE_MASK, 0);
+> > +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> > +}
+> > +
+> > +static void mtk_rtc_get_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
+> > +				      int time_alarm)
+> > +{
+> > +	u32 year, mon, mday, wday, hour, min, sec;
+> > +
+> > +	/*
+> > +	 * Read again until all fields are not changed for all fields in the
+> > +	 * consistent state.
+> > +	 */
+> > +	do {
+> > +		year = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA));
+> > +		mon = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON));
+> > +		wday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW));
+> > +		mday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM));
+> > +		hour = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU));
+> > +		min = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN));
+> > +		sec = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC));
+> > +	} while (year != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA)) ||
+> > +		 mon != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON))  ||
+> > +		 mday != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM))	||
+> > +		 wday != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW))	||
+> > +		 hour != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU))	||
+> > +		 min != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN))	||
+> > +		 sec != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC))
+> > +		);
+> 
+> I'm pretty sure only checking sec is enough because it is highly
+> unlikely that 7 reads take a minute.
+> 
+
+You're right. I made something stupid here. Only checking on sec is
+enough and will give simpler and better code.
+
+> > +static irqreturn_t mtk_rtc_alarmirq(int irq, void *id)
+> > +{
+> > +	struct mtk_rtc *hw = (struct mtk_rtc *)id;
+> > +	u32 irq_sta;
+> > +
+> > +	/* Stop alarm also implicitly disable the alarm interrupt */
+> > +	mtk_w32(hw, MTK_RTC_AL_CTL, 0);
+> 
+> You stop the alarm here, before testing whether the alarm really
+> happened.
+> 
+
+Okay. I will exchange the order for alarm stopping and the examination
+whether the alarm is really expired. 
+
+> > +	irq_sta = mtk_r32(hw, MTK_RTC_INT);
+> > +	if (irq_sta & RTC_INT_AL_STA) {
+> > +		rtc_update_irq(hw->rtc, 1, RTC_IRQF | RTC_AF);
+> > +
+> > +		/* Ack alarm interrupt status */
+> > +		mtk_w32(hw, MTK_RTredundantC_INT, RTC_INT_AL_STA);
+> > +		return IRQ_HANDLED;
+> > +	}
+> > +
+> > +	return IRQ_NONE;
+> > +}
+> > +
+> > +static int mtk_rtc_gettime(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +
+> > +	mtk_rtc_get_alarm_or_time(hw, tm, MTK_TC);
+> > +
+> > +	return rtc_valid_tm(tm);
+> > +}
+> > +
+> > +static int mtk_rtc_settime(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +
+> > +	/* Stop time counter before setting a new one*/
+> > +	mtk_set(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> > +
+> > +	/* Epoch == 1900 */
+> > +	if (tm->tm_year < 100 || tm->tm_year > 199)
+> > +		return -EINVAL;
+> 
+> Year is a 32 bits register, what makes the RTC fail in 2100? Is it
+> because of the leap year handling?
+> 
+
+I made something stupid again here: rtc hardware doesn't have such the
+limitation. I just felt alarm set up prior to 2100 is enough in my
+initial thought, but it seemed I shouldn't do this. I will remove the
+sanity condition.
+
+
+> > +static int mtk_rtc_setalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +	struct rtc_time *alrm_tm = &wkalrm->time;
+> > +
+> > +	/* Epoch == 1900 */
+> > +	if (alrm_tm->tm_year < 100 || alrm_tm->tm_year > 199)
+> > +		return -EINVAL;
+> > +
 > 
 > Ditto.
 > 
+Ditto. those condition will be removed.
 
-Same here.
+> > +
+> > +	dev_info(&pdev->dev, "MediaTek SoC based RTC enabled\n");
+> > +
+> 
+> I think the rtc core is verbose enough that this message is not needed.
+> 
 
-Regards,
-Matthias
+Okay. the redundant and specific log prompt would be removed as well.
+
+
+> 
