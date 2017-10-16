@@ -1,33 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 0/2] gpio: uniphier: UniPhier GPIO driver
-Date: Mon, 16 Oct 2017 10:24:15 +0200
-Message-ID: <CACRpkdbRtpsmkp5BZcCH4vOvqoeMT_1UGUkOEoJ+mYypgnKezA@mail.gmail.com>
-References: <1507808176-5223-1-git-send-email-yamada.masahiro@socionext.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 1/4] ARM: dts: iwg22d: Use /dev/ttySC3 as debug console
+Date: Mon, 16 Oct 2017 08:34:35 +0000
+Message-ID: <KL1PR06MB1702D289BE9642F285CF9ED1B84F0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1507899796-7941-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1507899796-7941-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1507808176-5223-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507899796-7941-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 1:36 PM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+Hi,
 
-> Changes in v8:
->   - Move dt-binding header to binding commit
->   - Add MAINTAINERS entry for the binding doc
->   - Add a consumer example to the binding doc
+Looks like the chosen node "stdout-path =3D "serial0:115200n8";" is not upd=
+ated with this patch.
 
-This v8 looks OK to me.
+So either drop the patch or fix the chosen node.
 
-The stuff is still hard to understand, but that is because the HW is
-very complex and strangely designed, not because of the driver
-author. I really think you did your best, thanks!
+Regards,
+Biju
 
-I'll wait some days and see if the DT people have something to say
-before applying it, but I'm as happy as I can be I guess.
+> -----Original Message-----
+> From: Fabrizio Castro [mailto:fabrizio.castro@bp.renesas.com]
+> Sent: 13 October 2017 14:03
+> To: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Russell King <linux@armlinux.org.uk>
+> Cc: Simon Horman <horms@verge.net.au>; Magnus Damm
+> <magnus.damm@gmail.com>; Geert Uytterhoeven <geert@linux-m68k.org>;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> renesas-soc@vger.kernel.org; Chris Paterson <Chris.Paterson2@renesas.com>=
+;
+> Biju Das <biju.das@bp.renesas.com>; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>; Chris Paterson
+> <Chris.Paterson2@renesas.com>
+> Subject: [PATCH 1/4] ARM: dts: iwg22d: Use /dev/ttySC3 as debug console
+>
+> The BSP release from iWave uses /dev/ttySC3 as debug console, this patch
+> renames the alias accordingly for compatibility.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> ---
+>  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> index 52153ec..edda4f1 100644
+> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+> @@ -16,7 +16,7 @@
+>  compatible =3D "iwave,g22d", "iwave,g22m", "renesas,r8a7745";
+>
+>  aliases {
+> -serial0 =3D &scif4;
+> +serial3 =3D &scif4;
+>  ethernet0 =3D &avb;
+>  };
+>
+> --
+> 2.7.4
 
-Yours,
-Linus Walleij
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
