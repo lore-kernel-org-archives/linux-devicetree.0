@@ -1,74 +1,75 @@
-From: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
-Date: Mon, 16 Oct 2017 23:22:38 +0200 (CEST)
-Message-ID: <1452233455.381184.1508188958452.JavaMail.zimbra@grenoble-inp.org>
-References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org> <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas@grenoble-inp.org> <a064c008-2268-26ef-edee-47bda38b117b@cogentembedded.com> <6a3f35f1-dae9-063d-963e-812a7341f612@cogentembedded.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: interrupts-extended only allowed with different parents? [Was:
+ Re: [PATCH 3/4] ARM: dts: imx28-tx28: fix interrupt flags and use
+ interrupts-extended property]
+Date: Mon, 16 Oct 2017 16:29:17 -0500
+Message-ID: <CAL_JsqJyu2MzwPui-G3w_Gt6CS9nTQom7Bi3q=ctzm6YKAgXZA@mail.gmail.com>
+References: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
+ <1507719939-27250-4-git-send-email-LW@KARO-electronics.de>
+ <20171016071726.gyzvalxzk4o3jsuz@pengutronix.de> <20171016105632.709e653c@karo-electronics.de>
+ <20171016090356.yvg5omwl4i75viiw@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6a3f35f1-dae9-063d-963e-812a7341f612-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, julia lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016090356.yvg5omwl4i75viiw@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Sergei,
-
-Is it better if the documentation say:
-"
-Optional property:
- - interrupt-parent: the phandle of the associated interrupt controller.
-"
-or should I also add that "it may be inherited from the parent nodes."?
-
-Jules Maselbas.
-
------ Mail original -----
-De: "Sergei Shtylyov" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-À: "Jules Maselbas" <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: "julia lawall" <julia.lawall-L2FTfq7BK8M@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "mark rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Envoyé: Lundi 16 Octobre 2017 22:21:53
-Objet: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
-
-On 10/16/2017 12:04 PM, Sergei Shtylyov wrote:
-
->> Adds bindings documentation for the max3421 driver.
+On Mon, Oct 16, 2017 at 4:03 AM, Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Mon, Oct 16, 2017 at 10:56:32AM +0200, Lothar Waßmann wrote:
+>> Hi,
 >>
->> Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
->> ---
->>   .../devicetree/bindings/usb/maxim,max3421.txt      | 24 
->> ++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
+>> On Mon, 16 Oct 2017 09:17:26 +0200 Uwe Kleine-König wrote:
+>> > Hello,
+>> >
+>> > On Wed, Oct 11, 2017 at 01:05:38PM +0200, Lothar Waßmann wrote:
+>> > > diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+>> > > index 211e67d..3c852f7 100644
+>> > > --- a/arch/arm/boot/dts/imx28-tx28.dts
+>> > > +++ b/arch/arm/boot/dts/imx28-tx28.dts
+>> > > @@ -328,8 +328,7 @@
+>> > >           reg = <0x20>;
+>> > >           pinctrl-names = "default";
+>> > >           pinctrl-0 = <&tx28_pca9554_pins>;
+>> > > -         interrupt-parent = <&gpio3>;
+>> > > -         interrupts = <28 0>;
+>> > > +         interrupts-extended = <&gpio3 28 IRQ_TYPE_NONE>;
+>> > >           gpio-controller;
+>> > >           #gpio-cells = <2>;
+>> > >           interrupt-controller;
+>> >
+>> > While interrupts-extended looks nice,
+>> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>> > has:
+>> >
+>> >     "interrupts-extended" should only be used when a device has
+>> >     multiple interrupt parents.
+>> >
+>> > If this is still true, this patch is wrong.
+>> >
+>> Thanks for the hint. It really helps to read the documentation
+>> sometimes, rahter than relying on existing code only...
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt 
->> b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
->> new file mode 100644
->> index 000000000000..7536c3ab3e5a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
->> @@ -0,0 +1,24 @@
->> +Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
->> +
->> +Required properties:
->> + - compatible: "maxim,max3421"
->> + - spi-max-frequency: maximum frequency for this device must not exceed 26 
->> MHz.
->> + - reg: chip select number to which this device is connected.
->> + - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
->> +   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
->> +   ACTIVE_LEVEL is 0 or 1.
->> + - interrupt-parent: the phandle of the associated interrupt controller.
-> 
->     This is never a required prob, it may be inherited from the parent nodes.
+>> A quick check shows, that more than 100 of the 130 uses of
+>> interrupts-extended are wrong. :(
+>
+> That's why I honestly consider that these documentation bits are stale.
+> I adapted the Subject to maybe catch the attention of the devicetree
+> guys.
 
-   Prop, sorry. :-)
+The documentation is correct as that is recommended practice IMO.
 
-[...]
+I wouldn't go fixing the 100 cases found either.
 
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> (BTW: The current wording is likely imprecise. I'd expect that it really
+> should mean "Use interrupt-parent + interrupts if possible", but the
+> following still fulfills the documented condition:
+
+"should" is pretty standard to mean recommended vs. "shall" or "must"
+meaning required.
+
+Rob
