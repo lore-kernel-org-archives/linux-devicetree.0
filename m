@@ -1,49 +1,56 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v4 0/6] K2G: Add QSPI support
-Date: Tue, 17 Oct 2017 00:34:10 +0200
-Message-ID: <ebd85d99-431b-3f6d-4bdf-e7d47b81567c@gmail.com>
-References: <20171003051925.8821-1-vigneshr@ti.com>
- <09cc0a61-3f73-4a10-2d67-32515a7da861@ti.com>
- <6f507813-388a-13e5-31ba-736b419744fa@gmail.com>
- <69beca0c-68a2-2d2c-d4a8-6f05a1fbc957@wedev4u.fr>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RESEND][PATCH 0/4] firmware: of: populate /firmware/ node during
+ init
+Date: Mon, 16 Oct 2017 15:44:07 -0700
+Message-ID: <59E53637.8020502@gmail.com>
+References: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <69beca0c-68a2-2d2c-d4a8-6f05a1fbc957@wedev4u.fr>
-Content-Language: en-US
+In-Reply-To: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Vignesh R <vigneshr@ti.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2017 12:29 AM, Cyrille Pitchen wrote:
-> Hi all,
-> 
-> Le 16/10/2017 à 11:28, Marek Vasut a écrit :
->> On 10/16/2017 08:15 AM, Vignesh R wrote:
->>>
->>>
->>> On Tuesday 03 October 2017 10:49 AM, Vignesh R wrote:
->>>>
->>>>
->>>> This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
->>>> The patches enhance the existing cadence-quadspi driver to support
->>>> loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
->>>
->>> Gentle ping on the series...
->>
->> It's IMO OK, Cyrille, can you pick it ?
->>
-> 
-> The series looks good to me too.
-> 
-> Marek, could you please add you "Acked-by" or "Reviewed-by" tag for the
-> record in patchwork ? It will be automatically added when I use
-> "pwclient git-am -s" to merge the patches into the spi-nor/next branch.
++ me
 
-Acked-by: Marek Vasut <marek.vasut@gmail.com>
-
--- 
-Best regards,
-Marek Vasut
+On 09/28/17 03:45, Sudeep Holla wrote:
+> Hi Rob, Arnd,
+> 
+> There's a push to place all firmware related device node under
+> /firmware/ node. However all the associated drivers are dealing with
+> device creation in their own ways. For example, qcom_scm, optee and
+> meson-sm drivers deal with the node in their own way. The SCMI drivers
+> I am about to add also needs to do the same. This small series is to
+> make it generic so that all the users of /firmware/ node need not
+> repeat the same.
+> 
+> There was concern that /firmware in DT is fit for /sys/firmware in sysfs.
+> IMO anything exposed to userspace from such firmware interface must
+> be in "/sys/firmware", but I don't see any issue with kernel handling
+> them as platform device/driver internally.
+> 
+> Sudeep Holla (4):
+>   of: platform: populate /firmware/ node from
+>     of_platform_default_populate_init()
+>   firmware: qcom_scm: drop redandant of_platform_populate
+>   drivers: tee: rework optee_driver_{init,exit} to use platform device
+>   firmware: meson-sm: rework meson_sm_init to use
+>     module_platform_driver_probe
+> 
+>  drivers/firmware/meson/meson_sm.c | 21 ++++++-----
+>  drivers/firmware/qcom_scm.c       | 24 -------------
+>  drivers/of/platform.c             |  4 +++
+>  drivers/tee/optee/core.c          | 74 +++++++++++++--------------------------
+>  4 files changed, 41 insertions(+), 82 deletions(-)
+> 
+> --
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
