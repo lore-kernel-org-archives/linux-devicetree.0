@@ -1,54 +1,74 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH  2/2] ARM: dts: r8a7743: Add xhci support to SoC dtsi
-Date: Mon, 16 Oct 2017 11:12:49 +0100
-Message-ID: <1508148769-47488-3-git-send-email-biju.das@bp.renesas.com>
-References: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] K2G: Add QSPI support
+Date: Mon, 16 Oct 2017 11:28:47 +0200
+Message-ID: <6f507813-388a-13e5-31ba-736b419744fa@gmail.com>
+References: <20171003051925.8821-1-vigneshr@ti.com>
+ <09cc0a61-3f73-4a10-2d67-32515a7da861@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <09cc0a61-3f73-4a10-2d67-32515a7da861-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On 10/16/2017 08:15 AM, Vignesh R wrote:
+> 
+> 
+> On Tuesday 03 October 2017 10:49 AM, Vignesh R wrote:
+>>
+>>
+>> This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
+>> The patches enhance the existing cadence-quadspi driver to support
+>> loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
+> 
+> Gentle ping on the series...
 
-Add node for xhci. Boards DT files will enable it if needed.
+It's IMO OK, Cyrille, can you pick it ?
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+>>
+>> Change log:
+>>
+>> v4:
+>> * New patch to fix error handling sequence in probe.
+>>
+>> v3:
+>> * Fix build warnings reported by kbuild test bot.
+>>
+>> Resend:
+>> * Rebase to latest linux-next.
+>> * Collect Acked-bys
+>>
+>> v2:
+>> * Drop DT patches. Will be sent as separate series as requested by
+>>  maintainer.
+>> * Split binding docs into separate patches.
+>> * Address comments by Rob Herring.
+>>
+>> Vignesh R (6):
+>>   mtd: spi-nor: cadence-quadspi: Add TI 66AK2G SoC specific compatible
+>>   mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+>>   mtd: spi-nor: cadence-quadspi: Add new binding to enable loop-back
+>>     circuit
+>>   mtd: spi-nor: cadence-quadspi: Add support to enable loop-back clock
+>>     circuit
+>>   mtd: spi-nor: cadence-quadspi: Fix error path in probe
+>>   mtd: spi-nor: cadence-quadspi: Add runtime PM support
+>>
+>>  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  7 ++-
+>>  drivers/mtd/spi-nor/cadence-quadspi.c              | 55 +++++++++++++++++++---
+>>  2 files changed, 55 insertions(+), 7 deletions(-)
+>>
+> 
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 699c040..386bf07 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -931,6 +931,26 @@
- 			status = "disabled";
- 		};
- 
-+		/*
-+		 * pci1 and xhci share the same phy, therefore only one of them
-+		 * can be active at any one time. If both of them are enabled,
-+		 * a race condition will determine who'll control the phy.
-+		 * A firmware file is needed by the xhci driver in order for
-+		 * USB 3.0 to work properly.
-+		 */
-+		xhci: usb@ee000000 {
-+			compatible = "renesas,xhci-r8a7743",
-+				     "renesas,rcar-gen2-xhci";
-+			reg = <0 0xee000000 0 0xc00>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 328>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 328>;
-+			phys = <&usb2 1>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a7743";
- 			reg = <0 0xee100000 0 0x328>;
+
 -- 
-1.9.1
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
