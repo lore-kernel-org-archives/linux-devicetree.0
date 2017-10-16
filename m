@@ -1,37 +1,34 @@
-From: Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: Re: [PATCH v4 0/9] Mediatek MT2712 clock and scpsys support
-Date: Mon, 16 Oct 2017 14:42:14 +0800
-Message-ID: <1508136134.20464.49.camel@mtksdaap41>
-References: <1505793630-12590-1-git-send-email-weiyi.lu@mediatek.com>
-         <20171012224540.GE18706@codeaurora.org>
-         <ac7940d1-e23d-add2-b4b6-bd7cf66fea34@gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 07/11] dmaengine: sun6i: Retrieve channel count/max
+ request from devicetree
+Date: Mon, 16 Oct 2017 12:32:17 +0530
+Message-ID: <20171016070217.GO30097@localhost>
+References: <20170928014928.2272-1-stefan.bruens@rwth-aachen.de>
+ <6277478a-601a-48b0-8e1f-1d309049d4f4@rwthex-w2-a.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ac7940d1-e23d-add2-b4b6-bd7cf66fea34@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6277478a-601a-48b0-8e1f-1d309049d4f4-cBaz+nnMw1+1MzRH+ruthl5UTUQ924AY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-10-13 at 16:50 +0200, Matthias Brugger wrote:
+On Thu, Sep 28, 2017 at 03:49:24AM +0200, Stefan Brüns wrote:
+> To avoid introduction of a new compatible for each small SoC/DMA controller
+> variation, move the definition of the channel count to the devicetree.
 > 
-> On 10/13/2017 12:45 AM, Stephen Boyd wrote:
-> > On 09/19, Weiyi Lu wrote:
-> >> This series is based on v4.14-rc1 and composed of
-> >> clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
-> > 
-> > What's the merge plan? Can I apply the clk ones to clk tree and
-> > ignore the rest?
-> > 
-> 
-> Yes, please do so. I'll take scpsys, which depends on the clock patches.
-> 
-> Regards,
-> Matthias
+> The number of vchans is no longer explicit, but limited by the highest
+> port/DMA request number. The result is a slight overallocation for SoCs
+> with a sparse port mapping.
 
-Hi Stephen & Matthias,
+This doesnt apply for me, please check
 
-I will start to separate this patch set into three series
-(clk/scpsys/dts) when I send the next version.
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
