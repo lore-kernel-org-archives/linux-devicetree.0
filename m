@@ -1,55 +1,62 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
-Date: Mon, 16 Oct 2017 18:16:26 +0200
-Message-ID: <f80312bc-e9bd-2216-404c-016a6ad690a3@st.com>
-References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
+Subject: Re: [PATCH v5 3/4] ARM: dts: stm32: Add MDMA support for STM32H743
+ SoC
+Date: Mon, 16 Oct 2017 18:30:52 +0200
+Message-ID: <3398ee25-4219-a7e5-d842-200d87317584@st.com>
+References: <1506613003-28376-1-git-send-email-pierre-yves.mordret@st.com>
+ <1506613003-28376-4-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1506613003-28376-4-git-send-email-pierre-yves.mordret@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, John Youn <johnyoun@synopsys.com>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW3DqWxpZSwKCk9uIDA4LzI4LzIwMTcgMDQ6MjAgUE0sIEFtZWxpZSBEZWxhdW5heSB3cm90
-ZToKPiBUaGUgU1RNMzJGNyBNQ1UgZmFtaWx5IGVtYmVkcyB0d28gRFdDMiBVU0IgT1RHIGNvcmVz
-LiBPbmUgY29yZSBpcyBVU0IKPiBPVEcgRlMgYW5kIHRoZSBvdGhlciBpcyBVU0IgT1RHIEhTLiBU
-aGUgVVNCIEZTIGNvcmUgb25seSB3b3JrcyB3aXRoIGl0cwo+IGludGVybmFsIHBoeSB3aGlsc3Qg
-dGhlIFVTQiBIUyBjb3JlIGNhbiB3b3JrIGluIEhTIHdpdGggZXh0ZXJuYWwgVUxQSSBwaHkKPiBv
-ciBpbiBGUy9MUyB3aXRoIHRoZSBvbi1jaGlwIEZTIHBoeS4KPiAKPiBBbWVsaWUgRGVsYXVuYXkg
-KDcpOgo+ICAgIGR0LWJpbmRpbmdzOiB1c2I6IERvY3VtZW50IHRoZSBTVE0zMkY3IERXQzIgVVNC
-IE9URyBIUyBjb3JlIGJpbmRpbmcKPiAgICB1c2I6IGR3YzI6IGFkZCBzdXBwb3J0IGZvciBTVE0z
-MkY3IFVTQiBPVEcgSFMKPiAgICBBUk06IGR0czogc3RtMzI6IEFkZCBVU0IgSFMgc3VwcG9ydCBm
-b3IgU1RNMzJGNzQ2IE1DVQo+ICAgIEFSTTogZHRzOiBzdG0zMjogRW5hYmxlIFVTQiBIUyBvbiBz
-dG0zMjc0NmctZXZhbAo+ICAgIEFSTTogZHRzOiBzdG0zMjogRW5hYmxlIFVTQiBIUyBvbiBzdG0z
-MmY3NDYtZGlzY28KPiAgICBBUk06IGR0czogc3RtMzI6IEFkZCBVU0IgRlMgc3VwcG9ydCBmb3Ig
-U1RNMzJGNzQ2IE1DVQo+ICAgIEFSTTogZHRzOiBzdG0zMjogRW5hYmxlIFVTQiBGUyBvbiBzdG0z
-MmY3NDYtZGlzY28KPiAKPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2Iv
-ZHdjMi50eHQgfCAgMiArCj4gICBhcmNoL2FybS9ib290L2R0cy9zdG0zMjc0NmctZXZhbC5kdHMg
-ICAgICAgICAgIHwgMTYgKysrKysrCj4gICBhcmNoL2FybS9ib290L2R0cy9zdG0zMmY3NDYtZGlz
-Y28uZHRzICAgICAgICAgIHwgMzAgKysrKysrKysrKwo+ICAgYXJjaC9hcm0vYm9vdC9kdHMvc3Rt
-MzJmNzQ2LmR0c2kgICAgICAgICAgICAgICB8IDgwICsrKysrKysrKysrKysrKysrKysrKysrKysr
-Cj4gICBkcml2ZXJzL3VzYi9kd2MyL3BhcmFtcy5jICAgICAgICAgICAgICAgICAgICAgIHwgMTEg
-KysrKwo+ICAgNSBmaWxlcyBjaGFuZ2VkLCAxMzkgaW5zZXJ0aW9ucygrKQo+IAoKUGF0Y2hlcyAz
-IHRvIDcgYXBwbGllZCBvbiBzdG0zMi1kdC1mb3ItdjQuMTUgYnJhbmNoLgpDdXJyZW50bHkgVVNC
-IHN0YWNrIGlzIG5vdCBlbmFibGVkIGJ5IGRlZmF1bHQgKGFuZCB3aWxsIG5vdCBiZSkuIElmIHlv
-dSAKcGxhbiB0byB1c2UgVVNCIGRvbid0IGZvcmdldCB0byBjcmVhdGUgYSByZXNlcnZlZCBtZW1v
-cnkgcmVnaW9uIGZvciBETUEgCnBvb2wgKGFzIERNQSBhbmQgY2FjaGVzIGFyZSBub3QgZnJpZW5k
-cyBvbiBjb3J0ZXgtTTcpIGluIGRldmljZXRyZWUuClJlc2VydmVkIG1lbW9yeSByZWdpb24gZm9y
-IERNQSBwb29sIHN1cHBvcnQgd2lsbCBiZSBhZGRlZCBpbiBzdG0zMkY3IGFuZCAKc3RtMzJINyBk
-ZXZpY2V0cmVlIGFzIHNvb24gc2VyaWVzICJBUk06IE5PTU1VOiBNUFUgdXBkYXRlcyIgZnJvbSAK
-VmxhZGltaXIgTXVyemluIHdpbGwgYmUgbWVyZ2VkLgoKUmVnYXJkcwpBbGV4CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi
+
+On 09/28/2017 05:36 PM, Pierre-Yves MORDRET wrote:
+> This patch adds MDMA support for STM32H743 SoC.
+> 
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> ---
+>   Version history:
+>      v5:
+>      v4:
+>      v3:
+>          * None
+>      v2:
+>          * Add MDMA support in DT for H7
+> ---
+> ---
+>   arch/arm/boot/dts/stm32h743.dtsi | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+> index 58ec227..8e0aeb7 100644
+> --- a/arch/arm/boot/dts/stm32h743.dtsi
+> +++ b/arch/arm/boot/dts/stm32h743.dtsi
+> @@ -193,6 +193,16 @@
+>   				status = "disabled";
+>   			};
+>   		};
+> +
+> +		mdma1: dma@52000000 {
+> +			compatible = "st,stm32h7-mdma";
+> +			reg = <0x52000000 0x1000>;
+> +			interrupts = <122>;
+> +			clocks = <&timer_clk>;
+> +			#dma-cells = <5>;
+> +			dma-channels = <16>;
+> +			dma-requests = <32>;
+> +		};
+>   	};
+>   };
+>   
+> 
+Applied on stm32-dt-for-v4.15.
+
+Thanks
+Alex
