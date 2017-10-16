@@ -1,294 +1,80 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: Re: [PATCH v2 3/3] mtd: spi-nor: add flag for reading dummy cycles
- from nv cfg reg
-Date: Mon, 16 Oct 2017 11:41:31 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1710161141020.19479@mgerlach-VirtualBox>
-References: <1505932139-2905-1-git-send-email-matthew.gerlach@linux.intel.com> <1505932139-2905-4-git-send-email-matthew.gerlach@linux.intel.com> <28c32a9c-1fd8-3af4-abc6-f4938e138daa@wedev4u.fr>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26 Oct 2017)
+Date: Mon, 16 Oct 2017 20:44:35 +0200
+Message-ID: <3991995.cBZA2o0zRC@diego>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com> <39f87f46-da67-11d9-4336-213c13025568@monstr.eu> <8a168960-2dae-35cc-e610-0fe257c9121d@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-231588532-1508179293=:19479"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <28c32a9c-1fd8-3af4-abc6-f4938e138daa-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tien.hock.loh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8a168960-2dae-35cc-e610-0fe257c9121d-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Am Montag, 16. Oktober 2017, 17:40:57 CEST schrieb Ben Dooks:
+> On 16/10/17 06:36, Michal Simek wrote:
+> > Hi,
+> > 
+> > On 9.10.2017 22:39, Grant Likely wrote:
+> >> Kernel Summit is now just over 2 weeks away and it is time to pull
+> >> together the schedule for the Devicetree workshop. Originally I
+> >> planned on just an afternoon, but I've got the room for the whole day,
+> >> so I've got a lot of flexibility on the schedule. Unscheduled time can
+> >> be used for hacking.
+> >> 
+> >> Date: 26 Oct 2017
+> >> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
+> >> Location: Athens room - Hilton Prague
+> >> 
+> >> If you plan to attend, make sure you update your OSSunmitE/ELCE
+> >> registration to include the DT Workshop (log in to access and modify
+> >> your registration):
+> >> 
+> >> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&
+> >> EventsessionId=&Email_Address=&membershipID=
+> >> 
+> >> Here is my current list of topics in no particular order, including
+> >> the topic moderator:
+> >> 
+> >> Runtime memory consumption (Rob Herring)
+> >> Overlay maintenance plan (TBC)
+> >> Stable ABI for devicetree (TBC)
+> >> DT YAML encoding (Pantelis Antoniou)
+> >> DT Schema format - option 1 (Pantelis Antoniou)
+> >> DT Schema format - option 2 (Grant Likely)
+> >> Sharing Generic bindings (TBC)
+> >> devicetree.org update (Grant)
+> >> 
+> >> Reply to this email if you want to propose another topic.
+> >> 
+> >> Reply privately if there is a particular topic you want to attend but
+> >> you are unable to be there in the morning or afternoon. I'll put the
+> >> actual agenda together a week out from the event.
+> > 
+> > I would like to talk how to add support for AArch32 based on arm64 dts
+> > file.
+> > 
+> > And next topic is discuss criteria for adding new DTS board files to
+> > kernel for supporting custom boards especially for arm32 which can end
+> > up with a lot of dts files in this folder.
+> > If make sense to permit only boards with something new or just enable
+> > reference boards to go in.
+> 
+> I am interested in this, as we seem to be repeating the quantity
+> issue with the board file of having many .dts sources in the kernel.
+> 
+> I'm not sure how to deal with this, on one hand only having the
+> reference (and possibly popular) boards is going to keep the size
+> down. On the other hand out of tree .dts files are going to be
+> difficult to find (or vanish with the vendor).
+> 
+> It seems we are still no closer to having a DT repository outside
+> the kernel.
 
---8323329-231588532-1508179293=:19479
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+There exists
+https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
 
-
-Hi Cyrille,
-
-Thanks for the feedback.  See my comments in line below.
-
-Matthew Gerlach
-
-
-On Tue, 10 Oct 2017, Cyrille Pitchen wrote:
-
-> Hi Matthew
->
-> NAK for this patch
->
-> Le 20/09/2017 à 20:28, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org a écrit :
->> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>
->> This patch is a work around for some non-standard behavior
->> of EPCQ flash parts:
->>
->> https://www.altera.com/documentation/wtw1396921531042.html#wtw1396921651224
->>
->
-> From the above documentation:
-> """
-> Write Non-Volatile Configuration Register Operation
->
-> You need to write the non-volatile configuration registers for EPCQ-L
-> devices for different configuration schemes. If you are using the .jic
-> file, the Quartus® Prime programmer sets the number of dummy clock
-> cycles and address bytes. If you are using an external programmer tools
-> (3rd party programmer tools), you must set the non-volatile
-> configuration registers.
->
-> To set the non-volatile configuration register, follow these steps:
->
->    Execute the write enable operation.
->    Execute the write non-volatile configuration register operation.
->    Set the 16-bit register value.
->
-
-This documentation does not match my experience with the flash.  No where
-am I setting the non-volatile configuration register.  After power up, I 
-just read the register and observe 10 dummy clock cycles, which is the 
-only value that results in successfully reading correct data from the 
-flash.  I suspect the FPGA is doing the same at power up.
-
-> Set the 16-bit register value as b'1110 1110 xxxx 1111 where xxxx is the
-> dummy clock value. When the xxxx value is from 0001 to 1110, the dummy
-> clock value is from 1 to 14. When xxxx is 0000 or 1111, the dummy clock
-> value is at the default value, which is 8 for standard fast read (AS x1)
-> mode and 10 for extended quad input fast read (AS x4) mode.
-> """
->
-> AFAIU, it is stated that you can set the number of dummy cycle to either
-> 0000b or 1111b, the default value. There is no valid reason to use any
-> other value, like there is no valid reason to tune the number of dummy
-> clock cycles. Just keep the default settings, please!
-
-The default Micron setting simply does not work.
-
->
-> If we start to play changing the number of dummy cycles it would be real
-> mess to maintain.
-
-I completely understand the maintainance issue.
-
->
-> First, should we read the value to be used from some register or should
-> we force this value instead by writing that register ?
-> Some would prefer reading whereas other would prefer updating...
->
-> Moreover, the method to read or write the number of dummy cycles is not
-> standard and is manufacturer specific:
-
-Yes I get it that is manufacturer specific, and this would be another 
-example of yet a different manufacturer's approach.
-
->
-> - Micron uses 2 registers: the Volatile Configuration Register and the
-> Non-Volatile configuration Register.
->
-> - Macronix uses another register but doesn't store the number of dummy
-> cycles directly: instead this manufacturer uses codes. So we would have
-> to store tables mapping codes <-> number dummy clock cycles
->
-> - Spansion/Cypress also uses code tables and I already know that
-> depending on the memory part number the code is either 2bit or 4bit and
-> stored in different registers. Damned!
->
-> If I allow you to tune the number of dummy clock cycles for Micron
-> memory it would be fair that I allow other people to tune this number
-> for other memory manufacturers. However it would be a real pain to
-> maintain because there is no standard for that hence manufacturers just
-> do what they want and change things when they want. Far too
-> unpredictable, IMHO.
->
-> So to avoid a messy situation, the rule is simple: SPI-NOR memory MUST
-> be configured in their default factory settings when spi_nor_scan() is
-> called. Your memory has the very same JEDEC ID as some Micron memory,
-> then it should behave the exact same way: in this case the value for the
-> number of dummy clock cycles should be set to 0000b or 1111b in the NVCR
-> (and VCR too).
-
-I think this is crux of the problem.  The flash chip is essentially lying 
-about what kind of chip it is.  It says it is a Micron memory, but it 
-certainly is not behaving like a Micron chip.  I believe the purpose of 
-these EPCQ chips is somehow make it easier for the FPGA to configure 
-itself on power up, but it is doing it in a very non-standard and 
-non-maintainable way.  I believe the FPGA is reading dummy cycles from the
-NVCR on power up.  How else would it know how many dummy cycles to use?
-
-
-The good news is that these chips are on path to 
-end of life, and moving forward we will be using standard flash parts. 
-The bad news is that there are a lot of these chips already in the wild, 
-and I suspect more are in the pipeline.
-
-At this point I see no path forward to being able to upstream support for 
-these EPCQ chips.
-
->
->
->> These flash parts are generally used to configure Intel/Altera FPGAs
->> on power up.  These parts report a JEDEC id of the Micron part at the core,
->> but have a different number of dummy cycles than specified in the Micron
->> data sheet.  The number of required dummy cycles can be read from the
->> Non-Volatile Configuration register.
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> ---
->>  drivers/mtd/spi-nor/altera-asmip2.c | 31 ++++++++++++++++++++++++++-----
->>  include/linux/mtd/altera-asmip2.h   |  3 +++
->>  2 files changed, 29 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/mtd/spi-nor/altera-asmip2.c b/drivers/mtd/spi-nor/altera-asmip2.c
->> index a977765..d9cd807 100644
->> --- a/drivers/mtd/spi-nor/altera-asmip2.c
->> +++ b/drivers/mtd/spi-nor/altera-asmip2.c
->> @@ -40,6 +40,10 @@
->>  #define QSPI_POLL_TIMEOUT_US		10000000
->>  #define QSPI_POLL_INTERVAL_US		5
->>
->> +#define SPINOR_OP_RD_NVCFG		0xb5
->> +#define NVCFG_DUMMY_SFT			12
->> +#define NVCFG_DUMMY_MASK		0xf
->> +
->>  struct altera_asmip2 {
->>  	void __iomem *csr_base;
->>  	u32 num_flashes;
->> @@ -231,7 +235,8 @@ static void altera_asmip2_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
->>  }
->>
->>  static int altera_asmip2_setup_banks(struct device *dev,
->> -				      u32 bank, struct device_node *np)
->> +				     u32 bank, struct device_node *np,
->> +				     u32 flags)
->>  {
->>  	const struct spi_nor_hwcaps hwcaps = {
->>  		.mask = SNOR_HWCAPS_READ |
->> @@ -241,6 +246,7 @@ static int altera_asmip2_setup_banks(struct device *dev,
->>  	struct altera_asmip2 *q = dev_get_drvdata(dev);
->>  	struct altera_asmip2_flash *flash;
->>  	struct spi_nor *nor;
->> +	u16 nvcfg;
->>  	int ret = 0;
->>
->>  	if (bank > q->num_flashes - 1)
->> @@ -273,6 +279,20 @@ static int altera_asmip2_setup_banks(struct device *dev,
->>  		return ret;
->>  	}
->>
->> +	if (flags & ALTERA_ASMIP2_FLASH_FLG_RD_NVCFG) {
->> +		ret = altera_asmip2_read_reg(nor, SPINOR_OP_RD_NVCFG,
->> +		 			     (u8*)&nvcfg, sizeof(nvcfg));
->> +
->> +		if (ret) {
->> +			dev_err(nor->dev,
->> +				"failed to read NV Configuration register\n");
->> +			return ret;
->> +		}
->> +
->> +		nor->read_dummy = (nvcfg >> NVCFG_DUMMY_SFT) & NVCFG_DUMMY_MASK;
->> +		dev_info(nor->dev, "%s dummy %d\n", __func__, nor->read_dummy);
->> +	}
->> +
->
-> You have forgotten the special case for values 0000b and 1111b (default
-> settings). For those 2 values, the actual number of dummy clock cycles is:
-> - 0 for Read (03h/13h)
-> - 8 for Fast Read 1-1-1 (0Bh/0Ch)
-> - 8 for Fast Read 1-1-2 (3Bh/3Ch)
-> - 8 for Fast Read 1-2-2 (BBh/BCh)
-> - 8 for Fast Read 1-1-4 (6Bh/6Ch)
-> - 10 for Fast Read 1-4-4 (EBh/ECh)
->
-> Besides, the value read from the Non-Volatile Configuration Register is
-> the value loaded into the Volatile Configuration Register at power-up.
-> The actual number of dummy clock cycles to be used by Fast Read commands
-> should be read from the Volatile Configuration Register.
->
-> Anyway, this not the way to go.
->
-> Best regards,
->
-> Cyrille
->
->>  	ret =  mtd_device_register(&nor->mtd, NULL, 0);
->>
->>  	return ret;
->> @@ -308,7 +328,7 @@ static int altera_asmip2_create(struct device *dev, void __iomem *csr_base)
->>  }
->>
->>  static int altera_asmip2_add_bank(struct device *dev,
->> -			 u32 bank, struct device_node *np)
->> +			 u32 bank, struct device_node *np, u32 flags)
->>  {
->>  	struct altera_asmip2 *q = dev_get_drvdata(dev);
->>
->> @@ -317,7 +337,7 @@ static int altera_asmip2_add_bank(struct device *dev,
->>
->>  	q->num_flashes++;
->>
->> -	return altera_asmip2_setup_banks(dev, bank, np);
->> +	return altera_asmip2_setup_banks(dev, bank, np, flags);
->>  }
->>
->>  static int altera_asmip2_remove_banks(struct device *dev)
->> @@ -361,7 +381,8 @@ static int altera_asmip2_probe_with_pdata(struct platform_device *pdev,
->>  	}
->>
->>  	for (i = 0; i < qdata->num_chip_sel; i++) {
->> -		ret = altera_asmip2_add_bank(dev, i, NULL);
->> +		ret = altera_asmip2_add_bank(dev, i, NULL,
->> +					     qdata->flash_flags[i]);
->>  		if (ret) {
->>  			dev_err(dev, "failed to add qspi bank %d\n", ret);
->>  			break;
->> @@ -414,7 +435,7 @@ static int altera_asmip2_probe(struct platform_device *pdev)
->>  			goto error;
->>  		}
->>
->> -		if (altera_asmip2_add_bank(dev, bank, pp)) {
->> +		if (altera_asmip2_add_bank(dev, bank, pp, 0)) {
->>  			dev_err(dev, "failed to add bank %u\n", bank);
->>  			goto error;
->>  		}
->> diff --git a/include/linux/mtd/altera-asmip2.h b/include/linux/mtd/altera-asmip2.h
->> index 580c43c..185a9b2 100644
->> --- a/include/linux/mtd/altera-asmip2.h
->> +++ b/include/linux/mtd/altera-asmip2.h
->> @@ -16,9 +16,12 @@
->>  #define ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP 3
->>  #define ALTERA_ASMIP2_RESOURCE_SIZE 0x10
->>
->> +#define ALTERA_ASMIP2_FLASH_FLG_RD_NVCFG	BIT(0)
->> +
->>  struct altera_asmip2_plat_data {
->>  	void __iomem *csr_base;
->>  	u32 num_chip_sel;
->> +	u32 flash_flags[ALTERA_ASMIP2_MAX_NUM_FLASH_CHIP];
->>  };
->>
->>  #endif
->>
->
->
---8323329-231588532-1508179293=:19479--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+While the in-kernel sources are still the authoritative ones, you can
+at least get a feel for what an out-of-tree repo would feel like.
