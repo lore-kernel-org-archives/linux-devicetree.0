@@ -1,105 +1,55 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] mtd: powernv: Support MTD_NO_ERASE
-Date: Mon, 16 Oct 2017 17:55:17 +0200
-Message-ID: <20171016175517.264e710a@bbrezillon>
-References: <20170905202339.20732-1-wak@google.com>
-        <20170921095930.4b473f91@bbrezillon>
-        <CAPnigKmBujCoKdtXwnK6YsU=YvXM+MaDvDvKpUXEVgHzOC-VEw@mail.gmail.com>
-        <8760cbv090.fsf@concordia.ellerman.id.au>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCHv2 0/7] Add support for USB OTG on STM32F7
+Date: Mon, 16 Oct 2017 18:16:26 +0200
+Message-ID: <f80312bc-e9bd-2216-404c-016a6ad690a3@st.com>
+References: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8760cbv090.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1503930018-536-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, John Youn <johnyoun@synopsys.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
-
-Sorry for the late reply.
-
-On Fri, 22 Sep 2017 14:13:47 +1000
-Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
-
-> William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> writes:
-> 
-> > +Cyril Bur and
-> >
-> > Not sure what you mean by mainline, but the commit is in the master branch
-> > at
-> > https://github.com/open-power/skiboot/commit/ba99af9b149d02438347b055e6e7d6bd15e33551  
-> 
-> I suspect Boris missed that you were referring to a skiboot commit and
-> looked in Linux?
-> 
-> > I'm unsure about the documentation of the properties as I'm not really the
-> > maintainer of any of the code on either side. I just added this DT property
-> > for plumbing through the NO_ERASE flag. I added Cyril and Michael as they
-> > both work closely with this driver and could comment better than I could.
-> >
-> > - William
-> >
-> > On Thu, Sep 21, 2017 at 12:59 AM Boris Brezillon <
-> > boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >  
-> >> +the DT maintainers
-> >>
-> >> On Tue,  5 Sep 2017 13:23:39 -0700
-> >> "William A. Kennington III" <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> >>  
-> >> > As of skiboot@ba99af9b149d02438347b055e6e7d6bd15e33551, we now support  
-> >>
-> >> I didn't find this commit in mainline.
-> >>  
-> >> > adding a device tree entry which marks a flash device as not needing
-> >> > erase. This patch adds support for setting MTD_NO_ERASE on powernvflash
-> >> > devices which have the property no-erase.
-> >> >
-> >> > Signed-off-by: William A. Kennington III <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> >> > ---
-> >> >  drivers/mtd/devices/powernv_flash.c | 2 ++
-> >> >  1 file changed, 2 insertions(+)
-> >> >
-> >> > diff --git a/drivers/mtd/devices/powernv_flash.c  
-> >> b/drivers/mtd/devices/powernv_flash.c  
-> >> > index f5396f26ddb4..fab9f9121b4c 100644
-> >> > --- a/drivers/mtd/devices/powernv_flash.c
-> >> > +++ b/drivers/mtd/devices/powernv_flash.c
-> >> > @@ -196,6 +196,8 @@ static int powernv_flash_set_driver_info(struct  
-> >> device *dev,  
-> >> >       mtd->name = of_get_property(dev->of_node, "name", NULL);
-> >> >       mtd->type = MTD_NORFLASH;
-> >> >       mtd->flags = MTD_WRITEABLE;
-> >> > +     if (of_property_read_bool(dev->of_node, "no-erase"))
-> >> > +             mtd->flags |= MTD_NO_ERASE;  
-> >>
-> >> I don't see this property document in a DT binding doc, which is
-> >> mandatory. Actually, there's no DT bindings doc at all for the
-> >> 'ibm,opal-flash' device in mainline, is this normal?  
-> 
-> The binding doc is here:
-> 
->   https://github.com/open-power/skiboot/blob/master/doc/device-tree/ibm%2Copal/flash.rst
-> 
-> But that property is not documented :(
-
-Would be good to update the doc then :-).
-
-> 
-> We have some of the skiboot bindings also in the kernel tree, but there
-> was talk of moving all the binding docs *out* of the kernel, so we never
-> made an effort to put more in. I've lost track of whether there are
-> still plans to move the binding docs out or not.
-
-
-Okay, I don't know what's the policy for external DT bindings doc, but
-maybe you can add a file in Document/devicetree/bindings/mtd pointing
-to the skiboot doc.
-
-Rob, what's your opinion?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW3DqWxpZSwKCk9uIDA4LzI4LzIwMTcgMDQ6MjAgUE0sIEFtZWxpZSBEZWxhdW5heSB3cm90
+ZToKPiBUaGUgU1RNMzJGNyBNQ1UgZmFtaWx5IGVtYmVkcyB0d28gRFdDMiBVU0IgT1RHIGNvcmVz
+LiBPbmUgY29yZSBpcyBVU0IKPiBPVEcgRlMgYW5kIHRoZSBvdGhlciBpcyBVU0IgT1RHIEhTLiBU
+aGUgVVNCIEZTIGNvcmUgb25seSB3b3JrcyB3aXRoIGl0cwo+IGludGVybmFsIHBoeSB3aGlsc3Qg
+dGhlIFVTQiBIUyBjb3JlIGNhbiB3b3JrIGluIEhTIHdpdGggZXh0ZXJuYWwgVUxQSSBwaHkKPiBv
+ciBpbiBGUy9MUyB3aXRoIHRoZSBvbi1jaGlwIEZTIHBoeS4KPiAKPiBBbWVsaWUgRGVsYXVuYXkg
+KDcpOgo+ICAgIGR0LWJpbmRpbmdzOiB1c2I6IERvY3VtZW50IHRoZSBTVE0zMkY3IERXQzIgVVNC
+IE9URyBIUyBjb3JlIGJpbmRpbmcKPiAgICB1c2I6IGR3YzI6IGFkZCBzdXBwb3J0IGZvciBTVE0z
+MkY3IFVTQiBPVEcgSFMKPiAgICBBUk06IGR0czogc3RtMzI6IEFkZCBVU0IgSFMgc3VwcG9ydCBm
+b3IgU1RNMzJGNzQ2IE1DVQo+ICAgIEFSTTogZHRzOiBzdG0zMjogRW5hYmxlIFVTQiBIUyBvbiBz
+dG0zMjc0NmctZXZhbAo+ICAgIEFSTTogZHRzOiBzdG0zMjogRW5hYmxlIFVTQiBIUyBvbiBzdG0z
+MmY3NDYtZGlzY28KPiAgICBBUk06IGR0czogc3RtMzI6IEFkZCBVU0IgRlMgc3VwcG9ydCBmb3Ig
+U1RNMzJGNzQ2IE1DVQo+ICAgIEFSTTogZHRzOiBzdG0zMjogRW5hYmxlIFVTQiBGUyBvbiBzdG0z
+MmY3NDYtZGlzY28KPiAKPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2Iv
+ZHdjMi50eHQgfCAgMiArCj4gICBhcmNoL2FybS9ib290L2R0cy9zdG0zMjc0NmctZXZhbC5kdHMg
+ICAgICAgICAgIHwgMTYgKysrKysrCj4gICBhcmNoL2FybS9ib290L2R0cy9zdG0zMmY3NDYtZGlz
+Y28uZHRzICAgICAgICAgIHwgMzAgKysrKysrKysrKwo+ICAgYXJjaC9hcm0vYm9vdC9kdHMvc3Rt
+MzJmNzQ2LmR0c2kgICAgICAgICAgICAgICB8IDgwICsrKysrKysrKysrKysrKysrKysrKysrKysr
+Cj4gICBkcml2ZXJzL3VzYi9kd2MyL3BhcmFtcy5jICAgICAgICAgICAgICAgICAgICAgIHwgMTEg
+KysrKwo+ICAgNSBmaWxlcyBjaGFuZ2VkLCAxMzkgaW5zZXJ0aW9ucygrKQo+IAoKUGF0Y2hlcyAz
+IHRvIDcgYXBwbGllZCBvbiBzdG0zMi1kdC1mb3ItdjQuMTUgYnJhbmNoLgpDdXJyZW50bHkgVVNC
+IHN0YWNrIGlzIG5vdCBlbmFibGVkIGJ5IGRlZmF1bHQgKGFuZCB3aWxsIG5vdCBiZSkuIElmIHlv
+dSAKcGxhbiB0byB1c2UgVVNCIGRvbid0IGZvcmdldCB0byBjcmVhdGUgYSByZXNlcnZlZCBtZW1v
+cnkgcmVnaW9uIGZvciBETUEgCnBvb2wgKGFzIERNQSBhbmQgY2FjaGVzIGFyZSBub3QgZnJpZW5k
+cyBvbiBjb3J0ZXgtTTcpIGluIGRldmljZXRyZWUuClJlc2VydmVkIG1lbW9yeSByZWdpb24gZm9y
+IERNQSBwb29sIHN1cHBvcnQgd2lsbCBiZSBhZGRlZCBpbiBzdG0zMkY3IGFuZCAKc3RtMzJINyBk
+ZXZpY2V0cmVlIGFzIHNvb24gc2VyaWVzICJBUk06IE5PTU1VOiBNUFUgdXBkYXRlcyIgZnJvbSAK
+VmxhZGltaXIgTXVyemluIHdpbGwgYmUgbWVyZ2VkLgoKUmVnYXJkcwpBbGV4CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
