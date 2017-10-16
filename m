@@ -1,82 +1,63 @@
-From: Bernd Edlinger <bernd.edlinger-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCHv3 1/2] Add device tree bindings for Altera FPGA Manager
- GPIO
-Date: Mon, 16 Oct 2017 17:04:03 +0000
-Message-ID: <AM5PR0701MB2657E31C99D3AAA873F12B1DE44F0@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-References: <AM5PR0701MB2657FDDE2E0CE80D0EECB4B3E4770@AM5PR0701MB2657.eurprd07.prod.outlook.com>
- <20171013200609.x6cjol7a57eypohl@rob-hp-laptop>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 07/11] dmaengine: sun6i: Retrieve channel count/max
+ request from devicetree
+Date: Mon, 16 Oct 2017 22:45:23 +0530
+Message-ID: <20171016171523.GR30097@localhost>
+References: <20170928014928.2272-1-stefan.bruens@rwth-aachen.de>
+ <6277478a-601a-48b0-8e1f-1d309049d4f4@rwthex-w2-a.rwth-ad.de>
+ <20171016070217.GO30097@localhost>
+ <1918888.BSE68NRsHe@sbruens-linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013200609.x6cjol7a57eypohl@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <F489DE346625EC41AE126060D5C02AA1-MxyWWZKIsxacE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1918888.BSE68NRsHe@sbruens-linux>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?iso-8859-1?B?QnL8bnMs?= Stefan <Stefan.Bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMTMvMTcgMjI6MDYsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBTdW4sIE9jdCAwOCwg
-MjAxNyBhdCAxMTozMDoyN0FNICswMDAwLCBCZXJuZCBFZGxpbmdlciB3cm90ZToNCj4+IFRoZXNl
-IGFyZSB0aGUgYmluZGluZ3MgZm9yIHRoZSBncGlvLWFsdGVyYS1mcGdhbWdyIGRyaXZlci4NCj4g
-DQo+IEJpbmRpbmdzIGFyZSBmb3IgaC93IGRldmljZXMsIG5vdCBkcml2ZXJzLg0KPiANCg0KSSBz
-aG91bGQgZHJvcCB0aGF0IHNlbnRlbmNlIHRoZW4/DQpUaGUgZmlyc3QgbGluZSBpcyBhbHJlYWR5
-Og0KIkFkZCBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgQWx0ZXJhIEZQR0EgTWFuYWdlciBHUElP
-Ig0KDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQmVybmQgRWRsaW5nZXIgPGJlcm5kLmVkbGluZ2Vy
-QGhvdG1haWwuZGU+DQo+PiAtLS0NCj4+ICAgLi4uL2JpbmRpbmdzL2dwaW8vZ3Bpby1hbHRlcmEt
-ZnBnYW1nci50eHQgICAgICAgICAgfCA0NSArKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIDEg
-ZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLWFsdGVyYS1mcGdhbWdy
-LnR4dA0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZ3Bpby9ncGlvLWFsdGVyYS1mcGdhbWdyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncGlvL2dwaW8tYWx0ZXJhLWZwZ2FtZ3IudHh0DQo+PiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uN2U5NDM0Zg0KPj4gLS0tIC9kZXYvbnVsbA0KPj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby1hbHRlcmEt
-ZnBnYW1nci50eHQNCj4+IEBAIC0wLDAgKzEsNDUgQEANCj4+ICtBbHRlcmEgRlBHQSBNYW5hZ2Vy
-IEdQSU8gY29udHJvbGxlciBiaW5kaW5ncw0KPj4gKw0KPj4gK1JlcXVpcmVkIGNvbnRyb2xsZXIg
-cHJvcGVydGllczoNCj4+ICstICNhZGRyZXNzLWNlbGxzIDogU2hvdWxkIGJlIDENCj4+ICstICNz
-aXplLWNlbGxzIDogU2hvdWxkIGJlIDANCj4+ICstIGNvbXBhdGlibGU6DQo+PiArICAtICJhbHRy
-LGZwZ2FtZ3ItZ3BpbyINCj4gDQo+IFNlZW1zIGtpbmQgb2YgZ2VuZXJpYy4gT25seSAxIGltcGxl
-bWVudGF0aW9uIG9mIGgvdz8NCg0KSSBndWVzcywgdGhlcmUgYXJlIGxvdHMgb2YgQWx0ZXJhIGRl
-dmljZXMgd2l0aCBzaW1pbGFyIHBlcmlwaGVyYWxzLg0KDQo+IA0KPj4gKy0gcmVnOiBQaHlzaWNh
-bCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidzIHJlZ2lzdGVycy4N
-Cj4+ICstIHN0YXR1cyA6ICJva2F5IiBvciAiZGlzYWJsZWQiLg0KPiANCj4gTm8gbmVlZCB0byBk
-b2N1bWVudCBzdGF0dXMuDQo+IA0KDQpPaywgd2lsbCByZW1vdmUgaGVyZSBhbmQgaW4gdGhlIEV4
-YW1wbGUuDQoNCj4+ICsNCj4+ICtUaGUgRlBHQSBNYW5hZ2VyIGhhcyB0d28gMzItYml0IHBvcnRz
-LCBvbmUgZm9yIGlucHV0IGFuZCBvbmUgZm9yIG91dHB1dC4NCj4gDQo+IFRoaXMgc291bmRzIG1v
-cmUgbGlrZSBhIHN5c3RlbSBjb250cm9sL3N0YXR1cyByZWdpc3RlciB0byB0aWUgb2ZmIGFsbA0K
-PiB0aGUgbGVmdG92ZXIgc2lnbmFscyB0aGFuIGEgR1BJTyBibG9jay4gTGludXMgbGlrZWx5IGhh
-cyBzb21lIG9waW5pb25zDQo+IG9uIHRoYXQuDQo+IA0KDQpJIGRvbid0IHRoaW5rIHNvLCB0aGUg
-b25seSBkaWZmZXJlbmNlIGlzIHRoYXQgdGhlIHNpZ25hbHMgYXJlIG5vdCBhdCB0aGUNCmV4dGVy
-bmFsIGJvdW5kYXJ5LCBpbnN0ZWFkIHRoZXkgY29ubmVjdCBpbnRlcm5hbGx5IHRoZSBGUEdBIGxv
-Z2ljLg0KV2hhdCB0aGVzZSBzaWduYWxzIGNvbnRyb2wgZGVwZW5kcyBlbnRpcmVseSBvbiB0aGUg
-dXNlcidzIGxvZ2ljIGRlc2lnbi4NCg0KPj4gKw0KPj4gK1BvcnQgcHJvcGVydGllczoNCj4+ICst
-IGNvbXBhdGlibGU6DQo+PiArICAtICJhbHRyLGZwZ2FtZ3ItZ3Bpby1vdXRwdXQiDQo+PiArICAt
-ICJhbHRyLGZwZ2FtZ3ItZ3Bpby1pbnB1dCINCj4+ICstICNncGlvLWNlbGxzIDogU2hvdWxkIGJl
-IDINCj4+ICsgIC0gVGhlIGZpcnN0IGNlbGwgaXMgdGhlIGdwaW8gb2Zmc2V0IG51bWJlci4NCj4+
-ICsgIC0gVGhlIHNlY29uZCBjZWxsIGlzIHJlc2VydmVkIGFuZCBpcyBjdXJyZW50bHkgdW51c2Vk
-Lg0KPj4gKy0gZ3Bpby1jb250cm9sbGVyIDogTWFya3MgdGhlIGRldmljZSBub2RlIGFzIGEgR1BJ
-TyBjb250cm9sbGVyLg0KPj4gKy0gcmVnIDogUG9ydCBudW1iZXIsIDAgZm9yIG91dHB1dCwgMSBm
-b3IgaW5wdXQuDQo+PiArDQo+PiArRXhhbXBsZToNCj4+ICsNCj4+ICtncGlvMzogZ3Bpb0BmZjcw
-NjAxMCB7DQo+PiArICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+ICsgICNzaXplLWNlbGxzID0g
-PDA+Ow0KPj4gKyAgY29tcGF0aWJsZSA9ICJhbHRyLGZwZ2FtZ3ItZ3BpbyI7DQo+PiArICByZWcg
-PSA8MHhmZjcwNjAxMCAweDg+Ow0KPj4gKyAgc3RhdHVzID0gIm9rYXkiOw0KPj4gKw0KPj4gKyAg
-cG9ydGQ6IGdwaW8tY29udHJvbGxlckAwIHsNCj4+ICsgICAgY29tcGF0aWJsZSA9ICJhbHRyLGZw
-Z2FtZ3ItZ3Bpby1vdXRwdXQiOw0KPj4gKyAgICBncGlvLWNvbnRyb2xsZXI7DQo+PiArICAgICNn
-cGlvLWNlbGxzID0gPDI+Ow0KPj4gKyAgICByZWcgPSA8MD47DQo+PiArICB9Ow0KPj4gKw0KPj4g
-KyAgcG9ydGU6IGdwaW8tY29udHJvbGxlckAxIHsNCj4+ICsgICAgY29tcGF0aWJsZSA9ICJhbHRy
-LGZwZ2FtZ3ItZ3Bpby1pbnB1dCI7DQo+PiArICAgIGdwaW8tY29udHJvbGxlcjsNCj4+ICsgICAg
-I2dwaW8tY2VsbHMgPSA8Mj47DQo+PiArICAgIHJlZyA9IDwxPjsNCj4+ICsgIH07DQo+IA0KPiBU
-aGVzZSBjaGlsZCBub2RlcyBkb24ndCByZWFsbHkgYWRkIGFueXRoaW5nLiBDYW4ndCB5b3UganVz
-dCBkZWZpbmUgdGhlDQo+IGNvbnRyb2xsZXIgaGFzIDY0IGxpbmVzIHdpdGggdGhlIDFzdCAzMiBi
-ZWluZyBvdXRwdXRzLg0KPiANCg0KT3RoZXIgZGV2aWNlIGJpbmRpbmdzIGNhbiByZWZlciB0byB0
-aGUgc2luZ2xlIGJpdHMgaW4gZWFjaCBwb3J0DQphcyAiPCZwb3J0ZCAxIDA+IiBvciAiPCZwb3J0
-ZSAyIDA+IiB3aGljaCBpcyBtb3JlIG1uZW1vbmljLA0KYnV0IGl0IGlzIHBvc3NpYmxlIHRoYXQg
-dGhpcyBtYWtlcyBubyBkaWZmZXJlbmNlIHRvIHRoZSB1c2VyIG1vZGUuDQoNClRoZSBiaW5kaW5n
-cyBhcmUgc3RydWN0dXJlZCBzaW1pbGFyIHRvIHdoYXQncyBpbg0KRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2dwaW8vc25wcy1kd2FwYi1ncGlvLnR4dA0Kd2hlcmUgdGhlIGJpbmRp
-bmdzIGFyZSBzdHJ1Y3R1cmVkIGluIHRoZSBzYW1lIHdheS4NCg0KDQpCZXJuZC4NCg==
+On Mon, Oct 16, 2017 at 02:21:02PM +0000, Brüns, Stefan wrote:
+> On Montag, 16. Oktober 2017 09:02:17 CEST Vinod Koul wrote:
+> > On Thu, Sep 28, 2017 at 03:49:24AM +0200, Stefan Brüns wrote:
+> > > To avoid introduction of a new compatible for each small SoC/DMA
+> > > controller
+> > > variation, move the definition of the channel count to the devicetree.
+> > > 
+> > > The number of vchans is no longer explicit, but limited by the highest
+> > > port/DMA request number. The result is a slight overallocation for SoCs
+> > > with a sparse port mapping.
+> > 
+> > This doesnt apply for me, please check
+> 
+> The hunk below fails after https://git.kernel.org/pub/scm/linux/kernel/git/
+> vkoul/slave-dma.git/commit/?h=topic/
+> sun&id=8f3b00347bf075fb457f90ce76573615f567e7bc
+> , which removed the "const struct of_device_id *device;" declaration.
+> 
+> 
+> > diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> > index 7fce976a13d8..b5906da2a975 100644
+> > --- a/drivers/dma/sun6i-dma.c
+> > +++ b/drivers/dma/sun6i-dma.c
+> > @@ -42,6 +42,9 @@
+> ..
+> > @@ -1155,6 +1159,7 @@ MODULE_DEVICE_TABLE(of, sun6i_dma_match);
+> >  static int sun6i_dma_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct of_device_id *device;
+> > +	struct device_node *np = pdev->dev.of_node;
+> >  	struct sun6i_dma_dev *sdc;
+> >  	struct resource *res;
+> >  	int ret, i;
+> 
+> Can you fix this up, or should I send a new version of this patch?
+
+rebased one please
+
+-- 
+~Vinod
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
