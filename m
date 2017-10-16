@@ -1,74 +1,56 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 1/4] ARM: dts: iwg22d: Use /dev/ttySC3 as debug console
-Date: Mon, 16 Oct 2017 08:34:35 +0000
-Message-ID: <KL1PR06MB1702D289BE9642F285CF9ED1B84F0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1507899796-7941-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1507899796-7941-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 3/4] ARM: dts: imx28-tx28: fix interrupt flags and use
+ interrupts-extended property
+Date: Mon, 16 Oct 2017 10:56:32 +0200
+Message-ID: <20171016105632.709e653c@karo-electronics.de>
+References: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
+        <1507719939-27250-4-git-send-email-LW@KARO-electronics.de>
+        <20171016071726.gyzvalxzk4o3jsuz@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507899796-7941-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016071726.gyzvalxzk4o3jsuz@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Looks like the chosen node "stdout-path =3D "serial0:115200n8";" is not upd=
-ated with this patch.
-
-So either drop the patch or fix the chosen node.
-
-Regards,
-Biju
-
-> -----Original Message-----
-> From: Fabrizio Castro [mailto:fabrizio.castro@bp.renesas.com]
-> Sent: 13 October 2017 14:03
-> To: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Russell King <linux@armlinux.org.uk>
-> Cc: Simon Horman <horms@verge.net.au>; Magnus Damm
-> <magnus.damm@gmail.com>; Geert Uytterhoeven <geert@linux-m68k.org>;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> renesas-soc@vger.kernel.org; Chris Paterson <Chris.Paterson2@renesas.com>=
-;
-> Biju Das <biju.das@bp.renesas.com>; Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com>; Chris Paterson
-> <Chris.Paterson2@renesas.com>
-> Subject: [PATCH 1/4] ARM: dts: iwg22d: Use /dev/ttySC3 as debug console
+On Mon, 16 Oct 2017 09:17:26 +0200 Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Wed, Oct 11, 2017 at 01:05:38PM +0200, Lothar Waßmann wrote:
+> > diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+> > index 211e67d..3c852f7 100644
+> > --- a/arch/arm/boot/dts/imx28-tx28.dts
+> > +++ b/arch/arm/boot/dts/imx28-tx28.dts
+> > @@ -328,8 +328,7 @@
+> >  		reg = <0x20>;
+> >  		pinctrl-names = "default";
+> >  		pinctrl-0 = <&tx28_pca9554_pins>;
+> > -		interrupt-parent = <&gpio3>;
+> > -		interrupts = <28 0>;
+> > +		interrupts-extended = <&gpio3 28 IRQ_TYPE_NONE>;
+> >  		gpio-controller;
+> >  		#gpio-cells = <2>;
+> >  		interrupt-controller;
+> 
+> While interrupts-extended looks nice,
+> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> has:
+> 
+> 	"interrupts-extended" should only be used when a device has
+> 	multiple interrupt parents.
+> 
+> If this is still true, this patch is wrong.
 >
-> The BSP release from iWave uses /dev/ttySC3 as debug console, this patch
-> renames the alias accordingly for compatibility.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> ---
->  arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> index 52153ec..edda4f1 100644
-> --- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> +++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-> @@ -16,7 +16,7 @@
->  compatible =3D "iwave,g22d", "iwave,g22m", "renesas,r8a7745";
->
->  aliases {
-> -serial0 =3D &scif4;
-> +serial3 =3D &scif4;
->  ethernet0 =3D &avb;
->  };
->
-> --
-> 2.7.4
+Thanks for the hint. It really helps to read the documentation
+sometimes, rahter than relying on existing code only...
+
+A quick check shows, that more than 100 of the 130 uses of
+interrupts-extended are wrong. :(
 
 
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Lothar Waßmann
