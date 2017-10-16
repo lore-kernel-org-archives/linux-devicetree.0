@@ -1,27 +1,71 @@
-From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Subject: Re: [PATCH v4 02/12] [media] cxd2880-spi: Add support for CXD2880 SPI
- interface
-Date: Mon, 16 Oct 2017 10:35:57 +0900
-Message-ID: <3b9b0037-27bf-02e3-5dc5-367b2cbd982e@sony.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
- <20171013055928.21132-1-Yasunari.Takiguchi@sony.com>
- <CAJbz7-0T=LUSTr59kPDk4kVkHLh5XEeNEkA2T=hG=P_fXrrU=g@mail.gmail.com>
- <eab5bd7b-d909-343d-7078-842e3d0d9ab9@sony.com>
- <CAJbz7-1Ad6L60KCmwtFDPzYH-vcBnzT5vDf-63YMRbyFQRDk+g@mail.gmail.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
+Subject: [PATCH v6 00/12] mmc: mediatek: add support of mt2701/mt2712
+Date: Mon, 16 Oct 2017 09:46:27 +0800
+Message-ID: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJbz7-1Ad6L60KCmwtFDPzYH-vcBnzT5vDf-63YMRbyFQRDk+g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Honza_Petrou=c5=a1?= <jpetrous@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, yasunari.takiguchi@sony.com
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chaotian Jing <chaotian.jing@mediatek.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Honza,
+  This serial of patches are adding support of mt2701/mt2712.
+there are many changes and HW improvement between mt8173 and
+mt2701/mt2712, below is a list of these changes:
+  1. enlarge CLKDIV bits from 8 to 12
+  2. remove the PAD_TUNE register and add a new PAD_TUNE0 register
+  3. add data sync and async fifo feature
+  4. add busy_check feature
+  5. add stop_clk fix
+  6. add enhance_rx support
+  7. add a seperate CG of source clock
 
-> BTW, is there any device, preferable some devboard with this silicon
-> on the market?
-There is not devboard at this moment, but we are promoting this device.
+  mt2712 supports full of these features, mt2701 supports part of it, and
+add a "mediatek,latch-ck" to work-around as it do not support stop-clk fix.
 
-Takiguchi
+Note: As Pinctrl/CCF are not ready now, so that current patches do not
+include DTS part.
+
+Changed vs v5:
+  based on Rob's comments, explain why MT8173 no longer compatible with
+driver that supports "mediatek,mt8135-mmc", add more clearly description
+of "mediatek,latch-ck".
+
+Changed vs v4:
+  based on Julien's comment, change the "bool pad_tune0" to "u32 pad_tune_reg".
+
+Changed vs v3:
+  based on Ulf's comments, make the bindings change to be the first patch.
+
+Changed vs v2:
+  based on Matthias's comments, merge binding file changes to one patch,
+add "hs400_tune" flag in dev_comp.
+
+Changed vs v1:
+  based on Ulf/Rob/Matthias's comments of DTS binding file, make the binding
+file clearly and fix probe issue.
+
+
+Chaotian Jing (12):
+  mmc: dt-bindings: Add reg/source_cg/latch-ck for Mediatek MMC bindings
+  mmc: mediatek: add support of mt2701/mt2712
+  arm64: dts: mt8173: remove "mediatek,mt8135-mmc" from mmc nodes
+  mmc: mediatek: make hs400_tune_response only for mt8173
+  mmc: mediatek: add pad_tune0 support
+  mmc: mediatek: add async fifo and data tune support
+  mmc: mediatek: add busy_check support
+  mmc: mediatek: add stop_clk fix and enhance_rx support
+  mmc: mediatek: add support of source_cg clock
+  mmc: mediatek: add latch-ck support
+  mmc: mediatek: improve eMMC hs400 mode read performance
+  mmc: mediatek: perfer to use rise edge latching for cmd line
+
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt |  18 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi         |  12 +-
+ drivers/mmc/host/mtk-sd.c                        | 283 ++++++++++++++++++++---
+ 3 files changed, 265 insertions(+), 48 deletions(-)
+
+-- 
+1.8.1.1.dirty
+
