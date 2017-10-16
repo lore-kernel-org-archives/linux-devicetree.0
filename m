@@ -1,66 +1,80 @@
-From: "Wang, Alan 1. (NSB - CN/Hangzhou)" <alan.1.wang@nokia-sbell.com>
-Subject: RE: [PATCH] of: overlay: fix memory leak related to duplicated
- property
-Date: Mon, 16 Oct 2017 02:35:24 +0000
-Message-ID: <VI1PR07MB342187128B48F66C464401A2A24F0@VI1PR07MB3421.eurprd07.prod.outlook.com>
-References: <1507859591-2337-1-git-send-email-alan.1.wang@nokia-sbell.com>
- <1507864056-52089-1-git-send-email-alan.1.wang@nokia-sbell.com>
- <59E13876.5020801@gmail.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 3/3] arm64: dts: realtek: Add MeLE V9
+Date: Mon, 16 Oct 2017 05:01:53 +0200
+Message-ID: <20171016030153.11078-4-afaerber@suse.de>
+References: <20171016030153.11078-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59E13876.5020801@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171016030153.11078-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bizon <bizongod-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, meleservice-asvZZsi/7w8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssDQoNCkNvdWxkIEkgY29udGludWUgdG8gc2VuZCBteSBwYXRjaCBzaW5jZSBjb25m
-bGljdCB3aXRoIHlvdXIgcGF0Y2hlcz8gT3IgSSBoYXZlIHRvIHdhaXQgZm9yIHlvdXIgcGF0Y2hl
-cyBtZXJnZWQ/IFRoYW5rcy4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEZy
-YW5rIFJvd2FuZCBbbWFpbHRvOmZyb3dhbmQubGlzdEBnbWFpbC5jb21dIA0KU2VudDogU2F0dXJk
-YXksIE9jdG9iZXIgMTQsIDIwMTcgNjowNSBBTQ0KVG86IFdhbmcsIEFsYW4gMS4gKE5TQiAtIENO
-L0hhbmd6aG91KSA8YWxhbi4xLndhbmdAbm9raWEtc2JlbGwuY29tPjsgUGFudGVsaXMgQW50b25p
-b3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0
-QGtlcm5lbC5vcmc+DQpDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0hdIG9mOiBvdmVybGF5OiBmaXgg
-bWVtb3J5IGxlYWsgcmVsYXRlZCB0byBkdXBsaWNhdGVkIHByb3BlcnR5DQoNCkhpIFJvYiwNCg0K
-T24gMTAvMTIvMTcgMjA6MDcsIExpeGluIFdhbmcgd3JvdGU6DQo+IEZyb206IGFsYXdhbmcgPGFs
-YW4uMS53YW5nQG5va2lhLXNiZWxsLmNvbT4NCj4gDQo+IEhlbGxvLA0KPiANCj4gU29ycnkgSXQg
-d2FzIG15IGZhdWx0IGluIGxhc3QgZW1haWwgdGhhdCB3cm90ZSB0aGUgd3Jvbmcgc3ViamVjdCBh
-bmQgc2lnbiBvZmYgbmFtZS4NCj4gQ29ycmVjdCB0aGVtIHRoaXMgdGltZS4NCj4gVGhhbmtzDQo+
-IA0KPiBGdW5jdGlvbiBvZl9jaGFuZ2VzZXRfYWRkX3Byb3BlcnR5IG9yIG9mX2NoYW5nZXNldF91
-cGRhdGVfcHJvcGVydHkgbWF5IA0KPiBmYWlscy4gSW4gdGhpcyBjYXNlIHRoZSBwcm9wZXJ0eSBq
-dXN0IGFsbG9jYXRlZCBpcyBuZXZlciBkZWFsbG9jYXRlZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
-IExpeGluIFdhbmcgPGFsYW4uMS53YW5nQG5va2lhLXNiZWxsLmNvbT4NCj4gLS0tDQo+ICBkcml2
-ZXJzL29mL292ZXJsYXkuYyB8IDE1ICsrKysrKysrKysrLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDExIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9vZi9vdmVybGF5LmMgYi9kcml2ZXJzL29mL292ZXJsYXkuYyBpbmRleCANCj4gOGVjZmVl
-My4uYWYzYjlhMSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9vZi9vdmVybGF5LmMNCj4gKysrIGIv
-ZHJpdmVycy9vZi9vdmVybGF5LmMNCj4gQEAgLTE2Miw2ICsxNjIsNyBAQCBzdGF0aWMgaW50IG9m
-X292ZXJsYXlfYXBwbHlfc2luZ2xlX3Byb3BlcnR5KHN0cnVjdCBvZl9vdmVybGF5ICpvdiwNCj4g
-IAkJYm9vbCBpc19zeW1ib2xzX25vZGUpDQo+ICB7DQo+ICAJc3RydWN0IHByb3BlcnR5ICpwcm9w
-biA9IE5VTEwsICp0cHJvcDsNCj4gKwlpbnQgcmV0ID0gMDsNCj4gIA0KPiAgCS8qIE5PVEU6IE11
-bHRpcGxlIGNoYW5nZXMgb2Ygc2luZ2xlIHByb3BlcnRpZXMgbm90IHN1cHBvcnRlZCAqLw0KPiAg
-CXRwcm9wID0gb2ZfZmluZF9wcm9wZXJ0eSh0YXJnZXQsIHByb3AtPm5hbWUsIE5VTEwpOyBAQCAt
-MTg2LDEwIA0KPiArMTg3LDE2IEBAIHN0YXRpYyBpbnQgb2Zfb3ZlcmxheV9hcHBseV9zaW5nbGVf
-cHJvcGVydHkoc3RydWN0IA0KPiBvZl9vdmVybGF5ICpvdiwNCj4gIA0KPiAgCS8qIG5vdCBmb3Vu
-ZD8gYWRkICovDQo+ICAJaWYgKHRwcm9wID09IE5VTEwpDQo+IC0JCXJldHVybiBvZl9jaGFuZ2Vz
-ZXRfYWRkX3Byb3BlcnR5KCZvdi0+Y3NldCwgdGFyZ2V0LCBwcm9wbik7DQo+IC0NCj4gLQkvKiBm
-b3VuZD8gdXBkYXRlICovDQo+IC0JcmV0dXJuIG9mX2NoYW5nZXNldF91cGRhdGVfcHJvcGVydHko
-Jm92LT5jc2V0LCB0YXJnZXQsIHByb3BuKTsNCj4gKwkJcmV0ID0gb2ZfY2hhbmdlc2V0X2FkZF9w
-cm9wZXJ0eSgmb3YtPmNzZXQsIHRhcmdldCwgcHJvcG4pOw0KPiArCWVsc2UgLyogZm91bmQ/IHVw
-ZGF0ZSAqLw0KPiArCQlyZXQgPSBvZl9jaGFuZ2VzZXRfdXBkYXRlX3Byb3BlcnR5KCZvdi0+Y3Nl
-dCwgdGFyZ2V0LCBwcm9wbik7DQo+ICsNCj4gKwlpZiAocmV0KSB7DQo+ICsJCWtmcmVlKHByb3Bu
-LT5uYW1lKTsNCj4gKwkJa2ZyZWUocHJvcG4tPnZhbHVlKTsNCj4gKwkJa2ZyZWUocHJvcG4pOw0K
-PiArCX0NCj4gKwlyZXR1cm4gcmV0Ow0KPiAgfQ0KPiAgDQo+ICBzdGF0aWMgaW50IG9mX292ZXJs
-YXlfYXBwbHlfc2luZ2xlX2RldmljZV9ub2RlKHN0cnVjdCBvZl9vdmVybGF5ICpvdiwNCj4gDQoN
-Ckp1c3QgYSBoZWFkcyB1cC4NCg0KVGhpcyB3aWxsIGNvbmZsaWN0IHdpdGggbXkgcGF0Y2ggc2Vy
-aWVzICJbUEFUQ0ggMDAvMTJdIG9mOiBvdmVybGF5OiBjbGVhbiB1cCBkZXZpY2UgdHJlZSBvdmVy
-bGF5IGNvZGUiIFsxXS4gIFRoZSBpc3N1ZSB0aGF0IExpeGluIGhhcyBpZGVudGlmaWVkIHdpbGwg
-c3RpbGwgcmVtYWluIGFmdGVyIGFwcGx5aW5nIG15IHBhdGNoIHNlcmllcywgYW5kIGNhbiBiZSBm
-aXhlZCBpbiB0aGUgc2FtZSBtYW5uZXIgYXMgaGlzIHBhdGNoLCBqdXN0IGRpZmZlcmVudCBjb250
-ZXh0LCBpbmNsdWRpbmcgdmFyaWFibGUgbmFtZXMuDQoNClsxXSBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxNy8xMC8yLzY3OQ0KDQotRnJhbmsNCg==
+Add an initial Device Tree for MeLE V9 Media Player.
+
+Cc: meleservice-asvZZsi/7w8@public.gmane.org
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ arch/arm64/boot/dts/realtek/Makefile            |  1 +
+ arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts | 31 +++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
+
+diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+index cf93f4db7a69..c0b36ba64a1e 100644
+--- a/arch/arm64/boot/dts/realtek/Makefile
++++ b/arch/arm64/boot/dts/realtek/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1293-ds418j.dtb
+ 
++dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-mele-v9.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
+ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+ 
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts b/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
+new file mode 100644
+index 000000000000..bd584e99fff9
+--- /dev/null
++++ b/arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
+@@ -0,0 +1,31 @@
++/*
++ * Copyright (c) 2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++
++#include "rtd1295.dtsi"
++
++/ {
++	compatible = "mele,v9", "realtek,rtd1295";
++	model = "MeLE V9";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x80000000>;
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
+-- 
+2.13.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
