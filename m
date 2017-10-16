@@ -1,81 +1,89 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 00/12] of: overlay: clean up device tree overlay code
-Date: Mon, 16 Oct 2017 15:55:07 -0500
-Message-ID: <CAL_Jsq+Anm=34vZ2_DPr5CtAy1c8DS=XzO72f_KssFedhtWMzw@mail.gmail.com>
-References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com> <59E1382A.6030003@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59E1382A.6030003@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/5 v2] watchdog: gemini/ftwdt010: rename DT bindings
+Date: Mon, 16 Oct 2017 22:54:23 +0200
+Message-ID: <20171016205427.4297-1-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 5:03 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> Hi Rob,
->
-> On 10/02/17 20:53, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> I have found the device tree overlay code to be difficult to read and
->> maintain.  This patch series attempts to improve that situation.
->>
->> The cleanup includes some changes visible to users of overlays.  The
->> only in kernel user of overlays is fixed up for those changes.  The
->> in kernel user is:
->>
->>    drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
->>
->> Following the cleanup patches are a set of patches to fix various
->> issues.
->>
->> The first five patches are intended to not make any functional
->> changes, and are segrated to ease review.
->>
->> Frank Rowand (12):
->>   of: overlay.c: Remove comments that state the obvious, to reduce
->>     clutter
->>   of: overlay.c: Convert comparisons to zero or NULL to logical
->>     expressions
->>   of: overlay: rename identifiers to more reflect what they do
->>   of: overlay: rename identifiers in dup_and_fixup_symbol_prop()
->>   of: overlay: minor restructuring
->>   of: overlay: detect cases where device tree may become corrupt
->>   of: overlay: expand check of whether overlay changeset can be removed
->>   of: overlay: loosen overly strict phandle clash check
->>   of: overlay: avoid race condition between applying multiple overlays
->>   of: overlay: simplify applying symbols from an overlay
->>   of: overlay: remove a dependency on device node full_name
->>   of: overlay: remove unneeded check for NULL kbasename()
->>
->>  Documentation/devicetree/overlay-notes.txt   |   12 +-
->>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |   15 +-
->>  drivers/of/base.c                            |    2 +-
->>  drivers/of/dynamic.c                         |  137 +++-
->>  drivers/of/of_private.h                      |   10 +-
->>  drivers/of/overlay.c                         | 1024 ++++++++++++++++----------
->>  drivers/of/unittest.c                        |   80 +-
->>  include/linux/of.h                           |   33 +-
->>  8 files changed, 871 insertions(+), 442 deletions(-)
->>
->
-> What is the status on this series?  Did I resolve all of the issues that
-> you found?  Is there anything else I need to do?
->
-> The last issue that I recall, was a question about "[PATCH 09/12] of: overlay:
-> avoid race condition between applying multiple overlays", were you asked if
-> of_resolve_phandles() could be moved into of_overlay_apply().  I sent an
-> additional patch "[PATCH] of: overlay: move resolve phandles into
-> of_overlay_apply()" [1] that applies on top of this series to do so.
+The device tree bindings are in two copies and also should be
+consolidated into a single Faraday Technology FTWDT010
+binding since we uncovered that this IP part is a standard
+IP from Faraday.
 
-Sorry, found my draft on [1] unsent.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Collect Rob's ACK.
+---
+ .../bindings/watchdog/cortina,gemini-watchdog.txt       | 17 -----------------
+ ...{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} | 11 ++++++++---
+ 2 files changed, 8 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+ rename Documentation/devicetree/bindings/watchdog/{cortina,gemin-watchdog.txt => faraday,ftwdt010.txt} (55%)
 
-> There is a trickle of new patches against the same files as in my
-> series, so I would like to get my series applied sooner that later,
-> if possible.
+diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt b/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
+deleted file mode 100644
+index bc4b865d178b..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/cortina,gemini-watchdog.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-Cortina Systems Gemini SoC Watchdog
+-
+-Required properties:
+-- compatible : must be "cortina,gemini-watchdog"
+-- reg : shall contain base register location and length
+-- interrupts : shall contain the interrupt for the watchdog
+-
+-Optional properties:
+-- timeout-sec : the default watchdog timeout in seconds.
+-
+-Example:
+-
+-watchdog@41000000 {
+-	compatible = "cortina,gemini-watchdog";
+-	reg = <0x41000000 0x1000>;
+-	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+similarity index 55%
+rename from Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+rename to Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+index bc4b865d178b..9ecdb502e605 100644
+--- a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
++++ b/Documentation/devicetree/bindings/watchdog/faraday,ftwdt010.txt
+@@ -1,7 +1,12 @@
+-Cortina Systems Gemini SoC Watchdog
++Faraday Technology FTWDT010 watchdog
++
++This is an IP part from Faraday Technology found in the Gemini
++SoCs and others.
+ 
+ Required properties:
+-- compatible : must be "cortina,gemini-watchdog"
++- compatible : must be one of
++  "faraday,ftwdt010"
++  "cortina,gemini-watchdog", "faraday,ftwdt010"
+ - reg : shall contain base register location and length
+ - interrupts : shall contain the interrupt for the watchdog
+ 
+@@ -11,7 +16,7 @@ Optional properties:
+ Example:
+ 
+ watchdog@41000000 {
+-	compatible = "cortina,gemini-watchdog";
++	compatible = "faraday,ftwdt010";
+ 	reg = <0x41000000 0x1000>;
+ 	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+ };
+-- 
+2.13.6
 
-I've applied 1-8, but haven't pushed them out. I was hoping to do the
-whole series at once.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
