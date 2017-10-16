@@ -1,52 +1,31 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 0/3] arm64: dts: Initial MeLE V9 support
-Date: Mon, 16 Oct 2017 05:01:50 +0200
-Message-ID: <20171016030153.11078-1-afaerber@suse.de>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 7/9] usb: host: modify description for MTK xHCI config
+Date: Mon, 16 Oct 2017 11:25:04 +0800
+Message-ID: <1508124304.17567.78.camel@mhfsdcap03>
+References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
+         <37153cd259af6e1fc34b32a2e0dd1a15b8214579.1507882470.git.chunfeng.yun@mediatek.com>
+         <59E0962E.9030508@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <59E0962E.9030508@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Bizon <bizongod@gmail.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, meleservice@mele.cn, devicetree@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This mini-series adds a Device Tree for the MeLE V9 Android Media Player.
-
-Same as with PROBOX2 AVA, serial (loady) was the only working way to boot a new
-kernel from the vendor's U-Boot on this TV box.
-
-More details at:
-https://en.opensuse.org/HCL:Mele_V9
-
-@MeLE: Please review the following three patches and either signal your
-acknowledgement of my naming proposals with an "Acked-by: name <email>"
-response or point out any changes you would like to see applied. Thanks!
-
-Latest experimental patches at:
-https://github.com/afaerber/linux/commits/rtd1295-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-Cc: meleservice@mele.cn
-Cc: devicetree@vger.kernel.org
-
-Andreas Färber (3):
-  dt-bindings: Add vendor prefix for MeLE
-  dt-bindings: arm: realtek: Document MeLE V9
-  arm64: dts: realtek: Add MeLE V9
-
- Documentation/devicetree/bindings/arm/realtek.txt  |  1 +
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/arm64/boot/dts/realtek/Makefile               |  1 +
- arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts    | 31 ++++++++++++++++++++++
- 4 files changed, 34 insertions(+)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-mele-v9.dts
-
--- 
-2.13.6
+On Fri, 2017-10-13 at 13:32 +0300, Mathias Nyman wrote:
+> On 13.10.2017 11:26, Chunfeng Yun wrote:
+> > Due to all MediaTek SoCs with xHCI host controller use this
+> > driver, remove limitation for specific SoCs
+> >
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> 
+> xHCI parts of series look good to me, If Rob Herring agrees with the
+> dt changes I can send it forward
+Thanks a lot
+> 
+> -Mathias
+> 
