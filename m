@@ -1,7 +1,7 @@
 From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH 7/9] ARM: dts: rockchip: Add usb otg for rk3288-vyasa
-Date: Mon, 16 Oct 2017 17:46:25 +0530
-Message-ID: <1508156187-27519-8-git-send-email-jagan@amarulasolutions.com>
+Subject: [PATCH 8/9] ARM: dts: rockchip: Add io domains for rk3288-vyasa
+Date: Mon, 16 Oct 2017 17:46:26 +0530
+Message-ID: <1508156187-27519-9-git-send-email-jagan@amarulasolutions.com>
 References: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com>
@@ -10,65 +10,38 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Trimarchi <michael@amarulasolutions.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add usb otg support for rk3288-vyasa, board support usb1 otg
-power through otg_vbus_drv and naming conversion followed
-as per schematic.
+Add io domains supported by rk3288-vyasa board.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
-Note: g_ether/g_serial fired an issue with mainline tree 
-https://paste.ubuntu.com/25752571/
-
- arch/arm/boot/dts/rk3288-vyasa.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/rk3288-vyasa.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
-index c22d674..2f1389a 100644
+index 2f1389a..0e0995f 100644
 --- a/arch/arm/boot/dts/rk3288-vyasa.dts
 +++ b/arch/arm/boot/dts/rk3288-vyasa.dts
-@@ -115,6 +115,20 @@
- 		vin-supply = <&vcc_io>;
+@@ -374,6 +374,21 @@
  	};
- 
-+	vusb1_5v: vusb1-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vusb1_5v";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PB4 GPIO_ACTIVE_HIGH>; /* OTG_VBUS_DRV */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&otg_vbus_drv>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vsus_5v>;
-+	};
-+
- 	vusb2_5v: vusb2-5v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vusb2_5v";
-@@ -401,6 +415,10 @@
- 	status = "okay";
  };
  
-+&usb_otg {
++&io_domains {
 +	status = "okay";
++
++	audio-supply = <&vcc_18>;
++	bb-supply = <&vcc_io>;
++	dvp-supply = <&vcc_io>;
++	flash0-suuply = <&vcc_18>;
++	flash1-supply = <&vcc_lan>;
++	gpio30-supply = <&vcc_io>;
++	gpio1830 = <&vcc_io>;
++	lcdc-supply = <&vcc_io>;
++	sdcard-supply = <&vccio_sd>;
++	wifi-supply = <&vcc_18>;
 +};
 +
- &vopb {
+ &i2c2 {
  	status = "okay";
- };
-@@ -455,4 +473,11 @@
- 			rockchip,pins = <RK_GPIO8 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
-+
-+	usb_otg {
-+		otg_vbus_drv: otg-vbus-drv {
-+			rockchip,pins = <RK_GPIO0 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
-+
-+		};
-+	};
  };
 -- 
 2.7.4
