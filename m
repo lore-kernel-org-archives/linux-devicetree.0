@@ -1,62 +1,104 @@
-From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] memory: ti-emif-sram: introduce relocatable
- suspend/resume handlers
-Date: Mon, 16 Oct 2017 08:31:59 -0700
-Message-ID: <19256977-40e1-a972-4de8-838a8da863cc@oracle.com>
-References: <20171013205915.9652-1-d-gerlach@ti.com>
- <20171013205915.9652-3-d-gerlach@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] mtd: powernv: Support MTD_NO_ERASE
+Date: Mon, 16 Oct 2017 17:55:17 +0200
+Message-ID: <20171016175517.264e710a@bbrezillon>
+References: <20170905202339.20732-1-wak@google.com>
+        <20170921095930.4b473f91@bbrezillon>
+        <CAPnigKmBujCoKdtXwnK6YsU=YvXM+MaDvDvKpUXEVgHzOC-VEw@mail.gmail.com>
+        <8760cbv090.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013205915.9652-3-d-gerlach-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <8760cbv090.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Hi Michael,
 
-On 10/13/2017 1:59 PM, Dave Gerlach wrote:
-> Certain SoCs like Texas Instruments AM335x and AM437x require parts
-> of the EMIF PM code to run late in the suspend sequence from SRAM,
-> such as saving and restoring the EMIF context and placing the memory
-> into self-refresh.
-> 
-> One requirement for these SoCs to suspend and enter its lowest power
-> mode, called DeepSleep0, is that the PER power domain must be shut off.
-> Because the EMIF (DDR Controller) resides within this power domain, it
-> will lose context during a suspend operation, so we must save it so we
-> can restore once we resume. However, we cannot execute this code from
-> external memory, as it is not available at this point, so the code must
-> be executed late in the suspend path from SRAM.
-> 
-> This patch introduces a ti-emif-sram driver that includes several
-> functions written in ARM ASM that are relocatable so the PM SRAM
-> code can use them. It also allocates a region of writable SRAM to
-> be used by the code running in the executable region of SRAM to save
-> and restore the EMIF context. It can export a table containing the
-> absolute addresses of the available PM functions so that other SRAM
-> code can branch to them. This code is required for suspend/resume on
-> AM335x and AM437x to work.
-> 
-> In addition to this, to be able to share data structures between C and
-> the ti-emif-sram-pm assembly code, we can automatically generate all of
-> the C struct member offsets and sizes as macros by processing
-> emif-asm-offsets.c into assembly code and then extracting the relevant
-> data as is done for the generated platform asm-offsets.h files.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> ---
-> v4->v5:
-> * Simplify Makefile to generate include/generated/ti-emif-asm-offsets.h
-> 
-If you are happy with this version from Dave, can I get your ack please?
-I can add this to the driver-soc then.
+Sorry for the late reply.
 
-Regards,
-Santosh
+On Fri, 22 Sep 2017 14:13:47 +1000
+Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+
+> William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> writes:
+> 
+> > +Cyril Bur and
+> >
+> > Not sure what you mean by mainline, but the commit is in the master branch
+> > at
+> > https://github.com/open-power/skiboot/commit/ba99af9b149d02438347b055e6e7d6bd15e33551  
+> 
+> I suspect Boris missed that you were referring to a skiboot commit and
+> looked in Linux?
+> 
+> > I'm unsure about the documentation of the properties as I'm not really the
+> > maintainer of any of the code on either side. I just added this DT property
+> > for plumbing through the NO_ERASE flag. I added Cyril and Michael as they
+> > both work closely with this driver and could comment better than I could.
+> >
+> > - William
+> >
+> > On Thu, Sep 21, 2017 at 12:59 AM Boris Brezillon <
+> > boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >  
+> >> +the DT maintainers
+> >>
+> >> On Tue,  5 Sep 2017 13:23:39 -0700
+> >> "William A. Kennington III" <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> >>  
+> >> > As of skiboot@ba99af9b149d02438347b055e6e7d6bd15e33551, we now support  
+> >>
+> >> I didn't find this commit in mainline.
+> >>  
+> >> > adding a device tree entry which marks a flash device as not needing
+> >> > erase. This patch adds support for setting MTD_NO_ERASE on powernvflash
+> >> > devices which have the property no-erase.
+> >> >
+> >> > Signed-off-by: William A. Kennington III <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> >> > ---
+> >> >  drivers/mtd/devices/powernv_flash.c | 2 ++
+> >> >  1 file changed, 2 insertions(+)
+> >> >
+> >> > diff --git a/drivers/mtd/devices/powernv_flash.c  
+> >> b/drivers/mtd/devices/powernv_flash.c  
+> >> > index f5396f26ddb4..fab9f9121b4c 100644
+> >> > --- a/drivers/mtd/devices/powernv_flash.c
+> >> > +++ b/drivers/mtd/devices/powernv_flash.c
+> >> > @@ -196,6 +196,8 @@ static int powernv_flash_set_driver_info(struct  
+> >> device *dev,  
+> >> >       mtd->name = of_get_property(dev->of_node, "name", NULL);
+> >> >       mtd->type = MTD_NORFLASH;
+> >> >       mtd->flags = MTD_WRITEABLE;
+> >> > +     if (of_property_read_bool(dev->of_node, "no-erase"))
+> >> > +             mtd->flags |= MTD_NO_ERASE;  
+> >>
+> >> I don't see this property document in a DT binding doc, which is
+> >> mandatory. Actually, there's no DT bindings doc at all for the
+> >> 'ibm,opal-flash' device in mainline, is this normal?  
+> 
+> The binding doc is here:
+> 
+>   https://github.com/open-power/skiboot/blob/master/doc/device-tree/ibm%2Copal/flash.rst
+> 
+> But that property is not documented :(
+
+Would be good to update the doc then :-).
+
+> 
+> We have some of the skiboot bindings also in the kernel tree, but there
+> was talk of moving all the binding docs *out* of the kernel, so we never
+> made an effort to put more in. I've lost track of whether there are
+> still plans to move the binding docs out or not.
+
+
+Okay, I don't know what's the policy for external DT bindings doc, but
+maybe you can add a file in Document/devicetree/bindings/mtd pointing
+to the skiboot doc.
+
+Rob, what's your opinion?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
