@@ -1,49 +1,44 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v3 04/13] arm64: alternatives: use tpidr_el2 on VHE hosts
-Date: Mon, 16 Oct 2017 11:17:37 +0100
-Message-ID: <20171016101736.fkaikxflyc46zczf@armageddon.cambridge.arm.com>
-References: <20170922182614.27885-1-james.morse@arm.com>
- <20170922182614.27885-5-james.morse@arm.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFCv2 PATCH 12/36] dt-bindings: document stall and PASID
+ properties for IOMMU masters
+Date: Mon, 16 Oct 2017 11:23:02 +0100
+Message-ID: <e7288f51-1cfa-44ce-e3ce-e9f3daf91579@arm.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-13-jean-philippe.brucker@arm.com>
+ <20171013191051.lgxbcobkzzj5guhv@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <20170922182614.27885-5-james.morse@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: James Morse <james.morse@arm.com>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Loc Ho <lho@apm.com>, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20171013191051.lgxbcobkzzj5guhv@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "joro@8bytes.org" <joro@8bytes.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 07:26:05PM +0100, James Morse wrote:
-> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-> index 29adab8138c3..8f2d0f7d193b 100644
-> --- a/arch/arm64/include/asm/processor.h
-> +++ b/arch/arm64/include/asm/processor.h
-> @@ -193,5 +193,6 @@ static inline void spin_lock_prefetch(const void *ptr)
->  
->  int cpu_enable_pan(void *__unused);
->  int cpu_enable_cache_maint_trap(void *__unused);
-> +int cpu_copy_el2regs(void *__unused);
->  
->  #endif /* __ASM_PROCESSOR_H */
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index cd52d365d1f0..8e4c7da2b126 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-[...]
-> +int cpu_copy_el2regs(void *__unused)
+On 13/10/17 20:10, Rob Herring wrote:
+> On Fri, Oct 06, 2017 at 02:31:39PM +0100, Jean-Philippe Brucker wrote:
+>> On ARM systems, some platform devices behind an IOMMU may support stall
+>> and PASID features. Stall is the ability to recover from page faults and
+>> PASID offers multiple process address spaces to the device. Together they
+>> allow to do paging with a device. Let the firmware tell us when a device
+>> supports stall and PASID.
+> 
+> Can't these be implied by the compatible string of the devices?
 
-Can this be static? I couldn't find it used anywhere else apart from
-cpufeature.c
+I think that PASID capacity can be deduced from the compatible string but
+don't know how these devices will be implemented (the only known example
+being a software model for testing). In any case implementing PASID based
+on the compatible string is tricky, because the IOMMU driver needs to know
+PASID capacity before the device driver has had time to probe the device.
+Maybe we could get away with a static table associating compatible string
+to PASID capacity, but it's not very nice.
 
--- 
-Catalin
+For stall it's a property of the integration between device and IOMMU,
+much like the "iommus" property, so it can't be deduced only from the
+compatible string. It's crucial that the firmware validates that stalling
+is safe, because we don't have any other way to discover it.
+
+Thanks,
+Jean
