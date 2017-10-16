@@ -1,74 +1,48 @@
-From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH RESEND] phy: rcar-gen2: Add r8a7743/5 support
-Date: Mon, 16 Oct 2017 10:52:51 +0000
-Message-ID: <TY1PR06MB0702439B7CD95E771FAC001DB74F0@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <1507544543-28654-1-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507544543-28654-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+Subject: Re: [PATCH] ASoC: sgtl5000: add support for a fixed sysclk frequency
+Date: Mon, 16 Oct 2017 13:17:07 +0200
+Message-ID: <9A3652B7-C0ED-44DE-AC6F-9D883076E9B8@theobroma-systems.com>
+References: <20171006083449.24038-1-jakob.unterwurzacher@theobroma-systems.com>
+ <AM5PR0401MB2627DE7F266788214268424BE34E0@AM5PR0401MB2627.eurprd04.prod.outlook.com>
+ <EA6FEF1C-263E-4529-AC8E-16F50C27030F@theobroma-systems.com>
+ <CAOMZO5D-2iFsAUk2Ldo4RD5Xg71Q5HOBuasYc0t=tV3hZbaO2g@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5D-2iFsAUk2Ldo4RD5Xg71Q5HOBuasYc0t=tV3hZbaO2g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Richard Leitner <richard.leitner@skidata.com>, Bhumika Goyal <bhumirks@gmail.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Kishon,
 
-> From: Biju Das [mailto:biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org]
-> Sent: 09 October 2017 11:22
->=20
-> Add USB PHY support for r8a7743/5 SoC. Renesas RZ/G1[ME] (R8A7743/5)
-> USB PHY is identical to the R-Car Gen2 family.
->=20
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> On 16. Oct 2017, at 12:51, Fabio Estevam <festevam@gmail.com> wrote:
+> 
+> Hi Jakob,
+> 
+> On Mon, Oct 16, 2017 at 7:46 AM, Jakob Unterwurzacher
+> <jakob.unterwurzacher@theobroma-systems.com> wrote:
+>> Hi Fabio, that’s interesting.
+>> 
+>> Looks like the fsl,imx-audio-sgtl5000 sound card driver that is used on the imx51-babbage
+>> does not try to adjust MCLK in response to the playback sample rate.
+>> 
+>> The simple-audio-card driver does that (it calls snd_soc_dai_set_sysclk whenever playback
+>> starts).
+> 
+> Could you please test this with linux-next tree?
+> 
+> Looks like that the recent b0a7043d5c2c("ASoC: fsl_ssi: Caculate bit
+> clock rate using slot number and width") would avoid the issue.
+> 
 
-Does this patch look okay to you?
+Hi Fabio,
 
-Thanks, Chris
+if this ( https://patchwork.kernel.org/patch/9952385/ ) is the patch, then it seems to be
+specific to the Freescale I2S controller. We use the SGTL5000 together with a Rockchip CPU.
 
+I think I see a way to fix this without adding a DTS property, I’ll send out a patch later this afternoon.
 
-> ---
-> This patch is tested against Linux next tag next-20170929.
->=20
->  Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-> b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-> index 91da947..eeb9e18 100644
-> --- a/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-> @@ -4,10 +4,13 @@ This file provides information on what the device node
-> for the R-Car generation
->  2 USB PHY contains.
->=20
->  Required properties:
-> -- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A77=
-90
-> SoC.
-> +- compatible: "renesas,usb-phy-r8a7743" if the device is a part of R8A77=
-43
-> SoC.
-> +	      "renesas,usb-phy-r8a7745" if the device is a part of R8A7745 SoC.
-> +	      "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
->  	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
->  	      "renesas,usb-phy-r8a7794" if the device is a part of R8A7794 SoC.
-> -	      "renesas,rcar-gen2-usb-phy" for a generic R-Car Gen2 compatible
-> device.
-> +	      "renesas,rcar-gen2-usb-phy" for a generic R-Car Gen2 or
-> +					  RZ/G1 compatible device.
->=20
->  	      When compatible with the generic version, nodes must list the
->  	      SoC-specific version corresponding to the platform first
-> --
-> 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jakob
