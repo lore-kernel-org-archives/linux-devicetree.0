@@ -1,94 +1,157 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] extcon: add optional debounce-timeout-ms attribute
-Date: Tue, 17 Oct 2017 08:20:04 +0900
-Message-ID: <59E53EA4.5020302@samsung.com>
-References: <1508139288-11114-1-git-send-email-raveendra.padasalagi@broadcom.com>
-        <CGME20171016073514epcas2p1dbcba68d0491b76af827d2d52da3b371@epcas2p1.samsung.com>
-        <1508139288-11114-2-git-send-email-raveendra.padasalagi@broadcom.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
+Date: Mon, 16 Oct 2017 18:43:26 -0500
+Message-ID: <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
+References: <20171013160914.3220-1-niklas.cassel@axis.com>
+ <20171013160914.3220-9-niklas.cassel@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1508139288-11114-2-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171013160914.3220-9-niklas.cassel@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@axis.com>
+Cc: Niklas Cassel <niklass@axis.com>, Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2017년 10월 16일 16:34, Raveendra Padasalagi wrote:
-> Add changes to capture optional dt attribute "debounce-timeout-ms"
-> provided in extcon node and used the same value if provided otherwise
-> default value of 20ms is used for id and vbus gpios debounce time.
-> 
-> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Fri, Oct 13, 2017 at 06:09:11PM +0200, Niklas Cassel wrote:
+> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
 > ---
->  drivers/extcon/extcon-usb-gpio.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
+>  drivers/pci/dwc/Kconfig                            |  41 +++--
+>  drivers/pci/dwc/Makefile                           |   4 +-
+>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
+>  4 files changed, 233 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-> index 9c925b0..090f65f 100644
-> --- a/drivers/extcon/extcon-usb-gpio.c
-> +++ b/drivers/extcon/extcon-usb-gpio.c
-> @@ -41,6 +41,7 @@ struct usb_extcon_info {
+> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> index 4e4aee4439ea..33eef7ae5a23 100644
+> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+>  and thus inherits all the common properties defined in designware-pcie.txt.
 >  
->  	unsigned long debounce_jiffies;
->  	struct delayed_work wq_detcable;
-> +	unsigned int gpio_debounce_timeout_ms;
-
-You better to use the "debounce_usecs" name
-because the unit of debounce time is usec.
-
->  };
+>  Required properties:
+> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
+>  - reg: base addresses and lengths of the PCIe controller (DBI),
+>  	the PHY controller, and configuration address space.
+>  - reg-names: Must include the following entries:
+> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+> index 22ec82fcdea2..e333283fb1ed 100644
+> --- a/drivers/pci/dwc/Kconfig
+> +++ b/drivers/pci/dwc/Kconfig
+> @@ -14,6 +14,36 @@ config PCIE_DW_EP
+>  	depends on PCI_ENDPOINT
+>  	select PCIE_DW
 >  
->  static const unsigned int usb_extcon_cable[] = {
-> @@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
->  	if (IS_ERR(info->vbus_gpiod))
->  		return PTR_ERR(info->vbus_gpiod);
->  
-> +	ret = of_property_read_u32(np, "debounce-timeout-ms",
-> +			     &info->gpio_debounce_timeout_ms);
-
-I prefer to use the 'input-debounce' property name
-Because the pinctrl-bindings.txt[1] gives the guide
-for the generic name of debounce.
-[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-- "debounce-timeout-ms" -> "input-debounce"
-
-> +	if (ret)
-> +		info->gpio_debounce_timeout_ms = USB_GPIO_DEBOUNCE_MS;
+> +config PCIE_ARTPEC6
+> +	bool "Axis ARTPEC-6 PCIe controller"
+> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
+> +	depends on MACH_ARTPEC6
+> +	help
+> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+> +	  SoCs.  This PCIe controller uses the DesignWare core.
 > +
->  	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->  	if (IS_ERR(info->edev)) {
->  		dev_err(dev, "failed to allocate extcon device\n");
-> @@ -147,13 +153,14 @@ static int usb_extcon_probe(struct platform_device *pdev)
+> +if PCIE_ARTPEC6
+> +
+> +config PCIE_ARTPEC6_HOST
+> +	bool "Axis ARTPEC-6 Host Mode"
+> +	depends on PCI
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIEPORTBUS
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+> +	  host mode.
+> +
+> +config PCIE_ARTPEC6_EP
+> +	bool "Axis ARTPEC-6 Endpoint Mode"
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	help
+> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+> +	  endpoint mode.
+> +
+> +endif
+> +
+>  config PCI_DRA7XX
+>  	bool "TI DRA7xx PCIe controller"
+>  	depends on SOC_DRA7XX || COMPILE_TEST
+> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
+>  	  DesignWare hardware and therefore the driver re-uses the
+>  	  DesignWare core functions to implement the driver.
 >  
->  	if (info->id_gpiod)
->  		ret = gpiod_set_debounce(info->id_gpiod,
-> -					 USB_GPIO_DEBOUNCE_MS * 1000);
-> +					 info->gpio_debounce_timeout_ms * 1000);
->  	if (!ret && info->vbus_gpiod)
->  		ret = gpiod_set_debounce(info->vbus_gpiod,
-> -					 USB_GPIO_DEBOUNCE_MS * 1000);
-> +					 info->gpio_debounce_timeout_ms * 1000);
->  
->  	if (ret < 0)
-> -		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
-> +		info->debounce_jiffies = msecs_to_jiffies(
-> +						info->gpio_debounce_timeout_ms);
->  
->  	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
->  
-> 
+> -config PCIE_ARTPEC6
+> -	bool "Axis ARTPEC-6 PCIe controller"
+> -	depends on PCI
+> -	depends on MACH_ARTPEC6
+> -	depends on PCI_MSI_IRQ_DOMAIN
+> -	select PCIEPORTBUS
+> -	select PCIE_DW_HOST
+> -	help
+> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+> -	  SoCs.  This PCIe controller uses the DesignWare core.
+> -
+>  config PCIE_KIRIN
+>  	depends on OF && ARM64
+>  	bool "HiSilicon Kirin series SoCs PCIe controllers"
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+> index c61be9738cce..ac98242b83a9 100644
+> --- a/drivers/pci/dwc/Makefile
+> +++ b/drivers/pci/dwc/Makefile
+> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
+> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> +endif
+
+I see you're copying the DRA7XX style here, but I don't really
+understand it.  I guess the idea is to build pcie-artpec6.o if either
+CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+
+Is this really the simplest way to express that in Kconfig?  Both the
+"if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
+unusual.
+
+>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>  endif
+
+> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+
+Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
+Or is this something other endpoint drivers could/should share?
+
+> +{
+> +	u32 reg;
+> +
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +	dw_pcie_writel_dbi2(pci, reg, 0x0);
+> +	dw_pcie_writel_dbi(pci, reg, 0x0);
+> +	dw_pcie_dbi_ro_wr_dis(pci);
+> +}
+> +
+> +static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
+> +	enum pci_barno bar;
+> +
+> +	artpec6_pcie_assert_core_reset(artpec6_pcie);
+> +	artpec6_pcie_init_phy(artpec6_pcie);
+> +	artpec6_pcie_deassert_core_reset(artpec6_pcie);
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+
+I naively expected some of this new code to be #ifdef PCIE_ARTPEC6_EP.
+But I haven't really internalized the endpoint support, so maybe that
+doesn't make sense?
+
+Bjorn
