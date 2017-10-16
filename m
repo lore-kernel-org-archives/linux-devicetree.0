@@ -1,62 +1,43 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 4/4] drm: rcar-du: Add R8A7745 support
-Date: Mon, 16 Oct 2017 15:36:40 +0300
-Message-ID: <2922323.urz8JTfWKj@avalon>
-References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1507908142-13142-5-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 1/6] ARM: dts: imx51-apf51dev: Fix 'backlight@bl1' node with unit name and no reg property
+Date: Mon, 16 Oct 2017 10:48:25 -0200
+Message-ID: <1508158110-5188-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1507908142-13142-5-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZyaWRheSwgMTMgT2N0
-b2JlciAyMDE3IDE4OjIyOjIyIEVFU1QgRmFicml6aW8gQ2FzdHJvIHdyb3RlOgo+IEFkZCBzdXBw
-b3J0IGZvciB0aGUgUjhBNzc0NSBEVSAod2hpY2ggaXMgdmVyeSBzaW1pbGFyIHRvIHRoZSBSOEE3
-Nzk0IERVKTsKPiBpdCBoYXMgMiBSR0Igb3V0cHV0cy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBGYWJy
-aXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4KPiBSZXZpZXdlZC1i
-eTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJl
-bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCmFuZCB0YWtl
-biBpbiBteSB0cmVlLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9k
-cnYuYyB8IDIyICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIyIGlu
-c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
-cl9kdV9kcnYuYwo+IGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9kcnYuYyBpbmRl
-eCAzZGI1ZThkLi5mYWE1YjMyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
-L3JjYXJfZHVfZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Ry
-di5jCj4gQEAgLTU1LDYgKzU1LDI3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9kdV9kZXZp
-Y2VfaW5mbwo+IHJ6ZzFfZHVfcjhhNzc0M19pbmZvID0geyAubnVtX2x2ZHMgPSAxLAo+ICB9Owo+
-IAo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZHVfZGV2aWNlX2luZm8gcnpnMV9kdV9yOGE3
-NzQ1X2luZm8gPSB7Cj4gKwkuZ2VuID0gMiwKPiArCS5mZWF0dXJlcyA9IFJDQVJfRFVfRkVBVFVS
-RV9DUlRDX0lSUV9DTE9DSwo+ICsJCSAgfCBSQ0FSX0RVX0ZFQVRVUkVfRVhUX0NUUkxfUkVHUywK
-PiArCS5udW1fY3J0Y3MgPSAyLAo+ICsJLnJvdXRlcyA9IHsKPiArCQkvKgo+ICsJCSAqIFI4QTc3
-NDUgaGFzIHR3byBSR0Igb3V0cHV0cwo+ICsJCSAqLwo+ICsJCVtSQ0FSX0RVX09VVFBVVF9EUEFE
-MF0gPSB7Cj4gKwkJCS5wb3NzaWJsZV9jcnRjcyA9IEJJVCgwKSwKPiArCQkJLnBvcnQgPSAwLAo+
-ICsJCX0sCj4gKwkJW1JDQVJfRFVfT1VUUFVUX0RQQUQxXSA9IHsKPiArCQkJLnBvc3NpYmxlX2Ny
-dGNzID0gQklUKDEpLAo+ICsJCQkucG9ydCA9IDEsCj4gKwkJfSwKPiArCX0sCj4gKwkubnVtX2x2
-ZHMgPSAwLAo+ICt9Owo+ICsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCByY2FyX2R1X2RldmljZV9p
-bmZvIHJjYXJfZHVfcjhhNzc3OV9pbmZvID0gewo+ICAJLmdlbiA9IDIsCj4gIAkuZmVhdHVyZXMg
-PSAwLAo+IEBAIC0yMjksNiArMjUwLDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCByY2FyX2R1X2Rl
-dmljZV9pbmZvCj4gcmNhcl9kdV9yOGE3Nzk2X2luZm8gPSB7Cj4gCj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJjYXJfZHVfb2ZfdGFibGVbXSA9IHsKPiAgCXsgLmNvbXBhdGli
-bGUgPSAicmVuZXNhcyxkdS1yOGE3NzQzIiwgLmRhdGEgPSAmcnpnMV9kdV9yOGE3NzQzX2luZm8g
-fSwKPiArCXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3NzQ1IiwgLmRhdGEgPSAmcnpn
-MV9kdV9yOGE3NzQ1X2luZm8gfSwKPiAgCXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3
-Nzc5IiwgLmRhdGEgPSAmcmNhcl9kdV9yOGE3Nzc5X2luZm8gfSwKPiAgCXsgLmNvbXBhdGlibGUg
-PSAicmVuZXNhcyxkdS1yOGE3NzkwIiwgLmRhdGEgPSAmcmNhcl9kdV9yOGE3NzkwX2luZm8gfSwK
-PiAgCXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxkdS1yOGE3NzkxIiwgLmRhdGEgPSAmcmNhcl9k
-dV9yOGE3NzkxX2luZm8gfSwKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The following build warning is seen with W=1:
+
+Warning (unit_address_vs_reg): Node /backlight@bl1 has a unit name, but no reg property
+
+Fix this warning by changing '@' to '-'.
+
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/imx51-apf51dev.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx51-apf51dev.dts b/arch/arm/boot/dts/imx51-apf51dev.dts
+index a5e6091..75a9a4e4 100644
+--- a/arch/arm/boot/dts/imx51-apf51dev.dts
++++ b/arch/arm/boot/dts/imx51-apf51dev.dts
+@@ -16,7 +16,7 @@
+ 	model = "Armadeus Systems APF51Dev docking/development board";
+ 	compatible = "armadeus,imx51-apf51dev", "armadeus,imx51-apf51", "fsl,imx51";
+ 
+-	backlight@bl1{
++	backlight-bl1{
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_backlight>;
+ 		compatible = "gpio-backlight";
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
