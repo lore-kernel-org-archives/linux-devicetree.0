@@ -1,101 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Mon, 16 Oct 2017 14:45:59 -0500
-Message-ID: <CAL_JsqJxFJSE-=778oHvNgpaBzhX9mBSzh1a0ZMvwSG69qStLw@mail.gmail.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <39f87f46-da67-11d9-4336-213c13025568@monstr.eu> <8a168960-2dae-35cc-e610-0fe257c9121d@codethink.co.uk>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: max3421: Add bindings documentation
+Date: Mon, 16 Oct 2017 23:21:53 +0300
+Message-ID: <6a3f35f1-dae9-063d-963e-812a7341f612@cogentembedded.com>
+References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org>
+ <832170edafa26b7b2bed76afe170f1c9c4f7b9ae.1508108927.git.jules.maselbas@grenoble-inp.org>
+ <a064c008-2268-26ef-edee-47bda38b117b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8a168960-2dae-35cc-e610-0fe257c9121d-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+In-Reply-To: <a064c008-2268-26ef-edee-47bda38b117b-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-MW
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: julia.lawall-L2FTfq7BK8M@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 11:40 AM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> On 16/10/17 06:36, Michal Simek wrote:
+On 10/16/2017 12:04 PM, Sergei Shtylyov wrote:
+
+>> Adds bindings documentation for the max3421 driver.
 >>
->> Hi,
+>> Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/usb/maxim,max3421.txt      | 24 
+>> ++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
 >>
->> On 9.10.2017 22:39, Grant Likely wrote:
->>>
->>> Kernel Summit is now just over 2 weeks away and it is time to pull
->>> together the schedule for the Devicetree workshop. Originally I
->>> planned on just an afternoon, but I've got the room for the whole day,
->>> so I've got a lot of flexibility on the schedule. Unscheduled time can
->>> be used for hacking.
->>>
->>> Date: 26 Oct 2017
->>> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
->>> Location: Athens room - Hilton Prague
->>>
->>> If you plan to attend, make sure you update your OSSunmitE/ELCE
->>> registration to include the DT Workshop (log in to access and modify
->>> your registration):
->>>
->>>
->>> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
->>>
->>> Here is my current list of topics in no particular order, including
->>> the topic moderator:
->>>
->>> Runtime memory consumption (Rob Herring)
->>> Overlay maintenance plan (TBC)
->>> Stable ABI for devicetree (TBC)
->>> DT YAML encoding (Pantelis Antoniou)
->>> DT Schema format - option 1 (Pantelis Antoniou)
->>> DT Schema format - option 2 (Grant Likely)
->>> Sharing Generic bindings (TBC)
->>> devicetree.org update (Grant)
->>>
->>> Reply to this email if you want to propose another topic.
->>>
->>> Reply privately if there is a particular topic you want to attend but
->>> you are unable to be there in the morning or afternoon. I'll put the
->>> actual agenda together a week out from the event.
->>
->>
->> I would like to talk how to add support for AArch32 based on arm64 dts
->> file.
->>
->> And next topic is discuss criteria for adding new DTS board files to
->> kernel for supporting custom boards especially for arm32 which can end
->> up with a lot of dts files in this folder.
->> If make sense to permit only boards with something new or just enable
->> reference boards to go in.
->
->
-> I am interested in this, as we seem to be repeating the quantity
-> issue with the board file of having many .dts sources in the kernel.
+>> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt 
+>> b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+>> new file mode 100644
+>> index 000000000000..7536c3ab3e5a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+>> @@ -0,0 +1,24 @@
+>> +Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
+>> +
+>> +Required properties:
+>> + - compatible: "maxim,max3421"
+>> + - spi-max-frequency: maximum frequency for this device must not exceed 26 
+>> MHz.
+>> + - reg: chip select number to which this device is connected.
+>> + - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
+>> +   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
+>> +   ACTIVE_LEVEL is 0 or 1.
+>> + - interrupt-parent: the phandle of the associated interrupt controller.
+> 
+>     This is never a required prob, it may be inherited from the parent nodes.
 
-The problem was not so much having board files in the kernel. It was
-how to scale support for boards and SoCs with each family structuring
-things their own, different way.
+   Prop, sorry. :-)
 
-IIRC, the ARM tree was at ~400 boards at the start of DT conversion.
-Now we're at ~1100 boards for arm/arm64. Plus we still have 264 that
-aren't converted to DT.
+[...]
 
-> I'm not sure how to deal with this, on one hand only having the
-> reference (and possibly popular) boards is going to keep the size
-> down. On the other hand out of tree .dts files are going to be
-> difficult to find (or vanish with the vendor).
-
-Why do we care? What problem is that causing?
-
-> It seems we are still no closer to having a DT repository outside
-> the kernel.
-
-In relationship to the above what problem would that solve? We've got
-all the platform maintainers and arm-soc maintainers to handle dts
-files. Mark and myself along with subsystem maintainers reviewing and
-applying device bindings. If you move all that to a separate
-repository, then you have me because no one else has volunteered. I'm
-pretty sure no one wants me as the single point of failure.
-
-Rob
+MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
