@@ -1,49 +1,46 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 0/5] thermal: rockchip: add tsadc support in thermal
- driver and IPA thermal control for RV1108 in dts
-Date: Mon, 16 Oct 2017 17:15:37 -0700
-Message-ID: <20171017001535.GA16006@localhost.localdomain>
-References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: overlay: move resolve phandles into
+ of_overlay_apply()
+Date: Mon, 16 Oct 2017 17:24:01 -0700
+Message-ID: <59E54DA1.4050909@gmail.com>
+References: <1507683745-17499-1-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqL28_rr5CHMovr-k3h_Wyjpyf8xVia9Ffkcz_ZzGktCnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
+In-Reply-To: <CAL_JsqL28_rr5CHMovr-k3h_Wyjpyf8xVia9Ffkcz_ZzGktCnA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rocky Hao <rocky.hao@rock-chips.com>
-Cc: rui.zhang@intel.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Thu, Aug 24, 2017 at 06:27:50PM +0800, Rocky Hao wrote:
-> This series patches add the tsadc support in thermal driver and in devicetree for RV1108.
-> Also add thermal control with Intelligent Power Allocation (IPA) policy by default.  Please
-> refer to https://developer.arm.com/open-source/intelligent-power-allocation for more information
-> about IPA.
+On 10/16/17 13:46, Rob Herring wrote:
+> On Tue, Oct 10, 2017 at 8:02 PM,  <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Move more code into of_overlay_apply() so that it does not have
+>> to be duplicated by each caller of of_overlay_apply().
+>>
+>> The test in of_resolve_phandles() that the overlay tree is detached is
+>> temporarily disabled so that old style overlay unittests do not fail.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> This patch applies on top of the series: "[PATCH 00/12] of: overlay: clean
+>> up device tree overlay code".
+>>
+>> While reviewing "[PATCH 09/12] of: overlay: avoid race condition between
+>> applying multiple overlays", Rob asked if of_resolve_phandles() could be
+>> moved into of_overlay_apply().  This patch is what is involved in doing so.
 > 
-> Rocky Hao (5):
->   dt-bindings: rockchip-thermal: Support the RV1108 SoC compatible
->   thermal: rockchip: Support the RV1108 SoC in thermal driver
-
-Applied patches 1  and 2.
-
->   arm: dts: rockchip: add tsadc node for RV1108 SoC
->   arm: dts: rockchip: add thermal nodes for RV1108 SoC
->   arm: dts: rockchip: enable tsadc module on RV1108 evaluation board
+> Looks fine. Can you squash this into patch 9 and resend the series (or
+> at least 9-12). The rest all looks fine to me.
+> 
+> Rob
 > 
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
+Thanks, I'll do that.
 
-for the DT changes.
-
->  .../bindings/thermal/rockchip-thermal.txt          |  1 +
->  arch/arm/boot/dts/rv1108-evb.dts                   |  4 ++
->  arch/arm/boot/dts/rv1108.dtsi                      | 69 ++++++++++++++++++++++
->  drivers/thermal/rockchip_thermal.c                 | 67 +++++++++++++++++++++
->  4 files changed, 141 insertions(+)
-> 
-> -- 
-> 1.9.1
-> 
-> 
+-Frank
