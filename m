@@ -1,135 +1,103 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH usb-next v6 3/3] usb: core: hcd: integrate the PHY roothub wrapper
-Date: Tue, 17 Oct 2017 23:21:00 +0200
-Message-ID: <20171017212100.10544-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH usb-next v6 1/3] dt-bindings: usb: add the documentation for USB root-hub
+Date: Tue, 17 Oct 2017 23:20:58 +0200
+Message-ID: <20171017212100.10544-2-martin.blumenstingl@googlemail.com>
 References: <20171017212100.10544-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171017212100.10544-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This integrates the PHY roothub wrapper into the core hcd
-infrastructure. Multiple PHYs which are part of the roothub devicetree
-node (which is a sub-node of the sysdev's node) are now managed
-(= powered on/off when needed), by the new usb_phy_roothub code.
-
-One example where this is required is the Amlogic GXL and GXM SoCs:
-They are using a dwc3 USB controller with up to three ports enabled on
-the internal roothub. Using only the top-level "phy" properties does not
-work here since one can only specify one "usb2-phy" and one "usb3-phy",
-while actually at least two "usb2-phy" have to be specified.
+A USB root-hub may have several PHYs which need to be configured before
+the root-hub starts working.
+This adds the documentation for such a USB root-hub as well as a hint
+regarding the child-nodes on XHCI controllers which can include the
+roothub.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/usb/core/hcd.c  | 27 +++++++++++++++++++++++++++
- include/linux/usb/hcd.h |  1 +
- 2 files changed, 28 insertions(+)
+ .../devicetree/bindings/usb/usb-roothub.txt        | 46 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |  7 ++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 67aa3d039b9b..59bb8dac5264 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -50,6 +50,7 @@
- #include <linux/usb/otg.h>
- 
- #include "usb.h"
-+#include "phy.h"
- 
- 
- /*-------------------------------------------------------------------------*/
-@@ -2271,6 +2272,8 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
- 		usb_set_device_state(rhdev, USB_STATE_SUSPENDED);
- 		hcd->state = HC_STATE_SUSPENDED;
- 
-+		usb_phy_roothub_power_off(hcd->phy_roothub);
+diff --git a/Documentation/devicetree/bindings/usb/usb-roothub.txt b/Documentation/devicetree/bindings/usb/usb-roothub.txt
+new file mode 100644
+index 000000000000..fc0797d7cee9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/usb-roothub.txt
+@@ -0,0 +1,46 @@
++Generic USB root-hub Properties
 +
- 		/* Did we race with a root-hub wakeup event? */
- 		if (rhdev->do_remote_wakeup) {
- 			char	buffer[6];
-@@ -2292,6 +2295,7 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
- 		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
- 				"suspend", status);
- 	}
++similar to the USB device bindings (documented in usb-device.txt from the
++current directory) this provides support for configuring the root-hub.
 +
- 	return status;
- }
- 
-@@ -2307,6 +2311,11 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
- 		dev_dbg(&rhdev->dev, "skipped %s of dead bus\n", "resume");
- 		return 0;
- 	}
++Required properties:
++- compatible: should be at least one of "usb1d6b,3", "usb1d6b,2"
++- reg: must be 0.
++- address-cells: must be 1
++- size-cells: must be 0
 +
-+	status = usb_phy_roothub_power_on(hcd->phy_roothub);
-+	if (status)
-+		return status;
++Required sub-nodes:
++a sub-node per actual USB port is required. each sub-node supports the
++following properties:
++  Required properties:
++    - reg: the port number on the root-hub (mandatory)
++  Optional properties:
++    - phys: optional, from the *Generic PHY* bindings (mandatory needed
++      when phy-names is given)
++    - phy-names: optional, from the *Generic PHY* bindings; supported names
++      are "usb2-phy" or "usb3-phy"
 +
- 	if (!hcd->driver->bus_resume)
- 		return -ENOENT;
- 	if (HCD_RH_RUNNING(hcd))
-@@ -2344,6 +2353,7 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
- 		}
- 	} else {
- 		hcd->state = old_state;
-+		usb_phy_roothub_power_off(hcd->phy_roothub);
- 		dev_dbg(&rhdev->dev, "bus %s fail, err %d\n",
- 				"resume", status);
- 		if (status != -ESHUTDOWN)
-@@ -2780,6 +2790,16 @@ int usb_add_hcd(struct usb_hcd *hcd,
- 		}
- 	}
- 
-+	hcd->phy_roothub = usb_phy_roothub_init(hcd->self.sysdev);
-+	if (IS_ERR(hcd->phy_roothub)) {
-+		retval = PTR_ERR(hcd->phy_roothub);
-+		goto err_phy_roothub_init;
++Example:
++	&usb1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		roothub@0 {
++			compatible = "usb1d6b,3", "usb1d6b,2";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			port@1 {
++				reg = <1>;
++				phys = <&usb2_phy1>, <&usb3_phy1>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++
++			port@2 {
++				reg = <2>;
++				phys = <&usb2_phy2>, <&usb3_phy2>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
 +	}
-+
-+	retval = usb_phy_roothub_power_on(hcd->phy_roothub);
-+	if (retval)
-+		goto err_usb_phy_roothub_power_on;
-+
- 	dev_info(hcd->self.controller, "%s\n", hcd->product_desc);
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index ae6e484a8d7c..5b49ba9f2f9a 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -30,6 +30,13 @@ Optional properties:
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
  
- 	/* Keep old behaviour if authorized_default is not in [0, 1]. */
-@@ -2944,6 +2964,10 @@ int usb_add_hcd(struct usb_hcd *hcd,
- err_register_bus:
- 	hcd_buffer_destroy(hcd);
- err_create_buf:
-+	usb_phy_roothub_power_off(hcd->phy_roothub);
-+err_usb_phy_roothub_power_on:
-+	usb_phy_roothub_exit(hcd->phy_roothub);
-+err_phy_roothub_init:
- 	if (IS_ENABLED(CONFIG_GENERIC_PHY) && hcd->remove_phy && hcd->phy) {
- 		phy_power_off(hcd->phy);
- 		phy_exit(hcd->phy);
-@@ -3028,6 +3052,9 @@ void usb_remove_hcd(struct usb_hcd *hcd)
- 	usb_deregister_bus(&hcd->self);
- 	hcd_buffer_destroy(hcd);
- 
-+	usb_phy_roothub_power_off(hcd->phy_roothub);
-+	usb_phy_roothub_exit(hcd->phy_roothub);
++sub-nodes:
++- optionally there can be a node for the root-hub, see usb-roothub.txt in the
++  current directory
++- one or more nodes with reg 1-31 for each port to which a device is connected.
++  See usb-device.txt in the current directory for more information.
 +
- 	if (IS_ENABLED(CONFIG_GENERIC_PHY) && hcd->remove_phy && hcd->phy) {
- 		phy_power_off(hcd->phy);
- 		phy_exit(hcd->phy);
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index a1f03ebfde47..6915b2afc209 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -103,6 +103,7 @@ struct usb_hcd {
- 	 */
- 	struct usb_phy		*usb_phy;
- 	struct phy		*phy;
-+	struct usb_phy_roothub	*phy_roothub;
- 
- 	/* Flags that need to be manipulated atomically because they can
- 	 * change while the host controller is running.  Always use
++
+ Example:
+ 	usb@f0931000 {
+ 		compatible = "generic-xhci";
 -- 
 2.14.2
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
