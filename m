@@ -1,57 +1,61 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 3/3] eeprom: at24: enable runtime pm support
-Date: Tue, 17 Oct 2017 23:36:06 +0200
-Message-ID: <20171017213606.janfozvf5gjy3i7j@ninjato>
-References: <1507615237-21744-1-git-send-email-divagar.mohandass@intel.com>
- <1507615237-21744-4-git-send-email-divagar.mohandass@intel.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings: i2c: i2c-davinci: Update binding for
+ 66AK2Gx pwr dm property
+Date: Tue, 17 Oct 2017 23:46:22 +0200
+Message-ID: <20171017214622.k4e274topkoc2yew@ninjato>
+References: <20170911201145.31257-1-fcooper@ti.com>
+ <20170911201145.31257-3-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6azw25krnebqfqr7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="peiwda3slco7kbag"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1507615237-21744-4-git-send-email-divagar.mohandass@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Divagar Mohandass <divagar.mohandass@intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@iki.fi, tfiga@chromium.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com, mika.westerberg@linux.intel.com, linux-pm@vger.kernel.org
+In-Reply-To: <20170911201145.31257-3-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---6azw25krnebqfqr7
+--peiwda3slco7kbag
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 10, 2017 at 11:30:37AM +0530, Divagar Mohandass wrote:
-> Currently the device is kept in D0, there is an opportunity
-> to save power by enabling runtime pm.
+On Mon, Sep 11, 2017 at 03:11:45PM -0500, Franklin S Cooper Jr wrote:
+> Add pm-domains property which is required for 66AK2Gx. Also document 66AK=
+2G
+> unique clocks property usage.
 >=20
-> Device can be daisy chained from PMIC and we can't rely on I2C core
-> for auto resume/suspend. Driver will decide when to resume/suspend.
->=20
-> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
+> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 
 Applied to for-next, thanks!
 
 
---6azw25krnebqfqr7
+--peiwda3slco7kbag
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnmd8YACgkQFA3kzBSg
-Kba6EA//fDzf9U6V0o4KKPYe75rCK8mz/aGDrF8hKs9clMvAivjO2L8CsbprrAfS
-N2yiVXo39bLJujPpbFNAV+LXnZR4RR96+B92MU8TKfjhBCdOaAaMy+02fagkJrPM
-fKBWht7OpDRTWL4du2iI2dlW1EE6Xtbj4I+eoZXj/tA5xCze3g0I6Pan3PVDxDFf
-Sx/JeXuJ+RwlTVlsAczY67bGQSGA4VID3KVG9J7vjSGEe9U7S3lvzM+0i53cQozW
-OzOVGq0o+9SGGfX5sBcP+7/ZRY3QrRMfuCmkgZNyLZYK+1v0hSU1R9/3XfLXw5yp
-amLl2whhay1rSCsqCBZjhDXWSP44lhMdz9Sr32q9vbLK4vrv41iVEi8ISx3oEm2r
-FbA+/SY8XHBVI8sqSg2kZsFYwoni0KSZ2dE3XLrVQuJvxcu4N4K/aXmfM2C7Hrry
-45S6WF6aZf21SQDvI5j6RaEBZkshWb4bV9P2f3QXwN9vxg/vjgrCKV+sUhcaM8P4
-ykrfzWhVbzy2h4U1U5Bu/gIETaAZzJIWZpRqZoL3oh1Hktz+/3XFIYTvbxb3QDIv
-JNyfiswAjmpjJsvJIfNFQEEy/UhhpaC0rdrfiohfthaBfl64w5CDdJZBDglJAi8c
-IiFMPe1qaaVMWvaTGaYuA+9BizAhKEGTO+TeGDjunRhEjjVw8SE=
-=328b
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnmei4ACgkQFA3kzBSg
+KbYddQ//aOhZqC471Edlyrm1bZCDT23ePox/BiM5YYwxMB2Js+2Q+44tWxfX5Cuz
+jIjl8zKvbFRqFCY+RSj4JdxlQqqoFOcHJZ2cMDLyflSH63b4G9pLPBYB1fj8vr6E
+8XeR6i5RDgS93YokmX6mQ+563c8KEPi+N8kp32I8HviP6B5OXGTfZnUn4YL3SR9G
+aRYweIXKI4WpDecnJ+vsvp1r4QdnCOFV1xsDsrhP3J1lqtTzM9IfMY3BzUYIT3i+
+7/j+fLa+e+XBw9frkrnEPSIx4b9Y4vyuHBKQwE5gK39AV3LVZUSMXbGwzOeAbitn
+hCWAzVYDfWYRZL/gTs1GnS0/H3EUkzXG/zj4AJL+HR/jgmA6o/wE6zIDtIxeXfZc
+kBXX5c+Dvuxi1dNLg9xpdMdV9yM/T+8DU9M9IVld6pTU0NpzOeP5bDr1hwReHUD5
+daxazJ14ATHfhtu34RTg88rfNHMnRF7UplvHXNt/Bm0H/Cinua4smJAo4Cgi6gvZ
+Xgna2AkTn7xJ1yReiJE+eIAWss6NsV+TvB+SixKi3x+iPb33kXyyrJcIwN2HUJ0q
+BbhXW6tVstCp6HvLB7x4+I4+PTP4WAQAvBVhRw3cl/kXVDH8diEbx3sUradC2E9h
+rb76LshH8tP+QSU3PF9S64ayGIiGF1vj+XGyO4U2tzd891W1HuI=
+=hoTj
 -----END PGP SIGNATURE-----
 
---6azw25krnebqfqr7--
+--peiwda3slco7kbag--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
