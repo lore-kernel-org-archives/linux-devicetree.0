@@ -1,48 +1,101 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 1/4] clocksource: stm32: convert driver to timer_of
-Date: Tue, 17 Oct 2017 19:09:14 +0200
-Message-ID: <88c8f124-4cb1-a982-d4a2-c029ab0dcd2a@linaro.org>
-References: <1506959513-16851-1-git-send-email-benjamin.gaignard@linaro.org>
- <1506959513-16851-2-git-send-email-benjamin.gaignard@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/9] drm/panel: simple: make it possible to override LCD
+ bus format
+Date: Tue, 17 Oct 2017 12:11:40 -0500
+Message-ID: <CAL_JsqLhOmwjkj_OO=6umG2QwkWqQhAUQYL0WZUHhsV4LHXFyg@mail.gmail.com>
+References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
+ <1507721021-28174-4-git-send-email-LW@KARO-electronics.de>
+ <20171017121240.GD684@ulmo> <20171017144423.4ddd6047@karo-electronics.de>
+ <20171017125642.GE27983@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1506959513-16851-2-git-send-email-benjamin.gaignard@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, tglx@linutronix.de, ludovic.barre@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171017125642.GE27983@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2017 17:51, Benjamin Gaignard wrote:
-> Convert driver to use timer_of helpers. This allow to remove
-> custom proprietary structure.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> ---
-
-[ ... ]
-
-> -	clockevents_config_and_register(&data->evtdev,
-> -					DIV_ROUND_CLOSEST(rate, prescaler),
-> -					0x1, max_delta);
-> -
-> -	ret = request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
-> -			"stm32 clockevent", data);
-> -	if (ret) {
-> -		pr_err("%pOF: failed to request irq.\n", np);
-> -		goto err_get_irq;
-> -	}
-> +	clockevents_config_and_register(&to->clkevt,
-> +					timer_of_period(to), 0x60, max_delta);
-
-
-Why 0x1 -> 0x60 ?
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+T24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgNzo1NiBBTSwgVGhpZXJyeSBSZWRpbmcKPHRoaWVycnku
+cmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gT24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgMDI6NDQ6
+MjNQTSArMDIwMCwgTG90aGFyIFdhw59tYW5uIHdyb3RlOgo+PiBIaSwKPj4KPj4gT24gVHVlLCAx
+NyBPY3QgMjAxNyAxNDoxMjo0MCArMDIwMCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPj4gPiBPbiBX
+ZWQsIE9jdCAxMSwgMjAxNyBhdCAwMToyMzozNVBNICswMjAwLCBMb3RoYXIgV2HDn21hbm4gd3Jv
+dGU6Cj4+ID4gPiBUaGUgYmFzZWJvYXJkcyBmb3IgdGhlIEthLVJvIGVsZWN0cm9uaWNzIHNlcmll
+cyBvZiBpLk1YIG1vZHVsZXMKPj4gPiA+IHVzZSBhIDI0Yml0IExDRCBpbnRlcmZhY2UsIG5vIG1h
+dHRlciB3aGF0IExDRCBidXMgd2lkdGggdGhlIFNvQyBvbiB0aGUKPj4gPiA+IG1vZHVsZSBwcm92
+aWRlcyBhbmQgd2hhdCB0aGUgTENEIHBhbmVsIGV4cGVjdHMuIExDRHMgd2l0aCA2Yml0IHBlciBj
+b2xvcgo+PiA+ID4gd2lsbCBpZ25vcmUgdGhlIDIgTFNCcyBvZiBlYWNoIGNvbG9yIGxhbmUsIGFu
+ZCBtb2R1bGVzIHVzaW5nIGEgU29DCj4+ID4gPiB0aGF0IHByb3ZpZGVzIG9ubHkgNmJpdCBwZXIg
+Y29sb3IsIGRyaXZlIHRoZSBkaXNwbGF5IGluZm9ybWF0aW9uIG9uIHRoZQo+PiA+ID4gNiBNU0Jz
+IG9mIGVhY2ggY29sb3IgbGFuZSBhbmQgdGllIHRoZSAyIExTQnMgb2YgZWFjaCBjb2xvciBsYW5l
+IHRvIEdORC4KPj4gPiA+Cj4+ID4gPiBUaHVzLCBubyBtYXR0ZXIgd2hhdCBjb21iaW5hdGlvbiBv
+ZiBMQ0QgYW5kIFNvQyBpcyB1c2VkLCB0aGUgTENEIHBvcnQKPj4gPiA+IGNhbiBiZSB1c2VkIHdp
+dGhvdXQgc2h1ZmZsaW5nIGJpdCBsYW5lcyBieSBhbHdheXMgY29uZmlndXJpbmcgdGhlIExDRAo+
+PiA+ID4gb3V0cHV0IHRvIDI0Yml0IG1vZGUuCj4+ID4gPgo+PiA+ID4gQWRkIGEgZnVuY3Rpb24g
+dG8gaGFuZGxlIGNlcnRhaW4gcXVpcmtzIG9mIHRoZSBMQ0QgaW50ZXJmYWNlIHRvIHRoZQo+PiA+
+ID4gcGFuZWwgZHJpdmVyIHRvIGJlIGFibGUgdG8gb3ZlcnJpZGUgdGhlIGJ1cyBmb3JtYXQgc3Bl
+Y2lmaWVkIGluIGEKPj4gPiA+IHBhbmVsJ3MgZGlzcGxheV9tb2RlLgo+PiA+Cj4+ID4gSSB0aGlu
+ayB0aGUgYWJvdmUgcGFyYWdyYXBoIGNsZWFybHkgaW5kaWNhdGVzIHRoYXQgdGhpcyBpcyB0aGUg
+d3JvbmcKPj4gPiBwbGFjZSB0byB3b3JrYXJvdW5kIHRoaXMuIFlvdSBzYXkgeW91cnNlbGYgdGhh
+dCB0aGUgTENEIGludGVyZmFjZSBoYXMKPj4gPiBxdWlya3MgdGhhdCBuZWVkIHRvIGJlIGhhbmRs
+ZWQsIHNvIHdoeSBkbyB5b3Ugd2FudCB0byBmb3JjZSB0aGlzCj4+ID4gaGFuZGxpbmcgaW50byB0
+aGUgcGFuZWwgZHJpdmVyPwo+PiA+Cj4+IFRoZSBxdWlyayBpcyBpbiB0aGUgaW50ZXJmYWNpbmcg
+b2YgdGhlIFNvTSdzIExDRCBvdXRwdXQgdG8gdGhlIExDRAo+PiBwYW5lbC4gVGh1cyBpdCBjYW4g
+YmUgaGFuZGxlZCBpbiBlaXRoZXIgcGxhY2UuCj4KPiBZZXMuIFdoYXQgSSdtIHNheWluZyBpcyB0
+aGF0IHRoZSBwYW5lbCBpcywgaW4gbXkgb3BpbmlvbiwgdGhlIHdyb25nCj4gcGxhY2UgdG8gaGFu
+ZGxlIGFuIExDRCBpbnRlcmZhY2UgKG9yaWdpbmF0aW5nIGZyb20gdGhlIFNvTSkgcXVpcmsuCgpU
+aGVyZSdzIDIgcG9zc2libGUgdGhpbmdzIHdlIGNvdWxkIG5lZWQgdG8gZGVzY3JpYmUgaGVyZS4g
+Rmlyc3QsIGlzCmFueSByZXN0cmljdGlvbnMgdGhlIFNvTSBoYXMuIEZvciBleGFtcGxlLCB0aGUg
+U29NIGhhcyBhbiAxOC1iaXQKaW50ZXJmYWNlIHdoaWxlIHRoZSBTb0MgaGFzIGEgMjQtYml0IGlu
+dGVyZmFjZS4gU2Vjb25kLCBpcyBob3cgYSBwYW5lbAp3aXRoIGZld2VyIGJpdHMgdGhhbiB0aGUg
+aW50ZXJmYWNlICh3aGV0aGVyIGEgU29NIG9yIGRpcmVjdCB0byBTb0MpIGlzCndpcmVkIHVwLiBJ
+ZiB3ZSB0aGluayBhYm91dCB0aGlzIGluIHRlcm1zIG9mIGEgYmFzZSBEVCBwbHVzIG92ZXJsYXlz
+LAp0aGVuIHRoZSBmb3JtZXIgY2FzZSBiZWxvbmdzIGluIHRoZSBiYXNlIGFuZCB0aGUgbGF0dGVy
+IGJlbG9uZ3MgaW4gdGhlCm92ZXJsYXkuIElmIHRoZSBTb00gaW50ZXJmYWNlIG5lZWRzIHRvIGJl
+IFNvQyBpbmRlcGVuZGVudCwgdGhlbiBpdApnZXRzIG1vcmUgY29tcGxpY2F0ZWQgYXMgd2UgZG9u
+J3Qgd2FudCB0byBoYXZlIHRoZSBTb0MncyBMQ0QKY29udHJvbGxlciBub2RlIGluIHRoZSBvdmVy
+bGF5IGFkZGluZyBwcm9wZXJ0aWVzIHRvIGl0IGFuZCB0aGVyZWZvcmUKbmVlZCB0byBoYXZlIHNv
+bWUgc29ydCBvZiB0cmFuc2xhdGlvbiAoaS5lLiBhIGNvbm5lY3RvciBiaW5kaW5nKS4gQnV0Cndl
+IGhhdmUgbm8gZGVmaW5pdGlvbiBvZiBob3cgd2Ugd291bGQgZGVzY3JpYmUgT0YgZ3JhcGggdGhy
+dSBhCmNvbm5lY3Rvci4KCkluIHRoZSBlbmQsIHRoZXNlIGFyZSBib2FyZCBsZXZlbCBwcm9wZXJ0
+aWVzLCBzbyB5b3UgY2FuIG1ha2UgdGhlIHNhbWUKYXJndW1lbnQgdGhhdCB0aGlzIHByb3BlcnR5
+IGRvZXNuJ3QgYmVsb25nIGluIHRoZSBTb0MncyBMQ0QgY29udHJvbGxlcgpub2RlIGFzIHlvdSBj
+YW4gaXQgZG9lc24ndCBiZWxvbmcgaW4gdGhlIHBhbmVsIG5vZGUuIEdlbmVyYWxseSwgd2UKanVz
+dCBkZWZhdWx0IHRvIHRoZSBub2RlIGJvdW5kIHRvIHRoZSBkcml2ZXIgd2Ugd2FudCB0byBoYW5k
+bGUgdGhlCnByb3BlcnR5LgoKSW4gYW55IGNhc2UsIEkgdGhpbmsgdGhpcyBzaG91bGQgYmUgcHJv
+cGVydGllcyBvZiB0aGUgZW5kcG9pbnRzIHJhdGhlcgp0aGFuIHRoZSBlbmRwb2ludCBwYXJlbnQg
+bm9kZXMgYXMgaXQgaXMgYSBwcm9wZXJ0eSBvZiB0aGUgaW50ZXJmYWNlLApub3QgdGhlIGNvbnRy
+b2xsZXIgbm9yIHRoZSBwYW5lbC4gVGhpcyBpcyBhbHNvIGhvdyBjYW1lcmEgaW50ZXJmYWNlcwp3
+ZXJlIGRvbmUuIEFuIExDRCBjb250cm9sbGVyIG5vZGUgY291bGQgaGF2ZSAyIGludGVyZmFjZXMg
+Zm9yIGV4YW1wbGUuCgo+PiA+IFRoZSBwYW5lbCByZW1haW5zIHRoZSBzYW1lLCBubyBtYXR0ZXIg
+d2hhdCBpbnRlcmZhY2UgeW91IGNvbm5lY3QgaXQgdG8uCj4+ID4KPj4gQmVjYXVzZSB0aGF0J3Mg
+anVzdCBPTkUgcGxhY2UgdG8gY2hhbmdlLCBubyBtYXR0ZXIgd2hhdCBMQ0QgZHJpdmVyIGlzCj4+
+IGJlaW5nIHVzZWQuCj4KPiBUaGF0J3MgYSBMaW51eCBzcGVjaWZpYyBpbXBsZW1lbnRhdGlvbiBk
+ZXRhaWwuIElmIHlvdSBldmVyIHdhbnQgdG8gdXNlCj4gYSBwYW5lbCB0aGF0IGlzIG5vdCBkcml2
+ZW4gYnkgc2ltcGxlLXBhbmVsIHlvdSdkIGhhdmUgdG8gY2hhbmdlIGl0IGluCj4gdGhhdCBkcml2
+ZXIsIHRvby4KCkkgZG8gYWdyZWUgdGhlIGltcGxlbWVudGF0aW9uIGJlbG9uZ3MgaW4gdGhlIExD
+RCBjb250cm9sbGVyIHNpZGUsIGJ1dApqdXN0IGJlY2F1c2UgdGhlIHByb3BlcnR5IGlzIGluIHRo
+ZSBwYW5lbCBub2RlIHRoYXQgZG9lc24ndCBtZWFuIGl0J3MKdGhlIHBhbmVsIGRyaXZlciB0aGF0
+IGhhcyB0byBoYW5kbGUgdGhlIHByb3BlcnR5LiBBcyBsb25nIGFzIHRoZQpwcm9wZXJ0eSBpcyBw
+YXJzZS1hYmxlIGluIGEgc3RhbmRhcmQgd2F5LCB0aGUgInBhcmVudCIgY2FuIGRvIGl0LgpUaGVy
+ZSBhcmUgY2FzZXMgd2hlcmUgdGhlIGRyaXZlciB0aWVkIHRvIHRoZSBwYXJlbnQgbm9kZSBoYW5k
+bGVzCnByb3BlcnRpZXMgaW4gdGhlIGNoaWxkIG5vZGVzLiBTUEkgdGltaW5nIG1vZGVzIGlzIG9u
+ZSBleGFtcGxlLiBJbgp0aGlzIGNhc2UsIEkgdGhpbmsgd2UnbGwgbmVlZCB0byBoYW5kbGUgdGhp
+cyBwcm9wZXJ0eSBiZWluZyBpbiB0aGUKbG9jYWwgZW5kcG9pbnQgYW5kIHRoZSByZW1vdGUgZW5k
+cG9pbnQgYW5kIHJlc29sdmluZyB0aGUgZm9ybWF0IG5lZWRlZApiYXNlZCBvbiB0aGF0IChhcyB3
+ZWxsIGFzIHdoYXQgdGhlIHBhbmVsIGRyaXZlciBzYXlzKS4gVGhhdCdzIGdvaW5nIHRvCmJlIG5l
+ZWRlZCB3aXRoIG92ZXJsYXlzIGFuZCBjb25uZWN0b3JzIGFueXdheXMgYW5kIHRoZW4geW91IGRv
+bid0CnJlYWxseSBoYXZlIHRvIGNhcmUgd2hlcmUgdGhlIHJlc3RyaWN0aW9uIGNvbWVzIGZyb20u
+CgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
