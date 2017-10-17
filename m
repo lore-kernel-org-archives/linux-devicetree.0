@@ -1,102 +1,100 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RFC PATCH v3 1/5] arm64: dts: rockchip: Enable edp disaplay on kevin
-Date: Tue, 17 Oct 2017 16:09:21 +0800
-Message-ID: <20171017080925.23763-2-jeffy.chen@rock-chips.com>
-References: <20171017080925.23763-1-jeffy.chen@rock-chips.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/2] dt-bindings: power: add amlogic meeson power domain
+ bindings
+Date: Tue, 17 Oct 2017 10:11:46 +0200
+Message-ID: <2c765b7a-586e-de7c-8f48-0111689146bf@baylibre.com>
+References: <1508225882-8795-1-git-send-email-narmstrong@baylibre.com>
+ <1508225882-8795-3-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171017080925.23763-1-jeffy.chen@rock-chips.com>
+In-Reply-To: <1508225882-8795-3-git-send-email-narmstrong@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, heiko@sntech.de, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, tfiga@chromium.org, broonie@kernel.org, seanpaul@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
+To: khilman@baylibre.com, carlo@caione.org
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add edp panel and enable related nodes on kevin.
+On 17/10/2017 09:38, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/power/amlogic,meson-gx-pwrc.txt       | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+> new file mode 100644
+> index 0000000..94c2474
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+> @@ -0,0 +1,65 @@
+> +Amlogic Meson Power Controller
+> +==============================
+> +
+> +The Amlogic Meson SoCs embeds an internal Power domain controller.
+> +
+> +VPU Power Domain
+> +----------------
+> +
+> +The Video Processing Unit power domain is controlled by this power controller,
+> +but the domain requires some external resources to meet the correct power
+> +sequences.
+> +The bindings must respect the power domain bindings as described in the file
+> +power_domain.txt
+> +
+> +Device Tree Bindings:
+> +---------------------
+> +
+> +Required properties:
+> +- compatible: value should be different for each SoC family as :
+> +	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
+> +	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
+> +	- GXM (S912) : "amlogic,meson-gxm-vpu"
+> +	followed by the common "amlogic,meson-gx-vpu"
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-Reviewed-by: Mark Yao <mark.yao@rock-chips.com>
+Oops, wrong compatibles, please ignore this patch, I'll repost it.
 
----
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
- 2 files changed, 45 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index a3d3cea7dc4f..bc67b19f0af5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -93,6 +93,18 @@
- 		pwm-delay-us = <10000>;
- 	};
- 
-+	edp_panel: edp-panel {
-+		compatible = "sharp,lq123p1jx31", "simple-panel";
-+		backlight = <&backlight>;
-+		power-supply = <&pp3300_disp>;
-+
-+		ports {
-+			panel_in_edp: endpoint {
-+				remote-endpoint = <&edp_out_panel>;
-+			};
-+		};
-+	};
-+
- 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
- 		compatible = "murata,ncp15wb473";
- 		pullup-uv = <1800000>;
-@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
- 	};
- };
- 
-+&edp {
-+	status = "okay";
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			edp_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
- &ppvar_bigcpu_pwm {
- 	regulator-min-microvolt = <798674>;
- 	regulator-max-microvolt = <1302172>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 5772c52fbfd3..470105d651c2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
- 	dr_mode = "host";
- };
- 
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
-+
- #include <arm/cros-ec-keyboard.dtsi>
- #include <arm/cros-ec-sbs.dtsi>
- 
--- 
-2.11.0
+> +- #power-domain-cells: should be 0
+> +- amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
+> +- resets: phandles to the reset lines needed for this power demain sequence
+> +	as described in ../reset/reset.txt
+> +- clocks: from common clock binding: handle to VPU and VAPB clocks
+> +- clock-names: from common clock binding: must contain "vpu", "vapb"
+> +	corresponding to entry in the clocks property.
+> +
+> +Parent node should have the following properties :
+> +- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
+> +- reg: base address and size of the AO system control register space.
+> +
+> +Example:
+> +-------
+> +
+> +ao_sysctrl: sys-ctrl@0 {
+> +	compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
+> +	reg =  <0x0 0x0 0x0 0x100>;
+> +
+> +	pwrc_vpu: power-controller-vpu {
+> +		compatible = "amlogic,meson-gx-pwrc-vpu";
+> +		#power-domain-cells = <0>;
+> +		amlogic,hhi-sysctrl = <&sysctrl>;
+> +		resets = <&reset RESET_VIU>,
+> +			 <&reset RESET_VENC>,
+> +			 <&reset RESET_VCBUS>,
+> +			 <&reset RESET_BT656>,
+> +			 <&reset RESET_DVIN_RESET>,
+> +			 <&reset RESET_RDMA>,
+> +			 <&reset RESET_VENCI>,
+> +			 <&reset RESET_VENCP>,
+> +		 	 <&reset RESET_VDAC>,
+> +		 	 <&reset RESET_VDI6>,
+> +		 	 <&reset RESET_VENCL>,
+> +			 <&reset RESET_VID_LOCK>;
+> +		clocks = <&clkc CLKID_VPU>,
+> +			 <&clkc CLKID_VAPB>;
+> +		clock-names = "vpu", "vapb";
+> +	};
+> +};
+> +
+> +
+> 
