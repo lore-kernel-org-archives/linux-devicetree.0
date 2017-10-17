@@ -1,140 +1,56 @@
-From: Wendy Liang <wendy.liang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC PATCH v2] Dcoumentation: dt: mailbox: Add Xilinx IPI Mailbox
-Date: Tue, 17 Oct 2017 11:33:04 -0700
-Message-ID: <1508265184-17799-1-git-send-email-jliang@xilinx.com>
+From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] K2G: Add QSPI support
+Date: Tue, 17 Oct 2017 20:50:51 +0200
+Message-ID: <012e14f4-1eb0-2641-feaa-5fc8f9028810@wedev4u.fr>
+References: <20171003051925.8821-1-vigneshr@ti.com>
+ <09cc0a61-3f73-4a10-2d67-32515a7da861@ti.com>
+ <6f507813-388a-13e5-31ba-736b419744fa@gmail.com>
+ <69beca0c-68a2-2d2c-d4a8-6f05a1fbc957@wedev4u.fr>
+ <ebd85d99-431b-3f6d-4bdf-e7d47b81567c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ebd85d99-431b-3f6d-4bdf-e7d47b81567c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cyrilc-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, willw-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
-in ZynqMP SoC used for the communication between various processor
-systems.
+Le 17/10/2017 à 00:34, Marek Vasut a écrit :
+> On 10/17/2017 12:29 AM, Cyrille Pitchen wrote:
+>> Hi all,
+>>
+>> Le 16/10/2017 à 11:28, Marek Vasut a écrit :
+>>> On 10/16/2017 08:15 AM, Vignesh R wrote:
+>>>>
+>>>>
+>>>> On Tuesday 03 October 2017 10:49 AM, Vignesh R wrote:
+>>>>>
+>>>>>
+>>>>> This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
+>>>>> The patches enhance the existing cadence-quadspi driver to support
+>>>>> loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
+>>>>
+>>>> Gentle ping on the series...
+>>>
+>>> It's IMO OK, Cyrille, can you pick it ?
+>>>
+>>
+>> The series looks good to me too.
+>>
+>> Marek, could you please add you "Acked-by" or "Reviewed-by" tag for the
+>> record in patchwork ? It will be automatically added when I use
+>> "pwclient git-am -s" to merge the patches into the spi-nor/next branch.
+> 
+> Acked-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
 
-Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-V2: Each ZynqMP IPI mailbox controller instance for one physical connection
-    between two ZynqMP IPI agents.
----
- .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 103 +++++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+added Marek's "Acked-by" tags on the whole series and applied it into
+the spi-nor/next branch of l2-mtd
 
-diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-new file mode 100644
-index 0000000..ba02b93
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
-@@ -0,0 +1,103 @@
-+Xilinx IPI Mailbox Driver
-+========================================
-+
-+The Xilinx IPI(Inter Processor Interrupt) mailbox driver is a mailbox
-+controller that manages the messaging between two Xilinx Zynq UltraScale+
-+MPSoC IPI agents. Each IPI agent owns registers used for notification and
-+buffers for message.
-+
-+               +-------------------------------------+
-+               | Xilinx ZynqMP IPI Controller        |
-+               +-------------------------------------+
-+    +--------------------------------------------------+
-+ATF                    |                     |
-+                       |                     |
-+                       |                     |
-+    +--------------------------+             |
-+                       |                     |
-+                       |                     |
-+    +--------------------------------------------------+
-+            +------------------------------------------+
-+            |  +----------------+   +----------------+ |
-+Hardware    |  |  IPI Agent     |   |  IPI Buffers   | |
-+            |  |  Registers     |   |                | |
-+            |  |                |   |                | |
-+            |  +----------------+   +----------------+ |
-+            |                                          |
-+            | Xilinx IPI Agent Block                   |
-+            +------------------------------------------+
-+
-+
-+Controller Device Node:
-+===========================
-+Required properties:
-+--------------------
-+- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
-+- reg:			IPI buffers address range
-+- reg-names:		Names of the reg resources
-+- #mbox-cells:		Shall be 1. It contains:
-+			* tx(0) or rx(1) channel
-+- ipi-ids:		IPI agent IDs of the two ends of the
-+			communication.
-+- interrupt-parent:	Phandle for the interrupt controller
-+- interrupts:		Interrupt information corresponding to the
-+			interrupt-names property.
-+
-+Optional properties:
-+--------------------
-+- method:              The method of accessing the IPI agent registers.
-+                       Permitted values are: "smc" and "hvc". Default is
-+                       "smc".
-+
-+Client Device Node:
-+===========================
-+Required properties:
-+--------------------
-+- mboxes:		Standard property to specify a mailbox
-+			(See ./mailbox.txt)
-+- mbox-names:		List of identifier  strings for each mailbox
-+			channel.
-+
-+Example:
-+===========================
-+	/* APU IPI mailbox driver */
-+	ipi_mailbox_rpu0: ipi_mailbox@0xff90400 {
-+		compatible = "xlnx,zynqmp-ipi-mailbox";
-+		reg = <0x0 0xff990400 0x0 0x20>,
-+		      <0x0 0xff990420 0x0 0x20>,
-+		      <0x0 0xff990080 0x0 0x20>,
-+		      <0x0 0xff9900a0 0x0 0x20>;
-+		reg-names = "local_request_region", "local_response_region",
-+			    "remote_request_region", "remote_response_region";
-+		#mbox-cells = <1>;
-+		ipi-ids = <0 1>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 29 4>;
-+	};
-+	ipi_mailbox_rpu1: ipi_mailbox@ff990440 {
-+		compatible = "xlnx,zynqmp-ipi-mailbox";
-+		reg = <0x0 0xff990440 0x0 0x20>,
-+		      <0x0 0xff990460 0x0 0x20>,
-+		      <0x0 0xff990280 0x0 0x20>,
-+		      <0x0 0xff9902a0 0x0 0x20>;
-+		reg-names = "local_request_region", "local_response_region",
-+			    "remote_request_region", "remote_response_region";
-+		#mbox-cells = <1>;
-+		ipi-ids = <0 2>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 29 4>;
-+	};
-+	rpu_subsystem0: rpu_subsystem@0 {
-+		rpu0 {
-+			...
-+			mbox-clients = <&ipi_mailbox_rpu0 0>,
-+					<&ipi_mailbox_rpu0 1>;
-+			mbox-clients-names = "tx", "rx";
-+		};
-+		rpu1 {
-+			...
-+			mbox-clients = <&ipi_mailbox_rpu1 0>,
-+					<&ipi_mailbox_rpu1 1>;
-+			mbox-clients-names = "tx", "rx";
-+		};
-+	};
--- 
-2.7.4
-
+Thanks!
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
