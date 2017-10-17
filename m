@@ -1,18 +1,26 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 05/10] drm/sun4i: Add support for A20 display pipeline components
-Date: Tue, 17 Oct 2017 20:18:02 +0800
-Message-ID: <20171017121807.2994-6-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 04/10] drm/sun4i: Add support for A10 display
+ pipeline components
+Date: Tue, 17 Oct 2017 20:18:01 +0800
+Message-ID: <20171017121807.2994-5-wens@csie.org>
 References: <20171017121807.2994-1-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171017121807.2994-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Jonathan Liu <net147@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBA7KS7HQKGQEC4Q6NVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171017121807.2994-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Liu <net147@gmail.com>
-
-The A20 display pipeline has 2 frontends, 2 backends, and 2 TCONs.
+The A10 display pipeline has 2 frontends, 2 backends, and 2 TCONs.
 This patch adds support (or a compatible string in the frontend's
 case) for these components.
 
@@ -21,130 +29,88 @@ or it can output to HDMI via an on-chip HDMI controller, or
 CVBS/YPbPr/VGA signals via on-chip TV encoders. These additional
 encoders are not covered in this patch.
 
-Signed-off-by: Jonathan Liu <net147@gmail.com>
-[wens@csie.org: Expand commit message]
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 4 ++++
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 3 +++
  drivers/gpu/drm/sun4i/sun4i_backend.c                         | 8 ++++++++
- drivers/gpu/drm/sun4i/sun4i_drv.c                             | 3 +++
- drivers/gpu/drm/sun4i/sun4i_tcon.c                            | 7 +++++++
- 4 files changed, 22 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c                             | 4 +++-
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 8f9a58181f89..013e76b348ba 100644
+index 5650efcfd2ac..8f9a58181f89 100644
 --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
 +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -91,6 +91,7 @@ Required properties:
-    * allwinner,sun5i-a13-tcon
-    * allwinner,sun6i-a31-tcon
-    * allwinner,sun6i-a31s-tcon
-+   * allwinner,sun7i-a20-tcon
-    * allwinner,sun8i-a33-tcon
-    * allwinner,sun8i-v3s-tcon
-  - reg: base address and size of memory-mapped region
-@@ -158,6 +159,7 @@ Required properties:
-     * allwinner,sun4i-a10-display-backend
+@@ -155,6 +155,7 @@ system.
+ 
+ Required properties:
+   - compatible: value must be one of:
++    * allwinner,sun4i-a10-display-backend
      * allwinner,sun5i-a13-display-backend
      * allwinner,sun6i-a31-display-backend
-+    * allwinner,sun7i-a20-display-backend
      * allwinner,sun8i-a33-display-backend
-   - reg: base address and size of the memory-mapped region.
-   - interrupts: interrupt associated to this IP
-@@ -191,6 +193,7 @@ Required properties:
-     * allwinner,sun4i-a10-display-frontend
+@@ -187,6 +188,7 @@ deinterlacing and color space conversion.
+ 
+ Required properties:
+   - compatible: value must be one of:
++    * allwinner,sun4i-a10-display-frontend
      * allwinner,sun5i-a13-display-frontend
      * allwinner,sun6i-a31-display-frontend
-+    * allwinner,sun7i-a20-display-frontend
      * allwinner,sun8i-a33-display-frontend
-   - reg: base address and size of the memory-mapped region.
-   - interrupts: interrupt associated to this IP
-@@ -240,6 +243,7 @@ Required properties:
+@@ -233,6 +235,7 @@ extra node.
+ 
+ Required properties:
+   - compatible: value must be one of:
++    * allwinner,sun4i-a10-display-engine
+     * allwinner,sun5i-a10s-display-engine
      * allwinner,sun5i-a13-display-engine
      * allwinner,sun6i-a31-display-engine
-     * allwinner,sun6i-a31s-display-engine
-+    * allwinner,sun7i-a20-display-engine
-     * allwinner,sun8i-a33-display-engine
-     * allwinner,sun8i-v3s-display-engine
- 
 diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c b/drivers/gpu/drm/sun4i/sun4i_backend.c
-index 77f9e183df00..847eecbe4d14 100644
+index e8477321f978..77f9e183df00 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_backend.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
-@@ -524,6 +524,10 @@ static const struct sun4i_backend_quirks sun5i_backend_quirks = {
- static const struct sun4i_backend_quirks sun6i_backend_quirks = {
- };
+@@ -514,6 +514,10 @@ static int sun4i_backend_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
-+static const struct sun4i_backend_quirks sun7i_backend_quirks = {
++static const struct sun4i_backend_quirks sun4i_backend_quirks = {
 +	.needs_output_muxing = true,
 +};
 +
- static const struct sun4i_backend_quirks sun8i_a33_backend_quirks = {
+ static const struct sun4i_backend_quirks sun5i_backend_quirks = {
  };
  
-@@ -540,6 +544,10 @@ static const struct of_device_id sun4i_backend_of_table[] = {
- 		.compatible = "allwinner,sun6i-a31-display-backend",
- 		.data = &sun6i_backend_quirks,
- 	},
+@@ -524,6 +528,10 @@ static const struct sun4i_backend_quirks sun8i_a33_backend_quirks = {
+ };
+ 
+ static const struct of_device_id sun4i_backend_of_table[] = {
 +	{
-+		.compatible = "allwinner,sun7i-a20-display-backend",
-+		.data = &sun7i_backend_quirks,
++		.compatible = "allwinner,sun4i-a10-display-backend",
++		.data = &sun4i_backend_quirks,
 +	},
  	{
- 		.compatible = "allwinner,sun8i-a33-display-backend",
- 		.data = &sun8i_a33_backend_quirks,
+ 		.compatible = "allwinner,sun5i-a13-display-backend",
+ 		.data = &sun5i_backend_quirks,
 diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 5dbaf8bb414d..03df9fe9d6dd 100644
+index b8089ac6feef..5dbaf8bb414d 100644
 --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
 +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -180,6 +180,7 @@ static bool sun4i_drv_node_is_frontend(struct device_node *node)
- 	return of_device_is_compatible(node, "allwinner,sun4i-a10-display-frontend") ||
- 		of_device_is_compatible(node, "allwinner,sun5i-a13-display-frontend") ||
+@@ -177,7 +177,8 @@ static bool sun4i_drv_node_is_connector(struct device_node *node)
+ 
+ static bool sun4i_drv_node_is_frontend(struct device_node *node)
+ {
+-	return of_device_is_compatible(node, "allwinner,sun5i-a13-display-frontend") ||
++	return of_device_is_compatible(node, "allwinner,sun4i-a10-display-frontend") ||
++		of_device_is_compatible(node, "allwinner,sun5i-a13-display-frontend") ||
  		of_device_is_compatible(node, "allwinner,sun6i-a31-display-frontend") ||
-+		of_device_is_compatible(node, "allwinner,sun7i-a20-display-frontend") ||
  		of_device_is_compatible(node, "allwinner,sun8i-a33-display-frontend");
  }
- 
-@@ -189,6 +190,7 @@ static bool sun4i_drv_node_is_tcon(struct device_node *node)
- 		of_device_is_compatible(node, "allwinner,sun5i-a13-tcon") ||
- 		of_device_is_compatible(node, "allwinner,sun6i-a31-tcon") ||
- 		of_device_is_compatible(node, "allwinner,sun6i-a31s-tcon") ||
-+		of_device_is_compatible(node, "allwinner,sun7i-a20-tcon") ||
- 		of_device_is_compatible(node, "allwinner,sun8i-a33-tcon") ||
- 		of_device_is_compatible(node, "allwinner,sun8i-v3s-tcon");
+@@ -388,6 +389,7 @@ static int sun4i_drv_remove(struct platform_device *pdev)
  }
-@@ -394,6 +396,7 @@ static const struct of_device_id sun4i_drv_of_table[] = {
+ 
+ static const struct of_device_id sun4i_drv_of_table[] = {
++	{ .compatible = "allwinner,sun4i-a10-display-engine" },
+ 	{ .compatible = "allwinner,sun5i-a10s-display-engine" },
  	{ .compatible = "allwinner,sun5i-a13-display-engine" },
  	{ .compatible = "allwinner,sun6i-a31-display-engine" },
- 	{ .compatible = "allwinner,sun6i-a31s-display-engine" },
-+	{ .compatible = "allwinner,sun7i-a20-display-engine" },
- 	{ .compatible = "allwinner,sun8i-a33-display-engine" },
- 	{ .compatible = "allwinner,sun8i-v3s-display-engine" },
- 	{ }
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index c6e77f9840c2..184d32545744 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -868,6 +868,12 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
- 	.needs_de_be_mux	= true,
- };
- 
-+static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
-+	.has_channel_1		= true,
-+	/* Same display pipeline structure as A10 */
-+	.set_mux		= sun4i_a10_tcon_set_mux,
-+};
-+
- static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
- 	/* nothing is supported */
- };
-@@ -881,6 +887,7 @@ static const struct of_device_id sun4i_tcon_of_table[] = {
- 	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
- 	{ .compatible = "allwinner,sun6i-a31-tcon", .data = &sun6i_a31_quirks },
- 	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
-+	{ .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks },
- 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
- 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
- 	{ }
 -- 
 2.14.2
