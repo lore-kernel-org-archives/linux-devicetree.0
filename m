@@ -1,78 +1,111 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH  2/2] ARM: dts: r8a7743: Add xhci support to SoC dtsi
-Date: Tue, 17 Oct 2017 01:39:33 +0000
-Message-ID: <TY1PR06MB0992D251A9DB8DB83E7099C9D84C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
- <1508148769-47488-3-git-send-email-biju.das@bp.renesas.com>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 1/5] arm64: dts: rockchip: Enable edp disaplay
+ on kevin
+Date: Tue, 17 Oct 2017 09:50:38 +0800
+Message-ID: <5295f622-647a-c6d3-9ead-de8182d008e6@rock-chips.com>
+References: <20171016100640.26575-1-jeffy.chen@rock-chips.com>
+ <20171016100640.26575-2-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508148769-47488-3-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Content-Language: ja-JP
+In-Reply-To: <20171016100640.26575-2-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju-san,
-
-IIUC, when we submitted a patch for dts[i] file,
-we don't need to submit such a patch to usb maintainers.
-
-> From: Biju Das, Sent: Monday, October 16, 2017 7:13 PM
->=20
-> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->=20
-> Add node for xhci. Boards DT files will enable it if needed.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+On 2017年10月16日 18:06, Jeffy Chen wrote:
+> Add edp panel and enable related nodes on kevin.
+>
+> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.d=
-tsi
-> index 699c040..386bf07 100644
-> --- a/arch/arm/boot/dts/r8a7743.dtsi
-> +++ b/arch/arm/boot/dts/r8a7743.dtsi
-> @@ -931,6 +931,26 @@
->  			status =3D "disabled";
->  		};
->=20
-> +		/*
-> +		 * pci1 and xhci share the same phy, therefore only one of them
-> +		 * can be active at any one time. If both of them are enabled,
-> +		 * a race condition will determine who'll control the phy.
-> +		 * A firmware file is needed by the xhci driver in order for
-> +		 * USB 3.0 to work properly.
-> +		 */
-> +		xhci: usb@ee000000 {
-> +			compatible =3D "renesas,xhci-r8a7743",
-> +				     "renesas,rcar-gen2-xhci";
-> +			reg =3D <0 0xee000000 0 0xc00>;
-> +			interrupts =3D <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&cpg CPG_MOD 328>;
-> +			power-domains =3D <&sysc R8A7743_PD_ALWAYS_ON>;
-> +			resets =3D <&cpg 328>;
-> +			phys =3D <&usb2 1>;
-> +			phy-names =3D "usb";
-> +			status =3D "disabled";
-> +		};
+
+Looks good.
+
+Reviewed-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+> Changes in v2: None
+>
+>   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
+>   arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
+>   2 files changed, 45 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> index a3d3cea7dc4f..bc67b19f0af5 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+> @@ -93,6 +93,18 @@
+>   		pwm-delay-us = <10000>;
+>   	};
+>   
+> +	edp_panel: edp-panel {
+> +		compatible = "sharp,lq123p1jx31", "simple-panel";
+> +		backlight = <&backlight>;
+> +		power-supply = <&pp3300_disp>;
 > +
->  		sdhi0: sd@ee100000 {
->  			compatible =3D "renesas,sdhi-r8a7743";
->  			reg =3D <0 0xee100000 0 0x328>;
-
-It seems good to me. So,
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-
-Best regards,
-Yoshihiro Shimoda
-
-> --
-> 1.9.1
+> +		ports {
+> +			panel_in_edp: endpoint {
+> +				remote-endpoint = <&edp_out_panel>;
+> +			};
+> +		};
+> +	};
+> +
+>   	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
+>   		compatible = "murata,ncp15wb473";
+>   		pullup-uv = <1800000>;
+> @@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
+>   	};
+>   };
+>   
+> +&edp {
+> +	status = "okay";
+> +
+> +	ports {
+> +		edp_out: port@1 {
+> +			reg = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			edp_out_panel: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&panel_in_edp>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>   &ppvar_bigcpu_pwm {
+>   	regulator-min-microvolt = <798674>;
+>   	regulator-max-microvolt = <1302172>;
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> index 5772c52fbfd3..470105d651c2 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> @@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
+>   	dr_mode = "host";
+>   };
+>   
+> +&vopb {
+> +	status = "okay";
+> +};
+> +
+> +&vopb_mmu {
+> +	status = "okay";
+> +};
+> +
+> +&vopl {
+> +	status = "okay";
+> +};
+> +
+> +&vopl_mmu {
+> +	status = "okay";
+> +};
+> +
+>   #include <arm/cros-ec-keyboard.dtsi>
+>   #include <arm/cros-ec-sbs.dtsi>
+>   
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
