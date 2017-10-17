@@ -1,98 +1,117 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: RE: [PATCH] usb: renesas_usbhs: Add compatible string for r8a7743/5
-Date: Tue, 17 Oct 2017 12:39:49 +0300
-Message-ID: <87fuaijeoq.fsf@linux.intel.com>
-References: <1507216358-917-1-git-send-email-biju.das@bp.renesas.com> <87wp3uji3x.fsf@linux.intel.com> <KL1PR06MB170284D41F8517AD9A96E8A0B84C0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
+Date: Tue, 17 Oct 2017 11:40:01 +0200
+Message-ID: <929df0d1-b9d9-de8a-3dd0-b95cb5e6be16@grinn-global.com>
+References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
+ <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
+ <1507912842.5910.39.camel@hadess.net>
+ <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <KL1PR06MB170284D41F8517AD9A96E8A0B84C0-k6wCOA2IOKSx7cDWSRonpW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, Antonio Ospite <ao2-qKGr9MkilAE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
 Hi,
+Thanks everyone for review!
 
-Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> writes:
-> Hi,
->
->> -----Original Message-----
->> From: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:devicetree-
->> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Felipe Balbi
->> Sent: 17 October 2017 09:26
->> To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>; Greg Kroah-Hartman
->> <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark
->> Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>; Chris Paterson
->> <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; Fabrizio Castro
->> <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-rene=
-sas-
->> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Biju Das
->> <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> Subject: Re: [PATCH] usb: renesas_usbhs: Add compatible string for r8a77=
-43/5
->>
->>
->> Hi,
->>
->> Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> writes:
->> > This patch adds support for r8a7743/5 SoC.  The Renesas RZ/G1[ME]
->> > (R8A7743/5) usbhs is identical to the R-Car Gen2 family.
->> >
->> > This doesn't change the driver, so it does nothing by itself.  But it
->> > does mean that checkpatch won't complain about a future patch that
->> > adds "renesas,usbhs-r8a7743" or "renesas,usbhs-r8a7745" to a DT, which
->> > helps ensure that shipped DTs use documented compatibility strings.
->> >
->> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > ---
->> > This patch is tested against Linux next tag next-20170929
->
->> care to rebase on my testing/next? It fails to apply.
->
-> Sorry for the trouble.
->
-> I have already send a V2 for fixing this.
->
-> [v2] usb: renesas_usbhs: Add compatible string for r8a7743/5
-> https://patchwork.kernel.org/patch/9990063/
->
-> I have rebased this patch on my testing/next and confirms it apply cleanl=
-y.
+On 14.10.2017 00:58, Dmitry Torokhov wrote:
+> <...snip...>
+> My preference would be to assign constant chip data, such as register,
+> to the relevant device ID structure (I2C or OF or ACPI) and reference it
+> form where it is needed.
+> 
+> struct goodix_chip_data {
+> 	u16	config_addr;
+> };
+> 
+> ...
+> 
+> struct goodix_ts_data {
+> 	...
+> 	const struct goodix_chip_data *chip;
+> 	...
+> };
+> 
+> ...
+> 
+> static const goodix_chip_data gt1x_chip_data = {
+> 	.config_addr	= GOODIX_GT1X_REG_CONFIG_DATA,
+> };
+> 
+> static const goodix_chip_data gt9x_chip_data = {
+> 	.config_addr	= GOODIX_GT9X_REG_CONFIG_DATA,
+> };
+> 
+> static const struct of_device_id goodix_of_match[] = {
+> 	{ .compatible = "goodix,gt1151", .data = &gt1x_chip_data },
+> 	...
+> };
+> 
+> and so on...
+> 
+> Thanks.
+> 
 
-thank you, now applied :-)
+This looks good to me. Together with config_addr I would put config_len
+to struct goodix_chip_data (and remove cfg_len member from struct
+goodix_ts_data).
 
-=2D-=20
-balbi
+The main problem I have is how to assign goodix_chip_data to a ACPI
+device (I have very little knowledge about ACPI). I do not know from
+where comes 'GDIX1001' ACPI ID and how it corresponds to OF compatible
+strings. Can you help me with that?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+I have something like that so far:
 
------BEGIN PGP SIGNATURE-----
+struct goodix_chip_data {
+         u16 config_addr;
+         int config_len;
+         int config_checksum_len;
+};
 
-iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlnlz+UACgkQzL64meEa
-mQZ18g/+NO2I4ekLK3bAPaNPOW9nLXNpIfrhssSUeCeSiB/kbkXqhNMpfBEoRTbq
-1J1vpbnuiUXVjSAYWECYqRsWiQniNpwOmJEMWgQlK5hr1n5YrSKKvbe1DmXQa6mR
-idtNS99CLpK018tZHv9NDoiJ7WEvtlP1ZisSmHyXWwhwv70DOkJWr34imC8YcxMz
-O1GbrxV42I6FbaGT2doxpryniAVQe3sn+omjyLa2TNRVf2gqp/TDexWryn/cQOhX
-E/Vi6pbbYdcQ7Tl/ZLRU+On4f1ZDDm1abbndBdXyve8L4yrIZBZhb/h9ZHPeWOtJ
-tjp9ynvMYDHVHQvL6sExYdbWlwKPxi5QDxALMkwiREWyWkKkbJODt26esKKaHGIf
-nDsxUAQEgy3dxWOAo6p+G6ydG91nmhbeAyLrEKuDfr8+5MOFdkPI7RE9TysTAEzJ
-NuCwwwyQHe+uL6/yOuuXWwxz8WWjqwGXlQgrKnWlzQwFCQcsBLMGWnwzdLoSZ91i
-jQYTr43XFvCnFo4Gj5JilkOIsT/RSYSrJN/fVFcsmA3ySZICH1nmj6/Nu6LJuYuv
-nzqDIDMaPa3ciDaAVjWYb+h0CVkpClCrvJstmbwVu9OhxKxdmVGHR8kxr2smGwQW
-oGqO5ig61EF0UGIWo6yh3NhhGnK5VY6HxL/+fBpybNdU0g7GjSc=
-=3+jM
------END PGP SIGNATURE-----
---=-=-=--
+...
+
+static const goodix_chip_data gt1x_chip_data = {
+	.config_addr		= GOODIX_GT1X_REG_CONFIG_DATA,
+	.config_len		= GOODIX_CONFIG_MAX_LENGTH,
+	.config_checksum_len	= 2,
+};
+
+static const goodix_chip_data gt911_chip_data = {
+	.config_addr		= GOODIX_GT9X_REG_CONFIG_DATA,
+	.config_len		= GOODIX_CONFIG_911_LENGTH,
+	.config_checksum_len	= 1,
+};
+
+static const goodix_chip_data gt967_chip_data = {
+	.config_addr		= GOODIX_GT9X_REG_CONFIG_DATA,
+	.config_len		= GOODIX_CONFIG_967_LENGTH,
+	.config_checksum_len	= 1,
+};
+
+...
+
+static const struct of_device_id goodix_of_match[] = {
+	{ .compatible = "goodix,gt1151", .data = &gt1x_chip_data },
+	{ .compatible = "goodix,gt911",  .data = &gt911_chip_data },
+	{ .compatible = "goodix,gt9110", .data = &gt911_chip_data },
+	{ .compatible = "goodix,gt912",  .data = &gt967_chip_data },
+	{ .compatible = "goodix,gt927",  .data = &gt911_chip_data },
+	{ .compatible = "goodix,gt9271", .data = &gt911_chip_data },
+	{ .compatible = "goodix,gt928",  .data = &gt911_chip_data },
+	{ .compatible = "goodix,gt967",  .data = &gt967_chip_data },
+	{ }
+};
+
+-- 
+Marcin Niestroj
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
