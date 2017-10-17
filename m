@@ -1,196 +1,91 @@
-From: "Han, Nandor (GE Healthcare)" <nandor.han-JJi787mZWgc@public.gmane.org>
-Subject: RE: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 17 Oct 2017 11:14:48 +0000
-Message-ID: <AM3P101MB0180DF4B90673D3D6A0CF44FE64C0@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <AM3P101MB0180F7019908E059648488F0E67D0@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
- <20171004214935.nejsdqmlj4wwyq5v@pengutronix.de>
- <AM3P101MB0180BF8845D0CCFD9C76C63EE6750@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
- <20171010082556.q47bahujdlffxj5e@pengutronix.de>
- <AM3P101MB018058EF35B61CC5E39DCAEFE6750@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/9] drm/panel: simple: add a macro for defining display
+ modes in a simpler and less error prone way
+Date: Tue, 17 Oct 2017 14:08:18 +0200
+Message-ID: <20171017120818.GB684@ulmo>
+References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
+ <1507721021-28174-2-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM3P101MB018058EF35B61CC5E39DCAEFE6750-Irc2Ng3OI610aGNDtyle9VAr667LJVwUiGd9ebBGJoev3QGu/rdwKA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507721021-28174-2-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: linux-serial-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-serial-
-> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Han, Nandor (GE Healthcare)
-> Sent: 10 October 2017 13:17
-> To: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Jiri Slaby
-> <jslaby-IBi9RG/b67k@public.gmane.org>; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Subject: EXT: [PATCH] serial: imx-serial - move DMA buffer configuration to
-> DT
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Uwe Kleine-König [mailto:u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
-> > Sent: 10 October 2017 11:26
-> > To: Han, Nandor (GE Healthcare) <nandor.han-JJi787mZWgc@public.gmane.org>
-> > Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>; Greg Kroah-Hartman
-> > <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>; linux-
-> > serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Subject: EXT: Re: [PATCH] serial: imx-serial - move DMA buffer
-> > configuration to DT
-> >
+On Wed, Oct 11, 2017 at 01:23:33PM +0200, Lothar Wa=C3=9Fmann wrote:
+> Create a macro that eases the definition of display mode parameters by
+> accecpting the parameters:
+> freq, hactive, hfront-porch, hsynclen, hback-porch,
+> vactive, vfront-porch, vsynclen, vback-porch, vrefresh
+> that can be usually directly taken from an LCD datasheet.
+>=20
+> Put the calculations that are now open coded repeating the same
+> parameters multiple times into the macro expansion.
+>=20
+> Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
+/panel-simple.c
+> index 474fa75..dec639d 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -411,6 +411,20 @@ static const struct panel_desc ampire_am_480272h3tmq=
+w_t01h =3D {
+>  	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X24,
+>  };
+> =20
+> +#define SP_DISPLAY_MODE(freq, ha, hfp, hs, hbp, va, vfp, vs, vbp, vr, fl=
+gs) { \
+> +	.clock =3D freq,							\
+> +	.hdisplay =3D ha,							\
+> +	.hsync_start =3D (ha) + (hfp),					\
+> +	.hsync_end =3D (ha) + (hfp) + (hs),				\
+> +	.htotal =3D (ha) + (hfp) + (hs) + (hbp),				\
+> +	.vdisplay =3D (va),						\
+> +	.vsync_start =3D (va) + (vfp),					\
+> +	.vsync_end =3D (va) + (vfp) + (vs),				\
+> +	.vtotal =3D (va) + (vfp) + (vs) + (vbp),				\
+> +	.vrefresh =3D vr,							\
+> +	.flags =3D flgs,							\
+> +	}
 
-Anything that I could still clarify here I'll be happy to explain :)
+I don't think this simplifies anything. It's now completely non-obvious
+which parameter is which, so you actually have to go look at the macro
+definition when you add a new mode to make sure you get them right.
 
-> > Hello,
-> >
-> > On Tue, Oct 10, 2017 at 07:58:31AM +0000, Han, Nandor (GE Healthcare)
-> > wrote:
-> > > > > > That doesn't sound like a good fix but more like a work around.
-> > > > > > Which other options did you test to fix your problem?
-> > > > > >
-> > > > >
-> > > > > I haven't tried any other, because except using maybe, ioctl I
-> > > > > haven't got anything better.
-> > > >
-> > > > My question didn't target where to configure the buffer size
-> > > > instead of dts. I wonder if it would help to change the fifo
-> > > > watermark limits for
-> > example.
-> > > >
-> > >
-> > > Ok. Sorry I didn't understand correct. Watermark will not help in
-> > > this case because it is used only to trigger the moving of the data
-> > > from RX FIFO to DMA buffer.  The iMX DMA (check the iMX6 RM
-> > > A.3.1.2.4 since is missing from iMX53 RM) will only return data to
-> > > serial driver when no more
-> > data exist in the RX FIFO (is using aging timer for this check) or BD
-> > (DMA
-> > buffer) is full. If data is sent continuously DMA will return data to
-> > driver only when BD is full.
-> >
-> > I read once over the description but I failed to understand it. At
-> > least it talks about water mark levels and min(WML-1,Count) which
-> > makes me think that the DMA script makes use of water marking too and
-> > my idea to play with that instead of buffer sizes might be sensible.
-> >
-> 
-> :). It is tricky, I agree. I will try to explain it even though I think the most
-> important part is to understand that watermark level control when data is
-> moved from out from rx FIFO  to DMA buffer (BD) and is not the trigger that
-> returns the data from DMA buffer (BD) to serial driver (which is the one that I
-> need).
-> 
-> The SDMA script is using 2 triggers to move data from rx FIFO to DMA buffer
-> (BD): 1) watermark hit and 2) aging timer. It ignores completely the "Idle line"
-> trigger. When watermark trigger is received it will move "min(WML-1,BD
-> count)" data from rx FIFO to BD. After this step in the rx FIFO will remain
-> always at least 1 byte (since we move WML-1). The last byte will be moved
-> based on the aging timer. During which SDMA will check if more data is
-> available and move the rest. SDMA will return the BD in 2 situations: 1) BD is
-> full 2) during aging time trigger the rx FIFO is empty.
-> 
-> > > So what we need here is a trigger that will force DMA to return data
-> > > faster to serial driver. The only one that I could find was the size
-> > > of the buffer. Of course another way will be to create different
-> > > SDMA scripts that can do all kinds of handling -- but dint' want to
-> > > go on that route :)
-> >
-> > :-)
-> >
-> > > > > Our problem is that in our system some serial ports needs to
-> > > > > have really low data latency, where others trade more bytes over
-> > > > > data latency. This situation results in a need of beeing able to
-> > > > > have different DMA buffer size for different ports.
-> > > > >
-> > > > > How can DMA buffer size affect latency?
-> > > > > DMA works like this: (To answer to your question DMA buffer is
-> > > > > not
-> > > > > FIFO)  1. Transfer the data from HW FIFO to DMA buffer based on
-> > > > > some interrupts (character received, etc)  2. Transfer the DMA
-> > > > > buffer back to serial port based on some events (buffer full,
-> > > > > aging timer, etc)  3. Serial
-> > > > port forwards to tty buffer.
-> > > >
-> > > > BTW In the past I saw the serial core introduce latency, too. Are
-> > > > you sure that's not your bottle neck?
-> > >
-> > > Can you be more specific?
-> >
-> > http://www.spinics.net/lists/linux-serial/msg17767.html
-> >
-> > > > > Data availability to consumer depends on: DMA buffer size, baud
-> > > > > rate and communication pattern. By communication patter I'm
-> > > > > refering that we send data continuoselly (serial line is never
-> > > > > idle) or packet by packet (serial line is idle in between)
-> > > > > Example:
-> > > > >       Baud: 19200 (1Byte = 0.52 ms)
-> > > > >       DMA buffer size: 100 bytes
-> > > > >       Communication pattern: continuously
-> > > > >       =>  DMA will return data to serial port only when DMA buffer is
-> > > > >       full, since the communication is continuously. This result in a
-> > > > >       data latency of 0.52 ms* 100bytes = 52ms. In case the buffer
-> > > > >       will be 200bytes the letency will be double.
-> > > > >
-> > > > > I agree with you, this is not directly a hw property but a DMA
-> > > > > configuration
-> > > > item.
-> > > > > But I've found this to be the best way to configure this
-> > > > > comparing with using
-> > > > ioctl.
-> > > > >
-> > > > > Let me know if you need more clarification and I would really be
-> > > > > open to other options that will solve our problem.
-> > > > >
-> > > > > <snip>
-> > > > >
-> > > > > > > +- fsl,dma-size : Indicate the size of the DMA buffer and
-> > > > > > > +its periods
-> > > > > >
-> > > > > > This is a sparse description, just from reading that I don't
-> > > > > > understand what it does.
-> > > > > >
-> > > > >
-> > > > > Serial driver configures a circular ring of buffers for DMA.
-> > > > > Here we can configure the size and the number of buffers.
-> > > >
-> > > > The problem is: How should a person, who wants to make available a
-> > > > port on a machine via dts, choose what value to use for fsl,dma-size?
-> > >
-> > > It doesn't have too. If this configuration is not provided the
-> > > serial port will
-> > have a default value.
-> > > The user has the possibility to tweak this settings in case is needed.
-> >
-> > "The default value works in general" is no good justification to not
-> > provide easy-to-grasp and well documented knobs.
-> >
-> 
-> I agree with you on this. But my intention was to say that the driver is using
-> the same settings as before and users are not impacted by this change, and I
-> only add the option to control that value.
-> 
-> > Best regards
-> > Uwe
-> >
-> 
-> Regards,
->     Nandor
-> 
-> > --
-> > Pengutronix e.K.                           | Uwe Kleine-König            |
-> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-serial" in the
-> body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnl8q8ACgkQ3SOs138+
+s6HA5Q//QAVtmUpLtYQa5t3Uu144p0lmBs6jcBF/mh3DZkm41waBjaXbxENr6CL5
+KnFFICvAYUSab3tpzBd1vIJtc5UzF2WJL6FftP6aWX6D1gTk5g6KL0XhJiaf8qQ9
+OD8c4qRnAAFIb18NHgkF0aNrYyp5rICwtavV6XR3VGEvqxqaFYTwFP/WiS2YEBWc
+92ay7LkY/AzSBWw/tFkHdkBYTm2OU/w9ZVncU9LddoMajOW745Ne2VHhx5BZoPlv
+Nr+5UABePW6AoWqdEnqHZvt5kI9vyvR4fynZtsc/LyGQbldmoeiWj1PbsS73iUfO
+kfgKUmVGH6o9AQyEX2rHOAdRJlrmIlI8wAbWJNChPIBowuTNMtvRx9XutCg2eo+v
+Oa10ntbkDPZ16n8X8KyN5zU94H4EdHYO3BrSrK/byKBpD9g3iR2A2A57YtR3Hvzt
+D5HEnCU9igGG0M70S/IchfgjKsZaxxour9GEgrLLQyHqlqxOgx2LcoG2mJt5xY8y
+PCzE/wxjFRjRhc53HFYfYl37iYs1Z1uvSFBWx+ucyBTsGgkodE7ljhOJkEntvaPC
+ky07MEM6O6aUyCytDRmg6q4BKE37N55omBg3Fp4qsSb7k17kGKPae3OGKksK4Z9y
+LL1V0cyW87C09wVDub1Je34fEjPLfo1W44HKqjoz4lLB4WacPVM=
+=L4hy
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
