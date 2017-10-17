@@ -1,31 +1,30 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] phy: rcar-gen3-usb2: add binding for r8a77995
-Date: Tue, 17 Oct 2017 15:27:52 -0500
-Message-ID: <20171017202752.q7r4qfg22xjfyung@rob-hp-laptop>
-References: <1507790088-26010-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1507790088-26010-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH] clk: renesas: rz: clk-rz is meant for RZ/A1
+Date: Tue, 17 Oct 2017 15:28:44 -0500
+Message-ID: <20171017202844.apawmkyofxl2rxar@rob-hp-laptop>
+References: <1507801068-12024-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1507790088-26010-5-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1507801068-12024-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 03:34:48PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds binding for r8a77995 (R-Car D3). Since r8a77995 doesn't
-> have dedicated pins (ID, VBUS), this will match against the generic
-> fallback on R-Car D3.
+On Thu, Oct 12, 2017 at 11:37:48AM +0200, Geert Uytterhoeven wrote:
+> The RZ family of Renesas SoCs has several different subfamilies (RZ/A,
+> RZ/G, RZ/N, and RZ/T).  Clarify that the renesas,rz-cpg-clocks DT
+> bindings and clk-rz driver apply to RZ/A1 only.
 > 
-> For now, this driver doesn't support usb role swap for r8a77995.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> To be queued in clk-renesas-for-v4.15.
+> 
+>  Documentation/devicetree/bindings/clock/renesas,rz-cpg-clocks.txt | 4 ++--
+>  drivers/clk/renesas/clk-rz.c                                      | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
