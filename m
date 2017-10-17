@@ -1,60 +1,56 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in full_name
-Date: Tue, 17 Oct 2017 16:32:53 -0500
-Message-ID: <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
-References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-6-robh@kernel.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v7 1/3] dt-bindings: add eeprom "size" property
+Date: Tue, 17 Oct 2017 23:35:58 +0200
+Message-ID: <20171017213558.rct4fjpplh3cfyyo@ninjato>
+References: <1507615237-21744-1-git-send-email-divagar.mohandass@intel.com>
+ <1507615237-21744-2-git-send-email-divagar.mohandass@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170821151651.25096-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2qwkx27l7hkxso7v"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507615237-21744-2-git-send-email-divagar.mohandass@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Divagar Mohandass <divagar.mohandass@intel.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@iki.fi, tfiga@chromium.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, rajmohan.mani@intel.com, mika.westerberg@linux.intel.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Hi Rob,
+--2qwkx27l7hkxso7v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> With dependencies on a statically allocated full path name converted to
-> use %pOF format specifier, we can store just the basename of node, and
-> the unflattening of the FDT can be simplified.
->
-> This commit will affect the remaining users of full_name. After
-> analyzing these users, the remaining cases should only change some print
-> messages. The main users of full_name are providing a name for struct
-> resource. The resource names shouldn't be important other than providing
-> /proc/iomem names.
->
-> We no longer distinguish between pre and post 0x10 dtb formats as either
-> a full path or basename will work. However, less than 0x10 formats have
-> been broken since the conversion to use libfdt (and no one has cared).
-> The conversion of the unflattening code to be non-recursive also broke
-> pre 0x10 formats as the populate_node function would return 0 in that
-> case.
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> v2:
-> - rebase to linux-next
->
->  drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
->  1 file changed, 11 insertions(+), 58 deletions(-)
+On Tue, Oct 10, 2017 at 11:30:35AM +0530, Divagar Mohandass wrote:
+> This adds eeprom "size" as optional property for i2c eeproms.
+> The "size" property allows explicitly specifying the size of the
+> EEPROM chip in bytes.
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Divagar Mohandass <divagar.mohandass@intel.com>
 
-I've just updated to the latest next branch and am finding problems
-applying overlays.   Reverting this commit alleviates things.  The
-errors I get are:
+Applied to for-next, thanks!
 
-[   88.498704] OF: overlay: Failed to apply prop @/__symbols__/clk_0
-[   88.513447] OF: overlay: apply failed '/__symbols__'
-[   88.518423] create_overlay: Failed to create overlay (err=-12)
 
-My branch also includes Pantelis' patch that turns on symbols [1].
+--2qwkx27l7hkxso7v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Alan
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://github.com/pantoniou/linux-beagle-track-mainline/commit/486c87d450f2895a766c6097328d0c6538ec7a31
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnmd7oACgkQFA3kzBSg
+KbblFBAAn7F2ZSl9+BZqREdwPEwX2/0SddLIswOeqrlvOTp/EL1rXzMLzRsVXAnp
+9lU6rySzRo6s4uZfW+rp1QHIcNQhH8RWM++0FVNSJc7mTdDvi07UWLmNeBG0yHb5
+G/mbuBjzEe4SzL2TgqLQIATDfGUOfC699TbkWDQybqNJ4GJq/J7AFdFvgdKWpuFz
+uNuElMup6gXBRmMg5JOw5CgMJMjrYqrJwSPjLUwsEDr4xhRNCrV8buQM44rN4G/6
+MZOUDFL9LfY7mVDkK5W4tv8v+gqaOfCAuehJxjyymbvsxpDfL21dC6Jih4S6doHk
+bfrJcpJA/yY6CTBGDccEBhFFhKxReCVpBc+fx/QdTaktp+UAx4yya7j6ZLYZTGOv
+3jFPuSBgReBn0kGP8spd82oPbUCNoXdJDE7KU36jOboNVncTonYvt05nVU8h/E4T
+9oE9HIzLAHKM9ISD5dYkN+aY4+IMpRiHvgNn5a8omFjEmTlCJyG7MxQ2anAVoZXl
++3SSCCNR7m6ady6CKr8t1fVR3nHdgTs4+gaWBrejPexwAseEox/0Kq9Aa6ZrDY4H
+K5Y93dcEirelwkG3TAUFvo1cvr0SVw4xgbfBxGVHqz1WrkRLWqPSub885qfCAc5G
+wfd/eqzlm/nCEsdVh4uZUZG2RaeqKp5AejLUvkB1W1QO7fUR380=
+=jmaE
+-----END PGP SIGNATURE-----
+
+--2qwkx27l7hkxso7v--
