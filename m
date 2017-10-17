@@ -1,99 +1,115 @@
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Subject: Re: [PATCH v3 1/4] [media] v4l2-common: Add helper function for
- fourcc to string
-Date: Tue, 17 Oct 2017 10:17:07 +0100
-Message-ID: <CAAoAYcN441pVUqCu00hbKmEQWyNaK4jdwkufpJ2P8iXkcQG5KA@mail.gmail.com>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <e6dfbe4afd3f1db4c3f8a81c0813dc418896f5e1.1505916622.git.dave.stevenson@raspberrypi.org>
- <20171013210937.pzgmozz7elsb3yo5@valkosipuli.retiisi.org.uk>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCHv3 07/12] ARM: dts: imx6-tx6: convert to using simple-audio-card
+Date: Tue, 17 Oct 2017 11:17:58 +0200
+Message-ID: <1508231883-12067-8-git-send-email-LW@KARO-electronics.de>
+References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
+ <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20171013210937.pzgmozz7elsb3yo5@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508231883-12067-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari.
+Convert the DTS sound setup to use the simple-audio-card driver.
 
-On 13 October 2017 at 22:09, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> Hi Dave,
->
-> On Wed, Sep 20, 2017 at 05:07:54PM +0100, Dave Stevenson wrote:
->> New helper function char *v4l2_fourcc2s(u32 fourcc, char *buf)
->> that converts a fourcc into a nice printable version.
->>
->> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
->> ---
->>
->> No changes from v2 to v3
->>
->>  drivers/media/v4l2-core/v4l2-common.c | 18 ++++++++++++++++++
->>  include/media/v4l2-common.h           |  3 +++
->>  2 files changed, 21 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
->> index a5ea1f5..0219895 100644
->> --- a/drivers/media/v4l2-core/v4l2-common.c
->> +++ b/drivers/media/v4l2-core/v4l2-common.c
->> @@ -405,3 +405,21 @@ void v4l2_get_timestamp(struct timeval *tv)
->>       tv->tv_usec = ts.tv_nsec / NSEC_PER_USEC;
->>  }
->>  EXPORT_SYMBOL_GPL(v4l2_get_timestamp);
->> +
->> +char *v4l2_fourcc2s(u32 fourcc, char *buf)
->> +{
->> +     buf[0] = fourcc & 0x7f;
->> +     buf[1] = (fourcc >> 8) & 0x7f;
->> +     buf[2] = (fourcc >> 16) & 0x7f;
->> +     buf[3] = (fourcc >> 24) & 0x7f;
->> +     if (fourcc & (1 << 31)) {
->> +             buf[4] = '-';
->> +             buf[5] = 'B';
->> +             buf[6] = 'E';
->> +             buf[7] = '\0';
->> +     } else {
->> +             buf[4] = '\0';
->> +     }
->> +     return buf;
->> +}
->> +EXPORT_SYMBOL_GPL(v4l2_fourcc2s);
->> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
->> index aac8b7b..5b0fff9 100644
->> --- a/include/media/v4l2-common.h
->> +++ b/include/media/v4l2-common.h
->> @@ -264,4 +264,7 @@ const struct v4l2_frmsize_discrete *v4l2_find_nearest_format(
->>
->>  void v4l2_get_timestamp(struct timeval *tv);
->>
->> +#define V4L2_FOURCC_MAX_SIZE 8
->> +char *v4l2_fourcc2s(u32 fourcc, char *buf);
->> +
->>  #endif /* V4L2_COMMON_H_ */
->
-> I like the idea but the use of a character pointer and assuming a length
-> looks a bit scary.
->
-> As this seems to be used uniquely for printing stuff, a couple of macros
-> could be used instead. Something like
->
-> #define V4L2_FOURCC_CONV "%c%c%c%c%s"
-> #define V4L2_FOURCC_TO_CONV(fourcc) \
->         fourcc & 0x7f, (fourcc >> 8) & 0x7f, (fourcc >> 16) & 0x7f, \
->         (fourcc >> 24) & 0x7f, fourcc & BIT(31) ? "-BE" : ""
->
-> You could use it with printk-style functions, e.g.
->
->         printk("blah fourcc " V4L2_FOURCC_CONV " is a nice format",
->                V4L2_FOURCC_TO_CONV(fourcc));
->
-> I guess it'd be better to add more parentheses around "fourcc" but it'd be
-> less clear here that way.
+Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-tx6.dtsi | 50 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 8 deletions(-)
 
-I was following Hans' suggestion made in
-https://www.spinics.net/lists/linux-media/msg117046.html
+diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
+index f1655b3..eb5accd 100644
+--- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
+@@ -43,6 +43,7 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/pwm/pwm.h>
++#include <dt-bindings/sound/fsl-imx-audmux.h>
+ 
+ / {
+ 	aliases {
+@@ -183,24 +184,56 @@
+ 	};
+ 
+ 	sound {
+-		compatible = "karo,imx6qdl-tx6qdl-sgtl5000",
+-			     "fsl,imx-audio-sgtl5000";
+-		model = "sgtl5000-audio";
++		compatible = "karo,imx6qdl-tx6-sgtl5000",
++			     "simple-audio-card";
++		simple-audio-card,name = "imx6qdl-tx6-sgtl5000-audio";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_audmux>;
+-		ssi-controller = <&ssi1>;
+-		audio-codec = <&sgtl5000>;
+-		audio-routing =
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&codec_dai>;
++		simple-audio-card,frame-master = <&codec_dai>;
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Line", "Line In",
++			"Line", "Line Out",
++			"Headphone", "Headphone Jack";
++		simple-audio-card,routing =
+ 			"MIC_IN", "Mic Jack",
+ 			"Mic Jack", "Mic Bias",
+ 			"Headphone Jack", "HP_OUT";
+-		mux-int-port = <1>;
+-		mux-ext-port = <5>;
++
++		cpu_dai: simple-audio-card,cpu {
++			sound-dai = <&ssi1>;
++		};
++
++		codec_dai: simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++		};
+ 	};
+ };
+ 
+ &audmux {
+ 	status = "okay";
++
++	ssi1 {
++		fsl,audmux-port = <0>;
++		fsl,port-config = <
++			(IMX_AUDMUX_V2_PTCR_SYN |
++			IMX_AUDMUX_V2_PTCR_TFSEL(4) |
++			IMX_AUDMUX_V2_PTCR_TCSEL(4) |
++			IMX_AUDMUX_V2_PTCR_TFSDIR |
++			IMX_AUDMUX_V2_PTCR_TCLKDIR)
++			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
++		>;
++	};
++
++	pins5 {
++		fsl,audmux-port = <4>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN
++			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
++		>;
++	};
+ };
+ 
+ &can1 {
+@@ -299,6 +332,7 @@
+ 
+ 	sgtl5000: sgtl5000@0a {
+ 		compatible = "fsl,sgtl5000";
++		#sound-dai-cells = <0>;
+ 		reg = <0x0a>;
+ 		VDDA-supply = <&reg_2v5>;
+ 		VDDIO-supply = <&reg_3v3>;
+-- 
+2.1.4
 
-Hans: Do you agree with Sakari here to make it to a macro?
-
-  Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
