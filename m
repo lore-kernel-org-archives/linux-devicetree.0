@@ -1,133 +1,54 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] [media] v4l2-common: Add helper function for
- fourcc to string
-Date: Tue, 17 Oct 2017 13:08:51 +0300
-Message-ID: <20171017100851.lr4vmrwqucq4q46f@valkosipuli.retiisi.org.uk>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <e6dfbe4afd3f1db4c3f8a81c0813dc418896f5e1.1505916622.git.dave.stevenson@raspberrypi.org>
- <20171013210937.pzgmozz7elsb3yo5@valkosipuli.retiisi.org.uk>
- <CAAoAYcN441pVUqCu00hbKmEQWyNaK4jdwkufpJ2P8iXkcQG5KA@mail.gmail.com>
- <8cd44cbf-6751-c3de-1729-c8c1d54e8b00@cisco.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8cd44cbf-6751-c3de-1729-c8c1d54e8b00-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [RFC PATCH v4 0/8] rockchip: kevin: Enable edp display
+Date: Tue, 17 Oct 2017 18:16:16 +0800
+Message-ID: <20171017101624.12506-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, heiko@sntech.de, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, tfiga@chromium.org, broonie@kernel.org, seanpaul@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-samsung-soc@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
 
-On Tue, Oct 17, 2017 at 11:28:46AM +0200, Hans Verkuil wrote:
-> On 10/17/17 11:17, Dave Stevenson wrote:
-> > Hi Sakari.
-> > 
-> > On 13 October 2017 at 22:09, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org> wrote:
-> >> Hi Dave,
-> >>
-> >> On Wed, Sep 20, 2017 at 05:07:54PM +0100, Dave Stevenson wrote:
-> >>> New helper function char *v4l2_fourcc2s(u32 fourcc, char *buf)
-> >>> that converts a fourcc into a nice printable version.
-> >>>
-> >>> Signed-off-by: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-> >>> ---
-> >>>
-> >>> No changes from v2 to v3
-> >>>
-> >>>  drivers/media/v4l2-core/v4l2-common.c | 18 ++++++++++++++++++
-> >>>  include/media/v4l2-common.h           |  3 +++
-> >>>  2 files changed, 21 insertions(+)
-> >>>
-> >>> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> >>> index a5ea1f5..0219895 100644
-> >>> --- a/drivers/media/v4l2-core/v4l2-common.c
-> >>> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> >>> @@ -405,3 +405,21 @@ void v4l2_get_timestamp(struct timeval *tv)
-> >>>       tv->tv_usec = ts.tv_nsec / NSEC_PER_USEC;
-> >>>  }
-> >>>  EXPORT_SYMBOL_GPL(v4l2_get_timestamp);
-> >>> +
-> >>> +char *v4l2_fourcc2s(u32 fourcc, char *buf)
-> >>> +{
-> >>> +     buf[0] = fourcc & 0x7f;
-> >>> +     buf[1] = (fourcc >> 8) & 0x7f;
-> >>> +     buf[2] = (fourcc >> 16) & 0x7f;
-> >>> +     buf[3] = (fourcc >> 24) & 0x7f;
-> >>> +     if (fourcc & (1 << 31)) {
-> >>> +             buf[4] = '-';
-> >>> +             buf[5] = 'B';
-> >>> +             buf[6] = 'E';
-> >>> +             buf[7] = '\0';
-> >>> +     } else {
-> >>> +             buf[4] = '\0';
-> >>> +     }
-> >>> +     return buf;
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(v4l2_fourcc2s);
-> >>> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-> >>> index aac8b7b..5b0fff9 100644
-> >>> --- a/include/media/v4l2-common.h
-> >>> +++ b/include/media/v4l2-common.h
-> >>> @@ -264,4 +264,7 @@ const struct v4l2_frmsize_discrete *v4l2_find_nearest_format(
-> >>>
-> >>>  void v4l2_get_timestamp(struct timeval *tv);
-> >>>
-> >>> +#define V4L2_FOURCC_MAX_SIZE 8
-> >>> +char *v4l2_fourcc2s(u32 fourcc, char *buf);
-> >>> +
-> >>>  #endif /* V4L2_COMMON_H_ */
-> >>
-> >> I like the idea but the use of a character pointer and assuming a length
-> >> looks a bit scary.
-> >>
-> >> As this seems to be used uniquely for printing stuff, a couple of macros
-> >> could be used instead. Something like
-> >>
-> >> #define V4L2_FOURCC_CONV "%c%c%c%c%s"
-> >> #define V4L2_FOURCC_TO_CONV(fourcc) \
-> >>         fourcc & 0x7f, (fourcc >> 8) & 0x7f, (fourcc >> 16) & 0x7f, \
-> >>         (fourcc >> 24) & 0x7f, fourcc & BIT(31) ? "-BE" : ""
-> 
-> 'fourcc' should be in parenthesis '(fourcc)'.
+Make edp display works on chromebook kevin(at least for boot animation).
 
-Yes, I omitted those for readability here.
+Also solve some issues i meet during the bringup.
 
-> 
-> >>
-> >> You could use it with printk-style functions, e.g.
-> >>
-> >>         printk("blah fourcc " V4L2_FOURCC_CONV " is a nice format",
-> >>                V4L2_FOURCC_TO_CONV(fourcc));
-> >>
-> >> I guess it'd be better to add more parentheses around "fourcc" but it'd be
-> >> less clear here that way.
-> > 
-> > I was following Hans' suggestion made in
-> > https://www.spinics.net/lists/linux-media/msg117046.html
-> > 
-> > Hans: Do you agree with Sakari here to make it to a macro?
-> 
-> Not a bad idea. But I think we should add it to the public videodev2.h
-> header in that case, allowing it to be used by applications as well.
+Changes in v4:
+Fix compile warning.
 
-Sounds good.
+Changes in v3:
+Assign orphan pwms to dummy pwmchip instead of adding device link in the
+customer driver.
 
-> 
-> How about calling the defines V4L2_FOURCC_FMT and V4L2_FOURCC_FMT_ARGS?
+Changes in v2:
+Use device link to correct the suspend/resume and shutdown ordering,
+instead of converting rockchip spi's suspend/resume PM callbacks to
+late suspend/resume PM callbacks.
 
-printf(3) describes conversion specifiers (%...) and I thought of using
-"CONV" there for that purpose to make it explicit. Fourcc, implicitly,
-already is about formats. What would you think of V4L2_FOURCC_CONV and
-V4L2_FOURCC_CONV_ARGS (or just V4L2_FOURCC_ARGS)?
+Jeffy Chen (7):
+  arm64: dts: rockchip: Enable edp disaplay on kevin
+  drm/rockchip: analogix_dp: Fix error handling path
+  drm/rockchip: dw-mipi-dsi: Fix error handling path
+  drm/rockchip: dw_hdmi: Fix error handling path
+  drm/rockchip: inno_hdmi: Fix error handling path
+  pwm: Add dummy pwmchip for orphan pwms
+  drm/rockchip: Add device links for master and components
+
+Tomasz Figa (1):
+  drm/bridge/analogix: Do not use device's drvdata
+
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  | 29 ++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       | 16 +++++
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 50 ++++++-------
+ drivers/gpu/drm/exynos/exynos_dp.c                 | 26 ++++---
+ drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    | 57 +++++++++------
+ drivers/gpu/drm/rockchip/dw-mipi-dsi.c             | 17 +++--
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |  4 +-
+ drivers/gpu/drm/rockchip/inno_hdmi.c               | 20 ++++--
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        | 24 ++++++-
+ drivers/pwm/core.c                                 | 81 ++++++++++++++++++++--
+ include/drm/bridge/analogix_dp.h                   | 19 ++---
+ 11 files changed, 254 insertions(+), 89 deletions(-)
 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
