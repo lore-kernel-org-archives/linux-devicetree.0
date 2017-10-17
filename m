@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 1/4] dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
-Date: Tue, 17 Oct 2017 17:40:32 +0800
-Message-ID: <235e4bdaa605021facf4ab5c4e8a2ecc5293516d.1508231935.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 3/4] rtc: mediatek: enhance the description for MediaTek PMIC based RTC
+Date: Tue, 17 Oct 2017 17:40:34 +0800
+Message-ID: <1497246c3be3f7e9e9e7471d697d9dcaabf5771c.1508231935.git.sean.wang@mediatek.com>
 References: <cover.1508231935.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,47 +9,44 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508231935.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Add device-tree binding for MediaTek SoC based RTC
+Give a better description for original MediaTek RTC driver as PMIC based
+RTC in order to distinguish SoC based RTC. Also turning all words with
+Mediatek to MediaTek here.
 
-Cc: devicetree@vger.kernel.org
+Cc: Eddie Huang <eddie.huang@mediatek.com>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Eddie Huang <eddie.huang@mediatek.com>
 ---
- .../devicetree/bindings/rtc/rtc-mediatek.txt        | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+ drivers/rtc/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-new file mode 100644
-index 0000000..09fe8f5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-@@ -0,0 +1,21 @@
-+Device-Tree bindings for MediaTek SoC based RTC
-+
-+Required properties:
-+- compatible	    : Should be
-+			"mediatek,mt7622-rtc", "mediatek,soc-rtc" : for MT7622 SoC
-+- reg 		    : Specifies base physical address and size of the registers;
-+- interrupts	    : Should contain the interrupt for RTC alarm;
-+- clocks	    : Specifies list of clock specifiers, corresponding to
-+		      entries in clock-names property;
-+- clock-names	    : Should contain "rtc" entries
-+
-+Example:
-+
-+rtc: rtc@10212800 {
-+	compatible = "mediatek,mt7622-rtc",
-+		     "mediatek,soc-rtc";
-+	reg = <0 0x10212800 0 0x200>;
-+	interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_LOW>;
-+	clocks = <&topckgen CLK_TOP_RTC>;
-+	clock-names = "rtc";
-+};
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 4226295..4500f77 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1716,14 +1716,14 @@ config RTC_DRV_MEDIATEK
+ 	  will be called rtc-mediatek.
+ 
+ config RTC_DRV_MT6397
+-	tristate "Mediatek Real Time Clock driver"
++	tristate "MediaTek PMIC based RTC"
+ 	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
+ 	help
+-	  This selects the Mediatek(R) RTC driver. RTC is part of Mediatek
++	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
+ 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
+-	  Mediatek(R) RTC driver.
++	  MediaTek(R) RTC driver.
+ 
+-	  If you want to use Mediatek(R) RTC interface, select Y or M here.
++	  If you want to use MediaTek(R) RTC interface, select Y or M here.
+ 
+ config RTC_DRV_XGENE
+ 	tristate "APM X-Gene RTC"
 -- 
 2.7.4
