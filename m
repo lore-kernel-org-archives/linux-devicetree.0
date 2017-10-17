@@ -1,135 +1,77 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: arm64: 4.14 of_match_node() issues
-Date: Wed, 18 Oct 2017 01:24:16 +0200
-Message-ID: <4155378a-446e-8a18-a1fc-7ff4568a23d3@suse.de>
-References: <5d2ff063-1f7e-0200-cc02-99804f7d9219@suse.de>
- <20171009092409.GB5127@arm.com>
- <66956548-fa7a-332a-8045-8202ae0aa564@arm.com>
- <CGME20171009120447epcas2p3d22ec871318e38a71a5b92f840b5e4d4@epcas2p3.samsung.com>
- <d4e48d3d-015f-08d2-7745-51c482c1a09a@arm.com>
- <42630b8b-8987-57ff-be7e-79af7294856e@samsung.com>
- <bbf611c8-c7e8-d67f-f933-3e7b23bdba22@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v3 00/12] of: overlay: clean up device tree overlay code
+Date: Tue, 17 Oct 2017 16:36:20 -0700
+Message-ID: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <bbf611c8-c7e8-d67f-f933-3e7b23bdba22-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Bruens <stefan.bruens-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 11.10.2017 um 12:07 schrieb Suzuki K Poulose:
-> On 09/10/17 13:20, Marek Szyprowski wrote:
->> Hi All,
->>
->> On 2017-10-09 14:04, Robin Murphy wrote:
->>> On 09/10/17 11:58, Robin Murphy wrote:
->>>> On 09/10/17 10:24, Will Deacon wrote:
->>>>> Hi Andreas,
->>>>>
->>>>> On Sat, Oct 07, 2017 at 02:42:13AM +0200, Andreas Färber wrote:
->>>>>> Since 4.14-rc1 I am seeing frequent oopses during module loading
->>>>>> (e.g.,
->>>>>> MMC, USB) from initrd on aarch64. Symptoms are similar to this in
->>>>>> -rc3:
->>>>>>
->>>>>> [  OK  ] Started udev Coldplug all Devices.
->>>>>> [   10.117775] usbcore: registered new interface driver usbfs
->>>>>> [   10.118235] Unable to handle kernel paging request at virtual
->>>>>> address
->>>>>> ffff000008e5abc0
->>>>>> [   10.118238] Mem abort info:
->>>>>> [   10.118245]   Exception class = DABT (current EL), IL = 32 bits
->>>>>> [   10.118249]   SET = 0, FnV = 0
->>>>>> [   10.118253]   EA = 0, S1PTW = 0
->>>>>> [   10.118256] Data abort info:
->>>>>> [   10.118261]   ISV = 0, ISS = 0x00000006
->>>>>> [   10.118264]   CM = 0, WnR = 0
->>>>>> [   10.118274] swapper pgtable: 4k pages, 48-bit VAs, pgd =
->>>>>> ffff0000094a5000
->>>>>> [   10.118279] [ffff000008e5abc0] *pgd=00000000bfffe003,
->>>>>> *pud=00000000bfffd003, *pmd=0000000000000000
->>>>>> [   10.118299] Internal error: Oops: 96000006 [#1] SMP
->>>>>> [   10.118305] Modules linked in: fixed usbcore(+) sunxi_mmc mmc_core
->>>>>> phy_sun4i_usb sg
->>>>>> [   10.118341] CPU: 3 PID: 49 Comm: kworker/3:1 Not tainted
->>>>>> 4.14.0-rc3-2.gf27997b-default #1
->>>>>> [   10.118345] Hardware name: sunxi sunxi/sunxi, BIOS 2017.05-rc1
->>>>>> 04/13/2017
->>>>>> [   10.118369] Workqueue: events deferred_probe_work_func
->>>>>> [   10.118378] task: ffff80007c8f4000 task.stack: ffff0000099d8000
->>>>>> [   10.118394] PC is at __of_match_node.part.1+0x48/0x88
->>>>>> [   10.118403] LR is at of_match_node+0x40/0x70
->>>>>> [   10.118411] pc : [<ffff00000879aed0>] lr : [<ffff00000879af50>]
->>>>> [...]
->>>>>
->>>>>> This has been observed on Pine64 (>60%; also by Stefan) and
->>>>>> Odroid-C2;
->>>>>> my other arm64 boards such as Raspberry Pi 3 have not run into
->>>>>> this so
->>>>>> far. No such problems on 32-bit boards.
->>>>>>
->>>>>> This is using the openSUSE config:
->>>>>> https://kernel.opensuse.org/cgit/kernel-source/plain/config/arm64/default
->>>>>>
->>>>> Hmm, hard to know what to suggest without a concrete reproducer. Do
->>>>> you know
->>>>> which driver is being probed in the log above? Also, does this
->>>>> still break
->>>>> if you pass "keepinitrd" on the cmdline? Finally, can you dump the
->>>>> kernel
->>>>> virtual memory layout, please?
->>>> FWIW, this looks a lot like what happens when a built-in driver's
->>>> of_match_table is marked __init, but for whatever reason (deferred
->>>> probe
->>>> etc.) winds up getting poked by a module load after it no longer
->>>> exists.
->>> Heh, synchronicity...
->>>
->>> https://lists.linuxfoundation.org/pipermail/iommu/2017-October/024572.html
->>>
->>>
->>> Looks like we either have to revert plenty of patches from the const
->>> brigade, avoid freeing init, or come up with some way to make the driver
->>> core cleverer about the whole deal :(
->>
->> It's not that bad. I did a quick check with
->>
->> # git grep "of_device_id.*init"
->>
->> and Exynos SYSMMU driver was the only candidate for a fix. Maybe someone
->> else should double check that list to make sure that there is no other
->> platform device/driver related code there.
->>
->> Best regards
-> 
-> The root cause of the problem we hit here is definitely the exynos_smmu
-> driver
-> problem. The modrpobe triggers a device scan and the deferred_probe work
-> goes
-> through the registered drivers again for each device and since the
-> exynos_smmu
-> driver table is gone already, we end up in this crash.
-> 
-> Andreas,
-> 
-> Please could you try with the patch above in the link ?
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-The above patch resolves the symptoms I observed on both boards, thanks.
+I have found the device tree overlay code to be difficult to read and
+maintain.  This patch series attempts to improve that situation.
 
-I'm not on the iommu list and it's not on linux-samsung-soc, so here's my
+The cleanup includes some changes visible to users of overlays.  The
+only in kernel user of overlays is fixed up for those changes.  The
+in kernel user is:
 
-Tested-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+   drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
 
-Best regards,
-Andreas
+Following the cleanup patches are a set of patches to fix various
+issues.
+
+The first five patches are intended to not make any functional
+changes, and are segrated to ease review.
+
+Version 3 applies on top of ac0f3e30d87e "of: overlay: fix memory
+leak related to duplicated property"
+
+
+
+Changes from version 2:
+   - rebase on Rob's dt/next branch
+   - 3/12: do missing renames in of_fill_overlay_info() so that 3/12
+     and 4/12 build.  This function is removed in 5/12.
+
+Changes from version 1:
+
+  - squash "[PATCH] of: overlay: move resolve phandles into
+    of_overlay_apply()" into "[PATCH 09/12] of: overlay: avoid race
+    condition between applying multiple overlays"
+
+
+Frank Rowand (12):
+  of: overlay.c: Remove comments that state the obvious, to reduce
+    clutter
+  of: overlay.c: Convert comparisons to zero or NULL to logical
+    expressions
+  of: overlay: rename identifiers to more reflect what they do
+  of: overlay: rename identifiers in dup_and_fixup_symbol_prop()
+  of: overlay: minor restructuring
+  of: overlay: detect cases where device tree may become corrupt
+  of: overlay: expand check of whether overlay changeset can be removed
+  of: overlay: loosen overly strict phandle clash check
+  of: overlay: avoid race condition between applying multiple overlays
+  of: overlay: simplify applying symbols from an overlay
+  of: overlay: remove a dependency on device node full_name
+  of: overlay: remove unneeded check for NULL kbasename()
+
+ Documentation/devicetree/overlay-notes.txt   |   12 +-
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |   14 +-
+ drivers/of/base.c                            |    2 +-
+ drivers/of/dynamic.c                         |  137 +++-
+ drivers/of/of_private.h                      |   22 +-
+ drivers/of/overlay.c                         | 1042 ++++++++++++++++----------
+ drivers/of/resolver.c                        |    7 +
+ drivers/of/unittest.c                        |   81 +-
+ include/linux/of.h                           |   17 +-
+ 9 files changed, 874 insertions(+), 460 deletions(-)
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
