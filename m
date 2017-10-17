@@ -1,54 +1,114 @@
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RFC PATCH v4 0/8] rockchip: kevin: Enable edp display
-Date: Tue, 17 Oct 2017 18:16:16 +0800
-Message-ID: <20171017101624.12506-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
+Subject: [RFC PATCH v4 1/8] arm64: dts: rockchip: Enable edp disaplay on kevin
+Date: Tue, 17 Oct 2017 18:16:17 +0800
+Message-ID: <20171017101624.12506-2-jeffy.chen@rock-chips.com>
+References: <20171017101624.12506-1-jeffy.chen@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171017101624.12506-1-jeffy.chen@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, heiko@sntech.de, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, tfiga@chromium.org, broonie@kernel.org, seanpaul@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org, Jingoo Han <jingoohan1@gmail.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-samsung-soc@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, linux-rockchip@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, heiko@sntech.de, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, tfiga@chromium.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, broonie@kernel.org, seanpaul@chromium.org, Catalin Marinas <catalin.marinas@arm.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+Add edp panel and enable related nodes on kevin.
 
-Make edp display works on chromebook kevin(at least for boot animation).
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Reviewed-by: Mark Yao <mark.yao@rock-chips.com>
 
-Also solve some issues i meet during the bringup.
+---
 
-Changes in v4:
-Fix compile warning.
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v3:
-Assign orphan pwms to dummy pwmchip instead of adding device link in the
-customer driver.
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
+ 2 files changed, 45 insertions(+)
 
-Changes in v2:
-Use device link to correct the suspend/resume and shutdown ordering,
-instead of converting rockchip spi's suspend/resume PM callbacks to
-late suspend/resume PM callbacks.
-
-Jeffy Chen (7):
-  arm64: dts: rockchip: Enable edp disaplay on kevin
-  drm/rockchip: analogix_dp: Fix error handling path
-  drm/rockchip: dw-mipi-dsi: Fix error handling path
-  drm/rockchip: dw_hdmi: Fix error handling path
-  drm/rockchip: inno_hdmi: Fix error handling path
-  pwm: Add dummy pwmchip for orphan pwms
-  drm/rockchip: Add device links for master and components
-
-Tomasz Figa (1):
-  drm/bridge/analogix: Do not use device's drvdata
-
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  | 29 ++++++++
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       | 16 +++++
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 50 ++++++-------
- drivers/gpu/drm/exynos/exynos_dp.c                 | 26 ++++---
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c    | 57 +++++++++------
- drivers/gpu/drm/rockchip/dw-mipi-dsi.c             | 17 +++--
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |  4 +-
- drivers/gpu/drm/rockchip/inno_hdmi.c               | 20 ++++--
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        | 24 ++++++-
- drivers/pwm/core.c                                 | 81 ++++++++++++++++++++--
- include/drm/bridge/analogix_dp.h                   | 19 ++---
- 11 files changed, 254 insertions(+), 89 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index a3d3cea7dc4f..bc67b19f0af5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -93,6 +93,18 @@
+ 		pwm-delay-us = <10000>;
+ 	};
+ 
++	edp_panel: edp-panel {
++		compatible = "sharp,lq123p1jx31", "simple-panel";
++		backlight = <&backlight>;
++		power-supply = <&pp3300_disp>;
++
++		ports {
++			panel_in_edp: endpoint {
++				remote-endpoint = <&edp_out_panel>;
++			};
++		};
++	};
++
+ 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
+ 		compatible = "murata,ncp15wb473";
+ 		pullup-uv = <1800000>;
+@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
+ 	};
+ };
+ 
++&edp {
++	status = "okay";
++
++	ports {
++		edp_out: port@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			edp_out_panel: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
++
+ &ppvar_bigcpu_pwm {
+ 	regulator-min-microvolt = <798674>;
+ 	regulator-max-microvolt = <1302172>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+index 5772c52fbfd3..470105d651c2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
+ 	dr_mode = "host";
+ };
+ 
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
++};
++
+ #include <arm/cros-ec-keyboard.dtsi>
+ #include <arm/cros-ec-sbs.dtsi>
+ 
 -- 
 2.11.0
