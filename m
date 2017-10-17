@@ -1,152 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC][PATCH 0/3] Overlay manager for predefined DT overlay
- fragments
-Date: Tue, 17 Oct 2017 14:46:00 -0500
-Message-ID: <20171017194600.he3suyuls4na5p6x@rob-hp-laptop>
-References: <1507613660-27236-1-git-send-email-john.stultz@linaro.org>
- <20171013214103.mv6wcemzcl36nnvs@rob-hp-laptop>
- <CALAqxLWcK-wbmQxtX4RziQsvQ26DmixC=gEPojFVHruFrpBnjw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/9] drm/panel: simple: add support for EDT ET0350 3.5"
+ QVGA panel
+Date: Tue, 17 Oct 2017 14:50:38 -0500
+Message-ID: <20171017195038.glirxs3sixpcj7uj@rob-hp-laptop>
+References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
+ <1507721021-28174-6-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CALAqxLWcK-wbmQxtX4RziQsvQ26DmixC=gEPojFVHruFrpBnjw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Dmitry Shmidt <dimitrysh@google.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+In-Reply-To: <1507721021-28174-6-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 04:51:03PM -0700, John Stultz wrote:
-> On Fri, Oct 13, 2017 at 2:41 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Mon, Oct 09, 2017 at 10:34:17PM -0700, John Stultz wrote:
-> >> In working with the HiKey and HiKey960 as targets for AOSP,
-> >> Dmitry developed the following overlay manager driver, which
-> >> allows a number of pre-determined DT overlay configurations to
-> >> be defined, and the configurations to be enabled at boot time
-> >> via a kernel boot argument.
-> >>
-> >> This has been submitted before, but while the earlier discussion
-> >> didn't really resolve to any sort of actionable direction, this
-> >> issue cropped up again and was a major discussion topic at the
-> >> Linux Plumbers Conference Android Microconference, so I suspect
-> >> it is worth revisiting this solution again.
-> >
-> > The Treble way to handle this is it is the bootloader's problem, right?
+On Wed, Oct 11, 2017 at 01:23:37PM +0200, Lothar Waﬂmann wrote:
+> Signed-off-by: Lothar Waﬂmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> ---
+>  .../bindings/display/panel/edt,et0350g0dh6.txt        |  7 +++++++
+
+Please split bindings to separate patch.
+
+>  drivers/gpu/drm/panel/panel-simple.c                  | 19 +++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/edt,et0350g0dh6.txt
 > 
-> I believe so, though with the treble approach, the device
-> configuration is still somewhat fixed. Just that configuration is
-> spread out between multiple partitions. Its a bit of a separate issue.
-> 
-> >> The overall use case is being able to configure devboards that
-> >> support a number of different mezzanine peripherals which
-> >> unfortunately cannot be probed. Some example mezzanines are
-> >> LCD panels or sensor hubs, as well as other options.
-> >
-> > There's probably some usecases for putting the overlay into the base
-> > DT, but I don't think mezzanine boards is one of them especially for dev
-> > boards where we may want to share overlays.
-> >
-> > I could see it in cases where you have 2nd source components for a
-> > product and want to select one.
-> >
-> >> The new functionality this driver provides is a mechanism to
-> >> specify multiple pre-determined dt overlay fragments in a
-> >> dtb file, and providing a way to select which dt fragments
-> >> should be applied via the kernel boot argument.
-> >>
-> >> The desire to use a kernel boot-argument as the selection
-> >> mechanism, comes from the Android Boot Image format not handling
-> >> dtbs independently. Usually with Android, the dtb is appended
-> >> to the kernel image, and modifying that is much more difficult
-> >> then changing the boot argugments. There is also a usability
-> >> argument that using a kernel command option to select
-> >> pre-defined entries is simpler for users to navigate.
-> >
-> > Doesn't Treble address the handling of overlays? Of course, none of what
-> > has been outlined for Treble has been reviewed upstream either... The
-> > concept seems fine, it's the vendor implementations that worry me.
-> 
-> Again, I'm not sure how that connects to the proposal here. Having
-> treble's multiple overlays being picked up in a standard fashion is
-> nice, but how does that translate into a user booting a board with one
-> mezzanine and then change the mezzanine and be able to get the new
-> mezzanine to work with a minimal amount of fuss.
+> diff --git a/Documentation/devicetree/bindings/display/panel/edt,et0350g0dh6.txt b/Documentation/devicetree/bindings/display/panel/edt,et0350g0dh6.txt
+> new file mode 100644
+> index 0000000..5546221
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/edt,et0350g0dh6.txt
+> @@ -0,0 +1,7 @@
+> +Emerging Display Technology Corp. 3.5" QVGA (320x240) TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "edt,et0350g0dh6"
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
 
-Perhaps I need to study how exactly treble systems will select all their 
-overlays. Supporting different panels or other 2nd source components is 
-a pretty common problem in production devices. Those aren't probe-able 
-either and folks don't want to flash different images for each 
-combination of h/w.
-
-> > As far as usability, a RPi user would probably say listing
-> > overlays in a text file is easiest as that's how the RPi firmware works.
-> 
-> Right, and I agree that usability wise, its very similar to the
-> cmdline arguments. But that requires firmware that keeps track of
-> various overlays and has some small filesystem where that config file
-> can be stored and easily updated.
-> 
-> >> Also, since the mezzanines are unable to be probed, we cannot
-> >> use other solutions, like having the bootloader specify
-> >> additional dtb overlays to the kernel.
-> >
-> > Not sure I follow.
-> >
-> > Someone has to decide what to put on the kernel command line. If you are
-> > setting the overlay in the command line at bootimage build time or in
-> > the bootloader, then you could just apply the overlay at that point in
-> > time. Maybe it's slightly easier to change the kernel command line than
-> > change the dtb.
-> 
-> Not, its not slightly easier, its much *much* easier to tweak the boot
-> arguments. Since the dtb is appended to the kernel image w/ the
-> abootimg format, its not simple at all to cut one out and replace it.
-
-Appended dtb was to support legacy non-DT aware bootloaders. It never 
-should have been carried over to arm64.
-
-> While the cmdline is trivial to do with the abootimg command:
-> abootimg -x boot.img
-> vi bootimg.cfg
-> abootimg -u boot.img -f ./bootimg.cfg
-
-It's easy because there is a tool to do so, not because a the kernel 
-command line is inheritly easier to modify than a dtb.
-
-It would be trivial to write a tool or add to this one the code to find 
-the dtb within the image and modify it. That's what every bootloader can 
-do.
-
-Of course, abootimg is a horrible creation IMO. Why Android can't use 
-something called a filesystem for the boot partition is beyond me. Then 
-modifying it would not require special tools that could only modify 
-whatever someone had the itch to modify. And combining the kernel, dtb, 
-and overlays into a single file would not be necessary.
-
-> and re-flash.  This doesn't require access to the kernel source or
-> rebuilding anything.
-> 
-> It seems you're suggesting that there be some sort of special overlay
-> partition which users have to flash with pre-built images containing
-> the appropriate overlay dtbs, so that something like the treble
-> overlay-per-partition approach could be used.
-
-I'm not really suggesting anything. I'm not going to take something that 
-*only* solves your usecase of apply an overlay embedded in a base dtb 
-based on the kernel command line. I have no issue really with either one 
-of those. What I don't want is another "overlay manager" for each 
-usecase. And sorry, you don't win for being first (you're not really).
-All this I said before.
-
-> And in the case with hikey/hikey960, this may be doable, as we can
-> modify the UEFI source, but it would also require users to have all
-> the various overlay images to flash as well, which adds complexity.
-> Additionally on other boards which don't have open firmware, such a
-> solution may not be feasible. The benefit to this approach is it
-> doesn't require such standardized firmware behavior.
-
-Unless there's some great, overwhelming demand to support such devices 
-with closed firmware, there's no benefit to me to care. What board do we 
-have with closed firmware that needs this?
+No reset lines, power supplies, etc.? Yes, simple-panel.txt defines 
+properties, but you still need to specify which ones you use. Otherwise, 
+I don't know if this panel has a single supply or you just forgot to 
+define the supplies.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
