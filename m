@@ -1,118 +1,91 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 03/10] drm/sun4i: hdmi: Support HDMI controller
- on A10
-Date: Tue, 17 Oct 2017 20:18:00 +0800
-Message-ID: <20171017121807.2994-4-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 02/10] drm/sun4i: tcon: Add support for A10 TCON
+Date: Tue, 17 Oct 2017 20:17:59 +0800
+Message-ID: <20171017121807.2994-3-wens@csie.org>
 References: <20171017121807.2994-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBA7KS7HQKGQEC4Q6NVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171017121807.2994-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171017121807.2994-1-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Jonathan Liu <net147@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The HDMI controller in the A10 SoC is the same as the one currently
-supported in the A10s. It has slightly different setup parameters.
-Since these parameters are not thoroughly understood, we add support
-for this variant by copying these parameters verbatim.
-
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- .../bindings/display/sunxi/sun4i-drm.txt           |  1 +
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             | 53 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index b2c08af73a95..5650efcfd2ac 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -40,6 +40,7 @@ CEC. It is one end of the pipeline.
- 
- Required properties:
-   - compatible: value must be one of:
-+    * allwinner,sun4i-a10-hdmi
-     * allwinner,sun5i-a10s-hdmi
-     * allwinner,sun6i-a31-hdmi
-   - reg: base address and size of memory-mapped region
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 6ca6e6a74c4a..bc2ba74d2ae5 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -289,6 +289,58 @@ static const struct cec_pin_ops sun4i_hdmi_cec_pin_ops = {
- #define SUN4I_HDMI_PAD_CTRL1_MASK	(GENMASK(24, 7) | GENMASK(5, 0))
- #define SUN4I_HDMI_PLL_CTRL_MASK	(GENMASK(31, 8) | GENMASK(3, 0))
- 
-+/* Only difference from sun5i is AMP is 4 instead of 6 */
-+static const struct sun4i_hdmi_variant sun4i_variant = {
-+	.pad_ctrl0_init_val	= SUN4I_HDMI_PAD_CTRL0_TXEN |
-+				  SUN4I_HDMI_PAD_CTRL0_CKEN |
-+				  SUN4I_HDMI_PAD_CTRL0_PWENG |
-+				  SUN4I_HDMI_PAD_CTRL0_PWEND |
-+				  SUN4I_HDMI_PAD_CTRL0_PWENC |
-+				  SUN4I_HDMI_PAD_CTRL0_LDODEN |
-+				  SUN4I_HDMI_PAD_CTRL0_LDOCEN |
-+				  SUN4I_HDMI_PAD_CTRL0_BIASEN,
-+	.pad_ctrl1_init_val	= SUN4I_HDMI_PAD_CTRL1_REG_AMP(4) |
-+				  SUN4I_HDMI_PAD_CTRL1_REG_EMP(2) |
-+				  SUN4I_HDMI_PAD_CTRL1_REG_DENCK |
-+				  SUN4I_HDMI_PAD_CTRL1_REG_DEN |
-+				  SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT |
-+				  SUN4I_HDMI_PAD_CTRL1_EMP_OPT |
-+				  SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT |
-+				  SUN4I_HDMI_PAD_CTRL1_AMP_OPT,
-+	.pll_ctrl_init_val	= SUN4I_HDMI_PLL_CTRL_VCO_S(8) |
-+				  SUN4I_HDMI_PLL_CTRL_CS(7) |
-+				  SUN4I_HDMI_PLL_CTRL_CP_S(15) |
-+				  SUN4I_HDMI_PLL_CTRL_S(7) |
-+				  SUN4I_HDMI_PLL_CTRL_VCO_GAIN(4) |
-+				  SUN4I_HDMI_PLL_CTRL_SDIV2 |
-+				  SUN4I_HDMI_PLL_CTRL_LDO2_EN |
-+				  SUN4I_HDMI_PLL_CTRL_LDO1_EN |
-+				  SUN4I_HDMI_PLL_CTRL_HV_IS_33 |
-+				  SUN4I_HDMI_PLL_CTRL_BWS |
-+				  SUN4I_HDMI_PLL_CTRL_PLL_EN,
-+
-+	.ddc_clk_reg		= REG_FIELD(SUN4I_HDMI_DDC_CLK_REG, 0, 6),
-+	.ddc_clk_pre_divider	= 2,
-+	.ddc_clk_m_offset	= 1,
-+
-+	.field_ddc_en		= REG_FIELD(SUN4I_HDMI_DDC_CTRL_REG, 31, 31),
-+	.field_ddc_start	= REG_FIELD(SUN4I_HDMI_DDC_CTRL_REG, 30, 30),
-+	.field_ddc_reset	= REG_FIELD(SUN4I_HDMI_DDC_CTRL_REG, 0, 0),
-+	.field_ddc_addr_reg	= REG_FIELD(SUN4I_HDMI_DDC_ADDR_REG, 0, 31),
-+	.field_ddc_slave_addr	= REG_FIELD(SUN4I_HDMI_DDC_ADDR_REG, 0, 6),
-+	.field_ddc_int_status	= REG_FIELD(SUN4I_HDMI_DDC_INT_STATUS_REG, 0, 8),
-+	.field_ddc_fifo_clear	= REG_FIELD(SUN4I_HDMI_DDC_FIFO_CTRL_REG, 31, 31),
-+	.field_ddc_fifo_rx_thres = REG_FIELD(SUN4I_HDMI_DDC_FIFO_CTRL_REG, 4, 7),
-+	.field_ddc_fifo_tx_thres = REG_FIELD(SUN4I_HDMI_DDC_FIFO_CTRL_REG, 0, 3),
-+	.field_ddc_byte_count	= REG_FIELD(SUN4I_HDMI_DDC_BYTE_COUNT_REG, 0, 9),
-+	.field_ddc_cmd		= REG_FIELD(SUN4I_HDMI_DDC_CMD_REG, 0, 2),
-+	.field_ddc_sda_en	= REG_FIELD(SUN4I_HDMI_DDC_LINE_CTRL_REG, 9, 9),
-+	.field_ddc_sck_en	= REG_FIELD(SUN4I_HDMI_DDC_LINE_CTRL_REG, 8, 8),
-+
-+	.ddc_fifo_reg		= SUN4I_HDMI_DDC_FIFO_DATA_REG,
-+	.ddc_fifo_has_dir	= true,
-+};
-+
- static const struct sun4i_hdmi_variant sun5i_variant = {
- 	.pad_ctrl0_init_val	= SUN4I_HDMI_PAD_CTRL0_TXEN |
- 				  SUN4I_HDMI_PAD_CTRL0_CKEN |
-@@ -613,6 +665,7 @@ static int sun4i_hdmi_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id sun4i_hdmi_of_table[] = {
-+	{ .compatible = "allwinner,sun4i-a10-hdmi", .data = &sun4i_variant, },
- 	{ .compatible = "allwinner,sun5i-a10s-hdmi", .data = &sun5i_variant, },
- 	{ .compatible = "allwinner,sun6i-a31-hdmi", .data = &sun6i_variant, },
- 	{ }
--- 
-2.14.2
+RnJvbTogSm9uYXRoYW4gTGl1IDxuZXQxNDdAZ21haWwuY29tPgoKVGhlIEExMCBoYXMgdHdvIFRD
+T05zIHRoYXQgYXJlIHNpbWlsYXIgdG8gdGhlIG9uZXMgZm91bmQgb24gb3RoZXIgU29Dcy4KTGlr
+ZSB0aGUgQTMxLCBUQ09OMCBoYXMgYSByZWdpc3RlciB1c2VkIHRvIG11eCB0aGUgVENPTiBvdXRw
+dXRzIHRvIHRoZQpkb3duc3RyZWFtIGVuY29kZXJzLiBUaGUgYml0IGZpZWxkcyBhcmUgc2xpZ2h0
+bHkgZGlmZmVyZW50LgoKU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gTGl1IDxuZXQxNDdAZ21haWwu
+Y29tPgpbd2Vuc0Bjc2llLm9yZzogUmV3b3JrZWQgZm9yIEExMCBhbmQgZml4ZWQgdXAgY29tbWl0
+IG1lc3NhZ2VdClNpZ25lZC1vZmYtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KLS0t
+CiAuLi4vYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0ICAgICAgICAgICB8ICAx
+ICsKIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kcnYuYyAgICAgICAgICAgICAgICAgIHwg
+IDMgKystCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jICAgICAgICAgICAgICAg
+ICB8IDMwICsrKysrKysrKysrKysrKysrKysrKysKIDMgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0
+aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjRpLWRybS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0CmluZGV4IDQ2
+ZGYzYjc4YWU5ZS4uYjJjMDhhZjczYTk1IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0CisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjRpLWRybS50eHQKQEAg
+LTg2LDYgKzg2LDcgQEAgVGhlIFRDT04gYWN0cyBhcyBhIHRpbWluZyBjb250cm9sbGVyIGZvciBS
+R0IsIExWRFMgYW5kIFRWIGludGVyZmFjZXMuCiAKIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAgLSBj
+b21wYXRpYmxlOiB2YWx1ZSBtdXN0IGJlIGVpdGhlcjoKKyAgICogYWxsd2lubmVyLHN1bjRpLWEx
+MC10Y29uCiAgICAqIGFsbHdpbm5lcixzdW41aS1hMTMtdGNvbgogICAgKiBhbGx3aW5uZXIsc3Vu
+NmktYTMxLXRjb24KICAgICogYWxsd2lubmVyLHN1bjZpLWEzMXMtdGNvbgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRp
+L3N1bjRpX2Rydi5jCmluZGV4IGI1ODc5ZDQ2MjBkOC4uYjgwODlhYzZmZWVmIDEwMDY0NAotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfZHJ2LmMKKysrIGIvZHJpdmVycy9ncHUvZHJt
+L3N1bjRpL3N1bjRpX2Rydi5jCkBAIC0xODQsNyArMTg0LDggQEAgc3RhdGljIGJvb2wgc3VuNGlf
+ZHJ2X25vZGVfaXNfZnJvbnRlbmQoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQogCiBzdGF0aWMg
+Ym9vbCBzdW40aV9kcnZfbm9kZV9pc190Y29uKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKIHsK
+LQlyZXR1cm4gb2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUobm9kZSwgImFsbHdpbm5lcixzdW41aS1h
+MTMtdGNvbiIpIHx8CisJcmV0dXJuIG9mX2RldmljZV9pc19jb21wYXRpYmxlKG5vZGUsICJhbGx3
+aW5uZXIsc3VuNGktYTEwLXRjb24iKSB8fAorCQlvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShub2Rl
+LCAiYWxsd2lubmVyLHN1bjVpLWExMy10Y29uIikgfHwKIAkJb2ZfZGV2aWNlX2lzX2NvbXBhdGli
+bGUobm9kZSwgImFsbHdpbm5lcixzdW42aS1hMzEtdGNvbiIpIHx8CiAJCW9mX2RldmljZV9pc19j
+b21wYXRpYmxlKG5vZGUsICJhbGx3aW5uZXIsc3VuNmktYTMxcy10Y29uIikgfHwKIAkJb2ZfZGV2
+aWNlX2lzX2NvbXBhdGlibGUobm9kZSwgImFsbHdpbm5lcixzdW44aS1hMzMtdGNvbiIpIHx8CmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGIvZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwppbmRleCA2ODc1MWI5OTk4NzcuLmM2ZTc3Zjk4NDBj
+MiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYworKysgYi9k
+cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCkBAIC03ODIsNiArNzgyLDMwIEBAIHN0
+YXRpYyBpbnQgc3VuNGlfdGNvbl9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
+IH0KIAogLyogcGxhdGZvcm0gc3BlY2lmaWMgVENPTiBtdXhpbmcgY2FsbGJhY2tzICovCitzdGF0
+aWMgaW50IHN1bjRpX2ExMF90Y29uX3NldF9tdXgoc3RydWN0IHN1bjRpX3Rjb24gKnRjb24sCisJ
+CQkJICBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCit7CisJc3RydWN0IHN1bjRpX3Rjb24g
+KnRjb24wID0gc3VuNGlfZ2V0X3Rjb24wKGVuY29kZXItPmRldik7CisJdTMyIHNoaWZ0OworCisJ
+aWYgKCF0Y29uMCkKKwkJcmV0dXJuIC1FSU5WQUw7CisKKwlzd2l0Y2ggKGVuY29kZXItPmVuY29k
+ZXJfdHlwZSkgeworCWNhc2UgRFJNX01PREVfRU5DT0RFUl9UTURTOgorCQkvKiBIRE1JICovCisJ
+CXNoaWZ0ID0gODsKKwkJYnJlYWs7CisJZGVmYXVsdDoKKwkJcmV0dXJuIC1FSU5WQUw7CisJfQor
+CisJcmVnbWFwX3VwZGF0ZV9iaXRzKHRjb24wLT5yZWdzLCBTVU40SV9UQ09OX01VWF9DVFJMX1JF
+RywKKwkJCSAgIDB4MyA8PCBzaGlmdCwgdGNvbi0+aWQgPDwgc2hpZnQpOworCisJcmV0dXJuIDA7
+Cit9CisKIHN0YXRpYyBpbnQgc3VuNWlfYTEzX3Rjb25fc2V0X211eChzdHJ1Y3Qgc3VuNGlfdGNv
+biAqdGNvbiwKIAkJCQkgIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIHsKQEAgLTgyMyw2
+ICs4NDcsMTEgQEAgc3RhdGljIGludCBzdW42aV90Y29uX3NldF9tdXgoc3RydWN0IHN1bjRpX3Rj
+b24gKnRjb24sCiAJcmV0dXJuIDA7CiB9CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VuNGlfdGNv
+bl9xdWlya3Mgc3VuNGlfYTEwX3F1aXJrcyA9IHsKKwkuaGFzX2NoYW5uZWxfMQkJPSB0cnVlLAor
+CS5zZXRfbXV4CQk9IHN1bjRpX2ExMF90Y29uX3NldF9tdXgsCit9OworCiBzdGF0aWMgY29uc3Qg
+c3RydWN0IHN1bjRpX3Rjb25fcXVpcmtzIHN1bjVpX2ExM19xdWlya3MgPSB7CiAJLmhhc19jaGFu
+bmVsXzEJCT0gdHJ1ZSwKIAkuc2V0X211eAkJPSBzdW41aV9hMTNfdGNvbl9zZXRfbXV4LApAQCAt
+ODQ4LDYgKzg3Nyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VuNGlfdGNvbl9xdWlya3Mgc3Vu
+OGlfdjNzX3F1aXJrcyA9IHsKIH07CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
+IHN1bjRpX3Rjb25fb2ZfdGFibGVbXSA9IHsKKwl7IC5jb21wYXRpYmxlID0gImFsbHdpbm5lcixz
+dW40aS1hMTAtdGNvbiIsIC5kYXRhID0gJnN1bjRpX2ExMF9xdWlya3MgfSwKIAl7IC5jb21wYXRp
+YmxlID0gImFsbHdpbm5lcixzdW41aS1hMTMtdGNvbiIsIC5kYXRhID0gJnN1bjVpX2ExM19xdWly
+a3MgfSwKIAl7IC5jb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW42aS1hMzEtdGNvbiIsIC5kYXRh
+ID0gJnN1bjZpX2EzMV9xdWlya3MgfSwKIAl7IC5jb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW42
+aS1hMzFzLXRjb24iLCAuZGF0YSA9ICZzdW42aV9hMzFzX3F1aXJrcyB9LAotLSAKMi4xNC4yCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
