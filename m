@@ -1,25 +1,33 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 5/5] arm: dts: rockchip: enable tsadc module on RV1108 evaluation board
-Date: Tue, 17 Oct 2017 21:01:11 +0200
-Message-ID: <2302063.Z22fM4bRKP@phil>
-References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com> <1503570734-8942-1-git-send-email-rocky.hao@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 2/3] dt-bindings: PCI: Add definition of pcie wake irq
+Date: Tue, 17 Oct 2017 14:03:30 -0500
+Message-ID: <20171017190330.dldonto4ppkkldbh@rob-hp-laptop>
+References: <20171013195059.23865-1-jeffy.chen@rock-chips.com>
+ <20171013195059.23865-3-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503570734-8942-1-git-send-email-rocky.hao@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <20171013195059.23865-3-jeffy.chen@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rocky Hao <rocky.hao@rock-chips.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, shawn.lin@rock-chips.com, briannorris@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 24. August 2017, 18:32:14 CEST schrieb Rocky Hao:
-> Enable tsadc module on RV1108 evaluation board
+On Sat, Oct 14, 2017 at 03:50:57AM +0800, Jeffy Chen wrote:
+> Add an optional interrupt for PCIE_WAKE pin.
 > 
-> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> ---
+> 
+> Changes in v6: None
+> Changes in v5:
+> Move to pci.txt
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/pci/pci.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-applied for 4.15 with Eduardo's Ack.
-
-
-Thanks
-Heiko
+Please add acks when posting new versions.
