@@ -1,30 +1,55 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH] drivers: Flag buses which demand DMA configuration
-Date: Tue, 17 Oct 2017 10:17:01 +0200
-Message-ID: <20171017081701.GB19475@lst.de>
-References: <bd1c6061a6a16f720e992a0f12933bdee6591aea.1507823375.git.robin.murphy@arm.com>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 1/9] SOC: brcmstb: add memory API
+Date: Tue, 17 Oct 2017 01:24:13 -0700
+Message-ID: <20171017082413.GA10574@infradead.org>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+ <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bd1c6061a6a16f720e992a0f12933bdee6591aea.1507823375.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org
+In-Reply-To: <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Looks fine:
+> +/* Macros to help extract property data */
+> +#define U8TOU32(b, offs) \
+> +	((((u32)b[0 + offs] << 0)  & 0x000000ff) | \
+> +	 (((u32)b[1 + offs] << 8)  & 0x0000ff00) | \
+> +	 (((u32)b[2 + offs] << 16) & 0x00ff0000) | \
+> +	 (((u32)b[3 + offs] << 24) & 0xff000000))
 
-Reviewed-by: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Please us helpers like get_unaligned_le32 instead opencoding them.
 
-Greg, do you want to take this or should I queue it up in the
-dma-mapping tree?
+> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(U8TOU32(b, offs)))
+
+And together with this it looks really whacky.  So you're converting
+from le to native first and then do another conversion from be to cpu?
+
+Something doesn't work out here.
+
+> +/* -------------------- Functions -------------------- */
+
+Please remove pointless comments like this one.
+
+> +
+> +/*
+> + * If the DT nodes are handy, determine which MEMC holds the specified
+> + * physical address.
+> + */
+> +#ifdef CONFIG_ARCH_BRCMSTB
+> +int __brcmstb_memory_phys_addr_to_memc(phys_addr_t pa, void __iomem *base)
+
+Please move this into the arm arch code.
+
+> +#elif defined(CONFIG_MIPS)
+
+And this into the mips arch code.
+
+> +EXPORT_SYMBOL(brcmstb_memory_phys_addr_to_memc);
+
+> +EXPORT_SYMBOL(brcmstb_memory_memc_size);
+
+Why is this exported?
