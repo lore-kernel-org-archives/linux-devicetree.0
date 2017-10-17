@@ -1,37 +1,108 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 0/3] iio: adc: stm32: Add support for differential channels
-Date: Tue, 17 Oct 2017 15:15:42 +0200
-Message-ID: <1508246145-19417-1-git-send-email-fabrice.gasnier@st.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 2/9] drm/panel: simple: simplify display_mode
+ definitions by using macro
+Date: Tue, 17 Oct 2017 15:17:00 +0200
+Message-ID: <20171017151700.4f5448cc@karo-electronics.de>
+References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
+        <1507721021-28174-3-git-send-email-LW@KARO-electronics.de>
+        <20171017120937.GC684@ulmo>
+        <20171017150516.0cab0cc1@karo-electronics.de>
+        <20171017130831.GA21172@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171017130831.GA21172@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for differential channels that can be found on STM32H7 ADC:
-- Introduce new DT property 'st,adc-diff-channels'.
-- Slightly rework single-ended channels definition in stm32-adc driver.
-- Add support for differential channels to stm32-adc driver.
+Hi,
 
-Fabrice Gasnier (3):
-  dt-bindings: iio: adc: stm32: add support for diff channels
-  iio: adc: stm32: remove const channel names definition
-  iio: adc: stm32: add support for differential channels
+On Tue, 17 Oct 2017 15:08:31 +0200 Thierry Reding wrote:
+> On Tue, Oct 17, 2017 at 03:05:16PM +0200, Lothar Waßmann wrote:
+> > Hi,
+> > 
+> > On Tue, 17 Oct 2017 14:09:37 +0200 Thierry Reding wrote:
+> > > On Wed, Oct 11, 2017 at 01:23:34PM +0200, Lothar Waßmann wrote:
+> > > > Use the newly defined macro to generate the display_mode data entries
+> > > > for all panels. This reduces the code size significantly and makes the
+> > > > code more readable.
+> > > > 
+> > > > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+> > > > ---
+> > > >  drivers/gpu/drm/panel/panel-simple.c | 799 ++++++-----------------------------
+> > > >  1 file changed, 134 insertions(+), 665 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> > > > index dec639d..fde9c41 100644
+> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
+> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
+> > > > @@ -89,6 +89,20 @@ struct panel_simple {
+> > > >  	struct gpio_desc *enable_gpio;
+> > > >  };
+> > > >  
+> > > > +#define SP_DISPLAY_MODE(freq, ha, hfp, hs, hbp, va, vfp, vs, vbp, vr, flgs) { \
+> > > > +	.clock = freq,							\
+> > > > +	.hdisplay = ha,							\
+> > > > +	.hsync_start = (ha) + (hfp),					\
+> > > > +	.hsync_end = (ha) + (hfp) + (hs),				\
+> > > > +	.htotal = (ha) + (hfp) + (hs) + (hbp),				\
+> > > > +	.vdisplay = (va),						\
+> > > > +	.vsync_start = (va) + (vfp),					\
+> > > > +	.vsync_end = (va) + (vfp) + (vs),				\
+> > > > +	.vtotal = (va) + (vfp) + (vs) + (vbp),				\
+> > > > +	.vrefresh = vr,							\
+> > > > +	.flags = flgs,							\
+> > > > +}
+> > > > +
+> > > >  static inline struct panel_simple *to_panel_simple(struct drm_panel *panel)
+> > > >  {
+> > > >  	return container_of(panel, struct panel_simple, base);
+> > > [...]
+> > > > @@ -411,33 +415,9 @@ static const struct panel_desc ampire_am_480272h3tmqw_t01h = {
+> > > >  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> > > >  };
+> > > >  
+> > > > -#define SP_DISPLAY_MODE(freq, ha, hfp, hs, hbp, va, vfp, vs, vbp, vr, flgs) { \
+> > > > -	.clock = freq,							\
+> > > > -	.hdisplay = ha,							\
+> > > > -	.hsync_start = (ha) + (hfp),					\
+> > > > -	.hsync_end = (ha) + (hfp) + (hs),				\
+> > > > -	.htotal = (ha) + (hfp) + (hs) + (hbp),				\
+> > > > -	.vdisplay = (va),						\
+> > > > -	.vsync_start = (va) + (vfp),					\
+> > > > -	.vsync_end = (va) + (vfp) + (vs),				\
+> > > > -	.vtotal = (va) + (vfp) + (vs) + (vbp),				\
+> > > > -	.vrefresh = vr,							\
+> > > > -	.flags = flgs,							\
+> > > > -	}
+> > > 
+> > > Your first patch should put this in the right place to begin with so
+> > > that this patch is really just the conversion.
+> > > 
+> > > Again, I don't think this macro actually improves the way modes are
+> > > defined.
+> > > 
+> > I'm not happy with this panel driver stuff anyway. With the legacy
+> > 'display-timings' node that provided the timing data directly in the
+> > DTB, every bootloader could pick up the timing data and feed it to
+> > whatever driver it used for the display.
+> > With the panel driver stuff the whole Linux driver has to be replicated
+> > in the boot loader in order to be able to use the same DTB as Linux for
+> > its HW configuration.
+> > And adding a new panel involves recompiling the kernel and the boot
+> > loader, rather than adding the timing data from the panel's datasheet
+> > into the DTB.
+> 
+> This isn't the first time I've heard this. Please read this for more
+> background information on why the situation is what it is:
+> 
+> 	http://sietch-tagr.blogspot.de/2016/04/display-panels-are-not-special.html
+> 
+Thanks for the link. That's what I have been looking for already for
+some time but couldn't find any references to.
 
- .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   6 +
- drivers/iio/adc/stm32-adc.c                        | 181 +++++++++++++--------
- 2 files changed, 119 insertions(+), 68 deletions(-)
 
--- 
-1.9.1
+Lothar Waßmann
