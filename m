@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 07/12] ARM: dts: imx6-tx6: convert to using simple-audio-card
-Date: Tue, 17 Oct 2017 10:53:29 +0200
-Message-ID: <1508230414-8090-8-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 08/12] ARM: dts: imx6-tx6: add support for I2C bus recovery
+Date: Tue, 17 Oct 2017 10:53:30 +0200
+Message-ID: <1508230414-8090-9-git-send-email-LW@KARO-electronics.de>
 References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,97 +13,71 @@ To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, 
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Convert the DTS sound setup to use the simple-audio-card driver.
+Define the required properties to enable I2C bus recovery supported by
+the I2C subsystem.
 
 Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx6qdl-tx6.dtsi | 50 ++++++++++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/imx6qdl-tx6.dtsi | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-index c6b2d63..e0dbf8b 100644
+index e0dbf8b..9b563d4 100644
 --- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-@@ -43,6 +43,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pwm/pwm.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
- 
- / {
- 	aliases {
-@@ -183,24 +184,56 @@
- 	};
- 
- 	sound {
--		compatible = "karo,imx6qdl-tx6qdl-sgtl5000",
--			     "fsl,imx-audio-sgtl5000";
--		model = "sgtl5000-audio";
-+		compatible = "karo,imx6qdl-tx6-sgtl5000",
-+			     "simple-audio-card";
-+		simple-audio-card,name = "imx6qdl-tx6-sgtl5000-audio";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_audmux>;
--		ssi-controller = <&ssi1>;
--		audio-codec = <&sgtl5000>;
--		audio-routing =
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Line", "Line In",
-+			"Line", "Line Out",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
- 			"MIC_IN", "Mic Jack",
- 			"Mic Jack", "Mic Bias",
- 			"Headphone Jack", "HP_OUT";
--		mux-int-port = <1>;
--		mux-ext-port = <5>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+			sound-dai = <&ssi1>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+		};
- 	};
+@@ -310,8 +310,11 @@
  };
  
- &audmux {
+ &i2c1 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "gpio";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
++	pinctrl-1 = <&pinctrl_i2c1_gpio>;
++	scl-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
++	sda-gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;
+ 	clock-frequency = <400000>;
  	status = "okay";
-+
-+	ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_SYN |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(4) |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(4) |
-+			IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-+		>;
-+	};
-+
-+	pins5 {
-+		fsl,audmux-port = <4>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-+		>;
-+	};
+ 
+@@ -324,8 +327,11 @@
  };
  
- &can1 {
-@@ -298,6 +331,7 @@
+ &i2c3 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "gpio";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
++	pinctrl-1 = <&pinctrl_i2c3_gpio>;
++	scl-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++	sda-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+ 	clock-frequency = <400000>;
+ 	status = "okay";
  
- 	sgtl5000: sgtl5000@0a {
- 		compatible = "fsl,sgtl5000";
-+		#sound-dai-cells = <0>;
- 		reg = <0x0a>;
- 		VDDA-supply = <&reg_2v5>;
- 		VDDIO-supply = <&reg_3v3>;
+@@ -551,6 +557,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c1_gpio: i2c1-gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__GPIO3_IO21		0x4001b8b1
++			MX6QDL_PAD_EIM_D28__GPIO3_IO28		0x4001b8b1
++		>;
++	};
++
+ 	pinctrl_i2c3: i2c3grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
+@@ -558,6 +571,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c3_gpio: i2c3-gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__GPIO1_IO03		0x4001b8b1
++			MX6QDL_PAD_GPIO_6__GPIO1_IO06		0x4001b8b1
++		>;
++	};
++
+ 	pinctrl_kpp: kppgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_9__KEY_COL6		0x1b0b1
 -- 
 2.1.4
