@@ -1,46 +1,55 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: overlay: move resolve phandles into
- of_overlay_apply()
-Date: Mon, 16 Oct 2017 17:24:01 -0700
-Message-ID: <59E54DA1.4050909@gmail.com>
-References: <1507683745-17499-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqL28_rr5CHMovr-k3h_Wyjpyf8xVia9Ffkcz_ZzGktCnA@mail.gmail.com>
+From: "Keiji Hayashibara" <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: RE: [PATCH v2 1/3] dt-bindings: nvmem: add description for UniPhier eFuse
+Date: Tue, 17 Oct 2017 10:10:37 +0900
+Message-ID: <000001d346e4$be23ee70$3a6bcb50$@socionext.com>
+References: <1507266180-11840-1-git-send-email-hayashibara.keiji@socionext.com> <1507266180-11840-2-git-send-email-hayashibara.keiji@socionext.com> <20171013134902.7gvmkvxvwnjlmstp@rob-hp-laptop> <CAK7LNARg6G152joHq06RkPab=NoWEkFArvF+Ccc1behdXFokmg@mail.gmail.com> <CAL_JsqJdbLFHqEU8+1e_hvA3Hd1MLJHETWAkd2pcsXpDKwONog@mail.gmail.com> <CAK7LNASpHvnicebVLbOgTDCmPp7UDVkf4FYWGsjAiB8ENo_2iw@mail.gmail.com> <370eba21-1da8-9994-65c1-b51f564343fb@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain;
+        charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL28_rr5CHMovr-k3h_Wyjpyf8xVia9Ffkcz_ZzGktCnA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <370eba21-1da8-9994-65c1-b51f564343fb-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: ja
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Srinivas Kandagatla' <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/17 13:46, Rob Herring wrote:
-> On Tue, Oct 10, 2017 at 8:02 PM,  <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Move more code into of_overlay_apply() so that it does not have
->> to be duplicated by each caller of of_overlay_apply().
->>
->> The test in of_resolve_phandles() that the overlay tree is detached is
->> temporarily disabled so that old style overlay unittests do not fail.
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->>
->> This patch applies on top of the series: "[PATCH 00/12] of: overlay: clean
->> up device tree overlay code".
->>
->> While reviewing "[PATCH 09/12] of: overlay: avoid race condition between
->> applying multiple overlays", Rob asked if of_resolve_phandles() could be
->> moved into of_overlay_apply().  This patch is what is involved in doing so.
-> 
-> Looks fine. Can you squash this into patch 9 and resend the series (or
-> at least 9-12). The rest all looks fine to me.
-> 
-> Rob
-> 
+Hello Srinivas,
 
-Thanks, I'll do that.
+OK. I will send fixed patch as soon as possible.
 
--Frank
+Thank you.
+
+Best Regards,
+Keiji Hayashibara
+
+
+> -----Original Message-----
+> From: Srinivas Kandagatla [mailto:srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
+> Sent: Monday, October 16, 2017 6:12 PM
+> 
+> On 15/10/17 09:04, Masahiro Yamada wrote:
+> > OK.
+> >
+> > usb_mon: usb_mon {
+> >
+> > should be fixed.
+> >
+> > Srinivas forwarded this to Greg,
+> > but I guess Greg has not applied this yet.
+> >
+> > The author can do re-spin,
+> > or a follow-up patch will do if it is too late.
+> 
+> Please send a patch to fix!
+> 
+> Thanks,
+> srini
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
