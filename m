@@ -1,39 +1,69 @@
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
-Date: Tue, 17 Oct 2017 12:11:55 -0400
-Message-ID: <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/9] SOC: brcmstb: add memory API
+Date: Tue, 17 Oct 2017 09:12:22 -0700
+Message-ID: <abdb1e9d-f8c9-8066-48c5-37b4e2474952@gmail.com>
 References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
- <1507761269-7017-6-git-send-email-jim2101024@gmail.com> <589c04cb-061b-a453-3188-79324a02388e@arm.com>
- <20171017081422.GA19475@lst.de>
+ <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
+ <20171017082413.GA10574@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171017081422.GA19475@lst.de>
+In-Reply-To: <20171017082413.GA10574@infradead.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, iommu@lists.linux-foundation.org
+To: Christoph Hellwig <hch@infradead.org>, Jim Quinlan <jim2101024@gmail.com>
+Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 4:14 AM, Christoph Hellwig <hch@lst.de> wrote:
-> Just took a quick look over this and I basically agree with the comments
-> from Robin.
->
-> What I don't understand is why you're even trying to do all these
-> hacky things.
->
-> It seems like the controller should simply set dma_pfn_offset for
-> each device hanging off it, and all the supported architectures
-> should be updated to obey that if they don't do so yet, and
-> you're done without needing this giant mess.
+On 10/17/2017 01:24 AM, Christoph Hellwig wrote:
+>> +/* Macros to help extract property data */
+>> +#define U8TOU32(b, offs) \
+>> +	((((u32)b[0 + offs] << 0)  & 0x000000ff) | \
+>> +	 (((u32)b[1 + offs] << 8)  & 0x0000ff00) | \
+>> +	 (((u32)b[2 + offs] << 16) & 0x00ff0000) | \
+>> +	 (((u32)b[3 + offs] << 24) & 0xff000000))
+> 
+> Please us helpers like get_unaligned_le32 instead opencoding them.
+> 
+>> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(U8TOU32(b, offs)))
+> 
+> And together with this it looks really whacky.  So you're converting
+> from le to native first and then do another conversion from be to cpu?
+> 
+> Something doesn't work out here.
+> 
+>> +/* -------------------- Functions -------------------- */
+> 
+> Please remove pointless comments like this one.
+> 
+>> +
+>> +/*
+>> + * If the DT nodes are handy, determine which MEMC holds the specified
+>> + * physical address.
+>> + */
+>> +#ifdef CONFIG_ARCH_BRCMSTB
+>> +int __brcmstb_memory_phys_addr_to_memc(phys_addr_t pa, void __iomem *base)
+> 
+> Please move this into the arm arch code.
 
-My understanding is that dma_pfn_offset is that it is a single
-constant offset from RAM, in our case, to map to PCIe space.  But in
-my commit message I detail how our PCIe controller presents memory
-with multiple regions with multiple different offsets. If an EP device
-maps to a region on the host memory, yes we can set the dma_pfn_offset
-for that device for that location within that range,.  But if the
-device then unmaps and allocates from another region with a different
-offset, it won't work.  If  I set dma_pfn_offset I have to assume that
-the device is using only one region of memory only, not more than one,
-and that it is not unmapping that region and mapping another (with a
-different offset).  Can I make those assumptions?
+No, this needs to work on both ARM and ARM64, hence the reason why this
+is in a reasonably architecture neutral place.
+
+> 
+>> +#elif defined(CONFIG_MIPS)
+> 
+> And this into the mips arch code.
+
+Same reason as above.
+
+> 
+>> +EXPORT_SYMBOL(brcmstb_memory_phys_addr_to_memc);
+> 
+>> +EXPORT_SYMBOL(brcmstb_memory_memc_size);
+> 
+> Why is this exported?
+
+Because the PCIE RC driver can be built as a module.
+-- 
+Florian
