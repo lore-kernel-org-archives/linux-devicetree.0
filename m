@@ -1,108 +1,44 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 2/9] drm/panel: simple: simplify display_mode
- definitions by using macro
-Date: Tue, 17 Oct 2017 15:17:00 +0200
-Message-ID: <20171017151700.4f5448cc@karo-electronics.de>
-References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
-        <1507721021-28174-3-git-send-email-LW@KARO-electronics.de>
-        <20171017120937.GC684@ulmo>
-        <20171017150516.0cab0cc1@karo-electronics.de>
-        <20171017130831.GA21172@ulmo>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/3] dt-bindings: iio: adc: stm32: add support for diff channels
+Date: Tue, 17 Oct 2017 15:15:43 +0200
+Message-ID: <1508246145-19417-2-git-send-email-fabrice.gasnier@st.com>
+References: <1508246145-19417-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171017130831.GA21172@ulmo>
+In-Reply-To: <1508246145-19417-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: linux@armlinux.org.uk, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+STM32H7 ADC channels may be configured either as single-ended or
+differential.
+Add 'st,adc-diff-channels' property to support differential channels.
+Differential channels are defined as a pair of positive and negative
+inputs: vinp & vinn.
 
-On Tue, 17 Oct 2017 15:08:31 +0200 Thierry Reding wrote:
-> On Tue, Oct 17, 2017 at 03:05:16PM +0200, Lothar Waßmann wrote:
-> > Hi,
-> > 
-> > On Tue, 17 Oct 2017 14:09:37 +0200 Thierry Reding wrote:
-> > > On Wed, Oct 11, 2017 at 01:23:34PM +0200, Lothar Waßmann wrote:
-> > > > Use the newly defined macro to generate the display_mode data entries
-> > > > for all panels. This reduces the code size significantly and makes the
-> > > > code more readable.
-> > > > 
-> > > > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
-> > > > ---
-> > > >  drivers/gpu/drm/panel/panel-simple.c | 799 ++++++-----------------------------
-> > > >  1 file changed, 134 insertions(+), 665 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > > > index dec639d..fde9c41 100644
-> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > > @@ -89,6 +89,20 @@ struct panel_simple {
-> > > >  	struct gpio_desc *enable_gpio;
-> > > >  };
-> > > >  
-> > > > +#define SP_DISPLAY_MODE(freq, ha, hfp, hs, hbp, va, vfp, vs, vbp, vr, flgs) { \
-> > > > +	.clock = freq,							\
-> > > > +	.hdisplay = ha,							\
-> > > > +	.hsync_start = (ha) + (hfp),					\
-> > > > +	.hsync_end = (ha) + (hfp) + (hs),				\
-> > > > +	.htotal = (ha) + (hfp) + (hs) + (hbp),				\
-> > > > +	.vdisplay = (va),						\
-> > > > +	.vsync_start = (va) + (vfp),					\
-> > > > +	.vsync_end = (va) + (vfp) + (vs),				\
-> > > > +	.vtotal = (va) + (vfp) + (vs) + (vbp),				\
-> > > > +	.vrefresh = vr,							\
-> > > > +	.flags = flgs,							\
-> > > > +}
-> > > > +
-> > > >  static inline struct panel_simple *to_panel_simple(struct drm_panel *panel)
-> > > >  {
-> > > >  	return container_of(panel, struct panel_simple, base);
-> > > [...]
-> > > > @@ -411,33 +415,9 @@ static const struct panel_desc ampire_am_480272h3tmqw_t01h = {
-> > > >  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> > > >  };
-> > > >  
-> > > > -#define SP_DISPLAY_MODE(freq, ha, hfp, hs, hbp, va, vfp, vs, vbp, vr, flgs) { \
-> > > > -	.clock = freq,							\
-> > > > -	.hdisplay = ha,							\
-> > > > -	.hsync_start = (ha) + (hfp),					\
-> > > > -	.hsync_end = (ha) + (hfp) + (hs),				\
-> > > > -	.htotal = (ha) + (hfp) + (hs) + (hbp),				\
-> > > > -	.vdisplay = (va),						\
-> > > > -	.vsync_start = (va) + (vfp),					\
-> > > > -	.vsync_end = (va) + (vfp) + (vs),				\
-> > > > -	.vtotal = (va) + (vfp) + (vs) + (vbp),				\
-> > > > -	.vrefresh = vr,							\
-> > > > -	.flags = flgs,							\
-> > > > -	}
-> > > 
-> > > Your first patch should put this in the right place to begin with so
-> > > that this patch is really just the conversion.
-> > > 
-> > > Again, I don't think this macro actually improves the way modes are
-> > > defined.
-> > > 
-> > I'm not happy with this panel driver stuff anyway. With the legacy
-> > 'display-timings' node that provided the timing data directly in the
-> > DTB, every bootloader could pick up the timing data and feed it to
-> > whatever driver it used for the display.
-> > With the panel driver stuff the whole Linux driver has to be replicated
-> > in the boot loader in order to be able to use the same DTB as Linux for
-> > its HW configuration.
-> > And adding a new panel involves recompiling the kernel and the boot
-> > loader, rather than adding the timing data from the panel's datasheet
-> > into the DTB.
-> 
-> This isn't the first time I've heard this. Please read this for more
-> background information on why the situation is what it is:
-> 
-> 	http://sietch-tagr.blogspot.de/2016/04/display-panels-are-not-special.html
-> 
-Thanks for the link. That's what I have been looking for already for
-some time but couldn't find any references to.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-
-Lothar Waßmann
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+index 48bfcaa3..c3c8de1 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -62,6 +62,12 @@ Required properties:
+ - st,adc-channels: List of single-ended channels muxed for this ADC.
+   It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
+   from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
++- st,adc-diff-channels: List of differential channels muxed for this ADC.
++  Depending on part used, some channels can be configured as differential
++  instead of single-ended (e.g. stm32h7). List here positive and negative
++  inputs pairs as <vinp vinn>, <vinp vinn>,... vinp and vinn are numbered
++  from 0 to 19 on stm32h7)
++  Note: At least one of "st,adc-channels" or "st,adc-diff-channels" is required.
+ - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+   Documentation/devicetree/bindings/iio/iio-bindings.txt
+ 
+-- 
+1.9.1
