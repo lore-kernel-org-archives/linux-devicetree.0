@@ -1,56 +1,97 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] K2G: Add QSPI support
-Date: Tue, 17 Oct 2017 20:50:51 +0200
-Message-ID: <012e14f4-1eb0-2641-feaa-5fc8f9028810@wedev4u.fr>
-References: <20171003051925.8821-1-vigneshr@ti.com>
- <09cc0a61-3f73-4a10-2d67-32515a7da861@ti.com>
- <6f507813-388a-13e5-31ba-736b419744fa@gmail.com>
- <69beca0c-68a2-2d2c-d4a8-6f05a1fbc957@wedev4u.fr>
- <ebd85d99-431b-3f6d-4bdf-e7d47b81567c@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 03/12] of: overlay: rename identifiers to more reflect
+ what they do
+Date: Tue, 17 Oct 2017 11:53:48 -0700
+Message-ID: <59E651BC.6030802@gmail.com>
+References: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
+ <1508203074-26917-4-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqJDZFznVm0TvCePHq_J-FhNyEXoLEue_ZRhOm6LyXC5kQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ebd85d99-431b-3f6d-4bdf-e7d47b81567c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqJDZFznVm0TvCePHq_J-FhNyEXoLEue_ZRhOm6LyXC5kQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 17/10/2017 à 00:34, Marek Vasut a écrit :
-> On 10/17/2017 12:29 AM, Cyrille Pitchen wrote:
->> Hi all,
+On 10/17/17 07:38, Rob Herring wrote:
+> On Mon, Oct 16, 2017 at 8:17 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 >>
->> Le 16/10/2017 à 11:28, Marek Vasut a écrit :
->>> On 10/16/2017 08:15 AM, Vignesh R wrote:
->>>>
->>>>
->>>> On Tuesday 03 October 2017 10:49 AM, Vignesh R wrote:
->>>>>
->>>>>
->>>>> This series adds support for Cadence QSPI IP present in TI's 66AK2G SoC.
->>>>> The patches enhance the existing cadence-quadspi driver to support
->>>>> loopback clock circuit, pm_runtime support and tweaks for 66AK2G SoC.
->>>>
->>>> Gentle ping on the series...
->>>
->>> It's IMO OK, Cyrille, can you pick it ?
->>>
+>> This patch is aimed primarily at drivers/of/overlay.c, but those
+>> changes also have a small impact in a few other files.
 >>
->> The series looks good to me too.
+>> overlay.c is difficult to read and maintain.  Improve readability:
+>>   - Rename functions, types and variables to better reflect what
+>>     they do and to be consistent with names in other places,
+>>     such as the device tree overlay FDT (flattened device tree),
+>>     and make the algorithms more clear
+>>   - Use the same names consistently throughout the file
+>>   - Update comments for name changes
+>>   - Fix incorrect comments
 >>
->> Marek, could you please add you "Acked-by" or "Reviewed-by" tag for the
->> record in patchwork ? It will be automatically added when I use
->> "pwclient git-am -s" to merge the patches into the spi-nor/next branch.
+>> This patch is intended to not introduce any functional change.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/overlay-notes.txt   |  12 +-
+>>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |   5 +-
+>>  drivers/of/dynamic.c                         |   2 +-
+>>  drivers/of/overlay.c                         | 506 ++++++++++++++-------------
+>>  drivers/of/unittest.c                        |  20 +-
+>>  include/linux/of.h                           |  12 +-
+>>  6 files changed, 294 insertions(+), 263 deletions(-)
 > 
-> Acked-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Doesn't build:
+> 
+> ../drivers/of/overlay.c:397:41: warning: ‘struct of_overlay_info’
+> declared inside parameter list will not be visible outside of this
+> definition or declaration
+>    struct device_node *info_node, struct of_overlay_info *ovinfo)
+>                                          ^~~~~~~~~~~~~~~
+> ../drivers/of/overlay.c:396:40: warning: ‘struct of_overlay’ declared
+> inside parameter list will not be visible outside of this definition
+> or declaration
+>  static int of_fill_overlay_info(struct of_overlay *ov,
+>                                         ^~~~~~~~~~
+> ../drivers/of/overlay.c: In function ‘of_fill_overlay_info’:
+> ../drivers/of/overlay.c:399:8: error: dereferencing pointer to
+> incomplete type ‘struct of_overlay_info’
+>   ovinfo->overlay = of_get_child_by_name(info_node, "__overlay__");
+>         ^~
+> ../drivers/of/overlay.c: In function ‘init_overlay_changeset’:
+> ../drivers/of/overlay.c:450:30: error: passing argument 1 of
+> ‘of_fill_overlay_info’ from incompatible pointer type
+> [-Werror=incompatible-pointer-types]
+>    ret = of_fill_overlay_info(ovcs, node, &fragments[cnt]);
+>                               ^~~~
+> ../drivers/of/overlay.c:396:12: note: expected ‘struct of_overlay *’
+> but argument is of type ‘struct overlay_changeset *’
+>  static int of_fill_overlay_info(struct of_overlay *ov,
+>             ^~~~~~~~~~~~~~~~~~~~
+> ../drivers/of/overlay.c:450:42: error: passing argument 3 of
+> ‘of_fill_overlay_info’ from incompatible pointer type
+> [-Werror=incompatible-pointer-types]
+>    ret = of_fill_overlay_info(ovcs, node, &fragments[cnt]);
+>                                           ^
+> ../drivers/of/overlay.c:396:12: note: expected ‘struct of_overlay_info
+> *’ but argument is of type ‘struct fragment *’
+>  static int of_fill_overlay_info(struct of_overlay *ov,
+>             ^~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> I could have messed something up as every commit so far conflicts with
+> "of: overlay: fix memory leak related to duplicated property". Can you
+> rebase on to my dt/next branch too.
+> 
+> Rob
 > 
 
-added Marek's "Acked-by" tags on the whole series and applied it into
-the spi-nor/next branch of l2-mtd
+OK, I'll rebase.
 
-Thanks!
+-Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
