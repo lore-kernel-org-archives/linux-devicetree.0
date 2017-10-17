@@ -1,51 +1,46 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/4] rtc: mediatek: add support for SoC based RTC on MT7622
-Date: Tue, 17 Oct 2017 17:40:31 +0800
-Message-ID: <cover.1508231935.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 4/4] rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
+Date: Tue, 17 Oct 2017 17:40:35 +0800
+Message-ID: <2fce8abd403fb8842110382e3229367b741da979.1508231935.git.sean.wang@mediatek.com>
+References: <cover.1508231935.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1508231935.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Changes since v1:
-- Rename to rtc-mt7622.c from rtc-mediatek.c
-- Use [readl,writel]_relaxed instead of __raw_* version
-- Remove redundant register reading in mtk_rtc_get_alarm_or_time()
-- Stop alarm when alarm is really expired in mtk_rtc_alarmirq()
-- Extend the maximum year the RTC/Alarm can count/support using year rebasing
-- Remove unnesscary log which is already done in core layer
+I work for MediaTek on maintaining the MediaTek SoC based RTC driver for
+the existing SoCs and keep adding support for the following SoCs in the
+future.
 
-This patchset introduces support for MediaTek SoC based real time clock
-(RTC) Currently, the driver is already tested successfully with hwclock
-and wakealarm on MT7622 SoC. And it should also be workable on other
-similar MediaTek SoCs. And patch 3 is a distinct patch used to distinguish
-between either SoC based or PMIC based RTC to avoid confusion for the RTC
-selection for the target SoC.
+Cc: Eddie Huang <eddie.huang@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Sean Wang (4):
-  dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
-  rtc: mediatek: add driver for RTC on MT7622 SoC
-  rtc: mediatek: enhance the description for MediaTek PMIC based RTC
-  rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
-
- .../devicetree/bindings/rtc/rtc-mediatek.txt       |  21 ++
- MAINTAINERS                                        |   3 +
- drivers/rtc/Kconfig                                |  18 +-
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-mt7622.c                           | 418 +++++++++++++++++++++
- 5 files changed, 457 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
- create mode 100644 drivers/rtc/rtc-mt7622.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2281af4..5142029 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1579,10 +1579,13 @@ F:	drivers/rtc/rtc-armada38x.c
+ 
+ ARM/Mediatek RTC DRIVER
+ M:	Eddie Huang <eddie.huang@mediatek.com>
++M:	Sean Wang <sean.wang@mediatek.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+ F:	drivers/rtc/rtc-mt6397.c
++F:	drivers/rtc/rtc-mt7622.c
+ 
+ ARM/Mediatek SoC support
+ M:	Matthias Brugger <matthias.bgg@gmail.com>
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
