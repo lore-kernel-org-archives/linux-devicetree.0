@@ -1,83 +1,42 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 08/12] ARM: dts: imx6-tx6: add support for I2C bus recovery
-Date: Tue, 17 Oct 2017 10:53:30 +0200
-Message-ID: <1508230414-8090-9-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCH 06/12] ARM: dts: imx6-tx6: specify ethernet phy reset
+ post-delay
+Date: Tue, 17 Oct 2017 10:53:28 +0200
+Message-ID: <1508230414-8090-7-git-send-email-LW@KARO-electronics.de>
 References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Define the required properties to enable I2C bus recovery supported by
-the I2C subsystem.
-
-Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
----
- arch/arm/boot/dts/imx6qdl-tx6.dtsi | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-index e0dbf8b..9b563d4 100644
---- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-@@ -310,8 +310,11 @@
- };
- 
- &i2c1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "gpio";
- 	pinctrl-0 = <&pinctrl_i2c1>;
-+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+	scl-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+	sda-gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;
- 	clock-frequency = <400000>;
- 	status = "okay";
- 
-@@ -324,8 +327,11 @@
- };
- 
- &i2c3 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "gpio";
- 	pinctrl-0 = <&pinctrl_i2c3>;
-+	pinctrl-1 = <&pinctrl_i2c3_gpio>;
-+	scl-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
-+	sda-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
- 	clock-frequency = <400000>;
- 	status = "okay";
- 
-@@ -551,6 +557,13 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c1_gpio: i2c1-gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D21__GPIO3_IO21		0x4001b8b1
-+			MX6QDL_PAD_EIM_D28__GPIO3_IO28		0x4001b8b1
-+		>;
-+	};
-+
- 	pinctrl_i2c3: i2c3grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-@@ -558,6 +571,13 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c3_gpio: i2c3-gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_3__GPIO1_IO03		0x4001b8b1
-+			MX6QDL_PAD_GPIO_6__GPIO1_IO06		0x4001b8b1
-+		>;
-+	};
-+
- 	pinctrl_kpp: kppgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_9__KEY_COL6		0x1b0b1
--- 
-2.1.4
+VW5kZXIgY2VydGFpbiBjaXJjdW1zdGFuY2VzIHRoZSBldGhlcm5ldCBQSFkgY2Fubm90IGJlIGRl
+dGVjdGVkIG9uCkthLVJvIGVsZWN0cm9uaWNzIFRYNiBtb2R1bGVzLiBVc2luZyBhIHBoeS1yZXNl
+dC1wb3N0LWRlbGF5IG9mIGF0IGxlYXN0CjJtcyBhbGxldmlhdGVzIHRoaXMgcHJvYmxlbS4gRGVm
+aW5lIGl0IHRvIDEwbXMgdG8gYmUgb24gdGhlIHNhZmUgc2lkZS4KClNpZ25lZC1vZmYtYnk6IExv
+dGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4KLS0tCiBhcmNoL2FybS9ib290
+L2R0cy9pbXg2cWRsLXR4Ni5kdHNpIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYuZHRzaQppbmRleCBhYTMyOTU2Li5jNmIyZDYzIDEw
+MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpCisrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LmR0c2kKQEAgLTI0OSw2ICsyNDksNyBAQAogCWNsb2Nr
+LW5hbWVzID0gImlwZyIsICJhaGIiLCAicHRwIiwgImVuZXRfb3V0IjsKIAlwaHktbW9kZSA9ICJy
+bWlpIjsKIAlwaHktcmVzZXQtZ3Bpb3MgPSA8JmdwaW83IDYgR1BJT19BQ1RJVkVfTE9XPjsKKwlw
+aHktcmVzZXQtcG9zdC1kZWxheSA9IDwxMD47CiAJcGh5LWhhbmRsZSA9IDwmZXRucGh5PjsKIAlw
+aHktc3VwcGx5ID0gPCZyZWdfM3YzX2V0bj47CiAJc3RhdHVzID0gIm9rYXkiOwotLSAKMi4xLjQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
