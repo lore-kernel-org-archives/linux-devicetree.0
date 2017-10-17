@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv3 06/12] ARM: dts: imx6-tx6: specify ethernet phy reset post-delay
-Date: Tue, 17 Oct 2017 11:17:57 +0200
-Message-ID: <1508231883-12067-7-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCHv3 03/12] ARM: dts: imx6-tx6: remove obsolete ipu1 alias
+Date: Tue, 17 Oct 2017 11:17:54 +0200
+Message-ID: <1508231883-12067-4-git-send-email-LW@KARO-electronics.de>
 References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
  <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
@@ -14,26 +14,25 @@ To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, 
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Under certain circumstances the ethernet PHY cannot be detected on
-Ka-Ro electronics TX6 modules. Using a phy-reset-post-delay of at least
-2ms alleviates this problem. Define it to 10ms to be on the safe side.
+The 'ipu1' alias is already defined in imx6q.dtsi. There is no need to
+redefine it here.
 
 Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
 ---
- arch/arm/boot/dts/imx6qdl-tx6.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-index f2cd3e7..f1655b3 100644
---- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
-@@ -249,6 +249,7 @@
- 	clock-names = "ipg", "ahb", "ptp", "enet_out";
- 	phy-mode = "rmii";
- 	phy-reset-gpios = <&gpio7 6 GPIO_ACTIVE_LOW>;
-+	phy-reset-post-delay = <10>;
- 	phy-handle = <&etnphy>;
- 	phy-supply = <&reg_3v3_etn>;
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts b/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
+index 6b42c44..be9233d 100644
+--- a/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
++++ b/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
+@@ -49,7 +49,6 @@
+ 
+ 	aliases {
+ 		display = &lvds0;
+-		ipu1 = &ipu2;
+ 		lvds0 = &lvds0;
+ 		lvds1 = &lvds1;
+ 	};
 -- 
 2.1.4
