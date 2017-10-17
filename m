@@ -1,157 +1,49 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
-Date: Mon, 16 Oct 2017 18:43:26 -0500
-Message-ID: <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
-References: <20171013160914.3220-1-niklas.cassel@axis.com>
- <20171013160914.3220-9-niklas.cassel@axis.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 0/5] thermal: rockchip: add tsadc support in thermal
+ driver and IPA thermal control for RV1108 in dts
+Date: Mon, 16 Oct 2017 17:15:37 -0700
+Message-ID: <20171017001535.GA16006@localhost.localdomain>
+References: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171013160914.3220-9-niklas.cassel@axis.com>
+In-Reply-To: <1503570475-7850-1-git-send-email-rocky.hao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>
-Cc: Niklas Cassel <niklass@axis.com>, Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rocky Hao <rocky.hao@rock-chips.com>
+Cc: rui.zhang@intel.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 13, 2017 at 06:09:11PM +0200, Niklas Cassel wrote:
-> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-> ---
->  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
->  drivers/pci/dwc/Kconfig                            |  41 +++--
->  drivers/pci/dwc/Makefile                           |   4 +-
->  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
->  4 files changed, 233 insertions(+), 17 deletions(-)
+Hello,
+
+On Thu, Aug 24, 2017 at 06:27:50PM +0800, Rocky Hao wrote:
+> This series patches add the tsadc support in thermal driver and in devicetree for RV1108.
+> Also add thermal control with Intelligent Power Allocation (IPA) policy by default.  Please
+> refer to https://developer.arm.com/open-source/intelligent-power-allocation for more information
+> about IPA.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> index 4e4aee4439ea..33eef7ae5a23 100644
-> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
->  and thus inherits all the common properties defined in designware-pcie.txt.
->  
->  Required properties:
-> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
-> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
-> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
->  - reg: base addresses and lengths of the PCIe controller (DBI),
->  	the PHY controller, and configuration address space.
->  - reg-names: Must include the following entries:
-> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-> index 22ec82fcdea2..e333283fb1ed 100644
-> --- a/drivers/pci/dwc/Kconfig
-> +++ b/drivers/pci/dwc/Kconfig
-> @@ -14,6 +14,36 @@ config PCIE_DW_EP
->  	depends on PCI_ENDPOINT
->  	select PCIE_DW
->  
-> +config PCIE_ARTPEC6
-> +	bool "Axis ARTPEC-6 PCIe controller"
-> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
-> +	depends on MACH_ARTPEC6
-> +	help
-> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
-> +	  SoCs.  This PCIe controller uses the DesignWare core.
-> +
-> +if PCIE_ARTPEC6
-> +
-> +config PCIE_ARTPEC6_HOST
-> +	bool "Axis ARTPEC-6 Host Mode"
-> +	depends on PCI
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIEPORTBUS
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
-> +	  host mode.
-> +
-> +config PCIE_ARTPEC6_EP
-> +	bool "Axis ARTPEC-6 Endpoint Mode"
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
-> +	  endpoint mode.
-> +
-> +endif
-> +
->  config PCI_DRA7XX
->  	bool "TI DRA7xx PCIe controller"
->  	depends on SOC_DRA7XX || COMPILE_TEST
-> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
->  	  DesignWare hardware and therefore the driver re-uses the
->  	  DesignWare core functions to implement the driver.
->  
-> -config PCIE_ARTPEC6
-> -	bool "Axis ARTPEC-6 PCIe controller"
-> -	depends on PCI
-> -	depends on MACH_ARTPEC6
-> -	depends on PCI_MSI_IRQ_DOMAIN
-> -	select PCIEPORTBUS
-> -	select PCIE_DW_HOST
-> -	help
-> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
-> -	  SoCs.  This PCIe controller uses the DesignWare core.
-> -
->  config PCIE_KIRIN
->  	depends on OF && ARM64
->  	bool "HiSilicon Kirin series SoCs PCIe controllers"
+> Rocky Hao (5):
+>   dt-bindings: rockchip-thermal: Support the RV1108 SoC compatible
+>   thermal: rockchip: Support the RV1108 SoC in thermal driver
 
-> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-> index c61be9738cce..ac98242b83a9 100644
-> --- a/drivers/pci/dwc/Makefile
-> +++ b/drivers/pci/dwc/Makefile
-> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
-> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-> +endif
+Applied patches 1  and 2.
 
-I see you're copying the DRA7XX style here, but I don't really
-understand it.  I guess the idea is to build pcie-artpec6.o if either
-CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+>   arm: dts: rockchip: add tsadc node for RV1108 SoC
+>   arm: dts: rockchip: add thermal nodes for RV1108 SoC
+>   arm: dts: rockchip: enable tsadc module on RV1108 evaluation board
+> 
 
-Is this really the simplest way to express that in Kconfig?  Both the
-"if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
-unusual.
+Acked-by: Eduardo Valentin <edubezval@gmail.com>
 
->  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->  endif
+for the DT changes.
 
-> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
-
-Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
-Or is this something other endpoint drivers could/should share?
-
-> +{
-> +	u32 reg;
-> +
-> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +	dw_pcie_writel_dbi2(pci, reg, 0x0);
-> +	dw_pcie_writel_dbi(pci, reg, 0x0);
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +}
-> +
-> +static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
-> +	enum pci_barno bar;
-> +
-> +	artpec6_pcie_assert_core_reset(artpec6_pcie);
-> +	artpec6_pcie_init_phy(artpec6_pcie);
-> +	artpec6_pcie_deassert_core_reset(artpec6_pcie);
-> +
-> +	for (bar = BAR_0; bar <= BAR_5; bar++)
-> +		dw_pcie_ep_reset_bar(pci, bar);
-> +}
-
-I naively expected some of this new code to be #ifdef PCIE_ARTPEC6_EP.
-But I haven't really internalized the endpoint support, so maybe that
-doesn't make sense?
-
-Bjorn
+>  .../bindings/thermal/rockchip-thermal.txt          |  1 +
+>  arch/arm/boot/dts/rv1108-evb.dts                   |  4 ++
+>  arch/arm/boot/dts/rv1108.dtsi                      | 69 ++++++++++++++++++++++
+>  drivers/thermal/rockchip_thermal.c                 | 67 +++++++++++++++++++++
+>  4 files changed, 141 insertions(+)
+> 
+> -- 
+> 1.9.1
+> 
+> 
