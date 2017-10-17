@@ -1,60 +1,33 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2 v2] drm: bridge: Add bindings for TI THS8134
-Date: Tue, 17 Oct 2017 12:19:03 +0200
-Message-ID: <20171017101904.22308-1-linus.walleij@linaro.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 7/9] usb: host: modify description for MTK xHCI config
+Date: Tue, 17 Oct 2017 12:20:59 +0200
+Message-ID: <20171017102059.GA17121@kroah.com>
+References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
+ <37153cd259af6e1fc34b32a2e0dd1a15b8214579.1507882470.git.chunfeng.yun@mediatek.com>
+ <59E0962E.9030508@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <59E0962E.9030508@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgVGV4YXMgSW5zdHJ1bWVudHMK
-VEhTODEzNEEgYW5kIFRIUzgxMzRCIFZHQSBEQUNzIGJ5IGV4dGVuZGluZyBhbmQgcmVuYW1pbmcg
-dGhlCmV4aXN0aW5nIGJpbmRpbmdzIGZvciBUSFM4MTM1LgoKVGhlc2UgREFDcyBhcmUgdXNlZCBm
-b3IgdGhlIFZHQSBvdXRwdXRzIG9uIHRoZSBBUk0gcmVmZXJlbmNlCmRlc2lnbnMgc3VjaCBhcyBJ
-bnRlZ3JhdG9yLCBWZXJzYXRpbGUgYW5kIFJlYWxWaWV3LgoKQ2M6IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnCkNjOiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUu
-Y29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1i
-eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgotLS0KQ2hhbmdlTG9n
-IHYxLT52MjoKLSBJbnRyb2R1Y2Ugc3BlY2lmaWMtdG8tZ2VuZXJhbCBjb21wYXRpYmxlIHN0cmlu
-ZzoKICBjb21wYXRpYmxlID0gInRpLHRoczgxMzRhIiwgInRpLHRoczgxM3giOwogIHNvIGRyaXZl
-cnMgY2FuIGhhbmRsZSB0aGUgd2hvbGUgZmFtaWx5IHRoZSBzYW1lIHdheS4KLSBDb2xsZWN0ZWQg
-Um9iJ3MgQUNLLgotLS0KIC4uLi9kaXNwbGF5L2JyaWRnZS97dGksdGhzODEzNS50eHQgPT4gdGks
-dGhzODEzeC50eHR9ICAgICAgfCAxNCArKysrKysrKystLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkg
-aW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uve3RpLHRoczgxMzUudHh0ID0+IHRpLHRoczgx
-M3gudHh0fSAoNjUlKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTM1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTN4LnR4dApzaW1pbGFyaXR5IGlu
-ZGV4IDY1JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvdGksdGhzODEzNS50eHQKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTN4LnR4dAppbmRleCA2ZWMxYTg4
-MGFjMTguLjk3ZWY1ZWI1NzA1MiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0CisrKyBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTN4LnR4dApAQCAt
-MSwxMSArMSwxNSBAQAotVEhTODEzNSBWaWRlbyBEQUMKLS0tLS0tLS0tLS0tLS0tLS0tCitUSFM4
-MTM0IGFuZCBUSFM4MTM1IFZpZGVvIERBQworLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
-IAotVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgVEhTODEzNSBWaWRl
-byBEQUMgYnJpZGdlLgorVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMg
-VEhTODEzNEEsIFRIUzgxMzRCIGFuZCBUSFM4MTM1CitWaWRlbyBEQUMgYnJpZGdlLgogCiBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgogCi0tIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHRoczgxMzUiCist
-IGNvbXBhdGlibGU6IE11c3QgYmUgb25lIG9mCisgICJ0aSx0aHM4MTM0YSIsICJ0aSx0aHM4MTN4
-IgorICAidGksdGhzODEzNGIiLCAidGksdGhzODEzeCIKKyAgInRpLHRoczgxMzUiLCAidGksdGhz
-ODEzeCIKIAogUmVxdWlyZWQgbm9kZXM6CiAKQEAgLTE5LDcgKzIzLDcgQEAgRXhhbXBsZQogLS0t
-LS0tLQogCiB2Z2EtYnJpZGdlIHsKLQljb21wYXRpYmxlID0gInRpLHRoczgxMzUiOworCWNvbXBh
-dGlibGUgPSAidGksdGhzODEzNSIsICJ0aSx0aHM4MTN4IjsKIAkjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKIAkjc2l6ZS1jZWxscyA9IDwwPjsKIAotLSAKMi4xMy41CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, Oct 13, 2017 at 01:32:14PM +0300, Mathias Nyman wrote:
+> On 13.10.2017 11:26, Chunfeng Yun wrote:
+> > Due to all MediaTek SoCs with xHCI host controller use this
+> > driver, remove limitation for specific SoCs
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> 
+> xHCI parts of series look good to me, If Rob Herring agrees with the
+> dt changes I can send it forward
+
+If you ack them, I can just take the whole series as-is.
+
+thanks,
+
+greg k-h
