@@ -1,75 +1,73 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Tue, 17 Oct 2017 14:48:48 +0100
-Message-ID: <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: dynamic: fix memory leak related to properties of __of_node_dup
+Date: Tue, 17 Oct 2017 09:03:44 -0500
+Message-ID: <CAL_JsqLaOYL64SatOv-xvq0AqXTKm1BUtienFfx_qwZ8TiN+xw@mail.gmail.com>
+References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
+ <CAL_JsqK0pc6sL+YR2U-J44fvwKivmxiULD5uc7bzTMEOZ_LKXg@mail.gmail.com> <59E1615F.50901@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171017114823.58476908@bbrezillon>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E1615F.50901-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: alawang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 10:48 AM, Boris Brezillon
-<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hello Grant,
+On Fri, Oct 13, 2017 at 7:59 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 10/13/17 13:47, Rob Herring wrote:
+>> On Thu, Oct 12, 2017 at 8:42 PM, alawang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org> wrote:
+>>> It is possible a node was dynamically allocated but without any
+>>> property. The properies will be got from devices and added to the
+>>> node when devices got connected.
+>>> When release this node, all properties of which had been moved to
+>>> deadprops.
+>>> In this case, the properties in the deadprops list are never
+>>> deallocated.
+>>
+>> This is not new, right? Do you actually hit this case? If so, how?
+>>
+>>>
+>>> Signed-off-by: alawang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+>>> ---
+>>>  drivers/of/dynamic.c | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>>> index 301b6db..465d43b 100644
+>>> --- a/drivers/of/dynamic.c
+>>> +++ b/drivers/of/dynamic.c
+>>> @@ -335,6 +335,10 @@ void of_node_release(struct kobject *kobj)
+>>>         if (!of_node_check_flag(node, OF_DYNAMIC))
+>>>                 return;
+>>>
+>>> +       if (!prop) {
+>>> +               prop = node->deadprops;
+>>> +               node->deadprops = NULL;
+>>> +       }
+>>>         while (prop) {
+>>>                 struct property *next = prop->next;
+>>>                 kfree(prop->name);
+>>> --
+>>> 2.6.2
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
 >
-> On Mon, 9 Oct 2017 21:39:51 +0100
-> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> The code looks right to me.  The patch description is confusing to me.
 >
->> Kernel Summit is now just over 2 weeks away and it is time to pull
->> together the schedule for the Devicetree workshop. Originally I
->> planned on just an afternoon, but I've got the room for the whole day,
->> so I've got a lot of flexibility on the schedule. Unscheduled time can
->> be used for hacking.
->>
->> Date: 26 Oct 2017
->> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
->> Location: Athens room - Hilton Prague
->>
->> If you plan to attend, make sure you update your OSSunmitE/ELCE
->> registration to include the DT Workshop (log in to access and modify
->> your registration):
->>
->> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
->>
->> Here is my current list of topics in no particular order, including
->> the topic moderator:
->>
->> Runtime memory consumption (Rob Herring)
->> Overlay maintenance plan (TBC)
->> Stable ABI for devicetree (TBC)
->> DT YAML encoding (Pantelis Antoniou)
->> DT Schema format - option 1 (Pantelis Antoniou)
->> DT Schema format - option 2 (Grant Likely)
->> Sharing Generic bindings (TBC)
->> devicetree.org update (Grant)
->>
->> Reply to this email if you want to propose another topic.
->
-> Not sure yet if I'll attend the DT workshop or not, but I thought I
-> could ask my question here because it might be of interest to someone
-> else who is attending.
->
-> What happens when the DT bindings is not documented in Linux but in an
-> another project because this project was the first to use it.
->
-> I had the case here http://patchwork.ozlabs.org/patch/810275/, and I'm
-> not sure what's the policy when this happens. Should we add a file
-> under Documentation/devicetree/bindings/... that points to the external
-> doc file, should we duplicate the DT bindings doc in Linux, or should
-> we just leave the bindings undocumented in the kernel tree?
+> If a node with no properties is dynamically added, then a property is
+> dynamically added to the node, then the property is dynamically removed,
+> the result will be node->properties == NULL and node->deadprops != NULL.
 
-I'm going to add this as a topic. I've got my own opinion, but it
-would be better to discuss in the room because it affects maintainers.
+What if you add 2 properties and then remove only 1. This would leave
+both properties and deadprops !NULL. I think the while loop needs to
+be a separate function so we iterate over both lists.
 
-g.
-
->
-> Regards,
->
-> Boris
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
