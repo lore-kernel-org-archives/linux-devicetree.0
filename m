@@ -1,56 +1,111 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in full_name
-Date: Tue, 17 Oct 2017 16:46:27 -0500
-Message-ID: <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com>
-References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-6-robh@kernel.org>
- <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/16] dt-bindings: mvebu-uart: update documentation
+ with extended UART
+Date: Tue, 17 Oct 2017 17:00:22 -0500
+Message-ID: <20171017220022.kr2qiodln3qfkbwe@rob-hp-laptop>
+References: <20171013090200.31034-1-miquel.raynal@free-electrons.com>
+ <20171013090200.31034-2-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, linux-kernel <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, David Laight <David.Laight@aculab.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171013090200.31034-2-miquel.raynal@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@free-electrons.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jiri Slaby <jslaby@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Wilson Ding <dingwei@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 4:32 PM, Alan Tull <atull@kernel.org> wrote:
-> On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh@kernel.org> wrote:
->
-> Hi Rob,
->
->> With dependencies on a statically allocated full path name converted to
->> use %pOF format specifier, we can store just the basename of node, and
->> the unflattening of the FDT can be simplified.
->>
->> This commit will affect the remaining users of full_name. After
->> analyzing these users, the remaining cases should only change some print
->> messages. The main users of full_name are providing a name for struct
->> resource. The resource names shouldn't be important other than providing
->> /proc/iomem names.
->>
->> We no longer distinguish between pre and post 0x10 dtb formats as either
->> a full path or basename will work. However, less than 0x10 formats have
->> been broken since the conversion to use libfdt (and no one has cared).
->> The conversion of the unflattening code to be non-recursive also broke
->> pre 0x10 formats as the populate_node function would return 0 in that
->> case.
->>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->> v2:
->> - rebase to linux-next
->>
->>  drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
->>  1 file changed, 11 insertions(+), 58 deletions(-)
->
-> I've just updated to the latest next branch and am finding problems
-> applying overlays.   Reverting this commit alleviates things.  The
-> errors I get are:
->
-> [   88.498704] OF: overlay: Failed to apply prop @/__symbols__/clk_0
-> [   88.513447] OF: overlay: apply failed '/__symbols__'
-> [   88.518423] create_overlay: Failed to create overlay (err=-12)
+On Fri, Oct 13, 2017 at 11:01:45AM +0200, Miquel Raynal wrote:
+> Update the Device Tree binding documentation for the Marvell EBU UART,
+> in order to allow describing the extended UART IP block, in addition to
+> the already supported standard UART IP. This requires adding a new
+> compatible string, the introduction of a clocks property, and extensions
+> to the interrupts property.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+> Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  .../devicetree/bindings/serial/mvebu-uart.txt      | 49 +++++++++++++++++++---
+>  1 file changed, 44 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/mvebu-uart.txt b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
+> index d37fabe17bd1..3df3a3fab4bb 100644
+> --- a/Documentation/devicetree/bindings/serial/mvebu-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
+> @@ -1,13 +1,52 @@
+> -* Marvell UART : Non standard UART used in some of Marvell EBU SoCs (e.g., Armada-3700)
+> +* Marvell UART : Non standard UART used in some of Marvell EBU SoCs
+> +                 e.g., Armada-3700.
+>  
+>  Required properties:
+> -- compatible: "marvell,armada-3700-uart"
+> +- compatible:
+> +    - "marvell,armada-3700-uart" for the standard variant of the UART
+> +      (32 bytes FIFO, no DMA, level interrupts, 8-bit access to the
+> +      FIFO, baudrate limited to 230400).
+> +    - "marvell,armada-3700-uart-ext" for the extended variant of the
+> +      UART (128 bytes FIFO, DMA, front interrupts, 8-bit or 32-bit
+> +      accesses to the FIFO, baudrate unlimited by the dividers).
 
-Frank's series with overlay updates should fix this.
+What do you call the next extended version? marvell,armada-3700-uart-ext-ext?
 
-Rob
+This is different versions of UART on the same chip?
+
+>  - reg: offset and length of the register set for the device.
+> -- interrupts: device interrupt
+> +- clocks: UART reference clock used to derive the baudrate (only
+> +      mandatory with "marvell,armada-3700-uart-ext" compatible).
+
+How is this optional? The freq is fixed if not present? If so, what 
+frequency?
+
+> +- interrupts:
+> +    - Must contain three elements for the standard variant of the IP
+> +      (marvell,armada-3700-uart): "uart-sum", "uart-tx" and "uart-rx",
+> +      respectively the UART sum interrupt, the UART TX interrupt and
+> +      UART RX interrupt. A corresponding interrupt-names property must
+> +      be defined.
+> +    - Must contain two elements for the extended variant of the IP
+> +      (marvell,armada-3700-uart-ext): "uart-tx" and "uart-rx",
+> +      respectively the UART TX interrupt and the UART RX interrupt. A
+> +      corresponding interrupts-names property must be defined.
+> +    - For backward compatibility reasons, a single element interrupts
+> +      property is also supported for the standard variant of the IP,
+> +      containing only the UART sum interrupt. This form is deprecated
+> +      and should no longer be used.
+>  
+>  Example:
+> -	serial@12000 {
+> +	uart0: serial@12000 {
+>  		compatible = "marvell,armada-3700-uart";
+>  		reg = <0x12000 0x200>;
+> -		interrupts = <43>;
+> +		clocks = <&xtalclk>;
+> +		interrupts =
+> +		<GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> +		<GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +		<GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "uart-sum", "uart-tx", "uart-rx";
+> +		status = "disabled";
+
+Don't show status in examples.
+
+> +	};
+> +
+> +	uart1: serial@12200 {
+> +		compatible = "marvell,armada-3700-uart-ext";
+> +		reg = <0x12200 0x30>;
+> +		clocks = <&xtalclk>;
+> +		interrupts =
+> +		<GIC_SPI 30 IRQ_TYPE_EDGE_RISING>,
+> +		<GIC_SPI 31 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-names = "uart-tx", "uart-rx";
+> +		status = "disabled";
+>  	};
+> -- 
+> 2.11.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
