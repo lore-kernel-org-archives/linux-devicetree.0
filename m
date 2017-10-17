@@ -1,31 +1,75 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] drivers: Flag buses which demand DMA configuration
-Date: Tue, 17 Oct 2017 10:28:09 +0200
-Message-ID: <20171017082809.GA4947@kroah.com>
-References: <bd1c6061a6a16f720e992a0f12933bdee6591aea.1507823375.git.robin.murphy@arm.com>
- <20171017081701.GB19475@lst.de>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 00/12] of: overlay: clean up device tree overlay code
+Date: Tue, 17 Oct 2017 11:43:12 +0300
+Message-ID: <0de3ee8a-5dca-8f3b-67aa-6d7f405828f6@ti.com>
+References: <1507002826-16393-1-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqJFPHOxrOYNcJCmNvdTA+1RqZxNSZOq6byzDVygUwV0Ow@mail.gmail.com>
+ <3eac16b0-fdd9-fd6c-e1ca-e0de49ce27cb@ti.com>
+ <96045775-4142-1d2d-52f6-d76c0a982461@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171017081701.GB19475-jcswGhMUV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <96045775-4142-1d2d-52f6-d76c0a982461@ti.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 10:17:01AM +0200, Christoph Hellwig wrote:
-> Looks fine:
-> 
-> Reviewed-by: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-> 
-> Greg, do you want to take this or should I queue it up in the
-> dma-mapping tree?
-
-You can take it, thanks!
-
-Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+77u/ClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
+IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
+bWljaWxlOiBIZWxzaW5raQoKT24gMTAvMDUvMTcgMTE6MzMsIEp5cmkgU2FyaGEgd3JvdGU6Cj4g
+T24gMTAvMDUvMTcgMDk6NTMsIFRvbWkgVmFsa2VpbmVuIHdyb3RlOgo+PiBPbiAwNC8xMC8xNyAx
+Nzo1NiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+PiBPbiBNb24sIE9jdCAyLCAyMDE3IGF0IDEwOjUz
+IFBNLCAgPGZyb3dhbmQubGlzdEBnbWFpbC5jb20+IHdyb3RlOgo+Pj4+IEZyb206IEZyYW5rIFJv
+d2FuZCA8ZnJhbmsucm93YW5kQHNvbnkuY29tPgo+Pj4+Cj4+Pj4gSSBoYXZlIGZvdW5kIHRoZSBk
+ZXZpY2UgdHJlZSBvdmVybGF5IGNvZGUgdG8gYmUgZGlmZmljdWx0IHRvIHJlYWQgYW5kCj4+Pj4g
+bWFpbnRhaW4uICBUaGlzIHBhdGNoIHNlcmllcyBhdHRlbXB0cyB0byBpbXByb3ZlIHRoYXQgc2l0
+dWF0aW9uLgo+Pj4+Cj4+Pj4gVGhlIGNsZWFudXAgaW5jbHVkZXMgc29tZSBjaGFuZ2VzIHZpc2li
+bGUgdG8gdXNlcnMgb2Ygb3ZlcmxheXMuICBUaGUKPj4+PiBvbmx5IGluIGtlcm5lbCB1c2VyIG9m
+IG92ZXJsYXlzIGlzIGZpeGVkIHVwIGZvciB0aG9zZSBjaGFuZ2VzLiAgVGhlCj4+Pj4gaW4ga2Vy
+bmVsIHVzZXIgaXM6Cj4+Pj4KPj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19z
+bGF2ZV9jb21wYXQuYwo+Pj4KPj4+IEF0IHdoYXQgcG9pbnQgY2FuIHdlIHJlbW92ZSB0aGlzPyBJ
+J20gYXNzdW1pbmcgYXQgc29tZSBwb2ludCB1c2Vycwo+Pj4gd2lsbCBuZWVkIHRvIHVwZGF0ZSB0
+aGVpciBkdGIncyBmb3Igb3RoZXIgcmVhc29ucyBhbmQgdGhpcyBiZWNvbWVzCj4+PiBvYnNvbGV0
+ZS4KPj4KPj4gVG8gYmUgaG9uZXN0LCBJIGhhdmUgbm8gaWRlYSwgb3IgaG93IHRvIGZpbmQgdGhh
+dCBvdXQuCj4+Cj4gCj4gSSB0aGluayB0aGUgZmlyc3QgYXBwcm9hY2ggY291bGQgYmUgc2V0dGlu
+ZyB0aGUgRFJNX1RJTENEQ19TTEFWRV9DT01QQVQKPiBkZWZhdWx0IHRvIG4gYW5kIGxpc3RlbiBp
+ZiB0aGVyZSBpcyBhbnkgcmVwb3J0cyBhYm91dCBicmVha2FnZS4KPiAKCkFmdGVyIGdpdmluZyBp
+dCBtb3JlIHRob3VnaHQuIE1heWJlIHdlIGNhbiBkcm9wIHRoZQpEUk1fVElMQ0RDX1NMQVZFX0NP
+TVBBVCBpbiB2NC4xNi4gMjAxNyBMVFMgaXMgb3V0IGFscmVhZHksIHNvIHRoZXJlCnNob3VsZCBi
+ZSBwbGVudHkgb2YgdGltZSBmb3Igd2hvZXZlciBpcyBzdGlsbCB1c2luZyB0aGUgbGVnYWN5IERU
+QnMgdG8KZ2V0IHJpZCBvZiB0aGVtLgoKPj4gRG8gd2UgbmVlZCB0byBnZXQgcmlkIG9mIGl0PyBB
+ZmFpaywgd2UgaGF2ZW4ndCBkbyBtdWNoIChvciBhbnk/KQo+PiBtYWludGVuYW5jZSBvbiB0aWxj
+ZGNfc2xhdmVfY29tcGF0LmMgc2luY2UgaXQgd2FzIHdyaXR0ZW4sIHNvIGZyb20gb3VyCj4+IHBl
+cnNwZWN0aXZlIGl0J3MgYmVlbiBhIG1pbmltYWwgYnVyZGVuLiBJcyBpdCBjcmVhdGluZyBidXJk
+ZW4gZm9yIG90aGVycz8KPj4KPj4gSXMgdGhlIGFwcHJvYWNoIGRvbmUgd2l0aCB0aWxjZGNfc2xh
+dmVfY29tcGF0LmMgc29tZXRoaW5nIHRoYXQncyBub3QKPj4gcmVjb21tZW5kZWQ/IEknbSBzdXJl
+IHNpbWlsYXIgc2l0dWF0aW9ucyBoYXBwZW4gd2l0aCBvdGhlciBkcml2ZXJzIHRvbywKPj4gYW5k
+IEkgdGhpbmsgaXQncyBhIGdvb2QgaWRlYSB0byBoYXZlIGEgcmVjb21tZW5kZWQgd2F5IG9mIGtl
+ZXBpbmcKPj4gY29tcGF0aWJpbGl0eS4KPj4KPiAKPiBGb3IgdGlsY2RjIEkgd291bGQgc2F5IHRo
+YXQgd2Ugc29vbiBuZWVkIGEgc2ltaWxhciBtZWNoYW5pc20gdG8gZ2V0IHJpZAo+IG9mZiB0aWxj
+ZGMgaW50ZXJuYWwgcGFuZWwgZHJpdmVyIGFuZCB0byBzdGFydCB1c2luZyBnZW5lcmljIHBhbmVs
+Cj4gZHJpdmVycyBpbnN0ZWFkLiBUaGF0IGlzLCBpZiB3ZSB3YW50IHRvIGtlZXAgdGhlIGtlcm5l
+bCBjb21wYXRpYmxlIHdpdGgKPiBvbGQgZGV2aWNldHJlZSBibG9icy4KPiAKCkFjdHVhbGx5IGZv
+ciB0aWxjZGMgdGhpcyBpcyBub3QgdGhhdCBiYWQuIFRoZSBtZXNzeSB0aWxjZGMgc2xhdmUKbWVj
+aGFuaXNtIGhhcyBiZWVuIGdvdHRlbiByaWQgb2YuIFRoZSByZXN0IG9mIHRpbGNkYyBzcGVjaWZp
+YyBsZWdhY3kKZHJpdmVycyAtIHRoZSB0aWxjZGMgbGVnYWN5IHBhbmVsIHN1cHBvcnQgYW5kIHRo
+ZSB0aWxjZGMgbGVnYWN5IHRmcDQxMApkcml2ZXIgLSBkbyBub3QgaGF2ZSBhbnkgZXh0ZXJuYWwg
+ZGVwZW5kZW5jaWVzIGFuZCB0aGV5IGNhbiBiYXNpY2FsbHkKcmVtYWluIHRoZXJlIGZvciBldmVy
+IGZvciBiYWNrd2FyZCBjb21wYXRpYmlsaXR5LgoKQnV0IGluIGdlbmVyYWwsIGEgZ2VuZXJpYyBt
+ZWNoYW5pc20gdG8gdHJhbnNsYXRlIGxlZ2FjeSBEVEJzIHRvIGZvbGxvdyBhCm5ldyBiaW5kaW5n
+IHdvdWxkIGJlIGEgaGFuZHkgdG9vbCBpbiBrZWVwaW5nIHRoZSBkcml2ZXJzIGNsZWFuIHdoaWxl
+CmtlZXBpbmcgdXAgdGhlIHN1cHBvcnQgZm9yIGxlZ2FjeSBEVEJzLgoKQmVzdCByZWdhcmRzLApK
+eXJpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
