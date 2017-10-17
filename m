@@ -1,87 +1,76 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH 08/10] ARM: dts: sun4i: Enable HDMI support
- on some A10 devices
-Date: Tue, 17 Oct 2017 22:38:45 +0800
-Message-ID: <CAGb2v65Z2N24AZp=Y-_YgKuZiT1uSDX5pzMrceU3+TY=+Zdf7g@mail.gmail.com>
-References: <20171017121807.2994-1-wens@csie.org>
- <20171017121807.2994-9-wens@csie.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 5/8] arm64: Use of_cpu_node_to_id helper for CPU
+ topology parsing
+Date: Tue, 17 Oct 2017 16:24:23 +0100
+Message-ID: <20171017152422.fawwvx6e3nn4dsej@lakrids.cambridge.arm.com>
+References: <20171010103303.32436-1-suzuki.poulose@arm.com>
+ <20171010103303.32436-6-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171017121807.2994-9-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171010103303.32436-6-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgODoxOCBQTSwgQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUu
-b3JnPiB3cm90ZToKPiBWYXJpb3VzIEExMC1iYXNlZCBkZXZlbG9wbWVudCBib2FyZHMgaGF2ZSBz
-dGFuZGFyZCBIRE1JIGNvbm5lY3RvcnMKPiB3aXJlZCB0byB0aGUgZGVkaWNhdGVkIEhETUkgcGlu
-cyBvbiB0aGUgU29DLgo+Cj4gRW5hYmxlIHRoZSBkaXNwbGF5IHBpcGVsaW5lIGFuZCBIRE1JIG91
-dHB1dCBvbiBib2FyZHMgSSBoYXZlIG9yIGhhdmUKPiBhY2Nlc3MgdG8gc2NoZW1hdGljczoKPgo+
-ICAgLSBDdWJpZWJvYXJkCj4gICAtIE9saW1leCBBMTAtT0xpbnVYaW5vLUxJTUUKPgo+IFNpZ25l
-ZC1vZmYtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPiAtLS0KPgo+IENhbiBzb21l
-b25lIGNvdWxkIGRvdWJsZSBjaGVjayB0aGUgTElNRSBmb3IgbWU/IEl0IHNob3VsZCB3b3JrIGdp
-dmVuCj4gaXQncyB0aGUgc2FtZSBsYXlvdXQgYXMgdGhlIEEyMCB2YXJpYW50LCB3aGljaCBoYXMg
-YmVlbiB0ZXN0ZWQuCj4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3VuNGktYTEwLWN1Ymll
-Ym9hcmQuZHRzICAgICB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysKPiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvc3VuNGktYTEwLW9saW51eGluby1saW1lLmR0cyB8IDIxICsrKysrKysrKysrKysr
-KysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9zdW40aS1hMTAtY3ViaWVib2FyZC5kdHMgYi9hcmNoL2Fy
-bS9ib290L2R0cy9zdW40aS1hMTAtY3ViaWVib2FyZC5kdHMKPiBpbmRleCBkNWJhNTQwMGE5NzUu
-LjE5ODJjOGMyMzhjNSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdW40aS1hMTAt
-Y3ViaWVib2FyZC5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW40aS1hMTAtY3ViaWVi
-b2FyZC5kdHMKPiBAQCAtNTksNiArNTksMTcgQEAKPiAgICAgICAgICAgICAgICAgc3Rkb3V0LXBh
-dGggPSAic2VyaWFsMDoxMTUyMDBuOCI7Cj4gICAgICAgICB9Owo+Cj4gKyAgICAgICBoZG1pLWNv
-bm5lY3RvciB7Cj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiaGRtaS1jb25uZWN0b3Ii
-Owo+ICsgICAgICAgICAgICAgICB0eXBlID0gImEiOwo+ICsKPiArICAgICAgICAgICAgICAgcG9y
-dCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgaGRtaV9jb25faW46IGVuZHBvaW50IHsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9v
-dXRfY29uPjsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICB9
-Owo+ICsgICAgICAgfTsKPiArCj4gICAgICAgICBsZWRzIHsKPiAgICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJncGlvLWxlZHMiOwo+ICAgICAgICAgICAgICAgICBwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOwo+IEBAIC05MCw2ICsxMDEsMTAgQEAKPiAgICAgICAgIGNwdS1zdXBwbHkgPSA8
-JnJlZ19kY2RjMj47Cj4gIH07Cj4KPiArJmRlIHsKPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsK
-PiArfTsKPiArCj4gICZlaGNpMCB7Cj4gICAgICAgICBzdGF0dXMgPSAib2theSI7Cj4gIH07Cj4g
-QEAgLTEwNyw2ICsxMjIsMTYgQEAKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiAgfTsKPgo+
-ICsmaGRtaSB7Cj4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4gK307Cj4gKwo+ICsmaGRtaV9v
-dXQgewo+ICsgICAgICAgaGRtaV9vdXRfY29uOiBlbmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAg
-IHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25faW4+Owo+ICsgICAgICAgfTsKPiArfTsKPiAr
-Cj4gICZpMmMwIHsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPgo+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9zdW40aS1hMTAtb2xpbnV4aW5vLWxpbWUuZHRzIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvc3VuNGktYTEwLW9saW51eGluby1saW1lLmR0cwo+IGluZGV4IDJkMWI0MzI5ZjU0
-YS4uZTM5ZWM5YmVlZjc1IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjRpLWEx
-MC1vbGludXhpbm8tbGltZS5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW40aS1hMTAt
-b2xpbnV4aW5vLWxpbWUuZHRzCj4gQEAgLTU4LDYgKzU4LDE3IEBACj4gICAgICAgICAgICAgICAg
-IHN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwo+ICAgICAgICAgfTsKPgo+ICsgICAg
-ICAgaGRtaS1jb25uZWN0b3Igewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImhkbWkt
-Y29ubmVjdG9yIjsKPiArICAgICAgICAgICAgICAgdHlwZSA9ICJhIjsKPiArCj4gKyAgICAgICAg
-ICAgICAgIHBvcnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGhkbWlfY29uX2luOiBlbmRw
-b2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
-PSA8JmhkbWlfb3V0X2Nvbj47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAg
-ICAgICAgICAgfTsKPiArICAgICAgIH07Cj4gKwo+ICAgICAgICAgbGVkcyB7Cj4gICAgICAgICAg
-ICAgICAgIGNvbXBhdGlibGUgPSAiZ3Bpby1sZWRzIjsKPiAgICAgICAgICAgICAgICAgcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKPiBAQCAtMTA2LDYgKzExNywxNiBAQAo+ICAgICAgICAgc3Rh
-dHVzID0gIm9rYXkiOwo+ICB9OwoKVGhlIExJTUUncyBkdHMgY2hhbmdlIGlzIG1pc3NpbmcgdGhl
-ICZkZSBwYXJ0LiA6KApJIGNhbiBmaXggdGhpcyB3aGVuIGFwcGx5aW5nLgoKQ2hlbll1Cgo+Cj4g
-KyZoZG1pIHsKPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiArfTsKPiArCj4gKyZoZG1pX291
-dCB7Cj4gKyAgICAgICBoZG1pX291dF9jb246IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAg
-cmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX2Nvbl9pbj47Cj4gKyAgICAgICB9Owo+ICt9Owo+ICsK
-PiAgJmkyYzAgewo+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+Cj4gLS0KPiAyLjE0LjIKPgo+
-IC0tCj4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUgc3Vic2NyaWJl
-ZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3VwLgo+IFRvIHVuc3Vic2Ny
-aWJlIGZyb20gdGhpcyBncm91cCBhbmQgc3RvcCByZWNlaXZpbmcgZW1haWxzIGZyb20gaXQsIHNl
-bmQgYW4gZW1haWwgdG8gbGludXgtc3VueGkrdW5zdWJzY3JpYmVAZ29vZ2xlZ3JvdXBzLmNvbS4K
-PiBGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2Qvb3B0
-b3V0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Oct 10, 2017 at 11:33:00AM +0100, Suzuki K Poulose wrote:
+> Make use of the new generic helper to convert an of_node of a CPU
+> to the logical CPU id in parsing the topology.
+> 
+> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+
+This looks sane to me, but it will need an ack from Will or Catalin.
+
+FWIW:
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Thanks,
+Mark.
+
+> ---
+>  arch/arm64/kernel/topology.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> index 8d48b233e6ce..21868530018e 100644
+> --- a/arch/arm64/kernel/topology.c
+> +++ b/arch/arm64/kernel/topology.c
+> @@ -37,18 +37,14 @@ static int __init get_cpu_for_node(struct device_node *node)
+>  	if (!cpu_node)
+>  		return -1;
+>  
+> -	for_each_possible_cpu(cpu) {
+> -		if (of_get_cpu_node(cpu, NULL) == cpu_node) {
+> -			topology_parse_cpu_capacity(cpu_node, cpu);
+> -			of_node_put(cpu_node);
+> -			return cpu;
+> -		}
+> -	}
+> -
+> -	pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> +	cpu = of_cpu_node_to_id(cpu_node);
+> +	if (cpu >= 0)
+> +		topology_parse_cpu_capacity(cpu_node, cpu);
+> +	else
+> +		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+>  
+>  	of_node_put(cpu_node);
+> -	return -1;
+> +	return cpu;
+>  }
+>  
+>  static int __init parse_core(struct device_node *core, int cluster_id,
+> -- 
+> 2.13.6
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
