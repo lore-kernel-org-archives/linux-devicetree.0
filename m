@@ -1,159 +1,133 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 10/10] ARM: dts: sun7i: Enable HDMI support on some A20 devices
-Date: Tue, 17 Oct 2017 20:18:07 +0800
-Message-ID: <20171017121807.2994-11-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 08/10] ARM: dts: sun4i: Enable HDMI support on
+ some A10 devices
+Date: Tue, 17 Oct 2017 20:18:05 +0800
+Message-ID: <20171017121807.2994-9-wens@csie.org>
 References: <20171017121807.2994-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171017121807.2994-1-wens@csie.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBXKS7HQKGQEN76HHLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171017121807.2994-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWxsIHRoZSBBMjAgZGV2aWNlcyBJIG93biBoYXZlIHN0YW5kYXJkIEhETUkgY29ubmVjdG9ycyB3
-aXJlZAp0byB0aGUgZGVkaWNhdGVkIEhETUkgcGlucyBvbiB0aGUgU29DOgoKICAtIEJhbmFuYXBp
-IE0xKwogIC0gQ3ViaWVib2FyZCAyCiAgLSBDdWJpZXRydWNrCiAgLSBMYW1vYm8gUjEgKG9yIEJh
-bmFuYXBpIFIxKQoKRGV2ZWxvcG1lbnQgYm9hcmRzIGZyb20gT2xpbWV4IGFsc28gaGF2ZSBzdGFu
-ZGFyZCBIRE1JIGNvbm5lY3RvcnMuClNjaGVtYXRpY3MgZm9yIHRoZW0gYXJlIHB1YmxpY2x5IGF2
-YWlsYWJsZS4gRW5hYmxlIEhETUkgb24gdGhlbSBhcwp3ZWxsLgoKICAtIE9saW1leCBBMjAtT0xp
-bnVYaW5vLUxJTUUKICAtIE9saW1leCBBMjAtT0xpbnVYaW5vLUxJTUUyCiAgLSBPbGltZXggQTIw
-LU9MaW51WGluby1NSUNSTwoKRW5hYmxlIHRoZSBkaXNwbGF5IHBpcGVsaW5lIGFuZCBIRE1JIG91
-dHB1dCBmb3IgdGhlbS4KClNpZ25lZC1vZmYtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9y
-Zz4KVGVzdGVkLWJ5OiBQcmlpdCBMYWVzIDxwbGFlc0BwbGFlcy5vcmc+ICMgQ3ViaWV0cnVjaywg
-QTIwLU9MaW51WGluby1NSUNSTwpUZXN0ZWQtYnk6IE9sbGl2ZXIgU2NoaW5hZ2wgPG9saXZlckBz
-Y2hpbmFnbC5ubD4gIyBBMjAtT0xpbnVYaW5vLUxJTUUyClRlc3RlZC1ieTogSm9uYXRoYW4gTGl1
-IDxuZXQxNDdAZ21haWwuY29tPiAjIEEyMC1PTGludVhpbm8tTElNRQotLS0KIGFyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjdpLWEyMC1iYW5hbmFwaS1tMS1wbHVzLmR0cyB8IDI1ICsrKysrKysrKysrKysr
-KysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLWN1YmllYm9hcmQyLmR0cyAg
-ICAgIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9zdW43
-aS1hMjAtY3ViaWV0cnVjay5kdHMgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysK
-IGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1sYW1vYm8tcjEuZHRzICAgICAgICB8IDI1ICsr
-KysrKysrKysrKysrKysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLW9saW51
-eGluby1saW1lLmR0cyAgIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKysrCiBhcmNoL2FybS9i
-b290L2R0cy9zdW43aS1hMjAtb2xpbnV4aW5vLWxpbWUyLmR0cyAgfCAyNSArKysrKysrKysrKysr
-KysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1vbGludXhpbm8tbWljcm8u
-ZHRzICB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKwogNyBmaWxlcyBjaGFuZ2VkLCAxNzUg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1i
-YW5hbmFwaS1tMS1wbHVzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1iYW5hbmFw
-aS1tMS1wbHVzLmR0cwppbmRleCBlYjU1ZTc0MjMyYzkuLjRlZDMxNjJlM2U1YSAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLWJhbmFuYXBpLW0xLXBsdXMuZHRzCisrKyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1iYW5hbmFwaS1tMS1wbHVzLmR0cwpAQCAtNjAs
-NiArNjAsMTcgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBuOCI7CiAJfTsKIAor
-CWhkbWktY29ubmVjdG9yIHsKKwkJY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7CisJCXR5
-cGUgPSAiYSI7CisKKwkJcG9ydCB7CisJCQloZG1pX2Nvbl9pbjogZW5kcG9pbnQgeworCQkJCXJl
-bW90ZS1lbmRwb2ludCA9IDwmaGRtaV9vdXRfY29uPjsKKwkJCX07CisJCX07CisJfTsKKwogCWxl
-ZHMgewogCQljb21wYXRpYmxlID0gImdwaW8tbGVkcyI7CiAJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7CkBAIC0xMDksNiArMTIwLDEwIEBACiAJY3B1LXN1cHBseSA9IDwmcmVnX2RjZGMyPjsK
-IH07CiAKKyZkZSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKKwogJmVoY2kwIHsKIAlzdGF0dXMg
-PSAib2theSI7CiB9OwpAQCAtMTMwLDYgKzE0NSwxNiBAQAogCX07CiB9OwogCismaGRtaSB7CisJ
-c3RhdHVzID0gIm9rYXkiOworfTsKKworJmhkbWlfb3V0IHsKKwloZG1pX291dF9jb246IGVuZHBv
-aW50IHsKKwkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX2Nvbl9pbj47CisJfTsKK307CisKICZp
-MmMwIHsKIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwogCXBpbmN0cmwtMCA9IDwmaTJjMF9w
-aW5zX2E+OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLWN1YmllYm9h
-cmQyLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1jdWJpZWJvYXJkMi5kdHMKaW5k
-ZXggMmE1MDIwNzYxOGNiLi4zOWY0M2U0ZWI3NDIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjdpLWEyMC1jdWJpZWJvYXJkMi5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Vu
-N2ktYTIwLWN1YmllYm9hcmQyLmR0cwpAQCAtNjEsNiArNjEsMTcgQEAKIAkJc3Rkb3V0LXBhdGgg
-PSAic2VyaWFsMDoxMTUyMDBuOCI7CiAJfTsKIAorCWhkbWktY29ubmVjdG9yIHsKKwkJY29tcGF0
-aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7CisJCXR5cGUgPSAiYSI7CisKKwkJcG9ydCB7CisJCQlo
-ZG1pX2Nvbl9pbjogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9vdXRf
-Y29uPjsKKwkJCX07CisJCX07CisJfTsKKwogCWxlZHMgewogCQljb21wYXRpYmxlID0gImdwaW8t
-bGVkcyI7CiAJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CkBAIC05MSw2ICsxMDIsMTAgQEAK
-IAljcHUtc3VwcGx5ID0gPCZyZWdfZGNkYzI+OwogfTsKIAorJmRlIHsKKwlzdGF0dXMgPSAib2th
-eSI7Cit9OworCiAmZWhjaTAgewogCXN0YXR1cyA9ICJva2F5IjsKIH07CkBAIC0xMTEsNiArMTI2
-LDE2IEBACiAJfTsKIH07CiAKKyZoZG1pIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismaGRt
-aV9vdXQgeworCWhkbWlfb3V0X2NvbjogZW5kcG9pbnQgeworCQlyZW1vdGUtZW5kcG9pbnQgPSA8
-JmhkbWlfY29uX2luPjsKKwl9OworfTsKKwogJmkyYzAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7CiAJcGluY3RybC0wID0gPCZpMmMwX3BpbnNfYT47CmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9zdW43aS1hMjAtY3ViaWV0cnVjay5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9z
-dW43aS1hMjAtY3ViaWV0cnVjay5kdHMKaW5kZXggODUyYTBhYTI0ZGNlLi44YzliZWRjNjAyZWMg
-MTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1jdWJpZXRydWNrLmR0cwor
-KysgYi9hcmNoL2FybS9ib290L2R0cy9zdW43aS1hMjAtY3ViaWV0cnVjay5kdHMKQEAgLTYxLDYg
-KzYxLDE3IEBACiAJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwogCX07CiAKKwlo
-ZG1pLWNvbm5lY3RvciB7CisJCWNvbXBhdGlibGUgPSAiaGRtaS1jb25uZWN0b3IiOworCQl0eXBl
-ID0gImEiOworCisJCXBvcnQgeworCQkJaGRtaV9jb25faW46IGVuZHBvaW50IHsKKwkJCQlyZW1v
-dGUtZW5kcG9pbnQgPSA8JmhkbWlfb3V0X2Nvbj47CisJCQl9OworCQl9OworCX07CisKIAlsZWRz
-IHsKIAkJY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOwogCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1
-bHQiOwpAQCAtMTI2LDYgKzEzNywxMCBAQAogCWNwdS1zdXBwbHkgPSA8JnJlZ19kY2RjMj47CiB9
-OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKICZlaGNpMCB7CiAJc3RhdHVzID0g
-Im9rYXkiOwogfTsKQEAgLTE0Niw2ICsxNjEsMTYgQEAKIAl9OwogfTsKIAorJmhkbWkgeworCXN0
-YXR1cyA9ICJva2F5IjsKK307CisKKyZoZG1pX291dCB7CisJaGRtaV9vdXRfY29uOiBlbmRwb2lu
-dCB7CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25faW4+OworCX07Cit9OworCiAmaTJj
-MCB7CiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JmkyYzBfcGlu
-c19hPjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1sYW1vYm8tcjEu
-ZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLWxhbW9iby1yMS5kdHMKaW5kZXggNmFi
-MmE2NjQ5ZWIxLi40NDJmM2M3NTVmMzYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1
-bjdpLWEyMC1sYW1vYm8tcjEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1s
-YW1vYm8tcjEuZHRzCkBAIC02MSw2ICs2MSwxNyBAQAogCQlzdGRvdXQtcGF0aCA9ICJzZXJpYWww
-OjExNTIwMG44IjsKIAl9OwogCisJaGRtaS1jb25uZWN0b3IgeworCQljb21wYXRpYmxlID0gImhk
-bWktY29ubmVjdG9yIjsKKwkJdHlwZSA9ICJhIjsKKworCQlwb3J0IHsKKwkJCWhkbWlfY29uX2lu
-OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX291dF9jb24+OworCQkJ
-fTsKKwkJfTsKKwl9OworCiAJbGVkcyB7CiAJCWNvbXBhdGlibGUgPSAiZ3Bpby1sZWRzIjsKIAkJ
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKQEAgLTk4LDYgKzEwOSwxMCBAQAogCWNwdS1zdXBw
-bHkgPSA8JnJlZ19kY2RjMj47CiB9OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisK
-ICZlaGNpMCB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKQEAgLTE3Myw2ICsxODgsMTYgQEAKIAl9
-OwogfTsKIAorJmhkbWkgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZoZG1pX291dCB7CisJ
-aGRtaV9vdXRfY29uOiBlbmRwb2ludCB7CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25f
-aW4+OworCX07Cit9OworCiAmaTJjMCB7CiAJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlw
-aW5jdHJsLTAgPSA8JmkyYzBfcGluc19hPjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjdpLWEyMC1vbGludXhpbm8tbGltZS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdW43aS1h
-MjAtb2xpbnV4aW5vLWxpbWUuZHRzCmluZGV4IDJjZTFhOWYxM2ExNy4uZWRmOWMzYzZjMGQ3IDEw
-MDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdW43aS1hMjAtb2xpbnV4aW5vLWxpbWUuZHRz
-CisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1vbGludXhpbm8tbGltZS5kdHMKQEAg
-LTYyLDYgKzYyLDE3IEBACiAJCXN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwogCX07
-CiAKKwloZG1pLWNvbm5lY3RvciB7CisJCWNvbXBhdGlibGUgPSAiaGRtaS1jb25uZWN0b3IiOwor
-CQl0eXBlID0gImEiOworCisJCXBvcnQgeworCQkJaGRtaV9jb25faW46IGVuZHBvaW50IHsKKwkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfb3V0X2Nvbj47CisJCQl9OworCQl9OworCX07CisK
-IAlsZWRzIHsKIAkJY29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOwogCQlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOwpAQCAtODAsNiArOTEsMTAgQEAKIAlzdGF0dXMgPSAib2theSI7CiB9OwogCism
-ZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKICZlaGNpMCB7CiAJc3RhdHVzID0gIm9rYXki
-OwogfTsKQEAgLTEwMCw2ICsxMTUsMTYgQEAKIAl9OwogfTsKIAorJmhkbWkgeworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKKyZoZG1pX291dCB7CisJaGRtaV9vdXRfY29uOiBlbmRwb2ludCB7CisJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9jb25faW4+OworCX07Cit9OworCiAmaTJjMCB7CiAJ
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKIAlwaW5jdHJsLTAgPSA8JmkyYzBfcGluc19hPjsK
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjdpLWEyMC1vbGludXhpbm8tbGltZTIu
-ZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuN2ktYTIwLW9saW51eGluby1saW1lMi5kdHMKaW5k
-ZXggMDk3YmQ3NTU3NjRjLi5iYTI1MDE4OWQwN2YgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjdpLWEyMC1vbGludXhpbm8tbGltZTIuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjdpLWEyMC1vbGludXhpbm8tbGltZTIuZHRzCkBAIC01OSw2ICs1OSwxNyBAQAogCQlzdGRv
-dXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKIAl9OwogCisJaGRtaS1jb25uZWN0b3Igewor
-CQljb21wYXRpYmxlID0gImhkbWktY29ubmVjdG9yIjsKKwkJdHlwZSA9ICJhIjsKKworCQlwb3J0
-IHsKKwkJCWhkbWlfY29uX2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZo
-ZG1pX291dF9jb24+OworCQkJfTsKKwkJfTsKKwl9OworCiAJbGVkcyB7CiAJCWNvbXBhdGlibGUg
-PSAiZ3Bpby1sZWRzIjsKIAkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKQEAgLTg1LDYgKzk2
-LDEwIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJmRlIHsKKwlzdGF0dXMgPSAib2theSI7
-Cit9OworCiAmZWhjaTAgewogCXN0YXR1cyA9ICJva2F5IjsKIH07CkBAIC0xMDUsNiArMTIwLDE2
-IEBACiAJfTsKIH07CiAKKyZoZG1pIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismaGRtaV9v
-dXQgeworCWhkbWlfb3V0X2NvbjogZW5kcG9pbnQgeworCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jmhk
-bWlfY29uX2luPjsKKwl9OworfTsKKwogJmkyYzAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7CiAJcGluY3RybC0wID0gPCZpMmMwX3BpbnNfYT47CmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9zdW43aS1hMjAtb2xpbnV4aW5vLW1pY3JvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjdpLWEyMC1vbGludXhpbm8tbWljcm8uZHRzCmluZGV4IGZjOWM1ZGI1MmNkNy4uZGZmYmFh
-MjRiM2VlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdW43aS1hMjAtb2xpbnV4aW5v
-LW1pY3JvLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW43aS1hMjAtb2xpbnV4aW5vLW1p
-Y3JvLmR0cwpAQCAtNjYsNiArNjYsMTcgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUy
-MDBuOCI7CiAJfTsKIAorCWhkbWktY29ubmVjdG9yIHsKKwkJY29tcGF0aWJsZSA9ICJoZG1pLWNv
-bm5lY3RvciI7CisJCXR5cGUgPSAiYSI7CisKKwkJcG9ydCB7CisJCQloZG1pX2Nvbl9pbjogZW5k
-cG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9vdXRfY29uPjsKKwkJCX07CisJ
-CX07CisJfTsKKwogCWxlZHMgewogCQljb21wYXRpYmxlID0gImdwaW8tbGVkcyI7CiAJCXBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7CkBAIC05Miw2ICsxMDMsMTAgQEAKIAljcHUtc3VwcGx5ID0g
-PCZyZWdfZGNkYzI+OwogfTsKIAorJmRlIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCiAmZWhj
-aTAgewogCXN0YXR1cyA9ICJva2F5IjsKIH07CkBAIC0xMTIsNiArMTI3LDE2IEBACiAJfTsKIH07
-CiAKKyZoZG1pIHsKKwlzdGF0dXMgPSAib2theSI7Cit9OworCismaGRtaV9vdXQgeworCWhkbWlf
-b3V0X2NvbjogZW5kcG9pbnQgeworCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfY29uX2luPjsK
-Kwl9OworfTsKKwogJmkyYzAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3Ry
-bC0wID0gPCZpMmMwX3BpbnNfYT47Ci0tIAoyLjE0LjIKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Various A10-based development boards have standard HDMI connectors
+wired to the dedicated HDMI pins on the SoC.
+
+Enable the display pipeline and HDMI output on boards I have or have
+access to schematics:
+
+  - Cubieboard
+  - Olimex A10-OLinuXino-LIME
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+
+Can someone could double check the LIME for me? It should work given
+it's the same layout as the A20 variant, which has been tested.
+
+---
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts     | 25 +++++++++++++++++++++++++
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts | 21 +++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+index d5ba5400a975..1982c8c238c5 100644
+--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+@@ -59,6 +59,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -90,6 +101,10 @@
+ 	cpu-supply = <&reg_dcdc2>;
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -107,6 +122,16 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+index 2d1b4329f54a..e39ec9beef75 100644
+--- a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
++++ b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+@@ -58,6 +58,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -106,6 +117,16 @@
+ 	status = "okay";
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+-- 
+2.14.2
