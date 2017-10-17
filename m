@@ -1,59 +1,71 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: Document common property for
- daisy-chained devices
-Date: Tue, 17 Oct 2017 15:32:29 -0500
-Message-ID: <20171017203229.blv5kkh6aoqd3hcw@rob-hp-laptop>
-References: <cover.1507797496.git.lukas@wunner.de>
- <f0c3b0c5514f74717c5783360b60062dfe9b8c0f.1507797496.git.lukas@wunner.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: hwmon: Add
+ ti-max-expected-current-microamp property to ina2xx
+Date: Tue, 17 Oct 2017 15:36:31 -0500
+Message-ID: <20171017203631.xaut7o3szaiucnqh@rob-hp-laptop>
+References: <1507811765-31005-1-git-send-email-m.purski@samsung.com>
+ <CGME20171012123635eucas1p1ff9a982db9d541cd0475d44d114ff92a@eucas1p1.samsung.com>
+ <1507811765-31005-4-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f0c3b0c5514f74717c5783360b60062dfe9b8c0f.1507797496.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1507811765-31005-4-git-send-email-m.purski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 12:40:10PM +0200, Lukas Wunner wrote:
-> Many serially-attached GPIO and IIO devices are daisy-chainable.
+On Thu, Oct 12, 2017 at 02:36:04PM +0200, Maciej Purski wrote:
+> Add optional max expected current property which allows calibrating
+> the ina sensor in order to achieve requested measure scale. Document
+> the changes in Documentation/hwmon/ina2xx.
 > 
->     Examples for GPIO devices are Maxim MAX3191x and TI SN65HVS88x:
->     https://datasheets.maximintegrated.com/en/ds/MAX31913.pdf
->     http://www.ti.com/lit/ds/symlink/sn65hvs880.pdf
-> 
->     Examples for IIO devices are TI DAC128S085 and TI DAC161S055:
->     http://www.ti.com/lit/ds/symlink/dac128s085.pdf
->     http://www.ti.com/lit/ds/symlink/dac161s055.pdf
-> 
-> We already have drivers for daisy-chainable devices in the tree but
-> their devicetree bindings are somewhat inconsistent and ill-named:
-> 
->     The gpio-74x164.c driver uses "registers-number" to convey the
->     number of devices in the daisy-chain.  (Sans vendor prefix,
->     multiple vendors sell compatible versions of this chip.)
-> 
->     The gpio-pisosr.c driver takes a different approach and calculates
->     the number of devices in the daisy-chain by dividing the common
->     "ngpios" property (Documentation/devicetree/bindings/gpio/gpio.txt)
->     by 8 (which assumes that each chip has 8 inputs).
-> 
-> Let's standardize on a common "#daisy-chained-devices" property.
-> That name was chosen because it's the term most frequently used in
-> datasheets.  (A less frequently used synonym is "cascaded devices".)
-> 
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
 > ---
-> Changes v1 -> v2:
+>  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 4 +++-
+>  Documentation/hwmon/ina2xx                         | 3 +++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 > 
-> - Newly inserted patch.
+> diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
+> index 02af0d9..49ef0be 100644
+> --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
+> @@ -14,11 +14,13 @@ Optional properties:
+>  
+>  - shunt-resistor
+>  	Shunt resistor value in micro-Ohm
+> -
+> +- ti-max-expected-current-microamp
+> +	Max expected current value in mA
+
+ti,max-...
+
+The property name is a bit long. Does "expected" add anything? Is there 
+a max unexpected current?
+
+>  Example:
+>  
+>  ina220@44 {
+>  	compatible = "ti,ina220";
+>  	reg = <0x44>;
+>  	shunt-resistor = <1000>;
+> +	ti-max-expected-current-microamp = <3000>;
+>  };
+> diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
+> index cfd31d9..30620e8 100644
+> --- a/Documentation/hwmon/ina2xx
+> +++ b/Documentation/hwmon/ina2xx
+> @@ -55,6 +55,9 @@ The shunt value in micro-ohms can be set via platform data or device tree at
+>  compile-time or via the shunt_resistor attribute in sysfs at run-time. Please
+>  refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
+>  if the device tree is used.
+> +The max expected current value in miliamp can be set via platform data
+> +or device tree at compile-time or via currX_max attribute in sysfs
+> +at run-time.
+>  
+>  Additionally ina226 supports update_interval attribute as described in
+>  Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
+> -- 
+> 2.7.4
 > 
->  .../devicetree/bindings/common-properties.txt      | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
