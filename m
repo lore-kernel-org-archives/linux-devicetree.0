@@ -1,113 +1,67 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 1/5] arm64: dts: rockchip: Enable edp disaplay
- on kevin
-Date: Tue, 17 Oct 2017 09:50:38 +0800
-Message-ID: <5295f622-647a-c6d3-9ead-de8182d008e6@rock-chips.com>
-References: <20171016100640.26575-1-jeffy.chen@rock-chips.com>
- <20171016100640.26575-2-jeffy.chen@rock-chips.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2 00/12] of: overlay: clean up device tree overlay code
+Date: Mon, 16 Oct 2017 19:04:24 -0700
+Message-ID: <59E56528.1060808@gmail.com>
+References: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171016100640.26575-2-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017年10月16日 18:06, Jeffy Chen wrote:
-> Add edp panel and enable related nodes on kevin.
->
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+On 10/16/17 18:17, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> I have found the device tree overlay code to be difficult to read and
+> maintain.  This patch series attempts to improve that situation.
+> 
+> The cleanup includes some changes visible to users of overlays.  The
+> only in kernel user of overlays is fixed up for those changes.  The
+> in kernel user is:
+> 
+>    drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+> 
+> Following the cleanup patches are a set of patches to fix various
+> issues.
+> 
+> The first five patches are intended to not make any functional
+> changes, and are segrated to ease review.
+> 
+> Frank Rowand (12):
+>   of: overlay.c: Remove comments that state the obvious, to reduce
+>     clutter
+>   of: overlay.c: Convert comparisons to zero or NULL to logical
+>     expressions
+>   of: overlay: rename identifiers to more reflect what they do
+>   of: overlay: rename identifiers in dup_and_fixup_symbol_prop()
+>   of: overlay: minor restructuring
+>   of: overlay: detect cases where device tree may become corrupt
+>   of: overlay: expand check of whether overlay changeset can be removed
+>   of: overlay: loosen overly strict phandle clash check
+>   of: overlay: avoid race condition between applying multiple overlays
+>   of: overlay: simplify applying symbols from an overlay
+>   of: overlay: remove a dependency on device node full_name
+>   of: overlay: remove unneeded check for NULL kbasename()
+> 
+>  Documentation/devicetree/overlay-notes.txt   |   12 +-
+>  drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |   14 +-
+>  drivers/of/base.c                            |    2 +-
+>  drivers/of/dynamic.c                         |  137 +++-
+>  drivers/of/of_private.h                      |   22 +-
+>  drivers/of/overlay.c                         | 1034 ++++++++++++++++----------
+>  drivers/of/resolver.c                        |    7 +
+>  drivers/of/unittest.c                        |   81 +-
+>  include/linux/of.h                           |   17 +-
+>  9 files changed, 869 insertions(+), 457 deletions(-)
+> 
 
-Looks good.
+Brown paper bag time.
 
-Reviewed-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Changes from version 1:
 
-> Changes in v2: None
->
->   arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
->   arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
->   2 files changed, 45 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> index a3d3cea7dc4f..bc67b19f0af5 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> @@ -93,6 +93,18 @@
->   		pwm-delay-us = <10000>;
->   	};
->   
-> +	edp_panel: edp-panel {
-> +		compatible = "sharp,lq123p1jx31", "simple-panel";
-> +		backlight = <&backlight>;
-> +		power-supply = <&pp3300_disp>;
-> +
-> +		ports {
-> +			panel_in_edp: endpoint {
-> +				remote-endpoint = <&edp_out_panel>;
-> +			};
-> +		};
-> +	};
-> +
->   	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
->   		compatible = "murata,ncp15wb473";
->   		pullup-uv = <1800000>;
-> @@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
->   	};
->   };
->   
-> +&edp {
-> +	status = "okay";
-> +
-> +	ports {
-> +		edp_out: port@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			edp_out_panel: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&panel_in_edp>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &ppvar_bigcpu_pwm {
->   	regulator-min-microvolt = <798674>;
->   	regulator-max-microvolt = <1302172>;
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> index 5772c52fbfd3..470105d651c2 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> @@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
->   	dr_mode = "host";
->   };
->   
-> +&vopb {
-> +	status = "okay";
-> +};
-> +
-> +&vopb_mmu {
-> +	status = "okay";
-> +};
-> +
-> +&vopl {
-> +	status = "okay";
-> +};
-> +
-> +&vopl_mmu {
-> +	status = "okay";
-> +};
-> +
->   #include <arm/cros-ec-keyboard.dtsi>
->   #include <arm/cros-ec-sbs.dtsi>
->   
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  squash "[PATCH] of: overlay: move resolve phandles into of_overlay_apply()"
+  into "[PATCH 09/12] of: overlay: avoid race condition between applying multiple overlays"
