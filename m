@@ -1,114 +1,76 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mtd: powernv: Support MTD_NO_ERASE
-Date: Tue, 17 Oct 2017 08:21:00 -0500
-Message-ID: <CAL_JsqLBkU9habdOhoQ8ZiM=x87eLmuLrS6ujx32UOv8LHc=EA@mail.gmail.com>
-References: <20170905202339.20732-1-wak@google.com> <20170921095930.4b473f91@bbrezillon>
- <CAPnigKmBujCoKdtXwnK6YsU=YvXM+MaDvDvKpUXEVgHzOC-VEw@mail.gmail.com>
- <8760cbv090.fsf@concordia.ellerman.id.au> <20171016175517.264e710a@bbrezillon>
+From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Tue, 17 Oct 2017 09:21:53 -0400
+Message-ID: <20171017132153.GH12015@bill-the-cat>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <20171017114823.58476908@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171016175517.264e710a@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <20171017114823.58476908@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 10:55 AM, Boris Brezillon
-<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Michael,
->
-> Sorry for the late reply.
->
-> On Fri, 22 Sep 2017 14:13:47 +1000
-> Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
->
->> William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> writes:
->>
->> > +Cyril Bur and
->> >
->> > Not sure what you mean by mainline, but the commit is in the master branch
->> > at
->> > https://github.com/open-power/skiboot/commit/ba99af9b149d02438347b055e6e7d6bd15e33551
->>
->> I suspect Boris missed that you were referring to a skiboot commit and
->> looked in Linux?
->>
->> > I'm unsure about the documentation of the properties as I'm not really the
->> > maintainer of any of the code on either side. I just added this DT property
->> > for plumbing through the NO_ERASE flag. I added Cyril and Michael as they
->> > both work closely with this driver and could comment better than I could.
->> >
->> > - William
->> >
->> > On Thu, Sep 21, 2017 at 12:59 AM Boris Brezillon <
->> > boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >
->> >> +the DT maintainers
->> >>
->> >> On Tue,  5 Sep 2017 13:23:39 -0700
->> >> "William A. Kennington III" <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->> >>
->> >> > As of skiboot@ba99af9b149d02438347b055e6e7d6bd15e33551, we now support
->> >>
->> >> I didn't find this commit in mainline.
->> >>
->> >> > adding a device tree entry which marks a flash device as not needing
->> >> > erase. This patch adds support for setting MTD_NO_ERASE on powernvflash
->> >> > devices which have the property no-erase.
->> >> >
->> >> > Signed-off-by: William A. Kennington III <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> >> > ---
->> >> >  drivers/mtd/devices/powernv_flash.c | 2 ++
->> >> >  1 file changed, 2 insertions(+)
->> >> >
->> >> > diff --git a/drivers/mtd/devices/powernv_flash.c
->> >> b/drivers/mtd/devices/powernv_flash.c
->> >> > index f5396f26ddb4..fab9f9121b4c 100644
->> >> > --- a/drivers/mtd/devices/powernv_flash.c
->> >> > +++ b/drivers/mtd/devices/powernv_flash.c
->> >> > @@ -196,6 +196,8 @@ static int powernv_flash_set_driver_info(struct
->> >> device *dev,
->> >> >       mtd->name = of_get_property(dev->of_node, "name", NULL);
->> >> >       mtd->type = MTD_NORFLASH;
->> >> >       mtd->flags = MTD_WRITEABLE;
->> >> > +     if (of_property_read_bool(dev->of_node, "no-erase"))
->> >> > +             mtd->flags |= MTD_NO_ERASE;
->> >>
->> >> I don't see this property document in a DT binding doc, which is
->> >> mandatory. Actually, there's no DT bindings doc at all for the
->> >> 'ibm,opal-flash' device in mainline, is this normal?
->>
->> The binding doc is here:
->>
->>   https://github.com/open-power/skiboot/blob/master/doc/device-tree/ibm%2Copal/flash.rst
->>
->> But that property is not documented :(
->
-> Would be good to update the doc then :-).
->
->>
->> We have some of the skiboot bindings also in the kernel tree, but there
->> was talk of moving all the binding docs *out* of the kernel, so we never
->> made an effort to put more in. I've lost track of whether there are
->> still plans to move the binding docs out or not.
+On Tue, Oct 17, 2017 at 11:48:23AM +0200, Boris Brezillon wrote:
+> Hello Grant,
+> 
+> On Mon, 9 Oct 2017 21:39:51 +0100
+> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> 
+> > Kernel Summit is now just over 2 weeks away and it is time to pull
+> > together the schedule for the Devicetree workshop. Originally I
+> > planned on just an afternoon, but I've got the room for the whole day,
+> > so I've got a lot of flexibility on the schedule. Unscheduled time can
+> > be used for hacking.
+> > 
+> > Date: 26 Oct 2017
+> > Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
+> > Location: Athens room - Hilton Prague
+> > 
+> > If you plan to attend, make sure you update your OSSunmitE/ELCE
+> > registration to include the DT Workshop (log in to access and modify
+> > your registration):
+> > 
+> > https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
+> > 
+> > Here is my current list of topics in no particular order, including
+> > the topic moderator:
+> > 
+> > Runtime memory consumption (Rob Herring)
+> > Overlay maintenance plan (TBC)
+> > Stable ABI for devicetree (TBC)
+> > DT YAML encoding (Pantelis Antoniou)
+> > DT Schema format - option 1 (Pantelis Antoniou)
+> > DT Schema format - option 2 (Grant Likely)
+> > Sharing Generic bindings (TBC)
+> > devicetree.org update (Grant)
+> > 
+> > Reply to this email if you want to propose another topic.
+> 
+> Not sure yet if I'll attend the DT workshop or not, but I thought I
+> could ask my question here because it might be of interest to someone
+> else who is attending.
+> 
+> What happens when the DT bindings is not documented in Linux but in an
+> another project because this project was the first to use it.
+> 
+> I had the case here http://patchwork.ozlabs.org/patch/810275/, and I'm
+> not sure what's the policy when this happens. Should we add a file
+> under Documentation/devicetree/bindings/... that points to the external
+> doc file, should we duplicate the DT bindings doc in Linux, or should
+> we just leave the bindings undocumented in the kernel tree?
 
-Whether bindings are moved out or not, what's in the kernel will be
-the starting point. I wouldn't hold your breath for them to move out
-any time soon.
+I really hope (and have tried pushing via some other channels) that
+given Android's embrace of devicetree for Android 8 they will have
+people present as there's going to be issues like the above cropping up
+now.
 
-> Okay, I don't know what's the policy for external DT bindings doc, but
-> maybe you can add a file in Document/devicetree/bindings/mtd pointing
-> to the skiboot doc.
->
-> Rob, what's your opinion?
-
-I'd prefer they be documented in the kernel especially if they are
-used by the kernel. Of course, there's IBM bindings covered by various
-?PAPR specs which wouldn't make sense to duplicate, but I'm guessing
-what's documented in skiboot are not covered by those specs.
-
-Rob
+-- 
+Tom
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
