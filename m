@@ -1,1300 +1,195 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 7/9] drm/exynos: Add driver for Exynos Scaler module
-Date: Tue, 17 Oct 2017 13:07:50 +0200
-Message-ID: <20171017110752.25096-8-m.szyprowski@samsung.com>
-References: <20171017110752.25096-1-m.szyprowski@samsung.com>
-        <CGME20171017110814eucas1p11e7519e68e67c0d75aa20e97a35acac5@eucas1p1.samsung.com>
+From: "Han, Nandor (GE Healthcare)" <nandor.han-JJi787mZWgc@public.gmane.org>
+Subject: RE: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
+Date: Tue, 17 Oct 2017 11:14:48 +0000
+Message-ID: <AM3P101MB0180DF4B90673D3D6A0CF44FE64C0@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
+References: <20170628101514.22610-1-romain.perier@collabora.com>
+ <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
+ <AM3P101MB0180F7019908E059648488F0E67D0@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
+ <20171004214935.nejsdqmlj4wwyq5v@pengutronix.de>
+ <AM3P101MB0180BF8845D0CCFD9C76C63EE6750@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
+ <20171010082556.q47bahujdlffxj5e@pengutronix.de>
+ <AM3P101MB018058EF35B61CC5E39DCAEFE6750@AM3P101MB0180.NAMP101.PROD.OUTLOOK.COM>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20171017110752.25096-1-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <AM3P101MB018058EF35B61CC5E39DCAEFE6750-Irc2Ng3OI610aGNDtyle9VAr667LJVwUiGd9ebBGJoev3QGu/rdwKA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tobias Jakobi <tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Exynos Scaler is a hardware module, which processes graphic data fetched
-from memory and transfers the resultant dato another memory buffer.
-Graphics data can be up/down-scaled, rotated, flipped and converted color
-space. Scaler hardware modules are a part of Exynos5420 and newer Exynos
-SoCs.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/gpu/samsung-scaler.txt     |  26 +
- drivers/gpu/drm/exynos/Kconfig                     |   6 +
- drivers/gpu/drm/exynos/Makefile                    |   1 +
- drivers/gpu/drm/exynos/exynos_drm_drv.c            |   3 +
- drivers/gpu/drm/exynos/exynos_drm_drv.h            |   1 +
- drivers/gpu/drm/exynos/exynos_drm_ipp.h            |   4 +
- drivers/gpu/drm/exynos/exynos_drm_scaler.c         | 717 +++++++++++++++++++++
- drivers/gpu/drm/exynos/regs-scaler.h               | 426 ++++++++++++
- 8 files changed, 1184 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
- create mode 100644 drivers/gpu/drm/exynos/exynos_drm_scaler.c
- create mode 100644 drivers/gpu/drm/exynos/regs-scaler.h
+> -----Original Message-----
+> From: linux-serial-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-serial-
+> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Han, Nandor (GE Healthcare)
+> Sent: 10 October 2017 13:17
+> To: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Jiri Slaby
+> <jslaby-IBi9RG/b67k@public.gmane.org>; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Subject: EXT: [PATCH] serial: imx-serial - move DMA buffer configuration to
+> DT
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Uwe Kleine-König [mailto:u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
+> > Sent: 10 October 2017 11:26
+> > To: Han, Nandor (GE Healthcare) <nandor.han-JJi787mZWgc@public.gmane.org>
+> > Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>; Greg Kroah-Hartman
+> > <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>; linux-
+> > serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: EXT: Re: [PATCH] serial: imx-serial - move DMA buffer
+> > configuration to DT
+> >
 
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-new file mode 100644
-index 000000000000..575fd7cbe2b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-@@ -0,0 +1,26 @@
-+* Samsung Exynos Image Scaler
-+
-+Required properties:
-+  - compatible : value should be one of the following:
-+	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
-+	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : Interrupt specifier for scaler interrupt, according to format
-+		 specific to interrupt parent.
-+
-+  - clocks : Clock specifier for scaler clock, according to generic clock
-+	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
-+
-+  - clock-names : Names of clocks. For exynos scaler, it should be "mscl".
-+
-+Example:
-+	scaler@12800000 {
-+		compatible = "samsung,exynos5420-scaler";
-+		reg = <0x12800000 0x1294>;
-+		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clock CLK_MSCL0>;
-+		clock-names = "mscl";
-+	};
-diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
-index 33ef84be2d7f..35ed6c714054 100644
---- a/drivers/gpu/drm/exynos/Kconfig
-+++ b/drivers/gpu/drm/exynos/Kconfig
-@@ -109,6 +109,12 @@ config DRM_EXYNOS_ROTATOR
- 	help
- 	  Choose this option if you want to use Exynos Rotator for DRM.
- 
-+config DRM_EXYNOS_SCALER
-+	bool "Scaler"
-+	select DRM_EXYNOS_IPP
-+	help
-+	  Choose this option if you want to use Exynos Scaler for DRM.
-+
- config DRM_EXYNOS_GSC
- 	bool "GScaler"
- 	depends on ARCH_EXYNOS5 && VIDEO_SAMSUNG_EXYNOS_GSC=n
-diff --git a/drivers/gpu/drm/exynos/Makefile b/drivers/gpu/drm/exynos/Makefile
-index f663490e949d..aa84472ac093 100644
---- a/drivers/gpu/drm/exynos/Makefile
-+++ b/drivers/gpu/drm/exynos/Makefile
-@@ -20,6 +20,7 @@ exynosdrm-$(CONFIG_DRM_EXYNOS_G2D)	+= exynos_drm_g2d.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_IPP)	+= exynos_drm_ipp.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_FIMC)	+= exynos_drm_fimc.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_ROTATOR)	+= exynos_drm_rotator.o
-+exynosdrm-$(CONFIG_DRM_EXYNOS_SCALER)	+= exynos_drm_scaler.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_GSC)	+= exynos_drm_gsc.o
- exynosdrm-$(CONFIG_DRM_EXYNOS_MIC)     += exynos_drm_mic.o
- 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
-index 4afeffa024f3..b2582ae993ff 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
-@@ -260,6 +260,9 @@ static struct exynos_drm_driver_info exynos_drm_drivers[] = {
- 	}, {
- 		DRV_PTR(rotator_driver, CONFIG_DRM_EXYNOS_ROTATOR),
- 		DRM_COMPONENT_DRIVER
-+	}, {
-+		DRV_PTR(scaler_driver, CONFIG_DRM_EXYNOS_SCALER),
-+		DRM_COMPONENT_DRIVER
- 	}, {
- 		DRV_PTR(gsc_driver, CONFIG_DRM_EXYNOS_GSC),
- 		DRM_COMPONENT_DRIVER
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.h b/drivers/gpu/drm/exynos/exynos_drm_drv.h
-index 8b3b31d35168..8dc8537f4fd1 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_drv.h
-+++ b/drivers/gpu/drm/exynos/exynos_drm_drv.h
-@@ -293,6 +293,7 @@ extern struct platform_driver vidi_driver;
- extern struct platform_driver g2d_driver;
- extern struct platform_driver fimc_driver;
- extern struct platform_driver rotator_driver;
-+extern struct platform_driver scaler_driver;
- extern struct platform_driver gsc_driver;
- extern struct platform_driver mic_driver;
- #endif
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.h b/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-index 9085b7699609..199eb2006410 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-+++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-@@ -147,6 +147,10 @@ struct exynos_drm_ipp_formats {
-      .type = (DRM_EXYNOS_IPP_LIMIT_TYPE_SIZE | DRM_EXYNOS_IPP_LIMIT_SIZE_##l), \
-      val
- 
-+#define IPP_SCALE_LIMIT(val...)	\
-+	.type = (DRM_EXYNOS_IPP_LIMIT_TYPE_SCALE),\
-+	val
-+
- int exynos_drm_ipp_register(struct drm_device *dev, struct exynos_drm_ipp *ipp,
- 		const struct exynos_drm_ipp_funcs *funcs, unsigned int caps,
- 		const struct exynos_drm_ipp_formats *formats, const char *name);
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-new file mode 100644
-index 000000000000..965d5f8a2ea3
---- /dev/null
-+++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-@@ -0,0 +1,717 @@
-+/*
-+ * Copyright (C) 2017 Samsung Electronics Co.Ltd
-+ * Author:
-+ *	Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundationr
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/component.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#include <drm/drmP.h>
-+#include <drm/exynos_drm.h>
-+#include "regs-scaler.h"
-+#include "exynos_drm_fb.h"
-+#include "exynos_drm_drv.h"
-+#include "exynos_drm_iommu.h"
-+#include "exynos_drm_ipp.h"
-+
-+#define scaler_read(offset)		readl(scaler->regs + (offset))
-+#define scaler_write(cfg, offset)	writel(cfg, scaler->regs + (offset))
-+#define SCALER_MAX_CLK			4
-+#define SCALER_AUTOSUSPEND_DELAY	2000
-+
-+struct scaler_data {
-+	const char	*clk_name[SCALER_MAX_CLK];
-+	unsigned	num_clk;
-+	const struct exynos_drm_ipp_formats *formats;
-+};
-+
-+struct scaler_context {
-+	struct exynos_drm_ipp		ipp;
-+	struct drm_device		*drm_dev;
-+	struct device			*dev;
-+	void __iomem			*regs;
-+	struct clk			*clock[SCALER_MAX_CLK];
-+	struct exynos_drm_ipp_task	*task;
-+	const struct scaler_data	*scaler_data;
-+};
-+
-+static const struct drm_exynos_ipp_limit scaler_5420_two_pixel_hv_limits[] = {
-+	{ IPP_SIZE_LIMIT(BUFFER, .h = { 16, SZ_8K }, .v = { 16, SZ_8K }) },
-+	{ IPP_SIZE_LIMIT(AREA, .h.align = 2, .v.align = 2) },
-+	{ IPP_SCALE_LIMIT(.h = { 65536 * 1 / 4, 65536 * 16},
-+			.v = { 65536 * 1 / 4, 65536 * 16}) },
-+	{ }
-+};
-+
-+static const struct drm_exynos_ipp_limit scaler_5420_two_pixel_h_limits[] = {
-+	{ IPP_SIZE_LIMIT(BUFFER, .h = { 16, SZ_8K }, .v = { 16, SZ_8K }) },
-+	{ IPP_SIZE_LIMIT(AREA, .h.align = 2, .v.align = 1) },
-+	{ IPP_SCALE_LIMIT(.h = { 65536 * 1 / 4, 65536 * 16},
-+			.v = { 65536 * 1 / 4, 65536 * 16}) },
-+	{ }
-+};
-+
-+static const struct drm_exynos_ipp_limit scaler_5420_one_pixel_limits[] = {
-+	{ IPP_SIZE_LIMIT(BUFFER, .h = { 16, SZ_8K }, .v = { 16, SZ_8K }) },
-+	{ IPP_SCALE_LIMIT(.h = { 65536 * 1 / 4, 65536 * 16},
-+			.v = { 65536 * 1 / 4, 65536 * 16}) },
-+	{ }
-+};
-+
-+static const struct exynos_drm_ipp_formats exynos5420_formats[] = {
-+	/* SCALER_YUV420_2P_UV */
-+	{ IPP_SRCDST_FORMAT(NV21, scaler_5420_two_pixel_hv_limits) },
-+
-+	/* SCALER_YUV420_2P_VU */
-+	{ IPP_SRCDST_FORMAT(NV12, scaler_5420_two_pixel_hv_limits) },
-+
-+	/* SCALER_YUV420_3P */
-+	{ IPP_SRCDST_FORMAT(YUV420, scaler_5420_two_pixel_hv_limits) },
-+
-+	/* SCALER_YUV422_1P_YUYV */
-+	{ IPP_SRCDST_FORMAT(YUYV, scaler_5420_two_pixel_h_limits) },
-+
-+	/* SCALER_YUV422_1P_UYVY */
-+	{ IPP_SRCDST_FORMAT(UYVY, scaler_5420_two_pixel_h_limits) },
-+
-+	/* SCALER_YUV422_1P_YVYU */
-+	{ IPP_SRCDST_FORMAT(YVYU, scaler_5420_two_pixel_h_limits) },
-+
-+	/* SCALER_YUV422_2P_UV */
-+	{ IPP_SRCDST_FORMAT(NV61, scaler_5420_two_pixel_h_limits) },
-+
-+	/* SCALER_YUV422_2P_VU */
-+	{ IPP_SRCDST_FORMAT(NV16, scaler_5420_two_pixel_h_limits) },
-+
-+	/* SCALER_YUV422_3P */
-+	{ IPP_SRCDST_FORMAT(YUV422, scaler_5420_two_pixel_h_limits) },
-+
-+	/* SCALER_YUV444_2P_UV */
-+	{ IPP_SRCDST_FORMAT(NV42, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_YUV444_2P_VU */
-+	{ IPP_SRCDST_FORMAT(NV24, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_YUV444_3P */
-+	{ IPP_SRCDST_FORMAT(YUV444, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_RGB_565 */
-+	{ IPP_SRCDST_FORMAT(RGB565, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_ARGB1555 */
-+	{ IPP_SRCDST_FORMAT(XRGB1555, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_ARGB1555 */
-+	{ IPP_SRCDST_FORMAT(ARGB1555, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_ARGB4444 */
-+	{ IPP_SRCDST_FORMAT(XRGB4444, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_ARGB4444 */
-+	{ IPP_SRCDST_FORMAT(ARGB4444, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_ARGB8888 */
-+	{ IPP_SRCDST_FORMAT(XRGB8888, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_ARGB8888 */
-+	{ IPP_SRCDST_FORMAT(ARGB8888, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_RGBA8888 */
-+	{ IPP_SRCDST_FORMAT(RGBX8888, scaler_5420_one_pixel_limits) },
-+
-+	/* SCALER_RGBA8888 */
-+	{ IPP_SRCDST_FORMAT(RGBA8888, scaler_5420_one_pixel_limits) },
-+
-+	{ },
-+};
-+
-+static const struct scaler_data exynos5420_data = {
-+	.clk_name	= {"mscl"},
-+	.num_clk	= 1,
-+	.formats	= exynos5420_formats,
-+};
-+
-+static const struct scaler_data exynos5433_data = {
-+	.clk_name	= {"pclk", "aclk", "aclk_xiu"},
-+	.clk_name	= {},
-+	.num_clk	= 3,
-+	.formats	= exynos5420_formats, /* intentional */
-+};
-+
-+static const struct of_device_id exynos_scaler_match[] = {
-+	{
-+		.compatible = "samsung,exynos5420-scaler",
-+		.data = &exynos5420_data,
-+	},
-+	{
-+		.compatible = "samsung,exynos5433-scaler",
-+		.data = &exynos5433_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, exynos_scaler_match);
-+
-+static u32 scaler_get_format(u32 drm_fmt)
-+{
-+	switch (drm_fmt) {
-+	case DRM_FORMAT_NV21:
-+		return SCALER_YUV420_2P_UV;
-+	case DRM_FORMAT_NV12:
-+		return SCALER_YUV420_2P_VU;
-+	case DRM_FORMAT_YUV420:
-+		return SCALER_YUV420_3P;
-+	case DRM_FORMAT_YUYV:
-+		return SCALER_YUV422_1P_YUYV;
-+	case DRM_FORMAT_UYVY:
-+		return SCALER_YUV422_1P_UYVY;
-+	case DRM_FORMAT_YVYU:
-+		return SCALER_YUV422_1P_YVYU;
-+	case DRM_FORMAT_NV61:
-+		return SCALER_YUV422_2P_UV;
-+	case DRM_FORMAT_NV16:
-+		return SCALER_YUV422_2P_VU;
-+	case DRM_FORMAT_YUV422:
-+		return SCALER_YUV422_3P;
-+	case DRM_FORMAT_NV42:
-+		return SCALER_YUV444_2P_UV;
-+	case DRM_FORMAT_NV24:
-+		return SCALER_YUV444_2P_VU;
-+	case DRM_FORMAT_YUV444:
-+		return SCALER_YUV444_3P;
-+	case DRM_FORMAT_RGB565:
-+		return SCALER_RGB_565;
-+	case DRM_FORMAT_XRGB1555:
-+		return SCALER_ARGB1555;
-+	case DRM_FORMAT_ARGB1555:
-+		return SCALER_ARGB1555;
-+	case DRM_FORMAT_XRGB4444:
-+		return SCALER_ARGB4444;
-+	case DRM_FORMAT_ARGB4444:
-+		return SCALER_ARGB4444;
-+	case DRM_FORMAT_XRGB8888:
-+		return SCALER_ARGB8888;
-+	case DRM_FORMAT_ARGB8888:
-+		return SCALER_ARGB8888;
-+	case DRM_FORMAT_RGBX8888:
-+		return SCALER_RGBA8888;
-+	case DRM_FORMAT_RGBA8888:
-+		return SCALER_RGBA8888;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int scaler_check(struct exynos_drm_ipp *ipp,
-+			struct exynos_drm_ipp_task *task)
-+{
-+	struct exynos_drm_ipp_buffer *src_buf = &task->src;
-+	struct exynos_drm_ipp_buffer *dst_buf = &task->dst;
-+
-+	if (src_buf->format->num_planes > 2 &&
-+		src_buf->buf.pitch[2] != src_buf->buf.pitch[1])
-+		return -EINVAL;
-+
-+	if (dst_buf->format->num_planes > 2 &&
-+		dst_buf->buf.pitch[2] != dst_buf->buf.pitch[1])
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static inline void scaler_enable_int(struct scaler_context *scaler)
-+{
-+	u32 val;
-+
-+	val = SCALER_INT_EN_TIMEOUT |
-+		SCALER_INT_EN_ILLEGAL_BLEND |
-+		SCALER_INT_EN_ILLEGAL_RATIO |
-+		SCALER_INT_EN_ILLEGAL_DST_HEIGHT |
-+		SCALER_INT_EN_ILLEGAL_DST_WIDTH |
-+		SCALER_INT_EN_ILLEGAL_DST_V_POS |
-+		SCALER_INT_EN_ILLEGAL_DST_H_POS |
-+		SCALER_INT_EN_ILLEGAL_DST_C_SPAN |
-+		SCALER_INT_EN_ILLEGAL_DST_Y_SPAN |
-+		SCALER_INT_EN_ILLEGAL_DST_CR_BASE |
-+		SCALER_INT_EN_ILLEGAL_DST_CB_BASE |
-+		SCALER_INT_EN_ILLEGAL_DST_Y_BASE |
-+		SCALER_INT_EN_ILLEGAL_DST_COLOR |
-+		SCALER_INT_EN_ILLEGAL_SRC_HEIGHT |
-+		SCALER_INT_EN_ILLEGAL_SRC_WIDTH |
-+		SCALER_INT_EN_ILLEGAL_SRC_CV_POS |
-+		SCALER_INT_EN_ILLEGAL_SRC_CH_POS |
-+		SCALER_INT_EN_ILLEGAL_SRC_YV_POS |
-+		SCALER_INT_EN_ILLEGAL_SRC_YH_POS |
-+		SCALER_INT_EN_ILLEGAL_DST_SPAN |
-+		SCALER_INT_EN_ILLEGAL_SRC_Y_SPAN |
-+		SCALER_INT_EN_ILLEGAL_SRC_CR_BASE |
-+		SCALER_INT_EN_ILLEGAL_SRC_CB_BASE |
-+		SCALER_INT_EN_ILLEGAL_SRC_Y_BASE |
-+		SCALER_INT_EN_ILLEGAL_SRC_COLOR |
-+		SCALER_INT_EN_FRAME_END;
-+	scaler_write(val, SCALER_INT_EN);
-+}
-+
-+static inline void scaler_set_src_fmt(struct scaler_context *scaler,
-+	u32 src_fmt)
-+{
-+	u32 val;
-+
-+	val = SCALER_SRC_CFG_SET_COLOR_FORMAT(src_fmt);
-+	scaler_write(val, SCALER_SRC_CFG);
-+}
-+
-+static inline void scaler_set_src_base(struct scaler_context *scaler,
-+	struct exynos_drm_ipp_buffer *src_buf)
-+{
-+	static unsigned int bases[] = {
-+		SCALER_SRC_Y_BASE,
-+		SCALER_SRC_CB_BASE,
-+		SCALER_SRC_CR_BASE,
-+	};
-+	int i;
-+
-+	for (i = 0; i < src_buf->format->num_planes; ++i)
-+		scaler_write(src_buf->dma_addr[i], bases[i]);
-+}
-+
-+static inline void scaler_set_src_span(struct scaler_context *scaler,
-+	struct exynos_drm_ipp_buffer *src_buf)
-+{
-+	u32 val;
-+
-+	val = SCALER_SRC_SPAN_SET_Y_SPAN(src_buf->buf.pitch[0] /
-+		src_buf->format->cpp[0]);
-+
-+	if (src_buf->format->num_planes > 1)
-+		val |= SCALER_SRC_SPAN_SET_C_SPAN(src_buf->buf.pitch[1]);
-+
-+	scaler_write(val, SCALER_SRC_SPAN);
-+}
-+
-+static inline void scaler_set_src_luma_pos(struct scaler_context *scaler,
-+	struct drm_exynos_ipp_task_rect *src_pos)
-+{
-+	u32 val;
-+
-+	val = SCALER_SRC_Y_POS_SET_YH_POS(src_pos->x << 2);
-+	val |=  SCALER_SRC_Y_POS_SET_YV_POS(src_pos->y << 2);
-+	scaler_write(val, SCALER_SRC_Y_POS);
-+	scaler_write(val, SCALER_SRC_C_POS); /* ATTENTION! */
-+}
-+
-+static inline void scaler_set_src_wh(struct scaler_context *scaler,
-+	struct drm_exynos_ipp_task_rect *src_pos)
-+{
-+	u32 val;
-+
-+	val = SCALER_SRC_WH_SET_WIDTH(src_pos->w);
-+	val |= SCALER_SRC_WH_SET_HEIGHT(src_pos->h);
-+	scaler_write(val, SCALER_SRC_WH);
-+}
-+
-+static inline void scaler_set_dst_fmt(struct scaler_context *scaler,
-+	u32 dst_fmt)
-+{
-+	u32 val;
-+
-+	val = SCALER_DST_CFG_SET_COLOR_FORMAT(dst_fmt);
-+	scaler_write(val, SCALER_DST_CFG);
-+}
-+
-+static inline void scaler_set_dst_base(struct scaler_context *scaler,
-+	struct exynos_drm_ipp_buffer *dst_buf)
-+{
-+	static unsigned int bases[] = {
-+		SCALER_DST_Y_BASE,
-+		SCALER_DST_CB_BASE,
-+		SCALER_DST_CR_BASE,
-+	};
-+	int i;
-+
-+	for (i = 0; i < dst_buf->format->num_planes; ++i)
-+		scaler_write(dst_buf->dma_addr[i], bases[i]);
-+}
-+
-+static inline void scaler_set_dst_span(struct scaler_context *scaler,
-+	struct exynos_drm_ipp_buffer *dst_buf)
-+{
-+	u32 val;
-+
-+	val = SCALER_DST_SPAN_SET_Y_SPAN(dst_buf->buf.pitch[0] /
-+		dst_buf->format->cpp[0]);
-+
-+	if (dst_buf->format->num_planes > 1)
-+		val |= SCALER_DST_SPAN_SET_C_SPAN(dst_buf->buf.pitch[1]);
-+
-+	scaler_write(val, SCALER_DST_SPAN);
-+}
-+
-+static inline void scaler_set_dst_luma_pos(struct scaler_context *scaler,
-+	struct drm_exynos_ipp_task_rect *dst_pos)
-+{
-+	u32 val;
-+
-+	val = SCALER_DST_WH_SET_WIDTH(dst_pos->w);
-+	val |= SCALER_DST_WH_SET_HEIGHT(dst_pos->h);
-+	scaler_write(val, SCALER_DST_WH);
-+}
-+
-+static inline void scaler_set_dst_wh(struct scaler_context *scaler,
-+	struct drm_exynos_ipp_task_rect *dst_pos)
-+{
-+	u32 val;
-+
-+	val = SCALER_DST_POS_SET_H_POS(dst_pos->x);
-+	val |= SCALER_DST_POS_SET_V_POS(dst_pos->y);
-+	scaler_write(val, SCALER_DST_POS);
-+}
-+
-+static inline void scaler_set_hv_ratio(struct scaler_context *scaler,
-+	unsigned int rotation,
-+	struct drm_exynos_ipp_task_rect *src_pos,
-+	struct drm_exynos_ipp_task_rect *dst_pos)
-+{
-+	u32 val, h_ratio, v_ratio;
-+
-+	if (drm_rotation_90_or_270(rotation)) {
-+		h_ratio = (src_pos->h << 16) / dst_pos->w;
-+		v_ratio = (src_pos->w << 16) / dst_pos->h;
-+	} else {
-+		h_ratio = (src_pos->w << 16) / dst_pos->w;
-+		v_ratio = (src_pos->h << 16) / dst_pos->h;
-+	}
-+
-+	val = SCALER_H_RATIO_SET(h_ratio);
-+	scaler_write(val, SCALER_H_RATIO);
-+
-+	val = SCALER_V_RATIO_SET(v_ratio);
-+	scaler_write(val, SCALER_V_RATIO);
-+}
-+
-+static inline void scaler_set_rotation(struct scaler_context *scaler,
-+	unsigned int rotation)
-+{
-+	u32 val = 0;
-+
-+	if (rotation & DRM_MODE_ROTATE_90)
-+		val |= SCALER_ROT_CFG_SET_ROTMODE(SCALER_ROT_MODE_90);
-+	else if (rotation & DRM_MODE_ROTATE_180)
-+		val |= SCALER_ROT_CFG_SET_ROTMODE(SCALER_ROT_MODE_180);
-+	else if (rotation & DRM_MODE_ROTATE_270)
-+		val |= SCALER_ROT_CFG_SET_ROTMODE(SCALER_ROT_MODE_270);
-+	if (rotation & DRM_MODE_REFLECT_X)
-+		val |= SCALER_ROT_CFG_FLIP_X_EN;
-+	if (rotation & DRM_MODE_REFLECT_Y)
-+		val |= SCALER_ROT_CFG_FLIP_Y_EN;
-+	scaler_write(val, SCALER_ROT_CFG);
-+}
-+
-+static inline void scaler_set_csc(struct scaler_context *scaler,
-+	const struct drm_format_info *fmt)
-+{
-+	static const u32 csc_mtx[2][3][3] = {
-+		{ /* YCbCr to RGB */
-+			{0x254, 0x000, 0x331},
-+			{0x254, 0xf38, 0xe60},
-+			{0x254, 0x409, 0x000},
-+		},
-+		{ /* RGB to YCbCr */
-+			{0x084, 0x102, 0x032},
-+			{0xfb4, 0xf6b, 0x0e1},
-+			{0x0e1, 0xf44, 0xfdc},
-+		},
-+	};
-+	int i, j, dir;
-+
-+	switch (fmt->format) {
-+	case DRM_FORMAT_RGB565:
-+	case DRM_FORMAT_XRGB1555:
-+	case DRM_FORMAT_ARGB1555:
-+	case DRM_FORMAT_XRGB4444:
-+	case DRM_FORMAT_ARGB4444:
-+	case DRM_FORMAT_XRGB8888:
-+	case DRM_FORMAT_ARGB8888:
-+	case DRM_FORMAT_RGBX8888:
-+	case DRM_FORMAT_RGBA8888:
-+		dir = 1;
-+		break;
-+	default:
-+		dir = 0;
-+	}
-+
-+	for (i = 0; i < 3; i++)
-+		for (j = 0; j < 3; j++)
-+			scaler_write(csc_mtx[dir][i][j], SCALER_CSC_COEF(j, i));
-+}
-+
-+static inline void scaler_set_timer(struct scaler_context *scaler,
-+	unsigned int timer, unsigned int divider)
-+{
-+	u32 val;
-+
-+	val = SCALER_TIMEOUT_CTRL_TIMER_ENABLE;
-+	val |= SCALER_TIMEOUT_CTRL_SET_TIMER_VALUE(timer);
-+	val |= SCALER_TIMEOUT_CTRL_SET_TIMER_DIV(divider);
-+	scaler_write(val, SCALER_TIMEOUT_CTRL);
-+}
-+
-+static inline void scaler_start_hw(struct scaler_context *scaler)
-+{
-+	scaler_write(SCALER_CFG_START_CMD, SCALER_CFG);
-+}
-+
-+static int scaler_commit(struct exynos_drm_ipp *ipp,
-+			  struct exynos_drm_ipp_task *task)
-+{
-+	struct scaler_context *scaler =
-+			container_of(ipp, struct scaler_context, ipp);
-+
-+	u32 src_fmt = scaler_get_format(task->src.buf.fourcc);
-+	struct drm_exynos_ipp_task_rect *src_pos = &task->src.rect;
-+
-+	u32 dst_fmt = scaler_get_format(task->dst.buf.fourcc);
-+	struct drm_exynos_ipp_task_rect *dst_pos = &task->dst.rect;
-+
-+	scaler->task = task;
-+
-+	pm_runtime_get_sync(scaler->dev);
-+
-+	scaler_set_src_fmt(scaler, src_fmt);
-+	scaler_set_src_base(scaler, &task->src);
-+	scaler_set_src_span(scaler, &task->src);
-+	scaler_set_src_luma_pos(scaler, src_pos);
-+	scaler_set_src_wh(scaler, src_pos);
-+
-+	scaler_set_dst_fmt(scaler, dst_fmt);
-+	scaler_set_dst_base(scaler, &task->dst);
-+	scaler_set_dst_span(scaler, &task->dst);
-+	scaler_set_dst_luma_pos(scaler, dst_pos);
-+	scaler_set_dst_wh(scaler, dst_pos);
-+
-+	scaler_set_hv_ratio(scaler, task->transform.rotation, src_pos, dst_pos);
-+	scaler_set_rotation(scaler, task->transform.rotation);
-+
-+	scaler_set_csc(scaler, task->src.format);
-+
-+	scaler_set_timer(scaler, 0xffff, 0xf);
-+
-+	scaler_enable_int(scaler);
-+	scaler_start_hw(scaler);
-+
-+	return 0;
-+}
-+
-+static struct exynos_drm_ipp_funcs ipp_funcs = {
-+	.check	= scaler_check,
-+	.commit = scaler_commit,
-+};
-+
-+static inline void scaler_disable_int(struct scaler_context *scaler)
-+{
-+	scaler_write(0, SCALER_INT_EN);
-+}
-+
-+static inline u32 scaler_get_int_status(struct scaler_context *scaler)
-+{
-+	return scaler_read(SCALER_INT_STATUS);
-+}
-+
-+static inline bool scaler_task_done(u32 val)
-+{
-+	return val & SCALER_INT_STATUS_FRAME_END ? 0 : -EINVAL;
-+}
-+
-+static irqreturn_t scaler_irq_handler(int irq, void *arg)
-+{
-+	struct scaler_context *scaler = arg;
-+
-+	u32 val = scaler_get_int_status(scaler);
-+
-+	scaler_disable_int(scaler);
-+
-+	if (scaler->task) {
-+		struct exynos_drm_ipp_task *task = scaler->task;
-+
-+		scaler->task = NULL;
-+		pm_runtime_mark_last_busy(scaler->dev);
-+		pm_runtime_put_autosuspend(scaler->dev);
-+		exynos_drm_ipp_task_done(task, scaler_task_done(val));
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int scaler_bind(struct device *dev, struct device *master, void *data)
-+{
-+	struct scaler_context *scaler = dev_get_drvdata(dev);
-+	struct drm_device *drm_dev = data;
-+	struct exynos_drm_ipp *ipp = &scaler->ipp;
-+
-+	scaler->drm_dev = drm_dev;
-+	drm_iommu_attach_device(drm_dev, dev);
-+
-+	exynos_drm_ipp_register(drm_dev, ipp, &ipp_funcs,
-+			   DRM_EXYNOS_IPP_CAP_CROP |
-+			   DRM_EXYNOS_IPP_CAP_ROTATE |
-+			   DRM_EXYNOS_IPP_CAP_SCALE |
-+			   DRM_EXYNOS_IPP_CAP_CONVERT,
-+			   scaler->scaler_data->formats, "scaler");
-+
-+	dev_info(dev, "The exynos scaler has been probed successfully\n");
-+
-+	return 0;
-+}
-+
-+static void scaler_unbind(struct device *dev, struct device *master,
-+			void *data)
-+{
-+	struct scaler_context *scaler = dev_get_drvdata(dev);
-+	struct drm_device *drm_dev = data;
-+	struct exynos_drm_ipp *ipp = &scaler->ipp;
-+
-+	exynos_drm_ipp_unregister(drm_dev, ipp);
-+	drm_iommu_detach_device(scaler->drm_dev, scaler->dev);
-+}
-+
-+static const struct component_ops scaler_component_ops = {
-+	.bind	= scaler_bind,
-+	.unbind = scaler_unbind,
-+};
-+
-+static int scaler_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource	*regs_res;
-+	struct scaler_context *scaler;
-+	int irq;
-+	int ret, i;
-+
-+	scaler = devm_kzalloc(dev, sizeof(*scaler), GFP_KERNEL);
-+	if (!scaler)
-+		return -ENOMEM;
-+
-+	scaler->scaler_data =
-+		(struct scaler_data *)of_device_get_match_data(dev);
-+
-+	scaler->dev = dev;
-+	regs_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	scaler->regs = devm_ioremap_resource(dev, regs_res);
-+	if (IS_ERR(scaler->regs))
-+		return PTR_ERR(scaler->regs);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "failed to get irq\n");
-+		return irq;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, irq, NULL,	scaler_irq_handler,
-+					IRQF_ONESHOT, "drm_scaler", scaler);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request irq\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < scaler->scaler_data->num_clk; ++i) {
-+		scaler->clock[i] = devm_clk_get(dev, scaler->scaler_data->clk_name[i]);
-+		if (IS_ERR(scaler->clock[i])) {
-+			dev_err(dev, "failed to get clock\n");
-+			return PTR_ERR(scaler->clock[i]);
-+		}
-+	}
-+
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_set_autosuspend_delay(dev, SCALER_AUTOSUSPEND_DELAY);
-+	pm_runtime_enable(dev);
-+	platform_set_drvdata(pdev, scaler);
-+
-+	ret = component_add(dev, &scaler_component_ops);
-+	if (ret)
-+		goto err_ippdrv_register;
-+
-+	return 0;
-+
-+err_ippdrv_register:
-+	pm_runtime_dont_use_autosuspend(dev);
-+	pm_runtime_disable(dev);
-+	return ret;
-+}
-+
-+static int scaler_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	component_del(dev, &scaler_component_ops);
-+	pm_runtime_dont_use_autosuspend(dev);
-+	pm_runtime_disable(dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+
-+static int clk_disable_unprepare_wrapper(struct clk *clk)
-+{
-+	clk_disable_unprepare(clk);
-+
-+	return 0;
-+}
-+
-+static int scaler_clk_ctrl(struct scaler_context *scaler, bool enable)
-+{
-+	int (*clk_fun)(struct clk *clk), i;
-+
-+	clk_fun = enable ? clk_prepare_enable : clk_disable_unprepare_wrapper;
-+
-+	for (i = 0; i < scaler->scaler_data->num_clk; ++i)
-+		clk_fun(scaler->clock[i]);
-+
-+	return 0;
-+}
-+
-+static int scaler_runtime_suspend(struct device *dev)
-+{
-+	struct scaler_context *scaler = dev_get_drvdata(dev);
-+
-+	return  scaler_clk_ctrl(scaler, false);
-+}
-+
-+static int scaler_runtime_resume(struct device *dev)
-+{
-+	struct scaler_context *scaler = dev_get_drvdata(dev);
-+
-+	return  scaler_clk_ctrl(scaler, true);
-+}
-+#endif
-+
-+static const struct dev_pm_ops scaler_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(scaler_runtime_suspend, scaler_runtime_resume,
-+									NULL)
-+};
-+
-+struct platform_driver scaler_driver = {
-+	.probe		= scaler_probe,
-+	.remove		= scaler_remove,
-+	.driver		= {
-+		.name	= "exynos-scaler",
-+		.owner	= THIS_MODULE,
-+		.pm	= &scaler_pm_ops,
-+		.of_match_table = exynos_scaler_match,
-+	},
-+};
-diff --git a/drivers/gpu/drm/exynos/regs-scaler.h b/drivers/gpu/drm/exynos/regs-scaler.h
-new file mode 100644
-index 000000000000..fc7ccad75e74
---- /dev/null
-+++ b/drivers/gpu/drm/exynos/regs-scaler.h
-@@ -0,0 +1,426 @@
-+/* drivers/gpu/drm/exynos/regs-scaler.h
-+ *
-+ * Copyright (c) 2017 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com/
-+ * Author: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * Register definition file for Samsung scaler driver
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef EXYNOS_REGS_SCALER_H
-+#define EXYNOS_REGS_SCALER_H
-+
-+/* Register part */
-+
-+/* Global setting */
-+#define SCALER_STATUS			0x0	/* no shadow */
-+#define SCALER_CFG			0x4
-+
-+/* Interrupt */
-+#define SCALER_INT_EN			0x8	/* no shadow */
-+#define SCALER_INT_STATUS		0xc	/* no shadow */
-+
-+/* SRC */
-+#define SCALER_SRC_CFG			0x10
-+#define SCALER_SRC_Y_BASE		0x14
-+#define SCALER_SRC_CB_BASE		0x18
-+#define SCALER_SRC_CR_BASE		0x294
-+#define SCALER_SRC_SPAN			0x1c
-+#define SCALER_SRC_Y_POS		0x20
-+#define SCALER_SRC_WH			0x24
-+#define SCALER_SRC_C_POS		0x28
-+
-+/* DST */
-+#define SCALER_DST_CFG			0x30
-+#define SCALER_DST_Y_BASE		0x34
-+#define SCALER_DST_CB_BASE		0x38
-+#define SCALER_DST_CR_BASE		0x298
-+#define SCALER_DST_SPAN			0x3c
-+#define SCALER_DST_WH			0x40
-+#define SCALER_DST_POS			0x44
-+
-+/* Ratio */
-+#define SCALER_H_RATIO			0x50
-+#define SCALER_V_RATIO			0x54
-+
-+/* Rotation */
-+#define SCALER_ROT_CFG			0x58
-+
-+/* Coefficient */
-+/*
-+ * YHCOEF_{x}{A|B|C|D}			CHCOEF_{x}{A|B|C|D}
-+ *
-+ *	A	B	C	D	A	B	C	D
-+ * 0	60	64	68	6c	140	144	148	14c
-+ * 1	70	74	78	7c	150	154	158	15c
-+ * 2	80	84	88	8c	160	164	168	16c
-+ * 3	90	94	98	9c	170	174	178	17c
-+ * 4	a0	a4	a8	ac	180	184	188	18c
-+ * 5	b0	b4	b8	bc	190	194	198	19c
-+ * 6	c0	c4	c8	cc	1a0	1a4	1a8	1ac
-+ * 7	d0	d4	d8	dc	1b0	1b4	1b8	1bc
-+ * 8	e0	e4	e8	ec	1c0	1c4	1c8	1cc
-+ *
-+ *
-+ * YVCOEF_{x}{A|B}			CVCOEF_{x}{A|B}
-+ *
-+ *	A	B			A	B
-+ * 0	f0	f4			1d0	1d4
-+ * 1	f8	fc			1d8	1dc
-+ * 2	100	104			1e0	1e4
-+ * 3	108	10c			1e8	1ec
-+ * 4	110	114			1f0	1f4
-+ * 5	118	11c			1f8	1fc
-+ * 6	120	124			200	204
-+ * 7	128	12c			208	20c
-+ * 8	130	134			210	214
-+ */
-+#define _SCALER_HCOEF_DELTA(r, c)	((r) * 0x10 + (c) * 0x4)
-+#define _SCALER_VCOEF_DELTA(r, c)	((r) * 0x8 + (c) * 0x4)
-+
-+#define SCALER_YHCOEF(r, c)		(0x60 + _SCALER_HCOEF_DELTA((r), (c)))
-+#define SCALER_YVCOEF(r, c)		(0xf0 + _SCALER_VCOEF_DELTA((r), (c)))
-+#define SCALER_CHCOEF(r, c)		(0x140 + _SCALER_HCOEF_DELTA((r), (c)))
-+#define SCALER_CVCOEF(r, c)		(0x1d0 + _SCALER_VCOEF_DELTA((r), (c)))
-+
-+
-+/* Color Space Conversion */
-+#define SCALER_CSC_COEF(x, y)		(0x220 + (y) * 0xc + (x) * 0x4)
-+
-+/* Dithering */
-+#define SCALER_DITH_CFG			0x250
-+
-+/* Version Number */
-+#define SCALER_VER			0x260	/* no shadow */
-+
-+/* Cycle count and Timeout */
-+#define SCALER_CYCLE_COUNT		0x278	/* no shadow */
-+#define SCALER_TIMEOUT_CTRL		0x2c0	/* no shadow */
-+#define SCALER_TIMEOUT_CNT		0x2c4	/* no shadow */
-+
-+/* Blending */
-+#define SCALER_SRC_BLEND_COLOR		0x280
-+#define SCALER_SRC_BLEND_ALPHA		0x284
-+#define SCALER_DST_BLEND_COLOR		0x288
-+#define SCALER_DST_BLEND_ALPHA		0x28c
-+
-+/* Color Fill */
-+#define SCALER_FILL_COLOR		0x290
-+
-+/* Multiple Command Queue */
-+#define SCALER_ADDR_Q_CONFIG		0x2a0	/* no shadow */
-+#define SCALER_SRC_ADDR_Q_STATUS	0x2a4	/* no shadow */
-+#define SCALER_SRC_ADDR_Q		0x2a8	/* no shadow */
-+
-+/* CRC */
-+#define SCALER_CRC_COLOR00_10		0x2b0	/* no shadow */
-+#define SCALER_CRC_COLOR20_30		0x2b4	/* no shadow */
-+#define SCALER_CRC_COLOR01_11		0x2b8	/* no shadow */
-+#define SCALER_CRC_COLOR21_31		0x2bc	/* no shadow */
-+
-+/* Shadow Registers */
-+#define SCALER_SHADOW_OFFSET		0x1000
-+
-+
-+/* Bit definition part */
-+#define SCALER_MASK(hi_b, lo_b)		((1 << ((hi_b) - (lo_b) + 1)) - 1)
-+#define SCALER_GET(reg, hi_b, lo_b)	\
-+	(((reg) >> (lo_b)) & SCALER_MASK(hi_b, lo_b))
-+#define SCALER_SET(val, hi_b, lo_b) \
-+	(((val) & SCALER_MASK(hi_b, lo_b)) << lo_b)
-+
-+/* SCALER_STATUS */
-+#define SCALER_STATUS_SCALER_RUNNING		(1 << 1)
-+#define SCALER_STATUS_SCALER_READY_CLK_DOWN	(1 << 0)
-+
-+/* SCALER_CFG */
-+#define SCALER_CFG_FILL_EN			(1 << 24)
-+#define SCALER_CFG_BLEND_COLOR_DIVIDE_ALPHA_EN	(1 << 17)
-+#define SCALER_CFG_BLEND_EN			(1 << 16)
-+#define SCALER_CFG_CSC_Y_OFFSET_SRC_EN		(1 << 10)
-+#define SCALER_CFG_CSC_Y_OFFSET_DST_EN		(1 << 9)
-+#define SCALER_CFG_16_BURST_MODE		(1 << 8)
-+#define SCALER_CFG_SOFT_RESET			(1 << 1)
-+#define SCALER_CFG_START_CMD			(1 << 0)
-+
-+/* SCALER_INT_EN */
-+#define SCALER_INT_EN_TIMEOUT			(1 << 31)
-+#define SCALER_INT_EN_ILLEGAL_BLEND		(1 << 24)
-+#define SCALER_INT_EN_ILLEGAL_RATIO		(1 << 23)
-+#define SCALER_INT_EN_ILLEGAL_DST_HEIGHT	(1 << 22)
-+#define SCALER_INT_EN_ILLEGAL_DST_WIDTH		(1 << 21)
-+#define SCALER_INT_EN_ILLEGAL_DST_V_POS		(1 << 20)
-+#define SCALER_INT_EN_ILLEGAL_DST_H_POS		(1 << 19)
-+#define SCALER_INT_EN_ILLEGAL_DST_C_SPAN	(1 << 18)
-+#define SCALER_INT_EN_ILLEGAL_DST_Y_SPAN	(1 << 17)
-+#define SCALER_INT_EN_ILLEGAL_DST_CR_BASE	(1 << 16)
-+#define SCALER_INT_EN_ILLEGAL_DST_CB_BASE	(1 << 15)
-+#define SCALER_INT_EN_ILLEGAL_DST_Y_BASE	(1 << 14)
-+#define SCALER_INT_EN_ILLEGAL_DST_COLOR		(1 << 13)
-+#define SCALER_INT_EN_ILLEGAL_SRC_HEIGHT	(1 << 12)
-+#define SCALER_INT_EN_ILLEGAL_SRC_WIDTH		(1 << 11)
-+#define SCALER_INT_EN_ILLEGAL_SRC_CV_POS	(1 << 10)
-+#define SCALER_INT_EN_ILLEGAL_SRC_CH_POS	(1 << 9)
-+#define SCALER_INT_EN_ILLEGAL_SRC_YV_POS	(1 << 8)
-+#define SCALER_INT_EN_ILLEGAL_SRC_YH_POS	(1 << 7)
-+#define SCALER_INT_EN_ILLEGAL_DST_SPAN		(1 << 6)
-+#define SCALER_INT_EN_ILLEGAL_SRC_Y_SPAN	(1 << 5)
-+#define SCALER_INT_EN_ILLEGAL_SRC_CR_BASE	(1 << 4)
-+#define SCALER_INT_EN_ILLEGAL_SRC_CB_BASE	(1 << 3)
-+#define SCALER_INT_EN_ILLEGAL_SRC_Y_BASE	(1 << 2)
-+#define SCALER_INT_EN_ILLEGAL_SRC_COLOR		(1 << 1)
-+#define SCALER_INT_EN_FRAME_END			(1 << 0)
-+
-+/* SCALER_INT_STATUS */
-+#define SCALER_INT_STATUS_TIMEOUT		(1 << 31)
-+#define SCALER_INT_STATUS_ILLEGAL_BLEND		(1 << 24)
-+#define SCALER_INT_STATUS_ILLEGAL_RATIO		(1 << 23)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_HEIGHT	(1 << 22)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_WIDTH	(1 << 21)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_V_POS	(1 << 20)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_H_POS	(1 << 19)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_C_SPAN	(1 << 18)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_Y_SPAN	(1 << 17)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_CR_BASE	(1 << 16)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_CB_BASE	(1 << 15)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_Y_BASE	(1 << 14)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_COLOR	(1 << 13)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_HEIGHT	(1 << 12)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_WIDTH	(1 << 11)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_CV_POS	(1 << 10)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_CH_POS	(1 << 9)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_YV_POS	(1 << 8)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_YH_POS	(1 << 7)
-+#define SCALER_INT_STATUS_ILLEGAL_DST_SPAN	(1 << 6)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_Y_SPAN	(1 << 5)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_CR_BASE	(1 << 4)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_CB_BASE	(1 << 3)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_Y_BASE	(1 << 2)
-+#define SCALER_INT_STATUS_ILLEGAL_SRC_COLOR	(1 << 1)
-+#define SCALER_INT_STATUS_FRAME_END		(1 << 0)
-+
-+/* SCALER_SRC_CFG */
-+#define SCALER_SRC_CFG_TILE_EN			(1 << 10)
-+#define SCALER_SRC_CFG_GET_BYTE_SWAP(r)		SCALER_GET(r, 6, 5)
-+#define SCALER_SRC_CFG_SET_BYTE_SWAP(v)		SCALER_SET(v, 6, 5)
-+#define SCALER_SRC_CFG_GET_COLOR_FORMAT(r)	SCALER_GET(r, 4, 0)
-+#define SCALER_SRC_CFG_SET_COLOR_FORMAT(v)	SCALER_SET(v, 4, 0)
-+#define SCALER_YUV420_2P_UV			0
-+#define SCALER_YUV422_2P_UV			2
-+#define SCALER_YUV444_2P_UV			3
-+#define SCALER_RGB_565				4
-+#define SCALER_ARGB1555				5
-+#define SCALER_ARGB8888				6
-+#define SCALER_ARGB8888_PRE			7
-+#define SCALER_YUV422_1P_YVYU			9
-+#define SCALER_YUV422_1P_YUYV			10
-+#define SCALER_YUV422_1P_UYVY			11
-+#define SCALER_ARGB4444				12
-+#define SCALER_L8A8				13
-+#define SCALER_RGBA8888				14
-+#define SCALER_L8				15
-+#define SCALER_YUV420_2P_VU			16
-+#define SCALER_YUV422_2P_VU			18
-+#define SCALER_YUV444_2P_VU			19
-+#define SCALER_YUV420_3P			20
-+#define SCALER_YUV422_3P			22
-+#define SCALER_YUV444_3P			23
-+
-+/* SCALER_SRC_SPAN */
-+#define SCALER_SRC_SPAN_GET_C_SPAN(r)		SCALER_GET(r, 29, 16)
-+#define SCALER_SRC_SPAN_SET_C_SPAN(v)		SCALER_SET(v, 29, 16)
-+#define SCALER_SRC_SPAN_GET_Y_SPAN(r)		SCALER_GET(r, 13, 0)
-+#define SCALER_SRC_SPAN_SET_Y_SPAN(v)		SCALER_SET(v, 13, 0)
-+
-+/* SCALER_SRC_Y_POS */
-+#define SCALER_SRC_Y_POS_GET_YH_POS(r)		SCALER_GET(r, 31, 16)
-+#define SCALER_SRC_Y_POS_SET_YH_POS(v)		SCALER_SET(v, 31, 16)
-+#define SCALER_SRC_Y_POS_GET_YV_POS(r)		SCALER_GET(r, 15, 0)
-+#define SCALER_SRC_Y_POS_SET_YV_POS(v)		SCALER_SET(v, 15, 0)
-+
-+/* SCALER_SRC_WH */
-+#define SCALER_SRC_WH_GET_WIDTH(r)		SCALER_GET(r, 29, 16)
-+#define SCALER_SRC_WH_SET_WIDTH(v)		SCALER_SET(v, 29, 16)
-+#define SCALER_SRC_WH_GET_HEIGHT(r)		SCALER_GET(r, 13, 0)
-+#define SCALER_SRC_WH_SET_HEIGHT(v)		SCALER_SET(v, 13, 0)
-+
-+/* SCALER_SRC_C_POS */
-+#define SCALER_SRC_C_POS_GET_CH_POS(r)		SCALER_GET(r, 31, 16)
-+#define SCALER_SRC_C_POS_SET_CH_POS(v)		SCALER_SET(v, 31, 16)
-+#define SCALER_SRC_C_POS_GET_CV_POS(r)		SCALER_GET(r, 15, 0)
-+#define SCALER_SRC_C_POS_SET_CV_POS(v)		SCALER_SET(v, 15, 0)
-+
-+/* SCALER_DST_CFG */
-+#define SCALER_DST_CFG_GET_BYTE_SWAP(r)		SCALER_GET(r, 6, 5)
-+#define SCALER_DST_CFG_SET_BYTE_SWAP(v)		SCALER_SET(v, 6, 5)
-+#define SCALER_DST_CFG_GET_COLOR_FORMAT(r)	SCALER_GET(r, 4, 0)
-+#define SCALER_DST_CFG_SET_COLOR_FORMAT(v)	SCALER_SET(v, 4, 0)
-+
-+/* SCALER_DST_SPAN */
-+#define SCALER_DST_SPAN_GET_C_SPAN(r)		SCALER_GET(r, 29, 16)
-+#define SCALER_DST_SPAN_SET_C_SPAN(v)		SCALER_SET(v, 29, 16)
-+#define SCALER_DST_SPAN_GET_Y_SPAN(r)		SCALER_GET(r, 13, 0)
-+#define SCALER_DST_SPAN_SET_Y_SPAN(v)		SCALER_SET(v, 13, 0)
-+
-+/* SCALER_DST_WH */
-+#define SCALER_DST_WH_GET_WIDTH(r)		SCALER_GET(r, 29, 16)
-+#define SCALER_DST_WH_SET_WIDTH(v)		SCALER_SET(v, 29, 16)
-+#define SCALER_DST_WH_GET_HEIGHT(r)		SCALER_GET(r, 13, 0)
-+#define SCALER_DST_WH_SET_HEIGHT(v)		SCALER_SET(v, 13, 0)
-+
-+/* SCALER_DST_POS */
-+#define SCALER_DST_POS_GET_H_POS(r)		SCALER_GET(r, 29, 16)
-+#define SCALER_DST_POS_SET_H_POS(v)		SCALER_SET(v, 29, 16)
-+#define SCALER_DST_POS_GET_V_POS(r)		SCALER_GET(r, 13, 0)
-+#define SCALER_DST_POS_SET_V_POS(v)		SCALER_SET(v, 13, 0)
-+
-+/* SCALER_H_RATIO */
-+#define SCALER_H_RATIO_GET(r)			SCALER_GET(r, 18, 0)
-+#define SCALER_H_RATIO_SET(v)			SCALER_SET(v, 18, 0)
-+
-+/* SCALER_V_RATIO */
-+#define SCALER_V_RATIO_GET(r)			SCALER_GET(r, 18, 0)
-+#define SCALER_V_RATIO_SET(v)			SCALER_SET(v, 18, 0)
-+
-+/* SCALER_ROT_CFG */
-+#define SCALER_ROT_CFG_FLIP_X_EN		(1 << 3)
-+#define SCALER_ROT_CFG_FLIP_Y_EN		(1 << 2)
-+#define SCALER_ROT_CFG_GET_ROTMODE(r)		SCALER_GET(r, 1, 0)
-+#define SCALER_ROT_CFG_SET_ROTMODE(v)		SCALER_SET(v, 1, 0)
-+#define SCALER_ROT_MODE_90			1
-+#define SCALER_ROT_MODE_180			2
-+#define SCALER_ROT_MODE_270			3
-+
-+/* SCALER_HCOEF, SCALER_VCOEF */
-+#define SCALER_COEF_SHIFT(i)			(16 * (1 - (i) % 2))
-+#define SCALER_COEF_GET(r, i)			\
-+				(((r) >> SCALER_COEF_SHIFT(i)) & 0x1ff)
-+#define SCALER_COEF_SET(v, i)			\
-+				(((v) & 0x1ff) << SCALER_COEF_SHIFT(i))
-+
-+/* SCALER_CSC_COEFxy */
-+#define SCALER_CSC_COEF_GET(r)			SCALER_GET(r, 11, 0)
-+#define SCALER_CSC_COEF_SET(v)			SCALER_SET(v, 11, 0)
-+
-+/* SCALER_DITH_CFG */
-+#define SCALER_DITH_CFG_GET_R_TYPE(r)		SCALER_GET(r, 8, 6)
-+#define SCALER_DITH_CFG_SET_R_TYPE(v)		SCALER_SET(v, 8, 6)
-+#define SCALER_DITH_CFG_GET_G_TYPE(r)		SCALER_GET(r, 5, 3)
-+#define SCALER_DITH_CFG_SET_G_TYPE(v)		SCALER_SET(v, 5, 3)
-+#define SCALER_DITH_CFG_GET_B_TYPE(r)		SCALER_GET(r, 2, 0)
-+#define SCALER_DITH_CFG_SET_B_TYPE(v)		SCALER_SET(v, 2, 0)
-+
-+/* SCALER_TIMEOUT_CTRL */
-+#define SCALER_TIMEOUT_CTRL_GET_TIMER_VALUE(r)	SCALER_GET(r, 31, 16)
-+#define SCALER_TIMEOUT_CTRL_SET_TIMER_VALUE(v)	SCALER_SET(v, 31, 16)
-+#define SCALER_TIMEOUT_CTRL_GET_TIMER_DIV(r)	SCALER_GET(r, 7, 4)
-+#define SCALER_TIMEOUT_CTRL_SET_TIMER_DIV(v)	SCALER_SET(v, 7, 4)
-+#define SCALER_TIMEOUT_CTRL_TIMER_ENABLE	(1 << 0)
-+
-+/* SCALER_TIMEOUT_CNT */
-+#define SCALER_TIMEOUT_CTRL_GET_TIMER_COUNT(r)	SCALER_GET(r, 31, 16)
-+
-+/* SCALER_SRC_BLEND_COLOR */
-+#define SCALER_SRC_BLEND_COLOR_SEL_INV		(1 << 31)
-+#define SCALER_SRC_BLEND_COLOR_GET_SEL(r)	SCALER_GET(r, 30, 29)
-+#define SCALER_SRC_BLEND_COLOR_SET_SEL(v)	SCALER_SET(v, 30, 29)
-+#define SCALER_SRC_BLEND_COLOR_OP_SEL_INV	(1 << 28)
-+#define SCALER_SRC_BLEND_COLOR_GET_OP_SEL(r)	SCALER_GET(r, 27, 24)
-+#define SCALER_SRC_BLEND_COLOR_SET_OP_SEL(v)	SCALER_SET(v, 27, 24)
-+#define SCALER_SRC_BLEND_COLOR_GET_COLOR0(r)	SCALER_GET(r, 23, 16)
-+#define SCALER_SRC_BLEND_COLOR_SET_COLOR0(v)	SCALER_SET(v, 23, 16)
-+#define SCALER_SRC_BLEND_COLOR_GET_COLOR1(r)	SCALER_GET(r, 15, 8)
-+#define SCALER_SRC_BLEND_COLOR_SET_COLOR1(v)	SCALER_SET(v, 15, 8)
-+#define SCALER_SRC_BLEND_COLOR_GET_COLOR2(r)	SCALER_GET(r, 7, 0)
-+#define SCALER_SRC_BLEND_COLOR_SET_COLOR2(v)	SCALER_SET(v, 7, 0)
-+
-+/* SCALER_SRC_BLEND_ALPHA */
-+#define SCALER_SRC_BLEND_ALPHA_SEL_INV		(1 << 31)
-+#define SCALER_SRC_BLEND_ALPHA_GET_SEL(r)	SCALER_GET(r, 30, 29)
-+#define SCALER_SRC_BLEND_ALPHA_SET_SEL(v)	SCALER_SET(v, 30, 29)
-+#define SCALER_SRC_BLEND_ALPHA_OP_SEL_INV	(1 << 28)
-+#define SCALER_SRC_BLEND_ALPHA_GET_OP_SEL(r)	SCALER_GET(r, 27, 24)
-+#define SCALER_SRC_BLEND_ALPHA_SET_OP_SEL(v)	SCALER_SET(v, 27, 24)
-+#define SCALER_SRC_BLEND_ALPHA_GET_ALPHA(r)	SCALER_GET(r, 7, 0)
-+#define SCALER_SRC_BLEND_ALPHA_SET_ALPHA(v)	SCALER_SET(v, 7, 0)
-+
-+/* SCALER_DST_BLEND_COLOR */
-+#define SCALER_DST_BLEND_COLOR_SEL_INV		(1 << 31)
-+#define SCALER_DST_BLEND_COLOR_GET_SEL(r)	SCALER_GET(r, 30, 29)
-+#define SCALER_DST_BLEND_COLOR_SET_SEL(v)	SCALER_SET(v, 30, 29)
-+#define SCALER_DST_BLEND_COLOR_OP_SEL_INV	(1 << 28)
-+#define SCALER_DST_BLEND_COLOR_GET_OP_SEL(r)	SCALER_GET(r, 27, 24)
-+#define SCALER_DST_BLEND_COLOR_SET_OP_SEL(v)	SCALER_SET(v, 27, 24)
-+#define SCALER_DST_BLEND_COLOR_GET_COLOR0(r)	SCALER_GET(r, 23, 16)
-+#define SCALER_DST_BLEND_COLOR_SET_COLOR0(v)	SCALER_SET(v, 23, 16)
-+#define SCALER_DST_BLEND_COLOR_GET_COLOR1(r)	SCALER_GET(r, 15, 8)
-+#define SCALER_DST_BLEND_COLOR_SET_COLOR1(v)	SCALER_SET(v, 15, 8)
-+#define SCALER_DST_BLEND_COLOR_GET_COLOR2(r)	SCALER_GET(r, 7, 0)
-+#define SCALER_DST_BLEND_COLOR_SET_COLOR2(v)	SCALER_SET(v, 7, 0)
-+
-+/* SCALER_DST_BLEND_ALPHA */
-+#define SCALER_DST_BLEND_ALPHA_SEL_INV		(1 << 31)
-+#define SCALER_DST_BLEND_ALPHA_GET_SEL(r)	SCALER_GET(r, 30, 29)
-+#define SCALER_DST_BLEND_ALPHA_SET_SEL(v)	SCALER_SET(v, 30, 29)
-+#define SCALER_DST_BLEND_ALPHA_OP_SEL_INV	(1 << 28)
-+#define SCALER_DST_BLEND_ALPHA_GET_OP_SEL(r)	SCALER_GET(r, 27, 24)
-+#define SCALER_DST_BLEND_ALPHA_SET_OP_SEL(v)	SCALER_SET(v, 27, 24)
-+#define SCALER_DST_BLEND_ALPHA_GET_ALPHA(r)	SCALER_GET(r, 7, 0)
-+#define SCALER_DST_BLEND_ALPHA_SET_ALPHA(v)	SCALER_SET(v, 7, 0)
-+
-+/* SCALER_FILL_COLOR */
-+#define SCALER_FILL_COLOR_GET_ALPHA(r)		SCALER_GET(r, 31, 24)
-+#define SCALER_FILL_COLOR_SET_ALPHA(v)		SCALER_SET(v, 31, 24)
-+#define SCALER_FILL_COLOR_GET_FILL_COLOR0(r)	SCALER_GET(r, 23, 16)
-+#define SCALER_FILL_COLOR_SET_FILL_COLOR0(v)	SCALER_SET(v, 23, 16)
-+#define SCALER_FILL_COLOR_GET_FILL_COLOR1(r)	SCALER_GET(r, 15, 8)
-+#define SCALER_FILL_COLOR_SET_FILL_COLOR1(v)	SCALER_SET(v, 15, 8)
-+#define SCALER_FILL_COLOR_GET_FILL_COLOR2(r)	SCALER_GET(r, 7, 0)
-+#define SCALER_FILL_COLOR_SET_FILL_COLOR2(v)	SCALER_SET(v, 7, 0)
-+
-+/* SCALER_ADDR_Q_CONFIG */
-+#define SCALER_ADDR_Q_CONFIG_RST		(1 << 0)
-+
-+/* SCALER_SRC_ADDR_Q_STATUS */
-+#define SCALER_SRC_ADDR_Q_STATUS_Y_FULL		(1 << 23)
-+#define SCALER_SRC_ADDR_Q_STATUS_Y_EMPTY	(1 << 22)
-+#define SCALER_SRC_ADDR_Q_STATUS_GET_Y_WR_IDX(r)	SCALER_GET(r, 21, 16)
-+#define SCALER_SRC_ADDR_Q_STATUS_CB_FULL	(1 << 15)
-+#define SCALER_SRC_ADDR_Q_STATUS_CB_EMPTY	(1 << 14)
-+#define SCALER_SRC_ADDR_Q_STATUS_GET_CB_WR_IDX(r)	SCALER_GET(r, 13, 8)
-+#define SCALER_SRC_ADDR_Q_STATUS_CR_FULL	(1 << 7)
-+#define SCALER_SRC_ADDR_Q_STATUS_CR_EMPTY	(1 << 6)
-+#define SCALER_SRC_ADDR_Q_STATUS_GET_CR_WR_IDX(r)	SCALER_GET(r, 5, 0)
-+
-+/* SCALER_DST_ADDR_Q_STATUS */
-+#define SCALER_DST_ADDR_Q_STATUS_Y_FULL		(1 << 23)
-+#define SCALER_DST_ADDR_Q_STATUS_Y_EMPTY	(1 << 22)
-+#define SCALER_DST_ADDR_Q_STATUS_GET_Y_WR_IDX(r)	SCALER_GET(r, 21, 16)
-+#define SCALER_DST_ADDR_Q_STATUS_CB_FULL	(1 << 15)
-+#define SCALER_DST_ADDR_Q_STATUS_CB_EMPTY	(1 << 14)
-+#define SCALER_DST_ADDR_Q_STATUS_GET_CB_WR_IDX(r)	SCALER_GET(r, 13, 8)
-+#define SCALER_DST_ADDR_Q_STATUS_CR_FULL	(1 << 7)
-+#define SCALER_DST_ADDR_Q_STATUS_CR_EMPTY	(1 << 6)
-+#define SCALER_DST_ADDR_Q_STATUS_GET_CR_WR_IDX(r)	SCALER_GET(r, 5, 0)
-+
-+/* SCALER_CRC_COLOR00_10 */
-+#define SCALER_CRC_COLOR00_10_GET_00(r)		SCALER_GET(r, 31, 16)
-+#define SCALER_CRC_COLOR00_10_GET_10(r)		SCALER_GET(r, 15, 0)
-+
-+/* SCALER_CRC_COLOR20_30 */
-+#define SCALER_CRC_COLOR20_30_GET_20(r)		SCALER_GET(r, 31, 16)
-+#define SCALER_CRC_COLOR20_30_GET_30(r)		SCALER_GET(r, 15, 0)
-+
-+/* SCALER_CRC_COLOR01_11 */
-+#define SCALER_CRC_COLOR01_11_GET_01(r)		SCALER_GET(r, 31, 16)
-+#define SCALER_CRC_COLOR01_11_GET_11(r)		SCALER_GET(r, 15, 0)
-+
-+/* SCALER_CRC_COLOR21_31 */
-+#define SCALER_CRC_COLOR21_31_GET_21(r)		SCALER_GET(r, 31, 16)
-+#define SCALER_CRC_COLOR21_31_GET_31(r)		SCALER_GET(r, 15, 0)
-+
-+#endif /* EXYNOS_REGS_SCALER_H */
--- 
-2.14.2
+Anything that I could still clarify here I'll be happy to explain :)
 
+> > Hello,
+> >
+> > On Tue, Oct 10, 2017 at 07:58:31AM +0000, Han, Nandor (GE Healthcare)
+> > wrote:
+> > > > > > That doesn't sound like a good fix but more like a work around.
+> > > > > > Which other options did you test to fix your problem?
+> > > > > >
+> > > > >
+> > > > > I haven't tried any other, because except using maybe, ioctl I
+> > > > > haven't got anything better.
+> > > >
+> > > > My question didn't target where to configure the buffer size
+> > > > instead of dts. I wonder if it would help to change the fifo
+> > > > watermark limits for
+> > example.
+> > > >
+> > >
+> > > Ok. Sorry I didn't understand correct. Watermark will not help in
+> > > this case because it is used only to trigger the moving of the data
+> > > from RX FIFO to DMA buffer.  The iMX DMA (check the iMX6 RM
+> > > A.3.1.2.4 since is missing from iMX53 RM) will only return data to
+> > > serial driver when no more
+> > data exist in the RX FIFO (is using aging timer for this check) or BD
+> > (DMA
+> > buffer) is full. If data is sent continuously DMA will return data to
+> > driver only when BD is full.
+> >
+> > I read once over the description but I failed to understand it. At
+> > least it talks about water mark levels and min(WML-1,Count) which
+> > makes me think that the DMA script makes use of water marking too and
+> > my idea to play with that instead of buffer sizes might be sensible.
+> >
+> 
+> :). It is tricky, I agree. I will try to explain it even though I think the most
+> important part is to understand that watermark level control when data is
+> moved from out from rx FIFO  to DMA buffer (BD) and is not the trigger that
+> returns the data from DMA buffer (BD) to serial driver (which is the one that I
+> need).
+> 
+> The SDMA script is using 2 triggers to move data from rx FIFO to DMA buffer
+> (BD): 1) watermark hit and 2) aging timer. It ignores completely the "Idle line"
+> trigger. When watermark trigger is received it will move "min(WML-1,BD
+> count)" data from rx FIFO to BD. After this step in the rx FIFO will remain
+> always at least 1 byte (since we move WML-1). The last byte will be moved
+> based on the aging timer. During which SDMA will check if more data is
+> available and move the rest. SDMA will return the BD in 2 situations: 1) BD is
+> full 2) during aging time trigger the rx FIFO is empty.
+> 
+> > > So what we need here is a trigger that will force DMA to return data
+> > > faster to serial driver. The only one that I could find was the size
+> > > of the buffer. Of course another way will be to create different
+> > > SDMA scripts that can do all kinds of handling -- but dint' want to
+> > > go on that route :)
+> >
+> > :-)
+> >
+> > > > > Our problem is that in our system some serial ports needs to
+> > > > > have really low data latency, where others trade more bytes over
+> > > > > data latency. This situation results in a need of beeing able to
+> > > > > have different DMA buffer size for different ports.
+> > > > >
+> > > > > How can DMA buffer size affect latency?
+> > > > > DMA works like this: (To answer to your question DMA buffer is
+> > > > > not
+> > > > > FIFO)  1. Transfer the data from HW FIFO to DMA buffer based on
+> > > > > some interrupts (character received, etc)  2. Transfer the DMA
+> > > > > buffer back to serial port based on some events (buffer full,
+> > > > > aging timer, etc)  3. Serial
+> > > > port forwards to tty buffer.
+> > > >
+> > > > BTW In the past I saw the serial core introduce latency, too. Are
+> > > > you sure that's not your bottle neck?
+> > >
+> > > Can you be more specific?
+> >
+> > http://www.spinics.net/lists/linux-serial/msg17767.html
+> >
+> > > > > Data availability to consumer depends on: DMA buffer size, baud
+> > > > > rate and communication pattern. By communication patter I'm
+> > > > > refering that we send data continuoselly (serial line is never
+> > > > > idle) or packet by packet (serial line is idle in between)
+> > > > > Example:
+> > > > >       Baud: 19200 (1Byte = 0.52 ms)
+> > > > >       DMA buffer size: 100 bytes
+> > > > >       Communication pattern: continuously
+> > > > >       =>  DMA will return data to serial port only when DMA buffer is
+> > > > >       full, since the communication is continuously. This result in a
+> > > > >       data latency of 0.52 ms* 100bytes = 52ms. In case the buffer
+> > > > >       will be 200bytes the letency will be double.
+> > > > >
+> > > > > I agree with you, this is not directly a hw property but a DMA
+> > > > > configuration
+> > > > item.
+> > > > > But I've found this to be the best way to configure this
+> > > > > comparing with using
+> > > > ioctl.
+> > > > >
+> > > > > Let me know if you need more clarification and I would really be
+> > > > > open to other options that will solve our problem.
+> > > > >
+> > > > > <snip>
+> > > > >
+> > > > > > > +- fsl,dma-size : Indicate the size of the DMA buffer and
+> > > > > > > +its periods
+> > > > > >
+> > > > > > This is a sparse description, just from reading that I don't
+> > > > > > understand what it does.
+> > > > > >
+> > > > >
+> > > > > Serial driver configures a circular ring of buffers for DMA.
+> > > > > Here we can configure the size and the number of buffers.
+> > > >
+> > > > The problem is: How should a person, who wants to make available a
+> > > > port on a machine via dts, choose what value to use for fsl,dma-size?
+> > >
+> > > It doesn't have too. If this configuration is not provided the
+> > > serial port will
+> > have a default value.
+> > > The user has the possibility to tweak this settings in case is needed.
+> >
+> > "The default value works in general" is no good justification to not
+> > provide easy-to-grasp and well documented knobs.
+> >
+> 
+> I agree with you on this. But my intention was to say that the driver is using
+> the same settings as before and users are not impacted by this change, and I
+> only add the option to control that value.
+> 
+> > Best regards
+> > Uwe
+> >
+> 
+> Regards,
+>     Nandor
+> 
+> > --
+> > Pengutronix e.K.                           | Uwe Kleine-König            |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-serial" in the
+> body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
