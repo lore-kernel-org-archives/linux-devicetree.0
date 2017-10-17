@@ -1,25 +1,73 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 8/9] ARM: dts: rockchip: Add io domains for rk3288-vyasa
-Date: Tue, 17 Oct 2017 21:22:27 +0200
-Message-ID: <4522560.db0ptWQylr@phil>
-References: <1508156187-27519-1-git-send-email-jagan@amarulasolutions.com> <1508156187-27519-9-git-send-email-jagan@amarulasolutions.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 3/4] PCI: dwc: dra7xx: Add support for SoC specific
+ compatible strings
+Date: Tue, 17 Oct 2017 14:23:02 -0500
+Message-ID: <20171017192302.GK5641@bhelgaas-glaptop.roam.corp.google.com>
+References: <20171010101606.15951-1-kishon@ti.com>
+ <20171010101606.15951-4-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508156187-27519-9-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171010101606.15951-4-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 16. Oktober 2017, 17:46:26 CEST schrieb Jagan Teki:
-> Add io domains supported by rk3288-vyasa board.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+s/PCI: dwc: dra7xx: Add support for SoC specific compatible strings/
+  PCI: dra7xx: Add dra726 and dra746 compatible strings/
+  
+I think including "dwc" makes sense for things that involve the DW
+core, but this is really dra7xx-specific.  And I think the *support*
+for SoC-specific strings was already there; it looks like this patch
+simply adds some of those strings.
 
-applied for 4.15 after moving it below the i2c node
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Oct 10, 2017 at 03:46:05PM +0530, Kishon Vijay Abraham I wrote:
+> dra74x/dra76x and dra72x has separate compatible strings. Add support
+> for these compatible strings in pci-dra7xx driver.
+
+s/has separate/have separate/
+
+> This is a preparatory patch for adding 2-lane mode support and
+> dra74/dra72 should add it's own driver data for 2-lane mode
+> configuration.
+
+s/it's/its/
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> ---
+>  drivers/pci/dwc/pci-dra7xx.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
+> index 362607f727ee..78a87a8f1362 100644
+> --- a/drivers/pci/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/dwc/pci-dra7xx.c
+> @@ -542,6 +542,22 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+>  		.compatible = "ti,dra7-pcie-ep",
+>  		.data = &dra7xx_pcie_ep_of_data,
+>  	},
+> +	{
+> +		.compatible = "ti,dra746-pcie-rc",
+> +		.data = &dra7xx_pcie_rc_of_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra746-pcie-ep",
+> +		.data = &dra7xx_pcie_ep_of_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra726-pcie-rc",
+> +		.data = &dra7xx_pcie_rc_of_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra726-pcie-ep",
+> +		.data = &dra7xx_pcie_ep_of_data,
+> +	},
+>  	{},
+>  };
+>  
+> -- 
+> 2.11.0
+> 
