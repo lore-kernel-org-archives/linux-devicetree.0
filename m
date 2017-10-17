@@ -1,107 +1,550 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv3 02/12] ARM: dts: imx6-tx6: remove obsolete eeti,egalax_ts
-Date: Tue, 17 Oct 2017 11:17:53 +0200
-Message-ID: <1508231883-12067-3-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCHv3 12/12] ARM: dts: imx: add support for TX6 modules on MB7 baseboard
+Date: Tue, 17 Oct 2017 11:18:03 +0200
+Message-ID: <1508231883-12067-13-git-send-email-LW@KARO-electronics.de>
 References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
  <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGRpc3BsYXksIHRoYXQgaW5jb3Jwb3JhdGVzIHRoaXMgdG91Y2hwYW5lbCBpcyBvYnNvbGV0
-ZSBhbmQgd29uJ3QKYmUgc3VwcG9ydGVkIGFueSBtb3JlLgoKU2lnbmVkLW9mZi1ieTogTG90aGFy
-IFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZkbC10eDZ1LTgxMXguZHRzICAgICB8IDIzICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiBh
-cmNoL2FybS9ib290L2R0cy9pbXg2ZGwtdHg2dS04MXh4LW1iNy5kdHMgfCAyMiArLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tCiBhcmNoL2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExMTAuZHRzICAgICAg
-fCAyMSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEt
-MTF4MC1tYjcuZHRzICB8IDIyICstLS0tLS0tLS0tLS0tLS0tLS0tLS0KIDQgZmlsZXMgY2hhbmdl
-ZCwgMyBpbnNlcnRpb25zKCspLCA4NSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2ZGwtdHg2dS04MTF4LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZk
-bC10eDZ1LTgxMXguZHRzCmluZGV4IDVlMGM2YmIuLmYwZjc1OWEgMTAwNjQ0Ci0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZkbC10eDZ1LTgxMXguZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZkbC10eDZ1LTgxMXguZHRzCkBAIC0xLDUgKzEsNSBAQAogLyoKLSAqIENvcHlyaWdodCAy
-MDE0LTIwMTYgTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgorICogQ29w
-eXJpZ2h0IDIwMTQtMjAxNyBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+
-CiAgKgogICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhl
-ciB1bmRlciB0aGUgdGVybXMKICAqIG9mIHRoZSBHUEwgb3IgdGhlIFgxMSBsaWNlbnNlLCBhdCB5
-b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbApAQCAtOTgsMTkgKzk4LDYgQEAKIAl9Owog
-fTsKIAotJmkyYzMgewotCXBvbHl0b3VjaDI6IGVldGlAMDQgewotCQljb21wYXRpYmxlID0gImVl
-dGksZWdhbGF4X3RzIjsKLQkJcmVnID0gPDB4MDQ+OwotCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1
-bHQiOwotCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZWV0aT47Ci0JCWludGVycnVwdC1wYXJlbnQg
-PSA8JmdwaW8zPjsKLQkJaW50ZXJydXB0cyA9IDwyMiAwPjsKLQkJd2FrZXVwLWdwaW9zID0gPCZn
-cGlvMyAyMiBHUElPX0FDVElWRV9ISUdIPjsKLQkJd2FrZXVwLXNvdXJjZTsKLQl9OwotfTsKLQog
-JmtwcCB7CiAJc3RhdHVzID0gImRpc2FibGVkIjsgLyogcGFkIGNvbmZsaWN0IHdpdGggYmFja2xp
-Z2h0MSBQV00gKi8KIH07CkBAIC0xNjgsMTEgKzE1NSwzIEBACiAmcHdtMSB7CiAJc3RhdHVzID0g
-Im9rYXkiOwogfTsKLQotJmlvbXV4YyB7Ci0JcGluY3RybF9lZXRpOiBlZXRpZ3JwIHsKLQkJZnNs
-LHBpbnMgPSA8Ci0JCQlNWDZRRExfUEFEX0VJTV9EMjJfX0dQSU8zX0lPMjIgMHgxYjBiMSAvKiBJ
-bnRlcnJ1cHQgKi8KLQkJPjsKLQl9OwotfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZkbC10eDZ1LTgxeHgtbWI3LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC10eDZ1
-LTgxeHgtbWI3LmR0cwppbmRleCBiOWE3ODNmLi5jODE3MzI0IDEwMDY0NAotLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2ZGwtdHg2dS04MXh4LW1iNy5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NmRsLXR4NnUtODF4eC1tYjcuZHRzCkBAIC0xLDUgKzEsNSBAQAogLyoKLSAqIENvcHly
-aWdodCAyMDE2IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5kZT4KKyAqIENv
-cHlyaWdodCAyMDE2LTIwMTcgTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRl
-PgogICoKICAqIFRoaXMgZmlsZSBpcyBkdWFsLWxpY2Vuc2VkOiB5b3UgY2FuIHVzZSBpdCBlaXRo
-ZXIgdW5kZXIgdGhlIHRlcm1zCiAgKiBvZiB0aGUgR1BMIG9yIHRoZSBYMTEgbGljZW5zZSwgYXQg
-eW91ciBvcHRpb24uIE5vdGUgdGhhdCB0aGlzIGR1YWwKQEAgLTEwNiwxOCArMTA2LDYgQEAKIAl4
-Y2VpdmVyLXN1cHBseSA9IDwmcmVnXzN2Mz47CiB9OwogCi0maTJjMyB7Ci0JcG9seXRvdWNoMTog
-ZWV0aUAwNCB7Ci0JCWNvbXBhdGlibGUgPSAiZWV0aSxlZ2FsYXhfdHMiOwotCQlyZWcgPSA8MHgw
-ND47Ci0JCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Ci0JCXBpbmN0cmwtMCA9IDwmcGluY3Ry
-bF9lZXRpPjsKLQkJaW50ZXJydXB0cy1leHRlbmRlZCA9IDwmZ3BpbzMgMjIgSVJRX1RZUEVfRURH
-RV9GQUxMSU5HPjsKLQkJd2FrZXVwLWdwaW9zID0gPCZncGlvMyAyMiBHUElPX0FDVElWRV9ISUdI
-PjsKLQkJd2FrZXVwLXNvdXJjZTsKLQl9OwotfTsKLQogJmtwcCB7CiAJc3RhdHVzID0gImRpc2Fi
-bGVkIjsgLyogcGFkcyBwYXJ0aWFsbHkgY2xhc2ggd2l0aCBiYWNrbGlnaHQxIFBXTSAqLwogfTsK
-QEAgLTI0NSwxMSArMjMzLDMgQEAKICZwd20xIHsKIAlzdGF0dXMgPSAib2theSI7CiB9OwotCi0m
-aW9tdXhjIHsKLQlwaW5jdHJsX2VldGk6IGVldGlncnAgewotCQlmc2wscGlucyA9IDwKLQkJCU1Y
-NlFETF9QQURfRUlNX0QyMl9fR1BJTzNfSU8yMiAweDFiMGIxIC8qIEludGVycnVwdCAqLwotCQk+
-OwotCX07Ci19OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtdHg2cS0xMTEw
-LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLXR4NnEtMTExMC5kdHMKaW5kZXggMGY1ZTYz
-OC4uOTAwNTU3ZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtdHg2cS0xMTEw
-LmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExMTAuZHRzCkBAIC05OCwx
-OSArOTgsNiBAQAogCX07CiB9OwogCi0maTJjMyB7Ci0JcG9seXRvdWNoMTogZWV0aUAwNCB7Ci0J
-CWNvbXBhdGlibGUgPSAiZWV0aSxlZ2FsYXhfdHMiOwotCQlyZWcgPSA8MHgwND47Ci0JCXBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7Ci0JCXBpbmN0cmwtMCA9IDwmcGluY3RybF9lZXRpPjsKLQkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzM+OwotCQlpbnRlcnJ1cHRzID0gPDIyIDA+OwotCQl3
-YWtldXAtZ3Bpb3MgPSA8JmdwaW8zIDIyIEdQSU9fQUNUSVZFX0hJR0g+OwotCQl3YWtldXAtc291
-cmNlOwotCX07Ci19OwotCiAma3BwIHsKIAlzdGF0dXMgPSAiZGlzYWJsZWQiOyAvKiBwYWQgY29u
-ZmxpY3Qgd2l0aCBiYWNrbGlnaHQxIFBXTSAqLwogfTsKQEAgLTE3MiwxMSArMTU5LDMgQEAKICZz
-YXRhIHsKIAlzdGF0dXMgPSAib2theSI7CiB9OwotCi0maW9tdXhjIHsKLQlwaW5jdHJsX2VldGk6
-IGVldGlncnAgewotCQlmc2wscGlucyA9IDwKLQkJCU1YNlFETF9QQURfRUlNX0QyMl9fR1BJTzNf
-SU8yMiAweDFiMGIxIC8qIEludGVycnVwdCAqLwotCQk+OwotCX07Ci19OwpkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtdHg2cS0xMXgwLW1iNy5kdHMgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg2cS10eDZxLTExeDAtbWI3LmR0cwppbmRleCBkNzhiMTI5Li42YjQyYzQ0IDEwMDY0
-NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExeDAtbWI3LmR0cworKysgYi9h
-cmNoL2FybS9ib290L2R0cy9pbXg2cS10eDZxLTExeDAtbWI3LmR0cwpAQCAtMSw1ICsxLDUgQEAK
-IC8qCi0gKiBDb3B5cmlnaHQgMjAxNiBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25p
-Y3MuZGU+CisgKiBDb3B5cmlnaHQgMjAxNi0yMDE3IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1l
-bGVjdHJvbmljcy5kZT4KICAqCiAgKiBUaGlzIGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNh
-biB1c2UgaXQgZWl0aGVyIHVuZGVyIHRoZSB0ZXJtcwogICogb2YgdGhlIEdQTCBvciB0aGUgWDEx
-IGxpY2Vuc2UsIGF0IHlvdXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsCkBAIC0xMDcsMTgg
-KzEwNyw2IEBACiAJeGNlaXZlci1zdXBwbHkgPSA8JnJlZ18zdjM+OwogfTsKIAotJmkyYzMgewot
-CXBvbHl0b3VjaDE6IGVldGlAMDQgewotCQljb21wYXRpYmxlID0gImVldGksZWdhbGF4X3RzIjsK
-LQkJcmVnID0gPDB4MDQ+OwotCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwotCQlwaW5jdHJs
-LTAgPSA8JnBpbmN0cmxfZWV0aT47Ci0JCWludGVycnVwdHMtZXh0ZW5kZWQgPSA8JmdwaW8zIDIy
-IElSUV9UWVBFX0VER0VfRkFMTElORz47Ci0JCXdha2V1cC1ncGlvcyA9IDwmZ3BpbzMgMjIgR1BJ
-T19BQ1RJVkVfSElHSD47Ci0JCXdha2V1cC1zb3VyY2U7Ci0JfTsKLX07Ci0KICZpcHUyIHsKIAlz
-dGF0dXMgPSAiZGlzYWJsZWQiOwogfTsKQEAgLTI1NCwxMSArMjQyLDMgQEAKICZzYXRhIHsKIAlz
-dGF0dXMgPSAib2theSI7CiB9OwotCi0maW9tdXhjIHsKLQlwaW5jdHJsX2VldGk6IGVldGlncnAg
-ewotCQlmc2wscGlucyA9IDwKLQkJCU1YNlFETF9QQURfRUlNX0QyMl9fR1BJTzNfSU8yMiAweDFi
-MGIxIC8qIEludGVycnVwdCAqLwotCQk+OwotCX07Ci19OwotLSAKMi4xLjQKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Create .dts files for various Ka-Ro electronics TX modules on the MB7
+baseboard.
+
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+---
+ arch/arm/boot/dts/Makefile                  |  8 ++++
+ arch/arm/boot/dts/imx6dl-tx6s-8034-mb7.dts  | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6dl-tx6s-8035-mb7.dts  | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6dl-tx6u-8033-mb7.dts  | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6dl-tx6u-80xx-mb7.dts  | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts  | 17 +--------
+ arch/arm/boot/dts/imx6q-tx6q-1036-mb7.dts   | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-tx6q-10x0-mb7.dts   | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qp-tx6qp-8037-mb7.dts | 48 ++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qp-tx6qp-8137-mb7.dts | 57 +++++++++++++++++++++++++++++
+ 10 files changed, 403 insertions(+), 15 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6dl-tx6s-8034-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-tx6s-8035-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-tx6u-8033-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-tx6u-80xx-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-tx6q-1036-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-tx6q-10x0-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6qp-tx6qp-8037-mb7.dts
+ create mode 100644 arch/arm/boot/dts/imx6qp-tx6qp-8137-mb7.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index add34d1..79226b7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -389,9 +389,13 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-ts4900.dtb \
+ 	imx6dl-tx6dl-comtft.dtb \
+ 	imx6dl-tx6s-8034.dtb \
++	imx6dl-tx6s-8034-mb7.dtb \
+ 	imx6dl-tx6s-8035.dtb \
++	imx6dl-tx6s-8035-mb7.dtb \
+ 	imx6dl-tx6u-801x.dtb \
++	imx6dl-tx6u-80xx-mb7.dtb \
+ 	imx6dl-tx6u-8033.dtb \
++	imx6dl-tx6u-8033-mb7.dtb \
+ 	imx6dl-tx6u-811x.dtb \
+ 	imx6dl-tx6u-81xx-mb7.dtb \
+ 	imx6dl-udoo.dtb \
+@@ -450,6 +454,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-tx6q-1020.dtb \
+ 	imx6q-tx6q-1020-comtft.dtb \
+ 	imx6q-tx6q-1036.dtb \
++	imx6q-tx6q-1036-mb7.dtb \
++	imx6q-tx6q-10x0-mb7.dtb \
+ 	imx6q-tx6q-1110.dtb \
+ 	imx6q-tx6q-11x0-mb7.dtb \
+ 	imx6q-udoo.dtb \
+@@ -463,7 +469,9 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6qp-sabreauto.dtb \
+ 	imx6qp-sabresd.dtb \
+ 	imx6qp-tx6qp-8037.dtb \
++	imx6qp-tx6qp-8037-mb7.dtb \
+ 	imx6qp-tx6qp-8137.dtb \
++	imx6qp-tx6qp-8137-mb7.dtb \
+ 	imx6qp-wandboard-revd1.dtb \
+ 	imx6qp-zii-rdu2.dtb
+ dtb-$(CONFIG_SOC_IMX6SL) += \
+diff --git a/arch/arm/boot/dts/imx6dl-tx6s-8034-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6s-8034-mb7.dts
+new file mode 100644
+index 0000000..fc23b4d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-tx6s-8034-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6dl-tx6s-8034.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6S-8034 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6dl-tx6s-8035-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6s-8035-mb7.dts
+new file mode 100644
+index 0000000..4101c65
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-tx6s-8035-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6dl-tx6s-8035.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6U-8035 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6dl-tx6u-8033-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6u-8033-mb7.dts
+new file mode 100644
+index 0000000..d34189f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-tx6u-8033-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6dl-tx6u-8033.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6U-8033 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6dl-tx6u-80xx-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6u-80xx-mb7.dts
+new file mode 100644
+index 0000000..aef5fcc
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-tx6u-80xx-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6dl-tx6u-801x.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6U-8030/-8010/-8012 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
+index 21eaec9..c4588fb 100644
+--- a/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
++++ b/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
+@@ -40,22 +40,9 @@
+  */
+ 
+ /dts-v1/;
+-#include "imx6dl.dtsi"
+-#include "imx6qdl-tx6.dtsi"
+-#include "imx6qdl-tx6-lvds.dtsi"
++#include "imx6dl-tx6u-811x.dts"
+ #include "imx6qdl-tx6-mb7.dtsi"
+ 
+ / {
+-	model = "Ka-Ro electronics TX6U-81xx Module on MB7 baseboard";
+-	compatible = "karo,imx6dl-tx6dl", "fsl,imx6dl";
+-};
+-
+-&backlight0 {
+-	pwms = <&pwm2 0 500000 PWM_POLARITY_INVERTED>;
+-	turn-on-delay-ms = <35>;
+-};
+-
+-&backlight1 {
+-	pwms = <&pwm1 0 500000 PWM_POLARITY_INVERTED>;
+-	turn-on-delay-ms = <35>;
++	model = "Ka-Ro electronics TX6U-8130/-8110 Module on MB7 baseboard";
+ };
+diff --git a/arch/arm/boot/dts/imx6q-tx6q-1036-mb7.dts b/arch/arm/boot/dts/imx6q-tx6q-1036-mb7.dts
+new file mode 100644
+index 0000000..9ffbb0fe7
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-tx6q-1036-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6q-tx6q-1036.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6Q-1036 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6q-tx6q-10x0-mb7.dts b/arch/arm/boot/dts/imx6q-tx6q-10x0-mb7.dts
+new file mode 100644
+index 0000000..d43a5d8
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-tx6q-10x0-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6q-tx6q-1010.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6Q-1010/-1030 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6qp-tx6qp-8037-mb7.dts b/arch/arm/boot/dts/imx6qp-tx6qp-8037-mb7.dts
+new file mode 100644
+index 0000000..92b38e6
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qp-tx6qp-8037-mb7.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6qp-tx6qp-8037.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6Q-8037 Module on MB7 baseboard";
++};
+diff --git a/arch/arm/boot/dts/imx6qp-tx6qp-8137-mb7.dts b/arch/arm/boot/dts/imx6qp-tx6qp-8137-mb7.dts
+new file mode 100644
+index 0000000..07ad707
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qp-tx6qp-8137-mb7.dts
+@@ -0,0 +1,57 @@
++/*
++ * Copyright 2017 Lothar Waßmann <LW@KARO-electronics.de>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "imx6qp-tx6qp-8137.dts"
++#include "imx6qdl-tx6-mb7.dtsi"
++
++/ {
++	model = "Ka-Ro electronics TX6Q-8137 Module on MB7 baseboard";
++	compatible = "karo,imx6qp-tx6qp", "fsl,imx6qp";
++};
++
++&ipu2 {
++	status = "disabled";
++};
++
++&sata {
++	status = "okay";
++};
+-- 
+2.1.4
