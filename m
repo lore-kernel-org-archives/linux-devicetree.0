@@ -1,260 +1,132 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 01/12] of: overlay.c: Remove comments that state the obvious, to reduce clutter
-Date: Tue, 17 Oct 2017 16:36:21 -0700
-Message-ID: <1508283392-18252-2-git-send-email-frowand.list@gmail.com>
-References: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508283392-18252-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Tue, 17 Oct 2017 16:45:56 -0700
+Message-ID: <59E69634.7020100@gmail.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <39f87f46-da67-11d9-4336-213c13025568@monstr.eu>
+ <8a168960-2dae-35cc-e610-0fe257c9121d@codethink.co.uk>
+ <CAL_JsqJxFJSE-=778oHvNgpaBzhX9mBSzh1a0ZMvwSG69qStLw@mail.gmail.com>
+ <CACxGe6vkxTwUw2ma_ykZQ0JsKUQTeffMC+g4pq6LnaN9qoY2_A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6vkxTwUw2ma_ykZQ0JsKUQTeffMC+g4pq6LnaN9qoY2_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On 10/17/17 06:38, Grant Likely wrote:
+> On Mon, Oct 16, 2017 at 8:45 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Mon, Oct 16, 2017 at 11:40 AM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+>>> On 16/10/17 06:36, Michal Simek wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 9.10.2017 22:39, Grant Likely wrote:
+>>>>>
+>>>>> Kernel Summit is now just over 2 weeks away and it is time to pull
+>>>>> together the schedule for the Devicetree workshop. Originally I
+>>>>> planned on just an afternoon, but I've got the room for the whole day,
+>>>>> so I've got a lot of flexibility on the schedule. Unscheduled time can
+>>>>> be used for hacking.
+>>>>>
+>>>>> Date: 26 Oct 2017
+>>>>> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
+>>>>> Location: Athens room - Hilton Prague
+>>>>>
+>>>>> If you plan to attend, make sure you update your OSSunmitE/ELCE
+>>>>> registration to include the DT Workshop (log in to access and modify
+>>>>> your registration):
+>>>>>
+>>>>>
+>>>>> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
+>>>>>
+>>>>> Here is my current list of topics in no particular order, including
+>>>>> the topic moderator:
+>>>>>
+>>>>> Runtime memory consumption (Rob Herring)
+>>>>> Overlay maintenance plan (TBC)
+>>>>> Stable ABI for devicetree (TBC)
+>>>>> DT YAML encoding (Pantelis Antoniou)
+>>>>> DT Schema format - option 1 (Pantelis Antoniou)
+>>>>> DT Schema format - option 2 (Grant Likely)
+>>>>> Sharing Generic bindings (TBC)
+>>>>> devicetree.org update (Grant)
+>>>>>
+>>>>> Reply to this email if you want to propose another topic.
+>>>>>
+>>>>> Reply privately if there is a particular topic you want to attend but
+>>>>> you are unable to be there in the morning or afternoon. I'll put the
+>>>>> actual agenda together a week out from the event.
+>>>>
+>>>>
+>>>> I would like to talk how to add support for AArch32 based on arm64 dts
+>>>> file.
+>>>>
+>>>> And next topic is discuss criteria for adding new DTS board files to
+>>>> kernel for supporting custom boards especially for arm32 which can end
+>>>> up with a lot of dts files in this folder.
+>>>> If make sense to permit only boards with something new or just enable
+>>>> reference boards to go in.
+>>>
+>>>
+>>> I am interested in this, as we seem to be repeating the quantity
+>>> issue with the board file of having many .dts sources in the kernel.
+>>
+>> The problem was not so much having board files in the kernel. It was
+>> how to scale support for boards and SoCs with each family structuring
+>> things their own, different way.
+>>
+>> IIRC, the ARM tree was at ~400 boards at the start of DT conversion.
+>> Now we're at ~1100 boards for arm/arm64. Plus we still have 264 that
+>> aren't converted to DT.
+>>
+>>> I'm not sure how to deal with this, on one hand only having the
+>>> reference (and possibly popular) boards is going to keep the size
+>>> down. On the other hand out of tree .dts files are going to be
+>>> difficult to find (or vanish with the vendor).
+>>
+>> Why do we care? What problem is that causing?
+> 
+> In fact, for many platforms that would be a good place to get to if
+> the firmware is providing the .dtb. Plus the DT data formats are so
+> simple that it is not difficult to get a DTB back into a DTS.
 
-Follows recommendations in Documentation/process/coding-style.rst,
-section 8, Commenting.
+No, it _is_ difficult to convert a DTB to a useful DTS.
 
-Some in function comments are promoted to function header comments.
+The DTB might not be easily extracted from a vendor provided
+boot image.
 
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
- drivers/of/overlay.c | 47 ++++++++++++++++++-----------------------------
- 1 file changed, 18 insertions(+), 29 deletions(-)
+You do not get a full DTS back from a decompiled DTB.  Phandle
+references are integers instead of strings.  Labels are missing.
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index af3b9a16df26..a42dd7b094c4 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -143,7 +143,6 @@ static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
- 	strcpy(new->value, target_path);
- 	strcpy(new->value + target_path_len, label_path);
- 
--	/* mark the property as dynamic */
- 	of_property_set_flag(new, OF_DYNAMIC);
- 
- 	return new;
-@@ -157,6 +156,10 @@ static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
- 
- }
- 
-+/*
-+ * Some special properties are not updated (no error returned).
-+ * Update of property in symbols node is not allowed.
-+ */
- static int of_overlay_apply_single_property(struct of_overlay *ov,
- 		struct device_node *target, struct property *prop,
- 		bool is_symbols_node)
-@@ -164,17 +167,14 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
- 	struct property *propn = NULL, *tprop;
- 	int ret = 0;
- 
--	/* NOTE: Multiple changes of single properties not supported */
- 	tprop = of_find_property(target, prop->name, NULL);
- 
--	/* special properties are not meant to be updated (silent NOP) */
- 	if (of_prop_cmp(prop->name, "name") == 0 ||
- 	    of_prop_cmp(prop->name, "phandle") == 0 ||
- 	    of_prop_cmp(prop->name, "linux,phandle") == 0)
- 		return 0;
- 
- 	if (is_symbols_node) {
--		/* changing a property in __symbols__ node not allowed */
- 		if (tprop)
- 			return -EINVAL;
- 		propn = dup_and_fixup_symbol_prop(ov, prop);
-@@ -185,10 +185,9 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
- 	if (propn == NULL)
- 		return -ENOMEM;
- 
--	/* not found? add */
- 	if (tprop == NULL)
- 		ret = of_changeset_add_property(&ov->cset, target, propn);
--	else /* found? update */
-+	else
- 		ret = of_changeset_update_property(&ov->cset, target, propn);
- 
- 	if (ret) {
-@@ -210,13 +209,11 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
- 	if (cname == NULL)
- 		return -ENOMEM;
- 
--	/* NOTE: Multiple mods of created nodes not supported */
- 	for_each_child_of_node(target, tchild)
- 		if (!of_node_cmp(cname, kbasename(tchild->full_name)))
- 			break;
- 
- 	if (tchild != NULL) {
--		/* new overlay phandle value conflicts with existing value */
- 		if (child->phandle)
- 			return -EINVAL;
- 
-@@ -224,12 +221,10 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
- 		ret = of_overlay_apply_one(ov, tchild, child, 0);
- 		of_node_put(tchild);
- 	} else {
--		/* create empty tree as a target */
- 		tchild = __of_node_dup(child, "%pOF/%s", target, cname);
- 		if (!tchild)
- 			return -ENOMEM;
- 
--		/* point to parent */
- 		tchild->parent = target;
- 
- 		ret = of_changeset_attach_node(&ov->cset, tchild);
-@@ -250,6 +245,8 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
-  * Note that the in case of an error the target node is left
-  * in a inconsistent state. Error recovery should be performed
-  * by using the changeset.
-+ *
-+ * Do not allow symbols node to have any children.
-  */
- static int of_overlay_apply_one(struct of_overlay *ov,
- 		struct device_node *target, const struct device_node *overlay,
-@@ -269,7 +266,6 @@ static int of_overlay_apply_one(struct of_overlay *ov,
- 		}
- 	}
- 
--	/* do not allow symbols node to have any children */
- 	if (is_symbols_node)
- 		return 0;
- 
-@@ -299,7 +295,6 @@ static int of_overlay_apply(struct of_overlay *ov)
- {
- 	int i, err;
- 
--	/* first we apply the overlays atomically */
- 	for (i = 0; i < ov->count; i++) {
- 		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
- 
-@@ -316,10 +311,10 @@ static int of_overlay_apply(struct of_overlay *ov)
- 
- /*
-  * Find the target node using a number of different strategies
-- * in order of preference
-+ * in order of preference:
-  *
-- * "target" property containing the phandle of the target
-- * "target-path" property containing the path of the target
-+ * 1) "target" property containing the phandle of the target
-+ * 2) "target-path" property containing the path of the target
-  */
- static struct device_node *find_target_node(struct device_node *info_node)
- {
-@@ -327,12 +322,10 @@ static struct device_node *find_target_node(struct device_node *info_node)
- 	u32 val;
- 	int ret;
- 
--	/* first try to go by using the target as a phandle */
- 	ret = of_property_read_u32(info_node, "target", &val);
- 	if (ret == 0)
- 		return of_find_node_by_phandle(val);
- 
--	/* now try to locate by path */
- 	ret = of_property_read_string(info_node, "target-path", &path);
- 	if (ret == 0)
- 		return of_find_node_by_path(path);
-@@ -397,7 +390,6 @@ static int of_build_overlay_info(struct of_overlay *ov,
- 	struct of_overlay_info *ovinfo;
- 	int cnt, err;
- 
--	/* worst case; every child is a node */
- 	cnt = 0;
- 	for_each_child_of_node(tree, node)
- 		cnt++;
-@@ -430,7 +422,6 @@ static int of_build_overlay_info(struct of_overlay *ov,
- 		cnt++;
- 	}
- 
--	/* if nothing filled, return error */
- 	if (cnt == 0) {
- 		kfree(ovinfo);
- 		return -ENODEV;
-@@ -486,7 +477,6 @@ int of_overlay_create(struct device_node *tree)
- 	struct of_overlay *ov;
- 	int err, id;
- 
--	/* allocate the overlay structure */
- 	ov = kzalloc(sizeof(*ov), GFP_KERNEL);
- 	if (ov == NULL)
- 		return -ENOMEM;
-@@ -505,7 +495,6 @@ int of_overlay_create(struct device_node *tree)
- 	}
- 	ov->id = id;
- 
--	/* build the overlay info structures */
- 	err = of_build_overlay_info(ov, tree);
- 	if (err) {
- 		pr_err("of_build_overlay_info() failed for tree@%pOF\n",
-@@ -520,18 +509,15 @@ int of_overlay_create(struct device_node *tree)
- 		goto err_free_idr;
- 	}
- 
--	/* apply the overlay */
- 	err = of_overlay_apply(ov);
- 	if (err)
- 		goto err_abort_trans;
- 
--	/* apply the changeset */
- 	err = __of_changeset_apply(&ov->cset);
- 	if (err)
- 		goto err_revert_overlay;
- 
- 
--	/* add to the tail of the overlay list */
- 	list_add_tail(&ov->node, &ov_list);
- 
- 	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
-@@ -554,13 +540,15 @@ int of_overlay_create(struct device_node *tree)
- }
- EXPORT_SYMBOL_GPL(of_overlay_create);
- 
--/* check whether the given node, lies under the given tree */
-+/*
-+ * check whether the given node, lies under the given tree
-+ * return 1 if under tree, else 0
-+ */
- static int overlay_subtree_check(struct device_node *tree,
- 		struct device_node *dn)
- {
- 	struct device_node *child;
- 
--	/* match? */
- 	if (tree == dn)
- 		return 1;
- 
-@@ -574,7 +562,10 @@ static int overlay_subtree_check(struct device_node *tree,
- 	return 0;
- }
- 
--/* check whether this overlay is the topmost */
-+/*
-+ * check whether this overlay is the topmost
-+ * return 1 if topmost, else 0
-+ */
- static int overlay_is_topmost(struct of_overlay *ov, struct device_node *dn)
- {
- 	struct of_overlay *ovt;
-@@ -595,7 +586,6 @@ static int overlay_is_topmost(struct of_overlay *ov, struct device_node *dn)
- 		}
- 	}
- 
--	/* overlay is topmost */
- 	return 1;
- }
- 
-@@ -645,7 +635,6 @@ int of_overlay_destroy(int id)
- 		goto out;
- 	}
- 
--	/* check whether the overlay is safe to remove */
- 	if (!overlay_removal_is_ok(ov)) {
- 		err = -EBUSY;
- 		goto out;
--- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>> It seems we are still no closer to having a DT repository outside
+>>> the kernel.
+>>
+>> In relationship to the above what problem would that solve? We've got
+>> all the platform maintainers and arm-soc maintainers to handle dts
+>> files. Mark and myself along with subsystem maintainers reviewing and
+>> applying device bindings. If you move all that to a separate
+>> repository, then you have me because no one else has volunteered. I'm
+>> pretty sure no one wants me as the single point of failure.
+> 
+
+
+> Yes. When it comes to the bindings, and schema files when we have
+> them, they should be maintained with the tools.
+
+Totally disagree.  I'm sure we'll have the same discussion we have had
+at various ELC and ELCE events, where a handful of people want to move
+the DTS files out of the kernel source tree, and the vast majority of
+the room is opposed to that.
+
+
+> 
+> g.
+> .
+> 
