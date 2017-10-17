@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 07/12] of: overlay: expand check of whether overlay changeset can be removed
-Date: Mon, 16 Oct 2017 18:17:49 -0700
-Message-ID: <1508203074-26917-8-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 12/12] of: overlay: remove unneeded check for NULL kbasename()
+Date: Mon, 16 Oct 2017 18:17:54 -0700
+Message-ID: <1508203074-26917-13-git-send-email-frowand.list@gmail.com>
 References: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
@@ -12,72 +12,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-The test of whether it is safe to remove an overlay changeset
-looked at whether any node in the overlay changeset was in a
-subtree rooted at any more recently applied overlay changeset
-node.
-
-The test failed to determine whether any node in the overlay
-changeset was the root of a subtree that contained a more
-recently applied overlay changeset node.  Add this additional
-check to the test.
-
-The test is still lacking any check for any phandle dependencies.
+kbasename() will not return NULL if passed a valid string.  If
+the parameter passed to kbasename() in this case is already NULL
+then the devicetree has been corrupted.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/of/overlay.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index c7526186b1c8..015d8b112f60 100644
+index a257474c9223..dc7657329aea 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -698,13 +698,13 @@ static int find_node(struct device_node *tree, struct device_node *np)
- }
+@@ -322,8 +322,6 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+ 	int ret = 0;
  
- /*
-- * Is @remove_ce_np a child of or the same as any
-+ * Is @remove_ce_node a child of, a parent of, or the same as any
-  * node in an overlay changeset more topmost than @remove_ovcs?
-  *
-  * Returns 1 if found, else 0
-  */
--static int node_in_later_cs(struct overlay_changeset *remove_ovcs,
--		struct device_node *remove_ce_np)
-+static int node_overlaps_later_cs(struct overlay_changeset *remove_ovcs,
-+		struct device_node *remove_ce_node)
- {
- 	struct overlay_changeset *ovcs;
- 	struct of_changeset_entry *ce;
-@@ -714,10 +714,16 @@ static int node_in_later_cs(struct overlay_changeset *remove_ovcs,
- 			break;
+ 	node_kbasename = kbasename(node->full_name);
+-	if (!node_kbasename)
+-		return -ENOMEM;
  
- 		list_for_each_entry(ce, &ovcs->cset.entries, node) {
--			if (find_node(ce->np, remove_ce_np)) {
--				pr_err("%s: #%d clashes #%d @%pOF\n",
-+			if (find_node(ce->np, remove_ce_node)) {
-+				pr_err("%s: #%d overlaps with #%d @%pOF\n",
- 					__func__, remove_ovcs->id, ovcs->id,
--					remove_ce_np);
-+					remove_ce_node);
-+				return 1;
-+			}
-+			if (find_node(remove_ce_node, ce->np)) {
-+				pr_err("%s: #%d overlaps with #%d @%pOF\n",
-+					__func__, remove_ovcs->id, ovcs->id,
-+					remove_ce_node);
- 				return 1;
- 			}
- 		}
-@@ -741,7 +747,7 @@ static int overlay_removal_is_ok(struct overlay_changeset *remove_ovcs)
- 	struct of_changeset_entry *remove_ce;
- 
- 	list_for_each_entry(remove_ce, &remove_ovcs->cset.entries, node) {
--		if (node_in_later_cs(remove_ovcs, remove_ce->np)) {
-+		if (node_overlaps_later_cs(remove_ovcs, remove_ce->np)) {
- 			pr_err("overlay #%d is not topmost\n", remove_ovcs->id);
- 			return 0;
- 		}
+ 	for_each_child_of_node(target_node, tchild)
+ 		if (!of_node_cmp(node_kbasename, kbasename(tchild->full_name)))
 -- 
 Frank Rowand <frank.rowand@sony.com>
