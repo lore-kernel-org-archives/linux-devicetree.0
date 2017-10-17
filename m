@@ -1,112 +1,260 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Tue, 17 Oct 2017 14:38:32 +0100
-Message-ID: <CACxGe6vkxTwUw2ma_ykZQ0JsKUQTeffMC+g4pq6LnaN9qoY2_A@mail.gmail.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <39f87f46-da67-11d9-4336-213c13025568@monstr.eu> <8a168960-2dae-35cc-e610-0fe257c9121d@codethink.co.uk>
- <CAL_JsqJxFJSE-=778oHvNgpaBzhX9mBSzh1a0ZMvwSG69qStLw@mail.gmail.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v1] dmaengine: stm32_mdma: activate pack/unpack feature
+Date: Tue, 17 Oct 2017 15:43:47 +0200
+Message-ID: <1508247827-31741-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJxFJSE-=778oHvNgpaBzhX9mBSzh1a0ZMvwSG69qStLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba
+ Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 8:45 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Oct 16, 2017 at 11:40 AM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
->> On 16/10/17 06:36, Michal Simek wrote:
->>>
->>> Hi,
->>>
->>> On 9.10.2017 22:39, Grant Likely wrote:
->>>>
->>>> Kernel Summit is now just over 2 weeks away and it is time to pull
->>>> together the schedule for the Devicetree workshop. Originally I
->>>> planned on just an afternoon, but I've got the room for the whole day,
->>>> so I've got a lot of flexibility on the schedule. Unscheduled time can
->>>> be used for hacking.
->>>>
->>>> Date: 26 Oct 2017
->>>> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
->>>> Location: Athens room - Hilton Prague
->>>>
->>>> If you plan to attend, make sure you update your OSSunmitE/ELCE
->>>> registration to include the DT Workshop (log in to access and modify
->>>> your registration):
->>>>
->>>>
->>>> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
->>>>
->>>> Here is my current list of topics in no particular order, including
->>>> the topic moderator:
->>>>
->>>> Runtime memory consumption (Rob Herring)
->>>> Overlay maintenance plan (TBC)
->>>> Stable ABI for devicetree (TBC)
->>>> DT YAML encoding (Pantelis Antoniou)
->>>> DT Schema format - option 1 (Pantelis Antoniou)
->>>> DT Schema format - option 2 (Grant Likely)
->>>> Sharing Generic bindings (TBC)
->>>> devicetree.org update (Grant)
->>>>
->>>> Reply to this email if you want to propose another topic.
->>>>
->>>> Reply privately if there is a particular topic you want to attend but
->>>> you are unable to be there in the morning or afternoon. I'll put the
->>>> actual agenda together a week out from the event.
->>>
->>>
->>> I would like to talk how to add support for AArch32 based on arm64 dts
->>> file.
->>>
->>> And next topic is discuss criteria for adding new DTS board files to
->>> kernel for supporting custom boards especially for arm32 which can end
->>> up with a lot of dts files in this folder.
->>> If make sense to permit only boards with something new or just enable
->>> reference boards to go in.
->>
->>
->> I am interested in this, as we seem to be repeating the quantity
->> issue with the board file of having many .dts sources in the kernel.
->
-> The problem was not so much having board files in the kernel. It was
-> how to scale support for boards and SoCs with each family structuring
-> things their own, different way.
->
-> IIRC, the ARM tree was at ~400 boards at the start of DT conversion.
-> Now we're at ~1100 boards for arm/arm64. Plus we still have 264 that
-> aren't converted to DT.
->
->> I'm not sure how to deal with this, on one hand only having the
->> reference (and possibly popular) boards is going to keep the size
->> down. On the other hand out of tree .dts files are going to be
->> difficult to find (or vanish with the vendor).
->
-> Why do we care? What problem is that causing?
+If source and destination bus width differs pack/unpack MDMA
+feature has to be activated for alignment.
+This pack/unpack feature implies to have both source/destination address
+and buffer length aligned on bus width.
 
-In fact, for many platforms that would be a good place to get to if
-the firmware is providing the .dtb. Plus the DT data formats are so
-simple that it is not difficult to get a DTB back into a DTS.
+Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+ drivers/dma/stm32-mdma.c | 84 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 50 insertions(+), 34 deletions(-)
 
->
->> It seems we are still no closer to having a DT repository outside
->> the kernel.
->
-> In relationship to the above what problem would that solve? We've got
-> all the platform maintainers and arm-soc maintainers to handle dts
-> files. Mark and myself along with subsystem maintainers reviewing and
-> applying device bindings. If you move all that to a separate
-> repository, then you have me because no one else has volunteered. I'm
-> pretty sure no one wants me as the single point of failure.
-
-Yes. When it comes to the bindings, and schema files when we have
-them, they should be maintained with the tools.
-
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index d3be6bf..daa1602 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -387,14 +387,20 @@ static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
+ 	}
+ }
+ 
+-static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 tlen)
++static enum dma_slave_buswidth stm32_mdma_get_max_width(dma_addr_t addr,
++							u32 buf_len, u32 tlen)
+ {
+ 	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+ 
+ 	for (max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+ 	     max_width > DMA_SLAVE_BUSWIDTH_1_BYTE;
+ 	     max_width >>= 1) {
+-		if (((buf_len % max_width) == 0) && (tlen >= max_width))
++		/*
++		 * Address and buffer length both have to be aligned on
++		 * bus width
++		 */
++		if ((((buf_len | addr) & (max_width - 1)) == 0) &&
++		    tlen >= max_width)
+ 			break;
+ 	}
+ 
+@@ -486,7 +492,8 @@ static void stm32_mdma_set_bus(struct stm32_mdma_device *dmadev, u32 *ctbr,
+ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 				     enum dma_transfer_direction direction,
+ 				     u32 *mdma_ccr, u32 *mdma_ctcr,
+-				     u32 *mdma_ctbr, u32 buf_len)
++				     u32 *mdma_ctbr, dma_addr_t addr,
++				     u32 buf_len)
+ {
+ 	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+ 	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
+@@ -520,6 +527,9 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 	ctcr &= ~STM32_MDMA_CTCR_LEN2_MSK;
+ 	ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
+ 
++	/* Disable Pack Enable */
++	ctcr &= ~STM32_MDMA_CTCR_PKE;
++
+ 	/* Check burst size constraints */
+ 	if (src_maxburst * src_addr_width > STM32_MDMA_MAX_BURST ||
+ 	    dst_maxburst * dst_addr_width > STM32_MDMA_MAX_BURST) {
+@@ -551,6 +561,8 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 
+ 	switch (direction) {
+ 	case DMA_MEM_TO_DEV:
++		dst_addr = chan->dma_config.dst_addr;
++
+ 		/* Set device data size */
+ 		dst_bus_width = stm32_mdma_get_width(chan, dst_addr_width);
+ 		if (dst_bus_width < 0)
+@@ -567,7 +579,7 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 		ctcr |= STM32_MDMA_CTCR_DBURST((ilog2(dst_best_burst)));
+ 
+ 		/* Set memory data size */
+-		src_addr_width = stm32_mdma_get_max_width(buf_len, tlen);
++		src_addr_width = stm32_mdma_get_max_width(addr, buf_len, tlen);
+ 		chan->mem_width = src_addr_width;
+ 		src_bus_width = stm32_mdma_get_width(chan, src_addr_width);
+ 		if (src_bus_width < 0)
+@@ -587,15 +599,19 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 		ctcr |= STM32_MDMA_CTCR_SBURST((ilog2(src_best_burst)));
+ 
+ 		/* Select bus */
+-		dst_addr = chan->dma_config.dst_addr;
+ 		stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
+ 				   dst_addr);
+ 
++		if (dst_bus_width != src_bus_width)
++			ctcr |= STM32_MDMA_CTCR_PKE;
++
+ 		/* Set destination address */
+ 		stm32_mdma_write(dmadev, STM32_MDMA_CDAR(chan->id), dst_addr);
+ 		break;
+ 
+ 	case DMA_DEV_TO_MEM:
++		src_addr = chan->dma_config.src_addr;
++
+ 		/* Set device data size */
+ 		src_bus_width = stm32_mdma_get_width(chan, src_addr_width);
+ 		if (src_bus_width < 0)
+@@ -611,7 +627,7 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 		ctcr |= STM32_MDMA_CTCR_SBURST((ilog2(src_best_burst)));
+ 
+ 		/* Set memory data size */
+-		dst_addr_width = stm32_mdma_get_max_width(buf_len, tlen);
++		dst_addr_width = stm32_mdma_get_max_width(addr, buf_len, tlen);
+ 		chan->mem_width = dst_addr_width;
+ 		dst_bus_width = stm32_mdma_get_width(chan, dst_addr_width);
+ 		if (dst_bus_width < 0)
+@@ -630,10 +646,12 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 		ctcr |= STM32_MDMA_CTCR_DBURST((ilog2(dst_best_burst)));
+ 
+ 		/* Select bus */
+-		src_addr = chan->dma_config.src_addr;
+ 		stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
+ 				   src_addr);
+ 
++		if (dst_bus_width != src_bus_width)
++			ctcr |= STM32_MDMA_CTCR_PKE;
++
+ 		/* Set source address */
+ 		stm32_mdma_write(dmadev, STM32_MDMA_CSAR(chan->id), src_addr);
+ 		break;
+@@ -719,23 +737,27 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
+ 			return -EINVAL;
+ 		}
+ 
+-		ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
+-						&ctbr, sg_dma_len(sg));
+-		if (ret < 0)
+-			return ret;
+-
+ 		if (direction == DMA_MEM_TO_DEV) {
+ 			src_addr = sg_dma_address(sg);
+ 			dst_addr = dma_config->dst_addr;
++			ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
++							&ctcr, &ctbr, src_addr,
++							sg_dma_len(sg));
+ 			stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
+ 					   src_addr);
+ 		} else {
+ 			src_addr = dma_config->src_addr;
+ 			dst_addr = sg_dma_address(sg);
++			ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
++							&ctcr, &ctbr, dst_addr,
++							sg_dma_len(sg));
+ 			stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
+ 					   dst_addr);
+ 		}
+ 
++		if (ret < 0)
++			return ret;
++
+ 		stm32_mdma_setup_hwdesc(chan, desc, direction, i, src_addr,
+ 					dst_addr, sg_dma_len(sg), ctcr, ctbr,
+ 					i == sg_len - 1, i == 0, false);
+@@ -830,27 +852,29 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
+ 	if (!desc)
+ 		return NULL;
+ 
+-	ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr, &ctbr,
+-					period_len);
+-	if (ret < 0)
+-		goto xfer_setup_err;
+-
+-	/* Enable interrupts */
+-	ccr &= ~STM32_MDMA_CCR_IRQ_MASK;
+-	ccr |= STM32_MDMA_CCR_TEIE | STM32_MDMA_CCR_CTCIE | STM32_MDMA_CCR_BTIE;
+-	desc->ccr = ccr;
+-
+ 	/* Select bus */
+ 	if (direction == DMA_MEM_TO_DEV) {
+ 		src_addr = buf_addr;
++		ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
++						&ctbr, src_addr, period_len);
+ 		stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
+ 				   src_addr);
+ 	} else {
+ 		dst_addr = buf_addr;
++		ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
++						&ctbr, dst_addr, period_len);
+ 		stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
+ 				   dst_addr);
+ 	}
+ 
++	if (ret < 0)
++		goto xfer_setup_err;
++
++	/* Enable interrupts */
++	ccr &= ~STM32_MDMA_CCR_IRQ_MASK;
++	ccr |= STM32_MDMA_CCR_TEIE | STM32_MDMA_CCR_CTCIE | STM32_MDMA_CCR_BTIE;
++	desc->ccr = ccr;
++
+ 	/* Configure hwdesc list */
+ 	for (i = 0; i < count; i++) {
+ 		if (direction == DMA_MEM_TO_DEV) {
+@@ -956,9 +980,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
+ 		ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
+ 
+ 		/* Set source best burst size */
+-		max_width = stm32_mdma_get_max_width(len, tlen);
+-		if (src % max_width)
+-			max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
++		max_width = stm32_mdma_get_max_width(src, len, tlen);
+ 		src_bus_width = stm32_mdma_get_width(chan, max_width);
+ 
+ 		max_burst = tlen / max_width;
+@@ -971,9 +993,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
+ 			STM32_MDMA_CTCR_SINCOS(src_bus_width);
+ 
+ 		/* Set destination best burst size */
+-		max_width = stm32_mdma_get_max_width(len, tlen);
+-		if (dest % max_width)
+-			max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
++		max_width = stm32_mdma_get_max_width(dest, len, tlen);
+ 		dst_bus_width = stm32_mdma_get_width(chan, max_width);
+ 
+ 		max_burst = tlen / max_width;
+@@ -1014,9 +1034,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
+ 					   STM32_MDMA_MAX_BLOCK_LEN);
+ 
+ 			/* Set source best burst size */
+-			max_width = stm32_mdma_get_max_width(len, tlen);
+-			if (src % max_width)
+-				max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
++			max_width = stm32_mdma_get_max_width(src, len, tlen);
+ 			src_bus_width = stm32_mdma_get_width(chan, max_width);
+ 
+ 			max_burst = tlen / max_width;
+@@ -1030,9 +1048,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
+ 				STM32_MDMA_CTCR_SINCOS(src_bus_width);
+ 
+ 			/* Set destination best burst size */
+-			max_width = stm32_mdma_get_max_width(len, tlen);
+-			if (dest % max_width)
+-				max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
++			max_width = stm32_mdma_get_max_width(dest, len, tlen);
+ 			dst_bus_width = stm32_mdma_get_width(chan, max_width);
+ 
+ 			max_burst = tlen / max_width;
+-- 
+2.7.4
