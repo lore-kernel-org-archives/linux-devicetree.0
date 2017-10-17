@@ -1,69 +1,71 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv3 01/12] ARM: dts: imx6-tx6: update model property to match current module HW revision
-Date: Tue, 17 Oct 2017 11:17:52 +0200
-Message-ID: <1508231883-12067-2-git-send-email-LW@KARO-electronics.de>
+Subject: [PATCHv3 05/12] ARM: dts: imx6-tx6: improve ethernet related pinctrl
+ setup
+Date: Tue, 17 Oct 2017 11:17:56 +0200
+Message-ID: <1508231883-12067-6-git-send-email-LW@KARO-electronics.de>
 References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
  <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-The current TX6Q module HW revision is 3 reflected in the module name
-suffix '-1030' (-1130 for LVDS).
-Change the model string to prevent confusion about what DTS file to
-use for these modules.
-
-Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
----
- arch/arm/boot/dts/imx6q-tx6q-1010.dts | 4 ++--
- arch/arm/boot/dts/imx6q-tx6q-1110.dts | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1010.dts b/arch/arm/boot/dts/imx6q-tx6q-1010.dts
-index e14e6be..17ff7e7 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1010.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1010.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2014-2016 Lothar Waßmann <LW@KARO-electronics.de>
-+ * Copyright 2014-2017 Lothar Waßmann <LW@KARO-electronics.de>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -44,7 +44,7 @@
- #include "imx6qdl-tx6.dtsi"
- 
- / {
--	model = "Ka-Ro electronics TX6Q-1010 Module";
-+	model = "Ka-Ro electronics TX6Q-1010/-1030 Module";
- 	compatible = "karo,imx6q-tx6q", "fsl,imx6q";
- 
- 	aliases {
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1110.dts b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-index 0433e22..0f5e638 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2014-2016 Lothar Waßmann <LW@KARO-electronics.de>
-+ * Copyright 2014-2017 Lothar Waßmann <LW@KARO-electronics.de>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -44,7 +44,7 @@
- #include "imx6qdl-tx6.dtsi"
- 
- / {
--	model = "Ka-Ro electronics TX6Q-1110 Module";
-+	model = "Ka-Ro electronics TX6Q-1110/-1130 Module";
- 	compatible = "karo,imx6q-tx6q", "fsl,imx6q";
- 
- 	aliases {
--- 
-2.1.4
+UmVtb3ZlIHRoZSBQSFkgSU5UIGFuZCBSRVNFVCBwaW5zIGZyb20gaG9nIHNlY3Rpb24gYW5kIHB1
+dCB0aGVtIGludG8KdGhlaXIgb3duIHBpbmN0cmwgbm9kZXMgcmVmZXJlbmNlZCBieSB0aGUgYXBw
+cm9wcmlhdGUgZHJpdmVyIG5vZGVzLgpBbHNvLCB0aGUgTURJTyBwaW5zIGFyZSByZXF1aXJlZCBm
+b3IgcHJvYmluZyB0aGUgRXRoZXJuZXQgUEhZLCBzbyB0aGV5Cm11c3QgYmUgY29uZmlndXJlZCBi
+eSB0aGUgRkVDIGRyaXZlciwgbm90IGJ5IHRoZSBQSFkgZHJpdmVyLiBNb3ZlIHRoZQpjb3JyZXNw
+b25kaW5nIHBpbmN0cmwgc2V0dGluZ3MgZnJvbSB0aGUgUEhZIHN1Ym5vZGUgdG8gdGhlIEZFQyBu
+b2RlLgoKU2lnbmVkLW9mZi1ieTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNz
+LmRlPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LmR0c2kgfCAyMyArKysrKysr
+KysrKysrKysrKy0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDYgZGVs
+ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYuZHRz
+aSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LmR0c2kKaW5kZXggYTUwYmY3MS4uZjJj
+ZDNlNyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYuZHRzaQorKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpCkBAIC0xLDUgKzEsNSBAQAogLyoK
+LSAqIENvcHlyaWdodCAyMDE0LTIwMTYgTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9u
+aWNzLmRlPgorICogQ29weXJpZ2h0IDIwMTQtMjAxNyBMb3RoYXIgV2HDn21hbm4gPExXQEtBUk8t
+ZWxlY3Ryb25pY3MuZGU+CiAgKgogICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5zZWQ6IHlvdSBj
+YW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKICAqIG9mIHRoZSBHUEwgb3IgdGhlIFgx
+MSBsaWNlbnNlLCBhdCB5b3VyIG9wdGlvbi4gTm90ZSB0aGF0IHRoaXMgZHVhbApAQCAtMjQxLDcg
+KzI0MSw3IEBACiAKICZmZWMgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Ci0JcGluY3Ry
+bC0wID0gPCZwaW5jdHJsX2VuZXQ+OworCXBpbmN0cmwtMCA9IDwmcGluY3RybF9lbmV0ICZwaW5j
+dHJsX2VuZXRfbWRpbyAmcGluY3RybF9ldG5waHlfcnN0PjsKIAljbG9ja3MgPSA8JmNsa3MgSU1Y
+NlFETF9DTEtfRU5FVD4sCiAJCSA8JmNsa3MgSU1YNlFETF9DTEtfRU5FVD4sCiAJCSA8JmNsa3Mg
+SU1YNlFETF9DTEtfRU5FVF9SRUY+LApAQCAtMjYxLDggKzI2MSw5IEBACiAJCQljb21wYXRpYmxl
+ID0gImV0aGVybmV0LXBoeS1pZWVlODAyLjMtYzIyIjsKIAkJCXJlZyA9IDwwPjsKIAkJCXBpbmN0
+cmwtbmFtZXMgPSAiZGVmYXVsdCI7Ci0JCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZW5ldF9tZGlv
+PjsKLQkJCWludGVycnVwdHMtZXh0ZW5kZWQgPSA8JmdwaW83IDEgSVJRX1RZUEVfRURHRV9GQUxM
+SU5HPjsKKwkJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9ldG5waHlfaW50PjsKKwkJCWludGVycnVw
+dC1wYXJlbnQgPSA8JmdwaW83PjsKKwkJCWludGVycnVwdHMgPSA8MSBJUlFfVFlQRV9FREdFX0ZB
+TExJTkc+OwogCQl9OwogCX07CiB9OwpAQCAtMzM0LDggKzMzNSw2IEBACiAKIAlwaW5jdHJsX2hv
+ZzogaG9nZ3JwIHsKIAkJZnNsLHBpbnMgPSA8Ci0JCQlNWDZRRExfUEFEX1NEM19EQVQyX19HUElP
+N19JTzA2CQkweDFiMGIxIC8qIEVUTiBQSFkgUkVTRVQgKi8KLQkJCU1YNlFETF9QQURfU0QzX0RB
+VDRfX0dQSU83X0lPMDEJCTB4MWIwYjEgLyogRVROIFBIWSBJTlQgKi8KIAkJCU1YNlFETF9QQURf
+RUlNX0EyNV9fR1BJTzVfSU8wMgkJMHgxYjBiMSAvKiBQV1IgQlROICovCiAJCT47CiAJfTsKQEAg
+LTQ1MywxMiArNDUyLDI0IEBACiAJCT47CiAJfTsKIAorCXBpbmN0cmxfZXRucGh5X2ludDogZXRu
+cGh5LWludGdycCB7CisJCWZzbCxwaW5zID0gPAorCQkJTVg2UURMX1BBRF9TRDNfREFUNF9fR1BJ
+TzdfSU8wMQkJMHgxYjBiMSAvKiBFVE4gUEhZIElOVCAqLworCQk+OworCX07CisKIAlwaW5jdHJs
+X2V0bnBoeV9wb3dlcjogZXRucGh5LXB3cmdycCB7CiAJCWZzbCxwaW5zID0gPAogCQkJTVg2UURM
+X1BBRF9FSU1fRDIwX19HUElPM19JTzIwCQkweDFiMGIxIC8qIEVUTiBQSFkgUE9XRVIgKi8KIAkJ
+PjsKIAl9OwogCisJcGluY3RybF9ldG5waHlfcnN0OiBldG5waHktcnN0Z3JwIHsKKwkJZnNsLHBp
+bnMgPSA8CisJCQlNWDZRRExfUEFEX1NEM19EQVQyX19HUElPN19JTzA2CQkweDFiMGIxIC8qIEVU
+TiBQSFkgUkVTRVQgKi8KKwkJPjsKKwl9OworCiAJcGluY3RybF9mbGV4Y2FuMTogZmxleGNhbjFn
+cnAgewogCQlmc2wscGlucyA9IDwKIAkJCU1YNlFETF9QQURfR1BJT183X19GTEVYQ0FOMV9UWAkJ
+MHgxYjBiMAotLSAKMi4xLjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
