@@ -1,71 +1,72 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH  1/2] dt-bindings: usb-xhci: Document r8a7743 support
-Date: Tue, 17 Oct 2017 01:33:51 +0000
-Message-ID: <TY1PR06MB0992CBE8ED62C52D6412BF28D84C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
- <1508148769-47488-2-git-send-email-biju.das@bp.renesas.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 0/9] Enable dw-mmc multi-card support
+Date: Tue, 17 Oct 2017 09:36:07 +0800
+Message-ID: <8e433531-8f67-d575-635e-c6ced29f6804@rock-chips.com>
+References: <cover.1507315433.git.lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508148769-47488-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Content-Language: ja-JP
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1507315433.git.lsun-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liming Sun <lsun-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju-san,
-(and added Mathias-san of the XHCI maintainer as TO)
 
-Thank you for the patch!
+On 2017/10/7 3:21, Liming Sun wrote:
+> This series of commits enables the multi-card support for the dw-mmc
+> controller. It includes two parts as below.
+> 
+> The first part (patches 1-7) reverts the series of recent commits that
+> removed the multi-card support with comments saying there was no such
+> use case in the real world. Actually this feature is being used in
+> Mellanox Bluefield SoC and has been requested by customers.
 
-> From: Biju Das, Sent: Monday, October 16, 2017 7:13 PM
->=20
-> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->=20
-> Document r8a7743 xhci support. The driver will use the fallback
-> compatible string "renesas,rcar-gen2-xhci", therefore no driver
-> change is needed.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documen=
-tation/devicetree/bindings/usb/usb-xhci.txt
-> index 2d80b60..4125d02 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -7,12 +7,14 @@ Required properties:
->      - "marvell,armada3700-xhci" for Armada 37xx SoCs
->      - "marvell,armada-375-xhci" for Armada 375 SoCs
->      - "marvell,armada-380-xhci" for Armada 38x SoCs
-> +    - "renesas,xhci-r8a7743" for r8a7743 SoC
->      - "renesas,xhci-r8a7790" for r8a7790 SoC
->      - "renesas,xhci-r8a7791" for r8a7791 SoC
->      - "renesas,xhci-r8a7793" for r8a7793 SoC
->      - "renesas,xhci-r8a7795" for r8a7795 SoC
->      - "renesas,xhci-r8a7796" for r8a7796 SoC
-> -    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 compatible devic=
-e
-> +    - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compati=
-ble
-> +      device
->      - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 compatible devic=
-e
->      - "xhci-platform" (deprecated)
->
+Hrm.... it's so unlucky that your patchset comes a little late. As
+your patch 8 and 9 said, you need them to fix problem for multi-card
+support, so definitely there was no such use case, and even the code
+was buggy to support it right? That makes the code hard to read and
+maintain, so we decide to remove it.
 
-It seems good to me. So,
+> 
+> The second part (patches 8-9) fixes the DesignWare multi-card support
+> according to the dw-mmc databook (synnopsys: DesignWare Cores Mobile
+> Storage Host Databook, 2.70a). It has changes to set the card number
+> into the CMD register to multiplex requests to different cards when
+> working in SD_MMC_CEATA mode, set the CTYPE / CLKENA / CDTHRCTL
+> registers properly according to the spec, and parse the per-card
+> configuration to match the Linux Documentation
+> (bindings/mmc/synopsys-dw-mshc.txt).
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Havn'e check the databook for details yet, but I think it's ok
+to re-introduce multi-slot support if a real user benefits from
+it. But you need a new patch to silent the log "num-slots property not
+found, assuming 1 slot is available" as we removed all the num-slots
+from DT at that time.
 
-Best regards,
-Yoshihiro Shimoda
+
+> 
+> Liming Sun (9):
+>    Revert "Documentation: dw-mshc: deprecate num-slots"
+>    Revert "mmc: dw_mmc: remove the unnecessary slot variable"
+>    Revert "mmc: dw_mmc: use the 'slot' instead of 'cur_slot'"
+>    Revert "mmc: dw_mmc: remove the 'id' arguments about functions
+>      relevant to slot"
+>    Revert "mmc: dw_mmc: change the array of slots"
+>    Revert "mmc: dw_mmc: remove the loop about finding slots"
+>    Revert "mmc: dw_mmc: deprecated the "num-slots" property"
+>    mmc: dw_mmc: Support two SD_MMC_CE-ATA cards
+>    mmc: dw_mmc: Parse slot-specific configuration
+> 
+>   .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  16 +-
+>   drivers/mmc/host/dw_mmc-exynos.c                   |   4 +-
+>   drivers/mmc/host/dw_mmc.c                          | 277 ++++++++++++++++-----
+>   drivers/mmc/host/dw_mmc.h                          |  17 +-
+>   4 files changed, 236 insertions(+), 78 deletions(-)
+> 
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
