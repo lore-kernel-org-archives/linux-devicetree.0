@@ -1,60 +1,71 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 1/4] clocksource: stm32: convert driver to timer_of
-Date: Tue, 17 Oct 2017 19:53:32 +0200
-Message-ID: <28b1df26-8375-1a38-b918-39b80390ef7d@linaro.org>
-References: <1506959513-16851-1-git-send-email-benjamin.gaignard@linaro.org>
- <1506959513-16851-2-git-send-email-benjamin.gaignard@linaro.org>
- <88c8f124-4cb1-a982-d4a2-c029ab0dcd2a@linaro.org>
- <CA+M3ks5CBOXfQCMmUZnkVUNwSGCnzaqdzDZa9ap6NYgDTVspsw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/10] ARM: dts: sun4i: Enable HDMI support
+ on some A10 devices
+Date: Tue, 17 Oct 2017 20:10:05 +0200
+Message-ID: <20171017181005.7x6wwuidzsm7kep3@flea.lan>
+References: <20171017121807.2994-1-wens@csie.org>
+ <20171017121807.2994-9-wens@csie.org>
+ <CAGb2v65Z2N24AZp=Y-_YgKuZiT1uSDX5pzMrceU3+TY=+Zdf7g@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+M3ks5CBOXfQCMmUZnkVUNwSGCnzaqdzDZa9ap6NYgDTVspsw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6nrfvyrqwqmsnmkm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7UOTHHQKGQEDTPJY2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65Z2N24AZp=Y-_YgKuZiT1uSDX5pzMrceU3+TY=+Zdf7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/10/2017 19:34, Benjamin Gaignard wrote:
-> 2017-10-17 19:09 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
->> On 02/10/2017 17:51, Benjamin Gaignard wrote:
->>> Convert driver to use timer_of helpers. This allow to remove
->>> custom proprietary structure.
->>>
->>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->>> ---
->>
->> [ ... ]
->>
->>> -     clockevents_config_and_register(&data->evtdev,
->>> -                                     DIV_ROUND_CLOSEST(rate, prescaler),
->>> -                                     0x1, max_delta);
->>> -
->>> -     ret = request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
->>> -                     "stm32 clockevent", data);
->>> -     if (ret) {
->>> -             pr_err("%pOF: failed to request irq.\n", np);
->>> -             goto err_get_irq;
->>> -     }
->>> +     clockevents_config_and_register(&to->clkevt,
->>> +                                     timer_of_period(to), 0x60, max_delta);
->>
->>
->> Why 0x1 -> 0x60 ?
+
+--6nrfvyrqwqmsnmkm
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Oct 17, 2017 at 10:38:45PM +0800, Chen-Yu Tsai wrote:
+> > diff --git a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+> > index 2d1b4329f54a..e39ec9beef75 100644
+> > --- a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+> > +++ b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+> > @@ -58,6 +58,17 @@
+> >                 stdout-path = "serial0:115200n8";
+> >         };
+> >
+> > +       hdmi-connector {
+> > +               compatible = "hdmi-connector";
+> > +               type = "a";
+> > +
+> > +               port {
+> > +                       hdmi_con_in: endpoint {
+> > +                               remote-endpoint = <&hdmi_out_con>;
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> >         leds {
+> >                 compatible = "gpio-leds";
+> >                 pinctrl-names = "default";
+> > @@ -106,6 +117,16 @@
+> >         status = "okay";
+> >  };
 > 
-> Because if the min delta is too small it could generate too much interrupts
-> and the system will not be able to catch all of them.
+> The LIME's dts change is missing the &de part. :(
+> I can fix this when applying.
 
-You did a change not related to what is described in the log.
+I've applied all of rest, I'll leave that one up to you, with my
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Shame on you! 50 push-ups! Reply to this email when it is done.
-
+Maxime
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--6nrfvyrqwqmsnmkm--
