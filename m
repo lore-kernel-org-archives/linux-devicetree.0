@@ -1,23 +1,22 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
  Oct 2017)
-Date: Tue, 17 Oct 2017 14:32:18 +0100
-Message-ID: <CACxGe6uiDCJw5g070kCbDEUBEPoz9rqswUc75Bx2h-9+6mxe2Q@mail.gmail.com>
+Date: Tue, 17 Oct 2017 14:34:21 +0100
+Message-ID: <CACxGe6tc-=4hkGu=Ltg9=+1TNc6vvDLQBDJb-fNDCw-JYs33sg@mail.gmail.com>
 References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <39f87f46-da67-11d9-4336-213c13025568@monstr.eu>
+ <7384dfc6-1068-eb6a-ae5f-7e805be8c48e@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <39f87f46-da67-11d9-4336-213c13025568-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7384dfc6-1068-eb6a-ae5f-7e805be8c48e-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 6:36 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> Hi,
->
-> On 9.10.2017 22:39, Grant Likely wrote:
+On Mon, Oct 16, 2017 at 5:42 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+> On 09/10/17 21:39, Grant Likely wrote:
+>>
 >> Kernel Summit is now just over 2 weeks away and it is time to pull
 >> together the schedule for the Devicetree workshop. Originally I
 >> planned on just an afternoon, but I've got the room for the whole day,
@@ -31,6 +30,7 @@ On Mon, Oct 16, 2017 at 6:36 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@pub
 >> If you plan to attend, make sure you update your OSSunmitE/ELCE
 >> registration to include the DT Workshop (log in to access and modify
 >> your registration):
+>>
 >>
 >> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
 >>
@@ -47,33 +47,22 @@ On Mon, Oct 16, 2017 at 6:36 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@pub
 >> devicetree.org update (Grant)
 >>
 >> Reply to this email if you want to propose another topic.
->>
->> Reply privately if there is a particular topic you want to attend but
->> you are unable to be there in the morning or afternoon. I'll put the
->> actual agenda together a week out from the event.
 >
-> I would like to talk how to add support for AArch32 based on arm64 dts file.
+>
+> I'd like to see a "device-tree overview" comprising of at-least
+>
+> - where is dt at
+> - where is dt going
+>
+>
+> I am also interested in an
+> "are we actually solving enough of the old board file problems"
 
-This sounds a lot like the duplicate descriptions topic Thomas
-proposed. I'll lump them into a single agenda item.
+Added all three under a "DT health check" topic. Hopefully it won't
+morph into "Complain about DT".  :-)
 
->
-> And next topic is discuss criteria for adding new DTS board files to
-> kernel for supporting custom boards especially for arm32 which can end
-> up with a lot of dts files in this folder.
-> If make sense to permit only boards with something new or just enable
-> reference boards to go in.
-
-Added.
-
->
-> Thanks,
-> Michal
->
-> --
-> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-> w: www.monstr.eu p: +42-0-721842854
-> Maintainer of Linux kernel - Xilinx Microblaze
-> Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-> U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
->
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
