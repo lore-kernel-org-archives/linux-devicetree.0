@@ -1,55 +1,72 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 1/9] SOC: brcmstb: add memory API
-Date: Tue, 17 Oct 2017 01:24:13 -0700
-Message-ID: <20171017082413.GA10574@infradead.org>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
- <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
+From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] usb: renesas_usbhs: Add compatible string for r8a7743/5
+Date: Tue, 17 Oct 2017 11:25:54 +0300
+Message-ID: <87wp3uji3x.fsf@linux.intel.com>
+References: <1507216358-917-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1507761269-7017-2-git-send-email-jim2101024@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Brian Norris <computersforpeace@gmail.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1507216358-917-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +/* Macros to help extract property data */
-> +#define U8TOU32(b, offs) \
-> +	((((u32)b[0 + offs] << 0)  & 0x000000ff) | \
-> +	 (((u32)b[1 + offs] << 8)  & 0x0000ff00) | \
-> +	 (((u32)b[2 + offs] << 16) & 0x00ff0000) | \
-> +	 (((u32)b[3 + offs] << 24) & 0xff000000))
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Please us helpers like get_unaligned_le32 instead opencoding them.
 
-> +#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(U8TOU32(b, offs)))
+Hi,
 
-And together with this it looks really whacky.  So you're converting
-from le to native first and then do another conversion from be to cpu?
+Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> writes:
+> This patch adds support for r8a7743/5 SoC.  The Renesas RZ/G1[ME]
+> (R8A7743/5) usbhs is identical to the R-Car Gen2 family.
+>
+> This doesn't change the driver, so it does nothing by itself.  But it does
+> mean that checkpatch won't complain about a future patch that adds
+> "renesas,usbhs-r8a7743" or "renesas,usbhs-r8a7745" to a DT, which helps
+> ensure that shipped DTs use documented compatibility strings.
+>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+> This patch is tested against Linux next tag next-20170929
 
-Something doesn't work out here.
+care to rebase on my testing/next? It fails to apply.
 
-> +/* -------------------- Functions -------------------- */
+While doing that, please collect all Acks given.
 
-Please remove pointless comments like this one.
+8<------------------------------------------------------------------------
 
-> +
-> +/*
-> + * If the DT nodes are handy, determine which MEMC holds the specified
-> + * physical address.
-> + */
-> +#ifdef CONFIG_ARCH_BRCMSTB
-> +int __brcmstb_memory_phys_addr_to_memc(phys_addr_t pa, void __iomem *base)
+checking file Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+Hunk #2 FAILED at 12.
+1 out of 2 hunks FAILED
 
-Please move this into the arm arch code.
+=2D-=20
+balbi
 
-> +#elif defined(CONFIG_MIPS)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And this into the mips arch code.
+-----BEGIN PGP SIGNATURE-----
 
-> +EXPORT_SYMBOL(brcmstb_memory_phys_addr_to_memc);
-
-> +EXPORT_SYMBOL(brcmstb_memory_memc_size);
-
-Why is this exported?
+iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlnlvpMACgkQzL64meEa
+mQaEbA//d1GTMrjBybTGKlYFgQF+5B+Q7NfXY9pw0XfaqcxFD2tgxZCNNwG1VCeM
+XR9SHsSArg7HB9iop2LM99Kgu9NexcqhLA2tAdnq1+rEcehg0n1ICUqOd3KluHlF
+5bKLgW06G/vD1lWiVDnJmrqqxa+fIXHQ+pOU3NMkIZjL/jbjttv1e7/86Y5+j+P5
+LmCHouH4SyAN41iiv9sSiTr31k//NMixx3UAn/awMF9vlw/fYFMV1uX/JuJo5Hw/
+bEtJLxW8PuPWX/2CiNyuPzEUJ7vqfiTWyj5GFqkfLomk7PbilcFHooMmYlvY3Ww6
+8Mtlg6SBDqkDnJzruJ/wfMLPEud/EEO13x3yUxi0YPYhG37jcX3CRebrikKTa305
+O0NMulqQnEg0hJdQQbEm58wOho7Abjbo7kBQy5aSXbcQOIhNgWZPLjcT/UGjntLa
+PgMdyqGEpTwFlnNgB+uLLV8QKWguwU8hflbPaoko80qlXrvIBDaUT0kclIK8+YCa
+atMzC5QZnStqggQSjKmvsmH20kwRJJSnF5DG7rnNYv1OoS3GF1GzXvilZGAAqVO8
++9DVln48T/QFwhAzJpY1V+LZgBKip8VcTHRhg4A0EVrjRG7UIRI1tBrWKD3wP3vu
+2Mx/2LFmQIfU3T+ywhToG422b4qkNT4cabOtaBrnlDKHblws8NU=
+=F+RY
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
