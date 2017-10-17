@@ -1,177 +1,152 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] PCI: dwc: pci-dra7xx: Enable x2 mode support
-Date: Tue, 17 Oct 2017 14:25:42 -0500
-Message-ID: <20171017192541.GL5641@bhelgaas-glaptop.roam.corp.google.com>
-References: <20171010101606.15951-1-kishon@ti.com>
- <20171010101606.15951-5-kishon@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC][PATCH 0/3] Overlay manager for predefined DT overlay
+ fragments
+Date: Tue, 17 Oct 2017 14:46:00 -0500
+Message-ID: <20171017194600.he3suyuls4na5p6x@rob-hp-laptop>
+References: <1507613660-27236-1-git-send-email-john.stultz@linaro.org>
+ <20171013214103.mv6wcemzcl36nnvs@rob-hp-laptop>
+ <CALAqxLWcK-wbmQxtX4RziQsvQ26DmixC=gEPojFVHruFrpBnjw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171010101606.15951-5-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+In-Reply-To: <CALAqxLWcK-wbmQxtX4RziQsvQ26DmixC=gEPojFVHruFrpBnjw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Dmitry Shmidt <dimitrysh@google.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-s/PCI: dwc: pci-dra7xx: Enable x2 mode support/
-  PCI: dra7xx: Enable x2 mode support for dra74x and dra76x/
+On Fri, Oct 13, 2017 at 04:51:03PM -0700, John Stultz wrote:
+> On Fri, Oct 13, 2017 at 2:41 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Mon, Oct 09, 2017 at 10:34:17PM -0700, John Stultz wrote:
+> >> In working with the HiKey and HiKey960 as targets for AOSP,
+> >> Dmitry developed the following overlay manager driver, which
+> >> allows a number of pre-determined DT overlay configurations to
+> >> be defined, and the configurations to be enabled at boot time
+> >> via a kernel boot argument.
+> >>
+> >> This has been submitted before, but while the earlier discussion
+> >> didn't really resolve to any sort of actionable direction, this
+> >> issue cropped up again and was a major discussion topic at the
+> >> Linux Plumbers Conference Android Microconference, so I suspect
+> >> it is worth revisiting this solution again.
+> >
+> > The Treble way to handle this is it is the bootloader's problem, right?
+> 
+> I believe so, though with the treble approach, the device
+> configuration is still somewhat fixed. Just that configuration is
+> spread out between multiple partitions. Its a bit of a separate issue.
+> 
+> >> The overall use case is being able to configure devboards that
+> >> support a number of different mezzanine peripherals which
+> >> unfortunately cannot be probed. Some example mezzanines are
+> >> LCD panels or sensor hubs, as well as other options.
+> >
+> > There's probably some usecases for putting the overlay into the base
+> > DT, but I don't think mezzanine boards is one of them especially for dev
+> > boards where we may want to share overlays.
+> >
+> > I could see it in cases where you have 2nd source components for a
+> > product and want to select one.
+> >
+> >> The new functionality this driver provides is a mechanism to
+> >> specify multiple pre-determined dt overlay fragments in a
+> >> dtb file, and providing a way to select which dt fragments
+> >> should be applied via the kernel boot argument.
+> >>
+> >> The desire to use a kernel boot-argument as the selection
+> >> mechanism, comes from the Android Boot Image format not handling
+> >> dtbs independently. Usually with Android, the dtb is appended
+> >> to the kernel image, and modifying that is much more difficult
+> >> then changing the boot argugments. There is also a usability
+> >> argument that using a kernel command option to select
+> >> pre-defined entries is simpler for users to navigate.
+> >
+> > Doesn't Treble address the handling of overlays? Of course, none of what
+> > has been outlined for Treble has been reviewed upstream either... The
+> > concept seems fine, it's the vendor implementations that worry me.
+> 
+> Again, I'm not sure how that connects to the proposal here. Having
+> treble's multiple overlays being picked up in a standard fashion is
+> nice, but how does that translate into a user booting a board with one
+> mezzanine and then change the mezzanine and be able to get the new
+> mezzanine to work with a minimal amount of fuss.
 
-Looks OK to me otherwise, but Rob had a comment about the DT names, so
-I'll wait for that resolution.
+Perhaps I need to study how exactly treble systems will select all their 
+overlays. Supporting different panels or other 2nd source components is 
+a pretty common problem in production devices. Those aren't probe-able 
+either and folks don't want to flash different images for each 
+combination of h/w.
 
-On Tue, Oct 10, 2017 at 03:46:06PM +0530, Kishon Vijay Abraham I wrote:
-> Perform syscon configurations to get x2 mode to working in dra74x
-> (and dra76x).
+> > As far as usability, a RPi user would probably say listing
+> > overlays in a text file is easiest as that's how the RPi firmware works.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/pci/dwc/pci-dra7xx.c | 68 ++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 66 insertions(+), 2 deletions(-)
+> Right, and I agree that usability wise, its very similar to the
+> cmdline arguments. But that requires firmware that keeps track of
+> various overlays and has some small filesystem where that config file
+> can be stored and easily updated.
 > 
-> diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
-> index 78a87a8f1362..a43c904310f3 100644
-> --- a/drivers/pci/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/dwc/pci-dra7xx.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
->  #include <linux/pci.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> @@ -83,6 +84,9 @@
->  #define MSI_REQ_GRANT					BIT(0)
->  #define MSI_VECTOR_SHIFT				7
->  
-> +#define PCIE_1LANE_2LANE_SELECTION			BIT(13)
-> +#define PCIE_B1C0_MODE_SEL				BIT(2)
-> +
->  struct dra7xx_pcie {
->  	struct dw_pcie		*pci;
->  	void __iomem		*base;		/* DT ti_conf */
-> @@ -95,6 +99,10 @@ struct dra7xx_pcie {
->  
->  struct dra7xx_pcie_of_data {
->  	enum dw_pcie_device_mode mode;
-> +	u32 b1co_mode_sel_mask;
-> +};
-> +
-> +struct dra7xx_pcie_data {
->  };
->  
->  #define to_dra7xx_pcie(x)	dev_get_drvdata((x)->dev)
-> @@ -533,6 +541,16 @@ static const struct dra7xx_pcie_of_data dra7xx_pcie_ep_of_data = {
->  	.mode = DW_PCIE_EP_TYPE,
->  };
->  
-> +static const struct dra7xx_pcie_of_data dra746_pcie_rc_of_data = {
-> +	.b1co_mode_sel_mask = BIT(2),
-> +	.mode = DW_PCIE_RC_TYPE,
-> +};
-> +
-> +static const struct dra7xx_pcie_of_data dra746_pcie_ep_of_data = {
-> +	.b1co_mode_sel_mask = BIT(2),
-> +	.mode = DW_PCIE_EP_TYPE,
-> +};
-> +
->  static const struct of_device_id of_dra7xx_pcie_match[] = {
->  	{
->  		.compatible = "ti,dra7-pcie",
-> @@ -544,11 +562,11 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
->  	},
->  	{
->  		.compatible = "ti,dra746-pcie-rc",
-> -		.data = &dra7xx_pcie_rc_of_data,
-> +		.data = &dra746_pcie_rc_of_data,
->  	},
->  	{
->  		.compatible = "ti,dra746-pcie-ep",
-> -		.data = &dra7xx_pcie_ep_of_data,
-> +		.data = &dra746_pcie_ep_of_data,
->  	},
->  	{
->  		.compatible = "ti,dra726-pcie-rc",
-> @@ -603,6 +621,44 @@ static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
->  	return ret;
->  }
->  
-> +static int dra7xx_pcie_configure_two_lane(struct device *dev,
-> +					  u32 b1co_mode_sel_mask)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct regmap *pcie_syscon;
-> +	unsigned int pcie_reg;
-> +
-> +	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "syscon-lane-conf");
-> +	if (IS_ERR(pcie_syscon)) {
-> +		dev_err(dev, "unable to get syscon-lane-conf\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (of_property_read_u32_index(np, "syscon-lane-conf", 1, &pcie_reg)) {
-> +		dev_err(dev, "couldn't get lane configuration reg offset\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	regmap_update_bits(pcie_syscon, pcie_reg, PCIE_1LANE_2LANE_SELECTION,
-> +			   PCIE_1LANE_2LANE_SELECTION);
-> +
-> +	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "syscon-lane-sel");
-> +	if (IS_ERR(pcie_syscon)) {
-> +		dev_err(dev, "unable to get syscon-lane-sel\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (of_property_read_u32_index(np, "syscon-lane-sel", 1, &pcie_reg)) {
-> +		dev_err(dev, "couldn't get lane selection reg offset\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	regmap_update_bits(pcie_syscon, pcie_reg, b1co_mode_sel_mask,
-> +			   PCIE_B1C0_MODE_SEL);
-> +
-> +	return 0;
-> +}
-> +
->  static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  {
->  	u32 reg;
-> @@ -624,6 +680,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  	const struct of_device_id *match;
->  	const struct dra7xx_pcie_of_data *data;
->  	enum dw_pcie_device_mode mode;
-> +	u32 b1co_mode_sel_mask;
->  
->  	match = of_match_device(of_match_ptr(of_dra7xx_pcie_match), dev);
->  	if (!match)
-> @@ -631,6 +688,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  
->  	data = (struct dra7xx_pcie_of_data *)match->data;
->  	mode = (enum dw_pcie_device_mode)data->mode;
-> +	b1co_mode_sel_mask = data->b1co_mode_sel_mask;
->  
->  	dra7xx = devm_kzalloc(dev, sizeof(*dra7xx), GFP_KERNEL);
->  	if (!dra7xx)
-> @@ -689,6 +747,12 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  	dra7xx->pci = pci;
->  	dra7xx->phy_count = phy_count;
->  
-> +	if (phy_count == 2) {
-> +		ret = dra7xx_pcie_configure_two_lane(dev, b1co_mode_sel_mask);
-> +		if (ret < 0)
-> +			goto err_link;
-> +	}
-> +
->  	ret = dra7xx_pcie_enable_phy(dra7xx);
->  	if (ret) {
->  		dev_err(dev, "failed to enable phy\n");
-> -- 
-> 2.11.0
+> >> Also, since the mezzanines are unable to be probed, we cannot
+> >> use other solutions, like having the bootloader specify
+> >> additional dtb overlays to the kernel.
+> >
+> > Not sure I follow.
+> >
+> > Someone has to decide what to put on the kernel command line. If you are
+> > setting the overlay in the command line at bootimage build time or in
+> > the bootloader, then you could just apply the overlay at that point in
+> > time. Maybe it's slightly easier to change the kernel command line than
+> > change the dtb.
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Not, its not slightly easier, its much *much* easier to tweak the boot
+> arguments. Since the dtb is appended to the kernel image w/ the
+> abootimg format, its not simple at all to cut one out and replace it.
+
+Appended dtb was to support legacy non-DT aware bootloaders. It never 
+should have been carried over to arm64.
+
+> While the cmdline is trivial to do with the abootimg command:
+> abootimg -x boot.img
+> vi bootimg.cfg
+> abootimg -u boot.img -f ./bootimg.cfg
+
+It's easy because there is a tool to do so, not because a the kernel 
+command line is inheritly easier to modify than a dtb.
+
+It would be trivial to write a tool or add to this one the code to find 
+the dtb within the image and modify it. That's what every bootloader can 
+do.
+
+Of course, abootimg is a horrible creation IMO. Why Android can't use 
+something called a filesystem for the boot partition is beyond me. Then 
+modifying it would not require special tools that could only modify 
+whatever someone had the itch to modify. And combining the kernel, dtb, 
+and overlays into a single file would not be necessary.
+
+> and re-flash.  This doesn't require access to the kernel source or
+> rebuilding anything.
+> 
+> It seems you're suggesting that there be some sort of special overlay
+> partition which users have to flash with pre-built images containing
+> the appropriate overlay dtbs, so that something like the treble
+> overlay-per-partition approach could be used.
+
+I'm not really suggesting anything. I'm not going to take something that 
+*only* solves your usecase of apply an overlay embedded in a base dtb 
+based on the kernel command line. I have no issue really with either one 
+of those. What I don't want is another "overlay manager" for each 
+usecase. And sorry, you don't win for being first (you're not really).
+All this I said before.
+
+> And in the case with hikey/hikey960, this may be doable, as we can
+> modify the UEFI source, but it would also require users to have all
+> the various overlay images to flash as well, which adds complexity.
+> Additionally on other boards which don't have open firmware, such a
+> solution may not be feasible. The benefit to this approach is it
+> doesn't require such standardized firmware behavior.
+
+Unless there's some great, overwhelming demand to support such devices 
+with closed firmware, there's no benefit to me to care. What board do we 
+have with closed firmware that needs this?
+
+Rob
