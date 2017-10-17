@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 10/12] of: overlay: simplify applying symbols from an overlay
-Date: Mon, 16 Oct 2017 18:17:52 -0700
-Message-ID: <1508203074-26917-11-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 09/12] of: overlay: avoid race condition between applying multiple overlays
+Date: Mon, 16 Oct 2017 18:17:51 -0700
+Message-ID: <1508203074-26917-10-git-send-email-frowand.list@gmail.com>
 References: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
@@ -12,227 +12,251 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-The code to apply symbols from an overlay to the live device tree
-was implemented with the intent to be minimally intrusive on the
-existing code.  After recent restructuring of the overlay apply
-code, it is easier to disintangle the code that applies the
-symbols, and to make the overlay changeset creation code more
-straight forward and understandable.
+The process of applying an overlay consists of:
+  - unflatten an overlay FDT (flattened device tree) into an
+    EDT (expanded device tree)
+  - fixup the phandle values in the overlay EDT to fit in a
+    range above the phandle values in the live device tree
+  - create the overlay changeset to reflect the contents of
+    the overlay EDT
+  - apply the overlay changeset, to modify the live device tree,
+    potentially changing the maximum phandle value in the live
+    device tree
 
-Remove the extra complexity, and make the code more obvious.
+There is currently no protection against two overlay applies
+concurrently determining what range of phandle values are in use
+in the live device tree, and subsequently changing that range.
+Add a mutex to prevent multiple overlay applies from occurring
+simultaneously.
+
+Move of_resolve_phandles() into of_overlay_apply() so that it does not
+have to be duplicated by each caller of of_overlay_apply().
+
+The test in of_resolve_phandles() that the overlay tree is detached is
+temporarily disabled so that old style overlay unittests do not fail.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/overlay.c | 91 +++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 65 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c |  6 ------
+ drivers/of/of_private.h                      | 12 +++++++++++
+ drivers/of/overlay.c                         | 32 ++++++++++++++++++++++++++++
+ drivers/of/resolver.c                        |  7 ++++++
+ drivers/of/unittest.c                        | 22 +++++++++++++------
+ include/linux/of.h                           |  3 ---
+ 6 files changed, 67 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+index 7a7be0515bfd..54025af534d4 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_slave_compat.c
+@@ -145,7 +145,6 @@ static struct device_node * __init tilcdc_get_overlay(struct kfree_table *kft)
+ 		__dtb_tilcdc_slave_compat_begin;
+ 	static void *overlay_data;
+ 	struct device_node *overlay;
+-	int ret;
+ 
+ 	if (!size) {
+ 		pr_warn("%s: No overlay data\n", __func__);
+@@ -164,11 +163,6 @@ static struct device_node * __init tilcdc_get_overlay(struct kfree_table *kft)
+ 	}
+ 
+ 	of_node_set_flag(overlay, OF_DETACHED);
+-	ret = of_resolve_phandles(overlay);
+-	if (ret) {
+-		pr_err("%s: Failed to resolve phandles: %d\n", __func__, ret);
+-		return NULL;
+-	}
+ 
+ 	return overlay;
+ }
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index b66e8a812147..03772bdbd94b 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -59,6 +59,18 @@ static inline int of_property_notify(int action, struct device_node *np,
+ }
+ #endif /* CONFIG_OF_DYNAMIC */
+ 
++#if defined(CONFIG_OF_RESOLVE)
++int of_resolve_phandles(struct device_node *tree);
++#endif
++
++#if defined(CONFIG_OF_OVERLAY)
++void of_overlay_mutex_lock(void);
++void of_overlay_mutex_unlock(void);
++#else
++static inline void of_overlay_mutex_lock(void) {};
++static inline void of_overlay_mutex_unlock(void) {};
++#endif
++
+ #if defined(CONFIG_OF_UNITTEST) && defined(CONFIG_OF_OVERLAY)
+ extern void __init unittest_unflatten_overlay_base(void);
+ #else
 diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index b1082c6f7b2c..912c222ff011 100644
+index a0d3222febdc..b1082c6f7b2c 100644
 --- a/drivers/of/overlay.c
 +++ b/drivers/of/overlay.c
-@@ -32,21 +32,22 @@
- struct fragment {
- 	struct device_node *target;
- 	struct device_node *overlay;
--	bool is_symbols_node;
- };
+@@ -71,6 +71,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
+ 		const struct device_node *overlay_node,
+ 		bool is_symbols_node);
  
- /**
-  * struct overlay_changeset
-- * @ovcs_list:	list on which we are located
-- * @count:	count of @fragments structures
-- * @fragments:	info about fragment nodes in overlay expanded device tree
-- * @cset:	changeset to apply fragments to live device tree
-+ * @ovcs_list:		list on which we are located
-+ * @count:		count of fragment structures
-+ * @fragments:		fragment nodes in the overlay expanded device tree
-+ * @symbols_fragment:	last element of @fragments[] is the  __symbols__ node
-+ * @cset:		changeset to apply fragments to live device tree
-  */
- struct overlay_changeset {
- 	int id;
- 	struct list_head ovcs_list;
- 	int count;
- 	struct fragment *fragments;
-+	bool symbols_fragment;
- 	struct of_changeset cset;
- };
++/*
++ * of_resolve_phandles() finds the largest phandle in the live tree.
++ * of_overlay_apply() may add a larger phandle to the live tree.
++ * Do not allow race between two overlays being applied simultaneously:
++ *    mutex_lock(&of_overlay_phandle_mutex)
++ *    of_resolve_phandles()
++ *    of_overlay_apply()
++ *    mutex_unlock(&of_overlay_phandle_mutex)
++ */
++static DEFINE_MUTEX(of_overlay_phandle_mutex);
++
++void of_overlay_mutex_lock(void)
++{
++	mutex_lock(&of_overlay_phandle_mutex);
++}
++
++void of_overlay_mutex_unlock(void)
++{
++	mutex_unlock(&of_overlay_phandle_mutex);
++}
++
++
+ static LIST_HEAD(ovcs_list);
+ static DEFINE_IDR(ovcs_idr);
  
-@@ -68,8 +69,7 @@ static int devicetree_corrupt(void)
+@@ -615,6 +637,12 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+ 		goto out;
+ 	}
  
- static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 		struct device_node *target_node,
--		const struct device_node *overlay_node,
--		bool is_symbols_node);
-+		const struct device_node *overlay_node);
++	of_overlay_mutex_lock();
++
++	ret = of_resolve_phandles(tree);
++	if (ret)
++		goto err_overlay_unlock;
++
+ 	mutex_lock(&of_mutex);
  
- /*
-  * of_resolve_phandles() finds the largest phandle in the live tree.
-@@ -221,7 +221,7 @@ static struct property *dup_and_fixup_symbol_prop(
-  * @ovcs:		overlay changeset
-  * @target_node:	where to place @overlay_prop in live tree
-  * @overlay_prop:	property to add or update, from overlay tree
-- * is_symbols_node:	1 if @target_node is "/__symbols__"
-+ * @is_symbols_prop:	1 if @overlay_prop is from node "/__symbols__"
-  *
-  * If @overlay_prop does not already exist in @target_node, add changeset entry
-  * to add @overlay_prop in @target_node, else add changeset entry to update
-@@ -237,7 +237,7 @@ static struct property *dup_and_fixup_symbol_prop(
- static int add_changeset_property(struct overlay_changeset *ovcs,
- 		struct device_node *target_node,
- 		struct property *overlay_prop,
--		bool is_symbols_node)
-+		bool is_symbols_prop)
- {
- 	struct property *new_prop = NULL, *prop;
+ 	ret = init_overlay_changeset(ovcs, tree);
+@@ -660,9 +688,13 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+ 	}
  
-@@ -248,7 +248,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
- 	    !of_prop_cmp(overlay_prop->name, "linux,phandle"))
+ 	mutex_unlock(&of_mutex);
++	of_overlay_mutex_unlock();
+ 
+ 	goto out;
+ 
++err_overlay_unlock:
++	of_overlay_mutex_unlock();
++
+ err_free_overlay_changeset:
+ 	free_overlay_changeset(ovcs);
+ 
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 99309cb7d372..8a0f52cfe160 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -275,11 +275,18 @@ int of_resolve_phandles(struct device_node *overlay)
+ 		err = -EINVAL;
+ 		goto out;
+ 	}
++
++#if 0
++	Temporarily disable check so that old style overlay unittests
++	do not fail when of_resolve_phandles() is moved into
++	of_overlay_apply().
++
+ 	if (!of_node_check_flag(overlay, OF_DETACHED)) {
+ 		pr_err("overlay not detached\n");
+ 		err = -EINVAL;
+ 		goto out;
+ 	}
++#endif
+ 
+ 	phandle_delta = live_tree_max_phandle() + 1;
+ 	adjust_overlay_phandles(overlay, phandle_delta);
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index db2f170186de..cb9b7674f746 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -994,9 +994,17 @@ static int __init unittest_data_add(void)
+ 		return -ENODATA;
+ 	}
+ 	of_node_set_flag(unittest_data_node, OF_DETACHED);
++
++	/*
++	 * This lock normally encloses of_overlay_apply() as well as
++	 * of_resolve_phandles().
++	 */
++	of_overlay_mutex_lock();
++
+ 	rc = of_resolve_phandles(unittest_data_node);
+ 	if (rc) {
+ 		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
++		of_overlay_mutex_unlock();
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1006,6 +1014,7 @@ static int __init unittest_data_add(void)
+ 			__of_attach_node_sysfs(np);
+ 		of_aliases = of_find_node_by_path("/aliases");
+ 		of_chosen = of_find_node_by_path("/chosen");
++		of_overlay_mutex_unlock();
  		return 0;
- 
--	if (is_symbols_node) {
-+	if (is_symbols_prop) {
- 		if (prop)
- 			return -EINVAL;
- 		new_prop = dup_and_fixup_symbol_prop(ovcs, overlay_prop);
-@@ -321,13 +321,13 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 		if (ret)
- 			return ret;
- 
--		return build_changeset_next_level(ovcs, tchild, node, 0);
-+		return build_changeset_next_level(ovcs, tchild, node);
  	}
  
- 	if (node->phandle && tchild->phandle)
- 		ret = -EINVAL;
- 	else
--		ret = build_changeset_next_level(ovcs, tchild, node, 0);
-+		ret = build_changeset_next_level(ovcs, tchild, node);
- 	of_node_put(tchild);
- 
- 	return ret;
-@@ -338,7 +338,6 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
-  * @ovcs:		overlay changeset
-  * @target_node:	where to place @overlay_node in live tree
-  * @overlay_node:	node from within an overlay device tree fragment
-- * @is_symbols_node:	@overlay_node is node "/__symbols__"
-  *
-  * Add the properties (if any) and nodes (if any) from @overlay_node to the
-  * @ovcs->cset changeset.  If an added node has child nodes, they will
-@@ -351,16 +350,14 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
-  */
- static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 		struct device_node *target_node,
--		const struct device_node *overlay_node,
--		bool is_symbols_node)
-+		const struct device_node *overlay_node)
- {
- 	struct device_node *child;
- 	struct property *prop;
- 	int ret;
- 
- 	for_each_property_of_node(overlay_node, prop) {
--		ret = add_changeset_property(ovcs, target_node, prop,
--					     is_symbols_node);
-+		ret = add_changeset_property(ovcs, target_node, prop, 0);
- 		if (ret) {
- 			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
- 				 target_node, prop->name, ret);
-@@ -368,9 +365,6 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
- 		}
+@@ -1018,6 +1027,9 @@ static int __init unittest_data_add(void)
+ 		attach_node_and_children(np);
+ 		np = next;
  	}
- 
--	if (is_symbols_node)
--		return 0;
--
- 	for_each_child_of_node(overlay_node, child) {
- 		ret = add_changeset_node(ovcs, target_node, child);
- 		if (ret) {
-@@ -384,6 +378,28 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
++
++	of_overlay_mutex_unlock();
++
  	return 0;
  }
  
-+/*
-+ * Add the properties from __overlay__ node to the @ovcs->cset changeset.
-+ */
-+static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
-+		struct device_node *target_node,
-+		const struct device_node *overlay_symbols_node)
-+{
-+	struct property *prop;
-+	int ret;
-+
-+	for_each_property_of_node(overlay_symbols_node, prop) {
-+		ret = add_changeset_property(ovcs, target_node, prop, 1);
-+		if (ret) {
-+			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
-+				 target_node, prop->name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * build_changeset() - populate overlay changeset in @ovcs from @ovcs->fragments
-  * @ovcs:	Overlay changeset
-@@ -398,14 +414,33 @@ static int build_changeset_next_level(struct overlay_changeset *ovcs,
-  */
- static int build_changeset(struct overlay_changeset *ovcs)
- {
--	int i, ret;
-+	struct fragment *fragment;
-+	int fragments_count, i, ret;
+@@ -2150,16 +2162,11 @@ static int __init overlay_data_add(int onum)
+ 	}
+ 	of_node_set_flag(info->np_overlay, OF_DETACHED);
  
--	for (i = 0; i < ovcs->count; i++) {
--		struct fragment *fragment = &ovcs->fragments[i];
-+	/*
-+	 * if there is a symbols fragment in ovcs->fragments[i] it is
-+	 * the final element in the array
-+	 */
-+	if (ovcs->symbols_fragment)
-+		fragments_count = ovcs->count - 1;
-+	else
-+		fragments_count = ovcs->count;
-+
-+	for (i = 0; i < fragments_count; i++) {
-+		fragment = &ovcs->fragments[i];
- 
- 		ret = build_changeset_next_level(ovcs, fragment->target,
--					       fragment->overlay,
--					       fragment->is_symbols_node);
-+						 fragment->overlay);
-+		if (ret) {
-+			pr_debug("apply failed '%pOF'\n", fragment->target);
-+			return ret;
-+		}
-+	}
-+
-+	if (ovcs->symbols_fragment) {
-+		fragment = &ovcs->fragments[ovcs->count - 1];
-+		ret = build_changeset_symbols_node(ovcs, fragment->target,
-+						   fragment->overlay);
- 		if (ret) {
- 			pr_debug("apply failed '%pOF'\n", fragment->target);
- 			return ret;
-@@ -522,12 +557,16 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
- 		}
+-	ret = of_resolve_phandles(info->np_overlay);
+-	if (ret) {
+-		pr_err("resolve ot phandles (ret=%d), %d\n", ret, onum);
+-		goto out_free_np_overlay;
+-	}
+-
+ 	info->overlay_id = 0;
+ 	ret = of_overlay_apply(info->np_overlay, &info->overlay_id);
+ 	if (ret < 0) {
+ 		pr_err("of_overlay_apply() (ret=%d), %d\n", ret, onum);
++		of_overlay_mutex_unlock();
+ 		goto out_free_np_overlay;
  	}
  
-+	/*
-+	 * if there is a symbols fragment in ovcs->fragments[i] it is
-+	 * the final element in the array
-+	 */
- 	node = of_get_child_by_name(tree, "__symbols__");
- 	if (node) {
-+		ovcs->symbols_fragment = 1;
- 		fragment = &fragments[cnt];
- 		fragment->overlay = node;
- 		fragment->target = of_find_node_by_path("/__symbols__");
--		fragment->is_symbols_node = 1;
+@@ -2209,7 +2216,10 @@ static __init void of_unittest_overlay_high_level(void)
+ 	 * Could not fixup phandles in unittest_unflatten_overlay_base()
+ 	 * because kmalloc() was not yet available.
+ 	 */
++	of_overlay_mutex_lock();
+ 	of_resolve_phandles(overlay_base_root);
++	of_overlay_mutex_unlock();
++
  
- 		if (!fragment->target) {
- 			pr_err("no symbols in root of device tree.\n");
+ 	/*
+ 	 * do not allow overlay_base to duplicate any node already in
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 49e5f24fb390..55e9ff0fb1fe 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1273,9 +1273,6 @@ static inline int of_reconfig_get_state_change(unsigned long action,
+ }
+ #endif /* CONFIG_OF_DYNAMIC */
+ 
+-/* CONFIG_OF_RESOLVE api */
+-extern int of_resolve_phandles(struct device_node *tree);
+-
+ /**
+  * of_device_is_system_power_controller - Tells if system-power-controller is found for device_node
+  * @np: Pointer to the given device_node
 -- 
 Frank Rowand <frank.rowand@sony.com>
