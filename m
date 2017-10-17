@@ -1,191 +1,40 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH 02/12] ARM: dts: imx6-tx6: remove obsolete eeti,egalax_ts
-Date: Tue, 17 Oct 2017 10:53:24 +0200
-Message-ID: <1508230414-8090-3-git-send-email-LW@KARO-electronics.de>
-References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+From: Jakob Unterwurzacher <jakob.unterwurzacher-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH] ASoC: sgtl5000: add support for a fixed sysclk frequency
+Date: Tue, 17 Oct 2017 11:01:57 +0200
+Message-ID: <28F29E6E-B067-4C06-8D35-3786D4B43AAE@theobroma-systems.com>
+References: <20171006083449.24038-1-jakob.unterwurzacher@theobroma-systems.com>
+ <AM5PR0401MB2627DE7F266788214268424BE34E0@AM5PR0401MB2627.eurprd04.prod.outlook.com>
+ <EA6FEF1C-263E-4529-AC8E-16F50C27030F@theobroma-systems.com>
+ <CAOMZO5D-2iFsAUk2Ldo4RD5Xg71Q5HOBuasYc0t=tV3hZbaO2g@mail.gmail.com>
+ <9A3652B7-C0ED-44DE-AC6F-9D883076E9B8@theobroma-systems.com>
+ <CAOMZO5CsRyTsOSU2L8jv0A=Db-o5RcA-ceCvokCWLKNj__htug@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5CsRyTsOSU2L8jv0A=Db-o5RcA-ceCvokCWLKNj__htug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Bhumika Goyal <bhumirks-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The display, that incorporates this touchpanel is obsolete and won't
-be supported any more.
 
-Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
----
- arch/arm/boot/dts/imx6dl-tx6u-811x.dts     | 23 +----------------------
- arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts | 22 +---------------------
- arch/arm/boot/dts/imx6q-tx6q-1110.dts      | 21 ---------------------
- arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts  | 22 +---------------------
- 4 files changed, 3 insertions(+), 85 deletions(-)
+> On 16. Oct 2017, at 13:19, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> I think I see a way to fix this without adding a DTS property, I’ll send out a patch later this afternoon.
+> 
+> Ok, great.
 
-diff --git a/arch/arm/boot/dts/imx6dl-tx6u-811x.dts b/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
-index 5e0c6bb..f0f759a 100644
---- a/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6u-811x.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2014-2016 Lothar Waßmann <LW@KARO-electronics.de>
-+ * Copyright 2014-2017 Lothar Waßmann <LW@KARO-electronics.de>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -98,19 +98,6 @@
- 	};
- };
- 
--&i2c3 {
--	polytouch2: eeti@04 {
--		compatible = "eeti,egalax_ts";
--		reg = <0x04>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_eeti>;
--		interrupt-parent = <&gpio3>;
--		interrupts = <22 0>;
--		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
--		wakeup-source;
--	};
--};
--
- &kpp {
- 	status = "disabled"; /* pad conflict with backlight1 PWM */
- };
-@@ -168,11 +155,3 @@
- &pwm1 {
- 	status = "okay";
- };
--
--&iomuxc {
--	pinctrl_eeti: eetigrp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
--		>;
--	};
--};
-diff --git a/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts b/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
-index b9a783f..c817324 100644
---- a/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
-+++ b/arch/arm/boot/dts/imx6dl-tx6u-81xx-mb7.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2016 Lothar Waßmann <LW@KARO-electronics.de>
-+ * Copyright 2016-2017 Lothar Waßmann <LW@KARO-electronics.de>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -106,18 +106,6 @@
- 	xceiver-supply = <&reg_3v3>;
- };
- 
--&i2c3 {
--	polytouch1: eeti@04 {
--		compatible = "eeti,egalax_ts";
--		reg = <0x04>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_eeti>;
--		interrupts-extended = <&gpio3 22 IRQ_TYPE_EDGE_FALLING>;
--		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
--		wakeup-source;
--	};
--};
--
- &kpp {
- 	status = "disabled"; /* pads partially clash with backlight1 PWM */
- };
-@@ -245,11 +233,3 @@
- &pwm1 {
- 	status = "okay";
- };
--
--&iomuxc {
--	pinctrl_eeti: eetigrp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
--		>;
--	};
--};
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-1110.dts b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-index 0f5e638..900557d 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-1110.dts
-@@ -98,19 +98,6 @@
- 	};
- };
- 
--&i2c3 {
--	polytouch1: eeti@04 {
--		compatible = "eeti,egalax_ts";
--		reg = <0x04>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_eeti>;
--		interrupt-parent = <&gpio3>;
--		interrupts = <22 0>;
--		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
--		wakeup-source;
--	};
--};
--
- &kpp {
- 	status = "disabled"; /* pad conflict with backlight1 PWM */
- };
-@@ -172,11 +159,3 @@
- &sata {
- 	status = "okay";
- };
--
--&iomuxc {
--	pinctrl_eeti: eetigrp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
--		>;
--	};
--};
-diff --git a/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts b/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
-index d78b129..6b42c44 100644
---- a/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
-+++ b/arch/arm/boot/dts/imx6q-tx6q-11x0-mb7.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2016 Lothar Waßmann <LW@KARO-electronics.de>
-+ * Copyright 2016-2017 Lothar Waßmann <LW@KARO-electronics.de>
-  *
-  * This file is dual-licensed: you can use it either under the terms
-  * of the GPL or the X11 license, at your option. Note that this dual
-@@ -107,18 +107,6 @@
- 	xceiver-supply = <&reg_3v3>;
- };
- 
--&i2c3 {
--	polytouch1: eeti@04 {
--		compatible = "eeti,egalax_ts";
--		reg = <0x04>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_eeti>;
--		interrupts-extended = <&gpio3 22 IRQ_TYPE_EDGE_FALLING>;
--		wakeup-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
--		wakeup-source;
--	};
--};
--
- &ipu2 {
- 	status = "disabled";
- };
-@@ -254,11 +242,3 @@
- &sata {
- 	status = "okay";
- };
--
--&iomuxc {
--	pinctrl_eeti: eetigrp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b1 /* Interrupt */
--		>;
--	};
--};
--- 
-2.1.4
+Hi Fabio, I think I found a way to get our use-case working with just DTS configuration
+for simple-audio-card.
+
+When you define the “clocks” property for the "simple-audio-card,cpu” sub-node,
+set_sysclk is called only once, on startup - like the IMX driver does.
+
+We should get away without changes to the codec driver.
+
+Thanks & best regards,
+Jakob--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
