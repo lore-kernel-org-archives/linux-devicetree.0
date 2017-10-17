@@ -1,89 +1,59 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [Patch 4/6] dt-bindings: media: ti-vpe: Document VPE driver
-Date: Tue, 17 Oct 2017 16:00:51 -0500
-Message-ID: <20171017210051.6ap3yg7b7viav6cy@rob-hp-laptop>
-References: <20171012192719.15193-1-bparrot@ti.com>
- <20171012192719.15193-5-bparrot@ti.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [RFC usb-next v5 1/3] dt-bindings: usb: add the documentation for
+ USB root-hub
+Date: Tue, 17 Oct 2017 23:02:43 +0200
+Message-ID: <CAFBinCAaEpXbYWkKwGohzUCZJ2cbfZJQCsEwzy+vYAK1t1U=aA@mail.gmail.com>
+References: <CAFBinCBwzzzj-ew-VTb9zojfzC9gedHd0uu0ez4WejBRTpnsWg@mail.gmail.com>
+ <Pine.LNX.4.44L0.1710131008390.1364-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171012192719.15193-5-bparrot-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1710131008390.1364-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 02:27:17PM -0500, Benoit Parrot wrote:
-> Device Tree bindings for the Video Processing Engine (VPE) driver.
-> 
-> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/media/ti-vpe.txt | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti-vpe.txt b/Documentation/devicetree/bindings/media/ti-vpe.txt
-> new file mode 100644
-> index 000000000000..c2ef93d08417
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/ti-vpe.txt
-> @@ -0,0 +1,41 @@
-> +Texas Instruments DRA7x VIDEO PROCESSING ENGINE (VPE)
-> +------------------------------------------------------
-> +
-> +The Video Processing Engine (VPE) is a key component for image post
-> +processing applications. VPE consist of a single memory to memory
-> +path which can perform chroma up/down sampling, deinterlacing,
-> +scaling and color space conversion.
-> +
-> +Required properties:
-> +- compatible: must be "ti,vpe"
+Hi Alan,
 
-Needs SoC specific compatibles.
+On Fri, Oct 13, 2017 at 4:15 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
+>
+>> Hi Alan,
+>>
+>> On Thu, Oct 12, 2017 at 11:17 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+>> > On Thu, 12 Oct 2017, Martin Blumenstingl wrote:
+>> >
+>> >> I haven't tested the described use-case. however, this patch is not
+>> >> supposed to change the binding for actual devices.
+>> >> USB device numbering starts at 1, while 0 is reserved for the root-hub
+>> >> (at least from what I know).
+>> >
+>> > Actually 1 is reserved for the root hub.  External devices are numbered
+>> > starting from 2.  (We can't use 0 for the root hub because, as you
+>> > said, USB device numbering starts at 1!)
+>> I just had a look at lsusb again:
+>> $ lsusb -t
+>> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
+>>
+>> however, for the devicetree bindings the devices are supposed to use 1-31: [0]
+>>
+>> Alan: just to make sure I understood you correctly: do you agree with
+>> this patch?
+>
+> I have no idea.  I haven't read the patch and I'm not familiar with the
+> details of DeviceTree.  I was just trying to clear up your
+> misunderstanding of USB device numbering.
+thank you for clarifying this.
+I tested it and the devicetree numbering is "off by one" compared to
+the lsusb output - this however has nothing to do with my patch.
+so my previous statements that basically said "0 is used for the
+roothub" should be "0 is used for the roothub in .dts/.dtsi files"
 
-> +- reg:	physical base address and length of the registers set for the 8
-> +	memory regions required;
-> +- reg-names: name associated with the memory regions described is <reg>;
-> +- interrupts: should contain IRQ line for VPE;
-> +
-> +Example:
-> +	vpe {
-> +		compatible = "ti,vpe";
-> +		ti,hwmods = "vpe";
-> +		clocks = <&dpll_core_h23x2_ck>;
-> +		clock-names = "fck";
-> +		reg =	<0x489d0000 0x120>,
-> +			<0x489d0300 0x20>,
-> +			<0x489d0400 0x20>,
-> +			<0x489d0500 0x20>,
-> +			<0x489d0600 0x3c>,
-> +			<0x489d0700 0x80>,
 
-Is there other stuff between these regions?
-
-> +			<0x489d5700 0x18>,
-> +			<0x489dd000 0x400>;
-> +		reg-names =	"vpe_top",
-> +				"vpe_chr_us0",
-> +				"vpe_chr_us1",
-> +				"vpe_chr_us2",
-> +				"vpe_dei",
-> +				"sc",
-> +				"csc",
-> +				"vpdma";
-> +		interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-
-These aren't needed.
-
-> +	};
-> -- 
-> 2.9.0
-> 
+Regards,
+Martin
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
