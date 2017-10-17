@@ -1,332 +1,85 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v1] dmaengine: stm32_mdma: activate pack/unpack feature
-Date: Tue, 17 Oct 2017 16:26:50 +0200
-Message-ID: <CA+M3ks4EymJ2aR5Fm1G1mTgyiOaGUcQgWMvDp0K4Hvue+M7rbA@mail.gmail.com>
-References: <1508247827-31741-1-git-send-email-pierre-yves.mordret@st.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 03/12] of: overlay: rename identifiers to more reflect
+ what they do
+Date: Tue, 17 Oct 2017 09:38:26 -0500
+Message-ID: <CAL_JsqJDZFznVm0TvCePHq_J-FhNyEXoLEue_ZRhOm6LyXC5kQ@mail.gmail.com>
+References: <1508203074-26917-1-git-send-email-frowand.list@gmail.com>
+ <1508203074-26917-4-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508247827-31741-1-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1508203074-26917-4-git-send-email-frowand.list@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-+Arnd since it should also fix 64 bits division issue
-
-2017-10-17 15:43 GMT+02:00 Pierre-Yves MORDRET <pierre-yves.mordret@st.com>=
-:
-> If source and destination bus width differs pack/unpack MDMA
-> feature has to be activated for alignment.
-> This pack/unpack feature implies to have both source/destination address
-> and buffer length aligned on bus width.
->
-> Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
-> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-> ---
->  drivers/dma/stm32-mdma.c | 84 ++++++++++++++++++++++++++++--------------=
-------
->  1 file changed, 50 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-> index d3be6bf..daa1602 100644
-> --- a/drivers/dma/stm32-mdma.c
-> +++ b/drivers/dma/stm32-mdma.c
-> @@ -387,14 +387,20 @@ static int stm32_mdma_get_width(struct stm32_mdma_c=
-han *chan,
->         }
->  }
->
-> -static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32=
- tlen)
-> +static enum dma_slave_buswidth stm32_mdma_get_max_width(dma_addr_t addr,
-> +                                                       u32 buf_len, u32 =
-tlen)
->  {
->         enum dma_slave_buswidth max_width =3D DMA_SLAVE_BUSWIDTH_8_BYTES;
->
->         for (max_width =3D DMA_SLAVE_BUSWIDTH_8_BYTES;
->              max_width > DMA_SLAVE_BUSWIDTH_1_BYTE;
->              max_width >>=3D 1) {
-> -               if (((buf_len % max_width) =3D=3D 0) && (tlen >=3D max_wi=
-dth))
-> +               /*
-> +                * Address and buffer length both have to be aligned on
-> +                * bus width
-> +                */
-> +               if ((((buf_len | addr) & (max_width - 1)) =3D=3D 0) &&
-> +                   tlen >=3D max_width)
->                         break;
->         }
->
-> @@ -486,7 +492,8 @@ static void stm32_mdma_set_bus(struct stm32_mdma_devi=
-ce *dmadev, u32 *ctbr,
->  static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
->                                      enum dma_transfer_direction directio=
-n,
->                                      u32 *mdma_ccr, u32 *mdma_ctcr,
-> -                                    u32 *mdma_ctbr, u32 buf_len)
-> +                                    u32 *mdma_ctbr, dma_addr_t addr,
-> +                                    u32 buf_len)
->  {
->         struct stm32_mdma_device *dmadev =3D stm32_mdma_get_dev(chan);
->         struct stm32_mdma_chan_config *chan_config =3D &chan->chan_config=
-;
-> @@ -520,6 +527,9 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdm=
-a_chan *chan,
->         ctcr &=3D ~STM32_MDMA_CTCR_LEN2_MSK;
->         ctcr |=3D STM32_MDMA_CTCR_TLEN((tlen - 1));
->
-> +       /* Disable Pack Enable */
-> +       ctcr &=3D ~STM32_MDMA_CTCR_PKE;
-> +
->         /* Check burst size constraints */
->         if (src_maxburst * src_addr_width > STM32_MDMA_MAX_BURST ||
->             dst_maxburst * dst_addr_width > STM32_MDMA_MAX_BURST) {
-> @@ -551,6 +561,8 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdm=
-a_chan *chan,
->
->         switch (direction) {
->         case DMA_MEM_TO_DEV:
-> +               dst_addr =3D chan->dma_config.dst_addr;
-> +
->                 /* Set device data size */
->                 dst_bus_width =3D stm32_mdma_get_width(chan, dst_addr_wid=
-th);
->                 if (dst_bus_width < 0)
-> @@ -567,7 +579,7 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdm=
-a_chan *chan,
->                 ctcr |=3D STM32_MDMA_CTCR_DBURST((ilog2(dst_best_burst)))=
-;
->
->                 /* Set memory data size */
-> -               src_addr_width =3D stm32_mdma_get_max_width(buf_len, tlen=
-);
-> +               src_addr_width =3D stm32_mdma_get_max_width(addr, buf_len=
-, tlen);
->                 chan->mem_width =3D src_addr_width;
->                 src_bus_width =3D stm32_mdma_get_width(chan, src_addr_wid=
-th);
->                 if (src_bus_width < 0)
-> @@ -587,15 +599,19 @@ static int stm32_mdma_set_xfer_param(struct stm32_m=
-dma_chan *chan,
->                 ctcr |=3D STM32_MDMA_CTCR_SBURST((ilog2(src_best_burst)))=
-;
->
->                 /* Select bus */
-> -               dst_addr =3D chan->dma_config.dst_addr;
->                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
->                                    dst_addr);
->
-> +               if (dst_bus_width !=3D src_bus_width)
-> +                       ctcr |=3D STM32_MDMA_CTCR_PKE;
-> +
->                 /* Set destination address */
->                 stm32_mdma_write(dmadev, STM32_MDMA_CDAR(chan->id), dst_a=
-ddr);
->                 break;
->
->         case DMA_DEV_TO_MEM:
-> +               src_addr =3D chan->dma_config.src_addr;
-> +
->                 /* Set device data size */
->                 src_bus_width =3D stm32_mdma_get_width(chan, src_addr_wid=
-th);
->                 if (src_bus_width < 0)
-> @@ -611,7 +627,7 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdm=
-a_chan *chan,
->                 ctcr |=3D STM32_MDMA_CTCR_SBURST((ilog2(src_best_burst)))=
-;
->
->                 /* Set memory data size */
-> -               dst_addr_width =3D stm32_mdma_get_max_width(buf_len, tlen=
-);
-> +               dst_addr_width =3D stm32_mdma_get_max_width(addr, buf_len=
-, tlen);
->                 chan->mem_width =3D dst_addr_width;
->                 dst_bus_width =3D stm32_mdma_get_width(chan, dst_addr_wid=
-th);
->                 if (dst_bus_width < 0)
-> @@ -630,10 +646,12 @@ static int stm32_mdma_set_xfer_param(struct stm32_m=
-dma_chan *chan,
->                 ctcr |=3D STM32_MDMA_CTCR_DBURST((ilog2(dst_best_burst)))=
-;
->
->                 /* Select bus */
-> -               src_addr =3D chan->dma_config.src_addr;
->                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
->                                    src_addr);
->
-> +               if (dst_bus_width !=3D src_bus_width)
-> +                       ctcr |=3D STM32_MDMA_CTCR_PKE;
-> +
->                 /* Set source address */
->                 stm32_mdma_write(dmadev, STM32_MDMA_CSAR(chan->id), src_a=
-ddr);
->                 break;
-> @@ -719,23 +737,27 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_=
-chan *chan,
->                         return -EINVAL;
->                 }
->
-> -               ret =3D stm32_mdma_set_xfer_param(chan, direction, &ccr, =
-&ctcr,
-> -                                               &ctbr, sg_dma_len(sg));
-> -               if (ret < 0)
-> -                       return ret;
-> -
->                 if (direction =3D=3D DMA_MEM_TO_DEV) {
->                         src_addr =3D sg_dma_address(sg);
->                         dst_addr =3D dma_config->dst_addr;
-> +                       ret =3D stm32_mdma_set_xfer_param(chan, direction=
-, &ccr,
-> +                                                       &ctcr, &ctbr, src=
-_addr,
-> +                                                       sg_dma_len(sg));
->                         stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR=
-_SBUS,
->                                            src_addr);
->                 } else {
->                         src_addr =3D dma_config->src_addr;
->                         dst_addr =3D sg_dma_address(sg);
-> +                       ret =3D stm32_mdma_set_xfer_param(chan, direction=
-, &ccr,
-> +                                                       &ctcr, &ctbr, dst=
-_addr,
-> +                                                       sg_dma_len(sg));
->                         stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR=
-_DBUS,
->                                            dst_addr);
->                 }
->
-> +               if (ret < 0)
-> +                       return ret;
-> +
->                 stm32_mdma_setup_hwdesc(chan, desc, direction, i, src_add=
-r,
->                                         dst_addr, sg_dma_len(sg), ctcr, c=
-tbr,
->                                         i =3D=3D sg_len - 1, i =3D=3D 0, =
-false);
-> @@ -830,27 +852,29 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_=
-addr_t buf_addr,
->         if (!desc)
->                 return NULL;
->
-> -       ret =3D stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr, &=
-ctbr,
-> -                                       period_len);
-> -       if (ret < 0)
-> -               goto xfer_setup_err;
-> -
-> -       /* Enable interrupts */
-> -       ccr &=3D ~STM32_MDMA_CCR_IRQ_MASK;
-> -       ccr |=3D STM32_MDMA_CCR_TEIE | STM32_MDMA_CCR_CTCIE | STM32_MDMA_=
-CCR_BTIE;
-> -       desc->ccr =3D ccr;
-> -
->         /* Select bus */
->         if (direction =3D=3D DMA_MEM_TO_DEV) {
->                 src_addr =3D buf_addr;
-> +               ret =3D stm32_mdma_set_xfer_param(chan, direction, &ccr, =
-&ctcr,
-> +                                               &ctbr, src_addr, period_l=
-en);
->                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
->                                    src_addr);
->         } else {
->                 dst_addr =3D buf_addr;
-> +               ret =3D stm32_mdma_set_xfer_param(chan, direction, &ccr, =
-&ctcr,
-> +                                               &ctbr, dst_addr, period_l=
-en);
->                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
->                                    dst_addr);
->         }
->
-> +       if (ret < 0)
-> +               goto xfer_setup_err;
-> +
-> +       /* Enable interrupts */
-> +       ccr &=3D ~STM32_MDMA_CCR_IRQ_MASK;
-> +       ccr |=3D STM32_MDMA_CCR_TEIE | STM32_MDMA_CCR_CTCIE | STM32_MDMA_=
-CCR_BTIE;
-> +       desc->ccr =3D ccr;
-> +
->         /* Configure hwdesc list */
->         for (i =3D 0; i < count; i++) {
->                 if (direction =3D=3D DMA_MEM_TO_DEV) {
-> @@ -956,9 +980,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_ad=
-dr_t dest, dma_addr_t src,
->                 ctcr |=3D STM32_MDMA_CTCR_TLEN((tlen - 1));
->
->                 /* Set source best burst size */
-> -               max_width =3D stm32_mdma_get_max_width(len, tlen);
-> -               if (src % max_width)
-> -                       max_width =3D DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +               max_width =3D stm32_mdma_get_max_width(src, len, tlen);
->                 src_bus_width =3D stm32_mdma_get_width(chan, max_width);
->
->                 max_burst =3D tlen / max_width;
-> @@ -971,9 +993,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_ad=
-dr_t dest, dma_addr_t src,
->                         STM32_MDMA_CTCR_SINCOS(src_bus_width);
->
->                 /* Set destination best burst size */
-> -               max_width =3D stm32_mdma_get_max_width(len, tlen);
-> -               if (dest % max_width)
-> -                       max_width =3D DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +               max_width =3D stm32_mdma_get_max_width(dest, len, tlen);
->                 dst_bus_width =3D stm32_mdma_get_width(chan, max_width);
->
->                 max_burst =3D tlen / max_width;
-> @@ -1014,9 +1034,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_=
-addr_t dest, dma_addr_t src,
->                                            STM32_MDMA_MAX_BLOCK_LEN);
->
->                         /* Set source best burst size */
-> -                       max_width =3D stm32_mdma_get_max_width(len, tlen)=
-;
-> -                       if (src % max_width)
-> -                               max_width =3D DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +                       max_width =3D stm32_mdma_get_max_width(src, len, =
-tlen);
->                         src_bus_width =3D stm32_mdma_get_width(chan, max_=
-width);
->
->                         max_burst =3D tlen / max_width;
-> @@ -1030,9 +1048,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_=
-addr_t dest, dma_addr_t src,
->                                 STM32_MDMA_CTCR_SINCOS(src_bus_width);
->
->                         /* Set destination best burst size */
-> -                       max_width =3D stm32_mdma_get_max_width(len, tlen)=
-;
-> -                       if (dest % max_width)
-> -                               max_width =3D DMA_SLAVE_BUSWIDTH_1_BYTE;
-> +                       max_width =3D stm32_mdma_get_max_width(dest, len,=
- tlen);
->                         dst_bus_width =3D stm32_mdma_get_width(chan, max_=
-width);
->
->                         max_burst =3D tlen / max_width;
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
+T24gTW9uLCBPY3QgMTYsIDIwMTcgYXQgODoxNyBQTSwgIDxmcm93YW5kLmxpc3RAZ21haWwuY29t
+PiB3cm90ZToKPiBGcm9tOiBGcmFuayBSb3dhbmQgPGZyYW5rLnJvd2FuZEBzb255LmNvbT4KPgo+
+IFRoaXMgcGF0Y2ggaXMgYWltZWQgcHJpbWFyaWx5IGF0IGRyaXZlcnMvb2Yvb3ZlcmxheS5jLCBi
+dXQgdGhvc2UKPiBjaGFuZ2VzIGFsc28gaGF2ZSBhIHNtYWxsIGltcGFjdCBpbiBhIGZldyBvdGhl
+ciBmaWxlcy4KPgo+IG92ZXJsYXkuYyBpcyBkaWZmaWN1bHQgdG8gcmVhZCBhbmQgbWFpbnRhaW4u
+ICBJbXByb3ZlIHJlYWRhYmlsaXR5Ogo+ICAgLSBSZW5hbWUgZnVuY3Rpb25zLCB0eXBlcyBhbmQg
+dmFyaWFibGVzIHRvIGJldHRlciByZWZsZWN0IHdoYXQKPiAgICAgdGhleSBkbyBhbmQgdG8gYmUg
+Y29uc2lzdGVudCB3aXRoIG5hbWVzIGluIG90aGVyIHBsYWNlcywKPiAgICAgc3VjaCBhcyB0aGUg
+ZGV2aWNlIHRyZWUgb3ZlcmxheSBGRFQgKGZsYXR0ZW5lZCBkZXZpY2UgdHJlZSksCj4gICAgIGFu
+ZCBtYWtlIHRoZSBhbGdvcml0aG1zIG1vcmUgY2xlYXIKPiAgIC0gVXNlIHRoZSBzYW1lIG5hbWVz
+IGNvbnNpc3RlbnRseSB0aHJvdWdob3V0IHRoZSBmaWxlCj4gICAtIFVwZGF0ZSBjb21tZW50cyBm
+b3IgbmFtZSBjaGFuZ2VzCj4gICAtIEZpeCBpbmNvcnJlY3QgY29tbWVudHMKPgo+IFRoaXMgcGF0
+Y2ggaXMgaW50ZW5kZWQgdG8gbm90IGludHJvZHVjZSBhbnkgZnVuY3Rpb25hbCBjaGFuZ2UuCj4K
+PiBTaWduZWQtb2ZmLWJ5OiBGcmFuayBSb3dhbmQgPGZyYW5rLnJvd2FuZEBzb255LmNvbT4KPiAt
+LS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL292ZXJsYXktbm90ZXMudHh0ICAgfCAgMTIg
+Ky0KPiAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfc2xhdmVfY29tcGF0LmMgfCAgIDUg
+Ky0KPiAgZHJpdmVycy9vZi9keW5hbWljLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIg
+Ky0KPiAgZHJpdmVycy9vZi9vdmVybGF5LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCA1MDYg
+KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tCj4gIGRyaXZlcnMvb2YvdW5pdHRlc3QuYyAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgIDIwICstCj4gIGluY2x1ZGUvbGludXgvb2YuaCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgIDEyICstCj4gIDYgZmlsZXMgY2hhbmdlZCwgMjk0IGluc2Vy
+dGlvbnMoKyksIDI2MyBkZWxldGlvbnMoLSkKCkRvZXNuJ3QgYnVpbGQ6CgouLi9kcml2ZXJzL29m
+L292ZXJsYXkuYzozOTc6NDE6IHdhcm5pbmc6IOKAmHN0cnVjdCBvZl9vdmVybGF5X2luZm/igJkK
+ZGVjbGFyZWQgaW5zaWRlIHBhcmFtZXRlciBsaXN0IHdpbGwgbm90IGJlIHZpc2libGUgb3V0c2lk
+ZSBvZiB0aGlzCmRlZmluaXRpb24gb3IgZGVjbGFyYXRpb24KICAgc3RydWN0IGRldmljZV9ub2Rl
+ICppbmZvX25vZGUsIHN0cnVjdCBvZl9vdmVybGF5X2luZm8gKm92aW5mbykKICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn4KLi4vZHJpdmVycy9v
+Zi9vdmVybGF5LmM6Mzk2OjQwOiB3YXJuaW5nOiDigJhzdHJ1Y3Qgb2Zfb3ZlcmxheeKAmSBkZWNs
+YXJlZAppbnNpZGUgcGFyYW1ldGVyIGxpc3Qgd2lsbCBub3QgYmUgdmlzaWJsZSBvdXRzaWRlIG9m
+IHRoaXMgZGVmaW5pdGlvbgpvciBkZWNsYXJhdGlvbgogc3RhdGljIGludCBvZl9maWxsX292ZXJs
+YXlfaW5mbyhzdHJ1Y3Qgb2Zfb3ZlcmxheSAqb3YsCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBefn5+fn5+fn5+Ci4uL2RyaXZlcnMvb2Yvb3ZlcmxheS5jOiBJbiBmdW5j
+dGlvbiDigJhvZl9maWxsX292ZXJsYXlfaW5mb+KAmToKLi4vZHJpdmVycy9vZi9vdmVybGF5LmM6
+Mzk5Ojg6IGVycm9yOiBkZXJlZmVyZW5jaW5nIHBvaW50ZXIgdG8KaW5jb21wbGV0ZSB0eXBlIOKA
+mHN0cnVjdCBvZl9vdmVybGF5X2luZm/igJkKICBvdmluZm8tPm92ZXJsYXkgPSBvZl9nZXRfY2hp
+bGRfYnlfbmFtZShpbmZvX25vZGUsICJfX292ZXJsYXlfXyIpOwogICAgICAgIF5+Ci4uL2RyaXZl
+cnMvb2Yvb3ZlcmxheS5jOiBJbiBmdW5jdGlvbiDigJhpbml0X292ZXJsYXlfY2hhbmdlc2V04oCZ
+OgouLi9kcml2ZXJzL29mL292ZXJsYXkuYzo0NTA6MzA6IGVycm9yOiBwYXNzaW5nIGFyZ3VtZW50
+IDEgb2YK4oCYb2ZfZmlsbF9vdmVybGF5X2luZm/igJkgZnJvbSBpbmNvbXBhdGlibGUgcG9pbnRl
+ciB0eXBlClstV2Vycm9yPWluY29tcGF0aWJsZS1wb2ludGVyLXR5cGVzXQogICByZXQgPSBvZl9m
+aWxsX292ZXJsYXlfaW5mbyhvdmNzLCBub2RlLCAmZnJhZ21lbnRzW2NudF0pOwogICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBefn5+Ci4uL2RyaXZlcnMvb2Yvb3ZlcmxheS5jOjM5NjoxMjog
+bm90ZTogZXhwZWN0ZWQg4oCYc3RydWN0IG9mX292ZXJsYXkgKuKAmQpidXQgYXJndW1lbnQgaXMg
+b2YgdHlwZSDigJhzdHJ1Y3Qgb3ZlcmxheV9jaGFuZ2VzZXQgKuKAmQogc3RhdGljIGludCBvZl9m
+aWxsX292ZXJsYXlfaW5mbyhzdHJ1Y3Qgb2Zfb3ZlcmxheSAqb3YsCiAgICAgICAgICAgIF5+fn5+
+fn5+fn5+fn5+fn5+fn5+Ci4uL2RyaXZlcnMvb2Yvb3ZlcmxheS5jOjQ1MDo0MjogZXJyb3I6IHBh
+c3NpbmcgYXJndW1lbnQgMyBvZgrigJhvZl9maWxsX292ZXJsYXlfaW5mb+KAmSBmcm9tIGluY29t
+cGF0aWJsZSBwb2ludGVyIHR5cGUKWy1XZXJyb3I9aW5jb21wYXRpYmxlLXBvaW50ZXItdHlwZXNd
+CiAgIHJldCA9IG9mX2ZpbGxfb3ZlcmxheV9pbmZvKG92Y3MsIG5vZGUsICZmcmFnbWVudHNbY250
+XSk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4KLi4vZHJpdmVy
+cy9vZi9vdmVybGF5LmM6Mzk2OjEyOiBub3RlOiBleHBlY3RlZCDigJhzdHJ1Y3Qgb2Zfb3Zlcmxh
+eV9pbmZvCirigJkgYnV0IGFyZ3VtZW50IGlzIG9mIHR5cGUg4oCYc3RydWN0IGZyYWdtZW50ICri
+gJkKIHN0YXRpYyBpbnQgb2ZfZmlsbF9vdmVybGF5X2luZm8oc3RydWN0IG9mX292ZXJsYXkgKm92
+LAogICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fgoKCkkgY291bGQgaGF2ZSBtZXNzZWQg
+c29tZXRoaW5nIHVwIGFzIGV2ZXJ5IGNvbW1pdCBzbyBmYXIgY29uZmxpY3RzIHdpdGgKIm9mOiBv
+dmVybGF5OiBmaXggbWVtb3J5IGxlYWsgcmVsYXRlZCB0byBkdXBsaWNhdGVkIHByb3BlcnR5Ii4g
+Q2FuIHlvdQpyZWJhc2Ugb24gdG8gbXkgZHQvbmV4dCBicmFuY2ggdG9vLgoKUm9iCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
