@@ -1,122 +1,162 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend
- property
-Date: Tue, 17 Oct 2017 16:39:05 -0700
-Message-ID: <20171017233904.GA65743@google.com>
-References: <20171012205220.130048-1-briannorris@chromium.org>
- <20171012205220.130048-2-briannorris@chromium.org>
- <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: frowand.list@gmail.com
+Subject: [PATCH v3 02/12] of: overlay.c: Convert comparisons to zero or NULL to logical expressions
+Date: Tue, 17 Oct 2017 16:36:22 -0700
+Message-ID: <1508283392-18252-3-git-send-email-frowand.list@gmail.com>
+References: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+From: Frank Rowand <frank.rowand@sony.com>
 
-Sorry for a little delay. I haven't been able to get much better answers
-out of the problematic vendor here (they insist they are within the
-spec), so I guess I'll have to go ahead based on current knowledge.
+Use normal shorthand for comparing a variable to zero.
+For variable "XXX":
+   convert (XXX == 0) to (!XXX)
+   convert (XXX != 0) to (XXX)
 
-On Fri, Oct 13, 2017 at 11:51:52AM -0500, Bjorn Helgaas wrote:
-> [+cc Doug]
-> 
-> On Thu, Oct 12, 2017 at 01:52:18PM -0700, Brian Norris wrote:
-> > The patch is self-descriptive. I've found that we may need
-> > platform-specific behavior for the PERST# signal in system suspend,
-> > depending on the type of PCIe endpoints are attached.
-> > 
-> > Signed-off-by: Brian Norris <briannorris@chromium.org>
-> > ---
-> >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> > index c77981c5dd18..91339b6d0652 100644
-> > --- a/Documentation/devicetree/bindings/pci/pci.txt
-> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> > @@ -24,3 +24,14 @@ driver implementation may support the following properties:
-> >     unsupported link speed, for instance, trying to do training for
-> >     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-> >     for gen2, and '1' for gen1. Any other values are invalid.
-> > +- pcie-reset-suspend:
-> > +   If present this property defines whether the PCIe Reset signal (referred to
-> > +   as PERST#) should be asserted when the system enters low-power suspend modes
-> > +   (e.g., S3). Depending on the form factor, the associated PCIe
-> > +   electromechanical specification may specify a particular behavior (e.g.,
-> > +   "PERST# is asserted in advance of the power being switched off in a
-> > +   power-managed state like S3") or it may be less clear. The net result is
-> > +   that some endpoints perform better (e.g., lower power consumption) with
-> > +   PERST# asserted, and others prefer PERST# deasserted. The value must be '0'
-> > +   or '1', where '0' means do not assert PERST# and '1' means assert PERST#.
-> > +   When absent, behavior may be platform-specific.
-> 
-> I don't understand this at all.  Are you suggesting that we need
-> different "pcie-reset-suspend" values based on what sort of endpoint
-> the user plugs in?
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
+ drivers/of/overlay.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-Partly. I guess I also failed to mention in this particular text (but I
-did, in patch 3) that it can be a board-specific problem, related to the
-fact that the only endpoint used on said board--soldered on, not
-replaceable--never seemed to require PERST# to be asserted in suspend.
-On such boards, I believe [1] it is physically impossible to drive this
-pin low in S3 suspend. So even if we tried to assert PERST#, it would
-pull back up when we suspend the system. I'm not sure if that's better
-or worse than not asserting it at all.
-
-So, that's why I settled on a device tree property. It describes the
-physical ability of the board too, in some cases. (I could document this
-better, I see.)
-
-However, in other cases, we might have boards that are physically
-capable, but where the use of this endpoint might still cause
-interoperability problems, per your next comment. So... (continued
-below)
-
-> If so, I really don't want to get involved in that, because that's an
-> issue that needs to be resolved by the vendors and the PCI-SIG.  If we
-
-Judging by conversations with these vendors, I can't really imagine them
-proactively dealing with the PCI-SIG on this. Is that really what you
-think will work best?
-
-I personally believe deferring (i.e., ignoring) the problem will not
-cause any change; badly behaved vendors will just do whatever suits
-them, and system designers will have to figure it out somehow -- ACPI
-systems will have platform-specific behavior hidden in firmware; device
-tree systems will do whatever they want out of tree; and the rare device
-tree system that gets upstream support will either have suboptimal power
-management, or have to have these sorts of conversations again. None of
-that puts pressure on an endpoint vendor to talk to the PCI-SIG.
-
-(I can try to put that pressure on them, but I only have so much power.)
-
-> put in a tweak like this, I think it would be a band-aid that only
-> delays getting a real solution figured out.
-> 
-> If you want a quirk to tune this based on specific devices, that might
-> make sense.  It would still sound like an interoperability issue and
-> an ongoing maintenance problem, but at least we would have specific
-> details about which devices are involved, and we'd have a chance to
-> make them work on more controllers than just Rockchip.
-
-(continued) ...I suppose we could do this too. Like, a new entry in enum
-pci_dev_flags, and code in drivers/pci/quirks.c? And then some helper so
-that a PCIe root port driver like Rockchip's can walk its children and
-check for the existence of this quirk? I'll see if I can write that up
-reasonably.
-
-Then I guess technically we could get away with not supporting the
-aforementioned device tree property, since any board where the HW won't
-support asserting PERST# in S3 should also have an endpoint with this
-quirk.
-
-Brian
-
-[1] I say "I believe" because the GPIO power rail is not powered in S3
-    (so at best we can possibly give a weak pull) and it is pulled up
-    externally. I don't think there's any way around this.
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index a42dd7b094c4..d3f4a5974a11 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -169,9 +169,9 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
+ 
+ 	tprop = of_find_property(target, prop->name, NULL);
+ 
+-	if (of_prop_cmp(prop->name, "name") == 0 ||
+-	    of_prop_cmp(prop->name, "phandle") == 0 ||
+-	    of_prop_cmp(prop->name, "linux,phandle") == 0)
++	if (!of_prop_cmp(prop->name, "name") ||
++	    !of_prop_cmp(prop->name, "phandle") ||
++	    !of_prop_cmp(prop->name, "linux,phandle"))
+ 		return 0;
+ 
+ 	if (is_symbols_node) {
+@@ -182,10 +182,10 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
+ 		propn = __of_prop_dup(prop, GFP_KERNEL);
+ 	}
+ 
+-	if (propn == NULL)
++	if (!propn)
+ 		return -ENOMEM;
+ 
+-	if (tprop == NULL)
++	if (!tprop)
+ 		ret = of_changeset_add_property(&ov->cset, target, propn);
+ 	else
+ 		ret = of_changeset_update_property(&ov->cset, target, propn);
+@@ -206,14 +206,14 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+ 	int ret = 0;
+ 
+ 	cname = kbasename(child->full_name);
+-	if (cname == NULL)
++	if (!cname)
+ 		return -ENOMEM;
+ 
+ 	for_each_child_of_node(target, tchild)
+ 		if (!of_node_cmp(cname, kbasename(tchild->full_name)))
+ 			break;
+ 
+-	if (tchild != NULL) {
++	if (tchild) {
+ 		if (child->phandle)
+ 			return -EINVAL;
+ 
+@@ -271,7 +271,7 @@ static int of_overlay_apply_one(struct of_overlay *ov,
+ 
+ 	for_each_child_of_node(overlay, child) {
+ 		ret = of_overlay_apply_single_device_node(ov, target, child);
+-		if (ret != 0) {
++		if (ret) {
+ 			pr_err("Failed to apply single node @%pOF/%s\n",
+ 			       target, child->name);
+ 			of_node_put(child);
+@@ -300,7 +300,7 @@ static int of_overlay_apply(struct of_overlay *ov)
+ 
+ 		err = of_overlay_apply_one(ov, ovinfo->target, ovinfo->overlay,
+ 					   ovinfo->is_symbols_node);
+-		if (err != 0) {
++		if (err) {
+ 			pr_err("apply failed '%pOF'\n", ovinfo->target);
+ 			return err;
+ 		}
+@@ -323,11 +323,11 @@ static struct device_node *find_target_node(struct device_node *info_node)
+ 	int ret;
+ 
+ 	ret = of_property_read_u32(info_node, "target", &val);
+-	if (ret == 0)
++	if (!ret)
+ 		return of_find_node_by_phandle(val);
+ 
+ 	ret = of_property_read_string(info_node, "target-path", &path);
+-	if (ret == 0)
++	if (!ret)
+ 		return of_find_node_by_path(path);
+ 
+ 	pr_err("Failed to find target for node %p (%s)\n",
+@@ -354,11 +354,11 @@ static int of_fill_overlay_info(struct of_overlay *ov,
+ 		struct device_node *info_node, struct of_overlay_info *ovinfo)
+ {
+ 	ovinfo->overlay = of_get_child_by_name(info_node, "__overlay__");
+-	if (ovinfo->overlay == NULL)
++	if (!ovinfo->overlay)
+ 		goto err_fail;
+ 
+ 	ovinfo->target = find_target_node(info_node);
+-	if (ovinfo->target == NULL)
++	if (!ovinfo->target)
+ 		goto err_fail;
+ 
+ 	return 0;
+@@ -398,13 +398,13 @@ static int of_build_overlay_info(struct of_overlay *ov,
+ 		cnt++;
+ 
+ 	ovinfo = kcalloc(cnt, sizeof(*ovinfo), GFP_KERNEL);
+-	if (ovinfo == NULL)
++	if (!ovinfo)
+ 		return -ENOMEM;
+ 
+ 	cnt = 0;
+ 	for_each_child_of_node(tree, node) {
+ 		err = of_fill_overlay_info(ov, node, &ovinfo[cnt]);
+-		if (err == 0)
++		if (!err)
+ 			cnt++;
+ 	}
+ 
+@@ -422,7 +422,7 @@ static int of_build_overlay_info(struct of_overlay *ov,
+ 		cnt++;
+ 	}
+ 
+-	if (cnt == 0) {
++	if (!cnt) {
+ 		kfree(ovinfo);
+ 		return -ENODEV;
+ 	}
+@@ -478,7 +478,7 @@ int of_overlay_create(struct device_node *tree)
+ 	int err, id;
+ 
+ 	ov = kzalloc(sizeof(*ov), GFP_KERNEL);
+-	if (ov == NULL)
++	if (!ov)
+ 		return -ENOMEM;
+ 	ov->id = -1;
+ 
+@@ -629,7 +629,7 @@ int of_overlay_destroy(int id)
+ 	mutex_lock(&of_mutex);
+ 
+ 	ov = idr_find(&ov_idr, id);
+-	if (ov == NULL) {
++	if (!ov) {
+ 		err = -ENODEV;
+ 		pr_err("destroy: Could not find overlay #%d\n", id);
+ 		goto out;
+-- 
+Frank Rowand <frank.rowand@sony.com>
