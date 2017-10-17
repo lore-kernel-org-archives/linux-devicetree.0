@@ -1,51 +1,60 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix typo in iommu nodes
-Date: Tue, 17 Oct 2017 19:52:55 +0200
-Message-ID: <35096146.J7tq43JfW1@phil>
-References: <20171010085648.1339605-1-arnd@arndb.de> <4123717.0VmPnCpUOn@diego>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 1/4] clocksource: stm32: convert driver to timer_of
+Date: Tue, 17 Oct 2017 19:53:32 +0200
+Message-ID: <28b1df26-8375-1a38-b918-39b80390ef7d@linaro.org>
+References: <1506959513-16851-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1506959513-16851-2-git-send-email-benjamin.gaignard@linaro.org>
+ <88c8f124-4cb1-a982-d4a2-c029ab0dcd2a@linaro.org>
+ <CA+M3ks5CBOXfQCMmUZnkVUNwSGCnzaqdzDZa9ap6NYgDTVspsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4123717.0VmPnCpUOn@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rocky Hao <rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+M3ks5CBOXfQCMmUZnkVUNwSGCnzaqdzDZa9ap6NYgDTVspsw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 10. Oktober 2017, 11:48:25 CEST schrieb Heiko Stübner:
-> Hi Arnd,
+On 17/10/2017 19:34, Benjamin Gaignard wrote:
+> 2017-10-17 19:09 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>> On 02/10/2017 17:51, Benjamin Gaignard wrote:
+>>> Convert driver to use timer_of helpers. This allow to remove
+>>> custom proprietary structure.
+>>>
+>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>>> ---
+>>
+>> [ ... ]
+>>
+>>> -     clockevents_config_and_register(&data->evtdev,
+>>> -                                     DIV_ROUND_CLOSEST(rate, prescaler),
+>>> -                                     0x1, max_delta);
+>>> -
+>>> -     ret = request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
+>>> -                     "stm32 clockevent", data);
+>>> -     if (ret) {
+>>> -             pr_err("%pOF: failed to request irq.\n", np);
+>>> -             goto err_get_irq;
+>>> -     }
+>>> +     clockevents_config_and_register(&to->clkevt,
+>>> +                                     timer_of_period(to), 0x60, max_delta);
+>>
+>>
+>> Why 0x1 -> 0x60 ?
 > 
-> Am Dienstag, 10. Oktober 2017, 10:56:01 CEST schrieb Arnd Bergmann:
-> > The latest dtc warns about an extraneous cell in the interrupt
-> > property of two of the iommu device nodes:
-> > 
-> > Warning (interrupts_property): interrupts size is (16), expected multiple of
-> > 12 in /iommu@ff373f00 Warning (interrupts_property): interrupts size is
-> > (16), expected multiple of 12 in /iommu@ff900800
-> > 
-> > This removes the typo.
-> > 
-> > Fixes: cede4c79de28 ("arm64: dts: rockchip: add rk3368 iommu nodes")
-> > Fixes: 49c82f2b7c5d ("arm64: dts: rockchip: add rk3328 iommu nodes")
-> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> looks like that got copy-pasted from rk3399 where we have 4 elements per irq.
-> In any case the change looks good, so if you want to apply it directly to 
-> armsoc-fixes here is a
-> 
-> Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> 
-> Depending on how you want to handle it I can also merge it, but
-> Olof already picked up my 2 fixes for 4.14, so you applying it might
-> save us the round-trip for a further 1-patch pull request :-)
+> Because if the min delta is too small it could generate too much interrupts
+> and the system will not be able to catch all of them.
 
-as another (somewhat urgent) fix for 64bit dts has come up, I've now also
-picked this change up for the following pull request.
+You did a change not related to what is described in the log.
+
+Shame on you! 50 push-ups! Reply to this email when it is done.
 
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+ <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
