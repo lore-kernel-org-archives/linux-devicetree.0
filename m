@@ -1,104 +1,78 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH 0/9] Enable dw-mmc multi-card support
-Date: Tue, 17 Oct 2017 15:52:03 +0000
-Message-ID: <AM2PR05MB07533A822C7CCBA7111FD58FA14C0@AM2PR05MB0753.eurprd05.prod.outlook.com>
-References: <cover.1507315433.git.lsun@mellanox.com>
- <8e433531-8f67-d575-635e-c6ced29f6804@rock-chips.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 5/8] arm64: Use of_cpu_node_to_id helper for CPU
+ topology parsing
+Date: Tue, 17 Oct 2017 17:11:40 +0100
+Message-ID: <20171017161140.GD19711@arm.com>
+References: <20171010103303.32436-1-suzuki.poulose@arm.com>
+ <20171010103303.32436-6-suzuki.poulose@arm.com>
+ <20171017152422.fawwvx6e3nn4dsej@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <8e433531-8f67-d575-635e-c6ced29f6804@rock-chips.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chris Metcalf <cmetcalf@mellanox.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171017152422.fawwvx6e3nn4dsej-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->> Hrm.... it's so unlucky that your patchset comes a little late. As your =
-patch 8 and 9 said, you need them to fix problem for multi-card support, so=
- definitely there was no such use case, and even the code was buggy to supp=
-ort it right? That makes the code hard to read and maintain, so we decide t=
-o remove it.
+On Tue, Oct 17, 2017 at 04:24:23PM +0100, Mark Rutland wrote:
+> On Tue, Oct 10, 2017 at 11:33:00AM +0100, Suzuki K Poulose wrote:
+> > Make use of the new generic helper to convert an of_node of a CPU
+> > to the logical CPU id in parsing the topology.
+> > 
+> > Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+> 
+> This looks sane to me, but it will need an ack from Will or Catalin.
+> 
+> FWIW:
+> 
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> 
+> Thanks,
+> Mark.
+> 
+> > ---
+> >  arch/arm64/kernel/topology.c | 16 ++++++----------
+> >  1 file changed, 6 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> > index 8d48b233e6ce..21868530018e 100644
+> > --- a/arch/arm64/kernel/topology.c
+> > +++ b/arch/arm64/kernel/topology.c
+> > @@ -37,18 +37,14 @@ static int __init get_cpu_for_node(struct device_node *node)
+> >  	if (!cpu_node)
+> >  		return -1;
+> >  
+> > -	for_each_possible_cpu(cpu) {
+> > -		if (of_get_cpu_node(cpu, NULL) == cpu_node) {
+> > -			topology_parse_cpu_capacity(cpu_node, cpu);
+> > -			of_node_put(cpu_node);
+> > -			return cpu;
+> > -		}
+> > -	}
+> > -
+> > -	pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> > +	cpu = of_cpu_node_to_id(cpu_node);
+> > +	if (cpu >= 0)
+> > +		topology_parse_cpu_capacity(cpu_node, cpu);
+> > +	else
+> > +		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> >  
+> >  	of_node_put(cpu_node);
 
-Thanks for the feedback. Yes, earlier the multi-card support was buggy inde=
-ed. We spent some time to debug it and got it working.
+This of_node_put is confusing me. Since of_cpu_node_to_id appears to be
+balanced with its use of the node refcount, is this one intended to pair
+with the earlier call to of_parse_phandle? If so, does that mainline is
+currently broken here because it doesn't drop the refcount twice for the
+matching node? Or do we need to return with that held?
 
->> Havn'e check the databook for details yet, but I think it's ok to re-int=
-roduce multi-slot support if a real user benefits from it. But you need a n=
-ew patch to silent the log "num-slots property not found, assuming 1 slot i=
-s available" as we removed all the num-slots from DT at that time.
-
-The " num-slots property not found..." log message has already been removed=
- by 8a629d26f back in 2016. Looks like we're good on this one. In dw_mci_pr=
-obe (), it has code to check pdata->num_slots. If 0, the host->num_slots wi=
-ll be set to 1. So the logic of setting default num_slots seems already the=
-re. But correct me if I am wrong.
-
-Thanks,
-Liming
-
------Original Message-----
-From: Shawn Lin [mailto:shawn.lin@rock-chips.com]=20
-Sent: Monday, October 16, 2017 9:36 PM
-To: Liming Sun <lsun@mellanox.com>; Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>; Rob Herring <robh+dt@kernel.org>;=
- Mark Rutland <mark.rutland@arm.com>; Kukjin Kim <kgene@kernel.org>; Krzysz=
-tof Kozlowski <krzk@kernel.org>; shawn.lin@rock-chips.com; linux-mmc@vger.k=
-ernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-=
-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 0/9] Enable dw-mmc multi-card support
-
-
-On 2017/10/7 3:21, Liming Sun wrote:
-> This series of commits enables the multi-card support for the dw-mmc=20
-> controller. It includes two parts as below.
->=20
-> The first part (patches 1-7) reverts the series of recent commits that=20
-> removed the multi-card support with comments saying there was no such=20
-> use case in the real world. Actually this feature is being used in=20
-> Mellanox Bluefield SoC and has been requested by customers.
-
-Hrm.... it's so unlucky that your patchset comes a little late. As your pat=
-ch 8 and 9 said, you need them to fix problem for multi-card support, so de=
-finitely there was no such use case, and even the code was buggy to support=
- it right? That makes the code hard to read and maintain, so we decide to r=
-emove it.
-
->=20
-> The second part (patches 8-9) fixes the DesignWare multi-card support=20
-> according to the dw-mmc databook (synnopsys: DesignWare Cores Mobile=20
-> Storage Host Databook, 2.70a). It has changes to set the card number=20
-> into the CMD register to multiplex requests to different cards when=20
-> working in SD_MMC_CEATA mode, set the CTYPE / CLKENA / CDTHRCTL=20
-> registers properly according to the spec, and parse the per-card=20
-> configuration to match the Linux Documentation=20
-> (bindings/mmc/synopsys-dw-mshc.txt).
-
-Havn'e check the databook for details yet, but I think it's ok to re-introd=
-uce multi-slot support if a real user benefits from it. But you need a new =
-patch to silent the log "num-slots property not found, assuming 1 slot is a=
-vailable" as we removed all the num-slots from DT at that time.
-
-
->=20
-> Liming Sun (9):
->    Revert "Documentation: dw-mshc: deprecate num-slots"
->    Revert "mmc: dw_mmc: remove the unnecessary slot variable"
->    Revert "mmc: dw_mmc: use the 'slot' instead of 'cur_slot'"
->    Revert "mmc: dw_mmc: remove the 'id' arguments about functions
->      relevant to slot"
->    Revert "mmc: dw_mmc: change the array of slots"
->    Revert "mmc: dw_mmc: remove the loop about finding slots"
->    Revert "mmc: dw_mmc: deprecated the "num-slots" property"
->    mmc: dw_mmc: Support two SD_MMC_CE-ATA cards
->    mmc: dw_mmc: Parse slot-specific configuration
->=20
->   .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  16 +-
->   drivers/mmc/host/dw_mmc-exynos.c                   |   4 +-
->   drivers/mmc/host/dw_mmc.c                          | 277 ++++++++++++++=
-++-----
->   drivers/mmc/host/dw_mmc.h                          |  17 +-
->   4 files changed, 236 insertions(+), 78 deletions(-)
->=20
-
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
