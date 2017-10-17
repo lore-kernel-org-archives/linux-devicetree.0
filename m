@@ -1,49 +1,59 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] staging: Introduce NVIDIA Tegra20 video decoder
- driver
-Date: Wed, 18 Oct 2017 00:26:45 +0300
-Message-ID: <ca4fa045-17f0-9142-6bca-bbf472c1f3bb@gmail.com>
-References: <cover.1507752381.git.digetx@gmail.com>
- <3d432aa2617977a2b0a8621a1fc2f36f751133e1.1507752381.git.digetx@gmail.com>
- <20171017201354.efgjrwvakkseyvr7@rob-hp-laptop> <20171017202407.GA10482@ulmo>
- <CAL_JsqKtFD9OgO2privwfBAZeCn3zg1JienmefPk=X2W-+ahJQ@mail.gmail.com>
+From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in full_name
+Date: Tue, 17 Oct 2017 16:32:53 -0500
+Message-ID: <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
+References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-6-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKtFD9OgO2privwfBAZeCn3zg1JienmefPk=X2W-+ahJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170821151651.25096-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18.10.2017 00:13, Rob Herring wrote:
-> On Tue, Oct 17, 2017 at 3:24 PM, Thierry Reding
-> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Oct 17, 2017 at 03:13:54PM -0500, Rob Herring wrote:
->> [...]
->>>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
->> [...]
->>>> +- resets : Must contain an entry for each entry in reset-names.
->>>> +  See ../reset/reset.txt for details.
->>>> +- reset-names : Must include the following entries:
->>>> +  - vde
->>>
->>> -names is pointless when there is only one.
->>
->> I'd prefer to keep it. In the past we occasionally had to add clocks or
->> resets to a device tree node where only one had been present (and hence
->> no -names property) and that caused some awkwardness because verbiage
->> had to be added to the bindings that clarified that one particular entry
->> (the original one) always had to come first.
-> 
-> The order should be specified regardless of -names and the original
-> one has to come first if you add any. That's not awkwardness, but how
-> bindings work.
+On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Probably it would be okay to remove '-names' from the binding doc, but keep them
-in the actual DT, wouldn't it?
+Hi Rob,
+
+> With dependencies on a statically allocated full path name converted to
+> use %pOF format specifier, we can store just the basename of node, and
+> the unflattening of the FDT can be simplified.
+>
+> This commit will affect the remaining users of full_name. After
+> analyzing these users, the remaining cases should only change some print
+> messages. The main users of full_name are providing a name for struct
+> resource. The resource names shouldn't be important other than providing
+> /proc/iomem names.
+>
+> We no longer distinguish between pre and post 0x10 dtb formats as either
+> a full path or basename will work. However, less than 0x10 formats have
+> been broken since the conversion to use libfdt (and no one has cared).
+> The conversion of the unflattening code to be non-recursive also broke
+> pre 0x10 formats as the populate_node function would return 0 in that
+> case.
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v2:
+> - rebase to linux-next
+>
+>  drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
+>  1 file changed, 11 insertions(+), 58 deletions(-)
+
+I've just updated to the latest next branch and am finding problems
+applying overlays.   Reverting this commit alleviates things.  The
+errors I get are:
+
+[   88.498704] OF: overlay: Failed to apply prop @/__symbols__/clk_0
+[   88.513447] OF: overlay: apply failed '/__symbols__'
+[   88.518423] create_overlay: Failed to create overlay (err=-12)
+
+My branch also includes Pantelis' patch that turns on symbols [1].
+
+Alan
+
+[1] https://github.com/pantoniou/linux-beagle-track-mainline/commit/486c87d450f2895a766c6097328d0c6538ec7a31
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
