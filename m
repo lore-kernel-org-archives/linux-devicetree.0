@@ -1,114 +1,60 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [RFC PATCH v4 1/8] arm64: dts: rockchip: Enable edp disaplay on kevin
-Date: Tue, 17 Oct 2017 18:16:17 +0800
-Message-ID: <20171017101624.12506-2-jeffy.chen@rock-chips.com>
-References: <20171017101624.12506-1-jeffy.chen@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v2] drm: bridge: Add bindings for TI THS8134
+Date: Tue, 17 Oct 2017 12:19:03 +0200
+Message-ID: <20171017101904.22308-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171017101624.12506-1-jeffy.chen@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, heiko@sntech.de, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, tfiga@chromium.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, broonie@kernel.org, seanpaul@chromium.org, Catalin Marinas <catalin.marinas@arm.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org, Mark Yao <mark.yao@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add edp panel and enable related nodes on kevin.
-
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-Reviewed-by: Mark Yao <mark.yao@rock-chips.com>
-
----
-
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
- 2 files changed, 45 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index a3d3cea7dc4f..bc67b19f0af5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -93,6 +93,18 @@
- 		pwm-delay-us = <10000>;
- 	};
- 
-+	edp_panel: edp-panel {
-+		compatible = "sharp,lq123p1jx31", "simple-panel";
-+		backlight = <&backlight>;
-+		power-supply = <&pp3300_disp>;
-+
-+		ports {
-+			panel_in_edp: endpoint {
-+				remote-endpoint = <&edp_out_panel>;
-+			};
-+		};
-+	};
-+
- 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
- 		compatible = "murata,ncp15wb473";
- 		pullup-uv = <1800000>;
-@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
- 	};
- };
- 
-+&edp {
-+	status = "okay";
-+
-+	ports {
-+		edp_out: port@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			edp_out_panel: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&panel_in_edp>;
-+			};
-+		};
-+	};
-+};
-+
- &ppvar_bigcpu_pwm {
- 	regulator-min-microvolt = <798674>;
- 	regulator-max-microvolt = <1302172>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 5772c52fbfd3..470105d651c2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
- 	dr_mode = "host";
- };
- 
-+&vopb {
-+	status = "okay";
-+};
-+
-+&vopb_mmu {
-+	status = "okay";
-+};
-+
-+&vopl {
-+	status = "okay";
-+};
-+
-+&vopl_mmu {
-+	status = "okay";
-+};
-+
- #include <arm/cros-ec-keyboard.dtsi>
- #include <arm/cros-ec-sbs.dtsi>
- 
--- 
-2.11.0
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgVGV4YXMgSW5zdHJ1bWVudHMK
+VEhTODEzNEEgYW5kIFRIUzgxMzRCIFZHQSBEQUNzIGJ5IGV4dGVuZGluZyBhbmQgcmVuYW1pbmcg
+dGhlCmV4aXN0aW5nIGJpbmRpbmdzIGZvciBUSFM4MTM1LgoKVGhlc2UgREFDcyBhcmUgdXNlZCBm
+b3IgdGhlIFZHQSBvdXRwdXRzIG9uIHRoZSBBUk0gcmVmZXJlbmNlCmRlc2lnbnMgc3VjaCBhcyBJ
+bnRlZ3JhdG9yLCBWZXJzYXRpbGUgYW5kIFJlYWxWaWV3LgoKQ2M6IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnCkNjOiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29sYXN6ZXdza2lAYmF5bGlicmUu
+Y29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1i
+eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgotLS0KQ2hhbmdlTG9n
+IHYxLT52MjoKLSBJbnRyb2R1Y2Ugc3BlY2lmaWMtdG8tZ2VuZXJhbCBjb21wYXRpYmxlIHN0cmlu
+ZzoKICBjb21wYXRpYmxlID0gInRpLHRoczgxMzRhIiwgInRpLHRoczgxM3giOwogIHNvIGRyaXZl
+cnMgY2FuIGhhbmRsZSB0aGUgd2hvbGUgZmFtaWx5IHRoZSBzYW1lIHdheS4KLSBDb2xsZWN0ZWQg
+Um9iJ3MgQUNLLgotLS0KIC4uLi9kaXNwbGF5L2JyaWRnZS97dGksdGhzODEzNS50eHQgPT4gdGks
+dGhzODEzeC50eHR9ICAgICAgfCAxNCArKysrKysrKystLS0tLQogMSBmaWxlIGNoYW5nZWQsIDkg
+aW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uve3RpLHRoczgxMzUudHh0ID0+IHRpLHRoczgx
+M3gudHh0fSAoNjUlKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTM1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTN4LnR4dApzaW1pbGFyaXR5IGlu
+ZGV4IDY1JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9icmlkZ2UvdGksdGhzODEzNS50eHQKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTN4LnR4dAppbmRleCA2ZWMxYTg4
+MGFjMTguLjk3ZWY1ZWI1NzA1MiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRoczgxMzUudHh0CisrKyBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSx0aHM4MTN4LnR4dApAQCAt
+MSwxMSArMSwxNSBAQAotVEhTODEzNSBWaWRlbyBEQUMKLS0tLS0tLS0tLS0tLS0tLS0tCitUSFM4
+MTM0IGFuZCBUSFM4MTM1IFZpZGVvIERBQworLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+IAotVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMgVEhTODEzNSBWaWRl
+byBEQUMgYnJpZGdlLgorVGhpcyBpcyB0aGUgYmluZGluZyBmb3IgVGV4YXMgSW5zdHJ1bWVudHMg
+VEhTODEzNEEsIFRIUzgxMzRCIGFuZCBUSFM4MTM1CitWaWRlbyBEQUMgYnJpZGdlLgogCiBSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgogCi0tIGNvbXBhdGlibGU6IE11c3QgYmUgInRpLHRoczgxMzUiCist
+IGNvbXBhdGlibGU6IE11c3QgYmUgb25lIG9mCisgICJ0aSx0aHM4MTM0YSIsICJ0aSx0aHM4MTN4
+IgorICAidGksdGhzODEzNGIiLCAidGksdGhzODEzeCIKKyAgInRpLHRoczgxMzUiLCAidGksdGhz
+ODEzeCIKIAogUmVxdWlyZWQgbm9kZXM6CiAKQEAgLTE5LDcgKzIzLDcgQEAgRXhhbXBsZQogLS0t
+LS0tLQogCiB2Z2EtYnJpZGdlIHsKLQljb21wYXRpYmxlID0gInRpLHRoczgxMzUiOworCWNvbXBh
+dGlibGUgPSAidGksdGhzODEzNSIsICJ0aSx0aHM4MTN4IjsKIAkjYWRkcmVzcy1jZWxscyA9IDwx
+PjsKIAkjc2l6ZS1jZWxscyA9IDwwPjsKIAotLSAKMi4xMy41CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
