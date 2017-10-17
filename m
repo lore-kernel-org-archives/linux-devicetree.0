@@ -1,61 +1,46 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v3 1/5] dt-bindings: interrupt-controller: Add Realtek RTD1295
-Date: Tue, 17 Oct 2017 14:47:03 +0200
-Message-ID: <20171017124708.6242-2-afaerber@suse.de>
+Subject: [PATCH v3 4/5] dt-bindings: interrupt-controller: Document RTD1195
+Date: Tue, 17 Oct 2017 14:47:06 +0200
+Message-ID: <20171017124708.6242-5-afaerber@suse.de>
 References: <20171017124708.6242-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20171017124708.6242-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Bizon <bizongod@gmail.com>, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Roc He <hepeng@zidoo.tv>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin@geniatech.com>, Bizon <bizongod@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Add binding for Realtek RTD1295 IRQ mux.
-
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v2 -> v3:
- * Renamed non-iso irq mux to "misc" for clarity
-
- v1 -> v2:
- * Dropped reference to common interrupt.txt bindings (Rob)
- 
- .../interrupt-controller/realtek,rtd119x-mux.txt   | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
-new file mode 100644
-index 000000000000..f39ce341adbd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
-@@ -0,0 +1,23 @@
-+Realtek RTD119x/129x IRQ Mux Controller
-+=======================================
-+
-+Required properties:
-+
-+- compatible           :  Should be one of the following:
-+                          - "realtek,rtd1295-misc-irq-mux"
-+                          - "realtek,rtd1295-iso-irq-mux"
-+- reg                  :  Specifies base physical address and size of the registers.
-+- interrupts           :  Specifies the interrupt line which is mux'ed.
-+- interrupt-controller :  Presence indicates the node as interrupt controller.
-+- #interrupt-cells     :  Shall be 1. See common bindings in interrupt.txt.
-+
-+
-+Example:
-+
-+	interrupt-controller@98007000 {
-+		compatible = "realtek,rtd1295-iso-irq-mux";
-+		reg = <0x98007000 0x100>;
-+		interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
--- 
-2.13.6
+QWRkIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgUmVhbHRlayBSVEQxMTk1LgoKU2lnbmVkLW9mZi1i
+eTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIHYzOiBOZXcKIAogQ291
+bGQgYmUgc3F1YXNoZWQgaW50byAxLzUgaWYgYWNrZWQuCiAKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2ludGVycnVwdC1jb250cm9sbGVyL3JlYWx0ZWsscnRkMTE5eC1tdXgudHh0ICAgIHwgMiAr
+KwogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9yZWFsdGVrLHJ0
+ZDExOXgtbXV4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1
+cHQtY29udHJvbGxlci9yZWFsdGVrLHJ0ZDExOXgtbXV4LnR4dAppbmRleCBmMzljZTM0MWFkYmQu
+LjY3YmUwNjUzNTI4YiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2ludGVycnVwdC1jb250cm9sbGVyL3JlYWx0ZWsscnRkMTE5eC1tdXgudHh0CisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9yZWFs
+dGVrLHJ0ZDExOXgtbXV4LnR4dApAQCAtNCw2ICs0LDggQEAgUmVhbHRlayBSVEQxMTl4LzEyOXgg
+SVJRIE11eCBDb250cm9sbGVyCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogCiAtIGNvbXBhdGlibGUg
+ICAgICAgICAgIDogIFNob3VsZCBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoKKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgLSAicmVhbHRlayxydGQxMTk1LW1pc2MtaXJxLW11eCIKKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgLSAicmVhbHRlayxydGQxMTk1LWlzby1pcnEtbXV4IgogICAgICAg
+ICAgICAgICAgICAgICAgICAgICAtICJyZWFsdGVrLHJ0ZDEyOTUtbWlzYy1pcnEtbXV4IgogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAtICJyZWFsdGVrLHJ0ZDEyOTUtaXNvLWlycS1tdXgiCiAt
+IHJlZyAgICAgICAgICAgICAgICAgIDogIFNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3Mg
+YW5kIHNpemUgb2YgdGhlIHJlZ2lzdGVycy4KLS0gCjIuMTMuNgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
