@@ -1,97 +1,77 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 4/9] drm/panel: simple: add support for overriding the
- pixel clock polarity
-Date: Tue, 17 Oct 2017 14:45:04 +0200
-Message-ID: <20171017124504.GC27983@ulmo>
-References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
- <1507721021-28174-5-git-send-email-LW@KARO-electronics.de>
- <20171017121422.GE684@ulmo>
- <20171017142507.127f1711@karo-electronics.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v3 0/5] arm64: Realtek RTD1195/RTD1295 IRQ mux
+Date: Tue, 17 Oct 2017 14:47:02 +0200
+Message-ID: <20171017124708.6242-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2133707754=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171017142507.127f1711@karo-electronics.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lothar =?utf-8?Q?Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bizon <bizongod-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>, =?UTF-8?q?=E8=92=8B=E4=B8=BD=E7=90=B4?= <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---===============2133707754==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="B4IIlcmfBL/1gGOG"
-Content-Disposition: inline
+This series adds two IRQ muxes for the Realtek RTD1295 and RTD1195 SoCs.
 
+The implementation is based on register offsets seen in the vendor DT,
+split up into two separate nodes, as well as code from QNAP's rtk119x and
+Synology's RTD1293/96 GPL code dumps.
 
---B4IIlcmfBL/1gGOG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v3 does various cleanups, renames variables, reworks unmask vs. enable/disable
+and adds an isr/scpu_int_en map as well as full RTD1195 support.
 
-On Tue, Oct 17, 2017 at 02:25:07PM +0200, Lothar Wa=C3=9Fmann wrote:
-> Hi,
->=20
-> On Tue, 17 Oct 2017 14:14:22 +0200 Thierry Reding wrote:
-> > On Wed, Oct 11, 2017 at 01:23:36PM +0200, Lothar Wa=C3=9Fmann wrote:
-> > > The Ka-Ro electronics MB7 baseboard has an on-board LCD->LVDS
-> > > converter that requires a fixed pixelclk polarity, no matter what the
-> > > panel's display_mode specifies. Add an option to override the pixelclk
-> > > polarity defined in the panel's display_mode via DTB.
-> >=20
-> > I'd argue that the LCD->LVDS converter should be modelled specifically
-> > in DT to handle this case. It could be a implemented as a DRM bridge
-> > driver, for example.
-> >=20
-> IMO that's just overkill for a simple chip that is in no way
-> configurable nor detectable by software.
+More experimental patches at:
+https://github.com/afaerber/linux/commits/rtd1295-next
 
-I suspect that you're not the only one who runs a board that has this
-kind of quirk. If we solve this in a generic way we can point people in
-that direction when they come asking for such a quirk.
+Have a lot of fun!
 
-So this could be something very simple that's instantiated using maybe a
-couple of lines of code.
+Cheers,
+Andreas
 
-Thierry
+v2 -> v3:
+* Rebased, adding nodes to rtd129x.dtsi instead of rtd1295.dtsi
+* Adopted {readl,writel}_relaxed() (Marc)
+* Adopted spin_lock_irqsave() (Marc)
+* Implemented RTD1195
+* Implemented mapping for non-linear bits such as i2c3
 
---B4IIlcmfBL/1gGOG
-Content-Type: application/pgp-signature; name="signature.asc"
+v1 -> v2:
+* Rebased, avoiding dependency on reset series for DT nodes
+* Don't forward set_affinity to GIC (Marc)
+* Added more spinlocks (Marc)
+* Code cleanups
+* Investigated quirk
+* Fixed spinlock initialization (Andrew)
 
------BEGIN PGP SIGNATURE-----
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Roc He <hepeng-qoVzM6YEWSw@public.gmane.org>
+Cc: 蒋丽琴 <jiang.liqin-31gW8twSeR21Z/+hSey0Gg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnl+1AACgkQ3SOs138+
-s6FwkQ//dt3bkw3sPxIQXSgPejIkGS5HXVSN+DztcbJUdw/HzkcS/cUP2f6Rmvay
-Lk7gyHpDrYdZ6QAkTbpvSI0DQBY9gukFLEtmCajxXp67xy7NkRYm2q4iRWn5Z96V
-6Cb5HVF2ALmjSQdCcRM6oIjuC0ldvVoPQw1ZfcBR70MHT9+ooiSmZv+HCrm2PfMf
-D5QCWfXt8iSrzsrB21Gr7OrT0N07VKvWhqkgrB7E7uzdXmDD8CQKd+irjXrJba/P
-AQnuljw2s2PLbKXjVUS60QUmOaOfKnMJLZr8MR+LYkgA73q7JgeBkYJhacrYhj+b
-wI1qlEpssOReh9FS7fW3kab7qz+HLBCWk97Yz/GvHTU50CBi+yIZrhSh9N8hp8tk
-LAZRexwagyQUdgJ/7jOwWcGofL7Hun48BBHjUqHcXkBFbu+7RtiOOGlAv3+Gf2iN
-vQJlnnxpQwd1GD6GefeuYfbqbruzyxHNzfkmnZ9Qi+lauxYsZBcCpOXCRmuqycl4
-EZezKM2c6qtni5ya/YA29hSw5pbqFuZ1ftzn2hDRxfbMMBWJ1gF9lx3a3cJf7pEv
-znrYYUiMoF5Vu2SVZIAVG3QEhH7lP54/GOKXdQ15MXGHYhkqTPbt4zbswzqKgu3s
-pMtdB1KnYJ+kTOZS+tqTUK6fPMBOs4OhGd4ZLwBK+E0gFeVmZXo=
-=d6rv
------END PGP SIGNATURE-----
+Andreas Färber (5):
+  dt-bindings: interrupt-controller: Add Realtek RTD1295
+  irqchip: Add Realtek RTD1295 mux driver
+  arm64: dts: realtek: Add irq mux to RTD129x
+  dt-bindings: interrupt-controller: Document RTD1195
+  irqchip: rtd119x: Add RTD1195 definitions
 
---B4IIlcmfBL/1gGOG--
+ .../interrupt-controller/realtek,rtd119x-mux.txt   |  25 ++
+ arch/arm64/boot/dts/realtek/rtd129x.dtsi           |  22 ++
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-rtd119x-mux.c                  | 388 +++++++++++++++++++++
+ 4 files changed, 436 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,rtd119x-mux.txt
+ create mode 100644 drivers/irqchip/irq-rtd119x-mux.c
 
---===============2133707754==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+-- 
+2.13.6
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2133707754==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
