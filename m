@@ -1,54 +1,48 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: rcar: document R8A77970 bindings
-Date: Wed, 18 Oct 2017 00:01:16 +0200
-Message-ID: <20171017220115.a5i5unwgyydxxtvt@ninjato>
-References: <20171013122401.540656908@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pwm: meson: use generic compatibles
+Date: Tue, 17 Oct 2017 17:09:20 -0500
+Message-ID: <20171017220920.acjq6dr3ntf7xkid@rob-hp-laptop>
+References: <20171013091642.31948-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z3mm5rvfiyxeka2k"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171013122401.540656908@cogentembedded.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20171013091642.31948-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 13, 2017 at 11:16:42AM +0200, Jerome Brunet wrote:
+> The meson pwm driver seems to be compatible with more SoCs than
+> initially thought. Let's use the most generic compatibles he have in
+> DT instead of the gxbb specific ones
+> 
+> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-meson.txt |  6 +++---
+>  drivers/pwm/pwm-meson.c                             | 12 ++++++------
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-meson.txt b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
+> index 1ee81321c35e..439e05030553 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-meson.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
+> @@ -3,8 +3,8 @@ Amlogic Meson PWM Controller
+>  
+>  Required properties:
+>  - compatible: Shall contain "amlogic,meson8b-pwm"
+> -                         or "amlogic,meson-gxbb-pwm"
+> -                         or "amlogic,meson-gxbb-ao-pwm"
+> +                         or "amlogic,meson-gx-pwm"
+> +                         or "amlogic,meson-gx-ao-pwm"
 
---z3mm5rvfiyxeka2k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've already said the same on other patches, but so other 
+maintainers see it, this seems like pointless, non-backwards compatible 
+change.
 
-On Fri, Oct 13, 2017 at 03:23:55PM +0300, Sergei Shtylyov wrote:
-> R-Car V3M (R8A77970) SoC also has the R-Car gen3 compatible I2C controlle=
-r,
-> so document  the SoC specific bindings.
->=20
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
-
-Applied to for-next, thanks!
-
-
---z3mm5rvfiyxeka2k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlnmfasACgkQFA3kzBSg
-KbYsKg/+Kjl2W5ZhUSqAn68sth/BDbkqJSan0689nfoaq4SlEBtOfaz+OLGKxZBB
-hZkOVpkCgRRI3SKci8L6pLCY9vHncy5aiFjTcNSSL30nb3B4qPZ4lbCzQ2WcvP4l
-4AQxPwQLOdySza7kxse8K+F0GKyaAvE0Eo7GCoYa/ASNZTwFgOeZYOOhRjeuZ3t9
-Pliq8o8LOFyY7WpQvnie9rILZ1QKLGX74+88VW+pudMuLwe2pf40mv3V1UVQQdsc
-D32kp06loHTXH2OkREwUbWcSL9eYVo+Z/blOCEpCxNgaV6+wv9QPFo+L/oYFM6Zd
-2tOvQDKniNkg+XY5SCKLd66ktqW1H6YAN3L4qeM+moRKiLGOabFVGrR9gu1IjCqN
-SKaYMYrM38pH6w42hqBnMTQwvzMtZZAjDMIPH77tfH/N1JizgKQMENQmGBml90pE
-kEHmqk+lEeSOVm3OjQ/q578dz9C2AmGBlhQzMuZ8jymCJ0rX3uTP8AhBGVBho2To
-Naic3S99rY2HP5+OSw0+7EJw5WAV/mgbWE4wK8/WI6tULHNSvnnTIyL4JRn9AeYr
-K9V3dSIs/P1ZsVkbmQRaeHL8oUzXbMTIUBaU634fsM4ZHJAya2N4hjB55W1Qc4CT
-jyS7CYCPtHjGDjSezHECawd3HcOOOYIXPrdjBtSlH8mF97tlUCY=
-=hjg8
------END PGP SIGNATURE-----
-
---z3mm5rvfiyxeka2k--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
