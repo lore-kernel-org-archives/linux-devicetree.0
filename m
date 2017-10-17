@@ -1,78 +1,39 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v8 5/8] arm64: Use of_cpu_node_to_id helper for CPU
- topology parsing
-Date: Tue, 17 Oct 2017 17:11:40 +0100
-Message-ID: <20171017161140.GD19711@arm.com>
-References: <20171010103303.32436-1-suzuki.poulose@arm.com>
- <20171010103303.32436-6-suzuki.poulose@arm.com>
- <20171017152422.fawwvx6e3nn4dsej@lakrids.cambridge.arm.com>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
+Date: Tue, 17 Oct 2017 12:11:55 -0400
+Message-ID: <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+ <1507761269-7017-6-git-send-email-jim2101024@gmail.com> <589c04cb-061b-a453-3188-79324a02388e@arm.com>
+ <20171017081422.GA19475@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171017152422.fawwvx6e3nn4dsej-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171017081422.GA19475@lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, iommu@lists.linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 04:24:23PM +0100, Mark Rutland wrote:
-> On Tue, Oct 10, 2017 at 11:33:00AM +0100, Suzuki K Poulose wrote:
-> > Make use of the new generic helper to convert an of_node of a CPU
-> > to the logical CPU id in parsing the topology.
-> > 
-> > Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-> 
-> This looks sane to me, but it will need an ack from Will or Catalin.
-> 
-> FWIW:
-> 
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> 
-> Thanks,
-> Mark.
-> 
-> > ---
-> >  arch/arm64/kernel/topology.c | 16 ++++++----------
-> >  1 file changed, 6 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> > index 8d48b233e6ce..21868530018e 100644
-> > --- a/arch/arm64/kernel/topology.c
-> > +++ b/arch/arm64/kernel/topology.c
-> > @@ -37,18 +37,14 @@ static int __init get_cpu_for_node(struct device_node *node)
-> >  	if (!cpu_node)
-> >  		return -1;
-> >  
-> > -	for_each_possible_cpu(cpu) {
-> > -		if (of_get_cpu_node(cpu, NULL) == cpu_node) {
-> > -			topology_parse_cpu_capacity(cpu_node, cpu);
-> > -			of_node_put(cpu_node);
-> > -			return cpu;
-> > -		}
-> > -	}
-> > -
-> > -	pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-> > +	cpu = of_cpu_node_to_id(cpu_node);
-> > +	if (cpu >= 0)
-> > +		topology_parse_cpu_capacity(cpu_node, cpu);
-> > +	else
-> > +		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-> >  
-> >  	of_node_put(cpu_node);
+On Tue, Oct 17, 2017 at 4:14 AM, Christoph Hellwig <hch@lst.de> wrote:
+> Just took a quick look over this and I basically agree with the comments
+> from Robin.
+>
+> What I don't understand is why you're even trying to do all these
+> hacky things.
+>
+> It seems like the controller should simply set dma_pfn_offset for
+> each device hanging off it, and all the supported architectures
+> should be updated to obey that if they don't do so yet, and
+> you're done without needing this giant mess.
 
-This of_node_put is confusing me. Since of_cpu_node_to_id appears to be
-balanced with its use of the node refcount, is this one intended to pair
-with the earlier call to of_parse_phandle? If so, does that mainline is
-currently broken here because it doesn't drop the refcount twice for the
-matching node? Or do we need to return with that held?
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My understanding is that dma_pfn_offset is that it is a single
+constant offset from RAM, in our case, to map to PCIe space.  But in
+my commit message I detail how our PCIe controller presents memory
+with multiple regions with multiple different offsets. If an EP device
+maps to a region on the host memory, yes we can set the dma_pfn_offset
+for that device for that location within that range,.  But if the
+device then unmaps and allocates from another region with a different
+offset, it won't work.  If  I set dma_pfn_offset I have to assume that
+the device is using only one region of memory only, not more than one,
+and that it is not unmapping that region and mapping another (with a
+different offset).  Can I make those assumptions?
