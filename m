@@ -1,14 +1,11 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/4] dt-bindings: display: amlogic,
- meson-dw-hdmi: Add optional HDMI 5V regulator
-Date: Tue, 17 Oct 2017 10:07:42 +0200
-Message-ID: <1508227664-11171-3-git-send-email-narmstrong@baylibre.com>
-References: <1508227664-11171-1-git-send-email-narmstrong@baylibre.com>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [RFC PATCH v3 0/5] rockchip: kevin: Enable edp display
+Date: Tue, 17 Oct 2017 16:09:20 +0800
+Message-ID: <20171017080925.23763-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1508227664-11171-1-git-send-email-narmstrong@baylibre.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,29 +15,34 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, rjw@rjwysocki.net, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, briannorris@chromium.org, Krzysztof Kozlowski <krzk@kernel.org>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Catalin Marinas <catalin.marinas@arm.com>, Caesar Wang <wxt@rock-chips.com>, linux-pwm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jeffy Chen <jeffy.chen@rock-chips.com>, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, zain wang <wzz@rock-chips.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, dmitry.torokhov@gmail.com, Seung
 List-Id: devicetree@vger.kernel.org
 
-T24gcmVmZXJlbmNlIGJvYXJkcyBhbmQgZGVyaXZhdGl2ZXMsIHRoZSBIRE1JIExvZ2ljIGlzIHBv
-d2VyZWQgYnkgYW4gZXh0ZXJuYWwKNVYgcmVndWxhdG9yLgpUaGlzIHJlZ3VsYXRvciB3YXMgc2V0
-IGJ5IHRoZSBWZW5kb3IgVS1Cb290LCBhZGQgb3B0aW9uYWwgc3VwcG9ydCBmb3IgaXQuCgpTaWdu
-ZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+Ci0tLQog
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1k
-dy1oZG1pLnR4dCB8IDQgKysrKwogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQoKZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9n
-aWMsbWVzb24tZHctaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9hbWxvZ2ljLG1lc29uLWR3LWhkbWkudHh0CmluZGV4IDdmMDQwZWQuLmJmNGExODAg
-MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Ft
-bG9naWMsbWVzb24tZHctaGRtaS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dApAQCAtNDgsNiArNDgsMTAg
-QEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Jlc2V0L3Jlc2V0LnR4dCwKICAgdGhlIHJlc2V0LW5hbWVzIHNob3VsZCBiZSAiaGRtaXR4
-X2FwYiIsICJoZG1pdHgiLCAiaGRtaXR4X3BoeSIKIAorT3B0aW9uYWwgcHJvcGVydGllczoKKy0g
-aGRtaS1zdXBwbHk6IE9wdGlvbmFsIHBoYW5kbGUgdG8gYW4gZXh0ZXJuYWwgNVYgcmVndWxhdG9y
-IHRvIHBvd2VyIHRoZSBIRE1JCisgIGxvZ2ljLCBhcyBkZXNjcmliZWQgaW4gdGhlIGZpbGUgLi4v
-cmVndWxhdG9yL3JlZ3VsYXRvci50eHQKKwogUmVxdWlyZWQgbm9kZXM6CiAKIFRoZSBjb25uZWN0
-aW9ucyB0byB0aGUgSERNSSBwb3J0cyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YgZ3JhcGgKLS0g
-CjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Ck1ha2UgZWRwIGRpc3BsYXkgd29ya3Mgb24gY2hyb21lYm9vayBrZXZpbihhdCBsZWFzdCBmb3Ig
+Ym9vdCBhbmltYXRpb24pLgoKQWxzbyBzb2x2ZSBzb21lIGlzc3VlcyBpIG1lZXQgZHVyaW5nIHRo
+ZSBicmluZ3VwLgoKQ2hhbmdlcyBpbiB2MzoKQXNzaWduIG9ycGhhbiBwd21zIHRvIGR1bW15IHB3
+bWNoaXAgaW5zdGVhZCBvZiBhZGRpbmcgZGV2aWNlIGxpbmsgaW4gdGhlCmN1c3RvbWVyIGRyaXZl
+ci4KCkNoYW5nZXMgaW4gdjI6ClVzZSBkZXZpY2UgbGluayB0byBjb3JyZWN0IHRoZSBzdXNwZW5k
+L3Jlc3VtZSBhbmQgc2h1dGRvd24gb3JkZXJpbmcsCmluc3RlYWQgb2YgY29udmVydGluZyByb2Nr
+Y2hpcCBzcGkncyBzdXNwZW5kL3Jlc3VtZSBQTSBjYWxsYmFja3MgdG8KbGF0ZSBzdXNwZW5kL3Jl
+c3VtZSBQTSBjYWxsYmFja3MuCgpKZWZmeSBDaGVuICg0KToKICBhcm02NDogZHRzOiByb2NrY2hp
+cDogRW5hYmxlIGVkcCBkaXNhcGxheSBvbiBrZXZpbgogIGRybS9yb2NrY2hpcDogRml4IGVycm9y
+IGhhbmRsaW5nIHBhdGggaW4gcm9ja2NoaXBfZHBfYmluZCgpCiAgcHdtOiBBZGQgZHVtbXkgcHdt
+Y2hpcCBmb3Igb3JwaGFuIHB3bXMKICBkcm0vcm9ja2NoaXA6IEFkZCBkZXZpY2UgbGlua3MgZm9y
+IG1hc3RlciBhbmQgY29tcG9uZW50cwoKVG9tYXN6IEZpZ2EgKDEpOgogIGRybS9icmlkZ2UvYW5h
+bG9naXg6IERvIG5vdCB1c2UgZGV2aWNlJ3MgZHJ2ZGF0YQoKIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+cm9ja2NoaXAvcmszMzk5LWdydS1rZXZpbi5kdHMgIHwgMjkgKysrKysrKysKIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS5kdHNpICAgICAgIHwgMTYgKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2UvYW5hbG9naXgvYW5hbG9naXhfZHBfY29yZS5jIHwgNTAgKysrKysr
+LS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHAuYyAgICAgICAgICAgICAg
+ICAgfCAyNiArKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvYW5hbG9naXhfZHAtcm9j
+a2NoaXAuYyAgICB8IDU3ICsrKysrKysrKy0tLS0tLQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L3JvY2tjaGlwX2RybV9kcnYuYyAgICAgICAgfCAyNCArKysrKystCiBkcml2ZXJzL3B3bS9jb3Jl
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDg0ICsrKysrKysrKysrKysrKysr
+KysrLS0KIGluY2x1ZGUvZHJtL2JyaWRnZS9hbmFsb2dpeF9kcC5oICAgICAgICAgICAgICAgICAg
+IHwgMTkgKystLS0KIDggZmlsZXMgY2hhbmdlZCwgMjI2IGluc2VydGlvbnMoKyksIDc5IGRlbGV0
+aW9ucygtKQoKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
