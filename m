@@ -1,91 +1,30 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] dt-bindings: power: add amlogic meeson power domain bindings
-Date: Tue, 17 Oct 2017 09:38:02 +0200
-Message-ID: <1508225882-8795-3-git-send-email-narmstrong@baylibre.com>
-References: <1508225882-8795-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508225882-8795-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH  1/2] dt-bindings: usb-xhci: Document r8a7743 support
+Date: Tue, 17 Oct 2017 09:54:34 +0200
+Message-ID: <20171017075434.eytcjy66n63pmy2i@verge.net.au>
+References: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
+ <1508148769-47488-2-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1508148769-47488-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/power/amlogic,meson-gx-pwrc.txt       | 65 ++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+On Mon, Oct 16, 2017 at 11:12:48AM +0100, Biju Das wrote:
+> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> 
+> Document r8a7743 xhci support. The driver will use the fallback
+> compatible string "renesas,rcar-gen2-xhci", therefore no driver
+> change is needed.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
-new file mode 100644
-index 0000000..94c2474
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
-@@ -0,0 +1,65 @@
-+Amlogic Meson Power Controller
-+==============================
-+
-+The Amlogic Meson SoCs embeds an internal Power domain controller.
-+
-+VPU Power Domain
-+----------------
-+
-+The Video Processing Unit power domain is controlled by this power controller,
-+but the domain requires some external resources to meet the correct power
-+sequences.
-+The bindings must respect the power domain bindings as described in the file
-+power_domain.txt
-+
-+Device Tree Bindings:
-+---------------------
-+
-+Required properties:
-+- compatible: value should be different for each SoC family as :
-+	- GXBB (S905) : "amlogic,meson-gxbb-vpu"
-+	- GXL (S905X, S905D) : "amlogic,meson-gxl-vpu"
-+	- GXM (S912) : "amlogic,meson-gxm-vpu"
-+	followed by the common "amlogic,meson-gx-vpu"
-+- #power-domain-cells: should be 0
-+- amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
-+- resets: phandles to the reset lines needed for this power demain sequence
-+	as described in ../reset/reset.txt
-+- clocks: from common clock binding: handle to VPU and VAPB clocks
-+- clock-names: from common clock binding: must contain "vpu", "vapb"
-+	corresponding to entry in the clocks property.
-+
-+Parent node should have the following properties :
-+- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
-+- reg: base address and size of the AO system control register space.
-+
-+Example:
-+-------
-+
-+ao_sysctrl: sys-ctrl@0 {
-+	compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
-+	reg =  <0x0 0x0 0x0 0x100>;
-+
-+	pwrc_vpu: power-controller-vpu {
-+		compatible = "amlogic,meson-gx-pwrc-vpu";
-+		#power-domain-cells = <0>;
-+		amlogic,hhi-sysctrl = <&sysctrl>;
-+		resets = <&reset RESET_VIU>,
-+			 <&reset RESET_VENC>,
-+			 <&reset RESET_VCBUS>,
-+			 <&reset RESET_BT656>,
-+			 <&reset RESET_DVIN_RESET>,
-+			 <&reset RESET_RDMA>,
-+			 <&reset RESET_VENCI>,
-+			 <&reset RESET_VENCP>,
-+		 	 <&reset RESET_VDAC>,
-+		 	 <&reset RESET_VDI6>,
-+		 	 <&reset RESET_VENCL>,
-+			 <&reset RESET_VID_LOCK>;
-+		clocks = <&clkc CLKID_VPU>,
-+			 <&clkc CLKID_VAPB>;
-+		clock-names = "vpu", "vapb";
-+	};
-+};
-+
-+
--- 
-2.7.4
+Reviewed-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
