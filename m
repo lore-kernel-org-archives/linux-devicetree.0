@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 4/4] rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
-Date: Tue, 17 Oct 2017 17:40:35 +0800
-Message-ID: <2fce8abd403fb8842110382e3229367b741da979.1508231935.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 1/4] dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
+Date: Tue, 17 Oct 2017 17:40:32 +0800
+Message-ID: <235e4bdaa605021facf4ab5c4e8a2ecc5293516d.1508231935.git.sean.wang@mediatek.com>
 References: <cover.1508231935.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,38 +9,47 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1508231935.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-I work for MediaTek on maintaining the MediaTek SoC based RTC driver for
-the existing SoCs and keep adding support for the following SoCs in the
-future.
+Add device-tree binding for MediaTek SoC based RTC
 
-Cc: Eddie Huang <eddie.huang@mediatek.com>
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- MAINTAINERS | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/rtc/rtc-mediatek.txt        | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2281af4..5142029 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1579,10 +1579,13 @@ F:	drivers/rtc/rtc-armada38x.c
- 
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
-+M:	Sean Wang <sean.wang@mediatek.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
-+F:	Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
- F:	drivers/rtc/rtc-mt6397.c
-+F:	drivers/rtc/rtc-mt7622.c
- 
- ARM/Mediatek SoC support
- M:	Matthias Brugger <matthias.bgg@gmail.com>
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+new file mode 100644
+index 0000000..09fe8f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+@@ -0,0 +1,21 @@
++Device-Tree bindings for MediaTek SoC based RTC
++
++Required properties:
++- compatible	    : Should be
++			"mediatek,mt7622-rtc", "mediatek,soc-rtc" : for MT7622 SoC
++- reg 		    : Specifies base physical address and size of the registers;
++- interrupts	    : Should contain the interrupt for RTC alarm;
++- clocks	    : Specifies list of clock specifiers, corresponding to
++		      entries in clock-names property;
++- clock-names	    : Should contain "rtc" entries
++
++Example:
++
++rtc: rtc@10212800 {
++	compatible = "mediatek,mt7622-rtc",
++		     "mediatek,soc-rtc";
++	reg = <0 0x10212800 0 0x200>;
++	interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_LOW>;
++	clocks = <&topckgen CLK_TOP_RTC>;
++	clock-names = "rtc";
++};
 -- 
 2.7.4
