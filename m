@@ -1,69 +1,74 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 5/5] ARM: sun8i: v40: enable USB host ports
- for Banana Pi M2 Berry
-Date: Wed, 18 Oct 2017 21:06:28 +0800
-Message-ID: <20171018130628.11298-6-icenowy@aosc.io>
-References: <20171018130628.11298-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
+Date: Wed, 18 Oct 2017 15:16:07 +0200
+Message-ID: <CAMuHMdXjAHOyLb+FKbztNTKciZMeR=VCuBXuTWdkzNEB1A5veA@mail.gmail.com>
+References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com>
+ <1508319227-19679-3-git-send-email-biju.das@bp.renesas.com> <2315907.0FoaqPrOEJ@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB4FETXHQKGQET7GSDPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171018130628.11298-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2315907.0FoaqPrOEJ@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
 List-Id: devicetree@vger.kernel.org
 
-Banana Pi M2 Berry has an on-board USB Hub that provides 4 USB Type-A
-ports, and it's connected to the USB1 port of the SoC.
+Hi Laurent,
 
-Enable it.
+On Wed, Oct 18, 2017 at 2:16 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Wednesday, 18 October 2017 12:33:47 EEST Biju Das wrote:
+>> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>>
+>> Although there is a HDMI connector on the q7 carrier board it is not
+>> connected to the RZ/G1M SoC. One must use the HDMI connector on the
+>> camera daughter board.
+>>
+>> This patch adds support for this connector.
+>>
+>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+>> --- a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+>> +++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
 
-diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index fe16fc0eb518..45c17c8c5915 100644
---- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-+++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -87,6 +87,10 @@
- 	};
- };
- 
-+&ehci1 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -98,6 +102,10 @@
- 	};
- };
- 
-+&ohci1 {
-+	status = "okay";
-+};
-+
- #include "axp22x.dtsi"
- 
- &reg_aldo3 {
-@@ -171,3 +179,8 @@
- 	pinctrl-0 = <&uart0_pb_pins>;
- 	status = "okay";
- };
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_vcc5v0>;
-+	status = "okay";
-+};
--- 
-2.13.6
+>> @@ -23,7 +48,57 @@
+>>       status = "okay";
+>>  };
+>>
+>> +&i2c5 {
+>> +     status = "okay";
+>> +     clock-frequency = <400000>;
+>> +
+>> +     cec_clock: cec-clock {
+>> +             compatible = "fixed-clock";
+>> +             #clock-cells = <0>;
+>> +             clock-frequency = <12000000>;
+>> +     };
+>
+> I assume this describes a fixed clock generator that is not I2C-controlled.
+> The node should thus not be a child of the i2c5 bus node, but should be moved
+> to the root node of the DT.
+
+Oops, that's something we should fix in r8a7791-koelsch.dts, too
+(CC Hans)
+
+> The rest looks good to me. With this fixed,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> However I can't find arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi in linux-next.
+> Which tree would you like to get this series merged through ?
+
+It's been in next as of next-20171012.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
