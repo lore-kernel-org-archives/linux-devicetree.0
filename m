@@ -1,67 +1,72 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCHv4 0/2] dwc3 on XU3
-Date: Wed, 18 Oct 2017 18:17:26 +0530
-Message-ID: <01b6deb8-21a7-7315-546a-d8a462326789@ti.com>
-References: <6de8a17a-745b-0fa2-c39d-cdeb28fc9489@ti.com>
- <CGME20171009120100eucas1p2400a1ee4a7c70eed37c653de780b715d@eucas1p2.samsung.com>
- <1507550451-21324-1-git-send-email-andrzej.p@samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Wed, 18 Oct 2017 14:57:43 +0200
+Message-ID: <20171018125743.kqna6b4lgng674om@piout.net>
+References: <cover.1508231935.git.sean.wang@mediatek.com>
+ <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
+ <1508325126.13340.25.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1507550451-21324-1-git-send-email-andrzej.p@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1508325126.13340.25.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: sean.wang@mediatek.com, a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 18/10/2017 at 19:12:06 +0800, Yingjoe Chen wrote:
+> On Tue, 2017-10-17 at 17:40 +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > This patch introduces the driver for the RTC on MT7622 SoC.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >  drivers/rtc/Kconfig      |  10 ++
+> >  drivers/rtc/Makefile     |   1 +
+> >  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 429 insertions(+)
+> >  create mode 100644 drivers/rtc/rtc-mt7622.c
+> > 
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index e0e58f3..4226295 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
+> >  	   This driver can also be built as a module. If so, the module
+> >  	   will be called rtc-moxart
+> >  
+> > +config RTC_DRV_MEDIATEK
+> 
+> How about changing this to RTC_DRV_MT7622 or RTC_DRV_MEDIATEK_SOC?
+> It is confusing to have both RTC_DRV_MEDIATEK & RTC_DRV_MT6397 here.
+> 
 
+Yes, this has to be RTC_DRV_MT7622. It doesn't matter if it support
+future SoCs named differently, it will be less confusing than using
+anything with only mediatek in it.
 
-On Monday 09 October 2017 05:30 PM, Andrzej Pietrasiewicz wrote:
-> Hi all,
+> > +		return -EINVAL;
+> > +
+> > +	/* Keep yr_base used to calculate the calculate year when userspace
+> > +	 * queries and extend the maximum year the RTC can count.
+> > +	 */
+> > +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
+> > +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
 > 
-> This is the fourth version of patches in this thread.
 > 
-> The series fixes problems with enumerating of SuperSpeed devices
-> on an Odroid XU3. There was a patch series from Vivek Gautam in
-> circulation, but it got lost somehow. Please see:
+> I'm not sure this worth it.
+> If maximum year it can hold is 99, I'd bet it won't support leap year
+> correctly after 2100. This make the RTC useless after that. 
 > 
-> https://lkml.org/lkml/2014/9/2/166
-> https://lkml.org/lkml/2015/2/2/257
+> Also, yr_base is lost after power cycle, so you can't get correct year
+> back anyway.
 > 
-> I adapted his patch so that it does not use a hacky solution to force
-> additional initialization in order for calibration to happen.
-> With this patch enumeration happens correctly and a super speed device
-> is recognized as such.
-> 
-> Changes since v3:
-> 
-> - improved the commit message in phy_calibrate() commit
->   (as suggested by Kishon)
-> - rebased onto v4.14-rc4
 
-merged, thanks!
+I agree, the best you can do here is to only support 2000 to 2099.
 
--Kishon
-> 
-> Changes since v2:
-> 
-> - exported the "calibrate_phy" symbol
-> 
-> Changes since v1:
-> 
-> - added calibrate() callback to phy
-> - used calibrate() instead of reset() to trigger the calibration
-> 
-> Andrzej Pietrasiewicz (1):
->   drivers: phy: add calibrate method
-> 
-> Vivek Gautam (1):
->   phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800
-> 
->  drivers/phy/phy-core.c                   |  15 +++
->  drivers/phy/samsung/phy-exynos5-usbdrd.c | 183 +++++++++++++++++++++++++++++++
->  drivers/usb/dwc3/core.c                  |   7 +-
->  include/linux/phy/phy.h                  |  10 ++
->  4 files changed, 213 insertions(+), 2 deletions(-)
-> 
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
