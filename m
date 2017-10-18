@@ -1,10 +1,10 @@
 From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RFC PATCH v2 2/3] regulator: core: Parse coupled regulators
- properties
-Date: Wed, 18 Oct 2017 14:47:01 +0200
-Message-ID: <1508330822-8039-3-git-send-email-m.purski@samsung.com>
+Subject: [RFC PATCH v2 3/3] regulator: core: Balance coupled regulators
+ voltages
+Date: Wed, 18 Oct 2017 14:47:02 +0200
+Message-ID: <1508330822-8039-4-git-send-email-m.purski@samsung.com>
 References: <1508330822-8039-1-git-send-email-m.purski@samsung.com>
-        <CGME20171018124735eucas1p2dc60191fb185f18dee16d4b3de8502cf@eucas1p2.samsung.com>
+        <CGME20171018124737eucas1p2ed8002fa4910545e9d56a536303ffc12@eucas1p2.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1508330822-8039-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -16,293 +16,449 @@ On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
 different devices on the board are supplied by different regulators
 with non-fixed voltages. If one of these devices temporarily requires
 higher voltage, there might occur a situation that the spread between
-devices' voltages is so high, that there is a risk of changing
+two devices' voltages is so high, that there is a risk of changing
 'high' and 'low' states on the interconnection between devices powered
 by those regulators.
 
-Each coupled regulator, should have phandles to every other in their
-DTS. All coupled regulators must share common structure
-coupled_reg_desc, which contains information obtained from the device
-tree: array of pointers to other coupled regulators, maximum allowed
-voltage spread and number of coupled regulators, which can't be higher
-than defined MAX_COUPLED.
+Introduce new function regulator_balance_coupled() which
+keeps max_spread constraint fulfilled between all coupled regulators.
+It should be called if any coupled regulator changes its voltage or
+after disabling or enabling. Disabled regulators should follow changes
+of the enabled ones and their consumers' demands shouldn't be taken
+into account while changing voltage of enabled regulators.
 
-Read all the necessary data from DTS in regulator_resolve_coupling(),
-which can succeed only if all the coupled regulators are already
-initialized, so it should be done only once per coupled regulators group
-by the last regulator initialized.
+Find voltages, which are closest to suiting all the consumers' demands
+while fulfilling max_spread constraint, keeping the following rules:
+- if one regulator is about to rise its voltage, rise others
+  voltages if needed
+- if the regulator, which has caused rising other regulators, is
+  lowered, lower the other regulators if possible
+- if one regulator is about to lower its voltage, but it hasn't caused
+  rising other regulators, don't change its voltage if it's not allowed
 
-Check if coupled regulators phandles arrays match for all coupled
-regulators and if their max_spread values are the same.
+Change regulators' voltages step by step, keeping max_spread constraint
+fulfilled all the time. Function regulator_coupled_get_optimal_voltage()
+should find the best possible change for the regulator, which doesn't break
+max_spread constraint. In function regulator_balance_coupled_voltage()
+optimize number of steps by finding highest voltage difference on each
+iteration.
 
 Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/regulator/core.c         | 195 +++++++++++++++++++++++++++++++++++++++
- include/linux/regulator/driver.h |  17 ++++
- 2 files changed, 212 insertions(+)
+ drivers/regulator/core.c | 292 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 276 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index e567fa5..a6cf902 100644
+index a6cf902..d2d910d 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -3953,6 +3953,198 @@ static int regulator_register_resolve_supply(struct device *dev, void *data)
- 	return 0;
+@@ -107,6 +107,9 @@ static int _notifier_call_chain(struct regulator_dev *rdev,
+ 				  unsigned long event, void *data);
+ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 				     int min_uV, int max_uV);
++static int regulator_set_voltage_rdev(struct regulator_dev *rdev,
++				      int min_uV, int max_uV);
++static int regulator_balance_coupled(struct coupled_reg_desc *c_desc);
+ static struct regulator *create_regulator(struct regulator_dev *rdev,
+ 					  struct device *dev,
+ 					  const char *supply_name);
+@@ -185,6 +188,48 @@ static void regulator_unlock_supply(struct regulator_dev *rdev)
  }
  
-+/* Function returns regulator coupled with the given regulator_dev */
-+static struct regulator_dev *parse_coupled_regulator(struct regulator_dev *rdev,
-+						     int index)
+ /**
++ * regulator_lock_coupled - lock a group of coupled regulators
++ * @c_desc:      coupled regulators description source
++ */
++static void regulator_lock_coupled(struct coupled_reg_desc *c_desc)
 +{
-+	struct device_node *node = rdev->dev.of_node;
-+	struct device_node *c_node;
-+	struct regulator_dev *c_rdev;
-+
-+	c_node = of_parse_phandle(node, "regulator-coupled-with", index);
-+	if (!c_node)
-+		return NULL;
-+
-+	c_rdev = of_find_regulator_by_node(c_node);
-+	if (!c_rdev)
-+		return NULL;
-+
-+	return c_rdev;
-+}
-+
-+static int check_coupled_regulators_array(struct coupled_reg_desc *c_desc,
-+					  int index)
-+{
-+	struct regulator_dev *rdev = c_desc->coupled_rdevs[index];
-+	struct regulator_dev **rdevs = c_desc->coupled_rdevs;
-+	struct regulator_dev *c_rdev, *tmp_rdev;
-+	struct device_node *node = rdev->dev.of_node;
 +	int n_coupled = c_desc->n_coupled;
-+	int i, j;
-+
-+	/* Different number of regulators coupled */
-+	if (of_count_phandle_with_args(node, "regulator-coupled-with", 0) !=
-+				       (n_coupled - 1))
-+		return -1;
-+
-+	/* Check if coupled regulators array match */
-+	for (i = 0; i < n_coupled; i++) {
-+		c_rdev = rdevs[i];
-+		/* Don't look for rdev in rdev's phandles array */
-+		if (c_rdev == rdev)
-+			continue;
-+
-+		/* Look for c_rdev phandle */
-+		for (j = 0; j < n_coupled; j++) {
-+			tmp_rdev = parse_coupled_regulator(rdev, j);
-+			if (!tmp_rdev)
-+				return -1;
-+
-+			/* Regulator found */
-+			if (tmp_rdev == c_rdev)
-+				break;
-+		}
-+
-+		/* Regulator can't be found */
-+		if (j == n_coupled && tmp_rdev != c_rdev)
-+			return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int check_coupled_regulator_constraints(struct coupled_reg_desc *c_desc,
-+					       int index)
-+{
-+	int c_max_spread;
-+	struct regulator_dev *rdev = c_desc->coupled_rdevs[index];
-+	struct device_node *node = rdev->dev.of_node;
-+
-+	if (of_property_read_u32(node, "regulator-couple-max-spread",
-+				 &c_max_spread))
-+		return -1;
-+
-+	/* Max_spread value different than in coupled regulator or wrong */
-+	if (c_max_spread < 0 || c_desc->max_spread != c_max_spread)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static int check_coupled_regulator_ops(struct coupled_reg_desc *c_desc,
-+				       int index)
-+{
-+	struct regulator_dev *rdev = c_desc->coupled_rdevs[index];
-+
-+	if (!regulator_ops_is_valid(rdev, REGULATOR_CHANGE_VOLTAGE))
-+		return -1;
-+
-+	if (!rdev->desc->ops->set_voltage &&
-+	    !rdev->desc->ops->set_voltage_sel)
-+		return -1;
-+	return 0;
-+}
-+
-+static void regulator_resolve_coupling(struct regulator_dev *rdev)
-+{
-+	struct coupled_reg_desc *c_desc;
-+	struct device_node *node = rdev->dev.of_node;
-+	struct regulator_dev *c_rdev = NULL;
-+	int max_spread, n_phandles, i;
-+
-+	c_desc = kzalloc(sizeof(*c_desc), GFP_KERNEL);
-+	if (!c_desc)
-+		return;
-+
-+	n_phandles = of_count_phandle_with_args(node, "regulator-coupled-with",
-+						0);
-+	if (n_phandles <= 0 || n_phandles >= MAX_COUPLED)
-+		goto err;
-+
-+	c_desc->n_coupled = n_phandles + 1;
-+
-+	if (of_property_read_u32(node, "regulator-coupled-max-spread",
-+				 &max_spread)) {
-+		rdev_err(rdev, "can't read max_spread for coupled regulator\n");
-+		goto err;
-+	}
-+
-+	c_desc->max_spread = max_spread;
-+
-+	/*
-+	 * Fill rdevs array with pointers to regulators parsed from
-+	 * device tree
-+	 */
-+	c_desc->coupled_rdevs[0] = rdev;
-+	for (i = 0; i < n_phandles; i++) {
-+		c_rdev = parse_coupled_regulator(rdev, i);
-+		if (!c_rdev) {
-+			rdev_err(rdev, "can't parse coupled regulators array\n");
-+			goto err;
-+		}
-+		c_desc->coupled_rdevs[i + 1] = c_rdev;
-+	}
-+
-+	/*
-+	 * Each coupled regulator must have phandles to all regulators
-+	 * they are coupled with. This should be checked by comparing
-+	 * rdevs array with phandles array of each regulator.
-+	 * There's no need for checking rdevs[0] as its device_node
-+	 * was a source to fill rdevs array.
-+	 */
-+	for (i = 0; i < n_phandles; i++) {
-+		if (check_coupled_regulators_array(c_desc, i + 1)) {
-+			rdev_err(rdev,
-+				 "coupled regulators arrays don't match\n");
-+			goto err;
-+		}
-+	}
-+
-+	for (i = 0; i < c_desc->n_coupled; i++) {
-+		/*
-+		 * All coupled regulators need to have
-+		 * regulator-couple-max-spread property with
-+		 * the same value.
-+		 */
-+		if (check_coupled_regulator_constraints(c_desc, i)) {
-+			rdev_err(rdev, "coupled regulators max_spread wrong\n");
-+			goto err;
-+		}
-+
-+		/*
-+		 * Regulators which can't change their voltage can't be
-+		 * coupled.
-+		 */
-+		if (check_coupled_regulator_ops(c_desc, i)) {
-+			rdev_err(rdev, "coupled regulators ops not valid\n");
-+			goto err;
-+		}
-+	}
-+
-+	for (i = 0; i < c_desc->n_coupled; i++)
-+		c_desc->coupled_rdevs[i]->coupled_desc = c_desc;
-+
-+	return;
-+err:
-+	kfree(c_desc);
-+}
-+
-+static void regulator_clean_coupling(struct regulator_dev *rdev)
-+{
-+	struct regulator_dev *c_rdevs[MAX_COUPLED];
-+	struct coupled_reg_desc *c_desc;
 +	int i;
 +
-+	if (!rdev->coupled_desc)
-+		return;
-+
-+	c_desc = rdev->coupled_desc;
-+	for (i = 0; i < c_desc->n_coupled; i++)
-+		c_rdevs[0]->coupled_desc = NULL;
-+
-+	kfree(c_desc);
++	for (i = 0; i < n_coupled; i++)
++		mutex_lock_nested(&c_desc->coupled_rdevs[i]->mutex, i);
 +}
 +
- /**
-  * regulator_register - register regulator
-  * @regulator_desc: regulator to register
-@@ -4116,6 +4308,8 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	dev_set_drvdata(&rdev->dev, rdev);
- 	rdev_init_debugfs(rdev);
- 
-+	regulator_resolve_coupling(rdev);
-+
- 	/* try to resolve regulators supply since a new one was registered */
- 	class_for_each_device(&regulator_class, NULL, NULL,
- 			      regulator_register_resolve_supply);
-@@ -4129,6 +4323,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
- wash:
- 	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
-+	regulator_clean_coupling(rdev);
- 	regulator_ena_gpio_free(rdev);
- 	mutex_unlock(&regulator_list_mutex);
- clean:
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 94417b4..8ca3215 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -15,6 +15,8 @@
- #ifndef __LINUX_REGULATOR_DRIVER_H_
- #define __LINUX_REGULATOR_DRIVER_H_
- 
-+#define MAX_COUPLED		10
-+
- #include <linux/device.h>
- #include <linux/notifier.h>
- #include <linux/regulator/consumer.h>
-@@ -402,6 +404,19 @@ struct regulator_config {
- };
- 
- /*
-+ * struct coupled_reg_desc
-+ *
-+ * Describes coupling of regulators. Each coupled regulator
-+ * contains a pointer to that structure. If the regulator is not
-+ * coupled with any other, it should remain NULL.
++/**
++ * regulator_unlock_coupled - unlock a group of coupled regulators
++ * @c_desc:      coupled regulators description source
 + */
-+struct coupled_reg_desc {
-+	struct regulator_dev *coupled_rdevs[MAX_COUPLED];
-+	int max_spread;
-+	int n_coupled;
-+};
++static void regulator_unlock_coupled(struct coupled_reg_desc *c_desc)
++{
++	int n_coupled = c_desc->n_coupled;
++	int i;
 +
-+/*
-  * struct regulator_dev
-  *
-  * Voltage / Current regulator class device. One for each
-@@ -424,6 +439,8 @@ struct regulator_dev {
- 	/* lists we own */
- 	struct list_head consumer_list; /* consumers we supply */
++	for (i = 0; i < n_coupled; i++)
++		mutex_unlock(&c_desc->coupled_rdevs[i]->mutex);
++}
++
++static void regulator_lock_supply_parents(struct regulator_dev *rdev)
++{
++	struct regulator_dev *supply = rdev_get_supply(rdev);
++
++	if (supply)
++		regulator_lock_supply(supply);
++}
++
++static void regulator_unlock_supply_parents(struct regulator_dev *rdev)
++{
++	struct regulator_dev *supply = rdev_get_supply(rdev);
++
++	if (supply)
++		regulator_unlock_supply(supply);
++}
++
++/**
+  * of_get_regulator - get a regulator device node based on supply name
+  * @dev: Device pointer for the consumer (of regulator) device
+  * @supply: regulator supply name
+@@ -2218,6 +2263,13 @@ int regulator_enable(struct regulator *regulator)
+ 	if (ret != 0 && rdev->supply)
+ 		regulator_disable(rdev->supply);
  
-+	struct coupled_reg_desc *coupled_desc;
++	/*
++	 * If the regulator is coupled with other regulators, we have to
++	 * balance their voltages to keep the max_spread constraint.
++	 */
++	if (rdev->coupled_desc)
++		regulator_balance_coupled(rdev->coupled_desc);
 +
- 	struct blocking_notifier_head notifier;
- 	struct mutex mutex; /* consumer lock */
- 	struct module *owner;
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(regulator_enable);
+@@ -2323,6 +2375,13 @@ int regulator_disable(struct regulator *regulator)
+ 	ret = _regulator_disable(rdev);
+ 	mutex_unlock(&rdev->mutex);
+ 
++	/*
++	 * If the regulator is coupled with other regulators, we can now
++	 * balance their voltages without checking the disabled regulator.
++	 */
++	if (rdev->coupled_desc)
++		regulator_balance_coupled(rdev->coupled_desc);
++
+ 	if (ret == 0 && rdev->supply)
+ 		regulator_disable(rdev->supply);
+ 
+@@ -2379,6 +2438,13 @@ int regulator_force_disable(struct regulator *regulator)
+ 		while (rdev->open_count--)
+ 			regulator_disable(rdev->supply);
+ 
++	/*
++	 * If the regulator is coupled with other regulators, we can now
++	 * balance their voltages without checking the disabled regulator.
++	 */
++	if (rdev->coupled_desc)
++		regulator_balance_coupled(rdev->coupled_desc);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(regulator_force_disable);
+@@ -2460,10 +2526,9 @@ static int _regulator_is_enabled(struct regulator_dev *rdev)
+ 	return rdev->desc->ops->is_enabled(rdev);
+ }
+ 
+-static int _regulator_list_voltage(struct regulator *regulator,
+-				    unsigned selector, int lock)
++static int _regulator_list_voltage(struct regulator_dev *rdev,
++				   unsigned selector, int lock)
+ {
+-	struct regulator_dev *rdev = regulator->rdev;
+ 	const struct regulator_ops *ops = rdev->desc->ops;
+ 	int ret;
+ 
+@@ -2479,7 +2544,8 @@ static int _regulator_list_voltage(struct regulator *regulator,
+ 		if (lock)
+ 			mutex_unlock(&rdev->mutex);
+ 	} else if (rdev->is_switch && rdev->supply) {
+-		ret = _regulator_list_voltage(rdev->supply, selector, lock);
++		ret = _regulator_list_voltage(rdev->supply->rdev,
++					      selector, lock);
+ 	} else {
+ 		return -EINVAL;
+ 	}
+@@ -2555,7 +2621,7 @@ EXPORT_SYMBOL_GPL(regulator_count_voltages);
+  */
+ int regulator_list_voltage(struct regulator *regulator, unsigned selector)
+ {
+-	return _regulator_list_voltage(regulator, selector, 1);
++	return _regulator_list_voltage(regulator->rdev, selector, 1);
+ }
+ EXPORT_SYMBOL_GPL(regulator_list_voltage);
+ 
+@@ -2896,8 +2962,6 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	int ret = 0;
+ 	int old_min_uV, old_max_uV;
+ 	int current_uV;
+-	int best_supply_uV = 0;
+-	int supply_change_uV = 0;
+ 
+ 	/* If we're setting the same range as last time the change
+ 	 * should be a noop (some cpufreq implementations use the same
+@@ -2941,6 +3005,34 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	if (ret < 0)
+ 		goto out2;
+ 
++	/*
++	 * If the regulator is coupled, return after changing consumer demands
++	 * without changing voltage. This will be handled outside the function
++	 * by regulator_balance_coupled()
++	 */
++	if (rdev->coupled_desc)
++		goto out;
++
++	ret = regulator_set_voltage_rdev(regulator->rdev, min_uV, max_uV);
++	if (ret < 0)
++		goto out2;
++
++out:
++	return 0;
++out2:
++	regulator->min_uV = old_min_uV;
++	regulator->max_uV = old_max_uV;
++
++	return ret;
++}
++
++static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
++				      int max_uV)
++{
++	int best_supply_uV = 0;
++	int supply_change_uV = 0;
++	int ret;
++
+ 	if (rdev->supply &&
+ 	    regulator_ops_is_valid(rdev->supply->rdev,
+ 				   REGULATOR_CHANGE_VOLTAGE) &&
+@@ -2952,13 +3044,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 		selector = regulator_map_voltage(rdev, min_uV, max_uV);
+ 		if (selector < 0) {
+ 			ret = selector;
+-			goto out2;
++			goto out;
+ 		}
+ 
+-		best_supply_uV = _regulator_list_voltage(regulator, selector, 0);
++		best_supply_uV = _regulator_list_voltage(rdev, selector, 0);
+ 		if (best_supply_uV < 0) {
+ 			ret = best_supply_uV;
+-			goto out2;
++			goto out;
+ 		}
+ 
+ 		best_supply_uV += rdev->desc->min_dropout_uV;
+@@ -2966,7 +3058,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 		current_supply_uV = _regulator_get_voltage(rdev->supply->rdev);
+ 		if (current_supply_uV < 0) {
+ 			ret = current_supply_uV;
+-			goto out2;
++			goto out;
+ 		}
+ 
+ 		supply_change_uV = best_supply_uV - current_supply_uV;
+@@ -2978,13 +3070,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 		if (ret) {
+ 			dev_err(&rdev->dev, "Failed to increase supply voltage: %d\n",
+ 					ret);
+-			goto out2;
++			goto out;
+ 		}
+ 	}
+ 
+ 	ret = _regulator_do_set_voltage(rdev, min_uV, max_uV);
+ 	if (ret < 0)
+-		goto out2;
++		goto out;
+ 
+ 	if (supply_change_uV < 0) {
+ 		ret = regulator_set_voltage_unlocked(rdev->supply,
+@@ -2998,9 +3090,174 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 
+ out:
+ 	return ret;
+-out2:
+-	regulator->min_uV = old_min_uV;
+-	regulator->max_uV = old_max_uV;
++}
++
++static int regulator_coupled_get_optimal_voltage(struct regulator_dev *rdev)
++{
++	struct coupled_reg_desc *c_desc = rdev->coupled_desc;
++	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
++	int max_spread = c_desc->max_spread;
++	int n_coupled = c_desc->n_coupled;
++	int desired_min_uV, desired_max_uV, min_actual_uV = INT_MAX;
++	int max_actual_uV = 0, highest_min_uV = 0, target_uV, possible_uV;
++	int i, ret;
++
++	/* If consumers don't provide any demands, set voltage to min_uV */
++	desired_min_uV = rdev->constraints->min_uV;
++	desired_max_uV = rdev->constraints->max_uV;
++	ret = regulator_check_consumers(rdev,
++					&desired_min_uV,
++					&desired_max_uV);
++	if (ret < 0)
++		goto out;
++
++	/* Find highest min desired voltage */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_min = 0;
++		int tmp_max = INT_MAX;
++
++		if (!_regulator_is_enabled(c_rdevs[i]))
++			continue;
++
++		ret = regulator_check_consumers(c_rdevs[i],
++						&tmp_min,
++						&tmp_max);
++		if (ret < 0)
++			goto out;
++
++		if (tmp_min > highest_min_uV)
++			highest_min_uV = tmp_min;
++	}
++
++	/*
++	 * Let target_uV be equal to the desired one if possible.
++	 * If not, set it to minimum voltage, allowed by other coupled
++	 * regulators.
++	 */
++	target_uV = max(desired_min_uV,  highest_min_uV - max_spread);
++
++	/*
++	 * Find min and max voltages, which currently aren't
++	 * violating max_spread
++	 */
++	for (i = 0; i < n_coupled; i++) {
++		int tmp_act;
++
++		/*
++		 * Don't check the regulator, which is about
++		 * to change voltage
++		 */
++		if (c_rdevs[i] == rdev)
++			continue;
++		if (!_regulator_is_enabled(c_rdevs[i]))
++			continue;
++
++		tmp_act = _regulator_get_voltage(c_rdevs[i]);
++		if (tmp_act < 0) {
++			ret = tmp_act;
++			goto out;
++		}
++
++		if (tmp_act < min_actual_uV)
++			min_actual_uV = tmp_act;
++
++		if (tmp_act > max_actual_uV)
++			max_actual_uV = tmp_act;
++	}
++
++	/* There aren't any other regulators enabled */
++	if (max_actual_uV == 0) {
++		possible_uV = target_uV;
++	} else {
++		/*
++		 * Correct target voltage, so as it currently isn't
++		 * violating max_spread
++		 */
++		possible_uV = max(target_uV, max_actual_uV - max_spread);
++		possible_uV = min(possible_uV, min_actual_uV + max_spread);
++	}
++
++	if (possible_uV > desired_max_uV) {
++		ret = -EINVAL;
++		goto out;
++	}
++	ret = possible_uV;
++
++out:
++	return ret;
++}
++
++static int regulator_balance_coupled(struct coupled_reg_desc *c_desc)
++{
++	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
++	int n_coupled = c_desc->n_coupled;
++	int i, best_delta, best_index, best_uV, ret = 1;
++
++	/*
++	 * Find the best possible voltage change on each loop. Leave the loop
++	 * if there isn't any possible change.
++	 */
++	while (1) {
++		best_delta = 0;
++		best_uV = 0;
++		best_index = -1;
++
++		regulator_lock_coupled(c_desc);
++
++		/*
++		 * Find highest difference between optimal voltage
++		 * and actual voltage.
++		 */
++		for (i = 0; i < n_coupled; i++) {
++			/*
++			 * optimal_uV is the best voltage that can be set for
++			 * i-th regulator at the moment without violating
++			 * max_spread constraint in order to balance
++			 * the coupled voltages.
++			 */
++			int optimal_uV, actual_uV;
++
++			optimal_uV = regulator_coupled_get_optimal_voltage(c_rdevs[i]);
++			if (optimal_uV < 0) {
++				ret = optimal_uV;
++				goto unlock;
++			}
++
++			actual_uV = _regulator_get_voltage(c_rdevs[i]);
++			if (actual_uV < 0) {
++				ret = optimal_uV;
++				goto unlock;
++			}
++
++			if (abs(best_delta) < abs(optimal_uV - actual_uV)) {
++				best_delta = optimal_uV - actual_uV;
++				best_index = i;
++				best_uV = optimal_uV;
++			}
++		}
++
++		/* Nothing to change, return successfully */
++		if (best_index == -1) {
++			ret = 0;
++			goto unlock;
++		}
++		/*
++		 * Lock just the supply regulators, as the regulator itself
++		 * is already locked by regulator_lock_coupled().
++		 */
++		regulator_lock_supply_parents(c_rdevs[best_index]);
++
++		ret = regulator_set_voltage_rdev(c_rdevs[best_index], best_uV,
++						 best_uV);
++
++		regulator_unlock_supply_parents(c_rdevs[best_index]);
++
++unlock:
++		regulator_unlock_coupled(c_desc);
++
++		if (ret < 0 || best_index == -1)
++			break;
++	}
+ 
+ 	return ret;
+ }
+@@ -3033,6 +3290,9 @@ int regulator_set_voltage(struct regulator *regulator, int min_uV, int max_uV)
+ 
+ 	regulator_unlock_supply(regulator->rdev);
+ 
++	if (regulator->rdev->coupled_desc)
++		ret = regulator_balance_coupled(regulator->rdev->coupled_desc);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(regulator_set_voltage);
 -- 
 2.7.4
 
