@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 2/8] ARM: dts: sunxi: Add dtsi for AXP81x PMIC
-Date: Wed, 18 Oct 2017 16:31:32 +0800
-Message-ID: <20171018083138.14517-3-wens@csie.org>
+Subject: [PATCH v2 7/8] ARM: dts: sun8i: a83t: cubietruck-plus:
+ Enable AP6330 WiFi on mmc1
+Date: Wed, 18 Oct 2017 16:31:37 +0800
+Message-ID: <20171018083138.14517-8-wens@csie.org>
 References: <20171018083138.14517-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB35CTTHQKGQE5WDP6OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4FCTTHQKGQESZZYHRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171018083138.14517-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,168 +20,62 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The AXP81x family of PMIC is used with the Allwinner A83T and H8 SoCs.
-This includes the AXP813 and AXP818. There is no discernible difference
-except the labeling. The AXP813 is paired with the A83T, while the
-AXP818 is paired with the H8.
+The WiFi side of the AP6330 WiFi/BT combo module is connected to
+mmc1. There are also GPIOs for enable and interrupts. An external
+clock from the AC100 RTC is also used.
 
-This patch adds a dtsi file for all the common bindings for these two
-PMICs. Currently this is just listing all the regulator nodes. The
-regulators are initialized based on their device node names.
+Enable WiFi on this board by enabling mmc1 and adding the power
+sequencing clocks and GPIO, as well as the chip's interrupt line.
 
-In the future this would be expanded to include power supplies and
-GPIO controllers.
+For the WiFi module to correctly detect the frequency of its main
+oscillator, the external low power clock must be set to 32768 Hz.
+
+Their does not seem to be proper out-of-band interrupt support
+for the BCM4330 chip within the AP6330 module. This part is left
+out for now.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/axp81x.dtsi | 139 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
- create mode 100644 arch/arm/boot/dts/axp81x.dtsi
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-new file mode 100644
-index 000000000000..73b761f850c5
---- /dev/null
-+++ b/arch/arm/boot/dts/axp81x.dtsi
-@@ -0,0 +1,139 @@
-+/*
-+ * Copyright 2017 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index bd53e5748991..7f0a3f6d0cf2 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -131,6 +131,17 @@
+ 		#sound-dai-cells = <0>;
+ 		compatible = "linux,spdif-dit";
+ 	};
 +
-+/* AXP813/818 Integrated Power Management Chip */
-+
-+&axp81x {
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+
-+	regulators {
-+		/* Default work frequency for buck regulators */
-+		x-powers,dcdc-freq = <3000>;
-+
-+		reg_dcdc1: dcdc1 {
-+		};
-+
-+		reg_dcdc2: dcdc2 {
-+		};
-+
-+		reg_dcdc3: dcdc3 {
-+		};
-+
-+		reg_dcdc4: dcdc4 {
-+		};
-+
-+		reg_dcdc5: dcdc5 {
-+		};
-+
-+		reg_dcdc6: dcdc6 {
-+		};
-+
-+		reg_dcdc7: dcdc7 {
-+		};
-+
-+		reg_aldo1: aldo1 {
-+		};
-+
-+		reg_aldo2: aldo2 {
-+		};
-+
-+		reg_aldo3: aldo3 {
-+		};
-+
-+		reg_dldo1: dldo1 {
-+		};
-+
-+		reg_dldo2: dldo2 {
-+		};
-+
-+		reg_dldo3: dldo3 {
-+		};
-+
-+		reg_dldo4: dldo4 {
-+		};
-+
-+		reg_eldo1: eldo1 {
-+		};
-+
-+		reg_eldo2: eldo2 {
-+		};
-+
-+		reg_eldo3: eldo3 {
-+		};
-+
-+		reg_fldo1: fldo1 {
-+		};
-+
-+		reg_fldo2: fldo2 {
-+		};
-+
-+		reg_fldo3: fldo3 {
-+		};
-+
-+		reg_ldo_io0: ldo-io0 {
-+			/* Disable by default to avoid conflicts with GPIO */
-+			status = "disabled";
-+		};
-+
-+		reg_ldo_io1: ldo-io1 {
-+			/* Disable by default to avoid conflicts with GPIO */
-+			status = "disabled";
-+		};
-+
-+		reg_rtc_ldo: rtc-ldo {
-+			/* RTC_LDO is a fixed, always-on regulator */
-+			regulator-always-on;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		reg_sw: sw {
-+		};
-+
-+		reg_drivevbus: drivevbus {
-+			status = "disabled";
-+		};
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		clocks = <&ac100_rtc 1>;
++		clock-names = "ext_clock";
++		/* The WiFi low power clock must be 32768 Hz */
++		assigned-clocks = <&ac100_rtc 1>;
++		assigned-clock-rates = <32768>;
++		/* enables internal regulator and de-asserts reset */
++		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 WL-PMU-EN */
 +	};
+ };
+ 
+ &ehci0 {
+@@ -153,6 +164,15 @@
+ 	status = "okay";
+ };
+ 
++&mmc1 {
++	vmmc-supply = <&reg_dcdc1>;
++	vqmmc-supply = <&reg_sw>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
 +};
++
+ &mmc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_8bit_emmc_pins>;
 -- 
 2.14.2
