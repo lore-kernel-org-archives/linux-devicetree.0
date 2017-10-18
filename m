@@ -1,340 +1,77 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
-Date: Wed, 18 Oct 2017 18:13:31 +0530
-Message-ID: <066fef03-7c21-fe7c-218a-fdec446500da@ti.com>
-References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508042882-20922-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [RFC PATCH v2 0/3] Add coupled regulators mechanism
+Date: Wed, 18 Oct 2017 14:46:59 +0200
+Message-ID: <1508330822-8039-1-git-send-email-m.purski@samsung.com>
+References: <CGME20171018124722eucas1p23aa3280d33bfd38650783ac7f52b9909@eucas1p2.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all,
 
-On Sunday 15 October 2017 10:18 AM, Shawn Guo wrote:
-> From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> 
-> Add combo phy driver for HiSilicon STB SoCs. This phy can be
-> used as pcie-phy, sata-phy or usb-phy.
-> 
-> Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/phy/phy-hi3798cv200-combphy.txt       |  21 ++
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/hisilicon/Kconfig                      |   9 +
->  drivers/phy/hisilicon/Makefile                     |   1 +
->  drivers/phy/hisilicon/phy-histb-combphy.c          | 236 +++++++++++++++++++++
->  5 files changed, 268 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
->  create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
-> new file mode 100644
-> index 000000000000..c7121cdcaed9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
-> @@ -0,0 +1,21 @@
-> +HiSilicon STB PCIE/SATA/USB3 PHY
-> +
-> +Properties:
-> +- compatible: Should be "hisilicon,hi3798cv200-combphy"
-> +- #phy-cells: Should be 1.  The cell number is used to select the phy mode:
-> +	0: PCIe mode
-> +	1: USB 3.0 mode
-> +	2: SATA mode
-> +- clocks: The phandle to clock provider and clock specifier pair.
-> +- resets: The phandle to reset controller and reset specifier pair.
-> +- hisilicon,peripheral-syscon: The phandle to the peripheral controller.
-> +
-> +Example:
-> +
-> +combphy1: phy {
-> +	compatible = "hisilicon,hi3798cv200-combphy";
-> +	#phy-cells = <1>;
-> +	clocks = <&crg HISTB_COMBPHY1_CLK>;
-> +	resets = <&crg 0x188 12>;
-> +	hisilicon,peripheral-syscon = <&peri_ctrl>;
-> +};
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 3a52dcb09566..11754b293fb4 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
->  obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
->  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-> +
+this patchset adds a new mechanism to the framework - regulators' coupling.
 
-spurious blank space..
->  obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
->  obj-$(CONFIG_ARCH_MESON)		+= amlogic/
->  obj-$(CONFIG_LANTIQ)			+= lantiq/
-> diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-> index 6164c4cd0f65..d9afe2b12827 100644
-> --- a/drivers/phy/hisilicon/Kconfig
-> +++ b/drivers/phy/hisilicon/Kconfig
-> @@ -11,6 +11,15 @@ config PHY_HI6220_USB
->  
->  	  To compile this driver as a module, choose M here.
->  
-> +config PHY_HISTB_COMBPHY
-> +	tristate "HiSilicon STB SoCs COMBPHY support"
-> +	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	select MFD_SYSCON
-> +	help
-> +	  Enable this to support the HISILICON STB SoCs COMBPHY.
-> +	  If unsure, say N.
-> +
->  config PHY_HIX5HD2_SATA
->  	tristate "HIX5HD2 SATA PHY Driver"
->  	depends on ARCH_HIX5HD2 && OF && HAS_IOMEM
-> diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-> index 541b348187a8..5e8e2dfa8c37 100644
-> --- a/drivers/phy/hisilicon/Makefile
-> +++ b/drivers/phy/hisilicon/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
-> +obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
->  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-> diff --git a/drivers/phy/hisilicon/phy-histb-combphy.c b/drivers/phy/hisilicon/phy-histb-combphy.c
-> new file mode 100644
-> index 000000000000..976338d1874b
-> --- /dev/null
-> +++ b/drivers/phy/hisilicon/phy-histb-combphy.c
-> @@ -0,0 +1,236 @@
-> +/*
-> + * COMBPHY driver for HiSilicon STB SoCs
-> + *
-> + * Copyright (C) 2016-2017 HiSilicon Co., Ltd. http://www.hisilicon.com
-> + *
-> + * Authors: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +
-> +#define PERI_CTRL			0x0008
-> +#define PERI_COMBPHY1_CFG		0x0858
-> +
-> +#define COMBPHY1_MODE_MASK		GENMASK(12, 11)
-> +#define COMBPHY_MODE_SHIFT		11
-> +#define COMBPHY_MODE_PCIE		0
-> +#define COMBPHY_MODE_USB		1
-> +#define COMBPHY_MODE_SATA		2
-> +
-> +#define COMBPHY1_BYPASS_CODEC_MASK	BIT(31)
-> +#define COMBPHY1_BYPASS_CODEC_VAL	(1 << 31)
-> +
-> +#define COMBPHY1_SRST_REQ_MASK		BIT(12)
-> +#define COMBPHY1_SRST_REQ_VAL		(1 << 12)
-> +
-> +#define COMBPHY1_REFCLK_SEL_MASK	GENMASK(11, 10)
-> +#define COMBPHY1_REFCLK_SEL_VAL		(2 << 10)
-> +
-> +#define COMBPHY1_CLKREF_OUT_OEN_MASK	BIT(0)
-> +#define COMBPHY1_CLKREF_OUT_OEN_VAL	(1 << 0)
-> +
-> +#define NANO_TEST_WRITE			GENMASK(24, 24)
-> +#define NANO_TEST_DATA			GENMASK(23, 20)
-> +#define NANO_TEST_ADDR			GENMASK(16, 12)
-> +
-> +struct histb_combphy_priv {
-> +	u32 mode;
-> +	struct regmap *peri;
-> +	struct clk *ref;
-> +	struct phy *phy;
-> +	struct reset_control *por;
-> +};
-> +
-> +static void nano_register_write(struct regmap *peri, u32 addr,
-> +				u32 offset, u32 value)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regmap_read(peri, addr, &val);
-> +	val &= ~NANO_TEST_ADDR;
-> +	val &= ~NANO_TEST_DATA;
-> +	val |= (offset << 12);
-> +	val |= (value << 20);
-> +	ret |= regmap_write(peri, addr, val);
-> +
-> +	ret = regmap_read(peri, addr, &val);
-> +	val &= ~NANO_TEST_WRITE;
-> +	ret |= regmap_write(peri, addr, val);
-> +
-> +	ret = regmap_read(peri, addr, &val);
-> +	val |= NANO_TEST_WRITE;
-> +	ret |= regmap_write(peri, addr, val);
-> +}
-> +
-> +static int histb_pcie_phy_init(struct histb_combphy_priv *priv)
-> +{
-> +	struct regmap *peri = priv->peri;
-> +	int ret;
-> +
-> +	/* set to pcie mode */
-> +	regmap_update_bits(peri, PERI_CTRL, COMBPHY1_MODE_MASK,
-> +			    COMBPHY_MODE_PCIE << COMBPHY_MODE_SHIFT);
-> +
-> +	regmap_update_bits(peri, PERI_COMBPHY1_CFG,
-> +			    COMBPHY1_BYPASS_CODEC_MASK,
-> +			    ~COMBPHY1_BYPASS_CODEC_VAL);
-> +
-> +	ret = clk_prepare_enable(priv->ref);
-> +	if (ret) {
-> +		dev_err(&priv->phy->dev, "clk_prepare_enable fail!\n");
-> +		return ret;
-> +	}
-> +
-> +	reset_control_deassert(priv->por);
-> +
-> +	regmap_update_bits(peri, PERI_COMBPHY1_CFG,
-> +			    COMBPHY1_CLKREF_OUT_OEN_MASK,
-> +			    COMBPHY1_CLKREF_OUT_OEN_VAL);
-> +
-> +	/* need to wait for EP clk stable */
-> +	mdelay(5);
-> +
-> +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0x1, 0x8);
-> +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0xc, 0x9);
-> +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0x1a, 0x4);
-> +
-> +	return 0;
-> +}
-> +
-> +static int histb_pcie_phy_exit(struct histb_combphy_priv *priv)
-> +{
-> +	regmap_update_bits(priv->peri, PERI_COMBPHY1_CFG,
-> +				COMBPHY1_CLKREF_OUT_OEN_MASK,
-> +				~COMBPHY1_CLKREF_OUT_OEN_VAL);
-> +	reset_control_deassert(priv->por);
-> +	clk_disable_unprepare(priv->ref);
-> +
-> +	return 0;
-> +}
-> +
-> +static int histb_combphy_init(struct phy *phy)
-> +{
-> +	struct histb_combphy_priv *priv = phy_get_drvdata(phy);
-> +	int ret = -1;
-> +
-> +	if (priv->mode == COMBPHY_MODE_PCIE)
-> +		ret = histb_pcie_phy_init(priv);
-> +
-> +	return ret;
-> +}
-> +
-> +static int histb_combphy_exit(struct phy *phy)
-> +{
-> +	struct histb_combphy_priv *priv = phy_get_drvdata(phy);
-> +	int ret = 0;
-> +
-> +	if (priv->mode == COMBPHY_MODE_PCIE)
-> +		ret = histb_pcie_phy_exit(priv);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct phy_ops histb_combphy_ops = {
-> +	.init = histb_combphy_init,
-> +	.exit = histb_combphy_exit,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct phy *histb_combphy_xlate(struct device *dev,
-> +				       struct of_phandle_args *args)
-> +{
-> +	struct histb_combphy_priv *priv = dev_get_drvdata(dev);
-> +
-> +	if (args->args_count < 1) {
-> +		dev_err(dev, "DT did not pass correct no of args\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	priv->mode = args->args[0];
-> +
-> +	if (priv->mode > COMBPHY_MODE_SATA) {
+On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
+different devices on the board are supplied by different regulators
+with non-fixed voltages. If one of these devices temporarily requires 
+higher voltage, there might occur a situation that the spread between 
+devices' voltages is so high, that there is a risk of changing
+'high' and 'low' states on the interconnection between devices powered
+by those regulators. 
 
-this should use generic bindings from include/dt-bindings/phy/phy.h.
+Algorithmicaly the problem was solved by: 
+Inderpal Singh <inderpal.s@samsung.com>
+Doug Anderson <dianders@chromium.org>
+
+The discussion on that subject can be found here:
+https://lkml.org/lkml/2014/4/29/28
+
+Therefore this patchset is an attempt to apply the idea to regulators core
+as concluded in the discussion by Mark Brown and Doug Anderson.
+
+This feature is required to enable support for generic CPUfreq 
+and devfreq drivers for the mentioned boards. 
+
+Open question - which locking model should be used, because
+during balancing voltages we need to lock all coupled regulators
+and their parents. Unfortunately, some coupled regulators might
+have common parents. I can see three possibilities here:
+1. (current implementation) Always lock all coupled regulators and additionally
+   lock parents only for changing voltage of the individual regulator
+2. Always lock all coupled regulators and their parents - to avoid deadlock
+   on common parent, first enumerate locks, then sort them and remove double
+   entries
+3. Always lock all coupled regulators and their parents - to avoid deadlock
+   on common parent, introduce so called reentrant locks (lock which might
+   be taken multiple times by the same process).
 
 
-> +		dev_err(dev, "DT did not pass correct phy mode\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	return priv->phy;
-> +}
-> +
-> +static int histb_combphy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct histb_combphy_priv *priv;
-> +	struct phy_provider *phy_provider;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->peri = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +				"hisilicon,peripheral-syscon");
-> +	if (IS_ERR(priv->peri)) {
-> +		dev_err(dev, "failed to find peri_ctrl regmap\n");
-> +		return PTR_ERR(priv->peri);
-> +	}
-> +
-> +	priv->ref = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(priv->ref)) {
-> +		dev_err(dev, "failed to find ref clk\n");
-> +		return PTR_ERR(priv->ref);
-> +	}
-> +
-> +	priv->por = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(priv->por)) {
-> +		dev_err(dev, "failed to por reset\n");
-> +		return PTR_ERR(priv->por);
-> +	}
-> +
-> +	priv->phy = devm_phy_create(dev, NULL, &histb_combphy_ops);
-> +	if (IS_ERR(priv->phy)) {
-> +		dev_err(dev, "failed to create combphy\n");
-> +		return PTR_ERR(priv->phy);
-> +	}
-> +
-> +	dev_set_drvdata(dev, priv);
-> +	phy_set_drvdata(priv->phy, priv);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, histb_combphy_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "failed to register phy provider\n");
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	return 0;
+Best regards,
 
-return PTR_ERR_OR_ZERO(phy_provider) instead?
+	Maciej Purski
 
-Thanks
-Kishon
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in RFC v2:
+- allow coupling n regulators (in fact up to constant value, now
+  set to 10)
+- change algorithm to be more readable
+- introduce better locking
+- add more comments
+- split first patch into two
+- update commit messages
+- change sequence of the patches
+
+Maciej Purski (3):
+  regulator: bindings: Add properties for coupled regulators
+  regulator: core: Parse coupled regulators properties
+  regulator: core: Balance coupled regulators voltages
+
+ .../devicetree/bindings/regulator/regulator.txt    |   4 +
+ drivers/regulator/core.c                           | 487 ++++++++++++++++++++-
+ include/linux/regulator/driver.h                   |  17 +
+ 3 files changed, 492 insertions(+), 16 deletions(-)
+
+-- 
+2.7.4
