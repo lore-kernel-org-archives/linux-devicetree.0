@@ -1,32 +1,39 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: dts: imx51-ts4800: Fix 'port@0' node with unit
- name and no reg property
-Date: Wed, 18 Oct 2017 10:51:25 +0800
-Message-ID: <20171018025124.GH18810@dragon>
-References: <1508158110-5188-1-git-send-email-marco.franchi@nxp.com>
- <1508158110-5188-2-git-send-email-marco.franchi@nxp.com>
+Subject: Re: [PATCHv3 00/12] ARM: dts: imx6: Update dts files for the Ka-Ro
+ TX6 module series
+Date: Wed, 18 Oct 2017 11:06:54 +0800
+Message-ID: <20171018030653.GL18810@dragon>
+References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
+ <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1508158110-5188-2-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1508231883-12067-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Cc: marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 10:48:26AM -0200, Marco Franchi wrote:
-> The following build warning is seen with W=1:
+On Tue, Oct 17, 2017 at 11:17:51AM +0200, Lothar Waßmann wrote:
+> Please ignore the V2 series. I accidentally sent the patches from a
+> wrong directory.
 > 
-> Warning (unit_address_vs_reg): Node /display-di0/port@0 has a unit name, but no reg property
-> 
-> Fix this warning by removing '@' from such node.
-> 
-> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+> This patchset updates the dts files for the Ka-Ro electronics GmbH TX6
+> module series and adds some include files to facilitate supporting
+> various SoM/baseboard combinations.
 
-This patch and #6 do not apply to imx/dt branch.  Please rebase.
+Applied all, thanks.
 
-Shawn
+> Changes vs. v2:
+> - resent the correct patches
+> 
+> Changes vs. v1:
+> - rebased to imx/dt branch
+> - eliminate use of 'interrupts-extended' property according to Uwe
+>   Kleine-König's comment
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
