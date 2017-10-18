@@ -1,15 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 6/8] ARM: dts: sun8i: a83t: Move mmc1 pinctrl
- setting to dtsi file
-Date: Wed, 18 Oct 2017 16:31:36 +0800
-Message-ID: <20171018083138.14517-7-wens@csie.org>
-References: <20171018083138.14517-1-wens@csie.org>
+Subject: [PATCH v2 0/8] ARM: sun8i: a83t: Enable AXP813/AXP818 regulators
+Date: Wed, 18 Oct 2017 16:31:30 +0800
+Message-ID: <20171018083138.14517-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB35CTTHQKGQE5WDP6OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3NCTTHQKGQE7UNQPTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171018083138.14517-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,41 +17,78 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-mmc1 only has 1 possible pinmux setting.
+Hi everyone,
 
-Move any settings to the dtsi file and set it by default.
+This series was originally name "regulator: axp20x: Add support for
+AXP813/818 regulators". It adds support for the X-Powers AXP813/818 [1]
+PMICs' regulators. The series is quite straightforward.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 2 --
- arch/arm/boot/dts/sun8i-a83t.dtsi         | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Changes since v1:
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 723641f56a74..de0be140338b 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -115,8 +115,6 @@
- &mmc1 {
- 	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc1_pins>;
- 	vmmc-supply = <&reg_vcc3v3>;
- 	vqmmc-supply = <&reg_vcc3v3>;
- 	non-removable;
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index ce6e887c8938..19acae1b4089 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -212,6 +212,8 @@
- 			resets = <&ccu RST_BUS_MMC1>;
- 			reset-names = "ahb";
- 			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc1_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+  - Regulator driver patches were merged and now dropped from the series
+
+  - Chose simpler names for the regulators
+
+  - Added SDIO WiFi enablement patches
+
+Patch 1 adds a axp20x-regulator cell for AXP813, thereby enabling the
+regulators.
+
+Patch 2 adds a shared dtsi file for the PMIC. This currently contains
+a list of regulator nodes, but will be expanded with Quentin's power
+supply work.
+
+Patches 3 through 5 add regulator nodes to board dts files for the A83T
+boards that I have. They are not squashed together as each file has
+substantial additions.
+
+Patch 6 moves the mmc1 pinmux setting over to the dtsi, and sets it by
+default.
+
+Patches 7 & 8 enable SDIO-based WiFi on the Cubietruck Plus and Banana
+Pi M3.
+
+Originally my work also included enabling Ethernet. But the Ethernet
+bindings were reverted. Everything can be found here:
+
+    https://github.com/wens/linux/tree/a83t-regulator-wifi-eth
+
+Please have a look.
+
+Lee, we need the mfd changes merged in before merging the dts changes.
+Otherwise, mmc would break as vmmc/vqmmc is tied to the PMIC regulators.
+
+
+Regards
+ChenYu
+
+
+[1] AXP813 and AXP818 are functionally identical. They have different
+    labels and are bundled with different SoCs (A83T and H8), as a sort
+    of product or market segmentation.
+
+
+
+Chen-Yu Tsai (8):
+  mfd: axp20x: Add axp20x-regulator cell for AXP813
+  ARM: dts: sunxi: Add dtsi for AXP81x PMIC
+  ARM: dts: sun8i: a83t: cubietruck-plus: Add AXP818 regulator nodes
+  ARM: dts: sun8i: a83t: bananapi-m3: Add AXP813 regulator nodes
+  ARM: dts: sun8i: a83t: allwinner-h8homlet-v2: Add AXP818 regulator
+    nodes
+  ARM: dts: sun8i: a83t: Move mmc1 pinctrl setting to dtsi file
+  ARM: dts: sun8i: a83t: cubietruck-plus: Enable AP6330 WiFi on mmc1
+  ARM: dts: sun8i: a83t: bananapi-m3: Enable AP6212 WiFi on mmc1
+
+ .../{sun8i-a83t-bananapi-m3.dts => axp81x.dtsi}    | 157 ++++++++---------
+ .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 147 ++++++++++++++--
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts       | 169 ++++++++++++++++++-
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts   | 187 +++++++++++++++++++--
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts          |   2 -
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  |   2 +
+ drivers/mfd/axp20x.c                               |   2 +
+ 7 files changed, 547 insertions(+), 119 deletions(-)
+ copy arch/arm/boot/dts/{sun8i-a83t-bananapi-m3.dts => axp81x.dtsi} (52%)
+
 -- 
 2.14.2
