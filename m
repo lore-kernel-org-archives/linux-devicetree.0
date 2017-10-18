@@ -1,79 +1,54 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] nvmem: meson: use generic compatible
-Date: Wed, 18 Oct 2017 09:31:07 +0200
-Message-ID: <1508311867.3957.33.camel@baylibre.com>
-References: <20171012152450.12454-1-jbrunet@baylibre.com>
-         <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
-         <1507923553.30658.10.camel@baylibre.com>
-         <20171017205204.t4vfvbc2c5nsrnhm@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171017205204.t4vfvbc2c5nsrnhm@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: [PATCH v5 0/4] stm32 clocksource driver rework
+Date: Wed, 18 Oct 2017 09:43:30 +0200
+Message-ID: <1508312614-27750-1-git-send-email-benjamin.gaignard@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de, ludovic.barre@st.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-10-17 at 15:52 -0500, Rob Herring wrote:
-> On Fri, Oct 13, 2017 at 09:39:13PM +0200, Jerome Brunet wrote:
-> > On Fri, 2017-10-13 at 21:14 +0200, Martin Blumenstingl wrote:
-> > > Hi Jerome,
-> > > 
-> > > On Thu, Oct 12, 2017 at 5:24 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > > wrote:
-> > > > The meson efuse driver seems to be compatible with more SoCs than
-> > > > initially thought. Let's use the most generic compatible he have in
-> > > > DT instead of the gxbb specific one
-> > > > 
-> > > > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
-> > > >  drivers/nvmem/meson-efuse.c                               | 2 +-
-> > > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > index fafd85bd67a6..0260524292fe 100644
-> > > > --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > @@ -1,7 +1,7 @@
-> > > >  = Amlogic eFuse device tree bindings =
-> > > > 
-> > > >  Required properties:
-> > > > -- compatible: should be "amlogic,meson-gxbb-efuse"
-> > > > +- compatible: should be "amlogic,meson-gx-efuse"
-> 
-> Same comment as for the firmware.
-> 
-> > > 
-> > > have you checked with the devicetree maintainers how they want the
-> > > documentation to look like in this case?
-> > 
-> > You mean "Should we put every compatible existing (in DT) in the
-> > documentation"
-> > From what I've seen, at least in meson drivers, only the matched ones are
-> > listed.
-> > 
-> > That's a good question though.
-> > We tend to put soc specific compatible "in case"  we need them later on.
-> > Should
-> > we document those ?
-> 
-> Absolutely.
+version 5:
+- rebase on top of timer/core branch
+- rework commit message of the first patch
 
-My understanding is that this documentation is the documentation of the bindings
-used by the driver. 
+version 4:
+- split patch in 3 parts
+  - convert code to timer_of
+  - only use 32 bits timers
+  - add clocksource support
 
-If I understand your point, we should document bindings (compatible in that
-case) that are in fact not fact by the driver. This means that if someone refer
-only to the documentation, he might be surprised by the result.
+version 3:
+- fix comments done by Daniel
+- use timer_of helper functions
 
-> 
-> Rob
+version 2:
+- fix uninitialized variable
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These patches implements clocksource and clockevent by using only one hardware block.
+Getting both clock source and events on the same hardware lead to change quite
+a lot driver code.
+It also limits usage of clocksource to 32 bits timers because 16 bits ones
+aren't enough accurate.
+Thanks to timer_fo helpers this series includes minor clean up in structures,
+function prototypes and driver name.
+
+Since 16 bits timers become useless it also removes them from stm32f4 and
+stm32f7 devicetree.
+
+Increase min delta value to be sure to not have too much interrupts.
+
+Benjamin Gaignard (4):
+  clocksource: stm32: convert driver to timer_of
+  clocksource: stm32: only use 32 bits timers
+  clocksource: stm32: add clocksource support
+  arm: dts: stm32: remove useless clocksource nodes
+
+ arch/arm/boot/dts/stm32f429.dtsi  |  32 ------
+ arch/arm/boot/dts/stm32f746.dtsi  |  32 ------
+ drivers/clocksource/Kconfig       |   1 +
+ drivers/clocksource/timer-stm32.c | 229 ++++++++++++++++++--------------------
+ 4 files changed, 112 insertions(+), 182 deletions(-)
+
+-- 
+2.7.4
