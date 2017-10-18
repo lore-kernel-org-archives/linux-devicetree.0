@@ -1,7 +1,7 @@
 From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v2 3/6] ARM: dts: imx53: Fix 'usbphy@x' node with unit name and no reg property
-Date: Wed, 18 Oct 2017 17:29:48 -0200
-Message-ID: <1508354991-18016-3-git-send-email-marco.franchi@nxp.com>
+Subject: [PATCH v2 2/6] ARM: dts: imx51-ts4800: Fix 'port@0' node with unit name and no reg property
+Date: Wed, 18 Oct 2017 17:29:47 -0200
+Message-ID: <1508354991-18016-2-git-send-email-marco.franchi@nxp.com>
 References: <1508354991-18016-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,33 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following build warnings are seen with W=1:
+The following build warning is seen with W=1:
 
-Warning (unit_address_vs_reg): Node /soc/aips@50000000/usbphy@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /soc/aips@50000000/usbphy@1 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /display-di0/port@0 has a unit name, 
+but no reg property
 
-Fix these warnings by changing '@' to '-'.
+Fix this warning by removing '@' from such node.
 
 Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes since v1:
--none
- arch/arm/boot/dts/imx53.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+-rebased to imx/dt branch
+ arch/arm/boot/dts/imx51-ts4800.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 8bf0d89..c937949 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -299,14 +299,14 @@
- 				reg = <0x53f00000 0x60>;
+diff --git a/arch/arm/boot/dts/imx51-ts4800.dts b/arch/arm/boot/dts/imx51-ts4800.dts
+index 35a1112..564233e 100644
+--- a/arch/arm/boot/dts/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/imx51-ts4800.dts
+@@ -71,7 +71,7 @@
  			};
+ 		};
  
--			usbphy0: usbphy@0 {
-+			usbphy0: usbphy-0 {
- 				compatible = "usb-nop-xceiv";
- 				clocks = <&clks IMX5_CLK_USB_PHY1_GATE>;
- 				clock-names = "main_clk";
- 				status = "okay";
+-		port@0 {
++		port {
+ 			display0_in: endpoint {
+ 				remote-endpoint = <&ipu_di0_disp1>;
  			};
- 
--			usbphy1: usbphy@1 {
-+			usbphy1: usbphy-1 {
- 				compatible = "usb-nop-xceiv";
- 				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
- 				clock-names = "main_clk";
 -- 
 2.7.4
 
