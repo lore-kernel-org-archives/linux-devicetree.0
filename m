@@ -1,240 +1,61 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v6 4/7] soc: mediatek: pwrap: refactor pwrap_init for the various PMIC types
-Date: Wed, 18 Oct 2017 16:28:45 +0800
-Message-ID: <2f1716fd1071f7fb2e26787d7705413250bc713d.1508313105.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 1/7] dt-bindings: arm: mediatek: add MT7622 string to the
+ PMIC wrapper doc
+Date: Wed, 18 Oct 2017 16:28:42 +0800
+Message-ID: <e602c5e107693a02eababcf4356c87b746b9950e.1508313105.git.sean.wang@mediatek.com>
 References: <cover.1508313105.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1508313105.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1508313105.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-pwrap initialization is highly associated with the base SoC and the
-target PMICs, so slight refactorization is made here for allowing
-pwrap_init to run on those PMICs with different capability from the
-previous MediaTek PMICs and the determination for the enablement of the
-pwrap capability depending on PMIC type. Apart from this, the patch
-makes the driver more extensible especially when more PMICs join into
-the pwrap driver.
-
-Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 130 ++++++++++++++++++++++++-----------
- 1 file changed, 90 insertions(+), 40 deletions(-)
+ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 2d3a8fa..e3398e3 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -70,6 +70,12 @@
- 					  PWRAP_WDT_SRC_EN_HARB_STAUPD_DLE | \
- 					  PWRAP_WDT_SRC_EN_HARB_STAUPD_ALE)
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+index 107700d..bf80e3f 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+@@ -19,6 +19,7 @@ IP Pairing
+ Required properties in pwrap device node.
+ - compatible:
+ 	"mediatek,mt2701-pwrap" for MT2701/7623 SoCs
++	"mediatek,mt7622-pwrap" for MT7622 SoCs
+ 	"mediatek,mt8135-pwrap" for MT8135 SoCs
+ 	"mediatek,mt8173-pwrap" for MT8173 SoCs
+ - interrupts: IRQ for pwrap in SOC
+@@ -36,9 +37,12 @@ Required properties in pwrap device node.
+ - clocks: Must contain an entry for each entry in clock-names.
  
-+/* Group of bits used for shown slave capability */
-+#define PWRAP_SLV_CAP_SPI	BIT(0)
-+#define PWRAP_SLV_CAP_DUALIO	BIT(1)
-+#define PWRAP_SLV_CAP_SECURITY	BIT(2)
-+#define HAS_CAP(_c, _x)	(((_c) & (_x)) == (_x))
-+
- /* defines for slave device wrapper registers */
- enum dew_regs {
- 	PWRAP_DEW_BASE,
-@@ -501,6 +507,8 @@ struct pmic_wrapper;
- struct pwrap_slv_type {
- 	const u32 *dew_regs;
- 	enum pmic_type type;
-+	/* Flags indicating the capability for the target slave */
-+	u32 caps;
- 	/*
- 	 * pwrap operations are highly associated with the PMIC types,
- 	 * so the pointers added increases flexibility allowing determination
-@@ -787,6 +795,37 @@ static int pwrap_init_sidly(struct pmic_wrapper *wrp)
- 	return 0;
- }
+ Optional properities:
+-- pmic: Mediatek PMIC MFD is the child device of pwrap
++- pmic: Using either MediaTek PMIC MFD as the child device of pwrap
+   See the following for child node definitions:
+   Documentation/devicetree/bindings/mfd/mt6397.txt
++  or the regulator-only device as the child device of pwrap, such as MT6380.
++  See the following definitions for such kinds of devices.
++  Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
  
-+static int pwrap_init_dual_io(struct pmic_wrapper *wrp)
-+{
-+	int ret;
-+	u32 rdata;
-+
-+	/* Enable dual IO mode */
-+	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_DIO_EN], 1);
-+
-+	/* Check IDLE & INIT_DONE in advance */
-+	ret = pwrap_wait_for_state(wrp,
-+				   pwrap_is_fsm_idle_and_sync_idle);
-+	if (ret) {
-+		dev_err(wrp->dev, "%s fail, ret=%d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	pwrap_writel(wrp, 1, PWRAP_DIO_EN);
-+
-+	/* Read Test */
-+	pwrap_read(wrp,
-+		   wrp->slave->dew_regs[PWRAP_DEW_READ_TEST], &rdata);
-+	if (rdata != PWRAP_DEW_READ_TEST_VAL) {
-+		dev_err(wrp->dev,
-+			"Read failed on DIO mode: 0x%04x!=0x%04x\n",
-+			PWRAP_DEW_READ_TEST_VAL, rdata);
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
- static int pwrap_mt8135_init_reg_clock(struct pmic_wrapper *wrp)
- {
- 	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT);
-@@ -935,6 +974,30 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
- 	return 0;
- }
- 
-+static int pwrap_init_security(struct pmic_wrapper *wrp)
-+{
-+	int ret;
-+
-+	/* Enable encryption */
-+	ret = pwrap_init_cipher(wrp);
-+	if (ret)
-+		return ret;
-+
-+	/* Signature checking - using CRC */
-+	if (pwrap_write(wrp,
-+			wrp->slave->dew_regs[PWRAP_DEW_CRC_EN], 0x1))
-+		return -EFAULT;
-+
-+	pwrap_writel(wrp, 0x1, PWRAP_CRC_EN);
-+	pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
-+	pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
-+		     PWRAP_SIG_ADR);
-+	pwrap_writel(wrp,
-+		     wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
-+
-+	return 0;
-+}
-+
- static int pwrap_mt8135_init_soc_specific(struct pmic_wrapper *wrp)
- {
- 	/* enable pwrap events and pwrap bridge in AP side */
-@@ -995,7 +1058,6 @@ static int pwrap_mt2701_init_soc_specific(struct pmic_wrapper *wrp)
- static int pwrap_init(struct pmic_wrapper *wrp)
- {
- 	int ret;
--	u32 rdata;
- 
- 	reset_control_reset(wrp->rstc);
- 	if (wrp->rstc_bridge)
-@@ -1007,10 +1069,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
- 		pwrap_writel(wrp, 0, PWRAP_DCM_DBC_PRD);
- 	}
- 
--	/* Reset SPI slave */
--	ret = pwrap_reset_spislave(wrp);
--	if (ret)
--		return ret;
-+	if (HAS_CAP(wrp->slave->caps, PWRAP_SLV_CAP_SPI)) {
-+		/* Reset SPI slave */
-+		ret = pwrap_reset_spislave(wrp);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
- 
-@@ -1022,45 +1086,26 @@ static int pwrap_init(struct pmic_wrapper *wrp)
- 	if (ret)
- 		return ret;
- 
--	/* Setup serial input delay */
--	ret = pwrap_init_sidly(wrp);
--	if (ret)
--		return ret;
--
--	/* Enable dual IO mode */
--	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_DIO_EN], 1);
--
--	/* Check IDLE & INIT_DONE in advance */
--	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle_and_sync_idle);
--	if (ret) {
--		dev_err(wrp->dev, "%s fail, ret=%d\n", __func__, ret);
--		return ret;
-+	if (HAS_CAP(wrp->slave->caps, PWRAP_SLV_CAP_SPI)) {
-+		/* Setup serial input delay */
-+		ret = pwrap_init_sidly(wrp);
-+		if (ret)
-+			return ret;
- 	}
- 
--	pwrap_writel(wrp, 1, PWRAP_DIO_EN);
--
--	/* Read Test */
--	pwrap_read(wrp, wrp->slave->dew_regs[PWRAP_DEW_READ_TEST], &rdata);
--	if (rdata != PWRAP_DEW_READ_TEST_VAL) {
--		dev_err(wrp->dev, "Read test failed after switch to DIO mode: 0x%04x != 0x%04x\n",
--				PWRAP_DEW_READ_TEST_VAL, rdata);
--		return -EFAULT;
-+	if (HAS_CAP(wrp->slave->caps, PWRAP_SLV_CAP_DUALIO)) {
-+		/* Enable dual I/O mode */
-+		ret = pwrap_init_dual_io(wrp);
-+		if (ret)
-+			return ret;
- 	}
- 
--	/* Enable encryption */
--	ret = pwrap_init_cipher(wrp);
--	if (ret)
--		return ret;
--
--	/* Signature checking - using CRC */
--	if (pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_EN], 0x1))
--		return -EFAULT;
--
--	pwrap_writel(wrp, 0x1, PWRAP_CRC_EN);
--	pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
--	pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
--		     PWRAP_SIG_ADR);
--	pwrap_writel(wrp, wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
-+	if (HAS_CAP(wrp->slave->caps, PWRAP_SLV_CAP_SECURITY)) {
-+		/* Enable security on bus */
-+		ret = pwrap_init_security(wrp);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	if (wrp->master->type == PWRAP_MT8135)
- 		pwrap_writel(wrp, 0x7, PWRAP_RRARB_EN);
-@@ -1116,6 +1161,8 @@ static const struct regmap_config pwrap_regmap_config = {
- static const struct pwrap_slv_type pmic_mt6323 = {
- 	.dew_regs = mt6323_regs,
- 	.type = PMIC_MT6323,
-+	.caps = PWRAP_SLV_CAP_SPI | PWRAP_SLV_CAP_DUALIO |
-+		PWRAP_SLV_CAP_SECURITY,
- 	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
- };
-@@ -1123,6 +1170,7 @@ static const struct pwrap_slv_type pmic_mt6323 = {
- static const struct pwrap_slv_type pmic_mt6380 = {
- 	.dew_regs = NULL,
- 	.type = PMIC_MT6380,
-+	.caps = 0,
- 	.pwrap_read = pwrap_read32,
- 	.pwrap_write = pwrap_write32,
- };
-@@ -1130,6 +1178,8 @@ static const struct pwrap_slv_type pmic_mt6380 = {
- static const struct pwrap_slv_type pmic_mt6397 = {
- 	.dew_regs = mt6397_regs,
- 	.type = PMIC_MT6397,
-+	.caps = PWRAP_SLV_CAP_SPI | PWRAP_SLV_CAP_DUALIO |
-+		PWRAP_SLV_CAP_SECURITY,
- 	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
- };
+ Example:
+ 	pwrap: pwrap@1000f000 {
 -- 
 2.7.4
