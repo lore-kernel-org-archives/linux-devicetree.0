@@ -1,39 +1,34 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 00/12] ARM: dts: imx6: Update dts files for the Ka-Ro
- TX6 module series
-Date: Wed, 18 Oct 2017 11:06:54 +0800
-Message-ID: <20171018030653.GL18810@dragon>
-References: <1508230414-8090-1-git-send-email-LW@KARO-electronics.de>
- <1508231883-12067-1-git-send-email-LW@KARO-electronics.de>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH 0/2] mmc: add an specific emmc driver for hi3798cv200-poplar board
+Date: Wed, 18 Oct 2017 07:16:26 -0400
+Message-ID: <1508325388-7260-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1508231883-12067-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, project-aspen-dev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 11:17:51AM +0200, Lothar Waßmann wrote:
-> Please ignore the V2 series. I accidentally sent the patches from a
-> wrong directory.
-> 
-> This patchset updates the dts files for the Ka-Ro electronics GmbH TX6
-> module series and adds some include files to facilitate supporting
-> various SoM/baseboard combinations.
+Add an specific emmc driver for hi3798cv200-poplar board. Previously, it used the
+generic dw-mmc driver with lower performance.
 
-Applied all, thanks.
+tianshuliang (2):
+  dt-bindings: mmc: add bindings for hi3798cv200-dw-mshc
+  mmc: dw_mmc: add support for hi3798cv200 specific extensions of
+    dw-mshc
 
-> Changes vs. v2:
-> - resent the correct patches
-> 
-> Changes vs. v1:
-> - rebased to imx/dt branch
-> - eliminate use of 'interrupts-extended' property according to Uwe
->   Kleine-König's comment
-> 
+ .../bindings/mmc/hi3798cv200-dw-mshc.txt           |  51 ++++++
+ drivers/mmc/host/Kconfig                           |   9 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/dw_mmc-hi3798cv200.c              | 191 +++++++++++++++++++++
+ 4 files changed, 252 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/hi3798cv200-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-hi3798cv200.c
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
