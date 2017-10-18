@@ -1,70 +1,48 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in
- full_name
-Date: Tue, 17 Oct 2017 16:51:34 -0700
-Message-ID: <59E69786.2030406@gmail.com>
-References: <20170821151651.25096-1-robh@kernel.org>
- <20170821151651.25096-6-robh@kernel.org>
- <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
- <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend property
+Date: Tue, 17 Oct 2017 17:56:32 -0700
+Message-ID: <CA+ASDXPNcoUE=F+TWsYpxw=e-NcPaqguSRb5fEYC+zoCCdvDvg@mail.gmail.com>
+References: <20171012205220.130048-1-briannorris@chromium.org>
+ <20171012205220.130048-2-briannorris@chromium.org> <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
+ <20171017233904.GA65743@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171017233904.GA65743@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/17 14:46, Rob Herring wrote:
-> On Tue, Oct 17, 2017 at 4:32 PM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>
->> Hi Rob,
->>
->>> With dependencies on a statically allocated full path name converted to
->>> use %pOF format specifier, we can store just the basename of node, and
->>> the unflattening of the FDT can be simplified.
->>>
->>> This commit will affect the remaining users of full_name. After
->>> analyzing these users, the remaining cases should only change some print
->>> messages. The main users of full_name are providing a name for struct
->>> resource. The resource names shouldn't be important other than providing
->>> /proc/iomem names.
->>>
->>> We no longer distinguish between pre and post 0x10 dtb formats as either
->>> a full path or basename will work. However, less than 0x10 formats have
->>> been broken since the conversion to use libfdt (and no one has cared).
->>> The conversion of the unflattening code to be non-recursive also broke
->>> pre 0x10 formats as the populate_node function would return 0 in that
->>> case.
->>>
->>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>> v2:
->>> - rebase to linux-next
->>>
->>>  drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
->>>  1 file changed, 11 insertions(+), 58 deletions(-)
->>
->> I've just updated to the latest next branch and am finding problems
->> applying overlays.   Reverting this commit alleviates things.  The
->> errors I get are:
->>
->> [   88.498704] OF: overlay: Failed to apply prop @/__symbols__/clk_0
->> [   88.513447] OF: overlay: apply failed '/__symbols__'
->> [   88.518423] create_overlay: Failed to create overlay (err=-12)
-> 
-> Frank's series with overlay updates should fix this.
+On Tue, Oct 17, 2017 at 4:39 PM, Brian Norris <briannorris@chromium.org> wrote:
+> On Fri, Oct 13, 2017 at 11:51:52AM -0500, Bjorn Helgaas wrote:
+> > If so, I really don't want to get involved in that, because that's an
+> > issue that needs to be resolved by the vendors and the PCI-SIG.  If we
+>
+> Judging by conversations with these vendors, I can't really imagine them
+> proactively dealing with the PCI-SIG on this. Is that really what you
+> think will work best?
+>
+> I personally believe deferring (i.e., ignoring) the problem will not
+> cause any change; badly behaved vendors will just do whatever suits
+> them, and system designers will have to figure it out somehow -- ACPI
+> systems will have platform-specific behavior hidden in firmware; device
+> tree systems will do whatever they want out of tree; and the rare device
+> tree system that gets upstream support will either have suboptimal power
+> management, or have to have these sorts of conversations again. None of
+> that puts pressure on an endpoint vendor to talk to the PCI-SIG.
 
-Yes, it does:
+I'll add a little more to my claim about ACPI systems. I chatted a
+little more with another engineer on my team who has dealt with ACPI
+firmware for a few generations of Intel platforms. Even among the
+latest two platforms he dealt with, there have been two different
+sorts of chipset bugs (at the host/root complex side, not just the
+endpoint) that have yielded different decisions on how to handle
+PERST#. This was opaque to Linux though, since that's how system
+firmware rolls :)
 
-  [PATCH v3 11/12] of: overlay: remove a dependency on device node full_name
+I expect this will not be the last discrepancy on how to handle
+PERST#. And to my knowledge, none of the above initiated any
+discussion with the PCI-SIG.
 
--Frank
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
