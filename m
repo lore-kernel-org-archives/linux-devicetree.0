@@ -1,114 +1,96 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 5/6] ARM: dts: uniphier: add GPIO hog definition
-Date: Wed, 18 Oct 2017 13:24:36 +0900
-Message-ID: <1508300677-23190-6-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH 3/6] ARM: dts: uniphier: route on-board device IRQ to GPIO controller
+Date: Wed, 18 Oct 2017 13:24:34 +0900
+Message-ID: <1508300677-23190-4-git-send-email-yamada.masahiro@socionext.com>
 References: <1508300677-23190-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1508300677-23190-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508300677-23190-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Interrupt lines from on-board devices are connected to the GPIO
-controller.  Add GPIO hogging so that the corresponding GPIO line
-is automatically requested.
+controller.  Handle this correctly.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 ---
 
- arch/arm/boot/dts/uniphier-ld4-ref.dts  | 8 ++++++++
- arch/arm/boot/dts/uniphier-ld6b-ref.dts | 8 ++++++++
- arch/arm/boot/dts/uniphier-pro4-ref.dts | 8 ++++++++
- arch/arm/boot/dts/uniphier-sld8-ref.dts | 8 ++++++++
- 4 files changed, 32 insertions(+)
+ arch/arm/boot/dts/uniphier-ld4-ref.dts       | 2 +-
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts      | 2 +-
+ arch/arm/boot/dts/uniphier-pro4-ref.dts      | 2 +-
+ arch/arm/boot/dts/uniphier-sld8-ref.dts      | 2 +-
+ arch/arm/boot/dts/uniphier-support-card.dtsi | 1 +
+ 5 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/uniphier-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ld4-ref.dts
-index 148e7bb..0056852 100644
+index b3aaab3..148e7bb 100644
 --- a/arch/arm/boot/dts/uniphier-ld4-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-ld4-ref.dts
-@@ -53,6 +53,14 @@
- 	status = "okay";
+@@ -38,7 +38,7 @@
  };
  
-+&gpio {
-+	xirq1 {
-+		gpio-hog;
-+		gpios = <121 0>;
-+		input;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
+ &ethsc {
+-	interrupts = <0 49 4>;
++	interrupts = <1 8>;
  };
+ 
+ &serial0 {
 diff --git a/arch/arm/boot/dts/uniphier-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ld6b-ref.dts
-index ec2a098..0e510a7 100644
+index 2188d11..ec2a098 100644
 --- a/arch/arm/boot/dts/uniphier-ld6b-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-ld6b-ref.dts
-@@ -55,6 +55,14 @@
- 	status = "okay";
+@@ -40,7 +40,7 @@
  };
  
-+&gpio {
-+	xirq4 {
-+		gpio-hog;
-+		gpios = <124 0>;
-+		input;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
+ &ethsc {
+-	interrupts = <0 52 4>;
++	interrupts = <4 8>;
  };
+ 
+ &serial0 {
 diff --git a/arch/arm/boot/dts/uniphier-pro4-ref.dts b/arch/arm/boot/dts/uniphier-pro4-ref.dts
-index 7316cc6..be99467 100644
+index 903df63..7316cc6 100644
 --- a/arch/arm/boot/dts/uniphier-pro4-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-pro4-ref.dts
-@@ -55,6 +55,14 @@
- 	status = "okay";
+@@ -40,7 +40,7 @@
  };
  
-+&gpio {
-+	xirq2 {
-+		gpio-hog;
-+		gpios = <122 0>;
-+		input;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
+ &ethsc {
+-	interrupts = <0 50 4>;
++	interrupts = <2 8>;
  };
+ 
+ &serial0 {
 diff --git a/arch/arm/boot/dts/uniphier-sld8-ref.dts b/arch/arm/boot/dts/uniphier-sld8-ref.dts
-index 4ec48a1..1c0e707 100644
+index 5accd3c..4ec48a1 100644
 --- a/arch/arm/boot/dts/uniphier-sld8-ref.dts
 +++ b/arch/arm/boot/dts/uniphier-sld8-ref.dts
-@@ -53,6 +53,14 @@
- 	status = "okay";
+@@ -38,7 +38,7 @@
  };
  
-+&gpio {
-+	xirq0 {
-+		gpio-hog;
-+		gpios = <120 0>;
-+		input;
-+	};
-+};
-+
- &i2c0 {
- 	status = "okay";
+ &ethsc {
+-	interrupts = <0 48 4>;
++	interrupts = <0 8>;
  };
+ 
+ &serial0 {
+diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/boot/dts/uniphier-support-card.dtsi
+index 6c825f1..c6d99c4 100644
+--- a/arch/arm/boot/dts/uniphier-support-card.dtsi
++++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
+@@ -16,6 +16,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x00000000 1 0x01f00000 0x00100000>;
++		interrupt-parent = <&gpio>;
+ 
+ 		ethsc: ethernet@0 {
+ 			compatible = "smsc,lan9118", "smsc,lan9115";
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
