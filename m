@@ -1,81 +1,91 @@
-From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
- (26 Oct 2017)
-Date: Wed, 18 Oct 2017 13:59:10 -0400
-Message-ID: <20171018175910.GP12015@bill-the-cat>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Wed, 18 Oct 2017 13:00:02 -0500
+Message-ID: <CAL_JsqJROBW3zAvG_D=ESqzwVOJiKZ-ZCC8Hm-cHRaXHiZ6ACA@mail.gmail.com>
 References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
- <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
- <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
+ <20171017114823.58476908@bbrezillon> <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
+ <1508257276.74236.38.camel@freebsd.org> <2D4E6B6D-8F07-46D0-BB36-D97916802893@linaro.org>
+ <CAMuHMdW-=-CdnD5Eb_w7fc7=c64i+bu=yv9_c0cj3UM940d8EA@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904@USCULXMSG01.am.sony.com>
+ <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw@mail.gmail.com>
+ <B7292660-D602-473E-9B47-CF7B4D2449D7@antoniou-consulting.com>
+ <20171018131809.q5nccysb2j7lu4bn@piout.net> <CAMuHMdXhQQpnQEgOu92MVNd=m2FvkqD9XcYS3rMVMHpB2zY0Qw@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD@USCULXMSG01.am.sony.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Y5U3e7U54RGuQ3mm"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171018110958.mh76pngzluazmc7y-7j8lgAiuQgnQXOPxS62xeg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD-t8YLG9SB9XQEb75RT/aEbJZPSYnAH24X@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 18, 2017 at 12:41 PM, Bird, Timothy <Tim.Bird-7U/KSKJipcs@public.gmane.org> wrote:
+>
+>
+>> -----Original Message-----
+>> From Geert Uytterhoeven on Wednesday, October 18, 2017 6:22 AM
+>> On Wed, Oct 18, 2017 at 3:18 PM, Alexandre Belloni
+>> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On 18/10/2017 at 15:59:00 +0300, Pantelis Antoniou wrote:
+>> >> > On Oct 18, 2017, at 15:14 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> wrote:
+>> >> > On Tue, Oct 17, 2017 at 8:03 PM, Bird, Timothy <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+>> wrote:
+>> >> >>> -----Original Message-----
+>> >> >>> From Geert Uytterhoeven on Tuesday, October 17, 2017 10:24 AM
+>> >> >>> On Tue, Oct 17, 2017 at 7:02 PM, Kumar Gala
+>> <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >> >>>> I think this also gets to having bindings described in a structured way
+>> so
+>> >> >>> they can be utilized for validation of dts files.  We are doing a little of
+>> this in
+>> >> >>> Zephyr since we are using a structured binding spec to generate code
+>> from
+>> >> >>> .dts (since we don’t utilize a runtime dtb).
+>> >> >>>
+>> >> >>> So you are basically generating board files from .dts?
+>> >> >>> (closing the loop ;-)
+>> >> >>
+>> >> >> I think we ought to do this on Linux, as a size optimization.
+>> >> >> -- Tim
+>> >> >>
+>> >> >> P.S.  I think I'll leave it ambiguous whether this was meant as a joke or
+>> not. :-)
+>> >>
+>> >> As crazy that sounds it is possible using the YAML bindings, i.e. C structure
+>> definitions
+>> >> and fill-up from DT automatically. Whether this is a good idea it’s another
+>> question :)
+>> >
+>> > But that doesn't work with any driver parsing custom properties (using
+>> > of_property_read_* and the likes). I would very much like to see what
+>> > are the boot time improvements when doing that ;)
+>>
+>> Unless you override of_property_read_*() to work on the dense C
+>> structures instead?
+>
+> Or turn the property reads into macros that then turn into constant declarations inline in the code.
+> No need stop at dense C structures.  Of course you lose all configuration flexibility at runtime.
+> But then that's the kind of trade-off one often makes with embedded software, isn't it?
 
---Y5U3e7U54RGuQ3mm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's basically what Grant proposed[1]. Turn all the property strings
+to numeric IDs that can directly reference the original FDT data
+avoiding storing the property structs.
 
-On Wed, Oct 18, 2017 at 12:09:58PM +0100, Mark Brown wrote:
-> On Wed, Oct 18, 2017 at 06:35:24PM +0800, Chen-Yu Tsai wrote:
->=20
-> > I'd like to add something on the topic of non-Linux projects. In this
-> > case it's diverging DT bindings from U-boot:
->=20
-> > https://patchwork.ozlabs.org/patch/823158/
->=20
-> > U-boot already has a set of devicetree binding additions:
-> > https://github.com/u-boot/u-boot/tree/master/doc/device-tree-bindings
->=20
-> > The patch in question wants to ab(use) the regulator-name property for
-> > driver instance binding. In my opinion this is not going to fly, as
-> > boards are free to define the names. This either sees no use other than
-> > as a dirty workaround for dts files that aren't following the PMIC
-> > regulator bindings (regulator node names should follow well defined,
-> > identifying names), or results in divergence of the DT files.
->=20
-> One meta issue I'm seeing here is that the u-boot people appear to have
-> their own divergent copy of some of the binding documents.
+If you don't care about code size then removing runtime configuration
+within the OF API (i.e. not reworking driver probe functions) is not
+going to save much. And these days with XIP SPI flash chips, code size
+is not so much the issue. Maybe you saw Nico's presentation at
+Connect, but if not it is here[2].
 
-Putting on my U-Boot hat now, it's mostly unintentional and something in
-general (yes, the initial topic here is not such an example) we try and
-avoid, or use u-boot, as the prefix on as it's something that had been
-previously rejected or deemed inappropriate to be in the upstream
-version of the binding.
+Rob
 
-But perhaps it's time to try and force the issue again, given what Rob
-and others have said in other parts of the thread.
-
---=20
-Tom
-
---Y5U3e7U54RGuQ3mm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJZ55ZuAAoJEIf59jXTHXZS/zsQALR0lw2OwGhx/6uTExhOCIx5
-C7rFyqbUtJayNjXZh5Qp6vGIdVkC7eNTinTyfKJ2Mq5bcv/KGh0kfxDj9CzB/8MA
-YfEQDxuGUAs4zALiUD6k4kTqWNhM7Sr6gEGUa4dTmZMXOiIwBIgiy3il6MaAJGHv
-SRcQZsXNUVAcxTXzUu628idbCtCmMUpFaPxSNET7KbjbjYqeiySEFDf1prMhzKvD
-bq0Q17Vf9ZPO+7jqb1GE9W6tlD4TL7X2oU+DTySrQgUlei6PelA4/MnciWGo82ik
-oezMUk6TtkmnUNzSYm9g55ZcyQEZyzlQd2kQ/9/SoBM3YkbQAqroDQ+LHHJWXqjN
-ElZANJU4CTdabTBHUilU74HAzXXB1A+/1keI6zJ0FE4c61v9x0jh5Kl7WZnfEdQY
-/kMyh+2mCBEVEIVM7znna/rOtVYU3jyhsUAbW84JlBfuLC4gr7zXN4kWe3a6BWWZ
-kt1OFJr0l2RCxBJ2kJC4o+MrHRsCqSx0bx9ujxmxV4O+SuTysE+Jkdxh2xbW/612
-Cv7x1jabMYiWEfe8kbADoZldAiXTaSIvAzaLVW5DApDDwAK0ujEqriO9igHTelCq
-3lhta8FekAp5yYd4bog5Q0uExaaJwCW4WNrlpyeXWKJjY0nUI8A/Ww+opF+OuTp7
-+eC10pLJJGfMGv3Fkm11
-=HSQB
------END PGP SIGNATURE-----
-
---Y5U3e7U54RGuQ3mm--
+[1] https://www.spinics.net/lists/devicetree/msg197417.html
+[2] http://connect.linaro.org/resource/las16/las16-407/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
