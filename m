@@ -1,170 +1,70 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] of_mdio: Fix broken PHY IRQ in case of probe deferral
-Date: Wed, 18 Oct 2017 13:54:03 +0200
-Message-ID: <1508327643-3579-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v6 0/4] phy: rcar-gen3-usb2: add support for r8a77995
+Date: Wed, 18 Oct 2017 17:28:46 +0530
+Message-ID: <4e2d9189-911b-8cb9-13ea-7caf7ff4bf8d@ti.com>
+References: <1507790088-26010-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1507790088-26010-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If an Ethernet PHY is initialized before the interrupt controller it is
-connected to, a message like the following is printed:
 
-    irq: no irq domain found for /interrupt-controller@e61c0000 !
 
-However, the actual error is ignored, leading to a non-functional (POLL)
-PHY interrupt later:
+On Thursday 12 October 2017 12:04 PM, Yoshihiro Shimoda wrote:
+> This patch set is based on the latest phy.git / next branch
+> (the commit id = 415060b21f318e009d865b4bcbf8f220ebc36964)
+> 
+> After this patch set is applied, a usb 2.0 host node that is combined
+> with usb 2.0 peripheral needs 'dr_mode = "otg";' property.
 
-    Micrel KSZ8041RNLI ee700000.ethernet-ffffffff:01: attached PHY driver [Micrel KSZ8041RNLI] (mii_bus:phy_addr=ee700000.ethernet-ffffffff:01, irq=POLL)
+merged, thanks!
 
-Depending on whether the PHY driver will fall back to polling, Ethernet
-may or may not work.
-
-To fix this:
-  1. Switch of_mdiobus_register_phy() from irq_of_parse_and_map() to
-     of_irq_get().
-     Unlike the former, the latter returns -EPROBE_DEFER if the
-     interrupt controller is not yet available, so this condition can be
-     detected.
-     Other errors are handled the same as before, i.e. use the passed
-     mdio->irq[addr] as interrupt.
-  2. Propagate and handle errors from of_mdiobus_register_phy() and
-     of_mdiobus_register_device().
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Seen on e.g. r8a7791/koelsch when using the new CPG/MSSR clock driver,
-which will hit upstream in v4.15.  I assume it always happened on RZ/G1
-in mainline.
-
-The actual patch is unchanged since v1, sent on May 18.  Obviously I
-still cannot test it on a system with multiple PHYs, just like v1.
-
-How can we proceed?
-
-Note that if you are worried about the MDIO subsystem not handling
-(partial) teardown and reprobe correctly in the presence of multiple
-PHYs, that can already be triggered since commit a5597008dbc23087 ("phy:
-fixed_phy: Add gpio to determine link up/down."), which handles
-EPROBE_DEFER for GPIOs.
-
-Thanks!
-
-v2:
-  - Update for non-functional interrupts being printed as "POLL" instead
-    of "-1" since commit 5e369aefdce4818c ("net: stmmac: Delete dead
-    code for MDIO registration").
----
- drivers/of/of_mdio.c | 39 +++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index d94dd8b77abd5140..98258583abb0b405 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -44,7 +44,7 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
- 	return -EINVAL;
- }
- 
--static void of_mdiobus_register_phy(struct mii_bus *mdio,
-+static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 				    struct device_node *child, u32 addr)
- {
- 	struct phy_device *phy;
-@@ -60,9 +60,13 @@ static void of_mdiobus_register_phy(struct mii_bus *mdio,
- 	else
- 		phy = get_phy_device(mdio, addr, is_c45);
- 	if (IS_ERR(phy))
--		return;
-+		return PTR_ERR(phy);
- 
--	rc = irq_of_parse_and_map(child, 0);
-+	rc = of_irq_get(child, 0);
-+	if (rc == -EPROBE_DEFER) {
-+		phy_device_free(phy);
-+		return rc;
-+	}
- 	if (rc > 0) {
- 		phy->irq = rc;
- 		mdio->irq[addr] = rc;
-@@ -84,22 +88,23 @@ static void of_mdiobus_register_phy(struct mii_bus *mdio,
- 	if (rc) {
- 		phy_device_free(phy);
- 		of_node_put(child);
--		return;
-+		return rc;
- 	}
- 
- 	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
- 		child->name, addr);
-+	return 0;
- }
- 
--static void of_mdiobus_register_device(struct mii_bus *mdio,
--				       struct device_node *child, u32 addr)
-+static int of_mdiobus_register_device(struct mii_bus *mdio,
-+				      struct device_node *child, u32 addr)
- {
- 	struct mdio_device *mdiodev;
- 	int rc;
- 
- 	mdiodev = mdio_device_create(mdio, addr);
- 	if (IS_ERR(mdiodev))
--		return;
-+		return PTR_ERR(mdiodev);
- 
- 	/* Associate the OF node with the device structure so it
- 	 * can be looked up later.
-@@ -112,11 +117,12 @@ static void of_mdiobus_register_device(struct mii_bus *mdio,
- 	if (rc) {
- 		mdio_device_free(mdiodev);
- 		of_node_put(child);
--		return;
-+		return rc;
- 	}
- 
- 	dev_dbg(&mdio->dev, "registered mdio device %s at address %i\n",
- 		child->name, addr);
-+	return 0;
- }
- 
- /* The following is a list of PHY compatible strings which appear in
-@@ -219,9 +225,11 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 		}
- 
- 		if (of_mdiobus_child_is_phy(child))
--			of_mdiobus_register_phy(mdio, child, addr);
-+			rc = of_mdiobus_register_phy(mdio, child, addr);
- 		else
--			of_mdiobus_register_device(mdio, child, addr);
-+			rc = of_mdiobus_register_device(mdio, child, addr);
-+		if (rc)
-+			goto unregister;
- 	}
- 
- 	if (!scanphys)
-@@ -242,12 +250,19 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 			dev_info(&mdio->dev, "scan phy %s at address %i\n",
- 				 child->name, addr);
- 
--			if (of_mdiobus_child_is_phy(child))
--				of_mdiobus_register_phy(mdio, child, addr);
-+			if (of_mdiobus_child_is_phy(child)) {
-+				rc = of_mdiobus_register_phy(mdio, child, addr);
-+				if (rc)
-+					goto unregister;
-+			}
- 		}
- 	}
- 
- 	return 0;
-+
-+unregister:
-+	mdiobus_unregister(mdio);
-+	return rc;
- }
- EXPORT_SYMBOL(of_mdiobus_register);
- 
--- 
-2.7.4
+-Kishon
+> 
+> Changes from v5:
+>  - Add "Reviewed-by:" into patch 2. (Simon-san, Thanks!)
+>  - Remove unnecessary "else" in rcar_gen3_get_phy_mode() in patch 2.
+> 
+> Changes from v4:
+>  - Remove the role_show() modification in patch 2.
+>  - Remove a new function rcar_gen3_otg_change_role() in patch 2 because adding
+>    this will be complecated patch code and this is unnecessary for now.
+>  - Add a new function rcar_gen3_get_phy_mode() to get current phy mode
+>    for comparing the new mode into a line in patch 2.
+>  - Rebase patch 3.
+> 
+> Changes from v3:
+>  - Use enum phy_mode in patch 2.
+>  - Remove "can_role_swap" parameter and revise the commit log in patch 2
+>    because a case of "can_role_swap = true" and "has_otg = false" is
+>    not supported for role swap at the moment.
+>  - Changes the name of "has_otg" to "has_otg_pins" in patch 3.
+>  - Use of_device_get_match_data() instead of of_match_device()
+>  - Add "Reviewed-by:" into patch No.1, 3 and 4. (Simon-san, Thanks!)
+>   - Since patch No.2 is changed in big at v4, I dropped his "Reviewed-by".
+> 
+> Changes from v2:
+>  - Revise the commit log ("SoCs" is not third-person singular present).
+> 
+> Changes from v1:
+>  - Revise typo "wronly" to "wrongly".
+>  - Remove RCAR_GEN3_PHY_HAS_DEDICATED_PINS from generic gen3 entry in
+>    patch 3/4
+>  - Remove the driver change from patch 4/4.
+>  - Revise the commit log of patch 4/4.
+> 
+> Yoshihiro Shimoda (4):
+>   phy: rcar-gen3-usb2: check dr_mode for otg mode
+>   phy: rcar-gen3-usb2: use enum phy_mode in the role_store()
+>   phy: rcar-gen3-usb2: add SoC-specific parameter for dedicated pins
+>   phy: rcar-gen3-usb2: add binding for r8a77995
+> 
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 70 ++++++++++++++--------
+>  2 files changed, 48 insertions(+), 24 deletions(-)
+> 
