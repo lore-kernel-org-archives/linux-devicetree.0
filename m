@@ -1,54 +1,145 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
-Date: Wed, 18 Oct 2017 08:53:16 +0200
-Message-ID: <20171018065316.GA11183@lst.de>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
-	<1507761269-7017-6-git-send-email-jim2101024@gmail.com>
-	<589c04cb-061b-a453-3188-79324a02388e@arm.com>
-	<20171017081422.GA19475@lst.de>
-	<CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH 3/4] extcon: add possibility to get extcon device by
+ of node
+Date: Wed, 18 Oct 2017 15:59:14 +0900
+Message-ID: <59E6FBC2.6080102@samsung.com>
+References: <20170928130730.8747-1-a.hajda@samsung.com>
+        <CGME20170928130736eucas1p250bb9d854204ea142a2160cd9ab56194@eucas1p2.samsung.com>
+        <20170928130730.8747-4-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20170928130730.8747-4-a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 12:11:55PM -0400, Jim Quinlan wrote:
-> My understanding is that dma_pfn_offset is that it is a single
-> constant offset from RAM, in our case, to map to PCIe space.
+Hi,
 
-Yes.
+On 2017년 09월 28일 22:07, Andrzej Hajda wrote:
+> Since extcon property is not allowed in DT, extcon subsystem requires
+> another way to get extcon device. Lets try the simplest approach - get
+> edev by of_node.
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/extcon/extcon.c | 44 ++++++++++++++++++++++++++++++++++----------
+>  include/linux/extcon.h  |  6 ++++++
+>  2 files changed, 40 insertions(+), 10 deletions(-)
 
-> But in
-> my commit message I detail how our PCIe controller presents memory
-> with multiple regions with multiple different offsets. If an EP device
-> maps to a region on the host memory, yes we can set the dma_pfn_offset
-> for that device for that location within that range,.  But if the
-> device then unmaps and allocates from another region with a different
-> offset, it won't work.  If  I set dma_pfn_offset I have to assume that
-> the device is using only one region of memory only, not more than one,
-> and that it is not unmapping that region and mapping another (with a
-> different offset).  Can I make those assumptions?
+Looks good to me. Just I added the minor comment.
+Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-No, we can't make that assumption unfortunately.  But how is your
-code going to work if the mapping spans multiple of your translation
-regions?
+> 
+> diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
+> index cb38c2747684..fdb8c1d767c1 100644
+> --- a/drivers/extcon/extcon.c
+> +++ b/drivers/extcon/extcon.c
+> @@ -1336,6 +1336,28 @@ void extcon_dev_unregister(struct extcon_dev *edev)
+>  EXPORT_SYMBOL_GPL(extcon_dev_unregister);
+>  
+>  #ifdef CONFIG_OF
+> +
+> +/*
+> + * extcon_get_edev_by_of_node - Get the extcon device from devicetree.
+> + * @node	: OF node identyfying edev
+> + *
+> + * Return the pointer of extcon device if success or ERR_PTR(err) if fail.
+> + */
+> +struct extcon_dev *extcon_get_edev_by_of_node(struct device_node *node)
+> +{
+> +	struct extcon_dev *edev;
+> +
+> +	mutex_lock(&extcon_dev_list_lock);
+> +	list_for_each_entry(edev, &extcon_dev_list, entry)
+> +		if (edev->dev.parent && edev->dev.parent->of_node == node)
+> +			goto end;
+> +	edev = ERR_PTR(-EPROBE_DEFER);
+> +end:
 
-Also I really don't think the stacking of dma_ops as in this patch
-is a good idea.  For MIPS you should do the variant suggested in
-the patch description and hook into dma_to_phys/phys_to_dma helpers,
-and for ARM/ARM64 you should talk to the maintainers on how they
-want the translation integrated.
+The extcon.c already use the 'out' statement for goto.
+I'd like you to use 'out' instead of 'end'.
+
+> +	mutex_unlock(&extcon_dev_list_lock);
+> +
+> +	return edev;
+> +}
+> +
+>  /*
+>   * extcon_get_edev_by_phandle - Get the extcon device from devicetree.
+>   * @dev		: the instance to the given device
+> @@ -1363,25 +1385,27 @@ struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev, int index)
+>  		return ERR_PTR(-ENODEV);
+>  	}
+>  
+> -	mutex_lock(&extcon_dev_list_lock);
+> -	list_for_each_entry(edev, &extcon_dev_list, entry) {
+> -		if (edev->dev.parent && edev->dev.parent->of_node == node) {
+> -			mutex_unlock(&extcon_dev_list_lock);
+> -			of_node_put(node);
+> -			return edev;
+> -		}
+> -	}
+> -	mutex_unlock(&extcon_dev_list_lock);
+> +	edev = extcon_get_edev_by_of_node(node);
+>  	of_node_put(node);
+>  
+> -	return ERR_PTR(-EPROBE_DEFER);
+> +	return edev;
+>  }
+> +
+>  #else
+> +
+> +struct extcon_dev *extcon_get_edev_by_of_node(struct device_node *node)
+> +{
+> +	return ERR_PTR(-ENOSYS);
+> +}
+> +
+>  struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev, int index)
+>  {
+>  	return ERR_PTR(-ENOSYS);
+>  }
+> +
+>  #endif /* CONFIG_OF */
+> +
+> +EXPORT_SYMBOL_GPL(extcon_get_edev_by_of_node);
+>  EXPORT_SYMBOL_GPL(extcon_get_edev_by_phandle);
+>  
+>  /**
+> diff --git a/include/linux/extcon.h b/include/linux/extcon.h
+> index 744d60ca80c3..2f88e7491672 100644
+> --- a/include/linux/extcon.h
+> +++ b/include/linux/extcon.h
+> @@ -261,6 +261,7 @@ extern void devm_extcon_unregister_notifier_all(struct device *dev,
+>   * Following APIs get the extcon_dev from devicetree or by through extcon name.
+>   */
+>  extern struct extcon_dev *extcon_get_extcon_dev(const char *extcon_name);
+> +extern struct extcon_dev *extcon_get_edev_by_of_node(struct device_node *node);
+>  extern struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev,
+>  						     int index);
+>  
+> @@ -382,6 +383,11 @@ static inline struct extcon_dev *extcon_get_extcon_dev(const char *extcon_name)
+>  	return ERR_PTR(-ENODEV);
+>  }
+>  
+> +static inline struct extcon_dev *extcon_get_edev_by_of_node(struct device_node *node)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+>  static inline struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev,
+>  				int index)
+>  {
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
