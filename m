@@ -1,155 +1,70 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
-Date: Wed, 18 Oct 2017 14:17:52 +0530
-Message-ID: <0d3f12b9-d8a1-701e-df88-788faa064f20@ti.com>
-References: <20171013160914.3220-1-niklas.cassel@axis.com>
- <20171013160914.3220-9-niklas.cassel@axis.com>
- <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
- <ebc64a29-4080-af88-c774-b3223115aef0@ti.com>
- <6a9b7221-1ed7-368d-f737-084e4a1519dc@axis.com>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] iio: adc: at91-sama5d2_adc: use max sample rate
+Date: Wed, 18 Oct 2017 11:49:46 +0300
+Message-ID: <14117d77-00b8-66eb-922c-e56f624633f5@microchip.com>
+References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
+ <1507703732-29175-6-git-send-email-eugen.hristev@microchip.com>
+ <20171015112847.5c035e7a@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6a9b7221-1ed7-368d-f737-084e4a1519dc@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@axis.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171015112847.5c035e7a@archlinux>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Niklas,
 
-On Wednesday 18 October 2017 01:45 PM, Niklas Cassel wrote:
-> On 10/18/2017 10:03 AM, Kishon Vijay Abraham I wrote:
->> Hi Bjorn,
->>
->> On Tuesday 17 October 2017 05:13 AM, Bjorn Helgaas wrote:
->>> On Fri, Oct 13, 2017 at 06:09:11PM +0200, Niklas Cassel wrote:
->>>> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
->>>> ---
->>>>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
->>>>  drivers/pci/dwc/Kconfig                            |  41 +++--
->>>>  drivers/pci/dwc/Makefile                           |   4 +-
->>>>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
->>>>  4 files changed, 233 insertions(+), 17 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->>>> index 4e4aee4439ea..33eef7ae5a23 100644
->>>> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->>>> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->>>> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
->>>>  and thus inherits all the common properties defined in designware-pcie.txt.
->>>>  
->>>>  Required properties:
->>>> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
->>>> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
->>>> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
->>>>  - reg: base addresses and lengths of the PCIe controller (DBI),
->>>>  	the PHY controller, and configuration address space.
->>>>  - reg-names: Must include the following entries:
->>>> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
->>>> index 22ec82fcdea2..e333283fb1ed 100644
->>>> --- a/drivers/pci/dwc/Kconfig
->>>> +++ b/drivers/pci/dwc/Kconfig
->>>> @@ -14,6 +14,36 @@ config PCIE_DW_EP
->>>>  	depends on PCI_ENDPOINT
->>>>  	select PCIE_DW
->>>>  
->>>> +config PCIE_ARTPEC6
->>>> +	bool "Axis ARTPEC-6 PCIe controller"
->>>> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
->>>> +	depends on MACH_ARTPEC6
->>>> +	help
->>>> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
->>>> +	  SoCs.  This PCIe controller uses the DesignWare core.
->>>> +
->>>> +if PCIE_ARTPEC6
->>>> +
->>>> +config PCIE_ARTPEC6_HOST
->>>> +	bool "Axis ARTPEC-6 Host Mode"
->>>> +	depends on PCI
->>>> +	depends on PCI_MSI_IRQ_DOMAIN
->>>> +	select PCIEPORTBUS
->>>> +	select PCIE_DW_HOST
->>>> +	help
->>>> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
->>>> +	  host mode.
->>>> +
->>>> +config PCIE_ARTPEC6_EP
->>>> +	bool "Axis ARTPEC-6 Endpoint Mode"
->>>> +	depends on PCI_ENDPOINT
->>>> +	select PCIE_DW_EP
->>>> +	help
->>>> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
->>>> +	  endpoint mode.
->>>> +
->>>> +endif
->>>> +
->>>>  config PCI_DRA7XX
->>>>  	bool "TI DRA7xx PCIe controller"
->>>>  	depends on SOC_DRA7XX || COMPILE_TEST
->>>> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
->>>>  	  DesignWare hardware and therefore the driver re-uses the
->>>>  	  DesignWare core functions to implement the driver.
->>>>  
->>>> -config PCIE_ARTPEC6
->>>> -	bool "Axis ARTPEC-6 PCIe controller"
->>>> -	depends on PCI
->>>> -	depends on MACH_ARTPEC6
->>>> -	depends on PCI_MSI_IRQ_DOMAIN
->>>> -	select PCIEPORTBUS
->>>> -	select PCIE_DW_HOST
->>>> -	help
->>>> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
->>>> -	  SoCs.  This PCIe controller uses the DesignWare core.
->>>> -
->>>>  config PCIE_KIRIN
->>>>  	depends on OF && ARM64
->>>>  	bool "HiSilicon Kirin series SoCs PCIe controllers"
->>>
->>>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
->>>> index c61be9738cce..ac98242b83a9 100644
->>>> --- a/drivers/pci/dwc/Makefile
->>>> +++ b/drivers/pci/dwc/Makefile
->>>> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->>>>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->>>>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->>>>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->>>> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
->>>> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
->>>> +endif
->>>
->>> I see you're copying the DRA7XX style here, but I don't really
->>> understand it.  I guess the idea is to build pcie-artpec6.o if either
->>> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
->>>
->>> Is this really the simplest way to express that in Kconfig?  Both the
->>> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
->>> unusual.
->>>
->>>>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->>>>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->>>>  endif
->>>
->>>> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
->>>
->>> Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
->>> Or is this something other endpoint drivers could/should share?
->>
->> yeah, dw_pcie_ep_reset_bar is already present in pcie-designware-ep.c which
->> should be made as library function to be used by other drivers. (pci-dra7xx.c
->> has also added something like above which should also be fixed).
->>
-> 
-> Hello Kishon,
-> 
-> I can remove the static keyword from dw_pcie_ep_reset_bar,
-> move the declaration to pcie-designware.h,
-> and make sure that both pcie-artpec6.c and pci-dra7xx.c uses it.
-> 
-> Will do this in the next version of the patch series if you
-> don't have any objection.
 
-sure, thanks for doing it :-)
+On 15.10.2017 13:28, Jonathan Cameron wrote:
+> On Wed, 11 Oct 2017 09:35:32 +0300
+> Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
+> 
+>> Change driver settings to use maximum sample rate clock.
+>> This is useful to achieve best possible sampling rate
+>> if we use DMA.
+>>
+>> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> 
+> I would normally expect this to have some bearing on the
+> noise levels on the measured signals.  All I can find
+> is a reference to the track time being 15*a single
+> clock cycle.  We could change this so that it is appropriate
+> for the currently samping frequency rather than leaving it
+> as a fixed value.
 
--Kishon
+Actually this is the startup (default) value. The sampling frequency
+can be changed from sysfs.
+I will drop this change to let the ADC work with minimum frequency
+at startup and user can change it from sysfs if greater speed is
+required (as with the watermark).
+
+Thanks !
+Eugen
+> 
+> Jonathan
+> 
+>> ---
+>>   drivers/iio/adc/at91-sama5d2_adc.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+>> index 7e51ecb..b76f88f 100644
+>> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+>> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+>> @@ -934,7 +934,7 @@ static void at91_adc_hw_init(struct at91_adc_state *st)
+>>   	at91_adc_writel(st, AT91_SAMA5D2_MR,
+>>   			AT91_SAMA5D2_MR_TRANSFER(2) | AT91_SAMA5D2_MR_ANACH);
+>>   
+>> -	at91_adc_setup_samp_freq(st, st->soc_info.min_sample_rate);
+>> +	at91_adc_setup_samp_freq(st, st->soc_info.max_sample_rate);
+>>   }
+>>   
+>>   static ssize_t at91_adc_get_fifo_state(struct device *dev,
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
