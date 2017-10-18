@@ -1,11 +1,13 @@
 From: Miquel Raynal <miquel.raynal@free-electrons.com>
-Subject: [RFC 00/12] Marvell NAND controller rework with ->exec_op()
-Date: Wed, 18 Oct 2017 16:36:17 +0200
-Message-ID: <20171018143629.29302-1-miquel.raynal@free-electrons.com>
+Subject: [RFC 09/12] ARM: dts: armada-38x: use reworked NAND controller driver
+Date: Wed, 18 Oct 2017 16:36:26 +0200
+Message-ID: <20171018143629.29302-10-miquel.raynal@free-electrons.com>
+References: <20171018143629.29302-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20171018143629.29302-1-miquel.raynal@free-electrons.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,123 +21,793 @@ To: Andrew Lunn <andrew@lunn.ch>, bcm-kernel-feedback-list@broadcom.com, Boris B
 Cc: Hanna Hawa <hannah@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Igor Grinberg <grinberg@compulab.co.il>, Miquel Raynal <miquel.raynal@free-electrons.com>, Ofer Heifetz <oferh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpUaGlzIHNlcmllcyBhZGRzIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiB0aGUgTkFORCBmcmFt
-ZXdvcmsgLT5leGVjX29wKCkKaW50ZXJmYWNlIHdpdGggYWxsIHRoZSByZWxhdGVkIGhvb2tzIGFu
-ZCBoZWxwZXJzLiBUaGUgcmVhc29ucyBmb3IgYWRkaW5nCml0IGFyZSBleHBsYWluZWQgaW4gZGV0
-YWlscyBpbiB0aGUgY29tbWl0IGxvZyAibXRkOiBuYW5kOiBhZGQKIC0+ZXhlY19vcCgpIGltcGxl
-bWVudGF0aW9uIiwgYnV0IG1vc3RseSBpdCB3aWxsIGVhc2UgbGF0ZXIgZXhwYW5zaW9uIG9mCnRo
-ZSBmcmFtZXdvcmssIGFzIHdlbGwgYXMgdGhlIGltcGxlbWVudGF0aW9uIG9mIG5ldyB2ZW5kb3Ig
-c3BlY2lmaWMKY29tbWFuZHMsIGFuZCBzaG91bGQgYWxzbyBlYXNlIGRyaXZlciBkZXZlbG9wbWVu
-dC4KClRoZSBzZXJpZXMgY29udGFpbnMgYXMgd2VsbCB0aGUgcmV3b3JrZWQgTkFORCBjb250cm9s
-bGVyIGRyaXZlciBmcm9tCk1hcnZlbGwuCgpBIGxvdCBvZiBjb21tZW50cyBhcmUgd3JpdHRlbiB0
-byBleHBsYWluIGhvdyB0byB1c2UgdGhlIG5ldyBBUEkgYW5kIHRoZQpNYXJ2ZWxsIGRyaXZlciBz
-aG93cyBob3cgdG8gaW1wbGVtZW50IGl0LiBBIHByb3BlciBleHRlcm5hbApkb2N1bWVudGF0aW9u
-IGlzIGJlaW5nIHdyaXR0ZW4gYW5kIHdpbGwgbGF0ZXIgYmUgc3VibWl0dGVkLgoKSXQgYWxzbyBj
-aGFuZ2VzIHRoZSBkZXZpY2UgdHJlZSBOQU5EIG5vZGUgZGVmaW5pdGlvbiBmb3IgYWxsIHBsYXRm
-b3JtcwpyZWZlcnJpbmcgdG8gdGhlIE1hcnZlbGwgZHJpdmVyIHRvIHVzZSB0aGUgbmV3IGJpbmRp
-bmdzLiBUaGV5IGFyZSBtb3JlCmhpZXJhcmNoaWNhbCBhbmQgZml0IHRoZSByZWFsIG9yZ2FuaXph
-dGlvbiBvZiB0aGUgaGFyZHdhcmUsIGJ5IGhhdmluZwpOQU5EIHBhcnRpdGlvbnMgdGhhdCBhcmUg
-cGFydCBvZiBOQU5EIGNoaXAgbm9kZXMsIHRoZW1zZWx2ZXMgcGFydCBvZgp0aGUgTkFORCBjb250
-cm9sbGVyIG5vZGUuCgpTZWUgdGhlIGNvbW1pdCBsb2cgb2YgIm10ZDogbmFuZDogYWRkIHJld29y
-a2VkIE1hcnZlbGwgTkFORCBjb250cm9sbGVyCmRyaXZlciIgZm9yIGRldGFpbHMgYWJvdXQgd2h5
-IGEgY29tcGxldGVseSBuZXcgZHJpdmVyIGlzIG5lZWRlZC4KCkFzIHRoaXMgc2VyaWVzIGNoYW5n
-ZXMgc2V2ZXJhbCBjb3JlIGZ1bmN0aW9ucyBhbmQgYWxzbyBkaXJlY3RseSB0b3VjaGVzCm11bHRp
-cGxlIGNvbnRyb2xsZXIgZHJpdmVycywgaXQgd291bGQgYmUgZ3JlYXQgdG8gaGF2ZSByZXZpZXdz
-IGFuZCB0ZXN0cwpmcm9tIHRoZSBjb25jZXJuZWQgbWFpbnRhaW5lcnMuIE9ubHkgUFhBM3h4IFNv
-Q3MgYXJlIG5vdCBzdXBwb3J0ZWQgeWV0CihleHBsYWluaW5nIHRoZSBSRkMpIGFzIGhhdmluZyBh
-IGxvY2FsIGJvYXJkIHRvIHRlc3QgaXMgcmVhbGx5IG5lZWRlZC4KClRoYW5rIHlvdSwKTWlxdcOo
-bAoKCkJvcmlzIEJyZXppbGxvbiAoMik6CiAgbXRkOiBuYW5kOiBwcm92aWRlIHNldmVyYWwgaGVs
-cGVycyB0byBkbyBjb21tb24gTkFORCBvcGVyYXRpb25zCiAgbXRkOiBuYW5kOiBmb3JjZSBkcml2
-ZXJzIHRvIGV4cGxpY2l0bHkgc2VuZCBSRUFEL1BST0cgY29tbWFuZHMKCk1pcXVlbCBSYXluYWwg
-KDEwKToKICBtdGQ6IG5hbmQ6IHVzZSBhIHN0YXRpYyBkYXRhX2ludGVyZmFjZSBpbiB0aGUgbmFu
-ZF9jaGlwIHN0cnVjdHVyZQogIG10ZDogbmFuZDogYWRkIC0+ZXhlY19vcCgpIGltcGxlbWVudGF0
-aW9uCiAgZHQtYmluZGluZ3M6IG10ZDogYWRkIE1hcnZlbGwgTkFORCBjb250cm9sbGVyIGRvY3Vt
-ZW50YXRpb24KICBtdGQ6IG5hbmQ6IGFkZCByZXdvcmtlZCBNYXJ2ZWxsIE5BTkQgY29udHJvbGxl
-ciBkcml2ZXIKICBBUk06IGR0czogYXJtYWRhLTM3MC14cDogdXNlIHJld29ya2VkIE5BTkQgY29u
-dHJvbGxlciBkcml2ZXIKICBBUk06IGR0czogYXJtYWRhLTM3NTogdXNlIHJld29ya2VkIE5BTkQg
-Y29udHJvbGxlciBkcml2ZXIKICBBUk06IGR0czogYXJtYWRhLTM4eDogdXNlIHJld29ya2VkIE5B
-TkQgY29udHJvbGxlciBkcml2ZXIKICBBUk06IGR0czogYXJtYWRhLTM5eDogdXNlIHJld29ya2Vk
-IE5BTkQgY29udHJvbGxlciBkcml2ZXIKICBBUk06IGR0czogcHhhOiB1c2UgcmV3b3JrZWQgTkFO
-RCBjb250cm9sbGVyIGRyaXZlcgogIEFSTTY0OiBkdHM6IG1hcnZlbGw6IHVzZSByZXdvcmtlZCBO
-QU5EIGNvbnRyb2xsZXIgZHJpdmVyIG9uIEFybWFkYQogICAgN0svOEsKCiAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tdGQvbWFydmVsbC1uYW5kLnR4dCAgICAgICB8ICAgOTUgKwogYXJjaC9hcm0v
-Ym9vdC9kdHMvYXJtYWRhLTM3MC1kYi5kdHMgICAgICAgICAgICAgICAgfCAgIDU2ICstCiBhcmNo
-L2FybS9ib290L2R0cy9hcm1hZGEtMzcwLWRsaW5rLWRuczMyN2wuZHRzICAgICB8ICAxMTkgKy0K
-IGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0zNzAtbWlyYWJveC5kdHMgICAgICAgICAgIHwgICA1
-MCArLQogYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM3MC1uZXRnZWFyLXJuMTAyLmR0cyAgICAg
-fCAgIDg5ICstCiBhcmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzcwLW5ldGdlYXItcm4xMDQuZHRz
-ICAgICB8ICAgODkgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0zNzAtcmQuZHRzICAgICAg
-ICAgICAgICAgIHwgICA1MSArLQogYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM3MC1zZWFnYXRl
-LW5hcy14YmF5LmR0c2kgfCAgIDYzICstCiBhcmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzcwLXhw
-LmR0c2kgICAgICAgICAgICAgICB8ICAgIDYgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0z
-NzUtZGIuZHRzICAgICAgICAgICAgICAgIHwgICA0OSArLQogYXJjaC9hcm0vYm9vdC9kdHMvYXJt
-YWRhLTM3NS5kdHNpICAgICAgICAgICAgICAgICAgfCAgICA2ICstCiBhcmNoL2FybS9ib290L2R0
-cy9hcm1hZGEtMzg1LWRiLWFwLmR0cyAgICAgICAgICAgICB8ICAgNjggKy0KIGFyY2gvYXJtL2Jv
-b3QvZHRzL2FybWFkYS0zODUtbGlua3N5cy1jYWltYW4uZHRzICAgIHwgIDEyOSArLQogYXJjaC9h
-cm0vYm9vdC9kdHMvYXJtYWRhLTM4NS1saW5rc3lzLWNvYnJhLmR0cyAgICAgfCAgMTI5ICstCiBh
-cmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzg1LWxpbmtzeXMtcmFuZ28uZHRzICAgICB8ICAxNDEg
-Ky0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0zODUtbGlua3N5cy1zaGVsYnkuZHRzICAgIHwg
-IDEyOSArLQogYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4NS1saW5rc3lzLmR0c2kgICAgICAg
-ICAgfCAgIDE1ICstCiBhcmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzg4LWRiLmR0cyAgICAgICAg
-ICAgICAgICB8ICAgNTQgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS0zOHguZHRzaSAgICAg
-ICAgICAgICAgICAgIHwgICAgNiArLQogYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM5MC1kYi5k
-dHMgICAgICAgICAgICAgICAgfCAgIDY1ICstCiBhcmNoL2FybS9ib290L2R0cy9hcm1hZGEtMzk1
-LWdwLmR0cyAgICAgICAgICAgICAgICB8ICAgNzMgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFk
-YS0zOTgtZGIuZHRzICAgICAgICAgICAgICAgIHwgICA1OSArLQogYXJjaC9hcm0vYm9vdC9kdHMv
-YXJtYWRhLTM5eC5kdHNpICAgICAgICAgICAgICAgICAgfCAgICA2ICstCiBhcmNoL2FybS9ib290
-L2R0cy9hcm1hZGEteHAtZGItZHhiYzIuZHRzICAgICAgICAgICB8ICAgIDEgLQogYXJjaC9hcm0v
-Ym9vdC9kdHMvYXJtYWRhLXhwLWRiLXhjMy0yNGc0eGcuZHRzICAgICAgfCAgICAxIC0KIGFyY2gv
-YXJtL2Jvb3QvZHRzL2FybWFkYS14cC1kYi5kdHMgICAgICAgICAgICAgICAgIHwgICAgMSAtCiBh
-cmNoL2FybS9ib290L2R0cy9hcm1hZGEteHAtZ3AuZHRzICAgICAgICAgICAgICAgICB8ICAgIDEg
-LQogYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLWxlbm92by1peDQtMzAwZC5kdHMgICAgfCAg
-ICAxIC0KIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS14cC1saW5rc3lzLW1hbWJhLmR0cyAgICAg
-IHwgIDE1NSArLQogYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLW5ldGdlYXItcm4yMTIwLmR0
-cyAgICAgfCAgIDg5ICstCiBhcmNoL2FybS9ib290L2R0cy9weGEzeHguZHRzaSAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgIDYgKy0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEt
-NzA0MC1kYi5kdHMgICAgIHwgICA0NyArLQogLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWNw
-MTEwLW1hc3Rlci5kdHNpICAgICAgfCAgICA2ICstCiAuLi4vYXJtNjQvYm9vdC9kdHMvbWFydmVs
-bC9hcm1hZGEtY3AxMTAtc2xhdmUuZHRzaSB8ICAgIDYgKy0KIGRyaXZlcnMvbXRkL25hbmQvS2Nv
-bmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxMSArCiBkcml2ZXJzL210ZC9uYW5k
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwogZHJpdmVycy9tdGQv
-bmFuZC9hdG1lbC9uYW5kLWNvbnRyb2xsZXIuYyAgICAgICAgICAgfCAgICA5ICstCiBkcml2ZXJz
-L210ZC9uYW5kL2JmNXh4X25hbmQuYyAgICAgICAgICAgICAgICAgICAgICB8ICAgIDYgKy0KIGRy
-aXZlcnMvbXRkL25hbmQvYnJjbW5hbmQvYnJjbW5hbmQuYyAgICAgICAgICAgICAgIHwgICAyMCAr
-LQogZHJpdmVycy9tdGQvbmFuZC9jYWZlX25hbmQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAg
-IDIwICstCiBkcml2ZXJzL210ZC9uYW5kL2RlbmFsaS5jICAgICAgICAgICAgICAgICAgICAgICAg
-ICB8ICAxMDkgKy0KIGRyaXZlcnMvbXRkL25hbmQvZGlza29uY2hpcC5jICAgICAgICAgICAgICAg
-ICAgICAgIHwgICAgNCArLQogZHJpdmVycy9tdGQvbmFuZC9kb2NnNC5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDE5ICstCiBkcml2ZXJzL210ZC9uYW5kL2ZzbF9lbGJjX25hbmQuYyAg
-ICAgICAgICAgICAgICAgICB8ICAgIDYgKy0KIGRyaXZlcnMvbXRkL25hbmQvZnNsX2lmY19uYW5k
-LmMgICAgICAgICAgICAgICAgICAgIHwgICAgNiArLQogZHJpdmVycy9tdGQvbmFuZC9mc21jX25h
-bmQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICstCiBkcml2ZXJzL210ZC9uYW5kL2dw
-bWktbmFuZC9ncG1pLW5hbmQuYyAgICAgICAgICAgICB8ICAgNzYgKy0KIGRyaXZlcnMvbXRkL25h
-bmQvaGlzaTUwNF9uYW5kLmMgICAgICAgICAgICAgICAgICAgIHwgICAgOSArLQogZHJpdmVycy9t
-dGQvbmFuZC9qejQ3NDBfbmFuZC5jICAgICAgICAgICAgICAgICAgICAgfCAgIDE2ICstCiBkcml2
-ZXJzL210ZC9uYW5kL2xwYzMyeHhfbWxjLmMgICAgICAgICAgICAgICAgICAgICB8ICAgIDcgKy0K
-IGRyaXZlcnMvbXRkL25hbmQvbHBjMzJ4eF9zbGMuYyAgICAgICAgICAgICAgICAgICAgIHwgICAz
-MyArLQogZHJpdmVycy9tdGQvbmFuZC9tYXJ2ZWxsX25hbmQuYyAgICAgICAgICAgICAgICAgICAg
-fCAyMzg0ICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL210ZC9uYW5kL210a19uYW5kLmMg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjEgKy0KIGRyaXZlcnMvbXRkL25hbmQvbmFuZF9i
-YXNlLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMjAyMCArKysrKysrKysrKysrKy0tLQogZHJp
-dmVycy9tdGQvbmFuZC9uYW5kX2h5bml4LmMgICAgICAgICAgICAgICAgICAgICAgfCAgMTA2ICst
-CiBkcml2ZXJzL210ZC9uYW5kL25hbmRfbWljcm9uLmMgICAgICAgICAgICAgICAgICAgICB8ICAg
-NTAgKy0KIGRyaXZlcnMvbXRkL25hbmQvbmFuZF90aW1pbmdzLmMgICAgICAgICAgICAgICAgICAg
-IHwgICAyMyArLQogZHJpdmVycy9tdGQvbmFuZC9vbWFwMi5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgICA4ICstCiBkcml2ZXJzL210ZC9uYW5kL3B4YTN4eF9uYW5kLmMgICAgICAgICAg
-ICAgICAgICAgICB8ICAgIDggKy0KIGRyaXZlcnMvbXRkL25hbmQvcWNvbV9uYW5kYy5jICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAxNiArLQogZHJpdmVycy9tdGQvbmFuZC9yODUyLmMgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDExICstCiBkcml2ZXJzL210ZC9uYW5kL3NoX2ZsY3Rs
-LmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDYgKy0KIGRyaXZlcnMvbXRkL25hbmQvc3Vu
-eGlfbmFuZC5jICAgICAgICAgICAgICAgICAgICAgIHwgICA5NyArLQogZHJpdmVycy9tdGQvbmFu
-ZC90YW5nb19uYW5kLmMgICAgICAgICAgICAgICAgICAgICAgfCAgIDI3ICstCiBkcml2ZXJzL210
-ZC9uYW5kL3RtaW9fbmFuZC5jICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDUgKy0KIGRyaXZl
-cnMvbXRkL25hbmQvdmY2MTBfbmZjLmMgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNiArLQog
-ZHJpdmVycy9zdGFnaW5nL210MjlmX3NwaW5hbmQvbXQyOWZfc3BpbmFuZC5jICAgICAgfCAgICA3
-ICstCiBpbmNsdWRlL2xpbnV4L210ZC9yYXduYW5kLmggICAgICAgICAgICAgICAgICAgICAgICB8
-ICAzOTEgKysrLQogNjggZmlsZXMgY2hhbmdlZCwgNTk4MCBpbnNlcnRpb25zKCspLCAxNDI0IGRl
-bGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvbWFydmVsbC1uYW5kLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-bXRkL25hbmQvbWFydmVsbF9uYW5kLmMKCi0tIAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51
-eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+Change the bindings to use the reworked Marvell NAND controller driver.
+Also adapt the nand controller node organization to distinguish which
+property is relevant for the controller, and which one is NAND chip
+specific. Expose the partitions as a subnode of the NAND chip.
+
+Remove the 'marvell,nand-enable-arbiter' property, inefective with
+Armada boards.
+
+Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+---
+ arch/arm/boot/dts/armada-385-db-ap.dts          |  68 ++++++------
+ arch/arm/boot/dts/armada-385-linksys-caiman.dts | 129 +++++++++++-----------
+ arch/arm/boot/dts/armada-385-linksys-cobra.dts  | 129 +++++++++++-----------
+ arch/arm/boot/dts/armada-385-linksys-rango.dts  | 141 ++++++++++++------------
+ arch/arm/boot/dts/armada-385-linksys-shelby.dts | 129 +++++++++++-----------
+ arch/arm/boot/dts/armada-385-linksys.dtsi       |  15 ++-
+ arch/arm/boot/dts/armada-388-db.dts             |  54 +++++----
+ arch/arm/boot/dts/armada-38x.dtsi               |   6 +-
+ 8 files changed, 353 insertions(+), 318 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-385-db-ap.dts b/arch/arm/boot/dts/armada-385-db-ap.dts
+index 25d2d720dc0e..625691196acb 100644
+--- a/arch/arm/boot/dts/armada-385-db-ap.dts
++++ b/arch/arm/boot/dts/armada-385-db-ap.dts
+@@ -166,39 +166,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			nfc: flash@d0000 {
+-				status = "okay";
+-				num-cs = <1>;
+-				nand-ecc-strength = <4>;
+-				nand-ecc-step-size = <512>;
+-				marvell,nand-keep-config;
+-				marvell,nand-enable-arbiter;
+-				nand-on-flash-bbt;
+-
+-				partitions {
+-					compatible = "fixed-partitions";
+-					#address-cells = <1>;
+-					#size-cells = <1>;
+-
+-					partition@0 {
+-						label = "U-Boot";
+-						reg = <0x00000000 0x00800000>;
+-						read-only;
+-					};
+-
+-					partition@800000 {
+-						label = "uImage";
+-						reg = <0x00800000 0x00400000>;
+-						read-only;
+-					};
+-
+-					partition@c00000 {
+-						label = "Root";
+-						reg = <0x00c00000 0x3f400000>;
+-					};
+-				};
+-			};
+-
+ 			usb3@f0000 {
+ 				status = "okay";
+ 				usb-phy = <&usb3_phy>;
+@@ -263,3 +230,38 @@
+ 		spi-max-frequency = <54000000>;
+ 	};
+ };
++
++&nand_controller {
++	status = "okay";
++
++	nand@0 {
++		reg = <0>;
++		marvell,rb = <0>;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "U-Boot";
++				reg = <0x00000000 0x00800000>;
++				read-only;
++			};
++
++			partition@800000 {
++				label = "uImage";
++				reg = <0x00800000 0x00400000>;
++				read-only;
++			};
++
++			partition@c00000 {
++				label = "Root";
++				reg = <0x00c00000 0x3f400000>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/armada-385-linksys-caiman.dts b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
+index ee669ae61011..e769bcf7a9d1 100644
+--- a/arch/arm/boot/dts/armada-385-linksys-caiman.dts
++++ b/arch/arm/boot/dts/armada-385-linksys-caiman.dts
+@@ -105,67 +105,72 @@
+ 
+ &nand {
+ 	/* 128MiB */
+-
+-	partition@0 {
+-		label = "u-boot";
+-		reg = <0x0000000 0x200000>;  /* 2MiB */
+-		read-only;
+-	};
+-
+-	partition@100000 {
+-		label = "u_env";
+-		reg = <0x200000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@140000 {
+-		label = "s_env";
+-		reg = <0x240000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@900000 {
+-		label = "devinfo";
+-		reg = <0x900000 0x100000>;   /* 1MiB */
+-		read-only;
+-	};
+-
+-	/* kernel1 overlaps with rootfs1 by design */
+-	partition@a00000 {
+-		label = "kernel1";
+-		reg = <0xa00000 0x2800000>;  /* 40MiB */
+-	};
+-
+-	partition@1000000 {
+-		label = "rootfs1";
+-		reg = <0x1000000 0x2200000>;  /* 34MiB */
+-	};
+-
+-	/* kernel2 overlaps with rootfs2 by design */
+-	partition@3200000 {
+-		label = "kernel2";
+-		reg = <0x3200000 0x2800000>; /* 40MiB */
+-	};
+-
+-	partition@3800000 {
+-		label = "rootfs2";
+-		reg = <0x3800000 0x2200000>; /* 34MiB */
+-	};
+-
+-	/*
+-	 * 38MiB, last MiB is for the BBT, not writable
+-	 */
+-	partition@5a00000 {
+-		label = "syscfg";
+-		reg = <0x5a00000 0x2600000>;
+-	};
+-
+-	/*
+-	 * Unused area between "s_env" and "devinfo".
+-	 * Moved here because otherwise the renumbered
+-	 * partitions would break the bootloader
+-	 * supplied bootargs
+-	 */
+-	partition@180000 {
+-		label = "unused_area";
+-		reg = <0x280000 0x680000>;   /* 6.5MiB */
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0000000 0x200000>;  /* 2MiB */
++			read-only;
++		};
++
++		partition@100000 {
++			label = "u_env";
++			reg = <0x200000 0x40000>;    /* 256KiB */
++		};
++
++		partition@140000 {
++			label = "s_env";
++			reg = <0x240000 0x40000>;    /* 256KiB */
++		};
++
++		partition@900000 {
++			label = "devinfo";
++			reg = <0x900000 0x100000>;   /* 1MiB */
++			read-only;
++		};
++
++		/* kernel1 overlaps with rootfs1 by design */
++		partition@a00000 {
++			label = "kernel1";
++			reg = <0xa00000 0x2800000>;  /* 40MiB */
++		};
++
++		partition@1000000 {
++			label = "rootfs1";
++			reg = <0x1000000 0x2200000>;  /* 34MiB */
++		};
++
++		/* kernel2 overlaps with rootfs2 by design */
++		partition@3200000 {
++			label = "kernel2";
++			reg = <0x3200000 0x2800000>; /* 40MiB */
++		};
++
++		partition@3800000 {
++			label = "rootfs2";
++			reg = <0x3800000 0x2200000>; /* 34MiB */
++		};
++
++		/*
++		 * 38MiB, last MiB is for the BBT, not writable
++		 */
++		partition@5a00000 {
++			label = "syscfg";
++			reg = <0x5a00000 0x2600000>;
++		};
++
++		/*
++		 * Unused area between "s_env" and "devinfo".
++		 * Moved here because otherwise the renumbered
++		 * partitions would break the bootloader
++		 * supplied bootargs
++		 */
++		partition@180000 {
++			label = "unused_area";
++			reg = <0x280000 0x680000>;   /* 6.5MiB */
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/armada-385-linksys-cobra.dts b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
+index 5169ca89c55a..690be217838c 100644
+--- a/arch/arm/boot/dts/armada-385-linksys-cobra.dts
++++ b/arch/arm/boot/dts/armada-385-linksys-cobra.dts
+@@ -105,67 +105,72 @@
+ 
+ &nand {
+ 	/* 128MiB */
+-
+-	partition@0 {
+-		label = "u-boot";
+-		reg = <0x0000000 0x200000>;  /* 2MiB */
+-		read-only;
+-	};
+-
+-	partition@100000 {
+-		label = "u_env";
+-		reg = <0x200000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@140000 {
+-		label = "s_env";
+-		reg = <0x240000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@900000 {
+-		label = "devinfo";
+-		reg = <0x900000 0x100000>;   /* 1MiB */
+-		read-only;
+-	};
+-
+-	/* kernel1 overlaps with rootfs1 by design */
+-	partition@a00000 {
+-		label = "kernel1";
+-		reg = <0xa00000 0x2800000>;  /* 40MiB */
+-	};
+-
+-	partition@1000000 {
+-		label = "rootfs1";
+-		reg = <0x1000000 0x2200000>;  /* 34MiB */
+-	};
+-
+-	/* kernel2 overlaps with rootfs2 by design */
+-	partition@3200000 {
+-		label = "kernel2";
+-		reg = <0x3200000 0x2800000>; /* 40MiB */
+-	};
+-
+-	partition@3800000 {
+-		label = "rootfs2";
+-		reg = <0x3800000 0x2200000>; /* 34MiB */
+-	};
+-
+-	/*
+-	 * 38MiB, last MiB is for the BBT, not writable
+-	 */
+-	partition@5a00000 {
+-		label = "syscfg";
+-		reg = <0x5a00000 0x2600000>;
+-	};
+-
+-	/*
+-	 * Unused area between "s_env" and "devinfo".
+-	 * Moved here because otherwise the renumbered
+-	 * partitions would break the bootloader
+-	 * supplied bootargs
+-	 */
+-	partition@180000 {
+-		label = "unused_area";
+-		reg = <0x280000 0x680000>;   /* 6.5MiB */
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0000000 0x200000>;  /* 2MiB */
++			read-only;
++		};
++
++		partition@100000 {
++			label = "u_env";
++			reg = <0x200000 0x40000>;    /* 256KiB */
++		};
++
++		partition@140000 {
++			label = "s_env";
++			reg = <0x240000 0x40000>;    /* 256KiB */
++		};
++
++		partition@900000 {
++			label = "devinfo";
++			reg = <0x900000 0x100000>;   /* 1MiB */
++			read-only;
++		};
++
++		/* kernel1 overlaps with rootfs1 by design */
++		partition@a00000 {
++			label = "kernel1";
++			reg = <0xa00000 0x2800000>;  /* 40MiB */
++		};
++
++		partition@1000000 {
++			label = "rootfs1";
++			reg = <0x1000000 0x2200000>;  /* 34MiB */
++		};
++
++		/* kernel2 overlaps with rootfs2 by design */
++		partition@3200000 {
++			label = "kernel2";
++			reg = <0x3200000 0x2800000>; /* 40MiB */
++		};
++
++		partition@3800000 {
++			label = "rootfs2";
++			reg = <0x3800000 0x2200000>; /* 34MiB */
++		};
++
++		/*
++		 * 38MiB, last MiB is for the BBT, not writable
++		 */
++		partition@5a00000 {
++			label = "syscfg";
++			reg = <0x5a00000 0x2600000>;
++		};
++
++		/*
++		 * Unused area between "s_env" and "devinfo".
++		 * Moved here because otherwise the renumbered
++		 * partitions would break the bootloader
++		 * supplied bootargs
++		 */
++		partition@180000 {
++			label = "unused_area";
++			reg = <0x280000 0x680000>;   /* 6.5MiB */
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/boot/dts/armada-385-linksys-rango.dts
+index da8a0f3d432b..93570c6bfe85 100644
+--- a/arch/arm/boot/dts/armada-385-linksys-rango.dts
++++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
+@@ -113,74 +113,79 @@
+ 
+ &nand {
+ 	/* AMD/Spansion S34ML02G2 256MiB, OEM Layout */
+-
+-	partition@0 {
+-		label = "u-boot";
+-		reg = <0x0000000 0x200000>;  /* 2MiB */
+-		read-only;
+-	};
+-
+-	partition@200000 {
+-		label = "u_env";
+-		reg = <0x200000 0x20000>;    /* 128KiB */
+-	};
+-
+-	partition@220000 {
+-		label = "s_env";
+-		reg = <0x220000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@7e0000 {
+-		label = "devinfo";
+-		reg = <0x7e0000 0x40000>;   /* 256KiB */
+-		read-only;
+-	};
+-
+-	partition@820000 {
+-		label = "sysdiag";
+-		reg = <0x820000 0x1e0000>;   /* 1920KiB */
+-		read-only;
+-	};
+-
+-	/* kernel1 overlaps with rootfs1 by design */
+-	partition@a00000 {
+-		label = "kernel1";
+-		reg = <0xa00000 0x5000000>;  /* 80MiB */
+-	};
+-
+-	partition@1000000 {
+-		label = "rootfs1";
+-		reg = <0x1000000 0x4a00000>;  /* 74MiB */
+-	};
+-
+-	/* kernel2 overlaps with rootfs2 by design */
+-	partition@5a00000 {
+-		label = "kernel2";
+-		reg = <0x5a00000 0x5000000>; /* 80MiB */
+-	};
+-
+-	partition@6000000 {
+-		label = "rootfs2";
+-		reg = <0x6000000 0x4a00000>; /* 74MiB */
+-	};
+-
+-	/*
+-	 * 86MiB, last MiB is for the BBT, not writable
+-	 */
+-	partition@aa00000 {
+-		label = "syscfg";
+-		reg = <0xaa00000 0x5600000>;
+-	};
+-
+-	/*
+-	 * Unused area between "s_env" and "devinfo".
+-	 * Moved here because otherwise the renumbered
+-	 * partitions would break the bootloader
+-	 * supplied bootargs
+-	 */
+-	partition@180000 {
+-		label = "unused_area";
+-		reg = <0x260000 0x5c0000>;   /* 5.75MiB */
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0000000 0x200000>;  /* 2MiB */
++			read-only;
++		};
++
++		partition@200000 {
++			label = "u_env";
++			reg = <0x200000 0x20000>;    /* 128KiB */
++		};
++
++		partition@220000 {
++			label = "s_env";
++			reg = <0x220000 0x40000>;    /* 256KiB */
++		};
++
++		partition@7e0000 {
++			label = "devinfo";
++			reg = <0x7e0000 0x40000>;   /* 256KiB */
++			read-only;
++		};
++
++		partition@820000 {
++			label = "sysdiag";
++			reg = <0x820000 0x1e0000>;   /* 1920KiB */
++			read-only;
++		};
++
++		/* kernel1 overlaps with rootfs1 by design */
++		partition@a00000 {
++			label = "kernel1";
++			reg = <0xa00000 0x5000000>;  /* 80MiB */
++		};
++
++		partition@1000000 {
++			label = "rootfs1";
++			reg = <0x1000000 0x4a00000>;  /* 74MiB */
++		};
++
++		/* kernel2 overlaps with rootfs2 by design */
++		partition@5a00000 {
++			label = "kernel2";
++			reg = <0x5a00000 0x5000000>; /* 80MiB */
++		};
++
++		partition@6000000 {
++			label = "rootfs2";
++			reg = <0x6000000 0x4a00000>; /* 74MiB */
++		};
++
++		/*
++		 * 86MiB, last MiB is for the BBT, not writable
++		 */
++		partition@aa00000 {
++			label = "syscfg";
++			reg = <0xaa00000 0x5600000>;
++		};
++
++		/*
++		 * Unused area between "s_env" and "devinfo".
++		 * Moved here because otherwise the renumbered
++		 * partitions would break the bootloader
++		 * supplied bootargs
++		 */
++		partition@180000 {
++			label = "unused_area";
++			reg = <0x260000 0x5c0000>;   /* 5.75MiB */
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/armada-385-linksys-shelby.dts b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+index 94aa35bc0bff..4694556700ff 100644
+--- a/arch/arm/boot/dts/armada-385-linksys-shelby.dts
++++ b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+@@ -105,67 +105,72 @@
+ 
+ &nand {
+ 	/* 128MiB */
+-
+-	partition@0 {
+-		label = "u-boot";
+-		reg = <0x0000000 0x200000>;  /* 2MiB */
+-		read-only;
+-	};
+-
+-	partition@100000 {
+-		label = "u_env";
+-		reg = <0x200000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@140000 {
+-		label = "s_env";
+-		reg = <0x240000 0x40000>;    /* 256KiB */
+-	};
+-
+-	partition@900000 {
+-		label = "devinfo";
+-		reg = <0x900000 0x100000>;   /* 1MiB */
+-		read-only;
+-	};
+-
+-	/* kernel1 overlaps with rootfs1 by design */
+-	partition@a00000 {
+-		label = "kernel1";
+-		reg = <0xa00000 0x2800000>;  /* 40MiB */
+-	};
+-
+-	partition@1000000 {
+-		label = "rootfs1";
+-		reg = <0x1000000 0x2200000>;  /* 34MiB */
+-	};
+-
+-	/* kernel2 overlaps with rootfs2 by design */
+-	partition@3200000 {
+-		label = "kernel2";
+-		reg = <0x3200000 0x2800000>; /* 40MiB */
+-	};
+-
+-	partition@3800000 {
+-		label = "rootfs2";
+-		reg = <0x3800000 0x2200000>; /* 34MiB */
+-	};
+-
+-	/*
+-	 * 38MiB, last MiB is for the BBT, not writable
+-	 */
+-	partition@5a00000 {
+-		label = "syscfg";
+-		reg = <0x5a00000 0x2600000>;
+-	};
+-
+-	/*
+-	 * Unused area between "s_env" and "devinfo".
+-	 * Moved here because otherwise the renumbered
+-	 * partitions would break the bootloader
+-	 * supplied bootargs
+-	 */
+-	partition@180000 {
+-		label = "unused_area";
+-		reg = <0x280000 0x680000>;   /* 6.5MiB */
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0000000 0x200000>;  /* 2MiB */
++			read-only;
++		};
++
++		partition@100000 {
++			label = "u_env";
++			reg = <0x200000 0x40000>;    /* 256KiB */
++		};
++
++		partition@140000 {
++			label = "s_env";
++			reg = <0x240000 0x40000>;    /* 256KiB */
++		};
++
++		partition@900000 {
++			label = "devinfo";
++			reg = <0x900000 0x100000>;   /* 1MiB */
++			read-only;
++		};
++
++		/* kernel1 overlaps with rootfs1 by design */
++		partition@a00000 {
++			label = "kernel1";
++			reg = <0xa00000 0x2800000>;  /* 40MiB */
++		};
++
++		partition@1000000 {
++			label = "rootfs1";
++			reg = <0x1000000 0x2200000>;  /* 34MiB */
++		};
++
++		/* kernel2 overlaps with rootfs2 by design */
++		partition@3200000 {
++			label = "kernel2";
++			reg = <0x3200000 0x2800000>; /* 40MiB */
++		};
++
++		partition@3800000 {
++			label = "rootfs2";
++			reg = <0x3800000 0x2200000>; /* 34MiB */
++		};
++
++		/*
++		 * 38MiB, last MiB is for the BBT, not writable
++		 */
++		partition@5a00000 {
++			label = "syscfg";
++			reg = <0x5a00000 0x2600000>;
++		};
++
++		/*
++		 * Unused area between "s_env" and "devinfo".
++		 * Moved here because otherwise the renumbered
++		 * partitions would break the bootloader
++		 * supplied bootargs
++		 */
++		partition@180000 {
++			label = "unused_area";
++			reg = <0x280000 0x680000>;   /* 6.5MiB */
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+index e1f355ffc8f7..358b17e921bb 100644
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -169,13 +169,18 @@
+ 	};
+ };
+ 
+-&nand {
++&nand_controller {
+ 	/* 128MiB or 256MiB */
+ 	status = "okay";
+-	num-cs = <1>;
+-	marvell,nand-keep-config;
+-	marvell,nand-enable-arbiter;
+-	nand-on-flash-bbt;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	nand: nand@0 {
++		reg = <0>;
++		marvell,rb = <0>;
++		marvell,nand-keep-config;
++		nand-on-flash-bbt;
++	};
+ };
+ 
+ &mdio {
+diff --git a/arch/arm/boot/dts/armada-388-db.dts b/arch/arm/boot/dts/armada-388-db.dts
+index a4ec1fa37529..0c020d7afcc1 100644
+--- a/arch/arm/boot/dts/armada-388-db.dts
++++ b/arch/arm/boot/dts/armada-388-db.dts
+@@ -128,29 +128,6 @@
+ 				status = "okay";
+ 			};
+ 
+-			flash@d0000 {
+-				status = "okay";
+-				num-cs = <1>;
+-				marvell,nand-keep-config;
+-				marvell,nand-enable-arbiter;
+-				nand-on-flash-bbt;
+-				nand-ecc-strength = <4>;
+-				nand-ecc-step-size = <512>;
+-
+-				partition@0 {
+-					label = "U-Boot";
+-					reg = <0 0x800000>;
+-				};
+-				partition@800000 {
+-					label = "Linux";
+-					reg = <0x800000 0x800000>;
+-				};
+-				partition@1000000 {
+-					label = "Filesystem";
+-					reg = <0x1000000 0x3f000000>;
+-				};
+-			};
+-
+ 			sdhci@d8000 {
+ 				broken-cd;
+ 				wp-inverted;
+@@ -202,3 +179,34 @@
+ 	};
+ };
+ 
++&nand_controller {
++	status = "okay";
++
++	nand@0 {
++		reg = <0>;
++		marvell,rb = <0>;
++		marvell,nand-keep-config;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "U-Boot";
++				reg = <0 0x800000>;
++			};
++			partition@800000 {
++				label = "Linux";
++				reg = <0x800000 0x800000>;
++			};
++			partition@1000000 {
++				label = "Filesystem";
++				reg = <0x1000000 0x3f000000>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 7ff0811e61db..764fcf08ef53 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -583,11 +583,11 @@
+ 				status = "okay";
+ 			};
+ 
+-			nand: flash@d0000 {
+-				compatible = "marvell,armada370-nand";
++			nand_controller: nand-controller@d0000 {
++				compatible = "marvell,armada370-nand-controller";
+ 				reg = <0xd0000 0x54>;
+ 				#address-cells = <1>;
+-				#size-cells = <1>;
++				#size-cells = <0>;
+ 				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&coredivclk 0>;
+ 				status = "disabled";
+-- 
+2.11.0
