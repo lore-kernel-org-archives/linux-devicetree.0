@@ -1,94 +1,268 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 0/8] ARM: sun8i: a83t: Enable AXP813/AXP818 regulators
-Date: Wed, 18 Oct 2017 16:31:30 +0800
-Message-ID: <20171018083138.14517-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
+Date: Wed, 18 Oct 2017 14:16:10 +0530
+Message-ID: <db0685b5-6078-1c6b-093d-f160f74e85bf@ti.com>
+References: <20171013160914.3220-1-niklas.cassel@axis.com>
+ <20171013160914.3220-9-niklas.cassel@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3NCTTHQKGQE7UNQPTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171013160914.3220-9-niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Nowicki <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Hi Niklas,
 
-This series was originally name "regulator: axp20x: Add support for
-AXP813/818 regulators". It adds support for the X-Powers AXP813/818 [1]
-PMICs' regulators. The series is quite straightforward.
+On Friday 13 October 2017 09:39 PM, Niklas Cassel wrote:
+> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
+>  drivers/pci/dwc/Kconfig                            |  41 +++--
+>  drivers/pci/dwc/Makefile                           |   4 +-
+>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
+>  4 files changed, 233 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> index 4e4aee4439ea..33eef7ae5a23 100644
+> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+>  and thus inherits all the common properties defined in designware-pcie.txt.
+>  
+>  Required properties:
+> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
 
-Changes since v1:
+If "snps,dw-pcie" is used for both RC and EP mode, how do we differentiate
+between the modes?
+>  - reg: base addresses and lengths of the PCIe controller (DBI),
+>  	the PHY controller, and configuration address space.
+>  - reg-names: Must include the following entries:
+> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+> index 22ec82fcdea2..e333283fb1ed 100644
+> --- a/drivers/pci/dwc/Kconfig
+> +++ b/drivers/pci/dwc/Kconfig
+> @@ -14,6 +14,36 @@ config PCIE_DW_EP
+>  	depends on PCI_ENDPOINT
+>  	select PCIE_DW
+>  
+> +config PCIE_ARTPEC6
+> +	bool "Axis ARTPEC-6 PCIe controller"
+> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
+> +	depends on MACH_ARTPEC6
+> +	help
+> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+> +	  SoCs.  This PCIe controller uses the DesignWare core.
+> +
+> +if PCIE_ARTPEC6
+> +
+> +config PCIE_ARTPEC6_HOST
+> +	bool "Axis ARTPEC-6 Host Mode"
+> +	depends on PCI
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIEPORTBUS
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+> +	  host mode.
+> +
+> +config PCIE_ARTPEC6_EP
+> +	bool "Axis ARTPEC-6 Endpoint Mode"
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	help
+> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+> +	  endpoint mode.
+> +
+> +endif
+> +
+>  config PCI_DRA7XX
+>  	bool "TI DRA7xx PCIe controller"
+>  	depends on SOC_DRA7XX || COMPILE_TEST
+> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
+>  	  DesignWare hardware and therefore the driver re-uses the
+>  	  DesignWare core functions to implement the driver.
+>  
+> -config PCIE_ARTPEC6
+> -	bool "Axis ARTPEC-6 PCIe controller"
+> -	depends on PCI
+> -	depends on MACH_ARTPEC6
+> -	depends on PCI_MSI_IRQ_DOMAIN
+> -	select PCIEPORTBUS
+> -	select PCIE_DW_HOST
+> -	help
+> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+> -	  SoCs.  This PCIe controller uses the DesignWare core.
+> -
+>  config PCIE_KIRIN
+>  	depends on OF && ARM64
+>  	bool "HiSilicon Kirin series SoCs PCIe controllers"
+> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+> index c61be9738cce..ac98242b83a9 100644
+> --- a/drivers/pci/dwc/Makefile
+> +++ b/drivers/pci/dwc/Makefile
+> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
+> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> +endif
+>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>  endif
+> @@ -12,7 +15,6 @@ obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone-dw.o pci-keystone.o
+>  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+> -obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+>  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+>  
+>  # The following drivers are for devices that use the generic ACPI
+> diff --git a/drivers/pci/dwc/pcie-artpec6.c b/drivers/pci/dwc/pcie-artpec6.c
+> index c5d7f98dc6b2..21ea9ffef784 100644
+> --- a/drivers/pci/dwc/pcie-artpec6.c
+> +++ b/drivers/pci/dwc/pcie-artpec6.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/resource.h>
+> @@ -30,8 +31,15 @@ struct artpec6_pcie {
+>  	struct dw_pcie		*pci;
+>  	struct regmap		*regmap;	/* DT axis,syscon-pcie */
+>  	void __iomem		*phy_base;	/* DT phy */
+> +	enum dw_pcie_device_mode mode;
+>  };
+>  
+> +struct artpec_pcie_of_data {
+> +	enum dw_pcie_device_mode mode;
+> +};
+> +
+> +static const struct of_device_id artpec6_pcie_of_match[];
+> +
+>  /* PCIe Port Logic registers (memory-mapped) */
+>  #define PL_OFFSET			0x700
+>  #define PCIE_PHY_DEBUG_R0		(PL_OFFSET + 0x28)
+> @@ -42,6 +50,7 @@ struct artpec6_pcie {
+>  #define  PCIECFG_DBG_OEN		BIT(24)
+>  #define  PCIECFG_CORE_RESET_REQ		BIT(21)
+>  #define  PCIECFG_LTSSM_ENABLE		BIT(20)
+> +#define  PCIECFG_DEVICE_TYPE_MASK	GENMASK(19, 16)
+>  #define  PCIECFG_CLKREQ_B		BIT(11)
+>  #define  PCIECFG_REFCLK_ENABLE		BIT(10)
+>  #define  PCIECFG_PLL_ENABLE		BIT(9)
+> @@ -126,6 +135,16 @@ static void artpec6_pcie_init_phy(struct artpec6_pcie *artpec6_pcie)
+>  	} while (retries && !(val & PHY_COSPLLLOCK));
+>  }
+>  
+> +static void artpec6_pcie_stop_link(struct dw_pcie *pci)
+> +{
+> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
+> +	u32 val;
+> +
+> +	val = artpec6_pcie_readl(artpec6_pcie, PCIECFG);
+> +	val &= ~PCIECFG_LTSSM_ENABLE;
+> +	artpec6_pcie_writel(artpec6_pcie, PCIECFG, val);
+> +}
+> +
+>  static int artpec6_pcie_establish_link(struct dw_pcie *pci)
+>  {
+>  	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
+> @@ -195,6 +214,136 @@ static irqreturn_t artpec6_pcie_msi_handler(int irq, void *arg)
+>  	return dw_handle_msi_irq(pp);
+>  }
+>  
+> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+> +{
+> +	u32 reg;
+> +
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +	dw_pcie_writel_dbi2(pci, reg, 0x0);
+> +	dw_pcie_writel_dbi(pci, reg, 0x0);
+> +	dw_pcie_dbi_ro_wr_dis(pci);
+> +}
+> +
+> +static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
+> +	enum pci_barno bar;
+> +
+> +	artpec6_pcie_assert_core_reset(artpec6_pcie);
+> +	artpec6_pcie_init_phy(artpec6_pcie);
+> +	artpec6_pcie_deassert_core_reset(artpec6_pcie);
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +}
+> +
+> +static int artpec6_pcie_raise_msi_irq(struct dw_pcie_ep *ep,
+> +				      u8 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct pci_epc *epc = ep->epc;
+> +	u32 cap_addr, cap_value, cap_id, next_ptr, msg_ctrl, msg_data;
+> +	u32 msg_addr_lower, msg_addr_upper;
+> +	u64 msg_addr;
+> +	bool has_upper;
+> +	int ret;
+> +
+> +	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+> +	cap_addr = dw_pcie_readl_dbi(pci, PCI_CAPABILITY_LIST);
+> +	while (1) {
+> +		cap_value = dw_pcie_readl_dbi(pci, cap_addr);
+> +		cap_id = cap_value & GENMASK(7, 0);
+> +		if (cap_id == PCI_CAP_ID_MSI)
+> +			break;
+> +		next_ptr = (cap_value & GENMASK(15, 8)) >> 8;
+> +		if (next_ptr == 0) {
+> +			dev_err(pci->dev, "No MSI cap found!\n");
+> +			return -EINVAL;
+> +		}
+> +		cap_addr = next_ptr;
+> +	}
 
-  - Regulator driver patches were merged and now dropped from the series
+The MSI capability always points to fixed offset in DesingWare. So I don't
+think this is necessary unless we move it to the generic endpoint layer.
+> +	msg_ctrl = (cap_value & GENMASK(31, 16)) >> 16;
+> +	has_upper = !!(msg_ctrl & BIT(7));
+> +	msg_addr_lower = dw_pcie_readl_dbi(pci, cap_addr + 0x4);
+> +	if (has_upper) {
+> +		msg_addr_upper = dw_pcie_readl_dbi(pci, cap_addr + 0x8);
+> +		msg_data = dw_pcie_readl_dbi(pci, cap_addr + 0xc) &
+> +			GENMASK(15, 0);
+> +	} else {
+> +		msg_addr_upper = 0;
+> +		msg_data = dw_pcie_readl_dbi(pci, cap_addr + 0x8) &
+> +			GENMASK(15, 0);
+> +	}
+> +	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
+> +	ret = epc->ops->map_addr(epc, ep->msi_mem_phys, msg_addr, PAGE_SIZE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(msg_data | (interrupt_num - 1), ep->msi_mem);
+> +
+> +	epc->ops->unmap_addr(epc, ep->msi_mem_phys);
+> +
+> +	return 0;
+> +}
 
-  - Chose simpler names for the regulators
+I think this entire function can also be made as a library function to be used
+by other drivers. (looks like only dra7xx has a shortcut to raise MSI irq).
 
-  - Added SDIO WiFi enablement patches
-
-Patch 1 adds a axp20x-regulator cell for AXP813, thereby enabling the
-regulators.
-
-Patch 2 adds a shared dtsi file for the PMIC. This currently contains
-a list of regulator nodes, but will be expanded with Quentin's power
-supply work.
-
-Patches 3 through 5 add regulator nodes to board dts files for the A83T
-boards that I have. They are not squashed together as each file has
-substantial additions.
-
-Patch 6 moves the mmc1 pinmux setting over to the dtsi, and sets it by
-default.
-
-Patches 7 & 8 enable SDIO-based WiFi on the Cubietruck Plus and Banana
-Pi M3.
-
-Originally my work also included enabling Ethernet. But the Ethernet
-bindings were reverted. Everything can be found here:
-
-    https://github.com/wens/linux/tree/a83t-regulator-wifi-eth
-
-Please have a look.
-
-Lee, we need the mfd changes merged in before merging the dts changes.
-Otherwise, mmc would break as vmmc/vqmmc is tied to the PMIC regulators.
-
-
-Regards
-ChenYu
-
-
-[1] AXP813 and AXP818 are functionally identical. They have different
-    labels and are bundled with different SoCs (A83T and H8), as a sort
-    of product or market segmentation.
-
-
-
-Chen-Yu Tsai (8):
-  mfd: axp20x: Add axp20x-regulator cell for AXP813
-  ARM: dts: sunxi: Add dtsi for AXP81x PMIC
-  ARM: dts: sun8i: a83t: cubietruck-plus: Add AXP818 regulator nodes
-  ARM: dts: sun8i: a83t: bananapi-m3: Add AXP813 regulator nodes
-  ARM: dts: sun8i: a83t: allwinner-h8homlet-v2: Add AXP818 regulator
-    nodes
-  ARM: dts: sun8i: a83t: Move mmc1 pinctrl setting to dtsi file
-  ARM: dts: sun8i: a83t: cubietruck-plus: Enable AP6330 WiFi on mmc1
-  ARM: dts: sun8i: a83t: bananapi-m3: Enable AP6212 WiFi on mmc1
-
- .../{sun8i-a83t-bananapi-m3.dts => axp81x.dtsi}    | 157 ++++++++---------
- .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 147 ++++++++++++++--
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts       | 169 ++++++++++++++++++-
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts   | 187 +++++++++++++++++++--
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts          |   2 -
- arch/arm/boot/dts/sun8i-a83t.dtsi                  |   2 +
- drivers/mfd/axp20x.c                               |   2 +
- 7 files changed, 547 insertions(+), 119 deletions(-)
- copy arch/arm/boot/dts/{sun8i-a83t-bananapi-m3.dts => axp81x.dtsi} (52%)
-
--- 
-2.14.2
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
