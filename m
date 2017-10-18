@@ -1,268 +1,155 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
-Date: Wed, 18 Oct 2017 14:16:10 +0530
-Message-ID: <db0685b5-6078-1c6b-093d-f160f74e85bf@ti.com>
+Date: Wed, 18 Oct 2017 14:17:52 +0530
+Message-ID: <0d3f12b9-d8a1-701e-df88-788faa064f20@ti.com>
 References: <20171013160914.3220-1-niklas.cassel@axis.com>
  <20171013160914.3220-9-niklas.cassel@axis.com>
+ <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
+ <ebc64a29-4080-af88-c774-b3223115aef0@ti.com>
+ <6a9b7221-1ed7-368d-f737-084e4a1519dc@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013160914.3220-9-niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Nowicki <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
-Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6a9b7221-1ed7-368d-f737-084e4a1519dc@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@axis.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+Niklas,
 
-On Friday 13 October 2017 09:39 PM, Niklas Cassel wrote:
-> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-> ---
->  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
->  drivers/pci/dwc/Kconfig                            |  41 +++--
->  drivers/pci/dwc/Makefile                           |   4 +-
->  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
->  4 files changed, 233 insertions(+), 17 deletions(-)
+On Wednesday 18 October 2017 01:45 PM, Niklas Cassel wrote:
+> On 10/18/2017 10:03 AM, Kishon Vijay Abraham I wrote:
+>> Hi Bjorn,
+>>
+>> On Tuesday 17 October 2017 05:13 AM, Bjorn Helgaas wrote:
+>>> On Fri, Oct 13, 2017 at 06:09:11PM +0200, Niklas Cassel wrote:
+>>>> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+>>>> ---
+>>>>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
+>>>>  drivers/pci/dwc/Kconfig                            |  41 +++--
+>>>>  drivers/pci/dwc/Makefile                           |   4 +-
+>>>>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
+>>>>  4 files changed, 233 insertions(+), 17 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>>>> index 4e4aee4439ea..33eef7ae5a23 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>>>> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>>>> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+>>>>  and thus inherits all the common properties defined in designware-pcie.txt.
+>>>>  
+>>>>  Required properties:
+>>>> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+>>>> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+>>>> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
+>>>>  - reg: base addresses and lengths of the PCIe controller (DBI),
+>>>>  	the PHY controller, and configuration address space.
+>>>>  - reg-names: Must include the following entries:
+>>>> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+>>>> index 22ec82fcdea2..e333283fb1ed 100644
+>>>> --- a/drivers/pci/dwc/Kconfig
+>>>> +++ b/drivers/pci/dwc/Kconfig
+>>>> @@ -14,6 +14,36 @@ config PCIE_DW_EP
+>>>>  	depends on PCI_ENDPOINT
+>>>>  	select PCIE_DW
+>>>>  
+>>>> +config PCIE_ARTPEC6
+>>>> +	bool "Axis ARTPEC-6 PCIe controller"
+>>>> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
+>>>> +	depends on MACH_ARTPEC6
+>>>> +	help
+>>>> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>>>> +	  SoCs.  This PCIe controller uses the DesignWare core.
+>>>> +
+>>>> +if PCIE_ARTPEC6
+>>>> +
+>>>> +config PCIE_ARTPEC6_HOST
+>>>> +	bool "Axis ARTPEC-6 Host Mode"
+>>>> +	depends on PCI
+>>>> +	depends on PCI_MSI_IRQ_DOMAIN
+>>>> +	select PCIEPORTBUS
+>>>> +	select PCIE_DW_HOST
+>>>> +	help
+>>>> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+>>>> +	  host mode.
+>>>> +
+>>>> +config PCIE_ARTPEC6_EP
+>>>> +	bool "Axis ARTPEC-6 Endpoint Mode"
+>>>> +	depends on PCI_ENDPOINT
+>>>> +	select PCIE_DW_EP
+>>>> +	help
+>>>> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+>>>> +	  endpoint mode.
+>>>> +
+>>>> +endif
+>>>> +
+>>>>  config PCI_DRA7XX
+>>>>  	bool "TI DRA7xx PCIe controller"
+>>>>  	depends on SOC_DRA7XX || COMPILE_TEST
+>>>> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
+>>>>  	  DesignWare hardware and therefore the driver re-uses the
+>>>>  	  DesignWare core functions to implement the driver.
+>>>>  
+>>>> -config PCIE_ARTPEC6
+>>>> -	bool "Axis ARTPEC-6 PCIe controller"
+>>>> -	depends on PCI
+>>>> -	depends on MACH_ARTPEC6
+>>>> -	depends on PCI_MSI_IRQ_DOMAIN
+>>>> -	select PCIEPORTBUS
+>>>> -	select PCIE_DW_HOST
+>>>> -	help
+>>>> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>>>> -	  SoCs.  This PCIe controller uses the DesignWare core.
+>>>> -
+>>>>  config PCIE_KIRIN
+>>>>  	depends on OF && ARM64
+>>>>  	bool "HiSilicon Kirin series SoCs PCIe controllers"
+>>>
+>>>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+>>>> index c61be9738cce..ac98242b83a9 100644
+>>>> --- a/drivers/pci/dwc/Makefile
+>>>> +++ b/drivers/pci/dwc/Makefile
+>>>> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>>>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>>>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>>>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>>>> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
+>>>> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+>>>> +endif
+>>>
+>>> I see you're copying the DRA7XX style here, but I don't really
+>>> understand it.  I guess the idea is to build pcie-artpec6.o if either
+>>> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+>>>
+>>> Is this really the simplest way to express that in Kconfig?  Both the
+>>> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
+>>> unusual.
+>>>
+>>>>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+>>>>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>>>  endif
+>>>
+>>>> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>>>
+>>> Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
+>>> Or is this something other endpoint drivers could/should share?
+>>
+>> yeah, dw_pcie_ep_reset_bar is already present in pcie-designware-ep.c which
+>> should be made as library function to be used by other drivers. (pci-dra7xx.c
+>> has also added something like above which should also be fixed).
+>>
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> index 4e4aee4439ea..33eef7ae5a23 100644
-> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
->  and thus inherits all the common properties defined in designware-pcie.txt.
->  
->  Required properties:
-> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
-> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
-> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
+> Hello Kishon,
+> 
+> I can remove the static keyword from dw_pcie_ep_reset_bar,
+> move the declaration to pcie-designware.h,
+> and make sure that both pcie-artpec6.c and pci-dra7xx.c uses it.
+> 
+> Will do this in the next version of the patch series if you
+> don't have any objection.
 
-If "snps,dw-pcie" is used for both RC and EP mode, how do we differentiate
-between the modes?
->  - reg: base addresses and lengths of the PCIe controller (DBI),
->  	the PHY controller, and configuration address space.
->  - reg-names: Must include the following entries:
-> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-> index 22ec82fcdea2..e333283fb1ed 100644
-> --- a/drivers/pci/dwc/Kconfig
-> +++ b/drivers/pci/dwc/Kconfig
-> @@ -14,6 +14,36 @@ config PCIE_DW_EP
->  	depends on PCI_ENDPOINT
->  	select PCIE_DW
->  
-> +config PCIE_ARTPEC6
-> +	bool "Axis ARTPEC-6 PCIe controller"
-> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
-> +	depends on MACH_ARTPEC6
-> +	help
-> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
-> +	  SoCs.  This PCIe controller uses the DesignWare core.
-> +
-> +if PCIE_ARTPEC6
-> +
-> +config PCIE_ARTPEC6_HOST
-> +	bool "Axis ARTPEC-6 Host Mode"
-> +	depends on PCI
-> +	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCIEPORTBUS
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
-> +	  host mode.
-> +
-> +config PCIE_ARTPEC6_EP
-> +	bool "Axis ARTPEC-6 Endpoint Mode"
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
-> +	  endpoint mode.
-> +
-> +endif
-> +
->  config PCI_DRA7XX
->  	bool "TI DRA7xx PCIe controller"
->  	depends on SOC_DRA7XX || COMPILE_TEST
-> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
->  	  DesignWare hardware and therefore the driver re-uses the
->  	  DesignWare core functions to implement the driver.
->  
-> -config PCIE_ARTPEC6
-> -	bool "Axis ARTPEC-6 PCIe controller"
-> -	depends on PCI
-> -	depends on MACH_ARTPEC6
-> -	depends on PCI_MSI_IRQ_DOMAIN
-> -	select PCIEPORTBUS
-> -	select PCIE_DW_HOST
-> -	help
-> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
-> -	  SoCs.  This PCIe controller uses the DesignWare core.
-> -
->  config PCIE_KIRIN
->  	depends on OF && ARM64
->  	bool "HiSilicon Kirin series SoCs PCIe controllers"
-> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-> index c61be9738cce..ac98242b83a9 100644
-> --- a/drivers/pci/dwc/Makefile
-> +++ b/drivers/pci/dwc/Makefile
-> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
-> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-> +endif
->  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->  endif
-> @@ -12,7 +15,6 @@ obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone-dw.o pci-keystone.o
->  obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
->  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
->  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
-> -obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
->  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
->  
->  # The following drivers are for devices that use the generic ACPI
-> diff --git a/drivers/pci/dwc/pcie-artpec6.c b/drivers/pci/dwc/pcie-artpec6.c
-> index c5d7f98dc6b2..21ea9ffef784 100644
-> --- a/drivers/pci/dwc/pcie-artpec6.c
-> +++ b/drivers/pci/dwc/pcie-artpec6.c
-> @@ -13,6 +13,7 @@
->  #include <linux/delay.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/of_device.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/resource.h>
-> @@ -30,8 +31,15 @@ struct artpec6_pcie {
->  	struct dw_pcie		*pci;
->  	struct regmap		*regmap;	/* DT axis,syscon-pcie */
->  	void __iomem		*phy_base;	/* DT phy */
-> +	enum dw_pcie_device_mode mode;
->  };
->  
-> +struct artpec_pcie_of_data {
-> +	enum dw_pcie_device_mode mode;
-> +};
-> +
-> +static const struct of_device_id artpec6_pcie_of_match[];
-> +
->  /* PCIe Port Logic registers (memory-mapped) */
->  #define PL_OFFSET			0x700
->  #define PCIE_PHY_DEBUG_R0		(PL_OFFSET + 0x28)
-> @@ -42,6 +50,7 @@ struct artpec6_pcie {
->  #define  PCIECFG_DBG_OEN		BIT(24)
->  #define  PCIECFG_CORE_RESET_REQ		BIT(21)
->  #define  PCIECFG_LTSSM_ENABLE		BIT(20)
-> +#define  PCIECFG_DEVICE_TYPE_MASK	GENMASK(19, 16)
->  #define  PCIECFG_CLKREQ_B		BIT(11)
->  #define  PCIECFG_REFCLK_ENABLE		BIT(10)
->  #define  PCIECFG_PLL_ENABLE		BIT(9)
-> @@ -126,6 +135,16 @@ static void artpec6_pcie_init_phy(struct artpec6_pcie *artpec6_pcie)
->  	} while (retries && !(val & PHY_COSPLLLOCK));
->  }
->  
-> +static void artpec6_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
-> +	u32 val;
-> +
-> +	val = artpec6_pcie_readl(artpec6_pcie, PCIECFG);
-> +	val &= ~PCIECFG_LTSSM_ENABLE;
-> +	artpec6_pcie_writel(artpec6_pcie, PCIECFG, val);
-> +}
-> +
->  static int artpec6_pcie_establish_link(struct dw_pcie *pci)
->  {
->  	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
-> @@ -195,6 +214,136 @@ static irqreturn_t artpec6_pcie_msi_handler(int irq, void *arg)
->  	return dw_handle_msi_irq(pp);
->  }
->  
-> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
-> +{
-> +	u32 reg;
-> +
-> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +	dw_pcie_writel_dbi2(pci, reg, 0x0);
-> +	dw_pcie_writel_dbi(pci, reg, 0x0);
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +}
-> +
-> +static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
-> +	enum pci_barno bar;
-> +
-> +	artpec6_pcie_assert_core_reset(artpec6_pcie);
-> +	artpec6_pcie_init_phy(artpec6_pcie);
-> +	artpec6_pcie_deassert_core_reset(artpec6_pcie);
-> +
-> +	for (bar = BAR_0; bar <= BAR_5; bar++)
-> +		dw_pcie_ep_reset_bar(pci, bar);
-> +}
-> +
-> +static int artpec6_pcie_raise_msi_irq(struct dw_pcie_ep *ep,
-> +				      u8 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct pci_epc *epc = ep->epc;
-> +	u32 cap_addr, cap_value, cap_id, next_ptr, msg_ctrl, msg_data;
-> +	u32 msg_addr_lower, msg_addr_upper;
-> +	u64 msg_addr;
-> +	bool has_upper;
-> +	int ret;
-> +
-> +	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
-> +	cap_addr = dw_pcie_readl_dbi(pci, PCI_CAPABILITY_LIST);
-> +	while (1) {
-> +		cap_value = dw_pcie_readl_dbi(pci, cap_addr);
-> +		cap_id = cap_value & GENMASK(7, 0);
-> +		if (cap_id == PCI_CAP_ID_MSI)
-> +			break;
-> +		next_ptr = (cap_value & GENMASK(15, 8)) >> 8;
-> +		if (next_ptr == 0) {
-> +			dev_err(pci->dev, "No MSI cap found!\n");
-> +			return -EINVAL;
-> +		}
-> +		cap_addr = next_ptr;
-> +	}
+sure, thanks for doing it :-)
 
-The MSI capability always points to fixed offset in DesingWare. So I don't
-think this is necessary unless we move it to the generic endpoint layer.
-> +	msg_ctrl = (cap_value & GENMASK(31, 16)) >> 16;
-> +	has_upper = !!(msg_ctrl & BIT(7));
-> +	msg_addr_lower = dw_pcie_readl_dbi(pci, cap_addr + 0x4);
-> +	if (has_upper) {
-> +		msg_addr_upper = dw_pcie_readl_dbi(pci, cap_addr + 0x8);
-> +		msg_data = dw_pcie_readl_dbi(pci, cap_addr + 0xc) &
-> +			GENMASK(15, 0);
-> +	} else {
-> +		msg_addr_upper = 0;
-> +		msg_data = dw_pcie_readl_dbi(pci, cap_addr + 0x8) &
-> +			GENMASK(15, 0);
-> +	}
-> +	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
-> +	ret = epc->ops->map_addr(epc, ep->msi_mem_phys, msg_addr, PAGE_SIZE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	writel(msg_data | (interrupt_num - 1), ep->msi_mem);
-> +
-> +	epc->ops->unmap_addr(epc, ep->msi_mem_phys);
-> +
-> +	return 0;
-> +}
-
-I think this entire function can also be made as a library function to be used
-by other drivers. (looks like only dra7xx has a shortcut to raise MSI irq).
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Kishon
