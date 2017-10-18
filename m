@@ -1,32 +1,43 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
  (26 Oct 2017)
-Date: Wed, 18 Oct 2017 12:08:13 +0200
-Message-ID: <20171018120813.488ae54d@windsurf.home>
+Date: Wed, 18 Oct 2017 12:11:57 +0200
+Message-ID: <20171018121157.059417a8@windsurf.home>
 References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
-        <39f87f46-da67-11d9-4336-213c13025568@monstr.eu>
-        <CACxGe6uiDCJw5g070kCbDEUBEPoz9rqswUc75Bx2h-9+6mxe2Q@mail.gmail.com>
+        <20171017114823.58476908@bbrezillon>
+        <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
+        <1508257276.74236.38.camel@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6uiDCJw5g070kCbDEUBEPoz9rqswUc75Bx2h-9+6mxe2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508257276.74236.38.camel-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Tue, 17 Oct 2017 14:32:18 +0100, Grant Likely wrote:
+On Tue, 17 Oct 2017 10:21:16 -0600, Ian Lepore wrote:
 
-> > I would like to talk how to add support for AArch32 based on arm64 dts file.  
-> 
-> This sounds a lot like the duplicate descriptions topic Thomas
-> proposed. I'll lump them into a single agenda item.
+> I've run into the same thing in FreeBSD.  We use bindings and dts
+> files, exacted periodically from the linux tree and imported into ours,
+> for all modern arm boards/systems.  Several times I've created drivers
+> for small things like i2c RTC chips that aren't supported currently by
+> linux, and it's not clear to me that it's even possible to submit
+> bindings and dts for them back upstream without also submitting a linux
+> driver that uses them (which of course I'm not in a position to do).
 
-I think it's a totally different problem, with most likely different
-solutions.
+You don't have to submit a driver to submit a binding.
+
+Examples of bindings that are not supported by any upstream driver:
+
+  Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt
+  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+
+and there are probably more.
 
 Best regards,
 
@@ -35,3 +46,7 @@ Thomas
 Thomas Petazzoni, CTO, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
