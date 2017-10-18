@@ -1,90 +1,67 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2] drm: panel: simple: add Toshiba LT089AC19000
-Date: Wed, 18 Oct 2017 19:22:40 +0200
-Message-ID: <20171018172240.8772-1-l.stach@pengutronix.de>
+From: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+Subject: RE: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Wed, 18 Oct 2017 17:41:11 +0000
+Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD@USCULXMSG01.am.sony.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+        <20171017114823.58476908@bbrezillon>
+        <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
+        <1508257276.74236.38.camel@freebsd.org>
+        <2D4E6B6D-8F07-46D0-BB36-D97916802893@linaro.org>
+        <CAMuHMdW-=-CdnD5Eb_w7fc7=c64i+bu=yv9_c0cj3UM940d8EA@mail.gmail.com>
+        <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904@USCULXMSG01.am.sony.com>
+        <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw@mail.gmail.com>
+        <B7292660-D602-473E-9B47-CF7B4D2449D7@antoniou-consulting.com>
+        <20171018131809.q5nccysb2j7lu4bn@piout.net>
+ <CAMuHMdXhQQpnQEgOu92MVNd=m2FvkqD9XcYS3rMVMHpB2zY0Qw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXhQQpnQEgOu92MVNd=m2FvkqD9XcYS3rMVMHpB2zY0Qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Only exposes a single mode and not a complete display timing, as
-the datasheet is rather vague about the minimum/maximum values.
-
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v2:
-- fix display size in documentation
-- add bus flags
----
- .../display/panel/toshiba,lt089ac29000.txt         |  8 +++++++
- drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-new file mode 100644
-index 000000000000..4c0caaf246c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-@@ -0,0 +1,8 @@
-+Toshiba 8.9" WXGA (1280x768) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "toshiba,lt089ac29000.txt"
-+- power-supply: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 474fa759e06e..a622aa468d2c 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1831,6 +1831,30 @@ static const struct panel_desc tianma_tm070jdhg30 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
- };
- 
-+static const struct drm_display_mode toshiba_lt089ac29000_mode = {
-+	.clock = 79500,
-+	.hdisplay = 1280,
-+	.hsync_start = 1280 + 192,
-+	.hsync_end = 1280 + 192 + 128,
-+	.htotal = 1280 + 192 + 128 + 64,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 20,
-+	.vsync_end = 768 + 20 + 7,
-+	.vtotal = 768 + 20 + 7 + 3,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc toshiba_lt089ac29000 = {
-+	.modes = &toshiba_lt089ac29000_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 194,
-+		.height = 116,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-+};
-+
- static const struct drm_display_mode tpk_f07a_0102_mode = {
- 	.clock = 33260,
- 	.hdisplay = 800,
-@@ -2113,6 +2137,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "tianma,tm070jdhg30",
- 		.data = &tianma_tm070jdhg30,
- 	}, {
-+		.compatible = "toshiba,lt089ac29000",
-+		.data = &toshiba_lt089ac29000,
-+	}, {
- 		.compatible = "tpk,f07a-0102",
- 		.data = &tpk_f07a_0102,
- 	}, {
--- 
-2.11.0
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbSBHZWVydCBVeXR0ZXJob2V2
+ZW4gb24gV2VkbmVzZGF5LCBPY3RvYmVyIDE4LCAyMDE3IDY6MjIgQU0NCj4gT24gV2VkLCBPY3Qg
+MTgsIDIwMTcgYXQgMzoxOCBQTSwgQWxleGFuZHJlIEJlbGxvbmkNCj4gPGFsZXhhbmRyZS5iZWxs
+b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6DQo+ID4gT24gMTgvMTAvMjAxNyBhdCAxNTo1
+OTowMCArMDMwMCwgUGFudGVsaXMgQW50b25pb3Ugd3JvdGU6DQo+ID4+ID4gT24gT2N0IDE4LCAy
+MDE3LCBhdCAxNToxNCAsIEdyYW50IExpa2VseSA8Z3JhbnQubGlrZWx5QHNlY3JldGxhYi5jYT4N
+Cj4gd3JvdGU6DQo+ID4+ID4gT24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgODowMyBQTSwgQmlyZCwg
+VGltb3RoeSA8VGltLkJpcmRAc29ueS5jb20+DQo+IHdyb3RlOg0KPiA+PiA+Pj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gPj4+IEZyb20gR2VlcnQgVXl0dGVyaG9ldmVuIG9uIFR1
+ZXNkYXksIE9jdG9iZXIgMTcsIDIwMTcgMTA6MjQgQU0NCj4gPj4gPj4+IE9uIFR1ZSwgT2N0IDE3
+LCAyMDE3IGF0IDc6MDIgUE0sIEt1bWFyIEdhbGENCj4gPGt1bWFyLmdhbGFAbGluYXJvLm9yZz4g
+d3JvdGU6DQo+ID4+ID4+Pj4gSSB0aGluayB0aGlzIGFsc28gZ2V0cyB0byBoYXZpbmcgYmluZGlu
+Z3MgZGVzY3JpYmVkIGluIGEgc3RydWN0dXJlZCB3YXkNCj4gc28NCj4gPj4gPj4+IHRoZXkgY2Fu
+IGJlIHV0aWxpemVkIGZvciB2YWxpZGF0aW9uIG9mIGR0cyBmaWxlcy4gIFdlIGFyZSBkb2luZyBh
+IGxpdHRsZSBvZg0KPiB0aGlzIGluDQo+ID4+ID4+PiBaZXBoeXIgc2luY2Ugd2UgYXJlIHVzaW5n
+IGEgc3RydWN0dXJlZCBiaW5kaW5nIHNwZWMgdG8gZ2VuZXJhdGUgY29kZQ0KPiBmcm9tDQo+ID4+
+ID4+PiAuZHRzIChzaW5jZSB3ZSBkb27igJl0IHV0aWxpemUgYSBydW50aW1lIGR0YikuDQo+ID4+
+ID4+Pg0KPiA+PiA+Pj4gU28geW91IGFyZSBiYXNpY2FsbHkgZ2VuZXJhdGluZyBib2FyZCBmaWxl
+cyBmcm9tIC5kdHM/DQo+ID4+ID4+PiAoY2xvc2luZyB0aGUgbG9vcCA7LSkNCj4gPj4gPj4NCj4g
+Pj4gPj4gSSB0aGluayB3ZSBvdWdodCB0byBkbyB0aGlzIG9uIExpbnV4LCBhcyBhIHNpemUgb3B0
+aW1pemF0aW9uLg0KPiA+PiA+PiAtLSBUaW0NCj4gPj4gPj4NCj4gPj4gPj4gUC5TLiAgSSB0aGlu
+ayBJJ2xsIGxlYXZlIGl0IGFtYmlndW91cyB3aGV0aGVyIHRoaXMgd2FzIG1lYW50IGFzIGEgam9r
+ZSBvcg0KPiBub3QuIDotKQ0KPiA+Pg0KPiA+PiBBcyBjcmF6eSB0aGF0IHNvdW5kcyBpdCBpcyBw
+b3NzaWJsZSB1c2luZyB0aGUgWUFNTCBiaW5kaW5ncywgaS5lLiBDIHN0cnVjdHVyZQ0KPiBkZWZp
+bml0aW9ucw0KPiA+PiBhbmQgZmlsbC11cCBmcm9tIERUIGF1dG9tYXRpY2FsbHkuIFdoZXRoZXIg
+dGhpcyBpcyBhIGdvb2QgaWRlYSBpdOKAmXMgYW5vdGhlcg0KPiBxdWVzdGlvbiA6KQ0KPiA+DQo+
+ID4gQnV0IHRoYXQgZG9lc24ndCB3b3JrIHdpdGggYW55IGRyaXZlciBwYXJzaW5nIGN1c3RvbSBw
+cm9wZXJ0aWVzICh1c2luZw0KPiA+IG9mX3Byb3BlcnR5X3JlYWRfKiBhbmQgdGhlIGxpa2VzKS4g
+SSB3b3VsZCB2ZXJ5IG11Y2ggbGlrZSB0byBzZWUgd2hhdA0KPiA+IGFyZSB0aGUgYm9vdCB0aW1l
+IGltcHJvdmVtZW50cyB3aGVuIGRvaW5nIHRoYXQgOykNCj4gDQo+IFVubGVzcyB5b3Ugb3ZlcnJp
+ZGUgb2ZfcHJvcGVydHlfcmVhZF8qKCkgdG8gd29yayBvbiB0aGUgZGVuc2UgQw0KPiBzdHJ1Y3R1
+cmVzIGluc3RlYWQ/DQoNCk9yIHR1cm4gdGhlIHByb3BlcnR5IHJlYWRzIGludG8gbWFjcm9zIHRo
+YXQgdGhlbiB0dXJuIGludG8gY29uc3RhbnQgZGVjbGFyYXRpb25zIGlubGluZSBpbiB0aGUgY29k
+ZS4NCk5vIG5lZWQgc3RvcCBhdCBkZW5zZSBDIHN0cnVjdHVyZXMuICBPZiBjb3Vyc2UgeW91IGxv
+c2UgYWxsIGNvbmZpZ3VyYXRpb24gZmxleGliaWxpdHkgYXQgcnVudGltZS4NCkJ1dCB0aGVuIHRo
+YXQncyB0aGUga2luZCBvZiB0cmFkZS1vZmYgb25lIG9mdGVuIG1ha2VzIHdpdGggZW1iZWRkZWQg
+c29mdHdhcmUsIGlzbid0IGl0Pw0KIC0tIFRpbQ0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
