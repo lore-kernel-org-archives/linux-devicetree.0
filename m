@@ -1,73 +1,49 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: net: add mt76 wireless device binding
-Date: Tue, 17 Oct 2017 21:02:28 -0500
-Message-ID: <CAL_JsqLNhA2ZjMCKP1FJ1UG_VdMhJYfdyG6CX=3HYZ+k9_HROA@mail.gmail.com>
-References: <20171006110249.31013-1-nbd@nbd.name> <20171013190749.lzzw4zjzt7fkp3hs@rob-hp-laptop>
- <3828919b-d634-9f03-22ad-1515219c31d4@nbd.name> <1589476.LyXlx7DqTg@debian64>
+Subject: Re: [RFCv2 PATCH 12/36] dt-bindings: document stall and PASID
+ properties for IOMMU masters
+Date: Tue, 17 Oct 2017 21:06:20 -0500
+Message-ID: <CAL_JsqLFDeNq=PoipFv4qjKKP2mhE+2Eou4dBZhfm=XuXxjHrg@mail.gmail.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-13-jean-philippe.brucker@arm.com> <20171013191051.lgxbcobkzzj5guhv@rob-hp-laptop>
+ <e7288f51-1cfa-44ce-e3ce-e9f3daf91579@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1589476.LyXlx7DqTg@debian64>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e7288f51-1cfa-44ce-e3ce-e9f3daf91579-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 14, 2017 at 10:43 AM, Christian Lamparter
-<chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Saturday, October 14, 2017 9:20:46 AM CEST Felix Fietkau wrote:
->> On 2017-10-13 21:07, Rob Herring wrote:
->> > On Fri, Oct 06, 2017 at 01:02:47PM +0200, Felix Fietkau wrote:
->> >> Add documentation describing how device tree can be used to configure
->> >> wireless chips supported by the mt76 driver.
->> >>
->> >> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
->> >> ---
->> >>  .../bindings/net/wireless/mediatek,mt76.txt        | 24 ++++++++++++++++++++++
->> >>  1 file changed, 24 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> >> new file mode 100644
->> >> index 000000000000..19522ab97d62
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->> >> @@ -0,0 +1,24 @@
->> >> +* MediaTek mt76xx devices
->> >> +
->> >> +This node provides properties for configuring the MediaTek mt76xx wireless
->> >> +device. The node is expected to be specified as a child node of the PCI
->> >> +controller to which the wireless chip is connected.
->> >> +
->> >> +Optional properties:
->> >> +
->> >> +- mac-address: See ethernet.txt in the parent directory
->> >> +- local-mac-address: See ethernet.txt in the parent directory
->> >> +- ieee80211-freq-limit: See ieee80211.txt
->> >> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
->> >
->> > MTD is a Linuxism. And is an EEPROM the only supported device? I'd
->> > suggest naming if after what the data contains.
->> PCI cards with this kind of wireless chip usually come with some form of
->> EEPROM or use the on-chip OTP ROM.
->> This property is for the case where the chip is built into an embedded
->> device and the data that would otherwise be on an EEPROM is stored on a
->> MTD partition instead.
->> The EEPROM data itself contains multiple things: calibration data,
->> hardware capabilities, MAC address, etc.
->> I couldn't think of a better name for it, do you have any suggestions?
-
-Naming is hard.
-
-> This sort of reminds me of the failed ath9k nvmem patches:
-> https://patchwork.kernel.org/patch/9622127/
+On Mon, Oct 16, 2017 at 5:23 AM, Jean-Philippe Brucker
+<jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 13/10/17 20:10, Rob Herring wrote:
+>> On Fri, Oct 06, 2017 at 02:31:39PM +0100, Jean-Philippe Brucker wrote:
+>>> On ARM systems, some platform devices behind an IOMMU may support stall
+>>> and PASID features. Stall is the ability to recover from page faults and
+>>> PASID offers multiple process address spaces to the device. Together they
+>>> allow to do paging with a device. Let the firmware tell us when a device
+>>> supports stall and PASID.
+>>
+>> Can't these be implied by the compatible string of the devices?
 >
-> Which uses the nvmem system.
+> I think that PASID capacity can be deduced from the compatible string but
+> don't know how these devices will be implemented (the only known example
+> being a software model for testing). In any case implementing PASID based
+> on the compatible string is tricky, because the IOMMU driver needs to know
+> PASID capacity before the device driver has had time to probe the device.
+> Maybe we could get away with a static table associating compatible string
+> to PASID capacity, but it's not very nice.
 >
-> https://github.com/torvalds/linux/blob/master/Documentation/nvmem/nvmem.txt
->
-> Rob, would this be acceptable?
+> For stall it's a property of the integration between device and IOMMU,
+> much like the "iommus" property, so it can't be deduced only from the
+> compatible string. It's crucial that the firmware validates that stalling
+> is safe, because we don't have any other way to discover it.
 
-Yeah, alignment with other drivers is a good thing.
+Okay, fair enough. I'll let others comment.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
