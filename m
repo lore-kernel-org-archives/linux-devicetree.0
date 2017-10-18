@@ -1,95 +1,54 @@
-From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: net: add mt76 wireless device binding
-Date: Wed, 18 Oct 2017 08:47:26 +0200
-Message-ID: <107987d8-4777-0c3f-bef8-fb63467d7593@nbd.name>
-References: <20171006110249.31013-1-nbd@nbd.name>
- <20171013190749.lzzw4zjzt7fkp3hs@rob-hp-laptop>
- <3828919b-d634-9f03-22ad-1515219c31d4@nbd.name> <1589476.LyXlx7DqTg@debian64>
- <CAL_JsqLNhA2ZjMCKP1FJ1UG_VdMhJYfdyG6CX=3HYZ+k9_HROA@mail.gmail.com>
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
+Date: Wed, 18 Oct 2017 08:53:16 +0200
+Message-ID: <20171018065316.GA11183@lst.de>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+	<1507761269-7017-6-git-send-email-jim2101024@gmail.com>
+	<589c04cb-061b-a453-3188-79324a02388e@arm.com>
+	<20171017081422.GA19475@lst.de>
+	<CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLNhA2ZjMCKP1FJ1UG_VdMhJYfdyG6CX=3HYZ+k9_HROA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-10-18 04:02, Rob Herring wrote:
-> On Sat, Oct 14, 2017 at 10:43 AM, Christian Lamparter
-> <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Saturday, October 14, 2017 9:20:46 AM CEST Felix Fietkau wrote:
->>> On 2017-10-13 21:07, Rob Herring wrote:
->>> > On Fri, Oct 06, 2017 at 01:02:47PM +0200, Felix Fietkau wrote:
->>> >> Add documentation describing how device tree can be used to configure
->>> >> wireless chips supported by the mt76 driver.
->>> >>
->>> >> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
->>> >> ---
->>> >>  .../bindings/net/wireless/mediatek,mt76.txt        | 24 ++++++++++++++++++++++
->>> >>  1 file changed, 24 insertions(+)
->>> >>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->>> >>
->>> >> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->>> >> new file mode 100644
->>> >> index 000000000000..19522ab97d62
->>> >> --- /dev/null
->>> >> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->>> >> @@ -0,0 +1,24 @@
->>> >> +* MediaTek mt76xx devices
->>> >> +
->>> >> +This node provides properties for configuring the MediaTek mt76xx wireless
->>> >> +device. The node is expected to be specified as a child node of the PCI
->>> >> +controller to which the wireless chip is connected.
->>> >> +
->>> >> +Optional properties:
->>> >> +
->>> >> +- mac-address: See ethernet.txt in the parent directory
->>> >> +- local-mac-address: See ethernet.txt in the parent directory
->>> >> +- ieee80211-freq-limit: See ieee80211.txt
->>> >> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
->>> >
->>> > MTD is a Linuxism. And is an EEPROM the only supported device? I'd
->>> > suggest naming if after what the data contains.
->>> PCI cards with this kind of wireless chip usually come with some form of
->>> EEPROM or use the on-chip OTP ROM.
->>> This property is for the case where the chip is built into an embedded
->>> device and the data that would otherwise be on an EEPROM is stored on a
->>> MTD partition instead.
->>> The EEPROM data itself contains multiple things: calibration data,
->>> hardware capabilities, MAC address, etc.
->>> I couldn't think of a better name for it, do you have any suggestions?
-> 
-> Naming is hard.
-> 
->> This sort of reminds me of the failed ath9k nvmem patches:
->> https://patchwork.kernel.org/patch/9622127/
->>
->> Which uses the nvmem system.
->>
->> https://github.com/torvalds/linux/blob/master/Documentation/nvmem/nvmem.txt
->>
->> Rob, would this be acceptable?
-> 
-> Yeah, alignment with other drivers is a good thing.
-This depends on another round of patches which also never made it 
-upstream and from reading the thread[1], I'm not actually sure what's 
-missing, or what should be changed.
+On Tue, Oct 17, 2017 at 12:11:55PM -0400, Jim Quinlan wrote:
+> My understanding is that dma_pfn_offset is that it is a single
+> constant offset from RAM, in our case, to map to PCIe space.
 
-I'm also not convinced that this makes things better in any meaningful 
-way. It pulls in extra dependencies (nvmem subsystem), which means 
-more kernel bloat for embedded systems, which are currently the only
-ones that even need this.
+Yes.
 
-Would it be acceptable to you if I submit an updated version that fixes 
-the other things you pointed out?
+> But in
+> my commit message I detail how our PCIe controller presents memory
+> with multiple regions with multiple different offsets. If an EP device
+> maps to a region on the host memory, yes we can set the dma_pfn_offset
+> for that device for that location within that range,.  But if the
+> device then unmaps and allocates from another region with a different
+> offset, it won't work.  If  I set dma_pfn_offset I have to assume that
+> the device is using only one region of memory only, not more than one,
+> and that it is not unmapping that region and mapping another (with a
+> different offset).  Can I make those assumptions?
 
-- Felix
+No, we can't make that assumption unfortunately.  But how is your
+code going to work if the mapping spans multiple of your translation
+regions?
 
-[1]: http://lists.infradead.org/pipermail/linux-mtd/2017-March/072541.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also I really don't think the stacking of dma_ops as in this patch
+is a good idea.  For MIPS you should do the variant suggested in
+the patch description and hook into dma_to_phys/phys_to_dma helpers,
+and for ARM/ARM64 you should talk to the maintainers on how they
+want the translation integrated.
