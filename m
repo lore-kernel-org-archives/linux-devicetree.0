@@ -1,72 +1,62 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
-Date: Wed, 18 Oct 2017 14:57:43 +0200
-Message-ID: <20171018125743.kqna6b4lgng674om@piout.net>
-References: <cover.1508231935.git.sean.wang@mediatek.com>
- <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
- <1508325126.13340.25.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: [PATCH v6 0/5] stm32 clocksource driver rework
+Date: Wed, 18 Oct 2017 14:58:21 +0200
+Message-ID: <1508331506-23782-1-git-send-email-benjamin.gaignard@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1508325126.13340.25.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: sean.wang@mediatek.com, a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de, ludovic.barre@st.com, julien.thierry@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/10/2017 at 19:12:06 +0800, Yingjoe Chen wrote:
-> On Tue, 2017-10-17 at 17:40 +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > This patch introduces the driver for the RTC on MT7622 SoC.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > ---
-> >  drivers/rtc/Kconfig      |  10 ++
-> >  drivers/rtc/Makefile     |   1 +
-> >  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 429 insertions(+)
-> >  create mode 100644 drivers/rtc/rtc-mt7622.c
-> > 
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index e0e58f3..4226295 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
-> >  	   This driver can also be built as a module. If so, the module
-> >  	   will be called rtc-moxart
-> >  
-> > +config RTC_DRV_MEDIATEK
-> 
-> How about changing this to RTC_DRV_MT7622 or RTC_DRV_MEDIATEK_SOC?
-> It is confusing to have both RTC_DRV_MEDIATEK & RTC_DRV_MT6397 here.
-> 
+version 6:
+- add timer_of_deinit function in core
+- rework failure cases in probe function
 
-Yes, this has to be RTC_DRV_MT7622. It doesn't matter if it support
-future SoCs named differently, it will be less confusing than using
-anything with only mediatek in it.
+version 5:
+- rebase on top of timer/core branch
+- rework commit message of the first patch
 
-> > +		return -EINVAL;
-> > +
-> > +	/* Keep yr_base used to calculate the calculate year when userspace
-> > +	 * queries and extend the maximum year the RTC can count.
-> > +	 */
-> > +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
-> > +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
-> 
-> 
-> I'm not sure this worth it.
-> If maximum year it can hold is 99, I'd bet it won't support leap year
-> correctly after 2100. This make the RTC useless after that. 
-> 
-> Also, yr_base is lost after power cycle, so you can't get correct year
-> back anyway.
-> 
+version 4:
+- split patch in 3 parts
+  - convert code to timer_of
+  - only use 32 bits timers
+  - add clocksource support
 
-I agree, the best you can do here is to only support 2000 to 2099.
+version 3:
+- fix comments done by Daniel
+- use timer_of helper functions
+
+version 2:
+- fix uninitialized variable
+
+These patches implements clocksource and clockevent by using only one hardware block.
+Getting both clock source and events on the same hardware lead to change quite
+a lot driver code.
+It also limits usage of clocksource to 32 bits timers because 16 bits ones
+aren't enough accurate.
+Thanks to timer_fo helpers this series includes minor clean up in structures,
+function prototypes and driver name.
+
+Since 16 bits timers become useless it also removes them from stm32f4 and
+stm32f7 devicetree.
+
+Increase min delta value to be sure to not have too much interrupts.
+
+
+Benjamin Gaignard (5):
+  timer: add timer_of_deinit function
+  clocksource: stm32: convert driver to timer_of
+  clocksource: stm32: only use 32 bits timers
+  clocksource: stm32: add clocksource support
+  arm: dts: stm32: remove useless clocksource nodes
+
+ arch/arm/boot/dts/stm32f429.dtsi  |  32 ------
+ arch/arm/boot/dts/stm32f746.dtsi  |  32 ------
+ drivers/clocksource/Kconfig       |   1 +
+ drivers/clocksource/timer-of.c    |  12 ++
+ drivers/clocksource/timer-of.h    |   3 +
+ drivers/clocksource/timer-stm32.c | 232 +++++++++++++++++++-------------------
+ 6 files changed, 132 insertions(+), 180 deletions(-)
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.7.4
