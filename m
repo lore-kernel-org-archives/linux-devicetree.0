@@ -1,79 +1,82 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v5 2/4] clocksource: stm32: only use 32 bits timers
-Date: Wed, 18 Oct 2017 14:25:18 +0200
-Message-ID: <CA+M3ks5wA08zyt-Z9PPyuEXjayL3LVY+=GWn6A1RBOUU+Qff5g@mail.gmail.com>
-References: <1508312614-27750-1-git-send-email-benjamin.gaignard@linaro.org>
- <1508312614-27750-3-git-send-email-benjamin.gaignard@linaro.org> <78e4bf06-7e95-d863-3b3d-c7362643da90@arm.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH  1/2] ARM: dts: r8a7743: Add DU support
+Date: Wed, 18 Oct 2017 15:26:37 +0300
+Message-ID: <2905584.Wm5DR7hli8@avalon>
+References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com> <1508319227-19679-2-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78e4bf06-7e95-d863-3b3d-c7362643da90@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Julien Thierry <julien.thierry@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508319227-19679-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-10-18 10:21 GMT+02:00 Julien Thierry <julien.thierry@arm.com>:
->
->
-> On 18/10/17 08:43, Benjamin Gaignard wrote:
->>
->> 16 bits hardware are not enough accure to be used.
->> Do no allow them to be probed by tested max counter value.
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->> ---
->>   drivers/clocksource/timer-stm32.c | 23 +++++++++--------------
->>   1 file changed, 9 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-stm32.c
->> b/drivers/clocksource/timer-stm32.c
->> index abff21c..f7e4eec 100644
->> --- a/drivers/clocksource/timer-stm32.c
->> +++ b/drivers/clocksource/timer-stm32.c
->> @@ -81,9 +81,9 @@ static irqreturn_t stm32_clock_event_handler(int irq,
->> void *dev_id)
->>   static int __init stm32_clockevent_init(struct device_node *node)
->>   {
->>         struct reset_control *rstc;
->> -       unsigned long max_delta;
->> -       int ret, bits, prescaler = 1;
->> +       unsigned long max_arr;
->>         struct timer_of *to;
->> +       int ret;
->>         to = kzalloc(sizeof(*to), GFP_KERNEL);
->>         if (!to)
->> @@ -113,26 +113,21 @@ static int __init stm32_clockevent_init(struct
->> device_node *node)
->>         /* Detect whether the timer is 16 or 32 bits */
->>         writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
->> -       max_delta = readl_relaxed(timer_of_base(to) + TIM_ARR);
->> -       if (max_delta == ~0U) {
->> -               prescaler = 1;
->> -               bits = 32;
->> -       } else {
->> -               prescaler = 1024;
->> -               bits = 16;
->> +       max_arr = readl_relaxed(timer_of_base(to) + TIM_ARR);
->> +       if (max_arr != ~0U) {
->> +               pr_err("32 bits timer is needed\n");
->> +               return -EINVAL;
->
->
-> Same as with previous patch, I think "to" should get freed.
+Hi Biju,
 
-Yes I could solve that in the first patch
+Thank you for the patch.
 
->
-> Also, why is there no function to undo what timer_of_init did? Shouldn't we
-> be able to free the irqs and unmap the timer io base here?
+On Wednesday, 18 October 2017 12:33:46 EEST Biju Das wrote:
+> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-timer-of doesn't provide deinit function since I will have to do a new version
-I will add it.
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-Benjamin
->
-> Cheers,
->
-> --
-> Julien Thierry
+> ---
+>  arch/arm/boot/dts/r8a7743.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+> index 7bbba4a..fafb10e 100644
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -1033,6 +1033,36 @@
+>  			};
+>  		};
+> 
+> +		du: display@feb00000 {
+> +			compatible = "renesas,du-r8a7743";
+> +			reg = <0 0xfeb00000 0 0x40000>,
+> +			      <0 0xfeb90000 0 0x1c>;
+> +			reg-names = "du", "lvds.0";
+> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 724>,
+> +				 <&cpg CPG_MOD 723>,
+> +				 <&cpg CPG_MOD 726>;
+> +			clock-names = "du.0", "du.1", "lvds.0";
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					du_out_rgb: endpoint {
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					du_out_lvds0: endpoint {
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		pci0: pci@ee090000 {
+>  			compatible = "renesas,pci-r8a7743",
+>  				     "renesas,pci-rcar-gen2";
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
