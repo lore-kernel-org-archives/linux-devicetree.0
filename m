@@ -1,7 +1,7 @@
 From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [PATCH 3/3] arm64: dts: hisilicon: supplement properties of emmc nodes for hi3798cv200-poplar board
-Date: Wed, 18 Oct 2017 07:22:08 -0400
-Message-ID: <1508325728-55823-4-git-send-email-xuejiancheng@hisilicon.com>
+Subject: [PATCH 1/3] arm64: dts: hisilicon: supplement properties of ir node for poplar board
+Date: Wed, 18 Oct 2017 07:22:06 -0400
+Message-ID: <1508325728-55823-2-git-send-email-xuejiancheng@hisilicon.com>
 References: <1508325728-55823-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,61 +9,30 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1508325728-55823-1-git-send-email-xuejiancheng@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, project-aspen-dev@linaro.org, hermit.wangheming@hisilicon.com, xuejiancheng@hisilicon.com, tianshuliang <tianshuliang@hisilicon.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, project-aspen-dev@linaro.org, hermit.wangheming@hisilicon.com, xuejiancheng@hisilicon.com, Younian Wang <wangyounian@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-From: tianshuliang <tianshuliang@hisilicon.com>
+From: Younian Wang <wangyounian@hisilicon.com>
 
-Supplement properties of emmc nodes to support high performance.
+Supplement properties of ir node for poplar board.
 
-Signed-off-by: tianshuliang <tianshuliang@hisilicon.com>
+Signed-off-by: Younian Wang <wangyounian@hisilicon.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts | 12 ++++++++++++
- arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi       |  8 +++++---
- 2 files changed, 17 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-index 6a0b7e9..b890829 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-@@ -160,4 +160,16 @@
- 	status = "okay";
- 	label = "LS-UART0";
- };
-+
-+&emmc {
-+	status = "okay";
-+	num-slots = <1>;
-+	fifo-depth = <256>;
-+	clock-frequency = <200000000>;
-+	cap-mmc-highspeed;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	non-removable;
-+	bus-width = <8>;
-+};
- /* No optional LS-UART1 on Low Speed Expansion Connector. */
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-index 5a73c68..df62382 100644
+index 75865f8a..0d11dc7 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-@@ -241,12 +241,14 @@
+@@ -405,6 +405,8 @@
+ 			reg = <0x8001000 0x1000>;
+ 			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&sysctrl HISTB_IR_CLK>;
++			hisilicon,power-syscon = <&sysctrl>;
++			linux,rc-map-name = "rc-hisi-poplar";
+ 			status = "disabled";
  		};
- 
- 		emmc: mmc@9830000 {
--			compatible = "snps,dw-mshc";
-+			compatible = "hisilicon,hi3798cv200-dw-mshc";
- 			reg = <0x9830000 0x10000>;
- 			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&crg HISTB_MMC_CIU_CLK>,
--				 <&crg HISTB_MMC_BIU_CLK>;
--			clock-names = "ciu", "biu";
-+				 <&crg HISTB_MMC_BIU_CLK>,
-+				 <&crg HISTB_MMC_SAMPLE_CLK>,
-+				 <&crg HISTB_MMC_DRV_CLK>;
-+			clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
- 		};
- 
- 		gpio0: gpio@8b20000 {
+ 	};
 -- 
 2.7.4
