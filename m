@@ -1,133 +1,116 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: add bindings for USB physical connector
-Date: Wed, 18 Oct 2017 18:47:01 +0300
-Message-ID: <2206421.ioyYkBuUpd@avalon>
-References: <20170928130730.8747-1-a.hajda@samsung.com> <20170928130730.8747-2-a.hajda@samsung.com> <3079487.ip075DyLUk@avalon>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in
+ full_name
+Date: Wed, 18 Oct 2017 18:53:05 +0300
+Message-ID: <1508341985.25643.12.camel@hp800z>
+References: <20170821151651.25096-1-robh@kernel.org>
+         <20170821151651.25096-6-robh@kernel.org>
+         <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
+         <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com>
+         <59E69786.2030406@gmail.com>
+         <CANk1AXStoiNtJfU0iNug1wKASurqH6OrNoaN=UtSh6xxSB088Q@mail.gmail.com>
+         <CAL_JsqKR3Jg+tgZr4xGPtcWnZW7ng741YjuyUFaS2SXKXbxGtg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <3079487.ip075DyLUk@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKR3Jg+tgZr4xGPtcWnZW7ng741YjuyUFaS2SXKXbxGtg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Alan Tull <atull@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, David Laight <David.Laight@aculab.com>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej,
+On Wed, 2017-10-18 at 10:44 -0500, Rob Herring wrote:
+> On Wed, Oct 18, 2017 at 10:12 AM, Alan Tull <atull@kernel.org> wrote:
+> > On Tue, Oct 17, 2017 at 6:51 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> >> On 10/17/17 14:46, Rob Herring wrote:
+> >>> On Tue, Oct 17, 2017 at 4:32 PM, Alan Tull <atull@kernel.org> wrote:
+> >>>> On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh@kernel.org> wrote:
+> >>>>
+> >>>> Hi Rob,
+> >>>>
+> >>>>> With dependencies on a statically allocated full path name converted to
+> >>>>> use %pOF format specifier, we can store just the basename of node, and
+> >>>>> the unflattening of the FDT can be simplified.
+> >>>>>
+> >>>>> This commit will affect the remaining users of full_name. After
+> >>>>> analyzing these users, the remaining cases should only change some print
+> >>>>> messages. The main users of full_name are providing a name for struct
+> >>>>> resource. The resource names shouldn't be important other than providing
+> >>>>> /proc/iomem names.
+> >>>>>
+> >>>>> We no longer distinguish between pre and post 0x10 dtb formats as either
+> >>>>> a full path or basename will work. However, less than 0x10 formats have
+> >>>>> been broken since the conversion to use libfdt (and no one has cared).
+> >>>>> The conversion of the unflattening code to be non-recursive also broke
+> >>>>> pre 0x10 formats as the populate_node function would return 0 in that
+> >>>>> case.
+> >>>>>
+> >>>>> Signed-off-by: Rob Herring <robh@kernel.org>
+> >>>>> ---
+> >>>>> v2:
+> >>>>> - rebase to linux-next
+> >>>>>
+> >>>>>  drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
+> >>>>>  1 file changed, 11 insertions(+), 58 deletions(-)
+> >>>>
+> >>>> I've just updated to the latest next branch and am finding problems
+> >>>> applying overlays.   Reverting this commit alleviates things.  The
+> >>>> errors I get are:
+> >>>>
+> >>>> [   88.498704] OF: overlay: Failed to apply prop @/__symbols__/clk_0
+> >>>> [   88.513447] OF: overlay: apply failed '/__symbols__'
+> >>>> [   88.518423] create_overlay: Failed to create overlay (err=-12)
+> >>>
+> >>> Frank's series with overlay updates should fix this.
+> >>
+> >> Yes, it does:
+> >>
+> >>   [PATCH v3 11/12] of: overlay: remove a dependency on device node full_name
+> >
+> > Thanks for the fast response.  I fetched the dt/next branch to test
+> > this but there are sufficient changes that Pantelis' "OF: DT-Overlay
+> > configfs interface (v7)" is broken now.  I've been adding that
+> > downstream since 4.4.  We're using it as an interface for applying
+> > overlays to program FPGAs.  If we fix it again, is there any chance
+> > that can go upstream now?
+> 
+> With a drive-by posting once every few years, no.
+> 
 
-On Wednesday, 18 October 2017 18:11:25 EEST Laurent Pinchart wrote:
-> On Thursday, 28 September 2017 16:07:27 EEST Andrzej Hajda wrote:
-> > These bindings allows to describe most known standard USB connectors
-> > and it should be possible to extend it if necessary.
-> > USB connectors, beside USB can be used to route other protocols,
-> > for example UART, Audio, MHL. In such case every device passing data
-> > through the connector should have appropriate graph bindings.
-> > 
-> > Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> > ---
-> > There are few things for discussion (IMO):
-> > 1. vendor specific connectors, I have added them here, but maybe better is
-> > 
-> >    to place them in separate files.
-> 
-> It's useful to have one vendor-specific compatible string to be used in the
-> example. We could split vendor-specific connectors to separate files later
-> if needed, but for now I'm fine keeping them here.
-> 
-> > 2. physical connector description - I have split it to three properties:
-> >    type(a,b,ab,c), max-mode(ls,fs,hs,ss,ss+), size(mini,micro,powered).
-> >    This tripled is able to describe all USB-standard connectors, but there
-> >    are also impossible combinations, for example(c, *, micro). Maybe
-> >    better
-> >    would be to just enumerate all possible connectors in include file.
-> 
-> I don't have a strong opinion on this. The three properties are nicely
-> descriptive. You might want to list the valid combinations in the bindings
-> though.
-> 
-> > 3. Numbering of port/remote nodes, currently only 0 is assigned for
-> > 
-> > Interface Controller. Maybe other functions should be also assigned:
-> >    HS, SS, CC, SBU, ... whatever. Maybe functions should be described
-> >    as an additional property of remote node?
-> 
-> Given that one of the main reasons this binding is needed is to describe MHL
-> connection to a USB connector, I think we'll need to define additional
-> functions, yes. I'm not sure yet how that should look like though.
-> > ---
-> > 
-> >  .../bindings/connector/usb-connector.txt           | 49 +++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644
-> > 
-> > Documentation/devicetree/bindings/connector/usb-connector.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > b/Documentation/devicetree/bindings/connector/usb-connector.txt new file
-> > mode 100644
-> > index 000000000000..f3a4e85122d5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > @@ -0,0 +1,49 @@
-> > +USB Connector
-> > +=============
-> > +
-> > +Required properties:
-> > +- compatible: "usb-connector"
-> > +  connectors with vendor specific extensions can add one of additional
-> > +  compatibles:
-> > +    "samsung,usb-connector-11pin": 11-pin Samsung micro-USB connector
-> > +- type: the USB connector type: "a", "b", "ab", "c"
-> > +- max-mode: max USB speed mode supported by the connector:
-> > +  "ls", "fs", "hs", "ss", "ss+"
-> > +
-> > +Optional properties:
-> > +- label: a symbolic name for the connector
-> > +- size: size of the connector, should be specified in case of
-> > +  non-standard USB connectors: "mini", "micro", "powered"
-> 
-> "non-standard" sounds like "vendor-specific", while I assume you're talking
-> about the size. The USB specification uses the term "standard" for this
-> purpose, so it's hard to use another one that would convey the right meaning
-> precisely. Maybe "non-standard ('large') USB connector sizes" ?
-> 
-> > +Required nodes:
-> > +- any data bus to the connector should be modeled using the
-> > +  OF graph bindings specified in bindings/graph.txt.
-> > +  There should be exactly one port with at least one endpoint to
-> > +  different device nodes. The first endpoint (reg = <0>) should
-> > +  point to USB Interface Controller.
-> > +
-> > +Example
-> > +-------
-> > +
-> > +musb_con: connector {
-> > +	compatible = "samsung,usb-connector-11pin", "usb-connector";
-> > +	label = "usb";
-> > +	type = "b";
-> > +	size = "micro";
-> > +	max-mode = "hs";
-> > +
-> > +	port {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		musb_con_usb_in: endpoint@0 {
-> > +			reg = <0>;
-> > +			remote-endpoint = <&muic_usb_out>;
-> > +		};
-> > +
-> > +		musb_con_mhl_in: endpoint@1 {
-> > +			reg = <1>;
-> > +			remote-endpoint = <&mhl_out>;
-> > +		};
-> > +	};
-> > +};
+I take offense to that. There's nothing changed in the patch for years.
+Reposting the same patch without changes would achieve nothing.
 
-One more comment, do I assume correctly that the Samsung 11-pin connector 
-carries USB and MHL on different pins ?
+> The issue remains that the kernel is not really setup to deal with any
+> random property or node to be changed at any point in run-time. I
+> think there needs to be some restrictions around what the overlays can
+> touch. We can't have it be wide open and then lock things down later
+> and break users. One example of what you could do is you can only add
+> sub-trees to whitelisted nodes. That's probably acceptable for your
+> usecase.
+> 
 
--- 
-Regards,
+Defining what can and what cannot be changed is not as trivial as a
+list of white-listed nodes.
 
-Laurent Pinchart
+In some cases there is a whole node hierarchy being inserted (like in
+a FPGA). In others, it's merely changing a status property to "okay" and
+a few device parameters.
+
+The real issue is that the kernel has no way to verify that a given
+device tree, either at boot time or at overlay application time, is
+correct.
+
+When the tree is wrong at boot-time you'll hang (if you're lucky).
+If the tree is wrong at run-time you'll get some into some unidentified
+funky state.
+
+Finally what is, and what is not 'correct' is not for the kernel to
+decide arbitrarily, it's a matter of policy, different for each
+use-case. 
+
+> Rob
+
+Regards
+
+-- Pantelis
