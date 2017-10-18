@@ -1,101 +1,152 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: hwmon: Add
- ti-max-expected-current-microamp property to ina2xx
-Date: Wed, 18 Oct 2017 09:12:26 +0100
-Message-ID: <20171018091226.000017dd@huawei.com>
-References: <1507811765-31005-1-git-send-email-m.purski@samsung.com>
-        <CGME20171012123635eucas1p1ff9a982db9d541cd0475d44d114ff92a@eucas1p1.samsung.com>
-        <1507811765-31005-4-git-send-email-m.purski@samsung.com>
-        <20171017203631.xaut7o3szaiucnqh@rob-hp-laptop>
-        <20171017205821.GA8737@roeck-us.net>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
+Date: Wed, 18 Oct 2017 10:15:28 +0200
+Message-ID: <6a9b7221-1ed7-368d-f737-084e4a1519dc@axis.com>
+References: <20171013160914.3220-1-niklas.cassel@axis.com>
+ <20171013160914.3220-9-niklas.cassel@axis.com>
+ <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
+ <ebc64a29-4080-af88-c774-b3223115aef0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20171017205821.GA8737@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>, Maciej Purski <m.purski@samsung.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ebc64a29-4080-af88-c774-b3223115aef0@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Oct 2017 13:58:21 -0700
-Guenter Roeck <linux@roeck-us.net> wrote:
-
-> On Tue, Oct 17, 2017 at 03:36:31PM -0500, Rob Herring wrote:
-> > On Thu, Oct 12, 2017 at 02:36:04PM +0200, Maciej Purski wrote:  
-> > > Add optional max expected current property which allows calibrating
-> > > the ina sensor in order to achieve requested measure scale. Document
-> > > the changes in Documentation/hwmon/ina2xx.
-> > > 
-> > > Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/hwmon/ina2xx.txt | 4 +++-
-> > >  Documentation/hwmon/ina2xx                         | 3 +++
-> > >  2 files changed, 6 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/hwmon/ina2xx.txt b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> > > index 02af0d9..49ef0be 100644
-> > > --- a/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> > > +++ b/Documentation/devicetree/bindings/hwmon/ina2xx.txt
-> > > @@ -14,11 +14,13 @@ Optional properties:
-> > >  
-> > >  - shunt-resistor
-> > >  	Shunt resistor value in micro-Ohm
-> > > -
-> > > +- ti-max-expected-current-microamp
-> > > +	Max expected current value in mA  
-> > 
-> > ti,max-...
-> > 
-> > The property name is a bit long. Does "expected" add anything? Is there 
-> > a max unexpected current?
-> >   
-> I am not too happy with it either. To me it suggests that there _can_ be
-> an unexpected current (why specify a max _expected_ current otherwise ?),
-> and that unexpected current won't be measurable and thus not reported
-> because it is ... well, unexpected.
-
-After calibration I 'think' this corresponds to the maximum current
-that the device can measure (it's applying scaling inside to make full use
-of available range of the register - there are some arguments that there is
-an optimum value after which we could do better in software).
-
-I guess the issue here is that this that we might need to separate the maximum
-current the device is capable of measuring from what it is currently configured
-to measure.  No idea how to describe that :)
-
-Jonathan
-
+On 10/18/2017 10:03 AM, Kishon Vijay Abraham I wrote:
+> Hi Bjorn,
 > 
-> Guenter
+> On Tuesday 17 October 2017 05:13 AM, Bjorn Helgaas wrote:
+>> On Fri, Oct 13, 2017 at 06:09:11PM +0200, Niklas Cassel wrote:
+>>> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+>>> ---
+>>>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
+>>>  drivers/pci/dwc/Kconfig                            |  41 +++--
+>>>  drivers/pci/dwc/Makefile                           |   4 +-
+>>>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
+>>>  4 files changed, 233 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>>> index 4e4aee4439ea..33eef7ae5a23 100644
+>>> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>>> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>>> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+>>>  and thus inherits all the common properties defined in designware-pcie.txt.
+>>>  
+>>>  Required properties:
+>>> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+>>> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+>>> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
+>>>  - reg: base addresses and lengths of the PCIe controller (DBI),
+>>>  	the PHY controller, and configuration address space.
+>>>  - reg-names: Must include the following entries:
+>>> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+>>> index 22ec82fcdea2..e333283fb1ed 100644
+>>> --- a/drivers/pci/dwc/Kconfig
+>>> +++ b/drivers/pci/dwc/Kconfig
+>>> @@ -14,6 +14,36 @@ config PCIE_DW_EP
+>>>  	depends on PCI_ENDPOINT
+>>>  	select PCIE_DW
+>>>  
+>>> +config PCIE_ARTPEC6
+>>> +	bool "Axis ARTPEC-6 PCIe controller"
+>>> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
+>>> +	depends on MACH_ARTPEC6
+>>> +	help
+>>> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>>> +	  SoCs.  This PCIe controller uses the DesignWare core.
+>>> +
+>>> +if PCIE_ARTPEC6
+>>> +
+>>> +config PCIE_ARTPEC6_HOST
+>>> +	bool "Axis ARTPEC-6 Host Mode"
+>>> +	depends on PCI
+>>> +	depends on PCI_MSI_IRQ_DOMAIN
+>>> +	select PCIEPORTBUS
+>>> +	select PCIE_DW_HOST
+>>> +	help
+>>> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+>>> +	  host mode.
+>>> +
+>>> +config PCIE_ARTPEC6_EP
+>>> +	bool "Axis ARTPEC-6 Endpoint Mode"
+>>> +	depends on PCI_ENDPOINT
+>>> +	select PCIE_DW_EP
+>>> +	help
+>>> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+>>> +	  endpoint mode.
+>>> +
+>>> +endif
+>>> +
+>>>  config PCI_DRA7XX
+>>>  	bool "TI DRA7xx PCIe controller"
+>>>  	depends on SOC_DRA7XX || COMPILE_TEST
+>>> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
+>>>  	  DesignWare hardware and therefore the driver re-uses the
+>>>  	  DesignWare core functions to implement the driver.
+>>>  
+>>> -config PCIE_ARTPEC6
+>>> -	bool "Axis ARTPEC-6 PCIe controller"
+>>> -	depends on PCI
+>>> -	depends on MACH_ARTPEC6
+>>> -	depends on PCI_MSI_IRQ_DOMAIN
+>>> -	select PCIEPORTBUS
+>>> -	select PCIE_DW_HOST
+>>> -	help
+>>> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>>> -	  SoCs.  This PCIe controller uses the DesignWare core.
+>>> -
+>>>  config PCIE_KIRIN
+>>>  	depends on OF && ARM64
+>>>  	bool "HiSilicon Kirin series SoCs PCIe controllers"
+>>
+>>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+>>> index c61be9738cce..ac98242b83a9 100644
+>>> --- a/drivers/pci/dwc/Makefile
+>>> +++ b/drivers/pci/dwc/Makefile
+>>> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>>> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
+>>> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+>>> +endif
+>>
+>> I see you're copying the DRA7XX style here, but I don't really
+>> understand it.  I guess the idea is to build pcie-artpec6.o if either
+>> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+>>
+>> Is this really the simplest way to express that in Kconfig?  Both the
+>> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
+>> unusual.
+>>
+>>>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+>>>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>>  endif
+>>
+>>> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>>
+>> Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
+>> Or is this something other endpoint drivers could/should share?
 > 
-> > >  Example:
-> > >  
-> > >  ina220@44 {
-> > >  	compatible = "ti,ina220";
-> > >  	reg = <0x44>;
-> > >  	shunt-resistor = <1000>;
-> > > +	ti-max-expected-current-microamp = <3000>;
-> > >  };
-> > > diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
-> > > index cfd31d9..30620e8 100644
-> > > --- a/Documentation/hwmon/ina2xx
-> > > +++ b/Documentation/hwmon/ina2xx
-> > > @@ -55,6 +55,9 @@ The shunt value in micro-ohms can be set via platform data or device tree at
-> > >  compile-time or via the shunt_resistor attribute in sysfs at run-time. Please
-> > >  refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
-> > >  if the device tree is used.
-> > > +The max expected current value in miliamp can be set via platform data
-> > > +or device tree at compile-time or via currX_max attribute in sysfs
-> > > +at run-time.
-> > >  
-> > >  Additionally ina226 supports update_interval attribute as described in
-> > >  Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
-> > > -- 
-> > > 2.7.4
-> > >   
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> yeah, dw_pcie_ep_reset_bar is already present in pcie-designware-ep.c which
+> should be made as library function to be used by other drivers. (pci-dra7xx.c
+> has also added something like above which should also be fixed).
+> 
 
+Hello Kishon,
+
+I can remove the static keyword from dw_pcie_ep_reset_bar,
+move the declaration to pcie-designware.h,
+and make sure that both pcie-artpec6.c and pci-dra7xx.c uses it.
+
+Will do this in the next version of the patch series if you
+don't have any objection.
+
+
+Regards,
+Niklas
