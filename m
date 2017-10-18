@@ -1,128 +1,107 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: dtc issue with overlays starting in next-20171009
-Date: Wed, 18 Oct 2017 15:16:34 -0500
-Message-ID: <CAL_Jsq+f4Y1DDB4ZkXAEKUZ_P9YdMUKMhr2E=VKtbHWMZFaO0w@mail.gmail.com>
-References: <CANk1AXQaXKud2Mic_879JiS39hJB4y0uTS2w1uxXje-0mO68Vw@mail.gmail.com>
- <59E7ACA0.7030809@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: puzzled by online explanation as to how to "overwrite" DT node
+Date: Wed, 18 Oct 2017 15:31:47 -0500
+Message-ID: <CAL_JsqLbMaDaGhsCeCj051_P1s5ORz9SUrANdQAeA-cZ+wr0QA@mail.gmail.com>
+References: <alpine.LFD.2.21.1710180612160.4201@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59E7ACA0.7030809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.21.1710180612160.4201-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use devicetree-compiler list for dtc issues please.
+On Wed, Oct 18, 2017 at 11:40 AM, Robert P. J. Day
+<rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org> wrote:
+>
+>   (WARNING: sort of newbie alert, but you know that, right? :-)
+>
+>   was perusing online tutorial on customizing device trees here:
+>
+>     http://developer.toradex.com/device-tree-customization
 
-On Wed, Oct 18, 2017 at 2:33 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Rob, Alan,
->
-> On 10/18/17 08:58, Alan Tull wrote:
->> Hi Rob,
->>
->> I've noticed a problem compiling DT overlays and traced it back to
->> beginning in next-20171009
->>
->> That tag adds the following in scripts/dtc
->>
->> e9480c1 2017-10-09 16:17:32 +0100 : Mark Brown : Merge remote-tracking
->> branch 'devicetree/for-next'
->> 4201d05 2017-10-03 15:03:47 -0500 : Rob Herring : scripts/dtc: Update
->> to upstream version v1.4.5-3-gb1a60033c110
->> 4322323 2017-10-03 15:03:46 -0500 : Rob Herring : scripts/dtc: add
->> fdt_overlay.c and fdt_addresses.c to sync script
->>
->> The error is:
->>
->> dtc: /home/atull/repos/linux-socfpga/scripts/dtc/livetree.c:543:
->> get_node_by_phandle: Assertion `(phandle != 0) && (phandle != -1)'
->> failed.
->> arch/arm/boot/dts/socfpga_overlay.dtb: Warning (clocks_property):
->> Could not get phandle node for
->> /fragment@0/__overlay__/gpio@10040:clocks(cell 0)
->> Aborted (core dumped)
->> scripts/Makefile.lib:316: recipe for target
->> 'arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb'
->> failed
->> make[2]: *** [arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb]
->> Error 134
->> arch/arm/Makefile:346: recipe for target 'dtbs' failed
->>
->> Here's a simplified overlay that gets this error.  Taking out the line
->> "interrupt-parent = <&intc>;" fixes the build.
->>
->> /dts-v1/;
->> /plugin/;
->> / {
->>         fragment@0 {
->>                 target-path = "/soc/base_fpga_region";
->>                 #address-cells = <1>;
->>                 #size-cells = <1>;
->>
->>                 __overlay__ {
->>                         ranges = <0x00000000 0x00000000 0xc0000000 0x00040000>,
->>                                  <0x00000001 0x00000000 0xff200000 0x00001000>;
->>
->>                         external-fpga-config;
->>
->>                         #address-cells = <2>;
->>                         #size-cells = <1>;
->>
->>                         fpga_pr_region0 {
->>                                 compatible = "fpga-region";
->>                                 fpga-bridges = <&freeze_controller_0>;
->>                                 ranges;
->>                         };
->>
->>                         freeze_controller_0: freeze_controller@0x100000450 {
->>                                 compatible = "altr,freeze-bridge-controller";
->>                                 reg = <0x00000001 0x00000450 0x00000010>;
->>                                 interrupt-parent = <&intc>;  /* <--
->> remove to fix build */
->>                                 interrupts = <0 21 4>;
->>                         };
->>                 };
->>         };
->> };
->>
->> Alan
->
-> Phandle references in overlays are assigned the value of -1 (0xffffffff) in
-> the dtb, to be fixed up when loaded.  A new check sees this value and
-> triggers the assert.
->
-> It is this commit in the upstream dtc tools tree:
->
->    commit ee3d26f6960bb5922d9a35fe266d9eac74a78ec0
->    checks: add interrupts property check
->
-> There are a bunch of other new checks that call get_node_by_phandle(),
-> and thus could trigger the assertion.
->
-> I'm guessing that those checks would also trigger the assert if an
-> overlay contained something that would lead to one of the other checks
-> being processed.
+Never seen that one.
 
-You won't get an assert because I check for 0 or -1 and skip the check
-in those cases. The interrupts check missed that condition.
-
-However, as shown above, you will get an erroneous warning because it
-just skips 1 cell and goes to the next to handle the case where the
-phandle is optional and you want a fixed number of elements.
-
-I guess we can't validate overlays which is unfortunate. I don't think
-that's a solvable problem unless you have the base DT.
-
-> You can avoid the problem in your example dts with "-Wno-interrupts_property"
+> and got a bit confused about the part describing how to (as i read it)
+> "overwrite" entire nodes.
 >
->   dtc -Wno-interrupts_property fpga_01_a.dts
+>   first, part on "overwriting properties" makes perfect sense --
+> here's an example in that piece about overwriting default USB mode:
 >
-> The larger set of other checks that might trigger the assert is too large
-> for me to want to add "-Wno-" flags for all of them to the command line
-> (as temporary workarounds).
+>   &usb0 {
+>       dr_mode = "host";
+>   };
+>
+> so, as i've always understood it, the above will do one of two things:
+>
+>   1) if that property is not set in the node referenced by that label,
+>      it will be *added* to what is already there, or
+>
+>   2) if that property is already set (to whatever), it will be
+>      overwritten
+>
+> so far, so good?
 
-David thought more switches were better.
+Yes.
+
+>   as a special example of that right below that, there's a short
+> paragraph called "Activating/Deactivating Devices" that uses this
+> example:
+>
+>   &uart4 {
+>       status = "okay";
+>   };
+>
+> but, really, that's just a special case of the first example so
+> there's nothing new here. but it's the next section called
+> "Overwriting nodes" that seems confusing:
+>
+>   "Whole nodes can be overwritten by simply redefining them. Like
+>   overwriting properties, latter definitions overwrite earlier
+>   definitions."
+
+I don't think that's right. I think you have to use /delete-node/ first.
+
+> wait, what? entire nodes can be overwritten by redefining them? the
+> example given looks like this:
+>
+>   "E.g. to overwrite the pin configuration of Vybrids UART2 (UART_B)
+>   overwrite the uart2grp node by simply redefining it in your device
+>   tree ..."
+>
+> with the device tree content
+>
+>   &iomuxc {
+>       vf610-colibri {
+>           pinctrl_uart2: uart2grp {
+>               fsl,pins = <
+>                   VF610_PAD_PTD0__UART2_TX        0x21a2
+>                   VF610_PAD_PTD1__UART2_RX        0x21a1
+>               >;
+>           };
+>           ...
+>       };
+>   };
+>
+> hang on ... isn't "vf610-colibri" also a "node" in this device tree?
+> does the above mean that the *entire* vf610-colibri node is being
+> overwritten? and that i would have to supply the entire new content of
+> that node, including simply duplicating the rest of the content that
+> is already there that i want to keep? (is that what the "..."
+> represents?)
+
+No, you should get a merged vf610-colibri node with the original
+contents and any new or overwritten properties from this chunk.
+
+IOW, only properties are overwritten.
+
+>   that seems bizarre, but it's what that wording seems to suggest. can
+> someone clarify what would happen in the above, and give perhaps a
+> link to the part of the DTspec that covers this? i'm sure i must be
+> misreading this.
+
+It's all source syntax which is mostly outside the scope of the spec.
 
 Rob
 --
