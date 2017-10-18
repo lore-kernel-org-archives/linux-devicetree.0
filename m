@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v6 6/7] soc: mediatek: pwrap: add common way for setup CS timing extenstion
-Date: Wed, 18 Oct 2017 16:28:47 +0800
-Message-ID: <7244413bf198a778c42500250d8da5a73a8b81d8.1508313105.git.sean.wang@mediatek.com>
+Subject: [PATCH v6 3/7] soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
+Date: Wed, 18 Oct 2017 16:28:44 +0800
+Message-ID: <d472e89001ea1539ac1d09924661d394c9bea1d6.1508313105.git.sean.wang@mediatek.com>
 References: <cover.1508313105.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,119 +14,132 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Multiple platforms would always use their own way handling CS timing
-extension on the bus which leads to a little bit code duplication.
-Therefore, the patch groups the similar logic to handle CS timing
-extension into the common function which allows the following SoCs
-have more reusability for configing CS timing.
+Some regulators such as MediaTek MT6380 also has to be written in
+32-bit mode. So the patch adds pwrap_write32, rename old pwrap_write
+into pwrap_write16 and one additional function pointer is introduced
+for increasing flexibility allowing the determination which mode is
+used by the pwrap slave detection through device tree.
 
 Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
+Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 59 ++++++++++++++++++++++--------------
- 1 file changed, 37 insertions(+), 22 deletions(-)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 70 +++++++++++++++++++++++++++---------
+ 1 file changed, 54 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 45c3e44..cbc3f0e 100644
+index 06930e2..2d3a8fa 100644
 --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
 +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -827,23 +827,44 @@ static int pwrap_init_dual_io(struct pmic_wrapper *wrp)
- 	return 0;
+@@ -507,6 +507,7 @@ struct pwrap_slv_type {
+ 	 * which type is used by the detection through device tree.
+ 	 */
+ 	int (*pwrap_read)(struct pmic_wrapper *wrp, u32 adr, u32 *rdata);
++	int (*pwrap_write)(struct pmic_wrapper *wrp, u32 adr, u32 wdata);
+ };
+ 
+ struct pmic_wrapper {
+@@ -601,22 +602,6 @@ static int pwrap_wait_for_state(struct pmic_wrapper *wrp,
+ 	} while (1);
  }
  
--static int pwrap_mt8135_init_reg_clock(struct pmic_wrapper *wrp)
-+/*
-+ * pwrap_init_chip_select_ext is used to configure CS extension time for each
-+ * phase during data transactions on the pwrap bus.
-+ */
-+static void pwrap_init_chip_select_ext(struct pmic_wrapper *wrp, u8 hext_write,
-+				       u8 hext_read, u8 lext_start,
-+				       u8 lext_end)
- {
--	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT);
--	pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_WRITE);
--	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT_READ);
--	pwrap_writel(wrp, 0x0, PWRAP_CSLEXT_START);
--	pwrap_writel(wrp, 0x0, PWRAP_CSLEXT_END);
-+	/*
-+	 * After finishing a write and read transaction, extends CS high time
-+	 * to be at least xT of BUS CLK as hext_write and hext_read specifies
-+	 * respectively.
-+	 */
-+	pwrap_writel(wrp, hext_write, PWRAP_CSHEXT_WRITE);
-+	pwrap_writel(wrp, hext_read, PWRAP_CSHEXT_READ);
- 
+-static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+-{
+-	int ret;
+-
+-	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
+-	if (ret) {
+-		pwrap_leave_fsm_vldclr(wrp);
+-		return ret;
+-	}
+-
+-	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
+-			PWRAP_WACS2_CMD);
+-
 -	return 0;
-+	/*
-+	 * Extends CS low time after CSL and before CSH command to be at
-+	 * least xT of BUS CLK as lext_start and lext_end specifies
-+	 * respectively.
-+	 */
-+	pwrap_writel(wrp, lext_start, PWRAP_CSLEXT_START);
-+	pwrap_writel(wrp, lext_end, PWRAP_CSLEXT_END);
- }
- 
--static int pwrap_mt8173_init_reg_clock(struct pmic_wrapper *wrp)
-+static int pwrap_common_init_reg_clock(struct pmic_wrapper *wrp)
+-}
+-
+ static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
  {
--	pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_WRITE);
--	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT_READ);
--	pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
--	pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
-+	switch (wrp->master->type) {
-+	case PWRAP_MT8173:
-+		pwrap_init_chip_select_ext(wrp, 0, 4, 2, 2);
-+		break;
-+	case PWRAP_MT8135:
-+		pwrap_writel(wrp, 0x4, PWRAP_CSHEXT);
-+		pwrap_init_chip_select_ext(wrp, 0, 4, 0, 0);
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return 0;
+ 	int ret;
+@@ -673,6 +658,56 @@ static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+ 	return wrp->slave->pwrap_read(wrp, adr, rdata);
  }
-@@ -853,20 +874,14 @@ static int pwrap_mt2701_init_reg_clock(struct pmic_wrapper *wrp)
- 	switch (wrp->slave->type) {
- 	case PMIC_MT6397:
- 		pwrap_writel(wrp, 0xc, PWRAP_RDDMY);
--		pwrap_writel(wrp, 0x4, PWRAP_CSHEXT_WRITE);
--		pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_READ);
--		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
--		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
-+		pwrap_init_chip_select_ext(wrp, 4, 0, 2, 2);
- 		break;
  
- 	case PMIC_MT6323:
- 		pwrap_writel(wrp, 0x8, PWRAP_RDDMY);
- 		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_RDDMY_NO],
- 			    0x8);
--		pwrap_writel(wrp, 0x5, PWRAP_CSHEXT_WRITE);
--		pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_READ);
--		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
--		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
-+		pwrap_init_chip_select_ext(wrp, 5, 0, 2, 2);
- 		break;
- 	default:
- 		break;
-@@ -1235,7 +1250,7 @@ static const struct pmic_wrapper_type pwrap_mt8135 = {
- 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
- 	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
- 	.has_bridge = 1,
--	.init_reg_clock = pwrap_mt8135_init_reg_clock,
-+	.init_reg_clock = pwrap_common_init_reg_clock,
- 	.init_soc_specific = pwrap_mt8135_init_soc_specific,
++static int pwrap_write16(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
++{
++	int ret;
++
++	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
++	if (ret) {
++		pwrap_leave_fsm_vldclr(wrp);
++		return ret;
++	}
++
++	pwrap_writel(wrp, (1 << 31) | ((adr >> 1) << 16) | wdata,
++		     PWRAP_WACS2_CMD);
++
++	return 0;
++}
++
++static int pwrap_write32(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
++{
++	int ret, msb, rdata;
++
++	for (msb = 0; msb < 2; msb++) {
++		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
++		if (ret) {
++			pwrap_leave_fsm_vldclr(wrp);
++			return ret;
++		}
++
++		pwrap_writel(wrp, (1 << 31) | (msb << 30) | (adr << 16) |
++			     ((wdata >> (msb * 16)) & 0xffff),
++			     PWRAP_WACS2_CMD);
++
++		/*
++		 * The pwrap_read operation is the requirement of hardware used
++		 * for the synchronization between two successive 16-bit
++		 * pwrap_writel operations composing one 32-bit bus writing.
++		 * Otherwise, we'll find the result fails on the lower 16-bit
++		 * pwrap writing.
++		 */
++		if (!msb)
++			pwrap_read(wrp, adr, &rdata);
++	}
++
++	return 0;
++}
++
++static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
++{
++	return wrp->slave->pwrap_write(wrp, adr, wdata);
++}
++
+ static int pwrap_regmap_read(void *context, u32 adr, u32 *rdata)
+ {
+ 	return pwrap_read(context, adr, rdata);
+@@ -1082,18 +1117,21 @@ static const struct pwrap_slv_type pmic_mt6323 = {
+ 	.dew_regs = mt6323_regs,
+ 	.type = PMIC_MT6323,
+ 	.pwrap_read = pwrap_read16,
++	.pwrap_write = pwrap_write16,
  };
  
-@@ -1247,7 +1262,7 @@ static const struct pmic_wrapper_type pwrap_mt8173 = {
- 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
- 	.wdt_src = PWRAP_WDT_SRC_MASK_NO_STAUPD,
- 	.has_bridge = 0,
--	.init_reg_clock = pwrap_mt8173_init_reg_clock,
-+	.init_reg_clock = pwrap_common_init_reg_clock,
- 	.init_soc_specific = pwrap_mt8173_init_soc_specific,
+ static const struct pwrap_slv_type pmic_mt6380 = {
+ 	.dew_regs = NULL,
+ 	.type = PMIC_MT6380,
+ 	.pwrap_read = pwrap_read32,
++	.pwrap_write = pwrap_write32,
  };
  
+ static const struct pwrap_slv_type pmic_mt6397 = {
+ 	.dew_regs = mt6397_regs,
+ 	.type = PMIC_MT6397,
+ 	.pwrap_read = pwrap_read16,
++	.pwrap_write = pwrap_write16,
+ };
+ 
+ static const struct of_device_id of_slave_match_tbl[] = {
 -- 
 2.7.4
