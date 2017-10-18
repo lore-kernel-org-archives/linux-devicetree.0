@@ -1,110 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: puzzled by online explanation as to how to "overwrite" DT node
-Date: Wed, 18 Oct 2017 15:31:47 -0500
-Message-ID: <CAL_JsqLbMaDaGhsCeCj051_P1s5ORz9SUrANdQAeA-cZ+wr0QA@mail.gmail.com>
-References: <alpine.LFD.2.21.1710180612160.4201@localhost.localdomain>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend property
+Date: Wed, 18 Oct 2017 15:38:48 -0500
+Message-ID: <CAL_JsqLYAOGHNRomE2a4Z+MLp807exqsYf7hPJhTd0cAbE85uA@mail.gmail.com>
+References: <20171012205220.130048-1-briannorris@chromium.org>
+ <20171012205220.130048-2-briannorris@chromium.org> <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
+ <20171017233904.GA65743@google.com> <20171018161752.GQ5641@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.21.1710180612160.4201-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171018161752.GQ5641@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 11:40 AM, Robert P. J. Day
-<rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org> wrote:
+On Wed, Oct 18, 2017 at 11:17 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Tue, Oct 17, 2017 at 04:39:05PM -0700, Brian Norris wrote:
+>> On Fri, Oct 13, 2017 at 11:51:52AM -0500, Bjorn Helgaas wrote:
+>> > On Thu, Oct 12, 2017 at 01:52:18PM -0700, Brian Norris wrote:
+>> > > The patch is self-descriptive. I've found that we may need
+>> > > platform-specific behavior for the PERST# signal in system suspend,
+>> > > depending on the type of PCIe endpoints are attached.
+>> > >
+>> > > Signed-off-by: Brian Norris <briannorris@chromium.org>
+>> > > ---
+>> > >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
+>> > >  1 file changed, 11 insertions(+)
+>> > >
+>> > > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> > > index c77981c5dd18..91339b6d0652 100644
+>> > > --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> > > +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> > > @@ -24,3 +24,14 @@ driver implementation may support the following properties:
+>> > >     unsupported link speed, for instance, trying to do training for
+>> > >     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+>> > >     for gen2, and '1' for gen1. Any other values are invalid.
+>> > > +- pcie-reset-suspend:
+>> > > +   If present this property defines whether the PCIe Reset signal (referred to
+>> > > +   as PERST#) should be asserted when the system enters low-power suspend modes
+>> > > +   (e.g., S3). Depending on the form factor, the associated PCIe
+>> > > +   electromechanical specification may specify a particular behavior (e.g.,
+>> > > +   "PERST# is asserted in advance of the power being switched off in a
+>> > > +   power-managed state like S3") or it may be less clear. The net result is
+>> > > +   that some endpoints perform better (e.g., lower power consumption) with
+>> > > +   PERST# asserted, and others prefer PERST# deasserted. The value must be '0'
+>> > > +   or '1', where '0' means do not assert PERST# and '1' means assert PERST#.
+>> > > +   When absent, behavior may be platform-specific.
+>> >
+>> > I don't understand this at all.  Are you suggesting that we need
+>> > different "pcie-reset-suspend" values based on what sort of endpoint
+>> > the user plugs in?
+>>
+>> Partly. I guess I also failed to mention in this particular text (but I
+>> did, in patch 3) that it can be a board-specific problem, related to the
+>> fact that the only endpoint used on said board--soldered on, not
+>> replaceable--never seemed to require PERST# to be asserted in suspend.
+>> On such boards, I believe [1] it is physically impossible to drive this
+>> pin low in S3 suspend. So even if we tried to assert PERST#, it would
+>> pull back up when we suspend the system. I'm not sure if that's better
+>> or worse than not asserting it at all.
+>>
+>> So, that's why I settled on a device tree property. It describes the
+>> physical ability of the board too, in some cases. (I could document this
+>> better, I see.)
 >
->   (WARNING: sort of newbie alert, but you know that, right? :-)
+> It would make sense to me to have a DT property in the PCIe host
+> controller object that describes how that controller works, including
+> its capabilities with respect to PERST#, assuming there's a reasonable
+> way to use that information.
 >
->   was perusing online tutorial on customizing device trees here:
->
->     http://developer.toradex.com/device-tree-customization
+> If there's a DT way to describe a hard-wired PCIe endpoint, it might
+> make sense to have a second property in the endpoint object that
+> describes its preferences.  Obviously this couldn't apply to slots
+> where we don't know what might be plugged in.
 
-Never seen that one.
-
-> and got a bit confused about the part describing how to (as i read it)
-> "overwrite" entire nodes.
->
->   first, part on "overwriting properties" makes perfect sense --
-> here's an example in that piece about overwriting default USB mode:
->
->   &usb0 {
->       dr_mode = "host";
->   };
->
-> so, as i've always understood it, the above will do one of two things:
->
->   1) if that property is not set in the node referenced by that label,
->      it will be *added* to what is already there, or
->
->   2) if that property is already set (to whatever), it will be
->      overwritten
->
-> so far, so good?
-
-Yes.
-
->   as a special example of that right below that, there's a short
-> paragraph called "Activating/Deactivating Devices" that uses this
-> example:
->
->   &uart4 {
->       status = "okay";
->   };
->
-> but, really, that's just a special case of the first example so
-> there's nothing new here. but it's the next section called
-> "Overwriting nodes" that seems confusing:
->
->   "Whole nodes can be overwritten by simply redefining them. Like
->   overwriting properties, latter definitions overwrite earlier
->   definitions."
-
-I don't think that's right. I think you have to use /delete-node/ first.
-
-> wait, what? entire nodes can be overwritten by redefining them? the
-> example given looks like this:
->
->   "E.g. to overwrite the pin configuration of Vybrids UART2 (UART_B)
->   overwrite the uart2grp node by simply redefining it in your device
->   tree ..."
->
-> with the device tree content
->
->   &iomuxc {
->       vf610-colibri {
->           pinctrl_uart2: uart2grp {
->               fsl,pins = <
->                   VF610_PAD_PTD0__UART2_TX        0x21a2
->                   VF610_PAD_PTD1__UART2_RX        0x21a1
->               >;
->           };
->           ...
->       };
->   };
->
-> hang on ... isn't "vf610-colibri" also a "node" in this device tree?
-> does the above mean that the *entire* vf610-colibri node is being
-> overwritten? and that i would have to supply the entire new content of
-> that node, including simply duplicating the rest of the content that
-> is already there that i want to keep? (is that what the "..."
-> represents?)
-
-No, you should get a merged vf610-colibri node with the original
-contents and any new or overwritten properties from this chunk.
-
-IOW, only properties are overwritten.
-
->   that seems bizarre, but it's what that wording seems to suggest. can
-> someone clarify what would happen in the above, and give perhaps a
-> link to the part of the DTspec that covers this? i'm sure i must be
-> misreading this.
-
-It's all source syntax which is mostly outside the scope of the spec.
+That's implicit with having an endpoint described in DT though true OF
+would have every device present.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
