@@ -1,48 +1,141 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] irqchip: meson: add support for the gpio interrupt controller
-Date: Wed, 18 Oct 2017 17:48:24 +0100
-Message-ID: <87shegieqv.fsf@on-the-bus.cambridge.arm.com>
-References: <20170918134610.17743-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 0/5] ZII RAVE platform driver
+Date: Wed, 18 Oct 2017 10:01:31 -0700
+Message-ID: <20171018170136.12347-1-andrew.smirnov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170918134610.17743-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
-        message of "Mon, 18 Sep 2017 15:46:07 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 18 2017 at  3:46:07 pm BST, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> This patch series adds support for the GPIO interrupt controller found on
-> Amlogic's meson SoC families.
->
-> Unlike what the name suggests, this controller is not part of the SoC
-> GPIO subsystem. It is a separate controller which can watch almost all
-> gpio pads of the SoC and generate and interrupt from it. "Almost" because
-> there are always exceptions and some specific gpios (TEST_N) lack this
-> capability.
->
-> Hardware wise, the controller is a 256 to 8 router with a filtering block
-> to select edge or level input and the polarity of the signal. We can't
-> setup the filtring to generate a signal on both the high and low polarity
-> so, ATM, IRQ_TYPE_EDGE_BOTH is not supported.
->
-> The number of interrupt line routed to the controller depends on the SoC,
-> and essentially the total number of GPIO available on the different gpio
-> controllers of the SoC.
->
-> This series has been tested on Amlogic S905-P200 board with the front
-> panel power button. Also tested on the Nanopi-k2 with the ethernet PHY
-> interrupt pin.
->
-> This work is derived from the previous work of Carlo Caione [1].
+Hi everyone,
 
-Queued for 4.15.
+This patch series is v8 of the driver for supervisory processor found
+on RAVE series of devices from ZII. Supervisory processor is a PIC
+microcontroller connected to various electrical subsystems on RAVE
+devices whose firmware implements protocol to command/qery them.
 
-	M.
+NOTE:
+
+ * This driver is dependent on crc_ccitt_false()
+   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
+   was pulled in by Andrew Morton and is currently avaiting users, so
+   this series might have to go in through Andrew's tree
+
+ * Currently the driver is placed in drivers/platform instead of
+   drivers/mfd as per request from Lee Jones (Lee, if you changed your
+   mind about it, let me know and I'll move the driver back)
+
+
+Changes since [v7]:
+
+    - Added watchdog driver to the patchset, so it would be easier to
+      understand how parent/children drivers are tied together
+
+    - Added serdev patches to implement devm_serdev_device_open() and make .remove optional
+
+    - "Added" missing serdev_device_close() by converting the driver
+      to use devm_serdev_device_open()
+
+    - Converted the driver to use devm_of_platform_populate()
+
+    - Removed needless dependency on MFD_CORE
+
+    - Removed dependency on SERIAL_DEV_CTRL_TTYPORT
+
+Changes since [v6]:
+
+    - Patch 2/2 has been applied by Lee so it is no longer a part of the series
+
+    - Removed all sysfs and debugfs attribute to reduce the scope of
+      the driver propsed for inclusion. This is not a critical to have
+      feature and can be added/discussed later.
+
+Changes since [v5]:
+
+    - Fixed a build break, introduced by a last minute change in [v5]
+
+    - Moved majority of attributes that were exposed over sysfs to debugfs
+
+    - Document remaining sysfs attributes in Documentation/ABI/testing/sysfs-platform-rave-sp
+
+Changes since [v4]:
+
+    - Replaced usage of DEVICE_ATTR with DEVICE_ATTR_RW
+
+    - Fixed a number of warnings produces by sparse tool
+
+    - Incorporated event more feedback from Andy Shevchenko
+
+    - Collected Reviewed-by from Andy
+
+Changes since [v3]:
+
+    - Re-collected lost Acked-by from Rob
+
+    - Incorporated further feedback from Andy Shevchenko
+
+    - Dropped useless change (stray newline) to drivers/mfd/Makefile
+
+Changes since [v2]:
+
+    - Fixed swapped command codes in rave_sp_common_get_boot_source()
+      and rave_sp_common_set_boot_source() revealed by further testing
+      of the code
+
+    - Incorporated feedback from Andy Shevchenko
+
+Changes since [v1]:
+
+    - Updated wording in DT-bindings as per Rob's request.
+
+    - Collected Rob's Acked-by for patch 2/2
+
+Feedback is greatly appreciated!
+
+Thanks,
+Andrey Smirnov
+
+[v7] lkml.kernel.org/r/20171013061321.31252-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v6] lkml.kernel.org/r/20170828163131.24815-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v5] lkml.kernel.org/r/20170728142704.11156-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v4] lkml.kernel.org/r/20170725184450.13171-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+
+Andrey Smirnov (5):
+  serdev: Make .remove in struct serdev_device_driver optional
+  serdev: Introduce devm_serdev_device_open()
+  platform: Add driver for RAVE Supervisory Processor
+  watchdog: Add RAVE SP watchdog driver
+  dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
+
+ .../bindings/watchdog/zii,rave-sp-wdt.txt          |  10 +
+ Documentation/driver-model/devres.txt              |   3 +
+ drivers/platform/Kconfig                           |   2 +
+ drivers/platform/Makefile                          |   1 +
+ drivers/platform/rave/Kconfig                      |  25 +
+ drivers/platform/rave/Makefile                     |   1 +
+ drivers/platform/rave/rave-sp.c                    | 670 +++++++++++++++++++++
+ drivers/tty/serdev/core.c                          |  31 +-
+ drivers/watchdog/Kconfig                           |   7 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/rave-sp-wdt.c                     | 310 ++++++++++
+ include/linux/rave-sp.h                            |  54 ++
+ include/linux/serdev.h                             |   1 +
+ 13 files changed, 1114 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+ create mode 100644 drivers/platform/rave/Kconfig
+ create mode 100644 drivers/platform/rave/Makefile
+ create mode 100644 drivers/platform/rave/rave-sp.c
+ create mode 100644 drivers/watchdog/rave-sp-wdt.c
+ create mode 100644 include/linux/rave-sp.h
+
 -- 
-Jazz is not dead, it just smell funny.
+2.13.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
