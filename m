@@ -1,60 +1,132 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 0/7] Add PMIC support to MediaTek MT7622 SoC
-Date: Wed, 18 Oct 2017 16:28:41 +0800
-Message-ID: <cover.1508313105.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v6 6/7] soc: mediatek: pwrap: add common way for setup CS timing extenstion
+Date: Wed, 18 Oct 2017 16:28:47 +0800
+Message-ID: <7244413bf198a778c42500250d8da5a73a8b81d8.1508313105.git.sean.wang@mediatek.com>
+References: <cover.1508313105.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1508313105.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Changes since v5:
-- drop the merged patch
-- add a patch for common way handling for setup CS timing extension
-- unify the comment style
+Multiple platforms would always use their own way handling CS timing
+extension on the bus which leads to a little bit code duplication.
+Therefore, the patch groups the similar logic to handle CS timing
+extension into the common function which allows the following SoCs
+have more reusability for configing CS timing.
 
-Changes since v4:
-- for patch 1/7 and 5/7, add the description about how to bind pmic wrapper with MT6380.
-- for patch 3/7, add more comments explaining why additional pwrap_read is 
-required in the pwrap_write32.
-- for patch 4/7 and 5/7, refactoring pwrap_init would help the driver to be more extensible 
-when more various SoC and PMICs join.
-- for patch 6/7, change pwrap_mt7622 into a const struct.
+Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 59 ++++++++++++++++++++++--------------
+ 1 file changed, 37 insertions(+), 22 deletions(-)
 
-Changes since v3
-- rebase into Linux 4.14-rc1
-- removed those patches already applied
-
-Changes since v2:
-- for patch 1/2, enhance the document as the suggestions from v2.
-- for patch 3, constify the table with struct regulator_ops, also fix that
-regulator doesn't have modesetting facilities it just shouldn't have the ops
-and finally fix copy+paste mistake in warranty disclaimer.
-- for patch 7/8, sort the things added for MT7622/MT6380 alphabetically.
-
-Chenglin Xu (1):
-  soc: mediatek: pwrap: add support for MT7622 SoC
-
-Sean Wang (6):
-  dt-bindings: arm: mediatek: add MT7622 string to the PMIC wrapper doc
-  soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
-  soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
-  soc: mediatek: pwrap: refactor pwrap_init for the various PMIC types
-  soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
-  soc: mediatek: pwrap: add common way for setup CS timing extenstion
-
- .../devicetree/bindings/soc/mediatek/pwrap.txt     |   6 +-
- drivers/soc/mediatek/mtk-pmic-wrap.c               | 490 ++++++++++++++++++---
- 2 files changed, 422 insertions(+), 74 deletions(-)
-
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index 45c3e44..cbc3f0e 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -827,23 +827,44 @@ static int pwrap_init_dual_io(struct pmic_wrapper *wrp)
+ 	return 0;
+ }
+ 
+-static int pwrap_mt8135_init_reg_clock(struct pmic_wrapper *wrp)
++/*
++ * pwrap_init_chip_select_ext is used to configure CS extension time for each
++ * phase during data transactions on the pwrap bus.
++ */
++static void pwrap_init_chip_select_ext(struct pmic_wrapper *wrp, u8 hext_write,
++				       u8 hext_read, u8 lext_start,
++				       u8 lext_end)
+ {
+-	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT);
+-	pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_WRITE);
+-	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT_READ);
+-	pwrap_writel(wrp, 0x0, PWRAP_CSLEXT_START);
+-	pwrap_writel(wrp, 0x0, PWRAP_CSLEXT_END);
++	/*
++	 * After finishing a write and read transaction, extends CS high time
++	 * to be at least xT of BUS CLK as hext_write and hext_read specifies
++	 * respectively.
++	 */
++	pwrap_writel(wrp, hext_write, PWRAP_CSHEXT_WRITE);
++	pwrap_writel(wrp, hext_read, PWRAP_CSHEXT_READ);
+ 
+-	return 0;
++	/*
++	 * Extends CS low time after CSL and before CSH command to be at
++	 * least xT of BUS CLK as lext_start and lext_end specifies
++	 * respectively.
++	 */
++	pwrap_writel(wrp, lext_start, PWRAP_CSLEXT_START);
++	pwrap_writel(wrp, lext_end, PWRAP_CSLEXT_END);
+ }
+ 
+-static int pwrap_mt8173_init_reg_clock(struct pmic_wrapper *wrp)
++static int pwrap_common_init_reg_clock(struct pmic_wrapper *wrp)
+ {
+-	pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_WRITE);
+-	pwrap_writel(wrp, 0x4, PWRAP_CSHEXT_READ);
+-	pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
+-	pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
++	switch (wrp->master->type) {
++	case PWRAP_MT8173:
++		pwrap_init_chip_select_ext(wrp, 0, 4, 2, 2);
++		break;
++	case PWRAP_MT8135:
++		pwrap_writel(wrp, 0x4, PWRAP_CSHEXT);
++		pwrap_init_chip_select_ext(wrp, 0, 4, 0, 0);
++		break;
++	default:
++		break;
++	}
+ 
+ 	return 0;
+ }
+@@ -853,20 +874,14 @@ static int pwrap_mt2701_init_reg_clock(struct pmic_wrapper *wrp)
+ 	switch (wrp->slave->type) {
+ 	case PMIC_MT6397:
+ 		pwrap_writel(wrp, 0xc, PWRAP_RDDMY);
+-		pwrap_writel(wrp, 0x4, PWRAP_CSHEXT_WRITE);
+-		pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_READ);
+-		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
+-		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
++		pwrap_init_chip_select_ext(wrp, 4, 0, 2, 2);
+ 		break;
+ 
+ 	case PMIC_MT6323:
+ 		pwrap_writel(wrp, 0x8, PWRAP_RDDMY);
+ 		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_RDDMY_NO],
+ 			    0x8);
+-		pwrap_writel(wrp, 0x5, PWRAP_CSHEXT_WRITE);
+-		pwrap_writel(wrp, 0x0, PWRAP_CSHEXT_READ);
+-		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
+-		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
++		pwrap_init_chip_select_ext(wrp, 5, 0, 2, 2);
+ 		break;
+ 	default:
+ 		break;
+@@ -1235,7 +1250,7 @@ static const struct pmic_wrapper_type pwrap_mt8135 = {
+ 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
+ 	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
+ 	.has_bridge = 1,
+-	.init_reg_clock = pwrap_mt8135_init_reg_clock,
++	.init_reg_clock = pwrap_common_init_reg_clock,
+ 	.init_soc_specific = pwrap_mt8135_init_soc_specific,
+ };
+ 
+@@ -1247,7 +1262,7 @@ static const struct pmic_wrapper_type pwrap_mt8173 = {
+ 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
+ 	.wdt_src = PWRAP_WDT_SRC_MASK_NO_STAUPD,
+ 	.has_bridge = 0,
+-	.init_reg_clock = pwrap_mt8173_init_reg_clock,
++	.init_reg_clock = pwrap_common_init_reg_clock,
+ 	.init_soc_specific = pwrap_mt8173_init_soc_specific,
+ };
+ 
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
