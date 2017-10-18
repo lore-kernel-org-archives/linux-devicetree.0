@@ -1,45 +1,31 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: rtc: mediatek: add bindings for
- MediaTek SoC based RTC
-Date: Wed, 18 Oct 2017 21:32:09 +0800
-Message-ID: <1508333529.13340.26.camel@mtksdaap41>
-References: <cover.1508231935.git.sean.wang@mediatek.com>
-         <235e4bdaa605021facf4ab5c4e8a2ecc5293516d.1508231935.git.sean.wang@mediatek.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 5/5] arm: dts: stm32: remove useless clocksource nodes
+Date: Wed, 18 Oct 2017 15:38:50 +0200
+Message-ID: <CA+M3ks7RYx5nXspXtgo7OhOdxNZuJztUwiU+m=qJ=5sAmZhudQ@mail.gmail.com>
+References: <1508331506-23782-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1508331506-23782-6-git-send-email-benjamin.gaignard@linaro.org> <CABGGisx1mrf8xSWAXSm9sevE16HgCT72RhcpH6J44ECQnCd3Jw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <235e4bdaa605021facf4ab5c4e8a2ecc5293516d.1508231935.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CABGGisx1mrf8xSWAXSm9sevE16HgCT72RhcpH6J44ECQnCd3Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-10-17 at 17:40 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add device-tree binding for MediaTek SoC based RTC
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/rtc-mediatek.txt        | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-> new file mode 100644
-> index 0000000..09fe8f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
+2017-10-18 15:21 GMT+02:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Wed, Oct 18, 2017 at 7:58 AM, Benjamin Gaignard
+> <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> 16 bits timers aren't accurate enough to be used as
+>> clocksource, remove them from stm32f4 and stm32f7 devicetree.
+>
+> They aren't useful for anything? Zephyr? u-boot?
 
+I have check with the teams and timers (either 16 or 32 bits) are not
+used by zephyr or u-boot
 
-How about change this filename to match driver filename change?
-
-Joe.C
-
-
+>
+> Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
