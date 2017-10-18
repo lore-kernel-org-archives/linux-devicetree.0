@@ -1,61 +1,119 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Wed, 18 Oct 2017 15:59:00 +0300
-Message-ID: <B7292660-D602-473E-9B47-CF7B4D2449D7@antoniou-consulting.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
- <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
- <1508257276.74236.38.camel@freebsd.org>
- <2D4E6B6D-8F07-46D0-BB36-D97916802893@linaro.org>
- <CAMuHMdW-=-CdnD5Eb_w7fc7=c64i+bu=yv9_c0cj3UM940d8EA@mail.gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904@USCULXMSG01.am.sony.com>
- <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 1/5] ARM: sun8i: r40: add USB host port nodes for R40
+Date: Wed, 18 Oct 2017 21:06:24 +0800
+Message-ID: <20171018130628.11298-2-icenowy@aosc.io>
+References: <20171018130628.11298-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171018130628.11298-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-> On Oct 18, 2017, at 15:14 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> 
-> On Tue, Oct 17, 2017 at 8:03 PM, Bird, Timothy <Tim.Bird-7U/KSKJipcs@public.gmane.org> wrote:
->>> -----Original Message-----
->>> From Geert Uytterhoeven on Tuesday, October 17, 2017 10:24 AM
->>> On Tue, Oct 17, 2017 at 7:02 PM, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> I think this also gets to having bindings described in a structured way so
->>> they can be utilized for validation of dts files.  We are doing a little of this in
->>> Zephyr since we are using a structured binding spec to generate code from
->>> .dts (since we don’t utilize a runtime dtb).
->>> 
->>> So you are basically generating board files from .dts?
->>> (closing the loop ;-)
->> 
->> I think we ought to do this on Linux, as a size optimization.
->> -- Tim
->> 
->> P.S.  I think I'll leave it ambiguous whether this was meant as a joke or not. :-)
-> 
+Allwinner R40 SoC features a USB OTG port and two USB HOST ports.
 
-As crazy that sounds it is possible using the YAML bindings, i.e. C structure definitions
-and fill-up from DT automatically. Whether this is a good idea it’s another question :)
+Add support for the host ports in the DTSI file.
 
-> Talk to Nicolas Pitre and Rob Herring about this. They've already made
-> a bunch of progress on reducing memory footprint.
-> 
-> g.
-> 
->> _______________________________________________
->> Ksummit-discuss mailing list
->> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
->> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The OTG controller still cannot work with existing compatibles, and needs
+more investigation. So it's not added yet.
+
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+Changes in v2:
+- Dropped the bogus OHCI resources in EHCI device node.
+
+ arch/arm/boot/dts/sun8i-r40.dtsi | 72 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index d5a6745409ae..19f270a9f3b1 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -173,6 +173,78 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		usbphy: phy@1c13400 {
++			compatible = "allwinner,sun8i-r40-usb-phy";
++			reg = <0x01c13400 0x14>,
++			      <0x01c14800 0x4>,
++			      <0x01c19800 0x4>,
++			      <0x01c1c800 0x4>;
++			reg-names = "phy_ctrl",
++				    "pmu0",
++				    "pmu1",
++				    "pmu2";
++			clocks = <&ccu CLK_USB_PHY0>,
++				 <&ccu CLK_USB_PHY1>,
++				 <&ccu CLK_USB_PHY2>;
++			clock-names = "usb0_phy",
++				      "usb1_phy",
++				      "usb2_phy";
++			resets = <&ccu RST_USB_PHY0>,
++				 <&ccu RST_USB_PHY1>,
++				 <&ccu RST_USB_PHY2>;
++			reset-names = "usb0_reset",
++				      "usb1_reset",
++				      "usb2_reset";
++			status = "disabled";
++			#phy-cells = <1>;
++		};
++
++		ehci1: usb@1c19000 {
++			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
++			reg = <0x01c19000 0x100>;
++			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_EHCI1>;
++			resets = <&ccu RST_BUS_EHCI1>;
++			phys = <&usbphy 1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ohci1: usb@1c19400 {
++			compatible = "allwinner,sun8i-r40-ohci", "generic-ohci";
++			reg = <0x01c19400 0x100>;
++			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI1>,
++				 <&ccu CLK_USB_OHCI1>;
++			resets = <&ccu RST_BUS_OHCI1>;
++			phys = <&usbphy 1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ehci2: usb@1c1c000 {
++			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
++			reg = <0x01c1c000 0x100>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_EHCI2>;
++			resets = <&ccu RST_BUS_EHCI2>;
++			phys = <&usbphy 2>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ohci2: usb@1c1c400 {
++			compatible = "allwinner,sun8i-r40-ohci", "generic-ohci";
++			reg = <0x01c1c400 0x100>;
++			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI2>,
++				 <&ccu CLK_USB_OHCI2>;
++			resets = <&ccu RST_BUS_OHCI2>;
++			phys = <&usbphy 2>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun8i-r40-ccu";
+ 			reg = <0x01c20000 0x400>;
+-- 
+2.13.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
