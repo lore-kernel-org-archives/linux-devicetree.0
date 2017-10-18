@@ -1,48 +1,53 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend property
-Date: Tue, 17 Oct 2017 17:56:32 -0700
-Message-ID: <CA+ASDXPNcoUE=F+TWsYpxw=e-NcPaqguSRb5fEYC+zoCCdvDvg@mail.gmail.com>
-References: <20171012205220.130048-1-briannorris@chromium.org>
- <20171012205220.130048-2-briannorris@chromium.org> <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
- <20171017233904.GA65743@google.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH 08/10] ARM: dts: sun4i: Enable HDMI support
+ on some A10 devices
+Date: Wed, 18 Oct 2017 09:42:05 +0800
+Message-ID: <CAGb2v67tqq7WF7X=xbVOc0_YqBnRTWLF-UyDDmFyRjdYUgbC2A@mail.gmail.com>
+References: <20171017121807.2994-1-wens@csie.org>
+ <20171017121807.2994-9-wens@csie.org>
+ <CAGb2v65Z2N24AZp=Y-_YgKuZiT1uSDX5pzMrceU3+TY=+Zdf7g@mail.gmail.com>
+ <20171017181005.7x6wwuidzsm7kep3@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171017233904.GA65743@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171017181005.7x6wwuidzsm7kep3@flea.lan>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 4:39 PM, Brian Norris <briannorris@chromium.org> wrote:
-> On Fri, Oct 13, 2017 at 11:51:52AM -0500, Bjorn Helgaas wrote:
-> > If so, I really don't want to get involved in that, because that's an
-> > issue that needs to be resolved by the vendors and the PCI-SIG.  If we
->
-> Judging by conversations with these vendors, I can't really imagine them
-> proactively dealing with the PCI-SIG on this. Is that really what you
-> think will work best?
->
-> I personally believe deferring (i.e., ignoring) the problem will not
-> cause any change; badly behaved vendors will just do whatever suits
-> them, and system designers will have to figure it out somehow -- ACPI
-> systems will have platform-specific behavior hidden in firmware; device
-> tree systems will do whatever they want out of tree; and the rare device
-> tree system that gets upstream support will either have suboptimal power
-> management, or have to have these sorts of conversations again. None of
-> that puts pressure on an endpoint vendor to talk to the PCI-SIG.
-
-I'll add a little more to my claim about ACPI systems. I chatted a
-little more with another engineer on my team who has dealt with ACPI
-firmware for a few generations of Intel platforms. Even among the
-latest two platforms he dealt with, there have been two different
-sorts of chipset bugs (at the host/root complex side, not just the
-endpoint) that have yielded different decisions on how to handle
-PERST#. This was opaque to Linux though, since that's how system
-firmware rolls :)
-
-I expect this will not be the last discrepancy on how to handle
-PERST#. And to my knowledge, none of the above initiated any
-discussion with the PCI-SIG.
-
-Brian
+T24gV2VkLCBPY3QgMTgsIDIwMTcgYXQgMjoxMCBBTSwgTWF4aW1lIFJpcGFyZAo8bWF4aW1lLnJp
+cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+IE9uIFR1ZSwgT2N0IDE3LCAyMDE3IGF0
+IDEwOjM4OjQ1UE0gKzA4MDAsIENoZW4tWXUgVHNhaSB3cm90ZToKPj4gPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vYm9vdC9kdHMvc3VuNGktYTEwLW9saW51eGluby1saW1lLmR0cyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3N1bjRpLWExMC1vbGludXhpbm8tbGltZS5kdHMKPj4gPiBpbmRleCAyZDFiNDMy
+OWY1NGEuLmUzOWVjOWJlZWY3NSAxMDA2NDQKPj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9z
+dW40aS1hMTAtb2xpbnV4aW5vLWxpbWUuZHRzCj4+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+c3VuNGktYTEwLW9saW51eGluby1saW1lLmR0cwo+PiA+IEBAIC01OCw2ICs1OCwxNyBAQAo+PiA+
+ICAgICAgICAgICAgICAgICBzdGRvdXQtcGF0aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKPj4gPiAg
+ICAgICAgIH07Cj4+ID4KPj4gPiArICAgICAgIGhkbWktY29ubmVjdG9yIHsKPj4gPiArICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7Cj4+ID4gKyAgICAgICAgICAg
+ICAgIHR5cGUgPSAiYSI7Cj4+ID4gKwo+PiA+ICsgICAgICAgICAgICAgICBwb3J0IHsKPj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBoZG1pX2Nvbl9pbjogZW5kcG9pbnQgewo+PiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX291dF9j
+b24+Owo+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ID4gKyAgICAgICAgICAgICAg
+IH07Cj4+ID4gKyAgICAgICB9Owo+PiA+ICsKPj4gPiAgICAgICAgIGxlZHMgewo+PiA+ICAgICAg
+ICAgICAgICAgICBjb21wYXRpYmxlID0gImdwaW8tbGVkcyI7Cj4+ID4gICAgICAgICAgICAgICAg
+IHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4+ID4gQEAgLTEwNiw2ICsxMTcsMTYgQEAKPj4g
+PiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gPiAgfTsKPj4KPj4gVGhlIExJTUUncyBkdHMg
+Y2hhbmdlIGlzIG1pc3NpbmcgdGhlICZkZSBwYXJ0LiA6KAo+PiBJIGNhbiBmaXggdGhpcyB3aGVu
+IGFwcGx5aW5nLgo+Cj4gSSd2ZSBhcHBsaWVkIGFsbCBvZiByZXN0LCBJJ2xsIGxlYXZlIHRoYXQg
+b25lIHVwIHRvIHlvdSwgd2l0aCBteQo+IEFja2VkLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUu
+cmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KCkRvbmUuCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
