@@ -1,52 +1,139 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
- (26 Oct 2017)
-Date: Wed, 18 Oct 2017 12:11:57 +0200
-Message-ID: <20171018121157.059417a8@windsurf.home>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
-        <20171017114823.58476908@bbrezillon>
-        <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
-        <1508257276.74236.38.camel@freebsd.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH net-next v2 1/2] dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+Date: Wed, 18 Oct 2017 19:23:55 +0900
+Message-ID: <20171018192355.243B.4A936039@socionext.com>
+References: <1507854928-4357-2-git-send-email-hayashi.kunihiko@socionext.com> <CAK7LNATkHsbr4cOh_F6u0Fznui3BFXfWJXgKwCk0EZANSmk0pg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508257276.74236.38.camel-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATkHsbr4cOh_F6u0Fznui3BFXfWJXgKwCk0EZANSmk0pg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Sat, 14 Oct 2017 01:41:12 +0900 <yamada.masahiro@socionext.com> wrote:
 
-On Tue, 17 Oct 2017 10:21:16 -0600, Ian Lepore wrote:
+> 2017-10-13 9:35 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
+> > DT bindings for the AVE ethernet controller found on Socionext's
+> > UniPhier platforms.
+> >
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > ---
+> >  .../bindings/net/socionext,uniphier-ave4.txt       | 53 ++++++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+> > new file mode 100644
+> > index 0000000..25f4d92
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+> > @@ -0,0 +1,53 @@
+> > +* Socionext AVE ethernet controller
+> > +
+> > +This describes the devicetree bindings for AVE ethernet controller
+> > +implemented on Socionext UniPhier SoCs.
+> > +
+> > +Required properties:
+> > + - compatible: Should be
+> > +       - "socionext,uniphier-pro4-ave4" : for Pro4 SoC
+> > +       - "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
+> > +       - "socionext,uniphier-ld20-ave4" : for LD20 SoC
+> > +       - "socionext,uniphier-ld11-ave4" : for LD11 SoC
+> 
+> Nit.  LD11, LD20, in this order please.
 
-> I've run into the same thing in FreeBSD.  We use bindings and dts
-> files, exacted periodically from the linux tree and imported into ours,
-> for all modern arm boards/systems.  Several times I've created drivers
-> for small things like i2c RTC chips that aren't supported currently by
-> linux, and it's not clear to me that it's even possible to submit
-> bindings and dts for them back upstream without also submitting a linux
-> driver that uses them (which of course I'm not in a position to do).
+I'll fix it. And also the SoC-dependent structures of the driver.
 
-You don't have to submit a driver to submit a binding.
+> > + - reg: Address where registers are mapped and size of region.
+> > + - interrupts: Should contain the MAC interrupt.
+> > + - phy-mode: See ethernet.txt in the same directory. Allow to choose
+> > +       "rgmii", "rmii", or "mii" according to the PHY.
+> > + - pinctrl-names: List of assigned state names, see pinctrl
+> > +       binding documentation.
+> > + - pinctrl-0: List of phandles to configure the GPIO pin,
+> 
+> 
+> configure the GPIO pin?
+> 
+> git-grep found this phrase.
+> 
+> 
+> $ git grep "List of phandles to configure the GPIO"
+> Documentation/devicetree/bindings/net/microchip,enc28j60.txt:-
+> pinctrl-0: List of phandles to configure the GPIO pin used as
+> interrupt line,
+> 
+> 
+> 
+> 
+> 
+> > +       see pinctrl binding documentation. Choose this appropriately
+> > +       according to phy-mode.
+> > +       - <&pinctrl_ether_rgmii> if phy-mode is "rgmii".
+> > +       - <&pinctrl_ether_rmii> if phy-mode is "rmii".
+> > +       - <&pinctrl_ether_mii> if phy-mode is "mii".
+> 
+> pinctrl_ether_rgmii is just a label
+> you just happened to write in your DT file.
+> 
+> This information is totally unrelated to hardware specification.
+> It is not stable, either.
 
-Examples of bindings that are not supported by any upstream driver:
+Surely this driver is independent from the pinctrl.
+I'll remove the descriptions about the pinctrl.
 
-  Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt
-  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-  Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > + - phy-handle: Should point to the external phy device.
+> > +       See ethernet.txt file in the same directory.
+> > + - mdio subnode: Should be device tree subnode with the following required
+> > +       properties:
+> > +       - #address-cells: Must be <1>.
+> > +       - #size-cells: Must be <0>.
+> > +       - reg: phy ID number, usually a small integer.
+> 
+> 
+> Are you talking about "Required subnode" in the "Required properties"?
 
-and there are probably more.
+It might be confused description. The subnode is separated from the properties.
 
-Best regards,
+> > +Optional properties:
+> > + - local-mac-address: See ethernet.txt in the same directory.
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In addition, I'll add "clocks" and "resets" according to another mail.
+
+> > +
+> > +Example:
+> > +
+> > +       ether: ethernet@65000000 {
+> > +               compatible = "socionext,uniphier-ld20-ave4";
+> > +               reg = <0x65000000 0x8500>;
+> > +               interrupts = <0 66 4>;
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_ether_rgmii>;
+> > +               phy-mode = "rgmii";
+> > +               phy-handle = <&ethphy>;
+> > +               local-mac-address = [00 00 00 00 00 00];
+> > +               mdio {
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       ethphy: ethphy@1 {
+> > +                               reg = <1>;
+> > +                       };
+> > +               };
+> > +       };
+> > --
+> > 2.7.4
+> >
+> 
+> 
+> 
+> -- 
+> Best Regards
+> Masahiro Yamada
+
+---
+Best Regards,
+Kunihiko Hayashi
