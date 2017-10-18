@@ -1,142 +1,51 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v8 0/5] ZII RAVE platform driver
-Date: Wed, 18 Oct 2017 10:01:31 -0700
-Message-ID: <20171018170136.12347-1-andrew.smirnov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v8 5/5] dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
+Date: Wed, 18 Oct 2017 10:01:36 -0700
+Message-ID: <20171018170136.12347-6-andrew.smirnov@gmail.com>
+References: <20171018170136.12347-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171018170136.12347-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
-
-This patch series is v8 of the driver for supervisory processor found
-on RAVE series of devices from ZII. Supervisory processor is a PIC
-microcontroller connected to various electrical subsystems on RAVE
-devices whose firmware implements protocol to command/qery them.
-
-NOTE:
-
- * This driver is dependent on crc_ccitt_false()
-   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
-   was pulled in by Andrew Morton and is currently avaiting users, so
-   this series might have to go in through Andrew's tree
-
- * Currently the driver is placed in drivers/platform instead of
-   drivers/mfd as per request from Lee Jones (Lee, if you changed your
-   mind about it, let me know and I'll move the driver back)
-
-
-Changes since [v7]:
-
-    - Added watchdog driver to the patchset, so it would be easier to
-      understand how parent/children drivers are tied together
-
-    - Added serdev patches to implement devm_serdev_device_open() and make .remove optional
-
-    - "Added" missing serdev_device_close() by converting the driver
-      to use devm_serdev_device_open()
-
-    - Converted the driver to use devm_of_platform_populate()
-
-    - Removed needless dependency on MFD_CORE
-
-    - Removed dependency on SERIAL_DEV_CTRL_TTYPORT
-
-Changes since [v6]:
-
-    - Patch 2/2 has been applied by Lee so it is no longer a part of the series
-
-    - Removed all sysfs and debugfs attribute to reduce the scope of
-      the driver propsed for inclusion. This is not a critical to have
-      feature and can be added/discussed later.
-
-Changes since [v5]:
-
-    - Fixed a build break, introduced by a last minute change in [v5]
-
-    - Moved majority of attributes that were exposed over sysfs to debugfs
-
-    - Document remaining sysfs attributes in Documentation/ABI/testing/sysfs-platform-rave-sp
-
-Changes since [v4]:
-
-    - Replaced usage of DEVICE_ATTR with DEVICE_ATTR_RW
-
-    - Fixed a number of warnings produces by sparse tool
-
-    - Incorporated event more feedback from Andy Shevchenko
-
-    - Collected Reviewed-by from Andy
-
-Changes since [v3]:
-
-    - Re-collected lost Acked-by from Rob
-
-    - Incorporated further feedback from Andy Shevchenko
-
-    - Dropped useless change (stray newline) to drivers/mfd/Makefile
-
-Changes since [v2]:
-
-    - Fixed swapped command codes in rave_sp_common_get_boot_source()
-      and rave_sp_common_set_boot_source() revealed by further testing
-      of the code
-
-    - Incorporated feedback from Andy Shevchenko
-
-Changes since [v1]:
-
-    - Updated wording in DT-bindings as per Rob's request.
-
-    - Collected Rob's Acked-by for patch 2/2
-
-Feedback is greatly appreciated!
-
-Thanks,
-Andrey Smirnov
-
-[v7] lkml.kernel.org/r/20171013061321.31252-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v6] lkml.kernel.org/r/20170828163131.24815-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v5] lkml.kernel.org/r/20170728142704.11156-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v4] lkml.kernel.org/r/20170725184450.13171-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-[v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-
-
-Andrey Smirnov (5):
-  serdev: Make .remove in struct serdev_device_driver optional
-  serdev: Introduce devm_serdev_device_open()
-  platform: Add driver for RAVE Supervisory Processor
-  watchdog: Add RAVE SP watchdog driver
-  dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
-
- .../bindings/watchdog/zii,rave-sp-wdt.txt          |  10 +
- Documentation/driver-model/devres.txt              |   3 +
- drivers/platform/Kconfig                           |   2 +
- drivers/platform/Makefile                          |   1 +
- drivers/platform/rave/Kconfig                      |  25 +
- drivers/platform/rave/Makefile                     |   1 +
- drivers/platform/rave/rave-sp.c                    | 670 +++++++++++++++++++++
- drivers/tty/serdev/core.c                          |  31 +-
- drivers/watchdog/Kconfig                           |   7 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/rave-sp-wdt.c                     | 310 ++++++++++
- include/linux/rave-sp.h                            |  54 ++
- include/linux/serdev.h                             |   1 +
- 13 files changed, 1114 insertions(+), 2 deletions(-)
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-watchdog@vger.kernel.org
+Cc: cphealy@gmail.com
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
- create mode 100644 drivers/platform/rave/Kconfig
- create mode 100644 drivers/platform/rave/Makefile
- create mode 100644 drivers/platform/rave/rave-sp.c
- create mode 100644 drivers/watchdog/rave-sp-wdt.c
- create mode 100644 include/linux/rave-sp.h
 
+diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+new file mode 100644
+index 000000000000..f242c3eed0dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+@@ -0,0 +1,10 @@
++Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog
++
++Required properties:
++
++ - compatible: Should be "zii,rave-sp-watchdog"
++
++Optional properties:
++
++ - Two byte nvmem cell "wdt_timeout", specified as per
++   Documentation/devicetree/bindings/nvmem/nvmem.txt
 -- 
 2.13.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
