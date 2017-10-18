@@ -1,494 +1,89 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
-Date: Wed, 18 Oct 2017 17:52:34 +0800
-Message-ID: <1508320354.13340.19.camel@mtksdaap41>
-References: <cover.1508231935.git.sean.wang@mediatek.com>
-         <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v5 02/12] mmc: mediatek: add support of mt2701/mt2712
+Date: Wed, 18 Oct 2017 12:00:31 +0200
+Message-ID: <42effbc0-ec5d-d99a-ca00-bdeaf3bcdc8d@gmail.com>
+References: <1507689696-25928-1-git-send-email-chaotian.jing@mediatek.com>
+ <1507689696-25928-3-git-send-email-chaotian.jing@mediatek.com>
+ <1508055978.8978.5.camel@mtksdaap41>
+ <a506506b-a326-6d54-9827-4fd82680700d@gmail.com>
+ <1508291195.30936.7.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1508291195.30936.7.camel@mtksdaap41>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, yong mao <yong.mao@mediatek.com>, Phong LE <ple@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-10-17 at 17:40 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+
+
+On 10/18/2017 03:46 AM, CK Hu wrote:
+> Hi, Matthias:
 > 
-> This patch introduces the driver for the RTC on MT7622 SoC.
+> On Mon, 2017-10-16 at 09:49 +0200, Matthias Brugger wrote:
+>>
+>> On 10/15/2017 10:26 AM, CK Hu wrote:
+>>> Hi, Chaotian:
+>>>
+>>> On Wed, 2017-10-11 at 10:41 +0800, Chaotian Jing wrote:
+>>>> mt2701/mt2712 has 12bit clock div, which is not compatible with
+>>>> mt8135/mt8173. and, some additional features will be added in
+>>>> mt2701/mt2712, so that need distinguish it by comatibale name.
+>>>>
+>>>> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+>>>> ---
+>>>>    drivers/mmc/host/mtk-sd.c | 82 +++++++++++++++++++++++++++++++++++++++--------
+>>>>    1 file changed, 69 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+>>>> index 267f7ab..643c795 100644
+>>>> --- a/drivers/mmc/host/mtk-sd.c
+>>>> +++ b/drivers/mmc/host/mtk-sd.c
+>> [...]
+>>>> @@ -350,6 +358,31 @@ struct msdc_host {
+>>>>    	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
+>>>>    };
+>>>>    
+>>>> +static const struct mtk_mmc_compatible mt8135_compat = {
+>>>> +	.clk_div_bits = 8,
+>>>> +};
+>>>> +
+>>>> +static const struct mtk_mmc_compatible mt8173_compat = {
+>>>> +	.clk_div_bits = 8,
+>>>> +};
+>>>> +
+>>>> +static const struct mtk_mmc_compatible mt2701_compat = {
+>>>> +	.clk_div_bits = 12,
+>>>> +};
+>>>> +
+>>>> +static const struct mtk_mmc_compatible mt2712_compat = {
+>>>> +	.clk_div_bits = 12,
+>>>> +};
+>>>> +
+>>>> +static const struct of_device_id msdc_of_ids[] = {
+>>>> +	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+>>>> +	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+>>>
+>>> Because mt8135_compat is equal to mt8173_compat, so I think the
+>>> compatible of "mediatek,mt8173-mmc" is redundant. You could just keep
+>>> compatible of "mediatek,mt8135-mmc" in driver, and use
+>>> "mediatek,mt8135-mmc" for both mt8135.dtsi and mt8173.dtsi.
+>>>
+>>
+>> Well thing is, that in the follow-up patches, new data types get added to the
+>> different compat structures and in the end all four a different.
 > 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->  drivers/rtc/Kconfig      |  10 ++
->  drivers/rtc/Makefile     |   1 +
->  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 429 insertions(+)
->  create mode 100644 drivers/rtc/rtc-mt7622.c
+> You are right, these modification are necessary. If so, adding
+> "mediatek,mt8173-mmc" in the patch of "add support of mt2701/mt2712"
+> looks irrelevant. Maybe the title should be modified as "add support of
+> mt8173/mt2701/mt2712" or move mt8173 part to another patch.
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index e0e58f3..4226295 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
->  	   This driver can also be built as a module. If so, the module
->  	   will be called rtc-moxart
->  
-> +config RTC_DRV_MEDIATEK
-> +	tristate "MediaTek SoC based RTC"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	help
-> +	  This enables support for the real time clock built in the MediaTek
-> +	  SoCs.
-> +
-> +	  This drive can also be built as a module. If so, the module
-> +	  will be called rtc-mediatek.
-> +
->  config RTC_DRV_MT6397
->  	tristate "Mediatek Real Time Clock driver"
->  	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 7230014..593a02c 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -101,6 +101,7 @@ obj-$(CONFIG_RTC_DRV_MOXART)	+= rtc-moxart.o
->  obj-$(CONFIG_RTC_DRV_MPC5121)	+= rtc-mpc5121.o
->  obj-$(CONFIG_RTC_DRV_VRTC)	+= rtc-mrst.o
->  obj-$(CONFIG_RTC_DRV_MSM6242)	+= rtc-msm6242.o
-> +obj-$(CONFIG_RTC_DRV_MEDIATEK)	+= rtc-mt7622.o
->  obj-$(CONFIG_RTC_DRV_MT6397)	+= rtc-mt6397.o
->  obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
->  obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
-> diff --git a/drivers/rtc/rtc-mt7622.c b/drivers/rtc/rtc-mt7622.c
-> new file mode 100644
-> index 0000000..1f00494
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-mt7622.c
-> @@ -0,0 +1,418 @@
-> +/*
-> + * Driver for MediaTek SoC based RTC
-> + *
-> + * Copyright (C) 2017 Sean Wang <sean.wang@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/rtc.h>
-> +
-> +#define MTK_RTC_DEV KBUILD_MODNAME
-> +
-> +#define MTK_RTC_PWRCHK1		0x4
-> +#define	RTC_PWRCHK1_MAGIC	0xc6
-> +
-> +#define MTK_RTC_PWRCHK2		0x8
-> +#define	RTC_PWRCHK2_MAGIC	0x9a
-> +
-> +#define MTK_RTC_KEY		0xc
-> +#define	RTC_KEY_MAGIC		0x59
-> +
-> +#define MTK_RTC_PROT1		0x10
-> +#define	RTC_PROT1_MAGIC		0xa3
-> +
-> +#define MTK_RTC_PROT2		0x14
-> +#define	RTC_PROT2_MAGIC		0x57
-> +
-> +#define MTK_RTC_PROT3		0x18
-> +#define	RTC_PROT3_MAGIC		0x67
-> +
-> +#define MTK_RTC_PROT4		0x1c
-> +#define	RTC_PROT4_MAGIC		0xd2
-> +
-> +#define MTK_RTC_CTL		0x20
-> +#define	RTC_RC_STOP		BIT(0)
-> +
-> +#define MTK_RTC_DEBNCE		0x2c
-> +#define	RTC_DEBNCE_MASK		GENMASK(2, 0)
-> +
-> +#define MTK_RTC_INT		0x30
-> +#define RTC_INT_AL_STA		BIT(4)
-> +
-> +/* Ranges from 0x40 to 0x78 provide RTC time setup for year, month,
-> + * day of month, day of week, hour, minute and second.
-> + */
-> +#define MTK_RTC_TREG(_t, _f)	(0x40 + (0x4 * (_f)) + ((_t) * 0x20))
-> +
-> +#define MTK_RTC_AL_CTL		0x7c
-> +#define	RTC_AL_EN		BIT(0)
-> +#define	RTC_AL_ALL		GENMASK(7, 0)
-> +
-> +#define MTK_RTC_TM_YR_L		100
-> +
-> +/* The maximum years the RTC can support is 99, For MT7622 */
-> +#define MTK_RTC_HW_YR_LIMIT	100
-> +
-> +/* Types of the function the RTC provides are time counter and alarm. */
-> +enum {
-> +	MTK_TC,
-> +	MTK_AL,
-> +	MTK_TYPE_MAX,
-> +};
-> +
-> +/* Indexes are used for the pointer to relevant registers in MTK_RTC_TREG */
-> +enum {
-> +	MTK_YEA,
-> +	MTK_MON,
-> +	MTK_DOM,
-> +	MTK_DOW,
-> +	MTK_HOU,
-> +	MTK_MIN,
-> +	MTK_SEC
-> +};
-> +
-> +struct mtk_rtc {
-> +	struct rtc_device *rtc;
-> +	void __iomem *base;
-> +	int irq;
-> +	struct clk *clk;
-> +	u32 yr_base[MTK_TYPE_MAX];
-> +};
-> +
-> +static void mtk_w32(struct mtk_rtc *rtc, u32 reg, u32 val)
-> +{
-> +	writel_relaxed(val, rtc->base + reg);
-> +}
-> +
-> +static u32 mtk_r32(struct mtk_rtc *rtc, u32 reg)
-> +{
-> +	return readl_relaxed(rtc->base + reg);
-> +}
-> +
-> +static void mtk_rmw(struct mtk_rtc *rtc, u32 reg, u32 mask, u32 set)
-> +{
-> +	u32 val;
-> +
-> +	val = mtk_r32(rtc, reg);
-> +	val &= ~mask;
-> +	val |= set;
-> +	mtk_w32(rtc, reg, val);
-> +}
-> +
-> +static void mtk_set(struct mtk_rtc *rtc, u32 reg, u32 val)
-> +{
-> +	mtk_rmw(rtc, reg, 0, val);
-> +}
-> +
-> +static void mtk_clr(struct mtk_rtc *rtc, u32 reg, u32 val)
-> +{
-> +	mtk_rmw(rtc, reg, val, 0);
-> +}
-> +
-> +static void mtk_rtc_hw_init(struct mtk_rtc *hw)
-> +{
-> +	/* The setup of the init sequence is for allowing RTC got to work */
-> +	mtk_w32(hw, MTK_RTC_PWRCHK1, RTC_PWRCHK1_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PWRCHK2, RTC_PWRCHK2_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_KEY, RTC_KEY_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT1, RTC_PROT1_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT2, RTC_PROT2_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT3, RTC_PROT3_MAGIC);
-> +	mtk_w32(hw, MTK_RTC_PROT4, RTC_PROT4_MAGIC);
-> +	mtk_rmw(hw, MTK_RTC_DEBNCE, RTC_DEBNCE_MASK, 0);
-> +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
-> +}
-> +
-> +static void mtk_rtc_get_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
-> +				      int time_alarm)
-> +{
-> +	u32 year, mon, mday, wday, hour, min, sec;
-> +
-> +	/*
-> +	 * Read again until the field of the second is not changed which
-> +	 * ensures all fields in the consistent state.
 
-Sean,
+I would prefer to split it in two patches. But I leave that to Ulf to decide 
+what he prefers.
 
-You need to read sec first for this to work.
-It is possible sec changed from 59 to 00 after you read min.
-
-Joe.C
-
-> +	 */
-> +	do {
-> +		year = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA));
-> +		mon = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON));
-> +		wday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW));
-> +		mday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM));
-> +		hour = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU));
-> +		min = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN));
-> +		sec = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC));
-> +	} while (sec != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC)));
-> +
-> +	tm->tm_sec  = sec;
-> +	tm->tm_min  = min;
-> +	tm->tm_hour = hour;
-> +	tm->tm_wday = wday;
-> +	tm->tm_mday = mday;
-> +	tm->tm_mon  = mon - 1;
-> +
-> +	/* Rebase to the absolute year which userspace requires */
-> +	tm->tm_year = year + MTK_RTC_TM_YR_L + hw->yr_base[time_alarm];
-> +}
-> +
-> +static void mtk_rtc_set_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
-> +				      int time_alarm)
-> +{
-> +	u32 year;
-> +
-> +	/* Rebase to the relative year which RTC hardware requires */
-> +	year = tm->tm_year - MTK_RTC_TM_YR_L - hw->yr_base[time_alarm];
-> +
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA), year);
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_MON), tm->tm_mon + 1);
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW), tm->tm_wday);
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM), tm->tm_mday);
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU), tm->tm_hour);
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN), tm->tm_min);
-> +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC), tm->tm_sec);
-> +}
-> +
-> +static irqreturn_t mtk_rtc_alarmirq(int irq, void *id)
-> +{
-> +	struct mtk_rtc *hw = (struct mtk_rtc *)id;
-> +	u32 irq_sta;
-> +
-> +	irq_sta = mtk_r32(hw, MTK_RTC_INT);
-> +	if (irq_sta & RTC_INT_AL_STA) {
-> +		/* Stop alarm also implicitly disables the alarm interrupt */
-> +		mtk_w32(hw, MTK_RTC_AL_CTL, 0);
-> +		rtc_update_irq(hw->rtc, 1, RTC_IRQF | RTC_AF);
-> +
-> +		/* Ack alarm interrupt status */
-> +		mtk_w32(hw, MTK_RTC_INT, RTC_INT_AL_STA);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-> +static int mtk_rtc_gettime(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +
-> +	mtk_rtc_get_alarm_or_time(hw, tm, MTK_TC);
-> +
-> +	return rtc_valid_tm(tm);
-> +}
-> +
-> +static int mtk_rtc_settime(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +
-> +	/* Epoch == 1900, and the driver assumes that tm->tm_year has to be
-> +	 * at least MTK_RTC_TM_YR_L.
-> +	 */
-> +	if (tm->tm_year <  MTK_RTC_TM_YR_L)
-> +		return -EINVAL;
-> +
-> +	/* Keep yr_base used to calculate the calculate year when userspace
-> +	 * queries and extend the maximum year the RTC can count.
-> +	 */
-> +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
-> +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
-> +
-> +	/* Stop time counter before setting a new one*/
-> +	mtk_set(hw, MTK_RTC_CTL, RTC_RC_STOP);
-> +
-> +	mtk_rtc_set_alarm_or_time(hw, tm, MTK_TC);
-> +
-> +	/* Restart the time counter */
-> +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_getalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +	struct rtc_time *alrm_tm = &wkalrm->time;
-> +
-> +	mtk_rtc_get_alarm_or_time(hw, alrm_tm, MTK_AL);
-> +
-> +	wkalrm->enabled = !!(mtk_r32(hw, MTK_RTC_AL_CTL) & RTC_AL_EN);
-> +	wkalrm->pending = !!(mtk_r32(hw, MTK_RTC_INT) & RTC_INT_AL_STA);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_setalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +	struct rtc_time *alrm_tm = &wkalrm->time;
-> +
-> +	/* Epoch == 1900, and the driver assumes that alrm_tm->tm_year has to
-> +	 * be at least MTK_RTC_TM_YR_L.
-> +	 */
-> +	if (alrm_tm->tm_year < MTK_RTC_TM_YR_L)
-> +		return -EINVAL;
-> +
-> +	/* Keep yr_base used to calculate the calculate year when userspace
-> +	 * queries and extend the maximum time the alarm can support.
-> +	 */
-> +	hw->yr_base[MTK_AL] = alrm_tm->tm_year - MTK_RTC_TM_YR_L -
-> +			      (alrm_tm->tm_year % MTK_RTC_HW_YR_LIMIT);
-> +
-> +	/*
-> +	 * Stop the alarm also implicitly including disables interrupt before
-> +	 * setting a new one.
-> +	 */
-> +	mtk_clr(hw, MTK_RTC_AL_CTL, RTC_AL_EN);
-> +
-> +	/*
-> +	 * Avoid contention between mtk_rtc_setalarm and IRQ handler so that
-> +	 * disabling the interrupt and awaiting for pending IRQ handler to
-> +	 * complete.
-> +	 */
-> +	synchronize_irq(hw->irq);
-> +
-> +	mtk_rtc_set_alarm_or_time(hw, alrm_tm, MTK_AL);
-> +
-> +	/* Restart the alarm with the new setup */
-> +	mtk_w32(hw, MTK_RTC_AL_CTL, RTC_AL_ALL);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct rtc_class_ops mtk_rtc_ops = {
-> +	.read_time		= mtk_rtc_gettime,
-> +	.set_time		= mtk_rtc_settime,
-> +	.read_alarm		= mtk_rtc_getalarm,
-> +	.set_alarm		= mtk_rtc_setalarm,
-> +};
-> +
-> +static const struct of_device_id mtk_rtc_match[] = {
-> +	{ .compatible = "mediatek,mt7622-rtc" },
-> +	{ .compatible = "mediatek,soc-rtc" },
-> +	{},
-> +};
-> +
-> +static int mtk_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct mtk_rtc *hw;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
-> +	if (!hw)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, hw);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	hw->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(hw->base))
-> +		return PTR_ERR(hw->base);
-> +
-> +	hw->clk = devm_clk_get(&pdev->dev, "rtc");
-> +	if (IS_ERR(hw->clk)) {
-> +		dev_err(&pdev->dev, "No clock\n");
-> +		return PTR_ERR(hw->clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(hw->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	hw->irq = platform_get_irq(pdev, 0);
-> +	if (hw->irq < 0) {
-> +		dev_err(&pdev->dev, "No IRQ resource\n");
-> +		ret = hw->irq;
-> +		goto err;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, hw->irq, mtk_rtc_alarmirq,
-> +			       0, dev_name(&pdev->dev), hw);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't request IRQ\n");
-> +		goto err;
-> +	}
-> +
-> +	mtk_rtc_hw_init(hw);
-> +
-> +	device_init_wakeup(&pdev->dev, true);
-> +
-> +	hw->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
-> +					   &mtk_rtc_ops, THIS_MODULE);
-> +	if (IS_ERR(hw->rtc)) {
-> +		ret = PTR_ERR(hw->rtc);
-> +		dev_err(&pdev->dev, "Unable to register device\n");
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	clk_disable_unprepare(hw->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int mtk_rtc_remove(struct platform_device *pdev)
-> +{
-> +	struct mtk_rtc *hw = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(hw->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int mtk_rtc_suspend(struct device *dev)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev))
-> +		enable_irq_wake(hw->irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_rtc_resume(struct device *dev)
-> +{
-> +	struct mtk_rtc *hw = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev))
-> +		disable_irq_wake(hw->irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(mtk_rtc_pm_ops, mtk_rtc_suspend, mtk_rtc_resume);
-> +
-> +#define MTK_RTC_PM_OPS (&mtk_rtc_pm_ops)
-> +#else	/* CONFIG_PM */
-> +#define MTK_RTC_PM_OPS NULL
-> +#endif	/* CONFIG_PM */
-> +
-> +static struct platform_driver mtk_rtc_driver = {
-> +	.probe	= mtk_rtc_probe,
-> +	.remove	= mtk_rtc_remove,
-> +	.driver = {
-> +		.name = MTK_RTC_DEV,
-> +		.of_match_table = mtk_rtc_match,
-> +		.pm = MTK_RTC_PM_OPS,
-> +	},
-> +};
-> +
-> +module_platform_driver(mtk_rtc_driver);
-> +
-> +MODULE_DESCRIPTION("MediaTek SoC based RTC Driver");
-> +MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
-> +MODULE_LICENSE("GPL");
+Regards,
+Matthias
