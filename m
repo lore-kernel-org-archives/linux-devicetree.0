@@ -1,111 +1,186 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v6 5/7] soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
-Date: Wed, 18 Oct 2017 16:28:46 +0800
-Message-ID: <81b419e1b38a06326aac53bfe0de01fae54805a0.1508313105.git.sean.wang@mediatek.com>
-References: <cover.1508313105.git.sean.wang@mediatek.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 2/8] ARM: dts: sunxi: Add dtsi for AXP81x PMIC
+Date: Wed, 18 Oct 2017 16:31:32 +0800
+Message-ID: <20171018083138.14517-3-wens@csie.org>
+References: <20171018083138.14517-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1508313105.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB35CTTHQKGQE5WDP6OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171018083138.14517-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+The AXP81x family of PMIC is used with the Allwinner A83T and H8 SoCs.
+This includes the AXP813 and AXP818. There is no discernible difference
+except the labeling. The AXP813 is paired with the A83T, while the
+AXP818 is paired with the H8.
 
-Add MediaTek MT6380 regulator becoming one of PMIC wrapper slave
-and also add extra new regmap_config of 32-bit mode for MT6380
-since old regmap_config of 16-bit mode can't be fit into the need.
+This patch adds a dtsi file for all the common bindings for these two
+PMICs. Currently this is just listing all the regulator nodes. The
+regulators are initialized based on their device node names.
 
-Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+In the future this would be expanded to include power supplies and
+GPIO controllers.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/axp81x.dtsi | 139 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 139 insertions(+)
+ create mode 100644 arch/arm/boot/dts/axp81x.dtsi
 
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index e3398e3..45c3e44 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -507,6 +507,7 @@ struct pmic_wrapper;
- struct pwrap_slv_type {
- 	const u32 *dew_regs;
- 	enum pmic_type type;
-+	const struct regmap_config *regmap;
- 	/* Flags indicating the capability for the target slave */
- 	u32 caps;
- 	/*
-@@ -1149,7 +1150,7 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static const struct regmap_config pwrap_regmap_config = {
-+static const struct regmap_config pwrap_regmap_config16 = {
- 	.reg_bits = 16,
- 	.val_bits = 16,
- 	.reg_stride = 2,
-@@ -1158,9 +1159,19 @@ static const struct regmap_config pwrap_regmap_config = {
- 	.max_register = 0xffff,
- };
- 
-+static const struct regmap_config pwrap_regmap_config32 = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.reg_read = pwrap_regmap_read,
-+	.reg_write = pwrap_regmap_write,
-+	.max_register = 0xffff,
-+};
+diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+new file mode 100644
+index 000000000000..73b761f850c5
+--- /dev/null
++++ b/arch/arm/boot/dts/axp81x.dtsi
+@@ -0,0 +1,139 @@
++/*
++ * Copyright 2017 Chen-Yu Tsai
++ *
++ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
- static const struct pwrap_slv_type pmic_mt6323 = {
- 	.dew_regs = mt6323_regs,
- 	.type = PMIC_MT6323,
-+	.regmap = &pwrap_regmap_config16,
- 	.caps = PWRAP_SLV_CAP_SPI | PWRAP_SLV_CAP_DUALIO |
- 		PWRAP_SLV_CAP_SECURITY,
- 	.pwrap_read = pwrap_read16,
-@@ -1170,6 +1181,7 @@ static const struct pwrap_slv_type pmic_mt6323 = {
- static const struct pwrap_slv_type pmic_mt6380 = {
- 	.dew_regs = NULL,
- 	.type = PMIC_MT6380,
-+	.regmap = &pwrap_regmap_config32,
- 	.caps = 0,
- 	.pwrap_read = pwrap_read32,
- 	.pwrap_write = pwrap_write32,
-@@ -1178,6 +1190,7 @@ static const struct pwrap_slv_type pmic_mt6380 = {
- static const struct pwrap_slv_type pmic_mt6397 = {
- 	.dew_regs = mt6397_regs,
- 	.type = PMIC_MT6397,
-+	.regmap = &pwrap_regmap_config16,
- 	.caps = PWRAP_SLV_CAP_SPI | PWRAP_SLV_CAP_DUALIO |
- 		PWRAP_SLV_CAP_SECURITY,
- 	.pwrap_read = pwrap_read16,
-@@ -1189,9 +1202,14 @@ static const struct of_device_id of_slave_match_tbl[] = {
- 		.compatible = "mediatek,mt6323",
- 		.data = &pmic_mt6323,
- 	}, {
-+		/* The MT6380 PMIC only implements a regulator, so we bind it
-+		 * directly instead of using a MFD.
-+		 */
-+		.compatible = "mediatek,mt6380-regulator",
-+		.data = &pmic_mt6380,
-+	}, {
- 		.compatible = "mediatek,mt6397",
- 		.data = &pmic_mt6397,
--	}, {
- 		/* sentinel */
- 	}
- };
-@@ -1372,7 +1390,7 @@ static int pwrap_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out2;
- 
--	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, &pwrap_regmap_config);
-+	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, wrp->slave->regmap);
- 	if (IS_ERR(wrp->regmap)) {
- 		ret = PTR_ERR(wrp->regmap);
- 		goto err_out2;
++/* AXP813/818 Integrated Power Management Chip */
++
++&axp81x {
++	interrupt-controller;
++	#interrupt-cells = <1>;
++
++	regulators {
++		/* Default work frequency for buck regulators */
++		x-powers,dcdc-freq = <3000>;
++
++		reg_dcdc1: dcdc1 {
++		};
++
++		reg_dcdc2: dcdc2 {
++		};
++
++		reg_dcdc3: dcdc3 {
++		};
++
++		reg_dcdc4: dcdc4 {
++		};
++
++		reg_dcdc5: dcdc5 {
++		};
++
++		reg_dcdc6: dcdc6 {
++		};
++
++		reg_dcdc7: dcdc7 {
++		};
++
++		reg_aldo1: aldo1 {
++		};
++
++		reg_aldo2: aldo2 {
++		};
++
++		reg_aldo3: aldo3 {
++		};
++
++		reg_dldo1: dldo1 {
++		};
++
++		reg_dldo2: dldo2 {
++		};
++
++		reg_dldo3: dldo3 {
++		};
++
++		reg_dldo4: dldo4 {
++		};
++
++		reg_eldo1: eldo1 {
++		};
++
++		reg_eldo2: eldo2 {
++		};
++
++		reg_eldo3: eldo3 {
++		};
++
++		reg_fldo1: fldo1 {
++		};
++
++		reg_fldo2: fldo2 {
++		};
++
++		reg_fldo3: fldo3 {
++		};
++
++		reg_ldo_io0: ldo-io0 {
++			/* Disable by default to avoid conflicts with GPIO */
++			status = "disabled";
++		};
++
++		reg_ldo_io1: ldo-io1 {
++			/* Disable by default to avoid conflicts with GPIO */
++			status = "disabled";
++		};
++
++		reg_rtc_ldo: rtc-ldo {
++			/* RTC_LDO is a fixed, always-on regulator */
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		reg_sw: sw {
++		};
++
++		reg_drivevbus: drivevbus {
++			status = "disabled";
++		};
++	};
++};
 -- 
-2.7.4
+2.14.2
