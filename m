@@ -1,98 +1,72 @@
-From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 02/12] mmc: mediatek: add support of mt2701/mt2712
-Date: Wed, 18 Oct 2017 09:46:35 +0800
-Message-ID: <1508291195.30936.7.camel@mtksdaap41>
-References: <1507689696-25928-1-git-send-email-chaotian.jing@mediatek.com>
-         <1507689696-25928-3-git-send-email-chaotian.jing@mediatek.com>
-         <1508055978.8978.5.camel@mtksdaap41>
-         <a506506b-a326-6d54-9827-4fd82680700d@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 00/12] of: overlay: clean up device tree overlay code
+Date: Tue, 17 Oct 2017 20:49:52 -0500
+Message-ID: <CAL_Jsq+_DnpzmKGF2rBEd4H-PB02uo442FUooHtDtk0tDAX1Jg@mail.gmail.com>
+References: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a506506b-a326-6d54-9827-4fd82680700d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Matthias:
-
-On Mon, 2017-10-16 at 09:49 +0200, Matthias Brugger wrote:
-> 
-> On 10/15/2017 10:26 AM, CK Hu wrote:
-> > Hi, Chaotian:
-> > 
-> > On Wed, 2017-10-11 at 10:41 +0800, Chaotian Jing wrote:
-> >> mt2701/mt2712 has 12bit clock div, which is not compatible with
-> >> mt8135/mt8173. and, some additional features will be added in
-> >> mt2701/mt2712, so that need distinguish it by comatibale name.
-> >>
-> >> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>   drivers/mmc/host/mtk-sd.c | 82 +++++++++++++++++++++++++++++++++++++++--------
-> >>   1 file changed, 69 insertions(+), 13 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> >> index 267f7ab..643c795 100644
-> >> --- a/drivers/mmc/host/mtk-sd.c
-> >> +++ b/drivers/mmc/host/mtk-sd.c
-> [...]
-> >> @@ -350,6 +358,31 @@ struct msdc_host {
-> >>   	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-> >>   };
-> >>   
-> >> +static const struct mtk_mmc_compatible mt8135_compat = {
-> >> +	.clk_div_bits = 8,
-> >> +};
-> >> +
-> >> +static const struct mtk_mmc_compatible mt8173_compat = {
-> >> +	.clk_div_bits = 8,
-> >> +};
-> >> +
-> >> +static const struct mtk_mmc_compatible mt2701_compat = {
-> >> +	.clk_div_bits = 12,
-> >> +};
-> >> +
-> >> +static const struct mtk_mmc_compatible mt2712_compat = {
-> >> +	.clk_div_bits = 12,
-> >> +};
-> >> +
-> >> +static const struct of_device_id msdc_of_ids[] = {
-> >> +	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
-> >> +	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
-> > 
-> > Because mt8135_compat is equal to mt8173_compat, so I think the
-> > compatible of "mediatek,mt8173-mmc" is redundant. You could just keep
-> > compatible of "mediatek,mt8135-mmc" in driver, and use
-> > "mediatek,mt8135-mmc" for both mt8135.dtsi and mt8173.dtsi.
-> > 
-> 
-> Well thing is, that in the follow-up patches, new data types get added to the 
-> different compat structures and in the end all four a different.
-
-You are right, these modification are necessary. If so, adding
-"mediatek,mt8173-mmc" in the patch of "add support of mt2701/mt2712"
-looks irrelevant. Maybe the title should be modified as "add support of
-mt8173/mt2701/mt2712" or move mt8173 part to another patch.
-
-Regards,
-CK
-
-> 
-> >> +	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
-> >> +	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
-> > 
-> > Ditto.
-> > 
-> 
-> Same here.
-> 
-> Regards,
-> Matthias
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgNjozNiBQTSwgIDxmcm93YW5kLmxpc3RAZ21haWwuY29t
+PiB3cm90ZToKPiBGcm9tOiBGcmFuayBSb3dhbmQgPGZyYW5rLnJvd2FuZEBzb255LmNvbT4KPgo+
+IEkgaGF2ZSBmb3VuZCB0aGUgZGV2aWNlIHRyZWUgb3ZlcmxheSBjb2RlIHRvIGJlIGRpZmZpY3Vs
+dCB0byByZWFkIGFuZAo+IG1haW50YWluLiAgVGhpcyBwYXRjaCBzZXJpZXMgYXR0ZW1wdHMgdG8g
+aW1wcm92ZSB0aGF0IHNpdHVhdGlvbi4KPgo+IFRoZSBjbGVhbnVwIGluY2x1ZGVzIHNvbWUgY2hh
+bmdlcyB2aXNpYmxlIHRvIHVzZXJzIG9mIG92ZXJsYXlzLiAgVGhlCj4gb25seSBpbiBrZXJuZWwg
+dXNlciBvZiBvdmVybGF5cyBpcyBmaXhlZCB1cCBmb3IgdGhvc2UgY2hhbmdlcy4gIFRoZQo+IGlu
+IGtlcm5lbCB1c2VyIGlzOgo+Cj4gICAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfc2xh
+dmVfY29tcGF0LmMKPgo+IEZvbGxvd2luZyB0aGUgY2xlYW51cCBwYXRjaGVzIGFyZSBhIHNldCBv
+ZiBwYXRjaGVzIHRvIGZpeCB2YXJpb3VzCj4gaXNzdWVzLgo+Cj4gVGhlIGZpcnN0IGZpdmUgcGF0
+Y2hlcyBhcmUgaW50ZW5kZWQgdG8gbm90IG1ha2UgYW55IGZ1bmN0aW9uYWwKPiBjaGFuZ2VzLCBh
+bmQgYXJlIHNlZ3JhdGVkIHRvIGVhc2UgcmV2aWV3Lgo+Cj4gVmVyc2lvbiAzIGFwcGxpZXMgb24g
+dG9wIG9mIGFjMGYzZTMwZDg3ZSAib2Y6IG92ZXJsYXk6IGZpeCBtZW1vcnkKPiBsZWFrIHJlbGF0
+ZWQgdG8gZHVwbGljYXRlZCBwcm9wZXJ0eSIKPgo+Cj4KPiBDaGFuZ2VzIGZyb20gdmVyc2lvbiAy
+Ogo+ICAgIC0gcmViYXNlIG9uIFJvYidzIGR0L25leHQgYnJhbmNoCj4gICAgLSAzLzEyOiBkbyBt
+aXNzaW5nIHJlbmFtZXMgaW4gb2ZfZmlsbF9vdmVybGF5X2luZm8oKSBzbyB0aGF0IDMvMTIKPiAg
+ICAgIGFuZCA0LzEyIGJ1aWxkLiAgVGhpcyBmdW5jdGlvbiBpcyByZW1vdmVkIGluIDUvMTIuCj4K
+PiBDaGFuZ2VzIGZyb20gdmVyc2lvbiAxOgo+Cj4gICAtIHNxdWFzaCAiW1BBVENIXSBvZjogb3Zl
+cmxheTogbW92ZSByZXNvbHZlIHBoYW5kbGVzIGludG8KPiAgICAgb2Zfb3ZlcmxheV9hcHBseSgp
+IiBpbnRvICJbUEFUQ0ggMDkvMTJdIG9mOiBvdmVybGF5OiBhdm9pZCByYWNlCj4gICAgIGNvbmRp
+dGlvbiBiZXR3ZWVuIGFwcGx5aW5nIG11bHRpcGxlIG92ZXJsYXlzIgo+Cj4KPiBGcmFuayBSb3dh
+bmQgKDEyKToKPiAgIG9mOiBvdmVybGF5LmM6IFJlbW92ZSBjb21tZW50cyB0aGF0IHN0YXRlIHRo
+ZSBvYnZpb3VzLCB0byByZWR1Y2UKPiAgICAgY2x1dHRlcgo+ICAgb2Y6IG92ZXJsYXkuYzogQ29u
+dmVydCBjb21wYXJpc29ucyB0byB6ZXJvIG9yIE5VTEwgdG8gbG9naWNhbAo+ICAgICBleHByZXNz
+aW9ucwo+ICAgb2Y6IG92ZXJsYXk6IHJlbmFtZSBpZGVudGlmaWVycyB0byBtb3JlIHJlZmxlY3Qg
+d2hhdCB0aGV5IGRvCj4gICBvZjogb3ZlcmxheTogcmVuYW1lIGlkZW50aWZpZXJzIGluIGR1cF9h
+bmRfZml4dXBfc3ltYm9sX3Byb3AoKQo+ICAgb2Y6IG92ZXJsYXk6IG1pbm9yIHJlc3RydWN0dXJp
+bmcKPiAgIG9mOiBvdmVybGF5OiBkZXRlY3QgY2FzZXMgd2hlcmUgZGV2aWNlIHRyZWUgbWF5IGJl
+Y29tZSBjb3JydXB0Cj4gICBvZjogb3ZlcmxheTogZXhwYW5kIGNoZWNrIG9mIHdoZXRoZXIgb3Zl
+cmxheSBjaGFuZ2VzZXQgY2FuIGJlIHJlbW92ZWQKPiAgIG9mOiBvdmVybGF5OiBsb29zZW4gb3Zl
+cmx5IHN0cmljdCBwaGFuZGxlIGNsYXNoIGNoZWNrCj4gICBvZjogb3ZlcmxheTogYXZvaWQgcmFj
+ZSBjb25kaXRpb24gYmV0d2VlbiBhcHBseWluZyBtdWx0aXBsZSBvdmVybGF5cwo+ICAgb2Y6IG92
+ZXJsYXk6IHNpbXBsaWZ5IGFwcGx5aW5nIHN5bWJvbHMgZnJvbSBhbiBvdmVybGF5Cj4gICBvZjog
+b3ZlcmxheTogcmVtb3ZlIGEgZGVwZW5kZW5jeSBvbiBkZXZpY2Ugbm9kZSBmdWxsX25hbWUKPiAg
+IG9mOiBvdmVybGF5OiByZW1vdmUgdW5uZWVkZWQgY2hlY2sgZm9yIE5VTEwga2Jhc2VuYW1lKCkK
+Pgo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvb3ZlcmxheS1ub3Rlcy50eHQgICB8ICAgMTIg
+Ky0KPiAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfc2xhdmVfY29tcGF0LmMgfCAgIDE0
+ICstCj4gIGRyaXZlcnMvb2YvYmFzZS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
+MiArLQo+ICBkcml2ZXJzL29mL2R5bmFtaWMuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+MzcgKysrLQo+ICBkcml2ZXJzL29mL29mX3ByaXZhdGUuaCAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMjIgKy0KPiAgZHJpdmVycy9vZi9vdmVybGF5LmMgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAxMDQyICsrKysrKysrKysrKysrKystLS0tLS0tLS0tCj4gIGRyaXZlcnMvb2YvcmVzb2x2ZXIu
+YyAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArCj4gIGRyaXZlcnMvb2YvdW5pdHRlc3Qu
+YyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4MSArLQo+ICBpbmNsdWRlL2xpbnV4L29mLmgg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTcgKy0KPiAgOSBmaWxlcyBjaGFuZ2VkLCA4
+NzQgaW5zZXJ0aW9ucygrKSwgNDYwIGRlbGV0aW9ucygtKQoKU2VyaWVzIGFwcGxpZWQuCgpSb2IK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
