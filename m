@@ -1,73 +1,169 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in full_name
-Date: Wed, 18 Oct 2017 10:12:47 -0500
-Message-ID: <CANk1AXStoiNtJfU0iNug1wKASurqH6OrNoaN=UtSh6xxSB088Q@mail.gmail.com>
-References: <20170821151651.25096-1-robh@kernel.org> <20170821151651.25096-6-robh@kernel.org>
- <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
- <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com> <59E69786.2030406@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Wed, 18 Oct 2017 10:32:41 -0500
+Message-ID: <CAL_Jsq+JiLgPLZSncWu=rQh80pnCXd0WpkLEkASPXeFSOMt4yg@mail.gmail.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <39f87f46-da67-11d9-4336-213c13025568@monstr.eu> <CABGGiswXP800Pshc8jpVv3N4O-u2hFHJs-Ut_xVe8xV9ixcJSw@mail.gmail.com>
+ <52c0aa5e-4995-9c0e-babb-60ec84a3deff@monstr.eu> <00068711-a9b8-e879-8212-b7eb4141e4b7@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59E69786.2030406-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <00068711-a9b8-e879-8212-b7eb4141e4b7-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 6:51 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 10/17/17 14:46, Rob Herring wrote:
->> On Tue, Oct 17, 2017 at 4:32 PM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>
->>> Hi Rob,
->>>
->>>> With dependencies on a statically allocated full path name converted to
->>>> use %pOF format specifier, we can store just the basename of node, and
->>>> the unflattening of the FDT can be simplified.
+On Wed, Oct 18, 2017 at 9:28 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi,
+>
+> On 18/10/17 15:04, Michal Simek wrote:
+>> On 16.10.2017 16:11, Rob Herring wrote:
+>>> On Mon, Oct 16, 2017 at 12:36 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+>>>> Hi,
 >>>>
->>>> This commit will affect the remaining users of full_name. After
->>>> analyzing these users, the remaining cases should only change some print
->>>> messages. The main users of full_name are providing a name for struct
->>>> resource. The resource names shouldn't be important other than providing
->>>> /proc/iomem names.
+>>>> On 9.10.2017 22:39, Grant Likely wrote:
+>>>>> Kernel Summit is now just over 2 weeks away and it is time to pull
+>>>>> together the schedule for the Devicetree workshop. Originally I
+>>>>> planned on just an afternoon, but I've got the room for the whole day,
+>>>>> so I've got a lot of flexibility on the schedule. Unscheduled time can
+>>>>> be used for hacking.
+>>>>>
+>>>>> Date: 26 Oct 2017
+>>>>> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
+>>>>> Location: Athens room - Hilton Prague
+>>>>>
+>>>>> If you plan to attend, make sure you update your OSSunmitE/ELCE
+>>>>> registration to include the DT Workshop (log in to access and modify
+>>>>> your registration):
+>>>>>
+>>>>> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
+>>>>>
+>>>>> Here is my current list of topics in no particular order, including
+>>>>> the topic moderator:
+>>>>>
+>>>>> Runtime memory consumption (Rob Herring)
+>>>>> Overlay maintenance plan (TBC)
+>>>>> Stable ABI for devicetree (TBC)
+>>>>> DT YAML encoding (Pantelis Antoniou)
+>>>>> DT Schema format - option 1 (Pantelis Antoniou)
+>>>>> DT Schema format - option 2 (Grant Likely)
+>>>>> Sharing Generic bindings (TBC)
+>>>>> devicetree.org update (Grant)
+>>>>>
+>>>>> Reply to this email if you want to propose another topic.
+>>>>>
+>>>>> Reply privately if there is a particular topic you want to attend but
+>>>>> you are unable to be there in the morning or afternoon. I'll put the
+>>>>> actual agenda together a week out from the event.
 >>>>
->>>> We no longer distinguish between pre and post 0x10 dtb formats as either
->>>> a full path or basename will work. However, less than 0x10 formats have
->>>> been broken since the conversion to use libfdt (and no one has cared).
->>>> The conversion of the unflattening code to be non-recursive also broke
->>>> pre 0x10 formats as the populate_node function would return 0 in that
->>>> case.
->>>>
->>>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> ---
->>>> v2:
->>>> - rebase to linux-next
->>>>
->>>>  drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
->>>>  1 file changed, 11 insertions(+), 58 deletions(-)
+>>>> I would like to talk how to add support for AArch32 based on arm64 dts file.
 >>>
->>> I've just updated to the latest next branch and am finding problems
->>> applying overlays.   Reverting this commit alleviates things.  The
->>> errors I get are:
->>>
->>> [   88.498704] OF: overlay: Failed to apply prop @/__symbols__/clk_0
->>> [   88.513447] OF: overlay: apply failed '/__symbols__'
->>> [   88.518423] create_overlay: Failed to create overlay (err=-12)
+>>> We already have that for RPi3, but it's a bit hacky in that you have
+>>> to include files from one arch to the other. What I'd like to see
+>>> ideally is no dependency on $ARCH to build dts files. You can't build
+>>> dts files for an arch without a cross-compiler installed which is an
+>>> artificial dependency. The dtb should be independent of whether you're
+>>> building for 32 or 64 bit.
 >>
->> Frank's series with overlay updates should fix this.
->
-> Yes, it does:
->
->   [PATCH v3 11/12] of: overlay: remove a dependency on device node full_name
+>> I wasn't aware about RPI3 but yes - I have seen the same for ZynqMP.
+>>
+>>>
+>>> There's the other aspect of being able to do armv8 32-bit builds as
+>>> there's no explicit support for v8 in arch/arm/. But that's not a DT
+>>> issue.
+>>
+>> Yep including Kconfig.platforms is required.
+>>
+>>>
+>>>> And next topic is discuss criteria for adding new DTS board files to
+>>>> kernel for supporting custom boards especially for arm32 which can end
+>>>> up with a lot of dts files in this folder.
+>>>
+>>> We really should move the arm32 files into subdirs for each SoC vendor
+>>> IMO, but I think armsoc maintainers have been against that churn.
+>>
+>> As you said above maybe we should consider to move all DTS files out of
+>> arch folder and sorted them based on SoC vendor. It sounds like a good
+>> topic to discuss.
 
-Thanks for the fast response.  I fetched the dt/next branch to test
-this but there are sufficient changes that Pantelis' "OF: DT-Overlay
-configfs interface (v7)" is broken now.  I've been adding that
-downstream since 4.4.  We're using it as an interface for applying
-overlays to program FPGAs.  If we fix it again, is there any chance
-that can go upstream now?
+That is 2 separate topics really. For the latter, you need to come up
+with reasons to justify the churn.
 
-Alan
+>>>> If make sense to permit only boards with something new or just enable
+>>>> reference boards to go in.
+>>>
+>>> The board dts files are generally pretty minimal. What's the issue
+>>> here? Just lots of files in arch/arm/boot/dts?
+>>
+>> yep. A lot of files there.
+
+Are we approaching the limits of # of files in one directory? Is
+Arnd/Olof or Linus complaining about there being too many files to
+maintain? Do sub-arch maintainers not know which files are theirs?
+What problem are we trying to solve here?
+
+If we're talking about moving bindings and dts files out of the
+kernel, then call it that. Otherwise, let's not mix the topics. Unless
+you want nothing to happen then tie it to moving to a separate
+repository.
+
+> I was wondering whether we should really stop providing .dts files for
+> *boards* in the *kernel* tree. In my impression this was more a stop-gap
+> measure to bridge the transition from board files to DT.
+
+Not really. A stop-gap would be a couple of kernel cycles in my mind.
+PPC dts files have been there forever practically.
+
+> Given that the particular board files are rather boring anyway, wouldn't
+> it be sufficient to just include the SoC .dtsi plus one (or two) example
+> .dts, for instance for the official evaluation board?
+
+That sounds horrible to manage. You are assuming the split between
+board and SoC specifics are done perfectly from the start. I haven't
+checked the history, but I'm going to guess that has not been the
+case. That would effectively make the split be an ABI. Folks have
+enough issues with the entire dtb being an ABI.
+
+However, there is a coming issue with Android project Treble which
+does say all board specifics are an overlay (or multiple overlays) to
+a common SoC base dtb which does make the split an ABI. For mainline
+to handle this, we'd need to start making the board files overlays.
+And to not break everything, we'd need to apply those overlays at
+build time to produce a single board dtb. OTOH, phones aren't really
+supported in mainline and vendors will do it wrong before mainline
+gets around to it.
+
+> This could be used as a template for creating specific board DTs.
+> Ideally vendors could put those on their boards: into some flash or
+> integrated into the firmware (as part of U-Boot, for instance).
+
+That's really a separate problem from where are dts files maintained.
+
+Does u-boot support using the same dtb to configure itself and to pass
+to the kernel yet? That was a foreign concept though I think it was
+being worked on.
+
+> And having a source for the .dtsi should make it easier to get a
+> readable de-compilation of a given .dtb.
+
+If such a tool existed to add back the annotations. YAML will solve
+that, I'm sure.
+
+> We could collect .dts files for boards somewhere else. It's already the
+> case that we have some boards with a specific SoC "supported by the
+> kernel" and some not, for no technical reason at all, actually. It's
+> just whether there is someone willing to post (and push through) a .dts
+> file.
+
+We could start accepting (but not requiring) patches against the
+devicetree-rebasing.git tree if that solves the problem of "kernel
+bindings" and "kernel dts files". We can mechanically convert their
+paths back to kernel paths and apply them. I've got no issue signing
+up to that because I fully expect that to be only a trickle.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
