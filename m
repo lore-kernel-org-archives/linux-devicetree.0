@@ -1,82 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH  1/2] ARM: dts: r8a7743: Add DU support
-Date: Wed, 18 Oct 2017 15:26:37 +0300
-Message-ID: <2905584.Wm5DR7hli8@avalon>
-References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com> <1508319227-19679-2-git-send-email-biju.das@bp.renesas.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 0/5] qcom-ufs: phy/hcd: Refactor phy initialization
+ code
+Date: Wed, 18 Oct 2017 18:01:49 +0530
+Message-ID: <238f7e71-c878-2851-c5b8-9ef4a835cf23@ti.com>
+References: <1507789176-2760-1-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508319227-19679-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507789176-2760-1-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: subhashj@codeaurora.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju,
 
-Thank you for the patch.
 
-On Wednesday, 18 October 2017 12:33:46 EEST Biju Das wrote:
-> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+On Thursday 12 October 2017 11:49 AM, Vivek Gautam wrote:
+> Refactoring the qcom-ufs phy and host controller code to move
+> further towards the generic phy usage. Right now the qcom-ufs exports
+> a bunch of APIs that are used by the host controller to initialize
+> the phy.
+> With this patch series, we populate the phy_init() which was a no-op
+> earlier. The host controller then calls the phy_init() at the designated
+> place rather than doing it invariably in ufs_hcd_init().
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
-> ---
->  arch/arm/boot/dts/r8a7743.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+> As part of this series, we introduce phy modes for ufs phy.
+> The M-PHY has two data rates defined for each generations (Gears) -
+> Rate A and Rate B. These can serve as the two modes of ufs HS phy.
+> Host controller can direct the phy to set the respective configurations
+> based on the phy modes.
 > 
-> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-> index 7bbba4a..fafb10e 100644
-> --- a/arch/arm/boot/dts/r8a7743.dtsi
-> +++ b/arch/arm/boot/dts/r8a7743.dtsi
-> @@ -1033,6 +1033,36 @@
->  			};
->  		};
+> The patch-series has been tested with necessary dt patches on db820c.
 > 
-> +		du: display@feb00000 {
-> +			compatible = "renesas,du-r8a7743";
-> +			reg = <0 0xfeb00000 0 0x40000>,
-> +			      <0 0xfeb90000 0 0x1c>;
-> +			reg-names = "du", "lvds.0";
-> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 724>,
-> +				 <&cpg CPG_MOD 723>,
-> +				 <&cpg CPG_MOD 726>;
-> +			clock-names = "du.0", "du.1", "lvds.0";
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					du_out_rgb: endpoint {
-> +					};
-> +				};
-> +				port@1 {
-> +					reg = <1>;
-> +					du_out_lvds0: endpoint {
-> +					};
-> +				};
-> +			};
-> +		};
-> +
->  		pci0: pci@ee090000 {
->  			compatible = "renesas,pci-r8a7743",
->  				     "renesas,pci-rcar-gen2";
+> 
+> Hi Kishon,
+> 
+> I shall be on vacation for the next week. Can you kindly consider
+> picking this series for 4.15. Martin was good with last version
+> of the patches[1], and Subhash has reviewed the patches of which
+> he has given 'Reviewed-by' for [PATCH 4/5] , and I have addressed
+> his comments for the last patch. I hope it's not too late for 4.15.
+> Subhash, can you please consider giving your 'Reviewed-by' for
+> the last patch if you find it good.
 
--- 
-Regards,
+merged to phy -next, thanks!
 
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Kishon
+> 
+> [1] https://lkml.org/lkml/2017/8/10/958
+> 
+> Vivek Gautam (5):
+>   dt-bindings: phy: Add PHY_TYPE_UFS definition
+>   phy: Add UFS PHY modes
+>   phy: qcom-ufs: Add support to set phy mode
+>   scsi/ufs: qcom: Set phy mode based on the controllers HS MODE
+>   ufs/phy: qcom: Refactor to use phy_init call
+> 
+>  drivers/phy/qualcomm/phy-qcom-ufs-i.h        |  5 ++--
+>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c | 29 +++++++++++++++++--
+>  drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c | 29 +++++++++++++++++--
+>  drivers/phy/qualcomm/phy-qcom-ufs.c          | 42 ++++++++++------------------
+>  drivers/scsi/ufs/ufs-qcom.c                  | 39 +++++++++++---------------
+>  include/dt-bindings/phy/phy.h                |  1 +
+>  include/linux/phy/phy-qcom-ufs.h             |  3 --
+>  include/linux/phy/phy.h                      |  2 ++
+>  8 files changed, 91 insertions(+), 59 deletions(-)
+> 
