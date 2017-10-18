@@ -1,126 +1,48 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 2/6] arm64: dts: uniphier: add GPIO controller nodes
-Date: Wed, 18 Oct 2017 13:24:33 +0900
-Message-ID: <1508300677-23190-3-git-send-email-yamada.masahiro@socionext.com>
-References: <1508300677-23190-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508300677-23190-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 0/6] ARM: dts: uniphier: add GPIO nodes and related properties
+Date: Wed, 18 Oct 2017 13:24:31 +0900
+Message-ID: <1508300677-23190-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The GPIO controller also acts as an interrupt controller and the
-interrupt lines are connected to the AIDET block.
+Masahiro Yamada (6):
+  ARM: dts: uniphier: add GPIO controller nodes
+  arm64: dts: uniphier: add GPIO controller nodes
+  ARM: dts: uniphier: route on-board device IRQ to GPIO controller
+  arm64: dts: uniphier: route on-board device IRQ to GPIO controller
+  ARM: dts: uniphier: add GPIO hog definition
+  arm64: dts: uniphier: add GPIO hog definition
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+ arch/arm/boot/dts/uniphier-ld4-ref.dts             | 10 ++++++++-
+ arch/arm/boot/dts/uniphier-ld4.dtsi                | 14 ++++++++++++
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts            | 10 ++++++++-
+ arch/arm/boot/dts/uniphier-pro4-ref.dts            | 10 ++++++++-
+ arch/arm/boot/dts/uniphier-pro4.dtsi               | 14 ++++++++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi               | 14 ++++++++++++
+ arch/arm/boot/dts/uniphier-pxs2.dtsi               | 17 +++++++++++++++
+ arch/arm/boot/dts/uniphier-sld8-ref.dts            | 10 ++++++++-
+ arch/arm/boot/dts/uniphier-sld8.dtsi               | 18 ++++++++++++++++
+ arch/arm/boot/dts/uniphier-support-card.dtsi       |  1 +
+ .../arm64/boot/dts/socionext/uniphier-ld11-ref.dts | 11 +++++++++-
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   | 25 ++++++++++++++++++++++
+ .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts | 11 +++++++++-
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 19 ++++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi   | 19 ++++++++++++++++
+ 15 files changed, 197 insertions(+), 6 deletions(-)
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 25 ++++++++++++++++++++++++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 19 ++++++++++++++++++
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 19 ++++++++++++++++++
- 3 files changed, 63 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index ee4aff5..99f14cc 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -161,6 +161,31 @@
- 			};
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>,
-+				      <&pinctrl 43 0 0>,
-+				      <&pinctrl 51 0 0>,
-+				      <&pinctrl 96 0 0>,
-+				      <&pinctrl 160 0 0>,
-+				      <&pinctrl 184 0 0>;
-+			gpio-ranges-group-names = "gpio_range0",
-+						  "gpio_range1",
-+						  "gpio_range2",
-+						  "gpio_range3",
-+						  "gpio_range4",
-+						  "gpio_range5";
-+			ngpios = <200>;
-+			socionext,interrupt-ranges = <0 48 16>, <16 154 5>,
-+						     <21 217 3>;
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index a29c279..17c1c92 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -230,6 +230,25 @@
- 			};
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>,
-+				      <&pinctrl 96 0 0>,
-+				      <&pinctrl 160 0 0>;
-+			gpio-ranges-group-names = "gpio_range0",
-+						  "gpio_range1",
-+						  "gpio_range2";
-+			ngpios = <205>;
-+			socionext,interrupt-ranges = <0 48 16>, <16 154 5>,
-+						     <21 217 3>;
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-index 384729f..87cb290 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-@@ -178,6 +178,25 @@
- 			clocks = <&peri_clk 3>;
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>,
-+				      <&pinctrl 96 0 0>,
-+				      <&pinctrl 160 0 0>;
-+			gpio-ranges-group-names = "gpio_range0",
-+						  "gpio_range1",
-+						  "gpio_range2";
-+			ngpios = <286>;
-+			socionext,interrupt-ranges = <0 48 16>, <16 154 5>,
-+						     <21 217 3>;
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
