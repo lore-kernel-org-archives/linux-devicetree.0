@@ -1,49 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 12/36] dt-bindings: document stall and PASID
- properties for IOMMU masters
-Date: Tue, 17 Oct 2017 21:06:20 -0500
-Message-ID: <CAL_JsqLFDeNq=PoipFv4qjKKP2mhE+2Eou4dBZhfm=XuXxjHrg@mail.gmail.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-13-jean-philippe.brucker@arm.com> <20171013191051.lgxbcobkzzj5guhv@rob-hp-laptop>
- <e7288f51-1cfa-44ce-e3ce-e9f3daf91579@arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 3/4] ARM: dts: imx28-tx28: fix interrupt flags and use
+ interrupts-extended property
+Date: Wed, 18 Oct 2017 10:13:32 +0800
+Message-ID: <20171018021331.GC18810@dragon>
+References: <1507719939-27250-1-git-send-email-LW@KARO-electronics.de>
+ <1507719939-27250-4-git-send-email-LW@KARO-electronics.de>
+ <20171016071726.gyzvalxzk4o3jsuz@pengutronix.de>
+ <20171016105632.709e653c@karo-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e7288f51-1cfa-44ce-e3ce-e9f3daf91579-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171016105632.709e653c@karo-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 5:23 AM, Jean-Philippe Brucker
-<jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 13/10/17 20:10, Rob Herring wrote:
->> On Fri, Oct 06, 2017 at 02:31:39PM +0100, Jean-Philippe Brucker wrote:
->>> On ARM systems, some platform devices behind an IOMMU may support stall
->>> and PASID features. Stall is the ability to recover from page faults and
->>> PASID offers multiple process address spaces to the device. Together they
->>> allow to do paging with a device. Let the firmware tell us when a device
->>> supports stall and PASID.
->>
->> Can't these be implied by the compatible string of the devices?
->
-> I think that PASID capacity can be deduced from the compatible string but
-> don't know how these devices will be implemented (the only known example
-> being a software model for testing). In any case implementing PASID based
-> on the compatible string is tricky, because the IOMMU driver needs to know
-> PASID capacity before the device driver has had time to probe the device.
-> Maybe we could get away with a static table associating compatible string
-> to PASID capacity, but it's not very nice.
->
-> For stall it's a property of the integration between device and IOMMU,
-> much like the "iommus" property, so it can't be deduced only from the
-> compatible string. It's crucial that the firmware validates that stalling
-> is safe, because we don't have any other way to discover it.
+On Mon, Oct 16, 2017 at 10:56:32AM +0200, Lothar Waßmann wrote:
+> Hi,
+> 
+> On Mon, 16 Oct 2017 09:17:26 +0200 Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Wed, Oct 11, 2017 at 01:05:38PM +0200, Lothar Waßmann wrote:
+> > > diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+> > > index 211e67d..3c852f7 100644
+> > > --- a/arch/arm/boot/dts/imx28-tx28.dts
+> > > +++ b/arch/arm/boot/dts/imx28-tx28.dts
+> > > @@ -328,8 +328,7 @@
+> > >  		reg = <0x20>;
+> > >  		pinctrl-names = "default";
+> > >  		pinctrl-0 = <&tx28_pca9554_pins>;
+> > > -		interrupt-parent = <&gpio3>;
+> > > -		interrupts = <28 0>;
+> > > +		interrupts-extended = <&gpio3 28 IRQ_TYPE_NONE>;
+> > >  		gpio-controller;
+> > >  		#gpio-cells = <2>;
+> > >  		interrupt-controller;
+> > 
+> > While interrupts-extended looks nice,
+> > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> > has:
+> > 
+> > 	"interrupts-extended" should only be used when a device has
+> > 	multiple interrupt parents.
+> > 
+> > If this is still true, this patch is wrong.
+> >
+> Thanks for the hint. It really helps to read the documentation
+> sometimes, rahter than relying on existing code only...
+> 
+> A quick check shows, that more than 100 of the 130 uses of
+> interrupts-extended are wrong. :(
 
-Okay, fair enough. I'll let others comment.
+So should I drop all interrupts-extended patches from you?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
