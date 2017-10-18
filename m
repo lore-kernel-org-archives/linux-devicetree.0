@@ -1,72 +1,40 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 00/12] of: overlay: clean up device tree overlay code
-Date: Tue, 17 Oct 2017 20:49:52 -0500
-Message-ID: <CAL_Jsq+_DnpzmKGF2rBEd4H-PB02uo442FUooHtDtk0tDAX1Jg@mail.gmail.com>
-References: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] drivers/irqchip: gicv3: add workaround for
+ Synquacer pre-ITS
+Date: Tue, 17 Oct 2017 20:53:53 -0500
+Message-ID: <CAL_Jsq+814HWD6D=FTDJBbgQuMCrkkdWo7qhH3TL6LYgGNQjaw@mail.gmail.com>
+References: <20171017165556.30250-1-ard.biesheuvel@linaro.org> <20171017165556.30250-4-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171017165556.30250-4-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Graeme Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgNjozNiBQTSwgIDxmcm93YW5kLmxpc3RAZ21haWwuY29t
-PiB3cm90ZToKPiBGcm9tOiBGcmFuayBSb3dhbmQgPGZyYW5rLnJvd2FuZEBzb255LmNvbT4KPgo+
-IEkgaGF2ZSBmb3VuZCB0aGUgZGV2aWNlIHRyZWUgb3ZlcmxheSBjb2RlIHRvIGJlIGRpZmZpY3Vs
-dCB0byByZWFkIGFuZAo+IG1haW50YWluLiAgVGhpcyBwYXRjaCBzZXJpZXMgYXR0ZW1wdHMgdG8g
-aW1wcm92ZSB0aGF0IHNpdHVhdGlvbi4KPgo+IFRoZSBjbGVhbnVwIGluY2x1ZGVzIHNvbWUgY2hh
-bmdlcyB2aXNpYmxlIHRvIHVzZXJzIG9mIG92ZXJsYXlzLiAgVGhlCj4gb25seSBpbiBrZXJuZWwg
-dXNlciBvZiBvdmVybGF5cyBpcyBmaXhlZCB1cCBmb3IgdGhvc2UgY2hhbmdlcy4gIFRoZQo+IGlu
-IGtlcm5lbCB1c2VyIGlzOgo+Cj4gICAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfc2xh
-dmVfY29tcGF0LmMKPgo+IEZvbGxvd2luZyB0aGUgY2xlYW51cCBwYXRjaGVzIGFyZSBhIHNldCBv
-ZiBwYXRjaGVzIHRvIGZpeCB2YXJpb3VzCj4gaXNzdWVzLgo+Cj4gVGhlIGZpcnN0IGZpdmUgcGF0
-Y2hlcyBhcmUgaW50ZW5kZWQgdG8gbm90IG1ha2UgYW55IGZ1bmN0aW9uYWwKPiBjaGFuZ2VzLCBh
-bmQgYXJlIHNlZ3JhdGVkIHRvIGVhc2UgcmV2aWV3Lgo+Cj4gVmVyc2lvbiAzIGFwcGxpZXMgb24g
-dG9wIG9mIGFjMGYzZTMwZDg3ZSAib2Y6IG92ZXJsYXk6IGZpeCBtZW1vcnkKPiBsZWFrIHJlbGF0
-ZWQgdG8gZHVwbGljYXRlZCBwcm9wZXJ0eSIKPgo+Cj4KPiBDaGFuZ2VzIGZyb20gdmVyc2lvbiAy
-Ogo+ICAgIC0gcmViYXNlIG9uIFJvYidzIGR0L25leHQgYnJhbmNoCj4gICAgLSAzLzEyOiBkbyBt
-aXNzaW5nIHJlbmFtZXMgaW4gb2ZfZmlsbF9vdmVybGF5X2luZm8oKSBzbyB0aGF0IDMvMTIKPiAg
-ICAgIGFuZCA0LzEyIGJ1aWxkLiAgVGhpcyBmdW5jdGlvbiBpcyByZW1vdmVkIGluIDUvMTIuCj4K
-PiBDaGFuZ2VzIGZyb20gdmVyc2lvbiAxOgo+Cj4gICAtIHNxdWFzaCAiW1BBVENIXSBvZjogb3Zl
-cmxheTogbW92ZSByZXNvbHZlIHBoYW5kbGVzIGludG8KPiAgICAgb2Zfb3ZlcmxheV9hcHBseSgp
-IiBpbnRvICJbUEFUQ0ggMDkvMTJdIG9mOiBvdmVybGF5OiBhdm9pZCByYWNlCj4gICAgIGNvbmRp
-dGlvbiBiZXR3ZWVuIGFwcGx5aW5nIG11bHRpcGxlIG92ZXJsYXlzIgo+Cj4KPiBGcmFuayBSb3dh
-bmQgKDEyKToKPiAgIG9mOiBvdmVybGF5LmM6IFJlbW92ZSBjb21tZW50cyB0aGF0IHN0YXRlIHRo
-ZSBvYnZpb3VzLCB0byByZWR1Y2UKPiAgICAgY2x1dHRlcgo+ICAgb2Y6IG92ZXJsYXkuYzogQ29u
-dmVydCBjb21wYXJpc29ucyB0byB6ZXJvIG9yIE5VTEwgdG8gbG9naWNhbAo+ICAgICBleHByZXNz
-aW9ucwo+ICAgb2Y6IG92ZXJsYXk6IHJlbmFtZSBpZGVudGlmaWVycyB0byBtb3JlIHJlZmxlY3Qg
-d2hhdCB0aGV5IGRvCj4gICBvZjogb3ZlcmxheTogcmVuYW1lIGlkZW50aWZpZXJzIGluIGR1cF9h
-bmRfZml4dXBfc3ltYm9sX3Byb3AoKQo+ICAgb2Y6IG92ZXJsYXk6IG1pbm9yIHJlc3RydWN0dXJp
-bmcKPiAgIG9mOiBvdmVybGF5OiBkZXRlY3QgY2FzZXMgd2hlcmUgZGV2aWNlIHRyZWUgbWF5IGJl
-Y29tZSBjb3JydXB0Cj4gICBvZjogb3ZlcmxheTogZXhwYW5kIGNoZWNrIG9mIHdoZXRoZXIgb3Zl
-cmxheSBjaGFuZ2VzZXQgY2FuIGJlIHJlbW92ZWQKPiAgIG9mOiBvdmVybGF5OiBsb29zZW4gb3Zl
-cmx5IHN0cmljdCBwaGFuZGxlIGNsYXNoIGNoZWNrCj4gICBvZjogb3ZlcmxheTogYXZvaWQgcmFj
-ZSBjb25kaXRpb24gYmV0d2VlbiBhcHBseWluZyBtdWx0aXBsZSBvdmVybGF5cwo+ICAgb2Y6IG92
-ZXJsYXk6IHNpbXBsaWZ5IGFwcGx5aW5nIHN5bWJvbHMgZnJvbSBhbiBvdmVybGF5Cj4gICBvZjog
-b3ZlcmxheTogcmVtb3ZlIGEgZGVwZW5kZW5jeSBvbiBkZXZpY2Ugbm9kZSBmdWxsX25hbWUKPiAg
-IG9mOiBvdmVybGF5OiByZW1vdmUgdW5uZWVkZWQgY2hlY2sgZm9yIE5VTEwga2Jhc2VuYW1lKCkK
-Pgo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvb3ZlcmxheS1ub3Rlcy50eHQgICB8ICAgMTIg
-Ky0KPiAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfc2xhdmVfY29tcGF0LmMgfCAgIDE0
-ICstCj4gIGRyaXZlcnMvb2YvYmFzZS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
-MiArLQo+ICBkcml2ZXJzL29mL2R5bmFtaWMuYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
-MzcgKysrLQo+ICBkcml2ZXJzL29mL29mX3ByaXZhdGUuaCAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMjIgKy0KPiAgZHJpdmVycy9vZi9vdmVybGF5LmMgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAxMDQyICsrKysrKysrKysrKysrKystLS0tLS0tLS0tCj4gIGRyaXZlcnMvb2YvcmVzb2x2ZXIu
-YyAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArCj4gIGRyaXZlcnMvb2YvdW5pdHRlc3Qu
-YyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4MSArLQo+ICBpbmNsdWRlL2xpbnV4L29mLmgg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTcgKy0KPiAgOSBmaWxlcyBjaGFuZ2VkLCA4
-NzQgaW5zZXJ0aW9ucygrKSwgNDYwIGRlbGV0aW9ucygtKQoKU2VyaWVzIGFwcGxpZWQuCgpSb2IK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Oct 17, 2017 at 11:55 AM, Ard Biesheuvel
+<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The Socionext Synquacer SoC's implementation of GICv3 has a so-called
+> 'pre-ITS', which maps 32-bit writes targeted at a separate window of
+> size '4 << device_id_bits' onto writes to GITS_TRANSLATER with device
+> ID taken from bits [device_id_bits + 1:2] of the window offset.
+> Writes that target GITS_TRANSLATER directly are reported as originating
+> from device ID #0.
+>
+> So add a workaround for this. Given that this breaks isolation, clear
+> the IRQ_DOMAIN_FLAG_MSI_REMAP flag as well.
+>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt |  4 ++
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  arch/arm64/Kconfig                                                    |  8 +++
+>  drivers/irqchip/irq-gic-v3-its.c                                      | 72 +++++++++++++++++++-
+>  3 files changed, 82 insertions(+), 2 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
