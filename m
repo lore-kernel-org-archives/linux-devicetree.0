@@ -1,36 +1,64 @@
 From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 00/13] arm64/firmware: Software Delegated Exception
- Interface
-Date: Wed, 18 Oct 2017 18:16:15 +0100
-Message-ID: <20171018171615.GH21820@arm.com>
+Subject: Re: [PATCH v4 10/13] firmware: arm_sdei: Add support for CPU and
+ system power states
+Date: Wed, 18 Oct 2017 18:17:47 +0100
+Message-ID: <20171018171747.GI21820@arm.com>
 References: <20171017174432.1684-1-james.morse@arm.com>
+ <20171017174432.1684-11-james.morse@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171017174432.1684-1-james.morse-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20171017174432.1684-11-james.morse-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
-
-On Tue, Oct 17, 2017 at 06:44:19PM +0100, James Morse wrote:
-> The Software Delegated Exception Interface (SDEI) is an ARM specification
-> for registering callbacks from the platform firmware into the OS.
-> This is intended to be used to implement firmware-first RAS notifications,
-> but also supports vendor-defined events and binding IRQs as events.
+On Tue, Oct 17, 2017 at 06:44:29PM +0100, James Morse wrote:
+> When a CPU enters an idle lower-power state or is powering off, we
+> need to mask SDE events so that no events can be delivered while we
+> are messing with the MMU as the registered entry points won't be valid.
 > 
-> The document is here:
-> http://infocenter.arm.com/help/topic/com.arm.doc.den0054a/ARM_DEN0054A_Software_Delegated_Exception_Interface.pdf
+> If the system reboots, we want to unregister all events and mask the CPUs.
+> For kexec this allows us to hand a clean slate to the next kernel
+> instead of relying on it to call sdei_{private,system}_data_reset().
 > 
-> I anticpate once reviewed this series will go via the arm-soc tree, as the
-> bulk of the code is under /drivers/firmware/.
+> For hibernate we unregister all events and re-register them on restore,
+> in case we restored with the SDE code loaded at a different address.
+> (e.g. KASLR).
+> 
+> Add all the notifiers necessary to do this. We only support shared events
+> so all events are left registered and enabled over CPU hotplug.
+> 
+> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> 
+> ---
+> Changes since v3:
+>  * Renamed CPUHP enum entry to have an ARM_ prefix.
+> 
+>  drivers/firmware/arm_sdei.c | 228 +++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/arm_sdei.h    |   3 +
+>  include/linux/cpuhotplug.h  |   1 +
+>  3 files changed, 231 insertions(+), 1 deletion(-)
 
-Given the close coupling with the arch code, I'm actually fine taking this
-all via arm64 so save it being spread across two merge windows. The driver
-code is a new file, so the scope for conflicts is minimal.
+[...]
+
+>  static void sdei_smccc_smc(unsigned long function_id,
+>  			   unsigned long arg0, unsigned long arg1,
+>  			   unsigned long arg2, unsigned long arg3,
+> @@ -544,9 +742,36 @@ static int sdei_probe(struct platform_device *pdev)
+>  		return 0;
+>  	}
+>  
+> +	err = cpuhp_setup_state_nocalls(CPUHP_AP_ARM_SDEI_STARTING, "SDEI",
+> +				&sdei_cpuhp_up, &sdei_cpuhp_down);
+> +	if (err) {
+> +		pr_warn("Failed to register CPU hotplug notifier...\n");
+> +		return err;
+> +	}
+
+What prevents CPU hotplug events coming in here?
 
 Will
 --
