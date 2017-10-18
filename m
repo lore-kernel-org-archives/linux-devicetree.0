@@ -1,80 +1,82 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] Documentation/devicetree: Add pcie-reset-suspend property
-Date: Wed, 18 Oct 2017 15:38:48 -0500
-Message-ID: <CAL_JsqLYAOGHNRomE2a4Z+MLp807exqsYf7hPJhTd0cAbE85uA@mail.gmail.com>
-References: <20171012205220.130048-1-briannorris@chromium.org>
- <20171012205220.130048-2-briannorris@chromium.org> <20171013165152.GE25517@bhelgaas-glaptop.roam.corp.google.com>
- <20171017233904.GA65743@google.com> <20171018161752.GQ5641@bhelgaas-glaptop.roam.corp.google.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Wed, 18 Oct 2017 23:10:41 +0200
+Message-ID: <20171018211041.3764qpfy2xkzuxjf@piout.net>
+References: <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
+ <1508257276.74236.38.camel@freebsd.org>
+ <2D4E6B6D-8F07-46D0-BB36-D97916802893@linaro.org>
+ <CAMuHMdW-=-CdnD5Eb_w7fc7=c64i+bu=yv9_c0cj3UM940d8EA@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904@USCULXMSG01.am.sony.com>
+ <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw@mail.gmail.com>
+ <B7292660-D602-473E-9B47-CF7B4D2449D7@antoniou-consulting.com>
+ <20171018131809.q5nccysb2j7lu4bn@piout.net>
+ <CAMuHMdXhQQpnQEgOu92MVNd=m2FvkqD9XcYS3rMVMHpB2zY0Qw@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD@USCULXMSG01.am.sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171018161752.GQ5641@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Brian Norris <briannorris@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>, Rajat Jain <rajatja@google.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD-t8YLG9SB9XQEb75RT/aEbJZPSYnAH24X@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 11:17 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Tue, Oct 17, 2017 at 04:39:05PM -0700, Brian Norris wrote:
->> On Fri, Oct 13, 2017 at 11:51:52AM -0500, Bjorn Helgaas wrote:
->> > On Thu, Oct 12, 2017 at 01:52:18PM -0700, Brian Norris wrote:
->> > > The patch is self-descriptive. I've found that we may need
->> > > platform-specific behavior for the PERST# signal in system suspend,
->> > > depending on the type of PCIe endpoints are attached.
->> > >
->> > > Signed-off-by: Brian Norris <briannorris@chromium.org>
->> > > ---
->> > >  Documentation/devicetree/bindings/pci/pci.txt | 11 +++++++++++
->> > >  1 file changed, 11 insertions(+)
->> > >
->> > > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
->> > > index c77981c5dd18..91339b6d0652 100644
->> > > --- a/Documentation/devicetree/bindings/pci/pci.txt
->> > > +++ b/Documentation/devicetree/bindings/pci/pci.txt
->> > > @@ -24,3 +24,14 @@ driver implementation may support the following properties:
->> > >     unsupported link speed, for instance, trying to do training for
->> > >     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->> > >     for gen2, and '1' for gen1. Any other values are invalid.
->> > > +- pcie-reset-suspend:
->> > > +   If present this property defines whether the PCIe Reset signal (referred to
->> > > +   as PERST#) should be asserted when the system enters low-power suspend modes
->> > > +   (e.g., S3). Depending on the form factor, the associated PCIe
->> > > +   electromechanical specification may specify a particular behavior (e.g.,
->> > > +   "PERST# is asserted in advance of the power being switched off in a
->> > > +   power-managed state like S3") or it may be less clear. The net result is
->> > > +   that some endpoints perform better (e.g., lower power consumption) with
->> > > +   PERST# asserted, and others prefer PERST# deasserted. The value must be '0'
->> > > +   or '1', where '0' means do not assert PERST# and '1' means assert PERST#.
->> > > +   When absent, behavior may be platform-specific.
->> >
->> > I don't understand this at all.  Are you suggesting that we need
->> > different "pcie-reset-suspend" values based on what sort of endpoint
->> > the user plugs in?
->>
->> Partly. I guess I also failed to mention in this particular text (but I
->> did, in patch 3) that it can be a board-specific problem, related to the
->> fact that the only endpoint used on said board--soldered on, not
->> replaceable--never seemed to require PERST# to be asserted in suspend.
->> On such boards, I believe [1] it is physically impossible to drive this
->> pin low in S3 suspend. So even if we tried to assert PERST#, it would
->> pull back up when we suspend the system. I'm not sure if that's better
->> or worse than not asserting it at all.
->>
->> So, that's why I settled on a device tree property. It describes the
->> physical ability of the board too, in some cases. (I could document this
->> better, I see.)
->
-> It would make sense to me to have a DT property in the PCIe host
-> controller object that describes how that controller works, including
-> its capabilities with respect to PERST#, assuming there's a reasonable
-> way to use that information.
->
-> If there's a DT way to describe a hard-wired PCIe endpoint, it might
-> make sense to have a second property in the endpoint object that
-> describes its preferences.  Obviously this couldn't apply to slots
-> where we don't know what might be plugged in.
+On 18/10/2017 at 17:41:11 +0000, Bird, Timothy wrote:
+> 
+> 
+> > -----Original Message-----
+> > From Geert Uytterhoeven on Wednesday, October 18, 2017 6:22 AM
+> > On Wed, Oct 18, 2017 at 3:18 PM, Alexandre Belloni
+> > <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > On 18/10/2017 at 15:59:00 +0300, Pantelis Antoniou wrote:
+> > >> > On Oct 18, 2017, at 15:14 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > wrote:
+> > >> > On Tue, Oct 17, 2017 at 8:03 PM, Bird, Timothy <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+> > wrote:
+> > >> >>> -----Original Message-----
+> > >> >>> From Geert Uytterhoeven on Tuesday, October 17, 2017 10:24 AM
+> > >> >>> On Tue, Oct 17, 2017 at 7:02 PM, Kumar Gala
+> > <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > >> >>>> I think this also gets to having bindings described in a structured way
+> > so
+> > >> >>> they can be utilized for validation of dts files.  We are doing a little of
+> > this in
+> > >> >>> Zephyr since we are using a structured binding spec to generate code
+> > from
+> > >> >>> .dts (since we don’t utilize a runtime dtb).
+> > >> >>>
+> > >> >>> So you are basically generating board files from .dts?
+> > >> >>> (closing the loop ;-)
+> > >> >>
+> > >> >> I think we ought to do this on Linux, as a size optimization.
+> > >> >> -- Tim
+> > >> >>
+> > >> >> P.S.  I think I'll leave it ambiguous whether this was meant as a joke or
+> > not. :-)
+> > >>
+> > >> As crazy that sounds it is possible using the YAML bindings, i.e. C structure
+> > definitions
+> > >> and fill-up from DT automatically. Whether this is a good idea it’s another
+> > question :)
+> > >
+> > > But that doesn't work with any driver parsing custom properties (using
+> > > of_property_read_* and the likes). I would very much like to see what
+> > > are the boot time improvements when doing that ;)
+> > 
+> > Unless you override of_property_read_*() to work on the dense C
+> > structures instead?
+> 
+> Or turn the property reads into macros that then turn into constant declarations inline in the code.
+> No need stop at dense C structures.  Of course you lose all configuration flexibility at runtime.
+> But then that's the kind of trade-off one often makes with embedded software, isn't it?
 
-That's implicit with having an endpoint described in DT though true OF
-would have every device present.
+That is not easily doable unless you are sure you only have only one
+instance of each device or they all have the same properties.
 
-Rob
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
