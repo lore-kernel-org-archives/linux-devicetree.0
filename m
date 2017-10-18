@@ -1,76 +1,122 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v8 7/8] dt-bindings: Document devicetree binding for ARM
- DSU PMU
-Date: Wed, 18 Oct 2017 10:20:29 +0100
-Message-ID: <20171018092028.iy3x7j2v4twblm5n@lakrids.cambridge.arm.com>
-References: <20171010103303.32436-1-suzuki.poulose@arm.com>
- <20171010103303.32436-8-suzuki.poulose@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171010103303.32436-8-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, will.deacon@arm.com, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Jonathan.Cameron@huawei.com, marc.zyngier@arm.com, peterz@infradead.org, mathieu.poirier@linaro.org, leo.yan@linaro.org
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
+Date: Wed, 18 Oct 2017 10:33:47 +0100
+Message-ID: <1508319227-19679-3-git-send-email-biju.das@bp.renesas.com>
+References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 10, 2017 at 11:33:02AM +0100, Suzuki K Poulose wrote:
-> This patch documents the devicetree bindings for ARM DSU PMU.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: frowand.list@gmail.com
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Although there is a HDMI connector on the q7 carrier board it is not
+connected to the RZ/G1M SoC. One must use the HDMI connector on the
+camera daughter board.
 
-Thanks,
-Mark.
+This patch adds support for this connector.
 
-> ---
-> Changes since V3:
->  - Fixed node name in the example, suggested by Rob
-> ---
->  .../devicetree/bindings/arm/arm-dsu-pmu.txt        | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-> new file mode 100644
-> index 000000000000..6efabba530f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-> @@ -0,0 +1,27 @@
-> +* ARM DynamIQ Shared Unit (DSU) Performance Monitor Unit (PMU)
-> +
-> +ARM DyanmIQ Shared Unit (DSU) integrates one or more CPU cores
-> +with a shared L3 memory system, control logic and external interfaces to
-> +form a multicore cluster. The PMU enables to gather various statistics on
-> +the operations of the DSU. The PMU provides independent 32bit counters that
-> +can count any of the supported events, along with a 64bit cycle counter.
-> +The PMU is accessed via CPU system registers and has no MMIO component.
-> +
-> +** DSU PMU required properties:
-> +
-> +- compatible	: should be one of :
-> +
-> +		"arm,dsu-pmu"
-> +
-> +- interrupts	: Exactly 1 SPI must be listed.
-> +
-> +- cpus		: List of phandles for the CPUs connected to this DSU instance.
-> +
-> +
-> +** Example:
-> +
-> +dsu-pmu-0 {
-> +	compatible = "arm,dsu-pmu";
-> +	interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>;
-> +	cpus = <&cpu_0>, <&cpu_1>;
-> +};
-> -- 
-> 2.13.6
-> 
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+---
+ arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi | 75 ++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+
+diff --git a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+index 31fab5f..45b8167 100644
+--- a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
++++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+@@ -13,6 +13,31 @@
+ 		serial1 = &scif1;
+ 		serial4 = &hscif1;
+ 	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_out: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
++};
++
++&du {
++	pinctrl-0 = <&du_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	ports {
++		port@0 {
++			endpoint {
++				remote-endpoint = <&adv7511_in>;
++			};
++		};
++	};
+ };
+ 
+ &hscif1 {
+@@ -23,7 +48,57 @@
+ 	status = "okay";
+ };
+ 
++&i2c5 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	cec_clock: cec-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <12000000>;
++	};
++
++	hdmi@39 {
++		compatible = "adi,adv7511w";
++		reg = <0x39>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&cec_clock>;
++		clock-names = "cec";
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&du_out_rgb>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con_out>;
++				};
++			};
++		};
++	};
++};
++
+ &pfc {
++	du_pins: du {
++		groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
++		function = "du";
++	};
++
+ 	hscif1_pins: hscif1 {
+ 		groups = "hscif1_data_c", "hscif1_ctrl_c";
+ 		function = "hscif1";
+-- 
+1.9.1
