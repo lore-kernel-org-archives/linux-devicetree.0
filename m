@@ -1,162 +1,39 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 1/6] ARM: dts: uniphier: add GPIO controller nodes
-Date: Wed, 18 Oct 2017 13:24:32 +0900
-Message-ID: <1508300677-23190-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1508300677-23190-1-git-send-email-yamada.masahiro@socionext.com>
+From: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] mtd: powernv: Support MTD_NO_ERASE
+Date: Wed, 18 Oct 2017 16:11:33 +1100
+Message-ID: <87k1zt82gq.fsf@linux.vnet.ibm.com>
+References: <20170905202339.20732-1-wak@google.com> <20170921095930.4b473f91@bbrezillon> <CAPnigKmBujCoKdtXwnK6YsU=YvXM+MaDvDvKpUXEVgHzOC-VEw@mail.gmail.com> <8760cbv090.fsf@concordia.ellerman.id.au> <20171016175517.264e710a@bbrezillon> <CAL_JsqLBkU9habdOhoQ8ZiM=x87eLmuLrS6ujx32UOv8LHc=EA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508300677-23190-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <CAL_JsqLBkU9habdOhoQ8ZiM=x87eLmuLrS6ujx32UOv8LHc=EA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd@lists.infradead.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The GPIO controller also acts as an interrupt controller and the
-interrupt lines are connected to the AIDET block.
+Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> I'd prefer they be documented in the kernel especially if they are
+> used by the kernel. Of course, there's IBM bindings covered by various
+> ?PAPR specs which wouldn't make sense to duplicate, but I'm guessing
+> what's documented in skiboot are not covered by those specs.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
----
+Correct.
 
- arch/arm/boot/dts/uniphier-ld4.dtsi  | 14 ++++++++++++++
- arch/arm/boot/dts/uniphier-pro4.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/uniphier-pro5.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 17 +++++++++++++++++
- arch/arm/boot/dts/uniphier-sld8.dtsi | 18 ++++++++++++++++++
- 5 files changed, 77 insertions(+)
+I don't have an objection to docs being in both places, as long as we
+could keep both in sync. Would suitable comments in the RST doc files
+pointing to the skiboot repo as the canonical copy work?
 
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index 79183db..b0151c4 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -103,6 +103,20 @@
- 			clocks = <&peri_clk 3>;
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>;
-+			gpio-ranges-group-names = "gpio_range";
-+			ngpios = <136>;
-+			socionext,interrupt-ranges = <0 48 13>, <14 62 2>;
-+		};
-+
- 		i2c0: i2c@58400000 {
- 			compatible = "socionext,uniphier-i2c";
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index b3dbbd9b..2921729 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -111,6 +111,20 @@
- 			clocks = <&peri_clk 3>;
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>;
-+			gpio-ranges-group-names = "gpio_range";
-+			ngpios = <248>;
-+			socionext,interrupt-ranges = <0 48 16>, <16 154 5>;
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-index b026bcd..c5d9501 100644
---- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-@@ -198,6 +198,20 @@
- 			clocks = <&peri_clk 3>;
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>;
-+			gpio-ranges-group-names = "gpio_range";
-+			ngpios = <248>;
-+			socionext,interrupt-ranges = <0 48 16>, <16 154 5>;
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index 90b020c..4d83001 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -173,6 +173,23 @@
- 			clocks = <&peri_clk 3>;
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>,
-+				      <&pinctrl 96 0 0>;
-+			gpio-ranges-group-names = "gpio_range0",
-+						  "gpio_range1";
-+			ngpios = <232>;
-+			socionext,interrupt-ranges = <0 48 16>, <16 154 5>,
-+						     <21 217 3>;
-+		};
-+
- 		i2c0: i2c@58780000 {
- 			compatible = "socionext,uniphier-fi2c";
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index b083903..09e52c8 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -103,6 +103,24 @@
- 			clocks = <&peri_clk 3>;
- 		};
- 
-+		gpio: gpio@55000000 {
-+			compatible = "socionext,uniphier-gpio";
-+			reg = <0x55000000 0x200>;
-+			interrupt-parent = <&aidet>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 0>,
-+				      <&pinctrl 104 0 0>,
-+				      <&pinctrl 112 0 0>;
-+			gpio-ranges-group-names = "gpio_range0",
-+						  "gpio_range1",
-+						  "gpio_range2";
-+			ngpios = <136>;
-+			socionext,interrupt-ranges = <0 48 13>, <14 62 2>;
-+		};
-+
- 		i2c0: i2c@58400000 {
- 			compatible = "socionext,uniphier-i2c";
- 			status = "disabled";
+I'd like to be able to just diff a subtree of kernel and skiboot to see
+if the docs have diverged.
+
+We may also need to think of a way to ensure that any of that moving
+back/forth of edits is done in a way that makes licensing sense too
+(skiboot is Apache 2.0)
+
 -- 
-2.7.4
+Stewart Smith
+OPAL Architect, IBM.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
