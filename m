@@ -1,54 +1,145 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Wed, 18 Oct 2017 13:14:26 +0100
-Message-ID: <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw@mail.gmail.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon> <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
- <1508257276.74236.38.camel@freebsd.org> <2D4E6B6D-8F07-46D0-BB36-D97916802893@linaro.org>
- <CAMuHMdW-=-CdnD5Eb_w7fc7=c64i+bu=yv9_c0cj3UM940d8EA@mail.gmail.com> <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904@USCULXMSG01.am.sony.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH  2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
+Date: Wed, 18 Oct 2017 15:16:31 +0300
+Message-ID: <2315907.0FoaqPrOEJ@avalon>
+References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com> <1508319227-19679-3-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904-t8YLG9SB9XQEb75RT/aEbJZPSYnAH24X@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1508319227-19679-3-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 8:03 PM, Bird, Timothy <Tim.Bird-7U/KSKJipcs@public.gmane.org> wrote:
->> -----Original Message-----
->> From Geert Uytterhoeven on Tuesday, October 17, 2017 10:24 AM
->> On Tue, Oct 17, 2017 at 7:02 PM, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
-e:
->> > I think this also gets to having bindings described in a structured wa=
-y so
->> they can be utilized for validation of dts files.  We are doing a little=
- of this in
->> Zephyr since we are using a structured binding spec to generate code fro=
-m
->> .dts (since we don=E2=80=99t utilize a runtime dtb).
->>
->> So you are basically generating board files from .dts?
->> (closing the loop ;-)
->
-> I think we ought to do this on Linux, as a size optimization.
->  -- Tim
->
-> P.S.  I think I'll leave it ambiguous whether this was meant as a joke or=
- not. :-)
+Hi Biju,
 
-Talk to Nicolas Pitre and Rob Herring about this. They've already made
-a bunch of progress on reducing memory footprint.
+Thank you for the patch.
 
-g.
+On Wednesday, 18 October 2017 12:33:47 EEST Biju Das wrote:
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Although there is a HDMI connector on the q7 carrier board it is not
+> connected to the RZ/G1M SoC. One must use the HDMI connector on the
+> camera daughter board.
+> 
+> This patch adds support for this connector.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+>  arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi | 75 +++++++++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi index 31fab5f..45b8167 100644
+> --- a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> +++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
+> @@ -13,6 +13,31 @@
+>  		serial1 = &scif1;
+>  		serial4 = &hscif1;
+>  	};
+> +
+> +	hdmi-out {
+> +		compatible = "hdmi-connector";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_con_out: endpoint {
+> +				remote-endpoint = <&adv7511_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&du {
+> +	pinctrl-0 = <&du_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +
+> +	ports {
+> +		port@0 {
+> +			endpoint {
+> +				remote-endpoint = <&adv7511_in>;
+> +			};
+> +		};
+> +	};
+>  };
+> 
+>  &hscif1 {
+> @@ -23,7 +48,57 @@
+>  	status = "okay";
+>  };
+> 
+> +&i2c5 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	cec_clock: cec-clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <12000000>;
+> +	};
 
-> _______________________________________________
-> Ksummit-discuss mailing list
-> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I assume this describes a fixed clock generator that is not I2C-controlled. 
+The node should thus not be a child of the i2c5 bus node, but should be moved 
+to the root node of the DT.
+
+The rest looks good to me. With this fixed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+However I can't find arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi in linux-next. 
+Which tree would you like to get this series merged through ?
+
+> +	hdmi@39 {
+> +		compatible = "adi,adv7511w";
+> +		reg = <0x39>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&cec_clock>;
+> +		clock-names = "cec";
+> +
+> +		adi,input-depth = <8>;
+> +		adi,input-colorspace = "rgb";
+> +		adi,input-clock = "1x";
+> +		adi,input-style = <1>;
+> +		adi,input-justification = "evenly";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				adv7511_in: endpoint {
+> +					remote-endpoint = <&du_out_rgb>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				adv7511_out: endpoint {
+> +					remote-endpoint = <&hdmi_con_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &pfc {
+> +	du_pins: du {
+> +		groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
+> +		function = "du";
+> +	};
+> +
+>  	hscif1_pins: hscif1 {
+>  		groups = "hscif1_data_c", "hscif1_ctrl_c";
+>  		function = "hscif1";
+
+
+-- 
+Regards,
+
+Laurent Pinchart
