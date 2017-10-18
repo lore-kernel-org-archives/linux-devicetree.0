@@ -1,85 +1,82 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH  2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
-Date: Wed, 18 Oct 2017 13:21:56 +0000
-Message-ID: <KL1PR06MB1702073B7CD3385150B5407CB84D0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com>
- <1508319227-19679-3-git-send-email-biju.das@bp.renesas.com>
- <2315907.0FoaqPrOEJ@avalon>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] ARM: sun8i: a83t: Enable
+ AXP813/AXP818 regulators
+Date: Wed, 18 Oct 2017 15:23:02 +0200
+Message-ID: <20171018132302.h6yfhzj3ufciynqx@flea.lan>
+References: <20171018083138.14517-1-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2315907.0FoaqPrOEJ@avalon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="i7f67s75n3f2os2c"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBONLTXHQKGQE2AR745Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171018083138.14517-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-> On Wednesday, 18 October 2017 12:33:47 EEST Biju Das wrote:
-> > From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> >
-> > Although there is a HDMI connector on the q7 carrier board it is not
-> > connected to the RZ/G1M SoC. One must use the HDMI connector on the
-> > camera daughter board.
-> >
-> > This patch adds support for this connector.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi | 75
-> > +++++++++++++++++++++++++++++
-> >  1 file changed, 75 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-> > b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi index 31fab5f..45b8167
-> > 100644
-> > --- a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-> > +++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-> > +&i2c5 {
-> > +status =3D "okay";
-> > +clock-frequency =3D <400000>;
-> > +
-> > +cec_clock: cec-clock {
-> > +compatible =3D "fixed-clock";
-> > +#clock-cells =3D <0>;
-> > +clock-frequency =3D <12000000>;
-> > +};
->
-> I assume this describes a fixed clock generator that is not I2C-controlle=
-d.
-> The node should thus not be a child of the i2c5 bus node, but should be m=
-oved
-> to the root node of the DT.
+--i7f67s75n3f2os2c
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Thanks, We will send a v2 with above changes.
+On Wed, Oct 18, 2017 at 04:31:30PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+> 
+> This series was originally name "regulator: axp20x: Add support for
+> AXP813/818 regulators". It adds support for the X-Powers AXP813/818 [1]
+> PMICs' regulators. The series is quite straightforward.
+> 
+> Changes since v1:
+> 
+>   - Regulator driver patches were merged and now dropped from the series
+> 
+>   - Chose simpler names for the regulators
+> 
+>   - Added SDIO WiFi enablement patches
+> 
+> Patch 1 adds a axp20x-regulator cell for AXP813, thereby enabling the
+> regulators.
+> 
+> Patch 2 adds a shared dtsi file for the PMIC. This currently contains
+> a list of regulator nodes, but will be expanded with Quentin's power
+> supply work.
+> 
+> Patches 3 through 5 add regulator nodes to board dts files for the A83T
+> boards that I have. They are not squashed together as each file has
+> substantial additions.
+> 
+> Patch 6 moves the mmc1 pinmux setting over to the dtsi, and sets it by
+> default.
+> 
+> Patches 7 & 8 enable SDIO-based WiFi on the Cubietruck Plus and Banana
+> Pi M3.
+> 
+> Originally my work also included enabling Ethernet. But the Ethernet
+> bindings were reverted. Everything can be found here:
+> 
+>     https://github.com/wens/linux/tree/a83t-regulator-wifi-eth
+> 
+> Please have a look.
+> 
+> Lee, we need the mfd changes merged in before merging the dts changes.
+> Otherwise, mmc would break as vmmc/vqmmc is tied to the PMIC regulators.
 
-> The rest looks good to me. With this fixed,
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->
-> However I can't find arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi in linux-ne=
-xt.
-> Which tree would you like to get this series merged through ?
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Currently it is in renesas devel branch (https://git.kernel.org/pub/scm/lin=
-ux/kernel/git/horms/renesas.git).
-It will be merged with linux-next in coming weeks.
+For the whole serie.
 
-Regards,
-Biju
+Maxime
 
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--i7f67s75n3f2os2c--
