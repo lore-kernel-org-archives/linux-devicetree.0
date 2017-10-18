@@ -1,82 +1,92 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
- (26 Oct 2017)
-Date: Wed, 18 Oct 2017 23:10:41 +0200
-Message-ID: <20171018211041.3764qpfy2xkzuxjf@piout.net>
-References: <CACxGe6tPQxwzN14TZtgNhw7OOuePLJxODrn-_b4gMDGzAFEf1Q@mail.gmail.com>
- <1508257276.74236.38.camel@freebsd.org>
- <2D4E6B6D-8F07-46D0-BB36-D97916802893@linaro.org>
- <CAMuHMdW-=-CdnD5Eb_w7fc7=c64i+bu=yv9_c0cj3UM940d8EA@mail.gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF3E64B904@USCULXMSG01.am.sony.com>
- <CACxGe6s8CbzRY7L1znq-nQ52eHp3pOu4X3pCX35ocQShnA_Ecw@mail.gmail.com>
- <B7292660-D602-473E-9B47-CF7B4D2449D7@antoniou-consulting.com>
- <20171018131809.q5nccysb2j7lu4bn@piout.net>
- <CAMuHMdXhQQpnQEgOu92MVNd=m2FvkqD9XcYS3rMVMHpB2zY0Qw@mail.gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD@USCULXMSG01.am.sony.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] drm: bridge: Add bindings for TI THS8134
+Date: Thu, 19 Oct 2017 00:14:14 +0300
+Message-ID: <14098078.249ollOXmK@avalon>
+References: <20171017101904.22308-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF3E64BBCD-t8YLG9SB9XQEb75RT/aEbJZPSYnAH24X@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Ian Lepore <ian-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171017101904.22308-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/10/2017 at 17:41:11 +0000, Bird, Timothy wrote:
-> 
-> 
-> > -----Original Message-----
-> > From Geert Uytterhoeven on Wednesday, October 18, 2017 6:22 AM
-> > On Wed, Oct 18, 2017 at 3:18 PM, Alexandre Belloni
-> > <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > On 18/10/2017 at 15:59:00 +0300, Pantelis Antoniou wrote:
-> > >> > On Oct 18, 2017, at 15:14 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > wrote:
-> > >> > On Tue, Oct 17, 2017 at 8:03 PM, Bird, Timothy <Tim.Bird-7U/KSKJipcs@public.gmane.org>
-> > wrote:
-> > >> >>> -----Original Message-----
-> > >> >>> From Geert Uytterhoeven on Tuesday, October 17, 2017 10:24 AM
-> > >> >>> On Tue, Oct 17, 2017 at 7:02 PM, Kumar Gala
-> > <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > >> >>>> I think this also gets to having bindings described in a structured way
-> > so
-> > >> >>> they can be utilized for validation of dts files.  We are doing a little of
-> > this in
-> > >> >>> Zephyr since we are using a structured binding spec to generate code
-> > from
-> > >> >>> .dts (since we don’t utilize a runtime dtb).
-> > >> >>>
-> > >> >>> So you are basically generating board files from .dts?
-> > >> >>> (closing the loop ;-)
-> > >> >>
-> > >> >> I think we ought to do this on Linux, as a size optimization.
-> > >> >> -- Tim
-> > >> >>
-> > >> >> P.S.  I think I'll leave it ambiguous whether this was meant as a joke or
-> > not. :-)
-> > >>
-> > >> As crazy that sounds it is possible using the YAML bindings, i.e. C structure
-> > definitions
-> > >> and fill-up from DT automatically. Whether this is a good idea it’s another
-> > question :)
-> > >
-> > > But that doesn't work with any driver parsing custom properties (using
-> > > of_property_read_* and the likes). I would very much like to see what
-> > > are the boot time improvements when doing that ;)
-> > 
-> > Unless you override of_property_read_*() to work on the dense C
-> > structures instead?
-> 
-> Or turn the property reads into macros that then turn into constant declarations inline in the code.
-> No need stop at dense C structures.  Of course you lose all configuration flexibility at runtime.
-> But then that's the kind of trade-off one often makes with embedded software, isn't it?
+Hi Linus,
 
-That is not easily doable unless you are sure you only have only one
-instance of each device or they all have the same properties.
+Thank you for the patch.
+
+On Tuesday, 17 October 2017 13:19:03 EEST Linus Walleij wrote:
+> This adds device tree bindings for the Texas Instruments
+> THS8134A and THS8134B VGA DACs by extending and renaming the
+> existing bindings for THS8135.
+> 
+> These DACs are used for the VGA outputs on the ARM reference
+> designs such as Integrator, Versatile and RealView.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+> ChangeLog v1->v2:
+> - Introduce specific-to-general compatible string:
+>   compatible = "ti,ths8134a", "ti,ths813x";
+>   so drivers can handle the whole family the same way.
+> - Collected Rob's ACK.
+> ---
+>  .../display/bridge/{ti,ths8135.txt => ti,ths813x.txt}      | 14 +++++++----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+>  rename Documentation/devicetree/bindings/display/bridge/{ti,ths8135.txt =>
+> ti,ths813x.txt} (65%)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> similarity index 65%
+> rename from Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> rename to Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> index 6ec1a880ac18..97ef5eb57052 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> @@ -1,11 +1,15 @@
+> -THS8135 Video DAC
+> ------------------
+> +THS8134 and THS8135 Video DAC
+> +-----------------------------
+> 
+> -This is the binding for Texas Instruments THS8135 Video DAC bridge.
+> +This is the binding for Texas Instruments THS8134A, THS8134B and THS8135
+> +Video DAC bridge.
+> 
+>  Required properties:
+> 
+> -- compatible: Must be "ti,ths8135"
+> +- compatible: Must be one of
+> +  "ti,ths8134a", "ti,ths813x"
+> +  "ti,ths8134b", "ti,ths813x"
+> +  "ti,ths8135", "ti,ths813x"
+> 
+>  Required nodes:
+> 
+> @@ -19,7 +23,7 @@ Example
+>  -------
+> 
+>  vga-bridge {
+> -	compatible = "ti,ths8135";
+> +	compatible = "ti,ths8135", "ti,ths813x";
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
