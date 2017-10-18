@@ -1,32 +1,47 @@
 From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 0/5] Allwinner R40 USB host support (DT part)
-Date: Wed, 18 Oct 2017 21:06:23 +0800
-Message-ID: <20171018130628.11298-1-icenowy@aosc.io>
+Subject: [PATCH v2 2/5] ARM: sun8i: r40: add 5V regulator for Banana Pi M2 Ultra
+Date: Wed, 18 Oct 2017 21:06:25 +0800
+Message-ID: <20171018130628.11298-3-icenowy@aosc.io>
+References: <20171018130628.11298-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171018130628.11298-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the USB host ports on Allwiner R40, and
-enable them on Banana Pi M2 Ultra and Berry boards.
+On newer revisions of the Banana Pi M2 Ultra boards, the 5V power output
+(used by HDMI, SATA and USB) is controller via a GPIO.
 
-The first patch adds USB PHY and EHCI/OHCI nodes to the R40 DTSI.
+Add the regulator node for it.
 
-The second and third patch adds 5V regulator for the two boards, and
-the fourth and fifth patch finally adds USB host ports support.
+Older revisions just have the 5V power output always on, and the GPIO is
+reserved on these boards. So it won't affect the older revisions.
 
-Icenowy Zheng (5):
-  ARM: sun8i: r40: add USB host port nodes for R40
-  ARM: sun8i: r40: add 5V regulator for Banana Pi M2 Ultra
-  ARM: sun8i: v40: add 5V regulator for Banana Pi M2 Berry
-  ARM: sun8i: r40: enable USB host for Banana Pi M2 Ultra
-  ARM: sun8i: v40: enable USB host ports for Banana Pi M2 Berry
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
- arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 31 ++++++++++
- arch/arm/boot/dts/sun8i-r40.dtsi                  | 72 +++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 22 +++++++
- 3 files changed, 125 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 7b52608cebe6..035599d870b9 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -78,6 +78,15 @@
+ 		};
+ 	};
+ 
++	reg_vcc5v0: vcc5v0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
++		enable-active-high;
++	};
++
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
 -- 
 2.13.6
