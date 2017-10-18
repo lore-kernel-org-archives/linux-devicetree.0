@@ -1,138 +1,116 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
-Date: Wed, 18 Oct 2017 13:33:49 +0530
-Message-ID: <ebc64a29-4080-af88-c774-b3223115aef0@ti.com>
-References: <20171013160914.3220-1-niklas.cassel@axis.com>
- <20171013160914.3220-9-niklas.cassel@axis.com>
- <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
+From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] clocksource: stm32: convert driver to timer_of
+Date: Wed, 18 Oct 2017 09:10:22 +0100
+Message-ID: <8919cadc-2e51-4b31-2836-32c45bbfabfe@arm.com>
+References: <1508312614-27750-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1508312614-27750-2-git-send-email-benjamin.gaignard@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Niklas Cassel <niklas.cassel@axis.com>
-Cc: Niklas Cassel <niklass@axis.com>, Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508312614-27750-2-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Benjamin,
 
-On Tuesday 17 October 2017 05:13 AM, Bjorn Helgaas wrote:
-> On Fri, Oct 13, 2017 at 06:09:11PM +0200, Niklas Cassel wrote:
->> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
->> ---
->>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
->>  drivers/pci/dwc/Kconfig                            |  41 +++--
->>  drivers/pci/dwc/Makefile                           |   4 +-
->>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
->>  4 files changed, 233 insertions(+), 17 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->> index 4e4aee4439ea..33eef7ae5a23 100644
->> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
->> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
->>  and thus inherits all the common properties defined in designware-pcie.txt.
->>  
->>  Required properties:
->> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
->> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
->> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
->>  - reg: base addresses and lengths of the PCIe controller (DBI),
->>  	the PHY controller, and configuration address space.
->>  - reg-names: Must include the following entries:
->> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
->> index 22ec82fcdea2..e333283fb1ed 100644
->> --- a/drivers/pci/dwc/Kconfig
->> +++ b/drivers/pci/dwc/Kconfig
->> @@ -14,6 +14,36 @@ config PCIE_DW_EP
->>  	depends on PCI_ENDPOINT
->>  	select PCIE_DW
->>  
->> +config PCIE_ARTPEC6
->> +	bool "Axis ARTPEC-6 PCIe controller"
->> +	depends on (PCI && PCI_MSI_IRQ_DOMAIN) || PCI_ENDPOINT
->> +	depends on MACH_ARTPEC6
->> +	help
->> +	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
->> +	  SoCs.  This PCIe controller uses the DesignWare core.
->> +
->> +if PCIE_ARTPEC6
->> +
->> +config PCIE_ARTPEC6_HOST
->> +	bool "Axis ARTPEC-6 Host Mode"
->> +	depends on PCI
->> +	depends on PCI_MSI_IRQ_DOMAIN
->> +	select PCIEPORTBUS
->> +	select PCIE_DW_HOST
->> +	help
->> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
->> +	  host mode.
->> +
->> +config PCIE_ARTPEC6_EP
->> +	bool "Axis ARTPEC-6 Endpoint Mode"
->> +	depends on PCI_ENDPOINT
->> +	select PCIE_DW_EP
->> +	help
->> +	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
->> +	  endpoint mode.
->> +
->> +endif
->> +
->>  config PCI_DRA7XX
->>  	bool "TI DRA7xx PCIe controller"
->>  	depends on SOC_DRA7XX || COMPILE_TEST
->> @@ -148,17 +178,6 @@ config PCIE_ARMADA_8K
->>  	  DesignWare hardware and therefore the driver re-uses the
->>  	  DesignWare core functions to implement the driver.
->>  
->> -config PCIE_ARTPEC6
->> -	bool "Axis ARTPEC-6 PCIe controller"
->> -	depends on PCI
->> -	depends on MACH_ARTPEC6
->> -	depends on PCI_MSI_IRQ_DOMAIN
->> -	select PCIEPORTBUS
->> -	select PCIE_DW_HOST
->> -	help
->> -	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
->> -	  SoCs.  This PCIe controller uses the DesignWare core.
->> -
->>  config PCIE_KIRIN
->>  	depends on OF && ARM64
->>  	bool "HiSilicon Kirin series SoCs PCIe controllers"
+On 18/10/17 08:43, Benjamin Gaignard wrote:
+> Convert driver to use timer_of helpers. This allow to remove
+> custom proprietary structure.
 > 
->> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
->> index c61be9738cce..ac98242b83a9 100644
->> --- a/drivers/pci/dwc/Makefile
->> +++ b/drivers/pci/dwc/Makefile
->> @@ -2,6 +2,9 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->>  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->>  obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->>  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->> +ifneq ($(filter y,$(CONFIG_PCIE_ARTPEC6_HOST) $(CONFIG_PCIE_ARTPEC6_EP)),)
->> +        obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
->> +endif
+> Increase min delta value because if it is too small it could
+> generate too much interrupts and the system will not be able
+> to catch them all.
 > 
-> I see you're copying the DRA7XX style here, but I don't really
-> understand it.  I guess the idea is to build pcie-artpec6.o if either
-> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   drivers/clocksource/Kconfig       |   1 +
+>   drivers/clocksource/timer-stm32.c | 162 +++++++++++++-------------------------
+>   2 files changed, 57 insertions(+), 106 deletions(-)
 > 
-> Is this really the simplest way to express that in Kconfig?  Both the
-> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
-> unusual.
-> 
->>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->>  endif
-> 
->> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
-> 
-> Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
-> Or is this something other endpoint drivers could/should share?
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index cc60620..755c0cc 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -289,6 +289,7 @@ config CLKSRC_STM32
+>   	bool "Clocksource for STM32 SoCs" if !ARCH_STM32
+>   	depends on OF && ARM && (ARCH_STM32 || COMPILE_TEST)
+>   	select CLKSRC_MMIO
+> +	select TIMER_OF
+>   
+>   config CLKSRC_MPS2
+>   	bool "Clocksource for MPS2 SoCs" if COMPILE_TEST
+> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+> index 8f24237..abff21c 100644
+> --- a/drivers/clocksource/timer-stm32.c
+> +++ b/drivers/clocksource/timer-stm32.c
 
-yeah, dw_pcie_ep_reset_bar is already present in pcie-designware-ep.c which
-should be made as library function to be used by other drivers. (pci-dra7xx.c
-has also added something like above which should also be fixed).
+[...]
 
-Thanks
-Kishon
+> -
+> -static int __init stm32_clockevent_init(struct device_node *np)
+> +static int __init stm32_clockevent_init(struct device_node *node)
+>   {
+> -	struct stm32_clock_event_ddata *data = &clock_event_ddata;
+> -	struct clk *clk;
+>   	struct reset_control *rstc;
+> -	unsigned long rate, max_delta;
+> -	int irq, ret, bits, prescaler = 1;
+> -
+> -	clk = of_clk_get(np, 0);
+> -	if (IS_ERR(clk)) {
+> -		ret = PTR_ERR(clk);
+> -		pr_err("failed to get clock for clockevent (%d)\n", ret);
+> -		goto err_clk_get;
+> -	}
+> -
+> -	ret = clk_prepare_enable(clk);
+> -	if (ret) {
+> -		pr_err("failed to enable timer clock for clockevent (%d)\n",
+> -		       ret);
+> -		goto err_clk_enable;
+> -	}
+> -
+> -	rate = clk_get_rate(clk);
+> -
+> -	rstc = of_reset_control_get(np, NULL);
+> +	unsigned long max_delta;
+> +	int ret, bits, prescaler = 1;
+> +	struct timer_of *to;
+> +
+> +	to = kzalloc(sizeof(*to), GFP_KERNEL);
+> +	if (!to)
+> +		return -ENOMEM;
+> +
+> +	to->flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE;
+> +	to->clkevt.name = "stm32_clockevent";
+> +	to->clkevt.rating = 200;
+> +	to->clkevt.features = CLOCK_EVT_FEAT_PERIODIC;
+> +	to->clkevt.set_state_shutdown = stm32_clock_event_shutdown;
+> +	to->clkevt.set_state_periodic = stm32_clock_event_set_periodic;
+> +	to->clkevt.set_state_oneshot = stm32_clock_event_shutdown;
+> +	to->clkevt.tick_resume = stm32_clock_event_shutdown;
+> +	to->clkevt.set_next_event = stm32_clock_event_set_next_event;
+> +
+> +	to->of_irq.handler = stm32_clock_event_handler;
+> +
+> +	ret = timer_of_init(node, to);
+> +	if (ret)
+> +		return ret;
+
+I don't know if we should keep some "err_*" labels at the end of the 
+function, but here there probably should a "kfree(to)" before returning.
+
+Otherwise the patch looks fine to me.
+
+Cheers,
+
+-- 
+Julien Thierry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
