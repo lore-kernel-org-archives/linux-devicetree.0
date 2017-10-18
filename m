@@ -1,91 +1,62 @@
-From: "liwei (CM)" <liwei213@huawei.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIHY0IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczog?=
- =?gb2312?Q?add_document_for_hisi-ufs?=
-Date: Wed, 18 Oct 2017 10:23:11 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140FA2FC5D@DGGEMM506-MBX.china.huawei.com>
-References: <20171013074936.97284-1-liwei213@huawei.com>
- <20171013074936.97284-3-liwei213@huawei.com>
- <20171017211739.tg7jm2hggega4sfy@rob-hp-laptop>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 09/13] arm64: kernel: Add arch-specific SDEI entry
+ code and CPU masking
+Date: Wed, 18 Oct 2017 11:54:23 +0100
+Message-ID: <20171018105422.53lnvivuq37e2oy4@armageddon.cambridge.arm.com>
+References: <20170922182614.27885-1-james.morse@arm.com>
+ <20170922182614.27885-10-james.morse@arm.com>
+ <20171016134139.sqe6xabdson2d5rd@armageddon.cambridge.arm.com>
+ <59E63105.9080804@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171017211739.tg7jm2hggega4sfy@rob-hp-laptop>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "eric@anholt.net" <eric@anholt.net>, "krzk@kernel.org" <krzk@kernel.org>, "lihuan (Z)" <lihuan41@hisilicon.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "khilman@baylibre.com" <khilman@baylibre.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "treding@nvidia.com" <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "Fengbaopeng (kevin,
- Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, wangyupe
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <59E63105.9080804-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYg0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LCBJIHdpbGwgZml4IHRoZW0gaW4gcGF0
-Y2ggdjUuDQoNCg0KLS0tLS3Tyrz+1K28/i0tLS0tDQq3orz+yMs6IFJvYiBIZXJyaW5nIFttYWls
-dG86cm9iaEBrZXJuZWwub3JnXSANCreiy83KsbzkOiAyMDE3xOoxMNTCMTjI1SA1OjE4DQrK1bz+
-yMs6IGxpd2VpIChDTSkNCrOty806IG1hcmsucnV0bGFuZEBhcm0uY29tOyB4dXdlaSAoTyk7IGNh
-dGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOyB2aW5ob2xpa2F0dGlA
-Z21haWwuY29tOyBqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbTsgbWFydGluLnBldGVyc2VuQG9yYWNs
-ZS5jb207IGtoaWxtYW5AYmF5bGlicmUuY29tOyBhcm5kQGFybmRiLmRlOyBncmVnb3J5LmNsZW1l
-bnRAZnJlZS1lbGVjdHJvbnMuY29tOyB0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNv
-bTsgeWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb207IHJpa3Uudm9pcGlvQGxpbmFyby5vcmc7
-IHRyZWRpbmdAbnZpZGlhLmNvbTsga3J6a0BrZXJuZWwub3JnOyBlcmljQGFuaG9sdC5uZXQ7IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LXNjc2lAdmdlci5rZXJu
-ZWwub3JnOyBndW9kb25nLnh1QGxpbmFyby5vcmc7IEZlbmdiYW9wZW5nIChrZXZpbiwgS2lyaW4g
-U29sdXRpb24gRGVwdCk7IGxpaHVhbiAoWik7IHdhbmd5dXBlbmcgKEEpDQrW98ziOiBSZTogW1BB
-VENIIHY0IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50IGZvciBoaXNp
-LXVmcw0KDQpPbiBGcmksIE9jdCAxMywgMjAxNyBhdCAwMzo0OTozM1BNICswODAwLCBMaSBXZWkg
-d3JvdGU6DQo+IGFkZCB1ZnMgbm9kZSBkb2N1bWVudCBmb3IgSGlzaWxpY29uLg0KPiANCj4gU2ln
-bmVkLW9mZi1ieTogTGkgV2VpIDxsaXdlaTIxM0BodWF3ZWkuY29tPg0KPiAtLS0NCj4gIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0IHwgNDcgKysrKysr
-KysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ3IGluc2VydGlvbnMoKykNCj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZz
-L3Vmcy1oaXNpLnR4dA0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXgg
-MDAwMDAwMDAwMDAwLi5lZTExNGE2NTE0M2QNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dA0KPiBAQCAtMCww
-ICsxLDQ3IEBADQo+ICsqIEhpc2lsaWNvbiBVbml2ZXJzYWwgRmxhc2ggU3RvcmFnZSAoVUZTKSBI
-b3N0IENvbnRyb2xsZXINCj4gKw0KPiArVUZTIG5vZGVzIGFyZSBkZWZpbmVkIHRvIGRlc2NyaWJl
-IG9uLWNoaXAgVUZTIGhhcmR3YXJlIG1hY3JvLg0KPiArRWFjaCBVRlMgSG9zdCBDb250cm9sbGVy
-IHNob3VsZCBoYXZlIGl0cyBvd24gbm9kZS4NCj4gKw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoN
-Cj4gKy0gY29tcGF0aWJsZSAgICAgICAgOiBjb21wYXRpYmxlIGxpc3QsIGNvbnRhaW5zIG9uZSBv
-ZiB0aGUgZm9sbG93aW5nIC0NCj4gKwkJCSJoaXNpbGljb24saGkzNjYwLXVmcyIgZm9yIGhpc2kg
-dWZzIGhvc3QgY29udHJvbGxlcg0KPiArCQkJIHByZXNlbnQgb24gSGkzNjYwIGNoaXBzZXQuDQo+
-ICstIHJlZyAgICAgICAgICAgICAgIDogc2hvdWxkIGNvbnRhaW4gVUZTIHJlZ2lzdGVyIGFkZHJl
-c3Mgc3BhY2UgJiBVRlMgU1lTIENUUkwgcmVnaXN0ZXIgYWRkcmVzcywNCj4gKy0gaW50ZXJydXB0
-LXBhcmVudCAgOiBpbnRlcnJ1cHQgZGV2aWNlDQo+ICstIGludGVycnVwdHMgICAgICAgIDogaW50
-ZXJydXB0IG51bWJlcg0KPiArLSBjbG9ja3MJICAgICAgICA6IExpc3Qgb2YgcGhhbmRsZSBhbmQg
-Y2xvY2sgc3BlY2lmaWVyIHBhaXJzDQo+ICstIGNsb2NrLW5hbWVzICAgICAgIDogTGlzdCBvZiBj
-bG9jayBpbnB1dCBuYW1lIHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1lDQo+ICsJCSAgICAgIG9y
-ZGVyIGFzIHRoZSBjbG9ja3MgcHJvcGVydHkuICJjbGtfcmVmIiwgImNsa19waHkiIGlzIG9wdGlv
-bmFsDQo+ICstIHJlc2V0cyAgICAgICAgICAgIDogcmVzZXQgbm9kZSByZWdpc3Rlciwgb25lIHJl
-c2V0IHRoZSBjbGsgYW5kIHRoZSBvdGhlciByZXNldCB0aGUgY29udHJvbGxlcg0KPiArLSByZXNl
-dC1uYW1lcyAgICAgICA6IGRlc2NyaWJlIHJlc2V0IG5vZGUgcmVnaXN0ZXINCj4gKw0KPiArT3B0
-aW9uYWwgcHJvcGVydGllcyBmb3IgYm9hcmQgZGV2aWNlOg0KPiArLSByZXNldC1ncGlvCQkJOiBz
-cGVjaWZpZXMgdG8gcmVzZXQgZGV2aWNlcw0KDQpTaG91bGQgYmUgInJlc2V0LWdwaW9zIi4NCg0K
-PiArDQo+ICtFeGFtcGxlOg0KPiArDQo+ICsJdWZzOiB1ZnNAZmYzYjAwMDAgew0KPiArCQljb21w
-YXRpYmxlID0gImhpc2lsaWNvbixoaTM2NjAtdWZzIiwgImplZGVjLHVmcy0xLjEiOw0KPiArCQkv
-KiAwOiBIQ0kgc3RhbmRhcmQgKi8NCj4gKwkJLyogMTogVUZTIFNZUyBDVFJMICovDQo+ICsJCXJl
-ZyA9IDwweDAgMHhmZjNiMDAwMCAweDAgMHgxMDAwPiwNCj4gKwkJCTwweDAgMHhmZjNiMTAwMCAw
-eDAgMHgxMDAwPjsNCj4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4gKwkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDI3OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gKwkJY2xvY2tzID0g
-PCZjcmdfY3RybCBISTM2NjBfQ0xLX0dBVEVfVUZTSU9fUkVGPiwNCj4gKwkJCTwmY3JnX2N0cmwg
-SEkzNjYwX0NMS19HQVRFX1VGU1BIWV9DRkc+Ow0KPiArCQljbG9jay1uYW1lcyA9ICJjbGtfcmVm
-IiwgImNsa19waHkiOw0KPiArCQlmcmVxLXRhYmxlLWh6ID0gPDAgMD4sIDwwIDA+Ow0KPiArCQkv
-KiBvZmZzZXQ6IDB4ODQ7IGJpdDogMTIgKi8NCj4gKwkJLyogb2Zmc2V0OiAweDg0OyBiaXQ6IDcg
-ICovDQo+ICsJCXJlc2V0cyA9IDwmY3JnX3JzdCAweDg0IDEyPiwNCj4gKwkJCTwmY3JnX3JzdCAw
-eDg0IDc+Ow0KPiArCQlyZXNldC1uYW1lcyA9ICJyc3QiLCAiYXNzZXJ0IjsNCj4gKwl9Ow0KPiAr
-DQo+ICsJJnVmcyB7DQo+ICsJCXJlc2V0LWdwaW8gPSA8JmdwaW8xOCAxIDA+Ow0KPiArCQlzdGF0
-dXMgPSAib2theSI7DQoNCkRvbid0IHNob3cgc3RhdHVzIG9yIHRoZSBjaGlwL2JvYXJkIHNwbGl0
-IGluIGV4YW1wbGVzLg0KDQo+ICsJfTsNCj4gKw0KPiAtLSANCj4gMi4xMS4wDQo+IA0KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, Oct 17, 2017 at 05:34:13PM +0100, James Morse wrote:
+> On 16/10/17 14:41, Catalin Marinas wrote:
+> > On Fri, Sep 22, 2017 at 07:26:10PM +0100, James Morse wrote:
+> >> +	u64 elr = read_sysreg(elr_el1);
+> >> +	u32 kernel_mode = read_sysreg(CurrentEL) | 1;	/* +SPSel */
+> >> +	unsigned long vbar = read_sysreg(vbar_el1);
+> >> +
+> >> +	/* Retrieve the missing registers values */
+> >> +	for (i = 0; i < clobbered_registers; i++) {
+> >> +		/* from within the handler, this call always succeeds */
+> >> +		sdei_api_event_context(i, &regs->regs[i]);
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * We didn't take an exception to get here, set PAN. UAO will be cleared
+> >> +	 * by sdei_event_handler()s set_fs(USER_DS) call.
+> >> +	 */
+> >> +	asm(ALTERNATIVE("nop", SET_PSTATE_PAN(1), ARM64_HAS_PAN,
+> >> +			CONFIG_ARM64_PAN));
+> 
+> > Can you use uaccess_disable() directly?
+> 
+> Wouldn't this invoke sw-pan's __uaccess_ttbr0_disable():
+> > write_sysreg(ttbr, ttbr0_el1);
+> 
+> Probing depends on VHE if booted at EL2, can we guarantee to have PAN (and
+> therefore not-SW-PAN) too?
+> 
+> (otherwise I can add 'depends on !ARM64_SW_TTBR0_PAN' to the Kconfig)
+
+We want the Kconfig to be able to include all features. What you can do
+though is:
+
+	select ARM64_PAN if ARM64_SW_TTBR0_PAN
+
+With VHE (ARMv8.2) we can guarantee that hardware PAN is around.
+
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
