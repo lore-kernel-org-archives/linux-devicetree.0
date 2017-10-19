@@ -1,68 +1,100 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 06/12] of: overlay: detect cases where device tree may
- become corrupt
-Date: Thu, 19 Oct 2017 12:19:41 -0700
-Message-ID: <59E8FACD.7030208@gmail.com>
-References: <1508283392-18252-1-git-send-email-frowand.list@gmail.com>
- <1508283392-18252-7-git-send-email-frowand.list@gmail.com>
- <CANk1AXR_=yKyHmTj282o89irF-2FhsmCt-dV30Z9HkeNcVVizg@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Problem with commit to add overlay symbols to live device tree
+Date: Thu, 19 Oct 2017 12:53:01 -0700
+Message-ID: <59E9029D.1030700@gmail.com>
+References: <85c5a40bb6eb4d4ebe522b3034528a36@infineon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXR_=yKyHmTj282o89irF-2FhsmCt-dV30Z9HkeNcVVizg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <85c5a40bb6eb4d4ebe522b3034528a36-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, frank.rowand-7U/KSKJipcs@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/17 12:04, Alan Tull wrote:
-> On Tue, Oct 17, 2017 at 6:36 PM,  <frowand.list@gmail.com> wrote:
-> 
->>  static int overlay_notify(struct overlay_changeset *ovcs,
->>                 enum of_overlay_notify_action action)
->>  {
->> @@ -86,8 +109,14 @@ static int overlay_notify(struct overlay_changeset *ovcs,
->>
->>                 ret = blocking_notifier_call_chain(&overlay_notify_chain,
->>                                                    action, &nd);
->> -               if (ret)
->> -                       return notifier_to_errno(ret);
->> +               if (ret == NOTIFY_STOP)
->> +                       return 0;
->> +               if (ret) {
->> +                       ret = notifier_to_errno(ret);
->> +                       pr_err("overlay changeset %s notifier error %d, target: %pOF\n",
->> +                              of_overlay_action_name[action], ret, nd.target);
->> +                       return ret;
->> +
-> 
-> Hi Frank,
-> 
-> This will spew lots of "error 0" messages for every notifier that
-> returns NOTIFY_OK.
-> 
-> rmdir /sys/kernel/config/device-tree/overlays/1
-> [  131.972505] OF: overlay: overlay changeset pre-remove notifier
-> error 0, target: /soc/base_fpga_region/fpga_pr_region0
-> [  131.987879] OF: overlay: overlay changeset post-remove notifier
-> error 0, target: /soc/base_fpga_region/fpga_pr_region0
+Hi Alexander,
 
-Thanks for finding that.  I'll send a patch so that NOTIFY_OK does
-not spew an error.  (And overlay_notify() should also not be
-returning an error in that case.)
+On 10/19/17 10:06, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
+> Hi Frank, Rob,
+> 
+> I ran some tests with kernel v4.14-rc2, where I came across an issue
+> with your commit "of: overlay: add overlay symbols to live device
+> tree" (d1651b03c2df75db8eda3fbcd3a07adb337ee8b0,
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/of?h=v4.14-rc5&id=d1651b03c2df75db8eda3fbcd3a07adb337ee8b0).
+> I am not sure whether this is a problem with your change or whether I
+> made a mistake somewhere.
+> 
+> Without this commit, the following device tree overlay works fine on
+> a Raspberry Pi:
+> 
+> /dts-v1/;
+> /plugin/;
+> 
+> / {
+> 	fragment@0 {
+> 		target-path = "/soc/spi@7e204000";
+> 		__overlay__ {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 			status = "okay";
+> 
+> 		        spidev1: spi@1 {
+> 				compatible = "spidev";
+> 				reg = <1>;
+> 				spi-max-frequency = <5000000>;
+> 			};
+> 		};
+> 	};
+> };
+> 
+> But with the commit, it is rejected:
+> 
+> OF: overlay: no symbols in root of device tree.
+> OF: overlay: of_build_overlay_info() failed for tree@/
+> create_overlay: Failed to create overlay (err=-22)
+> 
+> Only if I remove the spidev1 label, it continues to work with the
+> commit (but this is not always possible in more complex overlays).
+> 
+> I hope this does not make a difference, but I use the configfs
+> interface to load the overlay, that is not part of mainline, but
+> shipped by several distributions nonetheless (for example in the
+> Raspberry Pi kernel,
+> https://github.com/raspberrypi/linux/commit/cccc24635da69799335566eb464a4c9e1fb4a8ad).
+>
+>
+> Could you tell me whether this change in behavior is intentional and
+> whether I have to fix something in my usage?
 
--Frank
+Yes, the change is intentional.
+
+If you are using overlays, the expectation is that the device tree
+that was used to boot contains symbols (the paths of nodes that
+have phandles) so that phandle references in the overlay can be
+fixed up to match the values in the base devicetree.  Symbols
+will be added to the device tree if if is compiled with the
+"@" option.  This is the first method to avoid the overlay
+load error.
+
+If you compile the overlay with the "@" option then symbols
+will be added to the overlay DTB.  Previous to commit
+d1651b03c2df, these symbols would be ignored when an overlay
+was loaded.  If you remove the "@" from the compile of
+overlays, then everything should work the same way it did
+before the commit.  This is the second way to avoid the
+load overlay error.
 
 
+> Thanks
+> Alexander
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-> I could change fpga-region.c to return NOTIFY_STOP if it is accepting
-> the overlay, but it will still want to return NOTIFY_OK for every case
-> where it doesn't have an opinion.
-> 
-> Alan
-> 
->>         }
->>
->>         return 0;
-> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
