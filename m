@@ -1,59 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] staging: Introduce NVIDIA Tegra20 video decoder
- driver
-Date: Thu, 19 Oct 2017 15:52:42 -0500
-Message-ID: <CAL_Jsq+0MwXdmQyxQKG7ZFBbRUnw6xN5=edCSV-YYtRs=oU_dA@mail.gmail.com>
-References: <cover.1507752381.git.digetx@gmail.com>
- <3d432aa2617977a2b0a8621a1fc2f36f751133e1.1507752381.git.digetx@gmail.com>
- <20171017201354.efgjrwvakkseyvr7@rob-hp-laptop> <20171017202407.GA10482@ulmo>
- <CAL_JsqKtFD9OgO2privwfBAZeCn3zg1JienmefPk=X2W-+ahJQ@mail.gmail.com>
- <ca4fa045-17f0-9142-6bca-bbf472c1f3bb@gmail.com>
+Subject: Re: [Patch 4/6] dt-bindings: media: ti-vpe: Document VPE driver
+Date: Thu, 19 Oct 2017 16:06:10 -0500
+Message-ID: <CAL_Jsq+jy-JN=ppfkyexFqJsbQVw3UGdNrNBVUvmGPHBdoLGkg@mail.gmail.com>
+References: <20171012192719.15193-1-bparrot@ti.com> <20171012192719.15193-5-bparrot@ti.com>
+ <20171017210051.6ap3yg7b7viav6cy@rob-hp-laptop> <20171018130227.GO25400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <ca4fa045-17f0-9142-6bca-bbf472c1f3bb@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dmitry Osipenko <digetx@gmail.com>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171018130227.GO25400@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 4:26 PM, Dmitry Osipenko <digetx@gmail.com> wrote:
-> On 18.10.2017 00:13, Rob Herring wrote:
->> On Tue, Oct 17, 2017 at 3:24 PM, Thierry Reding
->> <thierry.reding@gmail.com> wrote:
->>> On Tue, Oct 17, 2017 at 03:13:54PM -0500, Rob Herring wrote:
->>> [...]
->>>>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
->>> [...]
->>>>> +- resets : Must contain an entry for each entry in reset-names.
->>>>> +  See ../reset/reset.txt for details.
->>>>> +- reset-names : Must include the following entries:
->>>>> +  - vde
->>>>
->>>> -names is pointless when there is only one.
->>>
->>> I'd prefer to keep it. In the past we occasionally had to add clocks or
->>> resets to a device tree node where only one had been present (and hence
->>> no -names property) and that caused some awkwardness because verbiage
->>> had to be added to the bindings that clarified that one particular entry
->>> (the original one) always had to come first.
+On Wed, Oct 18, 2017 at 8:02 AM, Benoit Parrot <bparrot@ti.com> wrote:
+> Rob Herring <robh@kernel.org> wrote on Tue [2017-Oct-17 16:00:51 -0500]:
+>> On Thu, Oct 12, 2017 at 02:27:17PM -0500, Benoit Parrot wrote:
+>> > Device Tree bindings for the Video Processing Engine (VPE) driver.
+>> >
+>> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+>> > ---
+>> >  Documentation/devicetree/bindings/media/ti-vpe.txt | 41 ++++++++++++++++++++++
+>> >  1 file changed, 41 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/media/ti-vpe.txt b/Documentation/devicetree/bindings/media/ti-vpe.txt
+>> > new file mode 100644
+>> > index 000000000000..c2ef93d08417
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/media/ti-vpe.txt
+>> > @@ -0,0 +1,41 @@
+>> > +Texas Instruments DRA7x VIDEO PROCESSING ENGINE (VPE)
+>> > +------------------------------------------------------
+>> > +
+>> > +The Video Processing Engine (VPE) is a key component for image post
+>> > +processing applications. VPE consist of a single memory to memory
+>> > +path which can perform chroma up/down sampling, deinterlacing,
+>> > +scaling and color space conversion.
+>> > +
+>> > +Required properties:
+>> > +- compatible: must be "ti,vpe"
 >>
->> The order should be specified regardless of -names and the original
->> one has to come first if you add any. That's not awkwardness, but how
->> bindings work.
+>> Needs SoC specific compatibles.
 >
-> Probably it would be okay to remove '-names' from the binding doc, but keep them
-> in the actual DT, wouldn't it?
+> This particular I/P is present on all DRA7x family of devices
+> so would "ti,dra7-vpe" be acceptable?
 
-No. Then where are the names documented?
+Better, but it's proven not to be in other cases IIRC. I'll leave it
+to TI maintainers to decide.
 
-Rob
+>> > +- reg:     physical base address and length of the registers set for the 8
+>> > +   memory regions required;
+>> > +- reg-names: name associated with the memory regions described is <reg>;
+>> > +- interrupts: should contain IRQ line for VPE;
+>> > +
+>> > +Example:
+>> > +   vpe {
+>> > +           compatible = "ti,vpe";
+>> > +           ti,hwmods = "vpe";
+>> > +           clocks = <&dpll_core_h23x2_ck>;
+>> > +           clock-names = "fck";
+>> > +           reg =   <0x489d0000 0x120>,
+>> > +                   <0x489d0300 0x20>,
+>> > +                   <0x489d0400 0x20>,
+>> > +                   <0x489d0500 0x20>,
+>> > +                   <0x489d0600 0x3c>,
+>> > +                   <0x489d0700 0x80>,
+>>
+>> Is there other stuff between these regions?
+>
+> No, they listed separately because each sub-region/module is
+> individually mapped and accessed using a starting 0 offset.
+
+So you are going to use 48KB of virtual memory to map 2KB of
+registers? Because each ioremap uses 8KB (1 page plus 1 guard page)
+last time i looked (which has been a while).
+
+But it's your platform.
