@@ -1,25 +1,47 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v7 0/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Thu, 19 Oct 2017 15:50:47 -0700
-Message-ID: <20171019225050.25410-1-brendanhiggins@google.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: [PATCH v7 3/3] MAINTAINERS: Add entry for the Nuvoton NPCM architecture
+Date: Thu, 19 Oct 2017 15:50:50 -0700
+Message-ID: <20171019225050.25410-4-brendanhiggins@google.com>
+References: <20171019225050.25410-1-brendanhiggins@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171019225050.25410-1-brendanhiggins@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, f.fainelli@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Addressed comments from:
-  - Rob: http://www.spinics.net/lists/devicetree/msg196376.html
+Add maintainers and reviewers for the Nuvoton NPCM architecture.
 
-Changes since previous update:
-  - Moved all memory mapped nodes to busses.
-  - Map ranges starting at 0
-  - Moved external clocks to root
-  - No changes to mach-npcm since v5
-  - No changes to MAINTAINERS since v5
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Tomer Maimon <tmaimon77@gmail.com>
+Reviewed-by: Avi Fishman <avifishman70@gmail.com>
+---
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Changes have been tested on the NPCM750 evaluation board.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 44cb004c765d..ec0d35384a16 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1598,6 +1598,19 @@ F:	drivers/pinctrl/nomadik/
+ F:	drivers/i2c/busses/i2c-nomadik.c
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
+ 
++ARM/NUVOTON NPCM ARCHITECTURE
++M:	Avi Fishman <avifishman70@gmail.com>
++M:	Tomer Maimon <tmaimon77@gmail.com>
++R:	Brendan Higgins <brendanhiggins@google.com>
++R:	Rick Altherr <raltherr@google.com>
++L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
++S:	Supported
++F:	arch/arm/mach-npcm/
++F:	arch/arm/boot/dts/nuvoton-npcm*
++F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
++F:	drivers/*/*npcm*
++F:	Documentation/*/*npcm*
++
+ ARM/NUVOTON W90X900 ARM ARCHITECTURE
+ M:	Wan ZongShun <mcuos.com@gmail.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+2.15.0.rc0.271.g36b669edcc-goog
