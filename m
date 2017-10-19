@@ -1,53 +1,62 @@
-From: matthew.gerlach@linux.intel.com
-Subject: [PATCH v3 1/2] dt-bindings: mtd: Altera ASMI Parallel II IP Core
-Date: Thu, 19 Oct 2017 15:14:49 -0700
-Message-ID: <1508451290-26426-2-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1508451290-26426-1-git-send-email-matthew.gerlach@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508451290-26426-1-git-send-email-matthew.gerlach@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org, tien.hock.loh@intel.com, hean.loong.ong@intel.com
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
+Date: Thu, 19 Oct 2017 18:47:45 -0400
+Message-ID: <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ@mail.gmail.com>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+ <1507761269-7017-6-git-send-email-jim2101024@gmail.com> <589c04cb-061b-a453-3188-79324a02388e@arm.com>
+ <20171017081422.GA19475@lst.de> <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
+ <20171018065316.GA11183@lst.de> <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com>
+ <20171019091644.GA14983@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171019091644.GA14983@lst.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, iommu@lists.linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On Thu, Oct 19, 2017 at 5:16 AM, Christoph Hellwig <hch@lst.de> wrote:
+> On Wed, Oct 18, 2017 at 10:41:17AM -0400, Jim Quinlan wrote:
+>> That's what brcm_to_{pci,cpu} are for -- they keep a list of the
+>> dma-ranges given in the PCIe DT node, and translate from system memory
+>> addresses to pci-space addresses, and vice versa.  As long as people
+>> are using the DMA API it should work.  It works for all of the ARM,
+>> ARM64, and MIPS Broadcom systems I've tested, using eight different EP
+>> devices.  Note that I am not thrilled to be advocating this mechanism
+>> but it seemed the best alternative.
+>
+> Say we are using your original example ranges:
+>
+>  memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
+>  memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
+>  memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
+>  memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
+>  memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
+>  memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
+>
+> and now you get a dma mapping request for physical addresses
+> 3fffff00 to 4000000f, which would span two of your ranges.  How
+> is this going to work?
 
-Device Tree bindings for Altera ASMI Parallel II IP Core
-connected to a flash chip.
+The only way to prevent this is to reserve a single page at the end of
+the first memory region of any pair that are adjacent in physical
+memory.  A hack, yes, but I don't see an easier way out of this.  Many
+if not most of our boards do not have adjacent regions and would not
+need this.
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2:
-    Made substitutions suggested by Rob Herring.
-    Emphasize driver expects controller is connected to spi-nor flash.
+Overriding phys_to_dma/dma_to_phys comes with the same overlap problem
+(MIPS solution and possible ARM/ARM64 solution).
 
-v3: add Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/mtd/altera-asmip2.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
+>
+>> I would prefer that the same code work for all three architectures.
+>> What I would like from ARM/ARM64 is the ability to override
+>> phys_to_dma() and dma_to_phys(); I thought the chances of that being
+>> accepted would be slim.  But you are right, I should ask the
+>> maintainers.
+>
+> It is still better than trying to stack dma ops, which is a receipe
+> for problems down the road.
 
-diff --git a/Documentation/devicetree/bindings/mtd/altera-asmip2.txt b/Documentation/devicetree/bindings/mtd/altera-asmip2.txt
-new file mode 100644
-index 0000000..2e58817
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/altera-asmip2.txt
-@@ -0,0 +1,15 @@
-+* Altera ASMI Parallel II IP Core
-+
-+Devicetree bindings for an Altera ASMI Parallel II IP core connected to a
-+spi-nor flash chip.
-+
-+Required properties:
-+- compatible : Should be "altr,asmi-parallel2-spi-nor".
-+- reg : A tuple consisting of a physical address and length.
-+
-+Example:
-+
-+qspi: spi@a0001000 {
-+	compatible = "altr,asmi-parallel2-spi-nor";
-+	reg = <0xa0001000 0x10>;
-+};
--- 
-2.7.4
+Let me send out V2 of my patchset and also send it to the ARM/ARM64
+maintainers as you suggested; perhaps there is an alternative.
