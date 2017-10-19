@@ -1,37 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] gpio: mcp23s08: add support for mcp23018
-Date: Thu, 19 Oct 2017 10:24:54 +0200
-Message-ID: <CACRpkdZb1ZStTNuzaOzt1SkDieKLmXRNdrNAgriwtiZpPoxb-Q@mail.gmail.com>
-References: <1507266491-73971-1-git-send-email-preid@electromag.com.au>
- <1507266491-73971-4-git-send-email-preid@electromag.com.au>
- <20171008211821.vege3ytdu5bnu35p@earth> <b749e94a-94e4-0087-aea2-99183b25b5ef@electromag.com.au>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2] drm: panel: simple: add Toshiba LT089AC19000
+Date: Thu, 19 Oct 2017 10:27:19 +0200
+Message-ID: <1508401639.11773.5.camel@pengutronix.de>
+References: <20171018172240.8772-1-l.stach@pengutronix.de>
+ <20171019081757.GB4459@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b749e94a-94e4-0087-aea2-99183b25b5ef-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171019081757.GB4459@ulmo>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 19, 2017 at 9:00 AM, Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
-
-> did this one in the series get applied?
-> or did you have a problem with it and want it rebased with the other 3
-> patches needing work.
-
-No I just missed this patch, sorry :(
-
-I have applied it now.
-
-> haven't seen any of them on devel branch
-> git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-
-This is on linux-pinctrl.git as it is a pin control driver now.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gRG9ubmVyc3RhZywgZGVuIDE5LjEwLjIwMTcsIDEwOjE3ICswMjAwIHNjaHJpZWIgVGhpZXJy
+eSBSZWRpbmc6Cj4gT24gV2VkLCBPY3QgMTgsIDIwMTcgYXQgMDc6MjI6NDBQTSArMDIwMCwgTHVj
+YXMgU3RhY2ggd3JvdGU6Cj4gPiBPbmx5IGV4cG9zZXMgYSBzaW5nbGUgbW9kZSBhbmQgbm90IGEg
+Y29tcGxldGUgZGlzcGxheSB0aW1pbmcsIGFzCj4gPiB0aGUgZGF0YXNoZWV0IGlzIHJhdGhlciB2
+YWd1ZSBhYm91dCB0aGUgbWluaW11bS9tYXhpbXVtIHZhbHVlcy4KPiA+IAo+ID4gPiA+IFNpZ25l
+ZC1vZmYtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPgo+ID4gPiA+IEFj
+a2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+ID4gLS0tCj4gPiB2MjoKPiA+
+IC0gZml4IGRpc3BsYXkgc2l6ZSBpbiBkb2N1bWVudGF0aW9uCj4gPiAtIGFkZCBidXMgZmxhZ3MK
+PiA+IC0tLQo+ID4gwqAuLi4vZGlzcGxheS9wYW5lbC90b3NoaWJhLGx0MDg5YWMyOTAwMC50eHTC
+oMKgwqDCoMKgwqDCoMKgwqB8wqDCoDggKysrKysrKwo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDI3ICsrKysr
+KysrKysrKysrKysrKysrKysKPiA+IMKgMiBmaWxlcyBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCsp
+Cj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9wYW5lbC90b3NoaWJhLGx0MDg5YWMyOTAwMC50eHQKPiAKPiBTZXBhcmF0ZSBw
+YXRjaGVzIGFyZSBwcmVmZXJyZWQgZm9yIGJpbmRpbmdzIGFuZCBkcml2ZXIuCgpUaGlzIGlzIG5l
+d3MgdG8gbWUuIEF0IGxlYXN0IGluIHNpbXBsZS1wYW5lbCBsYW5kLCBJJ3ZlIGFsd2F5cyBvbmx5
+CnNwbGl0IG91dCBhZGRpdGlvbnMgb2YgbmV3IHZlbmRvciBwcmVmaXhlcyBhbmQga2VwdCB0aGUg
+YmluZGluZ3MKdG9nZXRoZXIgd2l0aCB0aGUgZHJpdmVyLgoKSSdsbCBjaGFuZ2UgdGhhdCBpbiB0
+aGUgZnV0dXJlIGlmIHlvdSBwcmVmZXIgb3RoZXJ3aXNlLgoKPiAgQWxzbywgcGxlYXNlIHRyeQo+
+IHRvIHN0aWNrIHRvIHRoZSAiZHJtL3BhbmVsOiAiIHByZWZpeCBmb3IgcGFuZWwgcGF0Y2hlcyAo
+YW5kICJkcm0vcGFuZWw6Cj4gc2ltcGxlOiAiIGZvciBwYW5lbC1zaW1wbGUpLCB3aGljaCBtYWtl
+cyBpdCBlYXNpZXIgZm9yIG1lIHRvIHNwb3QgdGhlc2UKPiBwYXRjaGVzIGluIHBhdGNod29yay4K
+ClllYWgsIHNvcnJ5IGFib3V0IHRoYXQuCgo+IEJvdGggb2YgdGhlIGFib3ZlIGFyZW4ndCBibG9j
+a2Vycywgc28gYXBwbGllZCB0byBkcm0tbWlzYy1uZXh0LgoKVGhhbmtzLApMdWNhcwpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
