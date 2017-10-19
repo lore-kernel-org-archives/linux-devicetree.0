@@ -1,79 +1,53 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] Input: goodix - support gt1151 touchpanel
-Date: Wed, 18 Oct 2017 17:47:41 -0700
-Message-ID: <20171019004741.qdnbhkxtkuxnx2uw@dtor-ws>
-References: <20171012150443.27542-1-m.niestroj@grinn-global.com>
- <20171013180221.76b67869cf4eed7eeec3f56f@ao2.it>
- <1507912842.5910.39.camel@hadess.net>
- <20171013225843.2ejc2e5wzdckzxil@dtor-ws>
- <929df0d1-b9d9-de8a-3dd0-b95cb5e6be16@grinn-global.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <929df0d1-b9d9-de8a-3dd0-b95cb5e6be16@grinn-global.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Bastien Nocera <hadess@hadess.net>, Antonio Ospite <ao2@ao2.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: Chris Lew <clew@codeaurora.org>
+Subject: [PATCH 1/3] dt-bindings: soc: qcom: Support GLINK intents
+Date: Wed, 18 Oct 2017 18:10:16 -0700
+Message-ID: <1508375418-15611-2-git-send-email-clew@codeaurora.org>
+References: <1508375418-15611-1-git-send-email-clew@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508375418-15611-1-git-send-email-clew@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: aneela@codeaurora.org, smaliyap@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 11:40:01AM +0200, Marcin Niestroj wrote:
-> Hi,
-> Thanks everyone for review!
-> 
-> On 14.10.2017 00:58, Dmitry Torokhov wrote:
-> > <...snip...>
-> > My preference would be to assign constant chip data, such as register,
-> > to the relevant device ID structure (I2C or OF or ACPI) and reference it
-> > form where it is needed.
-> > 
-> > struct goodix_chip_data {
-> > 	u16	config_addr;
-> > };
-> > 
-> > ...
-> > 
-> > struct goodix_ts_data {
-> > 	...
-> > 	const struct goodix_chip_data *chip;
-> > 	...
-> > };
-> > 
-> > ...
-> > 
-> > static const goodix_chip_data gt1x_chip_data = {
-> > 	.config_addr	= GOODIX_GT1X_REG_CONFIG_DATA,
-> > };
-> > 
-> > static const goodix_chip_data gt9x_chip_data = {
-> > 	.config_addr	= GOODIX_GT9X_REG_CONFIG_DATA,
-> > };
-> > 
-> > static const struct of_device_id goodix_of_match[] = {
-> > 	{ .compatible = "goodix,gt1151", .data = &gt1x_chip_data },
-> > 	...
-> > };
-> > 
-> > and so on...
-> > 
-> > Thanks.
-> > 
-> 
-> This looks good to me. Together with config_addr I would put config_len
-> to struct goodix_chip_data (and remove cfg_len member from struct
-> goodix_ts_data).
-> 
-> The main problem I have is how to assign goodix_chip_data to a ACPI
-> device (I have very little knowledge about ACPI). I do not know from
-> where comes 'GDIX1001' ACPI ID and how it corresponds to OF compatible
-> strings. Can you help me with that?
+Virtual GLINK channels may know what throughput to expect from a
+remoteproc. An intent advertises to the remoteproc this channel is
+ready to receive data. Allow a channel to define the size and amount of
+intents to be prequeued.
 
-Hmm, wait a second... Looking at the driver we can fetch the product ID
-form the chip, so we do not really need to put this into OF or ACPI
-tables, but rather set up the "chip" pointer dynamically when we probe
-the device.
+Signed-off-by: Chris Lew <clew@codeaurora.org>
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thanks.
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+index b277eca861f7..6c21f76822ca 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+@@ -39,6 +39,14 @@ of these nodes are defined by the individual bindings for the specific function
+ 	Definition: a list of channels tied to this function, used for matching
+ 		    the function to a set of virtual channels
+ 
++- intents:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: a list of size,amount pairs describing what intents should
++		    be preallocated for this virtual channel. If a GLINK node
++		    supports intents, an intent advertises this channel is ready
++		    to receive data.
++
+ = EXAMPLE
+ The following example represents the GLINK RPM node on a MSM8996 device, with
+ the function for the "rpm_request" channel defined, which is used for
+@@ -69,6 +77,8 @@ regualtors and root clocks.
+ 			compatible = "qcom,rpm-msm8996";
+ 			qcom,glink-channels = "rpm_requests";
+ 
++			intents = <0x400 5
++				   0x800 1>;
+ 			...
+ 		};
+ 	};
 -- 
-Dmitry
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
