@@ -1,84 +1,202 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 02/10] arm: dts: mt2701: enable display pwm backlight
-Date: Thu, 19 Oct 2017 18:48:59 +0200
-Message-ID: <e05f2a13-01d6-e866-6ed5-adb6d3aada82@gmail.com>
+Subject: Re: [PATCH v3 10/10] arm: dts: mt7623: add PCIe related nodes
+Date: Thu, 19 Oct 2017 18:49:25 +0200
+Message-ID: <09e691c1-09b7-78cc-762a-f63f798bb273@gmail.com>
 References: <cover.1506908511.git.ryder.lee@mediatek.com>
- <0f9441e9fc40e47e94927a3a4c96dd3f7f287d94.1506908511.git.ryder.lee@mediatek.com>
+ <8befb307f6fddf0a39657f04f2e270b6f803b8b9.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0f9441e9fc40e47e94927a3a4c96dd3f7f287d94.1506908511.git.ryder.lee@mediatek.com>
+In-Reply-To: <8befb307f6fddf0a39657f04f2e270b6f803b8b9.1506908511.git.ryder.lee@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Weiqing Kong <weiqing.kong@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/02/2017 03:54 AM, Ryder Lee wrote:
-> From: Weiqing Kong <weiqing.kong@mediatek.com>
+On 10/02/2017 03:55 AM, Ryder Lee wrote:
+> This patch adds devices nodes and updates pinmux setting for the PICe
+> function block. Just note that PCIe port2 PHY is shared with U3 port.
 > 
-> This patch adds board related config for MT2701 pwm backlight.
-> 
-> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  arch/arm/boot/dts/mt2701-evb.dts | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  arch/arm/boot/dts/mt7623.dtsi                 | 108 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  30 +++++++
+>  2 files changed, 138 insertions(+)
+> 
 
 Pushed to v4.14-next/dts32
 
 Thanks!
 
-> 
-> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> index f484973..63af4b1 100644
-> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> @@ -56,12 +56,29 @@
->  	bt_sco_codec:bt_sco_codec {
->  		compatible = "linux,bt-sco";
->  	};
-> +
-> +	backlight_lcd: backlight_lcd {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&bls 0 100000>;
-> +		brightness-levels = <
-> +			  0  16  32  48  64  80  96 112
-> +			128 144 160 176 192 208 224 240
-> +			255
-> +		>;
-> +		default-brightness-level = <9>;
-> +	};
->  };
->  
->  &auxadc {
->  	status = "okay";
->  };
->  
-> +&bls {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm_bls_gpio>;
-> +};
-> +
->  &i2c0 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&i2c0_pins_a>;
-> @@ -111,6 +128,12 @@
->  		};
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index b19aa9f..32d454e 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -862,6 +862,114 @@
+>  		#reset-cells = <1>;
 >  	};
 >  
-> +	pwm_bls_gpio: pwm_bls_gpio {
-> +		pins_cmd_dat {
-> +			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
+> +	pcie: pcie-controller@1a140000 {
+> +		compatible = "mediatek,mt7623-pcie";
+> +		device_type = "pci";
+> +		reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
+> +		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
+> +		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
+> +		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
+> +		reg-names = "subsys", "port0", "port1", "port2";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0xf800 0 0 0>;
+> +		interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
+> +				<0x0800 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
+> +				<0x1000 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> +			 <&hifsys CLK_HIFSYS_PCIE0>,
+> +			 <&hifsys CLK_HIFSYS_PCIE1>,
+> +			 <&hifsys CLK_HIFSYS_PCIE2>;
+> +		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
+> +		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
+> +			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
+> +			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
+> +		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
+> +		phys = <&pcie0_port PHY_TYPE_PCIE>,
+> +		       <&pcie1_port PHY_TYPE_PCIE>,
+> +		       <&u3port1 PHY_TYPE_PCIE>;
+> +		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+> +		bus-range = <0x00 0xff>;
+> +		status = "disabled";
+> +		ranges = <0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000
+> +			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;
+> +
+> +		pcie@0,0 {
+> +			device_type = "pci";
+> +			reg = <0x0000 0 0 0 0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
+> +			ranges;
+> +			num-lanes = <1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie@1,0 {
+> +			device_type = "pci";
+> +			reg = <0x0800 0 0 0 0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> +			ranges;
+> +			num-lanes = <1>;
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie@2,0 {
+> +			device_type = "pci";
+> +			reg = <0x1000 0 0 0 0>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
+> +			ranges;
+> +			num-lanes = <1>;
+> +			status = "disabled";
 > +		};
 > +	};
 > +
->  	spi_pins_a: spi0@0 {
->  		pins_spi {
->  			pinmux = <MT2701_PIN_53_SPI0_CSN__FUNC_SPI0_CS>,
+> +	pcie0_phy: pcie-phy@1a149000 {
+> +		compatible = "mediatek,generic-tphy-v1";
+> +		reg = <0 0x1a149000 0 0x0700>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		status = "disabled";
+> +
+> +		pcie0_port: pcie-phy@1a149900 {
+> +			reg = <0 0x1a149900 0 0x0700>;
+> +			clocks = <&clk26m>;
+> +			clock-names = "ref";
+> +			#phy-cells = <1>;
+> +			status = "okay";
+> +		};
+> +	};
+> +
+> +	pcie1_phy: pcie-phy@1a14a000 {
+> +		compatible = "mediatek,generic-tphy-v1";
+> +		reg = <0 0x1a14a000 0 0x0700>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		status = "disabled";
+> +
+> +		pcie1_port: pcie-phy@1a14a900 {
+> +			reg = <0 0x1a14a900 0 0x0700>;
+> +			clocks = <&clk26m>;
+> +			clock-names = "ref";
+> +			#phy-cells = <1>;
+> +			status = "okay";
+> +		};
+> +	};
+> +
+>  	usb1: usb@1a1c0000 {
+>  		compatible = "mediatek,mt7623-xhci",
+>  			     "mediatek,mt8173-xhci";
+> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> index 267a05a..134a39a 100644
+> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> @@ -226,6 +226,28 @@
+>  	vqmmc-supply = <&mt6323_vio18_reg>;
+>  };
+>  
+> +&pcie {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_default>;
+> +	status = "okay";
+> +
+> +	pcie@0,0 {
+> +		status = "okay";
+> +	};
+> +
+> +	pcie@1,0 {
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&pcie0_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie1_phy {
+> +	status = "okay";
+> +};
+> +
+>  &pio {
+>  	bls_pins_a: bls@0 {
+>  		pins_cmd_dat {
+> @@ -414,6 +436,14 @@
+>  		};
+>  	};
+>  
+> +	pcie_default: pcie_pin_default {
+> +		pins_cmd_dat {
+> +			pinmux = <MT7623_PIN_208_AUD_EXT_CK1_FUNC_PCIE0_PERST_N>,
+> +				 <MT7623_PIN_209_AUD_EXT_CK2_FUNC_PCIE1_PERST_N>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>  	pwm_pins_a: pwm@0 {
+>  		pins_pwm {
+>  			pinmux = <MT7623_PIN_204_PWM1_FUNC_PWM1>,
 > 
