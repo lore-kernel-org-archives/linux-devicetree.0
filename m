@@ -1,86 +1,63 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] arm64: dts: renesas: salvator-common: add dr_mode
- property for USB2.0 channel 0
-Date: Thu, 19 Oct 2017 04:36:51 +0000
-Message-ID: <TY1PR06MB0992CA7C57C49DC0FB7B134BD8420@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1507800210-13403-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: dt: extcon: add optional
+ debounce-timeout-ms attribute
+Date: Thu, 19 Oct 2017 13:47:56 +0900
+Message-ID: <59E82E7C.8040404@samsung.com>
+References: <CGME20171019032612epcas5p40f27200408a554d4942802b986503636@epcas5p4.samsung.com>
+        <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1507800210-13403-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1508383560-15567-1-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon-san,
-
-> From: Yoshihiro Shimoda, Sent: Thursday, October 12, 2017 6:24 PM
->=20
-> Since Salvator-X[S] have a USB2.0 dual-role channel (CN9), this patch
-> adds dr_mode property for USB2.0 channel 0 (EHCI/OHCI and HS-USB)
-> as "otg".
->=20
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On 2017년 10월 19일 12:25, Raveendra Padasalagi wrote:
+> Add documentation on optional dt attribute "debounce-timeout-ms"
+> in extcon node to capture user specified timeout value for id
+> and vbus gpio detection.
+> 
+> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > ---
->  This patch based on the renesas.git / renesas-devel-20171011-v4.14-rc4 t=
-ag.
->=20
->  Using dual-role channel (or not) is related to the type of USB receptor =
-on
->  board specification. So, I added the property into the salvator-common.d=
-tsi.
->=20
->  This property will be used by phy-rcar-gen3-usb2 driver in the future [1=
-].
->  However, adding this property without the [1] patch will not cause any
->  side-effects.
->=20
->  [1] : https://patchwork.kernel.org/patch/10001113/
-
-Would you apply this patch for v4.15?
-I got ack from the PHY maintainer:
-
-https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg19494.htm=
-l
-
-Best regards,
-Yoshihiro Shimoda
-
->=20
->  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 3 +++
+> 
+> Changes in v2:
+>  Rename debounce-timeout-ms to input-debounce
+> 
+>  Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt | 3 +++
 >  1 file changed, 3 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm6=
-4/boot/dts/renesas/salvator-common.dtsi
-> index 3dcb26b..9bd409b 100644
-> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> @@ -282,6 +282,7 @@
->  };
->=20
->  &ehci0 {
-> +	dr_mode =3D "otg";
->  	status =3D "okay";
->  };
->=20
-> @@ -294,6 +295,7 @@
->  };
->=20
->  &hsusb {
-> +	dr_mode =3D "otg";
->  	status =3D "okay";
->  };
->=20
-> @@ -356,6 +358,7 @@
->  };
->=20
->  &ohci0 {
-> +	dr_mode =3D "otg";
->  	status =3D "okay";
->  };
->=20
-> --
-> 1.9.1
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> index dfc14f7..d115900 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+> @@ -10,6 +10,9 @@ Either one of id-gpio or vbus-gpio must be present. Both can be present as well.
+>  - id-gpio: gpio for USB ID pin. See gpio binding.
+>  - vbus-gpio: gpio for USB VBUS pin.
+>  
+> +Optional properties:
+> +- input-debounce: debounce timeout value for id and vbus gpio in microseconds.
+
+The pinctrl-bindings.txt[1] specify the unit of 'input-debounce'.
+The unit is usec instead of 'microsecond'. You need to modify the description of unit.
+[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+> +
+>  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
+>  	extcon_usb1 {
+>  		compatible = "linux,extcon-usb-gpio";
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
