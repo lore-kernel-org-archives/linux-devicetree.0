@@ -1,170 +1,80 @@
-From: Hans Verkuil <hansverk@cisco.com>
-Subject: Re: [PATCHv4 4/4] drm/tegra: add cec-notifier support
-Date: Thu, 19 Oct 2017 15:37:43 +0200
-Message-ID: <7e1fcffd-76dc-c4f2-942c-b9872f73fff0@cisco.com>
-References: <20170911122952.33980-1-hverkuil@xs4all.nl>
- <20170911122952.33980-5-hverkuil@xs4all.nl> <20171019131716.GT9005@ulmo>
- <20171019133007.GU9005@ulmo>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC resend] arm64: mt8173: Fix Acer Chromebooks mmsys probe problem
+Date: Thu, 19 Oct 2017 16:39:24 +0300
+Message-ID: <1683149.BjzMD0lNNQ@avalon>
+References: <20171019112610.13645-1-mbrugger@suse.com> <1508418114.7665.16.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20171019133007.GU9005@ulmo>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508418114.7665.16.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, ulrich.hecht+renesas@gmail.com, ck.hu@mediatek.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/17 15:30, Thierry Reding wrote:
-> On Thu, Oct 19, 2017 at 03:17:16PM +0200, Thierry Reding wrote:
->> On Mon, Sep 11, 2017 at 02:29:52PM +0200, Hans Verkuil wrote:
->>> From: Hans Verkuil <hans.verkuil@cisco.com>
->>>
->>> In order to support CEC the HDMI driver has to inform the CEC driver
->>> whenever the physical address changes. So when the EDID is read the
->>> CEC driver has to be informed and whenever the hotplug detect goes
->>> away.
->>>
->>> This is done through the cec-notifier framework.
->>>
->>> The link between the HDMI driver and the CEC driver is done through
->>> the hdmi_phandle in the tegra-cec node in the device tree.
->>>
->>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->>> ---
->>>  drivers/gpu/drm/tegra/Kconfig  | 1 +
->>>  drivers/gpu/drm/tegra/drm.h    | 3 +++
->>>  drivers/gpu/drm/tegra/hdmi.c   | 9 +++++++++
->>>  drivers/gpu/drm/tegra/output.c | 6 ++++++
->>>  4 files changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
->>> index 2db29d67193d..c882918c2024 100644
->>> --- a/drivers/gpu/drm/tegra/Kconfig
->>> +++ b/drivers/gpu/drm/tegra/Kconfig
->>> @@ -8,6 +8,7 @@ config DRM_TEGRA
->>>  	select DRM_PANEL
->>>  	select TEGRA_HOST1X
->>>  	select IOMMU_IOVA if IOMMU_SUPPORT
->>> +	select CEC_CORE if CEC_NOTIFIER
->>>  	help
->>>  	  Choose this option if you have an NVIDIA Tegra SoC.
->>>  
->>> diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
->>> index 6d6da01282f3..c0a18b60caf1 100644
->>> --- a/drivers/gpu/drm/tegra/drm.h
->>> +++ b/drivers/gpu/drm/tegra/drm.h
->>> @@ -212,6 +212,8 @@ int tegra_dc_state_setup_clock(struct tegra_dc *dc,
->>>  			       struct clk *clk, unsigned long pclk,
->>>  			       unsigned int div);
->>>  
->>> +struct cec_notifier;
->>> +
->>>  struct tegra_output {
->>>  	struct device_node *of_node;
->>>  	struct device *dev;
->>> @@ -219,6 +221,7 @@ struct tegra_output {
->>>  	struct drm_panel *panel;
->>>  	struct i2c_adapter *ddc;
->>>  	const struct edid *edid;
->>> +	struct cec_notifier *notifier;
->>>  	unsigned int hpd_irq;
->>>  	int hpd_gpio;
->>>  	enum of_gpio_flags hpd_gpio_flags;
->>> diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
->>> index cda0491ed6bf..fbf14e1efd0e 100644
->>> --- a/drivers/gpu/drm/tegra/hdmi.c
->>> +++ b/drivers/gpu/drm/tegra/hdmi.c
->>> @@ -21,6 +21,8 @@
->>>  
->>>  #include <sound/hda_verbs.h>
->>>  
->>> +#include <media/cec-notifier.h>
->>> +
->>>  #include "hdmi.h"
->>>  #include "drm.h"
->>>  #include "dc.h"
->>> @@ -1720,6 +1722,10 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
->>>  		return PTR_ERR(hdmi->vdd);
->>>  	}
->>>  
->>> +	hdmi->output.notifier = cec_notifier_get(&pdev->dev);
->>> +	if (hdmi->output.notifier == NULL)
->>> +		return -ENOMEM;
->>> +
->>>  	hdmi->output.dev = &pdev->dev;
->>>  
->>>  	err = tegra_output_probe(&hdmi->output);
->>> @@ -1778,6 +1784,9 @@ static int tegra_hdmi_remove(struct platform_device *pdev)
->>>  
->>>  	tegra_output_remove(&hdmi->output);
->>>  
->>> +	if (hdmi->output.notifier)
->>> +		cec_notifier_put(hdmi->output.notifier);
->>> +
->>>  	return 0;
->>>  }
->>>  
->>> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
->>> index 595d1ec3e02e..57c052521a44 100644
->>> --- a/drivers/gpu/drm/tegra/output.c
->>> +++ b/drivers/gpu/drm/tegra/output.c
->>> @@ -11,6 +11,8 @@
->>>  #include <drm/drm_panel.h>
->>>  #include "drm.h"
->>>  
->>> +#include <media/cec-notifier.h>
->>> +
->>>  int tegra_output_connector_get_modes(struct drm_connector *connector)
->>>  {
->>>  	struct tegra_output *output = connector_to_output(connector);
->>> @@ -33,6 +35,7 @@ int tegra_output_connector_get_modes(struct drm_connector *connector)
->>>  		edid = drm_get_edid(connector, output->ddc);
->>>  
->>>  	drm_mode_connector_update_edid_property(connector, edid);
->>> +	cec_notifier_set_phys_addr_from_edid(output->notifier, edid);
->>
->> I had to guard this with:
->>
->> 	#if IS_REACHABLE(CONFIG_CEC_CORE) && IS_ENABLED(CONFIG_CEC_NOTIFIER)
->> 	...
->> 	#endif
->>
->> to enable this driver to be built without CEC_NOTIFIER enabled. I see
->> that there are stubs defined if the above is false, but for some reason
->> they don't seem to be there for me either.
-> 
-> Nevermind that. This was not actually failing. However, ...
-> 
->>>  
->>>  	if (edid) {
->>>  		err = drm_add_edid_modes(connector, edid);
->>> @@ -68,6 +71,9 @@ tegra_output_connector_detect(struct drm_connector *connector, bool force)
->>>  			status = connector_status_connected;
->>>  	}
->>>  
->>> +	if (status != connector_status_connected)
->>> +		cec_notifier_phys_addr_invalidate(output->notifier);
-> 
-> This doesn't seem to exist in v4.14-rc1 which is the base for the
-> drm/tegra tree for v4.15. I see this function will be introduced in
-> v4.15 via the media tree.
+Hi Philipp,
 
-Strange. This was released in the 4.13 kernel, so you should really have it.
-It compiles fine for me, both with the drm tegra driver built-in and as a
-module.
+On Thursday, 19 October 2017 16:01:54 EEST Philipp Zabel wrote:
+> On Thu, 2017-10-19 at 13:26 +0200, Matthias Brugger wrote:
+> > In theory the MMSYS device tree identifier is matches twice, by the clk
+> > driver and the DRM subsystem. But the kernel only matches the first
+> > driver for a device (clk) and discards the second one. This breaks
+> > graphics on mt8173 and most probably on mt2701 as well.
+> > 
+> > MMSYS in Mediatek SoCs has some registers to control clock gates (which is
+> > used in the clk driver) and some registers to enable the differnet blocks
+> > of the display subsystem. The kernel uses the binding to load the central
+> > comoponent of the distplay subsystem, which in place probes all the other
+> > components and enables the present ones in the MMSYS.
+> > 
+> > We found us with the problem, that we need to change and therefor break
+> > one
+> > of the two bindings, or the DRM one or the clock driver one.
+> > 
+> > Apart from that the DRM subysystem does access the MMSYS registers via
+> > relaxed reads/writes. But the it should to so via regmap, as the
+> > registers are shared.
+> > 
+> > Possible solutions:
+> > 1) We add a new mediatek,mt8173-mmsys-clk node, which lives as a
+> > simple-mfd under the actual mmsys node. We change the clock driver to
+> > probe on this binding. This would make sense as the clock gate register
+> > live completly in the MMSYS configuration registers.
+> 
+> The reason why the drm driver matches against the mmsys node in the
+> first place is that we wanted to avoid 2).
 
-This makes no sense to me.
+Why did you want to avoid 2) ?
 
+> Also, mmsys is not a pure clock controller, as it also contains the
+> display path configuration in its register space.
+
+Which makes the mmsys related to display, but more in a syscon (combining 
+clocks and routing, and I assume other miscellaneous features that wouldn't 
+fit nicely in the other display-related IP cores) way than actually being part 
+of the display subsystem. Or does mmsys only provide display-related features 
+?
+
+> > 2) As the nodes of the DRM subsystem just need some of the registers of
+> > MMSYS we add a new binding mediatek,mt8173-dispsys which probes the
+> > central component of the DRM system. It has only a handle to mt8173-mmsys
+> > to access the registerspace via regmap functions.
+> > 
+> > In this patchset I implemented 2). Please take into account, that this is
+> > a RFC. I had no time to actually test the verison on real HW. Some of the
+> > register accesses should be done using regmap_update instead of
+> > regmap_read + regmap_write.
+> > 
+> > This RFC shall only show how solution 2) would look like. We can use it as
+> > discussion to see how we circumvent the actual situation.
+> 
+> Or we could leave the bindings untouched and create one platform device
+> from the other or even set up the clocks from the drm driver?
+
+Does mmsys provide features (such as clocks) to non-display IP cores ?
+
+-- 
 Regards,
 
-	Hans
-
-> 
-> How about if I replace this by:
-> 
-> 	cec_notifier_set_phys(output->notifier, CEC_PHYS_ADDR_INVALID);
-> 
-> for now and switch it over to the new function after v4.15-rc1? That way
-> we can avoid the extra dependency between the media and drm trees.
+Laurent Pinchart
