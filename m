@@ -1,106 +1,72 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] extcon: add optional debounce-timeout-ms
- attribute
-Date: Thu, 19 Oct 2017 14:22:18 +0900
-Message-ID: <59E8368A.8000600@samsung.com>
-References: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
-        <CGME20171019032619epcas2p2408b6d42002c826d2af71f619250c0cf@epcas2p2.samsung.com>
-        <1508383560-15567-2-git-send-email-raveendra.padasalagi@broadcom.com>
-        <59E8311F.5010103@samsung.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v3 1/6] remoteproc: qcom: mdt_loader: Make the firmware
+ authentication optional
+Date: Thu, 19 Oct 2017 10:52:52 +0530
+Message-ID: <59a7c297-8cc1-f16f-c890-ed13959da102@codeaurora.org>
+References: <1504154734-12175-1-git-send-email-sricharan@codeaurora.org>
+ <1504154734-12175-2-git-send-email-sricharan@codeaurora.org>
+ <20171012182624.GH1165@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <59E8311F.5010103-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171012182624.GH1165@minitux>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017년 10월 19일 13:59, Chanwoo Choi wrote:
-> Hi,
+Hi Bjorn,
+
+On 10/12/2017 11:56 PM, Bjorn Andersson wrote:
+> On Wed 30 Aug 21:45 PDT 2017, Sricharan R wrote:
 > 
-> On 2017년 10월 19일 12:26, Raveendra Padasalagi wrote:
->> Add changes to capture optional dt attribute "debounce-timeout-ms"
->> provided in extcon node and used the same value if provided otherwise
->> default value of 20ms is used for id and vbus gpios debounce time.
+>> qcom_mdt_load function loads the mdt type firmware and
+>> initialises the secure memory as well. Make the initialisation only
+>> when requested by the caller, so that the function can be used
+>> by self-authenticating remoteproc as well.
 >>
->> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 >> ---
+>>  drivers/soc/qcom/mdt_loader.c       | 70 +++++++++++++++++++++++++++++++------
+>>  include/linux/soc/qcom/mdt_loader.h |  3 ++
+>>  2 files changed, 62 insertions(+), 11 deletions(-)
 >>
->> Changes in v2:
->>  Rename gpio_debounce_timeout_ms to debounce_usecs
->>
->>  drivers/extcon/extcon-usb-gpio.c | 12 +++++++++---
->>  1 file changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
->> index 9c925b0..76ef1da 100644
->> --- a/drivers/extcon/extcon-usb-gpio.c
->> +++ b/drivers/extcon/extcon-usb-gpio.c
->> @@ -41,6 +41,7 @@ struct usb_extcon_info {
->>  
->>  	unsigned long debounce_jiffies;
->>  	struct delayed_work wq_detcable;
->> +	unsigned int debounce_usecs;
->>  };
->>  
->>  static const unsigned int usb_extcon_cable[] = {
->> @@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
->>  	if (IS_ERR(info->vbus_gpiod))
->>  		return PTR_ERR(info->vbus_gpiod);
->>  
->> +	ret = of_property_read_u32(np, "input-debounce",
->> +			     &info->debounce_usecs);
->> +	if (ret)
->> +		info->debounce_usecs = USB_GPIO_DEBOUNCE_MS;
+>> diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+>> index bd63df0..851f5d7 100644
+>> --- a/drivers/soc/qcom/mdt_loader.c
+>> +++ b/drivers/soc/qcom/mdt_loader.c
+>> @@ -86,9 +86,9 @@ ssize_t qcom_mdt_get_size(const struct firmware *fw)
+>>   *
+>>   * Returns 0 on success, negative errno otherwise.
+>>   */
 > 
-> The USB_GPIO_DEBOUNCE_MS indicates 20 millisecond.
-> You need to redefine it as following:
-> 	-#define USB_GPIO_DEBOUNCE_MS   20      /* ms */
-> 	+#define USB_GPIO_DEBOUNCE_USEC 20000
+> This kerneldoc is now lacks @pas_init, but as it's just an internal
+> function and you have kerneldoc on the public functions I suggest that
+> you drop it.
 > 
-> 	info->debounce_usecs = USB_GPIO_DEBOUNCE_USEC;
-> 
-> or
-> 	info->debounce_usecs = USB_GPIO_DEBOUNCE_MS * 1000;
-> 
-> 
->> +
->>  	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
->>  	if (IS_ERR(info->edev)) {
->>  		dev_err(dev, "failed to allocate extcon device\n");
->> @@ -147,13 +153,13 @@ static int usb_extcon_probe(struct platform_device *pdev)
->>  
->>  	if (info->id_gpiod)
->>  		ret = gpiod_set_debounce(info->id_gpiod,
->> -					 USB_GPIO_DEBOUNCE_MS * 1000);
->> +					 info->debounce_usecs * 1000);
-> 
-> The debounce_usecs is already microsecond, You don't need to mutiply with 1000.
-> 
-> 
->>  	if (!ret && info->vbus_gpiod)
->>  		ret = gpiod_set_debounce(info->vbus_gpiod,
->> -					 USB_GPIO_DEBOUNCE_MS * 1000);
->> +					 info->debounce_usecs * 1000);
 
-You don't need to mutiply with 1000.
+ Sure. Will change.
 
->>  
->>  	if (ret < 0)
->> -		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
->> +		info->debounce_jiffies = msecs_to_jiffies(info->debounce_usecs);
+>> -int qcom_mdt_load(struct device *dev, const struct firmware *fw,
+>> -		  const char *firmware, int pas_id, void *mem_region,
+>> -		  phys_addr_t mem_phys, size_t mem_size)
+>> +static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+>> +			   const char *firmware, int pas_id, void *mem_region,
+>> +			   phys_addr_t mem_phys, size_t mem_size, bool pas_init)
+> 
+> With this you have my Acked-by.
+> 
 
-You should you the 'usecs_to_jiffies' because info->debounce_usecs indicates the usec.
+ Thanks.
+
+Regards,
+ Sricharan
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
