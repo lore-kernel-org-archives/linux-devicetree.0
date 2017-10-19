@@ -1,218 +1,103 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in
- full_name
-Date: Thu, 19 Oct 2017 11:51:40 +0300
-Message-ID: <4393AFA4-620F-4C21-995D-A9806DAE1990@konsulko.com>
-References: <20170821151651.25096-1-robh@kernel.org>
- <20170821151651.25096-6-robh@kernel.org>
- <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
- <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com>
- <59E69786.2030406@gmail.com>
- <CANk1AXStoiNtJfU0iNug1wKASurqH6OrNoaN=UtSh6xxSB088Q@mail.gmail.com>
- <CAL_JsqKR3Jg+tgZr4xGPtcWnZW7ng741YjuyUFaS2SXKXbxGtg@mail.gmail.com>
- <1508341985.25643.12.camel@hp800z>
- <CAL_JsqKJ74y3qHVqbRph5C8=0Ggb+n=JT3TZybu2+mENyZ1VZA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKJ74y3qHVqbRph5C8=0Ggb+n=JT3TZybu2+mENyZ1VZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Thu, 19 Oct 2017 11:02:19 +0200
+Message-ID: <20171019090219.2odtq3xosqk5ytsb@piout.net>
+References: <cover.1508231935.git.sean.wang@mediatek.com>
+ <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
+ <1508325126.13340.25.camel@mtksdaap41>
+ <20171018125743.kqna6b4lgng674om@piout.net>
+ <1508381749.21840.123.camel@mtkswgap22>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1508381749.21840.123.camel@mtkswgap22>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>, a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 19/10/2017 at 10:55:49 +0800, Sean Wang wrote:
+> Hi, both
+> 
+> On Wed, 2017-10-18 at 14:57 +0200, Alexandre Belloni wrote:
+> > On 18/10/2017 at 19:12:06 +0800, Yingjoe Chen wrote:
+> > > On Tue, 2017-10-17 at 17:40 +0800, sean.wang@mediatek.com wrote:
+> > > > From: Sean Wang <sean.wang@mediatek.com>
+> > > > 
+> > > > This patch introduces the driver for the RTC on MT7622 SoC.
+> > > > 
+> > > > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > > > ---
+> > > >  drivers/rtc/Kconfig      |  10 ++
+> > > >  drivers/rtc/Makefile     |   1 +
+> > > >  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  3 files changed, 429 insertions(+)
+> > > >  create mode 100644 drivers/rtc/rtc-mt7622.c
+> > > > 
+> > > > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > > > index e0e58f3..4226295 100644
+> > > > --- a/drivers/rtc/Kconfig
+> > > > +++ b/drivers/rtc/Kconfig
+> > > > @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
+> > > >  	   This driver can also be built as a module. If so, the module
+> > > >  	   will be called rtc-moxart
+> > > >  
+> > > > +config RTC_DRV_MEDIATEK
+> > > 
+> > > How about changing this to RTC_DRV_MT7622 or RTC_DRV_MEDIATEK_SOC?
+> > > It is confusing to have both RTC_DRV_MEDIATEK & RTC_DRV_MT6397 here.
+> > > 
+> > 
+> > Yes, this has to be RTC_DRV_MT7622. It doesn't matter if it support
+> > future SoCs named differently, it will be less confusing than using
+> > anything with only mediatek in it.
+> > 
+> 
+> Agreed on. RTC_DRV_MT7622 will be applied instead to align the usage on
+> MT6397 and to get rid of such kind of confusion.
+> 
+> 
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	/* Keep yr_base used to calculate the calculate year when userspace
+> > > > +	 * queries and extend the maximum year the RTC can count.
+> > > > +	 */
+> > > > +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
+> > > > +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
+> > > 
+> > > 
+> > > I'm not sure this worth it.
+> > > If maximum year it can hold is 99, I'd bet it won't support leap year
+> > > correctly after 2100. This make the RTC useless after that. 
+> > > 
+> > > Also, yr_base is lost after power cycle, so you can't get correct year
+> > > back anyway.
+> > > 
+> > 
+> > I agree, the best you can do here is to only support 2000 to 2099.
+> > 
+> 
+> O.K. I will remove those yr_base extension and only consider only
+> support from 2000 to 2099 because of no much gain we can get from
+> yr_base.
+> 
+> The only gain is yr_base I thought just allows people have the
+> opportunity to set up rtc after 2100. However, it appears to not much
+> practical to foresee these things after 2100 and rtc must be setup again
+> when either year overflowing or power cycle happens after 2100 as Joe.C
+> mentioned.
+> 
+> In addition, I also found the rtc hardware would take year == 0 as not
+> leap year that works for 2100, 2200, 2300, but not for 2000, 2400,
+> 2800,... and thus 2000 is also needed to be excluded in both set_time
+> and set_alarm if only 2000 to 2099 is supported.
+> 
 
-> On Oct 18, 2017, at 21:30 , Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->=20
-> On Wed, Oct 18, 2017 at 10:53 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> On Wed, 2017-10-18 at 10:44 -0500, Rob Herring wrote:
->>> On Wed, Oct 18, 2017 at 10:12 AM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =
-wrote:
->>>> On Tue, Oct 17, 2017 at 6:51 PM, Frank Rowand =
-<frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> On 10/17/17 14:46, Rob Herring wrote:
->>>>>> On Tue, Oct 17, 2017 at 4:32 PM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =
-wrote:
->>>>>>> On Mon, Aug 21, 2017 at 10:16 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =
-wrote:
->>>>>>>=20
->>>>>>> Hi Rob,
->>>>>>>=20
->>>>>>>> With dependencies on a statically allocated full path name =
-converted to
->>>>>>>> use %pOF format specifier, we can store just the basename of =
-node, and
->>>>>>>> the unflattening of the FDT can be simplified.
->>>>>>>>=20
->>>>>>>> This commit will affect the remaining users of full_name. After
->>>>>>>> analyzing these users, the remaining cases should only change =
-some print
->>>>>>>> messages. The main users of full_name are providing a name for =
-struct
->>>>>>>> resource. The resource names shouldn't be important other than =
-providing
->>>>>>>> /proc/iomem names.
->>>>>>>>=20
->>>>>>>> We no longer distinguish between pre and post 0x10 dtb formats =
-as either
->>>>>>>> a full path or basename will work. However, less than 0x10 =
-formats have
->>>>>>>> been broken since the conversion to use libfdt (and no one has =
-cared).
->>>>>>>> The conversion of the unflattening code to be non-recursive =
-also broke
->>>>>>>> pre 0x10 formats as the populate_node function would return 0 =
-in that
->>>>>>>> case.
->>>>>>>>=20
->>>>>>>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>>>> ---
->>>>>>>> v2:
->>>>>>>> - rebase to linux-next
->>>>>>>>=20
->>>>>>>> drivers/of/fdt.c | 69 =
-+++++++++-----------------------------------------------
->>>>>>>> 1 file changed, 11 insertions(+), 58 deletions(-)
->>>>>>>=20
->>>>>>> I've just updated to the latest next branch and am finding =
-problems
->>>>>>> applying overlays.   Reverting this commit alleviates things.  =
-The
->>>>>>> errors I get are:
->>>>>>>=20
->>>>>>> [   88.498704] OF: overlay: Failed to apply prop =
-@/__symbols__/clk_0
->>>>>>> [   88.513447] OF: overlay: apply failed '/__symbols__'
->>>>>>> [   88.518423] create_overlay: Failed to create overlay =
-(err=3D-12)
->>>>>>=20
->>>>>> Frank's series with overlay updates should fix this.
->>>>>=20
->>>>> Yes, it does:
->>>>>=20
->>>>>  [PATCH v3 11/12] of: overlay: remove a dependency on device node =
-full_name
->>>>=20
->>>> Thanks for the fast response.  I fetched the dt/next branch to test
->>>> this but there are sufficient changes that Pantelis' "OF: =
-DT-Overlay
->>>> configfs interface (v7)" is broken now.  I've been adding that
->>>> downstream since 4.4.  We're using it as an interface for applying
->>>> overlays to program FPGAs.  If we fix it again, is there any chance
->>>> that can go upstream now?
->>>=20
->>> With a drive-by posting once every few years, no.
->>>=20
->>=20
->> I take offense to that. There's nothing changed in the patch for =
-years.
->> Reposting the same patch without changes would achieve nothing.
->=20
-> Are you still expecting review comments on it or something?
-> Furthermore, If something is posted infrequently, then I'm not
-> inclined to comment or care if the next posting is going to be after I
-> forget what I previously said (which is not very long).
->=20
-> I'm just saying, don't expect to forward port, post and it will be
-> accepted. Below is minimally one of the issues that needs to be
-> addressed.
->=20
->>> The issue remains that the kernel is not really setup to deal with =
-any
->>> random property or node to be changed at any point in run-time. I
->>> think there needs to be some restrictions around what the overlays =
-can
->>> touch. We can't have it be wide open and then lock things down later
->>> and break users. One example of what you could do is you can only =
-add
->>> sub-trees to whitelisted nodes. That's probably acceptable for your
->>> usecase.
->>>=20
->>=20
->> Defining what can and what cannot be changed is not as trivial as a
->> list of white-listed nodes.
->=20
-> No, but we have to start somewhere and we are not starting with any
-> change allowed anywhere at anytime. If that is what people want, then
-> they are going to get to maintain that out of tree.
->=20
+So you can make it work from 2001 to 2100 but I'm not sure it is worth
+it.
 
-I am still not sold on this =E2=80=98dangerous=E2=80=99 idea. No-one is =
-crazy enough to
-suggest overlays to be loadable by an unprivileged user. It=E2=80=99s =
-exactly the
-same =E2=80=98danger=E2=80=99 as loading a kernel module, while is sure =
-capable of much
-greater mischief.
-
->> In some cases there is a whole node hierarchy being inserted (like in
->> a FPGA).
->=20
-> Yes, so you'd have a target fpga region. That sounds fine to me. Maybe
-> its not a static whitelist, but drivers have to register target
-> nodes/paths.
->=20
->> In others, it's merely changing a status property to "okay" and
->> a few device parameters.
->=20
-> That seems fine too. Disabled nodes could be allowed. But what if you
-> add/change properties on a node that is not disabled? Once a node is
-> enabled, who is responsible for registering the device?
->=20
-> What about changing a node from enabled to disabled? The kernel would
-> need to handle that or not allow it.
->=20
-
-So it seems a simple whitelist won=E2=80=99t cut it. We=E2=80=99re =
-already talking about
-special casing for this or that property.
-
-My argument is that this kind of validation is not part of the =
-core-device tree,
-but instead is a policy decision different for each board.
-=20
->> The real issue is that the kernel has no way to verify that a given
->> device tree, either at boot time or at overlay application time, is
->> correct.
->>=20
->> When the tree is wrong at boot-time you'll hang (if you're lucky).
->> If the tree is wrong at run-time you'll get some into some =
-unidentified
->> funky state.
->=20
-> Or have some security hole or a mechanism for userspace to crash the =
-system.
->=20
-
-User-space as in regular users should never have enough privileges to =
-apply an
-overlay, same as in loading a kernel module.
-
->> Finally what is, and what is not 'correct' is not for the kernel to
->> decide arbitrarily, it's a matter of policy, different for each
->> use-case.
->=20
-> It is if the kernel will break doing so.
->=20
-
-I still haven=E2=80=99t seen a real example of the kernel breaking.
-
-I have seen a lot of cases where the kernel is crashing due to the =
-device
-removal path being broken, but those are kernel bugs to fix, not =
-something
-to use to hold back functionality that people want to use.
-
-> Rob
-
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
