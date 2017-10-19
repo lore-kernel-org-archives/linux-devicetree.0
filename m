@@ -1,82 +1,97 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 6/6] drm/tegra: Add Tegra186 support for VIC
-Date: Thu, 19 Oct 2017 13:40:02 +0200
-Message-ID: <20171019114002.GQ9005@ulmo>
-References: <20170905084306.19318-1-mperttunen@nvidia.com>
- <20170905084306.19318-7-mperttunen@nvidia.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
+Date: Thu, 19 Oct 2017 13:40:59 +0200
+Message-ID: <30e2bec3-9c5a-465e-1ddf-ee25efb66a60@axis.com>
+References: <20171013160914.3220-1-niklas.cassel@axis.com>
+ <20171013160914.3220-9-niklas.cassel@axis.com>
+ <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0661584385=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170905084306.19318-7-mperttunen@nvidia.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dnibade@nvidia.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jonathanh@nvidia.com, sgurrappadi@nvidia.com, robh+dt@kernel.org, linux-tegra@vger.kernel.org, digetx@gmail.com, amerilainen@nvidia.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Bjorn
 
---===============0661584385==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HAv5+T9jbwMPl6Kw"
-Content-Disposition: inline
+On 10/17/2017 01:43 AM, Bjorn Helgaas wrote:
+(snip)
+> I see you're copying the DRA7XX style here, but I don't really
+> understand it.  I guess the idea is to build pcie-artpec6.o if either
+> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+> 
+> Is this really the simplest way to express that in Kconfig?  Both the
+> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
+> unusual.
+
+I will try Christoph's suggestion.
+
+> 
+>>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
+>>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>  endif
+> 
+>> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+> 
+> Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
+> Or is this something other endpoint drivers could/should share?
+
+As discussed with Kishon, I make sure that the dw_pcie_ep_reset_bar
+in pcie-designware-ep.c is no longer static.
+
+> 
+>> +{
+>> +	u32 reg;
+>> +
+>> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+>> +	dw_pcie_dbi_ro_wr_en(pci);
+>> +	dw_pcie_writel_dbi2(pci, reg, 0x0);
+>> +	dw_pcie_writel_dbi(pci, reg, 0x0);
+>> +	dw_pcie_dbi_ro_wr_dis(pci);
+>> +}
+>> +
+>> +static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
+>> +{
+>> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
+>> +	enum pci_barno bar;
+>> +
+>> +	artpec6_pcie_assert_core_reset(artpec6_pcie);
+>> +	artpec6_pcie_init_phy(artpec6_pcie);
+>> +	artpec6_pcie_deassert_core_reset(artpec6_pcie);
+>> +
+>> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+>> +		dw_pcie_ep_reset_bar(pci, bar);
+>> +}
+> 
+> I naively expected some of this new code to be #ifdef PCIE_ARTPEC6_EP.
+> But I haven't really internalized the endpoint support, so maybe that
+> doesn't make sense?
+
+I copied the style from dra7xx.
+But after thinking about it, I agree with you.
+
+If we move dw_pcie_ep_reset_bar and artpec6_pcie_raise_msi_irq
+to pcie-designware-ep, the functions that are left are:
+
+artpec6_pcie_stop_link
+artpec6_pcie_ep_init
+artpec6_pcie_raise_irq
+artpec6_add_pcie_ep
+the compatible in the of match table
+
+The only function I'm hesitant about is .stop_link,
+since it is in dw_pcie_ops, however, right now it
+is only used in pcie-designware-ep.c
+
+Would you prefer me to make them #ifdef PCIE_ARTPEC6_EP ?
+
+I can do a similar patch for pci-dra7xx.
 
 
---HAv5+T9jbwMPl6Kw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 05, 2017 at 11:43:06AM +0300, Mikko Perttunen wrote:
-> Add Tegra186 support for VIC - no changes are required except for new
-> firmware and compatibility string.
->=20
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
->  drivers/gpu/drm/tegra/drm.c |  1 +
->  drivers/gpu/drm/tegra/vic.c | 10 ++++++++++
->  2 files changed, 11 insertions(+)
-
-Applied, thanks.
-
-Thierry
-
---HAv5+T9jbwMPl6Kw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnojxIACgkQ3SOs138+
-s6HGjA/+L3geVT/VuhXgsC860FnBccZC6n0H18RyFWrT4TECsBbjxLG70Ihi+YKj
-5ASnGuustekN81LYdTFdM8K7xJKbhvbCrvPjobuzr4zMtWwP02kDGU0+5+EiOPZ0
-3Fz4USMfzOF9lL6vuH9eON96spQ5p/+Ntubvfa/89UJjpL3HXkKNI7kjXmSXNSyY
-NcrQEF4x0fz07/9vQQBt8Geo9mdR+rAbrY9vTJrXDlUFheZMu2XaehcpAztWDsSB
-cHKXYrmPurMGawf57cZVR8jCGPpUmRGKBEw9GanAol7pUAkPlxN36BVF7WxR4Yjm
-tRwckS99tetcSMB8B9zhAh4D+1gkVuBSwmti7vgLCX7K1hcefPnCOViZ7CQ+0+vq
-P9vEHOxuJDuSSZza5u3UaBEUIqngJ9GLfGv5eUmKYDpMlC8CD3BQ+ybW5Ekw3Cxc
-x3vwTb/5UrIZGnreooZUkVDZpO7gXtVB3IB2GDCfxWUVndSyZ/sfmZ5dkYjO1BF/
-6waETWHQNMmrrl9VgO/FA6dkl3BPf3h3ZBv65o9lNBq47GkTBRuAXF9/aC3eHO7U
-v8ImV9dhuO/CLCkrBXyItgFVmXigfIRJelHXwJn8l/pc05zMA9Ik8zZP/vBMtt14
-Wi9CpkvWPESqblzcf0BkdPpcFONQsb7+MNbQAdS2XvdH7PDhFq0=
-=8hFn
------END PGP SIGNATURE-----
-
---HAv5+T9jbwMPl6Kw--
-
---===============0661584385==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0661584385==--
+Regards,
+Niklas
