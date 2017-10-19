@@ -1,164 +1,305 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: dtc issue with overlays starting in next-20171009
-Date: Thu, 19 Oct 2017 12:42:15 +1100
-Message-ID: <20171019014215.GT2776@umbus.fritz.box>
+Date: Thu, 19 Oct 2017 12:52:14 +1100
+Message-ID: <20171019015214.GU2776@umbus.fritz.box>
 References: <CANk1AXQaXKud2Mic_879JiS39hJB4y0uTS2w1uxXje-0mO68Vw@mail.gmail.com>
  <59E7ACA0.7030809@gmail.com>
  <CAL_Jsq+f4Y1DDB4ZkXAEKUZ_P9YdMUKMhr2E=VKtbHWMZFaO0w@mail.gmail.com>
+ <59E7D6E0.5030109@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="j2Klb18PAKd8hQ5U"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="dQ+ozEaLk2y6HH72"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+f4Y1DDB4ZkXAEKUZ_P9YdMUKMhr2E=VKtbHWMZFaO0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E7D6E0.5030109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---j2Klb18PAKd8hQ5U
+--dQ+ozEaLk2y6HH72
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 18, 2017 at 03:16:34PM -0500, Rob Herring wrote:
-> Use devicetree-compiler list for dtc issues please.
+On Wed, Oct 18, 2017 at 03:34:08PM -0700, Frank Rowand wrote:
+> On 10/18/17 13:16, Rob Herring wrote:
+> > Use devicetree-compiler list for dtc issues please.
+> >=20
+> > On Wed, Oct 18, 2017 at 2:33 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+> >> Hi Rob, Alan,
+> >>
+> >> On 10/18/17 08:58, Alan Tull wrote:
+> >>> Hi Rob,
+> >>>
+> >>> I've noticed a problem compiling DT overlays and traced it back to
+> >>> beginning in next-20171009
+> >>>
+> >>> That tag adds the following in scripts/dtc
+> >>>
+> >>> e9480c1 2017-10-09 16:17:32 +0100 : Mark Brown : Merge remote-tracking
+> >>> branch 'devicetree/for-next'
+> >>> 4201d05 2017-10-03 15:03:47 -0500 : Rob Herring : scripts/dtc: Update
+> >>> to upstream version v1.4.5-3-gb1a60033c110
+> >>> 4322323 2017-10-03 15:03:46 -0500 : Rob Herring : scripts/dtc: add
+> >>> fdt_overlay.c and fdt_addresses.c to sync script
+> >>>
+> >>> The error is:
+> >>>
+> >>> dtc: /home/atull/repos/linux-socfpga/scripts/dtc/livetree.c:543:
+> >>> get_node_by_phandle: Assertion `(phandle !=3D 0) && (phandle !=3D -1)'
+> >>> failed.
+> >>> arch/arm/boot/dts/socfpga_overlay.dtb: Warning (clocks_property):
+> >>> Could not get phandle node for
+> >>> /fragment@0/__overlay__/gpio@10040:clocks(cell 0)
+> >>> Aborted (core dumped)
+> >>> scripts/Makefile.lib:316: recipe for target
+> >>> 'arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb'
+> >>> failed
+> >>> make[2]: *** [arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_=
+ext_cfg.dtb]
+> >>> Error 134
+> >>> arch/arm/Makefile:346: recipe for target 'dtbs' failed
+> >>>
+> >>> Here's a simplified overlay that gets this error.  Taking out the line
+> >>> "interrupt-parent =3D <&intc>;" fixes the build.
+> >>>
+> >>> /dts-v1/;
+> >>> /plugin/;
+> >>> / {
+> >>>         fragment@0 {
+> >>>                 target-path =3D "/soc/base_fpga_region";
+> >>>                 #address-cells =3D <1>;
+> >>>                 #size-cells =3D <1>;
+> >>>
+> >>>                 __overlay__ {
+> >>>                         ranges =3D <0x00000000 0x00000000 0xc0000000 =
+0x00040000>,
+> >>>                                  <0x00000001 0x00000000 0xff200000 0x=
+00001000>;
+> >>>
+> >>>                         external-fpga-config;
+> >>>
+> >>>                         #address-cells =3D <2>;
+> >>>                         #size-cells =3D <1>;
+> >>>
+> >>>                         fpga_pr_region0 {
+> >>>                                 compatible =3D "fpga-region";
+> >>>                                 fpga-bridges =3D <&freeze_controller_=
+0>;
+> >>>                                 ranges;
+> >>>                         };
+> >>>
+> >>>                         freeze_controller_0: freeze_controller@0x1000=
+00450 {
+> >>>                                 compatible =3D "altr,freeze-bridge-co=
+ntroller";
+> >>>                                 reg =3D <0x00000001 0x00000450 0x0000=
+0010>;
+> >>>                                 interrupt-parent =3D <&intc>;  /* <--
+> >>> remove to fix build */
+> >>>                                 interrupts =3D <0 21 4>;
+> >>>                         };
+> >>>                 };
+> >>>         };
+> >>> };
+> >>>
+> >>> Alan
+> >>
+> >> Phandle references in overlays are assigned the value of -1 (0xfffffff=
+f) in
+> >> the dtb, to be fixed up when loaded.  A new check sees this value and
+> >> triggers the assert.
+> >>
+> >> It is this commit in the upstream dtc tools tree:
+> >>
+> >>    commit ee3d26f6960bb5922d9a35fe266d9eac74a78ec0
+> >>    checks: add interrupts property check
+> >>
+> >> There are a bunch of other new checks that call get_node_by_phandle(),
+> >> and thus could trigger the assertion.
+> >>
+> >> I'm guessing that those checks would also trigger the assert if an
+> >> overlay contained something that would lead to one of the other checks
+> >> being processed.
+> >=20
+> > You won't get an assert because I check for 0 or -1 and skip the check
+> > in those cases. The interrupts check missed that condition.
 >=20
-> On Wed, Oct 18, 2017 at 2:33 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> > Hi Rob, Alan,
-> >
-> > On 10/18/17 08:58, Alan Tull wrote:
-> >> Hi Rob,
-> >>
-> >> I've noticed a problem compiling DT overlays and traced it back to
-> >> beginning in next-20171009
-> >>
-> >> That tag adds the following in scripts/dtc
-> >>
-> >> e9480c1 2017-10-09 16:17:32 +0100 : Mark Brown : Merge remote-tracking
-> >> branch 'devicetree/for-next'
-> >> 4201d05 2017-10-03 15:03:47 -0500 : Rob Herring : scripts/dtc: Update
-> >> to upstream version v1.4.5-3-gb1a60033c110
-> >> 4322323 2017-10-03 15:03:46 -0500 : Rob Herring : scripts/dtc: add
-> >> fdt_overlay.c and fdt_addresses.c to sync script
-> >>
-> >> The error is:
-> >>
-> >> dtc: /home/atull/repos/linux-socfpga/scripts/dtc/livetree.c:543:
-> >> get_node_by_phandle: Assertion `(phandle !=3D 0) && (phandle !=3D -1)'
-> >> failed.
-> >> arch/arm/boot/dts/socfpga_overlay.dtb: Warning (clocks_property):
-> >> Could not get phandle node for
-> >> /fragment@0/__overlay__/gpio@10040:clocks(cell 0)
-> >> Aborted (core dumped)
-> >> scripts/Makefile.lib:316: recipe for target
-> >> 'arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb'
-> >> failed
-> >> make[2]: *** [arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_e=
-xt_cfg.dtb]
-> >> Error 134
-> >> arch/arm/Makefile:346: recipe for target 'dtbs' failed
-> >>
-> >> Here's a simplified overlay that gets this error.  Taking out the line
-> >> "interrupt-parent =3D <&intc>;" fixes the build.
-> >>
-> >> /dts-v1/;
-> >> /plugin/;
-> >> / {
-> >>         fragment@0 {
-> >>                 target-path =3D "/soc/base_fpga_region";
-> >>                 #address-cells =3D <1>;
-> >>                 #size-cells =3D <1>;
-> >>
-> >>                 __overlay__ {
-> >>                         ranges =3D <0x00000000 0x00000000 0xc0000000 0=
-x00040000>,
-> >>                                  <0x00000001 0x00000000 0xff200000 0x0=
-0001000>;
-> >>
-> >>                         external-fpga-config;
-> >>
-> >>                         #address-cells =3D <2>;
-> >>                         #size-cells =3D <1>;
-> >>
-> >>                         fpga_pr_region0 {
-> >>                                 compatible =3D "fpga-region";
-> >>                                 fpga-bridges =3D <&freeze_controller_0=
->;
-> >>                                 ranges;
-> >>                         };
-> >>
-> >>                         freeze_controller_0: freeze_controller@0x10000=
-0450 {
-> >>                                 compatible =3D "altr,freeze-bridge-con=
-troller";
-> >>                                 reg =3D <0x00000001 0x00000450 0x00000=
-010>;
-> >>                                 interrupt-parent =3D <&intc>;  /* <--
-> >> remove to fix build */
-> >>                                 interrupts =3D <0 21 4>;
-> >>                         };
-> >>                 };
-> >>         };
-> >> };
-> >>
-> >> Alan
-> >
-> > Phandle references in overlays are assigned the value of -1 (0xffffffff=
-) in
-> > the dtb, to be fixed up when loaded.  A new check sees this value and
-> > triggers the assert.
-> >
-> > It is this commit in the upstream dtc tools tree:
-> >
-> >    commit ee3d26f6960bb5922d9a35fe266d9eac74a78ec0
-> >    checks: add interrupts property check
-> >
-> > There are a bunch of other new checks that call get_node_by_phandle(),
-> > and thus could trigger the assertion.
-> >
-> > I'm guessing that those checks would also trigger the assert if an
-> > overlay contained something that would lead to one of the other checks
-> > being processed.
+> Awesome, thank for confirming that.  That means the temporary work around
+> is quite easy.
 >=20
-> You won't get an assert because I check for 0 or -1 and skip the check
-> in those cases. The interrupts check missed that condition.
+> >=20
+> > However, as shown above, you will get an erroneous warning because it
+> > just skips 1 cell and goes to the next to handle the case where the
+> > phandle is optional and you want a fixed number of elements.
 >=20
-> However, as shown above, you will get an erroneous warning because it
-> just skips 1 cell and goes to the next to handle the case where the
-> phandle is optional and you want a fixed number of elements.
+> Just for those reading along at home, with the one warning disabled, the
+> messages become:
 >=20
-> I guess we can't validate overlays which is unfortunate. I don't think
-> that's a solvable problem unless you have the base DT.
+>    $  dtc -Wno-interrupts_property socfpga_arria10_socdk_sdmmc_ghrd_ovl_e=
+xt_cfg.dts >junk.dtb
+>    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit n=
+ame, but no reg property
+>    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0/__overlay__ =
+has a reg or ranges property, but no unit name
 
-Right.  You can check some things in overlays, but when parsing
-something requires information from the base tree, there is indeed not
-much that can be done.
+Ah.. yeah.. we should put in explicit handling of this.  The top level
+nodes in an overlay don't really obey the normal DT rules, so we
+shouldn't apply the checks to them in the same way.
 
-> > You can avoid the problem in your example dts with "-Wno-interrupts_pro=
-perty"
-> >
-> >   dtc -Wno-interrupts_property fpga_01_a.dts
-> >
-> > The larger set of other checks that might trigger the assert is too lar=
-ge
-> > for me to want to add "-Wno-" flags for all of them to the command line
-> > (as temporary workarounds).
+This, incidentally was a major part of why I want to change overlay
+construction so it's done as a separate pass, rather than during the
+parse: that way we can apply the checks separately to each fragment
+before we assemble them, which I think will work better in most
+cases.  (well, actually, the plan was to have two groups of checks -
+some that run before overlay assembly, some after).  I made a start on
+this in the 'overlay' branch, but I never got a chance to finish it.
+
+> > I guess we can't validate overlays which is unfortunate. I don't think
+> > that's a solvable problem unless you have the base DT.
 >=20
-> David thought more switches were better.
+> Yes, maybe.  But there are still some useful warnings for overlays, maybe=
+=2E  I'm
+> not sure what the implications of the "range_format" warning that I will =
+show
+> below are (I'd actually have to spend a few minutes thinking about ranges=
+, and
+> I don't have the cycles right now).
+>=20
+>=20
+> >=20
+> >> You can avoid the problem in your example dts with "-Wno-interrupts_pr=
+operty"
+> >>
+> >>   dtc -Wno-interrupts_property fpga_01_a.dts
+> >>
+> >> The larger set of other checks that might trigger the assert is too la=
+rge
+> >> for me to want to add "-Wno-" flags for all of them to the command line
+> >> (as temporary workarounds).
+> >=20
+> > David thought more switches were better.
+>=20
+> Yep.  Not a complaint, just an observation about a _temporary_ workaround.
+>=20
+>=20
+> >=20
+> > Rob
+> >=20
+>=20
+>=20
+> Here is the "range_format" warning I mentioned above.  The dts file that
+> started this thread hand crafts what is internal overlay data, which
+> should be generated by the dtc compiler instead of being hand coded in
+> the dts.  If I remove the hand coded stuff and let dtc generate the
+> internal overlay data, the dtc messages become (use a wide window to
+> avoid line wrapping):
+>=20
+> $ dtc -Wno-interrupts_property fpga_01_a.dts >junk.dtb
+> <stdout>: Warning (ranges_format): "ranges" property in /fragment@0/__ove=
+rlay__ has invalid length (32 bytes) (parent #address-cells =3D=3D 2, child=
+ #address-cells =3D=3D 2, #size-cells =3D=3D 1)
 
-Right, as a rule, I like fine configurability of the checks.
+This is a false positive.  Correctly parsing the ranges property
+requires knowing the parent node's #address-cells and #size-cells.  In
+the case of an overlay, we don't know the real parent until it's
+applied, so we can't check this.
 
-But.. there's a trick to make things easier to configure in batches:
-when you enable a warning, you automatically enable all warnings that
-warning has as prerequisites.  And when you disable a warning, every
-other warning that has it as a prerequisite is also disabled.
+So this probably needs another change to skip this test on the top
+node of any overlay fragment.  Again, this would be easier if overlay
+juggling was in a separate pass.
 
-So by adding some dummy checks with the right depencies, you can allow
-enabling and disabling of groups of related checks with a single
-command line option.
+> <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit name=
+, but no reg property
+> <stdout>: Warning (unit_address_vs_reg): Node /fragment@0/__overlay__ has=
+ a reg or ranges property, but no unit name
+> <stdout>: Warning (avoid_default_addr_size): Relying on default #address-=
+cells value for /fragment@0/__overlay__
+> <stdout>: Warning (avoid_default_addr_size): Relying on default #size-cel=
+ls value for /fragment@0/__overlay__
+>=20
+>=20
+> The second through last warning are about the format of the internal
+> data structure, and hopefully could just be suppressed.  I don't
+> know how easy or hard that would be to implement - I am very much
+> not a dtc internals expert.
+
+Right, we shouldn't be applying these checks to nodes that are part of
+the overlay metadata rather than "real" nodes.
+
+> The first warning says something about what the overlay source dts
+> contains.  Here is what the original dts source looks like when
+> transformed to not contain the hand crafted internal overlay data:
+>=20
+> $ cat fpga_01_a.dts=20
+> /dts-v1/;
+> /plugin/;
+>=20
+> // This assumes an existing label in the base dts
+> // whose location is "/soc/base_fpga_region"
+> &fpga_region {
+>=20
+> 			ranges =3D <0x00000000 0x00000000 0xc0000000 0x00040000>,
+> 				 <0x00000001 0x00000000 0xff200000 0x00001000>;
+>=20
+> 			external-fpga-config;
+>=20
+> 			#address-cells =3D <2>;
+> 			#size-cells =3D <1>;
+>=20
+> 			fpga_pr_region0 {
+> 				compatible =3D "fpga-region";
+> 				fpga-bridges =3D <&freeze_controller_0>;
+> 				ranges;
+> 			};
+>=20
+> 			freeze_controller_0: freeze_controller@100000450 {
+> 				compatible =3D "altr,freeze-bridge-controller";
+> 				reg =3D <0x00000001 0x00000450 0x00000010>;
+> 				interrupt-parent =3D <&intc>;  /* <-- remove to fix build */
+> 				interrupts =3D <0 21 4>;
+> 			};
+> };
+>=20
+> Of course, if this was a real transformation, I would remove all the
+> extra tabbing.  But the current form makes it easier to see that all
+> of the stuff that is highly indented is unchanged from the original
+> dts file.
+>=20
+> $ diff -u socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dts fpga_01_a.dts
+> --- socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dts	2017-10-18 15:18:43.=
+123137508 -0700
+> +++ fpga_01_a.dts	2017-10-18 15:18:11.587136897 -0700
+> @@ -1,12 +1,10 @@
+>  /dts-v1/;
+>  /plugin/;
+> -/ {
+> -	fragment@0 {
+> -		target-path =3D "/soc/base_fpga_region";
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <1>;
+> =20
+> -		__overlay__ {
+> +// This assumes an existing label in the base dts
+> +// whose location is "/soc/base_fpga_region"
+> +&fpga_region {
+> +
+>  			ranges =3D <0x00000000 0x00000000 0xc0000000 0x00040000>,
+>  				 <0x00000001 0x00000000 0xff200000 0x00001000>;
+> =20
+> @@ -27,6 +25,4 @@
+>  				interrupt-parent =3D <&intc>;  /* <-- remove to fix build */
+>  				interrupts =3D <0 21 4>;
+>  			};
+> -		};
+> -	};
+>  };
+>=20
+>=20
+> -Frank
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -166,24 +307,28 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---j2Klb18PAKd8hQ5U
+--dQ+ozEaLk2y6HH72
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlnoAvcACgkQbDjKyiDZ
-s5IoNA//X+AFWbdXLP6x9wLx5bDb9AF0GOo6JsVQcQgmVbSVIG6+lEw1ExpyDuLJ
-4iTqQWouOVcnBBZEKSVaMM8o5+oRWxdp6OctV12gKdHXmvJ4Gj/Y/TQjTAq5gkzO
-V0L2NGDnWC5og6OXvKIt8/n0hjiK9mvREIWRQdXsTvG+iy+ywJp71EmU6EUnOptN
-3XXeIfPwVMEH4+QTKKfAn6h9zgHnGmamwltqVfPQoEQjTnkSc78tZ/uVz1JKwAYC
-IMMXhPKNbvZ9R9fLg5b5NsC2LOi/HpwjEC96I/9rmALgC9ddKcMxEu2b1ECr75tR
-BrzlZYa2/OEcpI9cKU/hQJOtCGlCrfNrzOlET/5PlJGmk6oNSaf2kzJyCdJ3umf5
-ZWrkp/lx8DaY09c9ZVt00K3ngO3dslnetNTSov//XHz6LgXvNJVg/PmNRxUbHogB
-V87085yxJkcYRK3mq2hzZd3e6j2IFjlaVU8EDMAUxrmyqG1GRgteciM7CxeYOc//
-XYkbSq4tpnOiEpCdvrZZDQXns9MqBVN+L7RsaB/6zlNbA3o+atNd7JKIxTZsa4Ej
-9e5VX/IrWlQViFOfZOu8iZRS+uJX7y9tCCFV3zePYEgVaWdO+obL7RP0fYfAKo/a
-IuaTeUM5znabtPY6kgNSyibP/vkx+sB+11Pws8to+fbSDgqBLI4=
-=9akC
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlnoBU4ACgkQbDjKyiDZ
+s5LhYw/+JQNBtL6xKkku69jg2moPa9/fnE+x5pVO7afzfesl+7qPSiya5MVPiy/p
+/aBDe0mCZ7UtJbwHbF08oktGDV6FLe96g6rE8JnTOlVSZalOLe4HSpO7spoUtr8F
+dhJT3z8IuxOUW61tAILCf18X6Phq8HpYdow9Fhp/W1HuAYWy26Ktyi554hk+TRWl
+doUDwA0Dhse4d7Qun21c+wHbFMwWNWoRNzusjXPgWW9sOQxXLMVtMge5H7ONpKKG
+ghQCWg5IixWSvGufc+9cFOb+4JC9CMXW2jMKRQwzfb0C2gCkkwEPjpYfyGzXm0ZP
+byw2oVCn+xm6iVUDUF5CknaBr4jCi6BuywIAhaFJ8Dl5cXeCblLAe5ZHIfvU9OdV
+83D8VAA/6mEo0hu7igd+UuvHkrnX4Be0rnp+M/Q4+ZOXCAXVGzn9SChwOpHLgdMf
+VXAZjO78edNYg4SRQ2KK1guElTOGt85IkM6lAYQiQcndDPm962BqQSByi0YASflx
+vGc0H1KOrvSmSWSP3PRp57i1ouTSAZc+qaSnrYoGInJP8bT8tj+DsRyiSal4eCc3
+O4tW9LE/sflO+IOQIPp4qcVEfO92CeCI0Iet7CSuk/zlXsZX+jQeinfvUk1lCgUc
+AlY2QclJgU/61ursVtt8hkuwK7eJZJA2V/oU7JUrD4Fcvd15+CE=
+=mqJP
 -----END PGP SIGNATURE-----
 
---j2Klb18PAKd8hQ5U--
+--dQ+ozEaLk2y6HH72--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
