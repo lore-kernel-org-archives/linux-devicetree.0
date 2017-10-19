@@ -1,60 +1,102 @@
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v6 00/10] rockchip: kevin: Enable edp display
-Date: Thu, 19 Oct 2017 11:48:02 +0800
-Message-ID: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v6 01/10] arm64: dts: rockchip: Enable edp disaplay on kevin
+Date: Thu, 19 Oct 2017 11:48:03 +0800
+Message-ID: <20171019034812.13768-2-jeffy.chen@rock-chips.com>
+References: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Romain Perier <romain.perier@collabora.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Kevin Hilman <khilman@baylibre.com>, briannorris@chromium.org, Krzysztof Kozlowski <krzk@kernel.org>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Caesar Wang <wxt@rock-chips.com>, Jose Abreu <Jose.Abreu@synopsys.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jeffy Chen <jeffy.chen@rock-chips.com>, Russell King <rmk+kernel@armlinux.org.uk>Rob Herring <ro>
+Cc: briannorris@chromium.org, seanpaul@chromium.org, dianders@chromium.org, heiko@sntech.de, tfiga@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Ck1ha2UgZWRwIGRpc3BsYXkgd29ya3Mgb24gY2hyb21lYm9vayBrZXZpbihhdCBsZWFzdCBmb3Ig
-Ym9vdCBhbmltYXRpb24pLgoKQWxzbyBzb2x2ZSBzb21lIGlzc3VlcyBpIG1lZXQgZHVyaW5nIHRo
-ZSBicmluZ3VwLgoKQ2hhbmdlcyBpbiB2NjoKRG9uJ3QgY2hhbmdlIG9yZGVyIG9mIHJvY2tjaGlw
-X2RybV9wc3JfcmVnaXN0ZXIoKS4KCkNoYW5nZXMgaW4gdjU6CkNhbGwgdGhlIGRlc3Ryb3kgaG9v
-ayBpbiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCBsaWtlIGluIHVuYmluZCgpLgpDYWxsIHRoZSBk
-ZXN0cm95IGhvb2sgaW4gdGhlIGVycm9yIGhhbmRsaW5nIHBhdGggbGlrZSBpbiB1bmJpbmQoKS4K
-VXBkYXRlIGNsZWFudXAgb3JkZXIgaW4gdW5iaW5kKCkuCkFkZCBkaXNhYmxlIHRvIHVuYmluZCgp
-LCBhbmQgaW5saW5lIGNsa19wcmVwYXJlX2VuYWJsZSgpIHdpdGggYmluZCgpLgoKSmVmZnkgQ2hl
-biAoMTApOgogIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBFbmFibGUgZWRwIGRpc2FwbGF5IG9uIGtl
-dmluCiAgZHJtL3JvY2tjaGlwOiBhbmFsb2dpeF9kcDogUmVtb3ZlIHVubmVjZXNzYXJ5IGluaXQg
-Y29kZQogIGRybS9icmlkZ2U6IGFuYWxvZ2l4OiBEbyBub3QgdXNlIGRldmljZSdzIGRydmRhdGEK
-ICBkcm0vYnJpZGdlOiBhbmFsb2dpeF9kcDogRml4IGNvbm5lY3RvciBhbmQgZW5jb2RlciBjbGVh
-bnVwCiAgZHJtL3JvY2tjaGlwOiBhbmFsb2dpeF9kcDogQWRkIGEgc2FuaXR5IGNoZWNrIGZvcgog
-ICAgcm9ja2NoaXBfZHJtX3Bzcl9yZWdpc3RlcigpCiAgZHJtL3JvY2tjaGlwOiBkdy1taXBpLWRz
-aTogRml4IGVycm9yIGhhbmRsaW5nIHBhdGgKICBkcm0vcm9ja2NoaXA6IGlubm9faGRtaTogRml4
-IGVycm9yIGhhbmRsaW5nIHBhdGgKICBkcm0vYnJpZGdlL3N5bm9wc3lzOiBkdy1oZG1pOiBBZGQg
-bWlzc2luZyBicmlkZ2UgZGV0YWNoCiAgZHJtL2JyaWRnZS9zeW5vcHN5czogZHctaGRtaTogRG8g
-bm90IHVzZSBkZXZpY2UncyBkcnZkYXRhCiAgZHJtL3JvY2tjaGlwOiBkd19oZG1pOiBGaXggZXJy
-b3IgaGFuZGxpbmcgcGF0aAoKIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdy
-dS1rZXZpbi5kdHMgIHwgMjkgKysrKysrKwogYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9y
-azMzOTktZ3J1LmR0c2kgICAgICAgfCAxNiArKysrCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fu
-YWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUuYyB8IDUyICsrKysrLS0tLS0tLQogZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMgICAgICAgICAgfCA1MyArKysrKystLS0tLS0K
-IGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RwLmMgICAgICAgICAgICAgICAgIHwgMjkg
-KysrKy0tLQogZHJpdmVycy9ncHUvZHJtL2lteC9kd19oZG1pLWlteC5jICAgICAgICAgICAgICAg
-ICAgfCAyMiArKystLQogZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2R3X2hkbWkuYyAgICAg
-ICAgICAgICAgfCAyMCArKystLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kd19oZG1p
-LmMgICAgICAgICAgICAgfCAxNCArKystCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvYW5hbG9n
-aXhfZHAtcm9ja2NoaXAuYyAgICB8IDk1ICsrKysrKysrKysrLS0tLS0tLS0tLS0KIGRyaXZlcnMv
-Z3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jICAgICAgICAgICAgIHwgMjEgKysrLS0KIGRy
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgMzkgKysr
-KystLS0tCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMgICAgICAgICAgICAg
-ICB8IDIyICsrKy0tCiBpbmNsdWRlL2RybS9icmlkZ2UvYW5hbG9naXhfZHAuaCAgICAgICAgICAg
-ICAgICAgICB8IDE5ICsrKy0tCiBpbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oICAgICAgICAg
-ICAgICAgICAgICAgICB8IDE3ICsrLS0KIDE0IGZpbGVzIGNoYW5nZWQsIDI2NSBpbnNlcnRpb25z
-KCspLCAxODMgZGVsZXRpb25zKC0pCgotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Add edp panel and enable related nodes on kevin.
+
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Reviewed-by: Mark Yao <mark.yao@rock-chips.com>
+
+---
+
+Changes in v6: None
+Changes in v5: None
+
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
+ 2 files changed, 45 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index a3d3cea7dc4f..bc67b19f0af5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -93,6 +93,18 @@
+ 		pwm-delay-us = <10000>;
+ 	};
+ 
++	edp_panel: edp-panel {
++		compatible = "sharp,lq123p1jx31", "simple-panel";
++		backlight = <&backlight>;
++		power-supply = <&pp3300_disp>;
++
++		ports {
++			panel_in_edp: endpoint {
++				remote-endpoint = <&edp_out_panel>;
++			};
++		};
++	};
++
+ 	thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
+ 		compatible = "murata,ncp15wb473";
+ 		pullup-uv = <1800000>;
+@@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
+ 	};
+ };
+ 
++&edp {
++	status = "okay";
++
++	ports {
++		edp_out: port@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			edp_out_panel: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&panel_in_edp>;
++			};
++		};
++	};
++};
++
+ &ppvar_bigcpu_pwm {
+ 	regulator-min-microvolt = <798674>;
+ 	regulator-max-microvolt = <1302172>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+index 5772c52fbfd3..470105d651c2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+@@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
+ 	dr_mode = "host";
+ };
+ 
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
++};
++
+ #include <arm/cros-ec-keyboard.dtsi>
+ #include <arm/cros-ec-sbs.dtsi>
+ 
+-- 
+2.11.0
