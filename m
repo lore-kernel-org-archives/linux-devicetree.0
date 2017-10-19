@@ -1,24 +1,13 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [RFC resend 1/4] dt-bindings: display: mediatek: add drm binding
-Date: Thu, 19 Oct 2017 13:26:07 +0200
-Message-ID: <20171019112610.13645-2-mbrugger@suse.com>
+Subject: [RFC resend 3/4] arm64: dts: mt8173: Fix drm subsystem
+Date: Thu, 19 Oct 2017 13:26:09 +0200
+Message-ID: <20171019112610.13645-4-mbrugger@suse.com>
 References: <20171019112610.13645-1-mbrugger@suse.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171019112610.13645-1-mbrugger@suse.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, ck.hu@mediatek.com, p.zabel@pengutronix.de, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: linux@armlinux.org.uk, matthias.bgg@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
 DRM subysystem and clock driver shared the same compatible mmsys.
@@ -28,32 +17,24 @@ this.
 
 Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,disp.txt          | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-index 383183a89164..6db652463e64 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-@@ -27,6 +27,7 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index b99a27372965..89db0a3f5950 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -803,6 +803,11 @@
+ 			#clock-cells = <1>;
+ 		};
  
- Required properties (all function blocks):
- - compatible: "mediatek,<chip>-disp-<function>", one of
-+	"mediatek,<chip>-dispsys"    - central component for the DRM system
- 	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
- 	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
- 	"mediatek,<chip>-disp-wdma"  - write DMA
-@@ -71,6 +72,11 @@ mmsys: clock-controller@14000000 {
- 	#clock-cells = <1>;
- };
- 
-+dispsys: display-system {
-+	compatible = "mediatek,mt2701-dispsys";
-+	mediatek,mmsys = <&mmsys>;
-+}
++		dispsys: display-system {
++			compatible = "mediatek,mt2701-dispsys";
++			mediatek,mmsys = <&mmsys>;
++		}
 +
- ovl0: ovl@1400c000 {
- 	compatible = "mediatek,mt8173-disp-ovl";
- 	reg = <0 0x1400c000 0 0x1000>;
+ 		mdp_rdma0: rdma@14001000 {
+ 			compatible = "mediatek,mt8173-mdp-rdma",
+ 				     "mediatek,mt8173-mdp";
 -- 
 2.14.2
