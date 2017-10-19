@@ -1,50 +1,60 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v2 6/8] ARM: dts: sun8i: a83t: Move mmc1
- pinctrl setting to dtsi file
-Date: Fri, 20 Oct 2017 00:34:30 +0800
-Message-ID: <CAGb2v64T=z8RefyEcDHJyrJE9ZCRN=c6zVf25JEqSKvDGUE_Rg@mail.gmail.com>
-References: <20171018083138.14517-1-wens@csie.org> <20171018083138.14517-7-wens@csie.org>
- <f85a30e2-5a9d-a7ba-0010-6602cabaf83e@riseup.net> <CAGb2v64O+eyriHG-FirtPKo6hACfbV9JcJRUUZ+rY1QM2w_r1g@mail.gmail.com>
- <4a2734fb-71ab-7cd9-2b17-669f2fdf9a2c@riseup.net>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] arm: dts: mt2701: add pwm backlight device node
+Date: Thu, 19 Oct 2017 18:48:50 +0200
+Message-ID: <54df408d-62b8-63dd-05af-68daa455b62c@gmail.com>
+References: <cover.1506908511.git.ryder.lee@mediatek.com>
+ <144f5d526d15cbf3ada220765c609eb2b59c240a.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4a2734fb-71ab-7cd9-2b17-669f2fdf9a2c-sGOZH3hwPm2sTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <144f5d526d15cbf3ada220765c609eb2b59c240a.1506908511.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?Sm9vbmFzIEt5bG3DpGzDpA==?= <joonas.kylmala-X3B1VOXEql0@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 12:02 AM, Joonas Kylmälä <joonas.kylmala-X3B1VOXEql0@public.gmane.org> wrote:
-> Chen-Yu Tsai:
->>> Chen-Yu Tsai:
->>>> mmc1 only has 1 possible pinmux setting.
->>>
->>> What if someone is using the MMC with bus width 1 and then using the
->>> remaining 3 pins for something else?
->>
->> I would very much like to see such a design. Currently the devices
->> we see all follow Allwinner's reference design, with only minor
->> modifications. As such, mmc1 is used exclusively for connecting
->> SDIO-based WiFi modules.
->>
->> If such a radical(?) design is done, the vendor can always add
->> a "mmc1-1bit-pins" setting and override the default.
->
-> Alright. So could we then make similar patches for other SoCs that have
-> the same situation with the MMC pinmuxing? I.e. let's move the pinctrl
-> to the dtsi file from the dts files. With H3 SDC0 and SDC1 nodes could
-> be moved then to the dtsi. Can't we also move the SDC0 pinctrl in A83T
-> to the dtsi file? Though, in order to do that mmc0_cd_pin node needs to
-> be added to the A38T dtsi.
 
-Yes. We are slowly doing this and other cleanups. This is somewhat
-boring and tedious, and it's not exactly a high priority item. You
-might have noticed Maxime recently sent patches to clean up sun4i
-and sun9i.
 
-ChenYu
+On 10/02/2017 03:54 AM, Ryder Lee wrote:
+> From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> This patch adds the device node for MT2701 pwm backlight.
+> 
+> Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+
+Pushed to v4.14-next/dts32
+
+Thanks!
+
+> 
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index afe12e5..3c85879 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -530,6 +530,15 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	bls: pwm@1400a000 {
+> +		compatible = "mediatek,mt2701-disp-pwm";
+> +		reg = <0 0x1400a000 0 0x1000>;
+> +		#pwm-cells = <2>;
+> +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
+> +		clock-names = "main", "mm";
+> +		status = "disabled";
+> +	};
+> +
+>  	larb0: larb@14010000 {
+>  		compatible = "mediatek,mt2701-smi-larb";
+>  		reg = <0 0x14010000 0 0x1000>;
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
