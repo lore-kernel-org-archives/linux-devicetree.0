@@ -1,49 +1,52 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in
- full_name
-Date: Thu, 19 Oct 2017 14:46:53 -0700
-Message-ID: <59E91D4D.8000200@gmail.com>
-References: <20170821151651.25096-1-robh@kernel.org>
- <20170821151651.25096-6-robh@kernel.org>
- <CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
- <CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com>
- <59E69786.2030406@gmail.com>
- <CANk1AXStoiNtJfU0iNug1wKASurqH6OrNoaN=UtSh6xxSB088Q@mail.gmail.com>
- <CAL_JsqKR3Jg+tgZr4xGPtcWnZW7ng741YjuyUFaS2SXKXbxGtg@mail.gmail.com>
- <1508341985.25643.12.camel@hp800z>
- <CAL_JsqKJ74y3qHVqbRph5C8=0Ggb+n=JT3TZybu2+mENyZ1VZA@mail.gmail.com>
- <4393AFA4-620F-4C21-995D-A9806DAE1990@konsulko.com>
- <20171019200615.GA10743@tyrael.ni.corp.natinst.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: overlay: pr_err from return NOTIFY_OK to overlay
+ apply/remove
+Date: Thu, 19 Oct 2017 14:49:20 -0700
+Message-ID: <59E91DE0.5090106@gmail.com>
+References: <1508447907-4462-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171019200615.GA10743@tyrael.ni.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <mdf@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Rob Herring <robh@kernel.org>, Alan Tull <atull@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, David Laight <David.Laight@aculab.com>, linux-fpga@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508447907-4462-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/17 13:06, Moritz Fischer wrote:
-
-< snip >
-
-> We also have plenty of code that is just not aware of overlays, and
-> assumes certain parts of the tree to stay static.
-
-I would state that somewhat differently.  :-)  There is very little
-code that is aware of overlays, and most code assumes the device tree
-does not change after early boot.
-
-This is one of the areas where the creation of overlays needs to be
-done with care.
-
-
-> I ran into that issue when I tried to add thermal zones via an overlay,
-> I've been investigating how to fix the thermal framework to work with
-> overlays since then and have some partially working code.
-> Currently the thermal framework parses the thermal-zones node at boot,
-> and assumes this stays static. This breaks with overlays.
+On 10/19/17 14:18, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 > 
-> I agree we eventually need to fix the parts that break when we use
-> overlays.
+> A device tree overlay notifier can return NOTIFY_OK, NOTIFY_STOP,
+> or an embedded errno.  overlay_notify() incorrectly reports an
+> error for NOTIFY_OK.
+> 
+> Reported-by: atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> ---
+>  drivers/of/overlay.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index c99842bb4b09..f5fce0fea40b 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -133,7 +133,7 @@ static int overlay_notify(struct overlay_changeset *ovcs,
+>  
+>  		ret = blocking_notifier_call_chain(&overlay_notify_chain,
+>  						   action, &nd);
+> -		if (ret == NOTIFY_STOP)
+> +		if (ret == NOTIFY_OK || ret == NOTIFY_STOP)
+>  			return 0;
+>  		if (ret) {
+>  			ret = notifier_to_errno(ret);
+> 
+
+Not needed in any stable kernel.  This is caused by
+"[PATCH v3 00/12] of: overlay: clean up device tree overlay code".
+
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
