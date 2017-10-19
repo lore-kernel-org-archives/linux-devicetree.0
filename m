@@ -1,180 +1,251 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 02/10] arm: dts: sunxi: Restore EMAC changes
-Date: Thu, 19 Oct 2017 08:57:46 +0200
-Message-ID: <20171019065745.pzurfghdvfnpxeuc@flea.lan>
-References: <20171018114458.17891-1-clabbe.montjoie@gmail.com>
- <20171018114458.17891-3-clabbe.montjoie@gmail.com>
- <20171018164450.GE15371@lunn.ch>
- <20171018185049.GA24584@Red>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Thu, 19 Oct 2017 08:59:19 +0200
+Message-ID: <015aad32-6b3e-31a8-4fa0-1b249c46d137@xs4all.nl>
+References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
+ <1507783506-3884-4-git-send-email-tharvey@gateworks.com>
+ <230ceb18-1d69-7fa8-acb0-c810094f8e50@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uku2j2u53sbdnskz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3EZUHHQKGQEA7RDERQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171018185049.GA24584@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <230ceb18-1d69-7fa8-acb0-c810094f8e50-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10/18/2017 02:04 PM, Hans Verkuil wrote:
+> Hi Tim,
+> 
+> Here is my review of this v2:
+> 
+> On 10/12/17 06:45, Tim Harvey wrote:
+>> Add support for the TDA1997x HDMI receivers.
+>>
+>> Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+>> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+>> ---
+>> v2:
+>>  - implement dv timings enum/cap
+>>  - remove deprecated g_mbus_config op
+>>  - fix dv_query_timings
+>>  - add EDID get/set handling
+>>  - remove max-pixel-rate support
+>>  - add audio codec DAI support
+>>  - use new audio bindings
+>>
+>> ---
+>>  drivers/media/i2c/Kconfig            |    9 +
+>>  drivers/media/i2c/Makefile           |    1 +
+>>  drivers/media/i2c/tda1997x.c         | 3336 ++++++++++++++++++++++++++++++++++
+>>  include/dt-bindings/media/tda1997x.h |   78 +
+>>  include/media/i2c/tda1997x.h         |   53 +
+>>  5 files changed, 3477 insertions(+)
+>>  create mode 100644 drivers/media/i2c/tda1997x.c
+>>  create mode 100644 include/dt-bindings/media/tda1997x.h
+>>  create mode 100644 include/media/i2c/tda1997x.h
+>>
 
---uku2j2u53sbdnskz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<snip>
 
-On Wed, Oct 18, 2017 at 08:50:49PM +0200, Corentin Labbe wrote:
-> On Wed, Oct 18, 2017 at 06:44:50PM +0200, Andrew Lunn wrote:
-> > On Wed, Oct 18, 2017 at 01:44:50PM +0200, Corentin Labbe wrote:
-> > > The original dwmac-sun8i DT bindings have some issue on how to handle
-> > > integrated PHY and was reverted in last RC of 4.13.
-> > > But now we have a solution so we need to get back that was reverted.
-> > >=20
-> > > This patch restore arm DT about dwmac-sun8i
-> > > This reverts commit fe45174b72ae ("arm: dts: sunxi: Revert EMAC chang=
-es")
-> > >=20
-> > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts |  9 ++++++++
-> > >  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts   | 19 +++++++++++++=
-++++
-> > >  arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts     | 19 +++++++++++++=
-++++
-> > >  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts         |  7 ++++++
-> > >  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts         |  8 +++++++
-> > >  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts       |  8 +++++++
-> > >  arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts   |  5 +++++
-> > >  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts        |  8 +++++++
-> > >  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts      | 22 +++++++++++++=
-++++++
-> > >  arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts    | 16 +++++++++++++=
-+
-> > >  arch/arm/boot/dts/sunxi-h3-h5.dtsi                | 26 +++++++++++++=
-++++++++++
-> > >  11 files changed, 147 insertions(+)
-> > >=20
-> > > diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch=
-/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> > > index b1502df7b509..6713d0f2b3f4 100644
-> > > --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> > > +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-> > > @@ -56,6 +56,8 @@
-> > > =20
-> > >  	aliases {
-> > >  		serial0 =3D &uart0;
-> > > +		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
-> > > +		ethernet0 =3D &emac;
-> > >  		ethernet1 =3D &xr819;
-> > >  	};
-> > > =20
-> > > @@ -102,6 +104,13 @@
-> > >  	status =3D "okay";
-> > >  };
-> > > =20
-> > > +&emac {
-> > > +	phy-handle =3D <&int_mii_phy>;
-> > > +	phy-mode =3D "mii";
-> > > +	allwinner,leds-active-low;
-> > > +	status =3D "okay";
-> > > +};
-> > > +
-> > >  &mmc0 {
-> > >  	pinctrl-names =3D "default";
-> > >  	pinctrl-0 =3D <&mmc0_pins_a>;
-> > > diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/a=
-rm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-> > > index e1dba9ffa94b..f2292deaa590 100644
-> > > --- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-> > > +++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-> > > @@ -52,6 +52,7 @@
-> > >  	compatible =3D "sinovoip,bpi-m2-plus", "allwinner,sun8i-h3";
-> > > =20
-> > >  	aliases {
-> > > +		ethernet0 =3D &emac;
-> > >  		serial0 =3D &uart0;
-> > >  		serial1 =3D &uart1;
-> > >  	};
-> > > @@ -111,6 +112,24 @@
-> > >  	status =3D "okay";
-> > >  };
-> > > =20
-> > > +&emac {
-> > > +	pinctrl-names =3D "default";
-> > > +	pinctrl-0 =3D <&emac_rgmii_pins>;
-> > > +	phy-supply =3D <&reg_gmac_3v3>;
-> > > +	phy-handle =3D <&ext_rgmii_phy>;
-> > > +	phy-mode =3D "rgmii";
-> > > +
-> > > +	allwinner,leds-active-low;
-> > > +	status =3D "okay";
-> > > +};
-> > > +
-> >=20
-> >=20
-> > > +&external_mdio {
-> > > +	ext_rgmii_phy: ethernet-phy@1 {
-> > > +		compatible =3D "ethernet-phy-ieee802.3-c22";
-> > > +		reg =3D <0>;
-> > > +	};
-> > > +};
-> > > +
-> >=20
-> > Hi Corentin
-> >=20
-> > I'm wondering about the order of the patches. Does the external_mdio
-> > node actually exist at this point? Or only later when other patches
-> > are applied?
-> >=20
->=20
-> You are right order of patch are wrong, I need to cut this one in two.
-> "Revert=C2=B2" sunxi-h3-h5.dtsi
-> apply mdiomux
-> "Revert=C2=B2" all board nodes
+>> +/* parse an infoframe and do some sanity checks on it */
+>> +static unsigned int
+>> +tda1997x_parse_infoframe(struct tda1997x_state *state, u16 addr)
+>> +{
+>> +	struct v4l2_subdev *sd = &state->sd;
+>> +	union hdmi_infoframe frame;
+>> +	u8 buffer[40];
+>> +	u8 reg;
+>> +	int len, err;
+>> +
+>> +	/* read data */
+>> +	len = io_readn(sd, addr, sizeof(buffer), buffer);
+>> +	err = hdmi_infoframe_unpack(&frame, buffer);
+>> +	if (err) {
+>> +		v4l_err(state->client,
+>> +			"failed parsing %d byte infoframe: 0x%04x/0x%02x\n",
+>> +			len, addr, buffer[0]);
+>> +		return err;
+>> +	}
+>> +	if (debug > 1)
+>> +		hdmi_infoframe_log(KERN_INFO, &state->client->dev, &frame);
+>> +	switch (frame.any.type) {
+>> +	/* Audio InfoFrame: see HDMI spec 8.2.2 */
+>> +	case HDMI_INFOFRAME_TYPE_AUDIO:
+>> +		/* sample rate */
+>> +		switch (frame.audio.sample_frequency) {
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_32000:
+>> +			state->audio_samplerate = 32000;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_44100:
+>> +			state->audio_samplerate = 44100;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_48000:
+>> +			state->audio_samplerate = 48000;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_88200:
+>> +			state->audio_samplerate = 88200;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_96000:
+>> +			state->audio_samplerate = 96000;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_176400:
+>> +			state->audio_samplerate = 176400;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_192000:
+>> +			state->audio_samplerate = 192000;
+>> +			break;
+>> +		default:
+>> +		case HDMI_AUDIO_SAMPLE_FREQUENCY_STREAM:
+>> +			break;
+>> +		}
+>> +
+>> +		/* sample size */
+>> +		switch (frame.audio.sample_size) {
+>> +		case HDMI_AUDIO_SAMPLE_SIZE_16:
+>> +			state->audio_samplesize = 16;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_SIZE_20:
+>> +			state->audio_samplesize = 20;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_SIZE_24:
+>> +			state->audio_samplesize = 24;
+>> +			break;
+>> +		case HDMI_AUDIO_SAMPLE_SIZE_STREAM:
+>> +		default:
+>> +			break;
+>> +		}
+>> +
+>> +		/* Channel Count */
+>> +		state->audio_channels = frame.audio.channels;
+>> +		if (frame.audio.channel_allocation &&
+>> +		    frame.audio.channel_allocation != state->audio_ch_alloc) {
+>> +			/* use the channel assignment from the infoframe */
+>> +			state->audio_ch_alloc = frame.audio.channel_allocation;
+>> +			tda1997x_configure_audout(sd, state->audio_ch_alloc);
+>> +			/* reset the audio FIFO */
+>> +			tda1997x_hdmi_info_reset(sd, RESET_AUDIO, false);
+>> +		}
+>> +		break;
+>> +
+>> +	/* Source Product Descriptor information (SPD) */
+>> +	case HDMI_INFOFRAME_TYPE_SPD:
+>> +		strncpy(frame.spd.vendor, state->vendor,
+>> +			sizeof(frame.spd.vendor));
+>> +		strncpy(frame.spd.product, state->product,
+>> +			sizeof(frame.spd.product));
+>> +		v4l_info(state->client, "Source Product Descriptor: %s %s\n",
+>> +			 state->vendor, state->product);
+> 
+> Use hdmi_infoframe_log() for logging infoframes.
+> 
+>> +		break;
+>> +
+>> +	/* Auxiliary Video information (AVI) InfoFrame: see HDMI spec 8.2.1 */
+>> +	case HDMI_INFOFRAME_TYPE_AVI:
+>> +		state->colorspace = frame.avi.colorspace;
+>> +		state->colorimetry = frame.avi.colorimetry;
+>> +		/*
+>> +		 * If colorimetry not specified, conversion depends on res type:
+>> +		 *  - SDTV: ITU601 for SD (480/576/240/288 line resolution)
+>> +		 *  - HDTV: ITU709 for HD (720/1080 line resolution)
+>> +		 *  -   PC: sRGB
+>> +		 * see HDMI specification section 6.7
+>> +		 */
+>> +		if ((state->colorspace == HDMI_COLORSPACE_YUV422 ||
+>> +		     state->colorspace == HDMI_COLORSPACE_YUV444) &&
+>> +		    (state->colorimetry == HDMI_COLORIMETRY_EXTENDED ||
+>> +		     state->colorimetry == HDMI_COLORIMETRY_NONE)) {
+>> +			switch (state->timings.bt.height) {
+>> +			case 480:
+>> +			case 576:
+>> +			case 240:
+>> +			case 288:
+>> +				state->colorimetry = HDMI_COLORIMETRY_ITU_601;
+>> +				break;
+>> +			case 720:
+>> +			case 1080:
+>> +				state->colorimetry = HDMI_COLORIMETRY_ITU_709;
+>> +				break;
+>> +			default:
+>> +				state->colorimetry = HDMI_COLORIMETRY_NONE;
+> 
+> Missing break.
+> 
+>> +			}
+>> +		}
+>> +		v4l_dbg(1, debug, state->client,
+>> +			"Colorspace=%d Colorimetry=%d\n",
+>> +			state->colorspace, state->colorimetry);
+>> +
+>> +		/* configure upsampler: 0=bypass 1=repeatchroma 2=interpolate */
+>> +		reg = io_read(sd, REG_PIX_REPEAT);
+>> +		reg &= ~PIX_REPEAT_MASK_UP_SEL;
+>> +		if (state->colorspace == HDMI_COLORSPACE_YUV422)
+>> +			reg |= (PIX_REPEAT_CHROMA << PIX_REPEAT_SHIFT);
+>> +		io_write(sd, REG_PIX_REPEAT, reg);
+>> +
+>> +		/* ConfigurePixelRepeater: repeat n-times each pixel */
+>> +		reg = io_read(sd, REG_PIX_REPEAT);
+>> +		reg &= ~PIX_REPEAT_MASK_REP;
+>> +		reg |= frame.avi.pixel_repeat;
+>> +		io_write(sd, REG_PIX_REPEAT, reg);
+>> +
+>> +		/* configure the receiver with the new colorspace */
+>> +		tda1997x_configure_conv(sd, state->colorspace,
+>> +					state->colorimetry);
+> 
+> What I am missing here is handling of the RGB quantization range.
+> An HDMI receiver will typically send full range RGB or limited range YUV
+> to the SoC. The HDMI source can however send full or limited range RGB
+> or limited range YUV (full range YUV is theoretically possible, but nobody
+> does that).
+> 
+> For a Full HD receiver the rules when receiving RGB video are as follows:
+> 
+> If the EDID supports selectable RGB Quantization Range, then check if the
+> source explicitly sets the RGB quantization range in the AVI InfoFrame and
+> use that value.
 
-I'm not even sure why you're actually adding them that way. Can't you
-just create the new binding file, support it in the driver, and add
-the matching DT nodes ?
+A small correction here: while ideally you should indeed check if the current
+EDID supports selectable RGB Quantization Range, in practice you don't need
+to. If the source explicitly sets the RGB quantization range, then just use
+that.
 
-Maxime
+Note: some hardware can do this automatically (adv7604) by detecting what is
+transmitted in the AVI InfoFrame. That's probably not the case here since you
+have to provide a conversion matrix.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> 
+> Otherwise fall back to the default rules:
+> 
+> if VIC == 0, then expect full range RGB, otherwise expect limited range RGB.
+> 
+> It gets even more complicated with 4k video, but this is full HD only.
+> 
+> In addition, you may also want to implement the V4L2_CID_DV_RX_RGB_RANGE control
+> to let userspace override the autodetection.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+To clarify: this control makes it possible to override the default rules. Too
+many sources (Hi Apple!) make a mess of this and send e.g. full range when they
+should be sending limited range or vice versa.
 
---uku2j2u53sbdnskz
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> RGB Quantization Range handling is *the* biggest headache for HDMI receivers.
+> 
+> If you happen to attend the Embedded Linux Conference Europe in Prague next
+> week, then attend my presentation on HDMI 4k Video on the Wednesday for all
+> the reasons why this is so tricky.
 
------BEGIN PGP SIGNATURE-----
+If you have any questions, feel free to ask. This is a nasty corner of the HDMI
+spec but unfortunately one that is very visible to the user if you do it wrong.
 
-iQIcBAEBAgAGBQJZ6EzpAAoJEBx+YmzsjxAgytgP/1KB1p5cfdrLxWEVJrDcNKY3
-rDUarR5FW8KDKx6sVF+7lhQy1ymawbixa7Uj7t54TUQE13UvvVsfrab96rt4wIda
-QOpppy0pPEV7kkU1zrSbhMSALBVwsVmX+ONKoDS0EKfj2rqbE6QBwNbj4VFVjEMv
-x3m+/oqKydq5cocN8YPzdsyCDr9QlfIymtD6c35hOjeyrGSulvUZWQke9wqj1oIc
-pZ8byA19fUxU+D/A0tPB2H7Q+huFjzQu3g0qiBm1G28lR4rke1lE0wenCPPfyNQr
-jXknXj3F5LuYxk3BXXZhl35sxObNYTIu7+RJBwQf076ZpJspt55RlzSxzt2sdUAf
-BvsG5zLo6Mo8whwdjXQIe+lfiomRANJW/SGRf9029bpGZinPQ8DlCIihK6vdoKAm
-RcD2gHptAhQ7YBzpBqiIsLqiUBwNFcQzrKu2AdbjjqTGJFVFJWoJABvLkNbpnYvE
-K4w1RBssr8x/XjfsgLlL9ViGT4VYBjJVYJgzmnSLbpf3dQ3I+SwEHzgb5lrnVz0z
-EGg8vKJS7EWuiCvZ/KUhCukQghS3SevrYnpft9N7+iTrWPqNjhVG8RS2+GXa4EXl
-Ir4mpxddKPHuIe8SD6VN3IMnoTzHS743ZBPcIEO4NbQbwq7h8LMmxlUltwCYvxio
-xCvpDsj5iDGNFM1XJ9l0
-=CKnu
------END PGP SIGNATURE-----
+Regards,
 
---uku2j2u53sbdnskz--
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
