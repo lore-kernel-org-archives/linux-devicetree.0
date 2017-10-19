@@ -1,45 +1,41 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: rtc: mediatek: add bindings for
- MediaTek SoC based RTC
-Date: Thu, 19 Oct 2017 11:00:18 +0800
-Message-ID: <1508382018.21840.124.camel@mtkswgap22>
-References: <cover.1508231935.git.sean.wang@mediatek.com>
-         <235e4bdaa605021facf4ab5c4e8a2ecc5293516d.1508231935.git.sean.wang@mediatek.com>
-         <1508333529.13340.26.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Subject: [PATCH v2 1/2] Documentation: dt: extcon: add optional debounce-timeout-ms attribute
+Date: Thu, 19 Oct 2017 08:55:59 +0530
+Message-ID: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508333529.13340.26.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-10-18 at 21:32 +0800, Yingjoe Chen wrote:
-> On Tue, 2017-10-17 at 17:40 +0800, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > Add device-tree binding for MediaTek SoC based RTC
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/rtc/rtc-mediatek.txt        | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-> > new file mode 100644
-> > index 0000000..09fe8f5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-mediatek.txt
-> 
-> 
-> How about change this filename to match driver filename change?
-> 
-> Joe.C
-> 
+Add documentation on optional dt attribute "debounce-timeout-ms"
+in extcon node to capture user specified timeout value for id
+and vbus gpio detection.
 
-Will be improved together with the other patches
+Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
+---
+
+Changes in v2:
+ Rename debounce-timeout-ms to input-debounce
+
+ Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+index dfc14f7..d115900 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+@@ -10,6 +10,9 @@ Either one of id-gpio or vbus-gpio must be present. Both can be present as well.
+ - id-gpio: gpio for USB ID pin. See gpio binding.
+ - vbus-gpio: gpio for USB VBUS pin.
+ 
++Optional properties:
++- input-debounce: debounce timeout value for id and vbus gpio in microseconds.
++
+ Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
+ 	extcon_usb1 {
+ 		compatible = "linux,extcon-usb-gpio";
+-- 
+1.9.1
