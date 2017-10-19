@@ -1,60 +1,96 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
-Date: Thu, 19 Oct 2017 11:16:44 +0200
-Message-ID: <20171019091644.GA14983@lst.de>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
-	<1507761269-7017-6-git-send-email-jim2101024@gmail.com>
-	<589c04cb-061b-a453-3188-79324a02388e@arm.com>
-	<20171017081422.GA19475@lst.de>
-	<CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
-	<20171018065316.GA11183@lst.de>
-	<CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 0/4] tegra-cec: add Tegra HDMI CEC support
+Date: Thu, 19 Oct 2017 11:20:54 +0200
+Message-ID: <20171019092054.GC9005@ulmo>
+References: <20170911122952.33980-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p2kqVDKq5asng8Dg"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170911122952.33980-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 10:41:17AM -0400, Jim Quinlan wrote:
-> That's what brcm_to_{pci,cpu} are for -- they keep a list of the
-> dma-ranges given in the PCIe DT node, and translate from system memory
-> addresses to pci-space addresses, and vice versa.  As long as people
-> are using the DMA API it should work.  It works for all of the ARM,
-> ARM64, and MIPS Broadcom systems I've tested, using eight different EP
-> devices.  Note that I am not thrilled to be advocating this mechanism
-> but it seemed the best alternative.
 
-Say we are using your original example ranges:
+--p2kqVDKq5asng8Dg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
- memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
- memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
- memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
- memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
- memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
+On Mon, Sep 11, 2017 at 02:29:48PM +0200, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>=20
+> This patch series adds support for the Tegra CEC functionality.
+>=20
+> This v4 has been rebased to the latest 4.14 pre-rc1 mainline.
+>=20
+> Please review! Other than for the bindings that are now Acked I have not
+> received any feedback.
+>=20
+> The first patch documents the CEC bindings, the second adds support
+> for this to tegra124.dtsi and enables it for the Jetson TK1.
+>=20
+> The third patch adds the CEC driver itself and the final patch adds
+> the cec notifier support to the drm/tegra driver in order to notify
+> the CEC driver whenever the physical address changes.
+>=20
+> I expect that the dts changes apply as well to the Tegra X1/X2 and possib=
+ly
+> other Tegra SoCs, but I can only test this with my Jetson TK1 board.
+>=20
+> The dt-bindings and the tegra-cec driver would go in through the media
+> subsystem, the drm/tegra part through the drm subsystem and the dts
+> changes through (I guess) the linux-tegra developers. Luckily they are
+> all independent of one another.
+>=20
+> To test this you need the CEC utilities from git://linuxtv.org/v4l-utils.=
+git.
+>=20
+> To build this:
+>=20
+> git clone git://linuxtv.org/v4l-utils.git
+> cd v4l-utils
+> ./bootstrap.sh; ./configure
+> make
+> sudo make install # optional, you really only need utils/cec*
+>=20
+> To test:
+>=20
+> cec-ctl --playback # configure as playback device
+> cec-ctl -S # detect all connected CEC devices
 
-and now you get a dma mapping request for physical addresses
-3fffff00 to 4000000f, which would span two of your ranges.  How
-is this going to work?
+I finally got around to test this. Unfortunately I wasn't able to
+properly show connected CEC devices, but I think that may just be
+because the monitor I was testing against doesn't support CEC. I
+will have to check against a different device eventually to check
+that it properly enumerates, though I suspect you've already done
+quite extensive testing yourself.
 
-> I would prefer that the same code work for all three architectures.
-> What I would like from ARM/ARM64 is the ability to override
-> phys_to_dma() and dma_to_phys(); I thought the chances of that being
-> accepted would be slim.  But you are right, I should ask the
-> maintainers.
+Thanks for doing this!
 
-It is still better than trying to stack dma ops, which is a receipe
-for problems down the road.
+Thierry
+
+--p2kqVDKq5asng8Dg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnobnIACgkQ3SOs138+
+s6EZQhAAqeg2RhJGig8cIOH8Isj0CVYUHoTD8JxET9VAawfpmBlCl8k5/bJE+Ajr
+7s6pfyQRymH+A2apL806B7NW/y7nVLgoE0cpOOe9gZg37XkR1IGndyX+fWSmz68R
+R3rgN9dveLpJNa5dEtE4/fUCZlw1eNj8gxfAAGwGjUwTNmsBgIm4svEdugABoLuD
+dnbv15JOjEBbblMXGw42ibO9R5vusn8P++WA+VgwQ7svt9DvQ3ldooY5pxruLael
+dYRemwZeJBqbddJC1xALLTXIEPNB2GMtMI/nNR1wFUXB3+xRR8LJMQJf7q6qbgJf
+n9lPq2gJdWK16CPKKJLRNvDLRDejU5xYf0Allh3VqCWjNUiX2VTpOIH6mP9hB/6v
+Nrhp2JRnRnbInU97krYgpySaOtbJ7/RaqhjFZ3sfM23qgOOi5A2zpXZZizYMHvpW
+Nzup2KjUfhZ85AVaBnuxrDOzjzvuTyUnRIO2e69CHBDSewlfuTnZVLhFkY0PC6dD
+UnzIj50JZxMi5XF2u1Xr0veWVWv6g9tUdLY0wTmeFJBQ5WGrkenpED00aGu0Xh7A
+RRq5esn0X5ieaXPemip09H4zH2kelcBCAPS0A6/CujwOUmXauVsw5mRRkbJ1S5b8
+uEqaRPcQg5skqEpUFwi2VOH/fXOOBT3fzTiQ5t0vuwIDb+PyBZA=
+=4/tm
+-----END PGP SIGNATURE-----
+
+--p2kqVDKq5asng8Dg--
