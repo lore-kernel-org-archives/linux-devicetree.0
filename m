@@ -1,219 +1,93 @@
 From: Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v5 6/9] soc: mediatek: extend bus protection API
-Date: Thu, 19 Oct 2017 10:48:47 +0800
-Message-ID: <1508381330-3700-7-git-send-email-weiyi.lu@mediatek.com>
+Subject: [PATCH v5 5/9] dt-bindings: soc: add MT2712 power dt-bindings
+Date: Thu, 19 Oct 2017 10:48:46 +0800
+Message-ID: <1508381330-3700-6-git-send-email-weiyi.lu@mediatek.com>
 References: <1508381330-3700-1-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1508381330-3700-1-git-send-email-weiyi.lu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Weiyi Lu <weiyi.lu@mediatek.com>
+Cc: James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fan Chen <fan.chen@mediatek.com>, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-MT2712 add "set/clear" bus control register to each control register set
-instead of providing only one "enable" control register, we could avoid
-the read-modify-write racing by using extend API with such new design.
-By improving the mtk-infracfg bus protection implementation to
-support set/clear bus protection control method by IC configuration.
+Add power dt-bindings for MT2712.
 
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-infracfg.c   | 24 ++++++++++++++++++++----
- drivers/soc/mediatek/mtk-scpsys.c     | 28 ++++++++++++++++++++--------
- include/linux/soc/mediatek/infracfg.h |  7 ++++---
- 3 files changed, 44 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |  3 +++
+ include/dt-bindings/power/mt2712-power.h           | 26 ++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 include/dt-bindings/power/mt2712-power.h
 
-diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-index dba3055..344ffba 100644
---- a/drivers/soc/mediatek/mtk-infracfg.c
-+++ b/drivers/soc/mediatek/mtk-infracfg.c
-@@ -19,23 +19,32 @@
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+index 40056f7..76bf45b 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
++++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+@@ -12,11 +12,13 @@ power/power_domain.txt. It provides the power domains defined in
+ - include/dt-bindings/power/mt8173-power.h
+ - include/dt-bindings/power/mt6797-power.h
+ - include/dt-bindings/power/mt2701-power.h
++- include/dt-bindings/power/mt2712-power.h
+ - include/dt-bindings/power/mt7622-power.h
  
- #define INFRA_TOPAXI_PROTECTEN		0x0220
- #define INFRA_TOPAXI_PROTECTSTA1	0x0228
-+#define INFRA_TOPAXI_PROTECTEN_SET	0x0260
-+#define INFRA_TOPAXI_PROTECTEN_CLR	0x0264
- 
- /**
-  * mtk_infracfg_set_bus_protection - enable bus protection
-  * @regmap: The infracfg regmap
-  * @mask: The mask containing the protection bits to be enabled.
-+ * @use_reg_set: The boolean flag determines to set the protection bits
-+ *               by set register or enable register
-  *
-  * This function enables the bus protection bits for disabled power
-  * domains so that the system does not hang when some unit accesses the
-  * bus while in power down.
-  */
--int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
-+int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool use_reg_set)
- {
- 	unsigned long expired;
- 	u32 val;
- 	int ret;
- 
--	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
-+	if (use_reg_set)
-+		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_SET, mask);
-+	else
-+		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask,
-+				mask);
- 
- 	expired = jiffies + HZ;
- 
-@@ -59,16 +68,23 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
-  * mtk_infracfg_clear_bus_protection - disable bus protection
-  * @regmap: The infracfg regmap
-  * @mask: The mask containing the protection bits to be disabled.
-+ * @use_reg_clr: The boolean flag determines to clear the protection bits
-+ *               by clear register or enable register
-  *
-  * This function disables the bus protection bits previously enabled with
-  * mtk_infracfg_set_bus_protection.
-  */
--int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask)
+ Required properties:
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-scpsys"
++	- "mediatek,mt2712-scpsys"
+ 	- "mediatek,mt6797-scpsys"
+ 	- "mediatek,mt7622-scpsys"
+ 	- "mediatek,mt8173-scpsys"
+@@ -27,6 +29,7 @@ Required properties:
+                       These are clocks which hardware needs to be
+                       enabled before enabling certain power domains.
+ 	Required clocks for MT2701: "mm", "mfg", "ethif"
++	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
+ 	Required clocks for MT6797: "mm", "mfg", "vdec"
+ 	Required clocks for MT7622: "hif_sel"
+ 	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
+diff --git a/include/dt-bindings/power/mt2712-power.h b/include/dt-bindings/power/mt2712-power.h
+new file mode 100644
+index 0000000..92b46d7
+--- /dev/null
++++ b/include/dt-bindings/power/mt2712-power.h
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (C) 2017 MediaTek Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
++ * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
++ */
 +
-+int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool use_reg_clr)
- {
- 	unsigned long expired;
- 	int ret;
- 
--	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
-+	if (use_reg_clr)
-+		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_CLR, mask);
-+	else
-+		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
- 
- 	expired = jiffies + HZ;
- 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index e1ce8b1..ebee3e9 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -134,6 +134,7 @@ struct scp {
- 	void __iomem *base;
- 	struct regmap *infracfg;
- 	struct scp_ctrl_reg ctrl_reg;
-+	bool bus_prot_use_set_clr_reg;
- };
- 
- struct scp_subdomain {
-@@ -147,6 +148,7 @@ struct scp_soc_data {
- 	const struct scp_subdomain *subdomains;
- 	int num_subdomains;
- 	const struct scp_ctrl_reg regs;
-+	bool bus_prot_use_set_clr_reg;
- };
- 
- static int scpsys_domain_is_on(struct scp_domain *scpd)
-@@ -254,7 +256,8 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
--				scpd->data->bus_prot_mask);
-+				scpd->data->bus_prot_mask,
-+				scp->bus_prot_use_set_clr_reg);
- 		if (ret)
- 			goto err_pwr_ack;
- 	}
-@@ -289,7 +292,8 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_set_bus_protection(scp->infracfg,
--				scpd->data->bus_prot_mask);
-+				scpd->data->bus_prot_mask,
-+				scp->bus_prot_use_set_clr_reg);
- 		if (ret)
- 			goto out;
- 	}
-@@ -382,7 +386,8 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
- 
- static struct scp *init_scp(struct platform_device *pdev,
- 			const struct scp_domain_data *scp_domain_data, int num,
--			const struct scp_ctrl_reg *scp_ctrl_reg)
-+			const struct scp_ctrl_reg *scp_ctrl_reg,
-+			bool bus_prot_use_set_clr_reg)
- {
- 	struct genpd_onecell_data *pd_data;
- 	struct resource *res;
-@@ -397,6 +402,8 @@ static struct scp *init_scp(struct platform_device *pdev,
- 	scp->ctrl_reg.pwr_sta_offs = scp_ctrl_reg->pwr_sta_offs;
- 	scp->ctrl_reg.pwr_sta2nd_offs = scp_ctrl_reg->pwr_sta2nd_offs;
- 
-+	scp->bus_prot_use_set_clr_reg = bus_prot_use_set_clr_reg;
++#ifndef _DT_BINDINGS_POWER_MT2712_POWER_H
++#define _DT_BINDINGS_POWER_MT2712_POWER_H
 +
- 	scp->dev = &pdev->dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -816,7 +823,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
--	}
-+	},
-+	.bus_prot_use_set_clr_reg = false,
- };
- 
- static const struct scp_soc_data mt6797_data = {
-@@ -827,7 +835,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS_MT6797,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6797
--	}
-+	},
-+	.bus_prot_use_set_clr_reg = false,
- };
- 
- static const struct scp_soc_data mt7622_data = {
-@@ -836,7 +845,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
--	}
-+	},
-+	.bus_prot_use_set_clr_reg = false,
- };
- 
- static const struct scp_soc_data mt8173_data = {
-@@ -847,7 +857,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
--	}
-+	},
-+	.bus_prot_use_set_clr_reg = false,
- };
- 
- /*
-@@ -884,7 +895,8 @@ static int scpsys_probe(struct platform_device *pdev)
- 	match = of_match_device(of_scpsys_match_tbl, &pdev->dev);
- 	soc = (const struct scp_soc_data *)match->data;
- 
--	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs);
-+	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs,
-+			soc->bus_prot_use_set_clr_reg);
- 	if (IS_ERR(scp))
- 		return PTR_ERR(scp);
- 
-diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
-index a0182ec..7df0fc8 100644
---- a/include/linux/soc/mediatek/infracfg.h
-+++ b/include/linux/soc/mediatek/infracfg.h
-@@ -27,7 +27,8 @@
- #define MT7622_TOP_AXI_PROT_EN_WB		(BIT(2) | BIT(6) | \
- 						 BIT(7) | BIT(8))
- 
--int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask);
--int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask);
--
-+int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool use_reg_set);
-+int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool use_reg_clr);
- #endif /* __SOC_MEDIATEK_INFRACFG_H */
++#define MT2712_POWER_DOMAIN_MM		0
++#define MT2712_POWER_DOMAIN_VDEC	1
++#define MT2712_POWER_DOMAIN_VENC	2
++#define MT2712_POWER_DOMAIN_ISP		3
++#define MT2712_POWER_DOMAIN_AUDIO	4
++#define MT2712_POWER_DOMAIN_USB		5
++#define MT2712_POWER_DOMAIN_USB2	6
++#define MT2712_POWER_DOMAIN_MFG		7
++
++#endif /* _DT_BINDINGS_POWER_MT2712_POWER_H */
 -- 
 1.9.1
