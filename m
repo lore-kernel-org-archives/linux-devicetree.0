@@ -1,67 +1,149 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
- (26 Oct 2017)
-Date: Thu, 19 Oct 2017 01:04:33 +0100
-Message-ID: <20171019000433.y3qt3xaw4nnzvsga@sirena.co.uk>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
- <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
- <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
- <20171018175910.GP12015@bill-the-cat>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: dtc issue with overlays starting in next-20171009
+Date: Wed, 18 Oct 2017 19:17:04 -0500
+Message-ID: <CAL_Jsq+svHThmkqDYRLsQdSeKjvnAfvgbqkhDmk-kVB6D8ocvQ@mail.gmail.com>
+References: <CANk1AXQaXKud2Mic_879JiS39hJB4y0uTS2w1uxXje-0mO68Vw@mail.gmail.com>
+ <59E7ACA0.7030809@gmail.com> <CAL_Jsq+f4Y1DDB4ZkXAEKUZ_P9YdMUKMhr2E=VKtbHWMZFaO0w@mail.gmail.com>
+ <59E7D6E0.5030109@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lvrnqi4f33lcbutf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171018175910.GP12015@bill-the-cat>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E7D6E0.5030109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 18, 2017 at 5:34 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 10/18/17 13:16, Rob Herring wrote:
+>> Use devicetree-compiler list for dtc issues please.
+>>
+>> On Wed, Oct 18, 2017 at 2:33 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Hi Rob, Alan,
+>>>
+>>> On 10/18/17 08:58, Alan Tull wrote:
+>>>> Hi Rob,
+>>>>
+>>>> I've noticed a problem compiling DT overlays and traced it back to
+>>>> beginning in next-20171009
+>>>>
+>>>> That tag adds the following in scripts/dtc
+>>>>
+>>>> e9480c1 2017-10-09 16:17:32 +0100 : Mark Brown : Merge remote-tracking
+>>>> branch 'devicetree/for-next'
+>>>> 4201d05 2017-10-03 15:03:47 -0500 : Rob Herring : scripts/dtc: Update
+>>>> to upstream version v1.4.5-3-gb1a60033c110
+>>>> 4322323 2017-10-03 15:03:46 -0500 : Rob Herring : scripts/dtc: add
+>>>> fdt_overlay.c and fdt_addresses.c to sync script
+>>>>
+>>>> The error is:
+>>>>
+>>>> dtc: /home/atull/repos/linux-socfpga/scripts/dtc/livetree.c:543:
+>>>> get_node_by_phandle: Assertion `(phandle != 0) && (phandle != -1)'
+>>>> failed.
+>>>> arch/arm/boot/dts/socfpga_overlay.dtb: Warning (clocks_property):
+>>>> Could not get phandle node for
+>>>> /fragment@0/__overlay__/gpio@10040:clocks(cell 0)
+>>>> Aborted (core dumped)
+>>>> scripts/Makefile.lib:316: recipe for target
+>>>> 'arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb'
+>>>> failed
+>>>> make[2]: *** [arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb]
+>>>> Error 134
+>>>> arch/arm/Makefile:346: recipe for target 'dtbs' failed
+>>>>
+>>>> Here's a simplified overlay that gets this error.  Taking out the line
+>>>> "interrupt-parent = <&intc>;" fixes the build.
+>>>>
+>>>> /dts-v1/;
+>>>> /plugin/;
+>>>> / {
+>>>>         fragment@0 {
+>>>>                 target-path = "/soc/base_fpga_region";
+>>>>                 #address-cells = <1>;
+>>>>                 #size-cells = <1>;
+>>>>
+>>>>                 __overlay__ {
+>>>>                         ranges = <0x00000000 0x00000000 0xc0000000 0x00040000>,
+>>>>                                  <0x00000001 0x00000000 0xff200000 0x00001000>;
+>>>>
+>>>>                         external-fpga-config;
+>>>>
+>>>>                         #address-cells = <2>;
+>>>>                         #size-cells = <1>;
+>>>>
+>>>>                         fpga_pr_region0 {
+>>>>                                 compatible = "fpga-region";
+>>>>                                 fpga-bridges = <&freeze_controller_0>;
+>>>>                                 ranges;
+>>>>                         };
+>>>>
+>>>>                         freeze_controller_0: freeze_controller@0x100000450 {
+>>>>                                 compatible = "altr,freeze-bridge-controller";
+>>>>                                 reg = <0x00000001 0x00000450 0x00000010>;
+>>>>                                 interrupt-parent = <&intc>;  /* <--
+>>>> remove to fix build */
+>>>>                                 interrupts = <0 21 4>;
+>>>>                         };
+>>>>                 };
+>>>>         };
+>>>> };
+>>>>
+>>>> Alan
+>>>
+>>> Phandle references in overlays are assigned the value of -1 (0xffffffff) in
+>>> the dtb, to be fixed up when loaded.  A new check sees this value and
+>>> triggers the assert.
+>>>
+>>> It is this commit in the upstream dtc tools tree:
+>>>
+>>>    commit ee3d26f6960bb5922d9a35fe266d9eac74a78ec0
+>>>    checks: add interrupts property check
+>>>
+>>> There are a bunch of other new checks that call get_node_by_phandle(),
+>>> and thus could trigger the assertion.
+>>>
+>>> I'm guessing that those checks would also trigger the assert if an
+>>> overlay contained something that would lead to one of the other checks
+>>> being processed.
+>>
+>> You won't get an assert because I check for 0 or -1 and skip the check
+>> in those cases. The interrupts check missed that condition.
+>
+> Awesome, thank for confirming that.  That means the temporary work around
+> is quite easy.
+>
+>>
+>> However, as shown above, you will get an erroneous warning because it
+>> just skips 1 cell and goes to the next to handle the case where the
+>> phandle is optional and you want a fixed number of elements.
+>
+> Just for those reading along at home, with the one warning disabled, the
+> messages become:
+>
+>    $  dtc -Wno-interrupts_property socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dts >junk.dtb
+>    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit name, but no reg property
+>    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0/__overlay__ has a reg or ranges property, but no unit name
 
---lvrnqi4f33lcbutf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Look like errors to me.
 
-On Wed, Oct 18, 2017 at 01:59:10PM -0400, Tom Rini wrote:
-> On Wed, Oct 18, 2017 at 12:09:58PM +0100, Mark Brown wrote:
+>> I guess we can't validate overlays which is unfortunate. I don't think
+>> that's a solvable problem unless you have the base DT.
+>
+> Yes, maybe.  But there are still some useful warnings for overlays, maybe.  I'm
+> not sure what the implications of the "range_format" warning that I will show
+> below are (I'd actually have to spend a few minutes thinking about ranges, and
+> I don't have the cycles right now).
 
-> > One meta issue I'm seeing here is that the u-boot people appear to have
-> > their own divergent copy of some of the binding documents.
+Well, yes all the simple localized checks should work, but as we add
+more complex checks with either dtc or the schema we'll have after
+ELCE next week there's a lot we can't validate. Perhaps we have to
+place some restrictions on overlays so we can validate them better.
 
-> Putting on my U-Boot hat now, it's mostly unintentional and something in
-> general (yes, the initial topic here is not such an example) we try and
-> avoid, or use u-boot, as the prefix on as it's something that had been
-> previously rejected or deemed inappropriate to be in the upstream
-> version of the binding.
+I do wonder if we could add tags to phandles to make them
+identifiable. Perhaps making them all 0xFF?????? instead of starting
+at 1. 2^24 phandles should be enough for anyone(TM). That would not
+completely solve this problem, but then we could at least find the
+phandles in a property.
 
-Yeah, I didn't get the impression this was at all intentional.
-Unfortunately it's a shared property with divergent definitions rather
-than something u-boot specific that got added.
-
-> But perhaps it's time to try and force the issue again, given what Rob
-> and others have said in other parts of the thread.
-
-Yeah, if DT is going to be cross project we need to do better here.
-
---lvrnqi4f33lcbutf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnn7BAACgkQJNaLcl1U
-h9B0Awf9Fb9ds/if88WdUyhXMveJnzD10GiVuZ+Q9QIo/Po1PFYUPHi9l4Fu6fbc
-fc3HdxF1DDy7ID3ejBJkagio0xqHnI20snL7kTJKFz+wy1TT0irx0To6iJfc202I
-3Ce/19fzEhes1uBpiMBhr9YJpi6ANBVGo6bOyYyva3ofgcmpUVizW0xPHCqwHcPA
-UXe7IhtVWcTh4dulOHksPJKMXnmdpyewcIIeQkon9zJxOc5eGENlWmeVWq/ah/aD
-JcEg1iin145YSBSCa3bIBlC+mXDC2vmJTD+SuylqZCSuOP2l8Iz5O+6plCwLlUGC
-3i9SZ4FlkPg7YAYG0KiLKJnBinVQCw==
-=Z5fZ
------END PGP SIGNATURE-----
-
---lvrnqi4f33lcbutf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
