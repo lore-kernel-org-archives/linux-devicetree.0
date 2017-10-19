@@ -1,125 +1,208 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Thu, 19 Oct 2017 16:00:44 +0200
-Message-ID: <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
- <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
- <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
- <20171018175910.GP12015@bill-the-cat>
- <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz>
- <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 4/4] drm/tegra: add cec-notifier support
+Date: Thu, 19 Oct 2017 16:01:35 +0200
+Message-ID: <20171019140135.GV9005@ulmo>
+References: <20170911122952.33980-1-hverkuil@xs4all.nl>
+ <20170911122952.33980-5-hverkuil@xs4all.nl>
+ <20171019131716.GT9005@ulmo>
+ <20171019133007.GU9005@ulmo>
+ <7e1fcffd-76dc-c4f2-942c-b9872f73fff0@cisco.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CSNFvL6ilyiKL/Hs"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7e1fcffd-76dc-c4f2-942c-b9872f73fff0-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 10/19/2017 01:53 AM, Rob Herring wrote:
-> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org> wrote:
->>
->>> On 18 Oct 2017, at 18:59, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>
->>> On Wed, Oct 18, 2017 at 12:09:58PM +0100, Mark Brown wrote:
->>>> On Wed, Oct 18, 2017 at 06:35:24PM +0800, Chen-Yu Tsai wrote:
->>>>
->>>>> I'd like to add something on the topic of non-Linux projects. In this
->>>>> case it's diverging DT bindings from U-boot:
->>>>
->>>>> https://patchwork.ozlabs.org/patch/823158/
->>>>
->>>>> U-boot already has a set of devicetree binding additions:
->>>>> https://github.com/u-boot/u-boot/tree/master/doc/device-tree-bindings
->>>>
->>>>> The patch in question wants to ab(use) the regulator-name property for
->>>>> driver instance binding. In my opinion this is not going to fly, as
->>>>> boards are free to define the names. This either sees no use other than
->>>>> as a dirty workaround for dts files that aren't following the PMIC
->>>>> regulator bindings (regulator node names should follow well defined,
->>>>> identifying names), or results in divergence of the DT files.
->>>>
->>>> One meta issue I'm seeing here is that the u-boot people appear to have
->>>> their own divergent copy of some of the binding documents.
->>>
->>> Putting on my U-Boot hat now, it's mostly unintentional and something in
->>> general (yes, the initial topic here is not such an example) we try and
->>> avoid, or use u-boot, as the prefix on as it's something that had been
->>> previously rejected or deemed inappropriate to be in the upstream
->>> version of the binding.
->>>
->>> But perhaps it's time to try and force the issue again, given what Rob
->>> and others have said in other parts of the thread.
->>
->>  From the FreeBSD perspective I’d like it if there was a common repo for all devicetree consumers to share. We are trying to not have FreeBSD specific properties as this has caused issues in the past where we had (and still have) FreeBSD specific dts files. We are trying to remove these as drivers are updated to handle the common bindings.
-> 
-> Are you aware of this repo[1]? I don't have a sense for how widely
-> used it is. If not, it is intended to provide a common repository of
-> binding docs and dts files. If so, what are your issues with using it?
-> It's generated from the kernel tree with git-filter-branch and through
-> the kernel tree is the only way to add things currently. But there's
-> no requirement that you add a Linux driver to submit a binding or dts
-> change. We could consider taking patches against the tree directly,
-> and the maintainers (me) can fixup the paths and apply to the kernel
-> tree.
-> 
-> If there's bindings in the kernel tree you think are crap and Linux
-> specific, I'd like to know that too. We should start flagging those.
-> 
->> I have also spoken with some NetBSD and OpenBSD developers. They are both using devicetree to handle device enumeration. Having all 5 projects using a common set of dts files and binding would simplify keeping them in sync.
-> 
-> There's more than 5 likely: linux, 3x BSD, u-boot, barebox, zephyr,
-> ARM trusted firmware?, UEFI?, ?
+--CSNFvL6ilyiKL/Hs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First, sorry to come late in this discussion (please be tolerant if you 
-already respond to following requests/interrogations in precedent mails 
-:)). From STmicro point of view we have the same kind of requests/needs 
-than Andrew. We think about the possibility to use same DTS files for 
-Linux, U-boot, ATF and Zephir (others could come with other vendors). 
-Currently our main concerns about this are:
+On Thu, Oct 19, 2017 at 03:37:43PM +0200, Hans Verkuil wrote:
+> On 10/19/17 15:30, Thierry Reding wrote:
+> > On Thu, Oct 19, 2017 at 03:17:16PM +0200, Thierry Reding wrote:
+> >> On Mon, Sep 11, 2017 at 02:29:52PM +0200, Hans Verkuil wrote:
+> >>> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> >>>
+> >>> In order to support CEC the HDMI driver has to inform the CEC driver
+> >>> whenever the physical address changes. So when the EDID is read the
+> >>> CEC driver has to be informed and whenever the hotplug detect goes
+> >>> away.
+> >>>
+> >>> This is done through the cec-notifier framework.
+> >>>
+> >>> The link between the HDMI driver and the CEC driver is done through
+> >>> the hdmi_phandle in the tegra-cec node in the device tree.
+> >>>
+> >>> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> >>> ---
+> >>>  drivers/gpu/drm/tegra/Kconfig  | 1 +
+> >>>  drivers/gpu/drm/tegra/drm.h    | 3 +++
+> >>>  drivers/gpu/drm/tegra/hdmi.c   | 9 +++++++++
+> >>>  drivers/gpu/drm/tegra/output.c | 6 ++++++
+> >>>  4 files changed, 19 insertions(+)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kc=
+onfig
+> >>> index 2db29d67193d..c882918c2024 100644
+> >>> --- a/drivers/gpu/drm/tegra/Kconfig
+> >>> +++ b/drivers/gpu/drm/tegra/Kconfig
+> >>> @@ -8,6 +8,7 @@ config DRM_TEGRA
+> >>>  	select DRM_PANEL
+> >>>  	select TEGRA_HOST1X
+> >>>  	select IOMMU_IOVA if IOMMU_SUPPORT
+> >>> +	select CEC_CORE if CEC_NOTIFIER
+> >>>  	help
+> >>>  	  Choose this option if you have an NVIDIA Tegra SoC.
+> >>> =20
+> >>> diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
+> >>> index 6d6da01282f3..c0a18b60caf1 100644
+> >>> --- a/drivers/gpu/drm/tegra/drm.h
+> >>> +++ b/drivers/gpu/drm/tegra/drm.h
+> >>> @@ -212,6 +212,8 @@ int tegra_dc_state_setup_clock(struct tegra_dc *d=
+c,
+> >>>  			       struct clk *clk, unsigned long pclk,
+> >>>  			       unsigned int div);
+> >>> =20
+> >>> +struct cec_notifier;
+> >>> +
+> >>>  struct tegra_output {
+> >>>  	struct device_node *of_node;
+> >>>  	struct device *dev;
+> >>> @@ -219,6 +221,7 @@ struct tegra_output {
+> >>>  	struct drm_panel *panel;
+> >>>  	struct i2c_adapter *ddc;
+> >>>  	const struct edid *edid;
+> >>> +	struct cec_notifier *notifier;
+> >>>  	unsigned int hpd_irq;
+> >>>  	int hpd_gpio;
+> >>>  	enum of_gpio_flags hpd_gpio_flags;
+> >>> diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdm=
+i.c
+> >>> index cda0491ed6bf..fbf14e1efd0e 100644
+> >>> --- a/drivers/gpu/drm/tegra/hdmi.c
+> >>> +++ b/drivers/gpu/drm/tegra/hdmi.c
+> >>> @@ -21,6 +21,8 @@
+> >>> =20
+> >>>  #include <sound/hda_verbs.h>
+> >>> =20
+> >>> +#include <media/cec-notifier.h>
+> >>> +
+> >>>  #include "hdmi.h"
+> >>>  #include "drm.h"
+> >>>  #include "dc.h"
+> >>> @@ -1720,6 +1722,10 @@ static int tegra_hdmi_probe(struct platform_de=
+vice *pdev)
+> >>>  		return PTR_ERR(hdmi->vdd);
+> >>>  	}
+> >>> =20
+> >>> +	hdmi->output.notifier =3D cec_notifier_get(&pdev->dev);
+> >>> +	if (hdmi->output.notifier =3D=3D NULL)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>>  	hdmi->output.dev =3D &pdev->dev;
+> >>> =20
+> >>>  	err =3D tegra_output_probe(&hdmi->output);
+> >>> @@ -1778,6 +1784,9 @@ static int tegra_hdmi_remove(struct platform_de=
+vice *pdev)
+> >>> =20
+> >>>  	tegra_output_remove(&hdmi->output);
+> >>> =20
+> >>> +	if (hdmi->output.notifier)
+> >>> +		cec_notifier_put(hdmi->output.notifier);
+> >>> +
+> >>>  	return 0;
+> >>>  }
+> >>> =20
+> >>> diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/o=
+utput.c
+> >>> index 595d1ec3e02e..57c052521a44 100644
+> >>> --- a/drivers/gpu/drm/tegra/output.c
+> >>> +++ b/drivers/gpu/drm/tegra/output.c
+> >>> @@ -11,6 +11,8 @@
+> >>>  #include <drm/drm_panel.h>
+> >>>  #include "drm.h"
+> >>> =20
+> >>> +#include <media/cec-notifier.h>
+> >>> +
+> >>>  int tegra_output_connector_get_modes(struct drm_connector *connector)
+> >>>  {
+> >>>  	struct tegra_output *output =3D connector_to_output(connector);
+> >>> @@ -33,6 +35,7 @@ int tegra_output_connector_get_modes(struct drm_con=
+nector *connector)
+> >>>  		edid =3D drm_get_edid(connector, output->ddc);
+> >>> =20
+> >>>  	drm_mode_connector_update_edid_property(connector, edid);
+> >>> +	cec_notifier_set_phys_addr_from_edid(output->notifier, edid);
+> >>
+> >> I had to guard this with:
+> >>
+> >> 	#if IS_REACHABLE(CONFIG_CEC_CORE) && IS_ENABLED(CONFIG_CEC_NOTIFIER)
+> >> 	...
+> >> 	#endif
+> >>
+> >> to enable this driver to be built without CEC_NOTIFIER enabled. I see
+> >> that there are stubs defined if the above is false, but for some reason
+> >> they don't seem to be there for me either.
+> >=20
+> > Nevermind that. This was not actually failing. However, ...
+> >=20
+> >>> =20
+> >>>  	if (edid) {
+> >>>  		err =3D drm_add_edid_modes(connector, edid);
+> >>> @@ -68,6 +71,9 @@ tegra_output_connector_detect(struct drm_connector =
+*connector, bool force)
+> >>>  			status =3D connector_status_connected;
+> >>>  	}
+> >>> =20
+> >>> +	if (status !=3D connector_status_connected)
+> >>> +		cec_notifier_phys_addr_invalidate(output->notifier);
+> >=20
+> > This doesn't seem to exist in v4.14-rc1 which is the base for the
+> > drm/tegra tree for v4.15. I see this function will be introduced in
+> > v4.15 via the media tree.
+>=20
+> Strange. This was released in the 4.13 kernel, so you should really have =
+it.
+> It compiles fine for me, both with the drm tegra driver built-in and as a
+> module.
+>=20
+> This makes no sense to me.
 
-1-How to reduce dtb size:
-	--> Reading some thread, you already start this task with Nicolas. Does 
-it concerns only XiP system ?
-	-->For example, I want to use the same dtsi files between Linux and 
-U-boot. If in u-boot dts file I overload several "status" entry by 
-"disabled", is it possible that compiler doesn't build it ? And what 
-about not used phandle ?
+Sigh... you're right. I had inadvertently rebased onto a v4.13-rc1 when
+build testing. Sorry for the noise, it's working perfectly fine on top
+of v4.14-rc1.
 
-2- The place of DT files (sources/scripts). I see (and clone) your 
-"devicetree-rebasing.git" tree, it's a good start point. Currently 
-(correct me  if I'm wrong) the Kernel seems to "lead" the devicetree 
-bindings and devicetree dts(i) files. By using this external repo, it 
-would be maybe easier to integrate changes for other components than 
-Linux Kernel ? We could have (per vendor), same dtsi files which 
-describes the hardware (SoC + board) and a extra dts files (at least at 
-beginning) per software components to overload nodes (to disable some 
-nodes not required (see (1)), to change bindings which are different 
-regarding component ...).
-It will also allow to have all dt script / tools for all components at 
-only one place.
+Thierry
 
-Once again, sorry if I repeat things already discussed but I wanted to 
-expose what STMicro has in mind for DT. It will be a good topic to 
-discuss at Prague.
+--CSNFvL6ilyiKL/Hs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards
-Alex
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnosDwACgkQ3SOs138+
+s6Fc4xAAvL4Akm4S/zBPy5X4JIB40y73yX2WW0uuBw14PQ2GgZ4o9Nt6lHvZbsrf
+ZwTCqFniJ7IUGzwk1NAgpu0YeOenAp71B6OU3eshXukgqt1I1DmqgwMcjXAK0JdW
+fWfgYNlfllYg6y8eFbyhQDi5vBrntRALjXDlOTVngg2WY1odpq3AclqGQenN4iL0
+On+st2dv7oOove/b1IWWyctA7V2EcM8sSXCjYYK03KdwoaVvFwrgR2GPc33MJkwn
+gTSsgFf26twPowmEsYLMAhzzUJZ8WyYHDoyzUiQY4yJ665amH818lCENFZVCi+g0
+Fp46E5Ouc6ApcHA0BYDIlFtE87m6DZxTDFGk64zO9AQcdiULuZ/V+23v9zsFPZ/W
+AGiWkV09TUfDH2vcs4c9xfD8koTwmwbxwrAoIeRvd274R6p971mPwnl8IoYQCk0b
+LWSkpdpaG9UQgK29dwaJB6y7R5Y7BGeZR/s5VLE1T1CJ3Ss7MAxmI2z/HTgWYpsR
+x/pia9JmNmWf5x7ThTS5l/NJA2N9+TmsWiPGMPnSNYwgyMY0w5G5RULzVVhjv52i
+nRcsirJovgMh9soT1Ew3/Y9Ybgoje3obUHvQjyHWAz4C2n5MEl0detlDTFIreZZ8
+xOyBov0gZS7xmvejP6v3UUnLNnqmnRQjJ5XY6JK6bJtrRC98o6c=
+=4Zru
+-----END PGP SIGNATURE-----
 
-> 
-> Rob
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--CSNFvL6ilyiKL/Hs--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
