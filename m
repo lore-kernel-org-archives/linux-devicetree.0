@@ -1,95 +1,83 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3] of: dynamic: fix memory leak related to properties of
- __of_node_dup
-Date: Thu, 19 Oct 2017 16:26:25 -0700
-Message-ID: <59E934A1.9060304@gmail.com>
-References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
- <1508406006-64893-1-git-send-email-alan.1.wang@nokia-sbell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508406006-64893-1-git-send-email-alan.1.wang@nokia-sbell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lixin Wang <alan.1.wang@nokia-sbell.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v3] of: dynamic: fix memory leak related to properties of __of_node_dup
+Date: Thu, 19 Oct 2017 16:34:49 -0700
+Message-ID: <1508456089-32293-1-git-send-email-frowand.list@gmail.com>
+References: <59E934A1.9060304@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E934A1.9060304-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lixin,
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-On 10/19/17 02:40, Lixin Wang wrote:
-> If a node with no properties is dynamically added, then a property is
-> dynamically added to the node, then the property is dynamically removed,
-> the result will be node->properties == NULL and node->deadprops != NULL.
-> 
-> Add a separate function to release the properties in both lists.
-> 
-> Signed-off-by: Lixin Wang <alan.1.wang@nokia-sbell.com>
-> ---
-> v2 -> v3:
->  * Add a separate function to release the properties in both lists.
->  * Change the patch description for this change.
-> 
->  drivers/of/dynamic.c | 27 +++++++++++++++------------
->  1 file changed, 15 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 301b6db..b28511f 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -315,6 +315,19 @@ int of_detach_node(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(of_detach_node);
->  
-> +static void __of_property_list_release(struct property *prop)
-> +{
-> +	struct property *next;
-> +
-> +	while (prop) {
-> +		next = prop->next;
-> +		kfree(prop->name);
-> +		kfree(prop->value);
-> +		kfree(prop);
-> +		prop = next;
-> +	}
-> +}
-> +
->  /**
->   * of_node_release() - release a dynamically allocated node
->   * @kref: kref element of the node to be released
-> @@ -324,7 +337,6 @@ EXPORT_SYMBOL_GPL(of_detach_node);
->  void of_node_release(struct kobject *kobj)
->  {
->  	struct device_node *node = kobj_to_device_node(kobj);
-> -	struct property *prop = node->properties;
->  
->  	/* We should never be releasing nodes that haven't been detached. */
->  	if (!of_node_check_flag(node, OF_DETACHED)) {
-> @@ -335,18 +347,9 @@ void of_node_release(struct kobject *kobj)
->  	if (!of_node_check_flag(node, OF_DYNAMIC))
->  		return;
->  
-> -	while (prop) {
-> -		struct property *next = prop->next;
-> -		kfree(prop->name);
-> -		kfree(prop->value);
-> -		kfree(prop);
-> -		prop = next;
-> +	__of_property_list_release(node->properties);
-> +	__of_property_list_release(node->deadprops);
->  
-> -		if (!prop) {
-> -			prop = node->deadprops;
-> -			node->deadprops = NULL;
-> -		}
-> -	}
->  	kfree(node->full_name);
->  	kfree(node->data);
->  	kfree(node);
-> 
+This is Lixin's patch v3, reworded for my preferred style.
 
-The code is correct, but I would prefer some style issues to be more
-consistent with device tree code.  I will reply to this email with
-an example patch that you can use.
+---
+If Lixin agrees,
 
--Frank
+   Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+
+ drivers/of/dynamic.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 301b6db2b48d..f33b7c2e703e 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -315,6 +315,17 @@ int of_detach_node(struct device_node *np)
+ }
+ EXPORT_SYMBOL_GPL(of_detach_node);
+ 
++static void property_list_free(struct property *prop_list)
++{
++	struct property *prop;
++
++	for (prop = prop_list; prop != NULL; prop = prop->next) {
++		kfree(prop->name);
++		kfree(prop->value);
++		kfree(prop);
++	}
++}
++
+ /**
+  * of_node_release() - release a dynamically allocated node
+  * @kref: kref element of the node to be released
+@@ -324,7 +335,6 @@ int of_detach_node(struct device_node *np)
+ void of_node_release(struct kobject *kobj)
+ {
+ 	struct device_node *node = kobj_to_device_node(kobj);
+-	struct property *prop = node->properties;
+ 
+ 	/* We should never be releasing nodes that haven't been detached. */
+ 	if (!of_node_check_flag(node, OF_DETACHED)) {
+@@ -335,18 +345,9 @@ void of_node_release(struct kobject *kobj)
+ 	if (!of_node_check_flag(node, OF_DYNAMIC))
+ 		return;
+ 
+-	while (prop) {
+-		struct property *next = prop->next;
+-		kfree(prop->name);
+-		kfree(prop->value);
+-		kfree(prop);
+-		prop = next;
++	property_list_free(node->properties);
++	property_list_free(node->deadprops);
+ 
+-		if (!prop) {
+-			prop = node->deadprops;
+-			node->deadprops = NULL;
+-		}
+-	}
+ 	kfree(node->full_name);
+ 	kfree(node->data);
+ 	kfree(node);
+-- 
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
