@@ -1,35 +1,46 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Introduce new DT files for Meson-AXG SoC
-Date: Thu, 19 Oct 2017 12:18:22 +0200
-Message-ID: <7hfuafzbip.fsf@baylibre.com>
-References: <20171013231313.22850-1-dlan@gentoo.org>
+Subject: Re: [PATCH] firmware: meson-sm: use generic compatible
+Date: Thu, 19 Oct 2017 12:25:30 +0200
+Message-ID: <7h8tg7zb6t.fsf@baylibre.com>
+References: <20171012134743.10625-1-jbrunet@baylibre.com>
+        <20171017204959.kfbhn2yxhv2sb5qg@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171013231313.22850-1-dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> (Yixun Lan's message of
-        "Sat, 14 Oct 2017 07:13:11 +0800")
+In-Reply-To: <20171017204959.kfbhn2yxhv2sb5qg@rob-hp-laptop> (Rob Herring's
+        message of "Tue, 17 Oct 2017 15:50:00 -0500")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <dlan-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> writes:
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-> This attempt will try to add new DT files to support Meson-AXG SoC.
-> Due to the AXG series has new memory layout, we decide to start a new
-> DT structure without sharing with previous meson-gx.dtsi
+> On Thu, Oct 12, 2017 at 03:47:43PM +0200, Jerome Brunet wrote:
+>> The meson secure monitor seems to be compatible with more SoCs than
+>> initially thought. Let's use the most generic compatible he have in
+>> DT instead of the gxbb specific one
+>> 
+>> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/firmware/meson/meson_sm.txt | 4 ++--
+>>  drivers/firmware/meson/meson_sm.c                             | 4 ++--
+>>  2 files changed, 4 insertions(+), 4 deletions(-)
 >
-> 1) in the first patch, we try to document the new Meson-AXG bindings
-> 2) in the second patch, we try to bring up a minimal serial console,
-> so it's capable of running a minimal system (in ramdisk).
->
-> Yixun Lan (2):
->   dt-bindings: arm: amlogic: Add Meson AXG binding
->   arm64: dts: meson-axg: add initial A113D SoC DT support
+> Seems like a pointless, not backwards compatible change to me.
 
-Applied to v4.15/dt64 with reviews and acks.
+I've verified that it's backwards compatible with existing upstream DTs.
+
+> end, it's just a string to match on. Who cares what the string is.
+
+As platform maintiner, I very much care what the strings are and I want
+it to be coherent with the platform generic names, and I want the
+SoC-specific strings to correspond to the actual SoC names.
 
 Kevin
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
