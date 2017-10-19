@@ -1,53 +1,50 @@
-From: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v4 1/2] dt-bindings: Document STM32 CRYP bindings
-Date: Thu, 19 Oct 2017 11:03:58 +0200
-Message-ID: <1508403839-14131-2-git-send-email-fabien.dessenne@st.com>
-References: <1508403839-14131-1-git-send-email-fabien.dessenne@st.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] clocksource: stm32: convert driver to timer_of
+Date: Thu, 19 Oct 2017 11:07:08 +0200
+Message-ID: <10c85c67-df79-0f1a-dd64-8b6840d371c7@linaro.org>
+References: <1508331506-23782-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1508331506-23782-3-git-send-email-benjamin.gaignard@linaro.org>
+ <alpine.DEB.2.20.1710182028080.2477@nanos>
+ <CA+M3ks4Eg2-S8yDZuMd-jqZ6g2efvveU_WwQEh0rPZW0fGDt3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508403839-14131-1-git-send-email-fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <CA+M3ks4Eg2-S8yDZuMd-jqZ6g2efvveU_WwQEh0rPZW0fGDt3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Lionel Debieve <lionel.debieve-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document device tree bindings for the STM32 CRYP.
+On 18/10/2017 21:32, Benjamin Gaignard wrote:
+> 2017-10-18 20:31 GMT+02:00 Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>:
+>> On Wed, 18 Oct 2017, Benjamin Gaignard wrote:
+>>
+>>> Convert driver to use timer_of helpers. This allow to remove
+>>> custom proprietary structure.
+>>>
+>>> Increase min delta value because if it is too small it could
+>>> generate too much interrupts and the system will not be able
+>>> to catch them all.
+>>
+>> This does two completely independent changes at once. What the heck has
+>> increasing min delta to do with converting it to timer_of() helpers?
+>>
+>> Nothing at all. So please split this into two distinct patches. Each doing
+>> ONE thing.
+> 
+> I will do that.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/crypto/st,stm32-cryp.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
+With push ups.
 
-diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt b/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
-new file mode 100644
-index 0000000..970487f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
-@@ -0,0 +1,19 @@
-+* STMicroelectronics STM32 CRYP
-+
-+Required properties:
-+- compatible: Should be "st,stm32f756-cryp".
-+- reg: The address and length of the peripheral registers space
-+- clocks: The input clock of the CRYP instance
-+- interrupts: The CRYP interrupt
-+
-+Optional properties:
-+- resets: The input reset of the CRYP instance
-+
-+Example:
-+crypto@50060000 {
-+	compatible = "st,stm32f756-cryp";
-+	reg = <0x50060000 0x400>;
-+	interrupts = <79>;
-+	clocks = <&rcc 0 STM32F7_AHB2_CLOCK(CRYP)>;
-+	resets = <&rcc STM32F7_AHB2_RESET(CRYP)>;
-+};
+
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
