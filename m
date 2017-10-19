@@ -1,77 +1,47 @@
 From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH 2/3] rpmsg: glink: Add support to preallocate intents
-Date: Wed, 18 Oct 2017 18:10:17 -0700
-Message-ID: <1508375418-15611-3-git-send-email-clew@codeaurora.org>
+Subject: [PATCH 3/3] rpmsg: glink: Use best fit intent during tx
+Date: Wed, 18 Oct 2017 18:10:18 -0700
+Message-ID: <1508375418-15611-4-git-send-email-clew@codeaurora.org>
 References: <1508375418-15611-1-git-send-email-clew@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1508375418-15611-1-git-send-email-clew@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: aneela@codeaurora.org, smaliyap@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The base intents prequeued during channel creation may not satisfy a
-channel's throughput requirement. Add support for intents dt-binding to
-allow channels to specify the size and amount of intents to prequeue
-during endpoint announcement.
+Intents can vary in size, try to find the best fitting remote intent
+instead of first fit when sending a message to the remote proc.
 
 Signed-off-by: Chris Lew <clew@codeaurora.org>
 ---
- drivers/rpmsg/qcom_glink_native.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ drivers/rpmsg/qcom_glink_native.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 5a5e927ea50f..05e04a8943e3 100644
+index 05e04a8943e3..650974f85a4c 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1143,19 +1143,39 @@ static struct rpmsg_endpoint *qcom_glink_create_ept(struct rpmsg_device *rpdev,
- static int qcom_glink_announce_create(struct rpmsg_device *rpdev)
- {
- 	struct glink_channel *channel = to_glink_channel(rpdev->ept);
--	struct glink_core_rx_intent *intent;
- 	struct qcom_glink *glink = channel->glink;
--	int num_intents = glink->intentless ? 0 : 5;
-+	struct glink_core_rx_intent *intent;
-+	const struct property *prop = NULL;
-+	int num_groups = 1;
-+	int num_intents;
-+	int size;
-+	__be32 base[2];
-+	int *val = base;
-+
-+	if (rpdev->dev.of_node)
-+		prop = of_find_property(rpdev->dev.of_node, "intents", NULL);
-+
-+	if (prop && !glink->intentless) {
-+		val = prop->value;
-+		num_groups = prop->length / sizeof(u32) / 2;
-+	} else {
-+		base[0] = cpu_to_be32(SZ_1K);
-+		base[1] = cpu_to_be32(glink->intentless ? 0 : 5);
-+	}
+@@ -1251,11 +1251,16 @@ static int __qcom_glink_send(struct glink_channel *channel,
+ 			spin_lock_irqsave(&channel->intent_lock, flags);
+ 			idr_for_each_entry(&channel->riids, tmp, iid) {
+ 				if (tmp->size >= len && !tmp->in_use) {
+-					tmp->in_use = true;
+-					intent = tmp;
+-					break;
++					if (!intent)
++						intent = tmp;
++					else if (intent->size > tmp->size)
++						intent = tmp;
++					if (intent->size == len)
++						break;
+ 				}
+ 			}
++			if (intent)
++				intent->in_use = true;
+ 			spin_unlock_irqrestore(&channel->intent_lock, flags);
  
- 	/* Channel is now open, advertise base set of intents */
--	while (num_intents--) {
--		intent = qcom_glink_alloc_intent(glink, channel, SZ_1K, true);
--		if (!intent)
--			break;
-+	while (num_groups--) {
-+		size = be32_to_cpup(val++);
-+		num_intents = be32_to_cpup(val++);
-+		while (num_intents--) {
-+			intent = qcom_glink_alloc_intent(glink, channel, size,
-+							 true);
-+			if (!intent)
-+				break;
- 
--		qcom_glink_advertise_intent(glink, channel, intent);
-+			qcom_glink_advertise_intent(glink, channel, intent);
-+		}
- 	}
--
- 	return 0;
- }
- 
+ 			/* We found an available intent */
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
