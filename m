@@ -1,230 +1,504 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: dtc issue with overlays starting in next-20171009
-Date: Thu, 19 Oct 2017 12:57:55 +1100
-Message-ID: <20171019015755.GV2776@umbus.fritz.box>
-References: <CANk1AXQaXKud2Mic_879JiS39hJB4y0uTS2w1uxXje-0mO68Vw@mail.gmail.com>
- <59E7ACA0.7030809@gmail.com>
- <CAL_Jsq+f4Y1DDB4ZkXAEKUZ_P9YdMUKMhr2E=VKtbHWMZFaO0w@mail.gmail.com>
- <59E7D6E0.5030109@gmail.com>
- <CAL_Jsq+svHThmkqDYRLsQdSeKjvnAfvgbqkhDmk-kVB6D8ocvQ@mail.gmail.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Thu, 19 Oct 2017 10:18:47 +0800
+Message-ID: <1508379527.21840.94.camel@mtkswgap22>
+References: <cover.1508231935.git.sean.wang@mediatek.com>
+         <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
+         <1508320354.13340.19.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pM5zeTSooDOHDhuH"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+svHThmkqDYRLsQdSeKjvnAfvgbqkhDmk-kVB6D8ocvQ@mail.gmail.com>
+In-Reply-To: <1508320354.13340.19.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Alan Tull <atull@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2017-10-18 at 17:52 +0800, Yingjoe Chen wrote:
+> On Tue, 2017-10-17 at 17:40 +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > This patch introduces the driver for the RTC on MT7622 SoC.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> >  drivers/rtc/Kconfig      |  10 ++
+> >  drivers/rtc/Makefile     |   1 +
+> >  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 429 insertions(+)
+> >  create mode 100644 drivers/rtc/rtc-mt7622.c
+> > 
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index e0e58f3..4226295 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
+> >  	   This driver can also be built as a module. If so, the module
+> >  	   will be called rtc-moxart
+> >  
+> > +config RTC_DRV_MEDIATEK
+> > +	tristate "MediaTek SoC based RTC"
+> > +	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > +	help
+> > +	  This enables support for the real time clock built in the MediaTek
+> > +	  SoCs.
+> > +
+> > +	  This drive can also be built as a module. If so, the module
+> > +	  will be called rtc-mediatek.
+> > +
+> >  config RTC_DRV_MT6397
+> >  	tristate "Mediatek Real Time Clock driver"
+> >  	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
+> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> > index 7230014..593a02c 100644
+> > --- a/drivers/rtc/Makefile
+> > +++ b/drivers/rtc/Makefile
+> > @@ -101,6 +101,7 @@ obj-$(CONFIG_RTC_DRV_MOXART)	+= rtc-moxart.o
+> >  obj-$(CONFIG_RTC_DRV_MPC5121)	+= rtc-mpc5121.o
+> >  obj-$(CONFIG_RTC_DRV_VRTC)	+= rtc-mrst.o
+> >  obj-$(CONFIG_RTC_DRV_MSM6242)	+= rtc-msm6242.o
+> > +obj-$(CONFIG_RTC_DRV_MEDIATEK)	+= rtc-mt7622.o
+> >  obj-$(CONFIG_RTC_DRV_MT6397)	+= rtc-mt6397.o
+> >  obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
+> >  obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
+> > diff --git a/drivers/rtc/rtc-mt7622.c b/drivers/rtc/rtc-mt7622.c
+> > new file mode 100644
+> > index 0000000..1f00494
+> > --- /dev/null
+> > +++ b/drivers/rtc/rtc-mt7622.c
+> > @@ -0,0 +1,418 @@
+> > +/*
+> > + * Driver for MediaTek SoC based RTC
+> > + *
+> > + * Copyright (C) 2017 Sean Wang <sean.wang@mediatek.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License as
+> > + * published by the Free Software Foundation; either version 2 of
+> > + * the License, or (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/rtc.h>
+> > +
+> > +#define MTK_RTC_DEV KBUILD_MODNAME
+> > +
+> > +#define MTK_RTC_PWRCHK1		0x4
+> > +#define	RTC_PWRCHK1_MAGIC	0xc6
+> > +
+> > +#define MTK_RTC_PWRCHK2		0x8
+> > +#define	RTC_PWRCHK2_MAGIC	0x9a
+> > +
+> > +#define MTK_RTC_KEY		0xc
+> > +#define	RTC_KEY_MAGIC		0x59
+> > +
+> > +#define MTK_RTC_PROT1		0x10
+> > +#define	RTC_PROT1_MAGIC		0xa3
+> > +
+> > +#define MTK_RTC_PROT2		0x14
+> > +#define	RTC_PROT2_MAGIC		0x57
+> > +
+> > +#define MTK_RTC_PROT3		0x18
+> > +#define	RTC_PROT3_MAGIC		0x67
+> > +
+> > +#define MTK_RTC_PROT4		0x1c
+> > +#define	RTC_PROT4_MAGIC		0xd2
+> > +
+> > +#define MTK_RTC_CTL		0x20
+> > +#define	RTC_RC_STOP		BIT(0)
+> > +
+> > +#define MTK_RTC_DEBNCE		0x2c
+> > +#define	RTC_DEBNCE_MASK		GENMASK(2, 0)
+> > +
+> > +#define MTK_RTC_INT		0x30
+> > +#define RTC_INT_AL_STA		BIT(4)
+> > +
+> > +/* Ranges from 0x40 to 0x78 provide RTC time setup for year, month,
+> > + * day of month, day of week, hour, minute and second.
+> > + */
+> > +#define MTK_RTC_TREG(_t, _f)	(0x40 + (0x4 * (_f)) + ((_t) * 0x20))
+> > +
+> > +#define MTK_RTC_AL_CTL		0x7c
+> > +#define	RTC_AL_EN		BIT(0)
+> > +#define	RTC_AL_ALL		GENMASK(7, 0)
+> > +
+> > +#define MTK_RTC_TM_YR_L		100
+> > +
+> > +/* The maximum years the RTC can support is 99, For MT7622 */
+> > +#define MTK_RTC_HW_YR_LIMIT	100
+> > +
+> > +/* Types of the function the RTC provides are time counter and alarm. */
+> > +enum {
+> > +	MTK_TC,
+> > +	MTK_AL,
+> > +	MTK_TYPE_MAX,
+> > +};
+> > +
+> > +/* Indexes are used for the pointer to relevant registers in MTK_RTC_TREG */
+> > +enum {
+> > +	MTK_YEA,
+> > +	MTK_MON,
+> > +	MTK_DOM,
+> > +	MTK_DOW,
+> > +	MTK_HOU,
+> > +	MTK_MIN,
+> > +	MTK_SEC
+> > +};
+> > +
+> > +struct mtk_rtc {
+> > +	struct rtc_device *rtc;
+> > +	void __iomem *base;
+> > +	int irq;
+> > +	struct clk *clk;
+> > +	u32 yr_base[MTK_TYPE_MAX];
+> > +};
+> > +
+> > +static void mtk_w32(struct mtk_rtc *rtc, u32 reg, u32 val)
+> > +{
+> > +	writel_relaxed(val, rtc->base + reg);
+> > +}
+> > +
+> > +static u32 mtk_r32(struct mtk_rtc *rtc, u32 reg)
+> > +{
+> > +	return readl_relaxed(rtc->base + reg);
+> > +}
+> > +
+> > +static void mtk_rmw(struct mtk_rtc *rtc, u32 reg, u32 mask, u32 set)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val = mtk_r32(rtc, reg);
+> > +	val &= ~mask;
+> > +	val |= set;
+> > +	mtk_w32(rtc, reg, val);
+> > +}
+> > +
+> > +static void mtk_set(struct mtk_rtc *rtc, u32 reg, u32 val)
+> > +{
+> > +	mtk_rmw(rtc, reg, 0, val);
+> > +}
+> > +
+> > +static void mtk_clr(struct mtk_rtc *rtc, u32 reg, u32 val)
+> > +{
+> > +	mtk_rmw(rtc, reg, val, 0);
+> > +}
+> > +
+> > +static void mtk_rtc_hw_init(struct mtk_rtc *hw)
+> > +{
+> > +	/* The setup of the init sequence is for allowing RTC got to work */
+> > +	mtk_w32(hw, MTK_RTC_PWRCHK1, RTC_PWRCHK1_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PWRCHK2, RTC_PWRCHK2_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_KEY, RTC_KEY_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT1, RTC_PROT1_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT2, RTC_PROT2_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT3, RTC_PROT3_MAGIC);
+> > +	mtk_w32(hw, MTK_RTC_PROT4, RTC_PROT4_MAGIC);
+> > +	mtk_rmw(hw, MTK_RTC_DEBNCE, RTC_DEBNCE_MASK, 0);
+> > +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> > +}
+> > +
+> > +static void mtk_rtc_get_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
+> > +				      int time_alarm)
+> > +{
+> > +	u32 year, mon, mday, wday, hour, min, sec;
+> > +
+> > +	/*
+> > +	 * Read again until the field of the second is not changed which
+> > +	 * ensures all fields in the consistent state.
+> 
+> Sean,
+> 
+> You need to read sec first for this to work.
+> It is possible sec changed from 59 to 00 after you read min.
+> 
+> Joe.C
+> 
 
---pM5zeTSooDOHDhuH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nice catch. It will be fixed. Thanks for your careful review.
 
-On Wed, Oct 18, 2017 at 07:17:04PM -0500, Rob Herring wrote:
-> On Wed, Oct 18, 2017 at 5:34 PM, Frank Rowand <frowand.list@gmail.com> wr=
-ote:
-> > On 10/18/17 13:16, Rob Herring wrote:
-> >> Use devicetree-compiler list for dtc issues please.
-> >>
-> >> On Wed, Oct 18, 2017 at 2:33 PM, Frank Rowand <frowand.list@gmail.com>=
- wrote:
-> >>> Hi Rob, Alan,
-> >>>
-> >>> On 10/18/17 08:58, Alan Tull wrote:
-> >>>> Hi Rob,
-> >>>>
-> >>>> I've noticed a problem compiling DT overlays and traced it back to
-> >>>> beginning in next-20171009
-> >>>>
-> >>>> That tag adds the following in scripts/dtc
-> >>>>
-> >>>> e9480c1 2017-10-09 16:17:32 +0100 : Mark Brown : Merge remote-tracki=
-ng
-> >>>> branch 'devicetree/for-next'
-> >>>> 4201d05 2017-10-03 15:03:47 -0500 : Rob Herring : scripts/dtc: Update
-> >>>> to upstream version v1.4.5-3-gb1a60033c110
-> >>>> 4322323 2017-10-03 15:03:46 -0500 : Rob Herring : scripts/dtc: add
-> >>>> fdt_overlay.c and fdt_addresses.c to sync script
-> >>>>
-> >>>> The error is:
-> >>>>
-> >>>> dtc: /home/atull/repos/linux-socfpga/scripts/dtc/livetree.c:543:
-> >>>> get_node_by_phandle: Assertion `(phandle !=3D 0) && (phandle !=3D -1=
-)'
-> >>>> failed.
-> >>>> arch/arm/boot/dts/socfpga_overlay.dtb: Warning (clocks_property):
-> >>>> Could not get phandle node for
-> >>>> /fragment@0/__overlay__/gpio@10040:clocks(cell 0)
-> >>>> Aborted (core dumped)
-> >>>> scripts/Makefile.lib:316: recipe for target
-> >>>> 'arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb'
-> >>>> failed
-> >>>> make[2]: *** [arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl=
-_ext_cfg.dtb]
-> >>>> Error 134
-> >>>> arch/arm/Makefile:346: recipe for target 'dtbs' failed
-> >>>>
-> >>>> Here's a simplified overlay that gets this error.  Taking out the li=
-ne
-> >>>> "interrupt-parent =3D <&intc>;" fixes the build.
-> >>>>
-> >>>> /dts-v1/;
-> >>>> /plugin/;
-> >>>> / {
-> >>>>         fragment@0 {
-> >>>>                 target-path =3D "/soc/base_fpga_region";
-> >>>>                 #address-cells =3D <1>;
-> >>>>                 #size-cells =3D <1>;
-> >>>>
-> >>>>                 __overlay__ {
-> >>>>                         ranges =3D <0x00000000 0x00000000 0xc0000000=
- 0x00040000>,
-> >>>>                                  <0x00000001 0x00000000 0xff200000 0=
-x00001000>;
-> >>>>
-> >>>>                         external-fpga-config;
-> >>>>
-> >>>>                         #address-cells =3D <2>;
-> >>>>                         #size-cells =3D <1>;
-> >>>>
-> >>>>                         fpga_pr_region0 {
-> >>>>                                 compatible =3D "fpga-region";
-> >>>>                                 fpga-bridges =3D <&freeze_controller=
-_0>;
-> >>>>                                 ranges;
-> >>>>                         };
-> >>>>
-> >>>>                         freeze_controller_0: freeze_controller@0x100=
-000450 {
-> >>>>                                 compatible =3D "altr,freeze-bridge-c=
-ontroller";
-> >>>>                                 reg =3D <0x00000001 0x00000450 0x000=
-00010>;
-> >>>>                                 interrupt-parent =3D <&intc>;  /* <--
-> >>>> remove to fix build */
-> >>>>                                 interrupts =3D <0 21 4>;
-> >>>>                         };
-> >>>>                 };
-> >>>>         };
-> >>>> };
-> >>>>
-> >>>> Alan
-> >>>
-> >>> Phandle references in overlays are assigned the value of -1 (0xffffff=
-ff) in
-> >>> the dtb, to be fixed up when loaded.  A new check sees this value and
-> >>> triggers the assert.
-> >>>
-> >>> It is this commit in the upstream dtc tools tree:
-> >>>
-> >>>    commit ee3d26f6960bb5922d9a35fe266d9eac74a78ec0
-> >>>    checks: add interrupts property check
-> >>>
-> >>> There are a bunch of other new checks that call get_node_by_phandle(),
-> >>> and thus could trigger the assertion.
-> >>>
-> >>> I'm guessing that those checks would also trigger the assert if an
-> >>> overlay contained something that would lead to one of the other checks
-> >>> being processed.
-> >>
-> >> You won't get an assert because I check for 0 or -1 and skip the check
-> >> in those cases. The interrupts check missed that condition.
-> >
-> > Awesome, thank for confirming that.  That means the temporary work arou=
-nd
-> > is quite easy.
-> >
-> >>
-> >> However, as shown above, you will get an erroneous warning because it
-> >> just skips 1 cell and goes to the next to handle the case where the
-> >> phandle is optional and you want a fixed number of elements.
-> >
-> > Just for those reading along at home, with the one warning disabled, the
-> > messages become:
-> >
-> >    $  dtc -Wno-interrupts_property socfpga_arria10_socdk_sdmmc_ghrd_ovl=
-_ext_cfg.dts >junk.dtb
-> >    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit=
- name, but no reg property
-> >    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0/__overlay_=
-_ has a reg or ranges property, but no unit name
->=20
-> Look like errors to me.
->=20
-> >> I guess we can't validate overlays which is unfortunate. I don't think
-> >> that's a solvable problem unless you have the base DT.
-> >
-> > Yes, maybe.  But there are still some useful warnings for overlays, may=
-be.  I'm
-> > not sure what the implications of the "range_format" warning that I wil=
-l show
-> > below are (I'd actually have to spend a few minutes thinking about rang=
-es, and
-> > I don't have the cycles right now).
->=20
-> Well, yes all the simple localized checks should work, but as we add
-> more complex checks with either dtc or the schema we'll have after
-> ELCE next week there's a lot we can't validate. Perhaps we have to
-> place some restrictions on overlays so we can validate them better.
+	Sean
 
-Reworking overlay handling in dtc will help at least insofar as making
-it easier to work out which checks can be applied to overlay fragments
-and which only make sense on a fully assembled tree.  There will still
-be plenty of things that can't be checked on overlays, since they
-absolitely require information from the base tree.
 
-This is a reason I really prefer the (alas, stalled) connector
-proposal, since it makes it much more explicit what the external
-dependencies of the fragments are.
-
-> I do wonder if we could add tags to phandles to make them
-> identifiable. Perhaps making them all 0xFF?????? instead of starting
-> at 1. 2^24 phandles should be enough for anyone(TM).
-
-True, in a sense.  However this is a problem for systems generating
-FDTs from a real OF.  On real OF, the phandles are usually pointers
-inside OF, and if it happens to allocate it's memory at the top of the
-address space, phandles in the 0xff?????? range are entirely
-plausible.
-
-0 and -1 are the only values explicitly disallowed by IEEE1275, so
-they're the only safe values to use as markers.
-
-> That would not
-> completely solve this problem, but then we could at least find the
-> phandles in a property.
-
-No, it wouldn't do that reliably, because a 0xff?????? value could
-just as well appear as another integer value in a property.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---pM5zeTSooDOHDhuH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlnoBqMACgkQbDjKyiDZ
-s5KEiBAAiC9BJe12masdYaRBWN327K1WHbghETTt6rwfvr7H4+YoCOf8wkjluAad
-XXE5Gdz5slPyTVUUiMHYM+zNdi5p34ikdRu6IKJUetMYI6IMFODPzu4YlWTl/ohN
-RayUjBrl4zP66s/UgYhwjZklxIVeqArpyV+w7mqh49196UaaRK7nVAJqceZRo+3l
-7cQU+xZaBezRjXgIBI+VUJwigePpKpuHvPruS77neGl3lR/Uirk+RXPQFyR/fOMl
-qwlxGArII01ucgFR7P8Mt9SgQfD8eHAYb4fN11mEt/a/nqzSM7lzDhXLa/joso2X
-x+HmYgwHUIW6ogmeQkvKS651f+pYUel6o8FJU/shiHdaQxbhcc3RENMLK8r8OTsD
-jNJBy3bf2eTebcm7bHBE2xEB4280SErJMdwnvgqF6pMrXDaRoLoE7BDdahd6t/aj
-4Hs3hNyriYEOm4Vm1/Ltv7/CoXfiN1Gy3EHMZJFHjT1ufLpUesJresPHmIcLP32z
-FC2ZTjJRiJozVqEhQFhO5fYkiiM7OOdz7xeF7xyIAG7H4sFk0dYPdhFsYYY/7ntA
-3UnGCkbNLBoG0dnZuNfMDGMAmDAGz6uyJ3tI/yp1bJB8sXx6e5EVAN/m2Cju7WfG
-/3sGF3yQS0s+rXD4j+puQT+dg2Adg6GmwXdRhMROU9Di0Jy4QPI=
-=G6k0
------END PGP SIGNATURE-----
-
---pM5zeTSooDOHDhuH--
+> > +	 */
+> > +	do {
+> > +		year = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA));
+> > +		mon = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MON));
+> > +		wday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW));
+> > +		mday = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM));
+> > +		hour = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU));
+> > +		min = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN));
+> > +		sec = mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC));
+> > +	} while (sec != mtk_r32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC)));
+> > +
+> > +	tm->tm_sec  = sec;
+> > +	tm->tm_min  = min;
+> > +	tm->tm_hour = hour;
+> > +	tm->tm_wday = wday;
+> > +	tm->tm_mday = mday;
+> > +	tm->tm_mon  = mon - 1;
+> > +
+> > +	/* Rebase to the absolute year which userspace requires */
+> > +	tm->tm_year = year + MTK_RTC_TM_YR_L + hw->yr_base[time_alarm];
+> > +}
+> > +
+> > +static void mtk_rtc_set_alarm_or_time(struct mtk_rtc *hw, struct rtc_time *tm,
+> > +				      int time_alarm)
+> > +{
+> > +	u32 year;
+> > +
+> > +	/* Rebase to the relative year which RTC hardware requires */
+> > +	year = tm->tm_year - MTK_RTC_TM_YR_L - hw->yr_base[time_alarm];
+> > +
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_YEA), year);
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_MON), tm->tm_mon + 1);
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_DOW), tm->tm_wday);
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_DOM), tm->tm_mday);
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_HOU), tm->tm_hour);
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_MIN), tm->tm_min);
+> > +	mtk_w32(hw, MTK_RTC_TREG(time_alarm, MTK_SEC), tm->tm_sec);
+> > +}
+> > +
+> > +static irqreturn_t mtk_rtc_alarmirq(int irq, void *id)
+> > +{
+> > +	struct mtk_rtc *hw = (struct mtk_rtc *)id;
+> > +	u32 irq_sta;
+> > +
+> > +	irq_sta = mtk_r32(hw, MTK_RTC_INT);
+> > +	if (irq_sta & RTC_INT_AL_STA) {
+> > +		/* Stop alarm also implicitly disables the alarm interrupt */
+> > +		mtk_w32(hw, MTK_RTC_AL_CTL, 0);
+> > +		rtc_update_irq(hw->rtc, 1, RTC_IRQF | RTC_AF);
+> > +
+> > +		/* Ack alarm interrupt status */
+> > +		mtk_w32(hw, MTK_RTC_INT, RTC_INT_AL_STA);
+> > +		return IRQ_HANDLED;
+> > +	}
+> > +
+> > +	return IRQ_NONE;
+> > +}
+> > +
+> > +static int mtk_rtc_gettime(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +
+> > +	mtk_rtc_get_alarm_or_time(hw, tm, MTK_TC);
+> > +
+> > +	return rtc_valid_tm(tm);
+> > +}
+> > +
+> > +static int mtk_rtc_settime(struct device *dev, struct rtc_time *tm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +
+> > +	/* Epoch == 1900, and the driver assumes that tm->tm_year has to be
+> > +	 * at least MTK_RTC_TM_YR_L.
+> > +	 */
+> > +	if (tm->tm_year <  MTK_RTC_TM_YR_L)
+> > +		return -EINVAL;
+> > +
+> > +	/* Keep yr_base used to calculate the calculate year when userspace
+> > +	 * queries and extend the maximum year the RTC can count.
+> > +	 */
+> > +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
+> > +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
+> > +
+> > +	/* Stop time counter before setting a new one*/
+> > +	mtk_set(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> > +
+> > +	mtk_rtc_set_alarm_or_time(hw, tm, MTK_TC);
+> > +
+> > +	/* Restart the time counter */
+> > +	mtk_clr(hw, MTK_RTC_CTL, RTC_RC_STOP);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_rtc_getalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +	struct rtc_time *alrm_tm = &wkalrm->time;
+> > +
+> > +	mtk_rtc_get_alarm_or_time(hw, alrm_tm, MTK_AL);
+> > +
+> > +	wkalrm->enabled = !!(mtk_r32(hw, MTK_RTC_AL_CTL) & RTC_AL_EN);
+> > +	wkalrm->pending = !!(mtk_r32(hw, MTK_RTC_INT) & RTC_INT_AL_STA);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_rtc_setalarm(struct device *dev, struct rtc_wkalrm *wkalrm)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +	struct rtc_time *alrm_tm = &wkalrm->time;
+> > +
+> > +	/* Epoch == 1900, and the driver assumes that alrm_tm->tm_year has to
+> > +	 * be at least MTK_RTC_TM_YR_L.
+> > +	 */
+> > +	if (alrm_tm->tm_year < MTK_RTC_TM_YR_L)
+> > +		return -EINVAL;
+> > +
+> > +	/* Keep yr_base used to calculate the calculate year when userspace
+> > +	 * queries and extend the maximum time the alarm can support.
+> > +	 */
+> > +	hw->yr_base[MTK_AL] = alrm_tm->tm_year - MTK_RTC_TM_YR_L -
+> > +			      (alrm_tm->tm_year % MTK_RTC_HW_YR_LIMIT);
+> > +
+> > +	/*
+> > +	 * Stop the alarm also implicitly including disables interrupt before
+> > +	 * setting a new one.
+> > +	 */
+> > +	mtk_clr(hw, MTK_RTC_AL_CTL, RTC_AL_EN);
+> > +
+> > +	/*
+> > +	 * Avoid contention between mtk_rtc_setalarm and IRQ handler so that
+> > +	 * disabling the interrupt and awaiting for pending IRQ handler to
+> > +	 * complete.
+> > +	 */
+> > +	synchronize_irq(hw->irq);
+> > +
+> > +	mtk_rtc_set_alarm_or_time(hw, alrm_tm, MTK_AL);
+> > +
+> > +	/* Restart the alarm with the new setup */
+> > +	mtk_w32(hw, MTK_RTC_AL_CTL, RTC_AL_ALL);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct rtc_class_ops mtk_rtc_ops = {
+> > +	.read_time		= mtk_rtc_gettime,
+> > +	.set_time		= mtk_rtc_settime,
+> > +	.read_alarm		= mtk_rtc_getalarm,
+> > +	.set_alarm		= mtk_rtc_setalarm,
+> > +};
+> > +
+> > +static const struct of_device_id mtk_rtc_match[] = {
+> > +	{ .compatible = "mediatek,mt7622-rtc" },
+> > +	{ .compatible = "mediatek,soc-rtc" },
+> > +	{},
+> > +};
+> > +
+> > +static int mtk_rtc_probe(struct platform_device *pdev)
+> > +{
+> > +	struct mtk_rtc *hw;
+> > +	struct resource *res;
+> > +	int ret;
+> > +
+> > +	hw = devm_kzalloc(&pdev->dev, sizeof(*hw), GFP_KERNEL);
+> > +	if (!hw)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, hw);
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	hw->base = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(hw->base))
+> > +		return PTR_ERR(hw->base);
+> > +
+> > +	hw->clk = devm_clk_get(&pdev->dev, "rtc");
+> > +	if (IS_ERR(hw->clk)) {
+> > +		dev_err(&pdev->dev, "No clock\n");
+> > +		return PTR_ERR(hw->clk);
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(hw->clk);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	hw->irq = platform_get_irq(pdev, 0);
+> > +	if (hw->irq < 0) {
+> > +		dev_err(&pdev->dev, "No IRQ resource\n");
+> > +		ret = hw->irq;
+> > +		goto err;
+> > +	}
+> > +
+> > +	ret = devm_request_irq(&pdev->dev, hw->irq, mtk_rtc_alarmirq,
+> > +			       0, dev_name(&pdev->dev), hw);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Can't request IRQ\n");
+> > +		goto err;
+> > +	}
+> > +
+> > +	mtk_rtc_hw_init(hw);
+> > +
+> > +	device_init_wakeup(&pdev->dev, true);
+> > +
+> > +	hw->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+> > +					   &mtk_rtc_ops, THIS_MODULE);
+> > +	if (IS_ERR(hw->rtc)) {
+> > +		ret = PTR_ERR(hw->rtc);
+> > +		dev_err(&pdev->dev, "Unable to register device\n");
+> > +		goto err;
+> > +	}
+> > +
+> > +	return 0;
+> > +err:
+> > +	clk_disable_unprepare(hw->clk);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int mtk_rtc_remove(struct platform_device *pdev)
+> > +{
+> > +	struct mtk_rtc *hw = platform_get_drvdata(pdev);
+> > +
+> > +	clk_disable_unprepare(hw->clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int mtk_rtc_suspend(struct device *dev)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +
+> > +	if (device_may_wakeup(dev))
+> > +		enable_irq_wake(hw->irq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_rtc_resume(struct device *dev)
+> > +{
+> > +	struct mtk_rtc *hw = dev_get_drvdata(dev);
+> > +
+> > +	if (device_may_wakeup(dev))
+> > +		disable_irq_wake(hw->irq);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(mtk_rtc_pm_ops, mtk_rtc_suspend, mtk_rtc_resume);
+> > +
+> > +#define MTK_RTC_PM_OPS (&mtk_rtc_pm_ops)
+> > +#else	/* CONFIG_PM */
+> > +#define MTK_RTC_PM_OPS NULL
+> > +#endif	/* CONFIG_PM */
+> > +
+> > +static struct platform_driver mtk_rtc_driver = {
+> > +	.probe	= mtk_rtc_probe,
+> > +	.remove	= mtk_rtc_remove,
+> > +	.driver = {
+> > +		.name = MTK_RTC_DEV,
+> > +		.of_match_table = mtk_rtc_match,
+> > +		.pm = MTK_RTC_PM_OPS,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(mtk_rtc_driver);
+> > +
+> > +MODULE_DESCRIPTION("MediaTek SoC based RTC Driver");
+> > +MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
+> > +MODULE_LICENSE("GPL");
+> 
+> 
