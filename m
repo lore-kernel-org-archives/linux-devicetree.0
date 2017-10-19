@@ -1,62 +1,119 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4 2/4] ARM: tegra: add CEC support to tegra124.dtsi
-Date: Thu, 19 Oct 2017 11:23:15 +0200
-Message-ID: <20171019092315.GE9005@ulmo>
-References: <20170911122952.33980-1-hverkuil@xs4all.nl>
- <20170911122952.33980-3-hverkuil@xs4all.nl>
+From: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] extcon: add optional debounce-timeout-ms attribute
+Date: Thu, 19 Oct 2017 15:03:45 +0530
+Message-ID: <CAAFb_vrH-o8BH7kGs4Ot0Bh9mAn6ELjFsS8YFYPOf5vVQab3hg@mail.gmail.com>
+References: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
+ <CGME20171019032619epcas2p2408b6d42002c826d2af71f619250c0cf@epcas2p2.samsung.com>
+ <1508383560-15567-2-git-send-email-raveendra.padasalagi@broadcom.com>
+ <59E8311F.5010103@samsung.com> <59E8368A.8000600@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4Epv4kl9IRBfg3rk"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170911122952.33980-3-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E8368A.8000600-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Thanks Chanwoo Choi for the comments. Will revise the patch.
 
---4Epv4kl9IRBfg3rk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 11, 2017 at 02:29:50PM +0200, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->=20
-> Add support for the Tegra CEC IP to tegra124.dtsi and enable it on the
-> Jetson TK1.
->=20
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts |  4 ++++
->  arch/arm/boot/dts/tegra124.dtsi           | 12 +++++++++++-
->  2 files changed, 15 insertions(+), 1 deletion(-)
-
-I prefer SoC and board changes to be split into separate patches. I've
-done that with this patch while applying.
-
-Thanks,
-Thierry
-
---4Epv4kl9IRBfg3rk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlnobwMACgkQ3SOs138+
-s6Hvkg/9E5EJQszegpVwxmrEQoSTR8EHfeMqz55S175h5g6oN3jxBP0cU4/hqyVV
-01Q4i3UFR17OY8OKMzcogE3K7sWUZ8BkWibJcst2quy7/tR8pl/LbrKb+yRmmV+h
-XEWuS8zcaErSspV10s5mgFkuadNwZ8y/mHhqXPB7StCwvgxqf3jy0hi59DOv2zeN
-kYneC70IEEIiNVS/ETGLVU+3Ov4mi7wt/5f4acd6z30oeuWbj0vkLLMImFBnKcy2
-tDtIh2jAWxk8O/E6uREQ3I6i8TiiBhvVHORf0xBexbLtyNL65ZnR1902iWZJly5u
-Aq9NQ1EdvYprogKz3QZd9I4wNn/nwi0NbffkW60oWXMGqKc0CbxFWiKxnMGp5D6b
-WVAUdjGFipsrxaMFoQm9PTcoXdqtF5a5iXv6zMuyTPAW/+SqiLShLWSYkDKe0w/O
-JyYN45gYV/E0G+ZobBFJkUBU5JwQZjh3EAvPFrI/+ZOhNm6/fKvPVlQpGrjGoq2K
-0YeVI2AA+umoTi08bIk5okUPskR+wJYveCFk9/H+Q1NjDTSqOITjNqrAMHl7rxdj
-UMEwwGE4E/QI/SNJRVfVWLjPKiHUicW4kZ/ih6pDw0gxhM373fdxKSBr35zSuKQz
-PQ1Fe+7CUMwkDbuWejXmyeruf1m3+nJB4TFgM0JiIA8sdczrS2U=
-=7DH/
------END PGP SIGNATURE-----
-
---4Epv4kl9IRBfg3rk--
+Regards,
+Raveendra
+On Thu, Oct 19, 2017 at 10:52 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrot=
+e:
+> On 2017=EB=85=84 10=EC=9B=94 19=EC=9D=BC 13:59, Chanwoo Choi wrote:
+>> Hi,
+>>
+>> On 2017=EB=85=84 10=EC=9B=94 19=EC=9D=BC 12:26, Raveendra Padasalagi wro=
+te:
+>>> Add changes to capture optional dt attribute "debounce-timeout-ms"
+>>> provided in extcon node and used the same value if provided otherwise
+>>> default value of 20ms is used for id and vbus gpios debounce time.
+>>>
+>>> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>
+>>> Changes in v2:
+>>>  Rename gpio_debounce_timeout_ms to debounce_usecs
+>>>
+>>>  drivers/extcon/extcon-usb-gpio.c | 12 +++++++++---
+>>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-u=
+sb-gpio.c
+>>> index 9c925b0..76ef1da 100644
+>>> --- a/drivers/extcon/extcon-usb-gpio.c
+>>> +++ b/drivers/extcon/extcon-usb-gpio.c
+>>> @@ -41,6 +41,7 @@ struct usb_extcon_info {
+>>>
+>>>      unsigned long debounce_jiffies;
+>>>      struct delayed_work wq_detcable;
+>>> +    unsigned int debounce_usecs;
+>>>  };
+>>>
+>>>  static const unsigned int usb_extcon_cable[] =3D {
+>>> @@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device=
+ *pdev)
+>>>      if (IS_ERR(info->vbus_gpiod))
+>>>              return PTR_ERR(info->vbus_gpiod);
+>>>
+>>> +    ret =3D of_property_read_u32(np, "input-debounce",
+>>> +                         &info->debounce_usecs);
+>>> +    if (ret)
+>>> +            info->debounce_usecs =3D USB_GPIO_DEBOUNCE_MS;
+>>
+>> The USB_GPIO_DEBOUNCE_MS indicates 20 millisecond.
+>> You need to redefine it as following:
+>>       -#define USB_GPIO_DEBOUNCE_MS   20      /* ms */
+>>       +#define USB_GPIO_DEBOUNCE_USEC 20000
+>>
+>>       info->debounce_usecs =3D USB_GPIO_DEBOUNCE_USEC;
+>>
+>> or
+>>       info->debounce_usecs =3D USB_GPIO_DEBOUNCE_MS * 1000;
+>>
+>>
+>>> +
+>>>      info->edev =3D devm_extcon_dev_allocate(dev, usb_extcon_cable);
+>>>      if (IS_ERR(info->edev)) {
+>>>              dev_err(dev, "failed to allocate extcon device\n");
+>>> @@ -147,13 +153,13 @@ static int usb_extcon_probe(struct platform_devic=
+e *pdev)
+>>>
+>>>      if (info->id_gpiod)
+>>>              ret =3D gpiod_set_debounce(info->id_gpiod,
+>>> -                                     USB_GPIO_DEBOUNCE_MS * 1000);
+>>> +                                     info->debounce_usecs * 1000);
+>>
+>> The debounce_usecs is already microsecond, You don't need to mutiply wit=
+h 1000.
+>>
+>>
+>>>      if (!ret && info->vbus_gpiod)
+>>>              ret =3D gpiod_set_debounce(info->vbus_gpiod,
+>>> -                                     USB_GPIO_DEBOUNCE_MS * 1000);
+>>> +                                     info->debounce_usecs * 1000);
+>
+> You don't need to mutiply with 1000.
+>
+>>>
+>>>      if (ret < 0)
+>>> -            info->debounce_jiffies =3D msecs_to_jiffies(USB_GPIO_DEBOU=
+NCE_MS);
+>>> +            info->debounce_jiffies =3D msecs_to_jiffies(info->debounce=
+_usecs);
+>
+> You should you the 'usecs_to_jiffies' because info->debounce_usecs indica=
+tes the usec.
+>
+> --
+> Best Regards,
+> Chanwoo Choi
+> Samsung Electronics
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
