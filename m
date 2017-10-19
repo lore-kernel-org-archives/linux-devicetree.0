@@ -1,93 +1,100 @@
-From: Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v5 5/9] dt-bindings: soc: add MT2712 power dt-bindings
-Date: Thu, 19 Oct 2017 10:48:46 +0800
-Message-ID: <1508381330-3700-6-git-send-email-weiyi.lu@mediatek.com>
-References: <1508381330-3700-1-git-send-email-weiyi.lu@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Thu, 19 Oct 2017 10:55:49 +0800
+Message-ID: <1508381749.21840.123.camel@mtkswgap22>
+References: <cover.1508231935.git.sean.wang@mediatek.com>
+         <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
+         <1508325126.13340.25.camel@mtksdaap41>
+         <20171018125743.kqna6b4lgng674om@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1508381330-3700-1-git-send-email-weiyi.lu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fan Chen <fan.chen@mediatek.com>, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171018125743.kqna6b4lgng674om-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add power dt-bindings for MT2712.
+Hi, both
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
----
- .../devicetree/bindings/soc/mediatek/scpsys.txt    |  3 +++
- include/dt-bindings/power/mt2712-power.h           | 26 ++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 include/dt-bindings/power/mt2712-power.h
+On Wed, 2017-10-18 at 14:57 +0200, Alexandre Belloni wrote:
+> On 18/10/2017 at 19:12:06 +0800, Yingjoe Chen wrote:
+> > On Tue, 2017-10-17 at 17:40 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > 
+> > > This patch introduces the driver for the RTC on MT7622 SoC.
+> > > 
+> > > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  drivers/rtc/Kconfig      |  10 ++
+> > >  drivers/rtc/Makefile     |   1 +
+> > >  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 429 insertions(+)
+> > >  create mode 100644 drivers/rtc/rtc-mt7622.c
+> > > 
+> > > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > > index e0e58f3..4226295 100644
+> > > --- a/drivers/rtc/Kconfig
+> > > +++ b/drivers/rtc/Kconfig
+> > > @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
+> > >  	   This driver can also be built as a module. If so, the module
+> > >  	   will be called rtc-moxart
+> > >  
+> > > +config RTC_DRV_MEDIATEK
+> > 
+> > How about changing this to RTC_DRV_MT7622 or RTC_DRV_MEDIATEK_SOC?
+> > It is confusing to have both RTC_DRV_MEDIATEK & RTC_DRV_MT6397 here.
+> > 
+> 
+> Yes, this has to be RTC_DRV_MT7622. It doesn't matter if it support
+> future SoCs named differently, it will be less confusing than using
+> anything with only mediatek in it.
+> 
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-index 40056f7..76bf45b 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-+++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-@@ -12,11 +12,13 @@ power/power_domain.txt. It provides the power domains defined in
- - include/dt-bindings/power/mt8173-power.h
- - include/dt-bindings/power/mt6797-power.h
- - include/dt-bindings/power/mt2701-power.h
-+- include/dt-bindings/power/mt2712-power.h
- - include/dt-bindings/power/mt7622-power.h
- 
- Required properties:
- - compatible: Should be one of:
- 	- "mediatek,mt2701-scpsys"
-+	- "mediatek,mt2712-scpsys"
- 	- "mediatek,mt6797-scpsys"
- 	- "mediatek,mt7622-scpsys"
- 	- "mediatek,mt8173-scpsys"
-@@ -27,6 +29,7 @@ Required properties:
-                       These are clocks which hardware needs to be
-                       enabled before enabling certain power domains.
- 	Required clocks for MT2701: "mm", "mfg", "ethif"
-+	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
- 	Required clocks for MT6797: "mm", "mfg", "vdec"
- 	Required clocks for MT7622: "hif_sel"
- 	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-diff --git a/include/dt-bindings/power/mt2712-power.h b/include/dt-bindings/power/mt2712-power.h
-new file mode 100644
-index 0000000..92b46d7
---- /dev/null
-+++ b/include/dt-bindings/power/mt2712-power.h
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright (C) 2017 MediaTek Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+ * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_POWER_MT2712_POWER_H
-+#define _DT_BINDINGS_POWER_MT2712_POWER_H
-+
-+#define MT2712_POWER_DOMAIN_MM		0
-+#define MT2712_POWER_DOMAIN_VDEC	1
-+#define MT2712_POWER_DOMAIN_VENC	2
-+#define MT2712_POWER_DOMAIN_ISP		3
-+#define MT2712_POWER_DOMAIN_AUDIO	4
-+#define MT2712_POWER_DOMAIN_USB		5
-+#define MT2712_POWER_DOMAIN_USB2	6
-+#define MT2712_POWER_DOMAIN_MFG		7
-+
-+#endif /* _DT_BINDINGS_POWER_MT2712_POWER_H */
--- 
-1.9.1
+Agreed on. RTC_DRV_MT7622 will be applied instead to align the usage on
+MT6397 and to get rid of such kind of confusion.
+
+
+> > > +		return -EINVAL;
+> > > +
+> > > +	/* Keep yr_base used to calculate the calculate year when userspace
+> > > +	 * queries and extend the maximum year the RTC can count.
+> > > +	 */
+> > > +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
+> > > +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
+> > 
+> > 
+> > I'm not sure this worth it.
+> > If maximum year it can hold is 99, I'd bet it won't support leap year
+> > correctly after 2100. This make the RTC useless after that. 
+> > 
+> > Also, yr_base is lost after power cycle, so you can't get correct year
+> > back anyway.
+> > 
+> 
+> I agree, the best you can do here is to only support 2000 to 2099.
+> 
+
+O.K. I will remove those yr_base extension and only consider only
+support from 2000 to 2099 because of no much gain we can get from
+yr_base.
+
+The only gain is yr_base I thought just allows people have the
+opportunity to set up rtc after 2100. However, it appears to not much
+practical to foresee these things after 2100 and rtc must be setup again
+when either year overflowing or power cycle happens after 2100 as Joe.C
+mentioned.
+
+In addition, I also found the rtc hardware would take year == 0 as not
+leap year that works for 2100, 2200, 2300, but not for 2000, 2400,
+2800,... and thus 2000 is also needed to be excluded in both set_time
+and set_alarm if only 2000 to 2099 is supported.
+
+
+	Sean
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
