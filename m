@@ -1,52 +1,60 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] clocksource: stm32: convert driver to timer_of
-Date: Thu, 19 Oct 2017 11:07:08 +0200
-Message-ID: <10c85c67-df79-0f1a-dd64-8b6840d371c7@linaro.org>
-References: <1508331506-23782-1-git-send-email-benjamin.gaignard@linaro.org>
- <1508331506-23782-3-git-send-email-benjamin.gaignard@linaro.org>
- <alpine.DEB.2.20.1710182028080.2477@nanos>
- <CA+M3ks4Eg2-S8yDZuMd-jqZ6g2efvveU_WwQEh0rPZW0fGDt3w@mail.gmail.com>
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
+Date: Thu, 19 Oct 2017 11:16:44 +0200
+Message-ID: <20171019091644.GA14983@lst.de>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+	<1507761269-7017-6-git-send-email-jim2101024@gmail.com>
+	<589c04cb-061b-a453-3188-79324a02388e@arm.com>
+	<20171017081422.GA19475@lst.de>
+	<CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
+	<20171018065316.GA11183@lst.de>
+	<CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+M3ks4Eg2-S8yDZuMd-jqZ6g2efvveU_WwQEh0rPZW0fGDt3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/10/2017 21:32, Benjamin Gaignard wrote:
-> 2017-10-18 20:31 GMT+02:00 Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>:
->> On Wed, 18 Oct 2017, Benjamin Gaignard wrote:
->>
->>> Convert driver to use timer_of helpers. This allow to remove
->>> custom proprietary structure.
->>>
->>> Increase min delta value because if it is too small it could
->>> generate too much interrupts and the system will not be able
->>> to catch them all.
->>
->> This does two completely independent changes at once. What the heck has
->> increasing min delta to do with converting it to timer_of() helpers?
->>
->> Nothing at all. So please split this into two distinct patches. Each doing
->> ONE thing.
-> 
-> I will do that.
+On Wed, Oct 18, 2017 at 10:41:17AM -0400, Jim Quinlan wrote:
+> That's what brcm_to_{pci,cpu} are for -- they keep a list of the
+> dma-ranges given in the PCIe DT node, and translate from system memory
+> addresses to pci-space addresses, and vice versa.  As long as people
+> are using the DMA API it should work.  It works for all of the ARM,
+> ARM64, and MIPS Broadcom systems I've tested, using eight different EP
+> devices.  Note that I am not thrilled to be advocating this mechanism
+> but it seemed the best alternative.
 
-With push ups.
+Say we are using your original example ranges:
 
+ memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
+ memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
+ memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
+ memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
+ memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
+ memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+and now you get a dma mapping request for physical addresses
+3fffff00 to 4000000f, which would span two of your ranges.  How
+is this going to work?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> I would prefer that the same code work for all three architectures.
+> What I would like from ARM/ARM64 is the ability to override
+> phys_to_dma() and dma_to_phys(); I thought the chances of that being
+> accepted would be slim.  But you are right, I should ask the
+> maintainers.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is still better than trying to stack dma ops, which is a receipe
+for problems down the road.
