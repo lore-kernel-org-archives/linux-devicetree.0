@@ -1,34 +1,59 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 5/5] gpio: Add driver for Maxim MAX3191x industrial serializer
-Date: Thu, 19 Oct 2017 22:41:29 +0200
-Message-ID: <CACRpkdYy66+H+Fz7q-Ush4BaSxN3v8mafCL=+RhVBu9pLMpZRQ@mail.gmail.com>
-References: <cover.1507797496.git.lukas@wunner.de> <165c5061f7f309ecb7f1a3d32c8f7df5026f4a47.1507797496.git.lukas@wunner.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] staging: Introduce NVIDIA Tegra20 video decoder
+ driver
+Date: Thu, 19 Oct 2017 15:52:42 -0500
+Message-ID: <CAL_Jsq+0MwXdmQyxQKG7ZFBbRUnw6xN5=edCSV-YYtRs=oU_dA@mail.gmail.com>
+References: <cover.1507752381.git.digetx@gmail.com>
+ <3d432aa2617977a2b0a8621a1fc2f36f751133e1.1507752381.git.digetx@gmail.com>
+ <20171017201354.efgjrwvakkseyvr7@rob-hp-laptop> <20171017202407.GA10482@ulmo>
+ <CAL_JsqKtFD9OgO2privwfBAZeCn3zg1JienmefPk=X2W-+ahJQ@mail.gmail.com>
+ <ca4fa045-17f0-9142-6bca-bbf472c1f3bb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <165c5061f7f309ecb7f1a3d32c8f7df5026f4a47.1507797496.git.lukas@wunner.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <ca4fa045-17f0-9142-6bca-bbf472c1f3bb@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 12:40 PM, Lukas Wunner <lukas@wunner.de> wrote:
-
-> The driver was developed for and tested with the MAX31913 built into
-> the Revolution Pi by KUNBUS, but should work with all members of the
-> MAX3191x family:
+On Tue, Oct 17, 2017 at 4:26 PM, Dmitry Osipenko <digetx@gmail.com> wrote:
+> On 18.10.2017 00:13, Rob Herring wrote:
+>> On Tue, Oct 17, 2017 at 3:24 PM, Thierry Reding
+>> <thierry.reding@gmail.com> wrote:
+>>> On Tue, Oct 17, 2017 at 03:13:54PM -0500, Rob Herring wrote:
+>>> [...]
+>>>>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-vde.txt
+>>> [...]
+>>>>> +- resets : Must contain an entry for each entry in reset-names.
+>>>>> +  See ../reset/reset.txt for details.
+>>>>> +- reset-names : Must include the following entries:
+>>>>> +  - vde
+>>>>
+>>>> -names is pointless when there is only one.
+>>>
+>>> I'd prefer to keep it. In the past we occasionally had to add clocks or
+>>> resets to a device tree node where only one had been present (and hence
+>>> no -names property) and that caused some awkwardness because verbiage
+>>> had to be added to the bindings that clarified that one particular entry
+>>> (the original one) always had to come first.
+>>
+>> The order should be specified regardless of -names and the original
+>> one has to come first if you add any. That's not awkwardness, but how
+>> bindings work.
 >
-> MAX31910: low power
-> MAX31911: LED drivers
-> MAX31912: LED drivers + 2nd voltage monitor + low power
-> MAX31913: LED drivers + 2nd voltage monitor
-> MAX31953: LED drivers + 2nd voltage monitor + isolation
-> MAX31963: LED drivers + 2nd voltage monitor + isolation + buck regulator
->
-> Cc: Mathias Duckeck <m.duckeck@kunbus.de>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Probably it would be okay to remove '-names' from the binding doc, but keep them
+> in the actual DT, wouldn't it?
 
-Patch applied.
+No. Then where are the names documented?
 
-Yours,
-Linus Walleij
+Rob
