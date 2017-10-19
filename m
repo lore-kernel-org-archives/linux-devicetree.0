@@ -1,119 +1,73 @@
-From: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] extcon: add optional debounce-timeout-ms attribute
-Date: Thu, 19 Oct 2017 15:03:45 +0530
-Message-ID: <CAAFb_vrH-o8BH7kGs4Ot0Bh9mAn6ELjFsS8YFYPOf5vVQab3hg@mail.gmail.com>
-References: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <CGME20171019032619epcas2p2408b6d42002c826d2af71f619250c0cf@epcas2p2.samsung.com>
- <1508383560-15567-2-git-send-email-raveendra.padasalagi@broadcom.com>
- <59E8311F.5010103@samsung.com> <59E8368A.8000600@samsung.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCHv4 0/4] tegra-cec: add Tegra HDMI CEC support
+Date: Thu, 19 Oct 2017 11:36:14 +0200
+Message-ID: <0f43276f-0a89-8caa-6522-253458e3ad08@xs4all.nl>
+References: <20170911122952.33980-1-hverkuil@xs4all.nl>
+ <20171019092054.GC9005@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59E8368A.8000600-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20171019092054.GC9005@ulmo>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Chanwoo Choi for the comments. Will revise the patch.
+On 10/19/17 11:20, Thierry Reding wrote:
+> On Mon, Sep 11, 2017 at 02:29:48PM +0200, Hans Verkuil wrote:
+>> From: Hans Verkuil <hans.verkuil@cisco.com>
+>>
+>> This patch series adds support for the Tegra CEC functionality.
+>>
+>> This v4 has been rebased to the latest 4.14 pre-rc1 mainline.
+>>
+>> Please review! Other than for the bindings that are now Acked I have not
+>> received any feedback.
+>>
+>> The first patch documents the CEC bindings, the second adds support
+>> for this to tegra124.dtsi and enables it for the Jetson TK1.
+>>
+>> The third patch adds the CEC driver itself and the final patch adds
+>> the cec notifier support to the drm/tegra driver in order to notify
+>> the CEC driver whenever the physical address changes.
+>>
+>> I expect that the dts changes apply as well to the Tegra X1/X2 and possibly
+>> other Tegra SoCs, but I can only test this with my Jetson TK1 board.
+>>
+>> The dt-bindings and the tegra-cec driver would go in through the media
+>> subsystem, the drm/tegra part through the drm subsystem and the dts
+>> changes through (I guess) the linux-tegra developers. Luckily they are
+>> all independent of one another.
+>>
+>> To test this you need the CEC utilities from git://linuxtv.org/v4l-utils.git.
+>>
+>> To build this:
+>>
+>> git clone git://linuxtv.org/v4l-utils.git
+>> cd v4l-utils
+>> ./bootstrap.sh; ./configure
+>> make
+>> sudo make install # optional, you really only need utils/cec*
+>>
+>> To test:
+>>
+>> cec-ctl --playback # configure as playback device
+>> cec-ctl -S # detect all connected CEC devices
+> 
+> I finally got around to test this. Unfortunately I wasn't able to
+> properly show connected CEC devices, but I think that may just be
+> because the monitor I was testing against doesn't support CEC. I
+> will have to check against a different device eventually to check
+> that it properly enumerates, though I suspect you've already done
+> quite extensive testing yourself.
+
+Yes, you need a TV with CEC. Most (all?) PC monitors do not support this.
+I never understood why not.
+
+So just to confirm: you've merged this driver for 4.15?
 
 Regards,
-Raveendra
-On Thu, Oct 19, 2017 at 10:52 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrot=
-e:
-> On 2017=EB=85=84 10=EC=9B=94 19=EC=9D=BC 13:59, Chanwoo Choi wrote:
->> Hi,
->>
->> On 2017=EB=85=84 10=EC=9B=94 19=EC=9D=BC 12:26, Raveendra Padasalagi wro=
-te:
->>> Add changes to capture optional dt attribute "debounce-timeout-ms"
->>> provided in extcon node and used the same value if provided otherwise
->>> default value of 20ms is used for id and vbus gpios debounce time.
->>>
->>> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>
->>> Changes in v2:
->>>  Rename gpio_debounce_timeout_ms to debounce_usecs
->>>
->>>  drivers/extcon/extcon-usb-gpio.c | 12 +++++++++---
->>>  1 file changed, 9 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-u=
-sb-gpio.c
->>> index 9c925b0..76ef1da 100644
->>> --- a/drivers/extcon/extcon-usb-gpio.c
->>> +++ b/drivers/extcon/extcon-usb-gpio.c
->>> @@ -41,6 +41,7 @@ struct usb_extcon_info {
->>>
->>>      unsigned long debounce_jiffies;
->>>      struct delayed_work wq_detcable;
->>> +    unsigned int debounce_usecs;
->>>  };
->>>
->>>  static const unsigned int usb_extcon_cable[] =3D {
->>> @@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device=
- *pdev)
->>>      if (IS_ERR(info->vbus_gpiod))
->>>              return PTR_ERR(info->vbus_gpiod);
->>>
->>> +    ret =3D of_property_read_u32(np, "input-debounce",
->>> +                         &info->debounce_usecs);
->>> +    if (ret)
->>> +            info->debounce_usecs =3D USB_GPIO_DEBOUNCE_MS;
->>
->> The USB_GPIO_DEBOUNCE_MS indicates 20 millisecond.
->> You need to redefine it as following:
->>       -#define USB_GPIO_DEBOUNCE_MS   20      /* ms */
->>       +#define USB_GPIO_DEBOUNCE_USEC 20000
->>
->>       info->debounce_usecs =3D USB_GPIO_DEBOUNCE_USEC;
->>
->> or
->>       info->debounce_usecs =3D USB_GPIO_DEBOUNCE_MS * 1000;
->>
->>
->>> +
->>>      info->edev =3D devm_extcon_dev_allocate(dev, usb_extcon_cable);
->>>      if (IS_ERR(info->edev)) {
->>>              dev_err(dev, "failed to allocate extcon device\n");
->>> @@ -147,13 +153,13 @@ static int usb_extcon_probe(struct platform_devic=
-e *pdev)
->>>
->>>      if (info->id_gpiod)
->>>              ret =3D gpiod_set_debounce(info->id_gpiod,
->>> -                                     USB_GPIO_DEBOUNCE_MS * 1000);
->>> +                                     info->debounce_usecs * 1000);
->>
->> The debounce_usecs is already microsecond, You don't need to mutiply wit=
-h 1000.
->>
->>
->>>      if (!ret && info->vbus_gpiod)
->>>              ret =3D gpiod_set_debounce(info->vbus_gpiod,
->>> -                                     USB_GPIO_DEBOUNCE_MS * 1000);
->>> +                                     info->debounce_usecs * 1000);
->
-> You don't need to mutiply with 1000.
->
->>>
->>>      if (ret < 0)
->>> -            info->debounce_jiffies =3D msecs_to_jiffies(USB_GPIO_DEBOU=
-NCE_MS);
->>> +            info->debounce_jiffies =3D msecs_to_jiffies(info->debounce=
-_usecs);
->
-> You should you the 'usecs_to_jiffies' because info->debounce_usecs indica=
-tes the usec.
->
-> --
-> Best Regards,
-> Chanwoo Choi
-> Samsung Electronics
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+	Hans
