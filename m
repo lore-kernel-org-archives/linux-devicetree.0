@@ -1,281 +1,125 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4 2/2] crypto: stm32 - Support for STM32 CRYP crypto
- module
-Date: Thu, 19 Oct 2017 15:47:08 +0200
-Message-ID: <e11bd8d2-da0a-d296-c949-96bb5df5ba54@baylibre.com>
-References: <1508403839-14131-1-git-send-email-fabien.dessenne@st.com>
- <1508403839-14131-3-git-send-email-fabien.dessenne@st.com>
- <20171019103454.GA26877@Red> <0359a8aa-5d91-6284-76cb-44bbd7865a0f@st.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Thu, 19 Oct 2017 16:00:44 +0200
+Message-ID: <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <20171017114823.58476908@bbrezillon>
+ <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
+ <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
+ <20171018175910.GP12015@bill-the-cat>
+ <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz>
+ <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0359a8aa-5d91-6284-76cb-44bbd7865a0f@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>, Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lionel DEBIEVE <lionel.debieve@st.com>, Rob Herring <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Ludovic BARRE <ludovic.barre@st.com>, "David S . Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/10/2017 15:01, Fabien DESSENNE wrote:
-> Hi Corentin
-> 
-> 
-> Thank you for your comments. I will fix according to them. See also me 
-> answers/questions below
-> 
-> While we are at it, do you plan to deliver a new version of the 
-> crypto_engine update? (I had to remove the AEAD part of this new driver 
-> since it depends on that pending update)
-> 
-> BR
-> 
-> Fabien
-> 
-> 
-> On 19/10/17 12:34, Corentin Labbe wrote:
->> Hello
->>
->> I have some minor comment below
->>
->> On Thu, Oct 19, 2017 at 11:03:59AM +0200, Fabien Dessenne wrote:
->>> This module registers block cipher algorithms that make use of the
->>> STMicroelectronics STM32 crypto "CRYP1" hardware.
->>> The following algorithms are supported:
->>> - aes: ecb, cbc, ctr
->>> - des: ecb, cbc
->>> - tdes: ecb, cbc
->>>
->>> Signed-off-by: Fabien Dessennie <fabien.dessenne@st.com>
->>> ---
->>>   drivers/crypto/stm32/Kconfig      |    9 +
->>>   drivers/crypto/stm32/Makefile     |    3 +-
->>>   drivers/crypto/stm32/stm32-cryp.c | 1188 +++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 1199 insertions(+), 1 deletion(-)
->>>   create mode 100644 drivers/crypto/stm32/stm32-cryp.c
->>>
->>> diff --git a/drivers/crypto/stm32/Kconfig b/drivers/crypto/stm32/Kconfig
->>> index 602332e..61ef00b 100644
->>> --- a/drivers/crypto/stm32/Kconfig
->>> +++ b/drivers/crypto/stm32/Kconfig
->> [...]
->>> +/* Bit [0] encrypt / decrypt */
->>> +#define FLG_ENCRYPT             BIT(0)
->>> +/* Bit [8..1] algo & operation mode */
->>> +#define FLG_AES                 BIT(1)
->>> +#define FLG_DES                 BIT(2)
->>> +#define FLG_TDES                BIT(3)
->>> +#define FLG_ECB                 BIT(4)
->>> +#define FLG_CBC                 BIT(5)
->>> +#define FLG_CTR                 BIT(6)
->>> +/* Mode mask = bits [15..0] */
->>> +#define FLG_MODE_MASK           GENMASK(15, 0)
->>> +
->>> +/* Registers */
->>> +#define CRYP_CR                 0x00000000
->>> +#define CRYP_SR                 0x00000004
->>> +#define CRYP_DIN                0x00000008
->>> +#define CRYP_DOUT               0x0000000C
->>> +#define CRYP_DMACR              0x00000010
->>> +#define CRYP_IMSCR              0x00000014
->>> +#define CRYP_RISR               0x00000018
->>> +#define CRYP_MISR               0x0000001C
->>> +#define CRYP_K0LR               0x00000020
->>> +#define CRYP_K0RR               0x00000024
->>> +#define CRYP_K1LR               0x00000028
->>> +#define CRYP_K1RR               0x0000002C
->>> +#define CRYP_K2LR               0x00000030
->>> +#define CRYP_K2RR               0x00000034
->>> +#define CRYP_K3LR               0x00000038
->>> +#define CRYP_K3RR               0x0000003C
->>> +#define CRYP_IV0LR              0x00000040
->>> +#define CRYP_IV0RR              0x00000044
->>> +#define CRYP_IV1LR              0x00000048
->>> +#define CRYP_IV1RR              0x0000004C
->>> +
->>> +/* Registers values */
->>> +#define CR_DEC_NOT_ENC          0x00000004
->>> +#define CR_TDES_ECB             0x00000000
->>> +#define CR_TDES_CBC             0x00000008
->>> +#define CR_DES_ECB              0x00000010
->>> +#define CR_DES_CBC              0x00000018
->>> +#define CR_AES_ECB              0x00000020
->>> +#define CR_AES_CBC              0x00000028
->>> +#define CR_AES_CTR              0x00000030
->>> +#define CR_AES_KP               0x00000038
->>> +#define CR_AES_UNKNOWN          0xFFFFFFFF
->>> +#define CR_ALGO_MASK            0x00080038
->>> +#define CR_DATA32               0x00000000
->>> +#define CR_DATA16               0x00000040
->>> +#define CR_DATA8                0x00000080
->>> +#define CR_DATA1                0x000000C0
->>> +#define CR_KEY128               0x00000000
->>> +#define CR_KEY192               0x00000100
->>> +#define CR_KEY256               0x00000200
->>> +#define CR_FFLUSH               0x00004000
->>> +#define CR_CRYPEN               0x00008000
->> Why not using BIT(x) ?
-> 
-> Some values are not only 1 bit (then we may use BIT and BITGEN but this 
-> would be less readable), so I prefer to keep this values.
+Hi Rob,
 
-You can use GENMASK and the corresponding FIELD_PREP() and FIELD_GET().
-It avoids manipulating the bits directly.
+On 10/19/2017 01:53 AM, Rob Herring wrote:
+> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org> wrote:
+>>
+>>> On 18 Oct 2017, at 18:59, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>
+>>> On Wed, Oct 18, 2017 at 12:09:58PM +0100, Mark Brown wrote:
+>>>> On Wed, Oct 18, 2017 at 06:35:24PM +0800, Chen-Yu Tsai wrote:
+>>>>
+>>>>> I'd like to add something on the topic of non-Linux projects. In this
+>>>>> case it's diverging DT bindings from U-boot:
+>>>>
+>>>>> https://patchwork.ozlabs.org/patch/823158/
+>>>>
+>>>>> U-boot already has a set of devicetree binding additions:
+>>>>> https://github.com/u-boot/u-boot/tree/master/doc/device-tree-bindings
+>>>>
+>>>>> The patch in question wants to ab(use) the regulator-name property for
+>>>>> driver instance binding. In my opinion this is not going to fly, as
+>>>>> boards are free to define the names. This either sees no use other than
+>>>>> as a dirty workaround for dts files that aren't following the PMIC
+>>>>> regulator bindings (regulator node names should follow well defined,
+>>>>> identifying names), or results in divergence of the DT files.
+>>>>
+>>>> One meta issue I'm seeing here is that the u-boot people appear to have
+>>>> their own divergent copy of some of the binding documents.
+>>>
+>>> Putting on my U-Boot hat now, it's mostly unintentional and something in
+>>> general (yes, the initial topic here is not such an example) we try and
+>>> avoid, or use u-boot, as the prefix on as it's something that had been
+>>> previously rejected or deemed inappropriate to be in the upstream
+>>> version of the binding.
+>>>
+>>> But perhaps it's time to try and force the issue again, given what Rob
+>>> and others have said in other parts of the thread.
+>>
+>>  From the FreeBSD perspective I’d like it if there was a common repo for all devicetree consumers to share. We are trying to not have FreeBSD specific properties as this has caused issues in the past where we had (and still have) FreeBSD specific dts files. We are trying to remove these as drivers are updated to handle the common bindings.
+> 
+> Are you aware of this repo[1]? I don't have a sense for how widely
+> used it is. If not, it is intended to provide a common repository of
+> binding docs and dts files. If so, what are your issues with using it?
+> It's generated from the kernel tree with git-filter-branch and through
+> the kernel tree is the only way to add things currently. But there's
+> no requirement that you add a Linux driver to submit a binding or dts
+> change. We could consider taking patches against the tree directly,
+> and the maintainers (me) can fixup the paths and apply to the kernel
+> tree.
+> 
+> If there's bindings in the kernel tree you think are crap and Linux
+> specific, I'd like to know that too. We should start flagging those.
+> 
+>> I have also spoken with some NetBSD and OpenBSD developers. They are both using devicetree to handle device enumeration. Having all 5 projects using a common set of dts files and binding would simplify keeping them in sync.
+> 
+> There's more than 5 likely: linux, 3x BSD, u-boot, barebox, zephyr,
+> ARM trusted firmware?, UEFI?, ?
+
+First, sorry to come late in this discussion (please be tolerant if you 
+already respond to following requests/interrogations in precedent mails 
+:)). From STmicro point of view we have the same kind of requests/needs 
+than Andrew. We think about the possibility to use same DTS files for 
+Linux, U-boot, ATF and Zephir (others could come with other vendors). 
+Currently our main concerns about this are:
+
+1-How to reduce dtb size:
+	--> Reading some thread, you already start this task with Nicolas. Does 
+it concerns only XiP system ?
+	-->For example, I want to use the same dtsi files between Linux and 
+U-boot. If in u-boot dts file I overload several "status" entry by 
+"disabled", is it possible that compiler doesn't build it ? And what 
+about not used phandle ?
+
+2- The place of DT files (sources/scripts). I see (and clone) your 
+"devicetree-rebasing.git" tree, it's a good start point. Currently 
+(correct me  if I'm wrong) the Kernel seems to "lead" the devicetree 
+bindings and devicetree dts(i) files. By using this external repo, it 
+would be maybe easier to integrate changes for other components than 
+Linux Kernel ? We could have (per vendor), same dtsi files which 
+describes the hardware (SoC + board) and a extra dts files (at least at 
+beginning) per software components to overload nodes (to disable some 
+nodes not required (see (1)), to change bindings which are different 
+regarding component ...).
+It will also allow to have all dt script / tools for all components at 
+only one place.
+
+Once again, sorry if I repeat things already discussed but I wanted to 
+expose what STMicro has in mind for DT. It will be a good topic to 
+discuss at Prague.
+
+Regards
+Alex
+
 
 > 
->> Why not using also directly FLG_XX since CR_XX are arbitray values ? like using instead CR_AES_CBC = FLG_AES | FLG_CBC
+> Rob
 > 
-> The CR_ values are used to write in the registers. FLG_ are arbitraty 
-> values, so we cannot mix them.
-> 
->>
->> [...]
->>> +static inline void stm32_cryp_wait_enable(struct stm32_cryp *cryp)
->>> +{
->>> +	while (stm32_cryp_read(cryp, CRYP_CR) & CR_CRYPEN)
->>> +		cpu_relax();
->>> +}
->> This function is not used, so you could remove it
->>
->>> +
->>> +static inline void stm32_cryp_wait_busy(struct stm32_cryp *cryp)
->>> +{
->>> +	while (stm32_cryp_read(cryp, CRYP_SR) & SR_BUSY)
->>> +		cpu_relax();
->>> +}
->> No timeout ?
->>
->>
->>> +
->>> +static inline void stm32_cryp_wait_output(struct stm32_cryp *cryp)
->>> +{
->>> +	while (!(stm32_cryp_read(cryp, CRYP_SR) & SR_OFNE))
->>> +		cpu_relax();
->>> +}
->> This function is not used, so you could remove it
->>
->> [...]
->>> +static int stm32_cryp_check_aligned(struct scatterlist *sg, size_t total,
->>> +				    size_t align)
->>> +{
->>> +	int len = 0;
->>> +
->>> +	if (!total)
->>> +		return 0;
->>> +
->>> +	if (!IS_ALIGNED(total, align))
->>> +		return -EINVAL;
->>> +
->>> +	while (sg) {
->>> +		if (!IS_ALIGNED(sg->offset, sizeof(u32)))
->>> +			return -1;
->> -1 is not a good return value, prefer any -Exxxx
->>
->>> +
->>> +		if (!IS_ALIGNED(sg->length, align))
->>> +			return -1;
->>> +
->>> +		len += sg->length;
->>> +		sg = sg_next(sg);
->>> +	}
->>> +
->>> +	if (len != total)
->>> +		return -1;
->> [...]
->>> +static int stm32_cryp_copy_sgs(struct stm32_cryp *cryp)
->>> +{
->>> +	void *buf_in, *buf_out;
->>> +	int pages, total_in, total_out;
->>> +
->>> +	if (!stm32_cryp_check_io_aligned(cryp)) {
->>> +		cryp->sgs_copied = 0;
->>> +		return 0;
->>> +	}
->>> +
->>> +	total_in = ALIGN(cryp->total_in, cryp->hw_blocksize);
->>> +	pages = total_in ? get_order(total_in) : 1;
->>> +	buf_in = (void *)__get_free_pages(GFP_ATOMIC, pages);
->>> +
->>> +	total_out = ALIGN(cryp->total_out, cryp->hw_blocksize);
->>> +	pages = total_out ? get_order(total_out) : 1;
->>> +	buf_out = (void *)__get_free_pages(GFP_ATOMIC, pages);
->>> +
->>> +	if (!buf_in || !buf_out) {
->>> +		pr_err("Couldn't allocate pages for unaligned cases.\n");
->> You must use dev_err() instead. without it, it will be hard to know which subsystem said that error message.
->>
->> [...]
->>> +static int stm32_cryp_cra_init(struct crypto_tfm *tfm)
->>> +{
->>> +	tfm->crt_ablkcipher.reqsize = sizeof(struct stm32_cryp_reqctx);
->>> +
->>> +	return 0;
->>> +}
->> You could simply remove this function
-> 
-> I am not sure we can. Here we set reqsize.
-> Most of the other drivers do the same, but maybe this is wrong everywhere.
-> Could you give more details?
-> 
->>
->> [...]
->>> +
->>> +static void stm32_cryp_cra_exit(struct crypto_tfm *tfm)
->>> +{
->>> +}
->>> +
->>> +static int stm32_cryp_crypt(struct ablkcipher_request *req, unsigned long mode)
->>> +{
->>> +	struct stm32_cryp_ctx *ctx = crypto_ablkcipher_ctx(
->>> +			crypto_ablkcipher_reqtfm(req));
->>> +	struct stm32_cryp_reqctx *rctx = ablkcipher_request_ctx(req);
->>> +	struct stm32_cryp *cryp = stm32_cryp_find_dev(ctx);
->>> +
->>> +	if (!cryp)
->>> +		return -ENODEV;
->>> +
->>> +	rctx->mode = mode;
->>> +
->>> +	return crypto_transfer_cipher_request_to_engine(cryp->engine, req);
->>> +}
->>> +
->>> +static int stm32_cryp_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
->>> +			     unsigned int keylen)
->>> +{
->>> +	struct stm32_cryp_ctx *ctx = crypto_ablkcipher_ctx(tfm);
->>> +
->>> +	memcpy(ctx->key, key, keylen);
->>> +	ctx->keylen = keylen;
->> You never zeroize the key after request.
->>
->> [...]
->>> +static const struct of_device_id stm32_dt_ids[] = {
->>> +	{ .compatible = "st,stm32f756-cryp", },
->>> +	{},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, sti_dt_ids);
->>> +
->>> +static int stm32_cryp_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	struct stm32_cryp *cryp;
->>> +	struct resource *res;
->>> +	struct reset_control *rst;
->>> +	const struct of_device_id *match;
->>> +	int irq, ret;
->>> +
->>> +	cryp = devm_kzalloc(dev, sizeof(*cryp), GFP_KERNEL);
->>> +	if (!cryp)
->>> +		return -ENOMEM;
->>> +
->>> +	match = of_match_device(stm32_dt_ids, dev);
->>> +	if (!match)
->>> +		return -ENODEV;
->> I think this test is unnecessary, at least it should be before the devm_kzalloc
->>
->> Regards
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
