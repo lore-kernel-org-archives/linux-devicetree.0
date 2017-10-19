@@ -1,55 +1,32 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v2 0/5] Allwinner R40 USB host support (DT part)
-Date: Thu, 19 Oct 2017 15:42:19 +0800
-Message-ID: <CAGb2v67CBtbj0gH6WV-B0hKj6TsvofeRjUk2+VkfM40bjekVkA@mail.gmail.com>
-References: <20171018130628.11298-1-icenowy@aosc.io>
+From: Christoph Hellwig <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
+Date: Thu, 19 Oct 2017 00:59:12 -0700
+Message-ID: <20171019075912.GA10089@infradead.org>
+References: <20171013160914.3220-1-niklas.cassel@axis.com>
+ <20171013160914.3220-9-niklas.cassel@axis.com>
+ <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171018130628.11298-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171016234326.GM25517-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Nowicki <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 9:06 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> This patchset adds support for the USB host ports on Allwiner R40, and
-> enable them on Banana Pi M2 Ultra and Berry boards.
->
-> The first patch adds USB PHY and EHCI/OHCI nodes to the R40 DTSI.
->
-> The second and third patch adds 5V regulator for the two boards, and
-> the fourth and fifth patch finally adds USB host ports support.
->
-> Icenowy Zheng (5):
->   ARM: sun8i: r40: add USB host port nodes for R40
->   ARM: sun8i: r40: add 5V regulator for Banana Pi M2 Ultra
->   ARM: sun8i: v40: add 5V regulator for Banana Pi M2 Berry
->   ARM: sun8i: r40: enable USB host for Banana Pi M2 Ultra
+On Mon, Oct 16, 2017 at 06:43:26PM -0500, Bjorn Helgaas wrote:
+> understand it.  I guess the idea is to build pcie-artpec6.o if either
+> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
+> 
+> Is this really the simplest way to express that in Kconfig?  Both the
+> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
+> unusual.
 
-For the four patches,
-
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
->   ARM: sun8i: v40: enable USB host ports for Banana Pi M2 Berry
-
-See my comments on OHCI and USB hub for the last patch.
-
-ChenYu
-
->
->  arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 31 ++++++++++
->  arch/arm/boot/dts/sun8i-r40.dtsi                  | 72 +++++++++++++++++++++++
->  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 22 +++++++
->  3 files changed, 125 insertions(+)
->
-> --
-> 2.13.6
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+I thĳnk the right style is to make PCIE_ARTPEC6 a hidden kconfig
+symbol without help text, and then have PCIE_ARTPEC6_HOST and
+PCIE_ARTPEC6_EP select it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
