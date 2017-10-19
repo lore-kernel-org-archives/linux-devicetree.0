@@ -1,60 +1,110 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Meson GXL USB3 PHY and OTG detection driver
-Date: Thu, 19 Oct 2017 11:57:43 +0200
-Message-ID: <5cdc949b-f73e-fca8-246e-26022a743382@baylibre.com>
-References: <20170924195000.13276-1-martin.blumenstingl@googlemail.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] rtc: mediatek: add driver for RTC on MT7622 SoC
+Date: Thu, 19 Oct 2017 18:04:39 +0800
+Message-ID: <1508407479.29850.5.camel@mtkswgap22>
+References: <cover.1508231935.git.sean.wang@mediatek.com>
+         <2f86eebfd380cf932808df3404e2f4a6f2f0f874.1508231935.git.sean.wang@mediatek.com>
+         <1508325126.13340.25.camel@mtksdaap41>
+         <20171018125743.kqna6b4lgng674om@piout.net>
+         <1508381749.21840.123.camel@mtkswgap22>
+         <20171019090219.2odtq3xosqk5ytsb@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170924195000.13276-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171019090219.2odtq3xosqk5ytsb-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/09/2017 21:49, Martin Blumenstingl wrote:
-> Amlogic Meson GXL SoCs use a dwc3 controller with two USB2 ports,
-> Meson GXM SoCs use the same dwc3 controller but with three USB3
-> ports enabled. Neither of these SoCs has any USB3 port enabled in
-> the dwc3 registers.
-> The first USB2 port on both SoCs supports host and peripheral
-> (also called "device") mode.
+On Thu, 2017-10-19 at 11:02 +0200, Alexandre Belloni wrote:
+> On 19/10/2017 at 10:55:49 +0800, Sean Wang wrote:
+> > Hi, both
+> > 
+> > On Wed, 2017-10-18 at 14:57 +0200, Alexandre Belloni wrote:
+> > > On 18/10/2017 at 19:12:06 +0800, Yingjoe Chen wrote:
+> > > > On Tue, 2017-10-17 at 17:40 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > > > > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > 
+> > > > > This patch introduces the driver for the RTC on MT7622 SoC.
+> > > > > 
+> > > > > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > ---
+> > > > >  drivers/rtc/Kconfig      |  10 ++
+> > > > >  drivers/rtc/Makefile     |   1 +
+> > > > >  drivers/rtc/rtc-mt7622.c | 418 +++++++++++++++++++++++++++++++++++++++++++++++
+> > > > >  3 files changed, 429 insertions(+)
+> > > > >  create mode 100644 drivers/rtc/rtc-mt7622.c
+> > > > > 
+> > > > > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > > > > index e0e58f3..4226295 100644
+> > > > > --- a/drivers/rtc/Kconfig
+> > > > > +++ b/drivers/rtc/Kconfig
+> > > > > @@ -1705,6 +1705,16 @@ config RTC_DRV_MOXART
+> > > > >  	   This driver can also be built as a module. If so, the module
+> > > > >  	   will be called rtc-moxart
+> > > > >  
+> > > > > +config RTC_DRV_MEDIATEK
+> > > > 
+> > > > How about changing this to RTC_DRV_MT7622 or RTC_DRV_MEDIATEK_SOC?
+> > > > It is confusing to have both RTC_DRV_MEDIATEK & RTC_DRV_MT6397 here.
+> > > > 
+> > > 
+> > > Yes, this has to be RTC_DRV_MT7622. It doesn't matter if it support
+> > > future SoCs named differently, it will be less confusing than using
+> > > anything with only mediatek in it.
+> > > 
+> > 
+> > Agreed on. RTC_DRV_MT7622 will be applied instead to align the usage on
+> > MT6397 and to get rid of such kind of confusion.
+> > 
+> > 
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	/* Keep yr_base used to calculate the calculate year when userspace
+> > > > > +	 * queries and extend the maximum year the RTC can count.
+> > > > > +	 */
+> > > > > +	hw->yr_base[MTK_TC] = tm->tm_year - MTK_RTC_TM_YR_L -
+> > > > > +			      (tm->tm_year % MTK_RTC_HW_YR_LIMIT);
+> > > > 
+> > > > 
+> > > > I'm not sure this worth it.
+> > > > If maximum year it can hold is 99, I'd bet it won't support leap year
+> > > > correctly after 2100. This make the RTC useless after that. 
+> > > > 
+> > > > Also, yr_base is lost after power cycle, so you can't get correct year
+> > > > back anyway.
+> > > > 
+> > > 
+> > > I agree, the best you can do here is to only support 2000 to 2099.
+> > > 
+> > 
+> > O.K. I will remove those yr_base extension and only consider only
+> > support from 2000 to 2099 because of no much gain we can get from
+> > yr_base.
+> > 
+> > The only gain is yr_base I thought just allows people have the
+> > opportunity to set up rtc after 2100. However, it appears to not much
+> > practical to foresee these things after 2100 and rtc must be setup again
+> > when either year overflowing or power cycle happens after 2100 as Joe.C
+> > mentioned.
+> > 
+> > In addition, I also found the rtc hardware would take year == 0 as not
+> > leap year that works for 2100, 2200, 2300, but not for 2000, 2400,
+> > 2800,... and thus 2000 is also needed to be excluded in both set_time
+> > and set_alarm if only 2000 to 2099 is supported.
+> > 
 > 
-> The dwc3 controller supports host mode only. Peripheral mode is
-> implemented through an additional dwc2 controller (which only enables
-> device mode). The USB3 PHY has register bits which allow a driver to
-> detect the current mode - however this is currently not implemented
-> as the dwc2 controller seems to hang during reset (and I do not have
-> a use-case where I need peripheral/device mode).
-> 
-> While the dwc3 controller has no USB3 port enabled we still need the
-> USB3 PHY to be initialized, otherwise some boards (probably those where
-> the bootloader does not initialize the USB3 PHY) show errors with
-> high-speed USB devices connected to any of the USB2 ports. Configuring
-> the USB_R1_U3H_FLADJ_30MHZ_REG_MASK register as it's done by Amlogic's
-> vendor GPL kernel sources makes these error go away.
-> 
-> Thanks to Jerome Brunet for reporting the errors and Neil Armstrong
-> for discovering that initializing the USB3 PHY fixes these USB errors!
-> 
-> 
-> Martin Blumenstingl (2):
->   dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL
->     SoCs
->   phy: amlogic: add USB3 PHY support for Meson GXL and GXM
-> 
->  .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt |  19 +++
->  drivers/phy/amlogic/Kconfig                        |  12 ++
->  drivers/phy/amlogic/Makefile                       |   1 +
->  drivers/phy/amlogic/phy-meson-gxl-usb3.c           | 177 +++++++++++++++++++++
->  4 files changed, 209 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
->  create mode 100644 drivers/phy/amlogic/phy-meson-gxl-usb3.c
+> So you can make it work from 2001 to 2100 but I'm not sure it is worth
+> it.
 > 
 
-Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+I prefer to 2001 to 2099 only which can be completely handled in the
+common logic. Extra specific logic simply for 2100 seems not be
+worthwhile. 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
