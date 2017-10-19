@@ -1,267 +1,197 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: dtc issue with overlays starting in next-20171009
-Date: Thu, 19 Oct 2017 11:01:40 -0700
-Message-ID: <59E8E884.7010802@gmail.com>
-References: <CANk1AXQaXKud2Mic_879JiS39hJB4y0uTS2w1uxXje-0mO68Vw@mail.gmail.com>
- <59E7ACA0.7030809@gmail.com>
- <CAL_Jsq+f4Y1DDB4ZkXAEKUZ_P9YdMUKMhr2E=VKtbHWMZFaO0w@mail.gmail.com>
- <59E7D6E0.5030109@gmail.com>
- <CANk1AXQ4bkL+FWEqf7X9fNgrdTJoPWoMr+CMFxo6Dk1m_CmR1g@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Thu, 19 Oct 2017 11:46:04 -0700
+Message-ID: <59E8F2EC.5090602@gmail.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <20171017114823.58476908@bbrezillon>
+ <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
+ <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
+ <20171018175910.GP12015@bill-the-cat>
+ <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz>
+ <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
+ <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com>
+ <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXQ4bkL+FWEqf7X9fNgrdTJoPWoMr+CMFxo6Dk1m_CmR1g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/17 07:29, Alan Tull wrote:
-> On Wed, Oct 18, 2017 at 5:34 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 10/18/17 13:16, Rob Herring wrote:
->>> Use devicetree-compiler list for dtc issues please.
->>>
->>> On Wed, Oct 18, 2017 at 2:33 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>> Hi Rob, Alan,
->>>>
->>>> On 10/18/17 08:58, Alan Tull wrote:
->>>>> Hi Rob,
->>>>>
->>>>> I've noticed a problem compiling DT overlays and traced it back to
->>>>> beginning in next-20171009
->>>>>
->>>>> That tag adds the following in scripts/dtc
->>>>>
->>>>> e9480c1 2017-10-09 16:17:32 +0100 : Mark Brown : Merge remote-tracking
->>>>> branch 'devicetree/for-next'
->>>>> 4201d05 2017-10-03 15:03:47 -0500 : Rob Herring : scripts/dtc: Update
->>>>> to upstream version v1.4.5-3-gb1a60033c110
->>>>> 4322323 2017-10-03 15:03:46 -0500 : Rob Herring : scripts/dtc: add
->>>>> fdt_overlay.c and fdt_addresses.c to sync script
->>>>>
->>>>> The error is:
->>>>>
->>>>> dtc: /home/atull/repos/linux-socfpga/scripts/dtc/livetree.c:543:
->>>>> get_node_by_phandle: Assertion `(phandle != 0) && (phandle != -1)'
->>>>> failed.
->>>>> arch/arm/boot/dts/socfpga_overlay.dtb: Warning (clocks_property):
->>>>> Could not get phandle node for
->>>>> /fragment@0/__overlay__/gpio@10040:clocks(cell 0)
->>>>> Aborted (core dumped)
->>>>> scripts/Makefile.lib:316: recipe for target
->>>>> 'arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb'
->>>>> failed
->>>>> make[2]: *** [arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dtb]
->>>>> Error 134
->>>>> arch/arm/Makefile:346: recipe for target 'dtbs' failed
->>>>>
->>>>> Here's a simplified overlay that gets this error.  Taking out the line
->>>>> "interrupt-parent = <&intc>;" fixes the build.
->>>>>
->>>>> /dts-v1/;
->>>>> /plugin/;
->>>>> / {
->>>>>         fragment@0 {
->>>>>                 target-path = "/soc/base_fpga_region";
->>>>>                 #address-cells = <1>;
->>>>>                 #size-cells = <1>;
->>>>>
->>>>>                 __overlay__ {
->>>>>                         ranges = <0x00000000 0x00000000 0xc0000000 0x00040000>,
->>>>>                                  <0x00000001 0x00000000 0xff200000 0x00001000>;
->>>>>
->>>>>                         external-fpga-config;
->>>>>
->>>>>                         #address-cells = <2>;
->>>>>                         #size-cells = <1>;
->>>>>
->>>>>                         fpga_pr_region0 {
->>>>>                                 compatible = "fpga-region";
->>>>>                                 fpga-bridges = <&freeze_controller_0>;
->>>>>                                 ranges;
->>>>>                         };
->>>>>
->>>>>                         freeze_controller_0: freeze_controller@0x100000450 {
->>>>>                                 compatible = "altr,freeze-bridge-controller";
->>>>>                                 reg = <0x00000001 0x00000450 0x00000010>;
->>>>>                                 interrupt-parent = <&intc>;  /* <--
->>>>> remove to fix build */
->>>>>                                 interrupts = <0 21 4>;
->>>>>                         };
->>>>>                 };
->>>>>         };
->>>>> };
->>>>>
->>>>> Alan
->>>>
->>>> Phandle references in overlays are assigned the value of -1 (0xffffffff) in
->>>> the dtb, to be fixed up when loaded.  A new check sees this value and
->>>> triggers the assert.
->>>>
->>>> It is this commit in the upstream dtc tools tree:
->>>>
->>>>    commit ee3d26f6960bb5922d9a35fe266d9eac74a78ec0
->>>>    checks: add interrupts property check
->>>>
->>>> There are a bunch of other new checks that call get_node_by_phandle(),
->>>> and thus could trigger the assertion.
->>>>
->>>> I'm guessing that those checks would also trigger the assert if an
->>>> overlay contained something that would lead to one of the other checks
->>>> being processed.
->>>
->>> You won't get an assert because I check for 0 or -1 and skip the check
->>> in those cases. The interrupts check missed that condition.
->>
->> Awesome, thank for confirming that.  That means the temporary work around
->> is quite easy.
->>
->>>
->>> However, as shown above, you will get an erroneous warning because it
->>> just skips 1 cell and goes to the next to handle the case where the
->>> phandle is optional and you want a fixed number of elements.
->>
->> Just for those reading along at home, with the one warning disabled, the
->> messages become:
->>
->>    $  dtc -Wno-interrupts_property socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dts >junk.dtb
->>    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit name, but no reg property
->>    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0/__overlay__ has a reg or ranges property, but no unit name
+On 10/19/17 07:59, Rob Herring wrote:
+> On Thu, Oct 19, 2017 at 9:00 AM, Alexandre Torgue
+> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+>> Hi Rob,
 >>
 >>
->>> I guess we can't validate overlays which is unfortunate. I don't think
->>> that's a solvable problem unless you have the base DT.
->>
->> Yes, maybe.  But there are still some useful warnings for overlays, maybe.  I'm
->> not sure what the implications of the "range_format" warning that I will show
->> below are (I'd actually have to spend a few minutes thinking about ranges, and
->> I don't have the cycles right now).
->>
->>
->>>
->>>> You can avoid the problem in your example dts with "-Wno-interrupts_property"
->>>>
->>>>   dtc -Wno-interrupts_property fpga_01_a.dts
->>>>
->>>> The larger set of other checks that might trigger the assert is too large
->>>> for me to want to add "-Wno-" flags for all of them to the command line
->>>> (as temporary workarounds).
->>>
->>> David thought more switches were better.
->>
->> Yep.  Not a complaint, just an observation about a _temporary_ workaround.
->>
->>
->>>
->>> Rob
->>>
->>
->>
->> Here is the "range_format" warning I mentioned above.  The dts file that
->> started this thread hand crafts what is internal overlay data, which
->> should be generated by the dtc compiler instead of being hand coded in
->> the dts.  If I remove the hand coded stuff and let dtc generate the
->> internal overlay data, the dtc messages become (use a wide window to
->> avoid line wrapping):
->>
->> $ dtc -Wno-interrupts_property fpga_01_a.dts >junk.dtb
->> <stdout>: Warning (ranges_format): "ranges" property in /fragment@0/__overlay__ has invalid length (32 bytes) (parent #address-cells == 2, child #address-cells == 2, #size-cells == 1)
->> <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit name, but no reg property
->> <stdout>: Warning (unit_address_vs_reg): Node /fragment@0/__overlay__ has a reg or ranges property, but no unit name
->> <stdout>: Warning (avoid_default_addr_size): Relying on default #address-cells value for /fragment@0/__overlay__
->> <stdout>: Warning (avoid_default_addr_size): Relying on default #size-cells value for /fragment@0/__overlay__
->>
->>
->> The second through last warning are about the format of the internal
->> data structure, and hopefully could just be suppressed.  I don't
->> know how easy or hard that would be to implement - I am very much
->> not a dtc internals expert.
->>
->> The first warning says something about what the overlay source dts
->> contains.  Here is what the original dts source looks like when
->> transformed to not contain the hand crafted internal overlay data:
->>
->> $ cat fpga_01_a.dts
->> /dts-v1/;
->> /plugin/;
->>
->> // This assumes an existing label in the base dts
->> // whose location is "/soc/base_fpga_region"
->> &fpga_region {
->>
->>                         ranges = <0x00000000 0x00000000 0xc0000000 0x00040000>,
->>                                  <0x00000001 0x00000000 0xff200000 0x00001000>;
->>
->>                         external-fpga-config;
->>
->>                         #address-cells = <2>;
->>                         #size-cells = <1>;
->>
->>                         fpga_pr_region0 {
->>                                 compatible = "fpga-region";
->>                                 fpga-bridges = <&freeze_controller_0>;
->>                                 ranges;
->>                         };
->>
->>                         freeze_controller_0: freeze_controller@100000450 {
->>                                 compatible = "altr,freeze-bridge-controller";
->>                                 reg = <0x00000001 0x00000450 0x00000010>;
->>                                 interrupt-parent = <&intc>;  /* <-- remove to fix build */
->>                                 interrupts = <0 21 4>;
->>                         };
->> };
->>
->> Of course, if this was a real transformation, I would remove all the
->> extra tabbing.  But the current form makes it easier to see that all
->> of the stuff that is highly indented is unchanged from the original
->> dts file.
->>
->> $ diff -u socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dts fpga_01_a.dts
->> --- socfpga_arria10_socdk_sdmmc_ghrd_ovl_ext_cfg.dts    2017-10-18 15:18:43.123137508 -0700
->> +++ fpga_01_a.dts       2017-10-18 15:18:11.587136897 -0700
->> @@ -1,12 +1,10 @@
->>  /dts-v1/;
->>  /plugin/;
->> -/ {
->> -       fragment@0 {
->> -               target-path = "/soc/base_fpga_region";
->> -               #address-cells = <1>;
->> -               #size-cells = <1>;
->>
->> -               __overlay__ {
->> +// This assumes an existing label in the base dts
->> +// whose location is "/soc/base_fpga_region"
->> +&fpga_region {
->> +
+>> On 10/19/2017 01:53 AM, Rob Herring wrote:
+>>> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>
+>>> wrote:
 > 
-> Frank,
+> [...]
 > 
-> Thanks for correcting me on this.  I have this documented wrong in
-> Documentation/devicetree/bindings/fpga/fpga-region.txt
-> so I'll need to fix that to not steer people wrong.
+>>>>  From the FreeBSD perspective I’d like it if there was a common repo for
+>>>> all devicetree consumers to share. We are trying to not have FreeBSD
+>>>> specific properties as this has caused issues in the past where we had (and
+>>>> still have) FreeBSD specific dts files. We are trying to remove these as
+>>>> drivers are updated to handle the common bindings.
+>>>
+>>>
+>>> Are you aware of this repo[1]? I don't have a sense for how widely
+>>> used it is. If not, it is intended to provide a common repository of
+>>> binding docs and dts files. If so, what are your issues with using it?
+>>> It's generated from the kernel tree with git-filter-branch and through
+>>> the kernel tree is the only way to add things currently. But there's
+>>> no requirement that you add a Linux driver to submit a binding or dts
+>>> change. We could consider taking patches against the tree directly,
+>>> and the maintainers (me) can fixup the paths and apply to the kernel
+>>> tree.
+>>>
+>>> If there's bindings in the kernel tree you think are crap and Linux
+>>> specific, I'd like to know that too. We should start flagging those.
+>>>
+>>>> I have also spoken with some NetBSD and OpenBSD developers. They are both
+>>>> using devicetree to handle device enumeration. Having all 5 projects using a
+>>>> common set of dts files and binding would simplify keeping them in sync.
+>>>
+>>>
+>>> There's more than 5 likely: linux, 3x BSD, u-boot, barebox, zephyr,
+>>> ARM trusted firmware?, UEFI?, ?
+>>
+>>
+>> First, sorry to come late in this discussion (please be tolerant if you
+>> already respond to following requests/interrogations in precedent mails :)).
+>> From STmicro point of view we have the same kind of requests/needs than
+>> Andrew. We think about the possibility to use same DTS files for Linux,
+>> U-boot, ATF and Zephir (others could come with other vendors). Currently our
+>> main concerns about this are:
+>>
+>> 1-How to reduce dtb size:
+>>         --> Reading some thread, you already start this task with Nicolas.
+>> Does it concerns only XiP system ?
+> 
+> That's the main focus ATM. Nico has looked at shrinking code usage too
+> such as the tty layer and scheduler, but those have faced resistance.
+> We need actual products to prove the value (and that's a chicken and
+> egg problem).
+> 
+>>         -->For example, I want to use the same dtsi files between Linux and
+>> U-boot. If in u-boot dts file I overload several "status" entry by
+>> "disabled", is it possible that compiler doesn't build it ? And what about
+>> not used phandle ?
+> 
+> You certainly could remove disabled nodes in dtc. I'm not sure how
+> hard it would be to plumb into dtc. I think phandle properties are
+> already only created if there's a reference to them. If that is
 
-Thanks for pointing that out.  The new devicetree source format
-won't be available until the new dtc that is in Rob's next
-branch hits mainline.
+Yes, phandles are only created if referenced, unless compiled
+for loading overlays into:
 
--Frank
+$ cat test1.dts
+/dts-v1/;
+/ {
+	mynode: node {
+	};
+};
+$ cat test2.dts
+/dts-v1/;
+/ {
+	mynode: node {
+		myprop = < &mynode >;
+	};
+};
+$ scripts/dtc/dtx_diff test1.dts
+/dts-v1/;
+
+/ {
+
+	mynode: node {
+	};
+};
+$ scripts/dtc/dtx_diff test2.dts
+/dts-v1/;
+
+/ {
+
+	mynode: node {
+		myprop = <0x1>;
+		phandle = <0x1>;
+	};
+};
 
 
-> Alan
+If symbols are enabled for a base device tree, so that overlays
+can later reference them, then all symbols generate phandles:
+
+$ dtc -@ -O dts test1.dts
+/dts-v1/;
+
+/ {
+
+	mynode: node {
+		phandle = <0x1>;
+	};
+
+	__symbols__ {
+		mynode = "/node";
+	};
+};
+
+> created before you deleted nodes, then it would probably be hard to
+> find and remove all of those. It would be similar to solving the
+> device dependency problem. Or do you mean something like disable the
+> clock controller node if there are no enabled references to it? I
+> don't think we could do something like that generically and reliably.
 > 
+> We did recently stop creating both "phandle" and "linux,phandle"
+> properties by default in dtc, so that will save some size.
 > 
->>                         ranges = <0x00000000 0x00000000 0xc0000000 0x00040000>,
->>                                  <0x00000001 0x00000000 0xff200000 0x00001000>;
->>
->> @@ -27,6 +25,4 @@
->>                                 interrupt-parent = <&intc>;  /* <-- remove to fix build */
->>                                 interrupts = <0 21 4>;
->>                         };
->> -               };
->> -       };
->>  };
->>
->>
->> -Frank
+>> 2- The place of DT files (sources/scripts). I see (and clone) your
+>> "devicetree-rebasing.git" tree, it's a good start point. Currently (correct
+>> me  if I'm wrong) the Kernel seems to "lead" the devicetree bindings and
+>> devicetree dts(i) files.
 > 
+> Yes, and there's not really any changing that regardless of where
+> bindings and dts files live given Linux has the broadest h/w support.
+> 
+>> By using this external repo, it would be maybe
+>> easier to integrate changes for other components than Linux Kernel ?
+> 
+> Yes, barebox at least regularly imports it.
+> 
+>> We
+>> could have (per vendor), same dtsi files which describes the hardware (SoC +
+>> board) and a extra dts files (at least at beginning) per software components
+>> to overload nodes (to disable some nodes not required (see (1)), to change
+>> bindings which are different regarding component ...).
+> 
+> You mean dtsi files to disable nodes for linux, u-boot, etc. That may
+> make sense for mutually exclusive things like FreeBSD vs. Linux, but
+> for say u-boot, we really want u-boot and Linux (or whatever OS is
+> loaded) to use the same dtb. Having different dtbs is going to
+> increase your memory usage.
+> 
+>> It will also allow to have all dt script / tools for all components at only
+>> one place.
+>>
+>> Once again, sorry if I repeat things already discussed but I wanted to
+>> expose what STMicro has in mind for DT. It will be a good topic to discuss
+>> at Prague.
+> 
+> Yes, but I won't be there.
+> 
+> Rob
+> _______________________________________________
+> Ksummit-discuss mailing list
+> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
