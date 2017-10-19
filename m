@@ -1,33 +1,33 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 01/10] arm: dts: mt2701: add pwm backlight device node
-Date: Thu, 19 Oct 2017 18:48:50 +0200
-Message-ID: <54df408d-62b8-63dd-05af-68daa455b62c@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 04/10] arm: dts: mediatek: update audio node for mt2701
+ and mt7623
+Date: Thu, 19 Oct 2017 18:49:07 +0200
+Message-ID: <0f61ad91-2d9d-f7a5-6bc7-a543278068ba@gmail.com>
 References: <cover.1506908511.git.ryder.lee@mediatek.com>
- <144f5d526d15cbf3ada220765c609eb2b59c240a.1506908511.git.ryder.lee@mediatek.com>
+ <13ee41c37cbfd0de335b6fbbf061715184944cb8.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <144f5d526d15cbf3ada220765c609eb2b59c240a.1506908511.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <13ee41c37cbfd0de335b6fbbf061715184944cb8.1506908511.git.ryder.lee@mediatek.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 10/02/2017 03:54 AM, Ryder Lee wrote:
-> From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> This patch adds interrupt-names property in audio node so that
+> binding can be agnostic of the IRQ order.
 > 
-> This patch adds the device node for MT2701 pwm backlight.
-> 
-> Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  arch/arm/boot/dts/mt2701.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  arch/arm/boot/dts/mt2701.dtsi | 4 +++-
+>  arch/arm/boot/dts/mt7623.dtsi | 4 +++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+
 
 Pushed to v4.14-next/dts32
 
@@ -35,27 +35,33 @@ Thanks!
 
 > 
 > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index afe12e5..3c85879 100644
+> index 8c9fbe5..ecd388a 100644
 > --- a/arch/arm/boot/dts/mt2701.dtsi
 > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -530,6 +530,15 @@
->  		#clock-cells = <1>;
->  	};
+> @@ -445,7 +445,9 @@
+>  		compatible = "mediatek,mt2701-audio";
+>  		reg = <0 0x11220000 0 0x2000>,
+>  		      <0 0x112a0000 0 0x20000>;
+> -		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
+> +			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names	= "afe", "asys";
+>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
 >  
-> +	bls: pwm@1400a000 {
-> +		compatible = "mediatek,mt2701-disp-pwm";
-> +		reg = <0 0x1400a000 0 0x1000>;
-> +		#pwm-cells = <2>;
-> +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
-> +		clock-names = "main", "mm";
-> +		status = "disabled";
-> +	};
-> +
->  	larb0: larb@14010000 {
->  		compatible = "mediatek,mt2701-smi-larb";
->  		reg = <0 0x14010000 0 0x1000>;
+>  		clocks = <&infracfg CLK_INFRA_AUDIO>,
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index ec8a074..381843e 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -544,7 +544,9 @@
+>  			     "mediatek,mt2701-audio";
+>  		reg = <0 0x11220000 0 0x2000>,
+>  		      <0 0x112a0000 0 0x20000>;
+> -		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
+> +			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names	= "afe", "asys";
+>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+>  
+>  		clocks = <&infracfg CLK_INFRA_AUDIO>,
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
