@@ -1,97 +1,59 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
-Date: Thu, 19 Oct 2017 13:40:59 +0200
-Message-ID: <30e2bec3-9c5a-465e-1ddf-ee25efb66a60@axis.com>
-References: <20171013160914.3220-1-niklas.cassel@axis.com>
- <20171013160914.3220-9-niklas.cassel@axis.com>
- <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 3/5] ARM: dts: meson8b: enable gpio interrupt controller
+Date: Thu, 19 Oct 2017 14:01:41 +0200
+Message-ID: <20171019120143.20581-4-jbrunet@baylibre.com>
+References: <20171019120143.20581-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171016234326.GM25517@bhelgaas-glaptop.roam.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <20171019120143.20581-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>, linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn
+Add gpio interrupt controller node to the meson8b boards
 
-On 10/17/2017 01:43 AM, Bjorn Helgaas wrote:
-(snip)
-> I see you're copying the DRA7XX style here, but I don't really
-> understand it.  I guess the idea is to build pcie-artpec6.o if either
-> CONFIG_PCIE_ARTPEC6_HOST or CONFIG_PCIE_ARTPEC6_EP is set (or both).
-> 
-> Is this really the simplest way to express that in Kconfig?  Both the
-> "if PCIE_ARTPEC6" and this ifneq thing are complicated and relatively
-> unusual.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm/boot/dts/meson.dtsi   | 9 +++++++++
+ arch/arm/boot/dts/meson8b.dtsi | 6 ++++++
+ 2 files changed, 15 insertions(+)
 
-I will try Christoph's suggestion.
-
-> 
->>  ifneq ($(filter y,$(CONFIG_PCI_DRA7XX_HOST) $(CONFIG_PCI_DRA7XX_EP)),)
->>          obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->>  endif
-> 
->> +static void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
-> 
-> Looks funny to have this dw_*() function in pcie-artpec6.c.  Intended?
-> Or is this something other endpoint drivers could/should share?
-
-As discussed with Kishon, I make sure that the dw_pcie_ep_reset_bar
-in pcie-designware-ep.c is no longer static.
-
-> 
->> +{
->> +	u32 reg;
->> +
->> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
->> +	dw_pcie_dbi_ro_wr_en(pci);
->> +	dw_pcie_writel_dbi2(pci, reg, 0x0);
->> +	dw_pcie_writel_dbi(pci, reg, 0x0);
->> +	dw_pcie_dbi_ro_wr_dis(pci);
->> +}
->> +
->> +static void artpec6_pcie_ep_init(struct dw_pcie_ep *ep)
->> +{
->> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->> +	struct artpec6_pcie *artpec6_pcie = to_artpec6_pcie(pci);
->> +	enum pci_barno bar;
->> +
->> +	artpec6_pcie_assert_core_reset(artpec6_pcie);
->> +	artpec6_pcie_init_phy(artpec6_pcie);
->> +	artpec6_pcie_deassert_core_reset(artpec6_pcie);
->> +
->> +	for (bar = BAR_0; bar <= BAR_5; bar++)
->> +		dw_pcie_ep_reset_bar(pci, bar);
->> +}
-> 
-> I naively expected some of this new code to be #ifdef PCIE_ARTPEC6_EP.
-> But I haven't really internalized the endpoint support, so maybe that
-> doesn't make sense?
-
-I copied the style from dra7xx.
-But after thinking about it, I agree with you.
-
-If we move dw_pcie_ep_reset_bar and artpec6_pcie_raise_msi_irq
-to pcie-designware-ep, the functions that are left are:
-
-artpec6_pcie_stop_link
-artpec6_pcie_ep_init
-artpec6_pcie_raise_irq
-artpec6_add_pcie_ep
-the compatible in the of match table
-
-The only function I'm hesitant about is .stop_link,
-since it is in dw_pcie_ops, however, right now it
-is only used in pcie-designware-ep.c
-
-Would you prefer me to make them #ifdef PCIE_ARTPEC6_EP ?
-
-I can do a similar patch for pci-dra7xx.
-
-
-Regards,
-Niklas
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 290a183e87c5..3d18ecc2bef1 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -85,6 +85,15 @@
+ 				reg = <0x7c00 0x200>;
+ 			};
+ 
++			gpio_intc: interrupt-controller@9880 {
++				compatible = "amlogic,meson-gpio-intc";
++				reg = <0xc1109880 0x10>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
++				status = "disabled";
++			};
++
+ 			hwrng: rng@8100 {
+ 				compatible = "amlogic,meson-rng";
+ 				reg = <0x8100 0x8>;
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 40cfe5c8df6a..574aafa3db83 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -179,6 +179,12 @@
+ 	clock-names = "stmmaceth";
+ };
+ 
++&gpio_intc {
++	compatible = "amlogic,meson-gpio-intc",
++		     "amlogic,meson8b-gpio-intc";
++	status = "okay";
++};
++
+ &hwrng {
+ 	compatible = "amlogic,meson8b-rng", "amlogic,meson-rng";
+ 	clocks = <&clkc CLKID_RNG0>;
+-- 
+2.13.6
