@@ -1,71 +1,171 @@
-From: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Subject: [PATCHv4 1/2] Add device tree bindings for Altera FPGA Manager GPIO
-Date: Thu, 19 Oct 2017 16:29:05 +0000
-Message-ID: <AM5PR0701MB2657E740CD7F604D48083305E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] arm: dts: mt7623: update pio, usb and crypto
+ nodes
+Date: Thu, 19 Oct 2017 18:29:52 +0200
+Message-ID: <8c823070-7181-97cc-063e-3ced59c7e17d@gmail.com>
+References: <cover.1506908511.git.ryder.lee@mediatek.com>
+ <08d722e47b83bd70ed4d3c9a4546a3f70df96de4.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Language: de-DE
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <08d722e47b83bd70ed4d3c9a4546a3f70df96de4.1506908511.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
----
- .../bindings/gpio/gpio-altera-fpgamgr.txt          | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
-new file mode 100644
-index 0000000..6e2ad47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
-@@ -0,0 +1,43 @@
-+Altera FPGA Manager GPIO controller bindings
-+
-+Required controller properties:
-+- #address-cells : Should be 1
-+- #size-cells : Should be 0
-+- compatible:
-+  - "altr,fpgamgr-gpio"
-+- reg: Physical base address and length of the controller's registers.
-+
-+The FPGA Manager has two 32-bit ports, one for input and one for output.
-+
-+Port properties:
-+- compatible:
-+  - "altr,fpgamgr-gpio-output"
-+  - "altr,fpgamgr-gpio-input"
-+- #gpio-cells : Should be 2
-+  - The first cell is the gpio offset number.
-+  - The second cell is reserved and is currently unused.
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- reg : Port number, 0 for output, 1 for input.
-+
-+Example:
-+
-+gpio3: gpio@ff706010 {
-+  #address-cells = <1>;
-+  #size-cells = <0>;
-+  compatible = "altr,fpgamgr-gpio";
-+  reg = <0xff706010 0x8>;
-+
-+  portd: gpio-controller@0 {
-+    compatible = "altr,fpgamgr-gpio-output";
-+    gpio-controller;
-+    #gpio-cells = <2>;
-+    reg = <0>;
-+  };
-+
-+  porte: gpio-controller@1 {
-+    compatible = "altr,fpgamgr-gpio-input";
-+    gpio-controller;
-+    #gpio-cells = <2>;
-+    reg = <1>;
-+  };
-+};
--- 
-1.9.1
+
+On 10/02/2017 03:54 AM, Ryder Lee wrote:
+> This patch updates pio, usb and crypto nodes to make them be consistent
+> with the binding documents.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index 381843e..0640fb7 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -227,8 +227,7 @@
+>  	};
+>  
+>  	pio: pinctrl@10005000 {
+> -		compatible = "mediatek,mt7623-pinctrl",
+> -			     "mediatek,mt2701-pinctrl";
+> +		compatible = "mediatek,mt7623-pinctrl";
+
+Looks good.
+
+>  		reg = <0 0x1000b000 0 0x1000>;
+>  		mediatek,pctl-regmap = <&syscfg_pctl_a>;
+>  		pins-are-numbered;
+> @@ -680,7 +679,7 @@
+>  		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&hifsys CLK_HIFSYS_USB0PHY>,
+>  			 <&topckgen CLK_TOP_ETHIF_SEL>;
+> -		clock-names = "sys_ck", "free_ck";
+> +		clock-names = "sys_ck", "ref_ck";
+
+This is already merged. Please rebase.
+
+>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+>  		phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+>  		status = "disabled";
+> @@ -690,8 +689,6 @@
+>  		compatible = "mediatek,mt7623-u3phy",
+>  			     "mediatek,mt2701-u3phy";
+>  		reg = <0 0x1a1c4000 0 0x0700>;
+> -		clocks = <&clk26m>;
+> -		clock-names = "u3phya_ref";
+
+Same here.
+
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+>  		ranges;
+> @@ -699,12 +696,16 @@
+>  
+>  		u2port0: usb-phy@1a1c4800 {
+>  			reg = <0 0x1a1c4800 0 0x0100>;
+> +			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
+> +			clock-names = "ref";
+
+Same here.
+
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
+>  
+>  		u3port0: usb-phy@1a1c4900 {
+>  			reg = <0 0x1a1c4900 0 0x0700>;
+> +			clocks = <&clk26m>;
+> +			clock-names = "ref";
+
+Same here.
+
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
+> @@ -719,7 +720,7 @@
+>  		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_LOW>;
+>  		clocks = <&hifsys CLK_HIFSYS_USB1PHY>,
+>  			 <&topckgen CLK_TOP_ETHIF_SEL>;
+> -		clock-names = "sys_ck", "free_ck";
+> +		clock-names = "sys_ck", "ref_ck";
+
+Same here.
+
+>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+>  		phys = <&u2port1 PHY_TYPE_USB2>, <&u3port1 PHY_TYPE_USB3>;
+>  		status = "disabled";
+> @@ -729,8 +730,6 @@
+>  		compatible = "mediatek,mt7623-u3phy",
+>  			     "mediatek,mt2701-u3phy";
+>  		reg = <0 0x1a244000 0 0x0700>;
+> -		clocks = <&clk26m>;
+> -		clock-names = "u3phya_ref";
+
+Same here.
+
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+>  		ranges;
+> @@ -738,12 +737,16 @@
+>  
+>  		u2port1: usb-phy@1a244800 {
+>  			reg = <0 0x1a244800 0 0x0100>;
+> +			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
+> +			clock-names = "ref";
+
+Same here.
+
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
+>  
+>  		u3port1: usb-phy@1a244900 {
+>  			reg = <0 0x1a244900 0 0x0700>;
+> +			clocks = <&clk26m>;
+> +			clock-names = "ref";
+
+Same here.
+
+>  			#phy-cells = <1>;
+>  			status = "okay";
+>  		};
+> @@ -784,16 +787,15 @@
+>  	};
+>  
+>  	crypto: crypto@1b240000 {
+> -		compatible = "mediatek,mt7623-crypto";
+> +		compatible = "mediatek,eip97-crypto";
+
+Crypto node is not present in upstream.
+
+Regards,
+Matthias
+
+>  		reg = <0 0x1b240000 0 0x20000>;
+>  		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>,
+>  			     <GIC_SPI 97 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> -			 <&ethsys CLK_ETHSYS_CRYPTO>;
+> -		clock-names = "ethif","cryp";
+> +		clocks = <&ethsys CLK_ETHSYS_CRYPTO>;
+> +		clock-names = "cryp";
+>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+>  		status = "disabled";
+>  	};
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
