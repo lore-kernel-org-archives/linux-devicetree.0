@@ -1,16 +1,18 @@
 From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: [PATCH v2 1/2] Documentation: dt: extcon: add optional debounce-timeout-ms attribute
-Date: Thu, 19 Oct 2017 08:55:59 +0530
-Message-ID: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
+Subject: [PATCH v2 2/2] extcon: add optional debounce-timeout-ms attribute
+Date: Thu, 19 Oct 2017 08:56:00 +0530
+Message-ID: <1508383560-15567-2-git-send-email-raveendra.padasalagi@broadcom.com>
+References: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc: bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation on optional dt attribute "debounce-timeout-ms"
-in extcon node to capture user specified timeout value for id
-and vbus gpio detection.
+Add changes to capture optional dt attribute "debounce-timeout-ms"
+provided in extcon node and used the same value if provided otherwise
+default value of 20ms is used for id and vbus gpios debounce time.
 
 Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
 Reviewed-by: Ray Jui <ray.jui@broadcom.com>
@@ -18,24 +20,51 @@ Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
 
 Changes in v2:
- Rename debounce-timeout-ms to input-debounce
+ Rename gpio_debounce_timeout_ms to debounce_usecs
 
- Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/extcon/extcon-usb-gpio.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-index dfc14f7..d115900 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-@@ -10,6 +10,9 @@ Either one of id-gpio or vbus-gpio must be present. Both can be present as well.
- - id-gpio: gpio for USB ID pin. See gpio binding.
- - vbus-gpio: gpio for USB VBUS pin.
+diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
+index 9c925b0..76ef1da 100644
+--- a/drivers/extcon/extcon-usb-gpio.c
++++ b/drivers/extcon/extcon-usb-gpio.c
+@@ -41,6 +41,7 @@ struct usb_extcon_info {
  
-+Optional properties:
-+- input-debounce: debounce timeout value for id and vbus gpio in microseconds.
+ 	unsigned long debounce_jiffies;
+ 	struct delayed_work wq_detcable;
++	unsigned int debounce_usecs;
+ };
+ 
+ static const unsigned int usb_extcon_cable[] = {
+@@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
+ 	if (IS_ERR(info->vbus_gpiod))
+ 		return PTR_ERR(info->vbus_gpiod);
+ 
++	ret = of_property_read_u32(np, "input-debounce",
++			     &info->debounce_usecs);
++	if (ret)
++		info->debounce_usecs = USB_GPIO_DEBOUNCE_MS;
 +
- Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
- 	extcon_usb1 {
- 		compatible = "linux,extcon-usb-gpio";
+ 	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
+ 	if (IS_ERR(info->edev)) {
+ 		dev_err(dev, "failed to allocate extcon device\n");
+@@ -147,13 +153,13 @@ static int usb_extcon_probe(struct platform_device *pdev)
+ 
+ 	if (info->id_gpiod)
+ 		ret = gpiod_set_debounce(info->id_gpiod,
+-					 USB_GPIO_DEBOUNCE_MS * 1000);
++					 info->debounce_usecs * 1000);
+ 	if (!ret && info->vbus_gpiod)
+ 		ret = gpiod_set_debounce(info->vbus_gpiod,
+-					 USB_GPIO_DEBOUNCE_MS * 1000);
++					 info->debounce_usecs * 1000);
+ 
+ 	if (ret < 0)
+-		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
++		info->debounce_jiffies = msecs_to_jiffies(info->debounce_usecs);
+ 
+ 	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
+ 
 -- 
 1.9.1
