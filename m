@@ -1,70 +1,60 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: [PATCH v2 2/2] extcon: add optional debounce-timeout-ms attribute
-Date: Thu, 19 Oct 2017 08:56:00 +0530
-Message-ID: <1508383560-15567-2-git-send-email-raveendra.padasalagi@broadcom.com>
-References: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [PATCH v6 00/10] rockchip: kevin: Enable edp display
+Date: Thu, 19 Oct 2017 11:48:02 +0800
+Message-ID: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Romain Perier <romain.perier@collabora.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Kevin Hilman <khilman@baylibre.com>, briannorris@chromium.org, Krzysztof Kozlowski <krzk@kernel.org>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Caesar Wang <wxt@rock-chips.com>, Jose Abreu <Jose.Abreu@synopsys.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jeffy Chen <jeffy.chen@rock-chips.com>, Russell King <rmk+kernel@armlinux.org.uk>Rob Herring <ro>
 List-Id: devicetree@vger.kernel.org
 
-Add changes to capture optional dt attribute "debounce-timeout-ms"
-provided in extcon node and used the same value if provided otherwise
-default value of 20ms is used for id and vbus gpios debounce time.
-
-Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
-
-Changes in v2:
- Rename gpio_debounce_timeout_ms to debounce_usecs
-
- drivers/extcon/extcon-usb-gpio.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/extcon/extcon-usb-gpio.c b/drivers/extcon/extcon-usb-gpio.c
-index 9c925b0..76ef1da 100644
---- a/drivers/extcon/extcon-usb-gpio.c
-+++ b/drivers/extcon/extcon-usb-gpio.c
-@@ -41,6 +41,7 @@ struct usb_extcon_info {
- 
- 	unsigned long debounce_jiffies;
- 	struct delayed_work wq_detcable;
-+	unsigned int debounce_usecs;
- };
- 
- static const unsigned int usb_extcon_cable[] = {
-@@ -133,6 +134,11 @@ static int usb_extcon_probe(struct platform_device *pdev)
- 	if (IS_ERR(info->vbus_gpiod))
- 		return PTR_ERR(info->vbus_gpiod);
- 
-+	ret = of_property_read_u32(np, "input-debounce",
-+			     &info->debounce_usecs);
-+	if (ret)
-+		info->debounce_usecs = USB_GPIO_DEBOUNCE_MS;
-+
- 	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
- 	if (IS_ERR(info->edev)) {
- 		dev_err(dev, "failed to allocate extcon device\n");
-@@ -147,13 +153,13 @@ static int usb_extcon_probe(struct platform_device *pdev)
- 
- 	if (info->id_gpiod)
- 		ret = gpiod_set_debounce(info->id_gpiod,
--					 USB_GPIO_DEBOUNCE_MS * 1000);
-+					 info->debounce_usecs * 1000);
- 	if (!ret && info->vbus_gpiod)
- 		ret = gpiod_set_debounce(info->vbus_gpiod,
--					 USB_GPIO_DEBOUNCE_MS * 1000);
-+					 info->debounce_usecs * 1000);
- 
- 	if (ret < 0)
--		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
-+		info->debounce_jiffies = msecs_to_jiffies(info->debounce_usecs);
- 
- 	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
- 
--- 
-1.9.1
+Ck1ha2UgZWRwIGRpc3BsYXkgd29ya3Mgb24gY2hyb21lYm9vayBrZXZpbihhdCBsZWFzdCBmb3Ig
+Ym9vdCBhbmltYXRpb24pLgoKQWxzbyBzb2x2ZSBzb21lIGlzc3VlcyBpIG1lZXQgZHVyaW5nIHRo
+ZSBicmluZ3VwLgoKQ2hhbmdlcyBpbiB2NjoKRG9uJ3QgY2hhbmdlIG9yZGVyIG9mIHJvY2tjaGlw
+X2RybV9wc3JfcmVnaXN0ZXIoKS4KCkNoYW5nZXMgaW4gdjU6CkNhbGwgdGhlIGRlc3Ryb3kgaG9v
+ayBpbiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCBsaWtlIGluIHVuYmluZCgpLgpDYWxsIHRoZSBk
+ZXN0cm95IGhvb2sgaW4gdGhlIGVycm9yIGhhbmRsaW5nIHBhdGggbGlrZSBpbiB1bmJpbmQoKS4K
+VXBkYXRlIGNsZWFudXAgb3JkZXIgaW4gdW5iaW5kKCkuCkFkZCBkaXNhYmxlIHRvIHVuYmluZCgp
+LCBhbmQgaW5saW5lIGNsa19wcmVwYXJlX2VuYWJsZSgpIHdpdGggYmluZCgpLgoKSmVmZnkgQ2hl
+biAoMTApOgogIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBFbmFibGUgZWRwIGRpc2FwbGF5IG9uIGtl
+dmluCiAgZHJtL3JvY2tjaGlwOiBhbmFsb2dpeF9kcDogUmVtb3ZlIHVubmVjZXNzYXJ5IGluaXQg
+Y29kZQogIGRybS9icmlkZ2U6IGFuYWxvZ2l4OiBEbyBub3QgdXNlIGRldmljZSdzIGRydmRhdGEK
+ICBkcm0vYnJpZGdlOiBhbmFsb2dpeF9kcDogRml4IGNvbm5lY3RvciBhbmQgZW5jb2RlciBjbGVh
+bnVwCiAgZHJtL3JvY2tjaGlwOiBhbmFsb2dpeF9kcDogQWRkIGEgc2FuaXR5IGNoZWNrIGZvcgog
+ICAgcm9ja2NoaXBfZHJtX3Bzcl9yZWdpc3RlcigpCiAgZHJtL3JvY2tjaGlwOiBkdy1taXBpLWRz
+aTogRml4IGVycm9yIGhhbmRsaW5nIHBhdGgKICBkcm0vcm9ja2NoaXA6IGlubm9faGRtaTogRml4
+IGVycm9yIGhhbmRsaW5nIHBhdGgKICBkcm0vYnJpZGdlL3N5bm9wc3lzOiBkdy1oZG1pOiBBZGQg
+bWlzc2luZyBicmlkZ2UgZGV0YWNoCiAgZHJtL2JyaWRnZS9zeW5vcHN5czogZHctaGRtaTogRG8g
+bm90IHVzZSBkZXZpY2UncyBkcnZkYXRhCiAgZHJtL3JvY2tjaGlwOiBkd19oZG1pOiBGaXggZXJy
+b3IgaGFuZGxpbmcgcGF0aAoKIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdy
+dS1rZXZpbi5kdHMgIHwgMjkgKysrKysrKwogYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9y
+azMzOTktZ3J1LmR0c2kgICAgICAgfCAxNiArKysrCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fu
+YWxvZ2l4L2FuYWxvZ2l4X2RwX2NvcmUuYyB8IDUyICsrKysrLS0tLS0tLQogZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMgICAgICAgICAgfCA1MyArKysrKystLS0tLS0K
+IGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RwLmMgICAgICAgICAgICAgICAgIHwgMjkg
+KysrKy0tLQogZHJpdmVycy9ncHUvZHJtL2lteC9kd19oZG1pLWlteC5jICAgICAgICAgICAgICAg
+ICAgfCAyMiArKystLQogZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2R3X2hkbWkuYyAgICAg
+ICAgICAgICAgfCAyMCArKystLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kd19oZG1p
+LmMgICAgICAgICAgICAgfCAxNCArKystCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvYW5hbG9n
+aXhfZHAtcm9ja2NoaXAuYyAgICB8IDk1ICsrKysrKysrKysrLS0tLS0tLS0tLS0KIGRyaXZlcnMv
+Z3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jICAgICAgICAgICAgIHwgMjEgKysrLS0KIGRy
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgMzkgKysr
+KystLS0tCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvaW5ub19oZG1pLmMgICAgICAgICAgICAg
+ICB8IDIyICsrKy0tCiBpbmNsdWRlL2RybS9icmlkZ2UvYW5hbG9naXhfZHAuaCAgICAgICAgICAg
+ICAgICAgICB8IDE5ICsrKy0tCiBpbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oICAgICAgICAg
+ICAgICAgICAgICAgICB8IDE3ICsrLS0KIDE0IGZpbGVzIGNoYW5nZWQsIDI2NSBpbnNlcnRpb25z
+KCspLCAxODMgZGVsZXRpb25zKC0pCgotLSAKMi4xMS4wCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
