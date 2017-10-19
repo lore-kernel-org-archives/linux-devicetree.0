@@ -1,31 +1,34 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: gpio: max3191x: Document new driver
-Date: Thu, 19 Oct 2017 22:36:52 +0200
-Message-ID: <CACRpkdabZUtUBpsRJZgmKgiWoLb-_6W_+sHXJWWxUkgX+seK5g@mail.gmail.com>
-References: <cover.1507797496.git.lukas@wunner.de> <57660f421f2080914940806394a9365ac959f5a8.1507797496.git.lukas@wunner.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 5/5] gpio: Add driver for Maxim MAX3191x industrial serializer
+Date: Thu, 19 Oct 2017 22:41:29 +0200
+Message-ID: <CACRpkdYy66+H+Fz7q-Ush4BaSxN3v8mafCL=+RhVBu9pLMpZRQ@mail.gmail.com>
+References: <cover.1507797496.git.lukas@wunner.de> <165c5061f7f309ecb7f1a3d32c8f7df5026f4a47.1507797496.git.lukas@wunner.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57660f421f2080914940806394a9365ac959f5a8.1507797496.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <165c5061f7f309ecb7f1a3d32c8f7df5026f4a47.1507797496.git.lukas@wunner.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Mathias Duckeck <m.duckeck@kunbus.de>, Phil Elwell <phil@raspberrypi.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 12, 2017 at 12:40 PM, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org> wrote:
+On Thu, Oct 12, 2017 at 12:40 PM, Lukas Wunner <lukas@wunner.de> wrote:
 
-> Add device tree bindings for Maxim MAX3191x industrial serializer.
+> The driver was developed for and tested with the MAX31913 built into
+> the Revolution Pi by KUNBUS, but should work with all members of the
+> MAX3191x family:
 >
-> Cc: Mathias Duckeck <m.duckeck-XB/JSsFECOqzQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-> ---
-> Changes v1 -> v2:
+> MAX31910: low power
+> MAX31911: LED drivers
+> MAX31912: LED drivers + 2nd voltage monitor + low power
+> MAX31913: LED drivers + 2nd voltage monitor
+> MAX31953: LED drivers + 2nd voltage monitor + isolation
+> MAX31963: LED drivers + 2nd voltage monitor + isolation + buck regulator
+>
+> Cc: Mathias Duckeck <m.duckeck@kunbus.de>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
 
-Patch applied with Rob's ACK.
+Patch applied.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
