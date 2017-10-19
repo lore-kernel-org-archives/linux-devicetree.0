@@ -1,59 +1,45 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 3/5] ARM: dts: meson8b: enable gpio interrupt controller
-Date: Thu, 19 Oct 2017 14:01:41 +0200
-Message-ID: <20171019120143.20581-4-jbrunet@baylibre.com>
-References: <20171019120143.20581-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171019120143.20581-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/5] ARM: meson: enable gpio interrupt controller
+Date: Thu, 19 Oct 2017 14:01:38 +0200
+Message-ID: <20171019120143.20581-1-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add gpio interrupt controller node to the meson8b boards
+This patchset enables gpio interrupt controller found on the meson SoC
+family. ATM, it supports meson8b, gxbb and gxl. The meson8 has been left
+out because I don't have the documentation of this particular SoC.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm/boot/dts/meson.dtsi   | 9 +++++++++
- arch/arm/boot/dts/meson8b.dtsi | 6 ++++++
- 2 files changed, 15 insertions(+)
+The last patch uses the interrupts provided by this controller with the
+external ethernet PHY found on a few platforms.
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index 290a183e87c5..3d18ecc2bef1 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -85,6 +85,15 @@
- 				reg = <0x7c00 0x200>;
- 			};
- 
-+			gpio_intc: interrupt-controller@9880 {
-+				compatible = "amlogic,meson-gpio-intc";
-+				reg = <0xc1109880 0x10>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
-+				status = "disabled";
-+			};
-+
- 			hwrng: rng@8100 {
- 				compatible = "amlogic,meson-rng";
- 				reg = <0x8100 0x8>;
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 40cfe5c8df6a..574aafa3db83 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -179,6 +179,12 @@
- 	clock-names = "stmmaceth";
- };
- 
-+&gpio_intc {
-+	compatible = "amlogic,meson-gpio-intc",
-+		     "amlogic,meson8b-gpio-intc";
-+	status = "okay";
-+};
-+
- &hwrng {
- 	compatible = "amlogic,meson8b-rng", "amlogic,meson-rng";
- 	clocks = <&clkc CLKID_RNG0>;
+Jerome Brunet (5):
+  ARM: meson: enable MESON_IRQ_GPIO in Kconfig for meson8b
+  ARM64: meson: enable MESON_IRQ_GPIO in Kconfig
+  ARM: dts: meson8b: enable gpio interrupt controller
+  ARM64: dts: meson-gx: add gpio interrupt controller
+  ARM64: dts: meson-gx: add external PHY interrupt on some platforms
+
+ arch/arm/boot/dts/meson.dtsi                         | 9 +++++++++
+ arch/arm/boot/dts/meson8b.dtsi                       | 6 ++++++
+ arch/arm/mach-meson/Kconfig                          | 1 +
+ arch/arm64/Kconfig.platforms                         | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi            | 9 +++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts      | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi          | 6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi           | 6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts       | 2 ++
+ 12 files changed, 48 insertions(+)
+
 -- 
 2.13.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
