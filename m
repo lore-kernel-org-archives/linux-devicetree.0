@@ -1,118 +1,50 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Devicetree Workshop at Kernel Summit Prague (26 Oct 2017)
-Date: Thu, 19 Oct 2017 12:10:31 +0100
-Message-ID: <CACxGe6vhYV5dbnNQXyRoPq=XSA5HOtpN0FCqyoKvGVbRu-aRqA@mail.gmail.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: iio: at91-sama5d2_adc: add optional
+ dma property
+Date: Thu, 19 Oct 2017 13:14:17 +0200
+Message-ID: <20171019111417.7rzdnkvtukzzhl2u@piout.net>
+References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
+ <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
+ <20171013215142.vlfhzzzetmc7resq@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171013215142.vlfhzzzetmc7resq@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Eugen Hristev <eugen.hristev@microchip.com>, nicolas.ferre@microchip.com, linux-iio@vger.kernel.org, lars@metafoo.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ludovic.desroches@microchip.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi folks,
+On 13/10/2017 at 16:51:42 -0500, Rob Herring wrote:
+> On Wed, Oct 11, 2017 at 09:35:28AM +0300, Eugen Hristev wrote:
+> > Added property for DMA configuration of the device.
+> > 
+> > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> > index 552e7a8..5f94d479 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> > +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> > @@ -17,6 +17,11 @@ Required properties:
+> >    This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
+> >    IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
+> >  
+> > +Optional properties:
+> > +  - dmas: Phandle to dma channel for the ADC.
+> > +  See ../../dma/dma.txt for details.
+> > +  - dma-names: Must be "rx" when dmas property is being used.
+> 
+> -names is pointless when there is only one.
+> 
 
-I've flushed out the schedule. It is still a draft, but I've got names
-against the topics and put them into a rough order.
+You didn't reply to the question I had previously about that: What if at
+some point, we have multiple dmas in the same binding?
 
-If your name is listed below, it means I've asked you to frame the
-problem and moderate discussion for that topic. I'm *not* asking you
-to present unless the topic is specifically listed as a presentation.
-If you want you can have a slide or two, but you must get them to me
-by Tuesday evening, 24 October. I want to keep the time fiddling with
-projectors to a minimum.
-
-Originally this was intended as a 1/2 day workshop, but given that we
-have the room for the full day, I've spread things out to give a bit
-more time for hallway track. I can also move things around if need be
-to avoid conflicts with the maintainers summit and KVM forum. The
-maintenance topics are in the afternoon under the assumption that
-there are folks in the maintainers summit who will want to attend. The
-tooling and schema topics are in the morning. I've also tried really
-hard to preserve the breaks and lunch to give time for hallway
-discussion.
-
-As always, none of this is set in stone. If you have any specific
-conflicts or concerns then please say so.
-
-Cheers,
-g.
-
-==Morning==
-9:30 Welcome and Schedule bashing (0:10) (Grant Likely)
-
-===Tooling & Schema===
-9:40 (5min) Encoding and Schema checking: Framing the problem (Grant Likely)
-9:45 (15min) DT YAML encoding overview (Pantelis Antoniou - presentation)
-10:00 (20min) YAML encoding discussion
-10:20 (15min) DT Schema format - option 1 (Pantelis Antoniou - presentation)
-10:35 (15min) DT Schema format - option 2 (Grant Likely - presentation)
-10:50 (20min) DT Schema discussion - what should go in the spec?
-
-11:10-11:50 [Break]
-
-===Runtime usage===
-11:50 (20min) Code Generation from DT (Kumar Gala - presentation)
-12:10 (20min) Runtime memory consumption (Rob Herring - presentation)
-
-12:30-14:30 [Lunch]
-
-==Afternoon==
-===DTS maintenance issues===
-14:30 (15min) Overlay maintenance plan (Bill Mills)
-14:45 (15min) Avoiding duplicate descriptions (Thomas Petazzoni)
-15:00 (15min) Criteria for accepting board files
-15:15 (15min) Location for maintaining bindings - how to handle
-'foreign bindings' (Boris Brezillon)
-15:30 (15min) Sharing Generic bindings (Geert Uytterhoeven)
-15:45 (15min) ABI Stability (Lucas Stach)
-
-16:00-16:30 [break and overflow discussion]
-
-16:30 (20min) DT health check (Ben Dooks)
-16:50 (15min) devicetree.org update (Grant Likely)
-17:05 (15min) EBBR Discussion (Grant Likely)
-17:20 Closing and feedback
-
-
-On Mon, Oct 9, 2017 at 9:39 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> Kernel Summit is now just over 2 weeks away and it is time to pull
-> together the schedule for the Devicetree workshop. Originally I
-> planned on just an afternoon, but I've got the room for the whole day,
-> so I've got a lot of flexibility on the schedule. Unscheduled time can
-> be used for hacking.
->
-> Date: 26 Oct 2017
-> Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
-> Location: Athens room - Hilton Prague
->
-> If you plan to attend, make sure you update your OSSunmitE/ELCE
-> registration to include the DT Workshop (log in to access and modify
-> your registration):
->
-> https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
->
-> Here is my current list of topics in no particular order, including
-> the topic moderator:
->
-> Runtime memory consumption (Rob Herring)
-> Overlay maintenance plan (TBC)
-> Stable ABI for devicetree (TBC)
-> DT YAML encoding (Pantelis Antoniou)
-> DT Schema format - option 1 (Pantelis Antoniou)
-> DT Schema format - option 2 (Grant Likely)
-> Sharing Generic bindings (TBC)
-> devicetree.org update (Grant)
->
-> Reply to this email if you want to propose another topic.
->
-> Reply privately if there is a particular topic you want to attend but
-> you are unable to be there in the morning or afternoon. I'll put the
-> actual agenda together a week out from the event.
->
-> g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
