@@ -1,42 +1,48 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] of: overlay: pr_err from return NOTIFY_OK to overlay apply/remove
-Date: Thu, 19 Oct 2017 14:18:27 -0700
-Message-ID: <1508447907-4462-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] firmware: meson-sm: use generic compatible
+Date: Thu, 19 Oct 2017 16:18:17 -0500
+Message-ID: <CAL_JsqJ-XAqMA_zjxrJNAtysQsXzmWYUFqLJtKX2wUJ0oebtuw@mail.gmail.com>
+References: <20171012134743.10625-1-jbrunet@baylibre.com> <20171017204959.kfbhn2yxhv2sb5qg@rob-hp-laptop>
+ <7h8tg7zb6t.fsf@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7h8tg7zb6t.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On Thu, Oct 19, 2017 at 5:25 AM, Kevin Hilman <khilman@baylibre.com> wrote:
+> Rob Herring <robh@kernel.org> writes:
+>
+>> On Thu, Oct 12, 2017 at 03:47:43PM +0200, Jerome Brunet wrote:
+>>> The meson secure monitor seems to be compatible with more SoCs than
+>>> initially thought. Let's use the most generic compatible he have in
+>>> DT instead of the gxbb specific one
+>>>
+>>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/firmware/meson/meson_sm.txt | 4 ++--
+>>>  drivers/firmware/meson/meson_sm.c                             | 4 ++--
+>>>  2 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> Seems like a pointless, not backwards compatible change to me.
+>
+> I've verified that it's backwards compatible with existing upstream DTs.
 
-A device tree overlay notifier can return NOTIFY_OK, NOTIFY_STOP,
-or an embedded errno.  overlay_notify() incorrectly reports an
-error for NOTIFY_OK.
+Perhaps if you all are documenting only what the driver uses, not what
+the dts can have as Jerome said.
 
-Reported-by: atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
- drivers/of/overlay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> end, it's just a string to match on. Who cares what the string is.
+>
+> As platform maintiner, I very much care what the strings are and I want
+> it to be coherent with the platform generic names, and I want the
+> SoC-specific strings to correspond to the actual SoC names.
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index c99842bb4b09..f5fce0fea40b 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -133,7 +133,7 @@ static int overlay_notify(struct overlay_changeset *ovcs,
- 
- 		ret = blocking_notifier_call_chain(&overlay_notify_chain,
- 						   action, &nd);
--		if (ret == NOTIFY_STOP)
-+		if (ret == NOTIFY_OK || ret == NOTIFY_STOP)
- 			return 0;
- 		if (ret) {
- 			ret = notifier_to_errno(ret);
--- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+The most specific compatible should be, absolutely. The fallbacks can
+be anything really. Ideally, they are the compatible string for the
+1st SoC with "the same" compatible IP. Could be another vendor
+entirely even because mergers happen.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
