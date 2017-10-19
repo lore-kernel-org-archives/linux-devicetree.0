@@ -1,202 +1,107 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 10/10] arm: dts: mt7623: add PCIe related nodes
-Date: Thu, 19 Oct 2017 18:49:25 +0200
-Message-ID: <09e691c1-09b7-78cc-762a-f63f798bb273@gmail.com>
-References: <cover.1506908511.git.ryder.lee@mediatek.com>
- <8befb307f6fddf0a39657f04f2e270b6f803b8b9.1506908511.git.ryder.lee@mediatek.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/9] Mediatek MT2712 clock and scpsys support
+Date: Thu, 19 Oct 2017 19:06:14 +0200
+Message-ID: <e67f2b01-552b-e9b3-6c38-141e3063439d@gmail.com>
+References: <1508381330-3700-1-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8befb307f6fddf0a39657f04f2e270b6f803b8b9.1506908511.git.ryder.lee@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508381330-3700-1-git-send-email-weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/02/2017 03:55 AM, Ryder Lee wrote:
-> This patch adds devices nodes and updates pinmux setting for the PICe
-> function block. Just note that PCIe port2 PHY is shared with U3 port.
+On 10/19/2017 04:48 AM, Weiyi Lu wrote:
+> This series is based on v4.14-rc1 and composed of
+> clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt7623.dtsi                 | 108 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  30 +++++++
->  2 files changed, 138 insertions(+)
+> changes since v4:
+> - Refine scpsys and infracfg for bus protection by passing 
+>   a boolean flag to determine the register update method.
 > 
-
-Pushed to v4.14-next/dts32
-
-Thanks!
-
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index b19aa9f..32d454e 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -862,6 +862,114 @@
->  		#reset-cells = <1>;
->  	};
->  
-> +	pcie: pcie-controller@1a140000 {
-> +		compatible = "mediatek,mt7623-pcie";
-> +		device_type = "pci";
-> +		reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
-> +		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
-> +		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
-> +		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
-> +		reg-names = "subsys", "port0", "port1", "port2";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0xf800 0 0 0>;
-> +		interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
-> +				<0x0800 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
-> +				<0x1000 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-> +			 <&hifsys CLK_HIFSYS_PCIE0>,
-> +			 <&hifsys CLK_HIFSYS_PCIE1>,
-> +			 <&hifsys CLK_HIFSYS_PCIE2>;
-> +		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
-> +		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
-> +			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
-> +			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
-> +		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
-> +		phys = <&pcie0_port PHY_TYPE_PCIE>,
-> +		       <&pcie1_port PHY_TYPE_PCIE>,
-> +		       <&u3port1 PHY_TYPE_PCIE>;
-> +		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-> +		bus-range = <0x00 0xff>;
-> +		status = "disabled";
-> +		ranges = <0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000
-> +			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;
-> +
-> +		pcie@0,0 {
-> +			device_type = "pci";
-> +			reg = <0x0000 0 0 0 0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0>;
-> +			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
-> +			ranges;
-> +			num-lanes = <1>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@1,0 {
-> +			device_type = "pci";
-> +			reg = <0x0800 0 0 0 0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0>;
-> +			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +			ranges;
-> +			num-lanes = <1>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie@2,0 {
-> +			device_type = "pci";
-> +			reg = <0x1000 0 0 0 0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0>;
-> +			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-> +			ranges;
-> +			num-lanes = <1>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +
-> +	pcie0_phy: pcie-phy@1a149000 {
-> +		compatible = "mediatek,generic-tphy-v1";
-> +		reg = <0 0x1a149000 0 0x0700>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		status = "disabled";
-> +
-> +		pcie0_port: pcie-phy@1a149900 {
-> +			reg = <0 0x1a149900 0 0x0700>;
-> +			clocks = <&clk26m>;
-> +			clock-names = "ref";
-> +			#phy-cells = <1>;
-> +			status = "okay";
-> +		};
-> +	};
-> +
-> +	pcie1_phy: pcie-phy@1a14a000 {
-> +		compatible = "mediatek,generic-tphy-v1";
-> +		reg = <0 0x1a14a000 0 0x0700>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		status = "disabled";
-> +
-> +		pcie1_port: pcie-phy@1a14a900 {
-> +			reg = <0 0x1a14a900 0 0x0700>;
-> +			clocks = <&clk26m>;
-> +			clock-names = "ref";
-> +			#phy-cells = <1>;
-> +			status = "okay";
-> +		};
-> +	};
-> +
->  	usb1: usb@1a1c0000 {
->  		compatible = "mediatek,mt7623-xhci",
->  			     "mediatek,mt8173-xhci";
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 267a05a..134a39a 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -226,6 +226,28 @@
->  	vqmmc-supply = <&mt6323_vio18_reg>;
->  };
->  
-> +&pcie {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_default>;
-> +	status = "okay";
-> +
-> +	pcie@0,0 {
-> +		status = "okay";
-> +	};
-> +
-> +	pcie@1,0 {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&pcie0_phy {
-> +	status = "okay";
-> +};
-> +
-> +&pcie1_phy {
-> +	status = "okay";
-> +};
-> +
->  &pio {
->  	bls_pins_a: bls@0 {
->  		pins_cmd_dat {
-> @@ -414,6 +436,14 @@
->  		};
->  	};
->  
-> +	pcie_default: pcie_pin_default {
-> +		pins_cmd_dat {
-> +			pinmux = <MT7623_PIN_208_AUD_EXT_CK1_FUNC_PCIE0_PERST_N>,
-> +				 <MT7623_PIN_209_AUD_EXT_CK2_FUNC_PCIE1_PERST_N>;
-> +			bias-disable;
-> +		};
-> +	};
-> +
->  	pwm_pins_a: pwm@0 {
->  		pins_pwm {
->  			pinmux = <MT7623_PIN_204_PWM1_FUNC_PWM1>,
+> changes since v3:
+> - Rebase to v4.14-rc1.
 > 
+> changes since v2:
+> - ensure the clocks used by clocksource driver are registered
+>   before clocksource init() by using CLK_OF_DECLARE()
+> - correct the frequency of clk32k/clkrtc_ext/clkrtc_int
+> 
+> changes since v1:
+> - Rebase to v4.13-next-soc.
+> - Refine scpsys and infracfg for bus protection.
+> 
+> Weiyi Lu (9):
+>   dt-bindings: ARM: Mediatek: Document bindings for MT2712
+>   clk: mediatek: Add dt-bindings for MT2712 clocks
+>   clk: mediatek: Add MT2712 clock support
+
+Stephen, Mike: are you ok with the patches 1-3 of this series?
+
+If so, then I will take the rest through my tree.
+
+Thanks,
+Matthias
+
+>   arm: dts: mt2712: Add clock controller device nodes
+>   dt-bindings: soc: add MT2712 power dt-bindings
+>   soc: mediatek: extend bus protection API
+>   soc: mediatek: add dependent clock jpgdec/audio for scpsys
+>   soc: mediatek: add MT2712 scpsys support
+>   arm: dts: Add power controller device node of MT2712
+> 
+>  .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+>  .../bindings/arm/mediatek/mediatek,bdpsys.txt      |    1 +
+>  .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+>  .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+>  .../bindings/arm/mediatek/mediatek,jpgdecsys.txt   |   22 +
+>  .../bindings/arm/mediatek/mediatek,mcucfg.txt      |   22 +
+>  .../bindings/arm/mediatek/mediatek,mfgcfg.txt      |   22 +
+>  .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+>  .../bindings/arm/mediatek/mediatek,pericfg.txt     |    1 +
+>  .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+>  .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+>  .../bindings/arm/mediatek/mediatek,vencsys.txt     |    1 +
+>  .../devicetree/bindings/soc/mediatek/scpsys.txt    |    3 +
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  131 ++
+>  drivers/clk/mediatek/Kconfig                       |   50 +
+>  drivers/clk/mediatek/Makefile                      |    8 +
+>  drivers/clk/mediatek/clk-mt2712-bdp.c              |  102 ++
+>  drivers/clk/mediatek/clk-mt2712-img.c              |   80 ++
+>  drivers/clk/mediatek/clk-mt2712-jpgdec.c           |   76 ++
+>  drivers/clk/mediatek/clk-mt2712-mfg.c              |   75 +
+>  drivers/clk/mediatek/clk-mt2712-mm.c               |  170 +++
+>  drivers/clk/mediatek/clk-mt2712-vdec.c             |   94 ++
+>  drivers/clk/mediatek/clk-mt2712-venc.c             |   77 ++
+>  drivers/clk/mediatek/clk-mt2712.c                  | 1435 ++++++++++++++++++++
+>  drivers/clk/mediatek/clk-mtk.h                     |    2 +
+>  drivers/clk/mediatek/clk-pll.c                     |   13 +-
+>  drivers/soc/mediatek/mtk-infracfg.c                |   24 +-
+>  drivers/soc/mediatek/mtk-scpsys.c                  |  140 +-
+>  include/dt-bindings/clock/mt2712-clk.h             |  427 ++++++
+>  include/dt-bindings/power/mt2712-power.h           |   26 +
+>  include/linux/soc/mediatek/infracfg.h              |    7 +-
+>  31 files changed, 2991 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,jpgdecsys.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mcucfg.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,mfgcfg.txt
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-bdp.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-img.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-jpgdec.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-mfg.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-mm.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-vdec.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712-venc.c
+>  create mode 100644 drivers/clk/mediatek/clk-mt2712.c
+>  create mode 100644 include/dt-bindings/clock/mt2712-clk.h
+>  create mode 100644 include/dt-bindings/power/mt2712-power.h
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
