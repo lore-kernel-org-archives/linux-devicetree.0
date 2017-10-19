@@ -1,79 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [Patch 4/6] dt-bindings: media: ti-vpe: Document VPE driver
-Date: Thu, 19 Oct 2017 16:06:10 -0500
-Message-ID: <CAL_Jsq+jy-JN=ppfkyexFqJsbQVw3UGdNrNBVUvmGPHBdoLGkg@mail.gmail.com>
-References: <20171012192719.15193-1-bparrot@ti.com> <20171012192719.15193-5-bparrot@ti.com>
- <20171017210051.6ap3yg7b7viav6cy@rob-hp-laptop> <20171018130227.GO25400@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] nvmem: meson: use generic compatible
+Date: Thu, 19 Oct 2017 16:10:34 -0500
+Message-ID: <CAL_JsqKV5yGNFXxsPzAgF6_g-bQn8x8ScXVZ=Wgc1=APPL=mMw@mail.gmail.com>
+References: <20171012152450.12454-1-jbrunet@baylibre.com> <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
+ <1507923553.30658.10.camel@baylibre.com> <20171017205204.t4vfvbc2c5nsrnhm@rob-hp-laptop>
+ <1508311867.3957.33.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171018130227.GO25400@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508311867.3957.33.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 8:02 AM, Benoit Parrot <bparrot@ti.com> wrote:
-> Rob Herring <robh@kernel.org> wrote on Tue [2017-Oct-17 16:00:51 -0500]:
->> On Thu, Oct 12, 2017 at 02:27:17PM -0500, Benoit Parrot wrote:
->> > Device Tree bindings for the Video Processing Engine (VPE) driver.
->> >
->> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
->> > ---
->> >  Documentation/devicetree/bindings/media/ti-vpe.txt | 41 ++++++++++++++++++++++
->> >  1 file changed, 41 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/media/ti-vpe.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/media/ti-vpe.txt b/Documentation/devicetree/bindings/media/ti-vpe.txt
->> > new file mode 100644
->> > index 000000000000..c2ef93d08417
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/media/ti-vpe.txt
->> > @@ -0,0 +1,41 @@
->> > +Texas Instruments DRA7x VIDEO PROCESSING ENGINE (VPE)
->> > +------------------------------------------------------
->> > +
->> > +The Video Processing Engine (VPE) is a key component for image post
->> > +processing applications. VPE consist of a single memory to memory
->> > +path which can perform chroma up/down sampling, deinterlacing,
->> > +scaling and color space conversion.
->> > +
->> > +Required properties:
->> > +- compatible: must be "ti,vpe"
+On Wed, Oct 18, 2017 at 2:31 AM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> On Tue, 2017-10-17 at 15:52 -0500, Rob Herring wrote:
+>> On Fri, Oct 13, 2017 at 09:39:13PM +0200, Jerome Brunet wrote:
+>> > On Fri, 2017-10-13 at 21:14 +0200, Martin Blumenstingl wrote:
+>> > > Hi Jerome,
+>> > >
+>> > > On Thu, Oct 12, 2017 at 5:24 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> > > wrote:
+>> > > > The meson efuse driver seems to be compatible with more SoCs than
+>> > > > initially thought. Let's use the most generic compatible he have in
+>> > > > DT instead of the gxbb specific one
+>> > > >
+>> > > > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> > > > ---
+>> > > >  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
+>> > > >  drivers/nvmem/meson-efuse.c                               | 2 +-
+>> > > >  2 files changed, 3 insertions(+), 3 deletions(-)
+>> > > >
+>> > > > diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> > > > b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> > > > index fafd85bd67a6..0260524292fe 100644
+>> > > > --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> > > > +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+>> > > > @@ -1,7 +1,7 @@
+>> > > >  = Amlogic eFuse device tree bindings =
+>> > > >
+>> > > >  Required properties:
+>> > > > -- compatible: should be "amlogic,meson-gxbb-efuse"
+>> > > > +- compatible: should be "amlogic,meson-gx-efuse"
 >>
->> Needs SoC specific compatibles.
->
-> This particular I/P is present on all DRA7x family of devices
-> so would "ti,dra7-vpe" be acceptable?
-
-Better, but it's proven not to be in other cases IIRC. I'll leave it
-to TI maintainers to decide.
-
->> > +- reg:     physical base address and length of the registers set for the 8
->> > +   memory regions required;
->> > +- reg-names: name associated with the memory regions described is <reg>;
->> > +- interrupts: should contain IRQ line for VPE;
->> > +
->> > +Example:
->> > +   vpe {
->> > +           compatible = "ti,vpe";
->> > +           ti,hwmods = "vpe";
->> > +           clocks = <&dpll_core_h23x2_ck>;
->> > +           clock-names = "fck";
->> > +           reg =   <0x489d0000 0x120>,
->> > +                   <0x489d0300 0x20>,
->> > +                   <0x489d0400 0x20>,
->> > +                   <0x489d0500 0x20>,
->> > +                   <0x489d0600 0x3c>,
->> > +                   <0x489d0700 0x80>,
+>> Same comment as for the firmware.
 >>
->> Is there other stuff between these regions?
+>> > >
+>> > > have you checked with the devicetree maintainers how they want the
+>> > > documentation to look like in this case?
+>> >
+>> > You mean "Should we put every compatible existing (in DT) in the
+>> > documentation"
+>> > From what I've seen, at least in meson drivers, only the matched ones are
+>> > listed.
+>> >
+>> > That's a good question though.
+>> > We tend to put soc specific compatible "in case"  we need them later on.
+>> > Should
+>> > we document those ?
+>>
+>> Absolutely.
 >
-> No, they listed separately because each sub-region/module is
-> individually mapped and accessed using a starting 0 offset.
+> My understanding is that this documentation is the documentation of the bindings
+> used by the driver.
 
-So you are going to use 48KB of virtual memory to map 2KB of
-registers? Because each ioremap uses 8KB (1 page plus 1 guard page)
-last time i looked (which has been a while).
+No, the binding doc should be sufficient to validate the dts.
 
-But it's your platform.
+> If I understand your point, we should document bindings (compatible in that
+> case) that are in fact not fact by the driver. This means that if someone refer
+> only to the documentation, he might be surprised by the result.
+
+How so?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
