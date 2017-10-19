@@ -1,67 +1,84 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 04/10] arm: dts: mediatek: update audio node for mt2701
- and mt7623
-Date: Thu, 19 Oct 2017 18:49:07 +0200
-Message-ID: <0f61ad91-2d9d-f7a5-6bc7-a543278068ba@gmail.com>
+Subject: Re: [PATCH v3 02/10] arm: dts: mt2701: enable display pwm backlight
+Date: Thu, 19 Oct 2017 18:48:59 +0200
+Message-ID: <e05f2a13-01d6-e866-6ed5-adb6d3aada82@gmail.com>
 References: <cover.1506908511.git.ryder.lee@mediatek.com>
- <13ee41c37cbfd0de335b6fbbf061715184944cb8.1506908511.git.ryder.lee@mediatek.com>
+ <0f9441e9fc40e47e94927a3a4c96dd3f7f287d94.1506908511.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <13ee41c37cbfd0de335b6fbbf061715184944cb8.1506908511.git.ryder.lee@mediatek.com>
+In-Reply-To: <0f9441e9fc40e47e94927a3a4c96dd3f7f287d94.1506908511.git.ryder.lee@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Erin Lo <erin.lo@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Weiqing Kong <weiqing.kong@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 10/02/2017 03:54 AM, Ryder Lee wrote:
-> This patch adds interrupt-names property in audio node so that
-> binding can be agnostic of the IRQ order.
+> From: Weiqing Kong <weiqing.kong@mediatek.com>
 > 
+> This patch adds board related config for MT2701 pwm backlight.
+> 
+> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  arch/arm/boot/dts/mt2701.dtsi | 4 +++-
->  arch/arm/boot/dts/mt7623.dtsi | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-
+>  arch/arm/boot/dts/mt2701-evb.dts | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 
 Pushed to v4.14-next/dts32
 
 Thanks!
 
 > 
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 8c9fbe5..ecd388a 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -445,7 +445,9 @@
->  		compatible = "mediatek,mt2701-audio";
->  		reg = <0 0x11220000 0 0x2000>,
->  		      <0 0x112a0000 0 0x20000>;
-> -		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> +			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names	= "afe", "asys";
->  		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+> index f484973..63af4b1 100644
+> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> @@ -56,12 +56,29 @@
+>  	bt_sco_codec:bt_sco_codec {
+>  		compatible = "linux,bt-sco";
+>  	};
+> +
+> +	backlight_lcd: backlight_lcd {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&bls 0 100000>;
+> +		brightness-levels = <
+> +			  0  16  32  48  64  80  96 112
+> +			128 144 160 176 192 208 224 240
+> +			255
+> +		>;
+> +		default-brightness-level = <9>;
+> +	};
+>  };
 >  
->  		clocks = <&infracfg CLK_INFRA_AUDIO>,
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index ec8a074..381843e 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -544,7 +544,9 @@
->  			     "mediatek,mt2701-audio";
->  		reg = <0 0x11220000 0 0x2000>,
->  		      <0 0x112a0000 0 0x20000>;
-> -		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupts =  <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-> +			      <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names	= "afe", "asys";
->  		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+>  &auxadc {
+>  	status = "okay";
+>  };
 >  
->  		clocks = <&infracfg CLK_INFRA_AUDIO>,
+> +&bls {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm_bls_gpio>;
+> +};
+> +
+>  &i2c0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&i2c0_pins_a>;
+> @@ -111,6 +128,12 @@
+>  		};
+>  	};
+>  
+> +	pwm_bls_gpio: pwm_bls_gpio {
+> +		pins_cmd_dat {
+> +			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
+> +		};
+> +	};
+> +
+>  	spi_pins_a: spi0@0 {
+>  		pins_spi {
+>  			pinmux = <MT2701_PIN_53_SPI0_CSN__FUNC_SPI0_CS>,
 > 
