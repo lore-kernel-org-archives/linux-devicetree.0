@@ -1,41 +1,34 @@
-From: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric
- I/O
-Date: Fri, 20 Oct 2017 17:48:11 +0000
-Message-ID: <AM5PR0701MB26576FBB8EDEF83F3AA82B89E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
- <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
- <AM5PR0701MB26571DEDBDEA72B54DC1E7F6E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
- <CACRpkdZXaTk-+LMcV8bZTg0bZ9cPxORHpXNL7m+bwnvr57yJ9A@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] macb: Kill PHY reset code
+Date: Fri, 20 Oct 2017 11:04:52 -0700
+Message-ID: <a336d75d-9611-7f35-714d-706f8df84b8e@gmail.com>
+References: <1508487261-18524-1-git-send-email-geert+renesas@glider.be>
+ <1508487261-18524-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZXaTk-+LMcV8bZTg0bZ9cPxORHpXNL7m+bwnvr57yJ9A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508487261-18524-3-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Content-Language: en-US
-Content-ID: <F04C3BB3827B234CBD07887682CF8D31@eurprd07.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjAvMTcgMTg6NDUsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+IE9uIEZyaSwgT2N0IDIw
-LCAyMDE3IGF0IDQ6NDAgUE0sIEJlcm5kIEVkbGluZ2VyDQo+IDxiZXJuZC5lZGxpbmdlckBob3Rt
-YWlsLmRlPiB3cm90ZToNCj4+IE9uIDEwLzIwLzE3IDEwOjEwLCBMaW51cyBXYWxsZWlqIHdyb3Rl
-Og0KPiANCj4+Pj4gKyAgICAgICBlcnIgPSBiZ3Bpb19pbml0KCZwb3J0LT5iZ2MsIGdwaW8tPmRl
-diwgNCwgZGF0LCBOVUxMLCBOVUxMLA0KPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgTlVM
-TCwgTlVMTCwgMCk7DQo+Pj4NCj4+PiBCdXQgYWxsIHlvdSBhZGQgaXMgaW5wdXQtb25seSBHUElP
-IGNoaXBzLiBBbHNvIGZvciB0aGUgb3V0cHV0IHBvcnRzLg0KPj4+DQo+Pg0KPj4gV2VsbCBhY3R1
-YWxseSB0aGlzIGFsbG93cyBib3RoIGlucHV0IGFuZCBvdXRwdXQsDQo+PiBidXQgd2hpbGUgdGhl
-IGlucHV0IHBvcnQgY291bGQgYmUgd3JpdHRlbiBieSBhY2NpZGVudCwNCj4+IHRoZSBoYXJkd2Fy
-ZSBkb2VzIHRoZSByaWdodCB0aGluZyBhbmQgaWdub3JlcyB0aGUgd3JpdGUgY3ljbGUuDQo+Pg0K
-Pj4gVGhlIG90aGVyIHBhcmFtZXRlcnMgb2YgYmdwaW9faW5wdXQgYXJlIGZvciBkZXZpY2VzIHdp
-dGgNCj4+IGV4cGxpY2l0IHNldC0gYW5kIHJlc2V0LXNpZ25hbHMsIGFuZCBjb25maWd1cmFibGUN
-Cj4+IG91dHB1dC1kaXJlY3Rpb24gZXRjLCB3aGljaCBJIGRvbid0IGhhdmUuDQo+IA0KPiBBaCEg
-WW91J3JlIHJpZ2h0LiBXaXRoIGp1c3Qgb25lIHJlZ2lzdGVyIGl0IGJlY29tZXMgb25lIG9mIHRo
-ZXNlIHRoYXQNCj4gcmVhZCBhbmQgd3JpdGUgaW50byB0aGF0IHJlZ2lzdGVyLCBzaW1wbHkuIFNv
-cnJ5IGZvciBteSBpZ25vcmFuY2UuDQo+IA0KPiBJIHdvdWxkIHByZWZlciBpZiB5b3Ugc2V0IHRo
-ZSBmbGFnIEJHUElPRl9OT19PVVRQVVQgb24gdGhlIGlucHV0DQo+IG9ubHkgdmVyc2lvbiB0aG91
-Z2guIFNlbWFudGljcyBtYXkgbWF0dGVyIHRvIHRoZSBtbWlvIGdwaW8gY29yZS4NCj4gDQoNCkFo
-LCB0aGFua3MsIHRoYXQncyBhIGdvb2Qgc3VnZ2VzdGlvbi4NCg0KSSB3aWxsIGRvIHRoYXQgYW5k
-IHNlbmQgYW4gdXBkYXRlZCBwYXRjaC4NCg0KDQpCZXJuZC4NCg==
+On 10/20/2017 01:14 AM, Geert Uytterhoeven wrote:
+> From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> With the phylib now being aware of the "reset-gpios" PHY node property,
+> there should be no need to frob the PHY reset in this driver anymore...
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
