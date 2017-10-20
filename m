@@ -1,13 +1,11 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 2/2] arm64: dts: uniphier: add STDMAC clock to EHCI nodes
-Date: Fri, 20 Oct 2017 14:16:21 +0900
-Message-ID: <1508476581-16483-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1508476581-16483-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH 1/2] ARM: dts: uniphier: add STDMAC clock to EHCI nodes
+Date: Fri, 20 Oct 2017 14:16:20 +0900
+Message-ID: <1508476581-16483-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1508476581-16483-1-git-send-email-yamada.masahiro@socionext.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,7 +16,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Without the STDMAC clock enabled, the USB 2.0 hosts do not work.
@@ -28,15 +26,17 @@ it is independent from the other clocks.
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/uniphier-ld4.dtsi  | 9 ++++++---
+ arch/arm/boot/dts/uniphier-pro4.dtsi | 6 ++++--
+ arch/arm/boot/dts/uniphier-sld8.dtsi | 9 ++++++---
+ 3 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 99f14cc..2c03d96 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -324,7 +324,8 @@
- 			interrupts = <0 243 4>;
+diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+index 18f7e73..ecab5f3 100644
+--- a/arch/arm/boot/dts/uniphier-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+@@ -258,7 +258,8 @@
+ 			interrupts = <0 80 4>;
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_usb0>;
 -			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
@@ -45,8 +45,8 @@ index 99f14cc..2c03d96 100644
  			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
  				 <&mio_rst 12>;
  		};
-@@ -336,7 +337,8 @@
- 			interrupts = <0 244 4>;
+@@ -270,7 +271,8 @@
+ 			interrupts = <0 81 4>;
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_usb1>;
 -			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
@@ -55,8 +55,66 @@ index 99f14cc..2c03d96 100644
  			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
  				 <&mio_rst 13>;
  		};
-@@ -348,7 +350,8 @@
- 			interrupts = <0 245 4>;
+@@ -282,7 +284,8 @@
+ 			interrupts = <0 82 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb2>;
+-			clocks = <&mio_clk 7>, <&mio_clk 10>, <&mio_clk 14>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 10>,
++				 <&mio_clk 14>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 10>,
+ 				 <&mio_rst 14>;
+ 		};
+diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+index 6bbca27..688e356 100644
+--- a/arch/arm/boot/dts/uniphier-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+@@ -308,7 +308,8 @@
+ 			interrupts = <0 80 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb2>;
+-			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 8>,
++				 <&mio_clk 12>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
+ 				 <&mio_rst 12>;
+ 		};
+@@ -320,7 +321,8 @@
+ 			interrupts = <0 81 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb3>;
+-			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 9>,
++				 <&mio_clk 13>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
+ 				 <&mio_rst 13>;
+ 		};
+diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+index 39cc0e0..782ca99 100644
+--- a/arch/arm/boot/dts/uniphier-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+@@ -262,7 +262,8 @@
+ 			interrupts = <0 80 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb0>;
+-			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 8>,
++				 <&mio_clk 12>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
+ 				 <&mio_rst 12>;
+ 		};
+@@ -274,7 +275,8 @@
+ 			interrupts = <0 81 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb1>;
+-			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 9>,
++				 <&mio_clk 13>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
+ 				 <&mio_rst 13>;
+ 		};
+@@ -286,7 +288,8 @@
+ 			interrupts = <0 82 4>;
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_usb2>;
 -			clocks = <&mio_clk 7>, <&mio_clk 10>, <&mio_clk 14>;
