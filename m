@@ -1,55 +1,118 @@
-From: Bernd Edlinger <bernd.edlinger-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric
- I/O
-Date: Fri, 20 Oct 2017 20:05:25 +0000
-Message-ID: <AM5PR0701MB2657A43F0E553624BCFD5781E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
- <CACRpkdZXaTk-+LMcV8bZTg0bZ9cPxORHpXNL7m+bwnvr57yJ9A@mail.gmail.com>
- <AM5PR0701MB26576FBB8EDEF83F3AA82B89E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
- <4519589.dXStasooJK@debian64>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Problem with commit to add overlay symbols to live device tree
+Date: Fri, 20 Oct 2017 13:57:44 -0700
+Message-ID: <59EA6348.5020205@gmail.com>
+References: <85c5a40bb6eb4d4ebe522b3034528a36@infineon.com>
+ <59E9029D.1030700@gmail.com> <d0bd4312e9314c8ba6c56d800d07c0a9@infineon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4519589.dXStasooJK@debian64>
-Content-Language: en-US
-Content-ID: <DCAD84C9A580A6429568790DCDE7B639-MxyWWZKIsxacE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <d0bd4312e9314c8ba6c56d800d07c0a9-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, frank.rowand-7U/KSKJipcs@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjAvMTcgMjE6MDgsIENocmlzdGlhbiBMYW1wYXJ0ZXIgd3JvdGU6DQo+IFdhaXQuDQo+
-IA0KPiBJIGhhZCB0aGUgc2FtZSBjb21tZW50IGFib3V0IHRoaXMgZWFybGllciBhbmQgYSBmZXcg
-bW9yZSBzdWdnZXN0aW9ucw0KPiB0byBtb3ZlIHRoZSBkcml2ZXIgdG8gZ3Bpby1tbWlvJ3MgZHQu
-IERpZG4ndCB5b3UgcmVhZCB0aGUgbWFpbD8NCj4gDQo+IDxodHRwczovL21hcmMuaW5mby8/bD1s
-aW51eC1ncGlvJm09MTUwNjc4NzM3NzI0MTMyJnc9Mj4NCj4gDQo+IEl0IG1hZGUgaXQgdG8gdGhl
-IGxpc3QgYXJjaGl2ZSwgc28gSSdtIHByZXR0eSBzdXJlIHRoaXMgZ290IGRlbGl2ZXJlZA0KPiB0
-byB5b3UgYXMgd2VsbC4NCj4gDQoNCkhpLA0KDQpsb29rcyBsaWtlIEkgb3Zlcmxvb2tlZCB5b3Vy
-IG1lc3NhZ2UsIHNvcnJ5Lg0KDQogPiBIbSwgSXMgaXQgcG9zc2libGUgdG8gZGlmZmVyZW5jaWF0
-ZSBpdCBmcm9tIGEgInN5c2NvbiIgZGV2aWNlPw0KDQpUaGlzIGlzIG5vdCBhIHJlZ2lzdGVyIHJl
-Z2lvbiBjb250YWluaW5nIGEgc2V0IG9mIG1pc2NlbGxhbmVvdXMNCnJlZ2lzdGVycywgd2hpY2gg
-YXJlIG5vdCBjb2hlc2l2ZSBlbm91Z2ggdG8gcmVwcmVzZW50IGFzIGFueSBzcGVjaWZpYw0KdHlw
-ZSBvZiBkZXZpY2UuICBBdCBsZWFzdCBub3QgaG93IEkgdW5kZXJzdGFuZCB0aGUgdGVybS4NCg0K
-VGhhdCB3b3VsZCBtZWFuIHVucmVsYXRlZCBidXQgaGFyZHdpcmVkIGZ1bmN0aW9ucyB0aGF0IHNo
-YXJlDQp0aGUgc2FtZSByZWdpc3Rlci4gIFRoZSB2YXJpb3VzIGZ1bmN0aW9ucyB3b3VsZCBiZSBm
-aXhlZCBhbmQgZG9jdW1lbnRlZA0KaW4gdGhlIG1hbnVhbC4NCg0KVGhlIGRpZmZlcmVuY2UgaXMg
-dGhhdCB0aGVyZSBpcyBubyBmaXhlZCBmdW5jdGlvbiBhdCBhbGwsDQpsaWtlIGluIHRoZSBjYXNl
-IG9mIGEgSS9PIHBpbiB3aGVyZSB0aGUgc2lnbmFsIGlzIHJvdXRlZCBvbiB0aGUgUENCDQp0byBz
-b21lIGV4dGVybmFsIGRldmljZS4NCg0KSW5zdGVhZCB0aGUgc2lnbmFscyBhcmUgcm91dGVkIHRo
-cm91Z2ggdGhlIGludGVybmFsIGludGVyY29ubmVjdA0KdG8gbG9naWMgZnVuY3Rpb25zIG9uIHRo
-ZSBGUEdBLg0KDQogPiBUaGUgZHJpdmVyIHNlZW1kIGZhaXJseSBzaW1wbGUuIFNvLCBZb3UgY291
-bGQgYWN0dWFsbHkgZ2V0DQogPiBhd2F5IHdpdGgganVzdCBhZGRpbmcgdGhlICJhbHRyLGZwZ2Ft
-Z3ItZ3BpbyIgY29tcGF0aWJsZSBzdHJpbmcNCiA+IHRvIGdwaW8tbW1pby5jJ3MgYmdwaW9fb2Zf
-bWF0Y2ggc3RydWN0IGF0IFswXSBhbmQgY2hhbmdlIHRoZSBkdA0KID4gdG8gc29tZXRoaW5nIGxp
-a2UgdGhpczoNCg0KVGhpcyBzdHJ1Y3R1cmUgZG9lcyBub3QgcmVmbGVjdCB0aGUgaW50ZXJuYWwg
-cmVnaXN0ZXIgc3RydWN0dXJlIG9mIHRoZQ0KRlBHQSBNYW5hZ2VyJ3MgSS9PIHJlZ2lzdGVyIGJs
-b2NrIGFueSBtb3JlLg0KDQpJIHRoaW5rIHRoaXMgY291bGQgb2YgY291cnNlIGJlIGEgY29tcGxl
-dGVseSBnZW5lcmljIGRyaXZlciwgaW4gdGhhdA0KY2FzZSBJIHNlZSBubyBuZWVkIHRvIHVzZSBh
-IHN0cmluZyBsaWtlICJhbHRyLGZwZ2FtZ3ItZ3BpbyIgYXQgYWxsLA0KbWF5YmUganVzdCAiZ2Vu
-ZXJpYy1ncGlvIi4NCg0KSSB3b3VsZCBzdGlsbCBzZWUgYSB2YWx1ZSBpbiBoYXZpbmcgYSBzcGVj
-aWZpYyBkcml2ZXIgZm9yIHRoaXMNCnNwZWNpZmljIGhhcmR3YXJlLg0KDQpCdXQgaXMgdGhpcyBk
-cml2ZXIgaXMgdG9vIHNpbXBsZSwgdG8gYmUgYWNjZXB0YWJsZT8NCg0KDQpCZXJuZC4NCg==
+On 10/20/17 05:11, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
+>> Hi Alexander,
+>>
+>> On 10/19/17 10:06, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
+>>> Hi Frank, Rob,
+>>>
+>>> I ran some tests with kernel v4.14-rc2, where I came across an issue
+>>> with your commit "of: overlay: add overlay symbols to live device
+>>> tree" (d1651b03c2df75db8eda3fbcd3a07adb337ee8b0,
+>>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d
+>> rivers/of?h=v4.14-rc5&id=d1651b03c2df75db8eda3fbcd3a07adb337ee8b0).
+>>> I am not sure whether this is a problem with your change or whether I
+>>> made a mistake somewhere.
+>>>
+>>> Without this commit, the following device tree overlay works fine on
+>>> a Raspberry Pi:
+>>>
+>>> /dts-v1/;
+>>> /plugin/;
+>>>
+>>> / {
+>>> 	fragment@0 {
+>>> 		target-path = "/soc/spi@7e204000";
+>>> 		__overlay__ {
+>>> 			#address-cells = <1>;
+>>> 			#size-cells = <0>;
+>>> 			status = "okay";
+>>>
+>>> 		        spidev1: spi@1 {
+>>> 				compatible = "spidev";
+>>> 				reg = <1>;
+>>> 				spi-max-frequency = <5000000>;
+>>> 			};
+>>> 		};
+>>> 	};
+>>> };
+>>>
+>>> But with the commit, it is rejected:
+>>>
+>>> OF: overlay: no symbols in root of device tree.
+>>> OF: overlay: of_build_overlay_info() failed for tree@/
+>>> create_overlay: Failed to create overlay (err=-22)
+>>>
+>>> Only if I remove the spidev1 label, it continues to work with the
+>>> commit (but this is not always possible in more complex overlays).
+>>>
+>>> I hope this does not make a difference, but I use the configfs
+>>> interface to load the overlay, that is not part of mainline, but
+>>> shipped by several distributions nonetheless (for example in the
+>>> Raspberry Pi kernel,
+>>>
+>> https://github.com/raspberrypi/linux/commit/cccc24635da69799335566eb46
+>> 4a4c9e1fb4a8ad).
+>>>
+>>>
+>>> Could you tell me whether this change in behavior is intentional and
+>>> whether I have to fix something in my usage?
+>>
+>> Yes, the change is intentional.
+>>
+>> If you are using overlays, the expectation is that the device tree
+>> that was used to boot contains symbols (the paths of nodes that
+>> have phandles) so that phandle references in the overlay can be
+>> fixed up to match the values in the base devicetree.  Symbols
+>> will be added to the device tree if if is compiled with the
+>> "@" option.  This is the first method to avoid the overlay
+>> load error.
+> 
+> Ah, thanks, this does solve the problem. I use nothing special to
+> generate the base devicetree, just "make dtbs". Would it make sense
+> to add the "@" option to the kernel Makefile, so that symbols are
+> added by default? Or does this have any downside? I'd suspect that
+
+Yes, there is a large downside.  Compiling with the "@" option will
+increase the size of the DTB.  Most boards will not use overlays, 
+and in those cases this overhead has no value.  So "@" should be
+opt-in, not default.
+
+
+> many more people will be hit by this change, since most tutorials for
+> overlays that I have seen include the "@" option for the dtc calls.> 
+>> If you compile the overlay with the "@" option then symbols
+>> will be added to the overlay DTB.  Previous to commit
+>> d1651b03c2df, these symbols would be ignored when an overlay
+>> was loaded.  If you remove the "@" from the compile of
+>> overlays, then everything should work the same way it did
+>> before the commit.  This is the second way to avoid the
+>> load overlay error.
+>>
+>>
+>>> Thanks
+>>> Alexander
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
