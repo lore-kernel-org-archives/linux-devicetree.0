@@ -1,104 +1,97 @@
-From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v3] display: panel: Add Mitsubishi aa070mc01 display support (800x480)
-Date: Sat, 21 Oct 2017 00:18:37 +0200
-Message-ID: <1508537917-1723-1-git-send-email-lukma@denx.de>
-References: <1508537169-402-1-git-send-email-lukma@denx.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508537169-402-1-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: hisi: add PCIe driver support for HiSilicon STB SoCs
+Date: Fri, 20 Oct 2017 17:52:48 -0500
+Message-ID: <20171020225248.GV6332@bhelgaas-glaptop.roam.corp.google.com>
+References: <1508043971-23216-1-git-send-email-shawnguo@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1508043971-23216-1-git-send-email-shawnguo@kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>, Rob Herring <robh+dt@kernel.org>, Jiancheng Xue <xuejiancheng@hisilicon.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for Mitsubishi aa070mc01 TFT panel working
-with 8 bit ISP mode (pin 19 "mode" HIGH for 20 pin TFT connector).
+On Sun, Oct 15, 2017 at 01:06:11PM +0800, Shawn Guo wrote:
+> From: Jianguo Sun <sunjianguo1@huawei.com>
+> 
+> Add PCIe controller driver for HiSilicon STB SoCs,
+> the controller is based on the DesignWare's PCIe core.
 
-Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
----
-Changes for v2:
-- Place the code sorted alphabetically
-- Add missing ./Documentation/devicetree/binding/display properties
-  description
+s/DesignWare's/DesignWare/
 
-Changes for v3:
-- Fix typo in display name (in property description)
+> Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
+>  drivers/pci/dwc/Kconfig                            |  10 +
+>  drivers/pci/dwc/Makefile                           |   1 +
+>  drivers/pci/dwc/pcie-histb.c                       | 469 +++++++++++++++++++++
+>  4 files changed, 546 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+>  create mode 100644 drivers/pci/dwc/pcie-histb.c
 
----
- .../display/panel/mitsubishi,aa070mc01.txt         |  7 +++++
- drivers/gpu/drm/panel/panel-simple.c               | 35 ++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
+Looks beautiful overall!
 
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
-new file mode 100644
-index 0000000..4f5094f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
-@@ -0,0 +1,7 @@
-+Mitsubishi "AA070MC01 7.0" WVGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "mitsubishi,aa070mc01-ca1"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 07188dc..72a20fc 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1350,6 +1350,38 @@ static const struct panel_desc lg_lp129qe = {
- 	},
- };
- 
-+static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
-+	.clock = 30400,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 0,
-+	.hsync_end = 800 + 1,
-+	.htotal = 800 + 0 + 1 + 160,
-+	.vdisplay = 480,
-+	.vsync_start = 480 + 0,
-+	.vsync_end = 480 + 48 + 1,
-+	.vtotal = 480 + 48 + 1 + 0,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-+};
-+
-+static const struct panel_desc mitsubishi_aa070mc01 = {
-+	.modes = &mitsubishi_aa070mc01_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 152,
-+		.height = 91,
-+	},
-+
-+	.delay = {
-+		.enable = 200,
-+		.unprepare = 200,
-+		.disable = 400,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
-+};
-+
- static const struct display_timing nec_nl12880bc20_05_timing = {
- 	.pixelclock = { 67000000, 71000000, 75000000 },
- 	.hactive = { 1280, 1280, 1280 },
-@@ -2080,6 +2112,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "lg,lp129qe",
- 		.data = &lg_lp129qe,
- 	}, {
-+		.compatible = "mitsubishi,aa070mc01-ca1",
-+		.data = &mitsubishi_aa070mc01,
-+	}, {
- 		.compatible = "nec,nl12880bc20-05",
- 		.data = &nec_nl12880bc20_05,
- 	}, {
--- 
-2.1.4
+This needs a MAINTAINERS update so "./scripts/get_maintainer.pl -f" prints
+something useful.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A few minor nits below that I would fix myself, but since you need to
+supply the MAINTAINERS update anyway, I'll let you do it :)
+
+> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> new file mode 100644
+> index 000000000000..9474ad9bc36c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
+> @@ -0,0 +1,66 @@
+> +HiSilicon STB PCIe host bridge DT description
+> +
+> +HiSilicon STB PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
+
+s/Designware/DesignWare/ in English text above (not in filenames,
+function names, etc).
+
+s/PCI/PCIe/
+
+> +static u32 histb_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+> +				u32 reg, size_t size)
+
+These should be lined up exactly ("u32" should line up with "struct"
+above it).  They are currently off by one.  Similarly for
+histb_pcie_write_dbi(), histb_pcie_rd_own_conf(),
+histb_pcie_wr_own_conf().
+
+> +	hipcie->aux_clk = devm_clk_get(dev, "aux");
+> +	if (IS_ERR(hipcie->aux_clk)) {
+> +		dev_err(dev, "Failed to get pcie aux clk\n");
+
+s/pcie/PCIe/ in this message and the ones below.  Also in
+histb_pcie_host_enable() comment.
+
+> +		return PTR_ERR(hipcie->aux_clk);
+> +	}
+> +
+> +	hipcie->pipe_clk = devm_clk_get(dev, "pipe");
+> +	if (IS_ERR(hipcie->pipe_clk)) {
+> +		dev_err(dev, "Failed to get pcie pipe clk\n");
+> +		return PTR_ERR(hipcie->pipe_clk);
+
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
+> +		if (pp->msi_irq < 0) {
+> +			dev_err(dev, "Failed to get msi irq\n");
+> +			return pp->msi_irq;
+> +		}
+> +
+> +		ret = devm_request_irq(dev, pp->msi_irq,
+> +				       histb_pcie_msi_irq_handler,
+> +				       IRQF_SHARED, "histb-pcie-msi", pp);
+> +		if (ret) {
+> +			dev_err(dev, "cannot request msi irq\n");
+
+s/msi irq/MSI IRQ/ in the error message.  Also a few lines above.
