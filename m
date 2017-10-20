@@ -1,66 +1,67 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Support GLINK intents
-Date: Thu, 19 Oct 2017 22:00:49 -0700
-Message-ID: <CAOCOHw75mrusG6XPXwKV7UDUt2gFZfU_MyUZxryk4YziCGinNg@mail.gmail.com>
-References: <1508375418-15611-1-git-send-email-clew@codeaurora.org> <1508375418-15611-2-git-send-email-clew@codeaurora.org>
+Subject: Re: [Patch v6 7/7] MAINTAINERS: Add SLIMbus maintainer
+Date: Thu, 19 Oct 2017 22:00:40 -0700
+Message-ID: <CAOCOHw7ufGO40W7-_q9kTc4wO63jZAK3Xh-Hs9JpcgaCEQ79yA@mail.gmail.com>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-8-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508375418-15611-2-git-send-email-clew@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Lew <clew@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, smaliyap@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171006155136.4682-8-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Michael Opdenacker <michael.opdenacker@free-electrons.com>, poeschel@lemonage.de, Andreas Noever <andreas.noever@gmail.com>, gong.chen@linux.intel.com, Arnd Bergmann <arnd@arndb.de>, kheitke@audience.com, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, james.hogan@imgtec.com, Pawel Moll <pawel.moll@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sharon.dvir1@mail.huji.ac.il, Rob Herring <robh+dt@kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, alan@linux.intel.com, bp@suse.de, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Jiri Kosina <jkosina@suse.cz>, joe@perches.com, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 18 Oct 18:10 PDT 2017, Chris Lew wrote:
+On Fri 06 Oct 08:51 PDT 2017, srinivas.kandagatla@linaro.org wrote:
 
-> Virtual GLINK channels may know what throughput to expect from a
-> remoteproc. An intent advertises to the remoteproc this channel is
-> ready to receive data. Allow a channel to define the size and amount of
-> intents to be prequeued.
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 >
-> Signed-off-by: Chris Lew <clew@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> Add myself as maintainer for slimbus.
 >
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> index b277eca861f7..6c21f76822ca 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-> @@ -39,6 +39,14 @@ of these nodes are defined by the individual bindings for the specific function
->   Definition: a list of channels tied to this function, used for matching
->      the function to a set of virtual channels
->
-> +- intents:
 
-qcom,intents or qcom,default-intents
-
-> + Usage: optional
-> + Value type: <prop-encoded-array>
-> + Definition: a list of size,amount pairs describing what intents should
-> +    be preallocated for this virtual channel. If a GLINK node
-> +    supports intents, an intent advertises this channel is ready
-> +    to receive data.
-
-Rather than describing what a GLINK intent is I would suggest that you
-replace this second sentence with something like "This can be used to
-tweak the default intents available for the channel to meet expectations
-of the remote."
-
-> +
->  = EXAMPLE
->  The following example represents the GLINK RPM node on a MSM8996 device, with
->  the function for the "rpm_request" channel defined, which is used for
-> @@ -69,6 +77,8 @@ regualtors and root clocks.
->   compatible = "qcom,rpm-msm8996";
->   qcom,glink-channels = "rpm_requests";
->
-> + intents = <0x400 5
-> +   0x800 1>;
->   ...
->   };
->   };
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2281af4..014f74b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12320,6 +12320,14 @@ T: git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
+>  F: include/linux/srcu.h
+>  F: kernel/rcu/srcu.c
+>
+> +SERIAL LOW-POWER INTER-CHIP MEDIA BUS (SLIMbus)
+> +M: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +L: alsa-devel@alsa-project.org (moderated for non-subscribers)
+> +S: Maintained
+> +F: drivers/slimbus/
+> +F: Documentation/devicetree/bindings/slimbus/
+> +F: include/linux/slimbus.h
+> +
+>  SMACK SECURITY MODULE
+>  M: Casey Schaufler <casey@schaufler-ca.com>
+>  L: linux-security-module@vger.kernel.org
+> --
+> 2.9.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
