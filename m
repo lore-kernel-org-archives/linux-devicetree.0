@@ -1,133 +1,119 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [RFC PATCH 5/5] gpio: aspeed: Add support for reset tolerance
-Date: Fri, 20 Oct 2017 14:07:27 +1030
-Message-ID: <20171020033727.21557-6-andrew@aj.id.au>
-References: <20171020033727.21557-1-andrew@aj.id.au>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [Patch v6 2/7] slimbus: Add messaging APIs to slimbus framework
+Date: Thu, 19 Oct 2017 22:00:26 -0700
+Message-ID: <CAOCOHw4k+JTm-QRTvdYAKJy=bSSM1EXq+4Ne3E9APsKRC5pgtw@mail.gmail.com>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-3-srinivas.kandagatla@linaro.org> <20171018061500.GE1575@tuxbook>
+ <1dfaba0b-78c2-8445-3b04-0bd6a25bf221@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171020033727.21557-1-andrew@aj.id.au>
+In-Reply-To: <1dfaba0b-78c2-8445-3b04-0bd6a25bf221@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org, corbet@lwn.net, joel@jms.id.au, ryan_chen@aspeedtech.com, robh+dt@kernel.org, frowand.list@gmail.com, ckeepax@opensource.wolfsonmicro.com, ldewangan@nvidia.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Sagar Dharia <sdharia@codeaurora.org>, bp@suse.de, poeschel@lemonage.de, Thierry Reding <treding@nvidia.com>, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, Mathieu Poirier <mathieu.poirier@linaro.org>, daniel@ffwll.ch, Jiri Kosina <jkosina@suse.cz>, sharon.dvir1@mail.huji.ac.il, joe@perches.com, David Miller <davem@davemloft.net>, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, kheitke@audience.com, linux-arm-msm <linux-arm-msm@vger.ke>
 List-Id: devicetree@vger.kernel.org
 
-Use the new pinconf parameter for reset tolerance to expose the
-associated capability of the Aspeed GPIO controller.
+On Wed 18 Oct 09:39 PDT 2017, Srinivas Kandagatla wrote:
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/gpio/gpio-aspeed.c | 39 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+> Thanks for Review Comments,
+>
+>
+> On 18/10/17 07:15, Bjorn Andersson wrote:
+> > On Fri 06 Oct 08:51 PDT 2017, srinivas.kandagatla@linaro.org wrote:
+[..]
+> >
+> > > + if (!async) {
+> > > + txn->msg->comp_cb = NULL;
+> > > + txn->msg->ctx = NULL;
+> >
+> > I believe txn->msg is always required, so you don't need to do this
+> > contidionally.
+>
+> I don't get this, why do you want to set comp_cb to NULL unconditionally?
+>
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index bfc53995064a..0492cd917178 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -60,6 +60,7 @@ struct aspeed_gpio_bank {
- 	uint16_t	val_regs;
- 	uint16_t	irq_regs;
- 	uint16_t	debounce_regs;
-+	uint16_t	tolerance_regs;
- 	const char	names[4][3];
- };
- 
-@@ -70,48 +71,56 @@ static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
- 		.val_regs = 0x0000,
- 		.irq_regs = 0x0008,
- 		.debounce_regs = 0x0040,
-+		.tolerance_regs = 0x001c,
- 		.names = { "A", "B", "C", "D" },
- 	},
- 	{
- 		.val_regs = 0x0020,
- 		.irq_regs = 0x0028,
- 		.debounce_regs = 0x0048,
-+		.tolerance_regs = 0x003c,
- 		.names = { "E", "F", "G", "H" },
- 	},
- 	{
- 		.val_regs = 0x0070,
- 		.irq_regs = 0x0098,
- 		.debounce_regs = 0x00b0,
-+		.tolerance_regs = 0x00ac,
- 		.names = { "I", "J", "K", "L" },
- 	},
- 	{
- 		.val_regs = 0x0078,
- 		.irq_regs = 0x00e8,
- 		.debounce_regs = 0x0100,
-+		.tolerance_regs = 0x00fc,
- 		.names = { "M", "N", "O", "P" },
- 	},
- 	{
- 		.val_regs = 0x0080,
- 		.irq_regs = 0x0118,
- 		.debounce_regs = 0x0130,
-+		.tolerance_regs = 0x012c,
- 		.names = { "Q", "R", "S", "T" },
- 	},
- 	{
- 		.val_regs = 0x0088,
- 		.irq_regs = 0x0148,
- 		.debounce_regs = 0x0160,
-+		.tolerance_regs = 0x015c,
- 		.names = { "U", "V", "W", "X" },
- 	},
- 	{
- 		.val_regs = 0x01E0,
- 		.irq_regs = 0x0178,
- 		.debounce_regs = 0x0190,
-+		.tolerance_regs = 0x018c,
- 		.names = { "Y", "Z", "AA", "AB" },
- 	},
- 	{
--		.val_regs = 0x01E8,
--		.irq_regs = 0x01A8,
-+		.val_regs = 0x01e8,
-+		.irq_regs = 0x01a8,
- 		.debounce_regs = 0x01c0,
-+		.tolerance_regs = 0x01bc,
- 		.names = { "AC", "", "", "" },
- 	},
- };
-@@ -531,6 +540,30 @@ static int aspeed_gpio_setup_irqs(struct aspeed_gpio *gpio,
- 	return 0;
- }
- 
-+static int aspeed_gpio_reset_tolerance(struct gpio_chip *chip,
-+					unsigned int offset, bool enable)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(chip);
-+	const struct aspeed_gpio_bank *bank;
-+	unsigned long flags;
-+	u32 val;
-+
-+	bank = to_bank(offset);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+	val = readl(gpio->base + bank->tolerance_regs);
-+
-+	if (enable)
-+		val |= GPIO_BIT(offset);
-+	else
-+		val &= ~GPIO_BIT(offset);
-+
-+	writel(val, gpio->base + bank->tolerance_regs);
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return 0;
-+}
-+
- static int aspeed_gpio_request(struct gpio_chip *chip, unsigned int offset)
- {
- 	if (!have_gpio(gpiochip_get_data(chip), offset))
-@@ -768,6 +801,8 @@ static int aspeed_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- 			param == PIN_CONFIG_DRIVE_OPEN_SOURCE)
- 		/* Return -ENOTSUPP to trigger emulation, as per datasheet */
- 		return -ENOTSUPP;
-+	else if (param == PIN_CONFIG_RESET_TOLERANT)
-+		return aspeed_gpio_reset_tolerance(chip, offset, arg);
- 
- 	return -ENOTSUPP;
- }
--- 
-2.11.0
+I'm just not happy about the complexity of this function, but perhaps
+it's confusing to always set them, regardless of them being used. Feel
+free to keep it.
+
+[..]
+> > > +void slim_return_tx(struct slim_controller *ctrl, int err)
+> > > +{
+> > > + unsigned long flags;
+> > > + int idx;
+> > > + struct slim_pending cur;
+> > > +
+> > > + spin_lock_irqsave(&ctrl->tx.lock, flags);
+> > > + idx = ctrl->tx.head;
+> > > + ctrl->tx.head = (ctrl->tx.head + 1) % ctrl->tx.n;
+> > > + cur = ctrl->pending_wr[idx];
+> >
+> > Why is this doing struct copy?
+> >
+> Not sure, do you see any issue with this?
+>
+
+It's a rarely used feature and I don't see a reason for using it here.
+
+It's probably better to make a copy of cur.cb and cur.ctx to make their
+use after the spin-unlock more obvious (but should be fine as the
+spinlock is for the pending_wr array.
+
+> > > + spin_unlock_irqrestore(&ctrl->tx.lock, flags);
+> > > +
+> > > + if (!cur.cb)
+> > > + dev_err(&ctrl->dev, "NULL Transaction or completion");
+> > > + else
+> > > + cur.cb(cur.ctx, err);
+> > > +
+> > > + up(&ctrl->tx_sem);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(slim_return_tx);
+[..]
+> > > +/**
+> > > + * struct slim_ctrl_buf: circular buffer used by contoller for TX, RX
+> > > + * @base: virtual base address for this buffer
+> > > + * @phy: physical address for this buffer (this is useful if controller can
+> > > + *  DMA the buffers for TX and RX to/from controller hardware
+> > > + * @lock: lock protecting head and tail
+> > > + * @head: index where buffer is returned back
+> > > + * @tail: index from where buffer is consumed
+> > > + * @sl_sz: byte-size of each slot in this buffer
+> > > + * @n:  number of elements in this circular ring, note that this needs to be
+> > > + * 1 more than actual buffers to allow for one open slot
+> > > + */
+> >
+> > Is this ringbuffer mechanism defined in the slimbus specification? Looks
+> > like something specific to the Qualcomm controller, rather than
+> > something that should be enforced in the framework.
+> >
+>
+> Yes, this is not part of the slimbus specs, but Qcom SOCs have concept of
+> Message Queues.
+>
+> Are you suggesting that this buffer handling has to be moved out of core
+> into controller driver?
+>
+
+The fact that this seems to describe a physical ring buffer, with some
+set of properties that are related to how a ring buffer works in the
+Qualcomm hardware and it carries a notion of physical mapping, all
+indicates to me that this describes some Qualcomm hardware interface.
+
+I believe this is a hardware implementation detail that should reside in
+the hardware part of the implementation (i.e. the Qualcomm driver).
+
+>
+> > > +struct slim_ctrl_buf {
+> > > + void *base;
+> > > + phys_addr_t phy;
+> > > + spinlock_t lock;
+> > > + int head;
+> > > + int tail;
+> > > + int sl_sz;
+> > > + int n;
+> > > +};
+
+Regards,
+Bjorn
