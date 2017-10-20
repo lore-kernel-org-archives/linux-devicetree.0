@@ -1,97 +1,174 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: hisi: add PCIe driver support for HiSilicon STB SoCs
-Date: Fri, 20 Oct 2017 17:52:48 -0500
-Message-ID: <20171020225248.GV6332@bhelgaas-glaptop.roam.corp.google.com>
-References: <1508043971-23216-1-git-send-email-shawnguo@kernel.org>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
+Date: Fri, 20 Oct 2017 19:32:47 -0400
+Message-ID: <29100eb4-ab8a-a10e-f23b-356658d9a925@codeaurora.org>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+	<20171006133203.22803-2-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1508043971-23216-1-git-send-email-shawnguo@kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>, Rob Herring <robh+dt@kernel.org>, Jiancheng Xue <xuejiancheng@hisilicon.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20171006133203.22803-2-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 15, 2017 at 01:06:11PM +0800, Shawn Guo wrote:
-> From: Jianguo Sun <sunjianguo1@huawei.com>
-> 
-> Add PCIe controller driver for HiSilicon STB SoCs,
-> the controller is based on the DesignWare's PCIe core.
+few nits below.
 
-s/DesignWare's/DesignWare/
-
-> Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
->  .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
->  drivers/pci/dwc/Kconfig                            |  10 +
->  drivers/pci/dwc/Makefile                           |   1 +
->  drivers/pci/dwc/pcie-histb.c                       | 469 +++++++++++++++++++++
->  4 files changed, 546 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
->  create mode 100644 drivers/pci/dwc/pcie-histb.c
-
-Looks beautiful overall!
-
-This needs a MAINTAINERS update so "./scripts/get_maintainer.pl -f" prints
-something useful.
-
-A few minor nits below that I would fix myself, but since you need to
-supply the MAINTAINERS update anyway, I'll let you do it :)
-
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> new file mode 100644
-> index 000000000000..9474ad9bc36c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> @@ -0,0 +1,66 @@
-> +HiSilicon STB PCIe host bridge DT description
+> +/*
+> + * Allocate a iommu_process structure for the given task.
+> + *
+> + * Ideally we shouldn't need the domain parameter, since iommu_process is
+> + * system-wide, but we use it to retrieve the driver's allocation ops and a
+> + * PASID range.
+> + */
+> +static struct iommu_process *
+> +iommu_process_alloc(struct iommu_domain *domain, struct task_struct *task)
+> +{
+> +	int err;
+> +	int pasid;
+> +	struct iommu_process *process;
 > +
-> +HiSilicon STB PCIe host controller is based on Designware PCI core.
-> +It shares common functions with PCIe Designware core driver and inherits
-> +common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +	if (WARN_ON(!domain->ops->process_alloc || !domain->ops->process_free))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	process = domain->ops->process_alloc(task);
+> +	if (IS_ERR(process))
+> +		return process;
+> +	if (!process)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	process->pid		= get_task_pid(task, PIDTYPE_PID);
+> +	process->release	= domain->ops->process_free;
+> +	INIT_LIST_HEAD(&process->domains);
+> +	kref_init(&process->kref);
+> +
+nit, I think you should place this check right after the pid assignment.
 
-s/Designware/DesignWare/ in English text above (not in filenames,
-function names, etc).
-
-s/PCI/PCIe/
-
-> +static u32 histb_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-> +				u32 reg, size_t size)
-
-These should be lined up exactly ("u32" should line up with "struct"
-above it).  They are currently off by one.  Similarly for
-histb_pcie_write_dbi(), histb_pcie_rd_own_conf(),
-histb_pcie_wr_own_conf().
-
-> +	hipcie->aux_clk = devm_clk_get(dev, "aux");
-> +	if (IS_ERR(hipcie->aux_clk)) {
-> +		dev_err(dev, "Failed to get pcie aux clk\n");
-
-s/pcie/PCIe/ in this message and the ones below.  Also in
-histb_pcie_host_enable() comment.
-
-> +		return PTR_ERR(hipcie->aux_clk);
+> +	if (!process->pid) {
+> +		err = -EINVAL;
+> +		goto err_free_process;
 > +	}
 > +
-> +	hipcie->pipe_clk = devm_clk_get(dev, "pipe");
-> +	if (IS_ERR(hipcie->pipe_clk)) {
-> +		dev_err(dev, "Failed to get pcie pipe clk\n");
-> +		return PTR_ERR(hipcie->pipe_clk);
-
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-> +		if (pp->msi_irq < 0) {
-> +			dev_err(dev, "Failed to get msi irq\n");
-> +			return pp->msi_irq;
-> +		}
+> +	idr_preload(GFP_KERNEL);
+> +	spin_lock(&iommu_process_lock);
+> +	pasid = idr_alloc_cyclic(&iommu_process_idr, process, domain->min_pasid,
+> +				 domain->max_pasid + 1, GFP_ATOMIC);
+> +	process->pasid = pasid;
+> +	spin_unlock(&iommu_process_lock);
+> +	idr_preload_end();
 > +
-> +		ret = devm_request_irq(dev, pp->msi_irq,
-> +				       histb_pcie_msi_irq_handler,
-> +				       IRQF_SHARED, "histb-pcie-msi", pp);
-> +		if (ret) {
-> +			dev_err(dev, "cannot request msi irq\n");
 
-s/msi irq/MSI IRQ/ in the error message.  Also a few lines above.
+nit, You can maybe return here if pasid is not negative.
+
+> +	if (pasid < 0) {
+> +		err = pasid;
+> +		goto err_put_pid;
+> +	}
+> +
+> +	return process;
+> +
+> +err_put_pid:
+> +	put_pid(process->pid);
+> +
+> +err_free_process:
+> +	domain->ops->process_free(process);
+> +
+> +	return ERR_PTR(err);
+> +}
+> +
+> +static void iommu_process_release(struct kref *kref)
+> +{
+> +	struct iommu_process *process;
+> +	void (*release)(struct iommu_process *);
+> +
+> +	assert_spin_locked(&iommu_process_lock);
+> +
+> +	process = container_of(kref, struct iommu_process, kref);
+
+if we are concerned about things going wrong (assert above), we should
+also add some pointer check here (WARN) for process and release pointers as well.
+
+> +	release = process->release;
+> +
+> +	WARN_ON(!list_empty(&process->domains));
+> +
+> +	idr_remove(&iommu_process_idr, process->pasid);
+> +	put_pid(process->pid);
+> +	release(process);
+> +}
+> +
+> +/*
+> + * Returns non-zero if a reference to the process was successfully taken.
+> + * Returns zero if the process is being freed and should not be used.
+> + */
+> +static int iommu_process_get_locked(struct iommu_process *process)
+> +{
+> +	assert_spin_locked(&iommu_process_lock);
+> +
+> +	if (process)
+> +		return kref_get_unless_zero(&process->kref);
+> +
+> +	return 0;
+> +}
+> +
+> +static void iommu_process_put_locked(struct iommu_process *process)
+> +{
+> +	assert_spin_locked(&iommu_process_lock);
+> +
+> +	kref_put(&process->kref, iommu_process_release);
+> +}
+> +
+> +static int iommu_process_attach(struct iommu_domain *domain, struct device *dev,
+> +				struct iommu_process *process)
+> +{
+> +	int err;
+> +	int pasid = process->pasid;
+> +	struct iommu_context *context;
+> +
+> +	if (WARN_ON(!domain->ops->process_attach || !domain->ops->process_detach))
+> +		return -ENODEV;
+> +
+> +	if (pasid > domain->max_pasid || pasid < domain->min_pasid)
+> +		return -ENOSPC;
+> +
+> +	context = kzalloc(sizeof(*context), GFP_KERNEL);
+> +	if (!context)
+> +		return -ENOMEM;
+> +
+
+devm_kzalloc maybe?
+
+> +	context->process	= process;
+> +	context->domain		= domain;
+> +	refcount_set(&context->ref, 1);
+> +
+> +	spin_lock(&iommu_process_lock);
+> +	err = domain->ops->process_attach(domain, dev, process, true);
+> +	if (err) {
+> +		kfree(context);
+> +		spin_unlock(&iommu_process_lock);
+> +		return err;
+> +	}
+> +
+> +	list_add(&context->process_head, &process->domains);
+> +	list_add(&context->domain_head, &domain->processes);
+> +	spin_unlock(&iommu_process_lock);
+> +
+> +	return 0;
+> +}
+
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
