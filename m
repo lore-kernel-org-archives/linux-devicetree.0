@@ -1,119 +1,66 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [Patch v6 2/7] slimbus: Add messaging APIs to slimbus framework
-Date: Thu, 19 Oct 2017 22:00:26 -0700
-Message-ID: <CAOCOHw4k+JTm-QRTvdYAKJy=bSSM1EXq+4Ne3E9APsKRC5pgtw@mail.gmail.com>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-3-srinivas.kandagatla@linaro.org> <20171018061500.GE1575@tuxbook>
- <1dfaba0b-78c2-8445-3b04-0bd6a25bf221@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Support GLINK intents
+Date: Thu, 19 Oct 2017 22:00:49 -0700
+Message-ID: <CAOCOHw75mrusG6XPXwKV7UDUt2gFZfU_MyUZxryk4YziCGinNg@mail.gmail.com>
+References: <1508375418-15611-1-git-send-email-clew@codeaurora.org> <1508375418-15611-2-git-send-email-clew@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1dfaba0b-78c2-8445-3b04-0bd6a25bf221@linaro.org>
+In-Reply-To: <1508375418-15611-2-git-send-email-clew@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Sagar Dharia <sdharia@codeaurora.org>, bp@suse.de, poeschel@lemonage.de, Thierry Reding <treding@nvidia.com>, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, Mathieu Poirier <mathieu.poirier@linaro.org>, daniel@ffwll.ch, Jiri Kosina <jkosina@suse.cz>, sharon.dvir1@mail.huji.ac.il, joe@perches.com, David Miller <davem@davemloft.net>, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, kheitke@audience.com, linux-arm-msm <linux-arm-msm@vger.ke>
+To: Chris Lew <clew@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, smaliyap@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 18 Oct 09:39 PDT 2017, Srinivas Kandagatla wrote:
+On Wed 18 Oct 18:10 PDT 2017, Chris Lew wrote:
 
-> Thanks for Review Comments,
+> Virtual GLINK channels may know what throughput to expect from a
+> remoteproc. An intent advertises to the remoteproc this channel is
+> ready to receive data. Allow a channel to define the size and amount of
+> intents to be prequeued.
 >
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 >
-> On 18/10/17 07:15, Bjorn Andersson wrote:
-> > On Fri 06 Oct 08:51 PDT 2017, srinivas.kandagatla@linaro.org wrote:
-[..]
-> >
-> > > + if (!async) {
-> > > + txn->msg->comp_cb = NULL;
-> > > + txn->msg->ctx = NULL;
-> >
-> > I believe txn->msg is always required, so you don't need to do this
-> > contidionally.
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> index b277eca861f7..6c21f76822ca 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+> @@ -39,6 +39,14 @@ of these nodes are defined by the individual bindings for the specific function
+>   Definition: a list of channels tied to this function, used for matching
+>      the function to a set of virtual channels
 >
-> I don't get this, why do you want to set comp_cb to NULL unconditionally?
->
+> +- intents:
 
-I'm just not happy about the complexity of this function, but perhaps
-it's confusing to always set them, regardless of them being used. Feel
-free to keep it.
+qcom,intents or qcom,default-intents
 
-[..]
-> > > +void slim_return_tx(struct slim_controller *ctrl, int err)
-> > > +{
-> > > + unsigned long flags;
-> > > + int idx;
-> > > + struct slim_pending cur;
-> > > +
-> > > + spin_lock_irqsave(&ctrl->tx.lock, flags);
-> > > + idx = ctrl->tx.head;
-> > > + ctrl->tx.head = (ctrl->tx.head + 1) % ctrl->tx.n;
-> > > + cur = ctrl->pending_wr[idx];
-> >
-> > Why is this doing struct copy?
-> >
-> Not sure, do you see any issue with this?
+> + Usage: optional
+> + Value type: <prop-encoded-array>
+> + Definition: a list of size,amount pairs describing what intents should
+> +    be preallocated for this virtual channel. If a GLINK node
+> +    supports intents, an intent advertises this channel is ready
+> +    to receive data.
+
+Rather than describing what a GLINK intent is I would suggest that you
+replace this second sentence with something like "This can be used to
+tweak the default intents available for the channel to meet expectations
+of the remote."
+
+> +
+>  = EXAMPLE
+>  The following example represents the GLINK RPM node on a MSM8996 device, with
+>  the function for the "rpm_request" channel defined, which is used for
+> @@ -69,6 +77,8 @@ regualtors and root clocks.
+>   compatible = "qcom,rpm-msm8996";
+>   qcom,glink-channels = "rpm_requests";
 >
-
-It's a rarely used feature and I don't see a reason for using it here.
-
-It's probably better to make a copy of cur.cb and cur.ctx to make their
-use after the spin-unlock more obvious (but should be fine as the
-spinlock is for the pending_wr array.
-
-> > > + spin_unlock_irqrestore(&ctrl->tx.lock, flags);
-> > > +
-> > > + if (!cur.cb)
-> > > + dev_err(&ctrl->dev, "NULL Transaction or completion");
-> > > + else
-> > > + cur.cb(cur.ctx, err);
-> > > +
-> > > + up(&ctrl->tx_sem);
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(slim_return_tx);
-[..]
-> > > +/**
-> > > + * struct slim_ctrl_buf: circular buffer used by contoller for TX, RX
-> > > + * @base: virtual base address for this buffer
-> > > + * @phy: physical address for this buffer (this is useful if controller can
-> > > + *  DMA the buffers for TX and RX to/from controller hardware
-> > > + * @lock: lock protecting head and tail
-> > > + * @head: index where buffer is returned back
-> > > + * @tail: index from where buffer is consumed
-> > > + * @sl_sz: byte-size of each slot in this buffer
-> > > + * @n:  number of elements in this circular ring, note that this needs to be
-> > > + * 1 more than actual buffers to allow for one open slot
-> > > + */
-> >
-> > Is this ringbuffer mechanism defined in the slimbus specification? Looks
-> > like something specific to the Qualcomm controller, rather than
-> > something that should be enforced in the framework.
-> >
->
-> Yes, this is not part of the slimbus specs, but Qcom SOCs have concept of
-> Message Queues.
->
-> Are you suggesting that this buffer handling has to be moved out of core
-> into controller driver?
->
-
-The fact that this seems to describe a physical ring buffer, with some
-set of properties that are related to how a ring buffer works in the
-Qualcomm hardware and it carries a notion of physical mapping, all
-indicates to me that this describes some Qualcomm hardware interface.
-
-I believe this is a hardware implementation detail that should reside in
-the hardware part of the implementation (i.e. the Qualcomm driver).
-
->
-> > > +struct slim_ctrl_buf {
-> > > + void *base;
-> > > + phys_addr_t phy;
-> > > + spinlock_t lock;
-> > > + int head;
-> > > + int tail;
-> > > + int sl_sz;
-> > > + int n;
-> > > +};
+> + intents = <0x400 5
+> +   0x800 1>;
+>   ...
+>   };
+>   };
 
 Regards,
 Bjorn
