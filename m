@@ -1,61 +1,45 @@
-From: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric
- I/O
-Date: Fri, 20 Oct 2017 14:40:58 +0000
-Message-ID: <AM5PR0701MB26571DEDBDEA72B54DC1E7F6E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
- <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
+From: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound traffic
+Date: Fri, 20 Oct 2017 10:41:56 -0400
+Message-ID: <CANCKTBsRRkwNMrxWjtgxbyZqT6NOxPX0NHDbnEO2BMjj8oVtpg@mail.gmail.com>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
+ <1507761269-7017-6-git-send-email-jim2101024@gmail.com> <589c04cb-061b-a453-3188-79324a02388e@arm.com>
+ <20171017081422.GA19475@lst.de> <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com>
+ <20171018065316.GA11183@lst.de> <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com>
+ <20171019091644.GA14983@lst.de> <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ@mail.gmail.com>
+ <20171020073730.GA12937@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <39CF6A2AD70102428C20513F1E08C1AC@eurprd07.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171020073730.GA12937-jcswGhMUV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMjAvMTcgMTA6MTAsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+IE9uIFRodSwgT2N0IDE5
-LCAyMDE3IGF0IDY6MjkgUE0sIEJlcm5kIEVkbGluZ2VyDQo+IDxiZXJuZC5lZGxpbmdlckBob3Rt
-YWlsLmRlPiB3cm90ZToNCj4gDQo+IERvZXMgdGhpcyByZWFsbHkgd29yaz8NCj4gDQoNClllcywg
-aXQgZG9lcyByZWFsbHkgd29yay4NCg0KSSB1c2UgaXQgdG8gZ2F0ZSBhIGNsb2NrIHNpZ25hbCB1
-c2luZyBmcGdhIGxvZ2ljDQppbnN0ZWFkIG9mIGFuIGV4dGVybmFsIGFuZCBnYXRlIG9uIHRoZSBQ
-Q0IuDQoNCkFuZCBhbm90aGVyIGRyaXZlciB1c2VzIHRoaXMgZ3BpbyB3aGljaA0KaXMgY29uZmln
-dXJlZCBhcyAic2VsZWN0LWdwaW8gPSA8JnBvcnRkIDIgMD47Ig0KaW4gdGhlIGRldmljZSB0cmVl
-LiAgVGhlIGFjdHVhbCBJL08gaXMgc2ltcGx5DQpjb250cm9sbGVkIHdpdGggZ3Bpb2Rfc2V0X3Zh
-bHVlKCksIHdoaWNoIHdvcmtzDQp3aXRob3V0IHRoZSBvdGhlciBkcml2ZXIgZXZlciBrbm93aW5n
-IGhvdyB0aGUNCkkvTyBpcyBjb25uZWN0ZWQuDQoNCkkgd2FzIGFsc28gYWJsZSB0byBleGVyY2lz
-ZSB0aGUgZGV2aWNlIHVubG9hZCBjb2RlIHBhdGgsDQp1c2luZyB5b3VyIGhpbnQgd2l0aCB0aGUg
-Z3BpbyB1bmJpbmQgZmlsZSBpbiB0aGUgc3lzZnMuDQoNCj4+IFRoaXMgaXMgYW4gaW50ZXJuYWwg
-MzItYml0IGlucHV0IGFuZCAzMi1iaXQgb3V0cHV0IHBvcnQgdG8gdGhlIEZQR0EgbG9naWMuDQo+
-Pg0KPj4gSW5zdGFudGlhdGUgdGhpcyBpbiB0aGUgZGV2aWNlIHRyZWUgYXM6DQo+Pg0KPj4gICAg
-Z3BpbzM6IGdwaW9AZmY3MDYwMTAgew0KPj4gICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4g
-ICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPj4gICAgIGNvbXBhdGlibGUgPSAiYWx0cixmcGdhbWdy
-LWdwaW8iOw0KPj4gICAgIHJlZyA9IDwweGZmNzA2MDEwIDB4OD47DQo+PiAgICAgc3RhdHVzID0g
-Im9rYXkiOw0KPj4NCj4+ICAgICBwb3J0ZDogZ3Bpby1jb250cm9sbGVyQDAgew0KPj4gICAgICBj
-b21wYXRpYmxlID0gImFsdHIsZnBnYW1nci1ncGlvLW91dHB1dCI7DQo+PiAgICAgIGdwaW8tY29u
-dHJvbGxlcjsNCj4+ICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47DQo+PiAgICAgIHJlZyA9IDwwPjsN
-Cj4+ICAgICB9Ow0KPj4NCj4+ICAgICBwb3J0ZTogZ3Bpby1jb250cm9sbGVyQDEgew0KPj4gICAg
-ICBjb21wYXRpYmxlID0gImFsdHIsZnBnYW1nci1ncGlvLWlucHV0IjsNCj4+ICAgICAgZ3Bpby1j
-b250cm9sbGVyOw0KPj4gICAgICAjZ3Bpby1jZWxscyA9IDwyPjsNCj4+ICAgICAgcmVnID0gPDE+
-Ow0KPj4gICAgIH07DQo+IA0KPiBTbyB5b3UgaGF2ZSBvdXRwdXQtb25seSBhbmQgaW5wdXQtb25s
-eSBwb3J0cy4uLi4NCj4gDQoNClllcy4NCg0KPj4gK3N0YXRpYyBpbnQgZnBnYW1ncl9ncGlvX2Fk
-ZF9wb3J0KHN0cnVjdCBmcGdhbWdyX2dwaW8gKmdwaW8sDQo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBzdHJ1Y3QgZnBnYW1ncl9wb3J0X3Byb3BlcnR5ICpwcCwNCj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBvZmZzKQ0KPj4gK3sNCj4+
-ICsgICAgICAgc3RydWN0IGZwZ2FtZ3JfZ3Bpb19wb3J0ICpwb3J0Ow0KPj4gKyAgICAgICB2b2lk
-IF9faW9tZW0gKmRhdDsNCj4+ICsgICAgICAgaW50IGVycjsNCj4+ICsNCj4+ICsgICAgICAgcG9y
-dCA9ICZncGlvLT5wb3J0c1tvZmZzXTsNCj4+ICsgICAgICAgcG9ydC0+Z3BpbyA9IGdwaW87DQo+
-PiArICAgICAgIHBvcnQtPmlkeCA9IHBwLT5pZHg7DQo+PiArDQo+PiArICAgICAgIGRhdCA9IGdw
-aW8tPnJlZ3MgKyAocHAtPmlkeCAqIDQpOw0KPj4gKw0KPj4gKyAgICAgICBlcnIgPSBiZ3Bpb19p
-bml0KCZwb3J0LT5iZ2MsIGdwaW8tPmRldiwgNCwgZGF0LCBOVUxMLCBOVUxMLA0KPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgIE5VTEwsIE5VTEwsIDApOw0KPiANCj4gQnV0IGFsbCB5b3UgYWRk
-IGlzIGlucHV0LW9ubHkgR1BJTyBjaGlwcy4gQWxzbyBmb3IgdGhlIG91dHB1dCBwb3J0cy4NCj4g
-DQoNCldlbGwgYWN0dWFsbHkgdGhpcyBhbGxvd3MgYm90aCBpbnB1dCBhbmQgb3V0cHV0LA0KYnV0
-IHdoaWxlIHRoZSBpbnB1dCBwb3J0IGNvdWxkIGJlIHdyaXR0ZW4gYnkgYWNjaWRlbnQsDQp0aGUg
-aGFyZHdhcmUgZG9lcyB0aGUgcmlnaHQgdGhpbmcgYW5kIGlnbm9yZXMgdGhlIHdyaXRlIGN5Y2xl
-Lg0KDQpUaGUgb3RoZXIgcGFyYW1ldGVycyBvZiBiZ3Bpb19pbnB1dCBhcmUgZm9yIGRldmljZXMg
-d2l0aA0KZXhwbGljaXQgc2V0LSBhbmQgcmVzZXQtc2lnbmFscywgYW5kIGNvbmZpZ3VyYWJsZQ0K
-b3V0cHV0LWRpcmVjdGlvbiBldGMsIHdoaWNoIEkgZG9uJ3QgaGF2ZS4NCg0KDQoNCkJlcm5kLg0K
+On Fri, Oct 20, 2017 at 3:37 AM, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org> wrote:
+> On Thu, Oct 19, 2017 at 06:47:45PM -0400, Jim Quinlan wrote:
+>> The only way to prevent this is to reserve a single page at the end of
+>> the first memory region of any pair that are adjacent in physical
+>> memory.  A hack, yes, but I don't see an easier way out of this.  Many
+>> if not most of our boards do not have adjacent regions and would not
+>> need this.
+>
+> dma mappings can be much larger than a single page.  For the block
+> world take a look at __blk_segment_map_sg which does the merging
+> of contiguous pages into a single SG segment.  You'd have to override
+> BIOVEC_PHYS_MERGEABLE to prevent this from happening in your supported
+> architectures for the block layer.
+
+I am not sure I understand your comment -- the size of the request
+shouldn't be a factor.  Let's look at your example of the DMA request
+of 3fffff00 to 4000000f (physical memory).  Lets say it is for 15
+pages.  If we block out  the last page [0x3ffff000..0x3fffffff] from
+what is available, there is no 15 page span that can happen across the
+0x40000000 boundary.  For SG, there can be no merge that connects a
+page from one region to another region.  Can you give an example of
+the scenario you are thinking of?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
