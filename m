@@ -1,47 +1,96 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH 1/5] gpio: gpiolib: Add core support for maintaining
- GPIO values on reset
-Date: Fri, 20 Oct 2017 09:43:29 +0200
-Message-ID: <CACRpkdaW5jMEh_OR2oiy_Bc-6Cb+GM1Uap+1u2T2hw85CwBh3g@mail.gmail.com>
-References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-2-andrew@aj.id.au>
- <CACRpkda-7-uM5x4kbNXkx3F7F4VTZtTvXfys5VPFb1YiVDo1+g@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 2/2] dt-bindings: drm/bridge: Document Cadence DSI bridge
+ bindings
+Date: Fri, 20 Oct 2017 09:49:22 +0200
+Message-ID: <20171020074922.14239-2-boris.brezillon@free-electrons.com>
+References: <20171020074922.14239-1-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda-7-uM5x4kbNXkx3F7F4VTZtTvXfys5VPFb1YiVDo1+g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Michael Welling <mwelling@emacinc.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171020074922.14239-1-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Menon,
+ Nishanth" <nm@ti.com>, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Mark Rutland <mark.rutland@arm.com>, Jyri Sarha <jsarha@ti.com>, Rob Herring <robh+dt@kernel.org>, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 9:17 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
->
->> GPIO state reset tolerance is implemented in gpiolib through the
->> addition of a new pinconf parameter. With that, some renaming of helpers
->> is done to clarify the scope of the already existing
->> gpiochip_line_is_persistent(), as it's now ambiguous as to whether that
->> means on suspend, reset or both.
->
-> Isn't it most reasonable to say persistance covers both cases, reset
-> and/or sleep? This seems a bit like overdefined.
-
-I should also add: right now persistance is defined in negative terms,
-you can supply the flag "may lose value", which means the subsystem
-by default, and driver by default, will try to keep values persistent across
-sleep.
-
-Then it is possible to opt in for not doing so. (Usually to save power I
-think.)
-
-I think that especially for userspace use cases, saving power should
-not really be the concern, but correct me if I'm wrong. I am thinking
-of a box with a DC plug wired up to a factory line here.
-
-What we have in the Arizona driver is an opt-in where the DT can
-say "don't preserve the value  this line during system sleep" i.e. "lay lose
-value" and we can extend that flag to mean "don't preserve this line
-during reset either" but by default assume that we should.
-
-Yours,
-Linus Walleij
+RG9jdW1lbnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBDYWRlbmNlIERTSSBicmlkZ2UuCgpT
+aWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0
+cm9ucy5jb20+Ci0tLQpIaSBSb2IsCgpJIGRyb3BwZWQgeW91ciBBLWIgYmVjYXVzZSB0d28gaW1w
+b3J0YW50IHRoaW5ncyBjaGFuZ2VkIGluIHRoaXMKdmVyc2lvbjoKKiB0aGUgY2xrIG5hbWVzIGhh
+dmUgY2hhbmdlZCAodGhleSBhcmUgbm93IHByZWZpeGVkIHdpdGggZHNpXykKKiBjb21wYXRpYmxl
+IG5vIGxvbmdlciBjb250YWlucyB0aGUgSVAgdmVyc2lvbgoKRmVlbCBmcmVlIHRvIGFkZCBpdCBi
+YWNrLgoKUmVnYXJkcywKCkJvcmlzCgpDaGFuZ2VzIGluIHY0OgotIFJlbmFtZSBEU0kgY2xrcyAo
+c3VnZ2VzdGVkIGJ5IFRvbWkpCi0gRHJvcCB0aGUgSVAgdmVyc2lvbiBpbiB0aGUgY29tcGF0aWJs
+ZSBzaW5jZSBpdCBjYW4gYmUgZXh0cmFjdGVkIGZyb20KICBhIHJlZ2lzdGVyIChzdWdnZXN0ZWQg
+YnkgQW5kcnplaikKCkNoYW5nZXMgaW4gdjM6Ci0gRml4IGNsb2NrIG5hbWVzIGluIHRoZSBleGFt
+cGxlCi0gRG9jdW1lbnQgaG93IHRvIHJlcHJlc2VudCBEU0kgZGV2aWNlcyB0aGF0IGFyZSBjb250
+cm9sbGVyIHRocm91Z2gKICBhbiBleHRlcm5hbCBidXMgbGlrZSBJMkMgb3IgU1BJCgpDaGFuZ2Vz
+IGluIHYyOgotIE5vbmUKLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2ku
+dHh0ICAgICAgICAgICB8IDEwOSArKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2Vk
+LCAxMDkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLGRzaS50eHQKCmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxk
+c2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L2NkbnMsZHNpLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjUw
+YmIzMTg5ZjJlZQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLGRzaS50eHQKQEAgLTAsMCArMSwxMDkgQEAKK0Nh
+ZGVuY2UgRFNJIGJyaWRnZQorPT09PT09PT09PT09PT09PT09CisKK1RoZSBDYWRlbmNlIERTSSBi
+cmlkZ2UgaXMgYSBEUEkgdG8gRFNJIGJyaWRnZSBzdXBwb3J0aW5nIHVwIHRvIDQgRFNJIGxhbmVz
+LgorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgc2V0IHRv
+ICJjZG5zLGRzaSIuCistIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2Yg
+dGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCistIGludGVycnVwdHM6IGludGVycnVwdCBsaW5l
+IGNvbm5lY3RlZCB0byB0aGUgRFNJIGJyaWRnZS4KKy0gY2xvY2tzOiBEU0kgYnJpZGdlIGNsb2Nr
+cy4KKy0gY2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAiZHNpX3BfY2xrIiBhbmQgImRzaV9zeXNf
+Y2xrIi4KKy0gcGh5czogcGhhbmRsZSBsaW5rIHRvIHRoZSBNSVBJIEQtUEhZIGNvbnRyb2xsZXIu
+CistIHBoeS1uYW1lczogbXVzdCBjb250YWluICJkcGh5Ii4KKy0gI2FkZHJlc3MtY2VsbHM6IG11
+c3QgYmUgc2V0IHRvIDEuCistICNzaXplLWNlbGxzOiBtdXN0IGJlIHNldCB0byAwLgorCitSZXF1
+aXJlZCBzdWJub2RlczoKKy0gcG9ydHM6IFBvcnRzIGFzIGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgorICAyIHBvcnRzIGFyZSBhdmFpbGFi
+bGU6CisgICogcG9ydCAwOiB0aGlzIHBvcnQgaXMgb25seSBuZWVkZWQgaWYgc29tZSBvZiB5b3Vy
+IERTSSBkZXZpY2VzIGFyZQorCSAgICBjb250cm9sbGVkIHRocm91Z2ggIGFuIGV4dGVybmFsIGJ1
+cyBsaWtlIEkyQyBvciBTUEkuIENhbiBoYXZlIGF0CisJICAgIG1vc3QgNCBlbmRwb2ludHMuIFRo
+ZSBlbmRwb2ludCBudW1iZXIgaXMgZGlyZWN0bHkgZW5jb2RpbmcgdGhlCisJICAgIERTSSB2aXJ0
+dWFsIGNoYW5uZWwgdXNlZCBieSB0aGlzIGRldmljZS4KKyAgKiBwb3J0IDE6IHJlcHJlc2VudHMg
+dGhlIERQSSBpbnB1dC4KKyAgT3RoZXIgcG9ydHMgd2lsbCBiZSBhZGRlZCBsYXRlciB0byBzdXBw
+b3J0IHRoZSBuZXcga2luZCBvZiBpbnB1dHMuCisKKy0gb25lIHN1Ym5vZGUgcGVyIERTSSBkZXZp
+Y2UgY29ubmVjdGVkIG9uIHRoZSBEU0kgYnVzLiBFYWNoIERTSSBkZXZpY2Ugc2hvdWxkCisgIGNv
+bnRhaW4gYSByZWcgcHJvcGVydHkgZW5jb2RpbmcgaXRzIHZpcnR1YWwgY2hhbm5lbC4KKworRXhh
+bXBsZToKKworCWRzaTA6IGRzaUBmZDBjMDAwMCB7CisJCWNvbXBhdGlibGUgPSAiY2Rucyxkc2kt
+MS4zLjEiOworCQlyZWcgPSA8MHgwIDB4ZmQwYzAwMDAgMHgwIDB4MTAwMD47CisJCWNsb2NrcyA9
+IDwmcGNsaz4sIDwmc3lzY2xrPjsKKwkJY2xvY2stbmFtZXMgPSAiZHNpX3BfY2xrIiwgImRzaV9z
+eXNfY2xrIjsKKwkJaW50ZXJydXB0cyA9IDwxPjsKKwkJcGh5cyA9IDwmZHBoeTE+OworCQlwaHkt
+bmFtZXMgPSAiZHBoeSI7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9
+IDwwPjsKKworCQlwb3J0cyB7CisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCSNzaXplLWNl
+bGxzID0gPDA+OworCisJCQlwb3J0QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQlkc2kwX2RwaV9p
+bnB1dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jnh4eF9kcGlfb3V0cHV0
+PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKworCQlwYW5lbDogZHNpLWRldkAwIHsKKwkJCWNvbXBh
+dGlibGUgPSAiPHZlbmRvcixwYW5lbD4iOworCQkJcmVnID0gPDA+OworCQl9OworCX07CisKK29y
+CisKKwlkc2kwOiBkc2lAZmQwYzAwMDAgeworCQljb21wYXRpYmxlID0gImNkbnMsZHNpIjsKKwkJ
+cmVnID0gPDB4MCAweGZkMGMwMDAwIDB4MCAweDEwMDA+OworCQljbG9ja3MgPSA8JnBjbGs+LCA8
+JnN5c2Nsaz47CisJCWNsb2NrLW5hbWVzID0gInN5c19wX2NsayIsICJkc2lfc3lzX2NsayI7CisJ
+CWludGVycnVwdHMgPSA8MT47CisJCXBoeXMgPSA8JmRwaHkxPjsKKwkJcGh5LW5hbWVzID0gImRw
+aHkiOworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJ
+cG9ydHMgeworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsK
+KworCQkJcG9ydEAwIHsKKwkJCQlyZWcgPSA8MD47CisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
+CisJCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCQlkc2kwX291dHB1dDogZW5kcG9pbnRAMCB7
+CisJCQkJCXJlZyA9IDwwPjsKKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfcGFuZWxfaW5w
+dXQ+OworCQkJCX07CisJCQl9OworCisJCQlwb3J0QDEgeworCQkJCXJlZyA9IDwxPjsKKwkJCQlk
+c2kwX2RwaV9pbnB1dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jnh4eF9k
+cGlfb3V0cHV0PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OworCisJaTJjQHh4eCB7CisJCXBh
+bmVsOiBwYW5lbEA1OSB7CisJCQljb21wYXRpYmxlID0gIjx2ZW5kb3IscGFuZWw+IjsKKwkJCXJl
+ZyA9IDwweDU5PjsKKworCQkJcG9ydCB7CisJCQkJZHNpX3BhbmVsX2lucHV0OiBlbmRwb2ludCB7
+CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpMF9vdXRwdXQ+OworCQkJCX07CisJCQl9Owor
+CQl9OworCX07Ci0tIAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
