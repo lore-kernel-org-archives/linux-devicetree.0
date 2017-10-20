@@ -1,118 +1,335 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Problem with commit to add overlay symbols to live device tree
-Date: Fri, 20 Oct 2017 13:57:44 -0700
-Message-ID: <59EA6348.5020205@gmail.com>
-References: <85c5a40bb6eb4d4ebe522b3034528a36@infineon.com>
- <59E9029D.1030700@gmail.com> <d0bd4312e9314c8ba6c56d800d07c0a9@infineon.com>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Fri, 20 Oct 2017 13:57:47 -0700
+Message-ID: <CAFd5g45_VV_76zexrgBSWaqNXMsYfZPX6hLHGGc_EVdtsQrzCw@mail.gmail.com>
+References: <20171019225050.25410-1-brendanhiggins@google.com>
+ <20171019225050.25410-2-brendanhiggins@google.com> <20171020104807.GE20805@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d0bd4312e9314c8ba6c56d800d07c0a9-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20171020104807.GE20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, frank.rowand-7U/KSKJipcs@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/20/17 05:11, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
->> Hi Alexander,
+On Fri, Oct 20, 2017 at 3:48 AM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> On Thu, Oct 19, 2017 at 03:50:48PM -0700, Brendan Higgins wrote:
+>> Adds basic support for the Nuvoton NPCM750 BMC.
 >>
->> On 10/19/17 10:06, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
->>> Hi Frank, Rob,
->>>
->>> I ran some tests with kernel v4.14-rc2, where I came across an issue
->>> with your commit "of: overlay: add overlay symbols to live device
->>> tree" (d1651b03c2df75db8eda3fbcd3a07adb337ee8b0,
->>>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d
->> rivers/of?h=v4.14-rc5&id=d1651b03c2df75db8eda3fbcd3a07adb337ee8b0).
->>> I am not sure whether this is a problem with your change or whether I
->>> made a mistake somewhere.
->>>
->>> Without this commit, the following device tree overlay works fine on
->>> a Raspberry Pi:
->>>
->>> /dts-v1/;
->>> /plugin/;
->>>
->>> / {
->>> 	fragment@0 {
->>> 		target-path = "/soc/spi@7e204000";
->>> 		__overlay__ {
->>> 			#address-cells = <1>;
->>> 			#size-cells = <0>;
->>> 			status = "okay";
->>>
->>> 		        spidev1: spi@1 {
->>> 				compatible = "spidev";
->>> 				reg = <1>;
->>> 				spi-max-frequency = <5000000>;
->>> 			};
->>> 		};
->>> 	};
->>> };
->>>
->>> But with the commit, it is rejected:
->>>
->>> OF: overlay: no symbols in root of device tree.
->>> OF: overlay: of_build_overlay_info() failed for tree@/
->>> create_overlay: Failed to create overlay (err=-22)
->>>
->>> Only if I remove the spidev1 label, it continues to work with the
->>> commit (but this is not always possible in more complex overlays).
->>>
->>> I hope this does not make a difference, but I use the configfs
->>> interface to load the overlay, that is not part of mainline, but
->>> shipped by several distributions nonetheless (for example in the
->>> Raspberry Pi kernel,
->>>
->> https://github.com/raspberrypi/linux/commit/cccc24635da69799335566eb46
->> 4a4c9e1fb4a8ad).
->>>
->>>
->>> Could you tell me whether this change in behavior is intentional and
->>> whether I have to fix something in my usage?
+>> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/Kconfig             |  2 +
+>>  arch/arm/Makefile            |  1 +
+>>  arch/arm/mach-npcm/Kconfig   | 48 ++++++++++++++++++++++++
+>>  arch/arm/mach-npcm/Makefile  |  3 ++
+>>  arch/arm/mach-npcm/headsmp.S | 17 +++++++++
+>>  arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
+>>  arch/arm/mach-npcm/platsmp.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
+>>  7 files changed, 193 insertions(+)
+>>  create mode 100644 arch/arm/mach-npcm/Kconfig
+>>  create mode 100644 arch/arm/mach-npcm/Makefile
+>>  create mode 100644 arch/arm/mach-npcm/headsmp.S
+>>  create mode 100644 arch/arm/mach-npcm/npcm7xx.c
+>>  create mode 100644 arch/arm/mach-npcm/platsmp.c
 >>
->> Yes, the change is intentional.
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 61a0cb15067e..05543f1cfbde 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -782,6 +782,8 @@ source "arch/arm/mach-netx/Kconfig"
 >>
->> If you are using overlays, the expectation is that the device tree
->> that was used to boot contains symbols (the paths of nodes that
->> have phandles) so that phandle references in the overlay can be
->> fixed up to match the values in the base devicetree.  Symbols
->> will be added to the device tree if if is compiled with the
->> "@" option.  This is the first method to avoid the overlay
->> load error.
-> 
-> Ah, thanks, this does solve the problem. I use nothing special to
-> generate the base devicetree, just "make dtbs". Would it make sense
-> to add the "@" option to the kernel Makefile, so that symbols are
-> added by default? Or does this have any downside? I'd suspect that
+>>  source "arch/arm/mach-nomadik/Kconfig"
+>>
+>> +source "arch/arm/mach-npcm/Kconfig"
+>> +
+>>  source "arch/arm/mach-nspire/Kconfig"
+>>
+>>  source "arch/arm/plat-omap/Kconfig"
+>> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+>> index 47d3a1ab08d2..60ca50c7d762 100644
+>> --- a/arch/arm/Makefile
+>> +++ b/arch/arm/Makefile
+>> @@ -191,6 +191,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)           += mediatek
+>>  machine-$(CONFIG_ARCH_MXS)           += mxs
+>>  machine-$(CONFIG_ARCH_NETX)          += netx
+>>  machine-$(CONFIG_ARCH_NOMADIK)               += nomadik
+>> +machine-$(CONFIG_ARCH_NPCM)          += npcm
+>>  machine-$(CONFIG_ARCH_NSPIRE)                += nspire
+>>  machine-$(CONFIG_ARCH_OXNAS)         += oxnas
+>>  machine-$(CONFIG_ARCH_OMAP1)         += omap1
+>> diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
+>> new file mode 100644
+>> index 000000000000..21dfa8ce828f
+>> --- /dev/null
+>> +++ b/arch/arm/mach-npcm/Kconfig
+>> @@ -0,0 +1,48 @@
+>> +menuconfig ARCH_NPCM
+>> +     bool "Nuvoton NPCM Architecture"
+>> +     select ARCH_REQUIRE_GPIOLIB
+>> +     select USE_OF
+>> +     select PINCTRL
+>> +     select PINCTRL_NPCM7XX
+>> +
+>> +if ARCH_NPCM
+>> +
+>> +comment "NPCMX50 CPU type"
+>> +
+>> +config CPU_NPCM750
+>> +     depends on ARCH_NPCM && ARCH_MULTI_V7
+>> +     bool "Support for NPCM750 BMC CPU (Poleg)"
+>> +     select CACHE_L2X0
+>> +     select CPU_V7
+>> +     select ARM_GIC
+>> +     select HAVE_SMP
+>> +     select SMP
+>> +     select SMP_ON_UP
+>> +     select HAVE_ARM_SCU
+>> +     select HAVE_ARM_TWD if SMP
+>> +     select ARM_ERRATA_720789
+>> +     select ARM_ERRATA_754322
+>> +     select ARM_ERRATA_764369
+>> +     select ARM_ERRATA_794072
+>> +     select PL310_ERRATA_588369
+>> +     select PL310_ERRATA_727915
+>> +     select USB_EHCI_ROOT_HUB_TT
+>> +     select USB_ARCH_HAS_HCD
+>> +     select USB_ARCH_HAS_EHCI
+>> +     select USB_EHCI_HCD
+>> +     select USB_ARCH_HAS_OHCI
+>> +     select USB_OHCI_HCD
+>> +     select USB
+>> +     select FIQ
+>> +     select CPU_USE_DOMAINS
+>> +     select GENERIC_CLOCKEVENTS
+>> +     select CLKDEV_LOOKUP
+>> +     select COMMON_CLK if OF
+>> +     select NPCM750_TIMER
+>> +     select MFD_SYSCON
+>> +     help
+>> +       Support for NPCM750 BMC CPU (Poleg).
+>> +
+>> +       Nuvoton NPCM750 BMC based on the Cortex A9.
+>> +
+>> +endif
+>> diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
+>> new file mode 100644
+>> index 000000000000..78416055b854
+>> --- /dev/null
+>> +++ b/arch/arm/mach-npcm/Makefile
+>> @@ -0,0 +1,3 @@
+>> +AFLAGS_headsmp.o             += -march=armv7-a
+>> +
+>> +obj-$(CONFIG_CPU_NPCM750)    += npcm7xx.o platsmp.o headsmp.o
+>> diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
+>> new file mode 100644
+>> index 000000000000..9fccbbd49ed4
+>> --- /dev/null
+>> +++ b/arch/arm/mach-npcm/headsmp.S
+>> @@ -0,0 +1,17 @@
+>> +/*
+>> + * Copyright 2017 Google, Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/linkage.h>
+>> +#include <linux/init.h>
+>> +#include <asm/assembler.h>
+>> +
+>> +ENTRY(npcm7xx_secondary_startup)
+>> +     safe_svcmode_maskall r0
+>> +
+>> +     b       secondary_startup
+>> +ENDPROC(npcm7xx_secondary_startup)
+>
+> Why do you need this?  The switch to svc mode is already handled by
+> secondary_startup.
 
-Yes, there is a large downside.  Compiling with the "@" option will
-increase the size of the DTB.  Most boards will not use overlays, 
-and in those cases this overhead has no value.  So "@" should be
-opt-in, not default.
+Florian Fainelli already brought this up:
+https://www.spinics.net/lists/arm-kernel/msg605126.html
+Without this the kernel complains that the core is started in
+"wrong/inconsistent mode":
 
+SMP: Total of 2 processors activated (398.13 BogoMIPS).
+CPU: WARNING: CPU(s) started in wrong/inconsistent modes (primary CPU
+mode 0x13)
+CPU: This may indicate a broken bootloader or firmware.
 
-> many more people will be hit by this change, since most tutorials for
-> overlays that I have seen include the "@" option for the dtc calls.> 
->> If you compile the overlay with the "@" option then symbols
->> will be added to the overlay DTB.  Previous to commit
->> d1651b03c2df, these symbols would be ignored when an overlay
->> was loaded.  If you remove the "@" from the compile of
->> overlays, then everything should work the same way it did
->> before the commit.  This is the second way to avoid the
->> load overlay error.
+>
+>> diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
+>> new file mode 100644
+>> index 000000000000..132e9d587857
+>> --- /dev/null
+>> +++ b/arch/arm/mach-npcm/npcm7xx.c
+>> @@ -0,0 +1,34 @@
+>> +/*
+>> + * Copyright (c) 2017 Nuvoton Technology corporation.
+>> + * Copyright 2017 Google, Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/types.h>
+>> +#include <asm/mach/arch.h>
+>> +#include <asm/mach-types.h>
+>> +#include <asm/mach/map.h>
+>> +#include <asm/hardware/cache-l2x0.h>
+>> +
+>> +#define NPCM7XX_AUX_VAL (L310_AUX_CTRL_INSTR_PREFETCH |                             \
+>> +                      L310_AUX_CTRL_DATA_PREFETCH |                         \
+>> +                      L310_AUX_CTRL_NS_LOCKDOWN |                           \
+>> +                      L310_AUX_CTRL_CACHE_REPLACE_RR |                      \
+>> +                      L2C_AUX_CTRL_SHARED_OVERRIDE |                        \
+>> +                      L310_AUX_CTRL_FULL_LINE_ZERO)
+>
+> Do you really need all these flags?
+
+Tomer, Avi, do we need these? I got this from the original version of
+the driver.
+
+>
+>> +
+>> +static const char *const npcm7xx_dt_match[] = {
+>> +     "nuvoton,npcm750",
+>> +     NULL
+>> +};
+>> +
+>> +DT_MACHINE_START(NPCM7XX_DT, "NPCMX50 Chip family")
+>> +     .atag_offset    = 0x100,
+>> +     .dt_compat      = npcm7xx_dt_match,
+>> +     .l2c_aux_val    = NPCM7XX_AUX_VAL,
+>> +     .l2c_aux_mask   = ~NPCM7XX_AUX_VAL,
+>> +MACHINE_END
+>> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
+>> new file mode 100644
+>> index 000000000000..450e83c3c531
+>> --- /dev/null
+>> +++ b/arch/arm/mach-npcm/platsmp.c
+>> @@ -0,0 +1,88 @@
+>> +/*
+>> + * Copyright 2017 Google, Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#define pr_fmt(fmt) "PLATSMP: " fmt
+>
+> Maybe something more descriptive?
+>
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/smp.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/of_address.h>
+>> +#include <asm/cacheflush.h>
+>> +#include <asm/smp.h>
+>> +#include <asm/smp_plat.h>
+>> +#include <asm/smp_scu.h>
+>> +
+>> +#define NPCM7XX_SCRPAD_REG 0x13c
+>> +
+>> +extern void npcm7xx_secondary_startup(void);
+>> +
+>> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
+>> +                                   struct task_struct *idle)
+>> +{
+>> +     struct device_node *gcr_np;
+>> +     void __iomem *gcr_base;
+>> +     int ret = 0;
+>> +
+>> +     gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
+>> +     if (!gcr_np) {
+>> +             pr_err("no gcr device node\n");
+>> +             ret = -EFAULT;
+>
+> EFAULT is used for bad userspace addresses, it should not be used for
+> other stuff - and a missing node is certainly not a "Bad address".
+>
+>> +             goto out;
+>> +     }
+>> +     gcr_base = of_iomap(gcr_np, 0);
+>> +     if (!gcr_base) {
+>> +             pr_err("could not iomap gcr at: 0x%p\n", gcr_base);
+>> +             ret = -EFAULT;
+>
+> This is more -ENOMEM.
+>
+>> +             goto out;
+>> +     }
+>> +
+>> +     /* give boot ROM kernel start address. */
+>> +     iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
+>> +               NPCM7XX_SCRPAD_REG);
+>> +     /* make sure npcm7xx_secondary_startup is seen by all observers. */
+>> +     smp_wmb();
+>
+> I think you mean "make sure the previous write is seen by all observers".
+> However, doesn't "dsb_sev()" already do that?
+>
+>> +     dsb_sev();
+>> +     /* make sure write buffer is drained */
+>> +     mb();
+>
+> This looks over the top.
+>
+>> +
+>> +     iounmap(gcr_base);
+>> +out:
+>> +     return ret;
+>> +}
+>> +
+>> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
+>> +{
+>> +     struct device_node *scu_np;
+>> +     void __iomem *scu_base;
+>> +
+>> +     scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
+>> +     if (!scu_np) {
+>> +             pr_err("no scu device node\n");
+>> +             return;
+>> +     }
+>> +     scu_base = of_iomap(scu_np, 0);
+>> +     if (!scu_base) {
+>> +             pr_err("could not iomap scu at: 0x%p\n", scu_base);
+>> +             return;
+>> +     }
+>> +
+>> +     scu_enable(scu_base);
+>> +
+>> +     iounmap(scu_base);
+>> +}
+>> +
+>> +static struct smp_operations npcm7xx_smp_ops __initdata = {
+>> +     .smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
+>> +     .smp_boot_secondary = npcm7xx_smp_boot_secondary,
+>> +};
+>> +
+>> +CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm7xx-smp", &npcm7xx_smp_ops);
+>> --
+>> 2.15.0.rc0.271.g36b669edcc-goog
 >>
->>
->>> Thanks
->>> Alexander
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+>
+> --
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+> According to speedtest.net: 8.21Mbps down 510kbps up
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
