@@ -1,32 +1,73 @@
-From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
-Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound
-        traffic
-Date: Fri, 20 Oct 2017 09:37:30 +0200
-Message-ID: <20171020073730.GA12937@lst.de>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com> <1507761269-7017-6-git-send-email-jim2101024@gmail.com> <589c04cb-061b-a453-3188-79324a02388e@arm.com> <20171017081422.GA19475@lst.de> <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com> <20171018065316.GA11183@lst.de> <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com> <20171019091644.GA14983@lst.de> <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ@mail.gmail.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH 4/5] gpio: gpiolib: Add sysfs support for
+ maintaining GPIO values on reset
+Date: Fri, 20 Oct 2017 18:10:08 +1030
+Message-ID: <1508485208.24322.46.camel@aj.id.au>
+References: <20171020033727.21557-1-andrew@aj.id.au>
+         <20171020033727.21557-5-andrew@aj.id.au>
+         <CACRpkdZ9HpXXuauRtVjA9n1dwF3sUQ4gJL-FOUMcMBDCL9oxYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-nXOZj63Mu4q9oJeJSRLo"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ9HpXXuauRtVjA9n1dwF3sUQ4gJL-FOUMcMBDCL9oxYw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 19, 2017 at 06:47:45PM -0400, Jim Quinlan wrote:
-> The only way to prevent this is to reserve a single page at the end of
-> the first memory region of any pair that are adjacent in physical
-> memory.  A hack, yes, but I don't see an easier way out of this.  Many
-> if not most of our boards do not have adjacent regions and would not
-> need this.
 
-dma mappings can be much larger than a single page.  For the block
-world take a look at __blk_segment_map_sg which does the merging
-of contiguous pages into a single SG segment.  You'd have to override
-BIOVEC_PHYS_MERGEABLE to prevent this from happening in your supported
-architectures for the block layer.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=-nXOZj63Mu4q9oJeJSRLo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, 2017-10-20 at 09:29 +0200, Linus Walleij wrote:
+> On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au>
+> wrote:
+>=20
+> > Expose a new 'maintain' sysfs attribute to control both suspend and
+> > reset tolerance.
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>=20
+> NAK. You will find the actual ABI documentation in
+> Documentation/ABI/obsolete/sysfs-gpio
+
+Right, I did a quick grep to find an attribute description in order to
+judge what documentation to change. Unfortunately my grep didn't pick
+up this file.
+
+> that's why. This is being phased out and should not be extended.
+> Everyone should use the character device, especially for new
+> functionality.
+
+Yeah, I expected this (and the NAK) would be the response but figured I
+should ask the question.
+
+Thanks,
+
+Andrew
+--=-nXOZj63Mu4q9oJeJSRLo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCgAGBQJZ6ahYAAoJEJ0dnzgO5LT5P5AQAJrlMhDzuNBwIw7eJYSWCeNo
+lkn/TYioF3Akxcwd6Y99FRDwc/GhirezWLgIJBKdSOCHSmPB8c1Vmb3QN/QMxCLT
+Fe1qqDmDJ/V0QKxit6IboAO+/SanmN07EyPfmY3+2jlgtDYBJZESbD6ePU03wgGz
+JwXnGcSnWyV1wfHHz4LeHhJj3TXQYCqiihELLyBis/9jF3wKUGQr2OE0eRM5Dq4D
+xx4MlTZneasu8qLBBMP/ZC50lBLzDBS7VQ10NApT5W+msohvnLzGM+vKjF/3j5X4
+zLe/6RHerMV/gfqI4ZnzTd7Iyhal2+4gbuZCiWPz0hi7LrhqZ6YcI8XPnLVtE8rG
+vjvy7ErtQ6nz8paaSLZ4uFi5dlw4TMHCMKvIuYUWHkN/BeAy06F6oyJMq6W1C+vm
+YIdzXY/Xdnudg4Af2PXcO4AbIxQ9UAgDLAwR/7oPN67Fs9SP1dewdQXApwj6+upY
+1za15ZmwivdXylOSquk9q4s/sgsyfnrzMe+h3PUn66ZCA7sDX1XH0vffh8awOz3I
+oqyyhsOth86z3e39uQeItHoxe99thMKcsXImeL8Tf42CdOcCOysBqu2np9263gOl
+LNAQg0qYH1pXYP2ztmX+uQiAFxvqL3rQMLmckwrptvhJbGZ7NF0aI46eti7myfaL
+NswkUQ6AtK/lJ0wQ/+Te
+=7t2h
+-----END PGP SIGNATURE-----
+
+--=-nXOZj63Mu4q9oJeJSRLo--
+
