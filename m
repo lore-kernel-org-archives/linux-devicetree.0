@@ -1,153 +1,41 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Fri, 20 Oct 2017 18:46:17 +0100
-Message-ID: <CACxGe6tJfcnwDB=m7GLnCeDSc4Srxqssv+-p1+zapDo2yLWXXQ@mail.gmail.com>
-References: <1506628736.28192.9.camel@hp800z>
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric
+ I/O
+Date: Fri, 20 Oct 2017 17:48:11 +0000
+Message-ID: <AM5PR0701MB26576FBB8EDEF83F3AA82B89E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+ <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
+ <AM5PR0701MB26571DEDBDEA72B54DC1E7F6E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+ <CACRpkdZXaTk-+LMcV8bZTg0bZ9cPxORHpXNL7m+bwnvr57yJ9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506628736.28192.9.camel@hp800z>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZXaTk-+LMcV8bZTg0bZ9cPxORHpXNL7m+bwnvr57yJ9A@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <F04C3BB3827B234CBD07887682CF8D31@eurprd07.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 28, 2017 at 8:58 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hello again,
->
-> Significant progress has been made on yamldt and is now capable of
-> not only generating yaml from DTS source but also compiling DTS sources
-> and being almost fully compatible with DTC.
->
-> Compiling the kernel's DTBs using yamldt is as simple as using a
-> DTC=yamldt.
->
-> Error reporting is accurate and validation against a YAML based schema
-> works as well. In a short while I will begin posting patches with
-> fixes on bindings and DTS files in the kernel.
->
-> Please try it on your platform and report if you encounter any problems.
->
-> https://github.com/pantoniou/yamldt
->
-> I am eagerly awaiting for your comments.
-
-Hi Pantelis,
-
-This is good work. I've played around with it and I'm looking forward
-to chatting next week.
-
-One thing I've done is tried loading the output YAML files into
-another YAML interpreter and the current encoding causes problems.
-Specifically, in yamldt anchors/aliases are being used as a
-replacement for labels/phandles, but that conflicts with the YAML data
-model which defines a reference as a way to make a copy of the data
-appear in another part of the tree. For example, for the following
-snippit:
-
-intc: intc@10000 {
-    #interrupt-cells = <1>;
-    compatible = "acme,intc";
-    reg = <0x10000 0x1000>;
-    gpio-controller;
-};
-
-serial@20000 {
-    compatible = "acme,uart";
-    reg = <0x20000 0x1000>;
-    interrupt-parent = <&intc>;
-    interrupts = <5>;
-};
-
-yamldt will encode this as:
-
-intc@10000: &intc
-    "#interrupt-cells": 1
-    compatible: acme,intc
-    reg: [0x10000, 0x1000]
-    gpio-controller:
-
-serial@20000:
-    compatible: acme,uart
-    reg: [0x20000, 0x1000]
-    interrupt-parent: *intc
-    interrupts: 5
-
-But, the expected behaviour for a YAML parser is expand the alias
-'*intc' which results in the following structure:
-
-intc@10000: &intc
-    "#interrupt-cells": 1
-    compatible: acme,intc
-    reg: [0x10000, 0x1000]
-    gpio-controller:
-
-serial@20000:
-    compatible: acme,uart
-    reg: [0x20000, 0x1000]
-    interrupt-parent:
-        "#interrupt-cells": 1
-        compatible: acme,intc
-        reg: [0x10000, 0x1000]
-        gpio-controller:
-    interrupts: 5
-
-See? It results in the entire interrupt controller node to appear as
-an instance under the interrupt-parent property, when the intention is
-only to create a phandle. yamldt should not redefine the behaviour of
-'*' aliases. Instead, it should use a different indicator, either
-using an explicit !phandle tag, or by replacing '*' with something
-else. I worked around it in my tests by replacing '*' with '$'.
-
-Plus, it would be useful to use normal YAML anchors/aliases for
-creating node templates. For example:
-
-serial-template: &acme-uart . # The anchor for the template
-    compatible: acme,uart
-    interrupt-parent: *intc
-
-root:
-    serial@20000:
-        <<: *acme-uart   # Alias node merged into serial@20000
-        interrupts: 5
-        reg: [0x20000, 0x1000]
-    serial@30000:
-        <<: *acme-uart   # Alias node merged into serial@30000
-        interrupts: 5
-        reg: [0x30000, 0x1000]
-
-Another problem with anchors/references is YAML seems to require the
-anchor to be defined before the reference, or at least that's what
-pyyaml and ruamel both expect. Regardless, The chosen YAML encoding
-should be readily consumable by existing yaml implementations without
-having to do a lot of customization.
-
-I'm slightly concerned about using & anchors for labels because it
-seems only one anchor can be defined per node, but DTC allows multiple
-labels for a single node. This might not be an issue in practice
-though. Another implementation issue related to using & anchors is the
-YAML spec defines them as an encoding artifact, and parsers can
-discard the anchor names after parsing the YAML structure, which is a
-problem if we use something like $name to reference an anchor. The
-solution might just be that labels need to go into a special property
-so they don't disappear from the data stream.
-
-There appears to be no place to put metadata. The root of the tree is
-the top level of the YAML structure. There isn't any provision for
-having a top level object to hold things like the memreserve map. We
-may need a namespace to use for special properties that aren't nodes
-or properties.
-
-The encoding differentiates between nodes and properties implicitly
-base on whether the contents are a map, or a scalar/list. This does
-mean any parser needs to do a bit more work and it may impact what can
-be done with validation (I'm not going to talk about validation in
-this email though. We'll talk next week.)
-
-Cheers,
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTAvMjAvMTcgMTg6NDUsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+IE9uIEZyaSwgT2N0IDIw
+LCAyMDE3IGF0IDQ6NDAgUE0sIEJlcm5kIEVkbGluZ2VyDQo+IDxiZXJuZC5lZGxpbmdlckBob3Rt
+YWlsLmRlPiB3cm90ZToNCj4+IE9uIDEwLzIwLzE3IDEwOjEwLCBMaW51cyBXYWxsZWlqIHdyb3Rl
+Og0KPiANCj4+Pj4gKyAgICAgICBlcnIgPSBiZ3Bpb19pbml0KCZwb3J0LT5iZ2MsIGdwaW8tPmRl
+diwgNCwgZGF0LCBOVUxMLCBOVUxMLA0KPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgTlVM
+TCwgTlVMTCwgMCk7DQo+Pj4NCj4+PiBCdXQgYWxsIHlvdSBhZGQgaXMgaW5wdXQtb25seSBHUElP
+IGNoaXBzLiBBbHNvIGZvciB0aGUgb3V0cHV0IHBvcnRzLg0KPj4+DQo+Pg0KPj4gV2VsbCBhY3R1
+YWxseSB0aGlzIGFsbG93cyBib3RoIGlucHV0IGFuZCBvdXRwdXQsDQo+PiBidXQgd2hpbGUgdGhl
+IGlucHV0IHBvcnQgY291bGQgYmUgd3JpdHRlbiBieSBhY2NpZGVudCwNCj4+IHRoZSBoYXJkd2Fy
+ZSBkb2VzIHRoZSByaWdodCB0aGluZyBhbmQgaWdub3JlcyB0aGUgd3JpdGUgY3ljbGUuDQo+Pg0K
+Pj4gVGhlIG90aGVyIHBhcmFtZXRlcnMgb2YgYmdwaW9faW5wdXQgYXJlIGZvciBkZXZpY2VzIHdp
+dGgNCj4+IGV4cGxpY2l0IHNldC0gYW5kIHJlc2V0LXNpZ25hbHMsIGFuZCBjb25maWd1cmFibGUN
+Cj4+IG91dHB1dC1kaXJlY3Rpb24gZXRjLCB3aGljaCBJIGRvbid0IGhhdmUuDQo+IA0KPiBBaCEg
+WW91J3JlIHJpZ2h0LiBXaXRoIGp1c3Qgb25lIHJlZ2lzdGVyIGl0IGJlY29tZXMgb25lIG9mIHRo
+ZXNlIHRoYXQNCj4gcmVhZCBhbmQgd3JpdGUgaW50byB0aGF0IHJlZ2lzdGVyLCBzaW1wbHkuIFNv
+cnJ5IGZvciBteSBpZ25vcmFuY2UuDQo+IA0KPiBJIHdvdWxkIHByZWZlciBpZiB5b3Ugc2V0IHRo
+ZSBmbGFnIEJHUElPRl9OT19PVVRQVVQgb24gdGhlIGlucHV0DQo+IG9ubHkgdmVyc2lvbiB0aG91
+Z2guIFNlbWFudGljcyBtYXkgbWF0dGVyIHRvIHRoZSBtbWlvIGdwaW8gY29yZS4NCj4gDQoNCkFo
+LCB0aGFua3MsIHRoYXQncyBhIGdvb2Qgc3VnZ2VzdGlvbi4NCg0KSSB3aWxsIGRvIHRoYXQgYW5k
+IHNlbmQgYW4gdXBkYXRlZCBwYXRjaC4NCg0KDQpCZXJuZC4NCg==
