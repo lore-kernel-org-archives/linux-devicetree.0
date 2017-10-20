@@ -1,63 +1,46 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [RFC resend 3/4] arm64: dts: mt8173: Fix drm subsystem
-Date: Fri, 20 Oct 2017 14:49:56 +0200
-Message-ID: <18286792-77dc-3f06-b70b-e06a4c6792a8@gmail.com>
-References: <20171019112610.13645-1-mbrugger@suse.com>
- <20171019112610.13645-4-mbrugger@suse.com>
- <1508491009.23296.2.camel@mtksdaap41>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/3] drm/omap: Support for dispc memory bandwidth limit
+Date: Fri, 20 Oct 2017 16:12:55 +0300
+Message-ID: <20171020131258.4092-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508491009.23296.2.camel@mtksdaap41>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: CK Hu <ck.hu@mediatek.com>
-Cc: ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, p.zabel@pengutronix.de, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/20/2017 11:16 AM, CK Hu wrote:
-> Hi, Matthias:
-> 
-> On Thu, 2017-10-19 at 13:26 +0200, Matthias Brugger wrote:
->> DRM subysystem and clock driver shared the same compatible mmsys.
->> This stopped does not work, as only the first driver for a compatible
->> gets probed. We change the comaptible to the new DRM identifier to fix
->> this.
->>
->> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index b99a27372965..89db0a3f5950 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -803,6 +803,11 @@
->>  			#clock-cells = <1>;
->>  		};
->>  
->> +		dispsys: display-system {
->> +			compatible = "mediatek,mt2701-dispsys";
-> 
-> Why do you probe "mediatek,mt2701-dispsys" in mt8173.dtsi?
-> 
-
-That's actually a copy-paste-error. Thanks for noting!
-
-Matthias
-
-> Regards,
-> CK
-> 
->> +			mediatek,mmsys = <&mmsys>;
->> +		}
->> +
->>  		mdp_rdma0: rdma@14001000 {
->>  			compatible = "mediatek,mt8173-mdp-rdma",
->>  				     "mediatek,mt8173-mdp";
-> 
-> 
+SGksCgpUaGlzIHNlcmllcyB3aWxsIGFkZCBzaW1wbGUgbWVtb3J5IGJhbmR3aWR0aCBsaW1pdCBz
+dXBwb3J0IHRvIHJlamVjdCBtb2Rlcwp3aGljaCwgaWYgdXNlZCB3aXRoIG9uZSBwbGFuZSBpbiBm
+dWxsIHNpemUgd291bGQgZmFpbCB0aGUgbGltaXQuCgpSZWdhcmRzLApQZXRlcgotLS0KUGV0ZXIg
+VWpmYWx1c2kgKDMpOgogIGR0LWJpbmRpbmdzOiBkaXNwbGF5L3RpOiBBZGQgb3B0aW9uYWwgcHJv
+cGVydHkgdG8gc2V0IG1lbW9yeSBiYW5kd2lkdGgKICAgIGxpbWl0CiAgZHJtL29tYXA6IGRzczog
+QWRkIHN1cHBvcnQgZm9yIHJlcG9ydGluZyBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0YXRpb24KICBk
+cm0vb21hcDogRmlsdGVyIGRpc3BsYXlzIG1vZGUgYmFzZWQgb24gYmFuZHdpZHRoIGxpbWl0Cgog
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgfCAgNSAr
+KysrKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNzLnR4dCAgICAgICAgICAg
+fCAgNCArKysrCiAuLi4vYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0ICAgICAg
+ICAgICB8ICA0ICsrKysKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA0LWRzcy50eHQg
+ICAgICAgICAgIHwgIDQgKysrKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDUtZHNz
+LnR4dCAgICAgICAgICAgfCAgNCArKysrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kc3MvZGlz
+cGMuYyAgICAgICAgICAgICAgICB8IDEzICsrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL29t
+YXBkcm0vZHNzL29tYXBkc3MuaCAgICAgICAgICAgICAgfCAgMiArKwogZHJpdmVycy9ncHUvZHJt
+L29tYXBkcm0vb21hcF9jb25uZWN0b3IuYyAgICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysr
+KysrKysrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5jICAgICAgICAgICAgICAg
+ICB8ICA1ICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5oICAgICAgICAg
+ICAgICAgICB8ICAzICsrKwogMTAgZmlsZXMgY2hhbmdlZCwgNjggaW5zZXJ0aW9ucygrKQoKLS0g
+ClBldGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAw
+MDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtr
+YS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
