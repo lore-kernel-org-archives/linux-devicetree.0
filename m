@@ -1,94 +1,91 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH] nvmem: meson: use generic compatible
-Date: Fri, 20 Oct 2017 10:21:12 +0200
-Message-ID: <1508487672.3616.18.camel@baylibre.com>
-References: <20171012152450.12454-1-jbrunet@baylibre.com>
-         <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
-         <1507923553.30658.10.camel@baylibre.com>
-         <20171017205204.t4vfvbc2c5nsrnhm@rob-hp-laptop>
-         <1508311867.3957.33.camel@baylibre.com>
-         <CAL_JsqKV5yGNFXxsPzAgF6_g-bQn8x8ScXVZ=Wgc1=APPL=mMw@mail.gmail.com>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [RFC PATCH 1/5] gpio: gpiolib: Add core support for maintaining
+ GPIO values on reset
+Date: Fri, 20 Oct 2017 18:54:15 +1030
+Message-ID: <1508487855.24322.49.camel@aj.id.au>
+References: <20171020033727.21557-1-andrew@aj.id.au>
+         <20171020033727.21557-2-andrew@aj.id.au>
+         <CACRpkda-7-uM5x4kbNXkx3F7F4VTZtTvXfys5VPFb1YiVDo1+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKV5yGNFXxsPzAgF6_g-bQn8x8ScXVZ=Wgc1=APPL=mMw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-d48CUOoV9VuoK6rPhecQ"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda-7-uM5x4kbNXkx3F7F4VTZtTvXfys5VPFb1YiVDo1+g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-10-19 at 16:10 -0500, Rob Herring wrote:
-> On Wed, Oct 18, 2017 at 2:31 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > On Tue, 2017-10-17 at 15:52 -0500, Rob Herring wrote:
-> > > On Fri, Oct 13, 2017 at 09:39:13PM +0200, Jerome Brunet wrote:
-> > > > On Fri, 2017-10-13 at 21:14 +0200, Martin Blumenstingl wrote:
-> > > > > Hi Jerome,
-> > > > > 
-> > > > > On Thu, Oct 12, 2017 at 5:24 PM, Jerome Brunet <jbrunet@baylibre.com>
-> > > > > wrote:
-> > > > > > The meson efuse driver seems to be compatible with more SoCs than
-> > > > > > initially thought. Let's use the most generic compatible he have in
-> > > > > > DT instead of the gxbb specific one
-> > > > > > 
-> > > > > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
-> > > > > >  drivers/nvmem/meson-efuse.c                               | 2 +-
-> > > > > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-
-> > > > > > efuse.txt
-> > > > > > b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > > > index fafd85bd67a6..0260524292fe 100644
-> > > > > > --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
-> > > > > > @@ -1,7 +1,7 @@
-> > > > > >  = Amlogic eFuse device tree bindings =
-> > > > > > 
-> > > > > >  Required properties:
-> > > > > > -- compatible: should be "amlogic,meson-gxbb-efuse"
-> > > > > > +- compatible: should be "amlogic,meson-gx-efuse"
-> > > 
-> > > Same comment as for the firmware.
-> > > 
-> > > > > 
-> > > > > have you checked with the devicetree maintainers how they want the
-> > > > > documentation to look like in this case?
-> > > > 
-> > > > You mean "Should we put every compatible existing (in DT) in the
-> > > > documentation"
-> > > > From what I've seen, at least in meson drivers, only the matched ones
-> > > > are
-> > > > listed.
-> > > > 
-> > > > That's a good question though.
-> > > > We tend to put soc specific compatible "in case"  we need them later on.
-> > > > Should
-> > > > we document those ?
-> > > 
-> > > Absolutely.
-> > 
-> > My understanding is that this documentation is the documentation of the
-> > bindings
-> > used by the driver.
-> 
-> No, the binding doc should be sufficient to validate the dts.
-> 
-> > If I understand your point, we should document bindings (compatible in that
-> > case) that are in fact not fact by the driver. This means that if someone
-> > refer
-> > only to the documentation, he might be surprised by the result.
-> 
-> How so?
 
-Compatible not matched.
-If the compatible is documented, I would expect "a driver" to match on it
+--=-d48CUOoV9VuoK6rPhecQ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If we document every compatible used in DTS, some won't be matched.
+On Fri, 2017-10-20 at 09:17 +0200, Linus Walleij wrote:
+> > On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au> wrote=
+:
+>=C2=A0
+> > GPIO state reset tolerance is implemented in gpiolib through the
+> > addition of a new pinconf parameter. With that, some renaming of helper=
+s
+> > is done to clarify the scope of the already existing
+> > gpiochip_line_is_persistent(), as it's now ambiguous as to whether that
+> > means on suspend, reset or both.
+>=C2=A0
+> Isn't it most reasonable to say persistance covers both cases, reset
+> and/or sleep? This seems a bit like overdefined.
 
-IMO, the current way (document the driver - the matched bindings) is easier and
-more predictable.
+I definitely had some internal debate about that. I erred on the side of
+avoiding potential change in expectations for the arizona. If you consider =
+that
+overdefined then I'm happy to go the other way.
 
-> 
-> Rob
+>=C2=A0
+> So can we say that is this flag is set, the hardware and driver should
+> do its best to preserve the value across any system disruptions.
+>=C2=A0
+> We can change the wording of course, patches welcome for that.
+
+Yep.
+
+>=C2=A0
+> But do we really need to distinguish the cases of disruption and
+> whether we cover up for them or not?
+>=C2=A0
+> I would say we can deal with that the day we have a system with
+> two register bits (or similar) where you can select to preserve across
+> sleep, reset, one or the other, AND there is also a usecase such that
+> a user wants to preserve the value across reset but not suspend or
+> vice versa.
+>=C2=A0
+> I suspect that will not happen.
+
+A very reasonable approach.
+
+Cheers for the feedback.
+
+Andrew
+--=-d48CUOoV9VuoK6rPhecQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCgAGBQJZ6bKvAAoJEJ0dnzgO5LT5xb0P/3hJ2tqH7oYshUwTVEJjSLd2
+xjGVSS5Vqrmn7FwEwmk1lYUlNSERaM1NtKwGKCVSM6Xvf+3MJ5TuXvxJRCHiSAxC
+qNerc80lrTZKuVNOwlfv3YCPZj5MHiNwynWaUoPuSIc0Y7iIWoYQl3oI5IhVVjQM
+f+v+QHSEa26NYwT8LJIpOmfKgwzypl1g6oTELB3g+Bt3Ff49Smr5VzCvborOFBNs
+W/qBybuf1qaKs/dv2hGLKpEULhVP+Y2L6zEL2zMd3URGlAvtCxBv3OsJMfHyQLDh
+cac0ciSAepA+SxsDu1fXHzrQ2X0A/62MpCsgVY97fjaU7yXGLjZ4hgbIrN6HAPAg
+s4c/PYjJZxkD1a1KhEumify8dpLXbVFLDv678/v6kc2MdeuETq0LZWo4tJ4JY/UA
+Vk3J0Q0Uf3T+P5+5ZI2ZgSAbfJL0JE9ngshPjA65eWP6UTvIuq/KmMZKxmd2nRv4
+DGrfzQONzTU7sbezF7oUOF78FejXU15Qc4YEifkSph9VLgUMpLa3BpJXRRUxhy00
+8a/fxb7qDjU/H4eB7fYgPVsXzxIn2l03vVzAX8VMGSxEsjerrqUn2EF3NKj669xD
+XSbBDvaeqyGF0FiC3jH9sLZYREKno/Jigh5D3xyO5lLTbyLWrh4V648cnn/0dMEl
+w47nA2cEGma8s58k+HHT
+=8Vaa
+-----END PGP SIGNATURE-----
+
+--=-d48CUOoV9VuoK6rPhecQ--
+
