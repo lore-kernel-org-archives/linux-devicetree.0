@@ -1,44 +1,33 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH 1/5] gpio: gpiolib: Add core support for maintaining
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/5] gpio: gpiolib: Add OF support for maintaining
  GPIO values on reset
-Date: Fri, 20 Oct 2017 09:17:15 +0200
-Message-ID: <CACRpkda-7-uM5x4kbNXkx3F7F4VTZtTvXfys5VPFb1YiVDo1+g@mail.gmail.com>
-References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-2-andrew@aj.id.au>
+Date: Fri, 20 Oct 2017 09:18:26 +0200
+Message-ID: <CACRpkdbxOen3ohwmDc8ZNWkirn3mNHaGiZq1O-6VnOjhvFcw+w@mail.gmail.com>
+References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-3-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20171020033727.21557-2-andrew@aj.id.au>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171020033727.21557-3-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
 
-> GPIO state reset tolerance is implemented in gpiolib through the
-> addition of a new pinconf parameter. With that, some renaming of helpers
-> is done to clarify the scope of the already existing
-> gpiochip_line_is_persistent(), as it's now ambiguous as to whether that
-> means on suspend, reset or both.
+> @@ -32,6 +32,7 @@ enum of_gpio_flags {
+>         OF_GPIO_SINGLE_ENDED = 0x2,
+>         OF_GPIO_OPEN_DRAIN = 0x4,
+>         OF_GPIO_SLEEP_MAY_LOSE_VALUE = 0x8,
+> +       OF_GPIO_RESET_TOLERANT = 0x16,
 
-Isn't it most reasonable to say persistance covers both cases, reset
-and/or sleep? This seems a bit like overdefined.
+Now you're mixing up decimal and hex.
 
-So can we say that is this flag is set, the hardware and driver should
-do its best to preserve the value across any system disruptions.
-
-We can change the wording of course, patches welcome for that.
-
-But do we really need to distinguish the cases of disruption and
-whether we cover up for them or not?
-
-I would say we can deal with that the day we have a system with
-two register bits (or similar) where you can select to preserve across
-sleep, reset, one or the other, AND there is also a usecase such that
-a user wants to preserve the value across reset but not suspend or
-vice versa.
-
-I suspect that will not happen.
+Anyways, I do not think this is necessary.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
