@@ -1,55 +1,67 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 7/7] ARM64: dts: meson-gxl: adjust libretech-cc
- gpio-line-names
-Date: Fri, 20 Oct 2017 10:09:36 +0200
-Message-ID: <60881aa5-7249-e7e7-4a3f-64eca2ccd910@baylibre.com>
-References: <20170921171604.27675-1-jbrunet@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric I/O
+Date: Fri, 20 Oct 2017 10:10:16 +0200
+Message-ID: <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
+References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170921171604.27675-1-jbrunet@baylibre.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc: Rob Herring <robh@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/09/2017 19:16, Jerome Brunet wrote:
-> TEST_N gpio has been moved so the gpio-line-names of the cc
-> must be adjusted accordingly
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> index 69ca14ac10fa..3e9b9c8b72f0 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> @@ -146,7 +146,9 @@
->  			  "7J1 Header Pin12",
->  			  "IR In",
->  			  "9J3 Switch HDMI CEC/7J1 Header Pin11",
-> -			  "7J1 Header Pin13";
-> +			  "7J1 Header Pin13",
-> +			  /* GPIO_TEST_N */
-> +			  "7J1 Header Pin15";
->  };
->  
->  &pinctrl_periphs {
-> @@ -188,9 +190,7 @@
->  			  "7J1 Header Pin32", "7J1 Header Pin29",
->  			  "7J1 Header Pin31",
->  			  /* Bank GPIOCLK */
-> -			  "7J1 Header Pin7", "",
-> -			  /* GPIO_TEST_N */
-> -			  "7J1 Header Pin15";
-> +			  "7J1 Header Pin7", "";
->  };
->  
->  /* SD card */
-> 
+On Thu, Oct 19, 2017 at 6:29 PM, Bernd Edlinger
+<bernd.edlinger@hotmail.de> wrote:
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Does this really work?
+
+> This is an internal 32-bit input and 32-bit output port to the FPGA logic.
+>
+> Instantiate this in the device tree as:
+>
+>   gpio3: gpio@ff706010 {
+>    #address-cells = <1>;
+>    #size-cells = <0>;
+>    compatible = "altr,fpgamgr-gpio";
+>    reg = <0xff706010 0x8>;
+>    status = "okay";
+>
+>    portd: gpio-controller@0 {
+>     compatible = "altr,fpgamgr-gpio-output";
+>     gpio-controller;
+>     #gpio-cells = <2>;
+>     reg = <0>;
+>    };
+>
+>    porte: gpio-controller@1 {
+>     compatible = "altr,fpgamgr-gpio-input";
+>     gpio-controller;
+>     #gpio-cells = <2>;
+>     reg = <1>;
+>    };
+
+So you have output-only and input-only ports....
+
+> +static int fpgamgr_gpio_add_port(struct fpgamgr_gpio *gpio,
+> +                                struct fpgamgr_port_property *pp,
+> +                                unsigned int offs)
+> +{
+> +       struct fpgamgr_gpio_port *port;
+> +       void __iomem *dat;
+> +       int err;
+> +
+> +       port = &gpio->ports[offs];
+> +       port->gpio = gpio;
+> +       port->idx = pp->idx;
+> +
+> +       dat = gpio->regs + (pp->idx * 4);
+> +
+> +       err = bgpio_init(&port->bgc, gpio->dev, 4, dat, NULL, NULL,
+> +                        NULL, NULL, 0);
+
+But all you add is input-only GPIO chips. Also for the output ports.
+
+Yours,
+Linus Walleij
