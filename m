@@ -1,68 +1,45 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] Add PMIC support to MediaTek MT7622 SoC
-Date: Fri, 20 Oct 2017 11:58:47 +0200
-Message-ID: <7facd6aa-6a94-3dc0-1067-b0a4f568dc66@gmail.com>
-References: <cover.1508313105.git.sean.wang@mediatek.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] MT2712 IOMMU SUPPORT
+Date: Fri, 20 Oct 2017 18:12:54 +0800
+Message-ID: <1508494374.15871.6.camel@mhfsdcap03>
+References: <1503313221-26453-1-git-send-email-yong.wu@mediatek.com>
+	<20170822143836.ac3faa7wcwfjtvjc@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1508313105.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170822143836.ac3faa7wcwfjtvjc-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: K Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=87=AF=29?= <K.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cloud.zhou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.zhou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2017-08-22 at 22:38 +0800, Joerg Roedel wrote:
+> On Mon, Aug 21, 2017 at 07:00:13PM +0800, Yong Wu wrote:
+> > Yong Wu (8):
+> >   dt-bindings: mediatek: Add binding for mt2712 IOMMU and SMI
+> >   iommu/mediatek: Move MTK_M4U_TO_LARB/PORT into mtk_iommu.c
+> >   iommu/mediatek: Add mt2712 IOMMU support
+> >   iommu/mediatek: Merge 2 M4U HWs into one iommu domain
+> >   iommu/mediatek: Move pgtable allocation into domain_alloc
+> >   iommu/mediatek: Disable iommu clock when system suspend
+> >   iommu/mediatek: Enlarge the validate PA range for 4GB mode
+> >   memory: mtk-smi: Degrade SMI init to module_init
+> 
+> Applied patches 2-7. Patch 1 is something for Matthias.
 
+gentle ping.
 
-On 10/18/2017 10:28 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Changes since v5:
-> - drop the merged patch
-> - add a patch for common way handling for setup CS timing extension
-> - unify the comment style
-> 
-> Changes since v4:
-> - for patch 1/7 and 5/7, add the description about how to bind pmic wrapper with MT6380.
-> - for patch 3/7, add more comments explaining why additional pwrap_read is 
-> required in the pwrap_write32.
-> - for patch 4/7 and 5/7, refactoring pwrap_init would help the driver to be more extensible 
-> when more various SoC and PMICs join.
-> - for patch 6/7, change pwrap_mt7622 into a const struct.
-> 
-> Changes since v3
-> - rebase into Linux 4.14-rc1
-> - removed those patches already applied
-> 
-> Changes since v2:
-> - for patch 1/2, enhance the document as the suggestions from v2.
-> - for patch 3, constify the table with struct regulator_ops, also fix that
-> regulator doesn't have modesetting facilities it just shouldn't have the ops
-> and finally fix copy+paste mistake in warranty disclaimer.
-> - for patch 7/8, sort the things added for MT7622/MT6380 alphabetically.
-> 
-> Chenglin Xu (1):
->   soc: mediatek: pwrap: add support for MT7622 SoC
-> 
-> Sean Wang (6):
->   dt-bindings: arm: mediatek: add MT7622 string to the PMIC wrapper doc
->   soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
->   soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
->   soc: mediatek: pwrap: refactor pwrap_init for the various PMIC types
->   soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
->   soc: mediatek: pwrap: add common way for setup CS timing extenstion
-> 
->  .../devicetree/bindings/soc/mediatek/pwrap.txt     |   6 +-
->  drivers/soc/mediatek/mtk-pmic-wrap.c               | 490 ++++++++++++++++++---
->  2 files changed, 422 insertions(+), 74 deletions(-)
-> 
+Hi Matthias,
 
-Pushed to v4.14-next/soc
-
-Thanks!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Could you help review the binding patch[1/8]? if it's ok for you
+too, Could you help apply it through your branch with Rob's ACK.
+Thanks.
