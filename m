@@ -1,82 +1,113 @@
-From: Marian Mihailescu <mihailescu2m@gmail.com>
-Subject: [PATCH] ARM: dts: exynos: add cpu perf counters to Exynos54xx boards
-Date: Fri, 20 Oct 2017 22:39:12 +1030
-Message-ID: <CAM3PiRxi8sxf6T990K8rd7UsOLd2D5TaLciF=c_wF=9gmpLKYg@mail.gmail.com>
+From: <Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>
+Subject: RE: Problem with commit to add overlay symbols to live device tree
+Date: Fri, 20 Oct 2017 12:11:49 +0000
+Message-ID: <d0bd4312e9314c8ba6c56d800d07c0a9@infineon.com>
+References: <85c5a40bb6eb4d4ebe522b3034528a36@infineon.com>
+ <59E9029D.1030700@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="001a114695fc510552055bf95710"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E9029D.1030700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frank.rowand-7U/KSKJipcs@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---001a114695fc510552055bf95710
-Content-Type: text/plain; charset="UTF-8"
+> Hi Alexander,
+>=20
+> On 10/19/17 10:06, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
+> > Hi Frank, Rob,
+> >
+> > I ran some tests with kernel v4.14-rc2, where I came across an issue
+> > with your commit "of: overlay: add overlay symbols to live device
+> > tree" (d1651b03c2df75db8eda3fbcd3a07adb337ee8b0,
+> >
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/d
+> rivers/of?h=3Dv4.14-rc5&id=3Dd1651b03c2df75db8eda3fbcd3a07adb337ee8b0).
+> > I am not sure whether this is a problem with your change or whether I
+> > made a mistake somewhere.
+> >
+> > Without this commit, the following device tree overlay works fine on
+> > a Raspberry Pi:
+> >
+> > /dts-v1/;
+> > /plugin/;
+> >
+> > / {
+> > 	fragment@0 {
+> > 		target-path =3D "/soc/spi@7e204000";
+> > 		__overlay__ {
+> > 			#address-cells =3D <1>;
+> > 			#size-cells =3D <0>;
+> > 			status =3D "okay";
+> >
+> > 		        spidev1: spi@1 {
+> > 				compatible =3D "spidev";
+> > 				reg =3D <1>;
+> > 				spi-max-frequency =3D <5000000>;
+> > 			};
+> > 		};
+> > 	};
+> > };
+> >
+> > But with the commit, it is rejected:
+> >
+> > OF: overlay: no symbols in root of device tree.
+> > OF: overlay: of_build_overlay_info() failed for tree@/
+> > create_overlay: Failed to create overlay (err=3D-22)
+> >
+> > Only if I remove the spidev1 label, it continues to work with the
+> > commit (but this is not always possible in more complex overlays).
+> >
+> > I hope this does not make a difference, but I use the configfs
+> > interface to load the overlay, that is not part of mainline, but
+> > shipped by several distributions nonetheless (for example in the
+> > Raspberry Pi kernel,
+> >
+> https://github.com/raspberrypi/linux/commit/cccc24635da69799335566eb46
+> 4a4c9e1fb4a8ad).
+> >
+> >
+> > Could you tell me whether this change in behavior is intentional and
+> > whether I have to fix something in my usage?
+>=20
+> Yes, the change is intentional.
+>=20
+> If you are using overlays, the expectation is that the device tree
+> that was used to boot contains symbols (the paths of nodes that
+> have phandles) so that phandle references in the overlay can be
+> fixed up to match the values in the base devicetree.  Symbols
+> will be added to the device tree if if is compiled with the
+> "@" option.  This is the first method to avoid the overlay
+> load error.
 
-Hi,
+Ah, thanks, this does solve the problem. I use nothing special to generate =
+the base devicetree, just "make dtbs". Would it make sense to add the "@" o=
+ption to the kernel Makefile, so that symbols are added by default? Or does=
+ this have any downside? I'd suspect that many more people will be hit by t=
+his change, since most tutorials for overlays that I have seen include the =
+"@" option for the dtc calls.
 
-This patch enables support for ARM Performance Monitoring Units
-available in Cortex-A7
-and Cortex-A15 CPU cores for Exynos54xx SoCs (5410, 5420 and 5422/5800).
-
-Exynos5410 currently has only Cortex-A7 nodes defined in the device tree,
-so the Cortex-A15 PMU is defined in the exynos5420 device tree file.
-
-Tested with perf on Odroid XU4 (Exynos5422):
-armv7_cortex_a7 PMU driver: 5 counters available
-armv7_cortex_a15 PMU driver: 7 counters available
-
-Regards,
-Marian
-
+> If you compile the overlay with the "@" option then symbols
+> will be added to the overlay DTB.  Previous to commit
+> d1651b03c2df, these symbols would be ignored when an overlay
+> was loaded.  If you remove the "@" from the compile of
+> overlays, then everything should work the same way it did
+> before the commit.  This is the second way to avoid the
+> load overlay error.
+>=20
+>=20
+> > Thanks
+> > Alexander
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-Either I've been missing something or nothing has been going on. (K. E. Gordon)
-
---001a114695fc510552055bf95710
-Content-Type: application/octet-stream;
-	name="0001-ARM-dts-exynos-add-cpu-perf-counters-to-Exynos54xx-b.patch"
-Content-Disposition: attachment;
-	filename="0001-ARM-dts-exynos-add-cpu-perf-counters-to-Exynos54xx-b.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_j8zup3zv0
-
-RnJvbTogTWFyaWFuIE1paGFpbGVzY3UgPG1paGFpbGVzY3UybUBnbWFpbC5jb20+CkRhdGU6IEZy
-aSwgMjAgT2N0IDIwMTcgMjA6MDk6MzIgKzEwMzAKU3ViamVjdDogW1BBVENIXSBBUk06IGR0czog
-ZXh5bm9zOiBhZGQgY3B1IHBlcmYgY291bnRlcnMgdG8gRXh5bm9zNTR4eCBib2FyZHMKCkVuYWJs
-ZSBzdXBwb3J0IGZvciBBUk0gUGVyZm9ybWFuY2UgTW9uaXRvcmluZyBVbml0cyBhdmFpbGFibGUg
-aW4gQ29ydGV4LUE3CmFuZCBDb3J0ZXgtQTE1IENQVSBjb3JlcyBmb3IgRXh5bm9zNTR4eCBTb0Nz
-ICg1NDEwLCA1NDIwIGFuZCA1NDIyLzU4MDApLgoKRXh5bm9zNTQxMCBjdXJyZW50bHkgaGFzIG9u
-bHkgQ29ydGV4LUE3IG5vZGVzIGRlZmluZWQgaW4gdGhlIGRldmljZSB0cmVlLApzbyB0aGUgQ29y
-dGV4LUExNSBQTVUgaXMgZGVmaW5lZCBpbiB0aGUgZXh5bm9zNTQyMCBkZXZpY2UgdHJlZSBmaWxl
-LgoKVGVzdGVkIHdpdGggcGVyZiBvbiBPZHJvaWQgWFU0IChFeHlub3M1NDIyKToKYXJtdjdfY29y
-dGV4X2E3IFBNVSBkcml2ZXI6IDUgY291bnRlcnMgYXZhaWxhYmxlCmFybXY3X2NvcnRleF9hMTUg
-UE1VIGRyaXZlcjogNyBjb3VudGVycyBhdmFpbGFibGUKClN1Z2dlc3RlZC1ieTogTWFyZWsgU3p5
-cHJvd3NraSA8bS5zenlwcm93c2tpQHNhbXN1bmcuY29tPgpTaWduZWQtb2ZmLWJ5OiBNYXJpYW4g
-TWloYWlsZXNjdSA8bWloYWlsZXNjdTJtQGdtYWlsLmNvbT4KU2lnbmVkLW9mZi1ieTogV2lsbHkg
-V29sZmYgPHdpbGx5Lm1oLndvbGZmQGdtYWlsLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9l
-eHlub3M1NDIwLmR0c2kgfCAxMyArKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9leHlu
-b3M1NHh4LmR0c2kgfCAxMyArKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDI2IGluc2Vy
-dGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kg
-Yi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kKaW5kZXggMDJkMmY4OS4uNDY4MDU5
-ZSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC5kdHNpCisrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaQpAQCAtNjk1LDYgKzY5NSwxOSBAQAogCQkJ
-aW9tbXVzID0gPCZzeXNtbXVfanBlZzE+OwogCQl9OwogCisJCWFybS1hMTUtcG11IHsKKwkJCWNv
-bXBhdGlibGUgPSAiYXJtLGNvcnRleC1hMTUtcG11IjsKKwkJCWludGVycnVwdC1wYXJlbnQgPSA8
-JmNvbWJpbmVyPjsKKwkJCWludGVycnVwdHMgPSA8MSAyPiwKKwkJCQk8NyAwPiwKKwkJCQk8MTYg
-Nj4sCisJCQkJPDE5IDI+OworCQkJaW50ZXJydXB0LWFmZmluaXR5ID0gPCZjcHU0PiwKKwkJCQk8
-JmNwdTU+LAorCQkJCTwmY3B1Nj4sCisJCQkJPCZjcHU3PjsKKwkJfTsKKwogCQlwbXVfc3lzdGVt
-X2NvbnRyb2xsZXI6IHN5c3RlbS1jb250cm9sbGVyQDEwMDQwMDAwIHsKIAkJCWNvbXBhdGlibGUg
-PSAic2Ftc3VuZyxleHlub3M1NDIwLXBtdSIsICJzeXNjb24iOwogCQkJcmVnID0gPDB4MTAwNDAw
-MDAgMHg1MDAwPjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0eHguZHRz
-aSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0eHguZHRzaQppbmRleCA4Y2E0ZmVmLi44ZTAw
-N2E0IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NHh4LmR0c2kKKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTR4eC5kdHNpCkBAIC03OSw2ICs3OSwxOSBAQAogCQkJ
-aW50ZXJydXB0cyA9IDxHSUNfU1BJIDQyIElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQl9OwogCisJ
-CWFybS1hNy1wbXUgeworCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3LXBtdSI7CisJCQlp
-bnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE2MCBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQk8R0lDX1NQSSAxNjEgSVJRX1RZUEVfTEVWRUxfSElH
-SD4sCisJCQkJPEdJQ19TUEkgMTYyIElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJCTxHSUNfU1BJ
-IDE2MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWludGVycnVwdC1hZmZpbml0eSA9IDwmY3B1
-MD4sCisJCQkJPCZjcHUxPiwKKwkJCQk8JmNwdTI+LAorCQkJCTwmY3B1Mz47CisJCX07CisKIAkJ
-c3NzOiBzc3NAMTA4MzAwMDAgewogCQkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczQyMTAt
-c2Vjc3MiOwogCQkJcmVnID0gPDB4MTA4MzAwMDAgMHgzMDA+OwotLSAKMi43LjQKCg==
---001a114695fc510552055bf95710--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
