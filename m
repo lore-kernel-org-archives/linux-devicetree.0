@@ -1,62 +1,153 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] dt-bindings: PCI: rcar: Correct example to match reality
-Date: Fri, 20 Oct 2017 12:30:44 -0500
-Message-ID: <20171020173044.GJ6332@bhelgaas-glaptop.roam.corp.google.com>
-References: <1507729813-21501-1-git-send-email-geert+renesas@glider.be>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
+Date: Fri, 20 Oct 2017 18:46:17 +0100
+Message-ID: <CACxGe6tJfcnwDB=m7GLnCeDSc4Srxqssv+-p1+zapDo2yLWXXQ@mail.gmail.com>
+References: <1506628736.28192.9.camel@hp800z>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1507729813-21501-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1506628736.28192.9.camel@hp800z>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 03:50:13PM +0200, Geert Uytterhoeven wrote:
-> Correct the USB subnodes in the example, cfr. commit f7d569c1e6a6fa73
-> ("ARM: dts: r8a779x: Fix PCI bus dtc warnings"):
->   1. Drop the bogus 'device_type = "pci"' properties,
->   2. Correct the unit addresses.
-> 
-> Update other bits in the example to match real use:
->   1. Rename the USB subnodes from "pci" to "usb",
->   2. Update the "phys" property.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Thu, Sep 28, 2017 at 8:58 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hello again,
+>
+> Significant progress has been made on yamldt and is now capable of
+> not only generating yaml from DTS source but also compiling DTS sources
+> and being almost fully compatible with DTC.
+>
+> Compiling the kernel's DTBs using yamldt is as simple as using a
+> DTC=yamldt.
+>
+> Error reporting is accurate and validation against a YAML based schema
+> works as well. In a short while I will begin posting patches with
+> fixes on bindings and DTS files in the kernel.
+>
+> Please try it on your platform and report if you encounter any problems.
+>
+> https://github.com/pantoniou/yamldt
+>
+> I am eagerly awaiting for your comments.
 
-Applied with acks from Sergei and Rob to pci/host-rcar for v4.15, thanks!
+Hi Pantelis,
 
-> ---
->  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> index 3d038638612b8ec2..9fe7e12a7bf37b7c 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> @@ -60,17 +60,15 @@ Example SoC configuration:
->  				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->  				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -		pci@0,1 {
-> +		usb@1,0 {
->  			reg = <0x800 0 0 0 0>;
-> -			device_type = "pci";
-> -			phys = <&usbphy 0 0>;
-> +			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
->  
-> -		pci@0,2 {
-> +		usb@2,0 {
->  			reg = <0x1000 0 0 0 0>;
-> -			device_type = "pci";
-> -			phys = <&usbphy 0 0>;
-> +			phys = <&usb0 0>;
->  			phy-names = "usb";
->  		};
->  	};
-> -- 
-> 2.7.4
-> 
+This is good work. I've played around with it and I'm looking forward
+to chatting next week.
+
+One thing I've done is tried loading the output YAML files into
+another YAML interpreter and the current encoding causes problems.
+Specifically, in yamldt anchors/aliases are being used as a
+replacement for labels/phandles, but that conflicts with the YAML data
+model which defines a reference as a way to make a copy of the data
+appear in another part of the tree. For example, for the following
+snippit:
+
+intc: intc@10000 {
+    #interrupt-cells = <1>;
+    compatible = "acme,intc";
+    reg = <0x10000 0x1000>;
+    gpio-controller;
+};
+
+serial@20000 {
+    compatible = "acme,uart";
+    reg = <0x20000 0x1000>;
+    interrupt-parent = <&intc>;
+    interrupts = <5>;
+};
+
+yamldt will encode this as:
+
+intc@10000: &intc
+    "#interrupt-cells": 1
+    compatible: acme,intc
+    reg: [0x10000, 0x1000]
+    gpio-controller:
+
+serial@20000:
+    compatible: acme,uart
+    reg: [0x20000, 0x1000]
+    interrupt-parent: *intc
+    interrupts: 5
+
+But, the expected behaviour for a YAML parser is expand the alias
+'*intc' which results in the following structure:
+
+intc@10000: &intc
+    "#interrupt-cells": 1
+    compatible: acme,intc
+    reg: [0x10000, 0x1000]
+    gpio-controller:
+
+serial@20000:
+    compatible: acme,uart
+    reg: [0x20000, 0x1000]
+    interrupt-parent:
+        "#interrupt-cells": 1
+        compatible: acme,intc
+        reg: [0x10000, 0x1000]
+        gpio-controller:
+    interrupts: 5
+
+See? It results in the entire interrupt controller node to appear as
+an instance under the interrupt-parent property, when the intention is
+only to create a phandle. yamldt should not redefine the behaviour of
+'*' aliases. Instead, it should use a different indicator, either
+using an explicit !phandle tag, or by replacing '*' with something
+else. I worked around it in my tests by replacing '*' with '$'.
+
+Plus, it would be useful to use normal YAML anchors/aliases for
+creating node templates. For example:
+
+serial-template: &acme-uart . # The anchor for the template
+    compatible: acme,uart
+    interrupt-parent: *intc
+
+root:
+    serial@20000:
+        <<: *acme-uart   # Alias node merged into serial@20000
+        interrupts: 5
+        reg: [0x20000, 0x1000]
+    serial@30000:
+        <<: *acme-uart   # Alias node merged into serial@30000
+        interrupts: 5
+        reg: [0x30000, 0x1000]
+
+Another problem with anchors/references is YAML seems to require the
+anchor to be defined before the reference, or at least that's what
+pyyaml and ruamel both expect. Regardless, The chosen YAML encoding
+should be readily consumable by existing yaml implementations without
+having to do a lot of customization.
+
+I'm slightly concerned about using & anchors for labels because it
+seems only one anchor can be defined per node, but DTC allows multiple
+labels for a single node. This might not be an issue in practice
+though. Another implementation issue related to using & anchors is the
+YAML spec defines them as an encoding artifact, and parsers can
+discard the anchor names after parsing the YAML structure, which is a
+problem if we use something like $name to reference an anchor. The
+solution might just be that labels need to go into a special property
+so they don't disappear from the data stream.
+
+There appears to be no place to put metadata. The root of the tree is
+the top level of the YAML structure. There isn't any provision for
+having a top level object to hold things like the memreserve map. We
+may need a namespace to use for special properties that aren't nodes
+or properties.
+
+The encoding differentiates between nodes and properties implicitly
+base on whether the contents are a map, or a scalar/list. This does
+mean any parser needs to do a bit more work and it may impact what can
+be done with validation (I'm not going to talk about validation in
+this email though. We'll talk next week.)
+
+Cheers,
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
