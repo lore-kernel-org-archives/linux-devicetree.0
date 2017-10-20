@@ -1,90 +1,77 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/3] drm/omap: Filter displays mode based on bandwidth limit
-Date: Fri, 20 Oct 2017 16:12:58 +0300
-Message-ID: <20171020131258.4092-4-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/3] drm/omap: dss: Add support for reporting memory bandwidth limitation
+Date: Fri, 20 Oct 2017 16:12:57 +0300
+Message-ID: <20171020131258.4092-3-peter.ujfalusi@ti.com>
 References: <20171020131258.4092-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171020131258.4092-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171020131258.4092-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SWYgd2UgaGF2ZSBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0IGNvbmZpZ3VyZWQsIHJlamVjdCB0aGUg
-bW9kZXMgd2hpY2ggd291bGQKcmVxdWlyZSBtb3JlIGJhbmR3aWR0aCB0aGFuIHRoZSBsaW1pdCBp
-ZiBpdCBpcyB1c2VkIHdpdGggb25lIGZ1bGwKcmVzb2x1dGlvbiBwbGFuZSAobW9zdCBjb21tb24g
-dXNlIGNhc2UpLgoKVGhpcyBmaWx0ZXJpbmcgaXMgbm90IHByb3ZpZGluZyBmdWxsIHByb3RlY3Rp
-b24gYXMgaXQgaXMgcG9zc2libGUgdGhhdAphcHBsaWNhdGlvbiB3b3VsZCBwaWNrIHNtYWxsZXIg
-Y3J0YyByZXNvbHV0aW9uIHdpdGggaGlnaCByZXNvbHV0aW9uIHBsYW5lcwphbmQgZG93biBzY2Fs
-aW5nLCBvciBjYW4gZW5hYmxlIG1vcmUgc21hbGxlciBwbGFuZXMgd2hlcmUgdGhlIHN1bSBvZiB0
-aGVpcgpiYW5kd2lkdGggbmVlZCB3b3VsZCBiZSBoaWdoZXIgdGhhbiB0aGUgbGltaXQuCgpUaGlz
-IHBhdGNoIG9ubHkgYWxsb3dzIHVzIHRvIGZpbHRlciBvdXQgbW9kZXMgd2hpY2ggd291bGQgbmVl
-ZCBtb3JlCmJhbmR3aWR0aCBpZiB0aGV5IHdlcmUgdXNlZCB3aXRoIG9uZSBmdWxsIHNjcmVlbiBw
-bGFuZS4KClNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5j
-b20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9jb25uZWN0b3IuYyB8IDI0ICsr
-KysrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kcnYu
-YyAgICAgICB8ICA1ICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5oICAg
-ICAgIHwgIDMgKysrCiAzIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykKCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jIGIvZHJpdmVycy9n
-cHUvZHJtL29tYXBkcm0vb21hcF9jb25uZWN0b3IuYwppbmRleCBhYTViYTlhZTIxOTEuLmM2OTNk
-MjI5NjBjOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9jb25uZWN0
-b3IuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jCkBAIC0x
-NTksNiArMTU5LDcgQEAgc3RhdGljIGludCBvbWFwX2Nvbm5lY3Rvcl9tb2RlX3ZhbGlkKHN0cnVj
-dCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCiAJCQkJIHN0cnVjdCBkcm1fZGlzcGxheV9tb2Rl
-ICptb2RlKQogewogCXN0cnVjdCBvbWFwX2Nvbm5lY3RvciAqb21hcF9jb25uZWN0b3IgPSB0b19v
-bWFwX2Nvbm5lY3Rvcihjb25uZWN0b3IpOworCXN0cnVjdCBvbWFwX2RybV9wcml2YXRlICpwcml2
-ID0gY29ubmVjdG9yLT5kZXYtPmRldl9wcml2YXRlOwogCXN0cnVjdCBvbWFwX2Rzc19kZXZpY2Ug
-KmRzc2RldiA9IG9tYXBfY29ubmVjdG9yLT5kc3NkZXY7CiAJc3RydWN0IG9tYXBfZHNzX2RyaXZl
-ciAqZHNzZHJ2ID0gZHNzZGV2LT5kcml2ZXI7CiAJc3RydWN0IHZpZGVvbW9kZSB2bSA9IHswfTsK
-QEAgLTIwMyw2ICsyMDQsMjkgQEAgc3RhdGljIGludCBvbWFwX2Nvbm5lY3Rvcl9tb2RlX3ZhbGlk
-KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCiAJCWRybV9tb2RlX2Rlc3Ryb3koZGV2
-LCBuZXdfbW9kZSk7CiAJfQogCisJLyogQ2hlY2sgZm9yIGJhbmR3aWR0aCBsaW1pdCAqLworCWlm
-ICghciAmJiBwcml2LT5tYXhfYmFuZHdpZHRoKSB7CisJCXVuc2lnbmVkIGludCBiYW5kd2lkdGgs
-IHJlYWxfcmVmcmVzaDsKKworCQkvKgorCQkgKiBFc3RpbWF0aW9uIGZvciB0aGUgYmFuZHdpZHRo
-IG5lZWQgb2YgYSBnaXZlbiBtb2RlIHdpdGggb25lCisJCSAqIGZ1bGwgc2NyZWVuIHBsYW5lOgor
-CQkgKiByZXNvbHV0aW9uICogMzJicHAgKiAocmVhbCkgcmVmcmVzaCByYXRlCisJCSAqLworCQly
-ZWFsX3JlZnJlc2ggPSBkcm1fbW9kZV92cmVmcmVzaChtb2RlKTsKKwkJaWYgKG1vZGUtPmZsYWdz
-ICYgRFJNX01PREVfRkxBR19JTlRFUkxBQ0UpCisJCQlyZWFsX3JlZnJlc2ggLz0gMjsKKworCQli
-YW5kd2lkdGggPSB2bS5oYWN0aXZlICogdm0udmFjdGl2ZSAqIDQgKiByZWFsX3JlZnJlc2g7CisK
-KwkJLyoKKwkJICogUmVqZWN0IG1vZGVzIHdoaWNoIHdvdWxkIG5lZWQgbW9yZSBiYW5kd2lkdGgg
-aWYgdXNlZCB3aXRoIG9uZQorCQkgKiBmdWxsIHJlc29sdXRpb24gcGxhbmUgKG1vc3QgY29tbW9u
-IHVzZSBjYXNlKS4KKwkJICovCisJCWlmIChwcml2LT5tYXhfYmFuZHdpZHRoIDwgYmFuZHdpZHRo
-KQorCQkJcmV0ID0gTU9ERV9CQUQ7CisJfQorCiAJREJHKCJjb25uZWN0b3I6IG1vZGUgJXM6ICIK
-IAkJCSIlZDpcIiVzXCIgJWQgJWQgJWQgJWQgJWQgJWQgJWQgJWQgJWQgJWQgMHgleCAweCV4IiwK
-IAkJCShyZXQgPT0gTU9ERV9PSykgPyAidmFsaWQiIDogImludmFsaWQiLApkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFw
-ZHJtL29tYXBfZHJ2LmMKaW5kZXggNTI4Y2Y1YzI1YmVjLi41OGI0YTBlMTQ5ZTAgMTAwNjQ0Ci0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL29tYXBkcm0vb21hcF9kcnYuYwpAQCAtNzAxLDYgKzcwMSwxMSBAQCBzdGF0aWMgaW50IHBk
-ZXZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAlzcGluX2xvY2tfaW5pdCgm
-cHJpdi0+bGlzdF9sb2NrKTsKIAlJTklUX0xJU1RfSEVBRCgmcHJpdi0+b2JqX2xpc3QpOwogCisJ
-LyogR2V0IG1lbW9yeSBiYW5kd2lkdGggbGltaXRzICovCisJaWYgKHByaXYtPmRpc3BjX29wcy0+
-Z2V0X21lbW9yeV9iYW5kd2lkdGhfbGltaXQpCisJCXByaXYtPm1heF9iYW5kd2lkdGggPQorCQkJ
-CXByaXYtPmRpc3BjX29wcy0+Z2V0X21lbW9yeV9iYW5kd2lkdGhfbGltaXQoKTsKKwogCW9tYXBf
-Z2VtX2luaXQoZGRldik7CiAKIAlyZXQgPSBvbWFwX21vZGVzZXRfaW5pdChkZGV2KTsKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmggYi9kcml2ZXJzL2dwdS9k
-cm0vb21hcGRybS9vbWFwX2Rydi5oCmluZGV4IGNjY2FhZTc4N2E3Yy4uZDQ5NzE1MjcyMDgwIDEw
-MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5oCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmgKQEAgLTg2LDYgKzg2LDkgQEAgc3RydWN0IG9t
-YXBfZHJtX3ByaXZhdGUgewogCXNwaW5sb2NrX3Qgd2FpdF9sb2NrOwkJLyogcHJvdGVjdHMgdGhl
-IHdhaXRfbGlzdCAqLwogCXN0cnVjdCBsaXN0X2hlYWQgd2FpdF9saXN0OwkvKiBsaXN0IG9mIG9t
-YXBfaXJxX3dhaXQgKi8KIAl1aW50MzJfdCBpcnFfbWFzazsJCS8qIGVuYWJsZWQgaXJxcyBpbiBh
-ZGRpdGlvbiB0byB3YWl0X2xpc3QgKi8KKworCS8qIG1lbW9yeSBiYW5kd2lkdGggbGltaXQgaWYg
-aXQgaXMgbmVlZGVkIG9uIHRoZSBwbGF0Zm9ybSAqLworCXVuc2lnbmVkIGludCBtYXhfYmFuZHdp
-ZHRoOwogfTsKIAogCi0tIApQZXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9y
-a2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1
-NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The get_memory_bandwidth_limit() in dispc_ops can be used to query the
+memory bandwidth limit of dispc by upper layers.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+ drivers/gpu/drm/omapdrm/dss/dispc.c   | 13 +++++++++++++
+ drivers/gpu/drm/omapdrm/dss/omapdss.h |  2 ++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+index 0f4fdb221498..90f9ad89af0d 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+@@ -4325,6 +4325,17 @@ static void dispc_free_irq(void *dev_id)
+ 	dispc.user_data = NULL;
+ }
+ 
++static u32 dispc_get_memory_bandwidth_limit(void)
++{
++	u32 limit = 0;
++
++	/* Optional maximum memory bandwidth */
++	of_property_read_u32(dispc.pdev->dev.of_node, "max-memory-bandwidth",
++			     &limit);
++
++	return limit;
++}
++
+ /*
+  * Workaround for errata i734 in DSS dispc
+  *  - LCD1 Gamma Correction Is Not Working When GFX Pipe Is Disabled
+@@ -4497,6 +4508,8 @@ static const struct dispc_ops dispc_ops = {
+ 	.get_num_ovls = dispc_get_num_ovls,
+ 	.get_num_mgrs = dispc_get_num_mgrs,
+ 
++	.get_memory_bandwidth_limit = dispc_get_memory_bandwidth_limit,
++
+ 	.mgr_enable = dispc_mgr_enable,
+ 	.mgr_is_enabled = dispc_mgr_is_enabled,
+ 	.mgr_get_vsync_irq = dispc_mgr_get_vsync_irq,
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
+index 0bc6669d56f0..f30b3c09e1ba 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
+@@ -692,6 +692,8 @@ struct dispc_ops {
+ 	int (*get_num_ovls)(void);
+ 	int (*get_num_mgrs)(void);
+ 
++	u32 (*get_memory_bandwidth_limit)(void);
++
+ 	void (*mgr_enable)(enum omap_channel channel, bool enable);
+ 	bool (*mgr_is_enabled)(enum omap_channel channel);
+ 	u32 (*mgr_get_vsync_irq)(enum omap_channel channel);
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
