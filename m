@@ -1,60 +1,94 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 3/4] arm64: dts: renesas: salvator-common: Add EthernetAVB PHY reset
-Date: Fri, 20 Oct 2017 10:14:20 +0200
-Message-ID: <1508487261-18524-4-git-send-email-geert+renesas@glider.be>
-References: <1508487261-18524-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508487261-18524-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH] nvmem: meson: use generic compatible
+Date: Fri, 20 Oct 2017 10:21:12 +0200
+Message-ID: <1508487672.3616.18.camel@baylibre.com>
+References: <20171012152450.12454-1-jbrunet@baylibre.com>
+         <CAFBinCBVNEqTk+NUHz62FetLhYagFb5K+g17P_2Xb7sBUfEmdA@mail.gmail.com>
+         <1507923553.30658.10.camel@baylibre.com>
+         <20171017205204.t4vfvbc2c5nsrnhm@rob-hp-laptop>
+         <1508311867.3957.33.camel@baylibre.com>
+         <CAL_JsqKV5yGNFXxsPzAgF6_g-bQn8x8ScXVZ=Wgc1=APPL=mMw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKV5yGNFXxsPzAgF6_g-bQn8x8ScXVZ=Wgc1=APPL=mMw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe the GPIO used to reset the Ethernet PHY for EthernetAVB.
-This allows the driver to reset the PHY during probe and after system
-resume.
+On Thu, 2017-10-19 at 16:10 -0500, Rob Herring wrote:
+> On Wed, Oct 18, 2017 at 2:31 AM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > On Tue, 2017-10-17 at 15:52 -0500, Rob Herring wrote:
+> > > On Fri, Oct 13, 2017 at 09:39:13PM +0200, Jerome Brunet wrote:
+> > > > On Fri, 2017-10-13 at 21:14 +0200, Martin Blumenstingl wrote:
+> > > > > Hi Jerome,
+> > > > > 
+> > > > > On Thu, Oct 12, 2017 at 5:24 PM, Jerome Brunet <jbrunet@baylibre.com>
+> > > > > wrote:
+> > > > > > The meson efuse driver seems to be compatible with more SoCs than
+> > > > > > initially thought. Let's use the most generic compatible he have in
+> > > > > > DT instead of the gxbb specific one
+> > > > > > 
+> > > > > > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt | 4 ++--
+> > > > > >  drivers/nvmem/meson-efuse.c                               | 2 +-
+> > > > > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/nvmem/amlogic-
+> > > > > > efuse.txt
+> > > > > > b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> > > > > > index fafd85bd67a6..0260524292fe 100644
+> > > > > > --- a/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/nvmem/amlogic-efuse.txt
+> > > > > > @@ -1,7 +1,7 @@
+> > > > > >  = Amlogic eFuse device tree bindings =
+> > > > > > 
+> > > > > >  Required properties:
+> > > > > > -- compatible: should be "amlogic,meson-gxbb-efuse"
+> > > > > > +- compatible: should be "amlogic,meson-gx-efuse"
+> > > 
+> > > Same comment as for the firmware.
+> > > 
+> > > > > 
+> > > > > have you checked with the devicetree maintainers how they want the
+> > > > > documentation to look like in this case?
+> > > > 
+> > > > You mean "Should we put every compatible existing (in DT) in the
+> > > > documentation"
+> > > > From what I've seen, at least in meson drivers, only the matched ones
+> > > > are
+> > > > listed.
+> > > > 
+> > > > That's a good question though.
+> > > > We tend to put soc specific compatible "in case"  we need them later on.
+> > > > Should
+> > > > we document those ?
+> > > 
+> > > Absolutely.
+> > 
+> > My understanding is that this documentation is the documentation of the
+> > bindings
+> > used by the driver.
+> 
+> No, the binding doc should be sufficient to validate the dts.
+> 
+> > If I understand your point, we should document bindings (compatible in that
+> > case) that are in fact not fact by the driver. This means that if someone
+> > refer
+> > only to the documentation, he might be surprised by the result.
+> 
+> How so?
 
-This fixes Ethernet operation after resume from s2ram on Salvator-XS,
-where the enable pin of the regulator providing PHY power is connected
-to PRESETn, and PSCI powers down the SoC during system suspend.
+Compatible not matched.
+If the compatible is documented, I would expect "a driver" to match on it
 
-On Salvator-X, the enable pin is always pulled high, but the driver may
-still need to reset the PHY if this wasn't done by the bootloader
-before.
+If we document every compatible used in DTS, some won't be matched.
 
-Inspired by patches in the BSP for the individual Salvator-X/XS boards
-by Kazuya Mizuguchi.
+IMO, the current way (document the driver - the matched bindings) is easier and
+more predictable.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-For proper PHY reset operation during system resume, this depends on
-"[PATCH v3 2/4] phylib: Add device reset GPIO support".
-However, this patch can be applied independently.
-
-v3:
-  - Extract from series "[PATCH 0/4] ravb: Add PHY reset support", and
-    incorporate in this series,
-  - Move reset-gpios from the ethernet to the ethernet-phy node.
----
- arch/arm64/boot/dts/renesas/salvator-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index a028cf577ae1d185..78dcb83f59c76333 100644
---- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -313,6 +313,7 @@
- 		reg = <0>;
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
- 	};
- };
- 
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Rob
