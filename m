@@ -1,45 +1,101 @@
-From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] MT2712 IOMMU SUPPORT
-Date: Fri, 20 Oct 2017 18:12:54 +0800
-Message-ID: <1508494374.15871.6.camel@mhfsdcap03>
-References: <1503313221-26453-1-git-send-email-yong.wu@mediatek.com>
-	<20170822143836.ac3faa7wcwfjtvjc@8bytes.org>
+From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 8/8] perf: ARM DynamIQ Shared Unit PMU support
+Date: Fri, 20 Oct 2017 11:17:41 +0100
+Message-ID: <b6fbfa75-a420-7cba-2f94-05317e72a9b3@arm.com>
+References: <20171010103303.32436-1-suzuki.poulose@arm.com>
+ <20171010103303.32436-9-suzuki.poulose@arm.com>
+ <20171018092011.auey5hgpnjwkpsej@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170822143836.ac3faa7wcwfjtvjc-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: K Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=87=AF=29?= <K.Zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cloud.zhou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <cloud.zhou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171018092011.auey5hgpnjwkpsej-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-22 at 22:38 +0800, Joerg Roedel wrote:
-> On Mon, Aug 21, 2017 at 07:00:13PM +0800, Yong Wu wrote:
-> > Yong Wu (8):
-> >   dt-bindings: mediatek: Add binding for mt2712 IOMMU and SMI
-> >   iommu/mediatek: Move MTK_M4U_TO_LARB/PORT into mtk_iommu.c
-> >   iommu/mediatek: Add mt2712 IOMMU support
-> >   iommu/mediatek: Merge 2 M4U HWs into one iommu domain
-> >   iommu/mediatek: Move pgtable allocation into domain_alloc
-> >   iommu/mediatek: Disable iommu clock when system suspend
-> >   iommu/mediatek: Enlarge the validate PA range for 4GB mode
-> >   memory: mtk-smi: Degrade SMI init to module_init
+On 18/10/17 10:20, Mark Rutland wrote:
+> Hi Suzuki,
 > 
-> Applied patches 2-7. Patch 1 is something for Matthias.
+> This generally looks good. My comments below are mostly minor, modulo
+> the probing/hotplug bit at the end.
+> 
 
-gentle ping.
+...
 
-Hi Matthias,
+>> +static void dsu_pmu_probe_pmu(void *data)
+>> +{
+>> +	struct dsu_pmu *dsu_pmu = data;
+>> +	u64 num_counters;
+>> +	u32 cpmceid[2];
+>> +
+>> +	num_counters = (__dsu_pmu_read_pmcr() >> CLUSTERPMCR_N_SHIFT) &
+>> +						CLUSTERPMCR_N_MASK;
+>> +	/* We can only support upto 31 independent counters */
+> 
+> s/upto/up to/
+> 
+> Does the hardware spec allow for more than this?
 
-    Could you help review the binding patch[1/8]? if it's ok for you
-too, Could you help apply it through your branch with Rob's ACK.
-Thanks.
+No, the "counter" mask registers are 32bit wide, with Bit 31 reserved for the
+Cycle counter.
+
+> 
+>> +	if (WARN_ON(num_counters > 31))
+>> +		num_counters = 31;
+>> +	dsu_pmu->num_counters = num_counters;
+>> +	if (!dsu_pmu->num_counters)
+>> +		return;
+>> +	cpmceid[0] = __dsu_pmu_read_pmceid(0);
+>> +	cpmceid[1] = __dsu_pmu_read_pmceid(1);
+>> +	bitmap_from_u32array(dsu_pmu->cpmceid_bitmap,
+>> +				DSU_PMU_MAX_COMMON_EVENTS,
+>> +				cpmceid,
+>> +				ARRAY_SIZE(cpmceid));
+>> +}
+> 
+> [...]
+> 
+>> +
+>> +static int dsu_pmu_device_probe(struct platform_device *pdev)
+>> +{
+>> +	int irq, rc, cpu;
+>> +	struct dsu_pmu *dsu_pmu;
+>> +	char *name;
+>> +	static atomic_t pmu_idx = ATOMIC_INIT(-1);
+>> +
+>> +	dsu_pmu = dsu_pmu_alloc(pdev);
+>> +	if (IS_ERR(dsu_pmu))
+>> +		return PTR_ERR(dsu_pmu);
+>> +
+>> +	rc = dsu_pmu_dt_get_cpus(pdev->dev.of_node, &dsu_pmu->associated_cpus);
+>> +	if (rc) {
+>> +		dev_warn(&pdev->dev, "Failed to parse the CPUs\n");
+>> +		return rc;
+>> +	}
+>> +
+>> +	rc = smp_call_function_any(&dsu_pmu->associated_cpus,
+>> +					dsu_pmu_probe_pmu,
+>> +					dsu_pmu, 1);
+> 
+> Can we probe the relevant CPUs in the same was as the qcom l2 pmu, using
+> notifiers?
+> 
+> That way we'd work better with maxcpus=.
+> 
+> We have to do this cross-call in the arm_pmu driver because we need the
+> name at probe time, but that doesn't apply here. We should be able to
+> lazily initialize the set of events and number of counters.
+
+OK, I will make the necessary changes.
+
+Thanks a lot for the review.
+
+Cheers
+Suzuki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
