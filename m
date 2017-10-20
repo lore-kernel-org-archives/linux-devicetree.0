@@ -1,98 +1,216 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 2/3] arm: dts: mt7623: update usb related nodes
-Date: Fri, 20 Oct 2017 17:46:46 +0800
-Message-ID: <66237617e8208edc30a0b6cf604eee175b62a9c9.1508492662.git.ryder.lee@mediatek.com>
-References: <4cabb9ad6f59b42cc10ba25a9eb0ce68f77d0a43.1508492662.git.ryder.lee@mediatek.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Fri, 20 Oct 2017 11:55:20 +0200
+Message-ID: <fea62563-6629-6d79-06a9-3d17c97ad238@st.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <20171017114823.58476908@bbrezillon>
+ <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
+ <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
+ <20171018175910.GP12015@bill-the-cat>
+ <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz>
+ <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
+ <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com>
+ <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig@mail.gmail.com>
+ <59E8F2EC.5090602@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4cabb9ad6f59b42cc10ba25a9eb0ce68f77d0a43.1508492662.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E8F2EC.5090602-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current usb related nodes are out-of-date, so we make them be
-consistent with the binding documents.
+Hi Frank,
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm/boot/dts/mt7623.dtsi | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+On 10/19/2017 08:46 PM, Frank Rowand wrote:
+> On 10/19/17 07:59, Rob Herring wrote:
+>> On Thu, Oct 19, 2017 at 9:00 AM, Alexandre Torgue
+>> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+>>> Hi Rob,
+>>>
+>>>
+>>> On 10/19/2017 01:53 AM, Rob Herring wrote:
+>>>> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>
+>>>> wrote:
+>>
+>> [...]
+>>
+>>>>>   From the FreeBSD perspective I’d like it if there was a common repo for
+>>>>> all devicetree consumers to share. We are trying to not have FreeBSD
+>>>>> specific properties as this has caused issues in the past where we had (and
+>>>>> still have) FreeBSD specific dts files. We are trying to remove these as
+>>>>> drivers are updated to handle the common bindings.
+>>>>
+>>>>
+>>>> Are you aware of this repo[1]? I don't have a sense for how widely
+>>>> used it is. If not, it is intended to provide a common repository of
+>>>> binding docs and dts files. If so, what are your issues with using it?
+>>>> It's generated from the kernel tree with git-filter-branch and through
+>>>> the kernel tree is the only way to add things currently. But there's
+>>>> no requirement that you add a Linux driver to submit a binding or dts
+>>>> change. We could consider taking patches against the tree directly,
+>>>> and the maintainers (me) can fixup the paths and apply to the kernel
+>>>> tree.
+>>>>
+>>>> If there's bindings in the kernel tree you think are crap and Linux
+>>>> specific, I'd like to know that too. We should start flagging those.
+>>>>
+>>>>> I have also spoken with some NetBSD and OpenBSD developers. They are both
+>>>>> using devicetree to handle device enumeration. Having all 5 projects using a
+>>>>> common set of dts files and binding would simplify keeping them in sync.
+>>>>
+>>>>
+>>>> There's more than 5 likely: linux, 3x BSD, u-boot, barebox, zephyr,
+>>>> ARM trusted firmware?, UEFI?, ?
+>>>
+>>>
+>>> First, sorry to come late in this discussion (please be tolerant if you
+>>> already respond to following requests/interrogations in precedent mails :)).
+>>>  From STmicro point of view we have the same kind of requests/needs than
+>>> Andrew. We think about the possibility to use same DTS files for Linux,
+>>> U-boot, ATF and Zephir (others could come with other vendors). Currently our
+>>> main concerns about this are:
+>>>
+>>> 1-How to reduce dtb size:
+>>>          --> Reading some thread, you already start this task with Nicolas.
+>>> Does it concerns only XiP system ?
+>>
+>> That's the main focus ATM. Nico has looked at shrinking code usage too
+>> such as the tty layer and scheduler, but those have faced resistance.
+>> We need actual products to prove the value (and that's a chicken and
+>> egg problem).
+>>
+>>>          -->For example, I want to use the same dtsi files between Linux and
+>>> U-boot. If in u-boot dts file I overload several "status" entry by
+>>> "disabled", is it possible that compiler doesn't build it ? And what about
+>>> not used phandle ?
+>>
+>> You certainly could remove disabled nodes in dtc. I'm not sure how
+>> hard it would be to plumb into dtc. I think phandle properties are
+>> already only created if there's a reference to them. If that is
+> 
+> Yes, phandles are only created if referenced, unless compiled
+> for loading overlays into:
+> 
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 6c2c8c8..84a3f27 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -788,7 +788,7 @@
- 		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&hifsys CLK_HIFSYS_USB0PHY>,
- 			 <&topckgen CLK_TOP_ETHIF_SEL>;
--		clock-names = "sys_ck", "free_ck";
-+		clock-names = "sys_ck", "ref_ck";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
- 		phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
- 		status = "disabled";
-@@ -798,8 +798,6 @@
- 		compatible = "mediatek,mt7623-u3phy",
- 			     "mediatek,mt2701-u3phy";
- 		reg = <0 0x1a1c4000 0 0x0700>;
--		clocks = <&clk26m>;
--		clock-names = "u3phya_ref";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-@@ -807,12 +805,16 @@
- 
- 		u2port0: usb-phy@1a1c4800 {
- 			reg = <0 0x1a1c4800 0 0x0100>;
-+			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
-+			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
- 
- 		u3port0: usb-phy@1a1c4900 {
- 			reg = <0 0x1a1c4900 0 0x0700>;
-+			clocks = <&clk26m>;
-+			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
-@@ -827,7 +829,7 @@
- 		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&hifsys CLK_HIFSYS_USB1PHY>,
- 			 <&topckgen CLK_TOP_ETHIF_SEL>;
--		clock-names = "sys_ck", "free_ck";
-+		clock-names = "sys_ck", "ref_ck";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
- 		phys = <&u2port1 PHY_TYPE_USB2>, <&u3port1 PHY_TYPE_USB3>;
- 		status = "disabled";
-@@ -837,8 +839,6 @@
- 		compatible = "mediatek,mt7623-u3phy",
- 			     "mediatek,mt2701-u3phy";
- 		reg = <0 0x1a244000 0 0x0700>;
--		clocks = <&clk26m>;
--		clock-names = "u3phya_ref";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-@@ -846,12 +846,16 @@
- 
- 		u2port1: usb-phy@1a244800 {
- 			reg = <0 0x1a244800 0 0x0100>;
-+			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
-+			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
- 
- 		u3port1: usb-phy@1a244900 {
- 			reg = <0 0x1a244900 0 0x0700>;
-+			clocks = <&clk26m>;
-+			clock-names = "ref";
- 			#phy-cells = <1>;
- 			status = "okay";
- 		};
--- 
-1.9.1
+Are there DTC "extra" options to use to not build those useless phandles 
+? I just tried to revert the dtb to dts (using following command:
+  ./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-flat.dts 
+arch/arm/boot/dts/stm32f469-disco.dtb)
+
+I see that phandles not used are in the dts output file. It is 
+especially an issue for pinmux phandles. All pinmux groups possibilities 
+are written inside (in my case) stm32f4-pinctrl.dtsi. This file is 
+included in each stm32 board dts files, and in those stm32 board dts 
+files only required node are enabled. But I see that all pinmux 
+definitions are embedded inside dtb binary (even ones not used in board 
+dts file).
+
+
+regards
+Alex
+
+> $ cat test1.dts
+> /dts-v1/;
+> / {
+> 	mynode: node {
+> 	};
+> };
+> $ cat test2.dts
+> /dts-v1/;
+> / {
+> 	mynode: node {
+> 		myprop = < &mynode >;
+> 	};
+> };
+> $ scripts/dtc/dtx_diff test1.dts
+> /dts-v1/;
+> 
+> / {
+> 
+> 	mynode: node {
+> 	};
+> };
+> $ scripts/dtc/dtx_diff test2.dts
+> /dts-v1/;
+> 
+> / {
+> 
+> 	mynode: node {
+> 		myprop = <0x1>;
+> 		phandle = <0x1>;
+> 	};
+> };
+> 
+> 
+> If symbols are enabled for a base device tree, so that overlays
+> can later reference them, then all symbols generate phandles:
+> 
+> $ dtc -@ -O dts test1.dts
+> /dts-v1/;
+> 
+> / {
+> 
+> 	mynode: node {
+> 		phandle = <0x1>;
+> 	};
+> 
+> 	__symbols__ {
+> 		mynode = "/node";
+> 	};
+> };
+> 
+>> created before you deleted nodes, then it would probably be hard to
+>> find and remove all of those. It would be similar to solving the
+>> device dependency problem. Or do you mean something like disable the
+>> clock controller node if there are no enabled references to it? I
+>> don't think we could do something like that generically and reliably.
+>>
+>> We did recently stop creating both "phandle" and "linux,phandle"
+>> properties by default in dtc, so that will save some size.
+>>
+>>> 2- The place of DT files (sources/scripts). I see (and clone) your
+>>> "devicetree-rebasing.git" tree, it's a good start point. Currently (correct
+>>> me  if I'm wrong) the Kernel seems to "lead" the devicetree bindings and
+>>> devicetree dts(i) files.
+>>
+>> Yes, and there's not really any changing that regardless of where
+>> bindings and dts files live given Linux has the broadest h/w support.
+>>
+>>> By using this external repo, it would be maybe
+>>> easier to integrate changes for other components than Linux Kernel ?
+>>
+>> Yes, barebox at least regularly imports it.
+>>
+>>> We
+>>> could have (per vendor), same dtsi files which describes the hardware (SoC +
+>>> board) and a extra dts files (at least at beginning) per software components
+>>> to overload nodes (to disable some nodes not required (see (1)), to change
+>>> bindings which are different regarding component ...).
+>>
+>> You mean dtsi files to disable nodes for linux, u-boot, etc. That may
+>> make sense for mutually exclusive things like FreeBSD vs. Linux, but
+>> for say u-boot, we really want u-boot and Linux (or whatever OS is
+>> loaded) to use the same dtb. Having different dtbs is going to
+>> increase your memory usage.
+>>
+>>> It will also allow to have all dt script / tools for all components at only
+>>> one place.
+>>>
+>>> Once again, sorry if I repeat things already discussed but I wanted to
+>>> expose what STMicro has in mind for DT. It will be a good topic to discuss
+>>> at Prague.
+>>
+>> Yes, but I won't be there.
+>>
+>> Rob
+>> _______________________________________________
+>> Ksummit-discuss mailing list
+>> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+>>
+> 
