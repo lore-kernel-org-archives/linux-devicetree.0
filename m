@@ -1,91 +1,65 @@
-From: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-Subject: [PATCH v4] of: dynamic: fix memory leak related to properties of __of_node_dup
-Date: Fri, 20 Oct 2017 09:59:09 +0800
-Message-ID: <1508464749-54218-1-git-send-email-alan.1.wang@nokia-sbell.com>
-References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507858967-40416-1-git-send-email-alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [RFC PATCH 0/5] gpio: Expose reset tolerance capability
+Date: Fri, 20 Oct 2017 14:07:22 +1030
+Message-ID: <20171020033727.21557-1-andrew@aj.id.au>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org, corbet@lwn.net, joel@jms.id.au, ryan_chen@aspeedtech.com, robh+dt@kernel.org, frowand.list@gmail.com, ckeepax@opensource.wolfsonmicro.com, ldewangan@nvidia.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-If a node with no properties is dynamically added, then a property is
-dynamically added to the node, then the property is dynamically removed,
-the result will be node->properties == NULL and node->deadprops != NULL.
+Hello,
 
-Add a separate function to release the properties in both lists.
+This series exposes a "reset tolerant" property for GPIOs. For example, the
+controller implemented in Aspeed BMCs provides such a feature to allow the BMC
+to be reset whilst maintaining necessary state to keep host systems alive or
+status LEDs in-tact.
 
-Signed-off-by: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
-Thanks the idea from Rob Herring, that I forgot to mention at patch v3.
-Thanks Frank Rowand for writing to me the example.
+I'm sending it as an RFC because I'm not sure using pinconf is the right way
+to go about it, or that expanding the sysfs interface is a good idea, or that
+the approach taken is right in the context of the existing suspend support.
+pinconf just ended up being a convenient abstraction whilst supporting the
+sysfs change, and didn't feel unreasonable to use for devicetree or the chardev
+interface either. My concern with using pinconf is that the reset-tolerant
+property is (currently) GPIO-centric, but maybe that's not a worry.
 
-v3 -> v4:
- * Using the style that is more consistent with device tree 
-   code, as suggested by Frank Rowand
+So the patches in the series support configuring the property via devicetree,
+the chardev interface and the sysfs interface. The sysfs interface also exposes
+the ability to configure the suspend tolerance, though there are some ordering
+requirements with respect to setting the direction (the suspend tolerance will
+only take if configured before setting the pin direction on the Arizona
+controller).
 
- drivers/of/dynamic.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+Please review!
 
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 301b6db..f33b7c2 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -315,6 +315,17 @@ int of_detach_node(struct device_node *np)
- }
- EXPORT_SYMBOL_GPL(of_detach_node);
- 
-+static void property_list_free(struct property *prop_list)
-+{
-+	struct property *prop;
-+
-+	for (prop = prop_list; prop != NULL; prop = prop->next) {
-+		kfree(prop->name);
-+		kfree(prop->value);
-+		kfree(prop);
-+	}
-+}
-+
- /**
-  * of_node_release() - release a dynamically allocated node
-  * @kref: kref element of the node to be released
-@@ -324,7 +335,6 @@ EXPORT_SYMBOL_GPL(of_detach_node);
- void of_node_release(struct kobject *kobj)
- {
- 	struct device_node *node = kobj_to_device_node(kobj);
--	struct property *prop = node->properties;
- 
- 	/* We should never be releasing nodes that haven't been detached. */
- 	if (!of_node_check_flag(node, OF_DETACHED)) {
-@@ -335,18 +345,9 @@ void of_node_release(struct kobject *kobj)
- 	if (!of_node_check_flag(node, OF_DYNAMIC))
- 		return;
- 
--	while (prop) {
--		struct property *next = prop->next;
--		kfree(prop->name);
--		kfree(prop->value);
--		kfree(prop);
--		prop = next;
-+	property_list_free(node->properties);
-+	property_list_free(node->deadprops);
- 
--		if (!prop) {
--			prop = node->deadprops;
--			node->deadprops = NULL;
--		}
--	}
- 	kfree(node->full_name);
- 	kfree(node->data);
- 	kfree(node);
+Cheers,
+
+Andrew
+
+Andrew Jeffery (5):
+  gpio: gpiolib: Add core support for maintaining GPIO values on reset
+  gpio: gpiolib: Add OF support for maintaining GPIO values on reset
+  gpio: gpiolib: Add chardev support for maintaining GPIO values on
+    reset
+  gpio: gpiolib: Add sysfs support for maintaining GPIO values on reset
+  gpio: aspeed: Add support for reset tolerance
+
+ Documentation/gpio/sysfs.txt            |  9 ++++
+ drivers/gpio/gpio-arizona.c             |  4 +-
+ drivers/gpio/gpio-aspeed.c              | 39 ++++++++++++++-
+ drivers/gpio/gpiolib-of.c               |  2 +
+ drivers/gpio/gpiolib-sysfs.c            | 88 +++++++++++++++++++++++++++++++--
+ drivers/gpio/gpiolib.c                  | 74 +++++++++++++++++++++++++--
+ drivers/gpio/gpiolib.h                  |  1 +
+ include/dt-bindings/gpio/gpio.h         |  4 ++
+ include/linux/gpio/consumer.h           |  9 ++++
+ include/linux/gpio/driver.h             |  5 +-
+ include/linux/gpio/machine.h            |  2 +
+ include/linux/of_gpio.h                 |  1 +
+ include/linux/pinctrl/pinconf-generic.h |  2 +
+ include/uapi/linux/gpio.h               | 11 +++--
+ 14 files changed, 234 insertions(+), 17 deletions(-)
+
 -- 
-2.6.2
+2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
