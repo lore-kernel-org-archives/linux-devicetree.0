@@ -1,216 +1,68 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Fri, 20 Oct 2017 11:55:20 +0200
-Message-ID: <fea62563-6629-6d79-06a9-3d17c97ad238@st.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
- <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
- <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
- <20171018175910.GP12015@bill-the-cat>
- <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz>
- <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
- <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com>
- <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig@mail.gmail.com>
- <59E8F2EC.5090602@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] Add PMIC support to MediaTek MT7622 SoC
+Date: Fri, 20 Oct 2017 11:58:47 +0200
+Message-ID: <7facd6aa-6a94-3dc0-1067-b0a4f568dc66@gmail.com>
+References: <cover.1508313105.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59E8F2EC.5090602-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1508313105.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-
-On 10/19/2017 08:46 PM, Frank Rowand wrote:
-> On 10/19/17 07:59, Rob Herring wrote:
->> On Thu, Oct 19, 2017 at 9:00 AM, Alexandre Torgue
->> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
->>> Hi Rob,
->>>
->>>
->>> On 10/19/2017 01:53 AM, Rob Herring wrote:
->>>> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>
->>>> wrote:
->>
->> [...]
->>
->>>>>   From the FreeBSD perspective I’d like it if there was a common repo for
->>>>> all devicetree consumers to share. We are trying to not have FreeBSD
->>>>> specific properties as this has caused issues in the past where we had (and
->>>>> still have) FreeBSD specific dts files. We are trying to remove these as
->>>>> drivers are updated to handle the common bindings.
->>>>
->>>>
->>>> Are you aware of this repo[1]? I don't have a sense for how widely
->>>> used it is. If not, it is intended to provide a common repository of
->>>> binding docs and dts files. If so, what are your issues with using it?
->>>> It's generated from the kernel tree with git-filter-branch and through
->>>> the kernel tree is the only way to add things currently. But there's
->>>> no requirement that you add a Linux driver to submit a binding or dts
->>>> change. We could consider taking patches against the tree directly,
->>>> and the maintainers (me) can fixup the paths and apply to the kernel
->>>> tree.
->>>>
->>>> If there's bindings in the kernel tree you think are crap and Linux
->>>> specific, I'd like to know that too. We should start flagging those.
->>>>
->>>>> I have also spoken with some NetBSD and OpenBSD developers. They are both
->>>>> using devicetree to handle device enumeration. Having all 5 projects using a
->>>>> common set of dts files and binding would simplify keeping them in sync.
->>>>
->>>>
->>>> There's more than 5 likely: linux, 3x BSD, u-boot, barebox, zephyr,
->>>> ARM trusted firmware?, UEFI?, ?
->>>
->>>
->>> First, sorry to come late in this discussion (please be tolerant if you
->>> already respond to following requests/interrogations in precedent mails :)).
->>>  From STmicro point of view we have the same kind of requests/needs than
->>> Andrew. We think about the possibility to use same DTS files for Linux,
->>> U-boot, ATF and Zephir (others could come with other vendors). Currently our
->>> main concerns about this are:
->>>
->>> 1-How to reduce dtb size:
->>>          --> Reading some thread, you already start this task with Nicolas.
->>> Does it concerns only XiP system ?
->>
->> That's the main focus ATM. Nico has looked at shrinking code usage too
->> such as the tty layer and scheduler, but those have faced resistance.
->> We need actual products to prove the value (and that's a chicken and
->> egg problem).
->>
->>>          -->For example, I want to use the same dtsi files between Linux and
->>> U-boot. If in u-boot dts file I overload several "status" entry by
->>> "disabled", is it possible that compiler doesn't build it ? And what about
->>> not used phandle ?
->>
->> You certainly could remove disabled nodes in dtc. I'm not sure how
->> hard it would be to plumb into dtc. I think phandle properties are
->> already only created if there's a reference to them. If that is
-> 
-> Yes, phandles are only created if referenced, unless compiled
-> for loading overlays into:
-> 
-
-Are there DTC "extra" options to use to not build those useless phandles 
-? I just tried to revert the dtb to dts (using following command:
-  ./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-flat.dts 
-arch/arm/boot/dts/stm32f469-disco.dtb)
-
-I see that phandles not used are in the dts output file. It is 
-especially an issue for pinmux phandles. All pinmux groups possibilities 
-are written inside (in my case) stm32f4-pinctrl.dtsi. This file is 
-included in each stm32 board dts files, and in those stm32 board dts 
-files only required node are enabled. But I see that all pinmux 
-definitions are embedded inside dtb binary (even ones not used in board 
-dts file).
 
 
-regards
-Alex
+On 10/18/2017 10:28 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Changes since v5:
+> - drop the merged patch
+> - add a patch for common way handling for setup CS timing extension
+> - unify the comment style
+> 
+> Changes since v4:
+> - for patch 1/7 and 5/7, add the description about how to bind pmic wrapper with MT6380.
+> - for patch 3/7, add more comments explaining why additional pwrap_read is 
+> required in the pwrap_write32.
+> - for patch 4/7 and 5/7, refactoring pwrap_init would help the driver to be more extensible 
+> when more various SoC and PMICs join.
+> - for patch 6/7, change pwrap_mt7622 into a const struct.
+> 
+> Changes since v3
+> - rebase into Linux 4.14-rc1
+> - removed those patches already applied
+> 
+> Changes since v2:
+> - for patch 1/2, enhance the document as the suggestions from v2.
+> - for patch 3, constify the table with struct regulator_ops, also fix that
+> regulator doesn't have modesetting facilities it just shouldn't have the ops
+> and finally fix copy+paste mistake in warranty disclaimer.
+> - for patch 7/8, sort the things added for MT7622/MT6380 alphabetically.
+> 
+> Chenglin Xu (1):
+>   soc: mediatek: pwrap: add support for MT7622 SoC
+> 
+> Sean Wang (6):
+>   dt-bindings: arm: mediatek: add MT7622 string to the PMIC wrapper doc
+>   soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
+>   soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
+>   soc: mediatek: pwrap: refactor pwrap_init for the various PMIC types
+>   soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
+>   soc: mediatek: pwrap: add common way for setup CS timing extenstion
+> 
+>  .../devicetree/bindings/soc/mediatek/pwrap.txt     |   6 +-
+>  drivers/soc/mediatek/mtk-pmic-wrap.c               | 490 ++++++++++++++++++---
+>  2 files changed, 422 insertions(+), 74 deletions(-)
+> 
 
-> $ cat test1.dts
-> /dts-v1/;
-> / {
-> 	mynode: node {
-> 	};
-> };
-> $ cat test2.dts
-> /dts-v1/;
-> / {
-> 	mynode: node {
-> 		myprop = < &mynode >;
-> 	};
-> };
-> $ scripts/dtc/dtx_diff test1.dts
-> /dts-v1/;
-> 
-> / {
-> 
-> 	mynode: node {
-> 	};
-> };
-> $ scripts/dtc/dtx_diff test2.dts
-> /dts-v1/;
-> 
-> / {
-> 
-> 	mynode: node {
-> 		myprop = <0x1>;
-> 		phandle = <0x1>;
-> 	};
-> };
-> 
-> 
-> If symbols are enabled for a base device tree, so that overlays
-> can later reference them, then all symbols generate phandles:
-> 
-> $ dtc -@ -O dts test1.dts
-> /dts-v1/;
-> 
-> / {
-> 
-> 	mynode: node {
-> 		phandle = <0x1>;
-> 	};
-> 
-> 	__symbols__ {
-> 		mynode = "/node";
-> 	};
-> };
-> 
->> created before you deleted nodes, then it would probably be hard to
->> find and remove all of those. It would be similar to solving the
->> device dependency problem. Or do you mean something like disable the
->> clock controller node if there are no enabled references to it? I
->> don't think we could do something like that generically and reliably.
->>
->> We did recently stop creating both "phandle" and "linux,phandle"
->> properties by default in dtc, so that will save some size.
->>
->>> 2- The place of DT files (sources/scripts). I see (and clone) your
->>> "devicetree-rebasing.git" tree, it's a good start point. Currently (correct
->>> me  if I'm wrong) the Kernel seems to "lead" the devicetree bindings and
->>> devicetree dts(i) files.
->>
->> Yes, and there's not really any changing that regardless of where
->> bindings and dts files live given Linux has the broadest h/w support.
->>
->>> By using this external repo, it would be maybe
->>> easier to integrate changes for other components than Linux Kernel ?
->>
->> Yes, barebox at least regularly imports it.
->>
->>> We
->>> could have (per vendor), same dtsi files which describes the hardware (SoC +
->>> board) and a extra dts files (at least at beginning) per software components
->>> to overload nodes (to disable some nodes not required (see (1)), to change
->>> bindings which are different regarding component ...).
->>
->> You mean dtsi files to disable nodes for linux, u-boot, etc. That may
->> make sense for mutually exclusive things like FreeBSD vs. Linux, but
->> for say u-boot, we really want u-boot and Linux (or whatever OS is
->> loaded) to use the same dtb. Having different dtbs is going to
->> increase your memory usage.
->>
->>> It will also allow to have all dt script / tools for all components at only
->>> one place.
->>>
->>> Once again, sorry if I repeat things already discussed but I wanted to
->>> expose what STMicro has in mind for DT. It will be a good topic to discuss
->>> at Prague.
->>
->> Yes, but I won't be there.
->>
->> Rob
->> _______________________________________________
->> Ksummit-discuss mailing list
->> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
->> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
->>
-> 
+Pushed to v4.14-next/soc
+
+Thanks!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
