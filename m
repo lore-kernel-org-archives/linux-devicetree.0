@@ -1,63 +1,69 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [Patch v6 6/7] regmap: add SLIMBUS support
-Date: Thu, 19 Oct 2017 22:00:35 -0700
-Message-ID: <CAOCOHw5JsXQsPCS31RBTwRHvLg5a2n=3uq=+RFEv-vBNPdjcaQ@mail.gmail.com>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-7-srinivas.kandagatla@linaro.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 2/2] arm64: dts: uniphier: add STDMAC clock to EHCI nodes
+Date: Fri, 20 Oct 2017 14:16:21 +0900
+Message-ID: <1508476581-16483-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1508476581-16483-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171006155136.4682-7-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Michael Opdenacker <michael.opdenacker@free-electrons.com>, poeschel@lemonage.de, Andreas Noever <andreas.noever@gmail.com>, gong.chen@linux.intel.com, Arnd Bergmann <arnd@arndb.de>, kheitke@audience.com, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, james.hogan@imgtec.com, Pawel Moll <pawel.moll@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sharon.dvir1@mail.huji.ac.il, Rob Herring <robh+dt@kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, alan@linux.intel.com, bp@suse.de, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Jiri Kosina <jkosina@suse.cz>, joe@perches.com, David Miller <davem@davemloft.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1508476581-16483-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 06 Oct 08:51 PDT 2017, srinivas.kandagatla@linaro.org wrote:
+Without the STDMAC clock enabled, the USB 2.0 hosts do not work.
+This clock must be explicitly listed in the "clocks" property because
+it is independent from the other clocks.
 
-> diff --git a/drivers/base/regmap/regmap-slimbus.c b/drivers/base/regmap/regmap-slimbus.c
-[..]
-> +static int regmap_slimbus_byte_reg_read(void *context, unsigned int reg,
-> + unsigned int *val)
-> +{
-> + struct slim_device *slim = context;
-> + struct slim_val_inf msg = {0,};
-> +
-> + msg.start_offset = reg;
-> + msg.num_bytes = 1;
-> + msg.rbuf = (void *)val;
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Turn rbuf into a void * and you don't need this cast (think I commented
-on this on a previous patch as well).
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> +
-> + return slim_request_val_element(slim, &msg);
-> +}
-> +
-> +static int regmap_slimbus_byte_reg_write(void *context, unsigned int reg,
-> + unsigned int val)
-> +{
-> + struct slim_device *slim = context;
-> + struct slim_val_inf msg = {0,};
-> +
-> + msg.start_offset = reg;
-> + msg.num_bytes = 1;
-> + msg.wbuf = (void *)&val;
-
-Dito
-
-> +
-> + return slim_change_val_element(slim, &msg);
-> +}
-
-Regards,
-Bjorn
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index 99f14cc..2c03d96 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -324,7 +324,8 @@
+ 			interrupts = <0 243 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb0>;
+-			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 8>,
++				 <&mio_clk 12>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
+ 				 <&mio_rst 12>;
+ 		};
+@@ -336,7 +337,8 @@
+ 			interrupts = <0 244 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb1>;
+-			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 9>,
++				 <&mio_clk 13>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
+ 				 <&mio_rst 13>;
+ 		};
+@@ -348,7 +350,8 @@
+ 			interrupts = <0 245 4>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usb2>;
+-			clocks = <&mio_clk 7>, <&mio_clk 10>, <&mio_clk 14>;
++			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 10>,
++				 <&mio_clk 14>;
+ 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 10>,
+ 				 <&mio_rst 14>;
+ 		};
+-- 
+2.7.4
