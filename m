@@ -1,40 +1,60 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] of: dynamic: fix memory leak related to properties of __of_node_dup
-Date: Fri, 20 Oct 2017 13:12:25 -0500
-Message-ID: <CAL_Jsq+OaT5XeUs4yhHwNUGSb932Nr53xQDaCjUXopR6ziifuA@mail.gmail.com>
-References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com> <1508464749-54218-1-git-send-email-alan.1.wang@nokia-sbell.com>
+From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric I/O
+Date: Fri, 20 Oct 2017 21:08:18 +0200
+Message-ID: <4519589.dXStasooJK@debian64>
+References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com> <CACRpkdZXaTk-+LMcV8bZTg0bZ9cPxORHpXNL7m+bwnvr57yJ9A@mail.gmail.com> <AM5PR0701MB26576FBB8EDEF83F3AA82B89E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508464749-54218-1-git-send-email-alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+In-Reply-To: <AM5PR0701MB26576FBB8EDEF83F3AA82B89E4430-drxRBzqxKr3KnPtvPVqCtTMcllmSiLMWnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Bernd Edlinger <bernd.edlinger-PkbjNfxxIASELgA04lAiVw@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 19, 2017 at 8:59 PM, Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org> wrote:
-> If a node with no properties is dynamically added, then a property is
-> dynamically added to the node, then the property is dynamically removed,
-> the result will be node->properties == NULL and node->deadprops != NULL.
->
-> Add a separate function to release the properties in both lists.
->
-> Signed-off-by: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
-> Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> ---
-> Thanks the idea from Rob Herring, that I forgot to mention at patch v3.
-> Thanks Frank Rowand for writing to me the example.
->
-> v3 -> v4:
->  * Using the style that is more consistent with device tree
->    code, as suggested by Frank Rowand
->
->  drivers/of/dynamic.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
+On Friday, October 20, 2017 5:48:11 PM CEST Bernd Edlinger wrote:
+> On 10/20/17 18:45, Linus Walleij wrote:
+> > On Fri, Oct 20, 2017 at 4:40 PM, Bernd Edlinger
+> > <bernd.edlinger-PkbjNfxxIASELgA04lAiVw@public.gmane.org> wrote:
+> >> On 10/20/17 10:10, Linus Walleij wrote:
+> > 
+> >>>> +       err = bgpio_init(&port->bgc, gpio->dev, 4, dat, NULL, NULL,
+> >>>> +                        NULL, NULL, 0);
+> >>>
+> >>> But all you add is input-only GPIO chips. Also for the output ports.
+> >>>
+> >>
+> >> Well actually this allows both input and output,
+> >> but while the input port could be written by accident,
+> >> the hardware does the right thing and ignores the write cycle.
+> >>
+> >> The other parameters of bgpio_input are for devices with
+> >> explicit set- and reset-signals, and configurable
+> >> output-direction etc, which I don't have.
+> > 
+> > Ah! You're right. With just one register it becomes one of these that
+> > read and write into that register, simply. Sorry for my ignorance.
+> > 
+> > I would prefer if you set the flag BGPIOF_NO_OUTPUT on the input
+> > only version though. Semantics may matter to the mmio gpio core.
+> > 
+> 
+> Ah, thanks, that's a good suggestion.
+> 
+> I will do that and send an updated patch.
+Wait.
 
-Applied.
+I had the same comment about this earlier and a few more suggestions
+to move the driver to gpio-mmio's dt. Didn't you read the mail?
 
-Rob
+<https://marc.info/?l=linux-gpio&m=150678737724132&w=2>
+
+It made it to the list archive, so I'm pretty sure this got delivered
+to you as well.
+
+Regards,
+Christian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
