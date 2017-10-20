@@ -1,161 +1,89 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 05/10] arm: dts: mt7623: update pio, usb and crypto
- nodes
-Date: Fri, 20 Oct 2017 09:55:39 +0800
-Message-ID: <1508464539.13396.6.camel@mtkswgap22>
-References: <cover.1506908511.git.ryder.lee@mediatek.com>
-         <08d722e47b83bd70ed4d3c9a4546a3f70df96de4.1506908511.git.ryder.lee@mediatek.com>
-         <8c823070-7181-97cc-063e-3ced59c7e17d@gmail.com>
+From: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+Subject: [PATCH v4] of: dynamic: fix memory leak related to properties of __of_node_dup
+Date: Fri, 20 Oct 2017 09:59:09 +0800
+Message-ID: <1508464749-54218-1-git-send-email-alan.1.wang@nokia-sbell.com>
+References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8c823070-7181-97cc-063e-3ced59c7e17d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1507858967-40416-1-git-send-email-alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+If a node with no properties is dynamically added, then a property is
+dynamically added to the node, then the property is dynamically removed,
+the result will be node->properties == NULL and node->deadprops != NULL.
 
-On Thu, 2017-10-19 at 18:29 +0200, Matthias Brugger wrote:
-> 
-> On 10/02/2017 03:54 AM, Ryder Lee wrote:
-> > This patch updates pio, usb and crypto nodes to make them be consistent
-> > with the binding documents.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/mt7623.dtsi | 26 ++++++++++++++------------
-> >  1 file changed, 14 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> > index 381843e..0640fb7 100644
-> > --- a/arch/arm/boot/dts/mt7623.dtsi
-> > +++ b/arch/arm/boot/dts/mt7623.dtsi
-> > @@ -227,8 +227,7 @@
-> >  	};
-> >  
-> >  	pio: pinctrl@10005000 {
-> > -		compatible = "mediatek,mt7623-pinctrl",
-> > -			     "mediatek,mt2701-pinctrl";
-> > +		compatible = "mediatek,mt7623-pinctrl";
-> 
-> Looks good.
-> 
-> >  		reg = <0 0x1000b000 0 0x1000>;
-> >  		mediatek,pctl-regmap = <&syscfg_pctl_a>;
-> >  		pins-are-numbered;
-> > @@ -680,7 +679,7 @@
-> >  		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_LOW>;
-> >  		clocks = <&hifsys CLK_HIFSYS_USB0PHY>,
-> >  			 <&topckgen CLK_TOP_ETHIF_SEL>;
-> > -		clock-names = "sys_ck", "free_ck";
-> > +		clock-names = "sys_ck", "ref_ck";
-> 
-> This is already merged. Please rebase.
+Add a separate function to release the properties in both lists.
 
-I didn't see any changes in mt7623.dtsi.
+Signed-off-by: Lixin Wang <alan.1.wang-FTnzSCDXTkYjo0HpFSRKWA@public.gmane.org>
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+---
+Thanks the idea from Rob Herring, that I forgot to mention at patch v3.
+Thanks Frank Rowand for writing to me the example.
 
-> >  		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-> >  		phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
-> >  		status = "disabled";
-> > @@ -690,8 +689,6 @@
-> >  		compatible = "mediatek,mt7623-u3phy",
-> >  			     "mediatek,mt2701-u3phy";
-> >  		reg = <0 0x1a1c4000 0 0x0700>;
-> > -		clocks = <&clk26m>;
-> > -		clock-names = "u3phya_ref";
-> 
-> Same here.
-> 
-> >  		#address-cells = <2>;
-> >  		#size-cells = <2>;
-> >  		ranges;
-> > @@ -699,12 +696,16 @@
-> >  
-> >  		u2port0: usb-phy@1a1c4800 {
-> >  			reg = <0 0x1a1c4800 0 0x0100>;
-> > +			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
-> > +			clock-names = "ref";
-> 
-> Same here.
-> 
-> >  			#phy-cells = <1>;
-> >  			status = "okay";
-> >  		};
-> >  
-> >  		u3port0: usb-phy@1a1c4900 {
-> >  			reg = <0 0x1a1c4900 0 0x0700>;
-> > +			clocks = <&clk26m>;
-> > +			clock-names = "ref";
-> 
-> Same here.
-> 
-> >  			#phy-cells = <1>;
-> >  			status = "okay";
-> >  		};
-> > @@ -719,7 +720,7 @@
-> >  		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_LOW>;
-> >  		clocks = <&hifsys CLK_HIFSYS_USB1PHY>,
-> >  			 <&topckgen CLK_TOP_ETHIF_SEL>;
-> > -		clock-names = "sys_ck", "free_ck";
-> > +		clock-names = "sys_ck", "ref_ck";
-> 
-> Same here.
-> 
-> >  		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-> >  		phys = <&u2port1 PHY_TYPE_USB2>, <&u3port1 PHY_TYPE_USB3>;
-> >  		status = "disabled";
-> > @@ -729,8 +730,6 @@
-> >  		compatible = "mediatek,mt7623-u3phy",
-> >  			     "mediatek,mt2701-u3phy";
-> >  		reg = <0 0x1a244000 0 0x0700>;
-> > -		clocks = <&clk26m>;
-> > -		clock-names = "u3phya_ref";
-> 
-> Same here.
-> 
-> >  		#address-cells = <2>;
-> >  		#size-cells = <2>;
-> >  		ranges;
-> > @@ -738,12 +737,16 @@
-> >  
-> >  		u2port1: usb-phy@1a244800 {
-> >  			reg = <0 0x1a244800 0 0x0100>;
-> > +			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
-> > +			clock-names = "ref";
-> 
-> Same here.
-> 
-> >  			#phy-cells = <1>;
-> >  			status = "okay";
-> >  		};
-> >  
-> >  		u3port1: usb-phy@1a244900 {
-> >  			reg = <0 0x1a244900 0 0x0700>;
-> > +			clocks = <&clk26m>;
-> > +			clock-names = "ref";
-> 
-> Same here.
-> 
-> >  			#phy-cells = <1>;
-> >  			status = "okay";
-> >  		};
-> > @@ -784,16 +787,15 @@
-> >  	};
-> >  
-> >  	crypto: crypto@1b240000 {
-> > -		compatible = "mediatek,mt7623-crypto";
-> > +		compatible = "mediatek,eip97-crypto";
-> 
-> Crypto node is not present in upstream.
+v3 -> v4:
+ * Using the style that is more consistent with device tree 
+   code, as suggested by Frank Rowand
 
-Crypto driver is already merged. 
+ drivers/of/dynamic.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-See Documentation/devicetree/bindings/crypto/mediatek-crypto.txt
-
-Thanks
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 301b6db..f33b7c2 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -315,6 +315,17 @@ int of_detach_node(struct device_node *np)
+ }
+ EXPORT_SYMBOL_GPL(of_detach_node);
+ 
++static void property_list_free(struct property *prop_list)
++{
++	struct property *prop;
++
++	for (prop = prop_list; prop != NULL; prop = prop->next) {
++		kfree(prop->name);
++		kfree(prop->value);
++		kfree(prop);
++	}
++}
++
+ /**
+  * of_node_release() - release a dynamically allocated node
+  * @kref: kref element of the node to be released
+@@ -324,7 +335,6 @@ EXPORT_SYMBOL_GPL(of_detach_node);
+ void of_node_release(struct kobject *kobj)
+ {
+ 	struct device_node *node = kobj_to_device_node(kobj);
+-	struct property *prop = node->properties;
+ 
+ 	/* We should never be releasing nodes that haven't been detached. */
+ 	if (!of_node_check_flag(node, OF_DETACHED)) {
+@@ -335,18 +345,9 @@ void of_node_release(struct kobject *kobj)
+ 	if (!of_node_check_flag(node, OF_DYNAMIC))
+ 		return;
+ 
+-	while (prop) {
+-		struct property *next = prop->next;
+-		kfree(prop->name);
+-		kfree(prop->value);
+-		kfree(prop);
+-		prop = next;
++	property_list_free(node->properties);
++	property_list_free(node->deadprops);
+ 
+-		if (!prop) {
+-			prop = node->deadprops;
+-			node->deadprops = NULL;
+-		}
+-	}
+ 	kfree(node->full_name);
+ 	kfree(node->data);
+ 	kfree(node);
+-- 
+2.6.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
