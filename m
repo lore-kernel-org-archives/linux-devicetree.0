@@ -1,7 +1,7 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [RFC PATCH 2/5] gpio: gpiolib: Add OF support for maintaining GPIO values on reset
-Date: Fri, 20 Oct 2017 14:07:24 +1030
-Message-ID: <20171020033727.21557-3-andrew@aj.id.au>
+Subject: [RFC PATCH 4/5] gpio: gpiolib: Add sysfs support for maintaining GPIO values on reset
+Date: Fri, 20 Oct 2017 14:07:26 +1030
+Message-ID: <20171020033727.21557-5-andrew@aj.id.au>
 References: <20171020033727.21557-1-andrew@aj.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171020033727.21557-1-andrew@aj.id.au>
@@ -10,84 +10,148 @@ To: linux-gpio@vger.kernel.org
 Cc: Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org, corbet@lwn.net, joel@jms.id.au, ryan_chen@aspeedtech.com, robh+dt@kernel.org, frowand.list@gmail.com, ckeepax@opensource.wolfsonmicro.com, ldewangan@nvidia.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add flags and the associated flag mappings between interfaces to enable
-GPIO reset tolerance to be specified via devicetree.
+Expose a new 'maintain' sysfs attribute to control both suspend and
+reset tolerance.
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/gpio/gpiolib-of.c       | 2 ++
- drivers/gpio/gpiolib.c          | 5 +++++
- include/dt-bindings/gpio/gpio.h | 4 ++++
- include/linux/of_gpio.h         | 1 +
- 4 files changed, 12 insertions(+)
+ Documentation/gpio/sysfs.txt |  9 +++++
+ drivers/gpio/gpiolib-sysfs.c | 88 ++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 93 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index e0d59e61b52f..4a268ba52998 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -155,6 +155,8 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+diff --git a/Documentation/gpio/sysfs.txt b/Documentation/gpio/sysfs.txt
+index aeab01aa4d00..f447f0746884 100644
+--- a/Documentation/gpio/sysfs.txt
++++ b/Documentation/gpio/sysfs.txt
+@@ -96,6 +96,15 @@ and have the following read/write attributes:
+ 		for "rising" and "falling" edges will follow this
+ 		setting.
  
- 	if (of_flags & OF_GPIO_SLEEP_MAY_LOSE_VALUE)
- 		*flags |= GPIO_SLEEP_MAY_LOSE_VALUE;
-+	if (of_flags & OF_GPIO_RESET_TOLERANT)
-+		*flags |= GPIO_RESET_TOLERANT;
- 
- 	return desc;
++	"maintain" ... displays and controls whether the state of the GPIO is
++		maintained or lost on suspend or reset. The valid values take
++	        the following meanings:
++
++	        0: Do not maintain state on either suspend or reset
++	        1: Maintain state for suspend only
++	        2: Maintain state for reset only
++	        3: Maintain state for both suspend and reset
++
+ GPIO controllers have paths like /sys/class/gpio/gpiochip42/ (for the
+ controller implementing GPIOs starting at #42) and have the following
+ read-only attributes:
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 3f454eaf2101..bfa186e73e26 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -289,6 +289,74 @@ static ssize_t edge_store(struct device *dev,
  }
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d9dc7e588699..6b4c5df10e84 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3434,6 +3434,7 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 	bool active_low = false;
- 	bool single_ended = false;
- 	bool open_drain = false;
-+	bool reset_tolerant = false;
- 	int ret;
+ static DEVICE_ATTR_RW(edge);
  
- 	if (!fwnode)
-@@ -3448,6 +3449,7 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 			active_low = flags & OF_GPIO_ACTIVE_LOW;
- 			single_ended = flags & OF_GPIO_SINGLE_ENDED;
- 			open_drain = flags & OF_GPIO_OPEN_DRAIN;
-+			reset_tolerant = flags & OF_GPIO_RESET_TOLERANT;
- 		}
- 	} else if (is_acpi_node(fwnode)) {
- 		struct acpi_gpio_info info;
-@@ -3478,6 +3480,9 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 			lflags |= GPIO_OPEN_SOURCE;
- 	}
- 
-+	if (reset_tolerant)
-+		lflags |= GPIO_RESET_TOLERANT;
++#define GPIOLIB_SYSFS_MAINTAIN_SUSPEND	BIT(0)
++#define GPIOLIB_SYSFS_MAINTAIN_RESET	BIT(1)
++#define GPIOLIB_SYSFS_MAINTAIN_ALL	GENMASK(1, 0)
++static ssize_t maintain_show(struct device *dev, struct device_attribute *attr,
++			     char *buf)
++{
++	struct gpiod_data *data = dev_get_drvdata(dev);
++	ssize_t	status = 0;
++	int val = 0;
 +
- 	ret = gpiod_configure_flags(desc, propname, lflags, dflags);
- 	if (ret < 0) {
- 		gpiod_put(desc);
-diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
-index 70de5b7a6c9b..01c75d9e308e 100644
---- a/include/dt-bindings/gpio/gpio.h
-+++ b/include/dt-bindings/gpio/gpio.h
-@@ -32,4 +32,8 @@
- #define GPIO_SLEEP_MAINTAIN_VALUE 0
- #define GPIO_SLEEP_MAY_LOSE_VALUE 8
- 
-+/* Bit 4 express GPIO persistence on reset */
-+#define GPIO_RESET_INTOLERANT 0
-+#define GPIO_RESET_TOLERANT 16
++	mutex_lock(&data->mutex);
 +
- #endif
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index 1fe205582111..9b34737706a7 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -32,6 +32,7 @@ enum of_gpio_flags {
- 	OF_GPIO_SINGLE_ENDED = 0x2,
- 	OF_GPIO_OPEN_DRAIN = 0x4,
- 	OF_GPIO_SLEEP_MAY_LOSE_VALUE = 0x8,
-+	OF_GPIO_RESET_TOLERANT = 0x16,
++	if (!test_bit(FLAG_SLEEP_MAY_LOSE_VALUE, &data->desc->flags))
++		val |= GPIOLIB_SYSFS_MAINTAIN_SUSPEND;
++
++	if (test_bit(FLAG_RESET_TOLERANT, &data->desc->flags))
++		val |= GPIOLIB_SYSFS_MAINTAIN_RESET;
++
++	status = sprintf(buf, "%d\n", val);
++
++	mutex_unlock(&data->mutex);
++
++	return status;
++}
++
++static ssize_t maintain_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf,
++			      size_t size)
++{
++	struct gpiod_data *data = dev_get_drvdata(dev);
++	struct gpio_chip *chip;
++	ssize_t	status;
++	long provided;
++
++	mutex_lock(&data->mutex);
++
++	chip = data->desc->gdev->chip;
++
++	if (!chip->set_config)
++		return -ENOTSUPP;
++
++	status = kstrtol(buf, 0, &provided);
++	if (status < 0)
++		goto out;
++
++	if (provided & ~GPIOLIB_SYSFS_MAINTAIN_ALL) {
++		status = -EINVAL;
++		goto out;
++	}
++
++	if (!(provided & GPIOLIB_SYSFS_MAINTAIN_SUSPEND))
++		set_bit(FLAG_SLEEP_MAY_LOSE_VALUE, &data->desc->flags);
++	else
++		clear_bit(FLAG_SLEEP_MAY_LOSE_VALUE,
++			  &data->desc->flags);
++
++	/* Configure reset tolerance */
++	status = gpiod_set_reset_tolerant(data->desc,
++			!!(provided & GPIOLIB_SYSFS_MAINTAIN_RESET));
++out:
++	mutex_unlock(&data->mutex);
++
++	return status ? : size;
++
++}
++static DEVICE_ATTR_RW(maintain);
++
+ /* Caller holds gpiod-data mutex. */
+ static int gpio_sysfs_set_active_low(struct device *dev, int value)
+ {
+@@ -378,6 +446,7 @@ static struct attribute *gpio_attrs[] = {
+ 	&dev_attr_edge.attr,
+ 	&dev_attr_value.attr,
+ 	&dev_attr_active_low.attr,
++	&dev_attr_maintain.attr,
+ 	NULL,
  };
  
- #ifdef CONFIG_OF_GPIO
+@@ -474,11 +543,22 @@ static ssize_t export_store(struct class *class,
+ 			status = -ENODEV;
+ 		goto done;
+ 	}
+-	status = gpiod_export(desc, true);
+-	if (status < 0)
++
++	/*
++	 * If userspace is requesting the GPIO via sysfs, make them explicitly
++	 * configure reset tolerance each time by unconditionally disabling it
++	 * here, as the export and configuration steps are not atomic.
++	 */
++	status = gpiod_set_reset_tolerant(desc, false);
++	if (status < 0) {
+ 		gpiod_free(desc);
+-	else
+-		set_bit(FLAG_SYSFS, &desc->flags);
++	} else {
++		status = gpiod_export(desc, true);
++		if (status < 0)
++			gpiod_free(desc);
++		else
++			set_bit(FLAG_SYSFS, &desc->flags);
++	}
+ 
+ done:
+ 	if (status)
 -- 
 2.11.0
