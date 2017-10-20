@@ -1,150 +1,103 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v7 0/6] SMP and CPU hotplug support for Meson8/Meson8b
-Date: Sat, 21 Oct 2017 00:14:28 +0200
-Message-ID: <CAFBinCB0YkApefxJCVDmEc0cD3JWv7+ZHE3PY2BjD3tXD6gbEQ@mail.gmail.com>
-References: <20170917164523.6970-1-martin.blumenstingl@googlemail.com>
- <CAFBinCCdj8LwXvUSoCPeVfPUTaLVFFyvKZcNceLGvj26Z740DQ@mail.gmail.com> <7hpoa07yn6.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v3] display: panel: Add Mitsubishi aa070mc01 display support (800x480)
+Date: Sat, 21 Oct 2017 00:18:37 +0200
+Message-ID: <1508537917-1723-1-git-send-email-lukma@denx.de>
+References: <1508537169-402-1-git-send-email-lukma@denx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7hpoa07yn6.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1508537169-402-1-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russel,
+This commit adds support for Mitsubishi aa070mc01 TFT panel working
+with 8 bit ISP mode (pin 19 "mode" HIGH for 20 pin TFT connector).
 
-On Fri, Oct 6, 2017 at 11:30 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->
->> Hello Russel, Hi Kevin,
->>
->> On Sun, Sep 17, 2017 at 6:45 PM, Martin Blumenstingl
->> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->>> This patchset adds support for booting the secondary CPU cores (and
->>> taking them offline again) on Amlogic Meson8 and Meson8b SoCs.
->>> It is based on an earlier version from Carlo Caione - this helped me
->>> a lot to get a better understanding of how SMP/CPU hotplug works
->>> (compared to the code found in Amlogic's GPL kernel sources from
->>> year 2015).
->>>
->>> Changes since v6 from [6]:
->>> - rebased on top of v4.14-rc1 (which only corrected some line
->>>   numbers in the SCU patches)
->> it's been two weeks since v6 and since then Linus L=C3=BCssing has
->> confirmed that this works fine on his Odroid-C1 as well (many thanks
->> for testing!): [7]
->>
->>> Changes since v5 from [5]:
->>> - dropped dependency on another patch series (for the clock
->>>   controller's embedded reset controller, which is needed to boot
->>>   the secondary CPUs) from the cover-letter as that series is now
->>>   merged
->>> - fix incorrect documentation of scu_cpu_power_enable (thanks to
->>>   Russell King for spotting these). removed the paragraph about
->>>   preemption, cache coherency and interrupts as we're powering on
->>>   a CPU core (the text was copied from the original scu_power_mode
->>>   but simply not adjusted). also changed "Set the executing CPUs"
->>>   to "Set the given (logical) CPU's" as we're not modifying the
->>>   current CPU. this affects only patch #2
->>> - extended the commit message of patch #3 with a short sentence
->>>   about why SCU_CPU_STATUS_MASK was introduced
->>>
->>> Changes since v4 from [4]:
->>> - use __pa_symbol(secondary_startup) instead of
->>>   virt_to_phys(secondary_startup) as suggested by Florian Fainelli
->>>   (affects patch #4)
->>> - (cover-letter) removed dependency on my other patch
->>>   "ARM: dts: meson: add a node which describes the SRAM" [2] as that
->>>   was merged into Kevin's Amlogic repo today
->>> - dropped patch #5 ("clk: meson: meson8b: export the CPU soft reset
->>>   lines") again because the reset controller series exposes the
->>>   preprocessor macros now directly, see [1]
->>> - refreshed the .dts patches so they now include the new header for
->>>   the reset line preprocessor macros
->>>
->>> Changes since v3 from [3]:
->>> - added Rob's ACK to patch #1
->>> - replaced a msleep(10) with usleep_range(10000, 15000) in patch #4
->>> - removed all "pen" code from patch #4 as that code was not needed
->>>   at all (it was left-over while trying to fix Meson8 secondary CPU
->>>   boot - which turned out to have nothing to do with this "pen" code)
->>> - removed all memory barrier operations as they were added based on
->>>   the code in the Amlogic GPL kernel tree (while trying to fix the
->>>   Meson8 secondary CPU boot - just like the "pen" code). Everything
->>>   still works fine with these on my Meson8m2 and Meson8b boards.
->>> - added PATCH #5 as we now have to export the reset identifiers
->>>   (just like we do it with the clock identifiers / preprocessor
->>>   macros) - this is the result of a change in the reset controller
->>>   patch in version 2, see [1]
->>> - use the reset line preprocessor macros (from patch #5) in patches
->>>   #6 and #7
->>>
->>> Changes since v2 from [0]:
->>> - added support for Meson8 (which requires a slightly different
->>>   enable-method)
->>> - implemented CPU hotplug support which allows taking a CPU core
->>>   offline for both, Meson8 and Meson8b
->>> - add a function to smp_scu.c which allows enabling a CPU core from
->>>   a different CPU (previously only the power mode for the current CPU
->>>   could be changed). Without this the CPU cores on Meson8 won't come
->>>   up (Amlogic's vendor GPL kernel sources also enable power through
->>>   SCU as very first step for Meson8b as well)
->>> - add a function to smp_scu.c to get the power status of a CPU core
->>>   (which is needed because the code in .cpu_kill needs to wait until
->>>   the core is actually powered off)
->>> - dropped patch "ARM: DTS: meson8b: Extend L2 cache controller node"
->>>   as it is already applied (for both, Meson8 and Meson8b)
->>> - dropped the patches which implement the reset controller which is
->>>   built into the clock-controller, these are a separate series: [1]
->>> - moved the enable-method property to each CPU node
->>>
->>>
->>> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December=
-/390355.html
->>> [1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004456=
-.html
->>> [2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004282=
-.html
->>> [3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004297=
-.html
->>> [4] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004354=
-.html
->>> [5] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004460=
-.html
->>> [6] http://lists.infradead.org/pipermail/linux-amlogic/2017-August/0045=
-88.html
->>>
->>> Carlo Caione (2):
->>>   dt-bindings: Amlogic: Add Meson8 and Meson8b SMP related documentatio=
-n
->>>   ARM: dts: meson8b: add support for booting the secondary CPU cores
->>>
->>> Martin Blumenstingl (4):
->>>   ARM: smp_scu: add a helper for powering on a specific CPU
->>>   ARM: smp_scu: allow the platform code to read the SCU CPU status
-could you please have a look at these two patches? it would be great
-if you could give feedback on these, because they are needed for SMP
-support on the Amlogic Meson8 and Meson8b platforms
+Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+---
+Changes for v2:
+- Place the code sorted alphabetically
+- Add missing ./Documentation/devicetree/binding/display properties
+  description
 
->>>   ARM: meson: Add SMP bringup code for Meson8 and Meson8b
->>>   ARM: dts: meson8: add support for booting the secondary CPU cores
->> @Russel: should Kevin take all patches including the two smp_scu ones?
->> or do you want to take them through your own tree?
->
-> With Russell's ack, I can take the series via the amlogic tree.  But I'm
-> also fine if Russell wants to take the arch/arm/* via his tree, and I
-> will just queue up the DT.
-please also let Kevin know if you would like him to take these patches
-through the amlogic tree
+Changes for v3:
+- Fix typo in display name (in property description)
 
-thank you in advance!
+---
+ .../display/panel/mitsubishi,aa070mc01.txt         |  7 +++++
+ drivers/gpu/drm/panel/panel-simple.c               | 35 ++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
 
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
+new file mode 100644
+index 0000000..4f5094f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
+@@ -0,0 +1,7 @@
++Mitsubishi "AA070MC01 7.0" WVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "mitsubishi,aa070mc01-ca1"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 07188dc..72a20fc 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1350,6 +1350,38 @@ static const struct panel_desc lg_lp129qe = {
+ 	},
+ };
+ 
++static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
++	.clock = 30400,
++	.hdisplay = 800,
++	.hsync_start = 800 + 0,
++	.hsync_end = 800 + 1,
++	.htotal = 800 + 0 + 1 + 160,
++	.vdisplay = 480,
++	.vsync_start = 480 + 0,
++	.vsync_end = 480 + 48 + 1,
++	.vtotal = 480 + 48 + 1 + 0,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++};
++
++static const struct panel_desc mitsubishi_aa070mc01 = {
++	.modes = &mitsubishi_aa070mc01_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++
++	.delay = {
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 400,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
++};
++
+ static const struct display_timing nec_nl12880bc20_05_timing = {
+ 	.pixelclock = { 67000000, 71000000, 75000000 },
+ 	.hactive = { 1280, 1280, 1280 },
+@@ -2080,6 +2112,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
+ 	}, {
++		.compatible = "mitsubishi,aa070mc01-ca1",
++		.data = &mitsubishi_aa070mc01,
++	}, {
+ 		.compatible = "nec,nl12880bc20-05",
+ 		.data = &nec_nl12880bc20_05,
+ 	}, {
+-- 
+2.1.4
 
-Regards
-Martin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
