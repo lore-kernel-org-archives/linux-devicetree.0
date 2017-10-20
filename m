@@ -1,47 +1,97 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: meson: add the efuse node
-Date: Sat, 21 Oct 2017 00:04:49 +0200
-Message-ID: <CAFBinCAtcWERQbH4Q8XRYMyYctwWEj0bX+Ud5oRyhOuOiYjqew@mail.gmail.com>
-References: <20171002232804.20042-1-martin.blumenstingl@googlemail.com> <20171002232804.20042-5-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v2] display: panel: Add Mitsubishi aa070mc01 display support (800x480)
+Date: Sat, 21 Oct 2017 00:06:09 +0200
+Message-ID: <1508537169-402-1-git-send-email-lukma@denx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171002232804.20042-5-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+This commit adds support for Mitsubishi aa070mc01 TFT panel working
+with 8 bit ISP mode (pin 19 "mode" HIGH for 20 pin TFT connector).
 
-On Tue, Oct 3, 2017 at 1:28 AM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Meson6, Meson8 and Meson8b use a similar IP block which has access to
-> 512 bytes of efuse data.
-> During SoC manufacturing some calibration settings for the CVBS
-> connector and the internal temperature sensor are written to this efuse.
-> On some boards it additionally stores for example the MAC addresses.
->
-> The efuse is enabled on Meson8 and Meson8b but kept disabled on Meson6
-> since we do not have a clock driver there (which is required to read
-> data from the efuse).
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/meson.dtsi   | 15 +++++++++++++++
->  arch/arm/boot/dts/meson6.dtsi  |  3 +++
->  arch/arm/boot/dts/meson8.dtsi  |  6 ++++++
->  arch/arm/boot/dts/meson8b.dtsi |  7 +++++++
->  4 files changed, 31 insertions(+)
-the dt-binding documentation and driver were queued for v4.15 today.
-could you please have a look at this patch and queue it for v4.15 as
-well (if everything is fine)?
+Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+---
+Changes for v2:
+- Place the code sorted alphabetically
+- Add missing ./Documentation/devicetree/binding/display properties
+  description
+---
+ .../display/panel/mitsubishi,aa070mc01.txt         |  7 +++++
+ drivers/gpu/drm/panel/panel-simple.c               | 35 ++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
 
-[snip]
+diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
+new file mode 100644
+index 0000000..4f5094f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa070mc01.txt
+@@ -0,0 +1,7 @@
++Mitsubishi "AA070MC01 7.0" WVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "mitsubishi,aa070mc01"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 07188dc..72a20fc 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1350,6 +1350,38 @@ static const struct panel_desc lg_lp129qe = {
+ 	},
+ };
+ 
++static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
++	.clock = 30400,
++	.hdisplay = 800,
++	.hsync_start = 800 + 0,
++	.hsync_end = 800 + 1,
++	.htotal = 800 + 0 + 1 + 160,
++	.vdisplay = 480,
++	.vsync_start = 480 + 0,
++	.vsync_end = 480 + 48 + 1,
++	.vtotal = 480 + 48 + 1 + 0,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++};
++
++static const struct panel_desc mitsubishi_aa070mc01 = {
++	.modes = &mitsubishi_aa070mc01_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++
++	.delay = {
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 400,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
++};
++
+ static const struct display_timing nec_nl12880bc20_05_timing = {
+ 	.pixelclock = { 67000000, 71000000, 75000000 },
+ 	.hactive = { 1280, 1280, 1280 },
+@@ -2080,6 +2112,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
+ 	}, {
++		.compatible = "mitsubishi,aa070mc01-ca1",
++		.data = &mitsubishi_aa070mc01,
++	}, {
+ 		.compatible = "nec,nl12880bc20-05",
+ 		.data = &nec_nl12880bc20_05,
+ 	}, {
+-- 
+2.1.4
 
-
-thank you!
-Martin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
