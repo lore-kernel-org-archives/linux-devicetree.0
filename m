@@ -1,51 +1,61 @@
-From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
-Subject: [PATCH v5 3/5] Documentation: Add device tree binding for Goldfish FB driver
-Date: Fri, 20 Oct 2017 16:33:36 +0200
-Message-ID: <1508510055-6167-4-git-send-email-aleksandar.markovic@rt-rk.com>
-References: <1508510055-6167-1-git-send-email-aleksandar.markovic@rt-rk.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508510055-6167-1-git-send-email-aleksandar.markovic@rt-rk.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Aleksandar Markovic <aleksandar.markovic@mips.com>, Miodrag Dinic <miodrag.dinic@mips.com>, Goran Ferenc <goran.ferenc@mips.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@mips.com>, dri-devel@lists.freedesktop.org, James Hogan <james.hogan@mips.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, Petar Jovanovic <petar.jovanovic@mips.com>, Raghu Gandham <raghu.gandham@mips.com>, Rob Herring <robh+dt@kernel.org>
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Subject: Re: [PATCHv4 2/2] Add a GPIO driver for Altera FPGA Manager Fabric
+ I/O
+Date: Fri, 20 Oct 2017 14:40:58 +0000
+Message-ID: <AM5PR0701MB26571DEDBDEA72B54DC1E7F6E4430@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+References: <AM5PR0701MB26576FCB30CDCA6F989C9B80E4420@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+ <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaSQRuEEpUC2=Z8K80vrrqbSfoCU4YUNJR+9vBXUgWRyA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <39CF6A2AD70102428C20513F1E08C1AC@eurprd07.prod.outlook.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Aleksandar Markovic <aleksandar.markovic@mips.com>
-
-Add documentation for DT binding of Goldfish FB driver. The compatible
-string used by OS for binding the driver is "google,goldfish-fb".
-
-Signed-off-by: Miodrag Dinic <miodrag.dinic@mips.com>
-Signed-off-by: Goran Ferenc <goran.ferenc@mips.com>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic@mips.com>
----
- .../devicetree/bindings/display/google,goldfish-fb.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-
-diff --git a/Documentation/devicetree/bindings/display/google,goldfish-fb.txt b/Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-new file mode 100644
-index 0000000..9ce0615
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-@@ -0,0 +1,18 @@
-+Android Goldfish framebuffer
-+
-+Android Goldfish framebuffer device used by Android emulator.
-+
-+Required properties:
-+
-+- compatible : should contain "google,goldfish-fb"
-+- reg        : <registers mapping>
-+- interrupts : <interrupt mapping>
-+
-+Example:
-+
-+	goldfish_fb@1f008000 {
-+		compatible = "google,goldfish-fb";
-+		interrupts = <0x10>;
-+		reg = <0x1f008000 0x0 0x100>;
-+		compatible = "google,goldfish-fb";
-+	};
--- 
-2.7.4
+T24gMTAvMjAvMTcgMTA6MTAsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+IE9uIFRodSwgT2N0IDE5
+LCAyMDE3IGF0IDY6MjkgUE0sIEJlcm5kIEVkbGluZ2VyDQo+IDxiZXJuZC5lZGxpbmdlckBob3Rt
+YWlsLmRlPiB3cm90ZToNCj4gDQo+IERvZXMgdGhpcyByZWFsbHkgd29yaz8NCj4gDQoNClllcywg
+aXQgZG9lcyByZWFsbHkgd29yay4NCg0KSSB1c2UgaXQgdG8gZ2F0ZSBhIGNsb2NrIHNpZ25hbCB1
+c2luZyBmcGdhIGxvZ2ljDQppbnN0ZWFkIG9mIGFuIGV4dGVybmFsIGFuZCBnYXRlIG9uIHRoZSBQ
+Q0IuDQoNCkFuZCBhbm90aGVyIGRyaXZlciB1c2VzIHRoaXMgZ3BpbyB3aGljaA0KaXMgY29uZmln
+dXJlZCBhcyAic2VsZWN0LWdwaW8gPSA8JnBvcnRkIDIgMD47Ig0KaW4gdGhlIGRldmljZSB0cmVl
+LiAgVGhlIGFjdHVhbCBJL08gaXMgc2ltcGx5DQpjb250cm9sbGVkIHdpdGggZ3Bpb2Rfc2V0X3Zh
+bHVlKCksIHdoaWNoIHdvcmtzDQp3aXRob3V0IHRoZSBvdGhlciBkcml2ZXIgZXZlciBrbm93aW5n
+IGhvdyB0aGUNCkkvTyBpcyBjb25uZWN0ZWQuDQoNCkkgd2FzIGFsc28gYWJsZSB0byBleGVyY2lz
+ZSB0aGUgZGV2aWNlIHVubG9hZCBjb2RlIHBhdGgsDQp1c2luZyB5b3VyIGhpbnQgd2l0aCB0aGUg
+Z3BpbyB1bmJpbmQgZmlsZSBpbiB0aGUgc3lzZnMuDQoNCj4+IFRoaXMgaXMgYW4gaW50ZXJuYWwg
+MzItYml0IGlucHV0IGFuZCAzMi1iaXQgb3V0cHV0IHBvcnQgdG8gdGhlIEZQR0EgbG9naWMuDQo+
+Pg0KPj4gSW5zdGFudGlhdGUgdGhpcyBpbiB0aGUgZGV2aWNlIHRyZWUgYXM6DQo+Pg0KPj4gICAg
+Z3BpbzM6IGdwaW9AZmY3MDYwMTAgew0KPj4gICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4g
+ICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPj4gICAgIGNvbXBhdGlibGUgPSAiYWx0cixmcGdhbWdy
+LWdwaW8iOw0KPj4gICAgIHJlZyA9IDwweGZmNzA2MDEwIDB4OD47DQo+PiAgICAgc3RhdHVzID0g
+Im9rYXkiOw0KPj4NCj4+ICAgICBwb3J0ZDogZ3Bpby1jb250cm9sbGVyQDAgew0KPj4gICAgICBj
+b21wYXRpYmxlID0gImFsdHIsZnBnYW1nci1ncGlvLW91dHB1dCI7DQo+PiAgICAgIGdwaW8tY29u
+dHJvbGxlcjsNCj4+ICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47DQo+PiAgICAgIHJlZyA9IDwwPjsN
+Cj4+ICAgICB9Ow0KPj4NCj4+ICAgICBwb3J0ZTogZ3Bpby1jb250cm9sbGVyQDEgew0KPj4gICAg
+ICBjb21wYXRpYmxlID0gImFsdHIsZnBnYW1nci1ncGlvLWlucHV0IjsNCj4+ICAgICAgZ3Bpby1j
+b250cm9sbGVyOw0KPj4gICAgICAjZ3Bpby1jZWxscyA9IDwyPjsNCj4+ICAgICAgcmVnID0gPDE+
+Ow0KPj4gICAgIH07DQo+IA0KPiBTbyB5b3UgaGF2ZSBvdXRwdXQtb25seSBhbmQgaW5wdXQtb25s
+eSBwb3J0cy4uLi4NCj4gDQoNClllcy4NCg0KPj4gK3N0YXRpYyBpbnQgZnBnYW1ncl9ncGlvX2Fk
+ZF9wb3J0KHN0cnVjdCBmcGdhbWdyX2dwaW8gKmdwaW8sDQo+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBzdHJ1Y3QgZnBnYW1ncl9wb3J0X3Byb3BlcnR5ICpwcCwNCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBvZmZzKQ0KPj4gK3sNCj4+
+ICsgICAgICAgc3RydWN0IGZwZ2FtZ3JfZ3Bpb19wb3J0ICpwb3J0Ow0KPj4gKyAgICAgICB2b2lk
+IF9faW9tZW0gKmRhdDsNCj4+ICsgICAgICAgaW50IGVycjsNCj4+ICsNCj4+ICsgICAgICAgcG9y
+dCA9ICZncGlvLT5wb3J0c1tvZmZzXTsNCj4+ICsgICAgICAgcG9ydC0+Z3BpbyA9IGdwaW87DQo+
+PiArICAgICAgIHBvcnQtPmlkeCA9IHBwLT5pZHg7DQo+PiArDQo+PiArICAgICAgIGRhdCA9IGdw
+aW8tPnJlZ3MgKyAocHAtPmlkeCAqIDQpOw0KPj4gKw0KPj4gKyAgICAgICBlcnIgPSBiZ3Bpb19p
+bml0KCZwb3J0LT5iZ2MsIGdwaW8tPmRldiwgNCwgZGF0LCBOVUxMLCBOVUxMLA0KPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgIE5VTEwsIE5VTEwsIDApOw0KPiANCj4gQnV0IGFsbCB5b3UgYWRk
+IGlzIGlucHV0LW9ubHkgR1BJTyBjaGlwcy4gQWxzbyBmb3IgdGhlIG91dHB1dCBwb3J0cy4NCj4g
+DQoNCldlbGwgYWN0dWFsbHkgdGhpcyBhbGxvd3MgYm90aCBpbnB1dCBhbmQgb3V0cHV0LA0KYnV0
+IHdoaWxlIHRoZSBpbnB1dCBwb3J0IGNvdWxkIGJlIHdyaXR0ZW4gYnkgYWNjaWRlbnQsDQp0aGUg
+aGFyZHdhcmUgZG9lcyB0aGUgcmlnaHQgdGhpbmcgYW5kIGlnbm9yZXMgdGhlIHdyaXRlIGN5Y2xl
+Lg0KDQpUaGUgb3RoZXIgcGFyYW1ldGVycyBvZiBiZ3Bpb19pbnB1dCBhcmUgZm9yIGRldmljZXMg
+d2l0aA0KZXhwbGljaXQgc2V0LSBhbmQgcmVzZXQtc2lnbmFscywgYW5kIGNvbmZpZ3VyYWJsZQ0K
+b3V0cHV0LWRpcmVjdGlvbiBldGMsIHdoaWNoIEkgZG9uJ3QgaGF2ZS4NCg0KDQoNCkJlcm5kLg0K
