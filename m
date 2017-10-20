@@ -1,7 +1,7 @@
 From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v3 3/6] ARM: dts: imx53: Fix 'usbphy@x' node with unit name and no reg property
-Date: Fri, 20 Oct 2017 13:48:24 -0200
-Message-ID: <1508514507-30736-3-git-send-email-marco.franchi@nxp.com>
+Subject: [PATCH v3 5/6] ARM: dts: imx53-qsb-common: Fix 'led_gpio7_7@0' node with unit name and no reg property
+Date: Fri, 20 Oct 2017 13:48:26 -0200
+Message-ID: <1508514507-30736-5-git-send-email-marco.franchi@nxp.com>
 References: <1508514507-30736-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,41 +12,32 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following build warnings are seen with W=1:
+The following build warning is seen with W=1:
 
-Warning (unit_address_vs_reg): Node /soc/aips@50000000/usbphy@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /soc/aips@50000000/usbphy@1 has a unit name, but no reg property
+Warning (unit_address_vs_reg): Node /soc/aips@50000000/iomuxc@53fa8000/imx53-qsb/led_gpio7_7@0 has a unit name, but no reg property
 
-Fix these warnings by changing '@' to '-'.
+Fix this warning by removing '@0' from such node.
 
 Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes since v2:
 -none
- arch/arm/boot/dts/imx53.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx53-qsb-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 8bf0d89..c937949 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -299,14 +299,14 @@
- 				reg = <0x53f00000 0x60>;
- 			};
+diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+index d5adf33..3c71de8 100644
+--- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
++++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+@@ -172,7 +172,7 @@
+ 			>;
+ 		};
  
--			usbphy0: usbphy@0 {
-+			usbphy0: usbphy-0 {
- 				compatible = "usb-nop-xceiv";
- 				clocks = <&clks IMX5_CLK_USB_PHY1_GATE>;
- 				clock-names = "main_clk";
- 				status = "okay";
- 			};
- 
--			usbphy1: usbphy@1 {
-+			usbphy1: usbphy-1 {
- 				compatible = "usb-nop-xceiv";
- 				clocks = <&clks IMX5_CLK_USB_PHY2_GATE>;
- 				clock-names = "main_clk";
+-		led_pin_gpio7_7: led_gpio7_7@0 {
++		led_pin_gpio7_7: led_gpio7_7 {
+ 			fsl,pins = <
+ 				MX53_PAD_PATA_DA_1__GPIO7_7 0x80000000
+ 			>;
 -- 
 2.7.4
 
