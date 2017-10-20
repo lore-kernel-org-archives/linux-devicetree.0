@@ -1,54 +1,31 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] ARM: dts: exynos: add cpu perf counters to Exynos54xx
- boards
-Date: Fri, 20 Oct 2017 17:15:51 +0100
-Message-ID: <e2b87fe2-bc04-242d-8f4f-9cd21743e3aa@arm.com>
-References: <CAM3PiRxi8sxf6T990K8rd7UsOLd2D5TaLciF=c_wF=9gmpLKYg@mail.gmail.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound
+        traffic
+Date: Fri, 20 Oct 2017 18:17:19 +0200
+Message-ID: <20171020161719.GA6247@lst.de>
+References: <20171017081422.GA19475@lst.de> <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com> <20171018065316.GA11183@lst.de> <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com> <20171019091644.GA14983@lst.de> <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ@mail.gmail.com> <20171020073730.GA12937@lst.de> <CANCKTBsRRkwNMrxWjtgxbyZqT6NOxPX0NHDbnEO2BMjj8oVtpg@mail.gmail.com> <20171020145752.GA4694@lst.de> <CANCKTBtxp9gSdndKAZ7xGA+VozQsn2PX_-9P8A22_5Matbb7-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAM3PiRxi8sxf6T990K8rd7UsOLd2D5TaLciF=c_wF=9gmpLKYg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marian Mihailescu <mihailescu2m@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANCKTBtxp9gSdndKAZ7xGA+VozQsn2PX_-9P8A22_5Matbb7-w@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux-MIPS <linux-mips@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, iommu@lists.linux-foun
 List-Id: devicetree@vger.kernel.org
 
-On 20/10/17 13:09, Marian Mihailescu wrote:
-> Hi,
+On Fri, Oct 20, 2017 at 11:27:41AM -0400, Jim Quinlan wrote:
+>       memc0-a@[        0....3fffefff] <=> pci@[        0....3fffefff]
+>       memc0-b@[100000000...13fffefff] <=> pci@[ 40000000....7fffefff]
+>       memc1-a@[ 40000000....7fffefff] <=> pci@[ 80000000....bfffefff]
+>       memc1-b@[300000000...33fffefff] <=> pci@[ c0000000....ffffefff]
+>       memc2-a@[ 80000000....bfffefff] <=> pci@[100000000...13fffefff]
+>       memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
 > 
-> This patch enables support for ARM Performance Monitoring Units
-> available in Cortex-A7
-> and Cortex-A15 CPU cores for Exynos54xx SoCs (5410, 5420 and 5422/5800).
-> 
-> Exynos5410 currently has only Cortex-A7 nodes defined in the device tree,
-> so the Cortex-A15 PMU is defined in the exynos5420 device tree file.
+> This leaves a one-page gap between phsyical memory regions which would
+> normally be contiguous. One cannot have a dma alloc that spans any two
+> regions.  This is a drastic step, but I don't see an alternative.
+> Perhaps  I may be missing what you are saying...
 
-Huh? 5410 only has the *A15* cluster described (and for whatever reason
-mainline cannot bring up the A7 cluster even if you do add it).
-
-Also*, the interrupt affinity properties are bogus as presented - those
-will need to be delegated to the SoC-variant-specific dtsi files in the
-same manner as the "cpus" nodes, to cope with the different CPU numberings.
-
-Robin.
-
-*I'd like to have made this comment inline in the patch, but I can't :(
-
-> Tested with perf on Odroid XU4 (Exynos5422):
-> armv7_cortex_a7 PMU driver: 5 counters available
-> armv7_cortex_a15 PMU driver: 7 counters available
-> 
-> Regards,
-> Marian
-> 
-> --
-> Either I've been missing something or nothing has been going on. (K. E. Gordon)
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Ok, IFF we are guranteed to always have a gap between physical memory
+locations we are fine indeed.
