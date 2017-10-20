@@ -1,80 +1,63 @@
-From: memeka <mihailescu2m@gmail.com>
-Subject: [PATCH] ARM: dts: exynos: add cpu perf counters to Exynos54xx boards
-Date: Fri, 20 Oct 2017 23:19:34 +1030
-Message-ID: <1508503774-2328-1-git-send-email-mihailescu2m@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [RFC resend 3/4] arm64: dts: mt8173: Fix drm subsystem
+Date: Fri, 20 Oct 2017 14:49:56 +0200
+Message-ID: <18286792-77dc-3f06-b70b-e06a4c6792a8@gmail.com>
+References: <20171019112610.13645-1-mbrugger@suse.com>
+ <20171019112610.13645-4-mbrugger@suse.com>
+ <1508491009.23296.2.camel@mtksdaap41>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508491009.23296.2.camel@mtksdaap41>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marian Mihailescu <mihailescu2m@gmail.com>, Willy Wolff <willy.mh.wolff@gmail.com>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com, p.zabel@pengutronix.de, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Marian Mihailescu <mihailescu2m@gmail.com>
 
-Enable support for ARM Performance Monitoring Units available in Cortex-A7
-and Cortex-A15 CPU cores for Exynos54xx SoCs (5410, 5420 and 5422/5800).
 
-Exynos5410 currently has only Cortex-A7 nodes defined in the device tree,
-so the Cortex-A15 PMU is defined in the exynos5420 device tree file.
+On 10/20/2017 11:16 AM, CK Hu wrote:
+> Hi, Matthias:
+> 
+> On Thu, 2017-10-19 at 13:26 +0200, Matthias Brugger wrote:
+>> DRM subysystem and clock driver shared the same compatible mmsys.
+>> This stopped does not work, as only the first driver for a compatible
+>> gets probed. We change the comaptible to the new DRM identifier to fix
+>> this.
+>>
+>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>> ---
+>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> index b99a27372965..89db0a3f5950 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> @@ -803,6 +803,11 @@
+>>  			#clock-cells = <1>;
+>>  		};
+>>  
+>> +		dispsys: display-system {
+>> +			compatible = "mediatek,mt2701-dispsys";
+> 
+> Why do you probe "mediatek,mt2701-dispsys" in mt8173.dtsi?
+> 
 
-Tested with perf on Odroid XU4 (Exynos5422):
-armv7_cortex_a7 PMU driver: 5 counters available
-armv7_cortex_a15 PMU driver: 7 counters available
+That's actually a copy-paste-error. Thanks for noting!
 
-Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Signed-off-by: Willy Wolff <willy.mh.wolff@gmail.com>
----
- arch/arm/boot/dts/exynos5420.dtsi | 13 +++++++++++++
- arch/arm/boot/dts/exynos54xx.dtsi | 13 +++++++++++++
- 2 files changed, 26 insertions(+)
+Matthias
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 02d2f89..468059e 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -695,6 +695,19 @@
- 			iommus = <&sysmmu_jpeg1>;
- 		};
- 
-+		arm-a15-pmu {
-+			compatible = "arm,cortex-a15-pmu";
-+			interrupt-parent = <&combiner>;
-+			interrupts = <1 2>,
-+				<7 0>,
-+				<16 6>,
-+				<19 2>;
-+			interrupt-affinity = <&cpu4>,
-+				<&cpu5>,
-+				<&cpu6>,
-+				<&cpu7>;
-+		};
-+
- 		pmu_system_controller: system-controller@10040000 {
- 			compatible = "samsung,exynos5420-pmu", "syscon";
- 			reg = <0x10040000 0x5000>;
-diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-index 8ca4fef..8e007a4 100644
---- a/arch/arm/boot/dts/exynos54xx.dtsi
-+++ b/arch/arm/boot/dts/exynos54xx.dtsi
-@@ -79,6 +79,19 @@
- 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		arm-a7-pmu {
-+			compatible = "arm,cortex-a7-pmu";
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-affinity = <&cpu0>,
-+				<&cpu1>,
-+				<&cpu2>,
-+				<&cpu3>;
-+		};
-+
- 		sss: sss@10830000 {
- 			compatible = "samsung,exynos4210-secss";
- 			reg = <0x10830000 0x300>;
--- 
-2.7.4
+> Regards,
+> CK
+> 
+>> +			mediatek,mmsys = <&mmsys>;
+>> +		}
+>> +
+>>  		mdp_rdma0: rdma@14001000 {
+>>  			compatible = "mediatek,mt8173-mdp-rdma",
+>>  				     "mediatek,mt8173-mdp";
+> 
+> 
