@@ -1,101 +1,173 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] Teach phylib hard-resetting devices
-Date: Fri, 20 Oct 2017 11:05:13 +0200
-Message-ID: <20171020090512.j6fkn2ohbxsuboxm@verge.net.au>
-References: <1508487261-18524-1-git-send-email-geert+renesas@glider.be>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] arm: dts: mt7623: update pio, usb and crypto
+ nodes
+Date: Fri, 20 Oct 2017 11:12:45 +0200
+Message-ID: <1c26168e-af36-eb1c-22d8-8d4ffdf84d8d@gmail.com>
+References: <cover.1506908511.git.ryder.lee@mediatek.com>
+ <08d722e47b83bd70ed4d3c9a4546a3f70df96de4.1506908511.git.ryder.lee@mediatek.com>
+ <8c823070-7181-97cc-063e-3ced59c7e17d@gmail.com>
+ <1508464539.13396.6.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1508487261-18524-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1508464539.13396.6.camel@mtkswgap22>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 10:14:17AM +0200, Geert Uytterhoeven wrote:
-> 	Hi David, Andrew, Florian, Simon, Magnus,
-> 
-> This patch series adds optional PHY reset support to phylib.
-> 
-> The first two patches are destined for David's net-next tree. They add
-> core PHY reset code, and update a driver that currently uses its own
-> reset code.  Note that these patches depend on "[PATCH v2] of_mdio: Fix
-> broken PHY IRQ in case of probe deferral"
-> (https://www.spinics.net/lists/linux-renesas-soc/msg19442.html), as v3
-> needs to propagate errors from of_mdiobus_register_phy() and
-> of_mdiobus_register_device() [1].
-> 
-> The last two patches are new (sort of, see [2]), and destined for
-> Simon's renesas tree.  They add properties to describe the EthernetAVB
-> PHY reset topology to the common Salvator-X/XS and ULCB DTS files, which
-> solves two issues:
->   1. On Salvator-XS, the enable pin of the regulator providing PHY power
->      is connected to PRESETn, and PSCI powers down the SoC during system
->      suspend.  Hence a PHY reset is needed to restore network functionality
->      after resume.
->   2. Linux should not rely on the boot loader having reset the PHY, but
->      should reset the PHY during driver probe.
-> 
-> Changes compared to v2, as sent by Sergei Shtylyov:
->   - Fix fwnode_get_named_gpiod() call due to added parameters (which
->     allowed to eliminate the gpiod_direction_output() call),
->   - Rebased, refreshed, reworded,
->   - Take over from Sergei,
->   - Add Acked-by,
->   - Remove unneeded gpiod check, as gpiod_set_value() handles NULL fine,
->   - Handle fwnode_get_named_gpiod() errors correctly:
->       - -ENOENT is ignored (the GPIO is optional), and turned into NULL,
-> 	which allowed to remove all later !IS_ERR() checks,
->       - Other errors (incl. -EPROBE_DEFER) are propagated [1],
->   - Extract DTS patches from series "[PATCH 0/4] ravb: Add PHY reset
->     support" (https://www.spinics.net/lists/netdev/msg457308.html), and
->     incorporate in this series, after moving reset-gpios from the
->     ethernet to the ethernet-phy node [2].
-> 
-> Thanks for your comments!
-> 
-> Geert Uytterhoeven (2):
->   arm64: dts: renesas: salvator-common: Add EthernetAVB PHY reset
->   arm64: dts: renesas: ulcb: Add EthernetAVB PHY reset
 
-I have marked the above patches as deferred pending acceptance of
-the other patches in this series. Please repost or otherwise ping
-me once that has happened.
 
+On 10/20/2017 03:55 AM, Ryder Lee wrote:
+> Hi
 > 
-> Sergei Shtylyov (2):
->   phylib: Add device reset GPIO support
->   macb: Kill PHY reset code
+> On Thu, 2017-10-19 at 18:29 +0200, Matthias Brugger wrote:
+>>
+>> On 10/02/2017 03:54 AM, Ryder Lee wrote:
+>>> This patch updates pio, usb and crypto nodes to make them be consistent
+>>> with the binding documents.
+>>>
+>>> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/mt7623.dtsi | 26 ++++++++++++++------------
+>>>  1 file changed, 14 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+>>> index 381843e..0640fb7 100644
+>>> --- a/arch/arm/boot/dts/mt7623.dtsi
+>>> +++ b/arch/arm/boot/dts/mt7623.dtsi
+>>> @@ -227,8 +227,7 @@
+>>>  	};
+>>>  
+>>>  	pio: pinctrl@10005000 {
+>>> -		compatible = "mediatek,mt7623-pinctrl",
+>>> -			     "mediatek,mt2701-pinctrl";
+>>> +		compatible = "mediatek,mt7623-pinctrl";
+>>
+>> Looks good.
+>>
+>>>  		reg = <0 0x1000b000 0 0x1000>;
+>>>  		mediatek,pctl-regmap = <&syscfg_pctl_a>;
+>>>  		pins-are-numbered;
+>>> @@ -680,7 +679,7 @@
+>>>  		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_LOW>;
+>>>  		clocks = <&hifsys CLK_HIFSYS_USB0PHY>,
+>>>  			 <&topckgen CLK_TOP_ETHIF_SEL>;
+>>> -		clock-names = "sys_ck", "free_ck";
+>>> +		clock-names = "sys_ck", "ref_ck";
+>>
+>> This is already merged. Please rebase.
 > 
->  Documentation/devicetree/bindings/net/phy.txt    |  2 ++
->  arch/arm64/boot/dts/renesas/salvator-common.dtsi |  1 +
->  arch/arm64/boot/dts/renesas/ulcb.dtsi            |  1 +
->  drivers/net/ethernet/cadence/macb.h              |  1 -
->  drivers/net/ethernet/cadence/macb_main.c         | 21 ---------------
->  drivers/net/phy/at803x.c                         | 18 +++----------
->  drivers/net/phy/mdio_bus.c                       |  4 +++
->  drivers/net/phy/mdio_device.c                    | 26 +++++++++++++++++--
->  drivers/net/phy/phy_device.c                     | 33 ++++++++++++++++++++++--
->  drivers/of/of_mdio.c                             | 23 +++++++++++++++++
->  include/linux/mdio.h                             |  3 +++
->  include/linux/phy.h                              |  5 ++++
->  12 files changed, 97 insertions(+), 41 deletions(-)
+> I didn't see any changes in mt7623.dtsi.
 > 
-> -- 
-> 2.7.4
+
+You are right, sorry I didn't noticed this.
+
+>>>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+>>>  		phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+>>>  		status = "disabled";
+>>> @@ -690,8 +689,6 @@
+>>>  		compatible = "mediatek,mt7623-u3phy",
+>>>  			     "mediatek,mt2701-u3phy";
+>>>  		reg = <0 0x1a1c4000 0 0x0700>;
+>>> -		clocks = <&clk26m>;
+>>> -		clock-names = "u3phya_ref";
+>>
+>> Same here.
+>>
+>>>  		#address-cells = <2>;
+>>>  		#size-cells = <2>;
+>>>  		ranges;
+>>> @@ -699,12 +696,16 @@
+>>>  
+>>>  		u2port0: usb-phy@1a1c4800 {
+>>>  			reg = <0 0x1a1c4800 0 0x0100>;
+>>> +			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
+>>> +			clock-names = "ref";
+>>
+>> Same here.
+>>
+>>>  			#phy-cells = <1>;
+>>>  			status = "okay";
+>>>  		};
+>>>  
+>>>  		u3port0: usb-phy@1a1c4900 {
+>>>  			reg = <0 0x1a1c4900 0 0x0700>;
+>>> +			clocks = <&clk26m>;
+>>> +			clock-names = "ref";
+>>
+>> Same here.
+>>
+>>>  			#phy-cells = <1>;
+>>>  			status = "okay";
+>>>  		};
+>>> @@ -719,7 +720,7 @@
+>>>  		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_LOW>;
+>>>  		clocks = <&hifsys CLK_HIFSYS_USB1PHY>,
+>>>  			 <&topckgen CLK_TOP_ETHIF_SEL>;
+>>> -		clock-names = "sys_ck", "free_ck";
+>>> +		clock-names = "sys_ck", "ref_ck";
+>>
+>> Same here.
+>>
+>>>  		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+>>>  		phys = <&u2port1 PHY_TYPE_USB2>, <&u3port1 PHY_TYPE_USB3>;
+>>>  		status = "disabled";
+>>> @@ -729,8 +730,6 @@
+>>>  		compatible = "mediatek,mt7623-u3phy",
+>>>  			     "mediatek,mt2701-u3phy";
+>>>  		reg = <0 0x1a244000 0 0x0700>;
+>>> -		clocks = <&clk26m>;
+>>> -		clock-names = "u3phya_ref";
+>>
+>> Same here.
+>>
+>>>  		#address-cells = <2>;
+>>>  		#size-cells = <2>;
+>>>  		ranges;
+>>> @@ -738,12 +737,16 @@
+>>>  
+>>>  		u2port1: usb-phy@1a244800 {
+>>>  			reg = <0 0x1a244800 0 0x0100>;
+>>> +			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
+>>> +			clock-names = "ref";
+>>
+>> Same here.
+>>
+>>>  			#phy-cells = <1>;
+>>>  			status = "okay";
+>>>  		};
+>>>  
+>>>  		u3port1: usb-phy@1a244900 {
+>>>  			reg = <0 0x1a244900 0 0x0700>;
+>>> +			clocks = <&clk26m>;
+>>> +			clock-names = "ref";
+>>
+>> Same here.
+>>
+>>>  			#phy-cells = <1>;
+>>>  			status = "okay";
+>>>  		};
+>>> @@ -784,16 +787,15 @@
+>>>  	};
+>>>  
+>>>  	crypto: crypto@1b240000 {
+>>> -		compatible = "mediatek,mt7623-crypto";
+>>> +		compatible = "mediatek,eip97-crypto";
+>>
+>> Crypto node is not present in upstream.
 > 
-> Gr{oetje,eeting}s,
+> Crypto driver is already merged. 
 > 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> 
+
+You are right, the node got added. I've overseen this as well :-\
+
+After sleeping over this patch, I would prefer that you split it in three, one
+for each device.
+Thanks,
+Matthias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
