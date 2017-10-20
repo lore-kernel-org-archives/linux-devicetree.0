@@ -1,132 +1,62 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/9] PCI: host: brcmstb: add DT docs for Brcmstb PCIe
- device
-Date: Fri, 20 Oct 2017 10:27:01 -0700
-Message-ID: <20171020172701.GA105780@google.com>
-References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com>
- <1507761269-7017-3-git-send-email-jim2101024@gmail.com>
- <20171017202418.ykve2o4zvuwxjdgj@rob-hp-laptop>
- <CANCKTBt_gUF8qAEuhS1336Uce+WdP_98ApZhv1sxZgJsWGoiGQ@mail.gmail.com>
- <CAL_JsqLoqB0GF201ofJrjdYH8B-Ca=hGBtE4=VcrBxS7M52mVQ@mail.gmail.com>
- <9fae640f-a9da-90bf-01d2-c62131611ef9@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] dt-bindings: PCI: rcar: Correct example to match reality
+Date: Fri, 20 Oct 2017 12:30:44 -0500
+Message-ID: <20171020173044.GJ6332@bhelgaas-glaptop.roam.corp.google.com>
+References: <1507729813-21501-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9fae640f-a9da-90bf-01d2-c62131611ef9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1507729813-21501-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Oct 19, 2017 at 02:58:55PM -0700, Florian Fainelli wrote:
-> On 10/19/2017 02:49 PM, Rob Herring wrote:
-> > On Tue, Oct 17, 2017 at 5:42 PM, Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> On Tue, Oct 17, 2017 at 4:24 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >>> This is not the regulator binding. Use the standard binding.
-> >>>
-> >> The reason we do it this way is because the PCIe controller does not
-> >> know or care what the names of the supplies are, or how many there
-> >> will be.  The list of regulators can be different for each board we
-> >> support, as these regulators turn on/off the downstream EP device.
-> >> All the PCIe controller does is turn on/off this list of regulators
-> >> when booting,resuming/suspending.
-> >>
-> >> An alternative would have the node specifying the standard properties
-> >>
-> >> xyz-supply = <&xyz_reg>;
-> >> abc-supply = <&abc_reg>;
-> >> pdq-supply = <&pdq_reg>;
-> >> ...
-> >>
-> >> and then have this driver search all of the properties in the PCIe
-> >> node for names matching /-supply$/, and then create a list of phandles
-> >> from that.  Is that what you would like?
-> > 
-> > Really, you should have child nodes of the PCIe devices and have the
-> > supplies in there.
+On Wed, Oct 11, 2017 at 03:50:13PM +0200, Geert Uytterhoeven wrote:
+> Correct the USB subnodes in the example, cfr. commit f7d569c1e6a6fa73
+> ("ARM: dts: r8a779x: Fix PCI bus dtc warnings"):
+>   1. Drop the bogus 'device_type = "pci"' properties,
+>   2. Correct the unit addresses.
 > 
-> While that would be technically more correct this poses a number of issues:
+> Update other bits in the example to match real use:
+>   1. Rename the USB subnodes from "pci" to "usb",
+>   2. Update the "phys" property.
 > 
-> - there is precedence in that area, and you already Acked binding
-> documents proposing the same thing:
-> 	* Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt (commit
-> c26ebe98a103479dae9284fe0a86a95af4a5cd46)
-> 	* Documentation/devicetree/bindings/pci/rockchip-pcie.txt (commit
-> 828bdcfbdb98eeb97facb05fe6c96ba0aed65c4a and before)
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I can actually speak to the Rockchip binding a bit :)
+Applied with acks from Sergei and Rob to pci/host-rcar for v4.15, thanks!
 
-It actually has a mixture of true controller regulators (e.g., the 1.8V
-and 0.9V regulators power analog portions of the SoC's PCIe logic) and
-controls for the PCIe endpoints (e.g., 12V). Additionally, some of these
-have been misused to represent a little of both, since the regulator
-framework is actually quite flexible ;)
-
-That may or may not help, but they are at least partially correct.
-
-The Freescale one does look like it's plainly *not* about the root
-controller.
-
-Also, those rails *are* all fairly well defined by the various PCIe
-electromechanical specifications, so isn't it reasonable to expect that
-a controller can optionally control power for 1 of each of the standard
-power types? Or do we really want to represent the flexibility that
-there can be up to N of each type for N endpoints?
-
-As a side note: it's also been pretty tough to get the power sequencing
-requirements represented correctly for some PCIe endpoints. I've tried
-to make use of this previously, but the series took so long (>1 year and
-counting!) my team lost interest:
-
-[PATCH v16 2/7] power: add power sequence library
-https://www.spinics.net/lists/linux-usb/msg158452.html
-
-It doesn't really solve all of this problem, but it could be worth
-looking at.
-
-> (which may indicate those should also be corrected, at the possible
-> expense of creating incompatibilities)
-
-If a better way is developed, we can always augment the bindings. The
-current bindings aren't that hard to maintain as "deprecated backups."
-
-> - there is a chicken and egg problem, you can't detect the EP without
-> turning its regulator on, and if you can't create a pci_device, you
-> certainly won't be able to associate it with an device_node counterpart
-
-That's definitely a major problem driving some of the current bindings.
-We're just not set up to walk the child devices if we can't probe them.
-
-> - PCIe being dynamic by nature, can you have "wildcard" PCIE EP DT node
-> that would be guaranteed to match any physically attached PCIE EP which
-> is discovered by the PCI bus layer (and then back to issue #2)
-
-Technically, you *can* walk the DT (i.e., 'device_node's) without having
-pci_dev's for each yet. Something like of_pci_find_child_device() would
-do it. But that still seems kind of wonky, and it's currently neither
-precise enough nor flexible enough for this, I don't think.
-
-Brian
-
-> If we can solve #2 and #3, it would be reasonable to move the regulator
-> to a PCIE EP node. Ideally, we may want the generic PCI layer to be
-> responsible for managing regulators within pci_enable_device() and
-> pci_disable_device() for instance?
+> ---
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
-> > 
-> > The driver could do what you describe, but you've still got to define
-> > the names here.
-> > 
-> > Rob
-> > 
-> 
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> index 3d038638612b8ec2..9fe7e12a7bf37b7c 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> @@ -60,17 +60,15 @@ Example SoC configuration:
+>  				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>  				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+>  
+> -		pci@0,1 {
+> +		usb@1,0 {
+>  			reg = <0x800 0 0 0 0>;
+> -			device_type = "pci";
+> -			phys = <&usbphy 0 0>;
+> +			phys = <&usb0 0>;
+>  			phy-names = "usb";
+>  		};
+>  
+> -		pci@0,2 {
+> +		usb@2,0 {
+>  			reg = <0x1000 0 0 0 0>;
+> -			device_type = "pci";
+> -			phys = <&usbphy 0 0>;
+> +			phys = <&usb0 0>;
+>  			phy-names = "usb";
+>  		};
+>  	};
 > -- 
-> Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.7.4
+> 
