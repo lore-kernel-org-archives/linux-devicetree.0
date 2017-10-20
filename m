@@ -1,77 +1,52 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/3] drm/omap: dss: Add support for reporting memory bandwidth limitation
-Date: Fri, 20 Oct 2017 16:12:57 +0300
-Message-ID: <20171020131258.4092-3-peter.ujfalusi@ti.com>
-References: <20171020131258.4092-1-peter.ujfalusi@ti.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: [PATCH v3 0/5] Introduce the Atmel PTC subsystem
+Date: Fri, 20 Oct 2017 15:31:16 +0200
+Message-ID: <20171020133121.7992-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171020131258.4092-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: dmitry.torokhov@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-The get_memory_bandwidth_limit() in dispc_ops can be used to query the
-memory bandwidth limit of dispc by upper layers.
+Hi,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- drivers/gpu/drm/omapdrm/dss/dispc.c   | 13 +++++++++++++
- drivers/gpu/drm/omapdrm/dss/omapdss.h |  2 ++
- 2 files changed, 15 insertions(+)
+The Atmel Peripheral touch controller subsystem offers built-in hardware for
+capacitive touch measurement on sensors that function as buttons, sliders and
+wheels. It is available on SAMA5D2. Public documentation will be available
+soon.
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-index 0f4fdb221498..90f9ad89af0d 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-@@ -4325,6 +4325,17 @@ static void dispc_free_irq(void *dev_id)
- 	dispc.user_data = NULL;
- }
- 
-+static u32 dispc_get_memory_bandwidth_limit(void)
-+{
-+	u32 limit = 0;
-+
-+	/* Optional maximum memory bandwidth */
-+	of_property_read_u32(dispc.pdev->dev.of_node, "max-memory-bandwidth",
-+			     &limit);
-+
-+	return limit;
-+}
-+
- /*
-  * Workaround for errata i734 in DSS dispc
-  *  - LCD1 Gamma Correction Is Not Working When GFX Pipe Is Disabled
-@@ -4497,6 +4508,8 @@ static const struct dispc_ops dispc_ops = {
- 	.get_num_ovls = dispc_get_num_ovls,
- 	.get_num_mgrs = dispc_get_num_mgrs,
- 
-+	.get_memory_bandwidth_limit = dispc_get_memory_bandwidth_limit,
-+
- 	.mgr_enable = dispc_mgr_enable,
- 	.mgr_is_enabled = dispc_mgr_is_enabled,
- 	.mgr_get_vsync_irq = dispc_mgr_get_vsync_irq,
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-index 0bc6669d56f0..f30b3c09e1ba 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-@@ -692,6 +692,8 @@ struct dispc_ops {
- 	int (*get_num_ovls)(void);
- 	int (*get_num_mgrs)(void);
- 
-+	u32 (*get_memory_bandwidth_limit)(void);
-+
- 	void (*mgr_enable)(enum omap_channel channel, bool enable);
- 	bool (*mgr_is_enabled)(enum omap_channel channel);
- 	u32 (*mgr_get_vsync_irq)(enum omap_channel channel);
+A firmware and a configuration file describing the topology and the parameters
+of the sensor are loaded when probing the driver.
+
+Changes:
+- v3:
+  - fix MAINTAINERS entry
+- v2:
+  - reorder patches to get the bindings documentation in first
+  - remove the header from the uapi since it may change in the future. Declare
+  only the few structures needed in the driver.
+  - add this driver to the sama5_defconfig
+
+Ludovic Desroches (5):
+  dt-bindings: input: Add Atmel PTC subsystem bindings
+  input: misc: introduce Atmel PTC driver
+  MAINTAINERS: add Atmel PTC entries
+  ARM: dts: at91: sama5d2: add PTC subsystem device
+  ARM: configs: at91: add PTC driver to sama5_defconfig
+
+ .../devicetree/bindings/input/atmel,ptc.txt        |  67 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  16 +
+ arch/arm/configs/sama5_defconfig                   |   2 +
+ drivers/input/misc/Kconfig                         |  12 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/atmel_ptc.c                     | 723 +++++++++++++++++++++
+ 7 files changed, 828 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/atmel,ptc.txt
+ create mode 100644 drivers/input/misc/atmel_ptc.c
+
 -- 
-Peter
+2.12.2
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
