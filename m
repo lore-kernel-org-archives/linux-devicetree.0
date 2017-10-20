@@ -1,63 +1,32 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [RFC PATCH 2/5] gpio: gpiolib: Add OF support for maintaining
- GPIO values on reset
-Date: Fri, 20 Oct 2017 17:59:35 +1030
-Message-ID: <1508484575.24322.43.camel@aj.id.au>
-References: <20171020033727.21557-1-andrew@aj.id.au>
-         <20171020033727.21557-3-andrew@aj.id.au>
-         <CACRpkdbxOen3ohwmDc8ZNWkirn3mNHaGiZq1O-6VnOjhvFcw+w@mail.gmail.com>
+From: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>
+Subject: Re: [PATCH 5/9] PCI: host: brcmstb: add dma-ranges for inbound
+        traffic
+Date: Fri, 20 Oct 2017 09:37:30 +0200
+Message-ID: <20171020073730.GA12937@lst.de>
+References: <1507761269-7017-1-git-send-email-jim2101024@gmail.com> <1507761269-7017-6-git-send-email-jim2101024@gmail.com> <589c04cb-061b-a453-3188-79324a02388e@arm.com> <20171017081422.GA19475@lst.de> <CANCKTBsCB+x2XgrND9AhRtxPkCXfps1nA+YymkZjKHOUZfjSHQ@mail.gmail.com> <20171018065316.GA11183@lst.de> <CANCKTBv+yiCNsrnx3m+W9wPqC4NdKPZ2p=zLtSa8fX6v1rPcYQ@mail.gmail.com> <20171019091644.GA14983@lst.de> <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-BCytwq9eSiP4jHVTrvre"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbxOen3ohwmDc8ZNWkirn3mNHaGiZq1O-6VnOjhvFcw+w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANCKTBuaTD29My77QfOeUmtZfLAmmJXUYe6QvBW+uoH2Kb+tAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 19, 2017 at 06:47:45PM -0400, Jim Quinlan wrote:
+> The only way to prevent this is to reserve a single page at the end of
+> the first memory region of any pair that are adjacent in physical
+> memory.  A hack, yes, but I don't see an easier way out of this.  Many
+> if not most of our boards do not have adjacent regions and would not
+> need this.
 
---=-BCytwq9eSiP4jHVTrvre
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2017-10-20 at 09:18 +0200, Linus Walleij wrote:
-> On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au>
-> wrote:
->=C2=A0
-> > @@ -32,6 +32,7 @@ enum of_gpio_flags {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0OF_GPIO_SINGLE_ENDED =
-=3D 0x2,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0OF_GPIO_OPEN_DRAIN =3D =
-0x4,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0OF_GPIO_SLEEP_MAY_LOSE_=
-VALUE =3D 0x8,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0OF_GPIO_RESET_TOLERANT =3D 0=
-x16,
->=C2=A0
-> Now you're mixing up decimal and hex.
-
-Ugh. Whoops.
---=-BCytwq9eSiP4jHVTrvre
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJZ6aXfAAoJEJ0dnzgO5LT5CVcP+QEkSzpGSdgHTFWo1m8kUNxl
-+aDVPbfR1xNybZrDRtMoiMnAHHqepqMqskRV8khGX6UabnPvUZjHMf1WGoJM1Alu
-Q3xxyVUXu788++RsJPP7ByVMfS1Tjju6EYJOeKMbhouflcrArKYakquKkGyd7W/2
-4h8sjx9pVICn+Gy0PZKjU/VTfCmQBKymyvJOIs32YXyupCN5LSxSIaeVQ4UJD18a
-U0dXN8fa7JyiQdoI9VYqdU1Y8RBX1TjX8XN1iFqojy3J5MOpgN/DaMIFZKwlR3OC
-+7TToQXoRHkfZTCf7mJUPpxYxlef8oTqAEC6PrHnnmq4FzfJBamta9km0NWri+4C
-wKMLqRQO6btuNkCL3uOIEna1YsdYrA8A884nel8HWb8eP/7xrwT+Srh54bYCGaUo
-lFm3ppBT2jG2VOadjxzPJAIlZRfHgDNryr/BO+QLYftIPBOuP77l19iLOVSXHGDS
-VVt6CARmXCtWAI9guvgnugHA+2OlnVtoab4qZJISQsjKIRMd3WX1TmMgOlvKwD8y
-Y0lNIsa6UpgIUPfoaSEC47APrOsBTId74wd1mUQaLnYpBDQjIuvn5vR/lyXSUPto
-5crMFyO0bZBGToIsUKVEx44s4RdbD7wSfz8lDx+XsXOPi1xpI2RiOnW/4vt+Hsw8
-hYqxksWxCTYiGYFn5G8l
-=xe2g
------END PGP SIGNATURE-----
-
---=-BCytwq9eSiP4jHVTrvre--
+dma mappings can be much larger than a single page.  For the block
+world take a look at __blk_segment_map_sg which does the merging
+of contiguous pages into a single SG segment.  You'd have to override
+BIOVEC_PHYS_MERGEABLE to prevent this from happening in your supported
+architectures for the block layer.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
