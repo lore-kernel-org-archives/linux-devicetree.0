@@ -1,137 +1,92 @@
-From: Julien Thierry <julien.thierry@arm.com>
-Subject: Re: [PATCH v7 1/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Fri, 20 Oct 2017 11:40:11 +0100
-Message-ID: <83927acd-5daf-04fd-3faf-0b5d2773c1fd@arm.com>
-References: <20171019225050.25410-1-brendanhiggins@google.com>
- <20171019225050.25410-2-brendanhiggins@google.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: Re: [PATCH 08/10] PCI: dwc: artpec6: add support for endpoint mode
+Date: Fri, 20 Oct 2017 12:48:00 +0200
+Message-ID: <2c2968eb-39f6-7b1e-0e6b-97e00c2e8cbf@axis.com>
+References: <20171013160914.3220-1-niklas.cassel@axis.com>
+ <20171013160914.3220-9-niklas.cassel@axis.com>
+ <db0685b5-6078-1c6b-093d-f160f74e85bf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171019225050.25410-2-brendanhiggins@google.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <db0685b5-6078-1c6b-093d-f160f74e85bf@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, f.fainelli@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Xiaowei Song <songxiaowei@hisilicon.com>, Peter Robinson <pbrobinson@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Duc Dang <dhdang@apm.com>
+Cc: linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brendan,
-
-On 19/10/17 23:50, Brendan Higgins wrote:
-> Adds basic support for the Nuvoton NPCM750 BMC.
+On 10/18/2017 10:46 AM, Kishon Vijay Abraham I wrote:
+> Hi Niklas,
 > 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Tomer Maimon <tmaimon77@gmail.com>
-> Reviewed-by: Avi Fishman <avifishman70@gmail.com>
-> Tested-by: Tomer Maimon <tmaimon77@gmail.com>
-> Tested-by: Avi Fishman <avifishman70@gmail.com>
-> ---
->   arch/arm/Kconfig             |  2 +
->   arch/arm/Makefile            |  1 +
->   arch/arm/mach-npcm/Kconfig   | 48 ++++++++++++++++++++++++
->   arch/arm/mach-npcm/Makefile  |  3 ++
->   arch/arm/mach-npcm/headsmp.S | 17 +++++++++
->   arch/arm/mach-npcm/npcm7xx.c | 34 +++++++++++++++++
->   arch/arm/mach-npcm/platsmp.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
->   7 files changed, 193 insertions(+)
->   create mode 100644 arch/arm/mach-npcm/Kconfig
->   create mode 100644 arch/arm/mach-npcm/Makefile
->   create mode 100644 arch/arm/mach-npcm/headsmp.S
->   create mode 100644 arch/arm/mach-npcm/npcm7xx.c
->   create mode 100644 arch/arm/mach-npcm/platsmp.c
+> On Friday 13 October 2017 09:39 PM, Niklas Cassel wrote:
+>> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+>> ---
+>>  .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   3 +-
+>>  drivers/pci/dwc/Kconfig                            |  41 +++--
+>>  drivers/pci/dwc/Makefile                           |   4 +-
+>>  drivers/pci/dwc/pcie-artpec6.c                     | 202 ++++++++++++++++++++-
+>>  4 files changed, 233 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>> index 4e4aee4439ea..33eef7ae5a23 100644
+>> --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+>> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+>>  and thus inherits all the common properties defined in designware-pcie.txt.
+>>  
+>>  Required properties:
+>> -- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
+>> +- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+>> +	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
 > 
+> If "snps,dw-pcie" is used for both RC and EP mode, how do we differentiate
+> between the modes?
 
-[...]
+Hello Kishon,
 
-> diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
-> new file mode 100644
-> index 000000000000..450e83c3c531
-> --- /dev/null
-> +++ b/arch/arm/mach-npcm/platsmp.c
-> @@ -0,0 +1,88 @@
-> +/*
-> + * Copyright 2017 Google, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#define pr_fmt(fmt) "PLATSMP: " fmt
-> +
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/smp.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp.h>
-> +#include <asm/smp_plat.h>
-> +#include <asm/smp_scu.h>
-> +
-> +#define NPCM7XX_SCRPAD_REG 0x13c
-> +
-> +extern void npcm7xx_secondary_startup(void);
-> +
-> +static int npcm7xx_smp_boot_secondary(unsigned int cpu,
-> +				      struct task_struct *idle)
-> +{
-> +	struct device_node *gcr_np;
-> +	void __iomem *gcr_base;
-> +	int ret = 0;
-> +
-> +	gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
-> +	if (!gcr_np) {
-> +		pr_err("no gcr device node\n");
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +	gcr_base = of_iomap(gcr_np, 0);
-> +	if (!gcr_base) {
-> +		pr_err("could not iomap gcr at: 0x%p\n", gcr_base);
+Most DWC core based PCIe controllers have the following text in their
+DT binding:
+"This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+and thus inherits all the common properties defined in designware-pcie.txt."
 
-nit:
- From the condition we know gcr_base is NULL here so we don't get much 
-info from it. Did you intend to print the value of gcr_np instead?
+It seems like DRA7xx is one of few DWC core based bindings that does
+not include this text.
 
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	/* give boot ROM kernel start address. */
-> +	iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
-> +		  NPCM7XX_SCRPAD_REG);
-> +	/* make sure npcm7xx_secondary_startup is seen by all observers. */
-> +	smp_wmb();
-> +	dsb_sev();
-> +	/* make sure write buffer is drained */
-> +	mb();
-> +
-> +	iounmap(gcr_base);
-> +out:
-> +	return ret;
-> +}
-> +
-> +static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +	struct device_node *scu_np;
-> +	void __iomem *scu_base;
-> +
-> +	scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
-> +	if (!scu_np) {
-> +		pr_err("no scu device node\n");
-> +		return;
-> +	}
-> +	scu_base = of_iomap(scu_np, 0);
-> +	if (!scu_base) {
-> +		pr_err("could not iomap scu at: 0x%p\n", scu_base);
+However, I can see that you've added "EP mode:" and "RC mode:" headings
+to designware-pcie.txt.
 
-Same comment about scu_base.
+But still the top of the file says:
+Required properties:
+- compatible: should contain "snps,dw-pcie" to identify the core.
 
-Cheers,
 
--- 
-Julien Thierry
+
+However, I don't think there's necessarily any contradiction here,
+since axis,artpec6-pcie.txt says:
+
+compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+compatible: "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
+
+And according to:
+https://elinux.org/Device_Tree_Usage#Understanding_the_compatible_Property
+
+The first string in the list specifies the exact device.
+The following strings represent other devices that the device is compatible
+with.
+
+Their example is:
+
+The compatible property for the MPC8349 serial device should therefore be:
+compatible = "fsl,mpc8349-uart", "ns16550".
+In this case, fsl,mpc8349-uart specifies the exact device, and ns16550 states
+that it is register-level compatible with a National Semiconductor 16550 UART.
+
+The exact device is "axis,artpec6-pcie-ep", but it is register compatible with
+"snps,dw-pcie".
+
+But perhaps Rob Herring could correct me if I'm wrong.
+
+
+Regards,
+Niklas
