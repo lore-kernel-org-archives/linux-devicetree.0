@@ -1,14 +1,14 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [Patch v6 7/7] MAINTAINERS: Add SLIMbus maintainer
-Date: Thu, 19 Oct 2017 22:00:40 -0700
-Message-ID: <CAOCOHw7ufGO40W7-_q9kTc4wO63jZAK3Xh-Hs9JpcgaCEQ79yA@mail.gmail.com>
+Subject: Re: [Patch v6 6/7] regmap: add SLIMBUS support
+Date: Thu, 19 Oct 2017 22:00:35 -0700
+Message-ID: <CAOCOHw5JsXQsPCS31RBTwRHvLg5a2n=3uq=+RFEv-vBNPdjcaQ@mail.gmail.com>
 References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-8-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-7-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171006155136.4682-8-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20171006155136.4682-7-srinivas.kandagatla@linaro.org>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -24,44 +24,40 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri 06 Oct 08:51 PDT 2017, srinivas.kandagatla@linaro.org wrote:
 
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> Add myself as maintainer for slimbus.
->
+> diff --git a/drivers/base/regmap/regmap-slimbus.c b/drivers/base/regmap/regmap-slimbus.c
+[..]
+> +static int regmap_slimbus_byte_reg_read(void *context, unsigned int reg,
+> + unsigned int *val)
+> +{
+> + struct slim_device *slim = context;
+> + struct slim_val_inf msg = {0,};
+> +
+> + msg.start_offset = reg;
+> + msg.num_bytes = 1;
+> + msg.rbuf = (void *)val;
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Turn rbuf into a void * and you don't need this cast (think I commented
+on this on a previous patch as well).
+
+> +
+> + return slim_request_val_element(slim, &msg);
+> +}
+> +
+> +static int regmap_slimbus_byte_reg_write(void *context, unsigned int reg,
+> + unsigned int val)
+> +{
+> + struct slim_device *slim = context;
+> + struct slim_val_inf msg = {0,};
+> +
+> + msg.start_offset = reg;
+> + msg.num_bytes = 1;
+> + msg.wbuf = (void *)&val;
+
+Dito
+
+> +
+> + return slim_change_val_element(slim, &msg);
+> +}
 
 Regards,
 Bjorn
-
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2281af4..014f74b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12320,6 +12320,14 @@ T: git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
->  F: include/linux/srcu.h
->  F: kernel/rcu/srcu.c
->
-> +SERIAL LOW-POWER INTER-CHIP MEDIA BUS (SLIMbus)
-> +M: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +L: alsa-devel@alsa-project.org (moderated for non-subscribers)
-> +S: Maintained
-> +F: drivers/slimbus/
-> +F: Documentation/devicetree/bindings/slimbus/
-> +F: include/linux/slimbus.h
-> +
->  SMACK SECURITY MODULE
->  M: Casey Schaufler <casey@schaufler-ca.com>
->  L: linux-security-module@vger.kernel.org
-> --
-> 2.9.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
