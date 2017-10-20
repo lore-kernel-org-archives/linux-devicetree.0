@@ -1,127 +1,44 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 1/2] ARM: dts: uniphier: add STDMAC clock to EHCI nodes
-Date: Fri, 20 Oct 2017 14:16:20 +0900
-Message-ID: <1508476581-16483-1-git-send-email-yamada.masahiro@socionext.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 1/5] gpio: gpiolib: Add core support for maintaining
+ GPIO values on reset
+Date: Fri, 20 Oct 2017 09:17:15 +0200
+Message-ID: <CACRpkda-7-uM5x4kbNXkx3F7F4VTZtTvXfys5VPFb1YiVDo1+g@mail.gmail.com>
+References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20171020033727.21557-2-andrew@aj.id.au>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Without the STDMAC clock enabled, the USB 2.0 hosts do not work.
-This clock must be explicitly listed in the "clocks" property because
-it is independent from the other clocks.
+On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+> GPIO state reset tolerance is implemented in gpiolib through the
+> addition of a new pinconf parameter. With that, some renaming of helpers
+> is done to clarify the scope of the already existing
+> gpiochip_line_is_persistent(), as it's now ambiguous as to whether that
+> means on suspend, reset or both.
 
- arch/arm/boot/dts/uniphier-ld4.dtsi  | 9 ++++++---
- arch/arm/boot/dts/uniphier-pro4.dtsi | 6 ++++--
- arch/arm/boot/dts/uniphier-sld8.dtsi | 9 ++++++---
- 3 files changed, 16 insertions(+), 8 deletions(-)
+Isn't it most reasonable to say persistance covers both cases, reset
+and/or sleep? This seems a bit like overdefined.
 
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index 18f7e73..ecab5f3 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -258,7 +258,8 @@
- 			interrupts = <0 80 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb0>;
--			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 8>,
-+				 <&mio_clk 12>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
- 				 <&mio_rst 12>;
- 		};
-@@ -270,7 +271,8 @@
- 			interrupts = <0 81 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb1>;
--			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 9>,
-+				 <&mio_clk 13>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
- 				 <&mio_rst 13>;
- 		};
-@@ -282,7 +284,8 @@
- 			interrupts = <0 82 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2>;
--			clocks = <&mio_clk 7>, <&mio_clk 10>, <&mio_clk 14>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 10>,
-+				 <&mio_clk 14>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 10>,
- 				 <&mio_rst 14>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index 6bbca27..688e356 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -308,7 +308,8 @@
- 			interrupts = <0 80 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2>;
--			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 8>,
-+				 <&mio_clk 12>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
- 				 <&mio_rst 12>;
- 		};
-@@ -320,7 +321,8 @@
- 			interrupts = <0 81 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb3>;
--			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 9>,
-+				 <&mio_clk 13>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
- 				 <&mio_rst 13>;
- 		};
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index 39cc0e0..782ca99 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -262,7 +262,8 @@
- 			interrupts = <0 80 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb0>;
--			clocks = <&mio_clk 7>, <&mio_clk 8>, <&mio_clk 12>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 8>,
-+				 <&mio_clk 12>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
- 				 <&mio_rst 12>;
- 		};
-@@ -274,7 +275,8 @@
- 			interrupts = <0 81 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb1>;
--			clocks = <&mio_clk 7>, <&mio_clk 9>, <&mio_clk 13>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 9>,
-+				 <&mio_clk 13>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
- 				 <&mio_rst 13>;
- 		};
-@@ -286,7 +288,8 @@
- 			interrupts = <0 82 4>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2>;
--			clocks = <&mio_clk 7>, <&mio_clk 10>, <&mio_clk 14>;
-+			clocks = <&sys_clk 8>, <&mio_clk 7>, <&mio_clk 10>,
-+				 <&mio_clk 14>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 10>,
- 				 <&mio_rst 14>;
- 		};
--- 
-2.7.4
+So can we say that is this flag is set, the hardware and driver should
+do its best to preserve the value across any system disruptions.
+
+We can change the wording of course, patches welcome for that.
+
+But do we really need to distinguish the cases of disruption and
+whether we cover up for them or not?
+
+I would say we can deal with that the day we have a system with
+two register bits (or similar) where you can select to preserve across
+sleep, reset, one or the other, AND there is also a usecase such that
+a user wants to preserve the value across reset but not suspend or
+vice versa.
+
+I suspect that will not happen.
+
+Yours,
+Linus Walleij
