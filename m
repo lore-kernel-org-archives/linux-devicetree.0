@@ -1,112 +1,102 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [RFC PATCH 3/5] gpio: gpiolib: Add chardev support for
- maintaining GPIO values on reset
-Date: Fri, 20 Oct 2017 19:32:53 +1030
-Message-ID: <1508490173.24322.53.camel@aj.id.au>
-References: <20171020033727.21557-1-andrew@aj.id.au>
-         <20171020033727.21557-4-andrew@aj.id.au>
-         <CACRpkdY4F-ocFxomLEsVyGA0odGooWysQq5MHi9qwUt6E_VDzA@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] Teach phylib hard-resetting devices
+Date: Fri, 20 Oct 2017 11:05:13 +0200
+Message-ID: <20171020090512.j6fkn2ohbxsuboxm@verge.net.au>
+References: <1508487261-18524-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-K4mhhnvm7upcPcUWi8ee"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY4F-ocFxomLEsVyGA0odGooWysQq5MHi9qwUt6E_VDzA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Michael Welling <mwelling@emacinc.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1508487261-18524-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Oct 20, 2017 at 10:14:17AM +0200, Geert Uytterhoeven wrote:
+> 	Hi David, Andrew, Florian, Simon, Magnus,
+> 
+> This patch series adds optional PHY reset support to phylib.
+> 
+> The first two patches are destined for David's net-next tree. They add
+> core PHY reset code, and update a driver that currently uses its own
+> reset code.  Note that these patches depend on "[PATCH v2] of_mdio: Fix
+> broken PHY IRQ in case of probe deferral"
+> (https://www.spinics.net/lists/linux-renesas-soc/msg19442.html), as v3
+> needs to propagate errors from of_mdiobus_register_phy() and
+> of_mdiobus_register_device() [1].
+> 
+> The last two patches are new (sort of, see [2]), and destined for
+> Simon's renesas tree.  They add properties to describe the EthernetAVB
+> PHY reset topology to the common Salvator-X/XS and ULCB DTS files, which
+> solves two issues:
+>   1. On Salvator-XS, the enable pin of the regulator providing PHY power
+>      is connected to PRESETn, and PSCI powers down the SoC during system
+>      suspend.  Hence a PHY reset is needed to restore network functionality
+>      after resume.
+>   2. Linux should not rely on the boot loader having reset the PHY, but
+>      should reset the PHY during driver probe.
+> 
+> Changes compared to v2, as sent by Sergei Shtylyov:
+>   - Fix fwnode_get_named_gpiod() call due to added parameters (which
+>     allowed to eliminate the gpiod_direction_output() call),
+>   - Rebased, refreshed, reworded,
+>   - Take over from Sergei,
+>   - Add Acked-by,
+>   - Remove unneeded gpiod check, as gpiod_set_value() handles NULL fine,
+>   - Handle fwnode_get_named_gpiod() errors correctly:
+>       - -ENOENT is ignored (the GPIO is optional), and turned into NULL,
+> 	which allowed to remove all later !IS_ERR() checks,
+>       - Other errors (incl. -EPROBE_DEFER) are propagated [1],
+>   - Extract DTS patches from series "[PATCH 0/4] ravb: Add PHY reset
+>     support" (https://www.spinics.net/lists/netdev/msg457308.html), and
+>     incorporate in this series, after moving reset-gpios from the
+>     ethernet to the ethernet-phy node [2].
+> 
+> Thanks for your comments!
+> 
+> Geert Uytterhoeven (2):
+>   arm64: dts: renesas: salvator-common: Add EthernetAVB PHY reset
+>   arm64: dts: renesas: ulcb: Add EthernetAVB PHY reset
 
---=-K4mhhnvm7upcPcUWi8ee
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I have marked the above patches as deferred pending acceptance of
+the other patches in this series. Please repost or otherwise ping
+me once that has happened.
 
-On Fri, 2017-10-20 at 09:27 +0200, Linus Walleij wrote:
-> I paged Bartosz and Michael on this, they are experts on the use cases fo=
-r
-> the character device and their opinions are likely more valuable than min=
-e.
->=20
-> > On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au> wrote=
-:
-> > Similar to devicetree support, add flags and mappings to expose reset
-> > tolerance configuration through the chardev interface.
-> >=20
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->=20
-> (...)
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0* Unconditionally configure reset tolerance, as =
-it's possible
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0* that the tolerance flag itself becomes toleran=
-t to resets.
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0* Thus it could remain set from a previous envir=
-onment, but
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0* the current environment may not expect it so.
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0*/
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0ret =3D gpiod_set_reset_tolerant(desc,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0!!(lflags & GPIOHANDLE_REQUEST_RE=
-SET_TOLERANT));
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (ret < 0)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto o=
-ut_free_descs;
->=20
-> First, as noted in the first patch, IMO we should just go for persistance=
-,
-> i.e. you want to flag to the system to keep the line persistent in any ca=
-se,
-> no matter if the system goes to sleep or resets.
->=20
-> So the usecase is going to be a control system or similar, a makerspace
-> project, an industrial product of some kind, driving GPIO from userspace.
->=20
-> I don't see it as helpful to give userspace control over whether the line
-> is persistent or not. It is more reasonable to assume persistance for
-> userspace use cases, don't you think? Whether the system goes to sleep
-> or the gpiochip resets should not make a door suddenly close or the
-> lights in the christmas tree go out, right? I think if the gpiochip suppo=
-rts
-> persistance of any kind, we should try to use it and not have userspace
-> provide flags for that.
-
-Right. I guess the counter argument to your examples is if the gpio is
-controlling any active process that we don't want to continue if we've
-lost the capacity to monitor some other inputs (some kind of dead-man's=20
-switch). But maybe the argument is that should be implemented in the
-kernel anyway?
-
-Andrew
---=-K4mhhnvm7upcPcUWi8ee
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJZ6bu9AAoJEJ0dnzgO5LT5WwcP/3taBkLhJi7NTeYM4U3/kvuZ
-pAnUi43H5rLbM7Ynx0eXZ0OHlPHRJBZDpYZmCfqdqSX+8hRELJNIlkj0u7+uXfAd
-Dnn9x4LTM/qS56/AedpDePgfkYGffKvG5cWF+0ZSmiuRqlExlyQKPaFXH05B1zq1
-ChtLY8WSBJayx46ZwzX3sqCltvjiR878Mo7H5LnpScrzvOwJ3MGOKmRODF2HZ9LR
-tnDsSiMPXsbXNGFSMerPhikmdY4vFSjx+eD431PNUfLfeaJbYb6Q2EYvWDel3b0u
-Bx8BoVrKXvIcq3kFOK6DrR528GLexI2yhoPRAb2dfu+5jQXQDsm68Q3K7HKhG8ly
-H7aqrkEtDdssgtHo+yzEPdJgt8dXkPdr03QyOwQDo7h/cPZvcJ2wpnauYirIhSp/
-1Oc6sEYWTc3QXxL6vo5g0cyTBbiiRE454wgvlmg3WXpejBxQm+ITQSCA1Z4h33ZE
-WMhYrtnN9aszORegK4nCrasVy5Wrpw1NdEGgWz1bzmkn9LMgmjkM3kdqamHikVL1
-Lgcv3Ttk/s9Y43d2T5yVB+lRz491h7wJKULFMc+7oKrB3OkbTvDkyXEWEbIC2eKQ
-l6imHChFkNy4KwK/kXXJ0xQkFXDuEDFMdPKk0ktMTkrmOvGJyaIbQ2UUQqUx3xxn
-kNO/AZaSuhyVZq8g2BmZ
-=WhCU
------END PGP SIGNATURE-----
-
---=-K4mhhnvm7upcPcUWi8ee--
-
+> 
+> Sergei Shtylyov (2):
+>   phylib: Add device reset GPIO support
+>   macb: Kill PHY reset code
+> 
+>  Documentation/devicetree/bindings/net/phy.txt    |  2 ++
+>  arch/arm64/boot/dts/renesas/salvator-common.dtsi |  1 +
+>  arch/arm64/boot/dts/renesas/ulcb.dtsi            |  1 +
+>  drivers/net/ethernet/cadence/macb.h              |  1 -
+>  drivers/net/ethernet/cadence/macb_main.c         | 21 ---------------
+>  drivers/net/phy/at803x.c                         | 18 +++----------
+>  drivers/net/phy/mdio_bus.c                       |  4 +++
+>  drivers/net/phy/mdio_device.c                    | 26 +++++++++++++++++--
+>  drivers/net/phy/phy_device.c                     | 33 ++++++++++++++++++++++--
+>  drivers/of/of_mdio.c                             | 23 +++++++++++++++++
+>  include/linux/mdio.h                             |  3 +++
+>  include/linux/phy.h                              |  5 ++++
+>  12 files changed, 97 insertions(+), 41 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
