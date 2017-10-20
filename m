@@ -1,108 +1,88 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 3/3] drm/omap: Filter displays mode based on bandwidth
- limit
-Date: Fri, 20 Oct 2017 15:34:03 +0200
-Message-ID: <20171020133403.wszkmpqb6rahcfx5@phenom.ffwll.local>
-References: <20171020131258.4092-1-peter.ujfalusi@ti.com>
- <20171020131258.4092-4-peter.ujfalusi@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
+ Oct 2017)
+Date: Fri, 20 Oct 2017 08:37:26 -0500
+Message-ID: <CAL_Jsq+kYCWFR5vSCuvT--N-hHTfFfEVrsv8VHw7PMiyONYs8A@mail.gmail.com>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+ <20171017114823.58476908@bbrezillon> <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
+ <20171018110958.mh76pngzluazmc7y@sirena.co.uk> <20171018175910.GP12015@bill-the-cat>
+ <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz> <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
+ <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com> <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig@mail.gmail.com>
+ <59E8F2EC.5090602@gmail.com> <fea62563-6629-6d79-06a9-3d17c97ad238@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20171020131258.4092-4-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fea62563-6629-6d79-06a9-3d17c97ad238-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjAsIDIwMTcgYXQgMDQ6MTI6NThQTSArMDMwMCwgUGV0ZXIgVWpmYWx1c2kg
-d3JvdGU6Cj4gSWYgd2UgaGF2ZSBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0IGNvbmZpZ3VyZWQsIHJl
-amVjdCB0aGUgbW9kZXMgd2hpY2ggd291bGQKPiByZXF1aXJlIG1vcmUgYmFuZHdpZHRoIHRoYW4g
-dGhlIGxpbWl0IGlmIGl0IGlzIHVzZWQgd2l0aCBvbmUgZnVsbAo+IHJlc29sdXRpb24gcGxhbmUg
-KG1vc3QgY29tbW9uIHVzZSBjYXNlKS4KPiAKPiBUaGlzIGZpbHRlcmluZyBpcyBub3QgcHJvdmlk
-aW5nIGZ1bGwgcHJvdGVjdGlvbiBhcyBpdCBpcyBwb3NzaWJsZSB0aGF0Cj4gYXBwbGljYXRpb24g
-d291bGQgcGljayBzbWFsbGVyIGNydGMgcmVzb2x1dGlvbiB3aXRoIGhpZ2ggcmVzb2x1dGlvbiBw
-bGFuZXMKPiBhbmQgZG93biBzY2FsaW5nLCBvciBjYW4gZW5hYmxlIG1vcmUgc21hbGxlciBwbGFu
-ZXMgd2hlcmUgdGhlIHN1bSBvZiB0aGVpcgo+IGJhbmR3aWR0aCBuZWVkIHdvdWxkIGJlIGhpZ2hl
-ciB0aGFuIHRoZSBsaW1pdC4KCk5vdGUgdGhhdCB1c2Vyc3BhY2UgY2FuIGFsc28ganVzdCBwaWNr
-IGEgbW9kZSBpdCB3YW50cywgc28geW91IG5lZWQgdG8KaGF2ZSBhIHByb3BlciBidyBjaGVjayBp
-biB5b3VyIGF0b21pY19jaGVjayBsb2dpYyBhbnl3YXkuIFRoZXJlJ3Mgc29tZQpyZWNlbnQgd29y
-ayB0byBzcHJpbmtsZSAtPm1vZGVfdmFsaWQgY2hlY2tzIG92ZXIgb2JqZWN0cyB0byBoZWxwIGEg
-Yml0CndpdGggZmlsbGluZyB0aGF0IGdhcCwgeW91IG1pZ2h0IHdhbnQgdG8gbG9vayBpbnRvIGEg
-Y3J0Yy0+bW9kZV92YWxpZApjYWxsYmFjayBmb3IgdGhpcyBsb2dpYyBhdCBsZWFzdC4KLURhbmll
-bAo+IAo+IFRoaXMgcGF0Y2ggb25seSBhbGxvd3MgdXMgdG8gZmlsdGVyIG91dCBtb2RlcyB3aGlj
-aCB3b3VsZCBuZWVkIG1vcmUKPiBiYW5kd2lkdGggaWYgdGhleSB3ZXJlIHVzZWQgd2l0aCBvbmUg
-ZnVsbCBzY3JlZW4gcGxhbmUuCj4gCj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBl
-dGVyLnVqZmFsdXNpQHRpLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21h
-cF9jb25uZWN0b3IuYyB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dw
-dS9kcm0vb21hcGRybS9vbWFwX2Rydi5jICAgICAgIHwgIDUgKysrKysKPiAgZHJpdmVycy9ncHUv
-ZHJtL29tYXBkcm0vb21hcF9kcnYuaCAgICAgICB8ICAzICsrKwo+ICAzIGZpbGVzIGNoYW5nZWQs
-IDMyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL29tYXBk
-cm0vb21hcF9jb25uZWN0b3IuYyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfY29ubmVj
-dG9yLmMKPiBpbmRleCBhYTViYTlhZTIxOTEuLmM2OTNkMjI5NjBjOCAxMDA2NDQKPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Nvbm5lY3Rvci5jCj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL29tYXBkcm0vb21hcF9jb25uZWN0b3IuYwo+IEBAIC0xNTksNiArMTU5LDcgQEAgc3Rh
-dGljIGludCBvbWFwX2Nvbm5lY3Rvcl9tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY29ubmVjdG9yICpj
-b25uZWN0b3IsCj4gIAkJCQkgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4gIHsKPiAg
-CXN0cnVjdCBvbWFwX2Nvbm5lY3RvciAqb21hcF9jb25uZWN0b3IgPSB0b19vbWFwX2Nvbm5lY3Rv
-cihjb25uZWN0b3IpOwo+ICsJc3RydWN0IG9tYXBfZHJtX3ByaXZhdGUgKnByaXYgPSBjb25uZWN0
-b3ItPmRldi0+ZGV2X3ByaXZhdGU7Cj4gIAlzdHJ1Y3Qgb21hcF9kc3NfZGV2aWNlICpkc3NkZXYg
-PSBvbWFwX2Nvbm5lY3Rvci0+ZHNzZGV2Owo+ICAJc3RydWN0IG9tYXBfZHNzX2RyaXZlciAqZHNz
-ZHJ2ID0gZHNzZGV2LT5kcml2ZXI7Cj4gIAlzdHJ1Y3QgdmlkZW9tb2RlIHZtID0gezB9Owo+IEBA
-IC0yMDMsNiArMjA0LDI5IEBAIHN0YXRpYyBpbnQgb21hcF9jb25uZWN0b3JfbW9kZV92YWxpZChz
-dHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+ICAJCWRybV9tb2RlX2Rlc3Ryb3koZGV2
-LCBuZXdfbW9kZSk7Cj4gIAl9Cj4gIAo+ICsJLyogQ2hlY2sgZm9yIGJhbmR3aWR0aCBsaW1pdCAq
-Lwo+ICsJaWYgKCFyICYmIHByaXYtPm1heF9iYW5kd2lkdGgpIHsKPiArCQl1bnNpZ25lZCBpbnQg
-YmFuZHdpZHRoLCByZWFsX3JlZnJlc2g7Cj4gKwo+ICsJCS8qCj4gKwkJICogRXN0aW1hdGlvbiBm
-b3IgdGhlIGJhbmR3aWR0aCBuZWVkIG9mIGEgZ2l2ZW4gbW9kZSB3aXRoIG9uZQo+ICsJCSAqIGZ1
-bGwgc2NyZWVuIHBsYW5lOgo+ICsJCSAqIHJlc29sdXRpb24gKiAzMmJwcCAqIChyZWFsKSByZWZy
-ZXNoIHJhdGUKPiArCQkgKi8KPiArCQlyZWFsX3JlZnJlc2ggPSBkcm1fbW9kZV92cmVmcmVzaCht
-b2RlKTsKPiArCQlpZiAobW9kZS0+ZmxhZ3MgJiBEUk1fTU9ERV9GTEFHX0lOVEVSTEFDRSkKPiAr
-CQkJcmVhbF9yZWZyZXNoIC89IDI7Cj4gKwo+ICsJCWJhbmR3aWR0aCA9IHZtLmhhY3RpdmUgKiB2
-bS52YWN0aXZlICogNCAqIHJlYWxfcmVmcmVzaDsKPiArCj4gKwkJLyoKPiArCQkgKiBSZWplY3Qg
-bW9kZXMgd2hpY2ggd291bGQgbmVlZCBtb3JlIGJhbmR3aWR0aCBpZiB1c2VkIHdpdGggb25lCj4g
-KwkJICogZnVsbCByZXNvbHV0aW9uIHBsYW5lIChtb3N0IGNvbW1vbiB1c2UgY2FzZSkuCj4gKwkJ
-ICovCj4gKwkJaWYgKHByaXYtPm1heF9iYW5kd2lkdGggPCBiYW5kd2lkdGgpCj4gKwkJCXJldCA9
-IE1PREVfQkFEOwo+ICsJfQo+ICsKPiAgCURCRygiY29ubmVjdG9yOiBtb2RlICVzOiAiCj4gIAkJ
-CSIlZDpcIiVzXCIgJWQgJWQgJWQgJWQgJWQgJWQgJWQgJWQgJWQgJWQgMHgleCAweCV4IiwKPiAg
-CQkJKHJldCA9PSBNT0RFX09LKSA/ICJ2YWxpZCIgOiAiaW52YWxpZCIsCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vb21h
-cGRybS9vbWFwX2Rydi5jCj4gaW5kZXggNTI4Y2Y1YzI1YmVjLi41OGI0YTBlMTQ5ZTAgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vb21hcF9kcnYuYwo+ICsrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmMKPiBAQCAtNzAxLDYgKzcwMSwxMSBAQCBzdGF0
-aWMgaW50IHBkZXZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCXNwaW5f
-bG9ja19pbml0KCZwcml2LT5saXN0X2xvY2spOwo+ICAJSU5JVF9MSVNUX0hFQUQoJnByaXYtPm9i
-al9saXN0KTsKPiAgCj4gKwkvKiBHZXQgbWVtb3J5IGJhbmR3aWR0aCBsaW1pdHMgKi8KPiArCWlm
-IChwcml2LT5kaXNwY19vcHMtPmdldF9tZW1vcnlfYmFuZHdpZHRoX2xpbWl0KQo+ICsJCXByaXYt
-Pm1heF9iYW5kd2lkdGggPQo+ICsJCQkJcHJpdi0+ZGlzcGNfb3BzLT5nZXRfbWVtb3J5X2JhbmR3
-aWR0aF9saW1pdCgpOwo+ICsKPiAgCW9tYXBfZ2VtX2luaXQoZGRldik7Cj4gIAo+ICAJcmV0ID0g
-b21hcF9tb2Rlc2V0X2luaXQoZGRldik7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9v
-bWFwZHJtL29tYXBfZHJ2LmggYi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5oCj4g
-aW5kZXggY2NjYWFlNzg3YTdjLi5kNDk3MTUyNzIwODAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL29tYXBkcm0vb21hcF9kcnYuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJt
-L29tYXBfZHJ2LmgKPiBAQCAtODYsNiArODYsOSBAQCBzdHJ1Y3Qgb21hcF9kcm1fcHJpdmF0ZSB7
-Cj4gIAlzcGlubG9ja190IHdhaXRfbG9jazsJCS8qIHByb3RlY3RzIHRoZSB3YWl0X2xpc3QgKi8K
-PiAgCXN0cnVjdCBsaXN0X2hlYWQgd2FpdF9saXN0OwkvKiBsaXN0IG9mIG9tYXBfaXJxX3dhaXQg
-Ki8KPiAgCXVpbnQzMl90IGlycV9tYXNrOwkJLyogZW5hYmxlZCBpcnFzIGluIGFkZGl0aW9uIHRv
-IHdhaXRfbGlzdCAqLwo+ICsKPiArCS8qIG1lbW9yeSBiYW5kd2lkdGggbGltaXQgaWYgaXQgaXMg
-bmVlZGVkIG9uIHRoZSBwbGF0Zm9ybSAqLwo+ICsJdW5zaWduZWQgaW50IG1heF9iYW5kd2lkdGg7
-Cj4gIH07Cj4gIAo+ICAKPiAtLSAKPiBQZXRlcgo+IAo+IFRleGFzIEluc3RydW1lbnRzIEZpbmxh
-bmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgo+IFktdHVubnVzL0J1c2lu
-ZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCj4gCj4gX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKRGFu
-aWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Js
-b2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Fri, Oct 20, 2017 at 4:55 AM, Alexandre Torgue
+<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+> Hi Frank,
+>
+>
+> On 10/19/2017 08:46 PM, Frank Rowand wrote:
+>> On 10/19/17 07:59, Rob Herring wrote:
+>>> On Thu, Oct 19, 2017 at 9:00 AM, Alexandre Torgue
+>>> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>>
+>>>> On 10/19/2017 01:53 AM, Rob Herring wrote:
+>>>>> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>
+>>>>> wrote:
+>>>
+>>>
+>>> [...]
+
+>>>>          -->For example, I want to use the same dtsi files between Linux
+>>>> and
+>>>> U-boot. If in u-boot dts file I overload several "status" entry by
+>>>> "disabled", is it possible that compiler doesn't build it ? And what
+>>>> about
+>>>> not used phandle ?
+>>>
+>>>
+>>> You certainly could remove disabled nodes in dtc. I'm not sure how
+>>> hard it would be to plumb into dtc. I think phandle properties are
+>>> already only created if there's a reference to them. If that is
+>>
+>>
+>> Yes, phandles are only created if referenced, unless compiled
+>> for loading overlays into:
+>>
+>
+> Are there DTC "extra" options to use to not build those useless phandles ? I
+> just tried to revert the dtb to dts (using following command:
+>  ./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-flat.dts
+> arch/arm/boot/dts/stm32f469-disco.dtb)
+>
+> I see that phandles not used are in the dts output file. It is especially an
+> issue for pinmux phandles. All pinmux groups possibilities are written
+> inside (in my case) stm32f4-pinctrl.dtsi. This file is included in each
+> stm32 board dts files, and in those stm32 board dts files only required node
+> are enabled. But I see that all pinmux definitions are embedded inside dtb
+> binary (even ones not used in board dts file).
+
+Ah, you mean removing nodes without a phandle reference, not phandles
+themselves.
+
+There's no way dtc could do that because no reference doesn't equate
+to unused. For example, there's no phandle reference to the /memory
+node, but that is for sure needed. We would have to add some
+annotation to nodes that could be removed if unused. This could be
+some source annotation (/delete-if-unused/), some extension to status
+property, or some new property.
+
+Another option would be just mark all those nodes disabled and then
+postprocess the dtb to mark them okay if they have a phandle property
+and delete the node if not.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
