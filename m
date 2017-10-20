@@ -1,33 +1,52 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 2/5] gpio: gpiolib: Add OF support for maintaining
- GPIO values on reset
-Date: Fri, 20 Oct 2017 09:18:26 +0200
-Message-ID: <CACRpkdbxOen3ohwmDc8ZNWkirn3mNHaGiZq1O-6VnOjhvFcw+w@mail.gmail.com>
-References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-3-andrew@aj.id.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 3/5] gpio: gpiolib: Add chardev support for
+ maintaining GPIO values on reset
+Date: Fri, 20 Oct 2017 09:27:39 +0200
+Message-ID: <CACRpkdY4F-ocFxomLEsVyGA0odGooWysQq5MHi9qwUt6E_VDzA@mail.gmail.com>
+References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-4-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171020033727.21557-3-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20171020033727.21557-4-andrew@aj.id.au>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Michael Welling <mwelling@emacinc.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+I paged Bartosz and Michael on this, they are experts on the use cases for
+the character device and their opinions are likely more valuable than mine.
 
-> @@ -32,6 +32,7 @@ enum of_gpio_flags {
->         OF_GPIO_SINGLE_ENDED = 0x2,
->         OF_GPIO_OPEN_DRAIN = 0x4,
->         OF_GPIO_SLEEP_MAY_LOSE_VALUE = 0x8,
-> +       OF_GPIO_RESET_TOLERANT = 0x16,
+On Fri, Oct 20, 2017 at 5:37 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+> Similar to devicetree support, add flags and mappings to expose reset
+> tolerance configuration through the chardev interface.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+(...)
 
-Now you're mixing up decimal and hex.
+> +                * Unconditionally configure reset tolerance, as it's possible
+> +                * that the tolerance flag itself becomes tolerant to resets.
+> +                * Thus it could remain set from a previous environment, but
+> +                * the current environment may not expect it so.
+> +                */
+> +               ret = gpiod_set_reset_tolerant(desc,
+> +                               !!(lflags & GPIOHANDLE_REQUEST_RESET_TOLERANT));
+> +               if (ret < 0)
+> +                       goto out_free_descs;
 
-Anyways, I do not think this is necessary.
+First, as noted in the first patch, IMO we should just go for persistance,
+i.e. you want to flag to the system to keep the line persistent in any case,
+no matter if the system goes to sleep or resets.
+
+So the usecase is going to be a control system or similar, a makerspace
+project, an industrial product of some kind, driving GPIO from userspace.
+
+I don't see it as helpful to give userspace control over whether the line
+is persistent or not. It is more reasonable to assume persistance for
+userspace use cases, don't you think? Whether the system goes to sleep
+or the gpiochip resets should not make a door suddenly close or the
+lights in the christmas tree go out, right? I think if the gpiochip supports
+persistance of any kind, we should try to use it and not have userspace
+provide flags for that.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
