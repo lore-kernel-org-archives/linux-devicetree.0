@@ -1,176 +1,200 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague (26
- Oct 2017)
-Date: Fri, 20 Oct 2017 15:47:21 +0200
-Message-ID: <9ba8453b-84f9-5e37-b0f5-6a0d9ebb2ce3@st.com>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <20171017114823.58476908@bbrezillon>
- <CAGb2v67GU4uW7uPMrqFjTW0qBR6LPNeX4Md+tf9S=HRWT_GVqA@mail.gmail.com>
- <20171018110958.mh76pngzluazmc7y@sirena.co.uk>
- <20171018175910.GP12015@bill-the-cat>
- <FD387FCC-3F95-48DF-B412-3384EF96FCFC@fubar.geek.nz>
- <CAL_JsqJTE5p0zjm-66D2143dEx+xQ0uKCV-20kMt-kq=SOa-8Q@mail.gmail.com>
- <23a238d7-0b3d-8b46-b2fe-88b9d0841aa1@st.com>
- <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig@mail.gmail.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v2 3/4] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Fri, 20 Oct 2017 07:00:07 -0700
+Message-ID: <CAJ+vNU2yHKDf5tCVyj6iw83z0sDuV0ZsZ-=sLfa+fTFbtjVo0A@mail.gmail.com>
+References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
+ <1507783506-3884-4-git-send-email-tharvey@gateworks.com> <230ceb18-1d69-7fa8-acb0-c810094f8e50@xs4all.nl>
+ <CAJ+vNU0Z988G+wTfpiSXXOM9QsPj-eRvH=F1b9__8kJ+18xk4g@mail.gmail.com> <a5bd27c9-10e4-b9f5-f0ac-293528fa570e@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+p=-yTY4BNKXdSccPcBWsCUkP8HPQ-ergZXPB8msY5ig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a5bd27c9-10e4-b9f5-f0ac-293528fa570e@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 10/19/2017 04:59 PM, Rob Herring wrote:
-> On Thu, Oct 19, 2017 at 9:00 AM, Alexandre Torgue
-> <alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
->> Hi Rob,
->>
->>
->> On 10/19/2017 01:53 AM, Rob Herring wrote:
->>> On Wed, Oct 18, 2017 at 6:28 PM, Andrew Turner <andrew-/GQUgJ3qWXsIvnNNuaVxrw@public.gmane.org>
->>> wrote:
-> 
-> [...]
-> 
->>>>   From the FreeBSD perspective I’d like it if there was a common repo for
->>>> all devicetree consumers to share. We are trying to not have FreeBSD
->>>> specific properties as this has caused issues in the past where we had (and
->>>> still have) FreeBSD specific dts files. We are trying to remove these as
->>>> drivers are updated to handle the common bindings.
+On Thu, Oct 19, 2017 at 12:39 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+<snip>
+>>> What I am missing here is handling of the RGB quantization range.
+>>> An HDMI receiver will typically send full range RGB or limited range YUV
+>>> to the SoC. The HDMI source can however send full or limited range RGB
+>>> or limited range YUV (full range YUV is theoretically possible, but nobody
+>>> does that).
 >>>
->>>
->>> Are you aware of this repo[1]? I don't have a sense for how widely
->>> used it is. If not, it is intended to provide a common repository of
->>> binding docs and dts files. If so, what are your issues with using it?
->>> It's generated from the kernel tree with git-filter-branch and through
->>> the kernel tree is the only way to add things currently. But there's
->>> no requirement that you add a Linux driver to submit a binding or dts
->>> change. We could consider taking patches against the tree directly,
->>> and the maintainers (me) can fixup the paths and apply to the kernel
->>> tree.
->>>
->>> If there's bindings in the kernel tree you think are crap and Linux
->>> specific, I'd like to know that too. We should start flagging those.
->>>
->>>> I have also spoken with some NetBSD and OpenBSD developers. They are both
->>>> using devicetree to handle device enumeration. Having all 5 projects using a
->>>> common set of dts files and binding would simplify keeping them in sync.
->>>
->>>
->>> There's more than 5 likely: linux, 3x BSD, u-boot, barebox, zephyr,
->>> ARM trusted firmware?, UEFI?, ?
 >>
+>> isn't this quantization range a function of the colorspace and
+>> colorimetry dictated by the AVI infoframe? I'm taking these into
+>> consideration when setting up the conversion matrix in
+>> tda1997x_configure_conv().
+>
+> No, it's independent of that.
+
+and from another reply:
+> A small correction here: while ideally you should indeed check if the current
+> EDID supports selectable RGB Quantization Range, in practice you don't need
+> to. If the source explicitly sets the RGB quantization range, then just use
+> that.
+>
+> Note: some hardware can do this automatically (adv7604) by detecting what is
+> transmitted in the AVI InfoFrame. That's probably not the case here since you
+> have to provide a conversion matrix.
+
+I see the AVI infoframe has hdmi_quantization_range and
+hdmi_ycc_quantization_range along with vid_code.
+
+I'm not at all clear what to do with this information. Is there
+anything you see in the datasheet [1] that points to something I need
+to be doing?
+
+>
 >>
->> First, sorry to come late in this discussion (please be tolerant if you
->> already respond to following requests/interrogations in precedent mails :)).
->>  From STmicro point of view we have the same kind of requests/needs than
->> Andrew. We think about the possibility to use same DTS files for Linux,
->> U-boot, ATF and Zephir (others could come with other vendors). Currently our
->> main concerns about this are:
+>>> For a Full HD receiver the rules when receiving RGB video are as follows:
+>>>
+>>> If the EDID supports selectable RGB Quantization Range, then check if the
+>>> source explicitly sets the RGB quantization range in the AVI InfoFrame and
+>>> use that value.
+>>>
+>>> Otherwise fall back to the default rules:
+>>>
+>>> if VIC == 0, then expect full range RGB, otherwise expect limited range RGB.
 >>
->> 1-How to reduce dtb size:
->>          --> Reading some thread, you already start this task with Nicolas.
->> Does it concerns only XiP system ?
-> 
-> That's the main focus ATM. Nico has looked at shrinking code usage too
-> such as the tty layer and scheduler, but those have faced resistance.
-> We need actual products to prove the value (and that's a chicken and
-> egg problem).
-> 
->>          -->For example, I want to use the same dtsi files between Linux and
->> U-boot. If in u-boot dts file I overload several "status" entry by
->> "disabled", is it possible that compiler doesn't build it ? And what about
->> not used phandle ?
-> 
-> You certainly could remove disabled nodes in dtc. I'm not sure how
-> hard it would be to plumb into dtc. I think phandle properties are
-> already only created if there's a reference to them. If that is
-> created before you deleted nodes, then it would probably be hard to
-> find and remove all of those. It would be similar to solving the
-> device dependency problem. Or do you mean something like disable the
-> clock controller node if there are no enabled references to it? I
-> don't think we could do something like that generically and reliably.
-> 
-> We did recently stop creating both "phandle" and "linux,phandle"
-> properties by default in dtc, so that will save some size.
+>> Are you referring to the video_code field of the AVI infoframe or vic
+>> from a vendor infoframe?
+>
+> AVI InfoFrame.
+>
+> The HDMI VIC codes in the vendor InfoFrame are only valid for 4k formats. And
+> that's not supported by this device, right?
 
-I responded to Frank. On my side, disabled nodes and not used phandles 
-are presents in DTB binary. Maybe I didn't use correctly the DTC. Are 
-there specific things to do ?
+Right, the TDA1997x supports 1080p only.
 
-> 
->> 2- The place of DT files (sources/scripts). I see (and clone) your
->> "devicetree-rebasing.git" tree, it's a good start point. Currently (correct
->> me  if I'm wrong) the Kernel seems to "lead" the devicetree bindings and
->> devicetree dts(i) files.
-> 
-> Yes, and there's not really any changing that regardless of where
-> bindings and dts files live given Linux has the broadest h/w support.
-> 
->> By using this external repo, it would be maybe
->> easier to integrate changes for other components than Linux Kernel ?
-> 
-> Yes, barebox at least regularly imports it.
-
-Yes, I just saw that. So currently it means that we could push DT 
-changes by component (ATF/uBOOT) in this repo directly ?  and then get 
-it in our local ATF or Uboot project ?
-
-> 
->> We
->> could have (per vendor), same dtsi files which describes the hardware (SoC +
->> board) and a extra dts files (at least at beginning) per software components
->> to overload nodes (to disable some nodes not required (see (1)), to change
->> bindings which are different regarding component ...).
-> 
-> You mean dtsi files to disable nodes for linux, u-boot, etc. That may
-> make sense for mutually exclusive things like FreeBSD vs. Linux, but
-> for say u-boot, we really want u-boot and Linux (or whatever OS is
-> loaded) to use the same dtb. Having different dtbs is going to
-> increase your memory usage.
-> 
-
-We could have different needs. For example I have a board and I would 
-like to have he following bootchain: ATF then Uboot then Kernel. For 
-that, I would like to use the same DTs files for the 3 components (and 
-the memory footprint is not an issue). The idea is to share HW 
-description between several components. But some differences implies to 
-overload dts files per component:
-
--bindings could be slightly different (the case between Linux and uboot)
--frameworks bindings (basically phandles) depends on sw component: ATF 
-will not define clocks as kernel done.
--Using several DTB is not an issue. For ATF we have to use a DTB as 
-small as possible.
-
-It's for this reason I said that using the external repo could be a good 
-thing in order to add extra dts files per components for overloading.
-
-I understand that people wants also to have the same binary for several 
-components but it doesn't prevent to have the both solutions.
-
-
->> It will also allow to have all dt script / tools for all components at only
->> one place.
+>
 >>
->> Once again, sorry if I repeat things already discussed but I wanted to
->> expose what STMicro has in mind for DT. It will be a good topic to discuss
->> at Prague.
-> 
-> Yes, but I won't be there.
+>>>
+>>> It gets even more complicated with 4k video, but this is full HD only.
+>>>
+>>> In addition, you may also want to implement the V4L2_CID_DV_RX_RGB_RANGE control
+>>> to let userspace override the autodetection.
+>>
+>> I'll add that as an additional patch. Are there other V4L2_CID's that
+>> I should be adding here?
+>
+> V4L2_CID_DV_RX_POWER_PRESENT (if possible) and optionally V4L2_CID_DV_RX_IT_CONTENT_TYPE.
+>
 
-Ok. I hope we will arrive to converge at Prague with Grant and involved 
-peoples ;). As we (ST) have already several components using DT, we 
-could help to prototype.
+It looks like there is a register for 5V_HPD detect.
 
-Regards
-Alex
+I assume the content type to return is the value reported from the AVI frame?
 
-> 
-> Rob
-> 
+<snip>
+>>
+>> Regarding video standard detection where this chip provides me with
+>> vertical-period, horizontal-period, and horizontal-pulse-width I
+>> should be able to detect the standard simply based off of
+>> vertical-period (framerate) and horizontal-period (line width
+>> including blanking) right? I wasn't sure if my method of matching
+>> these within 14% tolerance made sense. I will be removing the hsmatch
+>> logic from that as it seems the horizontal-pulse-width should be
+>> irrelevant.
+>
+> For proper video detection you ideally need:
+>
+> h/v sync size
+> h/v back/front porch size
+> h/v polarity
+> pixelclock (usually an approximation)
+>
+> The v4l2_find_dv_timings_cap() helper can help you find the corresponding
+> timings, allowing for pixelclock variation.
+>
+> That function assumes that the sync/back/frontporch values are all known.
+> But not all devices can actually discover those values. What can your
+> hardware detect? Can it tell front and backporch apart? Can it determine
+> the sync size?
+>
+> I've been considering for some time to improve that helper function to be
+> able to handle hardware that isn't able separate sync/back/frontporch values.
+>
+
+The TDA1997x provides only the vertical/horizontal periods and the
+horizontal pulse
+width (section 8.3.4 of datasheet [1]).
+
+Can you point me to a good primer on the relationship between these
+values and the h/v back/front porch?
+
+Currently I iterate over the list of known formats calculating hper
+(bt->pixelclock / V4L2_DV_BT_FRAME_WIDTH(bt)) and vper (hper /
+V4L2_DV_BT_FRAME_HEIGHT(bt)) (framerate) and find the closest match
+within +/- 7% tolerance. The list of supported formats is sorted by
+framerate then width.
+
+        /* look for matching timings */
+        for (i = 0; i < ARRAY_SIZE(tda1997x_hdmi_modes); i++) {
+                const struct tda1997x_video_std *std = &tda1997x_hdmi_modes[i];
+                const struct v4l2_bt_timings *bt = &std->timings.bt;
+                int _hper, _vper, _hsper;
+                int vmin, vmax, hmin, hmax, hsmin, hsmax;
+                int vmatch, hsmatch;
+
+                width = V4L2_DV_BT_FRAME_WIDTH(bt);
+                lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
+
+                _hper = (int)bt->pixelclock / (int)width;
+                _vper = _hper / lines;
+                _hsper = (int)bt->pixelclock / (int)bt->hsync;
+                if (bt->interlaced)
+                        _vper *= 2;
+                /* vper +/- 0.7% */
+                vmin = 993 * (27000000 / _vper) / 1000;
+                vmax = 1007 * (27000000 / _vper) / 1000;
+                _hsper = (int)bt->pixelclock / (int)bt->hsync;
+                if (bt->interlaced)
+                        _vper *= 2;
+                /* vper +/- 0.7% */
+                vmin = 993 * (27000000 / _vper) / 1000;
+                vmax = 1007 * (27000000 / _vper) / 1000;
+                /* hper +/- 0.7% */
+                hmin = 993 * (27000000 / _hper) / 1000;
+                hmax = 1007 * (27000000 / _hper) / 1000;
+
+                /* vmatch matches the framerate */
+                vmatch = ((vper <= vmax) && (vper >= vmin)) ? 1 : 0;
+                /* hmatch matches the width */
+                hmatch = ((hper <= hmax) && (hper >= hmin)) ? 1 : 0;
+                if (vmatch && hsmatch) {
+                        v4l_info(state->client,
+                                 "resolution: %dx%d%c@%d (%d/%d/%d) %dMHz %d\n",
+                                 bt->width, bt->height, bt->interlaced?'i':'p',
+                                 _vper, vper, hper, hsper, pixrate, hsmatch);
+                        state->fps = (int)bt->pixelclock / (width * lines);
+                        state->std = std;
+                        return 0;
+                }
+        }
+
+Note that I've thrown out any comparisons based on horizontal pulse
+width from my first patch as that didn't appear to fit well. So far
+the above works well however I do fail to recognize the following
+modes (using a Marshall SG4K HDMI test generator):
+
+VESA640x480P_60HZ v4l2 defines this as 4L2_DV_BT_CEA_640X480P59_94
+which fails vmatch
+VESA1400x1050P_60HZ should match V4L2_DV_BT_DMT_1400X1050P60_RB but it
+calculates 59Hz and fails vmatch
+VESA1920x1200P_60HZ should match V4L2_DV_BT_DMT_1920X1200P60_RB but it
+calculates 59Hz and fails vmatch
+CEAVIC1440x480I_60HZ not in v4l2-dv-timings.h
+CEAVIC720x480P_60HZ not in v4l2-dv-timings.h (there's a 720x480p59)
+CEAVIC1440x576I_50HZ not in v4l2-dv-timings.h
+
+I should have mentioned in my cover letter that I only have a
+datasheet for this device and some fairly obfuscated vendor example
+code - I don't have proper register set documentation.
+
+Regards,
+
+Tim
+
+[1] http://dev.gateworks.com/datasheets/TDA19971-datasheet-rev3.pdf
