@@ -1,195 +1,110 @@
 MIME-Version: 1.0
-In-Reply-To: <20171031100141.GQ4240@vireshk-i7>
-References: <cover.1509284255.git.viresh.kumar@linaro.org>
-	<CAL_JsqKi+9yEXRq=XcCG=S8wXmLk9BFCnXWEE9mcf+495j+1sw@mail.gmail.com>
-	<20171031100141.GQ4240@vireshk-i7>
-Date: Tue, 31 Oct 2017 11:03:06 -0500
-Message-ID: <CAL_JsqKFtBC-qrLR-5six8u8i0pLW4yKKXAq13RReuvV6yU4rA@mail.gmail.com>
-Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
-From: Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <331B5EB4-9C97-4B2C-9B54-BF648F309A50@konsulko.com>
+References: <20170821151651.25096-1-robh@kernel.org>
+	<20170821151651.25096-6-robh@kernel.org>
+	<CANk1AXTLT9gB_f0GZLODpppjkxqDAp1x1RZmQ8O1i+UHckimxw@mail.gmail.com>
+	<CABGGisxU2OPZz-rrWYZYgCQ0iGM9w5vL9Ob9BTHALFN8JyxeJQ@mail.gmail.com>
+	<59E69786.2030406@gmail.com>
+	<CANk1AXStoiNtJfU0iNug1wKASurqH6OrNoaN=UtSh6xxSB088Q@mail.gmail.com>
+	<CAL_JsqKR3Jg+tgZr4xGPtcWnZW7ng741YjuyUFaS2SXKXbxGtg@mail.gmail.com>
+	<1508341985.25643.12.camel@hp800z>
+	<CAL_JsqKJ74y3qHVqbRph5C8=0Ggb+n=JT3TZybu2+mENyZ1VZA@mail.gmail.com>
+	<4393AFA4-620F-4C21-995D-A9806DAE1990@konsulko.com>
+	<20171019200615.GA10743@tyrael.ni.corp.natinst.com>
+	<59E91D4D.8000200@gmail.com>
+	<331B5EB4-9C97-4B2C-9B54-BF648F309A50@konsulko.com>
+Date: Fri, 20 Oct 2017 09:59:44 -0500
+Message-ID: <CAL_JsqL3nv2ukc6j-LEvdxrLPQ+Y=BVKnFBTT5bUser7r4jAVA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] of/fdt: only store the device node basename in full_name
+From: Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Clark <robdclark@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Nishanth Menon <nm@ti.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, David Laight <David.Laight@aculab.com>, linux-fpga@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Oct 31, 2017 at 5:01 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> Hi Rob,
+On Fri, Oct 20, 2017 at 3:06 AM, Pantelis Antoniou <pantelis.antoniou@konsu=
+lko.com> wrote:
+> Hi Frank,
 >
-> On 30-10-17, 17:07, Rob Herring wrote:
->> Would probing the display earlier solve this as that's also something
->> people care about (or work-around by initializing the display in the
->> bootloader).
->
-> Not always.
->
-> And probing the display earlier may result in breaking some other
-> devices. For example, the display driver may want to enable and then
-> disable its clock at some point of time in probe(). The enable will
-> get propagated to parent clocks of display clock as well and all will
-> have a refcount of 1. Now if display controller disables its clock,
-> the whole hierarchy of clocks may go down as no one else have taken a
-> reference of those clocks and other peripherals, used during booting
-> the kernel, that depend on the clk hierarchy may not work properly
-> after that until the time their driver comes up.
->
-> One more typical problem I saw during my testing on hikey was that
-> many debug messages were missing during kernel boot (though everything
-> was available with dmesg later on), that I never noticed earlier on.
->
-> After digging a bit I found that it is because of the way AMBA bus
-> works. It enables and disables the interface clock before calling
-> probe() (to read some registers) and the interface and functional
-> clocks were same for hikey UART. And that disabled the clock before
-> calling probe() which was enabled by the bootloader. And the message
-> started coming again only after sometime when tty device all setup
-> properly.
->
-> Over that the display driver can be compiled as a module (which we
-> will disallow with your suggestion). Plus all the resources for the
-> display driver may not be available early on and so the driver will be
-> probed later again. And by that time some of the resources may get
-> disabled/reconfigured.
->
->> I guess if the display depends on resources A, B, and C,
->> other drivers could still each only depend on one of those and probe
->> successfully before the display does.
->
-> That would be tricky as well. Same example about refcounting of
-> clocks. What if the parent clock of display controller's clock gets
-> disabled, because another child of that parent clock has done a clk
-> enable/disable? And with amba probing, there are more chances of that
-> naturally.
->
-> My basic idea is that some code should come in and set these
-> constraints before any of the users of these resources come up (i.e.
-> display, serial, mmc drivers, etc). That is the only sane way with
-> which we would be able to have some guarantees here.
->
->> However, the display driver
->> would still probe,
->
-> As I said, it may be too late.
->
->> so you could do something then to enable the
->> constraints.
->> That would have the advantage that the driver knows what
->> resources it needs even if probe is deferred and you don't need
->> special DT bindings nor platform code.
->
-> I am not sure if I fully understood some of your comments. Lets see if
-> I have :)
->
-> Are you saying that we set the same boot constraints (i.e. by calling
-> the same API as proposed in this patchset) from these generic drivers?
-> I agree that the driver would know all the details and would be in a
-> good position to judge all the resources it needs, but again, this may
-> be too late. And what if we have two drivers which want to come up
-> first and set these constraints? Like MMC and LCD sharing same
-> regulator or clk line ?
->
->> Getting certain drivers/devices to probe first may just require
->> ensuring they get inserted at the beginning of the driver and device
->> lists which would be a pretty trivial change I think. That's ignoring
->> differing initcall levels though.
->
-> Sure and that's what we have been doing so far. Hacking different
-> parts of kernel to force some kind of ordering :)
->
->> > Another case can be a debug serial port enabled from the bootloader.
+>> On Oct 20, 2017, at 00:46 , Frank Rowand <frowand.list@gmail.com> wrote:
 >>
->> Continuing the above thought, we could just match device nodes against
->> stdout-path as we create devices and then set a priority flag or
->> something that the driver core would handle.
+>> On 10/19/17 13:06, Moritz Fischer wrote:
 >>
->> Yes, it's triggered by a specific use case, but I'm not that convinced
->> that having things setup by the bootloader and needing a transparent
->> hand off is a general case. You've given 2 examples. I can't think of
->> many more. One is CAN bus which has realtime servicing requirements,
->> but I don't think this series solves that (OOT solutions I've seen
->> insert callbacks at random places during kernel init).
->
-> I am not sure what the problem is and I can't say if that can benefit
-> from this work. Someone also mentioned (privately) that handing off a
-> preboot DSP to kernel can also be a usecase for this framework. I am
-> not sure of the details though :)
->
->> The other case
->> is just things that have no driver at all, but resources need to
->> remain enabled. That should just be some platform code to enable those
->> things IMO.
->
-> Yeah, I am not really targeting those right now. They can have
-> always-ON kind of hints in DT and that should be all. I am
-> specifically targeting stuff where a driver takes over eventually.
->
->> > Of course we can have more complex cases where the same resource is
->> > getting used by two devices while the kernel boots and the order in
->> > which devices get probed wouldn't matter as the other device will surely
->> > break then.
->> >
->> > There are also cases where the resources may not be shared, but the
->> > kernel will disable them forcefully as no users may have appeared until
->> > a certain point in kernel boot. This makes sure that the resources stay
->> > enabled. A wide variety of constraints can be satisfied using the new
->> > framework.
+>> < snip >
 >>
->> This is only if the driver (or dependent driver) is a module though.
->> Is that something we really need to handle?
->
-> Maybe, I am not sure.
->
-> Why shouldn't we allow the LCD driver to be present as a module? I am
-> just asking :)
->
->> > Viresh Kumar (11):
->> >   of: platform: Add of_find_amba_device_by_node()
->> >   of: platform: Make of_platform_bus_create() global
->> >   drivers: Add boot constraints core
->> >   boot_constraint: Add support for supply constraints
->> >   boot_constraint: Add support for clk constraints
->> >   boot_constraint: Add support for PM constraints
->> >   boot_constraint: Add debugfs support
->> >   boot_constraint: Manage deferrable constraints
->> >   boot_constraint: Add earlycon helper
->> >   boot_constraint: Add support for Hisilicon platforms
->> >   boot_constraint: Add support for IMX platform
->> >
->> >  arch/arm/mach-imx/Kconfig                 |   1 +
->> >  arch/arm64/Kconfig.platforms              |   2 +
->> >  drivers/Kconfig                           |   2 +
->> >  drivers/Makefile                          |   1 +
->> >  drivers/base/dd.c                         |  32 +++-
->> >  drivers/boot_constraints/Kconfig          |   9 +
->> >  drivers/boot_constraints/Makefile         |   7 +
+>>> We also have plenty of code that is just not aware of overlays, and
+>>> assumes certain parts of the tree to stay static.
 >>
->> Maintainer for this?
->
-> Sure, that's me. I am just holding off from touching MAINTAINERS file
-> until this stuff is accepted (at least informally).
->
->> >  drivers/boot_constraints/clk.c            |  73 ++++++++
->> >  drivers/boot_constraints/core.c           | 271 ++++++++++++++++++++++++++++++
->> >  drivers/boot_constraints/core.h           |  48 ++++++
->> >  drivers/boot_constraints/deferrable_dev.c | 235 ++++++++++++++++++++++++++
->> >  drivers/boot_constraints/hikey.c          | 145 ++++++++++++++++
->> >  drivers/boot_constraints/imx.c            | 113 +++++++++++++
->> >  drivers/boot_constraints/pm.c             |  31 ++++
->> >  drivers/boot_constraints/qcom.c           | 123 ++++++++++++++
->> >  drivers/boot_constraints/serial.c         |  28 +++
+>> I would state that somewhat differently.  :-)  There is very little
+>> code that is aware of overlays, and most code assumes the device tree
+>> does not change after early boot.
 >>
->> earlycon really. earlycon doesn't have to be a serial device.
->
-> Ah, ok.
->
->> >  drivers/boot_constraints/supply.c         | 107 ++++++++++++
+>> This is one of the areas where the creation of overlays needs to be
+>> done with care.
 >>
->> Kind of a mixture of boards and subsystem handlers. Perhaps subsystem
->> handlers should go into the subsystems. Then you can get a lot more
->> opinions on this. :)
 >
-> You don't want this to get merged, do you ? :)
+> Correct. But this is not breaking the kernel.
 >
-> Thanks for your feedback Rob. Really appreciate it.
+> In general we have the following case where we load overlays (at least
+> well formed overlays that are not doing stupid things).
 >
-> --
-> viresh
+> 1. Activation of a new device. Usually this works since is something that=
+=E2=80=99s
+> normally done at boot.
+
+Depends where in the tree it is.
+
+> 2. Deactivation of a device. This might break because the removal paths
+> of platform device especially are not well tested (or never executed for =
+that
+> matter).
+
+It's more than just the removal path of a driver. What if you try to remove=
+ a node that's a dependency of others. Generally, hot unplug of GPIOs, cloc=
+ks, interrupt controllers, etc. don't work.
+
+Plus we already have a way to disable devices. Unbind the driver.
+
+> 3. Modification of properties in an already activated device. If the devi=
+ce driver
+> has not installed a device tree modification hook (as in almost 99% of th=
+e devices)
+> it will do absolutely nothing, since the device tree is parsed only at pr=
+obe time.
+> I can argue that for these cases we could have a catch-all hook that disp=
+lays a
+> message that nothing happened.
+
+We don't know if a driver has kept pointers to property values or not. That=
+'s why we don't ever delete properties. If we are modifying or removing a p=
+roperty, then we just add new ones. A rogue program repeatedly modifying a =
+property and allocating memory might be a cause for concern.
+
+> 4. Modification of some part of the tree that=E2=80=99s not part of a dev=
+ice driver, perhaps
+> the aliases or chosen node. This may potentially be harmful or harmless d=
+epending on
+> what has been modified. For instance modifying an already existing alias =
+might cause
+> internal inconsistency about device naming, while adding a new aliases sh=
+ould be harmless.
+> This is a matter of policy per board, whether to allow or not.
+>
+> Are there other cases that are potentially more harmful?
+>
+>>
+>>> I ran into that issue when I tried to add thermal zones via an overlay,
+>>> I've been investigating how to fix the thermal framework to work with
+>>> overlays since then and have some partially working code.
+>>> Currently the thermal framework parses the thermal-zones node at boot,
+>>> and assumes this stays static. This breaks with overlays.
+>>>
+>>> I agree we eventually need to fix the parts that break when we use
+>>> overlays.
+>>
+>
+> Regards
+>
+> =E2=80=94 Pantelis
+>
