@@ -1,243 +1,540 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RFC 02/12] mtd: nand: force drivers to explicitly send
- READ/PROG commands
-Date: Fri, 20 Oct 2017 13:18:34 +0200
-Message-ID: <20171020131834.704e2adc@bbrezillon>
-References: <20171018143629.29302-1-miquel.raynal@free-electrons.com>
- <20171018143629.29302-3-miquel.raynal@free-electrons.com>
- <af6a28eeafc9379c3f4e8bb03ff60fc7@agner.ch>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [patch v9 1/4] drivers: jtag: Add JTAG core driver
+Date: Fri, 20 Oct 2017 13:55:12 +0200
+Message-ID: <20171020115512.GA2073@kroah.com>
+References: <1505985932-27568-1-git-send-email-oleksandrs@mellanox.com>
+ <1505985932-27568-2-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <af6a28eeafc9379c3f4e8bb03ff60fc7@agner.ch>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, Maxim Levitsky <maximlevitsky@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Josh Wu <rainyfeeling@outlook.com>, Russell King <linux@armlinux.org.uk>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, devicetree@vger.ker
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1505985932-27568-2-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Oct 2017 11:29:18 +0200
-Stefan Agner <stefan@agner.ch> wrote:
+On Thu, Sep 21, 2017 at 12:25:29PM +0300, Oleksandr Shamray wrote:
+> +struct jtag {
+> +	struct device *dev;
+> +	struct cdev cdev;
 
-> Hi Miquel,
-> 
-> Thanks for the work on this, happy to see the new interface is moving
-> forward. Some comments below.
-> 
-> On 2017-10-18 16:36, Miquel Raynal wrote:
-> > From: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > 
-> > The core currently send the READ0 and SEQIN+PAGEPROG commands in
-> > nand_do_read/write_ops(). This is inconsistent with  
-> > ->read/write_oob[_raw]() hooks behavior which are expected to send  
-> > these commands.
-> > 
-> > There's already a flag (NAND_ECC_CUSTOM_PAGE_ACCESS) to inform the core
-> > that a specific controller wants to send the READ/SEQIN+PAGEPROG
-> > commands on its own, but it's an opt-in flag, and existing drivers are
-> > unlikely to be updated to pass it.
-> > 
-> > Moreover, some controllers cannot dissociate the READ/PAGEPROG commands
-> > from the associated data transfer and ECC engine activation, and
-> > developers have to hack things in their ->cmdfunc() implementation to
-> > handle such complex cases, or have to accept the perf penalty of sending
-> > twice the same command.
-> > To address this problem we are planning on adding a new interface which
-> > is passed all information about a NAND operation (including the amount
-> > of data to transfer) and replacing all calls to ->cmdfunc() to calls to
-> > this new ->exec_op() hook. But, in order to do that, we need to have all  
-> > ->cmdfunc() calls placed near their associated ->read/write_buf/byte()  
-> > calls.
-> > 
-> > Modify the core and relevant drivers to make NAND_ECC_CUSTOM_PAGE_ACCESS
-> > the default case, and remove this flag.
-> > 
-> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > [miquel.raynal@free-electrons.com: rebased and fixed some conflicts]
-> > Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
-> > ---
-> >  drivers/mtd/nand/atmel/nand-controller.c      |  7 ++-
-> >  drivers/mtd/nand/bf5xx_nand.c                 |  6 ++-
-> >  drivers/mtd/nand/brcmnand/brcmnand.c          | 13 +++--
-> >  drivers/mtd/nand/cafe_nand.c                  |  6 +--
-> >  drivers/mtd/nand/denali.c                     | 14 +++++-
-> >  drivers/mtd/nand/docg4.c                      | 12 +++--
-> >  drivers/mtd/nand/fsl_elbc_nand.c              |  6 +--
-> >  drivers/mtd/nand/fsl_ifc_nand.c               |  6 +--
-> >  drivers/mtd/nand/gpmi-nand/gpmi-nand.c        | 30 ++++++------
-> >  drivers/mtd/nand/hisi504_nand.c               |  6 +--
-> >  drivers/mtd/nand/lpc32xx_mlc.c                |  5 +-
-> >  drivers/mtd/nand/lpc32xx_slc.c                | 11 +++--
-> >  drivers/mtd/nand/mtk_nand.c                   | 10 ++--
-> >  drivers/mtd/nand/nand_base.c                  | 68 +++++++++------------------
-> >  drivers/mtd/nand/nand_micron.c                |  1 -
-> >  drivers/mtd/nand/sh_flctl.c                   |  6 +--
-> >  drivers/mtd/nand/sunxi_nand.c                 | 34 +++++++++-----
-> >  drivers/mtd/nand/tango_nand.c                 |  1 -
-> >  drivers/mtd/nand/vf610_nfc.c                  |  6 +--
-> >  drivers/staging/mt29f_spinand/mt29f_spinand.c |  7 ++-
-> >  include/linux/mtd/rawnand.h                   | 11 -----
-> >  21 files changed, 142 insertions(+), 124 deletions(-)
-> >   
-> 
-> <snip>
-> 
-> > diff --git a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> > b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> > index c8ceaecd8065..3f2b903158c1 100644
-> > --- a/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> > +++ b/drivers/mtd/nand/gpmi-nand/gpmi-nand.c
-> > @@ -1043,6 +1043,8 @@ static int gpmi_ecc_read_page(struct mtd_info
-> > *mtd, struct nand_chip *chip,
-> >  	unsigned int  max_bitflips = 0;
-> >  	int           ret;
-> >  
-> > +	nand_read_page_op(chip, page, 0, NULL, 0);
-> > +
-> >  	dev_dbg(this->dev, "page number is : %d\n", page);
-> >  	ret = read_page_prepare(this, buf, nfc_geo->payload_size,
-> >  					this->payload_virt, this->payload_phys,
-> > @@ -1220,12 +1222,13 @@ static int gpmi_ecc_read_subpage(struct
-> > mtd_info *mtd, struct nand_chip *chip,
-> >  	meta = geo->metadata_size;
-> >  	if (first) {
-> >  		col = meta + (size + ecc_parity_size) * first;
-> > -		chip->cmdfunc(mtd, NAND_CMD_RNDOUT, col, -1);  
-> 
-> Shouldn't we add nand_change_read_column_op here?
-> 
-> 
-> >  
-> >  		meta = 0;
-> >  		buf = buf + first * size;
-> >  	}
-> >  
-> > +	nand_read_page_op(chip, page, col, NULL, 0);
-> > +
-> >  	/* Save the old environment */
-> >  	r1_old = r1_new = readl(bch_regs + HW_BCH_FLASH0LAYOUT0);
-> >  	r2_old = r2_new = readl(bch_regs + HW_BCH_FLASH0LAYOUT1);
-> > @@ -1277,6 +1280,9 @@ static int gpmi_ecc_write_page(struct mtd_info
-> > *mtd, struct nand_chip *chip,
-> >  	int        ret;
-> >  
-> >  	dev_dbg(this->dev, "ecc write page.\n");
-> > +
-> > +	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
-> > +
-> >  	if (this->swap_block_mark) {
-> >  		/*
-> >  		 * If control arrives here, we're doing block mark swapping.
-> > @@ -1338,7 +1344,10 @@ static int gpmi_ecc_write_page(struct mtd_info
-> > *mtd, struct nand_chip *chip,
-> >  				payload_virt, payload_phys);
-> >  	}
-> >  
-> > -	return 0;
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return nand_prog_page_end_op(chip);
-> >  }
-> >  
-> >  /*
-> > @@ -1472,8 +1481,8 @@ static int gpmi_ecc_read_page_raw(struct mtd_info *mtd,
-> >  	uint8_t *oob = chip->oob_poi;
-> >  	int step;
-> >  
-> > -	chip->read_buf(mtd, tmp_buf,
-> > -		       mtd->writesize + mtd->oobsize);
-> > +	nand_read_page_op(chip, page, 0, tmp_buf,
-> > +			  mtd->writesize + mtd->oobsize);
-> >  
-> >  	/*
-> >  	 * If required, swap the bad block marker and the data stored in the
-> > @@ -1617,24 +1626,19 @@ static int gpmi_ecc_write_page_raw(struct mtd_info *mtd,
-> >  		tmp_buf[mtd->writesize] = swap;
-> >  	}
-> >  
-> > -	chip->write_buf(mtd, tmp_buf, mtd->writesize + mtd->oobsize);
-> > -
-> > -	return 0;
-> > +	return nand_prog_page_op(chip, page, 0, tmp_buf,
-> > +				 mtd->writesize + mtd->oobsize);
-> >  }
-> >  
-> >  static int gpmi_ecc_read_oob_raw(struct mtd_info *mtd, struct nand_chip *chip,
-> >  				 int page)
-> >  {
-> > -	nand_read_page_op(chip, page, 0, NULL, 0);
-> > -
-> >  	return gpmi_ecc_read_page_raw(mtd, chip, NULL, 1, page);
-> >  }
-> >  
-> >  static int gpmi_ecc_write_oob_raw(struct mtd_info *mtd, struct nand_chip *chip,
-> >  				 int page)
-> >  {
-> > -	nand_prog_page_begin_op(chip, page, 0, NULL, 0);
-> > -
-> >  	return gpmi_ecc_write_page_raw(mtd, chip, NULL, 1, page);
-> >  }
-> >  
-> > @@ -1806,9 +1810,7 @@ static int mx23_write_transcription_stamp(struct
-> > gpmi_nand_data *this)
-> >  		/* Write the first page of the current stride. */
-> >  		dev_dbg(dev, "Writing an NCB fingerprint in page 0x%x\n", page);
-> >  
-> > -		nand_prog_page_begin_op(chip, page, 0, NULL, 0);
-> > -		chip->ecc.write_page_raw(mtd, chip, buffer, 0, page);
-> > -		status = nand_prog_page_end_op(chip);
-> > +		status = chip->ecc.write_page_raw(mtd, chip, buffer, 0, page);
-> >  		if (status)
-> >  			dev_err(dev, "[%s] Write failed.\n", __func__);
-> >  	}  
-> 
-> <snip>
-> 
-> > diff --git a/drivers/mtd/nand/vf610_nfc.c b/drivers/mtd/nand/vf610_nfc.c
-> > index 8037d4b48a05..80d31a58e558 100644
-> > --- a/drivers/mtd/nand/vf610_nfc.c
-> > +++ b/drivers/mtd/nand/vf610_nfc.c
-> > @@ -560,7 +560,7 @@ static int vf610_nfc_read_page(struct mtd_info
-> > *mtd, struct nand_chip *chip,
-> >  	int eccsize = chip->ecc.size;
-> >  	int stat;
-> >  
-> > -	vf610_nfc_read_buf(mtd, buf, eccsize);
-> > +	nand_read_page_op(chip, page, 0, buf, eccsize);
-> >  	if (oob_required)
-> >  		vf610_nfc_read_buf(mtd, chip->oob_poi, mtd->oobsize);
-> >  
-> > @@ -580,7 +580,7 @@ static int vf610_nfc_write_page(struct mtd_info
-> > *mtd, struct nand_chip *chip,
-> >  {
-> >  	struct vf610_nfc *nfc = mtd_to_nfc(mtd);
-> >  
-> > -	vf610_nfc_write_buf(mtd, buf, mtd->writesize);  
-> 
-> We currently ignore NAND_CMD_SEQIN in ->cmdfunc anyway, so I think this
-> change would not even be necessary here.
+Why are you using a cdev here and not just a normal misc device?  I
+forgot if this is what you were doing before, sorry...
 
-Well, the thing is, we're trying to keep the logic unchanged. Even if
-for your driver ->cmdfunc(NAND_CMD_SEQIN) is a NOP, I'd prefer to be
-consistent and still replace this ->write_buf() call by a
-nand_prog_page_begin_op() one.
+> +	int id;
+> +	atomic_t open;
 
-> 
-> This is a NAND controller which will benefit from the new interface. I
-> plan to convert the driver to the new interface, maybe I manage to do
-> that soon so we have a second driver making use of the new interface.
+Why do you need this?
 
-Great!!! Let us know if you need any help.
+> +	const struct jtag_ops *ops;
+> +	unsigned long priv[0] __aligned(ARCH_DMA_MINALIGN);
 
-Regards,
+Huh?  Why is this needed to be dma aligned?  Why not just use the
+private pointer in struct device?
 
-Boris
+> +};
+> +
+> +static dev_t jtag_devt;
+> +static DEFINE_IDA(jtag_ida);
+> +
+> +void *jtag_priv(struct jtag *jtag)
+> +{
+> +	return jtag->priv;
+> +}
+> +EXPORT_SYMBOL_GPL(jtag_priv);
+> +
+> +static u8 *jtag_copy_from_user(__u64 udata, unsigned long bit_size)
+> +{
+> +	unsigned long size;
+> +	void *kdata;
+> +
+> +	size = DIV_ROUND_UP(bit_size, BITS_PER_BYTE);
+> +	kdata = memdup_user(u64_to_user_ptr(udata), size);
+
+You only use this once, why not just open-code it?
+
+> +
+> +	return kdata;
+> +}
+> +
+> +static unsigned long jtag_copy_to_user(__u64 udata, u8 *kdata,
+> +				       unsigned long bit_size)
+> +{
+> +	unsigned long size;
+> +
+> +	size = DIV_ROUND_UP(bit_size, BITS_PER_BYTE);
+> +
+> +	return copy_to_user(u64_to_user_ptr(udata), (void *)(kdata), size);
+
+Same here, making this a separate function seems odd.
+
+> +}
+> +
+> +static struct class jtag_class = {
+> +	.name = "jtag",
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int jtag_run_test_idle_op(struct jtag *jtag,
+> +				 struct jtag_run_test_idle *idle)
+> +{
+> +	if (jtag->ops->idle)
+> +		return jtag->ops->idle(jtag, idle);
+> +	else
+> +		return -EOPNOTSUPP;
+
+Why is this a function?  Why not just do this work in the ioctl?
+
+> +}
+> +
+> +static int jtag_xfer_op(struct jtag *jtag, struct jtag_xfer *xfer, u8 *data)
+> +{
+> +	if (jtag->ops->xfer)
+> +		return jtag->ops->xfer(jtag, xfer, data);
+> +	else
+> +		return -EOPNOTSUPP;
+
+Same here, doesn't need to be a function.
+
+> +}
+> +
+> +static long jtag_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> +{
+> +	struct jtag *jtag = file->private_data;
+> +	struct jtag_run_test_idle idle;
+> +	struct jtag_xfer xfer;
+> +	u8 *xfer_data;
+> +	u32 value;
+> +	int err;
+> +
+> +	switch (cmd) {
+> +	case JTAG_GIOCFREQ:
+> +		if (jtag->ops->freq_get)
+> +			err = jtag->ops->freq_get(jtag, &value);
+> +		else
+> +			err = -EOPNOTSUPP;
+> +		if (err)
+> +			break;
+> +
+> +		err = put_user(value, (__u32 *)arg);
+> +		break;
+
+Are you sure the return value of put_user is correct here?  Shouldn't
+you return -EFAULT if err is not 0?
+
+> +
+> +	case JTAG_SIOCFREQ:
+> +		err = get_user(value, (__u32 *)arg);
+> +
+
+why a blank line?
+
+> +		if (value == 0)
+> +			err = -EINVAL;
+
+Check err first.
+
+> +		if (err)
+> +			break;
+
+And set it properly, again err should be -EFAULT, right?
+
+> +
+> +		if (jtag->ops->freq_set)
+> +			err = jtag->ops->freq_set(jtag, value);
+> +		else
+> +			err = -EOPNOTSUPP;
+> +		break;
+> +
+> +	case JTAG_IOCRUNTEST:
+> +		if (copy_from_user(&idle, (void *)arg,
+> +				   sizeof(struct jtag_run_test_idle)))
+> +			return -ENOMEM;
+> +		err = jtag_run_test_idle_op(jtag, &idle);
+
+Who validates the structure fields?  Is that up to the individual jtag
+driver?  Why not do it in the core correctly so that it only has to be
+done in one place and you do not have to audit every individual driver?
+
+> +		break;
+> +
+> +	case JTAG_IOCXFER:
+> +		if (copy_from_user(&xfer, (void *)arg,
+> +				   sizeof(struct jtag_xfer)))
+> +			return -EFAULT;
+> +
+> +		if (xfer.length >= JTAG_MAX_XFER_DATA_LEN)
+> +			return -EFAULT;
+> +
+> +		xfer_data = jtag_copy_from_user(xfer.tdio, xfer.length);
+> +		if (!xfer_data)
+> +			return -ENOMEM;
+
+Are you sure that's the correct error value?
+
+> +
+> +		err = jtag_xfer_op(jtag, &xfer, xfer_data);
+> +		if (jtag_copy_to_user(xfer.tdio, xfer_data, xfer.length)) {
+> +			kfree(xfer_data);
+> +			return -EFAULT;
+> +		}
+> +
+> +		kfree(xfer_data);
+> +		if (copy_to_user((void *)arg, &xfer, sizeof(struct jtag_xfer)))
+> +			return -EFAULT;
+> +		break;
+> +
+> +	case JTAG_GIOCSTATUS:
+> +		if (jtag->ops->status_get)
+> +			err = jtag->ops->status_get(jtag, &value);
+> +		else
+> +			err = -EOPNOTSUPP;
+> +		if (err)
+> +			break;
+> +
+> +		err = put_user(value, (__u32 *)arg);
+
+Same put_user err issue here.
+
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return err;
+> +}
+> +
+> +#ifdef CONFIG_COMPAT
+> +static long jtag_ioctl_compat(struct file *file, unsigned int cmd,
+> +			      unsigned long arg)
+> +{
+> +	return jtag_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
+> +}
+> +#endif
+
+Why do you need a compat callback for a new ioctl?  Create your
+structures properly and this should not be needed, right?
+
+> +
+> +static int jtag_open(struct inode *inode, struct file *file)
+> +{
+> +	struct jtag *jtag = container_of(inode->i_cdev, struct jtag, cdev);
+> +
+> +	if (atomic_read(&jtag->open)) {
+> +		dev_info(NULL, "jtag already opened\n");
+> +		return -EBUSY;
+
+Why do you care if multiple opens can happen?
+
+> +	}
+> +
+> +	atomic_inc(&jtag->open);
+
+Oh look, you just raced with two different people opening at the same
+time :(
+
+An atomic value is never a replacement for a lock, sorry.
+
+> +	file->private_data = jtag;
+> +	return 0;
+> +}
+> +
+> +static int jtag_release(struct inode *inode, struct file *file)
+> +{
+> +	struct jtag *jtag = file->private_data;
+> +
+> +	atomic_dec(&jtag->open);
+
+Again, not needed.
+
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations jtag_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= jtag_open,
+> +	.release	= jtag_release,
+> +	.llseek		= noop_llseek,
+> +	.unlocked_ioctl = jtag_ioctl,
+> +#ifdef CONFIG_COMPAT
+> +	.compat_ioctl	= jtag_ioctl_compat,
+> +#endif
+> +};
+> +
+> +struct jtag *jtag_alloc(size_t priv_size, const struct jtag_ops *ops)
+> +{
+> +	struct jtag *jtag;
+> +
+> +	jtag = kzalloc(sizeof(*jtag) + round_up(priv_size, ARCH_DMA_MINALIGN),
+> +		       GFP_KERNEL);
+> +	if (!jtag)
+> +		return NULL;
+> +
+> +	jtag->ops = ops;
+> +	return jtag;
+> +}
+> +EXPORT_SYMBOL_GPL(jtag_alloc);
+
+register should allocate and register the device, why pass a structure
+back that the caller then has to do something else with to use it?
+
+> +
+> +void jtag_free(struct jtag *jtag)
+> +{
+> +	kfree(jtag);
+> +}
+> +EXPORT_SYMBOL_GPL(jtag_free);
+> +
+> +int jtag_register(struct jtag *jtag)
+> +{
+> +	int id;
+> +	int err;
+> +
+> +	id = ida_simple_get(&jtag_ida, 0, 0, GFP_KERNEL);
+> +	if (id < 0)
+> +		return id;
+> +
+> +	jtag->id = id;
+> +	cdev_init(&jtag->cdev, &jtag_fops);
+> +	jtag->cdev.owner = THIS_MODULE;
+> +	err = cdev_add(&jtag->cdev, MKDEV(MAJOR(jtag_devt), jtag->id), 1);
+> +	if (err)
+> +		goto err_cdev;
+
+misc device would be so much simpler and easier here :(
+
+
+> +
+> +	/* Register this jtag device with the driver core */
+> +	jtag->dev = device_create(&jtag_class, NULL, MKDEV(MAJOR(jtag_devt),
+> +							   jtag->id),
+> +				  NULL, "jtag%d", jtag->id);
+> +	if (!jtag->dev)
+> +		goto err_device_create;
+> +
+> +	atomic_set(&jtag->open, 0);
+> +	dev_set_drvdata(jtag->dev, jtag);
+> +	return err;
+> +
+> +err_device_create:
+> +	cdev_del(&jtag->cdev);
+> +err_cdev:
+> +	ida_simple_remove(&jtag_ida, id);
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(jtag_register);
+> +
+> +void jtag_unregister(struct jtag *jtag)
+> +{
+> +	struct device *dev = jtag->dev;
+> +
+> +	cdev_del(&jtag->cdev);
+> +	device_unregister(dev);
+> +	ida_simple_remove(&jtag_ida, jtag->id);
+> +}
+> +EXPORT_SYMBOL_GPL(jtag_unregister);
+> +
+> +static int __init jtag_init(void)
+> +{
+> +	int err;
+> +
+> +	err = alloc_chrdev_region(&jtag_devt, JTAG_FIRST_MINOR,
+> +				  JTAG_MAX_DEVICES, "jtag");
+> +	if (err)
+> +		return err;
+> +
+> +	err = class_register(&jtag_class);
+> +	if (err)
+> +		unregister_chrdev_region(jtag_devt, JTAG_MAX_DEVICES);
+> +
+> +	return err;
+> +}
+> +
+> +static void __exit jtag_exit(void)
+> +{
+> +	class_unregister(&jtag_class);
+> +	unregister_chrdev_region(jtag_devt, JTAG_MAX_DEVICES);
+
+Your idr leaked memory :(
+
+
+
+> +}
+> +
+> +module_init(jtag_init);
+> +module_exit(jtag_exit);
+> +
+> +MODULE_AUTHOR("Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Generic jtag support");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/jtag.h b/include/linux/jtag.h
+> new file mode 100644
+> index 0000000..c016fed
+> --- /dev/null
+> +++ b/include/linux/jtag.h
+> @@ -0,0 +1,48 @@
+> +/*
+> + * drivers/jtag/jtag.c
+> + *
+> + * Copyright (c) 2017 Mellanox Technologies. All rights reserved.
+> + * Copyright (c) 2017 Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> + *
+> + * Released under the GPLv2 only.
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +#ifndef __JTAG_H
+> +#define __JTAG_H
+> +
+> +#include <uapi/linux/jtag.h>
+> +
+> +#ifndef ARCH_DMA_MINALIGN
+> +#define ARCH_DMA_MINALIGN 1
+> +#endif
+> +
+> +#define jtag_u64_to_ptr(arg) ((void *)(uintptr_t)arg)
+> +
+> +#define JTAG_MAX_XFER_DATA_LEN 65535
+> +
+> +struct jtag;
+> +/**
+> + * struct jtag_ops - callbacks for jtag control functions:
+> + *
+> + * @freq_get: get frequency function. Filled by device driver
+> + * @freq_set: set frequency function. Filled by device driver
+> + * @status_get: set status function. Filled by device driver
+> + * @idle: set JTAG to idle state function. Filled by device driver
+> + * @xfer: send JTAG xfer function. Filled by device driver
+> + */
+> +struct jtag_ops {
+> +	int (*freq_get)(struct jtag *jtag, u32 *freq);
+> +	int (*freq_set)(struct jtag *jtag, u32 freq);
+> +	int (*status_get)(struct jtag *jtag, u32 *state);
+> +	int (*idle)(struct jtag *jtag, struct jtag_run_test_idle *idle);
+> +	int (*xfer)(struct jtag *jtag, struct jtag_xfer *xfer);
+> +};
+> +
+> +void *jtag_priv(struct jtag *jtag);
+> +int jtag_register(struct jtag *jtag);
+> +void jtag_unregister(struct jtag *jtag);
+> +struct jtag *jtag_alloc(size_t priv_size, const struct jtag_ops *ops);
+> +void jtag_free(struct jtag *jtag);
+> +
+> +#endif /* __JTAG_H */
+> diff --git a/include/uapi/linux/jtag.h b/include/uapi/linux/jtag.h
+> new file mode 100644
+> index 0000000..180bf22
+> --- /dev/null
+> +++ b/include/uapi/linux/jtag.h
+> @@ -0,0 +1,115 @@
+> +/*
+> + * JTAG class driver
+> + *
+> + * Copyright (c) 2017 Mellanox Technologies. All rights reserved.
+> + * Copyright (c) 2017 Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> + *
+> + * Released under the GPLv2/BSD.
+> + * SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> + */
+> +
+> +#ifndef __UAPI_LINUX_JTAG_H
+> +#define __UAPI_LINUX_JTAG_H
+> +
+> +/**
+> + * enum jtag_xfer_mode:
+> + *
+> + * @JTAG_XFER_HW_MODE: hardware mode transfer
+> + * @JTAG_XFER_SW_MODE: software mode transfer
+> + */
+> +enum jtag_xfer_mode {
+> +	JTAG_XFER_HW_MODE,
+> +	JTAG_XFER_SW_MODE,
+> +};
+> +
+> +/**
+> + * enum jtag_endstate:
+> + *
+> + * @JTAG_STATE_IDLE: JTAG state machine IDLE state
+> + * @JTAG_STATE_PAUSEIR: JTAG state machine PAUSE_IR state
+> + * @JTAG_STATE_PAUSEDR: JTAG state machine PAUSE_DR state
+> + */
+> +enum jtag_endstate {
+> +	JTAG_STATE_IDLE,
+> +	JTAG_STATE_PAUSEIR,
+> +	JTAG_STATE_PAUSEDR,
+> +};
+> +
+> +/**
+> + * enum jtag_xfer_type:
+> + *
+> + * @JTAG_SIR_XFER: SIR transfer
+> + * @JTAG_SDR_XFER: SDR transfer
+> + */
+> +enum jtag_xfer_type {
+> +	JTAG_SIR_XFER,
+> +	JTAG_SDR_XFER,
+> +};
+> +
+> +/**
+> + * enum jtag_xfer_direction:
+> + *
+> + * @JTAG_READ_XFER: read transfer
+> + * @JTAG_WRITE_XFER: write transfer
+> + */
+> +enum jtag_xfer_direction {
+> +	JTAG_READ_XFER,
+> +	JTAG_WRITE_XFER,
+> +};
+> +
+> +/**
+> + * struct jtag_run_test_idle - forces JTAG state machine to
+> + * RUN_TEST/IDLE state
+> + *
+> + * @mode: access mode
+> + * @reset: 0 - run IDLE/PAUSE from current state
+> + *         1 - go through TEST_LOGIC/RESET state before  IDLE/PAUSE
+> + * @end: completion flag
+> + * @tck: clock counter
+> + *
+> + * Structure represents interface to JTAG device for jtag idle
+> + * execution.
+> + */
+> +struct jtag_run_test_idle {
+> +	__u8	mode;
+> +	__u8	reset;
+> +	__u8	endstate;
+> +	__u8	tck;
+> +};
+> +
+> +/**
+> + * struct jtag_xfer - jtag xfer:
+> + *
+> + * @mode: access mode
+> + * @type: transfer type
+> + * @direction: xfer direction
+> + * @length: xfer bits len
+> + * @tdio : xfer data array
+> + * @endir: xfer end state
+> + *
+> + * Structure represents interface to Aspeed JTAG device for jtag sdr xfer
+> + * execution.
+> + */
+> +struct jtag_xfer {
+> +	__u8	mode;
+> +	__u8	type;
+> +	__u8	direction;
+> +	__u8	endstate;
+> +	__u32	length;
+> +	__u64	tdio;
+
+I don't see anything odd here that requires a compat ioctl callback, do
+you?
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
