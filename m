@@ -1,66 +1,76 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [INTERNAL][PATCH 4/7] ASoC: stm32: sai: fix stop
- management in isr
-Date: Sat, 21 Oct 2017 11:16:07 +0100
-Message-ID: <20171021101607.uwnt4wniycthdld3@sirena.org.uk>
-References: <1508418203-16840-1-git-send-email-olivier.moysan@st.com>
- <1508418203-16840-5-git-send-email-olivier.moysan@st.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2946829544656077648=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1508418203-16840-5-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Olivier Moysan <olivier.moysan@st.com>
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Subject: Applied "ASoC: stm32: sai: Remove spurious IRQs on stop" to the asoc tree
+Date: Sat, 21 Oct 2017 11:31:45 +0100 (BST)
+Message-ID: <20171021103145.807AF440057@finisterre.ee.mobilebroadband>
+References: <1508418203-16840-6-git-send-email-olivier.moysan@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508418203-16840-6-git-send-email-olivier.moysan@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.comalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---===============2946829544656077648==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="n7u74fjcsblg3ksr"
-Content-Disposition: inline
+   ASoC: stm32: sai: Remove spurious IRQs on stop
 
+has been applied to the asoc tree at
 
---n7u74fjcsblg3ksr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-On Thu, Oct 19, 2017 at 03:03:20PM +0200, Olivier Moysan wrote:
-> Add check on substream validity.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Fixes should go at the start of the series so they can be applied
-separately and sent to Linus without having to wait for new features.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---n7u74fjcsblg3ksr
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnrHmYACgkQJNaLcl1U
-h9AUqwf/bjjid5cbjGdvnjMp8ZwyhiDJQFTLXUAMIqCxpp+P3oGlPuOcETEc6Cc6
-RvTgTV6K3DcQ8iUQ5pFjkEjxUFGSgXfM8VdMsrzJ9SShxx1TbU/GukcIEgC5W/jr
-wY7e+M6Gt1XL/PJuVILu9iOHGFYd9ztKEMueDS92sTv9J2gtWDnkZYHFf6ye1YpD
-UsNF5UXXcJkj/e4l2xJs40+3v2rJJ7cPy7Qc6yiOa74i2ZQnY1tDAQxrtexVbif2
-KMMe0xCl1QOQ/rB5uz4rzsN8O1DdUiMpGzdlefENtAgJXva6WOq2sESs+GGqvn8l
-uQD/8o/lNdNkEwZ1gslxkMyPiq35Bw==
-=wCWl
------END PGP SIGNATURE-----
+Thanks,
+Mark
 
---n7u74fjcsblg3ksr--
+>From 47a8907d7c73fad81030655f09832fbb4446a2f5 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Thu, 19 Oct 2017 15:03:21 +0200
+Subject: [PATCH] ASoC: stm32: sai: Remove spurious IRQs on stop
 
---===============2946829544656077648==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Clear IRQ mask on stream stop to avoid spurious IRQs.
 
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/stm/stm32_sai_sub.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---===============2946829544656077648==--
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 815ef1036199..fd7dc7760f58 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -419,8 +419,6 @@ static int stm32_sai_startup(struct snd_pcm_substream *substream,
+ 	}
+ 
+ 	/* Enable ITs */
+-	regmap_update_bits(sai->regmap, STM_SAI_SR_REGX,
+-			   SAI_XSR_MASK, (unsigned int)~SAI_XSR_MASK);
+ 
+ 	regmap_update_bits(sai->regmap, STM_SAI_CLRFR_REGX,
+ 			   SAI_XCLRFR_MASK, SAI_XCLRFR_MASK);
+@@ -693,6 +691,9 @@ static int stm32_sai_trigger(struct snd_pcm_substream *substream, int cmd,
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 		dev_dbg(cpu_dai->dev, "Disable DMA and SAI\n");
+ 
++		regmap_update_bits(sai->regmap, STM_SAI_IMR_REGX,
++				   SAI_XIMR_MASK, 0);
++
+ 		regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX,
+ 				   SAI_XCR1_SAIEN,
+ 				   (unsigned int)~SAI_XCR1_SAIEN);
+-- 
+2.14.1
