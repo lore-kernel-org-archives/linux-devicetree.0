@@ -1,71 +1,51 @@
-From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: mtd: add new compatible strings and
- improve description
-Date: Sun, 22 Oct 2017 18:30:53 +0800
-Message-ID: <1508668253.14979.5.camel@mhfsdcap03>
-References: <1505997906-30921-1-git-send-email-guochun.mao@mediatek.com>
-         <1505997906-30921-2-git-send-email-guochun.mao@mediatek.com>
-         <1507691713.14979.2.camel@mhfsdcap03>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [3/3] MIPS: jz4780: DTS: Probe the jz4740-watchdog driver from
+ devicetree
+Date: Sun, 22 Oct 2017 08:26:53 -0700
+Message-ID: <20171022152653.GA11714@roeck-us.net>
+References: <20170908183558.1537-3-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1507691713.14979.2.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <20170908183558.1537-3-malat@debian.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Wim Van Sebroeck <wim@iguana.be>, Linus Walleij <linus.walleij@linaro.org>, Paul Cercueil <paul@crapouillou.net>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille, Marek,
-
-Gentle ping...
-
-
-On Wed, 2017-10-11 at 11:15 +0800, Guochun Mao wrote:
-> gentle ping...
+On Fri, Sep 08, 2017 at 08:35:55PM +0200, Mathieu Malaterre wrote:
+> The jz4740-watchdog driver supports both jz4740 & jz4780.
 > 
-> On Thu, 2017-09-21 at 20:45 +0800, Guochun Mao wrote:
-> > Add "mediatak,mt2712-nor" and "mediatek,mt7622-nor"
-> > for nor flash node's compatible strings.
-> > Explicate the fallback compatible.
-> > 
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/mtd/mtk-quadspi.txt        |   15 +++++++++------
-> >  1 file changed, 9 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> > index 840f940..56d3668 100644
-> > --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> > @@ -1,13 +1,16 @@
-> >  * Serial NOR flash controller for MTK MT81xx (and similar)
-> >  
-> >  Required properties:
-> > -- compatible: 	  The possible values are:
-> > -		  "mediatek,mt2701-nor"
-> > -		  "mediatek,mt7623-nor"
-> > +- compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
-> > +		  and it's the fallback compatible for other Soc.
-> > +		  For every other SoC, should contain both the SoC-specific compatible
-> > +		  string and "mediatek,mt8173-nor".
-> > +		  The possible values are:
-> > +		  "mediatek,mt2701-nor", "mediatek,mt8173-nor"
-> > +		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
-> > +		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
-> > +		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
-> >  		  "mediatek,mt8173-nor"
-> > -		  For mt8173, compatible should be "mediatek,mt8173-nor".
-> > -		  For every other SoC, should contain both the SoC-specific compatible string
-> > -		  and "mediatek,mt8173-nor".
-> >  - reg: 		  physical base address and length of the controller's register
-> >  - clocks: 	  the phandle of the clocks needed by the nor controller
-> >  - clock-names: 	  the names of the clocks
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index 4853ef67b3ab..33d7f49186d6 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -207,6 +207,11 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	watchdog: jz4780-watchdog@10002000 {
+> +		compatible = "ingenic,jz4740-watchdog";
+> +		reg = <0x10002000 0x100>;
+> +	};
+> +
+>  	nemc: nemc@13410000 {
+>  		compatible = "ingenic,jz4780-nemc";
+>  		reg = <0x13410000 0x10000>;
