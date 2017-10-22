@@ -1,169 +1,183 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Sun, 22 Oct 2017 19:48:14 +0100
-Message-ID: <CACxGe6vm_iOUB-oyFw=myU1dNCsoBfmWTb+uTq3BGPb8xo+4Yw@mail.gmail.com>
-References: <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
- <1501181931.1055.18.camel@hp800z> <597A4B80.7000106@gmail.com>
- <1501191985.1055.50.camel@hp800z> <CAL_Jsq+NBEXyOmRx3Ar0OTpyaLeT0hEKw45R0PrVEdmOcd9czw@mail.gmail.com>
- <20170728005140.GF26163@bill-the-cat> <20170802150933.GG394@umbus.fritz.box>
- <CACxGe6um3TC3URKa8NWbbQT-gc=AV5jgTxbQ3pYnSp4Xmu_Mfg@mail.gmail.com>
- <20170803054914.GL394@umbus.fritz.box> <CACxGe6s3-1rK1NMm0B8fKP+XfxphcHj+pBU7=FxpSexXMWyeFQ@mail.gmail.com>
- <20170814134150.GL3452@umbus.fritz.box>
+Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
+Date: Sun, 22 Oct 2017 20:13:53 +0100
+Message-ID: <CACxGe6v+SaMcBDE=aB-2J=hbhmkq4tYbcp=-J5zK_GisNKJ5yg@mail.gmail.com>
+References: <1506628736.28192.9.camel@hp800z> <CACxGe6tJfcnwDB=m7GLnCeDSc4Srxqssv+-p1+zapDo2yLWXXQ@mail.gmail.com>
+ <D029AB76-4084-40D4-8095-CFFBEA55DB86@konsulko.com> <CACxGe6v702Xc3kyXy-1sN+rBqbarVZGvVbO-XWHm9GRvMr=Z4w@mail.gmail.com>
+ <744E94DE-E4AE-425B-9B02-E0E022017450@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170814134150.GL3452-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+In-Reply-To: <744E94DE-E4AE-425B-9B02-E0E022017450-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 14, 2017 at 2:41 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Thu, Aug 10, 2017 at 03:21:00PM +0100, Grant Likely wrote:
->> On Thu, Aug 3, 2017 at 6:49 AM, David Gibson
->> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> > Right.  Regardless of (1), (2) is absolutely the case.  Contrary to
->> > the initial description, the proposal in this thread really seems to
->> > be about completely reworking the device tree data model.  While in
->> > isolation the JSON/yaml data model is, I think, superior to the dtb
->> > one, attempting to change over now lies somewhere between hopelessly
->> > ambitious and completely bonkers, IMO.
+On Sun, Oct 22, 2017 at 7:23 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Grant,
+>
+>> On Oct 22, 2017, at 19:54 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wro=
+te:
 >>
->> That isn't what is being proposed. The structure of data doesn't
->> change. Anything encoded in YAML DT can be converted to/from DTS
->> without loss, and it is not a wholesale adoption of everything that is
->> possible with YAML. As with any other usage of YAML/JSON, the
->> metaschema constrains what is allowed. YAML DT should specify exactly
->> how DT is encoded into YAML. Anything that falls outside of that is
->> illegal and must fail to load.
->
-> Um.. yeah.  So the initial description said that, and that's the only
-> sane approach, but then a number of examples given by Pantelis later
-> in the thread seemed to directly contradict that, and implied carrying
-> the full YAML/JSON data model into clients like the kernel.  Hence my
-> confusion..
->
->> Your right that changing to "anything possible in YAML" would be
->> bonkers, but that is not what is being proposed. It is merely a
->> different encoding for DT data.
+>> On Fri, Oct 20, 2017 at 8:16 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> Hi Grant,
+>>>
+>>>> On Oct 20, 2017, at 20:46 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+>>>>
+>>>> On Thu, Sep 28, 2017 at 8:58 PM, Pantelis Antoniou
+>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+[...]
+>>> Yes. This is expected. I don=E2=80=99t think pure YAML form is a good m=
+atch for all
+>>> the crazy things that are possible (and actually used in practice) with=
+ DTS.
 >>
->> Defining the YAML DT metaschema is important because is there is quite
->
-> Ok, I'm not entirely sure what you mean by metaschema here.
-
-In YAML/json, metaschema refers to the structure of the data, and
-schema validates the data itself. So, in DT terms the metaschema would
-restrict YAML to just something that encodes the DT node structure,
-and the schema would be all the bindings, both generic and specific.
-
->> a tight coupling between YAML layout and how the data is loaded into
->> memory by YAML parsers. ie. Define the metaschema and you define the
->> data structures you get out on the other side. That makes the data
->> accessible in a consistent way to JSON & YAML tooling. For example,
->> I've had promising results using JSON Schema (specifically the Python
->> JSONSchema library) to start doing DT schema checking. Python JSON
->> schema doesn't operate directly on JSON or YAML files. It operates on
->> the data structure outputted by the JSON and YAML parsers. It would
->> just as happily operate on a DTS/DTB file parser as long as the
->> resulting data structure has the same layout.
->
-> Urhhh, except that json/yaml parsers can get at least the basic
-> structure of the data without context.  That's not true of dtb - you
-> need the context of other properties in this node, or sometimes other
-> nodes in order to parse property values into something meaningful.
-
-I assume you=E2=80=99re talking about interpreting property values here. If
-so, correct. The specific schema is needed to decode the raw bytes
-into useful data. So there is some back and forth between the schema
-and the data to do validation (get property bytes =E2=80=94> refer to schem=
-a
-to decode =E2=80=94> check with schema again to see if values are correct).
-
-However, there is still all of the DT structure of nodes & properties
-that can be defined so that schemes can be written against that
-structure.
-
->> So, define a DT YAML metaschema, and we've automatically got an
->> interchange format for DT that works with existing tools. Software
->> written to interact with YAML/JSON files can be leveraged to be used
->> with DTS. **without mass converting DTS to YAML**. There's no downside
->> here.
+>> I don=E2=80=99t think it is as dire as that. The DTS structure is not co=
+mplex
+>> and I think can easily be mapped into pure YAML. But, it does require
+>> treating the DTS structure separately from its semantic meaning. For
+>> example, the grammar of nodes, properties and labels easily maps to
+>> pure YAML, but phandles and overlay trees have semantic meaning that
+>> must be resolved by DT specific code. I=E2=80=99ll respond to you=E2=80=
+=99re specific
+>> examples below=E2=80=A6
 >>
->> This is what I meant by it defines a data model -- it defines a
->> working set data model for other applications to interact with. I did
->> not mean that it redefines the DTS model.
 >
-> Ok, but unlike translating from yaml into an internal data model to
-> translate dtb into an internal data model you need to know (at least
-> part of) all the bindings,
+> We are in complete agreement here. Single nodes and properties map to YAM=
+L perfectly.
+> It=E2=80=99s the complex way that we build the complete DTB that stress t=
+he YAML structures.
 
-I see the data model needing to handle at least two variants of
-property data. 1) raw bytes that needs to be decoded  before they can
-be interpreted, and structured data (ex. A reg property is a list of
-address/size pairs), but that info is not in the DTB. Access to the
-schema is required to decode a reg property into the list of tuples.
+Okay, good.
 
->> >> 3) Therefore the DTS->DTB workflow is the important one. Anything tha=
-t
->> >> falls outside of that may be interesting, but it distracts from the
->> >> immediate problem and I don't want to talk about it here.
->> >>
->> >> For schema documentation and checking, I've been investigating how to
->> >> use JSON Schema to enforce DT bindings. Specifically, I've been using
->> >> the JSONSchema Python library which strictly speaking doesn't operate
->> >> on JSON or YAML, but instead operates directly on Python data
->> >> structures. If that data happens to be imported from a DTS or DTB, th=
+>>> If we were to force YAML/DT file to be regular YAML files parseable by =
+everything
+>>> we=E2=80=99d have to rethink a lot of conventions that DT files current=
+ly use and I=E2=80=99m afraid
+>>> a machine translation from DTS to YAML might not be feasible then.
+>>>
+>>> OTOH moving to that model might make it possible to use YAML constructs=
+ that are not
+>>> mapped at all to DTS. For instance
+>>>
+>>> - foo: true
+>>>  bar: =E2=80=9Cstring=E2=80=9D
+>>>
+>>> - foo: false
+>>>  bar: =E2=80=9Canother-string=E2=80=9D
+>>>
+>>> is not possible to be mapped to a DT node/property structure right now.
+>>
+>> I=E2=80=99m not following. Are you saying DT has no way to encode a list=
+ of
+>> nodes? What use case are you imagining?
+>>
+>
+> This threw me off too at first.
+>
+> The problem is when you try to convert this into a live tree structure.
+>
+> The YAML encoding is
+>
+> +SEQ
+>  +MAP
+>   =3DVAL :foo
+>   =3DVAL :true
+>   =3DVAL :bar
+>   =3DVAL "string
+>  -MAP
+>  +MAP
+>   =3DVAL :foo
+>   =3DVAL :false
+>   =3DVAL :bar
+>   =3DVAL "another-string
+>  -MAP
+> -SEQ
+>
+> So it=E2=80=99s a sequence of MAPs.
+>
+> In a live tree DTS form would be
+>
+> noname-property =3D { foo=3Dtrue; bar =3D =E2=80=9Cstring=E2=80=9D; }, { =
+foo =3D false; bar=3D=E2=80=9Canother-string=E2=80=9D; };
+>
+> We don=E2=80=99t have the capability as right now to express something li=
+ke this.
+>
+> Namely properties containing nodes, and the root of the live tree not bei=
+ng a node.
+
+Ah, so you're proposing property data that encodes key/value pairs,
+correct? Effectively adding another layer of namespace under a
+property, but that namespace is invisible to and generic DT parsing
+code in an OS (for how DT is defined today).
+
+I would straight out make that structure illegal in the YAML DT
+metaschema until such time as the semantics are defined. For now
+properties should only be allowed to contain scalars, or lists of
+scalars/lists which can be nested.
+
+[...]
+
+>>>> The encoding differentiates between nodes and properties implicitly
+>>>> base on whether the contents are a map, or a scalar/list. This does
+>>>> mean any parser needs to do a bit more work and it may impact what can
+>>>> be done with validation (I'm not going to talk about validation in
+>>>> this email though. We'll talk next week.)
+>>>
+>>> Hmm, I=E2=80=99m not sure I follow this. Is that related to the metadat=
+a problem.
+>>
+>> It has to do with iterating over properties or nodes. Nodes and props
+>> are mixed together, and any code processing them has to explicitly
+>> check the type to differentiate between the two. The alternative would
+>> be to collect all properties under a single key:
+>>
+>> parent:
+>>  $props:
+>>    foo: hello
+>>    bar: world
+>>  child1: {}
+>>  child2: {}
+>>
+>
+> That=E2=80=99s no problem. It does look weird though. I am using the same=
+ parser
+> for parsing bindings and this might make the files a little bit weird.
+
+That it does. I don=E2=80=99t feel strongly about either approach, but I wa=
+nt
+to see how the different encodings affect doing the schema bits.
+
+>
+> Keep in mind that we have two YAML formats to parse; the hardware descrip=
+tion
+> and the bindings describing them.
+
+Three! Hw description, schema & metaschema. :-) But metaschema should
+be a normal jsonschema file.
+
+>
+>>>
+>>> BTW, a blog post explaining the rationale behind yamldt is going to com=
 e
->> >> JSON Schema engine doesn't care.
->> >
->> > So, inspired by this thread, I've had a little bit of a look at some
->> > of these json/python schema systems, and thought about how they'd
->> > apply to dtb.  It certainly seems worthwhile to exploit those schema
->> > systems if we can, since they seem pretty close to what's wanted at
->> > least flavour-wise.  But I see some difficulties that don't have
->> > obvious (to me) solutions.
->> >
->> > The main one is that they're based around the thing checked knowing
->> > its own types (at least in terms of basic scalar/sequence/map
->> > structure).  I guess that's the motivation behind Pantelis yamldt
->> > notion, but that doesn't address the problem of validating dtbs in the
->> > absence of source.
+>>> up soon at our website, I=E2=80=99ll post the link when it does.
 >>
->> I've been thinking about that two. It requires a kind of dual pass
->> schema checking. When a schema matches a node, the first pass would be
->> recasting raw dt property bytestrings into the types specified by the
->> schema. Only minimal checks can be performed at this stage. Mostly it
->> would be checking if it is possible to recast the bytestring into the
->> specified type. ex. if it is a cell array, then the bytestring length
->> must be a multiple of 4. If it is a string then it must be \0
->> terminated.
+>> Cool. I see it got posted, but didn=E2=80=99t get a chance to read it be=
+fore I
+>> got on this airplane. Will try to read this evening.
 >>
->> Second pass would be verifying that the data itself make sense.
+>> (BTW, I=E2=80=99m arriving at about 11:00 tonight)
+>>
 >
-> Ok, that makes sense.  I was thinking shortly after sending the
-> previous mail that an approach would be to combine an existing json
-> schema system with each binding having, let's call it an "encoding" to
-> translate between raw dtb and a parsed data structure of some sort.
+> Have a safe flight, you=E2=80=99ll get to beat me up tomorrow :)
 
-Yup
-
-> It's not entirely obvious to me that writing an encoding / decoding
-> handler will be less work than writing a schema checker from scratch
-> designed to work with bytestrings.  But, it's plausible that it might
-> be.
->
-> Fwiw, it might be worth looking back at traditional OF (IEEE 1275)
-> handling of this.  Because it's DT is not a static structure, but
-> something derived from live Forth objects, it has various Forth words
-> to encode and decode various things.  For example some properties will
-> be described in terms of how're they're built up from encode-int /
-> decode-int and other basic encoders acting in sequence.
-
-Sounds like a conversation we should have over a beer this week in Prague.
-
-:-)
+See you tomorrow. It will be good to catch up.
 
 g.
 --
