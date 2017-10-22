@@ -1,30 +1,33 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2] of_mdio: Fix broken PHY IRQ in case of probe deferral
-Date: Sat, 21 Oct 2017 19:06:38 -0700
-Message-ID: <92521B8C-6FCF-4F7C-B0D5-BE6A3F5FD021@gmail.com>
-References: <1508327643-3579-1-git-send-email-geert+renesas@glider.be> <20171022.023738.2186250991838185660.davem@davemloft.net>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v2] of_mdio: Fix broken PHY IRQ in case of probe
+ deferral
+Date: Sun, 22 Oct 2017 03:21:06 +0100 (WEST)
+Message-ID: <20171022.032106.409254810221513438.davem@davemloft.net>
+References: <1508327643-3579-1-git-send-email-geert+renesas@glider.be>
+        <FD695891-F3B8-4388-8887-A9DC997828B4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171022.023738.2186250991838185660.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, geert+renesas@glider.be
-Cc: andrew@lunn.ch, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <FD695891-F3B8-4388-8887-A9DC997828B4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On October 21, 2017 6:37:38 PM PDT, David Miller <davem@davemloft=2Enet> wr=
-ote:
->
->Second ping, this patch needs a review ASAP=2E
->
->Geert's hard-resetting PHY changes depend upon this change=2E
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Sat, 21 Oct 2017 19:01:45 -0700
 
-Done, same concerns as before and we could all improve on trying to get th=
-is tested on a pure SW model (e=2Eg QEMU) but there is only so little time=
-=2E=2E=2E Regarding the other patch series it needs more love before it get=
-s merged, so that hopefully lowers the criticality=2E
+> Reviewed-by : Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> I still can't make sure this is not a problem for multiple PHYs
+> hanging off the same bus, but like anything else, we'll deal with
+> problems later if they arise.
 
---=20
-Florian
+Thanks Florian.
+
+Applied, thanks everyone.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
