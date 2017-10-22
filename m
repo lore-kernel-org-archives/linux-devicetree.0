@@ -1,50 +1,89 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] openrisc: dts: or1ksim: Add stdout-path
-Date: Sun, 22 Oct 2017 11:23:53 +0900
-Message-ID: <20171022022353.27464-1-shorne@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stafford Horne <shorne@gmail.com>
+Subject: [PATCH 3/3] openrisc: dts: Add OpenRISC platform SoC
+Date: Sun, 22 Oct 2017 11:46:41 +0900
+Message-ID: <20171022024641.28478-4-shorne@gmail.com>
+References: <20171022024641.28478-1-shorne@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171022024641.28478-1-shorne@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Openrisc <openrisc@lists.librecores.org>, Stafford Horne <shorne@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-During reviews of the OpenRISC SMP patch series it was suggested to add
-stdout-path to the SMP dts file.  Add stdout-path to our other dts files
-to be a good example.
+Add devicetree binding documentation for the OpenRISC platform
+opencores,or1ksim.  This is the main OpenRISC reference platform
+supporting multiple FPGA SoC's.
 
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This format is based on some of the mips binding docs as we have
+similar requirements.
+
+Also, update maintainers so openrisc related binding changes are visible
+to the openrisc team.
+
+Suggested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 ---
+ .../bindings/openrisc/opencores/or1ksim.txt        | 39 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt
 
-Changes since v1
- - Complete rewrite with input from Geert
-
- arch/openrisc/boot/dts/or1ksim.dts | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/openrisc/boot/dts/or1ksim.dts b/arch/openrisc/boot/dts/or1ksim.dts
-index 5d4f9027afaf..8f41bd8c9f84 100644
---- a/arch/openrisc/boot/dts/or1ksim.dts
-+++ b/arch/openrisc/boot/dts/or1ksim.dts
-@@ -5,8 +5,13 @@
- 	#size-cells = <1>;
- 	interrupt-parent = <&pic>;
- 
-+	aliases {
-+		uart0 = &serial0;
+diff --git a/Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt b/Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt
+new file mode 100644
+index 000000000000..4950c794ecbb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt
+@@ -0,0 +1,39 @@
++OpenRISC Generic SoC
++====================
++
++Boards and FPGA SoC's which support the OpenRISC standard platform.  The
++platform essentially follows the conventions of the OpenRISC architecture
++specification, however some aspects, such as the boot protocol have been defined
++by the Linux port.
++
++Required properties
++-------------------
++ - compatible: Must include "opencores,or1ksim"
++
++CPU nodes:
++----------
++A "cpus" node is required.  Required properties:
++ - #address-cells: Must be 1.
++ - #size-cells: Must be 0.
++A CPU sub-node is also required for at least CPU 0.  Since the topology may
++be probed via CPS, it is not necessary to specify secondary CPUs.  Required
++properties:
++ - compatible: Must be "opencores,or1200-rtlsvn481".
++ - reg: CPU number.
++ - clock-frequency: The CPU clock frequency in Hz.
++Example:
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			compatible = "opencores,or1200-rtlsvn481";
++			reg = <0>;
++			clock-frequency = <20000000>;
++		};
 +	};
 +
- 	chosen {
--		bootargs = "console=uart,mmio,0x90000000,115200";
-+		bootargs = "earlycon";
-+		stdout-path = "uart0:115200";
- 	};
- 
- 	memory@0 {
++
++Boot protocol
++-------------
++The bootloader may pass the following arguments to the kernel:
++ - r3:  address of a flattened device-tree blob or 0x0.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a57d13cb414d..71e4f6762196 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10008,6 +10008,7 @@ T:	git git://github.com/openrisc/linux.git
+ L:	openrisc@lists.librecores.org
+ W:	http://openrisc.io
+ S:	Maintained
++F;	Documentation/devicetree/bindings/openrisc/
+ F:	Documentation/openrisc/
+ F:	arch/openrisc/
+ F:	drivers/irqchip/irq-or1k-*
 -- 
 2.13.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
