@@ -1,181 +1,46 @@
-From: Stafford Horne <shorne@gmail.com>
-Subject: [PATCH v3 10/13] openrisc: add simple_smp dts and defconfig for simulators
-Date: Sun, 22 Oct 2017 12:15:57 +0900
-Message-ID: <20171022031600.29612-11-shorne@gmail.com>
-References: <20171022031600.29612-1-shorne@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171022031600.29612-1-shorne@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 7/9] usb: host: modify description for MTK xHCI config
+Date: Sun, 22 Oct 2017 11:31:22 +0800
+Message-ID: <1508643082.17567.115.camel@mhfsdcap03>
+References: <994382d16d6bdc0f3d7c11b22f1710252e056e34.1507882470.git.chunfeng.yun@mediatek.com>
+         <37153cd259af6e1fc34b32a2e0dd1a15b8214579.1507882470.git.chunfeng.yun@mediatek.com>
+         <59E0962E.9030508@linux.intel.com> <20171017102059.GA17121@kroah.com>
+         <59E5DE7F.1040601@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59E5DE7F.1040601-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Hi, Greg
+On Tue, 2017-10-17 at 13:42 +0300, Mathias Nyman wrote:
+> On 17.10.2017 13:20, Greg Kroah-Hartman wrote:
+> > On Fri, Oct 13, 2017 at 01:32:14PM +0300, Mathias Nyman wrote:
+> >> On 13.10.2017 11:26, Chunfeng Yun wrote:
+> >>> Due to all MediaTek SoCs with xHCI host controller use this
+> >>> driver, remove limitation for specific SoCs
+> >>>
+> >>> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>> ---
+> >>
+> >> xHCI parts of series look good to me, If Rob Herring agrees with the
+> >> dt changes I can send it forward
+> >
+> > If you ack them, I can just take the whole series as-is.
+> >
+It would be great if you could take this series when you have time.
 
-Simple enough to be compatible with simulation environments,
-such as verilated systems, QEMU and other targets supporting OpenRISC
-SMP.  This also supports our base FPGA SoC's if the cpu frequency is
-upped to 50Mhz.
+Thanks a lot
 
-Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-[shorne@gmail.com: Added defconfig]
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
+> 
+> Acked-by: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> 
 
-Changes since v2
- - Fix stdout-path
 
-Changes since v1
- - Use openrisc, prefix for ompic
- - Add stdout-path
- - Remove @interrupt cells
-
- arch/openrisc/boot/dts/simple_smp.dts      | 63 ++++++++++++++++++++++++++++
- arch/openrisc/configs/simple_smp_defconfig | 66 ++++++++++++++++++++++++++++++
- 2 files changed, 129 insertions(+)
- create mode 100644 arch/openrisc/boot/dts/simple_smp.dts
- create mode 100644 arch/openrisc/configs/simple_smp_defconfig
-
-diff --git a/arch/openrisc/boot/dts/simple_smp.dts b/arch/openrisc/boot/dts/simple_smp.dts
-new file mode 100644
-index 000000000000..defbb92714ec
---- /dev/null
-+++ b/arch/openrisc/boot/dts/simple_smp.dts
-@@ -0,0 +1,63 @@
-+/dts-v1/;
-+/ {
-+	compatible = "opencores,or1ksim";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	interrupt-parent = <&pic>;
-+
-+	aliases {
-+		uart0 = &serial0;
-+	};
-+
-+	chosen {
-+		bootargs = "earlycon";
-+		stdout-path = "uart0:115200";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x02000000>;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			compatible = "opencores,or1200-rtlsvn481";
-+			reg = <0>;
-+			clock-frequency = <20000000>;
-+		};
-+		cpu@1 {
-+			compatible = "opencores,or1200-rtlsvn481";
-+			reg = <1>;
-+			clock-frequency = <20000000>;
-+		};
-+	};
-+
-+	ompic: ompic@98000000 {
-+		compatible = "openrisc,ompic";
-+		reg = <0x98000000 16>;
-+		interrupt-controller;
-+		#interrupt-cells = <0>;
-+		interrupts = <1>;
-+	};
-+
-+	/*
-+	 * OR1K PIC is built into CPU and accessed via special purpose
-+	 * registers.  It is not addressable and, hence, has no 'reg'
-+	 * property.
-+	 */
-+	pic: pic {
-+		compatible = "opencores,or1k-pic-level";
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+	};
-+
-+	serial0: serial@90000000 {
-+		compatible = "opencores,uart16550-rtlsvn105", "ns16550a";
-+		reg = <0x90000000 0x100>;
-+		interrupts = <2>;
-+		clock-frequency = <20000000>;
-+	};
-+
-+};
-diff --git a/arch/openrisc/configs/simple_smp_defconfig b/arch/openrisc/configs/simple_smp_defconfig
-new file mode 100644
-index 000000000000..b6e3c7e158e7
---- /dev/null
-+++ b/arch/openrisc/configs/simple_smp_defconfig
-@@ -0,0 +1,66 @@
-+CONFIG_CROSS_COMPILE="or1k-linux-"
-+CONFIG_LOCALVERSION="-simple-smp"
-+CONFIG_NO_HZ=y
-+CONFIG_LOG_BUF_SHIFT=14
-+CONFIG_BLK_DEV_INITRD=y
-+# CONFIG_RD_GZIP is not set
-+# CONFIG_RD_BZIP2 is not set
-+# CONFIG_RD_LZMA is not set
-+# CONFIG_RD_XZ is not set
-+# CONFIG_RD_LZO is not set
-+# CONFIG_RD_LZ4 is not set
-+CONFIG_EXPERT=y
-+# CONFIG_KALLSYMS is not set
-+# CONFIG_EPOLL is not set
-+# CONFIG_TIMERFD is not set
-+# CONFIG_EVENTFD is not set
-+# CONFIG_AIO is not set
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_SLOB=y
-+CONFIG_MODULES=y
-+# CONFIG_BLOCK is not set
-+CONFIG_OPENRISC_BUILTIN_DTB="simple_smp"
-+CONFIG_SMP=y
-+CONFIG_HZ_100=y
-+CONFIG_OPENRISC_HAVE_SHADOW_GPRS=y
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
-+# CONFIG_INET_XFRM_MODE_TUNNEL is not set
-+# CONFIG_INET_XFRM_MODE_BEET is not set
-+# CONFIG_INET_DIAG is not set
-+CONFIG_TCP_CONG_ADVANCED=y
-+# CONFIG_TCP_CONG_BIC is not set
-+# CONFIG_TCP_CONG_CUBIC is not set
-+# CONFIG_TCP_CONG_WESTWOOD is not set
-+# CONFIG_TCP_CONG_HTCP is not set
-+# CONFIG_IPV6 is not set
-+# CONFIG_WIRELESS is not set
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FW_LOADER is not set
-+CONFIG_NETDEVICES=y
-+CONFIG_ETHOC=y
-+CONFIG_MICREL_PHY=y
-+# CONFIG_WLAN is not set
-+# CONFIG_INPUT is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_LEGACY_PTYS is not set
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HWMON is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_DNOTIFY is not set
-+CONFIG_TMPFS=y
-+CONFIG_NFS_FS=y
-+CONFIG_XZ_DEC=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-+# CONFIG_RCU_TRACE is not set
--- 
-2.13.6
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
