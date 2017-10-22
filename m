@@ -1,74 +1,131 @@
-From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 05/10 v3] usb: usb251xb: Add 5,6,7 ports boost settings
-Date: Sun, 22 Oct 2017 23:38:07 +0300
-Message-ID: <20171022203812.9379-6-fancer.lancer@gmail.com>
+From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 03/10 v3] usb: usb251xb: Add USB251x specific port count setting
+Date: Sun, 22 Oct 2017 23:38:05 +0300
+Message-ID: <20171022203812.9379-4-fancer.lancer@gmail.com>
 References: <20170916104220.3742-1-fancer.lancer@gmail.com>
  <20171022203812.9379-1-fancer.lancer@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171022203812.9379-1-fancer.lancer@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: richard.leitner@skidata.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171022203812.9379-1-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-USB electrical signaling drive strength boost bit is also supported
-by USB2517 hub. Since it got three addition ports, the designers
-needed to add one more register for initialization. It turned out
-to be formerly reserved 0xF7. As before we just initialize it with
-default zeros.
+USB251xb as well as USB2517 datasheet states, that all these
+hubs differ by number of ports declared as the last digit in the
+model name. So USB2512 got two ports, USB2513 - three, and so on.
+Such setting must be reflected in the device specific data
+structure and corresponding dts property should be checked whether
+it doesn't get out of available ports.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Richard Leitner <richard.leitner@skidata.com>
+Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/usb/misc/usb251xb.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/usb/misc/usb251xb.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index a05bd2e1e..0f309943f 100644
+index 22c32ea3f..9586da7eb 100644
 --- a/drivers/usb/misc/usb251xb.c
 +++ b/drivers/usb/misc/usb251xb.c
-@@ -94,8 +94,10 @@
+@@ -154,46 +154,55 @@ struct usb251xb {
  
- #define USB251XB_ADDR_BOOST_UP	0xF6
- #define USB251XB_DEF_BOOST_UP	0x00
--#define USB251XB_ADDR_BOOST_X	0xF8
--#define USB251XB_DEF_BOOST_X	0x00
-+#define USB251XB_ADDR_BOOST_57	0xF7
-+#define USB251XB_DEF_BOOST_57	0x00
-+#define USB251XB_ADDR_BOOST_14	0xF8
-+#define USB251XB_DEF_BOOST_14	0x00
+ struct usb251xb_data {
+ 	u16 product_id;
++	u8 port_cnt;
+ 	char product_str[USB251XB_STRING_BUFSIZE / 2]; /* ASCII string */
+ };
  
- #define USB251XB_ADDR_PORT_SWAP	0xFA
- #define USB251XB_DEF_PORT_SWAP	0x00
-@@ -149,7 +151,8 @@ struct usb251xb {
- 	char serial[USB251XB_STRING_BUFSIZE];
- 	u8  bat_charge_en;
- 	u8  boost_up;
--	u8  boost_x;
-+	u8  boost_57;
-+	u8  boost_14;
- 	u8  port_swap;
- 	u8  port_map12;
- 	u8  port_map34;
-@@ -280,7 +283,8 @@ static int usb251xb_connect(struct usb251xb *hub)
- 	       USB251XB_STRING_BUFSIZE);
- 	i2c_wb[USB251XB_ADDR_BATTERY_CHARGING_ENABLE] = hub->bat_charge_en;
- 	i2c_wb[USB251XB_ADDR_BOOST_UP]          = hub->boost_up;
--	i2c_wb[USB251XB_ADDR_BOOST_X]           = hub->boost_x;
-+	i2c_wb[USB251XB_ADDR_BOOST_57]          = hub->boost_57;
-+	i2c_wb[USB251XB_ADDR_BOOST_14]          = hub->boost_14;
- 	i2c_wb[USB251XB_ADDR_PORT_SWAP]         = hub->port_swap;
- 	i2c_wb[USB251XB_ADDR_PORT_MAP_12]       = hub->port_map12;
- 	i2c_wb[USB251XB_ADDR_PORT_MAP_34]       = hub->port_map34;
-@@ -520,7 +524,8 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
- 	hub->bat_charge_en = USB251XB_DEF_BATTERY_CHARGING_ENABLE;
- 	hub->boost_up = USB251XB_DEF_BOOST_UP;
--	hub->boost_x = USB251XB_DEF_BOOST_X;
-+	hub->boost_57 = USB251XB_DEF_BOOST_57;
-+	hub->boost_14 = USB251XB_DEF_BOOST_14;
- 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
- 	hub->port_map12 = USB251XB_DEF_PORT_MAP_12;
- 	hub->port_map34 = USB251XB_DEF_PORT_MAP_34;
+ static const struct usb251xb_data usb2512b_data = {
+ 	.product_id = 0x2512,
++	.port_cnt = 2,
+ 	.product_str = "USB2512B",
+ };
+ 
+ static const struct usb251xb_data usb2512bi_data = {
+ 	.product_id = 0x2512,
++	.port_cnt = 2,
+ 	.product_str = "USB2512Bi",
+ };
+ 
+ static const struct usb251xb_data usb2513b_data = {
+ 	.product_id = 0x2513,
++	.port_cnt = 3,
+ 	.product_str = "USB2513B",
+ };
+ 
+ static const struct usb251xb_data usb2513bi_data = {
+ 	.product_id = 0x2513,
++	.port_cnt = 3,
+ 	.product_str = "USB2513Bi",
+ };
+ 
+ static const struct usb251xb_data usb2514b_data = {
+ 	.product_id = 0x2514,
++	.port_cnt = 4,
+ 	.product_str = "USB2514B",
+ };
+ 
+ static const struct usb251xb_data usb2514bi_data = {
+ 	.product_id = 0x2514,
++	.port_cnt = 4,
+ 	.product_str = "USB2514Bi",
+ };
+ 
+ static const struct usb251xb_data usb2517_data = {
+ 	.product_id = 0x2517,
++	.port_cnt = 7,
+ 	.product_str = "USB2517",
+ };
+ 
+ static const struct usb251xb_data usb2517i_data = {
+ 	.product_id = 0x2517,
++	.port_cnt = 7,
+ 	.product_str = "USB2517i",
+ };
+ 
+@@ -422,8 +431,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 		for (i = 0; i < len / sizeof(u32); i++) {
+ 			u32 port = be32_to_cpu(cproperty_u32[i]);
+ 
+-			if ((port >= 1) && (port <= 4))
++			if ((port >= 1) && (port <= data->port_cnt))
+ 				hub->non_rem_dev |= BIT(port);
++			else
++				dev_warn(dev, "NRD port %u doesn't exist\n",
++					port);
+ 		}
+ 	}
+ 
+@@ -433,8 +445,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 		for (i = 0; i < len / sizeof(u32); i++) {
+ 			u32 port = be32_to_cpu(cproperty_u32[i]);
+ 
+-			if ((port >= 1) && (port <= 4))
++			if ((port >= 1) && (port <= data->port_cnt))
+ 				hub->port_disable_sp |= BIT(port);
++			else
++				dev_warn(dev, "PDS port %u doesn't exist\n",
++					port);
+ 		}
+ 	}
+ 
+@@ -444,8 +459,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 		for (i = 0; i < len / sizeof(u32); i++) {
+ 			u32 port = be32_to_cpu(cproperty_u32[i]);
+ 
+-			if ((port >= 1) && (port <= 4))
++			if ((port >= 1) && (port <= data->port_cnt))
+ 				hub->port_disable_bp |= BIT(port);
++			else
++				dev_warn(dev, "PDB port %u doesn't exist\n",
++					port);
+ 		}
+ 	}
+ 
 -- 
 2.12.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
