@@ -1,32 +1,49 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v2] of_mdio: Fix broken PHY IRQ in case of probe
- deferral
-Date: Sun, 22 Oct 2017 03:21:06 +0100 (WEST)
-Message-ID: <20171022.032106.409254810221513438.davem@davemloft.net>
-References: <1508327643-3579-1-git-send-email-geert+renesas@glider.be>
-        <FD695891-F3B8-4388-8887-A9DC997828B4@gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] openrisc: dts: or1ksim: Add stdout-path
+Date: Sun, 22 Oct 2017 11:23:53 +0900
+Message-ID: <20171022022353.27464-1-shorne@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <FD695891-F3B8-4388-8887-A9DC997828B4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Sat, 21 Oct 2017 19:01:45 -0700
+During reviews of the OpenRISC SMP patch series it was suggested to add
+stdout-path to the SMP dts file.  Add stdout-path to our other dts files
+to be a good example.
 
-> Reviewed-by : Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> I still can't make sure this is not a problem for multiple PHYs
-> hanging off the same bus, but like anything else, we'll deal with
-> problems later if they arise.
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-Thanks Florian.
+Changes since v1
+ - Complete rewrite with input from Geert
 
-Applied, thanks everyone.
+ arch/openrisc/boot/dts/or1ksim.dts | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/openrisc/boot/dts/or1ksim.dts b/arch/openrisc/boot/dts/or1ksim.dts
+index 5d4f9027afaf..8f41bd8c9f84 100644
+--- a/arch/openrisc/boot/dts/or1ksim.dts
++++ b/arch/openrisc/boot/dts/or1ksim.dts
+@@ -5,8 +5,13 @@
+ 	#size-cells = <1>;
+ 	interrupt-parent = <&pic>;
+ 
++	aliases {
++		uart0 = &serial0;
++	};
++
+ 	chosen {
+-		bootargs = "console=uart,mmio,0x90000000,115200";
++		bootargs = "earlycon";
++		stdout-path = "uart0:115200";
+ 	};
+ 
+ 	memory@0 {
+-- 
+2.13.6
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
