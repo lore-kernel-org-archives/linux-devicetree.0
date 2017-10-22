@@ -1,131 +1,127 @@
-From: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 03/10 v3] usb: usb251xb: Add USB251x specific port count setting
-Date: Sun, 22 Oct 2017 23:38:05 +0300
-Message-ID: <20171022203812.9379-4-fancer.lancer@gmail.com>
+From: Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 01/10 v3] usb: usb251xb: Update usb251xb bindings
+Date: Sun, 22 Oct 2017 23:38:03 +0300
+Message-ID: <20171022203812.9379-2-fancer.lancer@gmail.com>
 References: <20170916104220.3742-1-fancer.lancer@gmail.com>
  <20171022203812.9379-1-fancer.lancer@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171022203812.9379-1-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171022203812.9379-1-fancer.lancer@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: richard.leitner@skidata.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-USB251xb as well as USB2517 datasheet states, that all these
-hubs differ by number of ports declared as the last digit in the
-model name. So USB2512 got two ports, USB2513 - three, and so on.
-Such setting must be reflected in the device specific data
-structure and corresponding dts property should be checked whether
-it doesn't get out of available ports.
+Since hub usb2517 is going to be supported by the usb251xb driver,
+the bindings need to be properly updated. Particularly:
+- add "microchip,usb2517" and "microchip,usb2517i" compatible strings.
+- add "boolean" description to all the properties, which really accept
+a boolean value including a new one "led-{usb,speed}-mode".
+- move reset-gpios property to the optional section. It isn't
+defined as required in the code and shouldn't be required at all, since
+hardware may handle reset pins by itself.
+- add new led-{usb,speed}-mode mode property. USB2517 device supports
+two LED modes: USB mode and speed (default) indication mode. The last one
+can be switched on by this property.
+- add {bp,sp}-max-{total,removable}-current-microamp property measured in
+microamp. It hasn't been defined as property before. Since the limitation
+specified by these parameters is hardware specific it needs to be defined
+in dts.
 
-Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/usb/misc/usb251xb.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/usb/usb251xb.txt           | 46 +++++++++++++++-------
+ 1 file changed, 32 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 22c32ea3f..9586da7eb 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -154,46 +154,55 @@ struct usb251xb {
+diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+index 3957d4eda..168ff819e 100644
+--- a/Documentation/devicetree/bindings/usb/usb251xb.txt
++++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+@@ -1,16 +1,17 @@
+ Microchip USB 2.0 Hi-Speed Hub Controller
  
- struct usb251xb_data {
- 	u16 product_id;
-+	u8 port_cnt;
- 	char product_str[USB251XB_STRING_BUFSIZE / 2]; /* ASCII string */
- };
+-The device node for the configuration of a Microchip USB251xB/xBi USB 2.0
++The device node for the configuration of a Microchip USB251x/xBi USB 2.0
+ Hi-Speed Controller.
  
- static const struct usb251xb_data usb2512b_data = {
- 	.product_id = 0x2512,
-+	.port_cnt = 2,
- 	.product_str = "USB2512B",
- };
+ Required properties :
+  - compatible : Should be "microchip,usb251xb" or one of the specific types:
+ 	"microchip,usb2512b", "microchip,usb2512bi", "microchip,usb2513b",
+-	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi"
+- - reset-gpios : Should specify the gpio for hub reset
++	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi",
++	"microchip,usb2517", "microchip,usb2517i"
+  - reg : I2C address on the selected bus (default is <0x2C>)
  
- static const struct usb251xb_data usb2512bi_data = {
- 	.product_id = 0x2512,
-+	.port_cnt = 2,
- 	.product_str = "USB2512Bi",
- };
- 
- static const struct usb251xb_data usb2513b_data = {
- 	.product_id = 0x2513,
-+	.port_cnt = 3,
- 	.product_str = "USB2513B",
- };
- 
- static const struct usb251xb_data usb2513bi_data = {
- 	.product_id = 0x2513,
-+	.port_cnt = 3,
- 	.product_str = "USB2513Bi",
- };
- 
- static const struct usb251xb_data usb2514b_data = {
- 	.product_id = 0x2514,
-+	.port_cnt = 4,
- 	.product_str = "USB2514B",
- };
- 
- static const struct usb251xb_data usb2514bi_data = {
- 	.product_id = 0x2514,
-+	.port_cnt = 4,
- 	.product_str = "USB2514Bi",
- };
- 
- static const struct usb251xb_data usb2517_data = {
- 	.product_id = 0x2517,
-+	.port_cnt = 7,
- 	.product_str = "USB2517",
- };
- 
- static const struct usb251xb_data usb2517i_data = {
- 	.product_id = 0x2517,
-+	.port_cnt = 7,
- 	.product_str = "USB2517i",
- };
- 
-@@ -422,8 +431,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		for (i = 0; i < len / sizeof(u32); i++) {
- 			u32 port = be32_to_cpu(cproperty_u32[i]);
- 
--			if ((port >= 1) && (port <= 4))
-+			if ((port >= 1) && (port <= data->port_cnt))
- 				hub->non_rem_dev |= BIT(port);
-+			else
-+				dev_warn(dev, "NRD port %u doesn't exist\n",
-+					port);
- 		}
- 	}
- 
-@@ -433,8 +445,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		for (i = 0; i < len / sizeof(u32); i++) {
- 			u32 port = be32_to_cpu(cproperty_u32[i]);
- 
--			if ((port >= 1) && (port <= 4))
-+			if ((port >= 1) && (port <= data->port_cnt))
- 				hub->port_disable_sp |= BIT(port);
-+			else
-+				dev_warn(dev, "PDS port %u doesn't exist\n",
-+					port);
- 		}
- 	}
- 
-@@ -444,8 +459,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		for (i = 0; i < len / sizeof(u32); i++) {
- 			u32 port = be32_to_cpu(cproperty_u32[i]);
- 
--			if ((port >= 1) && (port <= 4))
-+			if ((port >= 1) && (port <= data->port_cnt))
- 				hub->port_disable_bp |= BIT(port);
-+			else
-+				dev_warn(dev, "PDB port %u doesn't exist\n",
-+					port);
- 		}
- 	}
- 
+ Optional properties :
++ - reset-gpios : Should specify the gpio for hub reset
+  - skip-config : Skip Hub configuration, but only send the USB-Attach command
+  - vendor-id : Set USB Vendor ID of the hub (16 bit, default is 0x0424)
+  - product-id : Set USB Product ID of the hub (16 bit, default depends on type)
+@@ -19,29 +20,47 @@ Optional properties :
+  - manufacturer : Set USB Manufacturer string (max 31 characters long)
+  - product : Set USB Product string (max 31 characters long)
+  - serial : Set USB Serial string (max 31 characters long)
+- - {bus,self}-powered : selects between self- and bus-powered operation (default
+-	is self-powered)
+- - disable-hi-speed : disable USB Hi-Speed support
++ - {bus,self}-powered : selects between self- and bus-powered operation
++	(boolean, default is self-powered)
++ - disable-hi-speed : disable USB Hi-Speed support (boolean)
+  - {multi,single}-tt : selects between multi- and single-transaction-translator
+-	(default is multi-tt)
+- - disable-eop : disable End of Packet generation in full-speed mode
++	(boolean, default is multi-tt)
++ - disable-eop : disable End of Packet generation in full-speed mode (boolean)
+  - {ganged,individual}-sensing : select over-current sense type in self-powered
+-	mode (default is individual)
++	mode (boolean, default is individual)
+  - {ganged,individual}-port-switching : select port power switching mode
+-	(default is individual)
++	(boolean, default is individual)
+  - dynamic-power-switching : enable auto-switching from self- to bus-powered
+-	operation if the local power source is removed or unavailable
++	operation if the local power source is removed or unavailable (boolean)
+  - oc-delay-us : Delay time (in microseconds) for filtering the over-current
+ 	sense inputs. Valid values are 100, 4000, 8000 (default) and 16000. If
+ 	an invalid value is given, the default is used instead.
+- - compound-device : indicate the hub is part of a compound device
+- - port-mapping-mode : enable port mapping mode
++ - compound-device : indicate the hub is part of a compound device (boolean)
++ - port-mapping-mode : enable port mapping mode (boolean)
++ - led-{usb,speed}-mode : led usb/speed indication mode selection
++	(boolean, default is speed mode)
+  - string-support : enable string descriptor support (required for manufacturer,
+ 	product and serial string configuration)
+  - non-removable-ports : Should specify the ports which have a non-removable
+ 	device connected.
+  - sp-disabled-ports : Specifies the ports which will be self-power disabled
+  - bp-disabled-ports : Specifies the ports which will be bus-power disabled
++ - sp-max-total-current-microamp: Specifies max current consumed by the hub
++	from VBUS when operating in self-powered hub. It includes the hub
++	silicon along with all associated circuitry including a permanently
++	attached peripheral (range: 0 - 100000 uA, default 1000 uA)
++ - bp-max-total-current-microamp: Specifies max current consumed by the hub
++	from VBUS when operating in self-powered hub. It includes the hub
++	silicon along with all associated circuitry including a permanently
++	attached peripheral (range: 0 - 510000 uA, default 100000 uA)
++ - sp-max-removable-current-microamp: Specifies max current consumed by the hub
++	from VBUS when operating in self-powered hub. It includes the hub
++	silicon along with all associated circuitry excluding a permanently
++	attached peripheral (range: 0 - 100000 uA, default 1000 uA)
++ - bp-max-removable-current-microamp: Specifies max current consumed by the hub
++	from VBUS when operating in self-powered hub. It includes the hub
++	silicon along with all associated circuitry excluding a permanently
++	attached peripheral (range: 0 - 510000 uA, default 100000 uA)
+  - power-on-time-ms : Specifies the time it takes from the time the host
+ 	initiates the power-on sequence to a port until the port has adequate
+ 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+@@ -56,7 +75,6 @@ Examples:
+ 	usb2514b@2c {
+ 		compatible = "microchip,usb2514b";
+ 		reg = <0x2c>;
+-		reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 		vendor-id = /bits/ 16 <0x0000>;
+ 		product-id = /bits/ 16 <0x0000>;
+ 		string-support;
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
