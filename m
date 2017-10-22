@@ -1,7 +1,7 @@
 From: Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 09/10 v3] usb: usb251xb: Add max power/current dts property support
-Date: Sun, 22 Oct 2017 23:38:11 +0300
-Message-ID: <20171022203812.9379-10-fancer.lancer@gmail.com>
+Subject: [PATCH 06/10 v3] usb: usb251xb: Add battery enable setting flag
+Date: Sun, 22 Oct 2017 23:38:08 +0300
+Message-ID: <20171022203812.9379-7-fancer.lancer@gmail.com>
 References: <20170916104220.3742-1-fancer.lancer@gmail.com>
  <20171022203812.9379-1-fancer.lancer@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,56 +11,85 @@ To: richard.leitner@skidata.com, gregkh@linuxfoundation.org, robh+dt@kernel.org,
 Cc: Sergey.Semin@t-platforms.ru, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This parameters may be varied in accordance with hardware specifics.
-So lets add the corresponding settings to the usb251xb driver dts
-specification.
+Battery charging settings are supported by USB251xb hubs only.
+USB2517i isn't one of them. So we need to reflect it within the
+device-specific data structure. The driver doesn't support dts
+property changing this setting, but instead defaults it with zero.
+So the flag isn't used anywhere in the driver, but still can be helpful
+in future, when necessity of the corresponding dts setting arises.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/usb/misc/usb251xb.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ drivers/usb/misc/usb251xb.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 29432fd3b..669b98be2 100644
+index 0f309943f..e6ccea57a 100644
 --- a/drivers/usb/misc/usb251xb.c
 +++ b/drivers/usb/misc/usb251xb.c
-@@ -500,6 +500,26 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		}
- 	}
+@@ -164,54 +164,63 @@ struct usb251xb {
+ struct usb251xb_data {
+ 	u16 product_id;
+ 	u8 port_cnt;
++	bool bat_support;
+ 	char product_str[USB251XB_STRING_BUFSIZE / 2]; /* ASCII string */
+ };
  
-+	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
-+	if (!of_property_read_u32(np, "sp-max-total-current-microamp",
-+	    &property_u32))
-+		hub->max_power_sp = min_t(u8, property_u32 / 2000, 50);
-+
-+	hub->max_power_bp = USB251XB_DEF_MAX_POWER_BUS;
-+	if (!of_property_read_u32(np, "bp-max-total-current-microamp",
-+	    &property_u32))
-+		hub->max_power_bp = min_t(u8, property_u32 / 2000, 255);
-+
-+	hub->max_current_sp = USB251XB_DEF_MAX_CURRENT_SELF;
-+	if (!of_property_read_u32(np, "sp-max-removable-current-microamp",
-+	    &property_u32))
-+		hub->max_current_sp = min_t(u8, property_u32 / 2000, 50);
-+
-+	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
-+	if (!of_property_read_u32(np, "bp-max-removable-current-microamp",
-+	    &property_u32))
-+		hub->max_current_bp = min_t(u8, property_u32 / 2000, 255);
-+
- 	hub->power_on_time = USB251XB_DEF_POWER_ON_TIME;
- 	if (!of_property_read_u32(np, "power-on-time-ms", &property_u32))
- 		hub->power_on_time = min_t(u8, property_u32 / 2, 255);
-@@ -539,10 +559,6 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
- 	 */
--	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
--	hub->max_power_bp = USB251XB_DEF_MAX_POWER_BUS;
--	hub->max_current_sp = USB251XB_DEF_MAX_CURRENT_SELF;
--	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
- 	hub->bat_charge_en = USB251XB_DEF_BATTERY_CHARGING_ENABLE;
- 	hub->boost_up = USB251XB_DEF_BOOST_UP;
- 	hub->boost_57 = USB251XB_DEF_BOOST_57;
+ static const struct usb251xb_data usb2512b_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
++	.bat_support = true,
+ 	.product_str = "USB2512B",
+ };
+ 
+ static const struct usb251xb_data usb2512bi_data = {
+ 	.product_id = 0x2512,
+ 	.port_cnt = 2,
++	.bat_support = true,
+ 	.product_str = "USB2512Bi",
+ };
+ 
+ static const struct usb251xb_data usb2513b_data = {
+ 	.product_id = 0x2513,
+ 	.port_cnt = 3,
++	.bat_support = true,
+ 	.product_str = "USB2513B",
+ };
+ 
+ static const struct usb251xb_data usb2513bi_data = {
+ 	.product_id = 0x2513,
+ 	.port_cnt = 3,
++	.bat_support = true,
+ 	.product_str = "USB2513Bi",
+ };
+ 
+ static const struct usb251xb_data usb2514b_data = {
+ 	.product_id = 0x2514,
+ 	.port_cnt = 4,
++	.bat_support = true,
+ 	.product_str = "USB2514B",
+ };
+ 
+ static const struct usb251xb_data usb2514bi_data = {
+ 	.product_id = 0x2514,
+ 	.port_cnt = 4,
++	.bat_support = true,
+ 	.product_str = "USB2514Bi",
+ };
+ 
+ static const struct usb251xb_data usb2517_data = {
+ 	.product_id = 0x2517,
+ 	.port_cnt = 7,
++	.bat_support = false,
+ 	.product_str = "USB2517",
+ };
+ 
+ static const struct usb251xb_data usb2517i_data = {
+ 	.product_id = 0x2517,
+ 	.port_cnt = 7,
++	.bat_support = false,
+ 	.product_str = "USB2517i",
+ };
+ 
 -- 
 2.12.0
