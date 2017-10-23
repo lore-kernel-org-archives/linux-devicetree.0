@@ -1,57 +1,46 @@
 From: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Subject: [PATCH v3 2/2] dt-bindings: max3421: Add bindings documentation
-Date: Tue, 24 Oct 2017 01:08:43 +0200
-Message-ID: <972c818341c3e7a479b2815e3f3f38fbe35338b6.1508798984.git.jules.maselbas@grenoble-inp.org>
-References: <cover.1508798984.git.jules.maselbas@grenoble-inp.org>
+Subject: [PATCH v3 0/2] max3421: add devicetree support
+Date: Tue, 24 Oct 2017 01:08:41 +0200
+Message-ID: <cover.1508798984.git.jules.maselbas@grenoble-inp.org>
+References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-In-Reply-To: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-References: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+In-Reply-To: <cover.1508108927.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
 Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds bindings documentation for the max3421 driver.
+Hi,
 
-Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This patchset adds devicetree support to the max3421 driver.
+Theses modification are based on a previous (unapplied) patch
+series by Alexander Amelkin [1].
+
+Changes in v3:
+ * Documentation modification, interrupt-parent is optional.
+
+Changes in v2:
+ * The platform_data is no longer freed in max3421_remove() as it is
+   allocated with devm_kzalloc.
+ * Removed the dev_err print if devm_kzalloc fail.
+ * Removed a test for platform_data null pointer in max3421_hub_control()
+   as the driver probe will fail if no platform_data is found.
+
+Thank you.
+
+[1]: [https://lkml.org/lkml/2017/5/26/285]
+
 ---
- .../devicetree/bindings/usb/maxim,max3421.txt      | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+
+Jules Maselbas (2):
+  usb: max3421: Add devicetree support
+  dt-bindings: max3421: Add bindings documentation
+
+ .../devicetree/bindings/usb/maxim,max3421.txt      | 25 ++++++++
+ drivers/usb/host/max3421-hcd.c                     | 75 +++++++++++++++++++++-
+ 2 files changed, 99 insertions(+), 1 deletion(-)
  create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-new file mode 100644
-index 000000000000..5c699e52ce3f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-@@ -0,0 +1,25 @@
-+Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
-+
-+Required properties:
-+ - compatible: Should be "maxim,max3421"
-+ - spi-max-frequency: maximum frequency for this device must not exceed 26 MHz.
-+ - reg: chip select number to which this device is connected.
-+ - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
-+   GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
-+   ACTIVE_LEVEL is 0 or 1.
-+ - interrupts: the interrupt line description for the interrupt controller.
-+   The driver configures MAX3421E for active low level triggered interrupts,
-+   configure your interrupt line accordingly.
-+
-+Optional property:
-+ - interrupt-parent: the phandle to the associated interrupt controller.
-+
-+Example:
-+	usb@0 {
-+		compatible = "maxim,max3421";
-+		reg = <0>;
-+		maxim,vbus-en-pin = <3 1>;
-+		spi-max-frequency = <26000000>;
-+		interrupt-parent = <&PIC>;
-+		interrupts = <42>;
-+	};
 -- 
 2.14.2
 
