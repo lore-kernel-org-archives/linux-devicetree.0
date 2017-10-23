@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 3/4] rtc: mediatek: enhance the description for MediaTek PMIC based RTC
-Date: Mon, 23 Oct 2017 15:16:46 +0800
-Message-ID: <6f7a30fe5637066fd9fe67287f2d8c9a2b7afca2.1508741263.git.sean.wang@mediatek.com>
+Subject: [PATCH v3 4/4] rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
+Date: Mon, 23 Oct 2017 15:16:47 +0800
+Message-ID: <633a7df07a81fe2cca46e42e76174a15f6fbf163.1508741263.git.sean.wang@mediatek.com>
 References: <cover.1508741262.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,39 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Give a better description for original MediaTek RTC driver as PMIC based
-RTC in order to distinguish SoC based RTC. Also turning all words with
-Mediatek to MediaTek here.
+I work for MediaTek on maintaining the MediaTek SoC based RTC driver for
+the existing SoCs and keep adding support for the following SoCs in the
+future.
 
 Cc: Eddie Huang <eddie.huang@mediatek.com>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Eddie Huang <eddie.huang@mediatek.com>
 ---
- drivers/rtc/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index fd9b590..6a315cb 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1716,14 +1716,14 @@ config RTC_DRV_MT7622
- 	  will be called rtc-mt7622.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2281af4..332c04c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1579,10 +1579,13 @@ F:	drivers/rtc/rtc-armada38x.c
  
- config RTC_DRV_MT6397
--	tristate "Mediatek Real Time Clock driver"
-+	tristate "MediaTek PMIC based RTC"
- 	depends on MFD_MT6397 || (COMPILE_TEST && IRQ_DOMAIN)
- 	help
--	  This selects the Mediatek(R) RTC driver. RTC is part of Mediatek
-+	  This selects the MediaTek(R) RTC driver. RTC is part of MediaTek
- 	  MT6397 PMIC. You should enable MT6397 PMIC MFD before select
--	  Mediatek(R) RTC driver.
-+	  MediaTek(R) RTC driver.
+ ARM/Mediatek RTC DRIVER
+ M:	Eddie Huang <eddie.huang@mediatek.com>
++M:	Sean Wang <sean.wang@mediatek.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/rtc/rtc-mt7622.txt
+ F:	drivers/rtc/rtc-mt6397.c
++F:	drivers/rtc/rtc-mt7622.c
  
--	  If you want to use Mediatek(R) RTC interface, select Y or M here.
-+	  If you want to use MediaTek(R) RTC interface, select Y or M here.
- 
- config RTC_DRV_XGENE
- 	tristate "APM X-Gene RTC"
+ ARM/Mediatek SoC support
+ M:	Matthias Brugger <matthias.bgg@gmail.com>
 -- 
 2.7.4
