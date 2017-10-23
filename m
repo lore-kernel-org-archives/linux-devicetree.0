@@ -1,77 +1,69 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] media: dt-bindings: Add bindings for TDA1997X
-Date: Mon, 23 Oct 2017 17:22:10 -0500
-Message-ID: <20171023222210.gwyxlbvvbcbzbqie@rob-hp-laptop>
-References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
- <1507783506-3884-3-git-send-email-tharvey@gateworks.com>
+Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
+Date: Mon, 23 Oct 2017 17:28:50 -0500
+Message-ID: <20171023222850.ecavz6jm2mnoplea@rob-hp-laptop>
+References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1507783506-3884-3-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+In-Reply-To: <1508042882-20922-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 11, 2017 at 09:45:04PM -0700, Tim Harvey wrote:
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> ---
-> v2:
->  - add vendor prefix and remove _ from vidout-portcfg
->  - remove _ from labels
->  - remove max-pixel-rate property
->  - describe and provide example for single output port
->  - use new audio port bindings
+On Sun, Oct 15, 2017 at 12:48:02PM +0800, Shawn Guo wrote:
+> From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > 
-> ---
->  .../devicetree/bindings/media/i2c/tda1997x.txt     | 179 +++++++++++++++++++++
->  1 file changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+> Add combo phy driver for HiSilicon STB SoCs. This phy can be
+> used as pcie-phy, sata-phy or usb-phy.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+> Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/phy/phy-hi3798cv200-combphy.txt       |  21 ++
+
+Please split bindings to separate patch especially for new ones.
+
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/hisilicon/Kconfig                      |   9 +
+>  drivers/phy/hisilicon/Makefile                     |   1 +
+>  drivers/phy/hisilicon/phy-histb-combphy.c          | 236 +++++++++++++++++++++
+>  5 files changed, 268 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+>  create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
 > new file mode 100644
-> index 0000000..269d7f0
+> index 000000000000..c7121cdcaed9
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> @@ -0,0 +1,179 @@
-> +Device-Tree bindings for the NXP TDA1997x HDMI receiver
+> +++ b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+> @@ -0,0 +1,21 @@
+> +HiSilicon STB PCIE/SATA/USB3 PHY
 > +
-> +The TDA19971/73 are HDMI video receivers.
+> +Properties:
+> +- compatible: Should be "hisilicon,hi3798cv200-combphy"
+> +- #phy-cells: Should be 1.  The cell number is used to select the phy mode:
+> +	0: PCIe mode
+> +	1: USB 3.0 mode
+> +	2: SATA mode
+> +- clocks: The phandle to clock provider and clock specifier pair.
+> +- resets: The phandle to reset controller and reset specifier pair.
+> +- hisilicon,peripheral-syscon: The phandle to the peripheral controller.
+
+Could just be a child of the syscon instead?
+
 > +
-> +The TDA19971 Video port output pins can be used as follows:
-> + - RGB 8bit per color (24 bits total): R[11:4] B[11:4] G[11:4]
-> + - YUV444 8bit per color (24 bits total): Y[11:4] Cr[11:4] Cb[11:4]
-> + - YUV422 semi-planar 8bit per component (16 bits total): Y[11:4] CbCr[11:4]
-> + - YUV422 semi-planar 10bit per component (20 bits total): Y[11:2] CbCr[11:2]
-> + - YUV422 semi-planar 12bit per component (24 bits total): - Y[11:0] CbCr[11:0]
-> + - YUV422 BT656 8bit per component (8 bits total): YCbCr[11:4] (2-cycles)
-> + - YUV422 BT656 10bit per component (10 bits total): YCbCr[11:2] (2-cycles)
-> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
+> +Example:
 > +
-> +The TDA19973 Video port output pins can be used as follows:
-> + - RGB 12bit per color (36 bits total): R[11:0] B[11:0] G[11:0]
-> + - YUV444 12bit per color (36 bits total): Y[11:0] Cb[11:0] Cr[11:0]
-> + - YUV422 semi-planar 12bit per component (24 bits total): Y[11:0] CbCr[11:0]
-> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> +
-> +The Video port output pins are mapped via 4-bit 'pin groups' allowing
-> +for a variety fo connection possibilities including swapping pin order within
-
-s/fo /of /
-
-> +pin groups. The video_portcfg device-tree property consists of register mapping
-> +pairs which map a chip-specific VP output register to a 4-bit pin group. If
-> +the pin group needs to be bit-swapped you can use the *_S pin-group defines.
-
-The rest of the binding looks fine, but I have some reservations about 
-this. I think this should be common probably. There's been a few 
-bindings for display recently that deal with the interface format. Maybe 
-some vendor property is needed here to map a standard interface format 
-back to pin configuration.
-
-Rob
+> +combphy1: phy {
+> +	compatible = "hisilicon,hi3798cv200-combphy";
+> +	#phy-cells = <1>;
+> +	clocks = <&crg HISTB_COMBPHY1_CLK>;
+> +	resets = <&crg 0x188 12>;
+> +	hisilicon,peripheral-syscon = <&peri_ctrl>;
+> +};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
