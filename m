@@ -1,75 +1,50 @@
-From: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V2 0/7] Tegra PCIe end point config space map code
- refactoring
-Date: Mon, 23 Oct 2017 20:54:53 +0530
-Message-ID: <fba4fe22-1401-1653-0985-e1ffafb29ded@nvidia.com>
-References: <1508769312-12465-1-git-send-email-vidyas@nvidia.com>
- <CAL_Jsq+3UAwk5gNgh=s6O1f-MadyGCtADX7pyzX8eUfBqboRfA@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND][PATCH 1/4] of: platform: populate /firmware/ node from
+ of_platform_default_populate_init()
+Date: Mon, 23 Oct 2017 16:59:54 +0100
+Message-ID: <52ed3abb-6b05-89c9-5ab4-31b37ffa1db9@arm.com>
+References: <1506595562-10592-1-git-send-email-sudeep.holla@arm.com>
+ <1506595562-10592-2-git-send-email-sudeep.holla@arm.com>
+ <CAL_JsqJYNXoZbN4zydkkZHWYxJuH4ObYJGgz2L7++kMgTWC1vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+3UAwk5gNgh=s6O1f-MadyGCtADX7pyzX8eUfBqboRfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJYNXoZbN4zydkkZHWYxJuH4ObYJGgz2L7++kMgTWC1vg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
+On 17/10/17 14:02, Rob Herring wrote:
+> On Thu, Sep 28, 2017 at 5:45 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Since "/firmware" does not have its own "compatible" property as it's
+>> just collection of nodes representing firmware interface, it's sub-nodes
+>> are not populated during system initialization.
+>>
+>> Currently different firmware drivers search the /firmware/ node and
+>> populate the sub-node devices selectively. Instead we can populate
+>> the /firmware/ node during init to avoid more drivers continuing to
+>> populate the devices selectively.
+>>
+>> To generalize the solution this patch populates the /firmware/ node
+>> explicitly from of_platform_default_populate_init().
+>>
 
-On Monday 23 October 2017 08:40 PM, Rob Herring wrote:
-> On Mon, Oct 23, 2017 at 9:35 AM, Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> PCIe host controller in Tegra SoCs has 1GB of aperture available
->> for mapping end points config space, IO and BARs. In that, currently
->> 256MB is being reserved for mapping end points configuration space
->> which leaves less memory space available for mapping end points BARs
->> on some of the platforms.
->> This patch series attempts to use only 4K space from 1GB aperture to
->> access end points configuration space.
->>
->> Currently, this change benefits T20 and T186 in saving (i.e. repurposed
->> to use for BAR mapping) physical space as well as kernel virtual mapping space,
->> it saves only kernel virtual address space in T30, T124, T132 and T210.
->>
->> NOTE: Both driver and DT changes are inter-dependent and hence need to go together
-> You are breaking compatibility with any other OS.
->
-> Can't this easily be solved within the kernel by adjusting the
-> resource size? To save the virtual space, you only need patch 1 and
-> don't need the DT change. The DT change is just for phys address space
-> for BARs.
-In case of T20 & T186, DT change is required to re-purpose address space 
-which otherwise
-is used for config space mapping to map BARs. In case of other chips, DT 
-changes
-are also required because the 4K being used for mapping config space is 
-taken from the
-last 4K chunk of 256MB instead of first 4K chunk to align with driver 
-change.
->> Testing Done on T124, T210 & T186:
->>   Enumeration and basic functionality of immediate devices
->>   Enumeration of devices behind a PCIe switch
->>   Complete 4K configuration space access
->>
->> Vidya Sagar (7):
->>    PCI: tegra: refactor config space mapping code
->>    ARM: tegra: limit PCIe config space mapping to 4K for T20
->>    ARM: tegra: limit PCIe config space mapping to 4K for T30
->>    ARM: tegra: limit PCIe config space mapping to 4K for T124
->>    ARM64: tegra: limit PCIe config space mapping to 4K for T132
->>    ARM64: tegra: limit PCIe config space mapping to 4K for T210
->>    ARM64: tegra: limit PCIe config space mapping to 4K for T186
->>
->>   arch/arm/boot/dts/tegra124.dtsi          |   2 +-
->>   arch/arm/boot/dts/tegra20.dtsi           |   8 +--
->>   arch/arm/boot/dts/tegra30.dtsi           |   2 +-
->>   arch/arm64/boot/dts/nvidia/tegra132.dtsi |   2 +-
->>   arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +--
->>   arch/arm64/boot/dts/nvidia/tegra210.dtsi |   2 +-
->>   drivers/pci/host/pci-tegra.c             | 109 +++++++++----------------------
->>   7 files changed, 42 insertions(+), 91 deletions(-)
->>
->> --
->> 2.7.4
->>
+You had concernsin the past and I mentioned that firmware interface to
+user-space *has* to continue in /sys/firmware, but he platform_device
+management is internal to kernel.
+
+Can we proceed with this change at-least for qcom and meson firmware
+which are platform device already ? I can drop optee related changes.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
