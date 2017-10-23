@@ -1,87 +1,210 @@
-From: Chris Lew <clew@codeaurora.org>
-Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Support GLINK intents
-Date: Mon, 23 Oct 2017 11:37:56 -0700
-Message-ID: <e0f84c80-6e43-e241-c83a-9fe4f4ab2040@codeaurora.org>
-References: <1508375418-15611-1-git-send-email-clew@codeaurora.org>
- <1508375418-15611-2-git-send-email-clew@codeaurora.org>
- <CAOCOHw75mrusG6XPXwKV7UDUt2gFZfU_MyUZxryk4YziCGinNg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAOCOHw75mrusG6XPXwKV7UDUt2gFZfU_MyUZxryk4YziCGinNg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, smaliyap@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v8 02/10] dt-bindings: net: dwmac-sun8i: update documentation about integrated PHY
+Date: Mon, 23 Oct 2017 20:56:18 +0200
+Message-ID: <20171023185626.31793-3-clabbe.montjoie@gmail.com>
+References: <20171023185626.31793-1-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171023185626.31793-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch add documentation about the MDIO switch used on sun8i-h3-emac
+for integrated PHY.
 
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ .../devicetree/bindings/net/dwmac-sun8i.txt        | 139 +++++++++++++++++++--
+ 1 file changed, 127 insertions(+), 12 deletions(-)
 
-On 10/19/2017 10:00 PM, Bjorn Andersson wrote:
-> On Wed 18 Oct 18:10 PDT 2017, Chris Lew wrote:
-> 
->> Virtual GLINK channels may know what throughput to expect from a
->> remoteproc. An intent advertises to the remoteproc this channel is
->> ready to receive data. Allow a channel to define the size and amount of
->> intents to be prequeued.
->>
->> Signed-off-by: Chris Lew <clew@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
->> index b277eca861f7..6c21f76822ca 100644
->> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
->> @@ -39,6 +39,14 @@ of these nodes are defined by the individual bindings for the specific function
->>    Definition: a list of channels tied to this function, used for matching
->>       the function to a set of virtual channels
->>
->> +- intents:
-> 
-> qcom,intents or qcom,default-intents
-> 
-
-Will use "qcom,intents".
-
->> + Usage: optional
->> + Value type: <prop-encoded-array>
->> + Definition: a list of size,amount pairs describing what intents should
->> +    be preallocated for this virtual channel. If a GLINK node
->> +    supports intents, an intent advertises this channel is ready
->> +    to receive data.
-> 
-> Rather than describing what a GLINK intent is I would suggest that you
-> replace this second sentence with something like "This can be used to
-> tweak the default intents available for the channel to meet expectations
-> of the remote."
->
-
-Sounds good, will change.
-
->> +
->>   = EXAMPLE
->>   The following example represents the GLINK RPM node on a MSM8996 device, with
->>   the function for the "rpm_request" channel defined, which is used for
->> @@ -69,6 +77,8 @@ regualtors and root clocks.
->>    compatible = "qcom,rpm-msm8996";
->>    qcom,glink-channels = "rpm_requests";
->>
->> + intents = <0x400 5
->> +   0x800 1>;
->>    ...
->>    };
->>    };
-> 
-> Regards,
-> Bjorn
-> 
-
-Thanks,
-Chris
-
+diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+index 725f3b187886..3e37db10fa02 100644
+--- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
++++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+@@ -4,18 +4,18 @@ This device is a platform glue layer for stmmac.
+ Please see stmmac.txt for the other unchanged properties.
+ 
+ Required properties:
+-- compatible: should be one of the following string:
++- compatible: must be one of the following string:
+ 		"allwinner,sun8i-a83t-emac"
+ 		"allwinner,sun8i-h3-emac"
+ 		"allwinner,sun8i-v3s-emac"
+ 		"allwinner,sun50i-a64-emac"
+ - reg: address and length of the register for the device.
+ - interrupts: interrupt for the device
+-- interrupt-names: should be "macirq"
++- interrupt-names: must be "macirq"
+ - clocks: A phandle to the reference clock for this device
+-- clock-names: should be "stmmaceth"
++- clock-names: must be "stmmaceth"
+ - resets: A phandle to the reset control for this device
+-- reset-names: should be "stmmaceth"
++- reset-names: must be "stmmaceth"
+ - phy-mode: See ethernet.txt
+ - phy-handle: See ethernet.txt
+ - #address-cells: shall be 1
+@@ -39,23 +39,38 @@ Optional properties for the following compatibles:
+ - allwinner,leds-active-low: EPHY LEDs are active low
+ 
+ Required child node of emac:
+-- mdio bus node: should be named mdio
++- mdio bus node: with compatible "snps,dwmac-mdio"
+ 
+ Required properties of the mdio node:
+ - #address-cells: shall be 1
+ - #size-cells: shall be 0
+ 
+-The device node referenced by "phy" or "phy-handle" should be a child node
++The device node referenced by "phy" or "phy-handle" must be a child node
+ of the mdio node. See phy.txt for the generic PHY bindings.
+ 
+-Required properties of the phy node with the following compatibles:
++The following compatibles require that the emac node have a mdio-mux child
++node called "mdio-mux":
++  - "allwinner,sun8i-h3-emac"
++  - "allwinner,sun8i-v3s-emac":
++Required properties for the mdio-mux node:
++  - compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux"
++  - one child mdio for the integrated mdio with the compatible
++    "allwinner,sun8i-h3-mdio-internal"
++  - one child mdio for the external mdio if present (V3s have none)
++Required properties for the mdio-mux children node:
++  - reg: 1 for internal MDIO bus, 2 for external MDIO bus
++
++The following compatibles require a PHY node representing the integrated
++PHY, under the integrated MDIO bus node if an mdio-mux node is used:
+   - "allwinner,sun8i-h3-emac",
+   - "allwinner,sun8i-v3s-emac":
++
++Required properties of the integrated phy node:
+ - clocks: a phandle to the reference clock for the EPHY
+ - resets: a phandle to the reset control for the EPHY
++- Must be a child of the integrated mdio
+ 
+-Example:
+-
++Example with integrated PHY:
+ emac: ethernet@1c0b000 {
+ 	compatible = "allwinner,sun8i-h3-emac";
+ 	syscon = <&syscon>;
+@@ -72,13 +87,113 @@ emac: ethernet@1c0b000 {
+ 	phy-handle = <&int_mii_phy>;
+ 	phy-mode = "mii";
+ 	allwinner,leds-active-low;
++
++	mdio0: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++	};
++
++	mdio-mux {
++		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		int_mdio: mdio@1 {
++			compatible = "allwinner,sun8i-h3-mdio-internal";
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			int_mii_phy: ethernet-phy@1 {
++				reg = <1>;
++				clocks = <&ccu CLK_BUS_EPHY>;
++				resets = <&ccu RST_BUS_EPHY>;
++				phy-is-integrated;
++			};
++		};
++		ext_mdio: mdio@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++};
++
++Example with external PHY:
++emac: ethernet@1c0b000 {
++	compatible = "allwinner,sun8i-h3-emac";
++	syscon = <&syscon>;
++	reg = <0x01c0b000 0x104>;
++	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "macirq";
++	resets = <&ccu RST_BUS_EMAC>;
++	reset-names = "stmmaceth";
++	clocks = <&ccu CLK_BUS_EMAC>;
++	clock-names = "stmmaceth";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	phy-handle = <&ext_rgmii_phy>;
++	phy-mode = "rgmii";
++	allwinner,leds-active-low;
++
++	mdio0: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++	};
++
++	mdio-mux {
++		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		int_mdio: mdio@1 {
++			compatible = "allwinner,sun8i-h3-mdio-internal";
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			int_mii_phy: ethernet-phy@1 {
++				reg = <1>;
++				clocks = <&ccu CLK_BUS_EPHY>;
++				resets = <&ccu RST_BUS_EPHY>;
++			};
++		};
++		ext_mdio: mdio@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			ext_rgmii_phy: ethernet-phy@1 {
++				reg = <1>;
++			};
++		}:
++	};
++};
++
++Example with SoC without integrated PHY
++
++emac: ethernet@1c0b000 {
++	compatible = "allwinner,sun8i-a83t-emac";
++	syscon = <&syscon>;
++	reg = <0x01c0b000 0x104>;
++	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "macirq";
++	resets = <&ccu RST_BUS_EMAC>;
++	reset-names = "stmmaceth";
++	clocks = <&ccu CLK_BUS_EMAC>;
++	clock-names = "stmmaceth";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	phy-handle = <&ext_rgmii_phy>;
++	phy-mode = "rgmii";
++
+ 	mdio: mdio {
++		compatible = "snps,dwmac-mdio";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		int_mii_phy: ethernet-phy@1 {
++		ext_rgmii_phy: ethernet-phy@1 {
+ 			reg = <1>;
+-			clocks = <&ccu CLK_BUS_EPHY>;
+-			resets = <&ccu RST_BUS_EPHY>;
+ 		};
+ 	};
+ };
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.13.6
