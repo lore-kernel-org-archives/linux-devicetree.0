@@ -1,27 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for MeLE
-Date: Mon, 23 Oct 2017 17:37:22 -0500
-Message-ID: <20171023223722.u5jorailb3rqyrg5@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: arm: realtek: Document MeLE V9
+Date: Mon, 23 Oct 2017 17:37:45 -0500
+Message-ID: <20171023223745.3wurmzsn7gbc5pwc@rob-hp-laptop>
 References: <20171016030153.11078-1-afaerber@suse.de>
- <20171016030153.11078-2-afaerber@suse.de>
+ <20171016030153.11078-3-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171016030153.11078-2-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bizon <bizongod@gmail.com>, meleservice@mele.cn, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20171016030153.11078-3-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bizon <bizongod-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, meleservice-asvZZsi/7w8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 05:01:51AM +0200, Andreas Färber wrote:
-> MeLE is a Chinese manufacturer of TV boxes and Mini PCs.
+On Mon, Oct 16, 2017 at 05:01:52AM +0200, Andreas Färber wrote:
+> Define a compatible string for MeLE V9 Media Player.
 > 
-> Cc: meleservice@mele.cn
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Cc: meleservice-asvZZsi/7w8@public.gmane.org
+> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  Documentation/devicetree/bindings/arm/realtek.txt | 1 +
 >  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
