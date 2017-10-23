@@ -1,91 +1,98 @@
 From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 03/10 v3] usb: usb251xb: Add USB251x specific port count
- setting
-Date: Mon, 23 Oct 2017 23:36:03 +0200
-Message-ID: <d5c834d3-e868-0b40-2734-d410cd3db860@skidata.com>
+Subject: Re: [PATCH 02/10 v3] usb: usb251xb: Add USB2517i specific struct and
+ IDs
+Date: Mon, 23 Oct 2017 23:47:02 +0200
+Message-ID: <6bbb6ef6-41bc-a30b-8baf-80f765320d97@skidata.com>
 References: <20170916104220.3742-1-fancer.lancer@gmail.com>
  <20171022203812.9379-1-fancer.lancer@gmail.com>
- <20171022203812.9379-4-fancer.lancer@gmail.com>
+ <20171022203812.9379-3-fancer.lancer@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171022203812.9379-4-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171022203812.9379-3-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: de-AT
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+please see comments below for some nit-picks.
+
 On 10/22/2017 10:38 PM, Serge Semin wrote:
-> USB251xb as well as USB2517 datasheet states, that all these
-> hubs differ by number of ports declared as the last digit in the
-> model name. So USB2512 got two ports, USB2513 - three, and so on.
-> Such setting must be reflected in the device specific data
-> structure and corresponding dts property should be checked whether
-> it doesn't get out of available ports.
+> There are USB2517 and USB2517i hubs, which have almost the same
+> registers space as already supported USB251xBi series. The difference
+> it in DIDs and in a few functions. This patch adds the USB2517/i data
+> structures to the driver, so it would have different setting depending
+> on the device discovered on i2c-bus.
 > 
 > Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->   drivers/usb/misc/usb251xb.c | 24 +++++++++++++++++++++---
->   1 file changed, 21 insertions(+), 3 deletions(-)
+>   drivers/usb/misc/Kconfig    |  4 ++--
+>   drivers/usb/misc/usb251xb.c | 23 +++++++++++++++++++++--
+>   2 files changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
+> index 37dd1c018..27b9fcbdf 100644
+> --- a/drivers/usb/misc/Kconfig
+> +++ b/drivers/usb/misc/Kconfig
+> @@ -247,8 +247,8 @@ config USB_HUB_USB251XB
+>   	depends on I2C
+>   	help
+>   	  This option enables support for configuration via SMBus of the
+> -	  Microchip USB251xB/xBi USB 2.0 Hub Controller series.
+> -	  Configuration parameters may be set in devicetree or platform data.
+> +	  Microchip USB251x/xBi USB 2.0 Hub Controller series. Configuration
+> +	  parameters may be set in devicetree or platform data.
+
+Here you have "USB251x/xBi"...
+
+>   	  Say Y or M here if you need to configure such a device via SMBus.
+>   
+>   config USB_HSIC_USB3503
+> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> index 91f66d68b..22c32ea3f 100644
+> --- a/drivers/usb/misc/usb251xb.c
+> +++ b/drivers/usb/misc/usb251xb.c
 
 ...
-> @@ -422,8 +431,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
->   		for (i = 0; i < len / sizeof(u32); i++) {
->   			u32 port = be32_to_cpu(cproperty_u32[i]);
+
+> @@ -82,7 +83,7 @@
 >   
-> -			if ((port >= 1) && (port <= 4))
-> +			if ((port >= 1) && (port <= data->port_cnt))
->   				hub->non_rem_dev |= BIT(port);
-> +			else
-> +				dev_warn(dev, "NRD port %u doesn't exist\n",
-> +					port);
+>   #define USB251XB_ADDR_PRODUCT_STRING_LEN	0x14
+>   #define USB251XB_ADDR_PRODUCT_STRING		0x54
+> -#define USB251XB_DEF_PRODUCT_STRING		"USB251xB/xBi"
+> +#define USB251XB_DEF_PRODUCT_STRING		"USB251xB/xBi/7i"
 
-Please match the alignment of the second line with the open parenthesis.
+but here you have "USB251xB/xBi/7i"...
 
->   		}
->   	}
 >   
-> @@ -433,8 +445,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
->   		for (i = 0; i < len / sizeof(u32); i++) {
->   			u32 port = be32_to_cpu(cproperty_u32[i]);
+>   #define USB251XB_ADDR_SERIAL_STRING_LEN		0x15
+>   #define USB251XB_ADDR_SERIAL_STRING		0x92
+
+...
+
+> @@ -590,5 +609,5 @@ static struct i2c_driver usb251xb_i2c_driver = {
+>   module_i2c_driver(usb251xb_i2c_driver);
 >   
-> -			if ((port >= 1) && (port <= 4))
-> +			if ((port >= 1) && (port <= data->port_cnt))
->   				hub->port_disable_sp |= BIT(port);
-> +			else
-> +				dev_warn(dev, "PDS port %u doesn't exist\n",
-> +					port);
+>   MODULE_AUTHOR("Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>");
+> -MODULE_DESCRIPTION("USB251xB/xBi USB 2.0 Hub Controller Driver");
+> +MODULE_DESCRIPTION("USB251x/xBi USB 2.0 Hub Controller Driver");
 
-... same here ...
+... and here again "USB251x/xBi"...
 
->   		}
->   	}
->   
-> @@ -444,8 +459,11 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
->   		for (i = 0; i < len / sizeof(u32); i++) {
->   			u32 port = be32_to_cpu(cproperty_u32[i]);
->   
-> -			if ((port >= 1) && (port <= 4))
-> +			if ((port >= 1) && (port <= data->port_cnt))
->   				hub->port_disable_bp |= BIT(port);
-> +			else
-> +				dev_warn(dev, "PDB port %u doesn't exist\n",
-> +					port);
+>   MODULE_LICENSE("GPL");
+> 
 
-... and here.
+I'd prefer to use just one "name" for the driver. If you be precise that 
+would be "USB251xB/xBi/xi". But that seems a bit overloaded to me. AFAIK 
+the "B" and "i" prepended to the type have no affect on the I2C 
+interface/register map, so maybe "USB251x" would be sufficient?
 
->   		}
->   	}
-
-Otherwise feel free to add:
-
-Acked-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-
-regards,
+kind regards,
 Richard.L
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
