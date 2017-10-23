@@ -1,75 +1,164 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch v6 1/7] slimbus: Device management on SLIMbus
-Date: Mon, 23 Oct 2017 11:06:54 +0200
-Message-ID: <20171023090654.ydaoom7pye72frvd@sirena.org.uk>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 1/4] dt-bindings: display: rcar-du: Document R8A774[35] DU
+Date: Mon, 23 Oct 2017 09:36:23 +0000
+Message-ID: <TY1PR06MB08951ABE5C6936AE7D7DEACBC0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1507908142-13142-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1507908142-13142-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <4307810.tuXz3FVuBl@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yvzcuim5ww5lon27"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: gregkh@linuxfoundation.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, gong.chen@linux.intel.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kheitke@audience.com, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4307810.tuXz3FVuBl@avalon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Laurent,
 
---yvzcuim5ww5lon27
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+thank you for getting back to me.
 
-On Fri, Oct 06, 2017 at 05:51:30PM +0200, srinivas.kandagatla@linaro.org wrote:
+>
+> Hi Fabrizio,
+>
+> Thank you for the patch.
+>
+> On Friday, 13 October 2017 18:22:19 EEST Fabrizio Castro wrote:
+> > Add device tree bindings for r8a7743 and r8a7745 DUs.
+> > r8a7743 DU is similar to the one from r8a7791, r8a7745 DU is similar
+> > to the one from r8a7794.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/display/renesas,du.txt     | 30 ++++++++++----=
+-----
+> >  1 file changed, 17 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > b/Documentation/devicetree/bindings/display/renesas,du.txt index
+> > 4bbd1e9..c520226 100644
+> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > @@ -3,6 +3,8 @@
+> >  Required Properties:
+> >
+> >    - compatible: must be one of the following.
+> > +    - "renesas,du-r8a7743" for R8A7743 (RZ/G1M) compatible DU
+> > +    - "renesas,du-r8a7745" for R8A7745 (RZ/G1E) compatible DU
+> >      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+> >      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+> >      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> > @@ -27,10 +29,10 @@ Required Properties:
+> >    - clock-names: Name of the clocks. This property is model-dependent.
+> >      - R8A7779 uses a single functional clock. The clock doesn't need t=
+o be
+> >        named.
+> > -    - R8A779[0123456] use one functional clock per channel and one clo=
+ck
+> > per
+> > -      LVDS encoder (if available). The functional clocks must be named
+> > "du.x"
+> > -      with "x" being the channel numerical index. The LVDS clocks must=
+ be
+> > -      named "lvds.x" with "x" being the LVDS encoder numerical index.
+> > +    - R8A779[0123456] and R8A774[35] use one functional clock per chan=
+nel
+>
+> How about "All other DU instances use one functional clock..." ? I expect=
+ more
+> entries to the added in the future, it would be nice not to have to modif=
+y
+> this paragraph.
 
-> ---
->  Documentation/devicetree/bindings/slimbus/bus.txt |  57 ++
->  Documentation/slimbus/summary                     | 109 ++++
+I agree.
 
-This is a 40k patch which is a bit offputting for review.  Splitting the
-docs out would help this a bit.
+>
+> > and
+> > +      one clock per LVDS encoder (if available). The functional clocks=
+ must
+> > be
+> > +      named "du.x" with "x" being the channel numerical index. The LVD=
+S
+> > clocks
+> > +      must be named "lvds.x" with "x" being the LVDS encoder numerical
+> > index.
+> > - In addition to the functional and encoder clocks, all DU versions als=
+o
+> > support externally supplied pixel clocks. Those clocks are optional. Wh=
+en
+> > supplied they must be named "dclkin.x" with "x" being the input
+> > @@ -49,16 +51,18 @@ bindings specified
+> > in Documentation/devicetree/bindings/graph.txt. The following table lis=
+ts
+> > for each supported model the port number corresponding to each DU outpu=
+t.
+> >
+> > -Port 0Port1Port2Port3
+> > +                      Port0          Port1          Port2          Por=
+t3
+> >  ----------------------------------------------------------------------=
+-----
+> > -- - R8A7779 (H1)DPAD 0DPAD 1--
+> > - R8A7790 (H2)DPADLVDS 0LVDS 1-
+> > - R8A7791 (M2-W)DPADLVDS 0--
+> > - R8A7792 (V2H)DPAD 0DPAD 1--
+> > - R8A7793 (M2-N)DPADLVDS 0--
+> > - R8A7794 (E2)DPAD 0DPAD 1--
+> > - R8A7795 (H3)DPADHDMI 0HDMI 1LVDS
+> > - R8A7796 (M3-W)DPADHDMILVDS-
+> > + R8A7743 (RZ/G1M)     DPAD 0         LVDS 0         -              -
+>
+> When there's a single DPAD the table mentions "DPAD" instead of "DPAD 0".
+> There's no specific reason for that other than a historical one, but to k=
+eep
+> entries consistent I would either keep doing so, or rename DPAD to DPAD 0=
+ in
+> all existing entries. What would you prefer ?
 
-> +static int slim_boot_child(struct device *dev, void *unused)
-> +{
-> +	struct slim_driver *sbdrv;
-> +	struct slim_device *sbdev = to_slim_device(dev);
-> +
-> +	if (sbdev && sbdev->dev.driver) {
-> +		sbdrv = to_slim_driver(sbdev->dev.driver);
-> +		if (sbdrv->boot_device)
-> +			sbdrv->boot_device(sbdev);
-> +	}
-> +	return 0;
-> +}
+My personal preference is to number all of the entries (not just DPAD ones)=
+.
 
-We silently don't boot a device if it hasn't got a driver - is that the
-right thing?  It feels like the silencing should be in the calling
-function.
+>
+> If you're fine with these changes there's no need to submit a new version=
+, I
+> can fix when applying the patch to my tree.
 
-> +ret_assigned_laddr:
-> +	mutex_unlock(&ctrl->m_ctrl);
-> +	if (exists || ret)
-> +		return ret;
-> +
-> +	dev_info(&ctrl->dev, "setting slimbus l-addr:%x, ea:%x,%x,%x,%x\n",
-> +		*laddr, e_addr->manf_id, e_addr->prod_code,
-> +		e_addr->dev_index, e_addr->instance);
+Thank you Laurent!
 
-dev_dbg()?
+Best regards,
+Fab
 
---yvzcuim5ww5lon27
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> > + R8A7745 (RZ/G1E)     DPAD 0         DPAD 1         -              -
+> > + R8A7779 (R-Car H1)   DPAD 0         DPAD 1         -              -
+> > + R8A7790 (R-Car H2)   DPAD           LVDS 0         LVDS 1         -
+> > + R8A7791 (R-Car M2-W) DPAD           LVDS 0         -              -
+> > + R8A7792 (R-Car V2H)  DPAD 0         DPAD 1         -              -
+> > + R8A7793 (R-Car M2-N) DPAD           LVDS 0         -              -
+> > + R8A7794 (R-Car E2)   DPAD 0         DPAD 1         -              -
+> > + R8A7795 (R-Car H3)   DPAD           HDMI 0         HDMI 1         LVD=
+S
+> > + R8A7796 (R-Car M3-W) DPAD           HDMI           LVDS           -
+> >
+> >
+> >  Example: R8A7795 (R-Car H3) ES2.0 DU
+>
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlntsS0ACgkQJNaLcl1U
-h9DF3gf9EmuE2gecayadrX+9wcXYmpFA3V78a7kZmZWzqqjm2pXZ+5Lzo+GwmK0B
-ezNv1CxBcHM/SNgO5XgP+ClAHsDd+snyiXDgEEbAs+zaPK3MkUee5JTTFZAhqRZ+
-f+81AmCW9CeXOtwJCRnIf7K68//nCCwaPxwxdzYUVgr82mUptOO70E+/yjv/wDMm
-D3f7TVCFnHjLxru48Mv0wjhIH2XxoHfUEU9Lo+C+423zheUQoutgpLWV6Cb7O3l0
-h/trq6G0TeTop3YFC+zNBgqvzEn3C+PwRP68fLi+falghsi3n7Ep+kZUeQ+EOg3U
-6UpbawH7r2/cWNpLnGJ33P59prU2BA==
-=1a7F
------END PGP SIGNATURE-----
 
---yvzcuim5ww5lon27--
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
