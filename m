@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Subject: [PATCH] ARM: dts: imx28-tx28: fix interrupt flags
-Date: Mon, 23 Oct 2017 14:33:10 +0200
-Message-ID: <1508761990-17060-1-git-send-email-LW@KARO-electronics.de>
+Date: Mon, 23 Oct 2017 14:35:38 +0200
+Message-ID: <1508762138-17476-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
