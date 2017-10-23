@@ -1,84 +1,38 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] phy: add inno-usb2-phy driver for hi3798cv200 SoC
-Date: Mon, 23 Oct 2017 17:32:09 -0500
-Message-ID: <20171023223209.snq2xw3thjjwybmh@rob-hp-laptop>
-References: <1508078958-16966-1-git-send-email-shawnguo@kernel.org>
+Subject: Re: [PATCH v6 01/12] mmc: dt-bindings: Add reg/source_cg/latch-ck
+ for Mediatek MMC bindings
+Date: Mon, 23 Oct 2017 17:36:12 -0500
+Message-ID: <20171023223612.uzl52ux26nuujkt3@rob-hp-laptop>
+References: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
+ <1508118399-21828-2-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1508078958-16966-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1508118399-21828-2-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 15, 2017 at 10:49:18PM +0800, Shawn Guo wrote:
-> From: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+On Mon, Oct 16, 2017 at 09:46:28AM +0800, Chaotian Jing wrote:
+> Change the comptiable for support of multi-platform
+> Make compatible explicit, as MMC host of mt8173 has difference with
+> mt8135(mt8173 supports hs400 and hs400_tune),so that need separate
+> mt8173/mt8135 compatible name.
+> Add description for reg
+> Add description for source_cg
+> Add description for mediatek,latch-ck
+> Note that source_cg and mediatek,latch-ck are optional for some projects,
+> eg, MT2701 do not have source_cg, and MT2712 do not need
+> mediatek,latch-ck
 > 
-> It adds inno-usb2-phy driver for hi3798cv200 SoC USB 2.0 support.  One
-> inno-usb2-phy device can support up to two PHY ports.  While there is
-> device level reference clock and power reset to be controlled, each PHY
-> port has its own utmi reset that needs to assert/de-assert as needed.
-> 
-> Hi3798cv200 needs to access PHY port0 register via particular peripheral
-> syscon controller register to control PHY, like turning on PHY clock.
-> 
-> Signed-off-by: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt |  31 +++
->  drivers/phy/hisilicon/Kconfig                      |  10 +
->  drivers/phy/hisilicon/Makefile                     |   1 +
->  drivers/phy/hisilicon/phy-hisi-inno-usb2.c         | 223 +++++++++++++++++++++
->  4 files changed, 265 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
->  create mode 100644 drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> new file mode 100644
-> index 000000000000..4ef7af24a703
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> @@ -0,0 +1,31 @@
-> +HiSilicon INNO USB2 PHY
-> +
-> +Required properties:
-> +- compatible: Should be one of the following strings:
-> +	"hisilicon,inno-usb2-phy",
-> +	"hisilicon,hi3798cv200-usb2-phy".
-> +- #phy-cells: Should be 1. The specifier is the index of the PHY port to
-> +  reference.
-> +- hisilicon,peripheral-syscon: The phandle of syscon used to control PHY,
-> +  followed by a integer cell which defines the syscon register offset used
-> +  to talk to PHY.
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 
-Same comments as combophy.
-
-> +- clocks: The phandle and clock specifier pair for reference clock utmi_refclk.
-
-'clk' part of the name is redundant.
-
-> +- resets: The list of phandle and reset specifier pairs for each reset signal
-> +  in reset-names.
-> +- reset-names: Should contain "power_on", "utmi0" and "utmi1". The "utmi1"
-> +  should exist only if the device has two PHY port.
-> +
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> +
-> +Example:
-> +
-> +	usb2_phy1: usb2-phy1 {
-> +		compatible = "hisilicon,hi3798cv200-usb2-phy";
-> +		#phy-cells = <1>;
-> +		hisilicon,peripheral-syscon = <&peri_ctrl 0x120>;
-> +		clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
-> +		resets = <&crg 0xbc 4>,
-> +			 <&crg 0xbc 8>,
-> +			 <&crg 0xbc 9>;
-> +		reset-names = "power_on", "utmi0", "utmi1";
-> +	};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
