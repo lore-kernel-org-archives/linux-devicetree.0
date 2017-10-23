@@ -1,137 +1,55 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 4/9] ARM: dts: iwg22d-sodimm: sort dt nodes
-Date: Mon, 23 Oct 2017 18:09:25 +0100
-Message-ID: <1508778570-28795-5-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 5/9] ARM: dts: r8a7745: Add HS-USB device node
+Date: Mon, 23 Oct 2017 18:09:26 +0100
+Message-ID: <1508778570-28795-6-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Chris Paterson <chris.paterson2@renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Improve the layout of r8a7745-iwg22d-sodimm.dts by sorting the
-nodes alphabetically.
+From: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+From: Biju Das <biju.das@bp.renesas.com>
+
+Define the R8A7745 generic part of the HS-USB device node. It is up to the
+board file to enable the device.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
 Changes in v2:
 * rebased
 
- arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 62 ++++++++++++++---------------
- 1 file changed, 31 insertions(+), 31 deletions(-)
+ arch/arm/boot/dts/r8a7745.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-index 82587d7..3eb4f83 100644
---- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-+++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
-@@ -16,9 +16,9 @@
- 	compatible = "iwave,g22d", "iwave,g22m", "renesas,r8a7745";
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index 3a50f70..40048da1 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -916,6 +916,20 @@
+ 			};
+ 		};
  
- 	aliases {
-+		ethernet0 = &avb;
- 		serial3 = &scif4;
- 		serial5 = &hscif1;
--		ethernet0 = &avb;
- 	};
- 
- 	chosen {
-@@ -40,6 +40,25 @@
- 	};
- };
- 
-+&avb {
-+	pinctrl-0 = <&avb_pins>;
-+	pinctrl-names = "default";
++		hsusb: usb@e6590000 {
++			compatible = "renesas,usbhs-r8a7745",
++				     "renesas,rcar-gen2-usbhs";
++			reg = <0 0xe6590000 0 0x100>;
++			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 704>;
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 704>;
++			renesas,buswait = <4>;
++			phys = <&usb0 1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
 +
-+	phy-handle = <&phy3>;
-+	phy-mode = "gmii";
-+	renesas,no-ether-link;
-+	status = "okay";
-+
-+	phy3: ethernet-phy@3 {
-+	/*
-+	 * On some older versions of the platform (before R4.0) the phy address
-+	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
-+	 */
-+		reg = <3>;
-+		micrel,led-mode = <1>;
-+	};
-+};
-+
- &hscif1 {
- 	pinctrl-0 = <&hscif1_pins>;
- 	pinctrl-names = "default";
-@@ -48,7 +67,18 @@
- 	status = "okay";
- };
- 
-+&pci1 {
-+	status = "okay";
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &pfc {
-+	avb_pins: avb {
-+		groups = "avb_mdio", "avb_gmii";
-+		function = "avb";
-+	};
-+
- 	hscif1_pins: hscif1 {
- 		groups = "hscif1_data", "hscif1_ctrl";
- 		function = "hscif1";
-@@ -59,11 +89,6 @@
- 		function = "scif4";
- 	};
- 
--	avb_pins: avb {
--		groups = "avb_mdio", "avb_gmii";
--		function = "avb";
--	};
--
- 	sdhi0_pins: sd0 {
- 		groups = "sdhi0_data4", "sdhi0_ctrl";
- 		function = "sdhi0";
-@@ -83,25 +108,6 @@
- 	status = "okay";
- };
- 
--&avb {
--	pinctrl-0 = <&avb_pins>;
--	pinctrl-names = "default";
--
--	phy-handle = <&phy3>;
--	phy-mode = "gmii";
--	renesas,no-ether-link;
--	status = "okay";
--
--	phy3: ethernet-phy@3 {
--	/*
--	 * On some older versions of the platform (before R4.0) the phy address
--	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
--	 */
--		reg = <3>;
--		micrel,led-mode = <1>;
--	};
--};
--
- &sdhi0 {
- 	pinctrl-0 = <&sdhi0_pins>;
- 	pinctrl-names = "default";
-@@ -112,12 +118,6 @@
- 	status = "okay";
- };
- 
--&pci1 {
--	status = "okay";
--	pinctrl-0 = <&usb1_pins>;
--	pinctrl-names = "default";
--};
--
- &usbphy {
- 	status = "okay";
- };
+ 		usbphy: usb-phy@e6590100 {
+ 			compatible = "renesas,usb-phy-r8a7745",
+ 				     "renesas,rcar-gen2-usb-phy";
 -- 
 2.7.4
