@@ -1,296 +1,161 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/2] phy: add inno-usb2-phy driver for hi3798cv200 SoC
-Date: Mon, 23 Oct 2017 19:35:12 +0800
-Message-ID: <1508758512-22900-3-git-send-email-shawnguo@kernel.org>
-References: <1508758512-22900-1-git-send-email-shawnguo@kernel.org>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] phy: add combo phy driver for HiSilicon STB SoCs
+Date: Mon, 23 Oct 2017 19:42:32 +0800
+Message-ID: <0ccecbc3-68fe-e134-36e0-6075f723d384@hisilicon.com>
+References: <1508757968-22729-1-git-send-email-shawnguo@kernel.org>
+ <1508757968-22729-3-git-send-email-shawnguo@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508758512-22900-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1508757968-22729-3-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Hi,
 
-It adds inno-usb2-phy driver for hi3798cv200 SoC USB 2.0 support.  One
-inno-usb2-phy device can support up to two PHY ports.  While there is
-device level reference clock and power reset to be controlled, each PHY
-port has its own utmi reset that needs to assert/de-assert as needed.
+On 2017/10/23 19:26, Shawn Guo wrote:
+> From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> 
+> Add combo phy driver for HiSilicon STB SoCs. This phy can be
+> used as pcie-phy, sata-phy or usb-phy.
+> 
+> Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/phy/hisilicon/Kconfig             |   9 ++
+>  drivers/phy/hisilicon/Makefile            |   1 +
+>  drivers/phy/hisilicon/phy-histb-combphy.c | 253 ++++++++++++++++++++++++++++++
+>  3 files changed, 263 insertions(+)
+>  create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
+> 
+> diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
+> index 6164c4cd0f65..d9afe2b12827 100644
+> --- a/drivers/phy/hisilicon/Kconfig
+> +++ b/drivers/phy/hisilicon/Kconfig
+> @@ -11,6 +11,15 @@ config PHY_HI6220_USB
+>  
+>  	  To compile this driver as a module, choose M here.
+>  
+> +config PHY_HISTB_COMBPHY
+> +	tristate "HiSilicon STB SoCs COMBPHY support"
+> +	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
+> +	select GENERIC_PHY
+> +	select MFD_SYSCON
+> +	help
+> +	  Enable this to support the HISILICON STB SoCs COMBPHY.
+> +	  If unsure, say N.
+> +
+>  config PHY_HIX5HD2_SATA
+>  	tristate "HIX5HD2 SATA PHY Driver"
+>  	depends on ARCH_HIX5HD2 && OF && HAS_IOMEM
+> diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
+> index 541b348187a8..5e8e2dfa8c37 100644
+> --- a/drivers/phy/hisilicon/Makefile
+> +++ b/drivers/phy/hisilicon/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
+> +obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
+>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+> diff --git a/drivers/phy/hisilicon/phy-histb-combphy.c b/drivers/phy/hisilicon/phy-histb-combphy.c
+> new file mode 100644
+> index 000000000000..59685c98b0de
+> --- /dev/null
+> +++ b/drivers/phy/hisilicon/phy-histb-combphy.c
+> @@ -0,0 +1,253 @@
+> +/*
+> + * COMBPHY driver for HiSilicon STB SoCs
+> + *
+> + * Copyright (C) 2016-2017 HiSilicon Co., Ltd. http://www.hisilicon.com
+> + *
+> + * Authors: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
 
-Hi3798cv200 needs to access PHY port0 register via particular peripheral
-syscon controller register to control PHY, like turning on PHY clock.
+[snip]
+> +
+> +static int histb_pcie_phy_init(struct histb_combphy_priv *priv)
+> +{
+> +	struct regmap *peri = priv->peri;
+> +	int ret;
+> +
+> +	/* set to pcie mode */
+> +	regmap_update_bits(peri, PERI_CTRL, COMBPHY1_MODE_MASK,
+> +			    COMBPHY_MODE_PCIE << COMBPHY_MODE_SHIFT);
+> +
+> +	regmap_update_bits(peri, PERI_COMBPHY1_CFG,
+> +			    COMBPHY1_BYPASS_CODEC_MASK,
+> +			    ~COMBPHY1_BYPASS_CODEC_VAL);
+> +
+> +	ret = clk_prepare_enable(priv->ref);
+> +	if (ret) {
+> +		dev_err(&priv->phy->dev, "clk_prepare_enable fail!\n");
+> +		return ret;
+> +	}
+> +
+> +	reset_control_deassert(priv->por);
+> +
+> +	regmap_update_bits(peri, PERI_COMBPHY1_CFG,
+> +			    COMBPHY1_CLKREF_OUT_OEN_MASK,
+> +			    COMBPHY1_CLKREF_OUT_OEN_VAL);
+> +
+> +	/* need to wait for EP clk stable */
+> +	mdelay(5);
+> +
+> +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0x1, 0x8);
+> +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0xc, 0x9);
+> +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0x1a, 0x4);
+> +
+> +	return 0;
+> +}
+> +
+> +static int histb_pcie_phy_exit(struct histb_combphy_priv *priv)
+> +{
+> +	regmap_update_bits(priv->peri, PERI_COMBPHY1_CFG,
+> +				COMBPHY1_CLKREF_OUT_OEN_MASK,
+> +				~COMBPHY1_CLKREF_OUT_OEN_VAL);
+> +	reset_control_deassert(priv->por);
+> +	clk_disable_unprepare(priv->ref);
+> +
+> +	return 0;
+> +}
+> +
+> +static int histb_usb_phy_init(struct histb_combphy_priv *priv)
+> +{
+> +	int ret;
+> +
+I think the work mode should be set to usb3 first as histb_pcie_phy_init does.
+The current one may be not usb3.
 
-Signed-off-by: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/phy/hisilicon/Kconfig              |  10 ++
- drivers/phy/hisilicon/Makefile             |   1 +
- drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 224 +++++++++++++++++++++++++++++
- 3 files changed, 235 insertions(+)
- create mode 100644 drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+> +	ret = clk_prepare_enable(priv->ref);
+> +	if (ret) {
+> +		dev_err(&priv->phy->dev, "clk_prepare_enable fail!\n");
+> +		return ret;
+> +	}
+> +	reset_control_deassert(priv->por);
+> +	mdelay(1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int histb_usb_phy_exit(struct histb_combphy_priv *priv)
+> +{
+> +	reset_control_deassert(priv->por);
+> +	clk_disable_unprepare(priv->ref);
+> +
+> +	return 0;
+> +}
+> +
+[snip]
 
-diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-index 6164c4cd0f65..c21470eb7fba 100644
---- a/drivers/phy/hisilicon/Kconfig
-+++ b/drivers/phy/hisilicon/Kconfig
-@@ -11,6 +11,16 @@ config PHY_HI6220_USB
- 
- 	  To compile this driver as a module, choose M here.
- 
-+config PHY_HISI_INNO_USB2
-+       tristate "HiSilicon INNO USB2 PHY support"
-+       depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-+       select GENERIC_PHY
-+       select MFD_SYSCON
-+       help
-+         Support for INNO USB2 PHY on HiSilicon SoCs. This Phy supports
-+         USB 1.5Mb/s, USB 12Mb/s, USB 480Mb/s speeds. It supports one
-+         USB host port to accept one USB device.
-+
- config PHY_HIX5HD2_SATA
- 	tristate "HIX5HD2 SATA PHY Driver"
- 	depends on ARCH_HIX5HD2 && OF && HAS_IOMEM
-diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-index 541b348187a8..e6c979458d3b 100644
---- a/drivers/phy/hisilicon/Makefile
-+++ b/drivers/phy/hisilicon/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
-+obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
- obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-new file mode 100644
-index 000000000000..673bb9f9159a
---- /dev/null
-+++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-@@ -0,0 +1,224 @@
-+/*
-+ * HiSilicon INNO USB2 PHY Driver.
-+ *
-+ * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define INNO_PHY_PORT_NUM	2
-+#define REF_CLK_STABLE_TIME	100	/* unit:us */
-+#define UTMI_CLK_STABLE_TIME	200	/* unit:us */
-+#define TEST_CLK_STABLE_TIME	2	/* unit:ms */
-+#define PHY_CLK_STABLE_TIME	2	/* unit:ms */
-+#define UTMI_RST_COMPLETE_TIME	2	/* unit:ms */
-+#define POR_RST_COMPLETE_TIME	300	/* unit:us */
-+#define PHY_TEST_DATA		GENMASK(7, 0)
-+#define PHY_TEST_ADDR		GENMASK(15, 8)
-+#define PHY_TEST_PORT		GENMASK(18, 16)
-+#define PHY_TEST_WREN		BIT(21)
-+#define PHY_TEST_CLK		BIT(22)	/* rising edge active */
-+#define PHY_TEST_RST		BIT(23)	/* low active */
-+#define PHY_CLK_ENABLE		BIT(2)
-+
-+struct hisi_inno_phy_port {
-+	struct phy *phy;
-+	struct device *dev;
-+	struct reset_control *utmi_rst;
-+};
-+
-+struct hisi_inno_phy_priv {
-+	struct regmap *syscon;
-+	u32 syscon_reg;
-+	struct clk *ref_clk;
-+	struct reset_control *por_rst;
-+	struct hisi_inno_phy_port ports[INNO_PHY_PORT_NUM];
-+	u32 port_num;
-+};
-+
-+static void hisi_inno_phy_write_reg(struct regmap *syscon, u32 reg,
-+				    u8 port, u32 addr, u32 data)
-+{
-+	u32 value;
-+
-+	value = (data & PHY_TEST_DATA)
-+		| ((addr << 8) & PHY_TEST_ADDR)
-+		| ((port << 16) & PHY_TEST_PORT)
-+		| PHY_TEST_WREN | PHY_TEST_RST;
-+	regmap_write(syscon, reg, value);
-+	value |= PHY_TEST_CLK;
-+	regmap_write(syscon, reg, value);
-+	value &= ~PHY_TEST_CLK;
-+	regmap_write(syscon, reg, value);
-+}
-+
-+static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
-+{
-+	/* The phy clk is controlled by the port0 register 0x06. */
-+	hisi_inno_phy_write_reg(priv->syscon, priv->syscon_reg, 0, 0x06,
-+				PHY_CLK_ENABLE);
-+	msleep(PHY_CLK_STABLE_TIME);
-+}
-+
-+static int hisi_inno_phy_init(struct phy *phy)
-+{
-+	struct hisi_inno_phy_port *port = phy_get_drvdata(phy);
-+	struct hisi_inno_phy_priv *priv = dev_get_drvdata(port->dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->ref_clk);
-+	if (ret)
-+		return ret;
-+	udelay(REF_CLK_STABLE_TIME);
-+
-+	reset_control_deassert(priv->por_rst);
-+	udelay(POR_RST_COMPLETE_TIME);
-+
-+	/* Set up phy registers via peripheral syscon controller */
-+	hisi_inno_phy_setup(priv);
-+
-+	reset_control_deassert(port->utmi_rst);
-+	udelay(UTMI_RST_COMPLETE_TIME);
-+
-+	return 0;
-+}
-+
-+static int hisi_inno_phy_exit(struct phy *phy)
-+{
-+	struct hisi_inno_phy_port *port = phy_get_drvdata(phy);
-+	struct hisi_inno_phy_priv *priv = dev_get_drvdata(port->dev);
-+
-+	reset_control_assert(port->utmi_rst);
-+	reset_control_assert(priv->por_rst);
-+	clk_disable_unprepare(priv->ref_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops hisi_inno_phy_ops = {
-+	.init = hisi_inno_phy_init,
-+	.exit = hisi_inno_phy_exit,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct phy *hisi_inno_phy_xlate(struct device *dev,
-+				       struct of_phandle_args *args)
-+{
-+	struct hisi_inno_phy_priv *priv = dev_get_drvdata(dev);
-+	int id = args->args[0];
-+
-+	if (id >= priv->port_num)
-+		return ERR_PTR(-ENODEV);
-+
-+	return priv->ports[id].phy;
-+}
-+
-+static int hisi_inno_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct hisi_inno_phy_priv *priv;
-+	struct of_phandle_args out_args;
-+	struct phy_provider *provider;
-+	struct regmap *regmap;
-+	int ret, i;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	ret = of_parse_phandle_with_fixed_args(np,
-+			"hisilicon,peripheral-syscon", 1, 0, &out_args);
-+	if (ret)
-+		return ret;
-+
-+	regmap = syscon_node_to_regmap(out_args.np);
-+	if (IS_ERR(regmap))
-+		ret = PTR_ERR(regmap);
-+
-+	priv->syscon = regmap;
-+	priv->syscon_reg = out_args.args[0];
-+
-+	priv->ref_clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->ref_clk))
-+		return PTR_ERR(priv->ref_clk);
-+
-+	priv->port_num = of_count_phandle_with_args(np, "resets",
-+						    "#reset-cells");
-+	/* Do not count power_on reset */
-+	priv->port_num--;
-+
-+	if (priv->port_num <= 0 || priv->port_num > INNO_PHY_PORT_NUM) {
-+		dev_err(dev, "Invalid port number %d\n", priv->port_num);
-+		return -EINVAL;
-+	}
-+
-+	priv->por_rst = devm_reset_control_get_shared(dev, "power_on");
-+	if (IS_ERR(priv->por_rst))
-+		return PTR_ERR(priv->por_rst);
-+
-+	for (i = 0; i < priv->port_num; i++) {
-+		struct reset_control *rst;
-+		struct phy *phy;
-+		char id[6];
-+
-+		snprintf(id, 6, "utmi%1d\n", i);
-+		rst = devm_reset_control_get_exclusive(dev, id);
-+		if (IS_ERR(rst))
-+			return PTR_ERR(rst);
-+		priv->ports[i].utmi_rst = rst;
-+
-+		phy = devm_phy_create(dev, NULL, &hisi_inno_phy_ops);
-+		if (IS_ERR(phy))
-+			return PTR_ERR(phy);
-+
-+		priv->ports[i].phy = phy;
-+		priv->ports[i].dev = dev;
-+		phy_set_bus_width(phy, 8);
-+		phy_set_drvdata(phy, &priv->ports[i]);
-+	}
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	provider = devm_of_phy_provider_register(dev, hisi_inno_phy_xlate);
-+	return PTR_ERR_OR_ZERO(provider);
-+}
-+
-+static const struct of_device_id hisi_inno_phy_of_match[] = {
-+	{ .compatible = "hisilicon,inno-usb2-phy", },
-+	{ .compatible = "hisilicon,hi3798cv200-usb2-phy", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, hisi_inno_phy_of_match);
-+
-+static struct platform_driver hisi_inno_phy_driver = {
-+	.probe	= hisi_inno_phy_probe,
-+	.driver = {
-+		.name	= "hisi-inno-phy",
-+		.of_match_table	= hisi_inno_phy_of_match,
-+	}
-+};
-+module_platform_driver(hisi_inno_phy_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon INNO USB2 PHY Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Regards,
+Jiancheng
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
