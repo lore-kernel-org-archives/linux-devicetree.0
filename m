@@ -1,169 +1,113 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] firmware: meson-sm: use generic compatible
-Date: Mon, 23 Oct 2017 14:29:25 -0500
-Message-ID: <CAL_Jsq+_TrStcLHa_YVUXqE5unnpfQMM41JBwtHJpFWyA2ftug@mail.gmail.com>
-References: <20171012134743.10625-1-jbrunet@baylibre.com> <20171017204959.kfbhn2yxhv2sb5qg@rob-hp-laptop>
- <7h8tg7zb6t.fsf@baylibre.com> <CAL_JsqJ-XAqMA_zjxrJNAtysQsXzmWYUFqLJtKX2wUJ0oebtuw@mail.gmail.com>
- <1508488253.3616.28.camel@baylibre.com> <CAL_JsqKON3mKrkjg1gR-JjM_YarWMdGRURTx39MVgC=beCKz3g@mail.gmail.com>
- <1508746404.3587.26.camel@baylibre.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [RFC usb-next v5 1/3] dt-bindings: usb: add the documentation for
+ USB root-hub
+Date: Mon, 23 Oct 2017 23:36:48 +0200
+Message-ID: <CAFBinCDj0+htGVUkB+BOQgJDi0QevgquJt9=Y1SUVkyt9cwKuw@mail.gmail.com>
+References: <20171008211713.18696-1-martin.blumenstingl@googlemail.com>
+ <20171008211713.18696-2-martin.blumenstingl@googlemail.com>
+ <CAK8P3a2607YnNRRmAJJyTNJTTJmJvx-ZJm3QNAq84noPLy+F+A@mail.gmail.com>
+ <CAFBinCCc+Fj6wwGk+OLNQTHEYU8xBPe7OGHVSQ82kMew3xUsww@mail.gmail.com>
+ <CAK8P3a2C+8w5_8uZF2qHvq7Cp=AH6DDx5Y=mGJFCCz2pTLvPPg@mail.gmail.com>
+ <CAFBinCC7disratgMmmaSJMfywb-bPF32L-1BarSsX6zTChHEJg@mail.gmail.com>
+ <CAK8P3a31GLjQDUUdyTeaAX_fELV5_UkNQfbj+ssHrGa7Ek2NcA@mail.gmail.com>
+ <CAFBinCCmk3bSa4-OY7Mu0sPEhVv6=dQbSO94P=YMqk_hc+53Pg@mail.gmail.com>
+ <CAK8P3a0hFF-gMa4UWMXh-28=scF-8cnzPv-Sa11PzyvgMYAkQw@mail.gmail.com>
+ <CAFBinCAtsxu2gFXABhq5r0_DMJwsLGkLYjgWaEXMg=CVEjiv7w@mail.gmail.com> <CAK8P3a1cdob4trLG80xos1Zh1oXWLMExFTyS2EFsq0g+YULKpw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508746404.3587.26.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a1cdob4trLG80xos1Zh1oXWLMExFTyS2EFsq0g+YULKpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 3:13 AM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> On Fri, 2017-10-20 at 14:34 -0500, Rob Herring wrote:
->> On Fri, Oct 20, 2017 at 3:30 AM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> > On Thu, 2017-10-19 at 16:18 -0500, Rob Herring wrote:
->> > > On Thu, Oct 19, 2017 at 5:25 AM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> > > wrote:
->> > > > Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->> > > >
->> > > > > On Thu, Oct 12, 2017 at 03:47:43PM +0200, Jerome Brunet wrote:
->> > > > > > The meson secure monitor seems to be compatible with more SoCs than
->> > > > > > initially thought. Let's use the most generic compatible he have in
->> > > > > > DT instead of the gxbb specific one
->> > > > > >
->> > > > > > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> > > > > > ---
->> > > > > >  Documentation/devicetree/bindings/firmware/meson/meson_sm.txt | 4
->> > > > > > ++--
->> > > > > >  drivers/firmware/meson/meson_sm.c                             | 4
->> > > > > > ++--
->> > > > > >  2 files changed, 4 insertions(+), 4 deletions(-)
->> > > > >
->> > > > > Seems like a pointless, not backwards compatible change to me.
->> > > >
->> > > > I've verified that it's backwards compatible with existing upstream DTs.
->> > >
->> > > Perhaps if you all are documenting only what the driver uses, not what
->> > > the dts can have as Jerome said.
->> > >
->> > > > > end, it's just a string to match on. Who cares what the string is.
->> > > >
->> > > > As platform maintiner, I very much care what the strings are and I want
->> > > > it to be coherent with the platform generic names, and I want the
->> > > > SoC-specific strings to correspond to the actual SoC names.
->> > >
->> > > The most specific compatible should be, absolutely. The fallbacks can
->> > > be anything really. Ideally, they are the compatible string for the
->> > > 1st SoC with "the same" compatible IP. Could be another vendor
->> > > entirely even because mergers happen.
->> >
->> > Then what's your problem with these patches again ?
->>
->> Removal of the SoC specific compatible and breaking compatibility.
->> Kevin says compatibility is not broken, but it obviously it based on
->> the example and the driver change. So that can only mean your dts file
->> doesn't match the example.
+Hi Arnd,
+
+thank you for taking 10 minutes to discuss this in person with me!
+
+On Fri, Oct 20, 2017 at 12:10 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thu, Oct 19, 2017 at 11:25 PM, Martin Blumenstingl
+> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>>> Does dwc2 also use separate nodes for the roothub? From your
+>>> description it sounds like it would not be affected by your patch.
+>> currently it doesn't use separate notes for the roothub - however,
+>> with this patch it could (although I haven't explicitly tested this)
 >
-> I believe it does, but I suppose I have missed something.
+> Ok.
 >
-> Currently the driver only matches on:
-> .compatible = "amlogic,meson-gxbb-sm" (drivers/firmware/meson_sm.c)
+>>> Since you used a dtb that already listed an endpoint device below
+>>> an xhci, that would answer my earlier question of whether it worked
+>>> before your patch series, and you tested that it still works with your
+>>> patches applied and the roothub node added in the dtb.  Now we
+>>> just need to make sure we don't break existing dtb files that don't
+>>> have the roothub node but do have endpoint device nodes.
+>> the endpoint you're seeing is the root-hub - you can see the full .dts here: [0]
+>>
+>> maybe my patch description or documentation is not clear - could you
+>> please explain what makes you think that specifying the root-hub
+>> didn't work before (so I can update the comments where needed)?
+>> to sum up what this series does: find the node with reg = <0>; (= the
+>> root-hub) and get all PHY instances from the child-nodes
+>> this should not change any existing behavior except if someone had a
+>> node with reg = <0>; below any USB controller node (which was
+>> undocumented behavior before my patches)
 >
-> The only device-tree file using it is
-> meson-gx.dtsi: compatible = "amlogic,meson-gx-sm", "amlogic,meson-gxbb-sm";
-
-THIS is not what the binding example shows which is precisely the
-problem. Reading the binding doc and driver alone makes it look like
-you are breaking compatibility.
-
-> So:
-> 1) yes the order is backward (thx for pointing this out)
-> 2) by changing the compatible matched by the driver from "amlogic,meson-gxbb-sm"
-> to "amlogic,meson-gx-sm", I don't think I am breaking anything. Feel free to
-> point out why this is wrong because I don't get it.
-
-You are not breaking compatibility. That's not what I'm saying. If I
-had followed the binding doc and wrote my own dts, then compatibility
-would have been broken.
-
->> > I am just asking the driver to match the generic binding instead of the SoC
->> > specific, because we are also using it on other SoC, as explain in the patch
->> > comment. Does not seems that "pointless" to me.
->> >
->> > Right now the driver match only on: vendor,soc-one
->> > in dts, we have compatible = "vendor,family", "vendor,soc-one"
->>
->> That's backwards if I understand this right. It should be most
->> specific first, but that's a separate issue.
->>
->> > but it is compatible with soc-two as well.
->> > to match we would have to put "vendor,soc-one" as well which is a mess
->>
->> Why? That's how DT works and every other platform follows. Either you have:
->>
->> "vendor,soc-one", "vendor,family"
->> "vendor,soc-two", "vendor,family"
->>
->> or
->>
->> "vendor,soc-one"
->> "vendor,soc-two", "vendor,soc-one"
->>
->> The latter is how DT has existed and worked for 20+ years. The former
->> is what we allow because for some reason people have such an aversion
->> to saying soc2 is compatible with soc1.
->>
->> Either one is fine, but the documentation must be clear what the
->> constraints are for the dts file. For example, "vendor,soc-two" or
->> "vendor,family" alone are not valid. There's plenty of examples to
+> Maybe I misunderstand what the actual change to the hierarchy
+> is. Quoting from your example for the new code
 >
-> except that the DT file where it is used is a soc family dtsi.
-> meson-gx.dtsi is the common DT for gxbb and gxl family. Wouldn't it make sense
-> to have the SoC generic compatible alone here ? and override it in the SoC DT if
-> necessary ?
-
-That's a detail I don't really care so much about because that's just
-dts partitioning. I mainly care how the dtb ends up looking and that
-must have an SoC specific compatible.
-
-I will say though, I think that overriding properties like compatible
-would not be the best style. Generally, enough things change like
-memory address, irq numbers, etc. from SoC to SoC that it's not worth
-trying to share dtsi files that way.
-
->> follow. Renesas is one using "vendor,family" extensively.
->>
->> > By expressing correctly what the driver is compatible with, "vendor,family"
->> > we can dts that makes sense for soc-two as well
->> > compatible = "vendor,family", "vendor,soc-two"
+> +       &usb1 {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               roothub@0 {
+> +                       compatible = "usb1d6b,3", "usb1d6b,2";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0>;
+> +
+> +                       port@1 {
+> +                               reg = <1>;
+> +                               phys = <&usb2_phy1>, <&usb3_phy1>;
+> +                               phy-names = "usb2-phy", "usb3-phy";
+> +                       };
 >
-> Honestly, I don't care which of the 2 solutions we take. The important thing for
-> me is to eliminate the confusion introduced by the generic-compatible being here
-> and useless. The driver is indeed generic, but the related compatible is not
-> matched. This makes no sense.
+> The way I understand it, an endpoing device would now be
+> located in
+>
+>  &usb1/roothub@0/port@1/hub@2/device@1
+>
+> where previously it was in
+>
+>  &usb1/port@1/hub@2/device@1
+>
+> Is that correct?
+this is not how it's currently implemented - let's find out if this is
+a misunderstanding on my side
+the second example is still valid with this series, while the first
+example won't work with the code as it is
 
-The driver change is fine. The dts is fine too it seems, other than
-the string ordering. It's the binding doc that is not fine (read the
-last paragraph again if you still don't understand why). It needs to
-document which of the below you are doing.
+> I don't see any code that can deal with both cases and still
+> assign the correct of_node pointer to the device device@1 in
+> the end (maybe it's there and you just need to point me
+> to the right patch).
+it's not you - that code is (currently) not there
 
-> So either:
-> * we use "vendor,soc-one", "vendor,family" model: I believe this what I'm trying
->  to do here. For this, we need to match the soc generic compatible in the
-> driver.
->
-> * we use the "vendor,soc-two", "vendor,soc-one" model : The driver keeps on
-> matching the SoC specific compatible. We won't ever match the generic one with
-> this model, what is the point of keeping it around in DT ? Should we remove it ?
->
-> Maybe the later is better, it would end up just being a removal of an
-> undocumented property from DT.
->
->>
->> Binding docs may live in the kernel, but they are separate from
->> drivers. They describe the constraints of the dts files. There's no
->> reason to document what the driver wants because I can read the driver
->> source. I can't say the same thing about the dts file. The dts may not
->> come from the kernel and one dts file is not all possible options for
->> a given binding.
+> The reason why we have to be careful here is that the
+> Linux device hierarchy is not just derived from DT here, but
+> it gets created from the physical devices under &usb1
+> and the 'struct device' hierarchy has to match the DT hierarchy
+> exactly.
+yes, I fully agree with you here
+I will post an updated version of this series which includes an
+updated usb-xhci dt-binding documentation to show how the end result
+(after this series) can look like. I'll include Rob in the loop again
+so we don't introduce a broken binding.
+
+
+Regards,
+Martin
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
