@@ -1,32 +1,124 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC] yamldt v0.5, now a DTS compiler too
-Date: Mon, 23 Oct 2017 12:08:25 +0200
-Message-ID: <BA44C47D-F620-4FAC-B6D1-E6DBE3142C6F@konsulko.com>
-References: <1506628736.28192.9.camel@hp800z>
- <CACxGe6tJfcnwDB=m7GLnCeDSc4Srxqssv+-p1+zapDo2yLWXXQ@mail.gmail.com>
- <D029AB76-4084-40D4-8095-CFFBEA55DB86@konsulko.com>
- <CACxGe6v702Xc3kyXy-1sN+rBqbarVZGvVbO-XWHm9GRvMr=Z4w@mail.gmail.com>
- <744E94DE-E4AE-425B-9B02-E0E022017450@konsulko.com>
- <CACxGe6v+SaMcBDE=aB-2J=hbhmkq4tYbcp=-J5zK_GisNKJ5yg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6v+SaMcBDE=aB-2J=hbhmkq4tYbcp=-J5zK_GisNKJ5yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [RFC resend] arm64: mt8173: Fix Acer Chromebooks mmsys probe problem
+Date: Mon, 23 Oct 2017 13:23:27 +0300
+Message-ID: <1696751.sPjEUm9ynR@avalon>
+References: <20171019112610.13645-1-mbrugger@suse.com> <1683149.BjzMD0lNNQ@avalon> <1508424856.7665.22.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508424856.7665.22.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Philipp,
 
-I=E2=80=99ve just put up a blog-entry explaining the rationale behind =
-yaml and device tree.
+On Thursday, 19 October 2017 17:54:16 EEST Philipp Zabel wrote:
+> On Thu, 2017-10-19 at 16:39 +0300, Laurent Pinchart wrote:
+> > On Thursday, 19 October 2017 16:01:54 EEST Philipp Zabel wrote:
+> >> On Thu, 2017-10-19 at 13:26 +0200, Matthias Brugger wrote:
+> >>> In theory the MMSYS device tree identifier is matches twice, by the
+> >>> clk driver and the DRM subsystem. But the kernel only matches the
+> >>> first driver for a device (clk) and discards the second one. This
+> >>> breaks graphics on mt8173 and most probably on mt2701 as well.
+> >>> 
+> >>> MMSYS in Mediatek SoCs has some registers to control clock gates
+> >>> (which is used in the clk driver) and some registers to enable the
+> >>> differnet blocks of the display subsystem. The kernel uses the binding
+> >>> to load the central comoponent of the distplay subsystem, which in
+> >>> place probes all the other components and enables the present ones in
+> >>> the MMSYS.
+> >>> 
+> >>> We found us with the problem, that we need to change and therefor
+> >>> break one of the two bindings, or the DRM one or the clock driver one.
+> >>> 
+> >>> Apart from that the DRM subysystem does access the MMSYS registers via
+> >>> relaxed reads/writes. But the it should to so via regmap, as the
+> >>> registers are shared.
+> >>> 
+> >>> Possible solutions:
+> >>> 1) We add a new mediatek,mt8173-mmsys-clk node, which lives as a
+> >>> simple-mfd under the actual mmsys node. We change the clock driver to
+> >>> probe on this binding. This would make sense as the clock gate
+> >>> register live completly in the MMSYS configuration registers.
+> >> 
+> >> The reason why the drm driver matches against the mmsys node in the
+> >> first place is that we wanted to avoid 2).
+> > 
+> > Why did you want to avoid 2) ?
+> 
+> Because the "display-subsystem" node does not represent a real device,
+> it's just there to probe the driver that stitches all the DISP components
+> together.
 
-https://www.konsulko.com/yaml-and-device-tree/
+I'm not a big supported of such DT nodes for "logical" devices either. When 
+possible I prefer describing the relationship between display IP cores using 
+OF graph DT bindings.
 
-Please give it a quick glance and give feedback if you can.
+In some cases (and I don't know if the Mediatek display is one of them) there 
+is no single IP core that can be considered as a master from a display point 
+of view. This is inconvenient for device drivers as there's no clear place for 
+an entry point. I could thus be convinced to accept DT bindings for a logical 
+display DT node when there's really no other good choice.
 
-Regards
+> >> Also, mmsys is not a pure clock controller, as it also contains the
+> >> display path configuration in its register space.
+> > 
+> > Which makes the mmsys related to display, but more in a syscon (combining
+> > clocks and routing, and I assume other miscellaneous features that
+> > wouldn't fit nicely in the other display-related IP cores) way than
+> > actually being part of the display subsystem. Or does mmsys only provide
+> > display-related features ?
+> 
+> All devices in the 0x14000000 - 0x14ffffff memory range are part of the
+> MMSYS system. That includes the MMSYS control or system configuration
+> block at 0x14000000 - 0x14000fff as well as all the related MDP (media
+> data path) and DISP (display data path) blocks that follow. The DISP
+> blocks are purely display related, while the MDP blocks implement
+> implement mem2mem functions like scaling and conversion.
 
-=E2=80=94 Pantelis
+Without more information about the hardware it's hard to tell whether the DT 
+nodes for the DISP and MDP IP cores should be children of the MMSYS DT node or 
+not. In any case, it looks like the MMSYS is a syscon that provides 
+miscellaneous functions not fitting anywhere else.
+
+On simple solution, which shouldn't require DT changes, would be to merge the 
+MMSYS clock driver into the mediatek DRM driver, and register the MMSYS clocks 
+at probe time instead of using CLK_OF_DECLARE.
+
+Another option would be to handle MMSYS as an MFD. That shouldn't require DT 
+changes either.
+
+> >>> 2) As the nodes of the DRM subsystem just need some of the registers
+> >>> of MMSYS we add a new binding mediatek,mt8173-dispsys which probes the
+> >>> central component of the DRM system. It has only a handle to mt8173-
+> >>> mmsys to access the registerspace via regmap functions.
+> >>> 
+> >>> In this patchset I implemented 2). Please take into account, that this
+> >>> is a RFC. I had no time to actually test the verison on real HW. Some
+> >>> of the register accesses should be done using regmap_update instead of
+> >>> regmap_read + regmap_write.
+> >>> 
+> >>> This RFC shall only show how solution 2) would look like. We can use
+> >>> it as discussion to see how we circumvent the actual situation.
+> >> 
+> >> Or we could leave the bindings untouched and create one platform device
+> >> from the other or even set up the clocks from the drm driver?
+> > 
+> > Does mmsys provide features (such as clocks) to non-display IP cores ?
+> 
+> The MMSYS control block provides clocks for the DISP (display data path)
+> and MDP (multimedia data path) blocks, as well as the routing between
+> them, but not to anything outside of the MMSYS system.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
