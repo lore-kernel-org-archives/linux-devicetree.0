@@ -1,7 +1,7 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 5/9] ARM: dts: r8a7745: Add HS-USB device node
-Date: Mon, 23 Oct 2017 18:09:26 +0100
-Message-ID: <1508778570-28795-6-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 8/9] ARM: dts: iwg22d-sodimm: Enable HS-USB
+Date: Mon, 23 Oct 2017 18:09:29 +0100
+Message-ID: <1508778570-28795-9-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
@@ -14,8 +14,7 @@ From: Biju Das <biju.das@bp.renesas.com>
 
 From: Biju Das <biju.das@bp.renesas.com>
 
-Define the R8A7745 generic part of the HS-USB device node. It is up to the
-board file to enable the device.
+Enable HS-USB on iWave RZ/G1E carrier board.
 
 Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
@@ -23,33 +22,37 @@ Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Changes in v2:
 * rebased
 
- arch/arm/boot/dts/r8a7745.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 3a50f70..40048da1 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -916,6 +916,20 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+index 3eb4f83..80c82aa 100644
+--- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
++++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+@@ -67,6 +67,12 @@
+ 	status = "okay";
+ };
  
-+		hsusb: usb@e6590000 {
-+			compatible = "renesas,usbhs-r8a7745",
-+				     "renesas,rcar-gen2-usbhs";
-+			reg = <0 0xe6590000 0 0x100>;
-+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 704>;
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 704>;
-+			renesas,buswait = <4>;
-+			phys = <&usb0 1>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
++&hsusb {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
 +
- 		usbphy: usb-phy@e6590100 {
- 			compatible = "renesas,usb-phy-r8a7745",
- 				     "renesas,rcar-gen2-usb-phy";
+ &pci1 {
+ 	status = "okay";
+ 	pinctrl-0 = <&usb1_pins>;
+@@ -95,6 +101,11 @@
+ 		power-source = <3300>;
+ 	};
+ 
++	usb0_pins: usb0 {
++		groups = "usb0";
++		function = "usb0";
++	};
++
+ 	usb1_pins: usb1 {
+ 		groups = "usb1";
+ 		function = "usb1";
 -- 
 2.7.4
