@@ -1,26 +1,44 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v2 0/9] Ata ceva patches
-Date: Mon, 23 Oct 2017 07:10:01 -0700
-Message-ID: <20171023141001.GZ1302522@devbig577.frc2.facebook.com>
-References: <cover.1503314240.git.michal.simek@xilinx.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC
+ documentation
+Date: Mon, 23 Oct 2017 15:21:10 +0100
+Message-ID: <20171023142110.ohx2kgik7t2jht5p@dell>
+References: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1503314240.git.michal.simek@xilinx.com>
+In-Reply-To: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Alexander Graf <agraf@suse.de>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 21, 2017 at 01:17:15PM +0200, Michal Simek wrote:
-> Hi,
+On Mon, 16 Oct 2017, Baolin Wang wrote:
+
+> This patch adds the binding documentation for Spreadtrum SC27xx series
+> PMIC device.
 > 
-> this patchset contains the latest changes which are available in Xilinx tree.
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> ---
+> Changes since v1:
+>  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
+>  - Modify compatile string property.
+>  - Modify reg property.
+>  - Remove redundant 'pmic' label.
+>  - Change 'should be' to 'must be' for cells properties.
+> ---
+>  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   40 ++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
 
-Applied 1-9 to libata/for-4.15.
+Looks fine, but I'll give the DT guys a chance to have a look:
 
-Thanks.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
-tejun
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
