@@ -1,48 +1,137 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH v2 7/9] ARM: dts: r8a7745: Enable DMA for HSUSB
-Date: Mon, 23 Oct 2017 18:09:28 +0100
-Message-ID: <1508778570-28795-8-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 4/9] ARM: dts: iwg22d-sodimm: sort dt nodes
+Date: Mon, 23 Oct 2017 18:09:25 +0100
+Message-ID: <1508778570-28795-5-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508778570-28795-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Chris Paterson <chris.paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Improve the layout of r8a7745-iwg22d-sodimm.dts by sorting the
+nodes alphabetically.
 
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-
-This patch adds DMA properties to the HSUSB node.
-
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 ---
 Changes in v2:
 * rebased
 
- arch/arm/boot/dts/r8a7745.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts | 62 ++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 9733ac5..6c9a0d6 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -950,6 +950,9 @@
- 			reg = <0 0xe6590000 0 0x100>;
- 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 704>;
-+			dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
-+			       <&usb_dmac1 0>, <&usb_dmac1 1>;
-+			dma-names = "ch0", "ch1", "ch2", "ch3";
- 			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
- 			resets = <&cpg 704>;
- 			renesas,buswait = <4>;
+diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+index 82587d7..3eb4f83 100644
+--- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
++++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts
+@@ -16,9 +16,9 @@
+ 	compatible = "iwave,g22d", "iwave,g22m", "renesas,r8a7745";
+ 
+ 	aliases {
++		ethernet0 = &avb;
+ 		serial3 = &scif4;
+ 		serial5 = &hscif1;
+-		ethernet0 = &avb;
+ 	};
+ 
+ 	chosen {
+@@ -40,6 +40,25 @@
+ 	};
+ };
+ 
++&avb {
++	pinctrl-0 = <&avb_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&phy3>;
++	phy-mode = "gmii";
++	renesas,no-ether-link;
++	status = "okay";
++
++	phy3: ethernet-phy@3 {
++	/*
++	 * On some older versions of the platform (before R4.0) the phy address
++	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
++	 */
++		reg = <3>;
++		micrel,led-mode = <1>;
++	};
++};
++
+ &hscif1 {
+ 	pinctrl-0 = <&hscif1_pins>;
+ 	pinctrl-names = "default";
+@@ -48,7 +67,18 @@
+ 	status = "okay";
+ };
+ 
++&pci1 {
++	status = "okay";
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++};
++
+ &pfc {
++	avb_pins: avb {
++		groups = "avb_mdio", "avb_gmii";
++		function = "avb";
++	};
++
+ 	hscif1_pins: hscif1 {
+ 		groups = "hscif1_data", "hscif1_ctrl";
+ 		function = "hscif1";
+@@ -59,11 +89,6 @@
+ 		function = "scif4";
+ 	};
+ 
+-	avb_pins: avb {
+-		groups = "avb_mdio", "avb_gmii";
+-		function = "avb";
+-	};
+-
+ 	sdhi0_pins: sd0 {
+ 		groups = "sdhi0_data4", "sdhi0_ctrl";
+ 		function = "sdhi0";
+@@ -83,25 +108,6 @@
+ 	status = "okay";
+ };
+ 
+-&avb {
+-	pinctrl-0 = <&avb_pins>;
+-	pinctrl-names = "default";
+-
+-	phy-handle = <&phy3>;
+-	phy-mode = "gmii";
+-	renesas,no-ether-link;
+-	status = "okay";
+-
+-	phy3: ethernet-phy@3 {
+-	/*
+-	 * On some older versions of the platform (before R4.0) the phy address
+-	 * may be 1 or 3. The address is fixed to 3 for R4.0 onwards.
+-	 */
+-		reg = <3>;
+-		micrel,led-mode = <1>;
+-	};
+-};
+-
+ &sdhi0 {
+ 	pinctrl-0 = <&sdhi0_pins>;
+ 	pinctrl-names = "default";
+@@ -112,12 +118,6 @@
+ 	status = "okay";
+ };
+ 
+-&pci1 {
+-	status = "okay";
+-	pinctrl-0 = <&usb1_pins>;
+-	pinctrl-names = "default";
+-};
+-
+ &usbphy {
+ 	status = "okay";
+ };
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
