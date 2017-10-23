@@ -1,471 +1,95 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 1/2] ARM: dts: uniphier: add resets properties
-Date: Tue, 24 Oct 2017 01:42:28 +0900
-Message-ID: <1508776949-4995-1-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5] of: dynamic: fix memory leak related to properties of __of_node_dup
+Date: Mon, 23 Oct 2017 11:47:28 -0500
+Message-ID: <CAL_JsqLfw4BPcxHk-NcauezJCfAOxjZAJ=2Jr1WfAF44+9FC8Q@mail.gmail.com>
+References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
+ <1508728793-1213-1-git-send-email-alan.1.wang@nokia-sbell.com> <a3923393-eb8f-2339-fc33-6a57792f1626@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a3923393-eb8f-2339-fc33-6a57792f1626@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Lixin Wang <alan.1.wang@nokia-sbell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add resets properties to all nodes that have reset lines.
+On Mon, Oct 23, 2017 at 12:16 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 10/22/17 20:19, Lixin Wang wrote:
+>> If a node with no properties is dynamically added, then a property is
+>> dynamically added to the node, then the property is dynamically removed,
+>> the result will be node->properties == NULL and node->deadprops != NULL.
+>>
+>> Add a separate function to release the properties in both lists.
+>>
+>> Signed-off-by: Lixin Wang <alan.1.wang@nokia-sbell.com>
+>> ---
+>>  v4 -> v5:
+>>  * fix the bug in v4, that the prop->next should be saved before release
+>>    the prop.
+>>
+>>  drivers/of/dynamic.c | 26 ++++++++++++++------------
+>>  1 file changed, 14 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index 301b6db..39d69d3 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -315,6 +315,18 @@ int of_detach_node(struct device_node *np)
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_detach_node);
+>>
+>> +static void property_list_free(struct property *prop_list)
+>> +{
+>> +     struct property *prop, *next;
+>> +
+>> +     for (prop = prop_list; prop != NULL; prop = next) {
+>> +             next = prop->next;
+>> +             kfree(prop->name);
+>> +             kfree(prop->value);
+>> +             kfree(prop);
+>> +     }
+>> +}
+>> +
+>>  /**
+>>   * of_node_release() - release a dynamically allocated node
+>>   * @kref: kref element of the node to be released
+>> @@ -324,7 +336,6 @@ EXPORT_SYMBOL_GPL(of_detach_node);
+>>  void of_node_release(struct kobject *kobj)
+>>  {
+>>       struct device_node *node = kobj_to_device_node(kobj);
+>> -     struct property *prop = node->properties;
+>>
+>>       /* We should never be releasing nodes that haven't been detached. */
+>>       if (!of_node_check_flag(node, OF_DETACHED)) {
+>> @@ -335,18 +346,9 @@ void of_node_release(struct kobject *kobj)
+>>       if (!of_node_check_flag(node, OF_DYNAMIC))
+>>               return;
+>>
+>> -     while (prop) {
+>> -             struct property *next = prop->next;
+>> -             kfree(prop->name);
+>> -             kfree(prop->value);
+>> -             kfree(prop);
+>> -             prop = next;
+>> +     property_list_free(node->properties);
+>> +     property_list_free(node->deadprops);
+>>
+>> -             if (!prop) {
+>> -                     prop = node->deadprops;
+>> -                     node->deadprops = NULL;
+>> -             }
+>> -     }
+>>       kfree(node->full_name);
+>>       kfree(node->data);
+>>       kfree(node);
+>>
+>
+> Hi Lixin,
+>
+> My bad...  Thanks for the fix.
+>
+> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+I've dropped v4 and applied v5.
 
- arch/arm/boot/dts/uniphier-ld4.dtsi  |  9 +++++++++
- arch/arm/boot/dts/uniphier-pro4.dtsi | 11 +++++++++++
- arch/arm/boot/dts/uniphier-pro5.dtsi | 11 +++++++++++
- arch/arm/boot/dts/uniphier-pxs2.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/uniphier-sld8.dtsi |  9 +++++++++
- 5 files changed, 52 insertions(+)
-
-diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-index c0cd300..01fc3e1 100644
---- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-@@ -71,6 +71,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart0>;
- 			clocks = <&peri_clk 0>;
-+			resets = <&peri_rst 0>;
- 		};
- 
- 		serial1: serial@54006900 {
-@@ -81,6 +82,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart1>;
- 			clocks = <&peri_clk 1>;
-+			resets = <&peri_rst 1>;
- 		};
- 
- 		serial2: serial@54006a00 {
-@@ -91,6 +93,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart2>;
- 			clocks = <&peri_clk 2>;
-+			resets = <&peri_rst 2>;
- 		};
- 
- 		serial3: serial@54006b00 {
-@@ -101,6 +104,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
- 			clocks = <&peri_clk 3>;
-+			resets = <&peri_rst 3>;
- 		};
- 
- 		gpio: gpio@55000000 {
-@@ -127,6 +131,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c0>;
- 			clocks = <&peri_clk 4>;
-+			resets = <&peri_rst 4>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -140,6 +145,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c1>;
- 			clocks = <&peri_clk 5>;
-+			resets = <&peri_rst 5>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -153,6 +159,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c2>;
- 			clocks = <&peri_clk 6>;
-+			resets = <&peri_rst 6>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -166,6 +173,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c3>;
- 			clocks = <&peri_clk 7>;
-+			resets = <&peri_rst 7>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -319,6 +327,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand2cs>;
- 			clocks = <&sys_clk 2>;
-+			resets = <&sys_rst 2>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-index 095a364..7955c3a 100644
---- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-@@ -79,6 +79,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart0>;
- 			clocks = <&peri_clk 0>;
-+			resets = <&peri_rst 0>;
- 		};
- 
- 		serial1: serial@54006900 {
-@@ -89,6 +90,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart1>;
- 			clocks = <&peri_clk 1>;
-+			resets = <&peri_rst 1>;
- 		};
- 
- 		serial2: serial@54006a00 {
-@@ -99,6 +101,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart2>;
- 			clocks = <&peri_clk 2>;
-+			resets = <&peri_rst 2>;
- 		};
- 
- 		serial3: serial@54006b00 {
-@@ -109,6 +112,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
- 			clocks = <&peri_clk 3>;
-+			resets = <&peri_rst 3>;
- 		};
- 
- 		gpio: gpio@55000000 {
-@@ -135,6 +139,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c0>;
- 			clocks = <&peri_clk 4>;
-+			resets = <&peri_rst 4>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -148,6 +153,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c1>;
- 			clocks = <&peri_clk 5>;
-+			resets = <&peri_rst 5>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -161,6 +167,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c2>;
- 			clocks = <&peri_clk 6>;
-+			resets = <&peri_rst 6>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -174,6 +181,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c3>;
- 			clocks = <&peri_clk 7>;
-+			resets = <&peri_rst 7>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -187,6 +195,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 25 4>;
- 			clocks = <&peri_clk 9>;
-+			resets = <&peri_rst 9>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -198,6 +207,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 26 4>;
- 			clocks = <&peri_clk 10>;
-+			resets = <&peri_rst 10>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -338,6 +348,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand>;
- 			clocks = <&sys_clk 2>;
-+			resets = <&sys_rst 2>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-index dba944f..6589b8a 100644
---- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-@@ -166,6 +166,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart0>;
- 			clocks = <&peri_clk 0>;
-+			resets = <&peri_rst 0>;
- 		};
- 
- 		serial1: serial@54006900 {
-@@ -176,6 +177,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart1>;
- 			clocks = <&peri_clk 1>;
-+			resets = <&peri_rst 1>;
- 		};
- 
- 		serial2: serial@54006a00 {
-@@ -186,6 +188,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart2>;
- 			clocks = <&peri_clk 2>;
-+			resets = <&peri_rst 2>;
- 		};
- 
- 		serial3: serial@54006b00 {
-@@ -196,6 +199,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
- 			clocks = <&peri_clk 3>;
-+			resets = <&peri_rst 3>;
- 		};
- 
- 		gpio: gpio@55000000 {
-@@ -222,6 +226,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c0>;
- 			clocks = <&peri_clk 4>;
-+			resets = <&peri_rst 4>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -235,6 +240,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c1>;
- 			clocks = <&peri_clk 5>;
-+			resets = <&peri_rst 5>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -248,6 +254,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c2>;
- 			clocks = <&peri_clk 6>;
-+			resets = <&peri_rst 6>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -261,6 +268,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c3>;
- 			clocks = <&peri_clk 7>;
-+			resets = <&peri_rst 7>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -274,6 +282,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 25 4>;
- 			clocks = <&peri_clk 9>;
-+			resets = <&peri_rst 9>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -285,6 +294,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 26 4>;
- 			clocks = <&peri_clk 10>;
-+			resets = <&peri_rst 10>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -399,6 +409,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand2cs>;
- 			clocks = <&sys_clk 2>;
-+			resets = <&sys_rst 2>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-index a745437..d82d6d8 100644
---- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-+++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-@@ -173,6 +173,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart0>;
- 			clocks = <&peri_clk 0>;
-+			resets = <&peri_rst 0>;
- 		};
- 
- 		serial1: serial@54006900 {
-@@ -183,6 +184,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart1>;
- 			clocks = <&peri_clk 1>;
-+			resets = <&peri_rst 1>;
- 		};
- 
- 		serial2: serial@54006a00 {
-@@ -193,6 +195,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart2>;
- 			clocks = <&peri_clk 2>;
-+			resets = <&peri_rst 2>;
- 		};
- 
- 		serial3: serial@54006b00 {
-@@ -203,6 +206,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
- 			clocks = <&peri_clk 3>;
-+			resets = <&peri_rst 3>;
- 		};
- 
- 		gpio: gpio@55000000 {
-@@ -232,6 +236,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c0>;
- 			clocks = <&peri_clk 4>;
-+			resets = <&peri_rst 4>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -245,6 +250,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c1>;
- 			clocks = <&peri_clk 5>;
-+			resets = <&peri_rst 5>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -258,6 +264,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c2>;
- 			clocks = <&peri_clk 6>;
-+			resets = <&peri_rst 6>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -271,6 +278,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c3>;
- 			clocks = <&peri_clk 7>;
-+			resets = <&peri_rst 7>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -282,6 +290,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 45 4>;
- 			clocks = <&peri_clk 8>;
-+			resets = <&peri_rst 8>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -293,6 +302,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 25 4>;
- 			clocks = <&peri_clk 9>;
-+			resets = <&peri_rst 9>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -304,6 +314,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 26 4>;
- 			clocks = <&peri_clk 10>;
-+			resets = <&peri_rst 10>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -425,6 +436,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand2cs>;
- 			clocks = <&sys_clk 2>;
-+			resets = <&sys_rst 2>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-index df6d870..7188536 100644
---- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-+++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-@@ -71,6 +71,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart0>;
- 			clocks = <&peri_clk 0>;
-+			resets = <&peri_rst 0>;
- 		};
- 
- 		serial1: serial@54006900 {
-@@ -81,6 +82,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart1>;
- 			clocks = <&peri_clk 1>;
-+			resets = <&peri_rst 1>;
- 		};
- 
- 		serial2: serial@54006a00 {
-@@ -91,6 +93,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart2>;
- 			clocks = <&peri_clk 2>;
-+			resets = <&peri_rst 2>;
- 		};
- 
- 		serial3: serial@54006b00 {
-@@ -101,6 +104,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
- 			clocks = <&peri_clk 3>;
-+			resets = <&peri_rst 3>;
- 		};
- 
- 		gpio: gpio@55000000 {
-@@ -131,6 +135,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c0>;
- 			clocks = <&peri_clk 4>;
-+			resets = <&peri_rst 4>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -144,6 +149,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c1>;
- 			clocks = <&peri_clk 5>;
-+			resets = <&peri_rst 5>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -157,6 +163,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c2>;
- 			clocks = <&peri_clk 6>;
-+			resets = <&peri_rst 6>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -170,6 +177,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c3>;
- 			clocks = <&peri_clk 7>;
-+			resets = <&peri_rst 7>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -323,6 +331,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand2cs>;
- 			clocks = <&sys_clk 2>;
-+			resets = <&sys_rst 2>;
- 		};
- 	};
- };
--- 
-2.7.4
+Rob
