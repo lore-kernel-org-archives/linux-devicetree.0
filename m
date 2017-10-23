@@ -1,142 +1,117 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 05/13] irqchip: add initial support for ompic
-Date: Mon, 23 Oct 2017 09:00:09 +0100
-Message-ID: <86d15egupi.fsf@arm.com>
-References: <20171022031600.29612-1-shorne@gmail.com>
-        <20171022031600.29612-6-shorne@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: stm32: add support for diff
+ channels
+Date: Mon, 23 Oct 2017 10:06:27 +0200
+Message-ID: <0726f676-0440-afbe-f275-ec7fdaa29c9f@st.com>
+References: <1508246145-19417-1-git-send-email-fabrice.gasnier@st.com>
+ <1508246145-19417-2-git-send-email-fabrice.gasnier@st.com>
+ <20171021185401.529f2eb2@archlinux> <20171021202327.51dd2855@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171022031600.29612-6-shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Stafford Horne's
-        message of "Sun, 22 Oct 2017 12:15:52 +0900")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171021202327.51dd2855@archlinux>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 22 2017 at 12:15:52 pm BST, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
->
-> IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
-> described in the Multi-core support section of the OpenRISC 1.2
-> proposed architecture specification:
->
->   https://github.com/stffrdhrn/doc/raw/arch-1.2-proposal/openrisc-arch-1.2-rev0.pdf
->
-> Each OpenRISC core contains a full interrupt controller which is used in
-> the SMP architecture for interrupt balancing.  This IPI device, the
-> ompic, is the only external device required for enabling SMP on
-> OpenRISC.
->
-> Pending ops are stored in a memory bit mask which can allow multiple
-> pending operations to be set and serviced at a time. This is mostly
-> borrowed from the alpha IPI implementation.
->
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-> Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->
-> Changes since v2
->  - Fixed some issues with missing static
->  - Fixed spelling issue with multi-core
->  - Added back #interrupt-cells
->
-> Changes since v1
->  - Added openrisc, prefix
->  - Clarified 8 bytes per cpu
->  - Removed #interrupt-cells as this will not be an irq parent
->  - Changed ops to be percpu
->  - Added DTS and intialization failure validations
->
->
->  .../interrupt-controller/openrisc,ompic.txt        |  22 +++
->  MAINTAINERS                                        |   1 +
->  arch/openrisc/Kconfig                              |   1 +
->  drivers/irqchip/Kconfig                            |   3 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-ompic.c                        | 205 +++++++++++++++++++++
->  6 files changed, 233 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/openrisc,ompic.txt
->  create mode 100644 drivers/irqchip/irq-ompic.c
+On 10/21/2017 09:23 PM, Jonathan Cameron wrote:
+> On Sat, 21 Oct 2017 18:54:01 +0100
+> Jonathan Cameron <jic23@kernel.org> wrote:
+> 
+>> On Tue, 17 Oct 2017 15:15:43 +0200
+>> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>>
+>>> STM32H7 ADC channels may be configured either as single-ended or
+>>> differential.
+>>> Add 'st,adc-diff-channels' property to support differential channels.
+>>> Differential channels are defined as a pair of positive and negative
+>>> inputs: vinp & vinn.
+>>>
+>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>  
+>> Hmm. Fair enough.  Sometimes we support both types of channels
+>> and leave it to userspace, but in many cases that makes little sense
+>> - particularly if like I think is going on here, we aren't combining channels
+>> that can be separately read but rather the negative pin is simply unused
+>> when we are in single channel mode... (did I understand that right?)
+> I clearly didn't understand.  This is same as other devices
+> in that we are picking a pair from the channels that can otherwise be
+> used as single end channels. (I think). 
 
-[...]
+Hi Jonathan,
 
-> +static struct irqaction ompi_ipi_irqaction = {
-> +	.handler =      ompic_ipi_handler,
-> +	.flags =        IRQF_PERCPU,
-> +	.name =         "ompic_ipi",
-> +};
-> +
-> +static int __init ompic_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	struct resource res;
-> +	int irq;
-> +	int ret;
-> +
-> +	/* Validate the DT */
-> +	if (ompic_base) {
-> +		pr_err("ompic: duplicate ompic's are not supported");
-> +		return -EEXIST;
-> +	}
-> +
-> +	if (of_address_to_resource(node, 0, &res)) {
-> +		pr_err("ompic: reg property requires an address and size");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (resource_size(&res) < (num_possible_cpus() * OMPIC_CPUBYTES)) {
-> +		pr_err("ompic: reg size, currently %d must be at least %d",
-> +			resource_size(&res),
-> +			(num_possible_cpus() * OMPIC_CPUBYTES));
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Setup the device */
-> +	ompic_base = ioremap(res.start, resource_size(&res));
-> +	if (IS_ERR(ompic_base)) {
-> +		pr_err("ompic: unable to map registers");
-> +		return PTR_ERR(ompic_base);
-> +	}
-> +
-> +	irq = irq_of_parse_and_map(node, 0);
-> +	if (irq <= 0) {
-> +		pr_err("ompic: unable to parse device irq");
-> +		ret = -EINVAL;
-> +		goto out_unmap;
-> +	}
-> +
-> +	ret = setup_irq(irq, &ompi_ipi_irqaction);
-> +	if (ret)
-> +		goto out_irq_disp;
+Indeed, we're picking a pair from the channels that can be used as
+single channels otherwise.
+Also, it doesn't makes sense to leave the choice to userspace: when
+these channels are used in differential mode, both input should be
+biased. This is quite dependent on hardware (board), not really a
+runtime choice.
+Hope this clarifies ?
 
-Is there a particular reason why this cannot be turned request_irq()
-call? setup_irq is something we try to avoid these days...
+> 
+> For this binding I think I'd like to see an example added showing how
+> this works...
 
-> +
-> +	set_smp_cross_call(ompic_raise_softirq);
-> +
-> +	return 0;
-> +
-> +out_irq_disp:
-> +	irq_dispose_mapping(irq);
-> +out_unmap:
-> +	iounmap(ompic_base);
-> +	ompic_base = NULL;
-> +	return ret;
-> +}
-> +IRQCHIP_DECLARE(ompic, "openrisc,ompic", ompic_of_init);
+You're right, I should have added that. Please let me know if I can add
+bellow example in v2:
 
-Otherwise looks good to me.
+Example to setup differential channels 1, 2 & 3 (with resp. 0, 6 & 7
+negative inputs):
+	adc: adc@40022000 {
+		compatible = "st,stm32h7-adc-core";
+		...
+		adc1: adc@0 {
+			compatible = "st,stm32h7-adc";
+			...
+			st,adc-diff-channels = <1 0>, <2 6>, <3 7>;
+		};
+	};
 
-Thanks,
+Thanks for reviewing,
+Best Regards,
+Fabrice
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> 
+> Jonathan
+>>
+>> Jonathan
+>>
+>>> ---
+>>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>> index 48bfcaa3..c3c8de1 100644
+>>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>> @@ -62,6 +62,12 @@ Required properties:
+>>>  - st,adc-channels: List of single-ended channels muxed for this ADC.
+>>>    It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
+>>>    from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
+>>> +- st,adc-diff-channels: List of differential channels muxed for this ADC.
+>>> +  Depending on part used, some channels can be configured as differential
+>>> +  instead of single-ended (e.g. stm32h7). List here positive and negative
+>>> +  inputs pairs as <vinp vinn>, <vinp vinn>,... vinp and vinn are numbered
+>>> +  from 0 to 19 on stm32h7)
+>>> +  Note: At least one of "st,adc-channels" or "st,adc-diff-channels" is required.
+>>>  - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+>>>    Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>    
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
