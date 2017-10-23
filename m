@@ -1,229 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 02/10] dt-bindings: net: dwmac-sun8i: update
- documentation about integrated PHY
-Date: Mon, 23 Oct 2017 17:06:48 -0500
-Message-ID: <20171023220648.u3nlvg7vxz5tupf6@rob-hp-laptop>
-References: <20171023185626.31793-1-clabbe.montjoie@gmail.com>
- <20171023185626.31793-3-clabbe.montjoie@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] media: dt-bindings: Add bindings for TDA1997X
+Date: Mon, 23 Oct 2017 17:22:10 -0500
+Message-ID: <20171023222210.gwyxlbvvbcbzbqie@rob-hp-laptop>
+References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
+ <1507783506-3884-3-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171023185626.31793-3-clabbe.montjoie@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1507783506-3884-3-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 08:56:18PM +0200, Corentin Labbe wrote:
-> This patch add documentation about the MDIO switch used on sun8i-h3-emac
-> for integrated PHY.
-> 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+On Wed, Oct 11, 2017 at 09:45:04PM -0700, Tim Harvey wrote:
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/dwmac-sun8i.txt        | 139 +++++++++++++++++++--
->  1 file changed, 127 insertions(+), 12 deletions(-)
+> v2:
+>  - add vendor prefix and remove _ from vidout-portcfg
+>  - remove _ from labels
+>  - remove max-pixel-rate property
+>  - describe and provide example for single output port
+>  - use new audio port bindings
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> index 725f3b187886..3e37db10fa02 100644
-> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> @@ -4,18 +4,18 @@ This device is a platform glue layer for stmmac.
->  Please see stmmac.txt for the other unchanged properties.
->  
->  Required properties:
-> -- compatible: should be one of the following string:
-> +- compatible: must be one of the following string:
->  		"allwinner,sun8i-a83t-emac"
->  		"allwinner,sun8i-h3-emac"
->  		"allwinner,sun8i-v3s-emac"
->  		"allwinner,sun50i-a64-emac"
->  - reg: address and length of the register for the device.
->  - interrupts: interrupt for the device
-> -- interrupt-names: should be "macirq"
-> +- interrupt-names: must be "macirq"
->  - clocks: A phandle to the reference clock for this device
-> -- clock-names: should be "stmmaceth"
-> +- clock-names: must be "stmmaceth"
->  - resets: A phandle to the reset control for this device
-> -- reset-names: should be "stmmaceth"
-> +- reset-names: must be "stmmaceth"
->  - phy-mode: See ethernet.txt
->  - phy-handle: See ethernet.txt
->  - #address-cells: shall be 1
-> @@ -39,23 +39,38 @@ Optional properties for the following compatibles:
->  - allwinner,leds-active-low: EPHY LEDs are active low
->  
->  Required child node of emac:
-> -- mdio bus node: should be named mdio
-> +- mdio bus node: with compatible "snps,dwmac-mdio"
->  
->  Required properties of the mdio node:
->  - #address-cells: shall be 1
->  - #size-cells: shall be 0
->  
-> -The device node referenced by "phy" or "phy-handle" should be a child node
-> +The device node referenced by "phy" or "phy-handle" must be a child node
->  of the mdio node. See phy.txt for the generic PHY bindings.
->  
-> -Required properties of the phy node with the following compatibles:
-> +The following compatibles require that the emac node have a mdio-mux child
-> +node called "mdio-mux":
-> +  - "allwinner,sun8i-h3-emac"
-> +  - "allwinner,sun8i-v3s-emac":
-> +Required properties for the mdio-mux node:
-> +  - compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux"
-
-I think you can drop mdio-mux. They are in the wrong order anyway.
-
-> +  - one child mdio for the integrated mdio with the compatible
-> +    "allwinner,sun8i-h3-mdio-internal"
-> +  - one child mdio for the external mdio if present (V3s have none)
-> +Required properties for the mdio-mux children node:
-> +  - reg: 1 for internal MDIO bus, 2 for external MDIO bus
-> +
-> +The following compatibles require a PHY node representing the integrated
-> +PHY, under the integrated MDIO bus node if an mdio-mux node is used:
->    - "allwinner,sun8i-h3-emac",
->    - "allwinner,sun8i-v3s-emac":
-
-Please refer to mdio-mux.txt somewhere in here.
-
-> +
-> +Required properties of the integrated phy node:
->  - clocks: a phandle to the reference clock for the EPHY
->  - resets: a phandle to the reset control for the EPHY
-> +- Must be a child of the integrated mdio
->  
-> -Example:
-> -
-> +Example with integrated PHY:
->  emac: ethernet@1c0b000 {
->  	compatible = "allwinner,sun8i-h3-emac";
->  	syscon = <&syscon>;
-> @@ -72,13 +87,113 @@ emac: ethernet@1c0b000 {
->  	phy-handle = <&int_mii_phy>;
->  	phy-mode = "mii";
->  	allwinner,leds-active-low;
-> +
-> +	mdio0: mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +	};
-> +
-> +	mdio-mux {
-> +		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
-
-To be compliant with the mdio-mux binding, you need a mdio-parent-bus 
-property. Though that property is optional, so maybe the mdio-mux 
-binding just needs to say when it is optional. Presumably when the 
-parent is the mdio bus controller. 
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		int_mdio: mdio@1 {
-> +			compatible = "allwinner,sun8i-h3-mdio-internal";
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			int_mii_phy: ethernet-phy@1 {
-> +				reg = <1>;
-> +				clocks = <&ccu CLK_BUS_EPHY>;
-> +				resets = <&ccu RST_BUS_EPHY>;
-> +				phy-is-integrated;
-> +			};
-> +		};
-> +		ext_mdio: mdio@2 {
-> +			reg = <2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +Example with external PHY:
-> +emac: ethernet@1c0b000 {
-> +	compatible = "allwinner,sun8i-h3-emac";
-> +	syscon = <&syscon>;
-> +	reg = <0x01c0b000 0x104>;
-> +	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "macirq";
-> +	resets = <&ccu RST_BUS_EMAC>;
-> +	reset-names = "stmmaceth";
-> +	clocks = <&ccu CLK_BUS_EMAC>;
-> +	clock-names = "stmmaceth";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	phy-handle = <&ext_rgmii_phy>;
-> +	phy-mode = "rgmii";
-> +	allwinner,leds-active-low;
-> +
-> +	mdio0: mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +	};
-> +
-> +	mdio-mux {
-> +		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		int_mdio: mdio@1 {
-> +			compatible = "allwinner,sun8i-h3-mdio-internal";
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			int_mii_phy: ethernet-phy@1 {
-> +				reg = <1>;
-> +				clocks = <&ccu CLK_BUS_EPHY>;
-> +				resets = <&ccu RST_BUS_EPHY>;
-> +			};
-> +		};
-> +		ext_mdio: mdio@2 {
-> +			reg = <2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			ext_rgmii_phy: ethernet-phy@1 {
-> +				reg = <1>;
-> +			};
-> +		}:
-> +	};
-> +};
-> +
-> +Example with SoC without integrated PHY
-> +
-> +emac: ethernet@1c0b000 {
-> +	compatible = "allwinner,sun8i-a83t-emac";
-> +	syscon = <&syscon>;
-> +	reg = <0x01c0b000 0x104>;
-> +	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "macirq";
-> +	resets = <&ccu RST_BUS_EMAC>;
-> +	reset-names = "stmmaceth";
-> +	clocks = <&ccu CLK_BUS_EMAC>;
-> +	clock-names = "stmmaceth";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	phy-handle = <&ext_rgmii_phy>;
-> +	phy-mode = "rgmii";
-> +
->  	mdio: mdio {
-> +		compatible = "snps,dwmac-mdio";
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -		int_mii_phy: ethernet-phy@1 {
-> +		ext_rgmii_phy: ethernet-phy@1 {
->  			reg = <1>;
-> -			clocks = <&ccu CLK_BUS_EPHY>;
-> -			resets = <&ccu RST_BUS_EPHY>;
->  		};
->  	};
->  };
-> -- 
-> 2.13.6
+> ---
+>  .../devicetree/bindings/media/i2c/tda1997x.txt     | 179 +++++++++++++++++++++
+>  1 file changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+> new file mode 100644
+> index 0000000..269d7f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+> @@ -0,0 +1,179 @@
+> +Device-Tree bindings for the NXP TDA1997x HDMI receiver
+> +
+> +The TDA19971/73 are HDMI video receivers.
+> +
+> +The TDA19971 Video port output pins can be used as follows:
+> + - RGB 8bit per color (24 bits total): R[11:4] B[11:4] G[11:4]
+> + - YUV444 8bit per color (24 bits total): Y[11:4] Cr[11:4] Cb[11:4]
+> + - YUV422 semi-planar 8bit per component (16 bits total): Y[11:4] CbCr[11:4]
+> + - YUV422 semi-planar 10bit per component (20 bits total): Y[11:2] CbCr[11:2]
+> + - YUV422 semi-planar 12bit per component (24 bits total): - Y[11:0] CbCr[11:0]
+> + - YUV422 BT656 8bit per component (8 bits total): YCbCr[11:4] (2-cycles)
+> + - YUV422 BT656 10bit per component (10 bits total): YCbCr[11:2] (2-cycles)
+> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
+> +
+> +The TDA19973 Video port output pins can be used as follows:
+> + - RGB 12bit per color (36 bits total): R[11:0] B[11:0] G[11:0]
+> + - YUV444 12bit per color (36 bits total): Y[11:0] Cb[11:0] Cr[11:0]
+> + - YUV422 semi-planar 12bit per component (24 bits total): Y[11:0] CbCr[11:0]
+> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
+> +
+> +The Video port output pins are mapped via 4-bit 'pin groups' allowing
+> +for a variety fo connection possibilities including swapping pin order within
+
+s/fo /of /
+
+> +pin groups. The video_portcfg device-tree property consists of register mapping
+> +pairs which map a chip-specific VP output register to a 4-bit pin group. If
+> +the pin group needs to be bit-swapped you can use the *_S pin-group defines.
+
+The rest of the binding looks fine, but I have some reservations about 
+this. I think this should be common probably. There's been a few 
+bindings for display recently that deal with the interface format. Maybe 
+some vendor property is needed here to map a standard interface format 
+back to pin configuration.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
