@@ -1,34 +1,40 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] ARM: dts: r8a7745: Add IIC cores to dtsi
-Date: Mon, 23 Oct 2017 13:19:35 +0000
-Message-ID: <TY1PR06MB0895D20B307ECD9862727533C0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1507910793-13919-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20171020093302.o3jjjgu37gipqelj@verge.net.au>
+Subject: RE: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
+Date: Mon, 23 Oct 2017 13:25:36 +0000
+Message-ID: <TY1PR06MB0895D27B9C7F2D3B3113654EC0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171020093302.o3jjjgu37gipqelj@verge.net.au>
 Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-> Please include some changelog text here, preferably motivating the change=
-.
-
-Will do.
-
-Fab
-
->
-> On Fri, Oct 13, 2017 at 05:06:33PM +0100, Fabrizio Castro wrote:
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+SGVsbG8gR2VlcnQsDQoNCj4gPg0KPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaXdnMjBk
+LXE3LWNvbW1vbi5kdHNpDQo+ID4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pd2cyMGQtcTct
+Y29tbW9uLmR0c2kNCj4gPiA+IEBAIC0xMSw2ICsxMSw3IEBADQo+ID4gPiAgLyB7DQo+ID4gPiAg
+ICAgICAgIGFsaWFzZXMgew0KPiA+ID4gICAgICAgICAgICAgICAgIHNlcmlhbDAgPSAmc2NpZjA7
+DQo+ID4gPiArICAgICAgICAgICAgICAgc2VyaWFsMyA9ICZzY2lmYjE7DQo+ID4NCj4gPiBHaXZl
+biB0aGlzIHBvcnQgaXMgbm90IGxhYmVsZWQgInNlcmlhbDMiLCBidXQgY2FsbGVkICJkYXRhIHVh
+cnQiLCB5b3UgbWF5IHdhbnQNCj4gPiB0byBhZGQgYSBjb21tZW50IHRvIGF2b2lkIGNvbmZ1c2lv
+bjoNCj4NCj4gSXQncyBhIGxpdHRsZSBiaXQgY29uZnVzaW5nLCBpc24ndCBpdD8gVGhlIGxpbmVz
+IHJlbGF0ZWQgdG8gc3VjaCBpbnRlcmZhY2UgYXJlIG5hbWVkIGFzIFVBUlQwX3ggb24gdGhlIGNh
+cnJpZXIgYm9hcmQgc2NoZW1hdGljLCB0aGUgc2VjdGlvbg0KPiBvZiB0aGUgc2NoZW1hdGljIHRo
+YXQgY29udGFpbnMgdGhlIGhlYWRlciBpcyBuYW1lZCAiZGF0YSB1YXJ0IGhlYWRlciIsIGFuZCB0
+aGUgYm9hcmQgZG9jdW1lbnRhdGlvbiBuYW1lcyBpdCBleHBsaWNpdGx5IGFzICJVQVJUIDMgLQ0K
+PiAvZGV2L3R0eVNDMyAoU0NJRkIxKSIuDQo+DQo+IEkgZG9uJ3QgdGhpbmsgdGhlcmUgaXMgYW55
+dGhpbmcgd2UgY2FuIGRvIHRvIG1ha2UgdGhpcyBlYXNpZXIgZm9yIHRoZSB1c2VyIHJlYWxseSwg
+aXMgdGhlcmU/IDpEDQo+IElmIHdlIGRlY2lkZSB0byBhZGQgYSBjb21tZW50IHRvIHNlcmlhbCAz
+LCBJIGd1ZXNzIHdlIG5lZWQgdG8gYmUgY29uc2lzdGVudCBhbmQgYWRkIGNvbW1lbnRzIGZvciB0
+aGUgb3RoZXIgc2VyaWFsIGludGVyZmFjZXMgdG9vLg0KPiBJZiB5b3Ugc3RpbGwgcHJlZmVyIGhh
+dmluZyBhIGNvbW1lbnQgdGhlcmUgSSdsbCBzZW5kIGEgdjIgYW5kIHBhdGNoKGVzKSBmb3IgYWRk
+aW5nIGNvbW1lbnRzIHRvIHRoZSBvdGhlciBpbnRlcmZhY2VzLCBqdXN0IGxldCBtZSBrbm93Lg0K
+DQpBbnkgdGhvdWdodHMgYWJvdXQgdGhpcz8NCg0KVGhhbmtzLA0KRmFiDQoNCj4NCj4gVGhhbmtz
+LA0KPiBGYWINCj4NCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMg
+TWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDgg
+NUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBO
+by4gMDQ1ODY3MDkuDQo=
