@@ -1,58 +1,58 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v4 2/2] dma: sprd: Add Spreadtrum DMA driver
-Date: Mon, 23 Oct 2017 10:01:11 +0800
-Message-ID: <CAMz4kuKTWz86rv1WsGNxcssfK_7uHxw0=XwcqFZEFM=vo0nuQg@mail.gmail.com>
-References: <84d9f80ce9853ae8441ef91e8701ba516db8f697.1507612144.git.baolin.wang@spreadtrum.com>
- <6c3036ce14d776452bd8526c0ea9541880a43541.1507612144.git.baolin.wang@spreadtrum.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] phy: add inno-usb2-phy driver for hi3798cv200 SoC
+Date: Mon, 23 Oct 2017 10:08:37 +0800
+Message-ID: <20171023020836.GA16644@dragon>
+References: <1508078958-16966-1-git-send-email-shawnguo@kernel.org>
+ <68cd23ae-544d-a60a-14a9-347b7aaf76bf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6c3036ce14d776452bd8526c0ea9541880a43541.1507612144.git.baolin.wang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <68cd23ae-544d-a60a-14a9-347b7aaf76bf-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Wed, Oct 18, 2017 at 06:08:01PM +0530, Kishon Vijay Abraham I wrote:
+> > +	usb2_phy1: usb2-phy1 {
+> > +		compatible = "hisilicon,hi3798cv200-usb2-phy";
+> > +		#phy-cells = <1>;
+> > +		hisilicon,peripheral-syscon = <&peri_ctrl 0x120>;
+> > +		clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
+> > +		resets = <&crg 0xbc 4>,
+> > +			 <&crg 0xbc 8>,
+> > +			 <&crg 0xbc 9>;
+> > +		reset-names = "power_on", "utmi0", "utmi1";
+> > +	};
+> 
+> please send the devicetree binding documentation as a separate patch.
 
-On 10 October 2017 at 13:23, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
-> This patch adds the DMA controller driver for Spreadtrum SC9860 platform.
->
-> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> ---
-> Changes since v3:
->  - Remove redundant local 'mask' and 'val' variables.
->  - Simplify sprd_dma_get_req_type() function.
->  - Change pm_runtime_put_sync() to pm_runtime_put() in probe function.
->  - Simplify sizeof function.
->  - Other coding style fixes.
->
-> Changes since v2:
->  - Add COMPILE_TEST as dependency.
->  - Renamed DMA macro definition properly.
->  - Add sprd_dma_chn_update() helpers to save lots of code.
->  - Change pm_runtime_put_sync() to pm_runtime_put() when free resources.
->  - Re-implement the sprd_dma_tx_status() function.
->  - Free irq and kill tasklet when remove driver.
->  - Add some documentaion.
->  - Change to module_init() level and add MODULE_ALIAS().
->  - Other coding style fixes.
->
-> Changes since v1:
->  - Use virt-dma to manage dma descriptors.
->  - Remove link-list and channel-start-channel Spreadtrum special features.
->  - Remove device_config implementation.
->  - Other optimization.
->
-> Note: This patch just implemented the basic DMA_MEMCPY function, and in
-> future we will send new patches to introduce some Speadtrum special features,
-> that will be talk about how to handle these features easily instead of in one
-> big patch which is hard to review.
-> ---
+Yes, I should have done that.
 
-Do you have any comments for this version patchset? If not, could you
-apply this patchset into your branch? Thanks.
+<snip>
 
--- 
-Baolin.wang
-Best Regards
+> > +static int hisi_inno_phy_exit(struct phy *phy)
+> > +{
+> > +	struct hisi_inno_phy_port *port = phy_get_drvdata(phy);
+> > +	struct hisi_inno_phy_priv *priv = dev_get_drvdata(port->dev);
+> > +
+> > +	reset_control_assert(port->utmi_rst);
+> > +	reset_control_assert(priv->por_rst);
+> > +	clk_disable_unprepare(priv->ref_clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct phy_ops hisi_inno_phy_ops = {
+> > +	.init = hisi_inno_phy_start,
+> 
+> in order to make it identical you can just end it with *_init().
+
+Yes, good suggestion.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
