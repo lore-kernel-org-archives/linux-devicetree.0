@@ -1,53 +1,40 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH  2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
-Date: Mon, 23 Oct 2017 17:38:23 +0000
-Message-ID: <TY1PR06MB08953FFCD8624B3217A479E0C0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
+Date: Mon, 23 Oct 2017 17:50:56 +0000
+Message-ID: <TY1PR06MB08956CA52B99199B85DBE5E2C0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
 References: <1508319227-19679-1-git-send-email-biju.das@bp.renesas.com>
  <1508319227-19679-3-git-send-email-biju.das@bp.renesas.com>
  <2315907.0FoaqPrOEJ@avalon>
+ <CAMuHMdXjAHOyLb+FKbztNTKciZMeR=VCuBXuTWdkzNEB1A5veA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2315907.0FoaqPrOEJ@avalon>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXjAHOyLb+FKbztNTKciZMeR=VCuBXuTWdkzNEB1A5veA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent,
-
-> >
-> > +&i2c5 {
-> > +status =3D "okay";
-> > +clock-frequency =3D <400000>;
-> > +
-> > +cec_clock: cec-clock {
-> > +compatible =3D "fixed-clock";
-> > +#clock-cells =3D <0>;
-> > +clock-frequency =3D <12000000>;
-> > +};
->
-> I assume this describes a fixed clock generator that is not I2C-controlle=
-d.
-> The node should thus not be a child of the i2c5 bus node, but should be m=
-oved
-> to the root node of the DT.
-
-Will send a v2 to fix this.
-
-Thanks,
-Fab
-
->
-> The rest looks good to me. With this fixed,
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+SGVsbG8gR2VlcnQsDQoNCj4gPg0KPiA+IEkgYXNzdW1lIHRoaXMgZGVzY3JpYmVzIGEgZml4ZWQg
+Y2xvY2sgZ2VuZXJhdG9yIHRoYXQgaXMgbm90IEkyQy1jb250cm9sbGVkLg0KPiA+IFRoZSBub2Rl
+IHNob3VsZCB0aHVzIG5vdCBiZSBhIGNoaWxkIG9mIHRoZSBpMmM1IGJ1cyBub2RlLCBidXQgc2hv
+dWxkIGJlIG1vdmVkDQo+ID4gdG8gdGhlIHJvb3Qgbm9kZSBvZiB0aGUgRFQuDQo+DQo+IE9vcHMs
+IHRoYXQncyBzb21ldGhpbmcgd2Ugc2hvdWxkIGZpeCBpbiByOGE3NzkxLWtvZWxzY2guZHRzLCB0
+b28NCj4gKENDIEhhbnMpDQoNCnllYWgsIHRoYXQncyBwcmVjaXNlbHkgd2hlcmUgd2UgY29waWVk
+IHRoZSBsYXlvdXQgZnJvbSA6KQ0KDQpUaGFua3MsDQpGYWINCg0KPg0KPiA+IFRoZSByZXN0IGxv
+b2tzIGdvb2QgdG8gbWUuIFdpdGggdGhpcyBmaXhlZCwNCj4gPg0KPiA+IFJldmlld2VkLWJ5OiBM
+YXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+ID4N
+Cj4gPiBIb3dldmVyIEkgY2FuJ3QgZmluZCBhcmNoL2FybS9ib290L2R0cy9pd2cyMGQtcTctZGJj
+bS1jYS5kdHNpIGluIGxpbnV4LW5leHQuDQo+ID4gV2hpY2ggdHJlZSB3b3VsZCB5b3UgbGlrZSB0
+byBnZXQgdGhpcyBzZXJpZXMgbWVyZ2VkIHRocm91Z2ggPw0KPg0KPiBJdCdzIGJlZW4gaW4gbmV4
+dCBhcyBvZiBuZXh0LTIwMTcxMDEyLg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVy
+b3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2lu
+Z2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5k
+ZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
