@@ -1,92 +1,121 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] of: Devices with pci_epf_bus_type require DMA
- configuration
-Date: Mon, 23 Oct 2017 14:05:00 +0100
-Message-ID: <037082e6-5abe-daf9-47aa-9586a4aead99@arm.com>
-References: <20171011080041.12918-1-kishon@ti.com>
- <cae4b8e9-9944-6482-c12c-8ce87aea1487@arm.com>
- <3599d3e2-d496-eac3-7179-2d1795fc059d@ti.com>
+From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: stm32: add support for diff
+ channels
+Date: Mon, 23 Oct 2017 14:09:56 +0100
+Message-ID: <20171023140956.00002613@huawei.com>
+References: <1508246145-19417-1-git-send-email-fabrice.gasnier@st.com>
+        <1508246145-19417-2-git-send-email-fabrice.gasnier@st.com>
+        <20171021185401.529f2eb2@archlinux>
+        <20171021202327.51dd2855@archlinux>
+        <0726f676-0440-afbe-f275-ec7fdaa29c9f@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3599d3e2-d496-eac3-7179-2d1795fc059d@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0726f676-0440-afbe-f275-ec7fdaa29c9f-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/17 06:43, Kishon Vijay Abraham I wrote:
-> Hi,
+On Mon, 23 Oct 2017 10:06:27 +0200
+Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+
+> On 10/21/2017 09:23 PM, Jonathan Cameron wrote:
+> > On Sat, 21 Oct 2017 18:54:01 +0100
+> > Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >   
+> >> On Tue, 17 Oct 2017 15:15:43 +0200
+> >> Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+> >>  
+> >>> STM32H7 ADC channels may be configured either as single-ended or
+> >>> differential.
+> >>> Add 'st,adc-diff-channels' property to support differential channels.
+> >>> Differential channels are defined as a pair of positive and negative
+> >>> inputs: vinp & vinn.
+> >>>
+> >>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>    
+> >> Hmm. Fair enough.  Sometimes we support both types of channels
+> >> and leave it to userspace, but in many cases that makes little sense
+> >> - particularly if like I think is going on here, we aren't combining channels
+> >> that can be separately read but rather the negative pin is simply unused
+> >> when we are in single channel mode... (did I understand that right?)  
+> > I clearly didn't understand.  This is same as other devices
+> > in that we are picking a pair from the channels that can otherwise be
+> > used as single end channels. (I think).   
 > 
-> On Wednesday 11 October 2017 10:15 PM, Robin Murphy wrote:
->> On 11/10/17 09:00, Kishon Vijay Abraham I wrote:
->>> pci-epc-core.c invokes of_dma_configure in order to configure
->>> the coherent_dma_mask/dma_mask of endpoint function device. This is
->>> required for dma_alloc_coherent to succeed in pci function driver
->>> (pci-epf-test.c). However after
->>> commit 723288836628bc1c08 ("of: restrict DMA configuration"),
->>> of_dma_configure doesn't configure the coherent_dma_mask/dma_mask
->>> of endpoint function device (since it doesn't have dma-ranges
->>> property), resulting in dma_alloc_coherent in pci endpoint function
->>> driver to to fail. Fix it by making sure of_dma_configure configures
->>> coherent_dma_mask/dma_mask irrespective of whether the node has
->>> dma-ranges property or not.
->>
->> Frankly, what the endpoint stuff is doing looks wrong anyway. As I
->> understand it, the endpoint functions aren't real devices, just a
->> partitioning of resources - the only piece of hardware actually doing
->> DMA is the EPC itself, which should already have been configured
->> appropriately as a platform device.
+> Hi Jonathan,
 > 
-> EPF devices use EPC devices which in turn use the actual platform device for
-> configuring the hardware. IMO the devices in one layer shouldn't have to
-> explicitly use devices in another layer other than using clearly defined API's.
-> Here platform_device is the bottom later, above which is epc_device and on top
-> is epf_device.
-
-Note that the "sysdev"-type model that I'm implying already has
-precedent elsewhere, e.g. in the USB layer. Since you already have
-things abstracted behind the pci_epf_{alloc,free}_space() API, this
-seems like a simple change to make.
-
-> The idea is just by doing the initial setup in the framework, the epf driver be
-> able to use APIs like dma_alloc_coherent using it's own *device* rather than
-> the EPC's "device".
-
-OK, but when would that actually happen? Please correct me if I've got
-it wrong, but as best I understand it, the hardware extent of the EPF is
-some registers controlling the config space that the EPC exposes to the
-other end of the PCI link - the only actual DMA happening will be in
-response to PCI traffic in and out of the EPF's BARs, between the EPC
-and the memory backing those BAR regions which is already controlled by
-your API. Sure, the EPF *driver* is free to access whatever memory it
-feels like, but as a software construct that doesn't constitute DMA.
-
-To put it another way, if an endpoint driver *does* call
-dma_alloc_coherent(epf_device, ...), what does it then do with the
-resulting DMA address?
-
->> It seems to me that the EPF BAR allocations should just be using the EPC
->> device directly, rather than trying to pretend the EPFs are distinct DMA
->> masters.
->>
->> Furthermore, now that I've looked:
->>
->>> 	dma_addr_t phys_addr;
->>
->> please no :(
->>
->> (I can easily think of more than one system with an EP-capable DWC PCIe
->> block integrated behind an IOMMU)
+> Indeed, we're picking a pair from the channels that can be used as
+> single channels otherwise.
+> Also, it doesn't makes sense to leave the choice to userspace: when
+> these channels are used in differential mode, both input should be
+> biased. This is quite dependent on hardware (board), not really a
+> runtime choice.
+> Hope this clarifies ?
 > 
-> hmm.. haven't used IOMMU but won't setting up parent-child relationship between
-> EPC and EPF help in the case of IOMMU?
+> > 
+> > For this binding I think I'd like to see an example added showing how
+> > this works...  
+> 
+> You're right, I should have added that. Please let me know if I can add
+> bellow example in v2:
+Looks good to me.
 
-I was merely referring to the characterisation throughout this code that
-a DMA address is a physical address; it isn't, for any number of reasons
-(IOMMUs are just the most obvious). Fortunately it's only a cosmetic
-naming problem, the actual usage looks OK.
-
-Robin.
+Jonathan
+> 
+> Example to setup differential channels 1, 2 & 3 (with resp. 0, 6 & 7
+> negative inputs):
+> 	adc: adc@40022000 {
+> 		compatible = "st,stm32h7-adc-core";
+> 		...
+> 		adc1: adc@0 {
+> 			compatible = "st,stm32h7-adc";
+> 			...
+> 			st,adc-diff-channels = <1 0>, <2 6>, <3 7>;
+> 		};
+> 	};
+> 
+> Thanks for reviewing,
+> Best Regards,
+> Fabrice
+> 
+> > 
+> > Thanks,
+> > 
+> > Jonathan  
+> >>
+> >> Jonathan
+> >>  
+> >>> ---
+> >>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
+> >>>  1 file changed, 6 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> >>> index 48bfcaa3..c3c8de1 100644
+> >>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> >>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> >>> @@ -62,6 +62,12 @@ Required properties:
+> >>>  - st,adc-channels: List of single-ended channels muxed for this ADC.
+> >>>    It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
+> >>>    from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
+> >>> +- st,adc-diff-channels: List of differential channels muxed for this ADC.
+> >>> +  Depending on part used, some channels can be configured as differential
+> >>> +  instead of single-ended (e.g. stm32h7). List here positive and negative
+> >>> +  inputs pairs as <vinp vinn>, <vinp vinn>,... vinp and vinn are numbered
+> >>> +  from 0 to 19 on stm32h7)
+> >>> +  Note: At least one of "st,adc-channels" or "st,adc-diff-channels" is required.
+> >>>  - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+> >>>    Documentation/devicetree/bindings/iio/iio-bindings.txt
+> >>>      
+> >>
+> >> --
+> >> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html  
+> >   
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
