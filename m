@@ -1,147 +1,59 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v2 3/4] media: i2c: Add TDA1997x HDMI
-	receiver driver
-Date: Mon, 23 Oct 2017 10:05:59 -0700
-Message-ID: <CAJ+vNU2a8qtL4hbg5FQamF3WanQG1610QsJv=2cCxpD8OsiQ6w@mail.gmail.com>
-References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
- <1507783506-3884-4-git-send-email-tharvey@gateworks.com>
- <230ceb18-1d69-7fa8-acb0-c810094f8e50@xs4all.nl>
- <CAJ+vNU0Z988G+wTfpiSXXOM9QsPj-eRvH=F1b9__8kJ+18xk4g@mail.gmail.com>
- <a5bd27c9-10e4-b9f5-f0ac-293528fa570e@xs4all.nl>
- <CAJ+vNU2yHKDf5tCVyj6iw83z0sDuV0ZsZ-=sLfa+fTFbtjVo0A@mail.gmail.com>
- <5c68003a-380d-d339-718f-47bce64cdae8@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5c68003a-380d-d339-718f-47bce64cdae8@xs4all.nl>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 0/9] r8a7745/iwg22d DT rework + serial + HS-USB + IIC
+Date: Mon, 23 Oct 2017 18:09:21 +0100
+Message-ID: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 9:23 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+This series brings under the same roof a few patches that needed a v2
+and that are related to either r8a7745 or iwg22d, with the goal of making
+the merge process as smooth as possible.
 
->>
->> I see the AVI infoframe has hdmi_quantization_range and
->> hdmi_ycc_quantization_range along with vid_code.
->>
->> I'm not at all clear what to do with this information. Is there
->> anything you see in the datasheet [1] that points to something I need
->> to be doing?
->
-> You can ignore hdmi_ycc_quantization_range, it is the hdmi_quantization_range
-> that you need to read out.
->
-> The TDA can receive the following formats:
->
-> RGB Full Range
-> RGB Limited Range
-> YUV Bt.601 (aka SMPTE 170M)
-> YUV Rec.709
->
-> The YUV formats are always limited range.
->
-> The TDA can transmit RGB and YUV to the SoC. You want RGB to be full range and
-> YUV to be limited range. YUV can be either 601 or 709.
->
-> So if the TDA transmits RGB then you need to support the following conversions:
->
-> RGB Full -> RGB Full
-> RGB Limited -> RGB Full
-> YUV 601 -> RGB Full
-> YUV 709 -> RGB Full
->
-> And if the TDA transmits YUV then you need these conversions:
->
-> RGB Full -> YUV601 or YUV709
-> RGB Limited -> YUV601 or YUV709
-> YUV601 -> YUV601
-> YUV709 -> YUV709
->
-> For the RGB to YUV conversion you have a choice of converting to YUV601 or 709.
-> I recommend to either always convert to YUV601 or to let it depend on the resolution
-> (SDTV YUV601, HDTV YUV709).
->
+Patches [1-4] define a new DT architecture for the iW-RainboW-G22D SODIMM
+Development Platform to include the configuration with the HDMI daughter
+board and to define the serial interfaces.
 
-Ok - this is a good explanation that I should be able to follow. I
-will make sure to take into account hdmi_quantization_range when I
-setup the colorspace conversion matrix for v3.
+Patches [5-8] add USB function support to the r8a7745 SoC and to the
+iwg22d board. The patches providing the definition of compatible strings:
+* "renesas,r8a7745-usb-dmac", and
+* "renesas,usbhs-r8a7745"
+(on which these USB patches depend on) have been accepted by the
+respective maintainers already, but it will take a little bit for the
+definitions to appear on a renesas-devel tag. For reference:
+https://patchwork.kernel.org/patch/9990063/
+https://patchwork.kernel.org/patch/9987411/
+https://patchwork.kernel.org/patch/9990113/
 
-> Ideally the application should specify what it wants, but we don't have any API
-> support for that.
->
-<snip>
->>
->> The TDA1997x provides only the vertical/horizontal periods and the
->> horizontal pulse
->> width (section 8.3.4 of datasheet [1]).
->>
->> Can you point me to a good primer on the relationship between these
->> values and the h/v back/front porch?
->
-> The blanking consists of a front porch width, a sync width and a back porch width.
-> 'Width' is normally measured in pixels. Vertical blanking is the same, except that
-> is measured in lines. All these values are defined in the standards that define these
-> timings (e.g. VESA DMT, CTA-861).
->
-> So for 1080p60 the active video is 1920x1080. After each line of 1920 pixels you
-> have 88 'pixels' of front porch, a sync pulse of 44 'pixels' and a back porch of
-> 148 pixels. Total frame width is 2200. Similar for the vertical.
->
-> A good HDMI receiver will give you the exact values for these blanking sizes.
-> Especially the sync width/height is important since that can provide additional
-> format information when receiving VESA formats.
->
-> It looks as if the TDA does not measure in exact pixels but in 27 MHz clock
-> periods. Which is an approximation only.
->
-> So it appears that what you do is the best you can do.
->
-> Although I wonder about the hsper: the datasheet suggests that this is the width,
-> not a period. What is the value you read out when you receive 1080p60? If that
-> would be an exact width, then that would help a lot since you can compare that
-> against bt->hsync.
+Patch 9 adds IIC cores to the r8a7745 SoC.
 
-Here's a list of source modes and the vertical/horizontal period and
-horizontal pulse width returned from the TDA:
-00: VESA640x480P_60HZ 450427 856 101
-01: VESA800x600P_60HZ 447620 711 85
-02: VESA1024x768P_60HZ 449952 557 55
-03: VESA1280x768P_60HZ 450021 568 11
-04: VESA1360x768P_60HZ 449867 564 34
-05: VESA1280x960P_60HZ 449981 448 55
-06: VESA1280x1024P_60HZ 449833 420 27
-07: VESA1400x1050P_60HZ 450372 416 7
-08: VESA1600x1200P_60HZ 449981 358 27
-09: VESA1920x1200P_60HZ 450355 363 4
-10: CEAVIC1440x480I_60HZ 450430 1714 123
-11: CEAVIC720x480P_60HZ 450430 856 61
-12: CEAVIC1280x720P_60HZ 449981 598 13
-13: CEAVIC1280x720P_59.94 450431 599 13
-14: CEAVIC1920x1080I_60HZ 449981 798 15
-15: CEAVIC1920x1080I_59.95HZ 450431 799 15
-16: CEAVIC1920x1080P_30HZ 899962 798 15
-17: CEAVIC1920x1080P_29.95HZ 900862 799 15
-18: CEAVIC1920x1080P_24HZ 1124953 998 15
-19: CEAVIC1920x1080P_23.976HZ 1126077 999 15
-20: CEAVIC1920x1080P_60HZ 449981 398 7
-21: CEAVIC1920x1080P_59.94HZ 450431 399 7
-22: CEAVIC1440x576I_50HZ 539976 1726 127
-23: CEAVIC720x576P_50HZ 539976 862 63
-24: CEAVIC1280x720P_50HZ 539977 718 13
-25: CEAVIC1920x1080I_50HZ 539977 958 15
-26: CEAVIC1920x1080P_25HZ 1079954 958 15
-27: CEAVIC1920x1080P_50HZ 539977 478 7
+The patches of this series apply smoothly on top of tag:
+"renesas-devel-20171018-v4.14-rc5".
 
-so 1080p60 gives a hswidth=7
+Best regards,
+Fab
 
-Tim
+Biju Das (4):
+  ARM: dts: r8a7745: Add HS-USB device node
+  ARM: dts: r8a7745: Add USB-DMAC device nodes
+  ARM: dts: r8a7745: Enable DMA for HSUSB
+  ARM: dts: iwg22d-sodimm: Enable HS-USB
+
+Fabrizio Castro (5):
+  ARM: dts: iwg22d: Use /dev/ttySC3 as debug console
+  ARM: dts: iwg22d: Add /dev/ttySC5 support
+  ARM: dts: iwg22d-sodimm-dbhd-ca: Add device tree for HDMI DB
+  ARM: dts: iwg22d-sodimm: sort dt nodes
+  ARM: dts: r8a7745: Add IIC cores to dtsi
+
+ arch/arm/boot/dts/Makefile                         |  1 +
+ .../arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts | 61 +++++++++++++++
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts        | 87 ++++++++++++++--------
+ arch/arm/boot/dts/r8a7745.dtsi                     | 81 ++++++++++++++++++++
+ 4 files changed, 199 insertions(+), 31 deletions(-)
+ create mode 100644 arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
+
+-- 
+2.7.4
