@@ -1,124 +1,87 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 2/2] ARM: dts: iwg20d-q7-dbcm-ca: Add HDMI video output
-Date: Mon, 23 Oct 2017 19:09:22 +0100
-Message-ID: <1508782162-31714-3-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1508782162-31714-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1508782162-31714-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+From: Chris Lew <clew@codeaurora.org>
+Subject: Re: [PATCH 1/3] dt-bindings: soc: qcom: Support GLINK intents
+Date: Mon, 23 Oct 2017 11:37:56 -0700
+Message-ID: <e0f84c80-6e43-e241-c83a-9fe4f4ab2040@codeaurora.org>
+References: <1508375418-15611-1-git-send-email-clew@codeaurora.org>
+ <1508375418-15611-2-git-send-email-clew@codeaurora.org>
+ <CAOCOHw75mrusG6XPXwKV7UDUt2gFZfU_MyUZxryk4YziCGinNg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAOCOHw75mrusG6XPXwKV7UDUt2gFZfU_MyUZxryk4YziCGinNg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arun Kumar Neelakantam <aneela@codeaurora.org>, smaliyap@codeaurora.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Although there is a HDMI connector on the q7 carrier board it is not
-connected to the RZ/G1M SoC. One must use the HDMI connector on the
-camera daughter board.
 
-This patch adds support for this connector.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-Changes in v2:
-* moved cec_clock to root node
+On 10/19/2017 10:00 PM, Bjorn Andersson wrote:
+> On Wed 18 Oct 18:10 PDT 2017, Chris Lew wrote:
+> 
+>> Virtual GLINK channels may know what throughput to expect from a
+>> remoteproc. An intent advertises to the remoteproc this channel is
+>> ready to receive data. Allow a channel to define the size and amount of
+>> intents to be prequeued.
+>>
+>> Signed-off-by: Chris Lew <clew@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> index b277eca861f7..6c21f76822ca 100644
+>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> @@ -39,6 +39,14 @@ of these nodes are defined by the individual bindings for the specific function
+>>    Definition: a list of channels tied to this function, used for matching
+>>       the function to a set of virtual channels
+>>
+>> +- intents:
+> 
+> qcom,intents or qcom,default-intents
+> 
 
- arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi | 75 ++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+Will use "qcom,intents".
 
-diff --git a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-index 31fab5f..4db18f2 100644
---- a/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-+++ b/arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi
-@@ -13,6 +13,37 @@
- 		serial1 = &scif1;
- 		serial4 = &hscif1;
- 	};
-+
-+	cec_clock: cec-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <12000000>;
-+	};
-+
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_out: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&du {
-+	pinctrl-0 = <&du_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			endpoint {
-+				remote-endpoint = <&adv7511_in>;
-+			};
-+		};
-+	};
- };
- 
- &hscif1 {
-@@ -23,7 +54,51 @@
- 	status = "okay";
- };
- 
-+&i2c5 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&cec_clock>;
-+		clock-names = "cec";
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&du_out_rgb>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &pfc {
-+	du_pins: du {
-+		groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
-+		function = "du";
-+	};
-+
- 	hscif1_pins: hscif1 {
- 		groups = "hscif1_data_c", "hscif1_ctrl_c";
- 		function = "hscif1";
+>> + Usage: optional
+>> + Value type: <prop-encoded-array>
+>> + Definition: a list of size,amount pairs describing what intents should
+>> +    be preallocated for this virtual channel. If a GLINK node
+>> +    supports intents, an intent advertises this channel is ready
+>> +    to receive data.
+> 
+> Rather than describing what a GLINK intent is I would suggest that you
+> replace this second sentence with something like "This can be used to
+> tweak the default intents available for the channel to meet expectations
+> of the remote."
+>
+
+Sounds good, will change.
+
+>> +
+>>   = EXAMPLE
+>>   The following example represents the GLINK RPM node on a MSM8996 device, with
+>>   the function for the "rpm_request" channel defined, which is used for
+>> @@ -69,6 +77,8 @@ regualtors and root clocks.
+>>    compatible = "qcom,rpm-msm8996";
+>>    qcom,glink-channels = "rpm_requests";
+>>
+>> + intents = <0x400 5
+>> +   0x800 1>;
+>>    ...
+>>    };
+>>    };
+> 
+> Regards,
+> Bjorn
+> 
+
+Thanks,
+Chris
+
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
