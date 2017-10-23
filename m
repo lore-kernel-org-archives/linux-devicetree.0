@@ -1,44 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC
- documentation
-Date: Mon, 23 Oct 2017 15:21:10 +0100
-Message-ID: <20171023142110.ohx2kgik7t2jht5p@dell>
-References: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
+From: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 6/7] ARM64: tegra: limit PCIe config space mapping to 4K for T210
+Date: Mon, 23 Oct 2017 20:05:11 +0530
+Message-ID: <1508769312-12465-7-git-send-email-vidyas@nvidia.com>
+References: <1508769312-12465-1-git-send-email-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508769312-12465-1-git-send-email-vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Oct 2017, Baolin Wang wrote:
+reduces PCIe config space mapping size from its current 256MB
+to 4K to have only 4K of virtual memory mapping and to be
+in line with driver implementation
 
-> This patch adds the binding documentation for Spreadtrum SC27xx series
-> PMIC device.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> ---
-> Changes since v1:
->  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
->  - Modify compatile string property.
->  - Modify reg property.
->  - Remove redundant 'pmic' label.
->  - Change 'should be' to 'must be' for cells properties.
-> ---
->  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   40 ++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+Signed-off-by: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+V2:
+* no changes in this patch
 
-Looks fine, but I'll give the DT guys a chance to have a look:
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 29f471e0f22a..8cad2516597b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -16,7 +16,7 @@
+ 		device_type = "pci";
+ 		reg = <0x0 0x01003000 0x0 0x00000800   /* PADS registers */
+ 		       0x0 0x01003800 0x0 0x00000800   /* AFI registers */
+-		       0x0 0x02000000 0x0 0x10000000>; /* configuration space */
++		       0x0 0x11FFF000 0x0 0x00001000>; /* configuration space */
+ 		reg-names = "pads", "afi", "cs";
+ 		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>, /* controller interrupt */
+ 			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>; /* MSI interrupt */
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
