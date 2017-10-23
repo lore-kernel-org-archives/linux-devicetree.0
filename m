@@ -1,13 +1,22 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 2/2] arm64: dts: uniphier: add resets properties
-Date: Tue, 24 Oct 2017 01:42:29 +0900
-Message-ID: <1508776949-4995-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1508776949-4995-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508776949-4995-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: uniphier: add resets properties
+Date: Tue, 24 Oct 2017 01:42:28 +0900
+Message-ID: <1508776949-4995-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Add resets properties to all nodes that have reset lines.
@@ -15,16 +24,18 @@ Add resets properties to all nodes that have reset lines.
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 12 ++++++++++++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 12 ++++++++++++
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 11 +++++++++++
- 3 files changed, 35 insertions(+)
+ arch/arm/boot/dts/uniphier-ld4.dtsi  |  9 +++++++++
+ arch/arm/boot/dts/uniphier-pro4.dtsi | 11 +++++++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi | 11 +++++++++++
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/uniphier-sld8.dtsi |  9 +++++++++
+ 5 files changed, 52 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index 0ae316e..1c63d0a 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -125,6 +125,7 @@
+diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+index c0cd300..01fc3e1 100644
+--- a/arch/arm/boot/dts/uniphier-ld4.dtsi
++++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+@@ -71,6 +71,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart0>;
  			clocks = <&peri_clk 0>;
@@ -32,7 +43,7 @@ index 0ae316e..1c63d0a 100644
  		};
  
  		serial1: serial@54006900 {
-@@ -135,6 +136,7 @@
+@@ -81,6 +82,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart1>;
  			clocks = <&peri_clk 1>;
@@ -40,7 +51,7 @@ index 0ae316e..1c63d0a 100644
  		};
  
  		serial2: serial@54006a00 {
-@@ -145,6 +147,7 @@
+@@ -91,6 +93,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart2>;
  			clocks = <&peri_clk 2>;
@@ -48,7 +59,7 @@ index 0ae316e..1c63d0a 100644
  		};
  
  		serial3: serial@54006b00 {
-@@ -155,6 +158,7 @@
+@@ -101,6 +104,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart3>;
  			clocks = <&peri_clk 3>;
@@ -56,7 +67,7 @@ index 0ae316e..1c63d0a 100644
  		};
  
  		gpio: gpio@55000000 {
-@@ -203,6 +207,7 @@
+@@ -127,6 +131,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c0>;
  			clocks = <&peri_clk 4>;
@@ -64,7 +75,7 @@ index 0ae316e..1c63d0a 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -216,6 +221,7 @@
+@@ -140,6 +145,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c1>;
  			clocks = <&peri_clk 5>;
@@ -72,15 +83,15 @@ index 0ae316e..1c63d0a 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -226,6 +232,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 43 4>;
+@@ -153,6 +159,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c2>;
  			clocks = <&peri_clk 6>;
 +			resets = <&peri_rst 6>;
  			clock-frequency = <400000>;
  		};
  
-@@ -239,6 +246,7 @@
+@@ -166,6 +173,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c3>;
  			clocks = <&peri_clk 7>;
@@ -88,43 +99,19 @@ index 0ae316e..1c63d0a 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -252,6 +260,7 @@
+@@ -319,6 +327,7 @@
  			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c4>;
- 			clocks = <&peri_clk 8>;
-+			resets = <&peri_rst 8>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -262,6 +271,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 25 4>;
- 			clocks = <&peri_clk 9>;
-+			resets = <&peri_rst 9>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -314,6 +324,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_emmc>;
- 			clocks = <&sys_clk 4>;
-+			resets = <&sys_rst 4>;
- 			bus-width = <8>;
- 			mmc-ddr-1_8v;
- 			mmc-hs200-1_8v;
-@@ -454,6 +465,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand>;
+ 			pinctrl-0 = <&pinctrl_nand2cs>;
  			clocks = <&sys_clk 2>;
 +			resets = <&sys_rst 2>;
  		};
  	};
  };
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index 23ea35f..5c81070 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -231,6 +231,7 @@
+diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+index 095a364..7955c3a 100644
+--- a/arch/arm/boot/dts/uniphier-pro4.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+@@ -79,6 +79,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart0>;
  			clocks = <&peri_clk 0>;
@@ -132,7 +119,7 @@ index 23ea35f..5c81070 100644
  		};
  
  		serial1: serial@54006900 {
-@@ -241,6 +242,7 @@
+@@ -89,6 +90,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart1>;
  			clocks = <&peri_clk 1>;
@@ -140,7 +127,7 @@ index 23ea35f..5c81070 100644
  		};
  
  		serial2: serial@54006a00 {
-@@ -251,6 +253,7 @@
+@@ -99,6 +101,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart2>;
  			clocks = <&peri_clk 2>;
@@ -148,7 +135,7 @@ index 23ea35f..5c81070 100644
  		};
  
  		serial3: serial@54006b00 {
-@@ -261,6 +264,7 @@
+@@ -109,6 +112,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_uart3>;
  			clocks = <&peri_clk 3>;
@@ -156,7 +143,7 @@ index 23ea35f..5c81070 100644
  		};
  
  		gpio: gpio@55000000 {
-@@ -303,6 +307,7 @@
+@@ -135,6 +139,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c0>;
  			clocks = <&peri_clk 4>;
@@ -164,7 +151,7 @@ index 23ea35f..5c81070 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -316,6 +321,7 @@
+@@ -148,6 +153,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c1>;
  			clocks = <&peri_clk 5>;
@@ -172,107 +159,7 @@ index 23ea35f..5c81070 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -326,6 +332,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 43 4>;
- 			clocks = <&peri_clk 6>;
-+			resets = <&peri_rst 6>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -339,6 +346,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c3>;
- 			clocks = <&peri_clk 7>;
-+			resets = <&peri_rst 7>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -352,6 +360,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c4>;
- 			clocks = <&peri_clk 8>;
-+			resets = <&peri_rst 8>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -362,6 +371,7 @@
- 			#size-cells = <0>;
- 			interrupts = <0 25 4>;
- 			clocks = <&peri_clk 9>;
-+			resets = <&peri_rst 9>;
- 			clock-frequency = <400000>;
- 		};
- 
-@@ -419,6 +429,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_emmc>;
- 			clocks = <&sys_clk 4>;
-+			resets = <&sys_rst 4>;
- 			bus-width = <8>;
- 			mmc-ddr-1_8v;
- 			mmc-hs200-1_8v;
-@@ -510,6 +521,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand>;
- 			clocks = <&sys_clk 2>;
-+			resets = <&sys_rst 2>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-index f55b14b..48e7331 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
-@@ -153,6 +153,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart0>;
- 			clocks = <&peri_clk 0>;
-+			resets = <&peri_rst 0>;
- 		};
- 
- 		serial1: serial@54006900 {
-@@ -163,6 +164,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart1>;
- 			clocks = <&peri_clk 1>;
-+			resets = <&peri_rst 1>;
- 		};
- 
- 		serial2: serial@54006a00 {
-@@ -173,6 +175,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart2>;
- 			clocks = <&peri_clk 2>;
-+			resets = <&peri_rst 2>;
- 		};
- 
- 		serial3: serial@54006b00 {
-@@ -183,6 +186,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_uart3>;
- 			clocks = <&peri_clk 3>;
-+			resets = <&peri_rst 3>;
- 		};
- 
- 		gpio: gpio@55000000 {
-@@ -214,6 +218,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c0>;
- 			clocks = <&peri_clk 4>;
-+			resets = <&peri_rst 4>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -227,6 +232,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_i2c1>;
- 			clocks = <&peri_clk 5>;
-+			resets = <&peri_rst 5>;
- 			clock-frequency = <100000>;
- 		};
- 
-@@ -240,6 +246,7 @@
+@@ -161,6 +167,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c2>;
  			clocks = <&peri_clk 6>;
@@ -280,7 +167,7 @@ index f55b14b..48e7331 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -253,6 +260,7 @@
+@@ -174,6 +181,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_i2c3>;
  			clocks = <&peri_clk 7>;
@@ -288,7 +175,15 @@ index f55b14b..48e7331 100644
  			clock-frequency = <100000>;
  		};
  
-@@ -264,6 +272,7 @@
+@@ -187,6 +195,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <0 25 4>;
+ 			clocks = <&peri_clk 9>;
++			resets = <&peri_rst 9>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -198,6 +207,7 @@
  			#size-cells = <0>;
  			interrupts = <0 26 4>;
  			clocks = <&peri_clk 10>;
@@ -296,17 +191,277 @@ index f55b14b..48e7331 100644
  			clock-frequency = <400000>;
  		};
  
-@@ -321,6 +330,7 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_emmc>;
- 			clocks = <&sys_clk 4>;
-+			resets = <&sys_rst 4>;
- 			bus-width = <8>;
- 			mmc-ddr-1_8v;
- 			mmc-hs200-1_8v;
-@@ -405,6 +415,7 @@
+@@ -338,6 +348,7 @@
  			pinctrl-names = "default";
  			pinctrl-0 = <&pinctrl_nand>;
+ 			clocks = <&sys_clk 2>;
++			resets = <&sys_rst 2>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+index dba944f..6589b8a 100644
+--- a/arch/arm/boot/dts/uniphier-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+@@ -166,6 +166,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart0>;
+ 			clocks = <&peri_clk 0>;
++			resets = <&peri_rst 0>;
+ 		};
+ 
+ 		serial1: serial@54006900 {
+@@ -176,6 +177,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart1>;
+ 			clocks = <&peri_clk 1>;
++			resets = <&peri_rst 1>;
+ 		};
+ 
+ 		serial2: serial@54006a00 {
+@@ -186,6 +188,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart2>;
+ 			clocks = <&peri_clk 2>;
++			resets = <&peri_rst 2>;
+ 		};
+ 
+ 		serial3: serial@54006b00 {
+@@ -196,6 +199,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart3>;
+ 			clocks = <&peri_clk 3>;
++			resets = <&peri_rst 3>;
+ 		};
+ 
+ 		gpio: gpio@55000000 {
+@@ -222,6 +226,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c0>;
+ 			clocks = <&peri_clk 4>;
++			resets = <&peri_rst 4>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -235,6 +240,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c1>;
+ 			clocks = <&peri_clk 5>;
++			resets = <&peri_rst 5>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -248,6 +254,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c2>;
+ 			clocks = <&peri_clk 6>;
++			resets = <&peri_rst 6>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -261,6 +268,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c3>;
+ 			clocks = <&peri_clk 7>;
++			resets = <&peri_rst 7>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -274,6 +282,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <0 25 4>;
+ 			clocks = <&peri_clk 9>;
++			resets = <&peri_rst 9>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -285,6 +294,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <0 26 4>;
+ 			clocks = <&peri_clk 10>;
++			resets = <&peri_rst 10>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -399,6 +409,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand2cs>;
+ 			clocks = <&sys_clk 2>;
++			resets = <&sys_rst 2>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index a745437..d82d6d8 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -173,6 +173,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart0>;
+ 			clocks = <&peri_clk 0>;
++			resets = <&peri_rst 0>;
+ 		};
+ 
+ 		serial1: serial@54006900 {
+@@ -183,6 +184,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart1>;
+ 			clocks = <&peri_clk 1>;
++			resets = <&peri_rst 1>;
+ 		};
+ 
+ 		serial2: serial@54006a00 {
+@@ -193,6 +195,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart2>;
+ 			clocks = <&peri_clk 2>;
++			resets = <&peri_rst 2>;
+ 		};
+ 
+ 		serial3: serial@54006b00 {
+@@ -203,6 +206,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart3>;
+ 			clocks = <&peri_clk 3>;
++			resets = <&peri_rst 3>;
+ 		};
+ 
+ 		gpio: gpio@55000000 {
+@@ -232,6 +236,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c0>;
+ 			clocks = <&peri_clk 4>;
++			resets = <&peri_rst 4>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -245,6 +250,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c1>;
+ 			clocks = <&peri_clk 5>;
++			resets = <&peri_rst 5>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -258,6 +264,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c2>;
+ 			clocks = <&peri_clk 6>;
++			resets = <&peri_rst 6>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -271,6 +278,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c3>;
+ 			clocks = <&peri_clk 7>;
++			resets = <&peri_rst 7>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -282,6 +290,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <0 45 4>;
+ 			clocks = <&peri_clk 8>;
++			resets = <&peri_rst 8>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -293,6 +302,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <0 25 4>;
+ 			clocks = <&peri_clk 9>;
++			resets = <&peri_rst 9>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -304,6 +314,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <0 26 4>;
+ 			clocks = <&peri_clk 10>;
++			resets = <&peri_rst 10>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -425,6 +436,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand2cs>;
+ 			clocks = <&sys_clk 2>;
++			resets = <&sys_rst 2>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+index df6d870..7188536 100644
+--- a/arch/arm/boot/dts/uniphier-sld8.dtsi
++++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+@@ -71,6 +71,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart0>;
+ 			clocks = <&peri_clk 0>;
++			resets = <&peri_rst 0>;
+ 		};
+ 
+ 		serial1: serial@54006900 {
+@@ -81,6 +82,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart1>;
+ 			clocks = <&peri_clk 1>;
++			resets = <&peri_rst 1>;
+ 		};
+ 
+ 		serial2: serial@54006a00 {
+@@ -91,6 +93,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart2>;
+ 			clocks = <&peri_clk 2>;
++			resets = <&peri_rst 2>;
+ 		};
+ 
+ 		serial3: serial@54006b00 {
+@@ -101,6 +104,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_uart3>;
+ 			clocks = <&peri_clk 3>;
++			resets = <&peri_rst 3>;
+ 		};
+ 
+ 		gpio: gpio@55000000 {
+@@ -131,6 +135,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c0>;
+ 			clocks = <&peri_clk 4>;
++			resets = <&peri_rst 4>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -144,6 +149,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c1>;
+ 			clocks = <&peri_clk 5>;
++			resets = <&peri_rst 5>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -157,6 +163,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c2>;
+ 			clocks = <&peri_clk 6>;
++			resets = <&peri_rst 6>;
+ 			clock-frequency = <400000>;
+ 		};
+ 
+@@ -170,6 +177,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_i2c3>;
+ 			clocks = <&peri_clk 7>;
++			resets = <&peri_rst 7>;
+ 			clock-frequency = <100000>;
+ 		};
+ 
+@@ -323,6 +331,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_nand2cs>;
  			clocks = <&sys_clk 2>;
 +			resets = <&sys_rst 2>;
  		};
