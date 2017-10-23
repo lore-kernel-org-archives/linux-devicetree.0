@@ -1,91 +1,103 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Mon, 23 Oct 2017 16:56:14 -0500
-Message-ID: <20171023215614.6mub5tvioji6wcyq@rob-hp-laptop>
-References: <20171020074922.14239-1-boris.brezillon@free-electrons.com>
- <20171020074922.14239-2-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20171020074922.14239-2-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Menon,
- Nishanth" <nm@ti.com>, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Alan Douglas <adouglas@cadence.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, devicetree@vger.kernel.org
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v7 usb-next 1/4] dt-bindings: usb: add the documentation for USB root-hub
+Date: Mon, 23 Oct 2017 23:57:15 +0200
+Message-ID: <20171023215718.3446-2-martin.blumenstingl@googlemail.com>
+References: <20171023215718.3446-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171023215718.3446-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjAsIDIwMTcgYXQgMDk6NDk6MjJBTSArMDIwMCwgQm9yaXMgQnJlemlsbG9u
-IHdyb3RlOgo+IERvY3VtZW50IHRoZSBiaW5kaW5ncyB1c2VkIGZvciB0aGUgQ2FkZW5jZSBEU0kg
-YnJpZGdlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemls
-bG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiAtLS0KPiBIaSBSb2IsCj4gCj4gSSBkcm9wcGVkIHlv
-dXIgQS1iIGJlY2F1c2UgdHdvIGltcG9ydGFudCB0aGluZ3MgY2hhbmdlZCBpbiB0aGlzCj4gdmVy
-c2lvbjoKPiAqIHRoZSBjbGsgbmFtZXMgaGF2ZSBjaGFuZ2VkICh0aGV5IGFyZSBub3cgcHJlZml4
-ZWQgd2l0aCBkc2lfKQo+ICogY29tcGF0aWJsZSBubyBsb25nZXIgY29udGFpbnMgdGhlIElQIHZl
-cnNpb24KPiAKPiBGZWVsIGZyZWUgdG8gYWRkIGl0IGJhY2suCj4gCj4gUmVnYXJkcywKPiAKPiBC
-b3Jpcwo+IAo+IENoYW5nZXMgaW4gdjQ6Cj4gLSBSZW5hbWUgRFNJIGNsa3MgKHN1Z2dlc3RlZCBi
-eSBUb21pKQo+IC0gRHJvcCB0aGUgSVAgdmVyc2lvbiBpbiB0aGUgY29tcGF0aWJsZSBzaW5jZSBp
-dCBjYW4gYmUgZXh0cmFjdGVkIGZyb20KPiAgIGEgcmVnaXN0ZXIgKHN1Z2dlc3RlZCBieSBBbmRy
-emVqKQo+IAo+IENoYW5nZXMgaW4gdjM6Cj4gLSBGaXggY2xvY2sgbmFtZXMgaW4gdGhlIGV4YW1w
-bGUKPiAtIERvY3VtZW50IGhvdyB0byByZXByZXNlbnQgRFNJIGRldmljZXMgdGhhdCBhcmUgY29u
-dHJvbGxlciB0aHJvdWdoCj4gICBhbiBleHRlcm5hbCBidXMgbGlrZSBJMkMgb3IgU1BJCj4gCj4g
-Q2hhbmdlcyBpbiB2MjoKPiAtIE5vbmUKPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
-ZGdlL2NkbnMsZHNpLnR4dCAgICAgICAgICAgfCAxMDkgKysrKysrKysrKysrKysrKysrKysrCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAxMDkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsZHNp
-LnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsZHNpLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi41MGJiMzE4OWYyZWUKPiAtLS0gL2Rldi9udWxsCj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMs
-ZHNpLnR4dAo+IEBAIC0wLDAgKzEsMTA5IEBACj4gK0NhZGVuY2UgRFNJIGJyaWRnZQo+ICs9PT09
-PT09PT09PT09PT09PT0KPiArCj4gK1RoZSBDYWRlbmNlIERTSSBicmlkZ2UgaXMgYSBEUEkgdG8g
-RFNJIGJyaWRnZSBzdXBwb3J0aW5nIHVwIHRvIDQgRFNJIGxhbmVzLgo+ICsKPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgc2V0IHRvICJjZG5zLGRzaSIu
-Cj4gKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJv
-bGxlcidzIHJlZ2lzdGVycy4KPiArLSBpbnRlcnJ1cHRzOiBpbnRlcnJ1cHQgbGluZSBjb25uZWN0
-ZWQgdG8gdGhlIERTSSBicmlkZ2UuCj4gKy0gY2xvY2tzOiBEU0kgYnJpZGdlIGNsb2Nrcy4KPiAr
-LSBjbG9jay1uYW1lczogbXVzdCBjb250YWluICJkc2lfcF9jbGsiIGFuZCAiZHNpX3N5c19jbGsi
-Lgo+ICstIHBoeXM6IHBoYW5kbGUgbGluayB0byB0aGUgTUlQSSBELVBIWSBjb250cm9sbGVyLgo+
-ICstIHBoeS1uYW1lczogbXVzdCBjb250YWluICJkcGh5Ii4KPiArLSAjYWRkcmVzcy1jZWxsczog
-bXVzdCBiZSBzZXQgdG8gMS4KPiArLSAjc2l6ZS1jZWxsczogbXVzdCBiZSBzZXQgdG8gMC4KPiAr
-Cj4gK1JlcXVpcmVkIHN1Ym5vZGVzOgo+ICstIHBvcnRzOiBQb3J0cyBhcyBkZXNjcmliZWQgaW4g
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiArICAyIHBvcnRz
-IGFyZSBhdmFpbGFibGU6Cj4gKyAgKiBwb3J0IDA6IHRoaXMgcG9ydCBpcyBvbmx5IG5lZWRlZCBp
-ZiBzb21lIG9mIHlvdXIgRFNJIGRldmljZXMgYXJlCj4gKwkgICAgY29udHJvbGxlZCB0aHJvdWdo
-ICBhbiBleHRlcm5hbCBidXMgbGlrZSBJMkMgb3IgU1BJLiBDYW4gaGF2ZSBhdAo+ICsJICAgIG1v
-c3QgNCBlbmRwb2ludHMuIFRoZSBlbmRwb2ludCBudW1iZXIgaXMgZGlyZWN0bHkgZW5jb2Rpbmcg
-dGhlCj4gKwkgICAgRFNJIHZpcnR1YWwgY2hhbm5lbCB1c2VkIGJ5IHRoaXMgZGV2aWNlLgo+ICsg
-ICogcG9ydCAxOiByZXByZXNlbnRzIHRoZSBEUEkgaW5wdXQuCj4gKyAgT3RoZXIgcG9ydHMgd2ls
-bCBiZSBhZGRlZCBsYXRlciB0byBzdXBwb3J0IHRoZSBuZXcga2luZCBvZiBpbnB1dHMuCj4gKwo+
-ICstIG9uZSBzdWJub2RlIHBlciBEU0kgZGV2aWNlIGNvbm5lY3RlZCBvbiB0aGUgRFNJIGJ1cy4g
-RWFjaCBEU0kgZGV2aWNlIHNob3VsZAo+ICsgIGNvbnRhaW4gYSByZWcgcHJvcGVydHkgZW5jb2Rp
-bmcgaXRzIHZpcnR1YWwgY2hhbm5lbC4KPiArCj4gK0V4YW1wbGU6Cj4gKwo+ICsJZHNpMDogZHNp
-QGZkMGMwMDAwIHsKPiArCQljb21wYXRpYmxlID0gImNkbnMsZHNpLTEuMy4xIjsKPiArCQlyZWcg
-PSA8MHgwIDB4ZmQwYzAwMDAgMHgwIDB4MTAwMD47Cj4gKwkJY2xvY2tzID0gPCZwY2xrPiwgPCZz
-eXNjbGs+Owo+ICsJCWNsb2NrLW5hbWVzID0gImRzaV9wX2NsayIsICJkc2lfc3lzX2NsayI7Cj4g
-KwkJaW50ZXJydXB0cyA9IDwxPjsKPiArCQlwaHlzID0gPCZkcGh5MT47Cj4gKwkJcGh5LW5hbWVz
-ID0gImRwaHkiOwo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0g
-PDA+Owo+ICsKPiArCQlwb3J0cyB7Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkj
-c2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJCXBvcnRAMSB7Cj4gKwkJCQlyZWcgPSA8MT47Cj4g
-KwkJCQlkc2kwX2RwaV9pbnB1dDogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmeHh4X2RwaV9vdXRwdXQ+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlw
-YW5lbDogZHNpLWRldkAwIHsKPiArCQkJY29tcGF0aWJsZSA9ICI8dmVuZG9yLHBhbmVsPiI7Cj4g
-KwkJCXJlZyA9IDwwPjsKPiArCQl9Owo+ICsJfTsKPiArCj4gK29yCj4gKwo+ICsJZHNpMDogZHNp
-QGZkMGMwMDAwIHsKPiArCQljb21wYXRpYmxlID0gImNkbnMsZHNpIjsKPiArCQlyZWcgPSA8MHgw
-IDB4ZmQwYzAwMDAgMHgwIDB4MTAwMD47Cj4gKwkJY2xvY2tzID0gPCZwY2xrPiwgPCZzeXNjbGs+
-Owo+ICsJCWNsb2NrLW5hbWVzID0gInN5c19wX2NsayIsICJkc2lfc3lzX2NsayI7CgpOZWVkcyB1
-cGRhdGluZz8KCldpdGggdGhhdCwKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+A USB root-hub may have several PHYs which need to be configured before
+the root-hub starts working.
+This adds the documentation for such a USB root-hub as well as a hint
+regarding the child-nodes on XHCI controllers which can include the
+roothub.
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/usb/usb-roothub.txt        | 46 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |  7 ++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/usb-roothub.txt b/Documentation/devicetree/bindings/usb/usb-roothub.txt
+new file mode 100644
+index 000000000000..fc0797d7cee9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/usb-roothub.txt
+@@ -0,0 +1,46 @@
++Generic USB root-hub Properties
++
++similar to the USB device bindings (documented in usb-device.txt from the
++current directory) this provides support for configuring the root-hub.
++
++Required properties:
++- compatible: should be at least one of "usb1d6b,3", "usb1d6b,2"
++- reg: must be 0.
++- address-cells: must be 1
++- size-cells: must be 0
++
++Required sub-nodes:
++a sub-node per actual USB port is required. each sub-node supports the
++following properties:
++  Required properties:
++    - reg: the port number on the root-hub (mandatory)
++  Optional properties:
++    - phys: optional, from the *Generic PHY* bindings (mandatory needed
++      when phy-names is given)
++    - phy-names: optional, from the *Generic PHY* bindings; supported names
++      are "usb2-phy" or "usb3-phy"
++
++Example:
++	&usb1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		roothub@0 {
++			compatible = "usb1d6b,3", "usb1d6b,2";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			port@1 {
++				reg = <1>;
++				phys = <&usb2_phy1>, <&usb3_phy1>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++
++			port@2 {
++				reg = <2>;
++				phys = <&usb2_phy2>, <&usb3_phy2>;
++				phy-names = "usb2-phy", "usb3-phy";
++			};
++		};
++	}
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index ae6e484a8d7c..5b49ba9f2f9a 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -30,6 +30,13 @@ Optional properties:
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+ 
++sub-nodes:
++- optionally there can be a node for the root-hub, see usb-roothub.txt in the
++  current directory
++- one or more nodes with reg 1-31 for each port to which a device is connected.
++  See usb-device.txt in the current directory for more information.
++
++
+ Example:
+ 	usb@f0931000 {
+ 		compatible = "generic-xhci";
+-- 
+2.14.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
