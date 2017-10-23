@@ -1,88 +1,58 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
-Date: Mon, 23 Oct 2017 09:55:06 +0800
-Message-ID: <20171023015504.GG8700@dragon>
-References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
- <066fef03-7c21-fe7c-218a-fdec446500da@ti.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v4 2/2] dma: sprd: Add Spreadtrum DMA driver
+Date: Mon, 23 Oct 2017 10:01:11 +0800
+Message-ID: <CAMz4kuKTWz86rv1WsGNxcssfK_7uHxw0=XwcqFZEFM=vo0nuQg@mail.gmail.com>
+References: <84d9f80ce9853ae8441ef91e8701ba516db8f697.1507612144.git.baolin.wang@spreadtrum.com>
+ <6c3036ce14d776452bd8526c0ea9541880a43541.1507612144.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <066fef03-7c21-fe7c-218a-fdec446500da-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6c3036ce14d776452bd8526c0ea9541880a43541.1507612144.git.baolin.wang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi Vinod,
 
-Thanks for taking time to review the patch.
+On 10 October 2017 at 13:23, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+> This patch adds the DMA controller driver for Spreadtrum SC9860 platform.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> ---
+> Changes since v3:
+>  - Remove redundant local 'mask' and 'val' variables.
+>  - Simplify sprd_dma_get_req_type() function.
+>  - Change pm_runtime_put_sync() to pm_runtime_put() in probe function.
+>  - Simplify sizeof function.
+>  - Other coding style fixes.
+>
+> Changes since v2:
+>  - Add COMPILE_TEST as dependency.
+>  - Renamed DMA macro definition properly.
+>  - Add sprd_dma_chn_update() helpers to save lots of code.
+>  - Change pm_runtime_put_sync() to pm_runtime_put() when free resources.
+>  - Re-implement the sprd_dma_tx_status() function.
+>  - Free irq and kill tasklet when remove driver.
+>  - Add some documentaion.
+>  - Change to module_init() level and add MODULE_ALIAS().
+>  - Other coding style fixes.
+>
+> Changes since v1:
+>  - Use virt-dma to manage dma descriptors.
+>  - Remove link-list and channel-start-channel Spreadtrum special features.
+>  - Remove device_config implementation.
+>  - Other optimization.
+>
+> Note: This patch just implemented the basic DMA_MEMCPY function, and in
+> future we will send new patches to introduce some Speadtrum special features,
+> that will be talk about how to handle these features easily instead of in one
+> big patch which is hard to review.
+> ---
 
-This combo phy support PCIe and USB3 on HiSilicon STB SoC.  We will
-address all your comments and add USB3 support in the new version.
+Do you have any comments for this version patchset? If not, could you
+apply this patchset into your branch? Thanks.
 
-On Wed, Oct 18, 2017 at 06:13:31PM +0530, Kishon Vijay Abraham I wrote:
-> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> > index 3a52dcb09566..11754b293fb4 100644
-> > --- a/drivers/phy/Makefile
-> > +++ b/drivers/phy/Makefile
-> > @@ -6,6 +6,7 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
-> >  obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
-> >  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
-> >  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-> > +
-> 
-> spurious blank space..
-
-Left from rebasing the change to latest kernel.  Fixed.  Thanks.
-
-> >  obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
-> >  obj-$(CONFIG_ARCH_MESON)		+= amlogic/
-> >  obj-$(CONFIG_LANTIQ)			+= lantiq/
-
-<snip>
-
-> > +static struct phy *histb_combphy_xlate(struct device *dev,
-> > +				       struct of_phandle_args *args)
-> > +{
-> > +	struct histb_combphy_priv *priv = dev_get_drvdata(dev);
-> > +
-> > +	if (args->args_count < 1) {
-> > +		dev_err(dev, "DT did not pass correct no of args\n");
-> > +		return ERR_PTR(-ENODEV);
-> > +	}
-> > +
-> > +	priv->mode = args->args[0];
-> > +
-> > +	if (priv->mode > COMBPHY_MODE_SATA) {
-> 
-> this should use generic bindings from include/dt-bindings/phy/phy.h.
-
-Great.  Thanks for the info.  Will use it.
-
-> > +		dev_err(dev, "DT did not pass correct phy mode\n");
-> > +		return ERR_PTR(-ENODEV);
-> > +	}
-> > +
-> > +	return priv->phy;
-> > +}
-
-<snip>
-
-> > +	phy_provider = devm_of_phy_provider_register(dev, histb_combphy_xlate);
-> > +	if (IS_ERR(phy_provider)) {
-> > +		dev_err(dev, "failed to register phy provider\n");
-> > +		return PTR_ERR(phy_provider);
-> > +	}
-> > +
-> > +	return 0;
-> 
-> return PTR_ERR_OR_ZERO(phy_provider) instead?
-
-Yes.  Thanks for the suggestion.
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Baolin.wang
+Best Regards
