@@ -1,136 +1,168 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 00/10] net: stmmac: dwmac-sun8i: Handle integrated PHY
-Date: Mon, 23 Oct 2017 12:04:48 -0700
-Message-ID: <6634f0fb-d6f9-604b-eeca-6bbdd69ed59e@gmail.com>
-References: <20171023185626.31793-1-clabbe.montjoie@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] firmware: meson-sm: use generic compatible
+Date: Mon, 23 Oct 2017 14:29:25 -0500
+Message-ID: <CAL_Jsq+_TrStcLHa_YVUXqE5unnpfQMM41JBwtHJpFWyA2ftug@mail.gmail.com>
+References: <20171012134743.10625-1-jbrunet@baylibre.com> <20171017204959.kfbhn2yxhv2sb5qg@rob-hp-laptop>
+ <7h8tg7zb6t.fsf@baylibre.com> <CAL_JsqJ-XAqMA_zjxrJNAtysQsXzmWYUFqLJtKX2wUJ0oebtuw@mail.gmail.com>
+ <1508488253.3616.28.camel@baylibre.com> <CAL_JsqKON3mKrkjg1gR-JjM_YarWMdGRURTx39MVgC=beCKz3g@mail.gmail.com>
+ <1508746404.3587.26.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171023185626.31793-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1508746404.3587.26.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2017 11:56 AM, Corentin Labbe wrote:
-> Hello
-> 
-> The current way to find if the PHY is internal is to compare DT phy-mode
-> and emac_variant/internal_phy.
-> But it will negate a possible future SoC where an external PHY use the
-> same phy mode than the integrated one.
-> 
-> This patchs series adds a new way to handle this problem via a mdio-mux.
-> 
-> The first try was to create a new MDIO mux "mdio-mux-syscon".
-> mdio-mux-syscon working the same way than mdio-mux-mmioreg with the exception
-> that the register is used via syscon/regmap.
-> But this solution does not work for two reason:
-> - changing the MDIO selection need the reset of MAC which cannot be done by the
->         mdio-mux-syscon driver
-> - There were driver loading order problem:
->         - mdio-mux-syscon needing that stmmac register the parent MDIO
->         - stmmac needing that child MDIO was registered just after registering parent MDIO
-> 
-> So we cannot use any external MDIO-mux.
-> 
-> The final solution was to represent the mdio-mux in MAC node and let the MAC handle all things.
-> 
-> Since DT bits was reverted in 4.13, this patch series include the revert of the revert.
-> 
-> I have let patch splited for easy review. (for seeing what's new)
-> But the final serie could have some patch squashed if someone want.
-> Like squashing patch and 1 and 2 (documentation)
+On Mon, Oct 23, 2017 at 3:13 AM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> On Fri, 2017-10-20 at 14:34 -0500, Rob Herring wrote:
+>> On Fri, Oct 20, 2017 at 3:30 AM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>> > On Thu, 2017-10-19 at 16:18 -0500, Rob Herring wrote:
+>> > > On Thu, Oct 19, 2017 at 5:25 AM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> > > wrote:
+>> > > > Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+>> > > >
+>> > > > > On Thu, Oct 12, 2017 at 03:47:43PM +0200, Jerome Brunet wrote:
+>> > > > > > The meson secure monitor seems to be compatible with more SoCs than
+>> > > > > > initially thought. Let's use the most generic compatible he have in
+>> > > > > > DT instead of the gxbb specific one
+>> > > > > >
+>> > > > > > Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> > > > > > ---
+>> > > > > >  Documentation/devicetree/bindings/firmware/meson/meson_sm.txt | 4
+>> > > > > > ++--
+>> > > > > >  drivers/firmware/meson/meson_sm.c                             | 4
+>> > > > > > ++--
+>> > > > > >  2 files changed, 4 insertions(+), 4 deletions(-)
+>> > > > >
+>> > > > > Seems like a pointless, not backwards compatible change to me.
+>> > > >
+>> > > > I've verified that it's backwards compatible with existing upstream DTs.
+>> > >
+>> > > Perhaps if you all are documenting only what the driver uses, not what
+>> > > the dts can have as Jerome said.
+>> > >
+>> > > > > end, it's just a string to match on. Who cares what the string is.
+>> > > >
+>> > > > As platform maintiner, I very much care what the strings are and I want
+>> > > > it to be coherent with the platform generic names, and I want the
+>> > > > SoC-specific strings to correspond to the actual SoC names.
+>> > >
+>> > > The most specific compatible should be, absolutely. The fallbacks can
+>> > > be anything really. Ideally, they are the compatible string for the
+>> > > 1st SoC with "the same" compatible IP. Could be another vendor
+>> > > entirely even because mergers happen.
+>> >
+>> > Then what's your problem with these patches again ?
+>>
+>> Removal of the SoC specific compatible and breaking compatibility.
+>> Kevin says compatibility is not broken, but it obviously it based on
+>> the example and the driver change. So that can only mean your dts file
+>> doesn't match the example.
+>
+> I believe it does, but I suppose I have missed something.
+>
+> Currently the driver only matches on:
+> .compatible = "amlogic,meson-gxbb-sm" (drivers/firmware/meson_sm.c)
+>
+> The only device-tree file using it is
+> meson-gx.dtsi: compatible = "amlogic,meson-gx-sm", "amlogic,meson-gxbb-sm";
 
-I looked quickly through this, and the way you solved the mdio-mux is
-looking great to me, thanks for your patience.
+THIS is not what the binding example shows which is precisely the
+problem. Reading the binding doc and driver alone makes it look like
+you are breaking compatibility.
 
-Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> So:
+> 1) yes the order is backward (thx for pointing this out)
+> 2) by changing the compatible matched by the driver from "amlogic,meson-gxbb-sm"
+> to "amlogic,meson-gx-sm", I don't think I am breaking anything. Feel free to
+> point out why this is wrong because I don't get it.
 
-> 
-> Regards
-> 
-> Changes since v7:
-> - moved mdio-mux ouf of mdio as asked by Andrew Lunn
-> - reordered patchs order
-> 
-> Changes since v6:
-> - renamed external mdio to "external_mdio"
-> - added compatible to mdio-mux and internal-mdio
-> - removed usage of phy-is-integrated
-> - renamed do_not_scan to compatible_muxes (patch 10)
-> - patch 8 9 of v6 are squashed
-> 
-> Changes since v5:
-> - reordered patch 1 and 2
-> - mdio-mux node is now a mdio's child
-> - added patch 11 for removing unnecessary scan of mdio-mux
-> 
-> Changes since v4:
-> - Update documentation for new bindings
-> - Added 4 patchs for bring back reverted stuff of 4.13
-> - dwmac-sun8i now handle mdio-mux
-> - MDIO use now compatible = "snps,dwmac-mdio";
-> 
-> Changes since v3:
-> - Added a patch for handling fixed-link
-> - Updated documentation
-> 
-> Changes since v2:
-> - Add a MDIO mux for creating distinction between integrated and external MDIO.
-> - phy-is-integrated is not set in dtsi.
-> 
-> Changes since v1:
-> - Dropped phy-is-integrated documentation patch since another same patch was already merged
-> - Moved phy-is-integrated from SoC dtsi to final board DT.
-> 
-> 
-> Corentin Labbe (10):
->   dt-bindings: net: Restore sun8i dwmac binding
->   dt-bindings: net: dwmac-sun8i: update documentation about integrated
->     PHY
->   arm: dts: sunxi: h3/h5: Restore EMAC changes
->   arm: dts: sunxi: h3/h5: represent the mdio switch used by
->     sun8i-h3-emac
->   arm: dts: sunxi: Restore EMAC changes (boards)
->   arm64: dts: allwinner: Restore EMAC changes
->   arm64: dts: allwinner: add snps,dwmac-mdio compatible to emac/mdio
->   net: stmmac: snps,dwmac-mdio MDIOs are automatically registered
->   net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs
->   net: stmmac: sun8i: Restore the compatibles
-> 
->  .../devicetree/bindings/net/dwmac-sun8i.txt        | 199 ++++++++++++
->  arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  |   9 +
->  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  19 ++
->  arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts      |  19 ++
->  arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts          |   7 +
->  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |   8 +
->  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |   8 +
->  arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts    |   5 +
->  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   8 +
->  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  22 ++
->  arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts     |  16 +
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  47 +++
->  .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  16 +
->  .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  |  15 +
->  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  17 +
->  .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  16 +
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  21 ++
->  .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   |  17 +
->  .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  |  17 +
->  .../dts/allwinner/sun50i-h5-orangepi-prime.dts     |  17 +
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |   1 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 361 +++++++++++++--------
->  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   4 -
->  23 files changed, 735 insertions(+), 134 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> 
+You are not breaking compatibility. That's not what I'm saying. If I
+had followed the binding doc and wrote my own dts, then compatibility
+would have been broken.
 
+>> > I am just asking the driver to match the generic binding instead of the SoC
+>> > specific, because we are also using it on other SoC, as explain in the patch
+>> > comment. Does not seems that "pointless" to me.
+>> >
+>> > Right now the driver match only on: vendor,soc-one
+>> > in dts, we have compatible = "vendor,family", "vendor,soc-one"
+>>
+>> That's backwards if I understand this right. It should be most
+>> specific first, but that's a separate issue.
+>>
+>> > but it is compatible with soc-two as well.
+>> > to match we would have to put "vendor,soc-one" as well which is a mess
+>>
+>> Why? That's how DT works and every other platform follows. Either you have:
+>>
+>> "vendor,soc-one", "vendor,family"
+>> "vendor,soc-two", "vendor,family"
+>>
+>> or
+>>
+>> "vendor,soc-one"
+>> "vendor,soc-two", "vendor,soc-one"
+>>
+>> The latter is how DT has existed and worked for 20+ years. The former
+>> is what we allow because for some reason people have such an aversion
+>> to saying soc2 is compatible with soc1.
+>>
+>> Either one is fine, but the documentation must be clear what the
+>> constraints are for the dts file. For example, "vendor,soc-two" or
+>> "vendor,family" alone are not valid. There's plenty of examples to
+>
+> except that the DT file where it is used is a soc family dtsi.
+> meson-gx.dtsi is the common DT for gxbb and gxl family. Wouldn't it make sense
+> to have the SoC generic compatible alone here ? and override it in the SoC DT if
+> necessary ?
 
--- 
-Florian
+That's a detail I don't really care so much about because that's just
+dts partitioning. I mainly care how the dtb ends up looking and that
+must have an SoC specific compatible.
+
+I will say though, I think that overriding properties like compatible
+would not be the best style. Generally, enough things change like
+memory address, irq numbers, etc. from SoC to SoC that it's not worth
+trying to share dtsi files that way.
+
+>> follow. Renesas is one using "vendor,family" extensively.
+>>
+>> > By expressing correctly what the driver is compatible with, "vendor,family"
+>> > we can dts that makes sense for soc-two as well
+>> > compatible = "vendor,family", "vendor,soc-two"
+>
+> Honestly, I don't care which of the 2 solutions we take. The important thing for
+> me is to eliminate the confusion introduced by the generic-compatible being here
+> and useless. The driver is indeed generic, but the related compatible is not
+> matched. This makes no sense.
+
+The driver change is fine. The dts is fine too it seems, other than
+the string ordering. It's the binding doc that is not fine (read the
+last paragraph again if you still don't understand why). It needs to
+document which of the below you are doing.
+
+> So either:
+> * we use "vendor,soc-one", "vendor,family" model: I believe this what I'm trying
+>  to do here. For this, we need to match the soc generic compatible in the
+> driver.
+>
+> * we use the "vendor,soc-two", "vendor,soc-one" model : The driver keeps on
+> matching the SoC specific compatible. We won't ever match the generic one with
+> this model, what is the point of keeping it around in DT ? Should we remove it ?
+>
+> Maybe the later is better, it would end up just being a removal of an
+> undocumented property from DT.
+>
+>>
+>> Binding docs may live in the kernel, but they are separate from
+>> drivers. They describe the constraints of the dts files. There's no
+>> reason to document what the driver wants because I can read the driver
+>> source. I can't say the same thing about the dts file. The dts may not
+>> come from the kernel and one dts file is not all possible options for
+>> a given binding.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
