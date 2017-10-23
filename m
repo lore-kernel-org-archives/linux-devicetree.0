@@ -1,51 +1,60 @@
-From: Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH V2 7/7] ARM64: tegra: limit PCIe config space mapping to 4K for T186
-Date: Mon, 23 Oct 2017 20:05:12 +0530
-Message-ID: <1508769312-12465-8-git-send-email-vidyas@nvidia.com>
-References: <1508769312-12465-1-git-send-email-vidyas@nvidia.com>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCH] ARM: dts: imx53-tx53: fix interrupt flags
+Date: Mon, 23 Oct 2017 16:56:40 +0200
+Message-ID: <1508770600-28496-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1508769312-12465-1-git-send-email-vidyas@nvidia.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: treding@nvidia.com, bhelgaas@google.com
-Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-reduces PCIe config space mapping size from its current 256MB
-to 4K to have only 4K of virtual memory mapping and to be
-in line with driver implementation
+Some interrupts properties are given '0' as the flags argument or no
+flags argument at all.
+Change them to use the appropriate interrupt flags.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
 ---
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/imx53-tx53-x03x.dts | 2 +-
+ arch/arm/boot/dts/imx53-tx53.dtsi     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 7c3a2bdd4644..c64550c32d72 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -361,7 +361,7 @@
- 		device_type = "pci";
- 		reg = <0x0 0x10003000 0x0 0x00000800   /* PADS registers */
- 		       0x0 0x10003800 0x0 0x00000800   /* AFI registers */
--		       0x0 0x40000000 0x0 0x10000000>; /* configuration space */
-+		       0x0 0x40000000 0x0 0x00001000>; /* configuration space */
- 		reg-names = "pads", "afi", "cs";
+diff --git a/arch/arm/boot/dts/imx53-tx53-x03x.dts b/arch/arm/boot/dts/imx53-tx53-x03x.dts
+index aa9ae84..eb5b452 100644
+--- a/arch/arm/boot/dts/imx53-tx53-x03x.dts
++++ b/arch/arm/boot/dts/imx53-tx53-x03x.dts
+@@ -254,7 +254,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_tsc2007>;
+ 		interrupt-parent = <&gpio3>;
+-		interrupts = <26 0>;
++		interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
+ 		gpios = <&gpio3 26 GPIO_ACTIVE_LOW>;
+ 		ti,x-plate-ohms = <660>;
+ 		wakeup-source;
+diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
+index 8e10c47..71b58b6 100644
+--- a/arch/arm/boot/dts/imx53-tx53.dtsi
++++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+@@ -227,7 +227,7 @@
  
- 		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>, /* controller interrupt */
-@@ -379,9 +379,9 @@
- 		ranges = <0x82000000 0 0x10000000 0x0 0x10000000 0 0x00001000   /* port 0 configuration space */
- 			  0x82000000 0 0x10001000 0x0 0x10001000 0 0x00001000   /* port 1 configuration space */
- 			  0x82000000 0 0x10004000 0x0 0x10004000 0 0x00001000   /* port 2 configuration space */
--			  0x81000000 0 0x0        0x0 0x50000000 0 0x00010000   /* downstream I/O (64 KiB) */
--			  0x82000000 0 0x50100000 0x0 0x50100000 0 0x07F00000   /* non-prefetchable memory (127 MiB) */
--			  0xc2000000 0 0x58000000 0x0 0x58000000 0 0x28000000>; /* prefetchable memory (640 MiB) */
-+			  0x81000000 0 0x0        0x0 0x40001000 0 0x00010000   /* downstream I/O (64 KiB) */
-+			  0x82000000 0 0x40100000 0x0 0x40100000 0 0x07F00000   /* non-prefetchable memory (127 MiB) */
-+			  0xc2000000 0 0x48000000 0x0 0x48000000 0 0x38000000>; /* prefetchable memory (896 MiB) */
- 
- 		clocks = <&bpmp TEGRA186_CLK_AFI>,
- 			 <&bpmp TEGRA186_CLK_PCIE>,
+ 	phy0: ethernet-phy@0 {
+ 		interrupt-parent = <&gpio2>;
+-		interrupts = <4>;
++		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+ 		device_type = "ethernet-phy";
+ 	};
+ };
+@@ -247,7 +247,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ds1339>;
+ 		interrupt-parent = <&gpio4>;
+-		interrupts = <20 0>;
++		interrupts = <20 IRQ_TYPE_EDGE_FALLING>;
+ 		trickle-resistor-ohms = <250>;
+ 		trickle-diode-disable;
+ 	};
 -- 
-2.7.4
+2.1.4
