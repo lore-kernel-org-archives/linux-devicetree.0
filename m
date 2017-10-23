@@ -1,40 +1,50 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
-Date: Mon, 23 Oct 2017 13:17:07 +0100
-Message-ID: <7aaf9851-9546-f34d-1496-cbeea404abbd@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-2-jean-philippe.brucker@arm.com>
- <A2975661238FB949B60364EF0F2C257439AFD88A@SHSMSX104.ccr.corp.intel.com>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx28-tx28: fix interrupt flags
+Date: Mon, 23 Oct 2017 14:33:10 +0200
+Message-ID: <1508761990-17060-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <A2975661238FB949B60364EF0F2C257439AFD88A@SHSMSX104.ccr.corp.intel.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "Liu, Yi L" <yi.l.liu@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, gabriele.paoloni@huawe
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/17 12:04, Liu, Yi L wrote:
->> +	idr_preload(GFP_KERNEL);
->> +	spin_lock(&iommu_process_lock);
->> +	pasid = idr_alloc_cyclic(&iommu_process_idr, process, domain->min_pasid,
->> +				 domain->max_pasid + 1, GFP_ATOMIC);
->> +	process->pasid = pasid;
-> 
-> [Liu, Yi L] If I'm understanding well, here is managing the pasid allocation in iommu
-> layer instead of vendor iommu driver? Is there strong reason here? I think pasid
-> management may be better within vendor iommu driver as pasid management
-> could differ from vendor to vendor.
+Some interrupts properties are given '0' as the flags argument.
+Change them to use the appropriate interrupt flags.
 
-But that's the thing, we're trying to abstract PASID and process
-management to have it in the core, because there shouldn't be many
-differences from vendor to vendor. This way we have the allocation code in
-one place and vendor drivers don't have to copy paste it from other drivers.
+Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ arch/arm/boot/dts/imx28-tx28.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-It's just a global number within a range, so I don't think vendors will
-have many different ways of designing it.
+diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
+index 211e67d..52d99b4 100644
+--- a/arch/arm/boot/dts/imx28-tx28.dts
++++ b/arch/arm/boot/dts/imx28-tx28.dts
+@@ -329,7 +329,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&tx28_pca9554_pins>;
+ 		interrupt-parent = <&gpio3>;
+-		interrupts = <28 0>;
++		interrupts = <28 IRQ_TYPE_NONE>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+@@ -353,7 +353,7 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&tx28_tsc2007_pins>;
+ 		interrupt-parent = <&gpio3>;
+-		interrupts = <20 0>;
++		interrupts = <20 IRQ_TYPE_EDGE_FALLING>;
+ 		pendown-gpio = <&gpio3 20 GPIO_ACTIVE_LOW>;
+ 		ti,x-plate-ohms = /bits/ 16 <660>;
+ 	};
+-- 
+2.1.4
 
-Thanks,
-Jean
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
