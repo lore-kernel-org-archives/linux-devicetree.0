@@ -1,63 +1,126 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 0/7] Tegra PCIe end point config space map code refactoring
-Date: Mon, 23 Oct 2017 10:10:39 -0500
-Message-ID: <CAL_Jsq+3UAwk5gNgh=s6O1f-MadyGCtADX7pyzX8eUfBqboRfA@mail.gmail.com>
-References: <1508769312-12465-1-git-send-email-vidyas@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508769312-12465-1-git-send-email-vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH] arm64: dts: uniphier: add eMMC hardware reset provider node
+Date: Tue, 24 Oct 2017 00:21:37 +0900
+Message-ID: <1508772097-18752-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 9:35 AM, Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> PCIe host controller in Tegra SoCs has 1GB of aperture available
-> for mapping end points config space, IO and BARs. In that, currently
-> 256MB is being reserved for mapping end points configuration space
-> which leaves less memory space available for mapping end points BARs
-> on some of the platforms.
-> This patch series attempts to use only 4K space from 1GB aperture to
-> access end points configuration space.
->
-> Currently, this change benefits T20 and T186 in saving (i.e. repurposed
-> to use for BAR mapping) physical space as well as kernel virtual mapping space,
-> it saves only kernel virtual address space in T30, T124, T132 and T210.
->
-> NOTE: Both driver and DT changes are inter-dependent and hence need to go together
+Add mmc-pwrseq-emmc node to perform standard eMMC hardware reset
+procedure.
 
-You are breaking compatibility with any other OS.
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-Can't this easily be solved within the kernel by adjusting the
-resource size? To save the virtual space, you only need patch 1 and
-don't need the DT change. The DT change is just for phys address space
-for BARs.
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 7 +++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 8 ++++++++
+ 3 files changed, 23 insertions(+)
 
->
-> Testing Done on T124, T210 & T186:
->  Enumeration and basic functionality of immediate devices
->  Enumeration of devices behind a PCIe switch
->  Complete 4K configuration space access
->
-> Vidya Sagar (7):
->   PCI: tegra: refactor config space mapping code
->   ARM: tegra: limit PCIe config space mapping to 4K for T20
->   ARM: tegra: limit PCIe config space mapping to 4K for T30
->   ARM: tegra: limit PCIe config space mapping to 4K for T124
->   ARM64: tegra: limit PCIe config space mapping to 4K for T132
->   ARM64: tegra: limit PCIe config space mapping to 4K for T210
->   ARM64: tegra: limit PCIe config space mapping to 4K for T186
->
->  arch/arm/boot/dts/tegra124.dtsi          |   2 +-
->  arch/arm/boot/dts/tegra20.dtsi           |   8 +--
->  arch/arm/boot/dts/tegra30.dtsi           |   2 +-
->  arch/arm64/boot/dts/nvidia/tegra132.dtsi |   2 +-
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +--
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi |   2 +-
->  drivers/pci/host/pci-tegra.c             | 109 +++++++++----------------------
->  7 files changed, 42 insertions(+), 91 deletions(-)
->
-> --
-> 2.7.4
->
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index 5fde6f5..e8bd39c 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -7,6 +7,8 @@
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ /memreserve/ 0x80000000 0x02000000;
+ 
+ / {
+@@ -96,6 +98,11 @@
+ 		};
+ 	};
+ 
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio 26 GPIO_ACTIVE_LOW>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <1 13 4>,
+@@ -310,6 +317,7 @@
+ 			bus-width = <8>;
+ 			mmc-ddr-1_8v;
+ 			mmc-hs200-1_8v;
++			mmc-pwrseq = <&emmc_pwrseq>;
+ 			cdns,phy-input-delay-legacy = <4>;
+ 			cdns,phy-input-delay-mmc-highspeed = <2>;
+ 			cdns,phy-input-delay-mmc-ddr = <3>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index aae64d2..e7e9826 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -7,6 +7,7 @@
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/thermal/thermal.h>
+ 
+ /memreserve/ 0x80000000 0x02000000;
+@@ -169,6 +170,11 @@
+ 		};
+ 	};
+ 
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio 26 GPIO_ACTIVE_LOW>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <1 13 4>,
+@@ -416,6 +422,7 @@
+ 			bus-width = <8>;
+ 			mmc-ddr-1_8v;
+ 			mmc-hs200-1_8v;
++			mmc-pwrseq = <&emmc_pwrseq>;
+ 			cdns,phy-input-delay-legacy = <4>;
+ 			cdns,phy-input-delay-mmc-highspeed = <2>;
+ 			cdns,phy-input-delay-mmc-ddr = <3>;
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+index 7e990e3..6297a2d 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi
+@@ -7,6 +7,8 @@
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
++#include <dt-bindings/gpio/gpio.h>
++
+ /memreserve/ 0x80000000 0x02000000;
+ 
+ / {
+@@ -124,6 +126,11 @@
+ 		};
+ 	};
+ 
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio 47 GPIO_ACTIVE_LOW>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <1 13 4>,
+@@ -317,6 +324,7 @@
+ 			bus-width = <8>;
+ 			mmc-ddr-1_8v;
+ 			mmc-hs200-1_8v;
++			mmc-pwrseq = <&emmc_pwrseq>;
+ 			cdns,phy-input-delay-legacy = <4>;
+ 			cdns,phy-input-delay-mmc-highspeed = <2>;
+ 			cdns,phy-input-delay-mmc-ddr = <3>;
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
