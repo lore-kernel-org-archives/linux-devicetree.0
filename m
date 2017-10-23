@@ -1,117 +1,88 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [RFC resend] arm64: mt8173: Fix Acer Chromebooks mmsys probe
- problem
-Date: Mon, 23 Oct 2017 09:42:58 +0800
-Message-ID: <1508722978.1108.16.camel@mtksdaap41>
-References: <20171019112610.13645-1-mbrugger@suse.com>
- <1508418114.7665.16.camel@pengutronix.de> <1683149.BjzMD0lNNQ@avalon>
- <1508424856.7665.22.camel@pengutronix.de>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
+Date: Mon, 23 Oct 2017 09:55:06 +0800
+Message-ID: <20171023015504.GG8700@dragon>
+References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
+ <066fef03-7c21-fe7c-218a-fdec446500da@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1508424856.7665.22.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, ulrich.hecht+renesas@gmail.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <066fef03-7c21-fe7c-218a-fdec446500da-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIDIwMTctMTAtMTkgYXQgMTY6NTQgKzAyMDAsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gSGkgTGF1cmVudCwKPiAKPiBPbiBUaHUsIDIwMTctMTAtMTkgYXQgMTY6MzkgKzAzMDAs
-IExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBIaSBQaGlsaXBwLAo+ID4gCj4gPiBPbiBUaHVy
-c2RheSwgMTkgT2N0b2JlciAyMDE3IDE2OjAxOjU0IEVFU1QgUGhpbGlwcCBaYWJlbCB3cm90ZToK
-PiA+ID4gT24gVGh1LCAyMDE3LTEwLTE5IGF0IDEzOjI2ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2Vy
-IHdyb3RlOgo+ID4gPiA+IEluIHRoZW9yeSB0aGUgTU1TWVMgZGV2aWNlIHRyZWUgaWRlbnRpZmll
-ciBpcyBtYXRjaGVzIHR3aWNlLCBieSB0aGUgY2xrCj4gPiA+ID4gZHJpdmVyIGFuZCB0aGUgRFJN
-IHN1YnN5c3RlbS4gQnV0IHRoZSBrZXJuZWwgb25seSBtYXRjaGVzIHRoZSBmaXJzdAo+ID4gPiA+
-IGRyaXZlciBmb3IgYSBkZXZpY2UgKGNsaykgYW5kIGRpc2NhcmRzIHRoZSBzZWNvbmQgb25lLiBU
-aGlzIGJyZWFrcwo+ID4gPiA+IGdyYXBoaWNzIG9uIG10ODE3MyBhbmQgbW9zdCBwcm9iYWJseSBv
-biBtdDI3MDEgYXMgd2VsbC4KPiA+ID4gPiAKPiA+ID4gPiBNTVNZUyBpbiBNZWRpYXRlayBTb0Nz
-IGhhcyBzb21lIHJlZ2lzdGVycyB0byBjb250cm9sIGNsb2NrIGdhdGVzICh3aGljaCBpcwo+ID4g
-PiA+IHVzZWQgaW4gdGhlIGNsayBkcml2ZXIpIGFuZCBzb21lIHJlZ2lzdGVycyB0byBlbmFibGUg
-dGhlIGRpZmZlcm5ldCBibG9ja3MKPiA+ID4gPiBvZiB0aGUgZGlzcGxheSBzdWJzeXN0ZW0uIFRo
-ZSBrZXJuZWwgdXNlcyB0aGUgYmluZGluZyB0byBsb2FkIHRoZSBjZW50cmFsCj4gPiA+ID4gY29t
-b3BvbmVudCBvZiB0aGUgZGlzdHBsYXkgc3Vic3lzdGVtLCB3aGljaCBpbiBwbGFjZSBwcm9iZXMg
-YWxsIHRoZSBvdGhlcgo+ID4gPiA+IGNvbXBvbmVudHMgYW5kIGVuYWJsZXMgdGhlIHByZXNlbnQg
-b25lcyBpbiB0aGUgTU1TWVMuCj4gPiA+ID4gCj4gPiA+ID4gV2UgZm91bmQgdXMgd2l0aCB0aGUg
-cHJvYmxlbSwgdGhhdCB3ZSBuZWVkIHRvIGNoYW5nZSBhbmQgdGhlcmVmb3IgYnJlYWsKPiA+ID4g
-PiBvbmUKPiA+ID4gPiBvZiB0aGUgdHdvIGJpbmRpbmdzLCBvciB0aGUgRFJNIG9uZSBvciB0aGUg
-Y2xvY2sgZHJpdmVyIG9uZS4KPiA+ID4gPiAKPiA+ID4gPiBBcGFydCBmcm9tIHRoYXQgdGhlIERS
-TSBzdWJ5c3lzdGVtIGRvZXMgYWNjZXNzIHRoZSBNTVNZUyByZWdpc3RlcnMgdmlhCj4gPiA+ID4g
-cmVsYXhlZCByZWFkcy93cml0ZXMuIEJ1dCB0aGUgaXQgc2hvdWxkIHRvIHNvIHZpYSByZWdtYXAs
-IGFzIHRoZQo+ID4gPiA+IHJlZ2lzdGVycyBhcmUgc2hhcmVkLgo+ID4gPiA+IAo+ID4gPiA+IFBv
-c3NpYmxlIHNvbHV0aW9uczoKPiA+ID4gPiAxKSBXZSBhZGQgYSBuZXcgbWVkaWF0ZWssbXQ4MTcz
-LW1tc3lzLWNsayBub2RlLCB3aGljaCBsaXZlcyBhcyBhCj4gPiA+ID4gc2ltcGxlLW1mZCB1bmRl
-ciB0aGUgYWN0dWFsIG1tc3lzIG5vZGUuIFdlIGNoYW5nZSB0aGUgY2xvY2sgZHJpdmVyIHRvCj4g
-PiA+ID4gcHJvYmUgb24gdGhpcyBiaW5kaW5nLiBUaGlzIHdvdWxkIG1ha2Ugc2Vuc2UgYXMgdGhl
-IGNsb2NrIGdhdGUgcmVnaXN0ZXIKPiA+ID4gPiBsaXZlIGNvbXBsZXRseSBpbiB0aGUgTU1TWVMg
-Y29uZmlndXJhdGlvbiByZWdpc3RlcnMuCj4gPiA+IAo+ID4gPiBUaGUgcmVhc29uIHdoeSB0aGUg
-ZHJtIGRyaXZlciBtYXRjaGVzIGFnYWluc3QgdGhlIG1tc3lzIG5vZGUgaW4gdGhlCj4gPiA+IGZp
-cnN0IHBsYWNlIGlzIHRoYXQgd2Ugd2FudGVkIHRvIGF2b2lkIDIpLgo+ID4gCj4gPiBXaHkgZGlk
-IHlvdSB3YW50IHRvIGF2b2lkIDIpID8KPiAKPiBCZWNhdXNlIHRoZSAiZGlzcGxheS1zdWJzeXN0
-ZW0iIG5vZGUgZG9lcyBub3QgcmVwcmVzZW50IGEgcmVhbCBkZXZpY2UsCj4gaXQncyBqdXN0IHRo
-ZXJlIHRvIHByb2JlIHRoZSBkcml2ZXIgdGhhdCBzdGl0Y2hlcyBhbGwgdGhlIERJU1AKPiBjb21w
-b25lbnRzIHRvZ2V0aGVyLgo+IAo+ID4gPiBBbHNvLCBtbXN5cyBpcyBub3QgYSBwdXJlIGNsb2Nr
-IGNvbnRyb2xsZXIsIGFzIGl0IGFsc28gY29udGFpbnMgdGhlCj4gPiA+IGRpc3BsYXkgcGF0aCBj
-b25maWd1cmF0aW9uIGluIGl0cyByZWdpc3RlciBzcGFjZS4KPiA+IAo+ID4gV2hpY2ggbWFrZXMg
-dGhlIG1tc3lzIHJlbGF0ZWQgdG8gZGlzcGxheSwgYnV0IG1vcmUgaW4gYSBzeXNjb24gKGNvbWJp
-bmluZyAKPiA+IGNsb2NrcyBhbmQgcm91dGluZywgYW5kIEkgYXNzdW1lIG90aGVyIG1pc2NlbGxh
-bmVvdXMgZmVhdHVyZXMgdGhhdCB3b3VsZG4ndCAKPiA+IGZpdCBuaWNlbHkgaW4gdGhlIG90aGVy
-IGRpc3BsYXktcmVsYXRlZCBJUCBjb3Jlcykgd2F5IHRoYW4gYWN0dWFsbHkgYmVpbmcgcGFydCAK
-PiA+IG9mIHRoZSBkaXNwbGF5IHN1YnN5c3RlbS4gT3IgZG9lcyBtbXN5cyBvbmx5IHByb3ZpZGUg
-ZGlzcGxheS1yZWxhdGVkIGZlYXR1cmVzIAo+ID4gPwo+IAo+IEFsbCBkZXZpY2VzIGluIHRoZSAw
-eDE0MDAwMDAwIC0gMHgxNGZmZmZmZiBtZW1vcnkgcmFuZ2UgYXJlIHBhcnQgb2YgdGhlCj4gTU1T
-WVMgc3lzdGVtLiBUaGF0IGluY2x1ZGVzIHRoZSBNTVNZUyBjb250cm9sIG9yIHN5c3RlbSBjb25m
-aWd1cmF0aW9uCj4gYmxvY2sgYXQgMHgxNDAwMDAwMCAtIDB4MTQwMDBmZmYgYXMgd2VsbCBhcyBh
-bGwgdGhlIHJlbGF0ZWQgTURQIChtZWRpYQo+IGRhdGEgcGF0aCkgYW5kIERJU1AgKGRpc3BsYXkg
-ZGF0YSBwYXRoKSBibG9ja3MgdGhhdCBmb2xsb3cuIFRoZSBESVNQCj4gYmxvY2tzIGFyZSBwdXJl
-bHkgZGlzcGxheSByZWxhdGVkLCB3aGlsZSB0aGUgTURQIGJsb2NrcyBpbXBsZW1lbnQKPiBpbXBs
-ZW1lbnQgbWVtMm1lbSBmdW5jdGlvbnMgbGlrZSBzY2FsaW5nIGFuZCBjb252ZXJzaW9uLgo+IAo+
-ID4gPiA+IDIpIEFzIHRoZSBub2RlcyBvZiB0aGUgRFJNIHN1YnN5c3RlbSBqdXN0IG5lZWQgc29t
-ZSBvZiB0aGUgcmVnaXN0ZXJzIG9mCj4gPiA+ID4gTU1TWVMgd2UgYWRkIGEgbmV3IGJpbmRpbmcg
-bWVkaWF0ZWssbXQ4MTczLWRpc3BzeXMgd2hpY2ggcHJvYmVzIHRoZQo+ID4gPiA+IGNlbnRyYWwg
-Y29tcG9uZW50IG9mIHRoZSBEUk0gc3lzdGVtLiBJdCBoYXMgb25seSBhIGhhbmRsZSB0byBtdDgx
-NzMtbW1zeXMKPiA+ID4gPiB0byBhY2Nlc3MgdGhlIHJlZ2lzdGVyc3BhY2UgdmlhIHJlZ21hcCBm
-dW5jdGlvbnMuCj4gPiA+ID4gCj4gPiA+ID4gSW4gdGhpcyBwYXRjaHNldCBJIGltcGxlbWVudGVk
-IDIpLiBQbGVhc2UgdGFrZSBpbnRvIGFjY291bnQsIHRoYXQgdGhpcyBpcwo+ID4gPiA+IGEgUkZD
-LiBJIGhhZCBubyB0aW1lIHRvIGFjdHVhbGx5IHRlc3QgdGhlIHZlcmlzb24gb24gcmVhbCBIVy4g
-U29tZSBvZiB0aGUKPiA+ID4gPiByZWdpc3RlciBhY2Nlc3NlcyBzaG91bGQgYmUgZG9uZSB1c2lu
-ZyByZWdtYXBfdXBkYXRlIGluc3RlYWQgb2YKPiA+ID4gPiByZWdtYXBfcmVhZCArIHJlZ21hcF93
-cml0ZS4KPiA+ID4gPiAKPiA+ID4gPiBUaGlzIFJGQyBzaGFsbCBvbmx5IHNob3cgaG93IHNvbHV0
-aW9uIDIpIHdvdWxkIGxvb2sgbGlrZS4gV2UgY2FuIHVzZSBpdCBhcwo+ID4gPiA+IGRpc2N1c3Np
-b24gdG8gc2VlIGhvdyB3ZSBjaXJjdW12ZW50IHRoZSBhY3R1YWwgc2l0dWF0aW9uLgo+ID4gPiAK
-PiA+ID4gT3Igd2UgY291bGQgbGVhdmUgdGhlIGJpbmRpbmdzIHVudG91Y2hlZCBhbmQgY3JlYXRl
-IG9uZSBwbGF0Zm9ybSBkZXZpY2UKPiA+ID4gZnJvbSB0aGUgb3RoZXIgb3IgZXZlbiBzZXQgdXAg
-dGhlIGNsb2NrcyBmcm9tIHRoZSBkcm0gZHJpdmVyPwo+ID4gCj4gPiBEb2VzIG1tc3lzIHByb3Zp
-ZGUgZmVhdHVyZXMgKHN1Y2ggYXMgY2xvY2tzKSB0byBub24tZGlzcGxheSBJUCBjb3JlcyA/Cj4g
-Cj4gVGhlIE1NU1lTIGNvbnRyb2wgYmxvY2sgcHJvdmlkZXMgY2xvY2tzIGZvciB0aGUgRElTUCAo
-ZGlzcGxheSBkYXRhIHBhdGgpCj4gYW5kIE1EUCAobXVsdGltZWRpYSBkYXRhIHBhdGgpIGJsb2Nr
-cywgYXMgd2VsbCBhcyB0aGUgcm91dGluZyBiZXR3ZWVuCj4gdGhlbSwgYnV0IG5vdCB0byBhbnl0
-aGluZyBvdXRzaWRlIG9mIHRoZSBNTVNZUyBzeXN0ZW0uCgpBY2NvcmRpbmcgdG8gcmVnaXN0ZXIg
-dGFibGUgb2YgbWVkaWF0ZWsgeDIwIG1tc3lzIFsxXSBhbmQgUGhpbGlwcCdzCnN0YXRlbWVudCwg
-SSB0aGluayBtbXN5cyBpcyBuZWl0aGVyIGNsb2NrLWNvbnRyb2xsZXIgbm9yIGRpc3BsYXkKY29u
-dHJvbGxlci4gSXQncyBhIGNvbWJpbmF0aW9uIG9mIG11bHRpcGxlIGZ1bmN0aW9uLiBUaGUgZm91
-ciBtYWpvcgpmdW5jdGlvbiBpcyBkaXNwbGF5J3MgY2xvY2stY29udHJvbCwgbWRwJ3MgY2xvY2st
-Y29udHJvbCwgZGlzcGxheSdzCnJvdXRpbmcsIGFuZCBtZHAncyByb3V0aW5nLiBTbyB3ZSBoYXZl
-IHR3byBjaG9pY2U6CgoxKSBDZW50cmFsaXplIHRoZXNlIG11bHRpcGxlIGZ1bmN0aW9uIGNvbnRy
-b2wgaW5zaWRlIG1tc3lzIGRldmljZTogVGhpcwptZWFucyB0aGVyZSBpcyBvbmx5IGEgbW1zeXMg
-ZGV2aWNlIHdoaWNoIGNvbnRhaW5zIGZ1bmN0aW9uIG9mCmNsb2NrLWNvbnRyb2wsIGRpc3BsYXks
-IGFuZCBtZHAuCgoyKSBTZXBhcmF0ZSB0aGVzZSBtdWx0aXBsZSBmdW5jdGlvbiB0byBkaWZmZXJl
-bnQgZGV2aWNlOiBtbXN5cyBpcyB0aGUKbWFqb3IgZGV2aWNlIHdoaWNoIG93bnMgdGhlIHJlZ2lz
-dGVyIHJlc291cmNlIGJ1dCBkb2VzIG5vdGhpbmcuIFRoZQpmdW5jdGlvbiBpcyBjb250cm9sbGVk
-IGJ5IHRocmVlIHZpcnR1YWwgZGV2aWNlOiBtbXN5cy1jbG9jay1jb250cm9sbGVyLApkaXNwbGF5
-LWNvbnRyb2xsZXIsIGFuZCBtZHAtY29udHJvbGxlci4KCkkgcHJlZmVyIDIpIGJlY2F1c2UgdGhl
-c2UgZnVuY3Rpb24gc2VlbXMgaW5kZXBlbmRlbnQuIAoKUmVnYXJkcywKQ0sKClsxXQpodHRwczov
-L3d3dy45NmJvYXJkcy5vcmcvZG9jdW1lbnRhdGlvbi9Db25zdW1lckVkaXRpb24vTWVkaWFUZWtY
-MjAvQWRkaXRpb25hbERvY3MvCgo+IAo+IHJlZ2FyZHMKPiBQaGlsaXBwCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Kishon,
+
+Thanks for taking time to review the patch.
+
+This combo phy support PCIe and USB3 on HiSilicon STB SoC.  We will
+address all your comments and add USB3 support in the new version.
+
+On Wed, Oct 18, 2017 at 06:13:31PM +0530, Kishon Vijay Abraham I wrote:
+> > diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> > index 3a52dcb09566..11754b293fb4 100644
+> > --- a/drivers/phy/Makefile
+> > +++ b/drivers/phy/Makefile
+> > @@ -6,6 +6,7 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+> >  obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
+> >  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+> >  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+> > +
+> 
+> spurious blank space..
+
+Left from rebasing the change to latest kernel.  Fixed.  Thanks.
+
+> >  obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
+> >  obj-$(CONFIG_ARCH_MESON)		+= amlogic/
+> >  obj-$(CONFIG_LANTIQ)			+= lantiq/
+
+<snip>
+
+> > +static struct phy *histb_combphy_xlate(struct device *dev,
+> > +				       struct of_phandle_args *args)
+> > +{
+> > +	struct histb_combphy_priv *priv = dev_get_drvdata(dev);
+> > +
+> > +	if (args->args_count < 1) {
+> > +		dev_err(dev, "DT did not pass correct no of args\n");
+> > +		return ERR_PTR(-ENODEV);
+> > +	}
+> > +
+> > +	priv->mode = args->args[0];
+> > +
+> > +	if (priv->mode > COMBPHY_MODE_SATA) {
+> 
+> this should use generic bindings from include/dt-bindings/phy/phy.h.
+
+Great.  Thanks for the info.  Will use it.
+
+> > +		dev_err(dev, "DT did not pass correct phy mode\n");
+> > +		return ERR_PTR(-ENODEV);
+> > +	}
+> > +
+> > +	return priv->phy;
+> > +}
+
+<snip>
+
+> > +	phy_provider = devm_of_phy_provider_register(dev, histb_combphy_xlate);
+> > +	if (IS_ERR(phy_provider)) {
+> > +		dev_err(dev, "failed to register phy provider\n");
+> > +		return PTR_ERR(phy_provider);
+> > +	}
+> > +
+> > +	return 0;
+> 
+> return PTR_ERR_OR_ZERO(phy_provider) instead?
+
+Yes.  Thanks for the suggestion.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
