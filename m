@@ -1,54 +1,83 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] PCI: hisi: add PCIe driver support for HiSilicon STB SoCs
-Date: Mon, 23 Oct 2017 11:04:38 +0800
-Message-ID: <20171023030437.GH8700@dragon>
-References: <1508043971-23216-1-git-send-email-shawnguo@kernel.org>
- <20171020225248.GV6332@bhelgaas-glaptop.roam.corp.google.com>
+From: Lixin Wang <alan.1.wang@nokia-sbell.com>
+Subject: [PATCH v5] of: dynamic: fix memory leak related to properties of __of_node_dup
+Date: Mon, 23 Oct 2017 11:19:53 +0800
+Message-ID: <1508728793-1213-1-git-send-email-alan.1.wang@nokia-sbell.com>
+References: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171020225248.GV6332@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Jianguo Sun <sunjianguo1@huawei.com>, Rob Herring <robh+dt@kernel.org>, Jiancheng Xue <xuejiancheng@hisilicon.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1507858967-40416-1-git-send-email-alan.1.wang@nokia-sbell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lixin Wang <alan.1.wang@nokia-sbell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+If a node with no properties is dynamically added, then a property is
+dynamically added to the node, then the property is dynamically removed,
+the result will be node->properties == NULL and node->deadprops != NULL.
 
-Thanks for taking time to look at the patch.
+Add a separate function to release the properties in both lists.
 
-On Fri, Oct 20, 2017 at 05:52:48PM -0500, Bjorn Helgaas wrote:
-> On Sun, Oct 15, 2017 at 01:06:11PM +0800, Shawn Guo wrote:
-> > From: Jianguo Sun <sunjianguo1@huawei.com>
-> > 
-> > Add PCIe controller driver for HiSilicon STB SoCs,
-> > the controller is based on the DesignWare's PCIe core.
-> 
-> s/DesignWare's/DesignWare/
-> 
-> > Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > ---
-> >  .../bindings/pci/hisilicon-histb-pcie.txt          |  66 +++
-> >  drivers/pci/dwc/Kconfig                            |  10 +
-> >  drivers/pci/dwc/Makefile                           |   1 +
-> >  drivers/pci/dwc/pcie-histb.c                       | 469 +++++++++++++++++++++
-> >  4 files changed, 546 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> >  create mode 100644 drivers/pci/dwc/pcie-histb.c
-> 
-> Looks beautiful overall!
-> 
-> This needs a MAINTAINERS update so "./scripts/get_maintainer.pl -f" prints
-> something useful.
+Signed-off-by: Lixin Wang <alan.1.wang@nokia-sbell.com>
+---
+ v4 -> v5:
+ * fix the bug in v4, that the prop->next should be saved before release
+   the prop.
 
-Okay, I will add a MAINTAINERS entry for this driver.
+ drivers/of/dynamic.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-> A few minor nits below that I would fix myself, but since you need to
-> supply the MAINTAINERS update anyway, I'll let you do it :)
-
-Thanks for all the suggestions.  We fixed them all, and the code does
-look nicer.
-
-Shawn
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 301b6db..39d69d3 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -315,6 +315,18 @@ int of_detach_node(struct device_node *np)
+ }
+ EXPORT_SYMBOL_GPL(of_detach_node);
+ 
++static void property_list_free(struct property *prop_list)
++{
++	struct property *prop, *next;
++
++	for (prop = prop_list; prop != NULL; prop = next) {
++		next = prop->next;
++		kfree(prop->name);
++		kfree(prop->value);
++		kfree(prop);
++	}
++}
++
+ /**
+  * of_node_release() - release a dynamically allocated node
+  * @kref: kref element of the node to be released
+@@ -324,7 +336,6 @@ EXPORT_SYMBOL_GPL(of_detach_node);
+ void of_node_release(struct kobject *kobj)
+ {
+ 	struct device_node *node = kobj_to_device_node(kobj);
+-	struct property *prop = node->properties;
+ 
+ 	/* We should never be releasing nodes that haven't been detached. */
+ 	if (!of_node_check_flag(node, OF_DETACHED)) {
+@@ -335,18 +346,9 @@ void of_node_release(struct kobject *kobj)
+ 	if (!of_node_check_flag(node, OF_DYNAMIC))
+ 		return;
+ 
+-	while (prop) {
+-		struct property *next = prop->next;
+-		kfree(prop->name);
+-		kfree(prop->value);
+-		kfree(prop);
+-		prop = next;
++	property_list_free(node->properties);
++	property_list_free(node->deadprops);
+ 
+-		if (!prop) {
+-			prop = node->deadprops;
+-			node->deadprops = NULL;
+-		}
+-	}
+ 	kfree(node->full_name);
+ 	kfree(node->data);
+ 	kfree(node);
+-- 
+2.6.2
