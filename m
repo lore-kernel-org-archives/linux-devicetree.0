@@ -1,66 +1,92 @@
-From: Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH v3 05/13] irqchip: add initial support for ompic
-Date: Mon, 23 Oct 2017 21:57:27 +0900
-Message-ID: <20171023125727.GG2694@lianli.shorne-pla.net>
-References: <20171022031600.29612-1-shorne@gmail.com>
- <20171022031600.29612-6-shorne@gmail.com>
- <86d15egupi.fsf@arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] of: Devices with pci_epf_bus_type require DMA
+ configuration
+Date: Mon, 23 Oct 2017 14:05:00 +0100
+Message-ID: <037082e6-5abe-daf9-47aa-9586a4aead99@arm.com>
+References: <20171011080041.12918-1-kishon@ti.com>
+ <cae4b8e9-9944-6482-c12c-8ce87aea1487@arm.com>
+ <3599d3e2-d496-eac3-7179-2d1795fc059d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <86d15egupi.fsf@arm.com>
+In-Reply-To: <3599d3e2-d496-eac3-7179-2d1795fc059d@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Openrisc <openrisc@lists.librecores.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 09:00:09AM +0100, Marc Zyngier wrote:
-> On Sun, Oct 22 2017 at 12:15:52 pm BST, Stafford Horne <shorne@gmail.com> wrote:
-> > From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> >
-
-[...]
-
-> > +
-> > +	ret = setup_irq(irq, &ompi_ipi_irqaction);
-> > +	if (ret)
-> > +		goto out_irq_disp;
+On 23/10/17 06:43, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Is there a particular reason why this cannot be turned request_irq()
-> call? setup_irq is something we try to avoid these days...
-
-No reason, its just an old patch and I didn't know we should be avoiding
-setup_irq().
-
-I have just removed ompic_ipi_irqaction and replaced setup_irq() with this:
-
-	ret = request_irq(irq, ompic_ipi_handler, IRQF_PERCPU,
-				"ompic_ipi", NULL);
-	if (ret)
-		goto out_irq_disp;
-
-I did some testing and it looks to be working fine.
-
-> > +
-> > +	set_smp_cross_call(ompic_raise_softirq);
-> > +
-> > +	return 0;
-> > +
-> > +out_irq_disp:
-> > +	irq_dispose_mapping(irq);
-> > +out_unmap:
-> > +	iounmap(ompic_base);
-> > +	ompic_base = NULL;
-> > +	return ret;
-> > +}
-> > +IRQCHIP_DECLARE(ompic, "openrisc,ompic", ompic_of_init);
+> On Wednesday 11 October 2017 10:15 PM, Robin Murphy wrote:
+>> On 11/10/17 09:00, Kishon Vijay Abraham I wrote:
+>>> pci-epc-core.c invokes of_dma_configure in order to configure
+>>> the coherent_dma_mask/dma_mask of endpoint function device. This is
+>>> required for dma_alloc_coherent to succeed in pci function driver
+>>> (pci-epf-test.c). However after
+>>> commit 723288836628bc1c08 ("of: restrict DMA configuration"),
+>>> of_dma_configure doesn't configure the coherent_dma_mask/dma_mask
+>>> of endpoint function device (since it doesn't have dma-ranges
+>>> property), resulting in dma_alloc_coherent in pci endpoint function
+>>> driver to to fail. Fix it by making sure of_dma_configure configures
+>>> coherent_dma_mask/dma_mask irrespective of whether the node has
+>>> dma-ranges property or not.
+>>
+>> Frankly, what the endpoint stuff is doing looks wrong anyway. As I
+>> understand it, the endpoint functions aren't real devices, just a
+>> partitioning of resources - the only piece of hardware actually doing
+>> DMA is the EPC itself, which should already have been configured
+>> appropriately as a platform device.
 > 
-> Otherwise looks good to me.
+> EPF devices use EPC devices which in turn use the actual platform device for
+> configuring the hardware. IMO the devices in one layer shouldn't have to
+> explicitly use devices in another layer other than using clearly defined API's.
+> Here platform_device is the bottom later, above which is epc_device and on top
+> is epf_device.
 
-Thank You,
+Note that the "sysdev"-type model that I'm implying already has
+precedent elsewhere, e.g. in the USB layer. Since you already have
+things abstracted behind the pci_epf_{alloc,free}_space() API, this
+seems like a simple change to make.
 
-I will send another V once I get a bit more feedback on the other parts of the
-series.
+> The idea is just by doing the initial setup in the framework, the epf driver be
+> able to use APIs like dma_alloc_coherent using it's own *device* rather than
+> the EPC's "device".
 
--Stafford
+OK, but when would that actually happen? Please correct me if I've got
+it wrong, but as best I understand it, the hardware extent of the EPF is
+some registers controlling the config space that the EPC exposes to the
+other end of the PCI link - the only actual DMA happening will be in
+response to PCI traffic in and out of the EPF's BARs, between the EPC
+and the memory backing those BAR regions which is already controlled by
+your API. Sure, the EPF *driver* is free to access whatever memory it
+feels like, but as a software construct that doesn't constitute DMA.
+
+To put it another way, if an endpoint driver *does* call
+dma_alloc_coherent(epf_device, ...), what does it then do with the
+resulting DMA address?
+
+>> It seems to me that the EPF BAR allocations should just be using the EPC
+>> device directly, rather than trying to pretend the EPFs are distinct DMA
+>> masters.
+>>
+>> Furthermore, now that I've looked:
+>>
+>>> 	dma_addr_t phys_addr;
+>>
+>> please no :(
+>>
+>> (I can easily think of more than one system with an EP-capable DWC PCIe
+>> block integrated behind an IOMMU)
+> 
+> hmm.. haven't used IOMMU but won't setting up parent-child relationship between
+> EPC and EPF help in the case of IOMMU?
+
+I was merely referring to the characterisation throughout this code that
+a DMA address is a physical address; it isn't, for any number of reasons
+(IOMMUs are just the most obvious). Fortunately it's only a cosmetic
+naming problem, the actual usage looks OK.
+
+Robin.
