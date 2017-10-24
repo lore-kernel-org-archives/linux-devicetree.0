@@ -1,48 +1,34 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
-Date: Tue, 24 Oct 2017 23:12:04 +0800
-Message-ID: <20171024151202.GF6403@dragon>
-References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
- <20171023222850.ecavz6jm2mnoplea@rob-hp-laptop>
- <20171024064108.GC6403@dragon>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] livetree: avoid assertion of orphan phandles with overlays
+Date: Tue, 24 Oct 2017 10:21:10 -0500
+Message-ID: <CAL_JsqJAPKYf25pW-4awUHpovq-fxesG-E_rYjh8MGufVSYRBA@mail.gmail.com>
+References: <1508854458-9937-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171024064108.GC6403@dragon>
+In-Reply-To: <1508854458-9937-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 02:41:09PM +0800, Shawn Guo wrote:
-> > > +HiSilicon STB PCIE/SATA/USB3 PHY
-> > > +
-> > > +Properties:
-> > > +- compatible: Should be "hisilicon,hi3798cv200-combphy"
-> > > +- #phy-cells: Should be 1.  The cell number is used to select the phy mode:
-> > > +	0: PCIe mode
-> > > +	1: USB 3.0 mode
-> > > +	2: SATA mode
-> > > +- clocks: The phandle to clock provider and clock specifier pair.
-> > > +- resets: The phandle to reset controller and reset specifier pair.
-> > > +- hisilicon,peripheral-syscon: The phandle to the peripheral controller.
-> > 
-> > Could just be a child of the syscon instead?
-> 
-> It should be doable, but I do not fully understand the benefits of doing
-> that.
+On Tue, Oct 24, 2017 at 9:14 AM, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> wrote:
+> Right now, check_interrupts_property fails with overlays, as the phandle
+> for the interrupt-parent can be orphan. Avoid this by allowing the orphan
+> node to pass the assert check.
+>
+> The process_checks() call is also moved later during init sequence,
+> so that we can use the global variable generate_fixups to check if
+> we are compiling an overlay.
 
-Okay, I see that having it be child of syscon can save us this
-hisilicon,peripheral-syscon property, as the parent will just be the
-syscon device.  Also, if there is any register space only for phy
-device, we can define them as regular 'reg' property.
+This is fixed by [1].
 
-Let me know if I misunderstood your comment here.  Otherwise I will
-rework both combphy and inno-usb-phy patches to adopt your suggestion
-in v3 posting.  Thanks.
+David, BTW, you didn't push to kernel.org dtc repo. That's still the
+"official" one?
 
-Shawn
+Rob
+
+[1] https://github.com/dgibson/dtc/commit/c1e55a5513e9bca41dc78a0f20245cc928596a3a
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
