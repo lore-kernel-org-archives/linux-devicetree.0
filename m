@@ -1,41 +1,51 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [3/3] MIPS: jz4780: DTS: Probe the jz4740-watchdog driver from
- devicetree
-Date: Tue, 24 Oct 2017 15:43:41 +0200
-Message-ID: <S23990511AbdJXNoERCQml/20171024134404Z+1875@eddie.linux-mips.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Wim Van Sebroeck <wim@iguana.be>, linux-mips@linux-mips.org, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of supported chip names
+Date: Tue, 24 Oct 2017 14:50:32 +0100
+Message-ID: <1508853032-25229-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1505118928-3987-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1505118928-3987-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpMZSAyMiBvY3QuIDIwMTcgNToyNiBQTSwgR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2st
-dXMubmV0PiBhIMOpY3JpdCA6Cj4KPiBPbiBGcmksIFNlcCAwOCwgMjAxNyBhdCAwODozNTo1NVBN
-ICswMjAwLCBNYXRoaWV1IE1hbGF0ZXJyZSB3cm90ZTogCj4gPiBUaGUgano0NzQwLXdhdGNoZG9n
-IGRyaXZlciBzdXBwb3J0cyBib3RoIGp6NDc0MCAmIGp6NDc4MC4gCj4gPiAKPiA+IFNpZ25lZC1v
-ZmYtYnk6IE1hdGhpZXUgTWFsYXRlcnJlIDxtYWxhdEBkZWJpYW4ub3JnPiAKPgo+IEFja2VkLWJ5
-OiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+IAo+Cj4gPiAtLS0gCj4gPsKgIGFy
-Y2gvbWlwcy9ib290L2R0cy9pbmdlbmljL2p6NDc4MC5kdHNpIHwgNSArKysrKyAKPiA+wqAgMSBm
-aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSAKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2FyY2gv
-bWlwcy9ib290L2R0cy9pbmdlbmljL2p6NDc4MC5kdHNpIGIvYXJjaC9taXBzL2Jvb3QvZHRzL2lu
-Z2VuaWMvano0NzgwLmR0c2kgCj4gPiBpbmRleCA0ODUzZWY2N2IzYWIuLjMzZDdmNDkxODZkNiAx
-MDA2NDQgCj4gPiAtLS0gYS9hcmNoL21pcHMvYm9vdC9kdHMvaW5nZW5pYy9qejQ3ODAuZHRzaSAK
-PiA+ICsrKyBiL2FyY2gvbWlwcy9ib290L2R0cy9pbmdlbmljL2p6NDc4MC5kdHNpIAo+ID4gQEAg
-LTIwNyw2ICsyMDcsMTEgQEAgCj4gPsKgIHN0YXR1cyA9ICJkaXNhYmxlZCI7IAo+ID7CoCB9OyAK
-PiA+wqAgCj4gPiArIHdhdGNoZG9nOiBqejQ3ODAtd2F0Y2hkb2dAMTAwMDIwMDAgeyAKPiA+ICsg
-Y29tcGF0aWJsZSA9ICJpbmdlbmljLGp6NDc0MC13YXRjaGRvZyI7IAo+ID4gKyByZWcgPSA8MHgx
-MDAwMjAwMCAweDEwMD47IAo+ID4gKyB9OyAKPiA+ICsgCj4gPsKgIG5lbWM6IG5lbWNAMTM0MTAw
-MDAgeyAKPiA+wqAgY29tcGF0aWJsZSA9ICJpbmdlbmljLGp6NDc4MC1uZW1jIjsgCj4gPsKgIHJl
-ZyA9IDwweDEzNDEwMDAwIDB4MTAwMDA+OyAKClRoZSBub2RlIHNob3VsZCBiZSBuYW1lZCBqdXN0
-ICIgd2F0Y2hkb2dALi4uIiwgSSB0aGluay4=
+There are a few DT files that make use of sst25vf016b in their
+compatible strings, and the driver supports this chip already.
+This patch improves the documentation and therefore the result
+of ./scripts/checkpatch.pl.
+
+Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Signed-off-by: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+Thank you Rob, thank you Geert, and sorry for the delay on this one.
+Here is v2.
+
+Changes in v2:
+* fixed subject prefix
+* added changelog
+
+ Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+index 4cab5d8..bf56d77 100644
+--- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
++++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+@@ -31,6 +31,7 @@ Required properties:
+                  s25sl12801
+                  s25fl008k
+                  s25fl064k
++                 sst25vf016b
+                  sst25vf040b
+                  sst25wf040b
+                  m25p40
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
