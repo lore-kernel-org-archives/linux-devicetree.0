@@ -1,79 +1,140 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] phy: add inno-usb2-phy driver for hi3798cv200 SoC
-Date: Tue, 24 Oct 2017 14:49:20 +0800
-Message-ID: <20171024064919.GD6403@dragon>
-References: <1508078958-16966-1-git-send-email-shawnguo@kernel.org>
- <20171023223209.snq2xw3thjjwybmh@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Tue, 24 Oct 2017 09:37:55 +0200
+Message-ID: <20171024093755.501c9045@bbrezillon>
+References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
+        <CACxGe6vhYV5dbnNQXyRoPq=XSA5HOtpN0FCqyoKvGVbRu-aRqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171023223209.snq2xw3thjjwybmh@rob-hp-laptop>
+In-Reply-To: <CACxGe6vhYV5dbnNQXyRoPq=XSA5HOtpN0FCqyoKvGVbRu-aRqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 05:32:09PM -0500, Rob Herring wrote:
-> On Sun, Oct 15, 2017 at 10:49:18PM +0800, Shawn Guo wrote:
-> > From: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> > 
-> > It adds inno-usb2-phy driver for hi3798cv200 SoC USB 2.0 support.  One
-> > inno-usb2-phy device can support up to two PHY ports.  While there is
-> > device level reference clock and power reset to be controlled, each PHY
-> > port has its own utmi reset that needs to assert/de-assert as needed.
-> > 
-> > Hi3798cv200 needs to access PHY port0 register via particular peripheral
-> > syscon controller register to control PHY, like turning on PHY clock.
-> > 
-> > Signed-off-by: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> > Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt |  31 +++
-> >  drivers/phy/hisilicon/Kconfig                      |  10 +
-> >  drivers/phy/hisilicon/Makefile                     |   1 +
-> >  drivers/phy/hisilicon/phy-hisi-inno-usb2.c         | 223 +++++++++++++++++++++
-> >  4 files changed, 265 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> >  create mode 100644 drivers/phy/hisilicon/phy-hisi-inno-usb2.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> > new file mode 100644
-> > index 000000000000..4ef7af24a703
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> > @@ -0,0 +1,31 @@
-> > +HiSilicon INNO USB2 PHY
-> > +
-> > +Required properties:
-> > +- compatible: Should be one of the following strings:
-> > +	"hisilicon,inno-usb2-phy",
-> > +	"hisilicon,hi3798cv200-usb2-phy".
-> > +- #phy-cells: Should be 1. The specifier is the index of the PHY port to
-> > +  reference.
-> > +- hisilicon,peripheral-syscon: The phandle of syscon used to control PHY,
-> > +  followed by a integer cell which defines the syscon register offset used
-> > +  to talk to PHY.
+Hi Grant,
+
+On Thu, 19 Oct 2017 12:10:31 +0100
+Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+
+> Hi folks,
 > 
-> Same comments as combophy.
-
-If we agree that having the phy being child node gets us obvious
-benefits, I would be happy to change them all.
-
-> > +- clocks: The phandle and clock specifier pair for reference clock utmi_refclk.
+> I've flushed out the schedule. It is still a draft, but I've got names
+> against the topics and put them into a rough order.
 > 
-> 'clk' part of the name is redundant.
+> If your name is listed below, it means I've asked you to frame the
+> problem and moderate discussion for that topic. I'm *not* asking you
+> to present unless the topic is specifically listed as a presentation.
+> If you want you can have a slide or two, but you must get them to me
+> by Tuesday evening, 24 October. I want to keep the time fiddling with
+> projectors to a minimum.
+> 
+> Originally this was intended as a 1/2 day workshop, but given that we
+> have the room for the full day, I've spread things out to give a bit
+> more time for hallway track. I can also move things around if need be
+> to avoid conflicts with the maintainers summit and KVM forum. The
+> maintenance topics are in the afternoon under the assumption that
+> there are folks in the maintainers summit who will want to attend. The
+> tooling and schema topics are in the morning. I've also tried really
+> hard to preserve the breaks and lunch to give time for hallway
+> discussion.
+> 
+> As always, none of this is set in stone. If you have any specific
+> conflicts or concerns then please say so.
+> 
+> Cheers,
+> g.
+> 
+> ==Morning==
+> 9:30 Welcome and Schedule bashing (0:10) (Grant Likely)
+> 
+> ===Tooling & Schema===
+> 9:40 (5min) Encoding and Schema checking: Framing the problem (Grant Likely)
+> 9:45 (15min) DT YAML encoding overview (Pantelis Antoniou - presentation)
+> 10:00 (20min) YAML encoding discussion
+> 10:20 (15min) DT Schema format - option 1 (Pantelis Antoniou - presentation)
+> 10:35 (15min) DT Schema format - option 2 (Grant Likely - presentation)
+> 10:50 (20min) DT Schema discussion - what should go in the spec?
+> 
+> 11:10-11:50 [Break]
+> 
+> ===Runtime usage===
+> 11:50 (20min) Code Generation from DT (Kumar Gala - presentation)
+> 12:10 (20min) Runtime memory consumption (Rob Herring - presentation)
+> 
+> 12:30-14:30 [Lunch]
+> 
+> ==Afternoon==
+> ===DTS maintenance issues===
+> 14:30 (15min) Overlay maintenance plan (Bill Mills)
+> 14:45 (15min) Avoiding duplicate descriptions (Thomas Petazzoni)
+> 15:00 (15min) Criteria for accepting board files
+> 15:15 (15min) Location for maintaining bindings - how to handle
+> 'foreign bindings' (Boris Brezillon)
 
-Are you talking about the text utmi_refclk?  It's not something we put
-into 'clock-names' property, but just a text to tell what the clock is.
+Sorry for late reply, but I will not attend the Device Tree workshop.
+I still think the problem should be discussed and you seemed to have an
+opinion on this, so maybe you can lead the discussion.
 
-Shawn
+Regards,
 
-> > +- resets: The list of phandle and reset specifier pairs for each reset signal
-> > +  in reset-names.
-> > +- reset-names: Should contain "power_on", "utmi0" and "utmi1". The "utmi1"
-> > +  should exist only if the device has two PHY port.
+Boris
+
+> 15:30 (15min) Sharing Generic bindings (Geert Uytterhoeven)
+> 15:45 (15min) ABI Stability (Lucas Stach)
+> 
+> 16:00-16:30 [break and overflow discussion]
+> 
+> 16:30 (20min) DT health check (Ben Dooks)
+> 16:50 (15min) devicetree.org update (Grant Likely)
+> 17:05 (15min) EBBR Discussion (Grant Likely)
+> 17:20 Closing and feedback
+> 
+> 
+> On Mon, Oct 9, 2017 at 9:39 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > Kernel Summit is now just over 2 weeks away and it is time to pull
+> > together the schedule for the Devicetree workshop. Originally I
+> > planned on just an afternoon, but I've got the room for the whole day,
+> > so I've got a lot of flexibility on the schedule. Unscheduled time can
+> > be used for hacking.
+> >
+> > Date: 26 Oct 2017
+> > Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
+> > Location: Athens room - Hilton Prague
+> >
+> > If you plan to attend, make sure you update your OSSunmitE/ELCE
+> > registration to include the DT Workshop (log in to access and modify
+> > your registration):
+> >
+> > https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
+> >
+> > Here is my current list of topics in no particular order, including
+> > the topic moderator:
+> >
+> > Runtime memory consumption (Rob Herring)
+> > Overlay maintenance plan (TBC)
+> > Stable ABI for devicetree (TBC)
+> > DT YAML encoding (Pantelis Antoniou)
+> > DT Schema format - option 1 (Pantelis Antoniou)
+> > DT Schema format - option 2 (Grant Likely)
+> > Sharing Generic bindings (TBC)
+> > devicetree.org update (Grant)
+> >
+> > Reply to this email if you want to propose another topic.
+> >
+> > Reply privately if there is a particular topic you want to attend but
+> > you are unable to be there in the morning or afternoon. I'll put the
+> > actual agenda together a week out from the event.
+> >
+> > g.  
+> _______________________________________________
+> Ksummit-discuss mailing list
+> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
