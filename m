@@ -1,44 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] dt-bindings: display: msm: update clk names
-Date: Mon, 23 Oct 2017 19:16:54 -0500
-Message-ID: <20171024001654.frrq7e7ew32uw5cv@rob-hp-laptop>
-References: <20171017104958.24588-1-robdclark@gmail.com>
- <20171017104958.24588-5-robdclark@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] drm/exynos: Add driver for Exynos Scaler module
+Date: Mon, 23 Oct 2017 19:39:47 -0500
+Message-ID: <20171024003947.h2xxnnkh4czo7guv@rob-hp-laptop>
+References: <20171017110752.25096-1-m.szyprowski@samsung.com>
+ <CGME20171017110814eucas1p11e7519e68e67c0d75aa20e97a35acac5@eucas1p1.samsung.com>
+ <20171017110752.25096-8-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171017104958.24588-5-robdclark@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+In-Reply-To: <20171017110752.25096-8-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tobias Jakobi <tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBPY3QgMTcsIDIwMTcgYXQgMDY6NDk6NThBTSAtMDQwMCwgUm9iIENsYXJrIHdyb3Rl
-Ogo+IE5vdyB0aGF0IGRybS9tc20gaXMgY29udmVydGVkIG92ZXIgdG8gdXNlIG1zbV9nZXRfY2xr
-KCkgZXZlcnl3aGVyZSAodGhhdAo+IG1hdHRlcnMpLCB3aGljaCBoYW5kbGVzIGZhbGxpbmcgYmFj
-ayB0byBsb29raW5nIGZvciBhIGNsb2NrIHdpdGggdGhlCj4gIl9jbGsiIHN1ZmZpeCwgd2UgY2Fu
-IHJlbW92ZSAiX2NsayIgZnJvbSB0aGUgZG9jdW1lbnRhdGlvbiBzbyB0aGF0IG5ldwo+IGR0cyBm
-aWxlcyBhZGRlZCBkbyBub3QgaW5jbHVkZSAiX2NsayIgaW4gdGhlIG5hbWUuCj4gCj4gUHJldmlv
-dXNseSB3ZSB3ZXJlIGRvaW5nIHRoaXMgZm9yIHRoZSBtb3JlIHJlY2VudGx5IHVwc3RyZWFtZWQg
-YmluZGluZ3MKPiBidXQgbm90IGZvciAobmVhcmx5KSBhbGwuCj4gCj4gU2lnbmVkLW9mZi1ieTog
-Um9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21zbS9kc2kudHh0ICAgICAgICB8IDM2ICsrKysrKysrKysrLS0tLS0t
-LS0tLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZWRwLnR4dCAgICAg
-ICAgfCAyMCArKysrKystLS0tLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
-c20vaGRtaS50eHQgICAgICAgfCAgOCArKy0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L21zbS9tZHA1LnR4dCAgICAgICB8IDMyICsrKysrKysrKy0tLS0tLS0tLS0KPiAgNCBm
-aWxlcyBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspLCA0OCBkZWxldGlvbnMoLSkKCkFja2VkLWJ5
-OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Oct 17, 2017 at 01:07:50PM +0200, Marek Szyprowski wrote:
+> From: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> Exynos Scaler is a hardware module, which processes graphic data fetched
+> from memory and transfers the resultant dato another memory buffer.
+> Graphics data can be up/down-scaled, rotated, flipped and converted color
+> space. Scaler hardware modules are a part of Exynos5420 and newer Exynos
+> SoCs.
+> 
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpu/samsung-scaler.txt     |  26 +
+
+In the future, please split bindings to separate patches.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/gpu/drm/exynos/Kconfig                     |   6 +
+>  drivers/gpu/drm/exynos/Makefile                    |   1 +
+>  drivers/gpu/drm/exynos/exynos_drm_drv.c            |   3 +
+>  drivers/gpu/drm/exynos/exynos_drm_drv.h            |   1 +
+>  drivers/gpu/drm/exynos/exynos_drm_ipp.h            |   4 +
+>  drivers/gpu/drm/exynos/exynos_drm_scaler.c         | 717 +++++++++++++++++++++
+>  drivers/gpu/drm/exynos/regs-scaler.h               | 426 ++++++++++++
+>  8 files changed, 1184 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_scaler.c
+>  create mode 100644 drivers/gpu/drm/exynos/regs-scaler.h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
