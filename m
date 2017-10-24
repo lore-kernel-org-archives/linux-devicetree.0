@@ -1,72 +1,44 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
-Date: Tue, 24 Oct 2017 14:41:09 +0800
-Message-ID: <20171024064108.GC6403@dragon>
-References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
- <20171023222850.ecavz6jm2mnoplea@rob-hp-laptop>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH V3 0/2] Tegra PCIe end point config space map code refactoring
+Date: Tue, 24 Oct 2017 12:14:47 +0530
+Message-ID: <1508827489-10842-1-git-send-email-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171023222850.ecavz6jm2mnoplea@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: treding@nvidia.com, bhelgaas@google.com
+Cc: linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+PCIe host controller in Tegra SoCs has 1GB of aperture available
+for mapping end points config space, IO and BARs. In that, currently
+256MB is being reserved for mapping end points configuration space
+which leaves less memory space available for mapping end points BARs
+on some of the platforms.
+This patch series attempts to map only 4K space from 1GB aperture to
+access end points configuration space.
 
-On Mon, Oct 23, 2017 at 05:28:50PM -0500, Rob Herring wrote:
-> On Sun, Oct 15, 2017 at 12:48:02PM +0800, Shawn Guo wrote:
-> > From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > 
-> > Add combo phy driver for HiSilicon STB SoCs. This phy can be
-> > used as pcie-phy, sata-phy or usb-phy.
-> > 
-> > Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  .../bindings/phy/phy-hi3798cv200-combphy.txt       |  21 ++
-> 
-> Please split bindings to separate patch especially for new ones.
+Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
+to use for BAR mapping) physical space as well as kernel virtual mapping space,
+it saves only kernel virtual address space in T30, T124, T132 and T210.
 
-Yeah, have already done that in v2 [1].
+NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
+merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
+For older platforms (T20, T30, T124, T132, T210), this change works fine without any
+DT modifications
 
-> >  drivers/phy/Makefile                               |   1 +
-> >  drivers/phy/hisilicon/Kconfig                      |   9 +
-> >  drivers/phy/hisilicon/Makefile                     |   1 +
-> >  drivers/phy/hisilicon/phy-histb-combphy.c          | 236 +++++++++++++++++++++
-> >  5 files changed, 268 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
-> >  create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
-> > new file mode 100644
-> > index 000000000000..c7121cdcaed9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
-> > @@ -0,0 +1,21 @@
-> > +HiSilicon STB PCIE/SATA/USB3 PHY
-> > +
-> > +Properties:
-> > +- compatible: Should be "hisilicon,hi3798cv200-combphy"
-> > +- #phy-cells: Should be 1.  The cell number is used to select the phy mode:
-> > +	0: PCIe mode
-> > +	1: USB 3.0 mode
-> > +	2: SATA mode
-> > +- clocks: The phandle to clock provider and clock specifier pair.
-> > +- resets: The phandle to reset controller and reset specifier pair.
-> > +- hisilicon,peripheral-syscon: The phandle to the peripheral controller.
-> 
-> Could just be a child of the syscon instead?
+Testing Done on T124, T210 & T186:
+ Enumeration and basic functionality of immediate devices
+ Enumeration of devices behind a PCIe switch
+ Complete 4K configuration space access
 
-It should be doable, but I do not fully understand the benefits of doing
-that.
+Vidya Sagar (2):
+  PCI: tegra: refactor config space mapping code
+  ARM64: tegra: limit PCIe config space mapping to 4K for T186
 
-Shawn
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
+ drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
+ 2 files changed, 44 insertions(+), 89 deletions(-)
 
-[1] https://www.spinics.net/lists/devicetree/msg199804.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
