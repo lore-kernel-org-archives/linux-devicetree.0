@@ -1,47 +1,138 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC documentation
-Date: Tue, 24 Oct 2017 09:35:53 +0800
-Message-ID: <CAMz4kuLq=5G9R2bUOVSRqEPLr-Kc0CB8mGa-U1CcRbQvN1NdWA@mail.gmail.com>
-References: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
- <20171023224127.5utbp2t3ihn34mrz@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171023224127.5utbp2t3ihn34mrz@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: memeka <mihailescu2m@gmail.com>
+Subject: [PATCH v2] ARM: dts: exynos: add cpu perf counters to Exynos54xx boards
+Date: Tue, 24 Oct 2017 12:59:56 +1030
+Message-ID: <1508812196-14478-1-git-send-email-mihailescu2m@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: memeka <mihailescu2m@gmail.com>, Willy Wolff <willy.mh.wolff@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Enable support for ARM Performance Monitoring Units available in Cortex-A7
+and Cortex-A15 CPU cores for Exynos54xx SoCs (5410, 5420 and 5422/5800).
 
-On 24 October 2017 at 06:41, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Oct 16, 2017 at 08:03:14PM +0800, Baolin Wang wrote:
->> This patch adds the binding documentation for Spreadtrum SC27xx series
->> PMIC device.
->>
->> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->> Changes since v1:
->>  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
->>  - Modify compatile string property.
->>  - Modify reg property.
->>  - Remove redundant 'pmic' label.
->>  - Change 'should be' to 'must be' for cells properties.
->> ---
->>  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   40 ++++++++++++++++++++
->>  1 file changed, 40 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The PMUs interrupts are defined in the common exynos54xx.dtsi device tree,
+but the PMUs are enabled and have their interrupt CPU affinity defined
+next to each SoC's cpus node.
 
-Thanks Rob and Lee. Lee, could you apply this patchset into your next
-branch? Thanks.
+Tested with perf on Odroid XU4 (Exynos5422):
+armv7_cortex_a7 PMU driver: 5 counters available
+armv7_cortex_a15 PMU driver: 7 counters available
 
+Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Signed-off-by: Willy Wolff <willy.mh.wolff@gmail.com>
+
+---
+Changes since v1:
+ - both Cortex-A7 and Cortex-A15 PMUs are now defined in exynos54xx.dtsi
+ - CPU affinity is defined for each SoC *after* the cpus node entry
+ - PMUs are disabled in exynos54xx.dtsi and enabled for each SoC
+ - cpus labels have been fixed in the interrupt-affinity property for
+   Exynos5410 and Exynos5420 SoCs
+
+---
+ arch/arm/boot/dts/exynos5410.dtsi      |  8 ++++++++
+ arch/arm/boot/dts/exynos5420-cpus.dtsi | 16 ++++++++++++++++
+ arch/arm/boot/dts/exynos5422-cpus.dtsi | 16 ++++++++++++++++
+ arch/arm/boot/dts/exynos54xx.dtsi      | 20 ++++++++++++++++++++
+ 4 files changed, 60 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
+index 7eab4bc..f42b04b 100644
+--- a/arch/arm/boot/dts/exynos5410.dtsi
++++ b/arch/arm/boot/dts/exynos5410.dtsi
+@@ -428,4 +428,12 @@
+ 	samsung,syscon-phandle = <&pmu_system_controller>;
+ };
+ 
++&arm_a15_pmu {
++	interrupt-affinity = <&cpu0>,
++		<&cpu1>,
++		<&cpu2>,
++		<&cpu3>;
++	status = "okay";
++};
++
+ #include "exynos5410-pinctrl.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+index 5c052d7..518b7d8 100644
+--- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+@@ -124,3 +124,19 @@
+ 		};
+ 	};
+ };
++
++&arm_a7_pmu {
++	interrupt-affinity = <&cpu4>,
++		<&cpu5>,
++		<&cpu4>,
++		<&cpu5>;
++	status = "okay";
++};
++
++&arm_a15_pmu {
++	interrupt-affinity = <&cpu0>,
++		<&cpu1>,
++		<&cpu2>,
++		<&cpu3>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+index ab4c718..92676be 100644
+--- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+@@ -131,3 +131,19 @@
+ 		};
+ 	};
+ };
++
++&arm_a7_pmu {
++	interrupt-affinity = <&cpu0>,
++		<&cpu1>,
++		<&cpu2>,
++		<&cpu3>;
++	status = "okay";
++};
++
++&arm_a15_pmu {
++	interrupt-affinity = <&cpu4>,
++		<&cpu5>,
++		<&cpu6>,
++		<&cpu7>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index 8ca4fef..f0bd27d 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -79,6 +79,26 @@
+ 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		arm_a7_pmu: arm-a7-pmu {
++			compatible = "arm,cortex-a7-pmu";
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		arm_a15_pmu: arm-a15-pmu {
++			compatible = "arm,cortex-a15-pmu";
++			interrupt-parent = <&combiner>;
++			interrupts = <1 2>,
++				<7 0>,
++				<16 6>,
++				<19 2>;
++			status = "disabled";
++		};
++
+ 		sss: sss@10830000 {
+ 			compatible = "samsung,exynos4210-secss";
+ 			reg = <0x10830000 0x300>;
 -- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
