@@ -1,54 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 1/3] regulator: bindings: Add properties for
- coupled regulators
-Date: Tue, 24 Oct 2017 13:58:01 -0500
-Message-ID: <20171024185801.bq27wszp7socsxqx@rob-hp-laptop>
-References: <1508330822-8039-1-git-send-email-m.purski@samsung.com>
- <CGME20171018124727eucas1p255ccce41852d5585640f2d97153d2fa8@eucas1p2.samsung.com>
- <1508330822-8039-2-git-send-email-m.purski@samsung.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 10/10] of: mdio: Prevent
+ of_mdiobus_register from scanning mdio-mux nodes
+Date: Tue, 24 Oct 2017 21:02:26 +0200
+Message-ID: <20171024190226.GA23866@Red>
+References: <20171018114458.17891-1-clabbe.montjoie@gmail.com>
+ <20171018114458.17891-11-clabbe.montjoie@gmail.com>
+ <20171024184654.ggfrsrjd3nobku5n@rob-hp-laptop>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBRU4X3HQKGQE5JDFV3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1508330822-8039-2-git-send-email-m.purski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <20171024184654.ggfrsrjd3nobku5n@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 02:47:00PM +0200, Maciej Purski wrote:
-> Some regulators require keeping their voltage spread below defined
-> max_spread.
+On Tue, Oct 24, 2017 at 01:46:54PM -0500, Rob Herring wrote:
+> On Wed, Oct 18, 2017 at 01:44:58PM +0200, Corentin Labbe wrote:
+> > Each child node of an MDIO node is scanned as a PHY when calling
+> > of_mdiobus_register() givint the following result:
+> > [   18.175379] mdio_bus stmmac-0: /soc/ethernet@1c30000/mdio/mdio-mux has invalid PHY address
+> > [   18.175408] mdio_bus stmmac-0: scan phy mdio-mux at address 0
+> > [   18.175450] mdio_bus stmmac-0: scan phy mdio-mux at address 1
+> > [...]
+> > [   18.176420] mdio_bus stmmac-0: scan phy mdio-mux at address 30
+> > [   18.176452] mdio_bus stmmac-0: scan phy mdio-mux at address 31
+> > 
+> > Since mdio-mux nodes are not PHY, this patch a way to to not scan
+> > them.
 > 
-> Add properties to provide information on regulators' coupling.
-> 
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  Documentation/devicetree/bindings/regulator/regulator.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-> index 378f6dc..6769565 100644
-> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-> @@ -60,6 +60,10 @@ Optional properties:
->  	0: Disable active discharge.
->  	1: Enable active discharge.
->  	Absence of this property will leave configuration to default.
-> +- regulator-coupled-with: Phandle to regulators with which the regulator
-> +  should be coupled. Allow up to 9 phandles.
+> This can be dropped now, right?
 
-9? Sounds like a driver detail and pretty arbitrary.
-
-Is this linkage 2-way meaning 2 coupled regulators both have links to 
-the other one? If so, then what happens when you have a high number? If 
-not, how does one decide which regulator has this property? 
-
-> +- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
-> +  in microvolts.
->  
->  Deprecated properties:
->  - regulator-compatible: If a regulator chip contains multiple
-> -- 
-> 2.7.4
-> 
+Yes and it is dropped in my two last serie.
+Forgot to said it in changelog
