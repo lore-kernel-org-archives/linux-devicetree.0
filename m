@@ -1,56 +1,78 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: stm32: add support for diff
- channels
-Date: Tue, 24 Oct 2017 11:41:38 -0500
-Message-ID: <20171024164138.arnjrlw4pmk5xaqy@rob-hp-laptop>
-References: <1508246145-19417-1-git-send-email-fabrice.gasnier@st.com>
- <1508246145-19417-2-git-send-email-fabrice.gasnier@st.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] livetree: avoid assertion of orphan phandles with
+ overlays
+Date: Tue, 24 Oct 2017 18:07:34 +0200
+Message-ID: <20171024160734.GE15297@umbus>
+References: <1508854458-9937-1-git-send-email-t-kristo@ti.com>
+ <CAL_JsqJAPKYf25pW-4awUHpovq-fxesG-E_rYjh8MGufVSYRBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PPYy/fEw/8QCHSq3"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1508246145-19417-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <CAL_JsqJAPKYf25pW-4awUHpovq-fxesG-E_rYjh8MGufVSYRBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 03:15:43PM +0200, Fabrice Gasnier wrote:
-> STM32H7 ADC channels may be configured either as single-ended or
-> differential.
-> Add 'st,adc-diff-channels' property to support differential channels.
-> Differential channels are defined as a pair of positive and negative
-> inputs: vinp & vinn.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> index 48bfcaa3..c3c8de1 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> @@ -62,6 +62,12 @@ Required properties:
->  - st,adc-channels: List of single-ended channels muxed for this ADC.
->    It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
->    from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
-> +- st,adc-diff-channels: List of differential channels muxed for this ADC.
-> +  Depending on part used, some channels can be configured as differential
-> +  instead of single-ended (e.g. stm32h7). List here positive and negative
-> +  inputs pairs as <vinp vinn>, <vinp vinn>,... vinp and vinn are numbered
-> +  from 0 to 19 on stm32h7)
-> +  Note: At least one of "st,adc-channels" or "st,adc-diff-channels" is required.
 
-Wouldn't both present be invalid?
+--PPYy/fEw/8QCHSq3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
->    Documentation/devicetree/bindings/iio/iio-bindings.txt
->  
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Oct 24, 2017 at 10:21:10AM -0500, Rob Herring wrote:
+> On Tue, Oct 24, 2017 at 9:14 AM, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> wrote:
+> > Right now, check_interrupts_property fails with overlays, as the phandle
+> > for the interrupt-parent can be orphan. Avoid this by allowing the orph=
+an
+> > node to pass the assert check.
+> >
+> > The process_checks() call is also moved later during init sequence,
+> > so that we can use the global variable generate_fixups to check if
+> > we are compiling an overlay.
+>=20
+> This is fixed by [1].
+>=20
+> David, BTW, you didn't push to kernel.org dtc repo. That's still the
+> "official" one?
+
+Yess.  I usually push to github first, wait for the Travis build to
+complete then push to kernel.org, but I got distracted and forgot to
+finish that.  Fixed now.
+
+>=20
+> Rob
+>=20
+> [1] https://github.com/dgibson/dtc/commit/c1e55a5513e9bca41dc78a0f20245cc=
+928596a3a
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--PPYy/fEw/8QCHSq3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlnvZUAACgkQbDjKyiDZ
+s5J68xAA0YJ6ldzdKV3fwOvEDNluWUssWbGmLuZngUWqAAAho8mzqDUH/CvuAHAs
+ueebrY+pp965b6aTQdCWDTfELRmkkVx2gAVYpU5BIWNh0hFuzoh06JTgBfrcqggr
+EePiEjlwK3yxrifpxP7ZJzZwn4Lta3pUGvRMM62v9HVx7j+vhGCSAX43iBIs06Oz
+QK9xXvb/brcZ6bA1mZ+FeGHC/2tcpSFbz+QJ25wcZ1dUex4q1vP7//+LLabZWTFu
+tQvFAJerTvASAUK+sTyGSyW61wCkWfTYqLPHobJ2ze/k3TdyPU+Z9Jfgdo2pbqx/
+/xtCh9yP+4HJZiaO/B/FGFUydZLlMNB+nAkbEV8C12Vg2gXSdwXJkMVH8/JLxUpV
+Tc7t1xxWh9/6P4Ag4bw9fN+BMHATNMgTpSvlM+bnHVQXLD2HSWlVM4Uf50/3fgZi
+KCwnL9pXNI9t7TmqtYHLPd4xKu9FvTPGGLgzNxzB7DuD7vmD1Uoso9zRi9F3uONO
+lMZ0g0XvWO3MbcmA0W78qRFlWw9ocagZ1kBvn3WdoCYm8zA4yvqW90d3VQmHTW2o
+ltgWgpH3zGKferMZghwXluIOw2fWiYmqlFNEfk2EBZ943IgU+S+tsldVt2cHfeN8
+7OwJ4oqudJZsc0uL0epDdY0CKfl5vq6OJkXS6ykJINa8EDYcDLY=
+=GZd9
+-----END PGP SIGNATURE-----
+
+--PPYy/fEw/8QCHSq3--
