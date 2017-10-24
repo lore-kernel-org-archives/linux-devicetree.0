@@ -1,94 +1,72 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: Re: [PATCH 2/3] drivers: phy: broadcom: Add driver for Cygnus USB phy controller
-Date: Tue, 24 Oct 2017 12:11:00 +0530
-Message-ID: <CAAFb_vo-M=2sSCCvzesDiOT9F-RN0HfwwijKXWDvKYL1OdWqmA@mail.gmail.com>
-References: <1508819822-29956-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1508819822-29956-3-git-send-email-raveendra.padasalagi@broadcom.com> <e1b26a08cc999ddfabd0e1fedd5d772d@milecki.pl>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] phy: add combo phy driver for HiSilicon STB SoCs
+Date: Tue, 24 Oct 2017 14:41:09 +0800
+Message-ID: <20171024064108.GC6403@dragon>
+References: <1508042882-20922-1-git-send-email-shawnguo@kernel.org>
+ <20171023222850.ecavz6jm2mnoplea@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e1b26a08cc999ddfabd0e1fedd5d772d@milecki.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Raviteja Garimella <raviteja.garimella@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171023222850.ecavz6jm2mnoplea@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 11:16 AM, Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl=
-> wrote:
-> On 2017-10-24 06:37, Raveendra Padasalagi wrote:
->>
->> Add driver for Broadcom's USB phy controller's used in Cygnus
->> familyof SoC. Cygnus has three USB phy controller's, port 0,
->> port 1 provides USB host functionality and port 2 can be configured
->> for host/device role.
->>
->> Configuration of host/device role for port 2 is achieved based on
->> the extcon events, the driver registers to extcon framework to get
->> appropriate connect events for Host/Device cables connect/disconnect
->> states based on VBUS and ID interrupts.
->
->
-> Minor issues commented inline.
->
->
->> +#define USB2_IDM_IDM_IO_CONTROL_DIRECT_OFFSET          0x0408
->> +#define USB2_IDM_IDM_IO_CONTROL_DIRECT_CLK_ENABLE      BIT(0)
->
->
-> Here you define reg bits using BIT(n).
->
->
->> +#define SUSPEND_OVERRIDE_0                             13
->> +#define SUSPEND_OVERRIDE_1                             14
->> +#define SUSPEND_OVERRIDE_2                             15
->> +#define USB2_IDM_IDM_RESET_CONTROL_OFFSET              0x0800
->> +#define USB2_IDM_IDM_RESET_CONTROL__RESET              0
->
->
-> And here without BIT(n). Either is fine but it may be better to be
-> consistent about it.
+Hi Rob,
 
-Thanks, will fix it in the next version of the patch.
+On Mon, Oct 23, 2017 at 05:28:50PM -0500, Rob Herring wrote:
+> On Sun, Oct 15, 2017 at 12:48:02PM +0800, Shawn Guo wrote:
+> > From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > 
+> > Add combo phy driver for HiSilicon STB SoCs. This phy can be
+> > used as pcie-phy, sata-phy or usb-phy.
+> > 
+> > Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  .../bindings/phy/phy-hi3798cv200-combphy.txt       |  21 ++
+> 
+> Please split bindings to separate patch especially for new ones.
 
->
->
->> +static int cygnus_phy_probe(struct platform_device *pdev)
->> +{
->> +       struct resource *res;
->> +       struct cygnus_phy_driver *phy_driver;
->> +       struct phy_provider *phy_provider;
->> +       int i, ret;
->> +       u32 reg_val;
->> +       struct device *dev =3D &pdev->dev;
->> +       struct device_node *node =3D dev->of_node;
->> +
->> +       /* allocate memory for each phy instance */
->> +       phy_driver =3D devm_kzalloc(dev, sizeof(struct cygnus_phy_driver=
-),
->> +                                 GFP_KERNEL);
->> +       if (!phy_driver)
->> +               return -ENOMEM;
->> +
->> +       phy_driver->num_phys =3D of_get_child_count(node);
->> +
->> +       if (phy_driver->num_phys =3D=3D 0) {
->> +               dev_err(dev, "PHY no child node\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       phy_driver->instances =3D devm_kcalloc(dev, phy_driver->num_phys=
-,
->> +                                            sizeof(struct
->> cygnus_phy_instance),
->> +                                            GFP_KERNEL);
->
->
-> I don't think kcalloc is safe here. E.g. In cygnus_phy_shutdown you
-> iterate over all instances reading the .power value. If
-> cygnus_phy_shutdown gets called before having each instance powered up,
-> you'll read random memory as .power value.
+Yeah, have already done that in v2 [1].
 
-Yes, Need to use devm_kzalloc() to make sure contents of
-phy_driver->instances is zero initialized.
-Will fix it in the next patch.
+> >  drivers/phy/Makefile                               |   1 +
+> >  drivers/phy/hisilicon/Kconfig                      |   9 +
+> >  drivers/phy/hisilicon/Makefile                     |   1 +
+> >  drivers/phy/hisilicon/phy-histb-combphy.c          | 236 +++++++++++++++++++++
+> >  5 files changed, 268 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+> >  create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+> > new file mode 100644
+> > index 000000000000..c7121cdcaed9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+> > @@ -0,0 +1,21 @@
+> > +HiSilicon STB PCIE/SATA/USB3 PHY
+> > +
+> > +Properties:
+> > +- compatible: Should be "hisilicon,hi3798cv200-combphy"
+> > +- #phy-cells: Should be 1.  The cell number is used to select the phy mode:
+> > +	0: PCIe mode
+> > +	1: USB 3.0 mode
+> > +	2: SATA mode
+> > +- clocks: The phandle to clock provider and clock specifier pair.
+> > +- resets: The phandle to reset controller and reset specifier pair.
+> > +- hisilicon,peripheral-syscon: The phandle to the peripheral controller.
+> 
+> Could just be a child of the syscon instead?
+
+It should be doable, but I do not fully understand the benefits of doing
+that.
+
+Shawn
+
+[1] https://www.spinics.net/lists/devicetree/msg199804.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
