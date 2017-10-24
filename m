@@ -1,141 +1,235 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
- (26 Oct 2017)
-Date: Tue, 24 Oct 2017 09:37:55 +0200
-Message-ID: <20171024093755.501c9045@bbrezillon>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
-        <CACxGe6vhYV5dbnNQXyRoPq=XSA5HOtpN0FCqyoKvGVbRu-aRqA@mail.gmail.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v6 02/12] mmc: mediatek: add support of mt2701/mt2712
+Date: Tue, 24 Oct 2017 15:58:26 +0800
+Message-ID: <1508831906.29850.42.camel@mtkswgap22>
+References: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
+         <1508118399-21828-3-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vhYV5dbnNQXyRoPq=XSA5HOtpN0FCqyoKvGVbRu-aRqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1508118399-21828-3-git-send-email-chaotian.jing@mediatek.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chaotian Jing <chaotian.jing@mediatek.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, yong mao <yong.mao@mediatek.com>, Phong LE <ple@baylibre.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mmc@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi, 
 
-On Thu, 19 Oct 2017 12:10:31 +0100
-Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+I've tested those patches on the bpi-r2 board [1] and so far they work
+fine correctly. The below are some tests using lmdd on the board.
 
-> Hi folks,
-> 
-> I've flushed out the schedule. It is still a draft, but I've got names
-> against the topics and put them into a rough order.
-> 
-> If your name is listed below, it means I've asked you to frame the
-> problem and moderate discussion for that topic. I'm *not* asking you
-> to present unless the topic is specifically listed as a presentation.
-> If you want you can have a slide or two, but you must get them to me
-> by Tuesday evening, 24 October. I want to keep the time fiddling with
-> projectors to a minimum.
-> 
-> Originally this was intended as a 1/2 day workshop, but given that we
-> have the room for the full day, I've spread things out to give a bit
-> more time for hallway track. I can also move things around if need be
-> to avoid conflicts with the maintainers summit and KVM forum. The
-> maintenance topics are in the afternoon under the assumption that
-> there are folks in the maintainers summit who will want to attend. The
-> tooling and schema topics are in the morning. I've also tried really
-> hard to preserve the breaks and lunch to give time for hallway
-> discussion.
-> 
-> As always, none of this is set in stone. If you have any specific
-> conflicts or concerns then please say so.
-> 
-> Cheers,
-> g.
-> 
-> ==Morning==
-> 9:30 Welcome and Schedule bashing (0:10) (Grant Likely)
-> 
-> ===Tooling & Schema===
-> 9:40 (5min) Encoding and Schema checking: Framing the problem (Grant Likely)
-> 9:45 (15min) DT YAML encoding overview (Pantelis Antoniou - presentation)
-> 10:00 (20min) YAML encoding discussion
-> 10:20 (15min) DT Schema format - option 1 (Pantelis Antoniou - presentation)
-> 10:35 (15min) DT Schema format - option 2 (Grant Likely - presentation)
-> 10:50 (20min) DT Schema discussion - what should go in the spec?
-> 
-> 11:10-11:50 [Break]
-> 
-> ===Runtime usage===
-> 11:50 (20min) Code Generation from DT (Kumar Gala - presentation)
-> 12:10 (20min) Runtime memory consumption (Rob Herring - presentation)
-> 
-> 12:30-14:30 [Lunch]
-> 
-> ==Afternoon==
-> ===DTS maintenance issues===
-> 14:30 (15min) Overlay maintenance plan (Bill Mills)
-> 14:45 (15min) Avoiding duplicate descriptions (Thomas Petazzoni)
-> 15:00 (15min) Criteria for accepting board files
-> 15:15 (15min) Location for maintaining bindings - how to handle
-> 'foreign bindings' (Boris Brezillon)
+a. emmc with high-speed mode
 
-Sorry for late reply, but I will not attend the Device Tree workshop.
-I still think the problem should be discussed and you seemed to have an
-opinion on this, so maybe you can lead the discussion.
+reading
+# lmdd of=internal if=/dev/mmcblk0p3 count=100000  fsync=1
+819.2000 MB in 34.5092 secs, 23.7386 MB/sec
 
-Regards,
+writing
+# lmdd if=internal of=/dev/mmcblk0p3 count=100000  fsync=1
+819.2000 MB in 42.9084 secs, 19.0918 MB/sec
 
-Boris
+b. sd card with Apacer 16G, high-speed speed
 
-> 15:30 (15min) Sharing Generic bindings (Geert Uytterhoeven)
-> 15:45 (15min) ABI Stability (Lucas Stach)
-> 
-> 16:00-16:30 [break and overflow discussion]
-> 
-> 16:30 (20min) DT health check (Ben Dooks)
-> 16:50 (15min) devicetree.org update (Grant Likely)
-> 17:05 (15min) EBBR Discussion (Grant Likely)
-> 17:20 Closing and feedback
-> 
-> 
-> On Mon, Oct 9, 2017 at 9:39 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > Kernel Summit is now just over 2 weeks away and it is time to pull
-> > together the schedule for the Devicetree workshop. Originally I
-> > planned on just an afternoon, but I've got the room for the whole day,
-> > so I've got a lot of flexibility on the schedule. Unscheduled time can
-> > be used for hacking.
-> >
-> > Date: 26 Oct 2017
-> > Time: 9:00am-5:30pm (Lunch from 12:30-2:30)
-> > Location: Athens room - Hilton Prague
-> >
-> > If you plan to attend, make sure you update your OSSunmitE/ELCE
-> > registration to include the DT Workshop (log in to access and modify
-> > your registration):
-> >
-> > https://www.regonline.com/register/login.aspx?eventID=1883377&MethodId=0&EventsessionId=&Email_Address=&membershipID=
-> >
-> > Here is my current list of topics in no particular order, including
-> > the topic moderator:
-> >
-> > Runtime memory consumption (Rob Herring)
-> > Overlay maintenance plan (TBC)
-> > Stable ABI for devicetree (TBC)
-> > DT YAML encoding (Pantelis Antoniou)
-> > DT Schema format - option 1 (Pantelis Antoniou)
-> > DT Schema format - option 2 (Grant Likely)
-> > Sharing Generic bindings (TBC)
-> > devicetree.org update (Grant)
-> >
-> > Reply to this email if you want to propose another topic.
-> >
-> > Reply privately if there is a particular topic you want to attend but
-> > you are unable to be there in the morning or afternoon. I'll put the
-> > actual agenda together a week out from the event.
-> >
-> > g.  
-> _______________________________________________
-> Ksummit-discuss mailing list
-> Ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/ksummit-discuss
+reading
+# lmdd of=internal if=/dev/mmcblk1p1 count=100000  fsync=1             
+819.2000 MB in 36.8891 secs, 22.2071 MB/sec
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+writing
+# lmdd if=internal of=/dev/mmcblk1p1 count=100000  fsync=1
+819.2000 MB in 81.7611 secs, 10.0194 MB/sec
+                                                                                                       
+Since mmc on mt7623 is almost identical to to mt2701, once the whole
+series is being applied, I will change all nodes in dts with mt7623 to
+use mt2701-mmc fallbacks instead of mt8135-mmc ones.
+
+Tested-by: Sean Wang <sean.wang@mediatek.com>
+
+[1] http://forum.banana-pi.org/c/Banana-Pi-BPI-R2
+
+
+On Mon, 2017-10-16 at 09:46 +0800, Chaotian Jing wrote:
+> mt2701/mt2712 has 12bit clock div, which is not compatible with
+> mt8135/mt8173. and, some additional features will be added in
+> mt2701/mt2712, so that need distinguish it by comatibale name.
+> 
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> ---
+>  drivers/mmc/host/mtk-sd.c | 82 +++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 69 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index 267f7ab..643c795 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -95,6 +95,9 @@
+>  #define MSDC_CFG_CKDIV          (0xff << 8)	/* RW */
+>  #define MSDC_CFG_CKMOD          (0x3 << 16)	/* RW */
+>  #define MSDC_CFG_HS400_CK_MODE  (0x1 << 18)	/* RW */
+> +#define MSDC_CFG_HS400_CK_MODE_EXTRA  (0x1 << 22)	/* RW */
+> +#define MSDC_CFG_CKDIV_EXTRA    (0xfff << 8)	/* RW */
+> +#define MSDC_CFG_CKMOD_EXTRA    (0x3 << 20)	/* RW */
+>  
+>  /* MSDC_IOCON mask */
+>  #define MSDC_IOCON_SDR104CKS    (0x1 << 0)	/* RW */
+> @@ -295,6 +298,10 @@ struct msdc_save_para {
+>  	u32 emmc50_cfg0;
+>  };
+>  
+> +struct mtk_mmc_compatible {
+> +	u8 clk_div_bits;
+> +};
+> +
+>  struct msdc_tune_para {
+>  	u32 iocon;
+>  	u32 pad_tune;
+> @@ -309,6 +316,7 @@ struct msdc_delay_phase {
+>  
+>  struct msdc_host {
+>  	struct device *dev;
+> +	const struct mtk_mmc_compatible *dev_comp;
+>  	struct mmc_host *mmc;	/* mmc structure */
+>  	int cmd_rsp;
+>  
+> @@ -350,6 +358,31 @@ struct msdc_host {
+>  	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
+>  };
+>  
+> +static const struct mtk_mmc_compatible mt8135_compat = {
+> +	.clk_div_bits = 8,
+> +};
+> +
+> +static const struct mtk_mmc_compatible mt8173_compat = {
+> +	.clk_div_bits = 8,
+> +};
+> +
+> +static const struct mtk_mmc_compatible mt2701_compat = {
+> +	.clk_div_bits = 12,
+> +};
+> +
+> +static const struct mtk_mmc_compatible mt2712_compat = {
+> +	.clk_div_bits = 12,
+> +};
+> +
+> +static const struct of_device_id msdc_of_ids[] = {
+> +	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+> +	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
+> +	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
+> +	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, msdc_of_ids);
+> +
+>  static void sdr_set_bits(void __iomem *reg, u32 bs)
+>  {
+>  	u32 val = readl(reg);
+> @@ -509,7 +542,12 @@ static void msdc_set_timeout(struct msdc_host *host, u32 ns, u32 clks)
+>  		timeout = (ns + clk_ns - 1) / clk_ns + clks;
+>  		/* in 1048576 sclk cycle unit */
+>  		timeout = (timeout + (0x1 << 20) - 1) >> 20;
+> -		sdr_get_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD, &mode);
+> +		if (host->dev_comp->clk_div_bits == 8)
+> +			sdr_get_field(host->base + MSDC_CFG,
+> +				      MSDC_CFG_CKMOD, &mode);
+> +		else
+> +			sdr_get_field(host->base + MSDC_CFG,
+> +				      MSDC_CFG_CKMOD_EXTRA, &mode);
+>  		/*DDR mode will double the clk cycles for data timeout */
+>  		timeout = mode >= 2 ? timeout * 2 : timeout;
+>  		timeout = timeout > 1 ? timeout - 1 : 0;
+> @@ -548,7 +586,11 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+>  
+>  	flags = readl(host->base + MSDC_INTEN);
+>  	sdr_clr_bits(host->base + MSDC_INTEN, flags);
+> -	sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
+> +	if (host->dev_comp->clk_div_bits == 8)
+> +		sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
+> +	else
+> +		sdr_clr_bits(host->base + MSDC_CFG,
+> +			     MSDC_CFG_HS400_CK_MODE_EXTRA);
+>  	if (timing == MMC_TIMING_UHS_DDR50 ||
+>  	    timing == MMC_TIMING_MMC_DDR52 ||
+>  	    timing == MMC_TIMING_MMC_HS400) {
+> @@ -568,8 +610,12 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+>  
+>  		if (timing == MMC_TIMING_MMC_HS400 &&
+>  		    hz >= (host->src_clk_freq >> 1)) {
+> -			sdr_set_bits(host->base + MSDC_CFG,
+> -				     MSDC_CFG_HS400_CK_MODE);
+> +			if (host->dev_comp->clk_div_bits == 8)
+> +				sdr_set_bits(host->base + MSDC_CFG,
+> +					     MSDC_CFG_HS400_CK_MODE);
+> +			else
+> +				sdr_set_bits(host->base + MSDC_CFG,
+> +					     MSDC_CFG_HS400_CK_MODE_EXTRA);
+>  			sclk = host->src_clk_freq >> 1;
+>  			div = 0; /* div is ignore when bit18 is set */
+>  		}
+> @@ -587,8 +633,15 @@ static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
+>  			sclk = (host->src_clk_freq >> 2) / div;
+>  		}
+>  	}
+> -	sdr_set_field(host->base + MSDC_CFG, MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
+> -		      (mode << 8) | div);
+> +	if (host->dev_comp->clk_div_bits == 8)
+> +		sdr_set_field(host->base + MSDC_CFG,
+> +			      MSDC_CFG_CKMOD | MSDC_CFG_CKDIV,
+> +			      (mode << 8) | div);
+> +	else
+> +		sdr_set_field(host->base + MSDC_CFG,
+> +			      MSDC_CFG_CKMOD_EXTRA | MSDC_CFG_CKDIV_EXTRA,
+> +			      (mode << 12) | div);
+> +
+>  	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_CKPDN);
+>  	while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
+>  		cpu_relax();
+> @@ -1617,12 +1670,17 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>  	struct mmc_host *mmc;
+>  	struct msdc_host *host;
+>  	struct resource *res;
+> +	const struct of_device_id *of_id;
+>  	int ret;
+>  
+>  	if (!pdev->dev.of_node) {
+>  		dev_err(&pdev->dev, "No DT found\n");
+>  		return -EINVAL;
+>  	}
+> +
+> +	of_id = of_match_node(msdc_of_ids, pdev->dev.of_node);
+> +	if (!of_id)
+> +		return -EINVAL;
+>  	/* Allocate MMC host for this device */
+>  	mmc = mmc_alloc_host(sizeof(struct msdc_host), &pdev->dev);
+>  	if (!mmc)
+> @@ -1686,11 +1744,15 @@ static int msdc_drv_probe(struct platform_device *pdev)
+>  	msdc_of_property_parse(pdev, host);
+>  
+>  	host->dev = &pdev->dev;
+> +	host->dev_comp = of_id->data;
+>  	host->mmc = mmc;
+>  	host->src_clk_freq = clk_get_rate(host->src_clk);
+>  	/* Set host parameters to mmc */
+>  	mmc->ops = &mt_msdc_ops;
+> -	mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 255);
+> +	if (host->dev_comp->clk_div_bits == 8)
+> +		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 255);
+> +	else
+> +		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 4095);
+>  
+>  	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
+>  	/* MMC core transfer sizes tunable parameters */
+> @@ -1839,12 +1901,6 @@ static int msdc_runtime_resume(struct device *dev)
+>  	SET_RUNTIME_PM_OPS(msdc_runtime_suspend, msdc_runtime_resume, NULL)
+>  };
+>  
+> -static const struct of_device_id msdc_of_ids[] = {
+> -	{   .compatible = "mediatek,mt8135-mmc", },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, msdc_of_ids);
+> -
+>  static struct platform_driver mt_msdc_driver = {
+>  	.probe = msdc_drv_probe,
+>  	.remove = msdc_drv_remove,
+
+
