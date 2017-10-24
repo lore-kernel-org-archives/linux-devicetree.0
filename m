@@ -1,88 +1,108 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] phy: add combo phy driver for HiSilicon STB SoCs
-Date: Tue, 24 Oct 2017 16:58:26 +0800
-Message-ID: <20171024085825.GE6403@dragon>
-References: <1508757968-22729-1-git-send-email-shawnguo@kernel.org>
- <1508757968-22729-3-git-send-email-shawnguo@kernel.org>
- <0ccecbc3-68fe-e134-36e0-6075f723d384@hisilicon.com>
+From: "liwei (CM)" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjUgMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZz?=
+ =?utf-8?Q?:_add_document_for_hisi-ufs?=
+Date: Tue, 24 Oct 2017 09:06:11 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA321D1@DGGEMM506-MBX.china.huawei.com>
+References: <20171020085259.8093-1-liwei213@huawei.com>
+ <20171020085259.8093-3-liwei213@huawei.com>
+ <CAK8P3a0z_q-GNc-vSPbovu8yrEQyCGDccoDe16rycW+uOwO4Dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0ccecbc3-68fe-e134-36e0-6075f723d384-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Language: zh-CN
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: "liwei (CM)" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 07:42:32PM +0800, Jiancheng Xue wrote:
-> > +static int histb_pcie_phy_init(struct histb_combphy_priv *priv)
-> > +{
-> > +	struct regmap *peri = priv->peri;
-> > +	int ret;
-> > +
-> > +	/* set to pcie mode */
-> > +	regmap_update_bits(peri, PERI_CTRL, COMBPHY1_MODE_MASK,
-> > +			    COMBPHY_MODE_PCIE << COMBPHY_MODE_SHIFT);
-> > +
-> > +	regmap_update_bits(peri, PERI_COMBPHY1_CFG,
-> > +			    COMBPHY1_BYPASS_CODEC_MASK,
-> > +			    ~COMBPHY1_BYPASS_CODEC_VAL);
-> > +
-> > +	ret = clk_prepare_enable(priv->ref);
-> > +	if (ret) {
-> > +		dev_err(&priv->phy->dev, "clk_prepare_enable fail!\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	reset_control_deassert(priv->por);
-> > +
-> > +	regmap_update_bits(peri, PERI_COMBPHY1_CFG,
-> > +			    COMBPHY1_CLKREF_OUT_OEN_MASK,
-> > +			    COMBPHY1_CLKREF_OUT_OEN_VAL);
-> > +
-> > +	/* need to wait for EP clk stable */
-> > +	mdelay(5);
-> > +
-> > +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0x1, 0x8);
-> > +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0xc, 0x9);
-> > +	nano_register_write(peri, PERI_COMBPHY1_CFG, 0x1a, 0x4);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int histb_pcie_phy_exit(struct histb_combphy_priv *priv)
-> > +{
-> > +	regmap_update_bits(priv->peri, PERI_COMBPHY1_CFG,
-> > +				COMBPHY1_CLKREF_OUT_OEN_MASK,
-> > +				~COMBPHY1_CLKREF_OUT_OEN_VAL);
-> > +	reset_control_deassert(priv->por);
-> > +	clk_disable_unprepare(priv->ref);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int histb_usb_phy_init(struct histb_combphy_priv *priv)
-> > +{
-> > +	int ret;
-> > +
-> I think the work mode should be set to usb3 first as histb_pcie_phy_init does.
-> The current one may be not usb3.
-
-Thanks for the reminding.  We will address that in the next version.
-
-Shawn
-
-> > +	ret = clk_prepare_enable(priv->ref);
-> > +	if (ret) {
-> > +		dev_err(&priv->phy->dev, "clk_prepare_enable fail!\n");
-> > +		return ret;
-> > +	}
-> > +	reset_control_deassert(priv->por);
-> > +	mdelay(1);
-> > +
-> > +	return 0;
-> > +}
+SGksIEFybmQNClNvcnJ5IHRvIGJvdGhlciB5b3UsIHdoYXQncyB5b3VyIG9waW5pb24gYWJvdXQg
+bXkgZXhwbGFuYXRpb24gYW5kIHJldmlzaW9uIG1ldGhvZD8NCkkgYW0gbG9va2luZyBmb3J3YXJk
+IHRvIHlvdXIgcmVwbHksIHRoYW5rcyENCg0KDQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hk
+u7bkuro6IGxpd2VpIChDTSkgDQrlj5HpgIHml7bpl7Q6IDIwMTflubQxMOaciDIx5pelIDE3OjU5
+DQrmlLbku7bkuro6ICdBcm5kIEJlcmdtYW5uJw0K5oqE6YCBOiBSb2IgSGVycmluZzsgTWFyayBS
+dXRsYW5kOyB4dXdlaSAoTyk7IENhdGFsaW4gTWFyaW5hczsgV2lsbCBEZWFjb247IFZpbmF5YWsg
+SG9saWthdHRpOyBKYW1lcyBFLkouIEJvdHRvbWxleTsgTWFydGluIEsuIFBldGVyc2VuOyBLZXZp
+biBIaWxtYW47IEdyZWdvcnkgQ0xFTUVOVDsgVGhvbWFzIFBldGF6em9uaTsgTWFzYWhpcm8gWWFt
+YWRhOyBSaWt1IFZvaXBpbzsgVGhpZXJyeSBSZWRpbmc7IEtyenlzenRvZiBLb3psb3dza2k7IEVy
+aWMgQW5ob2x0OyBEVE1MOyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0OyBMaW51eCBBUk07IGxp
+bnV4LXNjc2k7IEd1b2RvbmcgWHU7IEZlbmdiYW9wZW5nIChrZXZpbiwgS2lyaW4gU29sdXRpb24g
+RGVwdCk7IGxpaHVhbiAoWik7IHdhbmd5dXBlbmcgKEEpDQrkuLvpopg6IOetlOWkjTogW1BBVENI
+IHY1IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYWRkIGRvY3VtZW50IGZvciBoaXNpLXVm
+cw0KDQpIaSwgQmVyZ21hbm4NClNvcnJ5IGxhdGUgZm9yIHRoZSByZXBseSxhbmQgdGhhbmsgeW91
+IHZlcnkgbXVjaCBmb3IgeW91ciBwYXRpZW5jZS4NCk15IHJlcGx5IGlzIGFzIGZvbGxvd3MuIEkg
+bG9vayBmb3J3YXJkIHRvIHlvdXIgZnVydGhlciByZXBseS4NCg0KDQotLS0tLemCruS7tuWOn+S7
+ti0tLS0tDQrlj5Hku7bkuro6IGFybmRiZXJnbWFubkBnbWFpbC5jb20gW21haWx0bzphcm5kYmVy
+Z21hbm5AZ21haWwuY29tXSDku6PooaggQXJuZCBCZXJnbWFubg0K5Y+R6YCB5pe26Ze0OiAyMDE3
+5bm0MTDmnIgyMOaXpSAxNzoxNg0K5pS25Lu25Lq6OiBsaXdlaSAoQ00pDQrmioTpgIE6IFJvYiBI
+ZXJyaW5nOyBNYXJrIFJ1dGxhbmQ7IHh1d2VpIChPKTsgQ2F0YWxpbiBNYXJpbmFzOyBXaWxsIERl
+YWNvbjsgVmluYXlhayBIb2xpa2F0dGk7IEphbWVzIEUuSi4gQm90dG9tbGV5OyBNYXJ0aW4gSy4g
+UGV0ZXJzZW47IEtldmluIEhpbG1hbjsgR3JlZ29yeSBDTEVNRU5UOyBUaG9tYXMgUGV0YXp6b25p
+OyBNYXNhaGlybyBZYW1hZGE7IFJpa3UgVm9pcGlvOyBUaGllcnJ5IFJlZGluZzsgS3J6eXN6dG9m
+IEtvemxvd3NraTsgRXJpYyBBbmhvbHQ7IERUTUw7IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3Q7
+IExpbnV4IEFSTTsgbGludXgtc2NzaTsgR3VvZG9uZyBYdTsgRmVuZ2Jhb3BlbmcgKGtldmluLCBL
+aXJpbiBTb2x1dGlvbiBEZXB0KTsgbGlodWFuIChaKTsgd2FuZ3l1cGVuZyAoQSkNCuS4u+mimDog
+UmU6IFtQQVRDSCB2NSAyLzVdIGR0LWJpbmRpbmdzOiBzY3NpOiB1ZnM6IGFkZCBkb2N1bWVudCBm
+b3IgaGlzaS11ZnMNCg0KT24gRnJpLCBPY3QgMjAsIDIwMTcgYXQgMTA6NTIgQU0sIExpIFdlaSA8
+bGl3ZWkyMTNAaHVhd2VpLmNvbT4gd3JvdGU6DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQNCj4gQEAgLTAs
+MCArMSw0NiBAQA0KPiArKiBIaXNpbGljb24gVW5pdmVyc2FsIEZsYXNoIFN0b3JhZ2UgKFVGUykg
+SG9zdCBDb250cm9sbGVyDQo+ICsNCj4gK1VGUyBub2RlcyBhcmUgZGVmaW5lZCB0byBkZXNjcmli
+ZSBvbi1jaGlwIFVGUyBoYXJkd2FyZSBtYWNyby4NCj4gK0VhY2ggVUZTIEhvc3QgQ29udHJvbGxl
+ciBzaG91bGQgaGF2ZSBpdHMgb3duIG5vZGUuDQo+ICsNCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+ICstIGNvbXBhdGlibGUgICAgICAgIDogY29tcGF0aWJsZSBsaXN0LCBjb250YWlucyBvbmUg
+b2YgdGhlIGZvbGxvd2luZyAtDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICJoaXNpbGljb24s
+aGkzNjYwLXVmcyIgZm9yIGhpc2kgdWZzIGhvc3QgY29udHJvbGxlcg0KPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgcHJlc2VudCBvbiBIaTM2NjAgY2hpcHNldC4NCj4gKy0gcmVnICAgICAgICAg
+ICAgICAgOiBzaG91bGQgY29udGFpbiBVRlMgcmVnaXN0ZXIgYWRkcmVzcyBzcGFjZSAmIFVGUyBT
+WVMgQ1RSTCByZWdpc3RlciBhZGRyZXNzLA0KPiArLSBpbnRlcnJ1cHQtcGFyZW50ICA6IGludGVy
+cnVwdCBkZXZpY2UNCj4gKy0gaW50ZXJydXB0cyAgICAgICAgOiBpbnRlcnJ1cHQgbnVtYmVyDQo+
+ICstIGNsb2NrcyAgICAgICAgICAgICAgIDogTGlzdCBvZiBwaGFuZGxlIGFuZCBjbG9jayBzcGVj
+aWZpZXIgcGFpcnMNCj4gKy0gY2xvY2stbmFtZXMgICAgICAgOiBMaXN0IG9mIGNsb2NrIGlucHV0
+IG5hbWUgc3RyaW5ncyBzb3J0ZWQgaW4gdGhlIHNhbWUNCj4gKyAgICAgICAgICAgICAgICAgICAg
+IG9yZGVyIGFzIHRoZSBjbG9ja3MgcHJvcGVydHkuICJjbGtfcmVmIiwgImNsa19waHkiIGlzIG9w
+dGlvbmFsDQo+ICstIHJlc2V0cyAgICAgICAgICAgIDogcmVzZXQgbm9kZSByZWdpc3Rlciwgb25l
+IHJlc2V0IHRoZSBjbGsgYW5kIHRoZSBvdGhlciByZXNldCB0aGUgY29udHJvbGxlcg0KPiArLSBy
+ZXNldC1uYW1lcyAgICAgICA6IGRlc2NyaWJlIHJlc2V0IG5vZGUgcmVnaXN0ZXINCg0KSSB0aGlu
+ayBJJ3ZlIGFza2VkIGFib3V0IHRoaXMgYmVmb3JlLCBidXQgSSB0aGluayB0aGlzIHNob3VsZCBi
+ZSBkb25lIG1vcmUgY29uc2lzdGVudGx5IHdpdGggdGhlIG90aGVyIFVGUyBiaW5kaW5ncy4NCg0K
+SW4gcGFydGljdWxhciwgSSB3b25kZXIgaWYgd2hhdCB5b3UgZGVzY3JpYmUgYXMgdGhlICJVRlMg
+U1lTIENUUkwiDQphcmVhIGNvcnJlc3BvbmRzIHRvIHdoYXQgUXVhbGNvbW0gaGF2ZSBkZXNjcmli
+ZWQgYXMgdGhlaXIgUEhZIGltcGxlbWVudGF0aW9uLiBJdCBjZXJ0YWlubHkgc2VlbXMgdG8gZHJp
+dmVyIHNvbWUgb2YgdGhlIHByb3BlcnRpZXMgdGhhdCB3b3VsZCBub3JtYWxseSBiZSBhc3NvY2lh
+dGVkIHdpdGggYSBQSFkuDQoNCkxpd2VpOlllcywgYSBwYXJ0IG9mICJVRlMgU1lTIENUUkwiIGlz
+IGFzc29jaWF0ZWQgd2l0aCBhIFBIWSwgYnV0IGZyb20gb3VyIGNoaXAgY29sbGVhZ3VlIHRoYXQg
+d2UgYXNzdXJlICJVRlMgU1lTIENUUkwiIGlzIGFzc29jaWF0ZWQgd2l0aCBjbGsvcmVzZXQvcG93
+ZXIgb24vcG93ZXIgb2ZmIGFuZCBzbyBvbi4gDQpJbiBmYWN0LCBpbiBhZGRpdGlvbiB0byB0aGUg
+Y29udHJvbGxlciBpdHNlbGYsIHRoZSBjb250cm9sbGVyIHJlbGF0ZWQgcGVyaXBoZXJ5IGFyZSBh
+bGwgaW4gdGhpcyBhcmVhLiBTbyBpdCdzIG5vdCBhcHByb3ByaWF0ZSB0byBwdXQgdGhpcyBpbnRv
+IGEgc2VwYXJhdGUgcGh5IG5vZGUuDQoNCkZvciB0aGUgImNsb2NrLW5hbWVzIiBwcm9wZXJ0eSwg
+eW91IHNwZWNpZnkgImNsa19yZWYiLCB3aGljaCBJIGFzc3VtZSBpcyB0aGUgc2FtZSBhcyB3aGF0
+IFF1YWxjb21tIGNhbGwgInJlZl9jbGsiLiBJJ2Qgc3VnZ2VzdCB5b3UgdXNlIHRoZSBleGlzdGlu
+ZyBuYW1lIGFuZCBhZGQgdGhhdCBhcyB0aGUgZGVmYXVsdCBuYW1lIGluIHRoZSB1ZnNoY2QtcGx0
+ZnJtLnR4dCBiaW5kaW5nIGRvY3VtZW50Lg0KDQpMaXdlaToiIHJlZl9jbGsgIiBpcyBhbHJlYWR5
+IGluIHRoZSB1ZnNoY2QtcGx0ZnJtLnR4dCBiaW5kaW5nIGRvY3VtZW50LCBhbmQgcGFyc2UgaW4g
+dWZzaGNkLmMsIHNvIHdlIHdpbGwgcmVwbGFjZSAiY2xrX3JlZiIgd2l0aCAicmVmX2NsayIuIEkg
+d2lsbCBmaXggaXQgaW4gcGF0Y2ggdjY7DQoNClRoZSAiY2xrX3BoeSIgcHJvcGVydHkgYXBwZWFy
+cyB0byBiZSByZWxhdGVkIHRvIHRoZSBQSFksIHNvIGl0IG1pZ2h0IGJlIGJldHRlciB0byBoYXZl
+IGEgc2VwYXJhdGUgcGh5IG5vZGUgd2l0aCBlaXRoZXIganVzdCB0aGUgY2xrLCBvciB3aXRoIHRo
+ZSBjbGsgcGx1cyB0aGUgIlVGUyBTWVMgQ1RSTCIgcmVnaXN0ZXIgYXJlYSwgd2hpY2hldmVyIG1h
+dGNoZXMgeW91ciBoYXJkd2FyZSBiZXR0ZXIsIGFuZCB0aGVuIHVzZSB0ZWggInBoeXMvcGh5LW5h
+bWVzIiBwcm9wZXJ0eSB0byByZWZlciB0byB0aGF0Lg0KDQpMaXdlaTogT0ssIEkgd2lsbCBhZGQg
+YSBzZXBhcmF0ZSBwaHkgbm9kZSBhbmQgZml4IGl0IGluIHBhdGNoIHY2Ow0KDQpUaGUgcmVzZXQg
+aGFuZGxpbmcgeW91IGRlc2NyaWJlIGhlcmUgKGJvdGggcmVzZXRzIGFuZCByZXNldC1ncGlvcykg
+YXBwZWFycyB0byBiZSBjb21wbGV0ZWx5IGdlbmVyaWMsIHNvIEknZCBzdWdnZXN0IGFkZGluZyB0
+aG9zZSB0byB1ZnNoY2QtcGx0ZnJtLnR4dCBpbnN0ZWFkIG9mIHlvdXIgb3duIGJpbmRpbmcsIHRv
+IGVuc3VyZSB0aGF0IGZ1dHVyZSBkcml2ZXJzIHVzZSB0aGUgc2FtZSBpZGVudGlmaWVycy4NCg0K
+TGl3ZWk6IEZyb20gb3VyIHNvYyBjaGlwIGNvbGxlYWd1ZSwgcmVzZXQgaW5jbHVkZSAicnN0Iiwg
+ImFzc2VydCIgaXMgbm90IGdlbmVyaWMgYW5kIHJlbGF0ZWQgd2l0aCBvdXIgc29jIGltcGxlbWVu
+dGF0aW9uLCB5b3UgY2FuIHNlZSB1ZnNfaGlzaV9zb2NfaW5pdCgpIGluIGRyaXZlcnMvc2NzaS91
+ZnMvdWZzLWhpc2kuYywgdGhlIHBvc2l0aW9uIG9mIHJzdCBhbmQgYXNzZXJ0IGlzIHZlcnkgc3Bl
+Y2lhbCwgaXQncyBoYXJkIHRvIHB1dCBpdCBpbiBhIGdlbmVyaWMgcHJvY2VzczsgcmVzZXQtZ3Bp
+b3MgaXMgdXNlZCB0byBzb2x2ZSBhIGRlZmVjdCBvZiB0aGUgU09DIGNoaXAgcmVzZXQgZnVuY3Rp
+b24gYW5kIGl0IGlzIG5vdCBnZW5lcmljICwgYnV0IG91ciBjaGlwIGhhcyBiZWVuIHVwZGF0ZWQs
+IHNvIHRoaXMgaXMgbm8gbG9uZ2VyIG5lZWRlZCwgYW5kIEkgd2lsbCByZW1vdmUgaXQgaW4gdGhl
+IHBhdGNoIHY2Ow0KDQpUaGFua3MhDQoNCiAgICAgIEFybmQNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
