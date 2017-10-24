@@ -1,36 +1,41 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: add efuse for RK3368 SoCs
-Date: Tue, 24 Oct 2017 15:37:33 +0200
-Message-ID: <5744497.0PmpLyO0rR@phil>
-References: <20170904085119.25981-1-romain.perier@collabora.com> <20170904085119.25981-5-romain.perier@collabora.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [3/3] MIPS: jz4780: DTS: Probe the jz4740-watchdog driver from
+ devicetree
+Date: Tue, 24 Oct 2017 15:43:41 +0200
+Message-ID: <S23990511AbdJXNoERCQml/20171024134404Z+1875@eddie.linux-mips.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170904085119.25981-5-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Ralf Baechle <ralf@linux-mips.org>, Wim Van Sebroeck <wim@iguana.be>, linux-mips@linux-mips.org, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 4. September 2017, 10:51:19 CEST schrieb Romain Perier:
-> This adds the definition for eFuse that is found on RK3368 SoCs with the
-> corresponding data cells.
-> 
-> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-
-applied for 4.15 after the following changes
-- moved efuse node to its correct position (determined by register address)
-- use correct clock-id as added by patch1 (efuse256 without the underscore)
-- added the #address- and #size-cells properties for the subnodes
-  to make dtc happy
-
-Please pay a bit more attention for future patches.
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpMZSAyMiBvY3QuIDIwMTcgNToyNiBQTSwgR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2st
+dXMubmV0PiBhIMOpY3JpdCA6Cj4KPiBPbiBGcmksIFNlcCAwOCwgMjAxNyBhdCAwODozNTo1NVBN
+ICswMjAwLCBNYXRoaWV1IE1hbGF0ZXJyZSB3cm90ZTogCj4gPiBUaGUgano0NzQwLXdhdGNoZG9n
+IGRyaXZlciBzdXBwb3J0cyBib3RoIGp6NDc0MCAmIGp6NDc4MC4gCj4gPiAKPiA+IFNpZ25lZC1v
+ZmYtYnk6IE1hdGhpZXUgTWFsYXRlcnJlIDxtYWxhdEBkZWJpYW4ub3JnPiAKPgo+IEFja2VkLWJ5
+OiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+IAo+Cj4gPiAtLS0gCj4gPsKgIGFy
+Y2gvbWlwcy9ib290L2R0cy9pbmdlbmljL2p6NDc4MC5kdHNpIHwgNSArKysrKyAKPiA+wqAgMSBm
+aWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSAKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2FyY2gv
+bWlwcy9ib290L2R0cy9pbmdlbmljL2p6NDc4MC5kdHNpIGIvYXJjaC9taXBzL2Jvb3QvZHRzL2lu
+Z2VuaWMvano0NzgwLmR0c2kgCj4gPiBpbmRleCA0ODUzZWY2N2IzYWIuLjMzZDdmNDkxODZkNiAx
+MDA2NDQgCj4gPiAtLS0gYS9hcmNoL21pcHMvYm9vdC9kdHMvaW5nZW5pYy9qejQ3ODAuZHRzaSAK
+PiA+ICsrKyBiL2FyY2gvbWlwcy9ib290L2R0cy9pbmdlbmljL2p6NDc4MC5kdHNpIAo+ID4gQEAg
+LTIwNyw2ICsyMDcsMTEgQEAgCj4gPsKgIHN0YXR1cyA9ICJkaXNhYmxlZCI7IAo+ID7CoCB9OyAK
+PiA+wqAgCj4gPiArIHdhdGNoZG9nOiBqejQ3ODAtd2F0Y2hkb2dAMTAwMDIwMDAgeyAKPiA+ICsg
+Y29tcGF0aWJsZSA9ICJpbmdlbmljLGp6NDc0MC13YXRjaGRvZyI7IAo+ID4gKyByZWcgPSA8MHgx
+MDAwMjAwMCAweDEwMD47IAo+ID4gKyB9OyAKPiA+ICsgCj4gPsKgIG5lbWM6IG5lbWNAMTM0MTAw
+MDAgeyAKPiA+wqAgY29tcGF0aWJsZSA9ICJpbmdlbmljLGp6NDc4MC1uZW1jIjsgCj4gPsKgIHJl
+ZyA9IDwweDEzNDEwMDAwIDB4MTAwMDA+OyAKClRoZSBub2RlIHNob3VsZCBiZSBuYW1lZCBqdXN0
+ICIgd2F0Y2hkb2dALi4uIiwgSSB0aGluay4=
