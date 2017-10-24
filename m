@@ -1,78 +1,65 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] livetree: avoid assertion of orphan phandles with
- overlays
-Date: Tue, 24 Oct 2017 18:07:34 +0200
-Message-ID: <20171024160734.GE15297@umbus>
-References: <1508854458-9937-1-git-send-email-t-kristo@ti.com>
- <CAL_JsqJAPKYf25pW-4awUHpovq-fxesG-E_rYjh8MGufVSYRBA@mail.gmail.com>
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 11/13] firmware: arm_sdei: add support for CPU private
+ events
+Date: Tue, 24 Oct 2017 18:34:02 +0100
+Message-ID: <59EF798A.9000609@arm.com>
+References: <20171017174432.1684-1-james.morse@arm.com> <20171017174432.1684-12-james.morse@arm.com> <20171018171959.GJ21820@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PPYy/fEw/8QCHSq3"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJAPKYf25pW-4awUHpovq-fxesG-E_rYjh8MGufVSYRBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171018171959.GJ21820-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Will,
 
---PPYy/fEw/8QCHSq3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 18/10/17 18:19, Will Deacon wrote:
+> On Tue, Oct 17, 2017 at 06:44:30PM +0100, James Morse wrote:
+>> Private SDE events are per-cpu, and need to be registered and enabled
+>> on each CPU.
+>>
+>> Hide this detail from the caller by adapting our {,un}register and
+>> {en,dis}able calls to send an IPI to each CPU if the event is private.
+>>
+>> CPU private events are unregistered when the CPU is powered-off, and
+>> re-registered when the CPU is brought back online. This saves bringing
+>> secondary cores back online to call private_reset() on shutdown, kexec
+>> and resume from hibernate.
 
-On Tue, Oct 24, 2017 at 10:21:10AM -0500, Rob Herring wrote:
-> On Tue, Oct 24, 2017 at 9:14 AM, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> wrote:
-> > Right now, check_interrupts_property fails with overlays, as the phandle
-> > for the interrupt-parent can be orphan. Avoid this by allowing the orph=
-an
-> > node to pass the assert check.
-> >
-> > The process_checks() call is also moved later during init sequence,
-> > so that we can use the global variable generate_fixups to check if
-> > we are compiling an overlay.
->=20
-> This is fixed by [1].
->=20
-> David, BTW, you didn't push to kernel.org dtc repo. That's still the
-> "official" one?
+>> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+>> index 28e4c4cbb16d..5598d9ba8b5d 100644
+>> --- a/drivers/firmware/arm_sdei.c
+>> +++ b/drivers/firmware/arm_sdei.c
+>> @@ -610,6 +813,7 @@ static int sdei_device_freeze(struct device *dev)
+>>  {
+>>  	int err;
+>>  
+>> +	frozen = true;
+>>  	err = sdei_event_unregister_all();
 
-Yess.  I usually push to github first, wait for the Travis build to
-complete then push to kernel.org, but I got distracted and forgot to
-finish that.  Fixed now.
+> Are the release semantics from spin_unlock in sdei_event_unregister_all
+> sufficient for the ordering guarantees you need?
 
->=20
-> Rob
->=20
-> [1] https://github.com/dgibson/dtc/commit/c1e55a5513e9bca41dc78a0f20245cc=
-928596a3a
->=20
+... ordering ...
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+The hotplug notifiers don't touch that lock, so at the first level: no.
 
---PPYy/fEw/8QCHSq3
-Content-Type: application/pgp-signature; name="signature.asc"
+It looks like I was relying on the cpu-hotplug code using stop-machine for its
+work, and the spinlocks changing the pre-empt count for this to work. Which is
+not something I want to debug if it changes!
 
------BEGIN PGP SIGNATURE-----
+I'll post a patch changing this bool to a more sensible atomic type.
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlnvZUAACgkQbDjKyiDZ
-s5J68xAA0YJ6ldzdKV3fwOvEDNluWUssWbGmLuZngUWqAAAho8mzqDUH/CvuAHAs
-ueebrY+pp965b6aTQdCWDTfELRmkkVx2gAVYpU5BIWNh0hFuzoh06JTgBfrcqggr
-EePiEjlwK3yxrifpxP7ZJzZwn4Lta3pUGvRMM62v9HVx7j+vhGCSAX43iBIs06Oz
-QK9xXvb/brcZ6bA1mZ+FeGHC/2tcpSFbz+QJ25wcZ1dUex4q1vP7//+LLabZWTFu
-tQvFAJerTvASAUK+sTyGSyW61wCkWfTYqLPHobJ2ze/k3TdyPU+Z9Jfgdo2pbqx/
-/xtCh9yP+4HJZiaO/B/FGFUydZLlMNB+nAkbEV8C12Vg2gXSdwXJkMVH8/JLxUpV
-Tc7t1xxWh9/6P4Ag4bw9fN+BMHATNMgTpSvlM+bnHVQXLD2HSWlVM4Uf50/3fgZi
-KCwnL9pXNI9t7TmqtYHLPd4xKu9FvTPGGLgzNxzB7DuD7vmD1Uoso9zRi9F3uONO
-lMZ0g0XvWO3MbcmA0W78qRFlWw9ocagZ1kBvn3WdoCYm8zA4yvqW90d3VQmHTW2o
-ltgWgpH3zGKferMZghwXluIOw2fWiYmqlFNEfk2EBZ943IgU+S+tsldVt2cHfeN8
-7OwJ4oqudJZsc0uL0epDdY0CKfl5vq6OJkXS6ykJINa8EDYcDLY=
-=GZd9
------END PGP SIGNATURE-----
 
---PPYy/fEw/8QCHSq3--
+Thanks,
+
+James
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
