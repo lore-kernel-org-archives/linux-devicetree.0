@@ -1,81 +1,54 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 6/8] PCI: host: brcmstb: add MSI capability
-Date: Tue, 24 Oct 2017 11:57:03 -0700
-Message-ID: <5406ab92-c1da-f6fa-083d-82d1027130ea@gmail.com>
-References: <1508868949-16652-1-git-send-email-jim2101024@gmail.com>
- <1508868949-16652-7-git-send-email-jim2101024@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH v2 1/3] regulator: bindings: Add properties for
+ coupled regulators
+Date: Tue, 24 Oct 2017 13:58:01 -0500
+Message-ID: <20171024185801.bq27wszp7socsxqx@rob-hp-laptop>
+References: <1508330822-8039-1-git-send-email-m.purski@samsung.com>
+ <CGME20171018124727eucas1p255ccce41852d5585640f2d97153d2fa8@eucas1p2.samsung.com>
+ <1508330822-8039-2-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1508868949-16652-7-git-send-email-jim2101024@gmail.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1508330822-8039-2-git-send-email-m.purski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jim,
-
-On 10/24/2017 11:15 AM, Jim Quinlan wrote:
-> This commit adds MSI to the Broadcom STB PCIe host controller. It does
-> not add MSIX since that functionality is not in the HW.  The MSI
-> controller is physically located within the PCIe block, however, there
-> is no reason why the MSI controller could not be moved elsewhere in
-> the future.
+On Wed, Oct 18, 2017 at 02:47:00PM +0200, Maciej Purski wrote:
+> Some regulators require keeping their voltage spread below defined
+> max_spread.
 > 
-> Since the internal Brcmstb MSI controller is intertwined with the PCIe
-> controller, it is not its own platform device but rather part of the
-> PCIe platform device.
+> Add properties to provide information on regulators' coupling.
 > 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
 > ---
->  drivers/pci/host/Kconfig           |  12 ++
->  drivers/pci/host/Makefile          |   1 +
->  drivers/pci/host/pci-brcmstb-msi.c | 318 +++++++++++++++++++++++++++++++++++++
->  drivers/pci/host/pci-brcmstb.c     |  72 +++++++--
->  drivers/pci/host/pci-brcmstb.h     |  26 +++
->  5 files changed, 419 insertions(+), 10 deletions(-)
->  create mode 100644 drivers/pci/host/pci-brcmstb-msi.c
+>  Documentation/devicetree/bindings/regulator/regulator.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index b9b4f11..54aa5d2 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -228,4 +228,16 @@ config PCI_BRCMSTB
->  	default ARCH_BRCMSTB || BMIPS_GENERIC
->  	help
->  	  Adds support for Broadcom Settop Box PCIe host controller.
-> +	  To compile this driver as a module, choose m here.
-> +
-> +config PCI_BRCMSTB_MSI
-> +	bool "Broadcom Brcmstb PCIe MSI support"
-> +	depends on ARCH_BRCMSTB || BMIPS_GENERIC
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+> index 378f6dc..6769565 100644
+> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+> @@ -60,6 +60,10 @@ Optional properties:
+>  	0: Disable active discharge.
+>  	1: Enable active discharge.
+>  	Absence of this property will leave configuration to default.
+> +- regulator-coupled-with: Phandle to regulators with which the regulator
+> +  should be coupled. Allow up to 9 phandles.
 
-This could probably be depends on PCI_BRCMSTB, which would imply these
-two conditions. PCI_BRCMSTB_MSI on its own is probably not very useful
-without the parent RC driver.
+9? Sounds like a driver detail and pretty arbitrary.
 
-> +	depends on OF
-> +	depends on PCI_MSI
-> +	default PCI_BRCMSTB
-> +	help
-> +	  Say Y here if you want to enable MSI support for Broadcom's iProc
-> +	  PCIe controller
-> +
->  endmenu
-> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
-> index c283321..1026d6f 100644
-> --- a/drivers/pci/host/Makefile
-> +++ b/drivers/pci/host/Makefile
-> @@ -23,6 +23,7 @@ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
->  obj-$(CONFIG_VMD) += vmd.o
->  obj-$(CONFIG_PCI_BRCMSTB) += brcmstb-pci.o
->  brcmstb-pci-objs := pci-brcmstb.o pci-brcmstb-dma.o
-> +obj-$(CONFIG_PCI_BRCMSTB_MSI) += pci-brcmstb-msi.o
+Is this linkage 2-way meaning 2 coupled regulators both have links to 
+the other one? If so, then what happens when you have a high number? If 
+not, how does one decide which regulator has this property? 
 
-Should we combine this file with the brcmstb-pci.o? There is probably no
-functional difference, except that pci-brcmstb-msi.ko needs to be loaded
-first, right?
--- 
-Florian
+> +- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
+> +  in microvolts.
+>  
+>  Deprecated properties:
+>  - regulator-compatible: If a regulator chip contains multiple
+> -- 
+> 2.7.4
+> 
