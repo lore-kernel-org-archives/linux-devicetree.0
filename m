@@ -1,21 +1,58 @@
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: [v3, 4/6] powerpc: dts: acadia: DT fix s/#interrupts-parent/#interrupt-parent/
-Date: Tue, 24 Oct 2017 19:07:45 +1100 (AEDT)
-Message-ID: <3yLm8y0fFdz9sBZ@ozlabs.org>
-References: <1496407129-13527-5-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496407129-13527-5-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Chanho Min <chanho.min@lge.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/4] dt-bindings: display: amlogic, meson-dw-hdmi: Add
+ optional HDMI 5V regulator
+Date: Tue, 24 Oct 2017 10:09:15 +0200
+Message-ID: <9b69d42b-ffc5-32cf-1509-ec8e74fc3825@baylibre.com>
+References: <1508227664-11171-1-git-send-email-narmstrong@baylibre.com>
+ <1508227664-11171-3-git-send-email-narmstrong@baylibre.com>
+ <20171023224625.oiswnpgmxzhg7aep@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171023224625.oiswnpgmxzhg7aep@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-06-02 at 12:38:47 UTC, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Applied to powerpc next, thanks.
-
-https://git.kernel.org/powerpc/c/3d2d4339cc326c427638daa67e264d
-
-cheers
+T24gMjQvMTAvMjAxNyAwMDo0NiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBPY3QgMTcs
+IDIwMTcgYXQgMTA6MDc6NDJBTSArMDIwMCwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6Cj4+IE9uIHJl
+ZmVyZW5jZSBib2FyZHMgYW5kIGRlcml2YXRpdmVzLCB0aGUgSERNSSBMb2dpYyBpcyBwb3dlcmVk
+IGJ5IGFuIGV4dGVybmFsCj4+IDVWIHJlZ3VsYXRvci4KPj4gVGhpcyByZWd1bGF0b3Igd2FzIHNl
+dCBieSB0aGUgVmVuZG9yIFUtQm9vdCwgYWRkIG9wdGlvbmFsIHN1cHBvcnQgZm9yIGl0Lgo+Pgo+
+PiBTaWduZWQtb2ZmLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+
+Cj4+IC0tLQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1s
+b2dpYyxtZXNvbi1kdy1oZG1pLnR4dCB8IDQgKysrKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5z
+ZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tZHctaGRtaS50eHQKPj4g
+aW5kZXggN2YwNDBlZC4uYmY0YTE4MCAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dAo+PiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29u
+LWR3LWhkbWkudHh0Cj4+IEBAIC00OCw2ICs0OCwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
+PiAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvcmVzZXQudHh0LAo+
+PiAgICB0aGUgcmVzZXQtbmFtZXMgc2hvdWxkIGJlICJoZG1pdHhfYXBiIiwgImhkbWl0eCIsICJo
+ZG1pdHhfcGh5Igo+PiAgCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArLSBoZG1pLXN1cHBs
+eTogT3B0aW9uYWwgcGhhbmRsZSB0byBhbiBleHRlcm5hbCA1ViByZWd1bGF0b3IgdG8gcG93ZXIg
+dGhlIEhETUkKPj4gKyAgbG9naWMsIGFzIGRlc2NyaWJlZCBpbiB0aGUgZmlsZSAuLi9yZWd1bGF0
+b3IvcmVndWxhdG9yLnR4dAo+IAo+IDVWIGludG8gYSBtb2Rlcm4gU29DIHNvdW5kcyBzdHJhbmdl
+LiBJcyB0aGlzIHJlYWxseSBmb3IgdGhlIGNoaXAgb3IgZm9yIAo+IDVWIHRvIHRoZSBjb25uZWN0
+b3I/IFRoZSBsYXR0ZXIgc2hvdWxkIGJlIGluIHRoZSBjb25uZWN0b3Igbm9kZS4KPiAKPiBSb2IK
+PiAKCkhpIFJvYiwKClRoZSBjaGlwIGRvZXMgbm90IGdldCB0aGUgNVYgYnV0IG11bHRpcGxlIGRl
+cml2ZWQgdm9sdGFnZXMsIGJ1dCBkZXBlbmRzIG9uIHRoZSA1ViByZWd1bGF0b3IgdG8KZW5hYmxl
+IHRoaXMgcG93ZXIgc3VwcGx5IGZvciB0aGUgY29ubmVjdG9yIGFuZCB0byB0aGUgaGRtaSBpbyBi
+YW5rLgoKU28gaW4gbXkgb3BpbmlvbiBpdCdzIG5vdCByZWxhdGVkIHRvIHRoZSBjb25uZWN0b3Ig
+YnV0IHRvIHRoZSBIRE1JIGxvZ2ljLgoKTmVpbApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
