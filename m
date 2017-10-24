@@ -1,380 +1,441 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] mfd: Add Spreadtrum SC27xx series PMICs driver
-Date: Tue, 24 Oct 2017 10:26:41 +0100
-Message-ID: <20171024092641.vtg7namz2qwonpw4@dell>
-References: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
- <8aabf006019f69e82f62bf6cfd4809c4079db9cb.1508154918.git.baolin.wang@spreadtrum.com>
+From: Chen Zhong <chen.zhong@mediatek.com>
+Subject: Re: [PATCH v5 5/6] input: Add MediaTek PMIC keys support
+Date: Tue, 24 Oct 2017 17:37:32 +0800
+Message-ID: <1508837852.4057.6.camel@mhfsdcap03>
+References: <1506509048-19032-1-git-send-email-chen.zhong@mediatek.com>
+         <1506509048-19032-6-git-send-email-chen.zhong@mediatek.com>
+         <20171024054409.6qbuzenzymkkjdth@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8aabf006019f69e82f62bf6cfd4809c4079db9cb.1508154918.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20171024054409.6qbuzenzymkkjdth@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Linus Walleij <linus.walleij@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Oct 2017, Baolin Wang wrote:
-
-> This patch adds support for Spreadtrum SC27xx series PMIC MFD core, and It
-> provides communication through the SPI interfaces. The SC27xx series PMICs
-> contains the following 6 major components:
-> - DCDCs
-> - LDOs
-> - Battery management system
-> - Audio codec
-> - User interface function, such as indicator, flash LED
-> - IC level function, such as power on/off, type-c
+On Mon, 2017-10-23 at 22:44 -0700, Dmitry Torokhov wrote:
+> On Wed, Sep 27, 2017 at 06:44:07PM +0800, Chen Zhong wrote:
+> > This patch add support to handle MediaTek PMIC MT6397/MT6323 key
+> > interrupts including pwrkey and homekey, also add setting for
+> > long press key shutdown behavior.
+> > 
+> > Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+> > ---
+> >  drivers/input/keyboard/Kconfig         |    9 +
+> >  drivers/input/keyboard/Makefile        |    1 +
+> >  drivers/input/keyboard/mtk-pmic-keys.c |  341 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 351 insertions(+)
+> >  create mode 100644 drivers/input/keyboard/mtk-pmic-keys.c
+> > 
+> > diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> > index 4c4ab1c..bd4e20a 100644
+> > --- a/drivers/input/keyboard/Kconfig
+> > +++ b/drivers/input/keyboard/Kconfig
+> > @@ -756,4 +756,13 @@ config KEYBOARD_BCM
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called bcm-keypad.
+> >  
+> > +config KEYBOARD_MTK_PMIC
+> > +	tristate "MediaTek PMIC keys support"
+> > +	depends on MFD_MT6397
+> > +	help
+> > +	  Say Y here if you want to use the pmic keys (powerkey/homekey).
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called pmic-keys.
+> > +
+> >  endif
+> > diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> > index d2338ba..20c0b98 100644
+> > --- a/drivers/input/keyboard/Makefile
+> > +++ b/drivers/input/keyboard/Makefile
+> > @@ -40,6 +40,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
+> >  obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
+> >  obj-$(CONFIG_KEYBOARD_MCS)		+= mcs_touchkey.o
+> >  obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
+> > +obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
+> >  obj-$(CONFIG_KEYBOARD_NEWTON)		+= newtonkbd.o
+> >  obj-$(CONFIG_KEYBOARD_NOMADIK)		+= nomadik-ske-keypad.o
+> >  obj-$(CONFIG_KEYBOARD_NSPIRE)		+= nspire-keypad.o
+> > diff --git a/drivers/input/keyboard/mtk-pmic-keys.c b/drivers/input/keyboard/mtk-pmic-keys.c
+> > new file mode 100644
+> > index 0000000..529fd95
+> > --- /dev/null
+> > +++ b/drivers/input/keyboard/mtk-pmic-keys.c
+> > @@ -0,0 +1,341 @@
+> > +/*
+> > + * Copyright (C) 2017 MediaTek, Inc.
+> > + *
+> > + * Author: Chen Zhong <chen.zhong@mediatek.com>
+> > + *
+> > + * This software is licensed under the terms of the GNU General Public
+> > + * License version 2, as published by the Free Software Foundation, and
+> > + * may be copied, distributed, and modified under those terms.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/input.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/mfd/mt6323/registers.h>
+> > +#include <linux/mfd/mt6397/registers.h>
+> > +#include <linux/mfd/mt6397/core.h>
+> > +
+> > +#define MTK_PMIC_PWRKEY_RST_EN_MASK	0x1
+> > +#define MTK_PMIC_PWRKEY_RST_EN_SHIFT	6
+> > +#define MTK_PMIC_HOMEKEY_RST_EN_MASK	0x1
+> > +#define MTK_PMIC_HOMEKEY_RST_EN_SHIFT	5
+> > +#define MTK_PMIC_RST_DU_MASK		0x3
+> > +#define MTK_PMIC_RST_DU_SHIFT		8
+> > +
+> > +#define MTK_PMIC_PWRKEY_RST		\
+> > +	(MTK_PMIC_PWRKEY_RST_EN_MASK << MTK_PMIC_PWRKEY_RST_EN_SHIFT)
+> > +#define MTK_PMIC_HOMEKEY_RST		\
+> > +	(MTK_PMIC_HOMEKEY_RST_EN_MASK << MTK_PMIC_HOMEKEY_RST_EN_SHIFT)
+> > +
+> > +#define MTK_PMIC_PWRKEY_INDEX	0
+> > +#define MTK_PMIC_HOMEKEY_INDEX	1
+> > +#define MTK_PMIC_MAX_KEY_COUNT	2
+> > +
+> > +struct mtk_pmic_keys_regs {
+> > +	u32 deb_reg;
+> > +	u32 deb_mask;
+> > +	u32 intsel_reg;
+> > +	u32 intsel_mask;
+> > +};
+> > +
+> > +#define MTK_PMIC_KEYS_REGS(_deb_reg, _deb_mask,		\
+> > +	_intsel_reg, _intsel_mask)			\
+> > +{							\
+> > +	.deb_reg		= _deb_reg,		\
+> > +	.deb_mask		= _deb_mask,		\
+> > +	.intsel_reg		= _intsel_reg,		\
+> > +	.intsel_mask		= _intsel_mask,		\
+> > +}
+> > +
+> > +struct mtk_pmic_regs {
+> > +	const struct mtk_pmic_keys_regs keys_regs[MTK_PMIC_MAX_KEY_COUNT];
+> > +	u32 pmic_rst_reg;
+> > +};
+> > +
+> > +static const struct mtk_pmic_regs mt6397_regs = {
+> > +	.keys_regs[MTK_PMIC_PWRKEY_INDEX] =
+> > +		MTK_PMIC_KEYS_REGS(MT6397_CHRSTATUS,
+> > +		0x8, MT6397_INT_RSV, 0x10),
+> > +	.keys_regs[MTK_PMIC_HOMEKEY_INDEX] =
+> > +		MTK_PMIC_KEYS_REGS(MT6397_OCSTATUS2,
+> > +		0x10, MT6397_INT_RSV, 0x8),
+> > +	.pmic_rst_reg = MT6397_TOP_RST_MISC,
+> > +};
+> > +
+> > +static const struct mtk_pmic_regs mt6323_regs = {
+> > +	.keys_regs[MTK_PMIC_PWRKEY_INDEX] =
+> > +		MTK_PMIC_KEYS_REGS(MT6323_CHRSTATUS,
+> > +		0x2, MT6323_INT_MISC_CON, 0x10),
+> > +	.keys_regs[MTK_PMIC_HOMEKEY_INDEX] =
+> > +		MTK_PMIC_KEYS_REGS(MT6323_CHRSTATUS,
+> > +		0x4, MT6323_INT_MISC_CON, 0x8),
+> > +	.pmic_rst_reg = MT6323_TOP_RST_MISC,
+> > +};
+> > +
+> > +struct mtk_pmic_keys_info {
+> > +	struct mtk_pmic_keys *keys;
+> > +	const struct mtk_pmic_keys_regs *regs;
+> > +	unsigned int keycode;
+> > +	int irq;
+> > +	bool wakeup:1;
+> > +};
+> > +
+> > +struct mtk_pmic_keys {
+> > +	struct input_dev *input_dev;
+> > +	struct device *dev;
+> > +	struct regmap *regmap;
+> > +	struct mtk_pmic_keys_info keys[MTK_PMIC_MAX_KEY_COUNT];
+> > +};
+> > +
+> > +enum mtk_pmic_keys_lp_mode {
+> > +	LP_DISABLE,
+> > +	LP_ONEKEY,
+> > +	LP_TWOKEY,
+> > +};
+> > +
+> > +static void mtk_pmic_keys_lp_reset_setup(struct mtk_pmic_keys *keys,
+> > +		u32 pmic_rst_reg)
+> > +{
+> > +	int ret;
+> > +	u32 long_press_mode, long_press_debounce;
+> > +
+> > +	ret = of_property_read_u32(keys->dev->of_node,
+> > +		"power-off-time-sec", &long_press_debounce);
+> > +	if (ret)
+> > +		long_press_debounce = 0;
+> > +
+> > +	regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +			   MTK_PMIC_RST_DU_MASK << MTK_PMIC_RST_DU_SHIFT,
+> > +			   long_press_debounce << MTK_PMIC_RST_DU_SHIFT);
+> > +
+> > +	ret = of_property_read_u32(keys->dev->of_node,
+> > +		"mediatek,long-press-mode", &long_press_mode);
+> > +	if (ret)
+> > +		long_press_mode = LP_DISABLE;
+> > +
+> > +	switch (long_press_mode) {
+> > +	case LP_ONEKEY:
+> > +		regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +				   MTK_PMIC_PWRKEY_RST,
+> > +				   MTK_PMIC_PWRKEY_RST);
+> > +		regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +				   MTK_PMIC_HOMEKEY_RST,
+> > +				   0);
+> > +		break;
+> > +	case LP_TWOKEY:
+> > +		regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +				   MTK_PMIC_PWRKEY_RST,
+> > +				   MTK_PMIC_PWRKEY_RST);
+> > +		regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +				   MTK_PMIC_HOMEKEY_RST,
+> > +				   MTK_PMIC_HOMEKEY_RST);
+> > +		break;
+> > +	case LP_DISABLE:
+> > +		regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +				   MTK_PMIC_PWRKEY_RST,
+> > +				   0);
+> > +		regmap_update_bits(keys->regmap, pmic_rst_reg,
+> > +				   MTK_PMIC_HOMEKEY_RST,
+> > +				   0);
+> > +		break;
+> > +	default:
+> > +		break;
+> > +	}
+> > +}
+> > +
+> > +static irqreturn_t mtk_pmic_keys_irq_handler_thread(int irq, void *data)
+> > +{
+> > +	struct mtk_pmic_keys_info *info = data;
+> > +	u32 key_deb, pressed;
+> > +
+> > +	regmap_read(info->keys->regmap, info->regs->deb_reg, &key_deb);
+> > +
+> > +	key_deb &= info->regs->deb_mask;
+> > +
+> > +	pressed = !key_deb;
+> > +
+> > +	input_report_key(info->keys->input_dev, info->keycode, pressed);
+> > +	input_sync(info->keys->input_dev);
+> > +
+> > +	dev_dbg(info->keys->dev, "(%s) key =%d using PMIC\n",
+> > +		 pressed ? "pressed" : "released", info->keycode);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int mtk_pmic_key_setup(struct mtk_pmic_keys *keys,
+> > +		struct mtk_pmic_keys_info *info)
+> > +{
+> > +	int ret;
+> > +
+> > +	info->keys = keys;
+> > +
+> > +	ret = regmap_update_bits(keys->regmap, info->regs->intsel_reg,
+> > +				 info->regs->intsel_mask,
+> > +				 info->regs->intsel_mask);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	ret = devm_request_threaded_irq(keys->dev, info->irq, NULL,
+> > +					mtk_pmic_keys_irq_handler_thread,
+> > +					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
+> > +					"mtk-pmic-keys", info);
+> > +	if (ret) {
+> > +		dev_err(keys->dev, "Failed to request IRQ: %d: %d\n",
+> > +			info->irq, ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	input_set_capability(keys->input_dev, EV_KEY, info->keycode);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int mtk_pmic_keys_suspend(struct device *dev)
 > 
-> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> ---
-> Changes since v1:
->  - Re-order the including head files.
->  - Add one condition to check register size and value size when reading.
->  - Fix some coding style issues.
-> ---
->  drivers/mfd/Kconfig           |   10 ++
->  drivers/mfd/Makefile          |    1 +
->  drivers/mfd/sprd-sc27xx-spi.c |  264 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 275 insertions(+)
->  create mode 100644 drivers/mfd/sprd-sc27xx-spi.c
+> Please use __maybe_unused annotation instead of #ifdef guard.
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index fc5e4fe..4753cd5 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1057,6 +1057,16 @@ config MFD_SMSC
->          To compile this driver as a module, choose M here: the
->          module will be called smsc.
->  
-> +config MFD_SC27XX_PMIC
-> +	tristate "Spreadtrum SC27xx PMICs"
-> +	depends on ARCH_SPRD || COMPILE_TEST
-> +	depends on SPI_MASTER
-> +	select MFD_CORE
-> +	select REGMAP_SPI
-> +	select REGMAP_IRQ
-> +	help
-> +	  This enables support for the Spreadtrum SC27xx PMICs.
+> > +{
+> > +	struct mtk_pmic_keys *keys = dev_get_drvdata(dev);
+> > +	int index;
+> > +
+> > +	for (index = 0; index < MTK_PMIC_MAX_KEY_COUNT; index++) {
+> > +		if (keys->keys[index].wakeup)
+> > +			enable_irq_wake(keys->keys[index].irq);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mtk_pmic_keys_resume(struct device *dev)
+> 
+> __maybe_unused here as well.
+> 
+> > +{
+> > +	struct mtk_pmic_keys *keys = dev_get_drvdata(dev);
+> > +	int index;
+> > +
+> > +	for (index = 0; index < MTK_PMIC_MAX_KEY_COUNT; index++) {
+> > +		if (keys->keys[index].wakeup)
+> > +			disable_irq_wake(keys->keys[index].irq);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +#endif
+> > +
+> > +static SIMPLE_DEV_PM_OPS(mtk_pmic_keys_pm_ops, mtk_pmic_keys_suspend,
+> > +			mtk_pmic_keys_resume);
+> > +
+> > +static const struct of_device_id of_mtk_pmic_keys_match_tbl[] = {
+> > +	{
+> > +		.compatible = "mediatek,mt6397-keys",
+> > +		.data = &mt6397_regs,
+> > +	}, {
+> > +		.compatible = "mediatek,mt6323-keys",
+> > +		.data = &mt6323_regs,
+> > +	}, {
+> > +		/* sentinel */
+> > +	}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, of_mtk_pmic_keys_match_tbl);
+> > +
+> > +static int mtk_pmic_keys_probe(struct platform_device *pdev)
+> > +{
+> > +	int error, index = 0;
+> > +	unsigned int keycount;
+> > +	struct mt6397_chip *pmic_chip = dev_get_drvdata(pdev->dev.parent);
+> > +	struct device_node *node = pdev->dev.of_node, *child;
+> > +	struct mtk_pmic_keys *keys;
+> > +	const struct mtk_pmic_regs *mtk_pmic_regs;
+> > +	struct input_dev *input_dev;
+> > +	const struct of_device_id *of_id =
+> > +		of_match_device(of_mtk_pmic_keys_match_tbl, &pdev->dev);
+> > +
+> > +	keys = devm_kzalloc(&pdev->dev, sizeof(*keys), GFP_KERNEL);
+> > +	if (!keys)
+> > +		return -ENOMEM;
+> > +
+> > +	keys->dev = &pdev->dev;
+> > +	keys->regmap = pmic_chip->regmap;
+> > +	mtk_pmic_regs = of_id->data;
+> > +
+> > +	keys->input_dev = input_dev = devm_input_allocate_device(keys->dev);
+> > +	if (!input_dev) {
+> > +		dev_err(keys->dev, "input allocate device fail.\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	input_dev->name = "mtk-pmic-keys";
+> > +	input_dev->id.bustype = BUS_HOST;
+> > +	input_dev->id.vendor = 0x0001;
+> > +	input_dev->id.product = 0x0001;
+> > +	input_dev->id.version = 0x0001;
+> > +
+> > +	keycount = device_get_child_node_count(keys->dev);
+> 
+> Since you are using of_* API everywhere else I'd rather we used
+> of_get_available_child_count() here.
+> 
+> 
+> Once these 2 issues are fixed please feel free to add 
+> 
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> I assume it will all go though MFD tree, right?
 
-More information here please.  This looks like a pretty big device.
-It deserves more than a single line of help text.
+I will fix these 2 issues and send the new version.
 
->  config ABX500_CORE
->  	bool "ST-Ericsson ABX500 Mixed Signal Circuit register functions"
->  	default y if ARCH_U300 || ARCH_U8500 || COMPILE_TEST
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index c3d0a1b..a377e0f 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -226,3 +226,4 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
->  obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
->  obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
->  obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
-> +obj-$(CONFIG_MFD_SC27XX_PMIC)	+= sprd-sc27xx-spi.o
-> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-> new file mode 100644
-> index 0000000..eb7ff5f
-> --- /dev/null
-> +++ b/drivers/mfd/sprd-sc27xx-spi.c
-> @@ -0,0 +1,264 @@
-> +/*
-> + * Copyright (C) 2017 Spreadtrum Communications Inc.
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/spi/spi.h>
-> +
-> +#define SPRD_PMIC_INT_MASK_STATUS	0x0
-> +#define SPRD_PMIC_INT_RAW_STATU		0x4
-> +#define SPRD_PMIC_INT_EN		0x8
-> +
-> +struct sprd_pmic {
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +	struct regmap_irq *irqs;
-> +	struct regmap_irq_chip irq_chip;
-> +	struct regmap_irq_chip_data *irq_data;
-> +	int irq;
-> +};
-> +
-> +struct sprd_pmic_data {
-> +	u32 irq_base;
-> +	u32 num_irqs;
-> +};
-> +
-> +/*
-> + * Since different PMICs of SC27xx series can have different interrupt
-> + * base address and irq number, we should save irq number and irq base
-> + * in the device data structure.
-> + */
-> +static const struct sprd_pmic_data sc2731_data = {
-> +	.irq_base = 0x140,
+Since patch 2,3,4,5 of this series are all for input driver, could you
+help to merge them with the new version later?
 
-Does IRQ 0x140 have a name?
+Thank you.
 
-Probably best to define it.
+> 
+> > +	if (keycount > MTK_PMIC_MAX_KEY_COUNT) {
+> > +		dev_err(keys->dev, "too many keys defined (%d)\n", keycount);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	for_each_child_of_node(node, child) {
+> > +		keys->keys[index].regs = &mtk_pmic_regs->keys_regs[index];
+> > +
+> > +		keys->keys[index].irq = platform_get_irq(pdev, index);
+> > +		if (keys->keys[index].irq < 0)
+> > +			return keys->keys[index].irq;
+> > +
+> > +		error = of_property_read_u32(child,
+> > +			"linux,keycodes", &keys->keys[index].keycode);
+> > +		if (error) {
+> > +			dev_err(keys->dev,
+> > +				"failed to read key:%d linux,keycode property: %d\n",
+> > +				index, error);
+> > +			return error;
+> > +		}
+> > +
+> > +		if (of_property_read_bool(child, "wakeup-source"))
+> > +			keys->keys[index].wakeup = true;
+> > +
+> > +		error = mtk_pmic_key_setup(keys, &keys->keys[index]);
+> > +		if (error)
+> > +			return error;
+> > +
+> > +		index++;
+> > +	}
+> > +
+> > +	error = input_register_device(input_dev);
+> > +	if (error) {
+> > +		dev_err(&pdev->dev,
+> > +			"register input device failed (%d)\n", error);
+> > +		return error;
+> > +	}
+> > +
+> > +	mtk_pmic_keys_lp_reset_setup(keys, mtk_pmic_regs->pmic_rst_reg);
+> > +
+> > +	platform_set_drvdata(pdev, keys);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver pmic_keys_pdrv = {
+> > +	.probe = mtk_pmic_keys_probe,
+> > +	.driver = {
+> > +		   .name = "mtk-pmic-keys",
+> > +		   .of_match_table = of_mtk_pmic_keys_match_tbl,
+> > +		   .pm = &mtk_pmic_keys_pm_ops,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(pmic_keys_pdrv);
+> > +
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_AUTHOR("Chen Zhong <chen.zhong@mediatek.com>");
+> > +MODULE_DESCRIPTION("MTK pmic-keys driver v0.1");
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> Thanks.
+> 
 
-> +	.num_irqs = 16,
-> +};
-> +
-> +static const struct mfd_cell sprd_pmic_devs[] = {
-> +	{
-> +		.name = "sc27xx-wdt",
-> +		.of_compatible = "sprd,sc27xx-wdt",
-> +	}, {
-> +		.name = "sc27xx-rtc",
-> +		.of_compatible = "sprd,sc27xx-rtc",
-> +	}, {
-> +		.name = "sc27xx-charger",
-> +		.of_compatible = "sprd,sc27xx-charger",
-> +	}, {
-> +		.name = "sc27xx-chg-timer",
-> +		.of_compatible = "sprd,sc27xx-chg-timer",
-> +	}, {
-> +		.name = "sc27xx-fast-chg",
-> +		.of_compatible = "sprd,sc27xx-fast-chg",
-> +	}, {
-> +		.name = "sc27xx-chg-wdt",
-> +		.of_compatible = "sprd,sc27xx-chg-wdt",
-> +	}, {
-> +		.name = "sc27xx-typec",
-> +		.of_compatible = "sprd,sc27xx-typec",
-> +	}, {
-> +		.name = "sc27xx-flash",
-> +		.of_compatible = "sprd,sc27xx-flash",
-> +	}, {
-> +		.name = "sc27xx-eic",
-> +		.of_compatible = "sprd,sc27xx-eic",
-> +	}, {
-> +		.name = "sc27xx-efuse",
-> +		.of_compatible = "sprd,sc27xx-efuse",
-> +	}, {
-> +		.name = "sc27xx-thermal",
-> +		.of_compatible = "sprd,sc27xx-thermal",
-> +	}, {
-> +		.name = "sc27xx-adc",
-> +		.of_compatible = "sprd,sc27xx-adc",
-> +	}, {
-> +		.name = "sc27xx-audio-codec",
-> +		.of_compatible = "sprd,sc27xx-audio-codec",
-> +	}, {
-> +		.name = "sc27xx-regulator",
-> +		.of_compatible = "sprd,sc27xx-regulator",
-> +	}, {
-> +		.name = "sc27xx-vibrator",
-> +		.of_compatible = "sprd,sc27xx-vibrator",
-> +	}, {
-> +		.name = "sc27xx-keypad-led",
-> +		.of_compatible = "sprd,sc27xx-keypad-led",
-> +	}, {
-> +		.name = "sc27xx-bltc",
-> +		.of_compatible = "sprd,sc27xx-bltc",
-> +	}, {
-> +		.name = "sc27xx-fgu",
-> +		.of_compatible = "sprd,sc27xx-fgu",
-> +	}, {
-> +		.name = "sc27xx-7sreset",
-> +		.of_compatible = "sprd,sc27xx-7sreset",
-> +	}, {
-> +		.name = "sc27xx-poweroff",
-> +		.of_compatible = "sprd,sc27xx-poweroff",
-> +	},
-> +};
-> +
-> +static int sprd_pmic_spi_write(void *context, const void *data, size_t count)
-> +{
-> +	struct device *dev = context;
-> +	struct spi_device *spi = to_spi_device(dev);
-> +
-> +	return spi_write(spi, data, count);
-> +}
-> +
-> +static int sprd_pmic_spi_read(void *context,
-> +			      const void *reg, size_t reg_size,
-> +			      void *val, size_t val_size)
-> +{
-> +	struct device *dev = context;
-> +	struct spi_device *spi = to_spi_device(dev);
-> +	u32 rx_buf[2] = { 0 };
-> +	int ret;
-> +
-> +	/* Now we only support one PMIC register to read every time. */
-> +	if (reg_size != sizeof(u32) || val_size != sizeof(u32))
-> +		return -EINVAL;
-> +
-> +	rx_buf[0] = *(u32 *)reg;
 
-This looks dodgy.  You should not be doing raw memory manipulation.
-
-You need to be passing __iomem and using one of the predefined APIs
-(i.e. readl) on it.
-
-> +	ret = spi_read(spi, rx_buf, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	memcpy(val, rx_buf, val_size);
-> +	return 0;
-> +}
-> +
-> +static struct regmap_bus sprd_pmic_regmap = {
-> +	.write = sprd_pmic_spi_write,
-> +	.read = sprd_pmic_spi_read,
-> +	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
-> +	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
-> +};
-> +
-> +static const struct regmap_config sprd_pmic_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = 0xffff,
-> +};
-> +
-> +static int sprd_pmic_probe(struct spi_device *spi)
-> +{
-> +	struct sprd_pmic *sprd_pmic;
-
-Would prefer that you called this ddata.
-
-> +	const struct sprd_pmic_data *data;
-
-Would prefer that you called this pdata.
-
-> +	int ret, i;
-> +
-> +	data = of_device_get_match_data(&spi->dev);
-> +	if (!data) {
-> +		dev_err(&spi->dev, "No matching driver data found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	sprd_pmic = devm_kzalloc(&spi->dev, sizeof(*sprd_pmic), GFP_KERNEL);
-> +	if (!sprd_pmic)
-> +		return -ENOMEM;
-> +
-> +	sprd_pmic->regmap = devm_regmap_init(&spi->dev, &sprd_pmic_regmap,
-> +					     &spi->dev, &sprd_pmic_config);
-> +	if (IS_ERR(sprd_pmic->regmap)) {
-> +		ret = PTR_ERR(sprd_pmic->regmap);
-> +		dev_err(&spi->dev, "Failed to allocate register map %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	spi_set_drvdata(spi, sprd_pmic);
-> +	sprd_pmic->dev = &spi->dev;
-> +	sprd_pmic->irq = spi->irq;
-> +
-> +	sprd_pmic->irq_chip.name = dev_name(&spi->dev);
-> +	sprd_pmic->irq_chip.status_base =
-> +		data->irq_base + SPRD_PMIC_INT_MASK_STATUS;
-> +	sprd_pmic->irq_chip.mask_base = data->irq_base + SPRD_PMIC_INT_EN;
-> +	sprd_pmic->irq_chip.ack_base = 0;
-> +	sprd_pmic->irq_chip.num_regs = 1;
-> +	sprd_pmic->irq_chip.num_irqs = data->num_irqs;
-> +	sprd_pmic->irq_chip.mask_invert = true;
-> +
-> +	sprd_pmic->irqs = devm_kzalloc(&spi->dev, sizeof(struct regmap_irq) *
-> +				       data->num_irqs, GFP_KERNEL);
-> +	if (!sprd_pmic->irqs)
-> +		return -ENOMEM;
-> +
-> +	sprd_pmic->irq_chip.irqs = sprd_pmic->irqs;
-> +	for (i = 0; i < data->num_irqs; i++) {
-> +		sprd_pmic->irqs[i].reg_offset = i / data->num_irqs;
-> +		sprd_pmic->irqs[i].mask = BIT(i % data->num_irqs);
-> +	}
-> +
-> +	ret = devm_regmap_add_irq_chip(&spi->dev, sprd_pmic->regmap,
-> +				       sprd_pmic->irq,
-> +				       IRQF_ONESHOT | IRQF_NO_SUSPEND, 0,
-> +				       &sprd_pmic->irq_chip,
-> +				       &sprd_pmic->irq_data);
-> +	if (ret) {
-> +		dev_err(&spi->dev, "Failed to add PMIC irq chip %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = mfd_add_devices(&spi->dev, PLATFORM_DEVID_AUTO, sprd_pmic_devs,
-> +			      ARRAY_SIZE(sprd_pmic_devs), NULL, 0,
-> +			      regmap_irq_get_domain(sprd_pmic->irq_data));
-> +	if (ret) {
-> +		dev_err(&spi->dev, "Failed to register device %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_pmic_remove(struct spi_device *spi)
-> +{
-> +	mfd_remove_devices(&spi->dev);
-
-Anything stopping you from using devm_*?
-
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sprd_pmic_match[] = {
-> +	{ .compatible = "sprd,sc2731", .data = &sc2731_data },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sprd_pmic_match);
-> +
-> +static struct spi_driver sprd_pmic_driver = {
-> +	.driver = {
-> +		.name = "sc27xx-pmic",
-> +		.bus = &spi_bus_type,
-> +		.of_match_table = sprd_pmic_match,
-
-of_match_ptr()?
-
-> +	},
-> +	.probe = sprd_pmic_probe,
-> +	.remove = sprd_pmic_remove,
-> +};
-> +
-> +static int __init sprd_pmic_init(void)
-> +{
-> +	return spi_register_driver(&sprd_pmic_driver);
-> +}
-> +subsys_initcall(sprd_pmic_init);
-> +
-> +static void __exit sprd_pmic_exit(void)
-> +{
-> +	spi_unregister_driver(&sprd_pmic_driver);
-> +}
-> +module_exit(sprd_pmic_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("SPI support for SC27xx PMICs");
-
-"SPI support"?  This is not an SPI driver.
-
-> +MODULE_AUTHOR("Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>");
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
