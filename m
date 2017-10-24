@@ -1,164 +1,91 @@
-From: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Subject: [PATCH v3 1/2] usb: max3421: Add devicetree support
-Date: Tue, 24 Oct 2017 01:08:42 +0200
-Message-ID: <1548646c67a3abbf5d0058f9078c615c1412e311.1508798984.git.jules.maselbas@grenoble-inp.org>
-References: <cover.1508798984.git.jules.maselbas@grenoble-inp.org>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 usb-next 2/4] usb: core: add a wrapper for the USB
+ PHYs on the root-hub
+Date: Tue, 24 Oct 2017 08:06:54 +0800
+Message-ID: <1508803614.17567.120.camel@mhfsdcap03>
+References: <20171023215718.3446-1-martin.blumenstingl@googlemail.com>
+         <20171023215718.3446-3-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-In-Reply-To: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-References: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+In-Reply-To: <20171023215718.3446-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds support for devicetree to the max3421 driver.
+On Mon, 2017-10-23 at 23:57 +0200, Martin Blumenstingl wrote:
+> Many SoC platforms have separate devices for the USB PHY which are
+> registered through the generic PHY framework. These PHYs have to be
+> enabled to make the USB controller actually work. They also have to be
+> disabled again on shutdown/suspend.
+> 
+> Currently (at least) the following HCI platform drivers are using custom
+> code to obtain all PHYs via devicetree for the roothub/controller and
+> disable/enable them when required:
+> - ehci-platform.c has ehci_platform_power_{on,off}
+> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
+> - ohci-platform.c has ohci_platform_power_{on,off}
+> 
+> These drivers are not using the generic devicetree USB device bindings
+> (for the root-hub) yet which were only introduced recently (documentation
+> is available in devicetree/bindings/usb/usb-device.txt).
+> 
+> With this new wrapper the usb2-phy and usb3-phy can be specified directly
+> in the child-node of the corresponding port of the roothub via
+> devicetree.
+> This allows SoCs like the Amlogic Meson GXL family to operate correctly
+> because all USB PHYs are initialized (instead of the first USB PHY
+> only).
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/usb/core/Makefile |   2 +-
+>  drivers/usb/core/phy.c    | 176 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/core/phy.h    |   7 ++
+>  3 files changed, 184 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/usb/core/phy.c
+>  create mode 100644 drivers/usb/core/phy.h
+> 
+> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
+> index 250ec1d662d9..b6e181d08bf6 100644
+> --- a/drivers/usb/core/Makefile
+> +++ b/drivers/usb/core/Makefile
+> @@ -5,7 +5,7 @@
+>  usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
+>  usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
+>  usbcore-y += devio.o notify.o generic.o quirks.o devices.o
+> -usbcore-y += port.o
+> +usbcore-y += phy.o port.o
+>  
+>  usbcore-$(CONFIG_OF)		+= of.o
+>  usbcore-$(CONFIG_USB_PCI)		+= hcd-pci.o
+> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+> new file mode 100644
+> index 000000000000..31245b4abdbf
+> --- /dev/null
+> +++ b/drivers/usb/core/phy.c
+...
+> diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+> new file mode 100644
+> index 000000000000..6fde59bfbff8
+> --- /dev/null
+> +++ b/drivers/usb/core/phy.h
+> @@ -0,0 +1,7 @@
+> +struct usb_phy_roothub;
+> +
+> +struct usb_phy_roothub *usb_phy_roothub_init(struct device *dev);
+> +int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+> +
+> +int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+> +void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
 
-Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
----
- drivers/usb/host/max3421-hcd.c | 75 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
+Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> 
 
-diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
-index 0ece9a9341e5..d77b3f27c6e7 100644
---- a/drivers/usb/host/max3421-hcd.c
-+++ b/drivers/usb/host/max3421-hcd.c
-@@ -60,6 +60,7 @@
- #include <linux/spi/spi.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
-+#include <linux/of.h>
- 
- #include <linux/platform_data/max3421-hcd.h>
- 
-@@ -85,6 +86,8 @@
- 			  USB_PORT_STAT_C_OVERCURRENT | \
- 			  USB_PORT_STAT_C_RESET) << 16)
- 
-+#define MAX3421_GPOUT_COUNT	8
-+
- enum max3421_rh_state {
- 	MAX3421_RH_RESET,
- 	MAX3421_RH_SUSPENDED,
-@@ -1672,7 +1675,7 @@ max3421_gpout_set_value(struct usb_hcd *hcd, u8 pin_number, u8 value)
- 	u8 mask, idx;
- 
- 	--pin_number;
--	if (pin_number > 7)
-+	if (pin_number >= MAX3421_GPOUT_COUNT)
- 		return;
- 
- 	mask = 1u << (pin_number % 4);
-@@ -1831,11 +1834,35 @@ static const struct hc_driver max3421_hcd_desc = {
- 	.bus_resume =		max3421_bus_resume,
- };
- 
-+static int
-+max3421_of_vbus_en_pin(struct device *dev, struct max3421_hcd_platform_data *pdata)
-+{
-+	int retval;
-+	uint32_t value[2];
-+
-+	if (!pdata)
-+		return -EINVAL;
-+
-+	retval = of_property_read_u32_array(dev->of_node, "maxim,vbus-en-pin", value, 2);
-+	if (retval) {
-+		dev_err(dev, "device tree node property 'maxim,vbus-en-pin' is missing\n");
-+		return retval;
-+	}
-+	dev_info(dev, "property 'maxim,vbus-en-pin' value is <%d %d>\n", value[0], value[1]);
-+
-+	pdata->vbus_gpout = value[0];
-+	pdata->vbus_active_level = value[1];
-+
-+	return 0;
-+}
-+
- static int
- max3421_probe(struct spi_device *spi)
- {
-+	struct device *dev = &spi->dev;
- 	struct max3421_hcd *max3421_hcd;
- 	struct usb_hcd *hcd = NULL;
-+	struct max3421_hcd_platform_data *pdata = NULL;
- 	int retval = -ENOMEM;
- 
- 	if (spi_setup(spi) < 0) {
-@@ -1843,6 +1870,40 @@ max3421_probe(struct spi_device *spi)
- 		return -EFAULT;
- 	}
- 
-+	if (!spi->irq) {
-+		dev_err(dev, "Failed to get SPI IRQ");
-+		return -EFAULT;
-+	}
-+
-+	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-+		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			retval = -ENOMEM;
-+			goto error;
-+		}
-+		retval = max3421_of_vbus_en_pin(dev, pdata);
-+		if (retval)
-+			goto error;
-+		spi->dev.platform_data = pdata;
-+	}
-+
-+	pdata = dev->platform_data;
-+	if (!pdata) {
-+		dev_err(dev, "driver configuration data is not provided\n");
-+		retval = -EFAULT;
-+		goto error;
-+	}
-+	if (pdata->vbus_active_level > 1) {
-+		dev_err(dev, "vbus active level value %d is out of range (0/1)\n", pdata->vbus_active_level);
-+		retval = -EINVAL;
-+		goto error;
-+	}
-+	if (pdata->vbus_gpout < 1 || pdata->vbus_gpout > MAX3421_GPOUT_COUNT) {
-+		dev_err(dev, "vbus gpout value %d is out of range (1..8)\n", pdata->vbus_gpout);
-+		retval = -EINVAL;
-+		goto error;
-+	}
-+
- 	hcd = usb_create_hcd(&max3421_hcd_desc, &spi->dev,
- 			     dev_name(&spi->dev));
- 	if (!hcd) {
-@@ -1885,6 +1946,11 @@ max3421_probe(struct spi_device *spi)
- 	return 0;
- 
- error:
-+	if (IS_ENABLED(CONFIG_OF) && dev->of_node && pdata) {
-+		devm_kfree(&spi->dev, pdata);
-+		spi->dev.platform_data = NULL;
-+	}
-+
- 	if (hcd) {
- 		kfree(max3421_hcd->tx);
- 		kfree(max3421_hcd->rx);
-@@ -1929,11 +1995,18 @@ max3421_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id max3421_of_match_table[] = {
-+	{ .compatible = "maxim,max3421", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, max3421_of_match_table);
-+
- static struct spi_driver max3421_driver = {
- 	.probe		= max3421_probe,
- 	.remove		= max3421_remove,
- 	.driver		= {
- 		.name	= "max3421-hcd",
-+		.of_match_table = of_match_ptr(max3421_of_match_table),
- 	},
- };
- 
--- 
-2.14.2
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
