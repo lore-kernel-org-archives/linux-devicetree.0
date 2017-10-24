@@ -1,69 +1,170 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 10/13] firmware: arm_sdei: Add support for CPU and
- system power states
-Date: Tue, 24 Oct 2017 18:34:19 +0100
-Message-ID: <59EF799B.4040802@arm.com>
-References: <20171017174432.1684-1-james.morse@arm.com> <20171017174432.1684-11-james.morse@arm.com> <20171018171747.GI21820@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2] Dcoumentation: dt: mailbox: Add Xilinx IPI Mailbox
+Date: Tue, 24 Oct 2017 12:50:13 -0500
+Message-ID: <20171024175013.sovbmrpagrtcvq2u@rob-hp-laptop>
+References: <1508265184-17799-1-git-send-email-jliang@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171018171747.GI21820-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1508265184-17799-1-git-send-email-jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Wendy Liang <wendy.liang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cyrilc-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, willw-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
+On Tue, Oct 17, 2017 at 11:33:04AM -0700, Wendy Liang wrote:
+> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
+> in ZynqMP SoC used for the communication between various processor
+> systems.
 
-On 18/10/17 18:17, Will Deacon wrote:
-> On Tue, Oct 17, 2017 at 06:44:29PM +0100, James Morse wrote:
->> When a CPU enters an idle lower-power state or is powering off, we
->> need to mask SDE events so that no events can be delivered while we
->> are messing with the MMU as the registered entry points won't be valid.
->>
->> If the system reboots, we want to unregister all events and mask the CPUs.
->> For kexec this allows us to hand a clean slate to the next kernel
->> instead of relying on it to call sdei_{private,system}_data_reset().
->>
->> For hibernate we unregister all events and re-register them on restore,
->> in case we restored with the SDE code loaded at a different address.
->> (e.g. KASLR).
->>
->> Add all the notifiers necessary to do this. We only support shared events
->> so all events are left registered and enabled over CPU hotplug.
+"dt-bindings: mailbox: " for the subject prefix please.
 
->>  static void sdei_smccc_smc(unsigned long function_id,
->>  			   unsigned long arg0, unsigned long arg1,
->>  			   unsigned long arg2, unsigned long arg3,
->> @@ -544,9 +742,36 @@ static int sdei_probe(struct platform_device *pdev)
->>  		return 0;
->>  	}
->>  
->> +	err = cpuhp_setup_state_nocalls(CPUHP_AP_ARM_SDEI_STARTING, "SDEI",
->> +				&sdei_cpuhp_up, &sdei_cpuhp_down);
->> +	if (err) {
->> +		pr_warn("Failed to register CPU hotplug notifier...\n");
->> +		return err;
->> +	}
 > 
-> What prevents CPU hotplug events coming in here?
+> Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> V2: Each ZynqMP IPI mailbox controller instance for one physical connection
+>     between two ZynqMP IPI agents.
+> ---
+>  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 103 +++++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> new file mode 100644
+> index 0000000..ba02b93
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> @@ -0,0 +1,103 @@
+> +Xilinx IPI Mailbox Driver
+> +========================================
+> +
+> +The Xilinx IPI(Inter Processor Interrupt) mailbox driver is a mailbox
 
-Nothing, but what would trigger them? This is after the arch code has brought up
-secondaries, but before user space is running.
+Bindings are for h/w, not drivers.
 
+> +controller that manages the messaging between two Xilinx Zynq UltraScale+
+> +MPSoC IPI agents. Each IPI agent owns registers used for notification and
+> +buffers for message.
+> +
+> +               +-------------------------------------+
+> +               | Xilinx ZynqMP IPI Controller        |
+> +               +-------------------------------------+
+> +    +--------------------------------------------------+
+> +ATF                    |                     |
+> +                       |                     |
+> +                       |                     |
+> +    +--------------------------+             |
+> +                       |                     |
+> +                       |                     |
+> +    +--------------------------------------------------+
+> +            +------------------------------------------+
+> +            |  +----------------+   +----------------+ |
+> +Hardware    |  |  IPI Agent     |   |  IPI Buffers   | |
+> +            |  |  Registers     |   |                | |
+> +            |  |                |   |                | |
+> +            |  +----------------+   +----------------+ |
+> +            |                                          |
+> +            | Xilinx IPI Agent Block                   |
+> +            +------------------------------------------+
+> +
+> +
+> +Controller Device Node:
+> +===========================
+> +Required properties:
+> +--------------------
+> +- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
+> +- reg:			IPI buffers address range
+> +- reg-names:		Names of the reg resources
+> +- #mbox-cells:		Shall be 1. It contains:
+> +			* tx(0) or rx(1) channel
+> +- ipi-ids:		IPI agent IDs of the two ends of the
+> +			communication.
 
-No events are registered by this point, so all that could go wrong is a
-freshly-arrived CPU is unmasked, then this probe method fails and assumes it
-left cores masked. If you think its possible I can post a patch to bolt it down
-some more.
+This needs a better description and a vendor prefix if not something 
+that should be common.
 
-Thanks for taking a look!
+> +- interrupt-parent:	Phandle for the interrupt controller
+> +- interrupts:		Interrupt information corresponding to the
+> +			interrupt-names property.
+> +
+> +Optional properties:
+> +--------------------
+> +- method:              The method of accessing the IPI agent registers.
+> +                       Permitted values are: "smc" and "hvc". Default is
+> +                       "smc".
+> +
+> +Client Device Node:
+> +===========================
+> +Required properties:
+> +--------------------
+> +- mboxes:		Standard property to specify a mailbox
+> +			(See ./mailbox.txt)
+> +- mbox-names:		List of identifier  strings for each mailbox
+> +			channel.
+> +
+> +Example:
+> +===========================
+> +	/* APU IPI mailbox driver */
+> +	ipi_mailbox_rpu0: ipi_mailbox@0xff90400 {
 
+Don't use '_' or '0x'. Building your dts with W=2 will give you these 
+warnings. Also, should be a generic node name, so: "mailbox@ff90400"
 
-Thanks,
+> +		compatible = "xlnx,zynqmp-ipi-mailbox";
+> +		reg = <0x0 0xff990400 0x0 0x20>,
+> +		      <0x0 0xff990420 0x0 0x20>,
+> +		      <0x0 0xff990080 0x0 0x20>,
+> +		      <0x0 0xff9900a0 0x0 0x20>;
+> +		reg-names = "local_request_region", "local_response_region",
+> +			    "remote_request_region", "remote_response_region";
+> +		#mbox-cells = <1>;
+> +		ipi-ids = <0 1>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 29 4>;
+> +	};
+> +	ipi_mailbox_rpu1: ipi_mailbox@ff990440 {
 
-James
+mailbox@...
+
+> +		compatible = "xlnx,zynqmp-ipi-mailbox";
+> +		reg = <0x0 0xff990440 0x0 0x20>,
+> +		      <0x0 0xff990460 0x0 0x20>,
+> +		      <0x0 0xff990280 0x0 0x20>,
+> +		      <0x0 0xff9902a0 0x0 0x20>;
+> +		reg-names = "local_request_region", "local_response_region",
+> +			    "remote_request_region", "remote_response_region";
+> +		#mbox-cells = <1>;
+> +		ipi-ids = <0 2>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 29 4>;
+> +	};
+> +	rpu_subsystem0: rpu_subsystem@0 {
+
+rpu-subsystem@0
+
+Though without a reg property, you shouldn't have '@0'.
+
+> +		rpu0 {
+> +			...
+> +			mbox-clients = <&ipi_mailbox_rpu0 0>,
+> +					<&ipi_mailbox_rpu0 1>;
+> +			mbox-clients-names = "tx", "rx";
+> +		};
+> +		rpu1 {
+> +			...
+> +			mbox-clients = <&ipi_mailbox_rpu1 0>,
+> +					<&ipi_mailbox_rpu1 1>;
+> +			mbox-clients-names = "tx", "rx";
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
