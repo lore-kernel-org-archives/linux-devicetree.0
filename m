@@ -1,38 +1,26 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: DRA76-EVM: Set powerhold property for tps65917
-Date: Tue, 24 Oct 2017 14:14:08 +0530
-Message-ID: <1508834648-28715-1-git-send-email-j-keerthy@ti.com>
+From: Bao Xiaowei <xiaowei.bao@nxp.com>
+Subject: [PATCH 0/3] dts: Add the property of IB and OB
+Date: Tue, 24 Oct 2017 16:30:42 +0800
+Message-ID: <20171024083045.31135-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, bhelgaas@google.com, shawnguo@kernel.org, madalin.bucur@nxp.com, sumit.garg@nxp.com, yangbo.lu@nxp.com, hongtao.jia@nxp.com, Yuantian.Tang@nxp.com, leoyang.li@nxp.com, kishon@ti.com, jingoohan1@gmail.com, pbrobinson@gmail.com, songxiaowei@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhiqiang.Hou@nxp.com, mingkai.hu@nxp.com, Minghuan.Lian@nxp.com
+Cc: Bao Xiaowei <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Set powerhold property for tps65917
+Depend on http://patchwork.ozlabs.org/patch/815382/
 
-Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra76-evm.dts | 1 +
- 1 file changed, 1 insertion(+)
+Bao Xiaowei (3):
+  ARMv8: dts: ls1046a: add the property of IB and OB
+  ARMv8: layerscape: add the pcie ep function support
+  ARMv8: pcie: make the DWC EP driver support for layerscape
 
-diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
-index b024a65..f64aab4 100644
---- a/arch/arm/boot/dts/dra76-evm.dts
-+++ b/arch/arm/boot/dts/dra76-evm.dts
-@@ -148,6 +148,7 @@
- 		compatible = "ti,tps65917";
- 		reg = <0x58>;
- 		ti,system-power-controller;
-+		ti,palmas-override-powerhold;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   6 ++
+ drivers/pci/dwc/Kconfig                        |   1 +
+ drivers/pci/dwc/pci-layerscape.c               | 137 +++++++++++++++++++++++--
+ 3 files changed, 138 insertions(+), 6 deletions(-)
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.1
