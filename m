@@ -1,33 +1,104 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add Spreadtrum SC9860 DMA controller
-Date: Wed, 25 Oct 2017 09:53:23 +0800
-Message-ID: <CAMz4kuK=i2C=wrOg00UZK8DG57icffDqrRVvdeGB2RDXgNu7cA@mail.gmail.com>
-References: <84d9f80ce9853ae8441ef91e8701ba516db8f697.1508824012.git.baolin.wang@spreadtrum.com>
- <20171024143829.GR936@localhost>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 2/2] mfd: Add Spreadtrum SC27xx series PMICs driver
+Date: Wed, 25 Oct 2017 10:17:32 +0800
+Message-ID: <CAMz4kuL-gr1NtF4kccbTtEj8m3Om5VDZB+MJQWGD3FJUaW3BHQ@mail.gmail.com>
+References: <1dd82fa9d640d076e88b618c0788d27315a51f66.1508154918.git.baolin.wang@spreadtrum.com>
+ <8aabf006019f69e82f62bf6cfd4809c4079db9cb.1508154918.git.baolin.wang@spreadtrum.com>
+ <20171024092641.vtg7namz2qwonpw4@dell> <CAMz4kuJ1SV0yv-mAbWiGZN15OoYxXap3-CEvVoDCkZwr7MJK9w@mail.gmail.com>
+ <20171024103718.jz2mvikg6klzs7un@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171024143829.GR936@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171024103718.jz2mvikg6klzs7un@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On 24 October 2017 at 22:38, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Oct 24, 2017 at 01:47:49PM +0800, Baolin Wang wrote:
->> This patch adds the binding documentation for Spreadtrum SC9860 DMA
->> controller device.
+On 24 October 2017 at 18:37, Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 24 Oct 2017, Baolin Wang wrote:
 >
-> Applied both after fixing subsytem name, thanks
+>> Hi Lee,
+>>
+>> On 24 October 2017 at 17:26, Lee Jones <lee.jones@linaro.org> wrote:
+>> > On Mon, 16 Oct 2017, Baolin Wang wrote:
+>> >
+>> >> This patch adds support for Spreadtrum SC27xx series PMIC MFD core, and It
+>> >> provides communication through the SPI interfaces. The SC27xx series PMICs
+>> >> contains the following 6 major components:
+>> >> - DCDCs
+>> >> - LDOs
+>> >> - Battery management system
+>> >> - Audio codec
+>> >> - User interface function, such as indicator, flash LED
+>> >> - IC level function, such as power on/off, type-c
+>> >>
+>> >> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+>> >> ---
+>> >> Changes since v1:
+>> >>  - Re-order the including head files.
+>> >>  - Add one condition to check register size and value size when reading.
+>> >>  - Fix some coding style issues.
+>> >> ---
+>> >>  drivers/mfd/Kconfig           |   10 ++
+>> >>  drivers/mfd/Makefile          |    1 +
+>> >>  drivers/mfd/sprd-sc27xx-spi.c |  264 +++++++++++++++++++++++++++++++++++++++++
+>> >>  3 files changed, 275 insertions(+)
+>> >>  create mode 100644 drivers/mfd/sprd-sc27xx-spi.c
+>
+> [...]
+>
+>> >> +static int sprd_pmic_spi_read(void *context,
+>> >> +                           const void *reg, size_t reg_size,
+>> >> +                           void *val, size_t val_size)
+>> >> +{
+>> >> +     struct device *dev = context;
+>> >> +     struct spi_device *spi = to_spi_device(dev);
+>> >> +     u32 rx_buf[2] = { 0 };
+>> >> +     int ret;
+>> >> +
+>> >> +     /* Now we only support one PMIC register to read every time. */
+>> >> +     if (reg_size != sizeof(u32) || val_size != sizeof(u32))
+>> >> +             return -EINVAL;
+>> >> +
+>> >> +     rx_buf[0] = *(u32 *)reg;
+>> >
+>> > This looks dodgy.  You should not be doing raw memory manipulation.
+>> >
+>> > You need to be passing __iomem and using one of the predefined APIs
+>> > (i.e. readl) on it.
+>>
+>> Sorry, I did not get you here. The 'reg' parameter is just one PMIC
+>> register offset which want to be read. We do not need to pass __iomem
+>> to SPI master driver, we just pass one register offset address to our
+>> SPI master driver then the SPI master driver will handle to read
+>> values from our PMIC.
+>
+> You should not be referencing the value at 'reg' manually:
+>
+> rx_buf[0] = readl(reg);
 
-Thanks, especially for your good suggestion.
+This is not true, like I said the 'reg' is not __iomem address, it is
+just one register offset, we should pass the reg offset to SPI master
+to read.
+
+> [...]
+>
+>> >> +static struct spi_driver sprd_pmic_driver = {
+>> >> +     .driver = {
+>> >> +             .name = "sc27xx-pmic",
+>> >> +             .bus = &spi_bus_type,
+>> >> +             .of_match_table = sprd_pmic_match,
+>> >
+>> > of_match_ptr()?
+>>
+>> The of_match_ptr() did nothing, so I think it is not necessary.
+>
+> What do you mean?
+
+sorry, what I mean is we must enable CONFIG_OF if we want to use this
+driver, so of_match_ptr() seems redundant.
 
 -- 
 Baolin.wang
 Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
