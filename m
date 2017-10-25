@@ -1,67 +1,74 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Devicetree Workshop at Kernel Summit Prague
- (26 Oct 2017)
-Date: Wed, 25 Oct 2017 16:40:27 +0200
-Message-ID: <20171025144027.qryjocn2zjblro4x@flea>
-References: <CACxGe6sxKzNKZbdGA-G=Th2oHwuanyC2kGYuaFcKbSRkuhep+Q@mail.gmail.com>
- <CACxGe6vhYV5dbnNQXyRoPq=XSA5HOtpN0FCqyoKvGVbRu-aRqA@mail.gmail.com>
- <20171024093755.501c9045@bbrezillon>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 10/13] firmware: arm_sdei: Add support for CPU and
+ system power states
+Date: Wed, 25 Oct 2017 15:43:21 +0100
+Message-ID: <20171025144320.GC17881@arm.com>
+References: <20171017174432.1684-1-james.morse@arm.com>
+ <20171017174432.1684-11-james.morse@arm.com>
+ <20171018171747.GI21820@arm.com>
+ <59EF799B.4040802@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xgvf4odqsyzxok2f"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171024093755.501c9045@bbrezillon>
+In-Reply-To: <59EF799B.4040802-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 24, 2017 at 06:34:19PM +0100, James Morse wrote:
+> Hi Will,
+> 
+> On 18/10/17 18:17, Will Deacon wrote:
+> > On Tue, Oct 17, 2017 at 06:44:29PM +0100, James Morse wrote:
+> >> When a CPU enters an idle lower-power state or is powering off, we
+> >> need to mask SDE events so that no events can be delivered while we
+> >> are messing with the MMU as the registered entry points won't be valid.
+> >>
+> >> If the system reboots, we want to unregister all events and mask the CPUs.
+> >> For kexec this allows us to hand a clean slate to the next kernel
+> >> instead of relying on it to call sdei_{private,system}_data_reset().
+> >>
+> >> For hibernate we unregister all events and re-register them on restore,
+> >> in case we restored with the SDE code loaded at a different address.
+> >> (e.g. KASLR).
+> >>
+> >> Add all the notifiers necessary to do this. We only support shared events
+> >> so all events are left registered and enabled over CPU hotplug.
+> 
+> >>  static void sdei_smccc_smc(unsigned long function_id,
+> >>  			   unsigned long arg0, unsigned long arg1,
+> >>  			   unsigned long arg2, unsigned long arg3,
+> >> @@ -544,9 +742,36 @@ static int sdei_probe(struct platform_device *pdev)
+> >>  		return 0;
+> >>  	}
+> >>  
+> >> +	err = cpuhp_setup_state_nocalls(CPUHP_AP_ARM_SDEI_STARTING, "SDEI",
+> >> +				&sdei_cpuhp_up, &sdei_cpuhp_down);
+> >> +	if (err) {
+> >> +		pr_warn("Failed to register CPU hotplug notifier...\n");
+> >> +		return err;
+> >> +	}
+> > 
+> > What prevents CPU hotplug events coming in here?
+> 
+> Nothing, but what would trigger them? This is after the arch code has brought up
+> secondaries, but before user space is running.
 
---xgvf4odqsyzxok2f
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But as we recently discovered (ae2e972dae3c), userspace can be running
+really early due to an initrd and I don't think that necessarily rules out
+hotplug operations.
 
-On Tue, Oct 24, 2017 at 09:37:55AM +0200, Boris Brezillon wrote:
-> > 15:15 (15min) Location for maintaining bindings - how to handle
-> > 'foreign bindings' (Boris Brezillon)
->=20
-> Sorry for late reply, but I will not attend the Device Tree workshop.
-> I still think the problem should be discussed and you seemed to have an
-> opinion on this, so maybe you can lead the discussion.
+> No events are registered by this point, so all that could go wrong is a
+> freshly-arrived CPU is unmasked, then this probe method fails and assumes it
+> left cores masked. If you think its possible I can post a patch to bolt it down
+> some more.
 
-I will be here though, so I can discuss this instead of Boris, we've
-been confronted to this recently as well.
+If the race is benign, could you avoid using the _nocalls registration
+function and drop the subsequent IPI?
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---xgvf4odqsyzxok2f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ8KJbAAoJEBx+YmzsjxAgK2kQALyqvlJcsgsU88R/+yQlRP1E
-DVqeo+MTye1ab78cCUsUU0uHKeoDc77POaz1WeNy2+z9D5IBr/nBH2FxODoW3COu
-SotcbRk8JoB92eCP9Mf29GqkexgBQkcZp22QOWC/dU69q+bmiNmMuB6re2SJ7dqj
-KjXTmD1Nvp1aml9fEey2bfQ6vZ6MyskC1bbumEnJpmWHJkdo6iT3W+C/l9Uh1/ls
-MTAGvuJohw5coy3uoAzYaF6MJziHPoSXtWCg/tl4NWZr/r72pcHbx+BQaiPzIz8O
-8NGhN5J1syHCBDDdjiaBrzWvrSngJSh9KmUFTGJjDeEfbucomerF2Lx9Bgd1PS4y
-NMPPHh3b0511x3FNP8H2asVxe+HUWJcjZk4C3R9j7jtY9EfRPOYs2JWxNAzDAAc2
-7CO7Jgng51832+SfsR4lmjjn+7P9lAc5LJ6ML97E6ZNwUbAEYj6U3LJ2MHG0V/PS
-gFlWkS40E5XzZDseC4O0XSnJh/CB9bB8L8X750gxs/gRfdC4Jr9Rda+L4bgV0k0Q
-91Ynb9XgGQmRTpjzq6TLYfBcE+rkz0bcsalk3xtgjCkJoYWp7qHWBigJzuYfmPZA
-zYspiWeJWmUAMhb/gWbm8dpLCQd6iYPsPHEoTBtkw1NJBBq9l6Mj3eEib/ZN/WCO
-gcU9+DWOlXfgnuv6LApv
-=rlaO
------END PGP SIGNATURE-----
-
---xgvf4odqsyzxok2f--
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
