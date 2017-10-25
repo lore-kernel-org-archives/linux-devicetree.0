@@ -1,96 +1,44 @@
-From: Yang Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: dts: ls1088a: Add USB support
-Date: Tue, 24 Oct 2017 17:26:37 -0500
-Message-ID: <CADRPPNS8+APXQRcmHqn9YDHKbyE49gH3yoQjrsOQfYrMykeizg@mail.gmail.com>
-References: <20171024093118.31238-1-yinbo.zhu@nxp.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [Patch v6 1/7] slimbus: Device management on SLIMbus
+Date: Tue, 24 Oct 2017 17:16:56 -0700
+Message-ID: <20171025001656.GB30645@codeaurora.org>
+References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
+ <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171024093118.31238-1-yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171006155136.4682-2-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yinbo.zhu-3arQi8VN3Tc@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 4:31 AM,  <yinbo.zhu-3arQi8VN3Tc@public.gmane.org> wrote:
-> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
->
-> Fix the issue that usb is not detected on ls1088ardb
+On 10/06, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> +
+> +SLIMbus example for Qualcomm's slimbus manager component:
+> +
+> +	slim@28080000 {
+> +		compatible = "qcom,slim-msm";
+> +		reg = <0x28080000 0x2000>,
+> +		interrupts = <0 33 0>;
+> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+> +		clock-names = "iface_clk", "core_clk";
 
-You can only fix issue for a function after the function has been
-added previously.  So like Shawn commented, this patch is about adding
-the USB support instead of fixing an issue.
+Please remove "_clk" from here.
 
->
-> Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
-> ---
->
-> Change in v3:
->                 - Change status from "enable" to "disabled" then enable it on dts file.
->                 - Add the version history.
->
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index 213abb72de93..6c3c3bc4b681 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -118,6 +118,14 @@
->         status = "okay";
->  };
->
-> +&usb0 {
-> +       status = "okay";
-> +};
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
 > +
-> +&usb1 {
-> +       status = "okay";
-> +};
-> +
->  &esdhc {
->         status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index c144d06a6e33..c23fede8cf5d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -359,6 +359,26 @@
->                         status = "disabled";
->                 };
->
-> +               usb0: usb3@3100000 {
-> +                       compatible = "snps,dwc3";
-> +                       reg = <0x0 0x3100000 0x0 0x10000>;
-> +                       interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
-> +                       dr_mode = "host";
-> +                       snps,quirk-frame-length-adjustment = <0x20>;
-> +                       snps,dis_rxdet_inp3_quirk;
-> +                       status = "disabled";
-> +               };
-> +
-> +               usb1: usb3@3110000 {
-> +                       compatible = "snps,dwc3";
-> +                       reg = <0x0 0x3110000 0x0 0x10000>;
-> +                       interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
-> +                       dr_mode = "host";
-> +                       snps,quirk-frame-length-adjustment = <0x20>;
-> +                       snps,dis_rxdet_inp3_quirk;
-> +                       status = "disabled";
-> +               };
-> +
->                 sata: sata@3200000 {
->                         compatible = "fsl,ls1088a-ahci";
->                         reg = <0x0 0x3200000 0x0 0x10000>,
-> --
-> 2.14.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		codec: wcd9310@1{
+> +			compatible = "slim217,60"";
+> +			reg = <1 0>;
+> +		};
+> +	};
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
