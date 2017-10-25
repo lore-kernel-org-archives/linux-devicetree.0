@@ -1,74 +1,44 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 10/13] firmware: arm_sdei: Add support for CPU and
- system power states
-Date: Wed, 25 Oct 2017 15:43:21 +0100
-Message-ID: <20171025144320.GC17881@arm.com>
-References: <20171017174432.1684-1-james.morse@arm.com>
- <20171017174432.1684-11-james.morse@arm.com>
- <20171018171747.GI21820@arm.com>
- <59EF799B.4040802@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: dt: extcon: add optional
+ debounce-timeout-ms attribute
+Date: Wed, 25 Oct 2017 09:53:37 -0500
+Message-ID: <20171025145337.kubcbkxrhbsy6o4a@rob-hp-laptop>
+References: <1508383560-15567-1-git-send-email-raveendra.padasalagi@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <59EF799B.4040802-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1508383560-15567-1-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 06:34:19PM +0100, James Morse wrote:
-> Hi Will,
+On Thu, Oct 19, 2017 at 08:55:59AM +0530, Raveendra Padasalagi wrote:
+> Add documentation on optional dt attribute "debounce-timeout-ms"
+> in extcon node to capture user specified timeout value for id
+> and vbus gpio detection.
 > 
-> On 18/10/17 18:17, Will Deacon wrote:
-> > On Tue, Oct 17, 2017 at 06:44:29PM +0100, James Morse wrote:
-> >> When a CPU enters an idle lower-power state or is powering off, we
-> >> need to mask SDE events so that no events can be delivered while we
-> >> are messing with the MMU as the registered entry points won't be valid.
-> >>
-> >> If the system reboots, we want to unregister all events and mask the CPUs.
-> >> For kexec this allows us to hand a clean slate to the next kernel
-> >> instead of relying on it to call sdei_{private,system}_data_reset().
-> >>
-> >> For hibernate we unregister all events and re-register them on restore,
-> >> in case we restored with the SDE code loaded at a different address.
-> >> (e.g. KASLR).
-> >>
-> >> Add all the notifiers necessary to do this. We only support shared events
-> >> so all events are left registered and enabled over CPU hotplug.
+> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
 > 
-> >>  static void sdei_smccc_smc(unsigned long function_id,
-> >>  			   unsigned long arg0, unsigned long arg1,
-> >>  			   unsigned long arg2, unsigned long arg3,
-> >> @@ -544,9 +742,36 @@ static int sdei_probe(struct platform_device *pdev)
-> >>  		return 0;
-> >>  	}
-> >>  
-> >> +	err = cpuhp_setup_state_nocalls(CPUHP_AP_ARM_SDEI_STARTING, "SDEI",
-> >> +				&sdei_cpuhp_up, &sdei_cpuhp_down);
-> >> +	if (err) {
-> >> +		pr_warn("Failed to register CPU hotplug notifier...\n");
-> >> +		return err;
-> >> +	}
-> > 
-> > What prevents CPU hotplug events coming in here?
+> Changes in v2:
+>  Rename debounce-timeout-ms to input-debounce
 > 
-> Nothing, but what would trigger them? This is after the arch code has brought up
-> secondaries, but before user space is running.
+>  Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-But as we recently discovered (ae2e972dae3c), userspace can be running
-really early due to an initrd and I don't think that necessarily rules out
-hotplug operations.
+Sorry, but extcon bindings should be scrapped IMO and I don't want to 
+see additions. "extcon" is a Linuxism and is the first clue.
 
-> No events are registered by this point, so all that could go wrong is a
-> freshly-arrived CPU is unmasked, then this probe method fails and assumes it
-> left cores masked. If you think its possible I can post a patch to bolt it down
-> some more.
+What's needed is a full USB connector binding, not just some incomplete 
+handling of ID and Vbus pins. There's some work happening on that[1].
 
-If the race is benign, could you avoid using the _nocalls registration
-function and drop the subsequent IPI?
+Rob
 
-Will
+[1] https://www.spinics.net/lists/linux-usb/msg161106.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
