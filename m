@@ -1,80 +1,34 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 1/3] dt-bindings: iio: adc: stm32: add support for diff
- channels
-Date: Wed, 25 Oct 2017 11:27:43 +0200
-Message-ID: <1508923665-2274-2-git-send-email-fabrice.gasnier@st.com>
-References: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 0/3] iio: adc: stm32: Add support for differential channels
+Date: Wed, 25 Oct 2017 11:27:42 +0200
+Message-ID: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-STM32H7 ADC channels may be configured either as single-ended or
-differential.
-Add 'st,adc-diff-channels' property to support differential channels.
-Differential channels are defined as a pair of positive and negative
-inputs: vinp & vinn.
+Add support for differential channels that can be found on STM32H7 ADC:
+- Introduce new DT property 'st,adc-diff-channels'.
+- Slightly rework single-ended channels definition in stm32-adc driver.
+- Add support for differential channels to stm32-adc driver.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
 Changes in v2:
-- Add differential channels example
-- Add a note on mixed single-ended / differential channels
----
- .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+- Add an example and a note in dt-bindings to better explain
+ 'st,adc-diff-channels' usage (based on Jonathan & Rob remarks).
+- Update variable names in stm32_adc_chan_init_one() based on Jonathan remark.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-index 48bfcaa3..e8bb824 100644
---- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-@@ -62,6 +62,15 @@ Required properties:
- - st,adc-channels: List of single-ended channels muxed for this ADC.
-   It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
-   from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
-+- st,adc-diff-channels: List of differential channels muxed for this ADC.
-+  Depending on part used, some channels can be configured as differential
-+  instead of single-ended (e.g. stm32h7). List here positive and negative
-+  inputs pairs as <vinp vinn>, <vinp vinn>,... vinp and vinn are numbered
-+  from 0 to 19 on stm32h7)
-+  Note: At least one of "st,adc-channels" or "st,adc-diff-channels" is required.
-+  Both properties can be used together. Some channels can be used as
-+  single-ended and some other ones as differential (mixed). But channels
-+  can't be configured both as single-ended and differential (invalid).
- - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
-   Documentation/devicetree/bindings/iio/iio-bindings.txt
- 
-@@ -111,3 +120,18 @@ Example:
- 		...
- 		other adc child nodes follow...
- 	};
-+
-+Example to setup:
-+- channel 1 as single-ended
-+- channels 2 & 3 as differential (with resp. 6 & 7 negative inputs)
-+
-+	adc: adc@40022000 {
-+		compatible = "st,stm32h7-adc-core";
-+		...
-+		adc1: adc@0 {
-+			compatible = "st,stm32h7-adc";
-+			...
-+			st,adc-channels = <1>;
-+			st,adc-diff-channels = <2 6>, <3 7>;
-+		};
-+	};
+Fabrice Gasnier (3):
+  dt-bindings: iio: adc: stm32: add support for diff channels
+  iio: adc: stm32: remove const channel names definition
+  iio: adc: stm32: add support for differential channels
+
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |  24 +++
+ drivers/iio/adc/stm32-adc.c                        | 181 +++++++++++++--------
+ 2 files changed, 137 insertions(+), 68 deletions(-)
+
 -- 
 1.9.1
