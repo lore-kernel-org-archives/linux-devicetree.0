@@ -1,104 +1,187 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 1/2] gpio: gpiolib: Expand sleep tolerance to include
- controller reset
-Date: Wed, 25 Oct 2017 09:32:01 +0100
-Message-ID: <20171025083201.wdudlzgphypyhmwc@localhost.localdomain>
-References: <20171025050417.27992-1-andrew@aj.id.au>
- <20171025050417.27992-2-andrew@aj.id.au>
+From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v6 1/1] pwm: mediatek: add MT2712/MT7622 support
+Date: Wed, 25 Oct 2017 11:34:41 +0300
+Message-ID: <ee597df8-3d59-2dfb-b34f-db9685ab763d@microchip.com>
+References: <1508914504-19253-1-git-send-email-zhi.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171025050417.27992-2-andrew@aj.id.au>
+In-Reply-To: <1508914504-19253-1-git-send-email-zhi.mao@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, frowand.list@gmail.com, joel@jms.id.au, ckeepax@opensource.wolfsonmicro.com, ldewangan@nvidia.com, ryan_chen@aspeedtech.com, bgolaszewski@baylibre.com, mwelling@emacinc.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org
+To: Zhi Mao <zhi.mao@mediatek.com>, john@phrozen.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org
+Cc: zhenbao.liu@mediatek.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 25, 2017 at 03:34:16PM +1030, Andrew Jeffery wrote:
-> Reset tolerance is added to gpiolib with the introduction of a new
-> pinconf parameter propagating the request to hardware. The existing
-> persistence support for sleep is augmented to include reset tolerance
-> if the GPIO driver provides it. Persistence continues to be enabled by
-> default; in-kernel consumers can opt out, but userspace (currently) does
-> not have a choice.
-> 
-> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
-> renamed, dropping the SLEEP prefix to reflect that the concept is no
-> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
-> could initially be misinterpreted, so I've further changed the symbols
-> to *_TRANSITORY and *_PERSISTENT to address this.
-> 
-> The sysfs interface is modified only to keep consistency with the
-> chardev interface in enforcing persistence for userspace exports.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> I'm not wedded to the names 'transitory' and 'persistent', so feel free to
-> paint the bikeshed some other colour.
-> 
+Hi Zhi,
 
-I am happy enough with the names.
-
->  drivers/gpio/gpiolib-of.c               |  6 ++--
->  drivers/gpio/gpiolib-sysfs.c            | 14 +++++---
->  drivers/gpio/gpiolib.c                  | 58 ++++++++++++++++++++++++++++++---
->  drivers/gpio/gpiolib.h                  |  2 +-
->  include/dt-bindings/gpio/gpio.h         |  6 ++--
->  include/linux/gpio/consumer.h           |  8 +++++
->  include/linux/gpio/machine.h            |  4 +--
->  include/linux/of_gpio.h                 |  2 +-
->  include/linux/pinctrl/pinconf-generic.h |  2 ++
->  9 files changed, 84 insertions(+), 18 deletions(-)
-
-> @@ -2424,6 +2428,46 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
->  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
->  
->  /**
-> + * gpiod_set_transitory - Lose or retain GPIO state on suspend or reset
-> + * @desc: descriptor of the GPIO for which to configure persistence
-> + * @transitory: True to lose state on suspend or reset, false for persistence
-> + *
-> + * Returns:
-> + * 0 on success, otherwise a negative error code.
-> + */
-> +int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
-> +{
-> +	struct gpio_chip *chip;
-> +	unsigned long packed;
-> +	int gpio;
-> +	int rc;
-> +
-> +	/* Handle FLAG_TRANSITORY first for suspend case */
-> +	if (transitory)
-> +		set_bit(FLAG_TRANSITORY, &desc->flags);
-> +	else
-> +		clear_bit(FLAG_TRANSITORY, &desc->flags);
-> +
-> +	/* Configure reset persistence if the controller supports it */
-> +	chip = desc->gdev->chip;
-> +	if (!chip->set_config)
-> +		return 0;
-> +
-> +	packed = pinconf_to_config_packed(PIN_CONFIG_RESET_TOLERANT,
-> +					  !transitory);
-> +	gpio = gpio_chip_hwgpio(desc);
-> +	rc = chip->set_config(chip, gpio, packed);
-> +	if (rc == -ENOTSUPP) {
-> +		dev_dbg(&desc->gdev->dev, "Reset tolerance not supported for GPIO %d\n",
-> +				gpio);
-> +		return 0;
-> +	}
-> +
-> +	return rc;
-
-This means that if we have a set_config we are directly
-equating PERSISTENT to RESET_TOLERANT, which seems wrong to
-me. I might have a GPIO on a controller with pinconf that
-doesn't have anything to do with RESET_TOLERANT. Should the
-PIN_CONFIG_RESET_TOLERANT, really just be PIN_CONFIG_PERSISTENT?
-And then its upto the driver what persistence means for that
-chip?
+I added few cosmetic things below. 
 
 Thanks,
-Charles
+Claudiu
+
+On 25.10.2017 09:55, Zhi Mao wrote:
+> Add support to MT2712 and MT7622.
+> Due to register offset address of pwm7 for MT2712 is not fixed 0x40,
+> add mtk_pwm_reg_offset array for pwm register offset.
+
+> Add NULL pointer checking for "data",
+> and remove "struct mtk_pwm_platform_data" member from "mtk_pwm_chip".
+This could go to changes history (see below)
+> 
+Remove this extra line.
+> 
+> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+> ---
+As a general practice you should add here (after the line: ---) changes history
+(these will be ignored by git if placed here), e.g.:
+Changes in v6:
+- this and that
+
+Changes in v5:
+- this and that
+
+...
+
+Changes in v2:
+- this and that
+
+Other than this it is OK from my point of view. After fixing the things I mentioned,
+you can add my:
+Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+
+>  drivers/pwm/pwm-mediatek.c |   53 ++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 44 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index 1d78ab1..cdd4d31 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/module.h>
+>  #include <linux/clk.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/slab.h>
+> @@ -40,11 +41,19 @@ enum {
+>  	MTK_CLK_PWM3,
+>  	MTK_CLK_PWM4,
+>  	MTK_CLK_PWM5,
+> +	MTK_CLK_PWM6,
+> +	MTK_CLK_PWM7,
+> +	MTK_CLK_PWM8,
+>  	MTK_CLK_MAX,
+>  };
+>  
+> -static const char * const mtk_pwm_clk_name[] = {
+> -	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5"
+> +static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+> +	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
+> +	"pwm8"
+> +};
+> +
+> +struct mtk_pwm_platform_data {
+> +	unsigned int num_pwms;
+>  };
+>  
+>  /**
+> @@ -59,6 +68,10 @@ struct mtk_pwm_chip {
+>  	struct clk *clks[MTK_CLK_MAX];
+>  };
+>  
+> +static const unsigned int mtk_pwm_reg_offset[] = {
+> +	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
+> +};
+> +
+>  static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
+>  {
+>  	return container_of(chip, struct mtk_pwm_chip, chip);
+> @@ -103,14 +116,14 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>  static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
+>  				unsigned int offset)
+>  {
+> -	return readl(chip->regs + 0x10 + (num * 0x40) + offset);
+> +	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
+>  }
+>  
+>  static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
+>  				  unsigned int num, unsigned int offset,
+>  				  u32 value)
+>  {
+> -	writel(value, chip->regs + 0x10 + (num * 0x40) + offset);
+> +	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
+>  }
+>  
+>  static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> @@ -185,6 +198,7 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>  
+>  static int mtk_pwm_probe(struct platform_device *pdev)
+>  {
+> +	const struct mtk_pwm_platform_data *data;
+>  	struct mtk_pwm_chip *pc;
+>  	struct resource *res;
+>  	unsigned int i;
+> @@ -194,15 +208,22 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	if (!pc)
+>  		return -ENOMEM;
+>  
+> +	data = of_device_get_match_data(&pdev->dev);
+> +	if (data == NULL)
+> +		return -EINVAL;
+> +
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+>  	if (IS_ERR(pc->regs))
+>  		return PTR_ERR(pc->regs);
+>  
+> -	for (i = 0; i < MTK_CLK_MAX; i++) {
+> +	for (i = 0; i < data->num_pwms + 2; i++) {
+>  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+> -		if (IS_ERR(pc->clks[i]))
+> +		if (IS_ERR(pc->clks[i])) {
+> +			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+> +				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
+>  			return PTR_ERR(pc->clks[i]);
+> +		}
+>  	}
+>  
+>  	platform_set_drvdata(pdev, pc);
+> @@ -210,7 +231,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	pc->chip.dev = &pdev->dev;
+>  	pc->chip.ops = &mtk_pwm_ops;
+>  	pc->chip.base = -1;
+> -	pc->chip.npwm = 5;
+> +	pc->chip.npwm = data->num_pwms;
+>  
+>  	ret = pwmchip_add(&pc->chip);
+>  	if (ret < 0) {
+> @@ -228,9 +249,23 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+>  	return pwmchip_remove(&pc->chip);
+>  }
+>  
+> +static const struct mtk_pwm_platform_data mt2712_pwm_data = {
+> +	.num_pwms = 8,
+> +};
+> +
+> +static const struct mtk_pwm_platform_data mt7622_pwm_data = {
+> +	.num_pwms = 6,
+> +};
+> +
+> +static const struct mtk_pwm_platform_data mt7623_pwm_data = {
+> +	.num_pwms = 5,
+> +};
+> +
+>  static const struct of_device_id mtk_pwm_of_match[] = {
+> -	{ .compatible = "mediatek,mt7623-pwm" },
+> -	{ }
+> +	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
+> +	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
+> +	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
+> +	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+>  
+> 
