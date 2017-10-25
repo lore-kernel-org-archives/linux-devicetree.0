@@ -1,35 +1,77 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] ata: fixes kernel crash while tracing
- ata_eh_link_autopsy event
-Date: Wed, 25 Oct 2017 07:54:50 -0700
-Message-ID: <20171025145450.GA59538@devbig577.frc2.facebook.com>
-References: <1508926976-11467-1-git-send-email-rsahu@apm.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v8 5/5] dt-bindings: watchdog: Add bindings for RAVE SP
+ watchdog driver
+Date: Wed, 25 Oct 2017 08:00:32 -0700
+Message-ID: <CAHQ1cqEHqdhUtPRUQG9KxbaRJXb_ZerhheO9R=eN=uDKpwT24g@mail.gmail.com>
+References: <20171018170136.12347-1-andrew.smirnov@gmail.com>
+ <20171018170136.12347-6-andrew.smirnov@gmail.com> <20171024190719.w4wy3omflkugkocg@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1508926976-11467-1-git-send-email-rsahu@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Rameshwar Prasad Sahu <rsahu@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171024190719.w4wy3omflkugkocg@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, Oct 24, 2017 at 12:07 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Oct 18, 2017 at 10:01:36AM -0700, Andrey Smirnov wrote:
+>
+> Commit msg?
+>
 
-On Wed, Oct 25, 2017 at 03:52:56PM +0530, Rameshwar Prasad Sahu wrote:
-> @@ -288,8 +289,8 @@
->  	),
-> 
->  	TP_fast_assign(
-> -		__entry->ata_port	= dev->link->ap->print_id;
-> -		__entry->ata_dev	= dev->link->pmp + dev->devno;
-> +		__entry->ata_port	= link->ap->print_id;
-> +		__entry->ata_dev	= link->pmp + link->device->devno;
+OK, will add in v9.
 
-The above is wrong if there are multiple devices on the link.  It
-probably should take both link and dev and use dev iff it's not NULL.
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-watchdog@vger.kernel.org
+>> Cc: cphealy@gmail.com
+>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Johan Hovold <johan@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+>> new file mode 100644
+>> index 000000000000..f242c3eed0dc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+>> @@ -0,0 +1,10 @@
+>> +Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog
+>> +
+>> +Required properties:
+>> +
+>> + - compatible: Should be "zii,rave-sp-watchdog"
+>> +
+>
+> Must be a child of ? defined in ?
 
-Thanks.
+Good point, will add.
 
--- 
-tejun
+>
+>> +Optional properties:
+>> +
+>> + - Two byte nvmem cell "wdt_timeout", specified as per
+>> +   Documentation/devicetree/bindings/nvmem/nvmem.txt
+>
+> prop name: definition... is the normal format.
+>
+> Also, don't use '_' in property names.
+>
+
+OK, will fix.
+
+Thanks,
+Andrey Smirnov
