@@ -1,77 +1,169 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 4/9] drm/panel: simple: add support for overriding the
- pixel clock polarity
-Date: Wed, 25 Oct 2017 11:56:05 +0200
-Message-ID: <20171025115605.06851901@karo-electronics.de>
-References: <1507721021-28174-1-git-send-email-LW@KARO-electronics.de>
-        <1507721021-28174-5-git-send-email-LW@KARO-electronics.de>
-        <20171017121422.GE684@ulmo>
-        <20171017142507.127f1711@karo-electronics.de>
-        <20171017124504.GC27983@ulmo>
+From: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 1/1] pwm: mediatek: add MT2712/MT7622 support
+Date: Wed, 25 Oct 2017 18:11:01 +0800
+Message-ID: <1508926261-25015-1-git-send-email-zhi.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171017124504.GC27983@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, zhenbao.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add support to MT2712 and MT7622.
+Due to register offset address of pwm7 for MT2712 is not fixed 0x40,
+add mtk_pwm_reg_offset array for pwm register offset.
 
-On Tue, 17 Oct 2017 14:45:04 +0200 Thierry Reding wrote:
-> On Tue, Oct 17, 2017 at 02:25:07PM +0200, Lothar Waßmann wrote:
-> > Hi,
-> > 
-> > On Tue, 17 Oct 2017 14:14:22 +0200 Thierry Reding wrote:
-> > > On Wed, Oct 11, 2017 at 01:23:36PM +0200, Lothar Waßmann wrote:
-> > > > The Ka-Ro electronics MB7 baseboard has an on-board LCD->LVDS
-> > > > converter that requires a fixed pixelclk polarity, no matter what the
-> > > > panel's display_mode specifies. Add an option to override the pixelclk
-> > > > polarity defined in the panel's display_mode via DTB.
-> > > 
-> > > I'd argue that the LCD->LVDS converter should be modelled specifically
-> > > in DT to handle this case. It could be a implemented as a DRM bridge
-> > > driver, for example.
-> > > 
-> > IMO that's just overkill for a simple chip that is in no way
-> > configurable nor detectable by software.
-> 
-> I suspect that you're not the only one who runs a board that has this
-> kind of quirk. If we solve this in a generic way we can point people in
-> that direction when they come asking for such a quirk.
-> 
-> So this could be something very simple that's instantiated using maybe a
-> couple of lines of code.
-> 
-I found the drivers/gpu/drm/bridge/lvds-encoder.c driver which on first
-glance is more or less what I would need. But the driver is currently
-dysfunctional due to:
-|commit 13dfc0540a575b47b2d640b093ac16e9e09474f6
-|Author: Eric Anholt <eric@anholt.net>
-|Date:   Fri Jun 2 13:25:14 2017 -0700
-|
-|    drm/bridge: Refactor out the panel wrapper from the lvds-encoder bridge.
+Reviewed-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+changee in v7:
+- adjust the commit message
 
-Also there is no in-kernel user of this driver, so that it obviously
-doesn't get tested in any way.
-There is only one dts file (r8a7779-marzen.dts) that instantiate this
-driver, but it has an incomplete OF graph. The missing link for the
-OF graph is provided by either r8a77xx-aa104xd12-panel.dtsi or
-r8a77xx-aa121td01-panel.dtsi, but those files are referenced nowhere in
-the kernel source.
+Changes in v6:
+- remove "struct mtk_pwm_platform_data" member from "mtk_pwm_chip". 
 
-Reverting the part of the above mentioned patch that touches
-lvds-encoder.c makes the driver functional, but I see no way to use
-this driver to enforce specific bus_flags for the interface, since the
-code is run prior to the simple-panel's initialization, which would
-override whatever settings might have been provided by the lvds-encoder
-driver.
+Changes in v5:
+- Add NULL pointer checking for "data"
 
-Can someone enligthen me, how to enforce specific bus_flags/bus_format
-settings for an LCD interface driven by the simple-panel driver apart
-from doing it in the simple-panel driver itself?
+ drivers/pwm/pwm-mediatek.c |   53 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 1d78ab1..cdd4d31 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/clk.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
+@@ -40,11 +41,19 @@ enum {
+ 	MTK_CLK_PWM3,
+ 	MTK_CLK_PWM4,
+ 	MTK_CLK_PWM5,
++	MTK_CLK_PWM6,
++	MTK_CLK_PWM7,
++	MTK_CLK_PWM8,
+ 	MTK_CLK_MAX,
+ };
+ 
+-static const char * const mtk_pwm_clk_name[] = {
+-	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5"
++static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
++	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
++	"pwm8"
++};
++
++struct mtk_pwm_platform_data {
++	unsigned int num_pwms;
+ };
+ 
+ /**
+@@ -59,6 +68,10 @@ struct mtk_pwm_chip {
+ 	struct clk *clks[MTK_CLK_MAX];
+ };
+ 
++static const unsigned int mtk_pwm_reg_offset[] = {
++	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
++};
++
+ static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
+ {
+ 	return container_of(chip, struct mtk_pwm_chip, chip);
+@@ -103,14 +116,14 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
+ 				unsigned int offset)
+ {
+-	return readl(chip->regs + 0x10 + (num * 0x40) + offset);
++	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
+ }
+ 
+ static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
+ 				  unsigned int num, unsigned int offset,
+ 				  u32 value)
+ {
+-	writel(value, chip->regs + 0x10 + (num * 0x40) + offset);
++	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
+ }
+ 
+ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -185,6 +198,7 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ static int mtk_pwm_probe(struct platform_device *pdev)
+ {
++	const struct mtk_pwm_platform_data *data;
+ 	struct mtk_pwm_chip *pc;
+ 	struct resource *res;
+ 	unsigned int i;
+@@ -194,15 +208,22 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	if (!pc)
+ 		return -ENOMEM;
+ 
++	data = of_device_get_match_data(&pdev->dev);
++	if (data == NULL)
++		return -EINVAL;
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(pc->regs))
+ 		return PTR_ERR(pc->regs);
+ 
+-	for (i = 0; i < MTK_CLK_MAX; i++) {
++	for (i = 0; i < data->num_pwms + 2; i++) {
+ 		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+-		if (IS_ERR(pc->clks[i]))
++		if (IS_ERR(pc->clks[i])) {
++			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
++				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
+ 			return PTR_ERR(pc->clks[i]);
++		}
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pc);
+@@ -210,7 +231,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &mtk_pwm_ops;
+ 	pc->chip.base = -1;
+-	pc->chip.npwm = 5;
++	pc->chip.npwm = data->num_pwms;
+ 
+ 	ret = pwmchip_add(&pc->chip);
+ 	if (ret < 0) {
+@@ -228,9 +249,23 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+ 	return pwmchip_remove(&pc->chip);
+ }
+ 
++static const struct mtk_pwm_platform_data mt2712_pwm_data = {
++	.num_pwms = 8,
++};
++
++static const struct mtk_pwm_platform_data mt7622_pwm_data = {
++	.num_pwms = 6,
++};
++
++static const struct mtk_pwm_platform_data mt7623_pwm_data = {
++	.num_pwms = 5,
++};
++
+ static const struct of_device_id mtk_pwm_of_match[] = {
+-	{ .compatible = "mediatek,mt7623-pwm" },
+-	{ }
++	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
++	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
++	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
++	{ },
+ };
+ MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+ 
+-- 
+1.7.9.5
 
-Lothar Waßmann
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
