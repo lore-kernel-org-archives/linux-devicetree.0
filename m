@@ -1,75 +1,68 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 1/6] timer: add timer_of_exit function
-Date: Wed, 25 Oct 2017 10:37:21 +0200
-Message-ID: <b3234794-0a72-02d9-9d29-f58effbb7356@linaro.org>
-References: <1508752722-4489-1-git-send-email-benjamin.gaignard@linaro.org>
- <1508752722-4489-2-git-send-email-benjamin.gaignard@linaro.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/9] Mediatek MT2712 clock and scpsys support
+Date: Wed, 25 Oct 2017 10:38:03 +0200
+Message-ID: <d8e00869-f6ff-9209-f630-abcb6815e225@gmail.com>
+References: <1508381330-3700-1-git-send-email-weiyi.lu@mediatek.com>
+ <e67f2b01-552b-e9b3-6c38-141e3063439d@gmail.com>
+ <20171024083830.GD15990@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508752722-4489-2-git-send-email-benjamin.gaignard@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171024083830.GD15990-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, tglx@linutronix.de, ludovic.barre@st.com, julien.thierry@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/2017 11:58, Benjamin Gaignard wrote:
-> Add this exit function to be able to undo what have been done
-> in timer_of_init().
+
+
+On 10/24/2017 10:38 AM, Stephen Boyd wrote:
+> On 10/19, Matthias Brugger wrote:
+>>
+>>
+>> On 10/19/2017 04:48 AM, Weiyi Lu wrote:
+>>> This series is based on v4.14-rc1 and composed of
+>>> clock control (PATCH 1-4) and scpsys control (PATCH 5-9)
+>>>
+>>> changes since v4:
+>>> - Refine scpsys and infracfg for bus protection by passing 
+>>>   a boolean flag to determine the register update method.
+>>>
+>>> changes since v3:
+>>> - Rebase to v4.14-rc1.
+>>>
+>>> changes since v2:
+>>> - ensure the clocks used by clocksource driver are registered
+>>>   before clocksource init() by using CLK_OF_DECLARE()
+>>> - correct the frequency of clk32k/clkrtc_ext/clkrtc_int
+>>>
+>>> changes since v1:
+>>> - Rebase to v4.13-next-soc.
+>>> - Refine scpsys and infracfg for bus protection.
+>>>
+>>> Weiyi Lu (9):
+>>>   dt-bindings: ARM: Mediatek: Document bindings for MT2712
+>>>   clk: mediatek: Add dt-bindings for MT2712 clocks
+>>>   clk: mediatek: Add MT2712 clock support
+>>
+>> Stephen, Mike: are you ok with the patches 1-3 of this series?
+>>
+>> If so, then I will take the rest through my tree.
+>>
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-
-I will take this one for 4.15
-
-Thanks
-
-  -- Daniel
-
-> ---
->  drivers/clocksource/timer-of.c | 12 ++++++++++++
->  drivers/clocksource/timer-of.h |  3 +++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-> index c79122d..7c64a5c1 100644
-> --- a/drivers/clocksource/timer-of.c
-> +++ b/drivers/clocksource/timer-of.c
-> @@ -176,3 +176,15 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
->  		timer_base_exit(&to->of_base);
->  	return ret;
->  }
-> +
-> +void timer_of_exit(struct timer_of *to)
-> +{
-> +	if (to->flags & TIMER_OF_IRQ)
-> +		timer_irq_exit(&to->of_irq);
-> +
-> +	if (to->flags & TIMER_OF_CLOCK)
-> +		timer_clk_exit(&to->of_clk);
-> +
-> +	if (to->flags & TIMER_OF_BASE)
-> +		timer_base_exit(&to->of_base);
-> +}
-> diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-> index e0d7272..44f57e0 100644
-> --- a/drivers/clocksource/timer-of.h
-> +++ b/drivers/clocksource/timer-of.h
-> @@ -66,4 +66,7 @@ static inline unsigned long timer_of_period(struct timer_of *to)
->  
->  extern int __init timer_of_init(struct device_node *np,
->  				struct timer_of *to);
-> +
-> +extern void timer_of_exit(struct timer_of *to);
-> +
->  #endif
+> Do you need a branch for headers? I'm see there's a v6 so I'll
+> review that one.
 > 
 
+If you plan to merge them to v4.15 then no, otherwise that would be helpfull.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+AFAIK no changes between v5 and v6.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks!
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
