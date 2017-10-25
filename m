@@ -1,156 +1,75 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v5 1/1] pwm: mediatek: add MT2712/MT7622 support
-Date: Wed, 25 Oct 2017 10:35:33 +0200
-Message-ID: <4cdb3861-56bd-3a45-a452-dccb9786aaa1@gmail.com>
-References: <1508759828-22974-1-git-send-email-zhi.mao@mediatek.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v7 1/6] timer: add timer_of_exit function
+Date: Wed, 25 Oct 2017 10:37:21 +0200
+Message-ID: <b3234794-0a72-02d9-9d29-f58effbb7356@linaro.org>
+References: <1508752722-4489-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1508752722-4489-2-git-send-email-benjamin.gaignard@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1508759828-22974-1-git-send-email-zhi.mao@mediatek.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508752722-4489-2-git-send-email-benjamin.gaignard@linaro.org>
 Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Zhi Mao <zhi.mao@mediatek.com>, john@phrozen.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, zhenbao.liu@mediatek.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, tglx@linutronix.de, ludovic.barre@st.com, julien.thierry@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/23/2017 01:57 PM, Zhi Mao wrote:
-> Add support to MT2712 and MT7622.
-> Due to register offset address of pwm7 for MT2712 is not fixed 0x40,
-> add mtk_pwm_reg_offset array for pwm register offset.
-> Add NULL pointer checking for "pc->data".
+On 23/10/2017 11:58, Benjamin Gaignard wrote:
+> Add this exit function to be able to undo what have been done
+> in timer_of_init().
 > 
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+
+I will take this one for 4.15
+
+Thanks
+
+  -- Daniel
+
 > ---
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
->  drivers/pwm/pwm-mediatek.c |   53 ++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 44 insertions(+), 9 deletions(-)
+>  drivers/clocksource/timer-of.c | 12 ++++++++++++
+>  drivers/clocksource/timer-of.h |  3 +++
+>  2 files changed, 15 insertions(+)
 > 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index 1d78ab1..867cc74 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -16,6 +16,7 @@
->  #include <linux/module.h>
->  #include <linux/clk.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
->  #include <linux/slab.h>
-> @@ -40,11 +41,19 @@ enum {
->  	MTK_CLK_PWM3,
->  	MTK_CLK_PWM4,
->  	MTK_CLK_PWM5,
-> +	MTK_CLK_PWM6,
-> +	MTK_CLK_PWM7,
-> +	MTK_CLK_PWM8,
->  	MTK_CLK_MAX,
->  };
->  
-> -static const char * const mtk_pwm_clk_name[] = {
-> -	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5"
-> +static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
-> +	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6", "pwm7",
-> +	"pwm8"
-> +};
-> +
-> +struct mtk_pwm_platform_data {
-> +	unsigned int num_pwms;
->  };
->  
->  /**
-> @@ -57,6 +66,11 @@ struct mtk_pwm_chip {
->  	struct pwm_chip chip;
->  	void __iomem *regs;
->  	struct clk *clks[MTK_CLK_MAX];
-> +	const struct mtk_pwm_platform_data *data;
-> +};
-> +
-> +static const unsigned int mtk_pwm_reg_offset[] = {
-> +	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
->  };
->  
->  static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
-> @@ -103,14 +117,14 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
->  				unsigned int offset)
->  {
-> -	return readl(chip->regs + 0x10 + (num * 0x40) + offset);
-> +	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
+> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+> index c79122d..7c64a5c1 100644
+> --- a/drivers/clocksource/timer-of.c
+> +++ b/drivers/clocksource/timer-of.c
+> @@ -176,3 +176,15 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
+>  		timer_base_exit(&to->of_base);
+>  	return ret;
 >  }
->  
->  static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
->  				  unsigned int num, unsigned int offset,
->  				  u32 value)
->  {
-> -	writel(value, chip->regs + 0x10 + (num * 0x40) + offset);
-> +	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
->  }
->  
->  static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> @@ -194,15 +208,22 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	if (!pc)
->  		return -ENOMEM;
->  
-> +	pc->data = of_device_get_match_data(&pdev->dev);
-> +	if (pc->data == NULL)
-> +		return -EINVAL;
 > +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	pc->regs = devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(pc->regs))
->  		return PTR_ERR(pc->regs);
->  
-> -	for (i = 0; i < MTK_CLK_MAX; i++) {
-> +	for (i = 0; i < pc->data->num_pwms + 2; i++) {
->  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
-> -		if (IS_ERR(pc->clks[i]))
-> +		if (IS_ERR(pc->clks[i])) {
-> +			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-> +				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
->  			return PTR_ERR(pc->clks[i]);
-> +		}
->  	}
->  
->  	platform_set_drvdata(pdev, pc);
-> @@ -210,7 +231,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
->  	pc->chip.dev = &pdev->dev;
->  	pc->chip.ops = &mtk_pwm_ops;
->  	pc->chip.base = -1;
-> -	pc->chip.npwm = 5;
-> +	pc->chip.npwm = pc->data->num_pwms;
->  
->  	ret = pwmchip_add(&pc->chip);
->  	if (ret < 0) {
-> @@ -228,9 +249,23 @@ static int mtk_pwm_remove(struct platform_device *pdev)
->  	return pwmchip_remove(&pc->chip);
->  }
->  
-> +static const struct mtk_pwm_platform_data mt2712_pwm_data = {
-> +	.num_pwms = 8,
-> +};
+> +void timer_of_exit(struct timer_of *to)
+> +{
+> +	if (to->flags & TIMER_OF_IRQ)
+> +		timer_irq_exit(&to->of_irq);
 > +
-> +static const struct mtk_pwm_platform_data mt7622_pwm_data = {
-> +	.num_pwms = 6,
-> +};
+> +	if (to->flags & TIMER_OF_CLOCK)
+> +		timer_clk_exit(&to->of_clk);
 > +
-> +static const struct mtk_pwm_platform_data mt7623_pwm_data = {
-> +	.num_pwms = 5,
-> +};
-> +
->  static const struct of_device_id mtk_pwm_of_match[] = {
-> -	{ .compatible = "mediatek,mt7623-pwm" },
-> -	{ }
-> +	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
-> +	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
-> +	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
-> +	{ },
->  };
->  MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+> +	if (to->flags & TIMER_OF_BASE)
+> +		timer_base_exit(&to->of_base);
+> +}
+> diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
+> index e0d7272..44f57e0 100644
+> --- a/drivers/clocksource/timer-of.h
+> +++ b/drivers/clocksource/timer-of.h
+> @@ -66,4 +66,7 @@ static inline unsigned long timer_of_period(struct timer_of *to)
 >  
+>  extern int __init timer_of_init(struct device_node *np,
+>  				struct timer_of *to);
+> +
+> +extern void timer_of_exit(struct timer_of *to);
+> +
+>  #endif
 > 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
