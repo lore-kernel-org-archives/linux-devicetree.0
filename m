@@ -1,632 +1,258 @@
-From: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/8] PCI: host: brcmstb: add MSI capability
-Date: Wed, 25 Oct 2017 11:50:55 -0400
-Message-ID: <CANCKTBuFy+6L0AX6wGH7CCqsWFVckeX5+U1x6SWvufXhS4DOvw@mail.gmail.com>
-References: <1508868949-16652-1-git-send-email-jim2101024@gmail.com>
- <1508868949-16652-7-git-send-email-jim2101024@gmail.com> <20171025005535.GJ21840@bhelgaas-glaptop.roam.corp.google.com>
+From: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [patch v9 1/4] drivers: jtag: Add JTAG core driver
+Date: Wed, 25 Oct 2017 15:58:42 +0000
+Message-ID: <AM4PR0501MB21942F65C3F28F8AE9B22504B1440@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+References: <1505985932-27568-1-git-send-email-oleksandrs@mellanox.com>
+ <1505985932-27568-2-git-send-email-oleksandrs@mellanox.com>
+ <20171020115512.GA2073@kroah.com>
+ <AM4PR0501MB21940531802FC14EDE8C3F75B1430@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+ <20171020145417.GD8965@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171025005535.GJ21840-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171020145417.GD8965-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, "tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org" <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org" <mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, system-sw-low-level <system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>"linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linu>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 25, 2017 at 9:22 AM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Oct 24, 2017 at 02:15:47PM -0400, Jim Quinlan wrote:
->> This commit adds MSI to the Broadcom STB PCIe host controller. It does
->> not add MSIX since that functiostbsrvnality is not in the HW.  The MSI
->> controller is physically located within the PCIe block, however, there
->> is no reason why the MSI controller could not be moved elsewhere in
->> the future.
->>
->> Since the internal Brcmstb MSI controller is intertwined with the PCIe
->> controller, it is not its own platform device but rather part of the
->> PCIe platform device.
->>
->> Signed-off-by: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/pci/host/Kconfig           |  12 ++
->>  drivers/pci/host/Makefile          |   1 +
->>  drivers/pci/host/pci-brcmstb-msi.c | 318 +++++++++++++++++++++++++++++++++++++
->>  drivers/pci/host/pci-brcmstb.c     |  72 +++++++--
->>  drivers/pci/host/pci-brcmstb.h     |  26 +++
->>  5 files changed, 419 insertions(+), 10 deletions(-)
->>  create mode 100644 drivers/pci/host/pci-brcmstb-msi.c
->>
->> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
->> index b9b4f11..54aa5d2 100644
->> --- a/drivers/pci/host/Kconfig
->> +++ b/drivers/pci/host/Kconfig
->> @@ -228,4 +228,16 @@ config PCI_BRCMSTB
->>       default ARCH_BRCMSTB || BMIPS_GENERIC
->>       help
->>         Adds support for Broadcom Settop Box PCIe host controller.
->> +       To compile this driver as a module, choose m here.
->> +
->> +config PCI_BRCMSTB_MSI
->> +     bool "Broadcom Brcmstb PCIe MSI support"
->> +     depends on ARCH_BRCMSTB || BMIPS_GENERIC
->> +     depends on OF
->> +     depends on PCI_MSI
->> +     default PCI_BRCMSTB
->> +     help
->> +       Say Y here if you want to enable MSI support for Broadcom's iProc
->> +       PCIe controller
->
-> Is there any reason *not* to enable MSI?  Most drivers just include
-> MSI support in the base driver, in the same file and under the same
-> config symbol.
->
-CONFIG_PCI_BRCMSTB_MSI is bool, CONFIG_PCI_BRCMSTB is tri-state.  The
-reason for this -- and also for the separate msi file -- is that there
-is an irq call  that is not exported (I can dig it up if you'd like).
-We have had requests that the PCIe RC driver doesn't run at boot, so
-we consider the idea of it being a module valuable.  You can see the
-same thing going on with PCIE_IPROC_MSI.
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org]
+> Sent: Friday, October 20, 2017 5:54 PM
+> To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Cc: arnd-r2nGTMty4D4@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org;
+> tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org; Vadim
+> Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; system-sw-low-level <system-sw-low-
+> level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; openocd-devel-
+> owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org; linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Subject: Re: [patch v9 1/4] drivers: jtag: Add JTAG core driver
+>=20
+> On Fri, Oct 20, 2017 at 02:34:00PM +0000, Oleksandr Shamray wrote:
+> > Hi Greg.
+> >
+> > > -----Original Message-----
+> > > From: Greg KH [mailto:gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org]
+> > > Sent: Friday, October 20, 2017 2:55 PM
+> > > To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> > > Cc: arnd-r2nGTMty4D4@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> > > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > > openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org;
+> > > tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org;
+> > > Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; system-sw-low-level
+> > > <system-sw-low- level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> > > openocd-devel- owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org;
+> > > linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> > > Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> > > Subject: Re: [patch v9 1/4] drivers: jtag: Add JTAG core driver
+> > >
+> > > On Thu, Sep 21, 2017 at 12:25:29PM +0300, Oleksandr Shamray wrote:
+> > > > +struct jtag {
+> > > > +	struct device *dev;
+> > > > +	struct cdev cdev;
+> > >
+> > > Why are you using a cdev here and not just a normal misc device?
+> >
+> > What the benefits to use misc instead of cdev?
+>=20
+> Less code, simpler logic, easier to review and understand, etc.
+>=20
+> Let me ask you, why use a cdev instead of a misc?
 
->> +
->>  endmenu
->> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
->> index c283321..1026d6f 100644
->> --- a/drivers/pci/host/Makefile
->> +++ b/drivers/pci/host/Makefile
->> @@ -23,6 +23,7 @@ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
->>  obj-$(CONFIG_VMD) += vmd.o
->>  obj-$(CONFIG_PCI_BRCMSTB) += brcmstb-pci.o
->>  brcmstb-pci-objs := pci-brcmstb.o pci-brcmstb-dma.o
->> +obj-$(CONFIG_PCI_BRCMSTB_MSI) += pci-brcmstb-msi.o
->>
->>  # The following drivers are for devices that use the generic ACPI
->>  # pci_root.c driver but don't support standard ECAM config access.
->> diff --git a/drivers/pci/host/pci-brcmstb-msi.c b/drivers/pci/host/pci-brcmstb-msi.c
->> new file mode 100644
->> index 0000000..c805e2f
->> --- /dev/null
->> +++ b/drivers/pci/host/pci-brcmstb-msi.c
->> @@ -0,0 +1,318 @@
->> +/*
->> + * Copyright (C) 2015-2017 Broadcom
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->
-> Remove last blank line of comment and add a blank line between comment
-> and #includes.
-Will fix.
+As I know misc device more applicable if we want to create one device f.e. =
+ /dev/jtag.=20
+But in current case we can have more than one jtag device /dev/jtag0 ... /d=
+ev/jtagN. =20
+So I decided to use cdev.
 
->
->> +#include <linux/bitops.h>
->> +#include <linux/compiler.h>
->> +#include <linux/init.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/msi.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/pci.h>
->> +#include <linux/types.h>
->> +
->> +#include "pci-brcmstb.h"
->> +
->> +#define PCIE_MISC_MSI_DATA_CONFIG                    0x404c
->> +#define PCIE_MSI_INTR2_BASE                          0x4500
->> +#define PCIE_MISC_MSI_BAR_CONFIG_LO                  0x4044
->> +#define PCIE_MISC_MSI_BAR_CONFIG_HI                  0x4048
->> +
->> +/* Offsets from PCIE_INTR2_CPU_BASE and PCIE_MSI_INTR2_BASE */
->> +#define STATUS                               0x0
->> +#define SET                          0x4
->> +#define CLR                          0x8
->> +#define MASK_STATUS                  0xc
->> +#define MASK_SET                     0x10
->> +#define MASK_CLR                     0x14
->> +
->> +struct brcm_msi {
->> +     struct irq_domain *msi_domain;
->> +     struct irq_domain *inner_domain;
->> +     struct mutex lock; /* guards the alloc/free operations */
->> +     u64 target_addr;
->> +     int irq;
->> +     /* intr_base is the base pointer for interrupt status/set/clr regs */
->> +     void __iomem *intr_base;
->> +     /* intr_legacy_mask indicates how many bits are MSI interrupts */
->> +     u32 intr_legacy_mask;
->> +     /* intr_legacy_offset indicates bit position of MSI_01. It is
->> +      * to map the register bit position to a hwirq that starts at 0.
->> +      */
->> +     u32 intr_legacy_offset;
->> +     /* used indicates which MSI interrupts have been alloc'd */
->> +     unsigned long used;
->> +
->> +     void __iomem *base;
->> +     struct device *dev;
->> +     struct device_node *dn;
->> +     unsigned int rev;
->> +};
->> +
->> +static struct irq_chip brcm_msi_irq_chip = {
->> +     .name = "Brcm_MSI",
->> +     .irq_mask = pci_msi_mask_irq,
->> +     .irq_unmask = pci_msi_unmask_irq,
->> +};
->> +
->> +static struct msi_domain_info brcm_msi_domain_info = {
->> +     .flags  = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->> +                MSI_FLAG_PCI_MSIX),
->> +     .chip   = &brcm_msi_irq_chip,
->> +};
->> +
->> +static void brcm_pcie_msi_isr(struct irq_desc *desc)
->> +{
->> +     struct irq_chip *chip = irq_desc_get_chip(desc);
->> +     struct brcm_msi *msi;
->> +     unsigned long status, virq;
->> +     u32 mask, bit, hwirq;
->> +
->> +     chained_irq_enter(chip, desc);
->> +     msi = irq_desc_get_handler_data(desc);
->> +     mask = msi->intr_legacy_mask;
->> +
->> +     while ((status = bcm_readl(msi->intr_base + STATUS) & mask)) {
->> +             for_each_set_bit(bit, &status, BRCM_INT_PCI_MSI_NR) {
->> +                     /* clear the interrupt */
->> +                     bcm_writel(1 << bit, msi->intr_base + CLR);
->> +
->> +                     /* Account for legacy interrupt offset */
->> +                     hwirq = bit - msi->intr_legacy_offset;
->> +
->> +                     virq = irq_find_mapping(msi->inner_domain, hwirq);
->> +                     if (virq) {
->> +                             if (msi->used & (1 << hwirq))
->> +                                     generic_handle_irq(virq);
->> +                             else
->> +                                     dev_info(msi->dev, "unhandled MSI %d\n",
->> +                                              hwirq);
->> +                     } else {
->> +                             /* Unknown MSI, just clear it */
->> +                             dev_dbg(msi->dev, "unexpected MSI\n");
->
-> Use a local "struct device *dev" to avoid repeating the "msi->dev"
-> here and elsewhere.
-Will fix.
+>=20
+> > > I forgot if this is what you were doing before, sorry...
+> > >
+> > > > +	int id;
+> > > > +	atomic_t open;
+> > >
+> > > Why do you need this?
+> >
+> > This counter used to avoid open at the same time by 2 or more users.
+>=20
+> But it isn't working :)
+>=20
+> And why do you care?
+>=20
+> > > > +	const struct jtag_ops *ops;
+> > > > +	unsigned long priv[0] __aligned(ARCH_DMA_MINALIGN);
+> > >
+> > > Huh?  Why is this needed to be dma aligned?  Why not just use the
+> > > private pointer in struct device?
+> > >
+> >
+> > It is critical?
+>=20
+> You are saying it is, so you have to justify it.  There is a pointer for =
+you to use,
+> don't make new ones for no reason, right?
+>=20
 
->
->> +                     }
->> +             }
->> +     }
->> +     chained_irq_exit(chip, desc);
->> +}
->> +
->> +static void brcm_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->> +{
->> +     struct brcm_msi *msi = irq_data_get_irq_chip_data(data);
->> +     u32 temp;
->> +
->> +     msg->address_lo = lower_32_bits(msi->target_addr);
->> +     msg->address_hi = upper_32_bits(msi->target_addr);
->> +     temp = bcm_readl(msi->base + PCIE_MISC_MSI_DATA_CONFIG);
->> +     msg->data = ((temp >> 16) & (temp & 0xffff)) | data->hwirq;
->> +}
->> +
->> +static int brcm_msi_set_affinity(struct irq_data *irq_data,
->> +                              const struct cpumask *mask, bool force)
->> +{
->> +     return -EINVAL;
->> +}
->> +
->> +static struct irq_chip brcm_msi_bottom_irq_chip = {
->> +     .name                   = "Brcm MSI",PCIE_IPROC_MSI
->
-> Why the different name from brcm_msi_irq_chip above ("Brcm_MSI" vs
-> "Brcm MSI")?  If the "_" signifies something, it should be made more
-> explicit.
->
-Will fix.
+You are right. Will remove.
 
->> +     .irq_compose_msi_msg    = brcm_compose_msi_msg,
->> +     .irq_set_affinity       = brcm_msi_set_affinity,
->> +};
->> +
->> +static int brcm_msi_alloc(struct brcm_msi *msi)
->> +{
->> +     int bit, hwirq;
->> +
->> +     mutex_lock(&msi->lock);
->> +     bit = ~msi->used ? ffz(msi->used) : -1;
->> +
->> +     if (bit >= 0 && bit < BRCM_INT_PCI_MSI_NR) {
->> +             msi->used |= (1 << bit);
->> +             hwirq = bit - msi->intr_legacy_offset;
->> +     } else {
->> +             hwirq = -ENOSPC;
->> +     }
->> +
->> +     mutex_unlock(&msi->lock);
->> +     return hwirq;
->> +}
->> +
->> +static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
->> +{
->> +     mutex_lock(&msi->lock);
->> +     msi->used &= ~(1 << (hwirq + msi->intr_legacy_offset));
->> +     mutex_unlock(&msi->lock);
->> +}
->> +
->> +static int brcm_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->> +                              unsigned int nr_irqs, void *args)
->> +{
->> +     struct brcm_msi *msi = domain->host_data;
->> +     int hwirq;
->> +
->> +     hwirq = brcm_msi_alloc(msi);
->> +
->> +     if (hwirq < 0)
->> +             return hwirq;
->> +
->> +     irq_domain_set_info(domain, virq, (irq_hw_number_t)hwirq,
->> +                         &brcm_msi_bottom_irq_chip, domain->host_data,
->> +                         handle_simple_irq, NULL, NULL);
->> +     return 0;
->> +}
->> +
->> +static void brcm_irq_domain_free(struct irq_domain *domain,
->> +                              unsigned int virq, unsigned int nr_irqs)
->> +{
->> +     struct irq_data *d = irq_domain_get_irq_data(domain, virq);
->> +     struct brcm_msi *msi = irq_data_get_irq_chip_data(d);
->> +
->> +     brcm_msi_free(msi, d->hwirq);
->> +}
->> +
->> +void brcm_msi_set_regs(struct brcm_msi *msi)
->> +{
->> +     u32 data_val, msi_lo, msi_hi;
->> +
->> +     if (msi->rev >= BRCM_PCIE_HW_REV_33) {PCIE_IPROC_MSI
->> +             /* ffe0 -- least sig 5 bits are 0 indicating 32 msgs
->> +              * 6540 -- this is our arbitrary unique data value
->> +              */PCIE_IPROC_MSI
->
-> Multi-line comment style.
->
-Will fix.
+> > > > +};
+> > > > +
+> > > > +static dev_t jtag_devt;
+> > > > +static DEFINE_IDA(jtag_ida);
+> > > > +
+> > > > +void *jtag_priv(struct jtag *jtag) {
+> > > > +	return jtag->priv;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(jtag_priv);
+> > > > +
+> > > > +static u8 *jtag_copy_from_user(__u64 udata, unsigned long bit_size=
+) {
+> > > > +	unsigned long size;
+> > > > +	void *kdata;
+> > > > +
+> > > > +	size =3D DIV_ROUND_UP(bit_size, BITS_PER_BYTE);
+> > > > +	kdata =3D memdup_user(u64_to_user_ptr(udata), size);
+> > >
+> > > You only use this once, why not just open-code it?
+> >
+> > I think it makes code more understandable.
+>=20
+> As a reviewer, I don't :)
 
->> +             data_val = 0xffe06540;
->> +     } else {
->> +             /* fff8 -- least sig 3 bits are 0 indicating 8 msgs
->> +              * 6540 -- this is our arbitrary unique data value
->> +              */
->> +             data_val = 0xfff86540;
->> +     }
->> +
->> +     /* Make sure we are not masking MSIs.  Note that MSIs can be masked,
->> +      * but that occurs on the PCIe EP device
->> +      */
->> +     bcm_writel(0xffffffff & msi->intr_legacy_mask,PCIE_IPROC_MSI
->> +                msi->intr_base + MASK_CLR);
->> +
->> +     msi_lo = lower_32_bits(msi->target_addr);
->> +     msi_hi = upper_32_bits(msi->target_addr);
->> +     /* The 0 bit of PCIE_MISC_MSI_BAR_CONFIG_LO is repurposed to MSI
->> +      * enable, which we set to 1.
->> +      */
->> +     bcm_writel(msi_lo | 1, msi->base + PCIE_MISC_MSI_BAR_CONFIG_LO);
->> +     bcm_writel(msi_hi, msi->base + PCIE_MISC_MSI_BAR_CONFIG_HI);
->> +     bcm_writel(data_val, msi->base + PCIE_MISC_MSI_DATA_CONFIG);
->> +}
->> +EXPORT_SYMBOL(brcm_msi_set_regs);
->> +
->> +static const struct irq_domain_ops msi_domain_ops = {
->> +     .alloc  = brcm_irq_domain_alloc,
->> +     .free   = brcm_irq_domain_free,
->> +};
->> +
->> +static int brcm_allocate_domains(struct brcm_msi *msi)
->> +{
->> +     struct fwnode_handle *fwnode = of_node_to_fwnode(msi->dn);
->> +
->> +     msi->inner_domain = irq_domain_add_linear(NULL, BRCM_INT_PCI_MSI_NR,
->> +                                               &msi_domain_ops, msi);
->> +     if (!msi->inner_domain) {
->> +             dev_err(msi->dev, "failed to create IRQ domain\n");
->> +             return -ENOMEM;
->> +     }
->> +
->> +     msi->msi_domain = pci_msi_create_irq_domain(fwnode,
->> +                                                 &brcm_msi_domain_info,
->> +                                                 msi->inner_domain);
->> +     if (!msi->msi_domain) {
->> +             dev_err(msi->dev, "failed to create MSI domain\n");
->> +             irq_domain_remove(msi->inner_domain);
->> +             return -ENOMEM;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static void brcm_free_domains(struct brcm_msi *msi)
->> +{
->> +     irq_domain_remove(msi->msi_domain);
->> +     irq_domain_remove(msi->inner_domain);
->> +}
->> +
->> +void brcm_msi_remove(struct brcm_msi *msi)
->> +{
->> +     if (!msi)
->> +             return;
->> +     irq_set_chained_handler(msi->irq, NULL);
->> +     irq_set_handler_data(msi->irq, NULL);
->> +     brcm_free_domains(msi);
->> +}
->> +EXPORT_SYMBOL(brcm_msi_remove);
->> +
->> +int brcm_msi_probe(struct platform_device *pdev, struct brcm_info *info)
->> +{
->> +     struct brcm_msi *msi;
->> +     int irq, ret;
->> +
->> +     irq = irq_of_parse_and_map(pdev->dev.of_node, 1);
->> +     if (irq <= 0) {
->> +             dev_err(&pdev->dev, "cannot map msi intr\n");
->> +             return -ENODEV;
->> +     }
->> +
->> +     msi = devm_kzalloc(&pdev->dev, sizeof(struct brcm_msi), GFP_KERNEL);
->> +     if (!msi)
->> +             return -ENOMEM;
->> +
->> +     msi->dev = &pdev->dev;
->> +     msi->base = info->base;
->> +     msi->rev =  info->rev;
->> +     msi->dn = pdev->dev.of_node;
->> +     msi->target_addr = info->msi_target_addr;
->> +     msi->irq = irq;
->> +
->> +     ret = brcm_allocate_domains(msi);
->> +     if (ret)
->> +             return ret;
->> +
->> +     irq_set_chained_handler_and_data(msi->irq, brcm_pcie_msi_isr, msi);
->> +
->> +     if (msi->rev >= BRCM_PCIE_HW_REV_33) {PCIE_IPROC_MSI
->> +             msi->intr_base = msi->base + PCIE_MSI_INTR2_BASE;
->> +             /* This version of PCIe hw has only 32 intr bits
->> +              * starting at bit position 0.
->> +              */
->> +             msi->intr_legacy_mask = 0xffffffff;
->> +             msi->intr_legacy_offset = 0x0;
->> +             msi->used = 0x0;
->> +
->> +     } else {
->> +             msi->intr_base = msi->base + PCIE_INTR2_CPU_BASE;
->> +             /* This version of PCIe hw has only 8 intr bits starting
->> +              * at bit position 24.
->> +              */
->> +             msi->intr_legacy_mask = 0xff000000;
->> +             msi->intr_legacy_offset = 24;
->> +             msi->used = 0x00ffffff;
->> +     }PCIE_IPROC_MSI
->> +
->> +     brcm_msi_set_regs(msi);
->> +     info->msi = msi;
->> +
->> +     return 0;
->> +}
->> +EXPORT_SYMBOL(brcm_msi_probe);
->> diff --git a/drivers/pci/host/pci-brcmstb.c b/drivers/pci/host/pci-brcmstb.c
->> index f5d80e6..99900d9 100644
->> --- a/drivers/pci/host/pci-brcmstb.c
->> +++ b/drivers/pci/host/pci-brcmstb.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/list.h>
->>  #include <linux/log2.h>
->>  #include <linux/module.h>
->> +#include <linux/msi.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_irq.h>
->>  #include <linux/of_pci.h>
->> @@ -327,10 +328,13 @@ struct brcm_pcie {
->>       int                     num_out_wins;
->>       bool                    ssc;
->>       int                     gen;
->> +     u64                     msi_target_addr;
->>       struct brcm_window      out_wins[BRCM_NUM_PCI_OUT_WINS];
->>       struct list_head        resources;
->>       struct device           *dev;
->>       struct list_head        pwr_supplies;
->> +     struct brcm_msi         *msi;
->> +     bool                    msi_internal;
->>       unsigned int            rev;
->>       unsigned int            num;
->>       bool                    bridge_setup_done;
->> @@ -763,6 +767,7 @@ static void brcm_pcie_setup_prep(struct brcm_pcie *pcie)
->>       void __iomem *base = pcie->base;
->>       unsigned int scb_size_val;
->>       u64 rc_bar2_size = 0, rc_bar2_offset = 0, total_mem_size = 0;
->> +     u64 msi_target_addr;
->>       u32 tmp, burst;
->>       int i;
->>
->> @@ -806,14 +811,17 @@ static void brcm_pcie_setup_prep(struct brcm_pcie *pcie)
->>       /* The PCI host controller by design must set the inbound
->>        * viewport to be a contiguous arrangement of all of the
->>        * system's memory.  In addition, its size mut be a power of
->> -      * two.  To further complicate matters, the viewport must
->> -      * start on a pci-address that is aligned on a multiple of its
->> -      * size.  If a portion of the viewport does not represent
->> -      * system memory -- e.g. 3GB of memory requires a 4GB viewport
->> -      * -- we can map the outbound memory in or after 3GB and even
->> -      * though the viewport will overlap the outbound memory the
->> -      * controller will know to send outbound memory downstream and
->> -      * everything else upstream.
->> +      * two.  Further, the MSI target address must NOT be placed
->> +      * inside this region, as the decoding logic will consider its
->> +      * address to be inbound memory traffic.  To further
->> +      * complicate matters, the viewport must start on a
->> +      * pci-address that is aligned on a multiple of its size.
->> +      * If a portion of the viewport does not represent system
->> +      * memory -- e.g. 3GB of memory requires a 4GB viewport --
->> +      * we can map the outbound memory in or after 3GB and even
->> +      * though the viewport will overlap the outbound memory
->> +      * the controller will know to send outbound memory downstream
->> +      * and everything else upstream.
->>        */
->>       rc_bar2_size = roundup_pow_of_two_64(total_mem_size);
->>
->> @@ -828,6 +836,14 @@ static void brcm_pcie_setup_prep(struct brcm_pcie *pcie)
->>               if (total_mem_size <= 0xc0000000ULL &&
->>                   rc_bar2_size <= 0x100000000ULL) {
->>                       rc_bar2_offset = 0;
->> +                     /* If the viewport is less then 4GB we can fit
->> +                      * the MSI target address under 4GB. Otherwise
->> +                      * put it right below 64GB.
->> +                      */
->> +                     msi_target_addr =
->> +                             (rc_bar2_size == 0x100000000ULL)
->> +                             ? BRCM_MSI_TARGET_ADDR_GT_4GB
->> +                             : BRCM_MSI_TARGET_ADDR_LT_4GB;
->>               } else {
->>                       /* The system memory is 4GB or larger so we
->>                        * cannot start the inbound region at location
->> @@ -836,15 +852,24 @@ static void brcm_pcie_setup_prep(struct brcm_pcie *pcie)
->>                        * start it at the 1x multiple of its size
->>                        */
->>                       rc_bar2_offset = rc_bar2_size;
->> -             }
->>
->> +                     /* Since we are starting the viewport at 4GB or
->> +                      * higher, put the MSI target address below 4GB
->> +                      */
->> +                     msi_target_addr = BRCM_MSI_TARGET_ADDR_LT_4GB;
->> +             }
->>       } else {
->>               /* Set simple configuration based on memory sizes
->>                * only.  We always start the viewport at address 0,
->>                * and set the MSI target address accordingly.
->>                */
->>               rc_bar2_offset = 0;
->> +
->> +             msi_target_addr = (rc_bar2_size >= 0x100000000ULL)
->> +                     ? BRCM_MSI_TARGET_ADDR_GT_4GB
->> +                     : BRCM_MSI_TARGET_ADDR_LT_4GB;
->>       }
->> +     pcie->msi_target_addr = msi_target_addr;
->>
->>       tmp = lower_32_bits(rc_bar2_offset);
->>       tmp = INSERT_FIELD(tmp, PCIE_MISC_RC_BAR2_CONFIG_LO, SIZE,
->> @@ -1053,6 +1078,9 @@ static int brcm_pcie_resume(struct device *dev)
->>       if (ret)
->>               return ret;
->>
->> +     if (pcie->msi && pcie->msi_internal)
->> +             brcm_msi_set_regs(pcie->msi);
->> +
->>       pcie->suspended = false;
->>
->>       return 0;
->> @@ -1116,6 +1144,7 @@ static void __attribute__((__section__("pci_fixup_early")))
->>
->>  static void _brcm_pcie_remove(struct brcm_pcie *pcie)
->>  {
->> +     brcm_msi_remove(pcie->msi);
->>       turn_off(pcie);
->>       clk_disable_unprepare(pcie->clk);
->>       clk_put(pcie->clk);PCIE_IPROC_MSI
->> @@ -1125,7 +1154,7 @@ static void _brcm_pcie_remove(struct brcm_pcie *pcie)
->>
->>  static int brcm_pcie_probe(struct platform_device *pdev)
->>  {
->> -     struct device_node *dn = pdev->dev.of_node;
->> +     struct device_node *dn = pdev->dev.of_node, *msi_dn;
->>       struct property *pp;
->>       const struct of_device_id *of_id;
->>       const struct pcie_cfg_data *data;
->> @@ -1244,6 +1273,29 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>       if (ret)
->>               goto fail;
->>
->> +     msi_dn = of_parse_phandle(pcie->dn, "msi-parent", 0);
->> +     /* Use the internal MSI if no msi-parent property */
->> +     if (!msi_dn)
->> +             msi_dn = pcie->dn;
->> +
->> +     if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled()
->> +         && msi_dn == pcie->dn) {
->> +             struct brcm_info info;
->> +
->> +             info.rev = pcie->rev;
->> +             info.msi_target_addr = pcie->msi_target_addr;
->> +             info.base = pcie->base;
->> +
->> +             ret = brcm_msi_probe(pdev, &info);
->> +             if (ret)
->> +                     dev_err(pcie->dev,
->> +                             "probe of internal MSI failed: %d)", ret);
->> +             else
->> +                     pcie->msi_internal = true;
->> +
->> +             pcie->msi = info.msi;
->> +     }
->> +
->>       list_splice_init(&pcie->resources, &bridge->windows);
->>       bridge->dev.parent = &pdev->dev;
->>       bridge->busnr = 0;
->> diff --git a/drivers/pci/host/pci-brcmstb.h b/drivers/pci/host/pci-brcmstb.h
->> index c3b148a..f969c2a 100644
->> --- a/drivers/pci/host/pci-brcmstb.h
->> +++ b/drivers/pci/host/pci-brcmstb.h
->> @@ -27,6 +27,32 @@
->>  extern struct of_pci_range *dma_ranges;
->>  extern int num_dma_ranges;
->>
->> +struct brcm_msi;
->> +struct brcm_info;
->> +struct platform_device;
->> +
->> +#ifdef CONFIG_PCI_BRCMSTB_MSI
->> +int brcm_msi_probe(struct platform_device *pdev, struct brcm_info *info);
->> +void brcm_msi_set_regs(struct brcm_msi *chip);
->> +void brcm_msi_remove(struct brcm_msi *chip);
->> +#else
->> +static inline int brcm_msi_probe(struct platform_device *pdev,
->> +                              struct brcm_info *info)
->> +{
->> +     return -ENODEV;
->> +}
->> +
->> +static inline void brcm_msi_set_regs(struct brcm_msi *chip) {}
->> +static inline void brcm_msi_remove(struct brcm_msi *chip) {}
->> +#endif /* CONFIG_PCI_BRCMSTB_MSI */
->> +
->> +struct brcm_info {PCIE_IPROC_MSI
->> +     int rev;
->> +     u64 msi_target_addr;
->> +     void __iomem *base;
->> +     struct brcm_msi *msi;
->> +};
->> +
->>  #if defined(CONFIG_MIPS)PCIE_IPROC_MSI
->>  /* Broadcom MIPs HW implicitly does the swapping if necessary */
->>  #define bcm_readl(a)         __raw_readl(a)
->> --
->> 1.9.0.138.g2de3478
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, I will fix :)
+
+>=20
+> > > > +
+> > > > +	return kdata;
+> > > > +}
+> > > > +
+> > > > +static unsigned long jtag_copy_to_user(__u64 udata, u8 *kdata,
+> > > > +				       unsigned long bit_size) {
+> > > > +	unsigned long size;
+> > > > +
+> > > > +	size =3D DIV_ROUND_UP(bit_size, BITS_PER_BYTE);
+> > > > +
+> > > > +	return copy_to_user(u64_to_user_ptr(udata), (void *)(kdata),
+> > > > +size);
+> > >
+> > > Same here, making this a separate function seems odd.
+> >
+> > Same, I think it makes code more understandable.
+>=20
+> But it doesn't.
+>=20
+
+Ok, I will fix :)
+
+> > > > +
+> > > > +		if (jtag->ops->freq_set)
+> > > > +			err =3D jtag->ops->freq_set(jtag, value);
+> > > > +		else
+> > > > +			err =3D -EOPNOTSUPP;
+> > > > +		break;
+> > > > +
+> > > > +	case JTAG_IOCRUNTEST:
+> > > > +		if (copy_from_user(&idle, (void *)arg,
+> > > > +				   sizeof(struct jtag_run_test_idle)))
+> > > > +			return -ENOMEM;
+> > > > +		err =3D jtag_run_test_idle_op(jtag, &idle);
+> > >
+> > > Who validates the structure fields?  Is that up to the individual
+> > > jtag driver?  Why not do it in the core correctly so that it only
+> > > has to be done in one place and you do not have to audit every indivi=
+dual
+> driver?
+> >
+> > Input parameters validated by jtag  platform driver. I think it not cri=
+tical.
+>=20
+> Not true at all.  It is very critical.  Remmeber, "All Input Is Evil!"
+>=20
+> You have to validate this.  I as a reviewer have to find where you are va=
+lidating
+> this data to ensure bad things do not happen.  I can't review that here, =
+now I
+> have to go and review all of the individual drivers, which is a major pai=
+n, don't
+> you agree?
+
+Agree.  I will add input parameter checking here before call device driver.
+
+>=20
+> > > > +		break;
+> > > > +
+> > > > +	case JTAG_IOCXFER:
+> > > > +		if (copy_from_user(&xfer, (void *)arg,
+> > > > +				   sizeof(struct jtag_xfer)))
+> > > > +			return -EFAULT;
+> > > > +
+> > > > +		if (xfer.length >=3D JTAG_MAX_XFER_DATA_LEN)
+> > > > +			return -EFAULT;
+> > > > +
+> > > > +		xfer_data =3D jtag_copy_from_user(xfer.tdio, xfer.length);
+> > > > +		if (!xfer_data)
+> > > > +			return -ENOMEM;
+> > >
+> > > Are you sure that's the correct error value?
+> >
+> > I think yes, but what you suggest?
+>=20
+> A fault happened, so -EFAULT, right?
+>=20
+
+Right.
+
+
+> > [..]
+> > > +       .unlocked_ioctl =3D jtag_ioctl,
+> > > +       .open           =3D jtag_open,
+> > > +       .release        =3D jtag_release,
+> > > +};
+> >
+> > add a compat_ioctl pointer here, after ensuring that all ioctl
+> > commands are compatible between 32-bit and 64-bit user space.
+> > [..]
+>=20
+> And if you do not, what happens?  You shouldn't need it as there is no fi=
+xups
+> necessary, or am I mistaken about that?
+
+Yes, you are right. In code compat_ioctl called same function as in unlocke=
+d_ioctl.=20
+So I can remove compat and system will always call unlocked_ioctl.
+
+>=20
+> > > > +static int jtag_open(struct inode *inode, struct file *file) {
+> > > > +	struct jtag *jtag =3D container_of(inode->i_cdev, struct jtag,
+> > > > +cdev);
+> > > > +
+> > > > +	if (atomic_read(&jtag->open)) {
+> > > > +		dev_info(NULL, "jtag already opened\n");
+> > > > +		return -EBUSY;
+> > >
+> > > Why do you care if multiple opens can happen?
+> >
+> > Jtag HW not support to using with multiple requests from different user=
+s. So
+> we prohibit this.
+>=20
+> Why does the kernel care?
+>=20
+> And again, your implementation is broken, it's not actually doing this
+> protection.  I recommend just not doing it at all, but if you really are =
+insisting
+> on it, you have to get it correct :)
+
+I will follow your recommendations and remove it.=20
+
+>=20
+> thanks,
+>=20
+> greg k-h
+
+Thanks.=20
+Oleksandr S
