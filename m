@@ -1,49 +1,51 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA76-EVM: Set powerhold property for tps65917
-Date: Wed, 25 Oct 2017 09:52:19 -0700
-Message-ID: <20171025165219.GO4394@atomide.com>
-References: <1508834648-28715-1-git-send-email-j-keerthy@ti.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH v2 3/9] dt-bindings: interrupt-controllers: add compatible
+ string for stm32h7
+Date: Wed, 25 Oct 2017 19:10:59 +0200
+Message-ID: <1508951465-17152-4-git-send-email-ludovic.Barre@st.com>
+References: <1508951465-17152-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1508834648-28715-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1508951465-17152-1-git-send-email-ludovic.Barre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [171024 01:46]:
-> Set powerhold property for tps65917
-> 
-> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Is this safe to merge separately before the driver changes?
+This patch updates stm32-exti documentation with stm32h7-exti
+compatible string.
 
-Regards,
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ .../devicetree/bindings/interrupt-controller/st,stm32-exti.txt        | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Tony
-
-> ---
->  arch/arm/boot/dts/dra76-evm.dts | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
-> index b024a65..f64aab4 100644
-> --- a/arch/arm/boot/dts/dra76-evm.dts
-> +++ b/arch/arm/boot/dts/dra76-evm.dts
-> @@ -148,6 +148,7 @@
->  		compatible = "ti,tps65917";
->  		reg = <0x58>;
->  		ti,system-power-controller;
-> +		ti,palmas-override-powerhold;
->  		interrupt-controller;
->  		#interrupt-cells = <2>;
->  
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+index 6e7703d..edf03f0 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+@@ -2,7 +2,9 @@ STM32 External Interrupt Controller
+ 
+ Required properties:
+ 
+-- compatible: Should be "st,stm32-exti"
++- compatible: Should be:
++    "st,stm32-exti"
++    "st,stm32h7-exti"
+ - reg: Specifies base physical address and size of the registers
+ - interrupt-controller: Indentifies the node as an interrupt controller
+ - #interrupt-cells: Specifies the number of cells to encode an interrupt
+-- 
+2.7.4
