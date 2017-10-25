@@ -1,90 +1,33 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net-next v3 1/2] dt-bindings: net: add DT bindings for
- Socionext UniPhier AVE
-Date: Wed, 25 Oct 2017 10:07:58 +0900
-Message-ID: <1508893679-11727-2-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1508893679-11727-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add Spreadtrum SC9860 DMA controller
+Date: Wed, 25 Oct 2017 09:53:23 +0800
+Message-ID: <CAMz4kuK=i2C=wrOg00UZK8DG57icffDqrRVvdeGB2RDXgNu7cA@mail.gmail.com>
+References: <84d9f80ce9853ae8441ef91e8701ba516db8f697.1508824012.git.baolin.wang@spreadtrum.com>
+ <20171024143829.GR936@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1508893679-11727-1-git-send-email-hayashi.kunihiko@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171024143829.GR936@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for the AVE ethernet controller found on Socionext's
-UniPhier platforms.
+Hi Vinod,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
----
- .../bindings/net/socionext,uniphier-ave4.txt       | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+On 24 October 2017 at 22:38, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Oct 24, 2017 at 01:47:49PM +0800, Baolin Wang wrote:
+>> This patch adds the binding documentation for Spreadtrum SC9860 DMA
+>> controller device.
+>
+> Applied both after fixing subsytem name, thanks
 
-diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-new file mode 100644
-index 0000000..4b7eca8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-@@ -0,0 +1,48 @@
-+* Socionext AVE ethernet controller
-+
-+This describes the devicetree bindings for AVE ethernet controller
-+implemented on Socionext UniPhier SoCs.
-+
-+Required properties:
-+ - compatible: Should be
-+	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
-+	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
-+	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
-+	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
-+ - reg: Address where registers are mapped and size of region.
-+ - interrupts: Should contain the MAC interrupt.
-+ - phy-mode: See ethernet.txt in the same directory. Allow to choose
-+	"rgmii", "rmii", or "mii" according to the PHY.
-+ - phy-handle: Should point to the external phy device.
-+	See ethernet.txt file in the same directory.
-+ - clocks: A phandle to the clock for the MAC.
-+
-+Optional properties:
-+ - resets: A phandle to the reset control for the MAC.
-+ - local-mac-address: See ethernet.txt in the same directory.
-+
-+Required subnode:
-+ - mdio: Device tree subnode with the following required properties:
-+	- #address-cells: Must be <1>.
-+	- #size-cells: Must be <0>.
-+	- reg: phy ID number, usually a small integer.
-+
-+Example:
-+
-+	ether: ethernet@65000000 {
-+		compatible = "socionext,uniphier-ld20-ave4";
-+		reg = <0x65000000 0x8500>;
-+		interrupts = <0 66 4>;
-+		phy-mode = "rgmii";
-+		phy-handle = <&ethphy>;
-+		clocks = <&sys_clk 6>;
-+		resets = <&sys_rst 6>;
-+		local-mac-address = [00 00 00 00 00 00];
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			ethphy: ethphy@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
+Thanks, especially for your good suggestion.
+
 -- 
-2.7.4
+Baolin.wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
