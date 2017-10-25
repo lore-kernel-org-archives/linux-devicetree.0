@@ -1,42 +1,19 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/8] SOC: brcmstb: add memory API
-Date: Tue, 24 Oct 2017 17:23:24 -0700
-Message-ID: <a83617d0-8506-7fe4-2870-d9dbd9ffdb3f@gmail.com>
-References: <1508868949-16652-1-git-send-email-jim2101024@gmail.com>
- <1508868949-16652-2-git-send-email-jim2101024@gmail.com>
+From: Rishi Bhattacharya <rishib-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [Patch v6 1/7] slimbus: Device management on SLIMbus
+Date: Wed, 25 Oct 2017 00:43:59 +0000
+Message-ID: <790648230eaa47dcafb14b9db4fe7f45@NASANEXM01C.na.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508868949-16652-2-git-send-email-jim2101024@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "bp-l3A5Bk7waGM@public.gmane.org" <bp-l3A5Bk7waGM@public.gmane.org>, "poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org" <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, "treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "daniel-/w4YWyX8dFk@public.gmane.org" <daniel-/w4YWyX8dFk@public.gmane.org>, "jkosina-AlSwsSmVLrQ@public.gmane.org" <jkosina-AlSwsSmVLrQ@public.gmane.org>, "sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org" <sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org>, "joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org" <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jim,
 
-On 10/24/2017 11:15 AM, Jim Quinlan wrote:
-> +#elif defined(CONFIG_MIPS)
-> +int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
-> +{
-> +	/* The logic here is fairly simple and hardcoded: if pa <= 0x5000_0000,
-> +	 * then this is MEMC0, else MEMC1.
-> +	 *
-> +	 * For systems with 2GB on MEMC0, MEMC1 starts at 9000_0000, with 1GB
-> +	 * on MEMC0, MEMC1 starts at 6000_0000.
-> +	 */
-> +	if (pa >= 0x50000000ULL)
-> +		return 1;
-> +	else
-> +		return 0;
-> +}
-> +#endif
-
-We may be missing an EXPORT_SYMBOL_GPL(brcmstb_memory_phys_to_addr_memc)
-here?
-
-Thanks!
--- 
-Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
