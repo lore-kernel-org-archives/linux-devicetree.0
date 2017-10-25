@@ -1,77 +1,49 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v8 5/5] dt-bindings: watchdog: Add bindings for RAVE SP
- watchdog driver
-Date: Wed, 25 Oct 2017 08:00:32 -0700
-Message-ID: <CAHQ1cqEHqdhUtPRUQG9KxbaRJXb_ZerhheO9R=eN=uDKpwT24g@mail.gmail.com>
-References: <20171018170136.12347-1-andrew.smirnov@gmail.com>
- <20171018170136.12347-6-andrew.smirnov@gmail.com> <20171024190719.w4wy3omflkugkocg@rob-hp-laptop>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: Re: [PATCH 1/8] SOC: brcmstb: add memory API
+Date: Wed, 25 Oct 2017 11:00:32 -0400
+Message-ID: <CANCKTBtLxAv9tmfi+92n+bYVq6x_ts0YzhH2YZ_jLnc+Dadc7g@mail.gmail.com>
+References: <1508868949-16652-1-git-send-email-jim2101024@gmail.com>
+ <1508868949-16652-2-git-send-email-jim2101024@gmail.com> <a83617d0-8506-7fe4-2870-d9dbd9ffdb3f@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171024190719.w4wy3omflkugkocg@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <a83617d0-8506-7fe4-2870-d9dbd9ffdb3f@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, linux-pci <linux-pci@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Kevin Cernekee <cernekee@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux-MIPS <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 12:07 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Oct 18, 2017 at 10:01:36AM -0700, Andrey Smirnov wrote:
+On Tue, Oct 24, 2017 at 8:23 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Hi Jim,
 >
-> Commit msg?
+> On 10/24/2017 11:15 AM, Jim Quinlan wrote:
+>> +#elif defined(CONFIG_MIPS)
+>> +int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
+>> +{
+>> +     /* The logic here is fairly simple and hardcoded: if pa <= 0x5000_0000,
+>> +      * then this is MEMC0, else MEMC1.
+>> +      *
+>> +      * For systems with 2GB on MEMC0, MEMC1 starts at 9000_0000, with 1GB
+>> +      * on MEMC0, MEMC1 starts at 6000_0000.
+>> +      */
+>> +     if (pa >= 0x50000000ULL)
+>> +             return 1;
+>> +     else
+>> +             return 0;
+>> +}
+>> +#endif
 >
+> We may be missing an EXPORT_SYMBOL_GPL(brcmstb_memory_phys_to_addr_memc)
+> here?
+>
+> Thanks!
+> --
+> Florian
 
-OK, will add in v9.
+Hi Florian,
 
->> Cc: linux-kernel@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-watchdog@vger.kernel.org
->> Cc: cphealy@gmail.com
->> Cc: Lucas Stach <l.stach@pengutronix.de>
->> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Pavel Machek <pavel@ucw.cz>
->> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Cc: Guenter Roeck <linux@roeck-us.net>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Johan Hovold <johan@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
->> new file mode 100644
->> index 000000000000..f242c3eed0dc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
->> @@ -0,0 +1,10 @@
->> +Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog
->> +
->> +Required properties:
->> +
->> + - compatible: Should be "zii,rave-sp-watchdog"
->> +
->
-> Must be a child of ? defined in ?
+I removed that EXPORT_SYMBOL_GPL() because this particular call is not
+directly invoked PCIe RC driver.  It is indirectly invoked by
+brcmstb_memory_memc_size(), which is exported.
 
-Good point, will add.
-
->
->> +Optional properties:
->> +
->> + - Two byte nvmem cell "wdt_timeout", specified as per
->> +   Documentation/devicetree/bindings/nvmem/nvmem.txt
->
-> prop name: definition... is the normal format.
->
-> Also, don't use '_' in property names.
->
-
-OK, will fix.
-
-Thanks,
-Andrey Smirnov
+Thanks, Jim
