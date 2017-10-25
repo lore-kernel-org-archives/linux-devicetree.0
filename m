@@ -1,27 +1,80 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC 2/4] clk: Add Ingenic X1000 CGU driver
-Date: Wed, 25 Oct 2017 02:23:30 -0700
-Message-ID: <20171025092330.GD30645@codeaurora.org>
-References: <20170927151527.25570-1-prasannatsmkumar@gmail.com>
- <20170927151527.25570-3-prasannatsmkumar@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 1/3] dt-bindings: iio: adc: stm32: add support for diff
+ channels
+Date: Wed, 25 Oct 2017 11:27:43 +0200
+Message-ID: <1508923665-2274-2-git-send-email-fabrice.gasnier@st.com>
+References: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170927151527.25570-3-prasannatsmkumar@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, mturquette@baylibre.com, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, paul@crapouillou.net, malat@debian.org, dom.peklo@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/27, PrasannaKumar Muralidharan wrote:
-> Add support for the clocks provided by CGU in Ingenic X1000 SoC.
-> 
-> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> ---
+STM32H7 ADC channels may be configured either as single-ended or
+differential.
+Add 'st,adc-diff-channels' property to support differential channels.
+Differential channels are defined as a pair of positive and negative
+inputs: vinp & vinn.
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+Changes in v2:
+- Add differential channels example
+- Add a note on mixed single-ended / differential channels
+---
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+index 48bfcaa3..e8bb824 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -62,6 +62,15 @@ Required properties:
+ - st,adc-channels: List of single-ended channels muxed for this ADC.
+   It can have up to 16 channels on stm32f4 or 20 channels on stm32h7, numbered
+   from 0 to 15 or 19 (resp. for in0..in15 or in0..in19).
++- st,adc-diff-channels: List of differential channels muxed for this ADC.
++  Depending on part used, some channels can be configured as differential
++  instead of single-ended (e.g. stm32h7). List here positive and negative
++  inputs pairs as <vinp vinn>, <vinp vinn>,... vinp and vinn are numbered
++  from 0 to 19 on stm32h7)
++  Note: At least one of "st,adc-channels" or "st,adc-diff-channels" is required.
++  Both properties can be used together. Some channels can be used as
++  single-ended and some other ones as differential (mixed). But channels
++  can't be configured both as single-ended and differential (invalid).
+ - #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+   Documentation/devicetree/bindings/iio/iio-bindings.txt
+ 
+@@ -111,3 +120,18 @@ Example:
+ 		...
+ 		other adc child nodes follow...
+ 	};
++
++Example to setup:
++- channel 1 as single-ended
++- channels 2 & 3 as differential (with resp. 6 & 7 negative inputs)
++
++	adc: adc@40022000 {
++		compatible = "st,stm32h7-adc-core";
++		...
++		adc1: adc@0 {
++			compatible = "st,stm32h7-adc";
++			...
++			st,adc-channels = <1>;
++			st,adc-diff-channels = <2 6>, <3 7>;
++		};
++	};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
