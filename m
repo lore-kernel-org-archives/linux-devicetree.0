@@ -1,92 +1,116 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH v2 4/9] irqchip: stm32: add stm32h7 support
-Date: Wed, 25 Oct 2017 19:11:00 +0200
-Message-ID: <1508951465-17152-5-git-send-email-ludovic.Barre@st.com>
-References: <1508951465-17152-1-git-send-email-ludovic.Barre@st.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 6/8] PCI: host: brcmstb: add MSI capability
+Date: Wed, 25 Oct 2017 12:23:10 -0500
+Message-ID: <20171025172310.GN21840@bhelgaas-glaptop.roam.corp.google.com>
+References: <1508868949-16652-1-git-send-email-jim2101024@gmail.com>
+ <1508868949-16652-7-git-send-email-jim2101024@gmail.com>
+ <5406ab92-c1da-f6fa-083d-82d1027130ea@gmail.com>
+ <CANCKTBvAqu-godc03BiAt+9hxAoWABLVCtBzaA9ZWLJgXnQ3Fg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1508951465-17152-1-git-send-email-ludovic.Barre@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANCKTBvAqu-godc03BiAt+9hxAoWABLVCtBzaA9ZWLJgXnQ3Fg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, Catalin Marinas <catalin.marinas@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Brian Norris <computersforpeace@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+[+cc Ray, Scott, Jon]
 
-stm32h7 has up to 96 inputs
-(3 banks of 32 inputs max).
+On Wed, Oct 25, 2017 at 11:28:07AM -0400, Jim Quinlan wrote:
+> On Tue, Oct 24, 2017 at 2:57 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > Hi Jim,
+> >
+> > On 10/24/2017 11:15 AM, Jim Quinlan wrote:
+> >> This commit adds MSI to the Broadcom STB PCIe host controller. It does
+> >> not add MSIX since that functionality is not in the HW.  The MSI
+> >> controller is physically located within the PCIe block, however, there
+> >> is no reason why the MSI controller could not be moved elsewhere in
+> >> the future.
+> >>
+> >> Since the internal Brcmstb MSI controller is intertwined with the PCIe
+> >> controller, it is not its own platform device but rather part of the
+> >> PCIe platform device.
+> >>
+> >> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> >> ---
+> >>  drivers/pci/host/Kconfig           |  12 ++
+> >>  drivers/pci/host/Makefile          |   1 +
+> >>  drivers/pci/host/pci-brcmstb-msi.c | 318 +++++++++++++++++++++++++++++++++++++
+> >>  drivers/pci/host/pci-brcmstb.c     |  72 +++++++--
+> >>  drivers/pci/host/pci-brcmstb.h     |  26 +++
+> >>  5 files changed, 419 insertions(+), 10 deletions(-)
+> >>  create mode 100644 drivers/pci/host/pci-brcmstb-msi.c
+> >>
+> >> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> >> index b9b4f11..54aa5d2 100644
+> >> --- a/drivers/pci/host/Kconfig
+> >> +++ b/drivers/pci/host/Kconfig
+> >> @@ -228,4 +228,16 @@ config PCI_BRCMSTB
+> >>       default ARCH_BRCMSTB || BMIPS_GENERIC
+> >>       help
+> >>         Adds support for Broadcom Settop Box PCIe host controller.
+> >> +       To compile this driver as a module, choose m here.
+> >> +
+> >> +config PCI_BRCMSTB_MSI
+> >> +     bool "Broadcom Brcmstb PCIe MSI support"
+> >> +     depends on ARCH_BRCMSTB || BMIPS_GENERIC
+> >
+> > This could probably be depends on PCI_BRCMSTB, which would imply these
+> > two conditions. PCI_BRCMSTB_MSI on its own is probably not very useful
+> > without the parent RC driver.
+> >
+> >> +     depends on OF
+> >> +     depends on PCI_MSI
+> >> +     default PCI_BRCMSTB
+> >> +     help
+> >> +       Say Y here if you want to enable MSI support for Broadcom's iProc
+> >> +       PCIe controller
+> >> +
+> >>  endmenu
+> >> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+> >> index c283321..1026d6f 100644
+> >> --- a/drivers/pci/host/Makefile
+> >> +++ b/drivers/pci/host/Makefile
+> >> @@ -23,6 +23,7 @@ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+> >>  obj-$(CONFIG_VMD) += vmd.o
+> >>  obj-$(CONFIG_PCI_BRCMSTB) += brcmstb-pci.o
+> >>  brcmstb-pci-objs := pci-brcmstb.o pci-brcmstb-dma.o
+> >> +obj-$(CONFIG_PCI_BRCMSTB_MSI) += pci-brcmstb-msi.o
+> >
+> > Should we combine this file with the brcmstb-pci.o? There is probably no
+> > functional difference, except that pci-brcmstb-msi.ko needs to be loaded
+> > first, right?
+> > --
+> > Florian
+> 
+> If you look at the pci/host/Kconfig you will see that other drivers
+> also have a separate MSI config (eg iproc, altera, xgene) so there is
+> precedent.  The reason that pci-brcmstb-msi.c is its own file is
+> because it depends on an irq function that is not exported.  That is
+> why CONFIG_PCI_BRCMSTB_MSI is bool, and CONFIG_PCI_BRCMSTB is
+> tristate.  -- Jim
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/irqchip/irq-stm32-exti.c | 42 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+There is precedent, but that doesn't mean I like it :)
+I would strongly prefer one file per driver when possible.
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index 6b4109b..d872dea 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -38,6 +38,39 @@ static const struct stm32_exti_bank *stm32f4xx_exti_banks[] = {
- 	&stm32f4xx_exti_b1,
- };
- 
-+static const struct stm32_exti_bank stm32h7xx_exti_b1 = {
-+	.imr_ofst	= 0x80,
-+	.emr_ofst	= 0x84,
-+	.rtsr_ofst	= 0x00,
-+	.ftsr_ofst	= 0x04,
-+	.swier_ofst	= 0x08,
-+	.pr_ofst	= 0x88,
-+};
-+
-+static const struct stm32_exti_bank stm32h7xx_exti_b2 = {
-+	.imr_ofst	= 0x90,
-+	.emr_ofst	= 0x94,
-+	.rtsr_ofst	= 0x20,
-+	.ftsr_ofst	= 0x24,
-+	.swier_ofst	= 0x28,
-+	.pr_ofst	= 0x98,
-+};
-+
-+static const struct stm32_exti_bank stm32h7xx_exti_b3 = {
-+	.imr_ofst	= 0xA0,
-+	.emr_ofst	= 0xA4,
-+	.rtsr_ofst	= 0x40,
-+	.ftsr_ofst	= 0x44,
-+	.swier_ofst	= 0x48,
-+	.pr_ofst	= 0xA8,
-+};
-+
-+static const struct stm32_exti_bank *stm32h7xx_exti_banks[] = {
-+	&stm32h7xx_exti_b1,
-+	&stm32h7xx_exti_b2,
-+	&stm32h7xx_exti_b3,
-+};
-+
- static unsigned long stm32_exti_pending(struct irq_chip_generic *gc)
- {
- 	const struct stm32_exti_bank *stm32_bank = gc->private;
-@@ -258,3 +291,12 @@ static int __init stm32f4_exti_of_init(struct device_node *np,
- }
- 
- IRQCHIP_DECLARE(stm32f4_exti, "st,stm32-exti", stm32f4_exti_of_init);
-+
-+static int __init stm32h7_exti_of_init(struct device_node *np,
-+				       struct device_node *parent)
-+{
-+	return stm32_exti_init(stm32h7xx_exti_banks,
-+			ARRAY_SIZE(stm32h7xx_exti_banks), np);
-+}
-+
-+IRQCHIP_DECLARE(stm32h7_exti, "st,stm32h7-exti", stm32h7_exti_of_init);
--- 
-2.7.4
+Take iproc for example.  iproc-msi.c is enabled by a Kconfig bool.  It
+contains a bunch of code with the only external entry points being
+iproc_msi_init() and iproc_msi_exit().  These are only called via
+iproc_pcie_bcma_probe() or iproc_pcie_pltfm_probe(), both of which are
+tristate.  So iproc-msi.c is only compiled if CONFIG_IPROC_BCMA or
+CONFIG_IPROC_PLATFORM are enabled, but all that text is loaded even if
+neither module is loaded, which seems suboptimal.
+
+I don't care if you have several config options to enable the BCMA
+probe and the platform probe (although these could probably be
+replaced in the code by a simple "#ifdef CONFIG_BCMA" and "#ifdef
+CONFIG_OF"), and making CONFIG_PCIE_IPROC tristate so it can be a
+module makes sense.  But I think it would be better to put all the
+code in one file instead of five, and probably remove
+CONFIG_PCIE_IPROC_MSI.  Maybe this requires exporting some IRQ
+function that currently isn't exported.  But that seems like a simpler
+solution than what we currently have.
+
+Bjorn
