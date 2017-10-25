@@ -1,34 +1,49 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/9] Enable dw-mmc multi-card support
-Date: Wed, 25 Oct 2017 18:50:08 +0200
-Message-ID: <CAPDyKFrjWiQAVTFxWLvmY4Vdom5UNZ5T2Jvw+jdwKi8soudy9A@mail.gmail.com>
-References: <cover.1507315433.git.lsun@mellanox.com> <8e433531-8f67-d575-635e-c6ced29f6804@rock-chips.com>
- <CGME20171017155217epcas3p4de2f27b921ce77234a2d3e46e4b17473@epcas3p4.samsung.com>
- <AM2PR05MB07533A822C7CCBA7111FD58FA14C0@AM2PR05MB0753.eurprd05.prod.outlook.com>
- <f71d94dc-7277-8675-c21e-9c2ec77174e7@samsung.com> <AM2PR05MB07537D50A18D391CD2295D84A1430@AM2PR05MB0753.eurprd05.prod.outlook.com>
- <CAPDyKFo9jt6V01WWGEXuB7QFz6_-Gqiuzcujh3R-VO2A052DTA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA76-EVM: Set powerhold property for tps65917
+Date: Wed, 25 Oct 2017 09:52:19 -0700
+Message-ID: <20171025165219.GO4394@atomide.com>
+References: <1508834648-28715-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFo9jt6V01WWGEXuB7QFz6_-Gqiuzcujh3R-VO2A052DTA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chris Metcalf <cmetcalf@mellanox.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1508834648-28715-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [171024 01:46]:
+> Set powerhold property for tps65917
+> 
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 
-> Unfortunate patch 8 and 9 does *not* solve the fundamental problem
-> with multiple slots. You can't solve it without involving the mmc
-> core, as explained in earlier discussions [1].
->
+Is this safe to merge separately before the driver changes?
 
-This link got lost, so here it is:
+Regards,
 
-[1]
-https://www.spinics.net/lists/linux-mmc/msg46549.html
+Tony
 
-[...]
-
-Kind regards
-Uffe
+> ---
+>  arch/arm/boot/dts/dra76-evm.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
+> index b024a65..f64aab4 100644
+> --- a/arch/arm/boot/dts/dra76-evm.dts
+> +++ b/arch/arm/boot/dts/dra76-evm.dts
+> @@ -148,6 +148,7 @@
+>  		compatible = "ti,tps65917";
+>  		reg = <0x58>;
+>  		ti,system-power-controller;
+> +		ti,palmas-override-powerhold;
+>  		interrupt-controller;
+>  		#interrupt-cells = <2>;
+>  
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
