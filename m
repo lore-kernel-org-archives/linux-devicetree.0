@@ -1,85 +1,75 @@
-From: <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v4] arm64: dts: ls1088a: Add USB support
-Date: Thu, 26 Oct 2017 10:05:52 +0800
-Message-ID: <20171026020552.42153-1-yinbo.zhu@nxp.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v9 6/7] dt-bindings: clock: Document qcom,apcs binding
+Date: Wed, 25 Oct 2017 21:13:26 -0700
+Message-ID: <20171026041326.GJ1575@tuxbook>
+References: <20170921164940.20343-1-georgi.djakov@linaro.org>
+ <20170921164940.20343-7-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yinbo.zhu-3arQi8VN3Tc@public.gmane.org, linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170921164940.20343-7-georgi.djakov@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, robh+dt@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+On Thu 21 Sep 09:49 PDT 2017, Georgi Djakov wrote:
 
-Add USB support on ls1088ardb
+> Add device-tree binding documentation for the Qualcom APCS clock
+> controller. This clock controller is a mux and half-integer divider
+> and provides the clock for the application CPU.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,apcs.txt        | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,apcs.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,apcs.txt b/Documentation/devicetree/bindings/clock/qcom,apcs.txt
+> new file mode 100644
+> index 000000000000..8083bcc33ebe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,apcs.txt
+> @@ -0,0 +1,27 @@
+> +Qualcomm APCS Clock Controller Binding
+> +--------------------------------------
+> +The APCS hardware block provides a combined mux and half-integer divider
+> +functionality. It is used for a main CPU clock mux on MSM8916 platforms.
+> +
+> +Required properties :
+> +- compatible : shall contain only one of the following:
+> +
+> +		"qcom,msm8916-apcs-clk"
+> +
+> +- clocks : shall be the phandle to the main input CPU PLL clock
+> +
+> +- #clock-cells : must be set to <0>
+> +
+> +Example:
+> +
+> +	apcs: mailbox@b011000 {
 
-Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
----
-Change in v4:
-                - Change status from "enable" to "disabled" then enable it on dts file.
-                - Add the version history.
-		- Update the subject.
+This node describes the "apcs kpss global"-block.
 
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+> +		compatible = "qcom,msm8916-apcs-kpss-global";
+> +		reg = <0xb011000 0x1000>;
+> +		#mbox-cells = <1>;
+> +
+> +		apcs_clk: apcs_clk {
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 0f6fcda36b9e..a84b49ec76ec 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -118,6 +118,14 @@
- 	status = "okay";
- };
- 
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
- &esdhc {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 33797b373674..64968def0890 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -385,6 +385,26 @@
- 			status = "disabled";
- 		};
- 
-+		usb0: usb3@3100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0x3100000 0x0 0x10000>;
-+			interrupts = <0 80 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "host";
-+			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
-+			status = "disabled";
-+		};
-+
-+		usb1: usb3@3110000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0x3110000 0x0 0x10000>;
-+			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "host";
-+			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
-+			status = "disabled";
-+		};
-+
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1088a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>,
--- 
-2.14.1
+This node describes that your implementation is split in two different
+drivers.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In other words, I think you should add the two clock properties to the
+apcs node, rather than adding a subnode. I also think you can make the
+mailbox driver implement the clock given the 8916 compatible.
+
+> +			compatible = "qcom,msm8916-apcs-clk";
+> +			clocks = <&a53pll>;
+> +			#clock-cells = <0>;
+> +		};
+> +	};
+
+Regards,
+Bjorn
