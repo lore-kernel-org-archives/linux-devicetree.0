@@ -1,170 +1,30 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?=
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v16 17/32] v4l: async: Prepare for async sub-device
- notifiers
-Date: Fri, 27 Oct 2017 00:10:51 +0200
-Message-ID: <20171026221051.GK2297@bigcity.dyn.berto.se>
-References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
- <20171026075342.5760-18-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171026075342.5760-18-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+From: Chris Lew <clew@codeaurora.org>
+Subject: [PATCH v2 0/3] GLINK intent preallocation support
+Date: Thu, 26 Oct 2017 15:28:53 -0700
+Message-ID: <1509056936-26578-1-git-send-email-clew@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: aneela@codeaurora.org, smaliyap@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-10-26 10:53:27 +0300, Sakari Ailus wrote:
-> Refactor the V4L2 async framework a little in preparation for async
-> sub-device notifiers. This avoids making some structural changes in the
-> patch actually implementing sub-device notifiers, making that patch easier
-> to review.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Intents are used to specify when a channel can receive data from a
+remoteproc. Add support for channels to customize the size and amount
+of prequeued intents.
 
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+An audio channel might expect to receive 3 packets of size 4k in rapid
+succession. This change allows the channel to prepare for this data instead
+of allocating on demand.
 
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 71 ++++++++++++++++++++++++++----------
->  1 file changed, 52 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index 1b536d68cedf..eb31d96254d1 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -125,12 +125,13 @@ static struct v4l2_async_subdev *v4l2_async_find_match(
->  }
->  
->  static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
-> +				   struct v4l2_device *v4l2_dev,
->  				   struct v4l2_subdev *sd,
->  				   struct v4l2_async_subdev *asd)
->  {
->  	int ret;
->  
-> -	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
-> +	ret = v4l2_device_register_subdev(v4l2_dev, sd);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -151,6 +152,31 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
->  	return 0;
->  }
->  
-> +/* Test all async sub-devices in a notifier for a match. */
-> +static int v4l2_async_notifier_try_all_subdevs(
-> +	struct v4l2_async_notifier *notifier)
-> +{
-> +	struct v4l2_device *v4l2_dev = notifier->v4l2_dev;
-> +	struct v4l2_subdev *sd, *tmp;
-> +
-> +	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
-> +		struct v4l2_async_subdev *asd;
-> +		int ret;
-> +
-> +		asd = v4l2_async_find_match(notifier, sd);
-> +		if (!asd)
-> +			continue;
-> +
-> +		ret = v4l2_async_match_notify(notifier, v4l2_dev, sd, asd);
-> +		if (ret < 0) {
-> +			mutex_unlock(&list_lock);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void v4l2_async_cleanup(struct v4l2_subdev *sd)
->  {
->  	v4l2_device_unregister_subdev(sd);
-> @@ -172,18 +198,15 @@ static void v4l2_async_notifier_unbind_all_subdevs(
->  	}
->  }
->  
-> -int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> -				 struct v4l2_async_notifier *notifier)
-> +static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
->  {
-> -	struct v4l2_subdev *sd, *tmp;
->  	struct v4l2_async_subdev *asd;
->  	int ret;
->  	int i;
->  
-> -	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-> +	if (notifier->num_subdevs > V4L2_MAX_SUBDEVS)
->  		return -EINVAL;
->  
-> -	notifier->v4l2_dev = v4l2_dev;
->  	INIT_LIST_HEAD(&notifier->waiting);
->  	INIT_LIST_HEAD(&notifier->done);
->  
-> @@ -216,18 +239,10 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
->  
->  	mutex_lock(&list_lock);
->  
-> -	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
-> -		int ret;
-> -
-> -		asd = v4l2_async_find_match(notifier, sd);
-> -		if (!asd)
-> -			continue;
-> -
-> -		ret = v4l2_async_match_notify(notifier, sd, asd);
-> -		if (ret < 0) {
-> -			mutex_unlock(&list_lock);
-> -			return ret;
-> -		}
-> +	ret = v4l2_async_notifier_try_all_subdevs(notifier);
-> +	if (ret) {
-> +		mutex_unlock(&list_lock);
-> +		return ret;
->  	}
->  
->  	if (list_empty(&notifier->waiting)) {
-> @@ -250,6 +265,23 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
->  
->  	return ret;
->  }
-> +
-> +int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-> +				 struct v4l2_async_notifier *notifier)
-> +{
-> +	int ret;
-> +
-> +	if (WARN_ON(!v4l2_dev))
-> +		return -EINVAL;
-> +
-> +	notifier->v4l2_dev = v4l2_dev;
-> +
-> +	ret = __v4l2_async_notifier_register(notifier);
-> +	if (ret)
-> +		notifier->v4l2_dev = NULL;
-> +
-> +	return ret;
-> +}
->  EXPORT_SYMBOL(v4l2_async_notifier_register);
->  
->  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-> @@ -324,7 +356,8 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
->  		if (!asd)
->  			continue;
->  
-> -		ret = v4l2_async_match_notify(notifier, sd, asd);
-> +		ret = v4l2_async_match_notify(notifier, notifier->v4l2_dev, sd,
-> +					      asd);
->  		if (ret)
->  			goto err_unlock;
->  
-> -- 
-> 2.11.0
-> 
+Chris Lew (3):
+  dt-bindings: soc: qcom: Support GLINK intents
+  rpmsg: glink: Add support to preallocate intents
+  rpmsg: glink: Use best fit intent during tx
+
+ .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 10 +++++
+ drivers/rpmsg/qcom_glink_native.c                  | 48 +++++++++++++++++-----
+ 2 files changed, 47 insertions(+), 11 deletions(-)
 
 -- 
-Regards,
-Niklas Söderlund
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
