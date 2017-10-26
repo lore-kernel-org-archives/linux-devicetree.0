@@ -1,51 +1,60 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH net-next 2/2] bindings: net: stmmac: Add documentation for
- TSN parameters
-Date: Thu, 26 Oct 2017 10:19:24 +0100
-Message-ID: <10e2834b-eaa5-ad37-5fca-1e4b1f9b0d53@synopsys.com>
-References: <cover.1508938927.git.joabreu@synopsys.com>
- <ef1d220cf792c74ae278e0200ca4763f9ab62d3e.1508938927.git.joabreu@synopsys.com>
- <c2a4a435-0b0b-4fa3-a69a-280f6d0c6427@gmail.com>
- <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
- <20171026090308.GD20299@lunn.ch>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 0/4] rtc: mediatek: add support for SoC based RTC on
+ MT7622
+Date: Thu, 26 Oct 2017 11:34:30 +0200
+Message-ID: <20171026093430.aw4rpjffrvrzycga@piout.net>
+References: <cover.1508741262.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171026090308.GD20299-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1508741262.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi,
 
-On 26-10-2017 10:03, Andrew Lunn wrote:
->> These parameters may also need to change in runtime depending on
->> the scheduled traffic. Unfortunately, net subsystem does not yet
->> support TSN so this will have to wait and for now we will use
->> fixed parameters.
-> Hi Jose
->
-> what you should do is help Linux get support for TSN. Please take part
-> in this discussion:
->
-> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.ozlabs.org_cover_808504_&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=WHDsc6kcWAl4i96Vm5hJ_19IJiuxx_p_Rzo2g-uHDKw&m=8yzdm5iHyWm9cVsYIYUtQNul5WnLO4nLnIxb3WDu-WU&s=6UJ2YJm5jXq6vTWpNRwRzNEuukPboceO61DQgDIpSj0&e=
+On 23/10/2017 at 15:16:43 +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Changes since v2:
+> - Remove time extension with yr_base 
+> - Add fixup that ensures all time fields in hardware keeping consistency
+> inside the mtk_rtc_get_alarm_or_time call
+> - Add validity for time range should be between 2001 to 2099
+> - Enhance comments with aligned style and explanation for certain limiation in
+> hardware
+> - Rename dt-binding naming from rtc-mediatek.txt to rtc-mt7622.txt
+> - Rename config naming from RTC_DRV_MEDIATEK to RTC_DRV_MT7622
+> 
+> Changes since v1:
+> - Rename to rtc-mt7622.c from rtc-mediatek.c
+> - Use [readl,writel]_relaxed instead of __raw_* version
+> - Remove redundant register reading in mtk_rtc_get_alarm_or_time()
+> - Stop alarm when alarm is really expired in mtk_rtc_alarmirq()
+> - Extend the maximum year the RTC/Alarm can count/support using year rebasing
+> - Remove unnesscary log which is already done in core layer
+> 
+> This patchset introduces support for MediaTek SoC based real time clock
+> (RTC) Currently, the driver is already tested successfully with hwclock
+> and wakealarm on MT7622 SoC. And it should also be workable on other
+> similar MediaTek SoCs. And patch 3 is a distinct patch used to distinguish
+> between either SoC based or PMIC based RTC to avoid confusion for the RTC
+> selection for the target SoC.
+> 
+> Sean Wang (4):
+>   dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
+>   rtc: mediatek: add driver for RTC on MT7622 SoC
+>   rtc: mediatek: enhance the description for MediaTek PMIC based RTC
+>   rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
+> 
 
-Seems like I don't have this thread saved here. Can you please
-add me in the thread?
+All applied, thanks. (I've alphabetically ordered Kconfig and Makefile
+entries in patch 2)
 
-Thanks and best regards,
-Jose Miguel Abreu
-
->
-> Test the RFC, make sure the concepts will work for your hardware. Make
-> you hardware work with these RFC patches. Help drive TSN forward. Once
-> the core TSN code lands, then you can post patches for your driver.
->
->     Andrew
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
