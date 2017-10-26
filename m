@@ -1,23 +1,24 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v9 02/10] dt-bindings: net: dwmac-sun8i: update
- documentation about integrated PHY
-Date: Thu, 26 Oct 2017 11:53:21 +0200
-Message-ID: <20171026095321.GI20299@lunn.ch>
+Subject: Re: [PATCH v9 04/10] arm: dts: sunxi: h3/h5: represent the mdio
+ switch used by sun8i-h3-emac
+Date: Thu, 26 Oct 2017 11:54:11 +0200
+Message-ID: <20171026095411.GJ20299@lunn.ch>
 References: <20171024175714.15840-1-clabbe.montjoie@gmail.com>
- <20171024175714.15840-3-clabbe.montjoie@gmail.com>
+ <20171024175714.15840-5-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171024175714.15840-3-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20171024175714.15840-5-clabbe.montjoie@gmail.com>
+Sender: netdev-owner@vger.kernel.org
 To: Corentin Labbe <clabbe.montjoie@gmail.com>
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 07:57:06PM +0200, Corentin Labbe wrote:
-> This patch add documentation about the MDIO switch used on sun8i-h3-emac
-> for integrated PHY.
+On Tue, Oct 24, 2017 at 07:57:08PM +0200, Corentin Labbe wrote:
+> Since dwmac-sun8i could use either an integrated PHY or an external PHY
+> (which could be at same MDIO address), we need to represent this selection
+> by a MDIO switch.
 > 
 > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
