@@ -1,71 +1,28 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5] ARM: dts: imx53-tx53: Fix 'ethernet-phy@0' node with
- unit name and no reg property
-Date: Thu, 26 Oct 2017 16:10:54 -0200
-Message-ID: <CAOMZO5ALw3VKkX_rQCfBVNQ1q5Y8a12R3Dn42NyPAn3Te0e6OQ@mail.gmail.com>
-References: <1509031514-30602-1-git-send-email-marco.franchi@nxp.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v5 0/2] thermal: add brcmstb AVS TMON driver
+Date: Thu, 26 Oct 2017 11:24:33 -0700
+Message-ID: <20171026182431.GA22718@localhost.localdomain>
+References: <20170926212800.4879-1-code@mmayer.net>
+ <9f6b61ee-7f53-f158-2642-15212db92781@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509031514-30602-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marco Antonio Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9f6b61ee-7f53-f158-2642-15212db92781@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Markus Mayer <code@mmayer.net>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 1:25 PM, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org> wrote:
-> The following build warning is seen with W=1:
->
-> Warning (unit_address_vs_reg): Node /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has a unit name, but no reg property
->
-> Fix this warning by adding reg property from such node and, consequently,
-> includes a mdio node into the fec node, with the 'address-cells' and
-> 'size-cells' to avoid these other following warnings:
->
-> Warning (reg_format): "reg" property in /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
->
-> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+On Thu, Oct 26, 2017 at 09:55:50AM -0700, Florian Fainelli wrote:
+> On 09/26/2017 02:27 PM, Markus Mayer wrote:
+> > From: Markus Mayer <mmayer@broadcom.com>
+> > 
+> > This series adds the brcmstb AVS TMON driver.
+> > 
+> > The driver was originally written by Brian Norris.
+> 
+> Rui, Eduardo, what's going on here? Can either one of you merge this
+> driver or are we going to miss another merge window?
 
-Lothar, could you please test it?
-
-> ---
-> Change since v4:
-> -pass the 'address-cells' and 'size-cells' values using a mdio node
-> -change message log
->  arch/arm/boot/dts/imx53-tx53.dtsi | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
-> index 71b58b6..a22e461 100644
-> --- a/arch/arm/boot/dts/imx53-tx53.dtsi
-> +++ b/arch/arm/boot/dts/imx53-tx53.dtsi
-> @@ -225,10 +225,16 @@
->         mac-address = [000000000000]; /* placeholder; will be overwritten by bootloader */
->         status = "okay";
->
-> -       phy0: ethernet-phy@0 {
-> -               interrupt-parent = <&gpio2>;
-> -               interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-> -               device_type = "ethernet-phy";
-> +       mdio {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               phy0: ethernet-phy@0 {
-> +                       reg = <0>;
-> +                       interrupt-parent = <&gpio2>;
-> +                       interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-> +                       device_type = "ethernet-phy";
-> +               };
->         };
->  };
->
-> --
-> 2.7.4
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I am taking a look. Thanks for the reminder.
