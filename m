@@ -1,75 +1,101 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v9 6/7] dt-bindings: clock: Document qcom,apcs binding
-Date: Wed, 25 Oct 2017 21:13:26 -0700
-Message-ID: <20171026041326.GJ1575@tuxbook>
+Subject: Re: [PATCH v9 4/7] clk: qcom: Add A53 PLL support
+Date: Wed, 25 Oct 2017 21:19:23 -0700
+Message-ID: <20171026041923.GK1575@tuxbook>
 References: <20170921164940.20343-1-georgi.djakov@linaro.org>
- <20170921164940.20343-7-georgi.djakov@linaro.org>
+ <20170921164940.20343-5-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170921164940.20343-7-georgi.djakov@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
+In-Reply-To: <20170921164940.20343-5-georgi.djakov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Georgi Djakov <georgi.djakov@linaro.org>
 Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, robh+dt@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Thu 21 Sep 09:49 PDT 2017, Georgi Djakov wrote:
+> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
+[..]
+> +
+> +static const struct of_device_id qcom_a53pll_match_table[] = {
+> +	{ .compatible = "qcom,msm8916-a53pll" },
+> +	{ }
+> +};
 
-> Add device-tree binding documentation for the Qualcom APCS clock
-> controller. This clock controller is a mux and half-integer divider
-> and provides the clock for the application CPU.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  .../devicetree/bindings/clock/qcom,apcs.txt        | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,apcs.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,apcs.txt b/Documentation/devicetree/bindings/clock/qcom,apcs.txt
-> new file mode 100644
-> index 000000000000..8083bcc33ebe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,apcs.txt
-> @@ -0,0 +1,27 @@
-> +Qualcomm APCS Clock Controller Binding
-> +--------------------------------------
-> +The APCS hardware block provides a combined mux and half-integer divider
-> +functionality. It is used for a main CPU clock mux on MSM8916 platforms.
-> +
-> +Required properties :
-> +- compatible : shall contain only one of the following:
-> +
-> +		"qcom,msm8916-apcs-clk"
-> +
-> +- clocks : shall be the phandle to the main input CPU PLL clock
-> +
-> +- #clock-cells : must be set to <0>
-> +
-> +Example:
-> +
-> +	apcs: mailbox@b011000 {
+Move the match table below the probe.
 
-This node describes the "apcs kpss global"-block.
-
-> +		compatible = "qcom,msm8916-apcs-kpss-global";
-> +		reg = <0xb011000 0x1000>;
-> +		#mbox-cells = <1>;
 > +
-> +		apcs_clk: apcs_clk {
+> +static int qcom_a53pll_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct regmap *regmap;
+> +	struct resource *res;
+> +	struct clk_pll *pll;
+> +	void __iomem *base;
+> +	struct clk_init_data init = { };
+> +	int ret;
+> +
+> +	pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
+> +	if (!pll)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	regmap = devm_regmap_init_mmio(dev, base, &a53pll_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	pll->l_reg = 0x04;
+> +	pll->m_reg = 0x08;
+> +	pll->n_reg = 0x0c;
+> +	pll->config_reg = 0x14;
+> +	pll->mode_reg = 0x00;
+> +	pll->status_reg = 0x1c;
+> +	pll->status_bit = 16;
+> +	pll->freq_tbl = a53pll_freq;
+> +
+> +	init.name = "a53pll";
+> +	init.parent_names = (const char *[]){ "xo" };
+> +	init.num_parents = 1;
+> +	init.ops = &clk_pll_sr2_ops;
+> +	init.flags = CLK_IS_CRITICAL;
+> +	pll->clkr.hw.init = &init;
+> +
+> +	ret = devm_clk_register_regmap(dev, &pll->clkr);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register regmap clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_simple_get,
+> +				     &pll->clkr.hw);
+> +	if (ret) {
+> +		dev_err(dev, "failed to add clock provider: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver qcom_a53pll_driver = {
+> +	.probe = qcom_a53pll_probe,
 
-This node describes that your implementation is split in two different
-drivers.
+I think you should either have a remove here that
+of_clk_del_hw_provider() or set suppress_bind_attrs in the .driver.
 
-In other words, I think you should add the two clock properties to the
-apcs node, rather than adding a subnode. I also think you can make the
-mailbox driver implement the clock given the 8916 compatible.
+> +	.driver = {
+> +		.name = "qcom-a53pll",
+> +		.of_match_table = qcom_a53pll_match_table,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(qcom_a53pll_driver);
 
-> +			compatible = "qcom,msm8916-apcs-clk";
-> +			clocks = <&a53pll>;
-> +			#clock-cells = <0>;
-> +		};
-> +	};
+Other than these nits I think this looks good.
 
 Regards,
 Bjorn
