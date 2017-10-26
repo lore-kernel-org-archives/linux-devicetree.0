@@ -1,90 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: pfuze100: Remove leading zero from '@08' notation" to the regulator tree
-Date: Thu, 26 Oct 2017 15:17:22 +0100 (BST)
-Message-ID: <20171026141722.C3D1844005B@finisterre.ee.mobilebroadband>
-References: <1508957833-22231-1-git-send-email-marco.franchi@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508957833-22231-1-git-send-email-marco.franchi@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Franchi <marco.franchi@nxp.com>
-Cc: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, marcofrk@gmail.comlinux-kernel@vger.kernel.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA76-EVM: Set powerhold property for tps65917
+Date: Thu, 26 Oct 2017 07:17:08 -0700
+Message-ID: <20171026141707.GE21504@atomide.com>
+References: <1508834648-28715-1-git-send-email-j-keerthy@ti.com>
+ <20171025165219.GO4394@atomide.com>
+ <30907da7-a80c-4718-dd9a-17cb22669eb5@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <30907da7-a80c-4718-dd9a-17cb22669eb5-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+* Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [171025 23:31]:
+> 
+> 
+> On Wednesday 25 October 2017 10:22 PM, Tony Lindgren wrote:
+> > * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [171024 01:46]:
+> >> Set powerhold property for tps65917
+> >>
+> >> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> > 
+> > Is this safe to merge separately before the driver changes?
+> 
+> This needs to wait till [1] is merged. I should have mentioned this.
+> 
+> I will ping on this as soon as the dependent patch is merged.
 
-   ASoC: pfuze100: Remove leading zero from '@08' notation
+OK thanks will untag this patch from my inbox for now then.
 
-has been applied to the regulator tree at
+Regards,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+Tony
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 26284ca918e4e271bae4e96129fc3791b9bf0983 Mon Sep 17 00:00:00 2001
-From: Marco Franchi <marco.franchi@nxp.com>
-Date: Wed, 25 Oct 2017 16:57:13 -0200
-Subject: [PATCH] ASoC: pfuze100: Remove leading zero from '@08' notation
-
-Improve the binding example by removing the leading 0 from '@08' notation,
-which fixes the following build warnings:
-
-Warning (unit_address_format): Node /pfuze100@08 unit name should not have leading 0s
-Warning (unit_address_format): Node /pfuze200@08 unit name should not have leading 0s
-Warning (unit_address_format): Node /pfuze3000@08 unit name should not have leading 0s
-
-Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/regulator/pfuze100.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index 444c47831a40..c6dd3f5e485b 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -21,7 +21,7 @@ Each regulator is defined using the standard binding for regulators.
- 
- Example 1: PFUZE100
- 
--	pmic: pfuze100@08 {
-+	pmic: pfuze100@8 {
- 		compatible = "fsl,pfuze100";
- 		reg = <0x08>;
- 
-@@ -122,7 +122,7 @@ Example 1: PFUZE100
- 
- Example 2: PFUZE200
- 
--	pmic: pfuze200@08 {
-+	pmic: pfuze200@8 {
- 		compatible = "fsl,pfuze200";
- 		reg = <0x08>;
- 
-@@ -216,7 +216,7 @@ Example 2: PFUZE200
- 
- Example 3: PFUZE3000
- 
--	pmic: pfuze3000@08 {
-+	pmic: pfuze3000@8 {
- 		compatible = "fsl,pfuze3000";
- 		reg = <0x08>;
- 
--- 
-2.14.1
+> [1] https://marc.info/?l=linux-omap&m=150883331614239&w=2
+> 
+> Thanks,
+> Keerthy
+> 
+> > 
+> > Regards,
+> > 
+> > Tony
+> > 
+> >> ---
+> >>  arch/arm/boot/dts/dra76-evm.dts | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
+> >> index b024a65..f64aab4 100644
+> >> --- a/arch/arm/boot/dts/dra76-evm.dts
+> >> +++ b/arch/arm/boot/dts/dra76-evm.dts
+> >> @@ -148,6 +148,7 @@
+> >>  		compatible = "ti,tps65917";
+> >>  		reg = <0x58>;
+> >>  		ti,system-power-controller;
+> >> +		ti,palmas-override-powerhold;
+> >>  		interrupt-controller;
+> >>  		#interrupt-cells = <2>;
+> >>  
+> >> -- 
+> >> 1.9.1
+> >>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
