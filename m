@@ -1,21 +1,37 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: Applied "ASoC: pfuze100: Remove leading zero from '@08' notation"
- to the regulator tree
-Date: Thu, 26 Oct 2017 12:19:55 -0200
-Message-ID: <CAOMZO5BKGG3OdfHo8COxr4LzgjPZWcEK8qr_hjf0pbH6DMmKeA@mail.gmail.com>
-References: <1508957833-22231-1-git-send-email-marco.franchi@nxp.com> <20171026141722.C3D1844005B@finisterre.ee.mobilebroadband>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: dts: imx53-tx53: Fix 'ethernet-phy@0' node with
+ unit name and no reg property
+Date: Thu, 26 Oct 2017 12:29:11 -0200
+Message-ID: <CAOMZO5DunnnMQ7yXr-OnJd51qGE39UheUDvSuvBmpomt2W2UDA@mail.gmail.com>
+References: <1508946042-17671-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171026141722.C3D1844005B@finisterre.ee.mobilebroadband>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Marco Franchi <marco.franchi@nxp.com>, Liam Girdwood <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marco Antonio Franchi <marcofrk@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508946042-17671-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marco Antonio Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 12:17 PM, Mark Brown <broonie@kernel.org> wrote:
-> The patch
->
->    ASoC: pfuze100: Remove leading zero from '@08' notation
+Hi Marco,
 
-This should be 'regulator: pfuze100' instead.
+On Wed, Oct 25, 2017 at 1:40 PM, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org> wrote:
+
+>                         fec: ethernet@63fec000 {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+
+This does not look corret.
+
+You should these lines under 'mdio':
+
+mdio {
+     #address-cells = <1>;
+     #size-cells = <0>;
+   .....
+
+Take a look at arch/arm/boot/dts/imx6ul-14x14-evk.dts for an example.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
