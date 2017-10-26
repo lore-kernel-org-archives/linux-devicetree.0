@@ -1,66 +1,34 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt-bindings: sgtl5000: Remove leading zero
- from '@0a' notation
-Date: Thu, 26 Oct 2017 09:41:26 +0200
-Message-ID: <20171026074126.pe7vzws77dt4kyv6@sirena.org.uk>
-References: <1508952290-18794-1-git-send-email-marco.franchi@nxp.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: royalty device tree implementation?
+Date: Thu, 26 Oct 2017 08:48:41 +0100
+Message-ID: <20171026074840.w4byt4mz4le5ga3z@salmiak>
+References: <84855b32-e5b8-1b36-ba9d-bdd10e140655@cisco.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7476574249816128518=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1508952290-18794-1-git-send-email-marco.franchi@nxp.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Franchi <marco.franchi@nxp.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, marcofrk@gmail.com, lgirdwood@gmail.com, robh+dt@kernel.org, festevam@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <84855b32-e5b8-1b36-ba9d-bdd10e140655-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Walker <danielwa-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, xe-linux-external-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 25, 2017 at 12:39:37PM -0700, Daniel Walker wrote:
+> 
+> Hi,
+> 
+> I was looking for a royalty free (i.e. MIT or X11 license) device tree
+> implementation? Something that could be used inside a boot loader for
+> example to add small sections into the device tree prior to booting the
+> kernel. I did some searches for something similar to this, but did not find
+> anything.
 
---===============7476574249816128518==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ohocs6mgsip7aogz"
-Content-Disposition: inline
+IIRC, libfdt is dual licensed under GPL/BSD, and can be found in the dtc source
+tree.
 
-
---ohocs6mgsip7aogz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Oct 25, 2017 at 03:24:50PM -0200, Marco Franchi wrote:
-> Improve the binding example by removing the leading 0 from '@0a' notation,
-> which fixes the following build warning:
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---ohocs6mgsip7aogz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlnxkaYACgkQJNaLcl1U
-h9A9bgf8CuLdhG267vYXLM2TiJT0iQqPYOTFiIu3fWy+hT5Wh3JSX8XwxJK1qM6F
-b5COUGnvKD3Fk1BLPGfplkxGEmG5ExtUEDvTb5QslZ0rVO7+NtJFbnQummHtNU34
-xWPz6hEpQyHCeWi5f9f7KWOgfg3q+REGOSOYXccbUTvqqoobWxpFO+RmhPq9NgkP
-fhqKEx3SzzdQrgtxVUaCTJC4Y4i6L5oB2aDqpZaSAQBKCq84IJs1sMbykIe+Uy3H
-d6F9UHZUGgM703M1FJvfTBs5whdWnFzcGEuPEjoGDDyVpMQnz79YhqM28QGpMXi9
-dn5UZsKmrxbejRibxLEHHFv0eRFoUg==
-=4Y16
------END PGP SIGNATURE-----
-
---ohocs6mgsip7aogz--
-
---===============7476574249816128518==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7476574249816128518==--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
