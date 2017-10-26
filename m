@@ -1,155 +1,99 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v16 17/32] v4l: async: Prepare for async sub-device notifiers
-Date: Thu, 26 Oct 2017 10:53:27 +0300
-Message-ID: <20171026075342.5760-18-sakari.ailus@linux.intel.com>
-References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH net-next 2/2] bindings: net: stmmac: Add documentation for
+ TSN parameters
+Date: Thu, 26 Oct 2017 08:54:06 +0100
+Message-ID: <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
+References: <cover.1508938927.git.joabreu@synopsys.com>
+ <ef1d220cf792c74ae278e0200ca4763f9ab62d3e.1508938927.git.joabreu@synopsys.com>
+ <c2a4a435-0b0b-4fa3-a69a-280f6d0c6427@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c2a4a435-0b0b-4fa3-a69a-280f6d0c6427-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Refactor the V4L2 async framework a little in preparation for async
-sub-device notifiers. This avoids making some structural changes in the
-patch actually implementing sub-device notifiers, making that patch easier
-to review.
+Hi Florian,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
----
- drivers/media/v4l2-core/v4l2-async.c | 71 ++++++++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 19 deletions(-)
+On 25-10-2017 20:34, Florian Fainelli wrote:
+> On 10/25/2017 07:04 AM, Jose Abreu wrote:
+>> This adds the documentation for TSN feature EST and FP.
+>>
+>> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+>> Cc: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>> Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/net/stmmac.txt | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> index c3a7be6..6359df6 100644
+>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -114,6 +114,16 @@ Optional properties:
+>>  			- snps,high_credit: max write outstanding req. limit
+>>  			- snps,low_credit: max read outstanding req. limit
+>>  		- snps,priority: TX queue priority (Range: 0x0 to 0xF)
+>> +- TSN parameters: below the list of all the parameters to configure TSN
+>> +		  features (only applicable for IP version >= 5.00)
+>> +	- snps,est: Enable EST algorithm
+>> +	- If EST enabled provide these parameters:
+>> +		- snps,btr: Array size of 2 with BTR value for EST algorithm
+>> +		- snps,ctr: Array size of 2 with CTR value for EST algorithm
+>> +		- snps,ter: TER value for EST algorithm
+>> +		- snps,gcl: Variable size array with GCL table entries.
+>> +	- snps,fp: Enable FP feature. This needs EST enabled.
+> You are using Device Tree as a configuration interface, that does not
+> sound right at all.
+>
+>> +
+>>  Examples:
+>>  
+>>  	stmmac_axi_setup: stmmac-axi-config {
+>> @@ -151,6 +161,15 @@ Examples:
+>>  		};
+>>  	};
+>>  
+>> +	tsn_setup: tsn-config {
+>> +		snps,est;
+>> +		snps,btr = <0x00000000 0x00000001>;
+>> +		snps,ctr = <0x00000000 0x10000000>;
+>> +		snps,ter = <0x00000000>;
+>> +		snps,gcl = <0x00000001 0x00000002 0x00000003>;
+>> +		snps,fp;
+>> +	};
+>> +
+>>  	gmac0: ethernet@e0800000 {
+>>  		compatible = "st,spear600-gmac";
+>>  		reg = <0xe0800000 0x8000>;
+>> @@ -176,4 +195,5 @@ Examples:
+>>  		};
+>>  		snps,mtl-rx-config = <&mtl_rx_setup>;
+>>  		snps,mtl-tx-config = <&mtl_tx_setup>;
+>> +		snps,tsn-config = <&tsn_setup>;
+> Yes, this is definitively using Device Tree as a configuration
+> interface, don't do that please.
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 1b536d68cedf..eb31d96254d1 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -125,12 +125,13 @@ static struct v4l2_async_subdev *v4l2_async_find_match(
- }
- 
- static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
-+				   struct v4l2_device *v4l2_dev,
- 				   struct v4l2_subdev *sd,
- 				   struct v4l2_async_subdev *asd)
- {
- 	int ret;
- 
--	ret = v4l2_device_register_subdev(notifier->v4l2_dev, sd);
-+	ret = v4l2_device_register_subdev(v4l2_dev, sd);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -151,6 +152,31 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
- 	return 0;
- }
- 
-+/* Test all async sub-devices in a notifier for a match. */
-+static int v4l2_async_notifier_try_all_subdevs(
-+	struct v4l2_async_notifier *notifier)
-+{
-+	struct v4l2_device *v4l2_dev = notifier->v4l2_dev;
-+	struct v4l2_subdev *sd, *tmp;
-+
-+	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
-+		struct v4l2_async_subdev *asd;
-+		int ret;
-+
-+		asd = v4l2_async_find_match(notifier, sd);
-+		if (!asd)
-+			continue;
-+
-+		ret = v4l2_async_match_notify(notifier, v4l2_dev, sd, asd);
-+		if (ret < 0) {
-+			mutex_unlock(&list_lock);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static void v4l2_async_cleanup(struct v4l2_subdev *sd)
- {
- 	v4l2_device_unregister_subdev(sd);
-@@ -172,18 +198,15 @@ static void v4l2_async_notifier_unbind_all_subdevs(
- 	}
- }
- 
--int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
--				 struct v4l2_async_notifier *notifier)
-+static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
- {
--	struct v4l2_subdev *sd, *tmp;
- 	struct v4l2_async_subdev *asd;
- 	int ret;
- 	int i;
- 
--	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-+	if (notifier->num_subdevs > V4L2_MAX_SUBDEVS)
- 		return -EINVAL;
- 
--	notifier->v4l2_dev = v4l2_dev;
- 	INIT_LIST_HEAD(&notifier->waiting);
- 	INIT_LIST_HEAD(&notifier->done);
- 
-@@ -216,18 +239,10 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 
- 	mutex_lock(&list_lock);
- 
--	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
--		int ret;
--
--		asd = v4l2_async_find_match(notifier, sd);
--		if (!asd)
--			continue;
--
--		ret = v4l2_async_match_notify(notifier, sd, asd);
--		if (ret < 0) {
--			mutex_unlock(&list_lock);
--			return ret;
--		}
-+	ret = v4l2_async_notifier_try_all_subdevs(notifier);
-+	if (ret) {
-+		mutex_unlock(&list_lock);
-+		return ret;
- 	}
- 
- 	if (list_empty(&notifier->waiting)) {
-@@ -250,6 +265,23 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 
- 	return ret;
- }
-+
-+int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
-+				 struct v4l2_async_notifier *notifier)
-+{
-+	int ret;
-+
-+	if (WARN_ON(!v4l2_dev))
-+		return -EINVAL;
-+
-+	notifier->v4l2_dev = v4l2_dev;
-+
-+	ret = __v4l2_async_notifier_register(notifier);
-+	if (ret)
-+		notifier->v4l2_dev = NULL;
-+
-+	return ret;
-+}
- EXPORT_SYMBOL(v4l2_async_notifier_register);
- 
- void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-@@ -324,7 +356,8 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
- 		if (!asd)
- 			continue;
- 
--		ret = v4l2_async_match_notify(notifier, sd, asd);
-+		ret = v4l2_async_match_notify(notifier, notifier->v4l2_dev, sd,
-+					      asd);
- 		if (ret)
- 			goto err_unlock;
- 
--- 
-2.11.0
+I understand your concern here and I know DT bindings should only
+describe the HW but note that this is already done in
+mtl-rx-config and mtl-tx-config.
 
+These parameters may also need to change in runtime depending on
+the scheduled traffic. Unfortunately, net subsystem does not yet
+support TSN so this will have to wait and for now we will use
+fixed parameters.
+
+Anyway, what do you suggest here instead? Platform data?
+
+Best regards,
+Jose Miguel Abreu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
