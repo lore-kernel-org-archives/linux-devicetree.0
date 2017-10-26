@@ -1,40 +1,36 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v5 5/6] input: Add MediaTek PMIC keys support
-Date: Thu, 26 Oct 2017 17:27:44 +0900
-Message-ID: <20171026082744.GA29398@gangnam>
-References: <1506509048-19032-1-git-send-email-chen.zhong@mediatek.com>
- <CGME20170927104421epcas2p190d03c1c6759f394debfc01b23641ece@epcas2p1.samsung.com>
- <1506509048-19032-6-git-send-email-chen.zhong@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 2/2] bindings: net: stmmac: Add documentation
+ for TSN parameters
+Date: Thu, 26 Oct 2017 11:03:08 +0200
+Message-ID: <20171026090308.GD20299@lunn.ch>
+References: <cover.1508938927.git.joabreu@synopsys.com>
+ <ef1d220cf792c74ae278e0200ca4763f9ab62d3e.1508938927.git.joabreu@synopsys.com>
+ <c2a4a435-0b0b-4fa3-a69a-280f6d0c6427@gmail.com>
+ <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-disposition: inline
-In-reply-to: <1506509048-19032-6-git-send-email-chen.zhong@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen Zhong <chen.zhong@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Jaechul Lee <jcsing.lee@samsung.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-input@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> These parameters may also need to change in runtime depending on
+> the scheduled traffic. Unfortunately, net subsystem does not yet
+> support TSN so this will have to wait and for now we will use
+> fixed parameters.
 
-On Wed, Sep 27, 2017 at 06:44:07PM +0800, Chen Zhong wrote:
-> This patch add support to handle MediaTek PMIC MT6397/MT6323 key
-> interrupts including pwrkey and homekey, also add setting for
-> long press key shutdown behavior.
-> 
-> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+Hi Jose
 
-if you want you can add:
+what you should do is help Linux get support for TSN. Please take part
+in this discussion:
 
-Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+https://patchwork.ozlabs.org/cover/808504/
 
-Andi
+Test the RFC, make sure the concepts will work for your hardware. Make
+you hardware work with these RFC patches. Help drive TSN forward. Once
+the core TSN code lands, then you can post patches for your driver.
+
+    Andrew
