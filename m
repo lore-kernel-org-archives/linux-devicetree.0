@@ -1,36 +1,107 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/2] bindings: net: stmmac: Add documentation
- for TSN parameters
-Date: Thu, 26 Oct 2017 11:03:08 +0200
-Message-ID: <20171026090308.GD20299@lunn.ch>
-References: <cover.1508938927.git.joabreu@synopsys.com>
- <ef1d220cf792c74ae278e0200ca4763f9ab62d3e.1508938927.git.joabreu@synopsys.com>
- <c2a4a435-0b0b-4fa3-a69a-280f6d0c6427@gmail.com>
- <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: gpiolib: Expand sleep tolerance to include
+ controller reset
+Date: Thu, 26 Oct 2017 10:03:18 +0100
+Message-ID: <20171026090318.uv6lvmkt4injiihc@localhost.localdomain>
+References: <20171025050417.27992-1-andrew@aj.id.au>
+ <20171025050417.27992-2-andrew@aj.id.au>
+ <20171025083201.wdudlzgphypyhmwc@localhost.localdomain>
+ <1508978453.13477.7.camel@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <1508978453.13477.7.camel-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org, bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mwelling-ei31t81uNw5BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> These parameters may also need to change in runtime depending on
-> the scheduled traffic. Unfortunately, net subsystem does not yet
-> support TSN so this will have to wait and for now we will use
-> fixed parameters.
+On Thu, Oct 26, 2017 at 11:10:53AM +1030, Andrew Jeffery wrote:
+> On Wed, 2017-10-25 at 09:32 +0100, Charles Keepax wrote:
+> > On Wed, Oct 25, 2017 at 03:34:16PM +1030, Andrew Jeffery wrote:
+> > This means that if we have a set_config we are directly
+> > equating PERSISTENT to RESET_TOLERANT, which seems wrong to
+> > me. I might have a GPIO on a controller with pinconf that
+> > doesn't have anything to do with RESET_TOLERANT. Should the
+> > PIN_CONFIG_RESET_TOLERANT, really just be PIN_CONFIG_PERSISTENT?
+> > And then its upto the driver what persistence means for that
+> > chip?
+> 
+> Right, maybe I'm tying the design in a bit too closely with the Aspeed hardware
+> again. I'm coming out in favour of changing it based on my thoughts below.
+> 
+> However, I want to understand whether there are alternatives to reset tolerance
+> as a property. The obvious one is sleep persistence as implemented in the
+> Arizona driver, but it didn't take the set_config() route with its initial
+> implementation.
+> 
+> The set_config() approach was largely driven by the sysfs patch in
+> the RFC series, because I wanted a way to propagate the desired property
+> to hardware without affecting (or again calling through the handlers for) the
+> export state or direction. It seemed to come out neat enough in general so I
+> kept it.
+> 
+> Were you thinking of using set_config() to control the Arizona's behaviour and
+> do something other than the calls to gpiochip_line_is_persistent() in
+> arizona_gpio_direction_{in,out}() (as in, keep the state inside the device
+> driver rather than querying gpiolib where the state is currently stored)? That
+> would seem neat in that it gives us one method of setting both persistence
+> types (and in this case I should rename the pinconf parameter). With that we
+> could probably get rid of gpiochip_line_is_persistent(). A small downside is
+> some duplicated state (we probably still want to keep FLAG_TRANSITORY in
+> gpiolib).
+> 
+> Would it be reasonable for other drivers to implement sleep persistence in the
+> same manner as the Arizona driver currently does? If that's the case, I don't
+> think there is a third tolerance option in addition to sleep and reset, and so
+> we might not need to rename the pinconf parameter.
+> 
+> Finally, we could implement reset persistence in the same manner as the
+> Arizona's sleep persistence (with gpiochip_line_is_persistent()) given the
+> sysfs patch has been thrown away.
+> 
+> So to summarise, having rambled a bit, I see the situation as:
+> 
+> 1. Rename the pinconf parameter, and patch the Arizona driver to use
+>    set_config() and hold sleep persistence state internally.
+> 2. Drop the pinconf parameter and do something similar to the Arizona's sleep
+>    persistence for reset persistence in the Aspeed driver.
+> 3. Keep things as proposed are and live with two approaches to persistence
+> 
+> Point 3 seems like the least desirable. I'm leaning towards 1. I could probably
+> live with 2. after experimenting with it and confirming it's workable for me.
+> 
+> If you think 1. is the way to go are you happy for me to send a patch to the
+> Arizona driver implementing the change?
+> 
 
-Hi Jose
+I guess the design was more playing to the fact that in the
+Arizona case we arn't really setting any register bit for the
+persisence, we are just not letting the CODEC power down whilst
+the GPIO is in use. The config approach does make more sense in
+the case where you are actually setting register bits.
 
-what you should do is help Linux get support for TSN. Please take part
-in this discussion:
+I don't have any great objection to keeping the persistence state
+in the Arizona GPIO driver, but it does seem to be duplicating
+the state a little. Also an early version of the patch chain did
+that and we decided it would better in the core.
 
-https://patchwork.ozlabs.org/cover/808504/
+I am not opposed to option 3 either. For example open-drain has
+a similar setup where there is a pin config option for it and
+also a GPIO function call to check for its presence on a specific
+GPIO. Certainly my objection was just that we were equating the
+very generic property to a very specific pinconf.
 
-Test the RFC, make sure the concepts will work for your hardware. Make
-you hardware work with these RFC patches. Help drive TSN forward. Once
-the core TSN code lands, then you can post patches for your driver.
+I think I would probably be keen to see what Linus's thoughts
+are, but my feelings are really your patch is probably good if we
+just rename the RESET_TOLERANT pinconf to something a little more
+generic.
 
-    Andrew
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
