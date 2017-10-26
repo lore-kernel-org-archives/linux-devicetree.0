@@ -1,63 +1,56 @@
-From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v5] ARM: dts: imx53-tx53: Fix 'ethernet-phy@0' node with unit name and no reg property
-Date: Thu, 26 Oct 2017 13:25:14 -0200
-Message-ID: <1509031514-30602-1-git-send-email-marco.franchi@nxp.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?=
+        <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: Re: [PATCH v16 02/32] v4l: async: Don't set sd->dev NULL in
+ v4l2_async_cleanup
+Date: Thu, 26 Oct 2017 17:23:38 +0200
+Message-ID: <20171026152338.GB2297@bigcity.dyn.berto.se>
+References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
+ <20171026075342.5760-3-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171026075342.5760-3-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following build warning is seen with W=1:
+On 2017-10-26 10:53:12 +0300, Sakari Ailus wrote:
+> v4l2_async_cleanup() is called when the async sub-device is unbound from
+> the media device. As the pointer is set by the driver registering the
+> async sub-device, leave the pointer as set by the driver.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Warning (unit_address_vs_reg): Node /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has a unit name, but no reg property
+Acked-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 
-Fix this warning by adding reg property from such node and, consequently, 
-includes a mdio node into the fec node, with the 'address-cells' and 
-'size-cells' to avoid these other following warnings:
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index 60a1a50b9537..21c748bf3a7b 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -134,7 +134,6 @@ static void v4l2_async_cleanup(struct v4l2_subdev *sd)
+>  	/* Subdevice driver will reprobe and put the subdev back onto the list */
+>  	list_del_init(&sd->async_list);
+>  	sd->asd = NULL;
+> -	sd->dev = NULL;
+>  }
+>  
+>  int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
+> -- 
+> 2.11.0
+> 
 
-Warning (reg_format): "reg" property in /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
-Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
-
-Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
----
-Change since v4:
--pass the 'address-cells' and 'size-cells' values using a mdio node
--change message log
- arch/arm/boot/dts/imx53-tx53.dtsi | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
-index 71b58b6..a22e461 100644
---- a/arch/arm/boot/dts/imx53-tx53.dtsi
-+++ b/arch/arm/boot/dts/imx53-tx53.dtsi
-@@ -225,10 +225,16 @@
- 	mac-address = [000000000000]; /* placeholder; will be overwritten by bootloader */
- 	status = "okay";
- 
--	phy0: ethernet-phy@0 {
--		interrupt-parent = <&gpio2>;
--		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
--		device_type = "ethernet-phy";
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+			interrupt-parent = <&gpio2>;
-+			interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+			device_type = "ethernet-phy";
-+		};
- 	};
- };
- 
 -- 
-2.7.4
-
+Regards,
+Niklas Söderlund
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
