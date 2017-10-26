@@ -1,137 +1,64 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?=
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v16 01/32] v4l: async: Remove re-probing support
-Date: Thu, 26 Oct 2017 17:20:09 +0200
-Message-ID: <20171026152009.GA2297@bigcity.dyn.berto.se>
-References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
- <20171026075342.5760-2-sakari.ailus@linux.intel.com>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v5] ARM: dts: imx53-tx53: Fix 'ethernet-phy@0' node with unit name and no reg property
+Date: Thu, 26 Oct 2017 13:25:14 -0200
+Message-ID: <1509031514-30602-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171026075342.5760-2-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-10-26 10:53:11 +0300, Sakari Ailus wrote:
-> Remove V4L2 async re-probing support. The re-probing support has been
-> there to support cases where the sub-devices require resources provided by
-> the main driver's hardware to function, such as clocks.
-> 
-> Reprobing has allowed unbinding and again binding the main driver without
-> explicitly unbinding the sub-device drivers. This is certainly not a
-> common need, and the responsibility will be the user's going forward.
-> 
-> An alternative could have been to introduce notifier specific locks.
-> Considering the complexity of the re-probing and that it isn't really a
-> solution to a problem but a workaround, remove re-probing instead.
-> 
-> If there is a need to support the clock provider unregister/register cycle
-> while keeping the clock references in the consumers in the future, this
-> should be implemented in the clock framework instead, not in V4L2.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+The following build warning is seen with W=1:
 
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Warning (unit_address_vs_reg): Node /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has a unit name, but no reg property
 
-> ---
->  drivers/media/v4l2-core/v4l2-async.c | 54 +-----------------------------------
->  1 file changed, 1 insertion(+), 53 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index d741a8e0fdac..60a1a50b9537 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -198,78 +198,26 @@ EXPORT_SYMBOL(v4l2_async_notifier_register);
->  void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
->  {
->  	struct v4l2_subdev *sd, *tmp;
-> -	unsigned int notif_n_subdev = notifier->num_subdevs;
-> -	unsigned int n_subdev = min(notif_n_subdev, V4L2_MAX_SUBDEVS);
-> -	struct device **dev;
-> -	int i = 0;
->  
->  	if (!notifier->v4l2_dev)
->  		return;
->  
-> -	dev = kvmalloc_array(n_subdev, sizeof(*dev), GFP_KERNEL);
-> -	if (!dev) {
-> -		dev_err(notifier->v4l2_dev->dev,
-> -			"Failed to allocate device cache!\n");
-> -	}
-> -
->  	mutex_lock(&list_lock);
->  
->  	list_del(&notifier->list);
->  
->  	list_for_each_entry_safe(sd, tmp, &notifier->done, async_list) {
-> -		struct device *d;
-> -
-> -		d = get_device(sd->dev);
-> -
->  		v4l2_async_cleanup(sd);
->  
-> -		/* If we handled USB devices, we'd have to lock the parent too */
-> -		device_release_driver(d);
-> -
->  		if (notifier->unbind)
->  			notifier->unbind(notifier, sd, sd->asd);
->  
-> -		/*
-> -		 * Store device at the device cache, in order to call
-> -		 * put_device() on the final step
-> -		 */
-> -		if (dev)
-> -			dev[i++] = d;
-> -		else
-> -			put_device(d);
-> +		list_move(&sd->async_list, &subdev_list);
->  	}
->  
->  	mutex_unlock(&list_lock);
->  
-> -	/*
-> -	 * Call device_attach() to reprobe devices
-> -	 *
-> -	 * NOTE: If dev allocation fails, i is 0, and the whole loop won't be
-> -	 * executed.
-> -	 */
-> -	while (i--) {
-> -		struct device *d = dev[i];
-> -
-> -		if (d && device_attach(d) < 0) {
-> -			const char *name = "(none)";
-> -			int lock = device_trylock(d);
-> -
-> -			if (lock && d->driver)
-> -				name = d->driver->name;
-> -			dev_err(d, "Failed to re-probe to %s\n", name);
-> -			if (lock)
-> -				device_unlock(d);
-> -		}
-> -		put_device(d);
-> -	}
-> -	kvfree(dev);
-> -
->  	notifier->v4l2_dev = NULL;
-> -
-> -	/*
-> -	 * Don't care about the waiting list, it is initialised and populated
-> -	 * upon notifier registration.
-> -	 */
->  }
->  EXPORT_SYMBOL(v4l2_async_notifier_unregister);
->  
-> -- 
-> 2.11.0
-> 
+Fix this warning by adding reg property from such node and, consequently, 
+includes a mdio node into the fec node, with the 'address-cells' and 
+'size-cells' to avoid these other following warnings:
 
+Warning (reg_format): "reg" property in /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
+Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
+
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+---
+Change since v4:
+-pass the 'address-cells' and 'size-cells' values using a mdio node
+-change message log
+ arch/arm/boot/dts/imx53-tx53.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx53-tx53.dtsi b/arch/arm/boot/dts/imx53-tx53.dtsi
+index 71b58b6..a22e461 100644
+--- a/arch/arm/boot/dts/imx53-tx53.dtsi
++++ b/arch/arm/boot/dts/imx53-tx53.dtsi
+@@ -225,10 +225,16 @@
+ 	mac-address = [000000000000]; /* placeholder; will be overwritten by bootloader */
+ 	status = "okay";
+ 
+-	phy0: ethernet-phy@0 {
+-		interrupt-parent = <&gpio2>;
+-		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+-		device_type = "ethernet-phy";
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy0: ethernet-phy@0 {
++			reg = <0>;
++			interrupt-parent = <&gpio2>;
++			interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
++			device_type = "ethernet-phy";
++		};
+ 	};
+ };
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
