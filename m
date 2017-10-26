@@ -1,61 +1,90 @@
 From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH  1/3] mtd: spi-nor: stm32-quadspi: Fix uninitialized error return code
-Date: Thu, 26 Oct 2017 13:54:52 +0200
-Message-ID: <1509018894-15111-2-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH  2/3] mtd: spi-nor: stm32-quadspi: fix prefetching outside fsize
+Date: Thu, 26 Oct 2017 13:54:53 +0200
+Message-ID: <1509018894-15111-3-git-send-email-ludovic.Barre@st.com>
 References: <1509018894-15111-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1509018894-15111-1-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>, Ludovic Barre <ludovic.barre@st.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-With gcc 4.1.2:
+When memory-mapped mode is used, a prefetching mechanism fully
+managed by the hardware allows to optimize the read from external
+the QSPI memory. A 32-bytes FIFO is used for prefetching.
+When the limit of flash size - fifo size is reached the prefetching
+mechanism tries to read outside the fsize.
+The stm32 quadspi hardware become busy and should be aborted.
 
-    drivers/mtd/spi-nor/stm32-quadspi.c: In function ‘stm32_qspi_tx_poll’:
-    drivers/mtd/spi-nor/stm32-quadspi.c:230: warning: ‘ret’ may be used uninitialized in this function
-
-Indeed, if stm32_qspi_cmd.len is zero, ret will be uninitialized.
-This length is passed from outside the driver using the
-spi_nor.{read,write}{,_reg}() callbacks.
-
-Several functions in drivers/mtd/spi-nor/spi-nor.c (e.g. write_enable(),
-write_disable(), and erase_chip()) call spi_nor.write_reg() with a zero
-length.
-
-Fix this by returning an explicit zero on success.
-
-Fixes: 0d43d7ab277a048c ("mtd: spi-nor: add driver for STM32 quad spi flash controller")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Ludovic Barre <ludovic.barre@st.com>
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Reported-by: Bruno Herrera <bruherrera@gmail.com>
+Tested-by: Bruno Herrera <bruherrera@gmail.com>
 ---
- drivers/mtd/spi-nor/stm32-quadspi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/spi-nor/stm32-quadspi.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mtd/spi-nor/stm32-quadspi.c b/drivers/mtd/spi-nor/stm32-quadspi.c
-index 86c0931..ad6a3e1 100644
+index ad6a3e1..70710be 100644
 --- a/drivers/mtd/spi-nor/stm32-quadspi.c
 +++ b/drivers/mtd/spi-nor/stm32-quadspi.c
-@@ -240,12 +240,12 @@ static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
- 						 STM32_QSPI_FIFO_TIMEOUT_US);
- 		if (ret) {
- 			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
--			break;
-+			return ret;
- 		}
- 		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
+@@ -113,6 +113,7 @@
+ #define STM32_MAX_MMAP_SZ	SZ_256M
+ #define STM32_MAX_NORCHIP	2
+ 
++#define STM32_QSPI_FIFO_SZ	32
+ #define STM32_QSPI_FIFO_TIMEOUT_US 30000
+ #define STM32_QSPI_BUSY_TIMEOUT_US 100000
+ 
+@@ -124,6 +125,7 @@ struct stm32_qspi_flash {
+ 	u32 presc;
+ 	u32 read_mode;
+ 	bool registered;
++	u32 prefetch_limit;
+ };
+ 
+ struct stm32_qspi {
+@@ -272,6 +274,7 @@ static int stm32_qspi_send(struct stm32_qspi_flash *flash,
+ {
+ 	struct stm32_qspi *qspi = flash->qspi;
+ 	u32 ccr, dcr, cr;
++	u32 last_byte;
+ 	int err;
+ 
+ 	err = stm32_qspi_wait_nobusy(qspi);
+@@ -314,6 +317,10 @@ static int stm32_qspi_send(struct stm32_qspi_flash *flash,
+ 		if (err)
+ 			goto abort;
+ 		writel_relaxed(FCR_CTCF, qspi->io_base + QUADSPI_FCR);
++	} else {
++		last_byte = cmd->addr + cmd->len;
++		if (last_byte > flash->prefetch_limit)
++			goto abort;
  	}
  
--	return ret;
-+	return 0;
+ 	return err;
+@@ -322,7 +329,9 @@ static int stm32_qspi_send(struct stm32_qspi_flash *flash,
+ 	cr = readl_relaxed(qspi->io_base + QUADSPI_CR) | CR_ABORT;
+ 	writel_relaxed(cr, qspi->io_base + QUADSPI_CR);
+ 
+-	dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
++	if (err)
++		dev_err(qspi->dev, "%s abort err:%d\n", __func__, err);
++
+ 	return err;
  }
  
- static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
+@@ -550,6 +559,7 @@ static int stm32_qspi_flash_setup(struct stm32_qspi *qspi,
+ 	}
+ 
+ 	flash->fsize = FSIZE_VAL(mtd->size);
++	flash->prefetch_limit = mtd->size - STM32_QSPI_FIFO_SZ;
+ 
+ 	flash->read_mode = CCR_FMODE_MM;
+ 	if (mtd->size > qspi->mm_size)
 -- 
 2.7.4
