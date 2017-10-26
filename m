@@ -1,37 +1,40 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Add HiSilicon INNO USB2 PHY driver support
-Date: Thu, 26 Oct 2017 16:00:44 +0800
-Message-ID: <20171026080043.GA31354@dragon>
-References: <1508758512-22900-1-git-send-email-shawnguo@kernel.org>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH v5 5/6] input: Add MediaTek PMIC keys support
+Date: Thu, 26 Oct 2017 17:27:44 +0900
+Message-ID: <20171026082744.GA29398@gangnam>
+References: <1506509048-19032-1-git-send-email-chen.zhong@mediatek.com>
+ <CGME20170927104421epcas2p190d03c1c6759f394debfc01b23641ece@epcas2p1.samsung.com>
+ <1506509048-19032-6-git-send-email-chen.zhong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1508758512-22900-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-disposition: inline
+In-reply-to: <1506509048-19032-6-git-send-email-chen.zhong@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen Zhong <chen.zhong@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Jaechul Lee <jcsing.lee@samsung.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-input@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi,
 
-On Mon, Oct 23, 2017 at 07:35:10PM +0800, Shawn Guo wrote:
-> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Sep 27, 2017 at 06:44:07PM +0800, Chen Zhong wrote:
+> This patch add support to handle MediaTek PMIC MT6397/MT6323 key
+> interrupts including pwrkey and homekey, also add setting for
+> long press key shutdown behavior.
 > 
-> It adds device tree bindings and driver support for HiSilicon INNO USB2
-> PHY device, which can be found on HiSilicon STB SoC Hi3798cv200.
-> 
-> Changes for v2:
->  - Move DT bindings into a separate patch.
->  - Rename hisi_inno_phy_start() to hisi_inno_phy_init() for aligning
->    name with .init hook.
+> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
 
-Just let you know, we will have v3 of this series moving phy device to
-be child node of peripheral controller syscon, just like what combphy v3
-does.
+if you want you can add:
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+
+Andi
