@@ -1,60 +1,26 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v3 0/4] rtc: mediatek: add support for SoC based RTC on
- MT7622
-Date: Thu, 26 Oct 2017 11:34:30 +0200
-Message-ID: <20171026093430.aw4rpjffrvrzycga@piout.net>
-References: <cover.1508741262.git.sean.wang@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v9 02/10] dt-bindings: net: dwmac-sun8i: update
+ documentation about integrated PHY
+Date: Thu, 26 Oct 2017 11:53:21 +0200
+Message-ID: <20171026095321.GI20299@lunn.ch>
+References: <20171024175714.15840-1-clabbe.montjoie@gmail.com>
+ <20171024175714.15840-3-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1508741262.git.sean.wang@mediatek.com>
+In-Reply-To: <20171024175714.15840-3-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Oct 24, 2017 at 07:57:06PM +0200, Corentin Labbe wrote:
+> This patch add documentation about the MDIO switch used on sun8i-h3-emac
+> for integrated PHY.
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-On 23/10/2017 at 15:16:43 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Changes since v2:
-> - Remove time extension with yr_base 
-> - Add fixup that ensures all time fields in hardware keeping consistency
-> inside the mtk_rtc_get_alarm_or_time call
-> - Add validity for time range should be between 2001 to 2099
-> - Enhance comments with aligned style and explanation for certain limiation in
-> hardware
-> - Rename dt-binding naming from rtc-mediatek.txt to rtc-mt7622.txt
-> - Rename config naming from RTC_DRV_MEDIATEK to RTC_DRV_MT7622
-> 
-> Changes since v1:
-> - Rename to rtc-mt7622.c from rtc-mediatek.c
-> - Use [readl,writel]_relaxed instead of __raw_* version
-> - Remove redundant register reading in mtk_rtc_get_alarm_or_time()
-> - Stop alarm when alarm is really expired in mtk_rtc_alarmirq()
-> - Extend the maximum year the RTC/Alarm can count/support using year rebasing
-> - Remove unnesscary log which is already done in core layer
-> 
-> This patchset introduces support for MediaTek SoC based real time clock
-> (RTC) Currently, the driver is already tested successfully with hwclock
-> and wakealarm on MT7622 SoC. And it should also be workable on other
-> similar MediaTek SoCs. And patch 3 is a distinct patch used to distinguish
-> between either SoC based or PMIC based RTC to avoid confusion for the RTC
-> selection for the target SoC.
-> 
-> Sean Wang (4):
->   dt-bindings: rtc: mediatek: add bindings for MediaTek SoC based RTC
->   rtc: mediatek: add driver for RTC on MT7622 SoC
->   rtc: mediatek: enhance the description for MediaTek PMIC based RTC
->   rtc: mediatek: update MAINTAINERS entry with MediaTek RTC driver
-> 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-All applied, thanks. (I've alphabetically ordered Kconfig and Makefile
-entries in patch 2)
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+    Andrew
