@@ -1,55 +1,72 @@
-From: Jesus Sanchez-Palencia <jesus.sanchez-palencia@intel.com>
-Subject: Re: [PATCH net-next 0/2] net: stmmac: Support DWMAC5 and TSN
-Date: Thu, 26 Oct 2017 09:28:22 -0700
-Message-ID: <9f37e884-be5e-b20f-1f5e-ddfd17d20c54@intel.com>
-References: <cover.1508938927.git.joabreu@synopsys.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/2] thermal: add brcmstb AVS TMON driver
+Date: Thu, 26 Oct 2017 09:55:50 -0700
+Message-ID: <9f6b61ee-7f53-f158-2642-15212db92781@gmail.com>
+References: <20170926212800.4879-1-code@mmayer.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cover.1508938927.git.joabreu@synopsys.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170926212800.4879-1-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jose,
-
-
-On 10/25/2017 07:02 AM, Jose Abreu wrote:
-> Hi,
+On 09/26/2017 02:27 PM, Markus Mayer wrote:
+> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > 
-> This adds support for a new IP version (5) of dwmac and for
-> TSN features as defined by IEEE802.1Qbv-2015 and IEEE802.1Qbu.
+> This series adds the brcmstb AVS TMON driver.
+> 
+> The driver was originally written by Brian Norris.
 
+Rui, Eduardo, what's going on here? Can either one of you merge this
+driver or are we going to miss another merge window?
 
-Just out of curiosity, are you aware of any NICs that are publicly
-available which use this IP version?
-
-Thanks,
-Jesus
 
 
 > 
-> Please review.
+> Changes since v4:
+> - disable trip points properly when needed; there was code left-over
+>   from an older iteration of this driver that used long ints, which
+>   resulted in code that was incorrect now that we are using ints
+> - rebased on v4.14-rc1
+> - patches 3 & 4 (turning on CONFIG_BRCMSTB_THERMAL for arm/arm64) are no
+>   longer part of the series, because they were already picked up for 4.14
 > 
-> Best regards,
-> Jose Miguel Abreu
+> Changes since v3:
+> - Rebased on v4.13-rc3 to resolve conflicts in the MAINTAINERS file
 > 
-> Jose Abreu (2):
->   net: stmmac: Add support for DWMAC5 with TSN features
->   bindings: net: stmmac: Add documentation for TSN parameters
+> Changes since v2:
+> - replaced calls to pr_debug() with calls to dev_dbg() [PATCH 2/4 only]
+> - all other patches are unchanged from v2
 > 
->  Documentation/devicetree/bindings/net/stmmac.txt   | 20 +++++
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |  2 +-
->  drivers/net/ethernet/stmicro/stmmac/common.h       |  4 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  | 37 +++++++-
->  drivers/net/ethernet/stmicro/stmmac/dwmac5_tsn.c   | 99 ++++++++++++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/dwmac5_tsn.h   | 57 +++++++++++++
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  4 +
->  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  | 57 ++++++++++++-
->  include/linux/stmmac.h                             | 11 +++
->  9 files changed, 288 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac5_tsn.c
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac5_tsn.h
+> Changes since v1:
+> - Fixed wording in binding document
+> - Fixed lincensing to consistently mention GPL v2
+> - Use thermal_zone_get_slope() and thermal_zone_get_offset()
+> - Some minor clean-ups
 > 
+> Brian Norris (2):
+>   Documentation: devicetree: add binding for Broadcom STB AVS TMON
+>   thermal: add brcmstb AVS TMON driver
+> 
+>  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
+>  MAINTAINERS                                        |   8 +
+>  drivers/thermal/Kconfig                            |   2 +-
+>  drivers/thermal/broadcom/Kconfig                   |   7 +
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/brcmstb_thermal.c         | 387 +++++++++++++++++++++
+>  6 files changed, 424 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+>  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
+> 
+
+
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
