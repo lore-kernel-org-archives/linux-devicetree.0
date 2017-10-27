@@ -1,66 +1,59 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [RFC PATCH v8 1/7] dt-bindings: PCI: Add definition of PCIe
- WAKE# irq and PCI irq
-Date: Thu, 26 Oct 2017 19:33:32 -0700
-Message-ID: <20171027023331.GA11665@google.com>
-References: <20171026132840.20946-1-jeffy.chen@rock-chips.com>
- <20171026132840.20946-2-jeffy.chen@rock-chips.com>
+From: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v3 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog documentation
+Date: Fri, 27 Oct 2017 10:28:24 +0800
+Message-ID: <d1efd94bfbc92b89e246b0b745d976d547b145b6.1509070855.git.eric.long@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171026132840.20946-2-jeffy.chen@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, rjw@rjwysocki.net, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 09:28:34PM +0800, Jeffy Chen wrote:
-> Add optional interrupts for PCIe WAKE# pin and PCI interrupt pin.
-> 
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> ---
-> 
-> Changes in v8:
-> Add optional "pci", and rewrite commit message.
-> 
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5:
-> Move to pci.txt
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/pci/pci.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index c77981c5dd18..faed405811cd 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -24,3 +24,6 @@ driver implementation may support the following properties:
->     unsupported link speed, for instance, trying to do training for
->     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->     for gen2, and '1' for gen1. Any other values are invalid.
-> +- interrupts: Interrupt specifier for each name in interrupt-names.
-> +- interrupt-names: May contains "wakeup" for PCIe WAKE# interrupt and "pci"
-> +  for PCI interrupt.
+This patch adds the documentation for Spreadtrum watchdog driver.
 
-Similar criticism to what Rob made on patch 4: this file already says "a
-host bridge driver implementation may support the following properties",
-so this property is clearly not for child devices. And so having the
-"PCI interrupt" here doesn't make much sense.
+Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since v2:
+- Add acked tag from Rob.
 
-Similarly, you're documenting "wakeup" here as a host bridge property,
-but then patch 7 is adding per-device support it seems? That seems
-wrong.
+Changes since v1:
+- No updates.
+---
+ .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
 
-In fact, I'm pretty sure this series fails to actually look in the host
-bridge for the "wakeup" interrupt at all! Did you actually test this?
+diff --git a/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+new file mode 100644
+index 0000000..aeaf3e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+@@ -0,0 +1,19 @@
++Spreadtrum SoCs Watchdog timer
++
++Required properties:
++- compatible : Should be "sprd,sp9860-wdt".
++- reg : Specifies base physical address and size of the registers.
++- interrupts : Exactly one interrupt specifier.
++- timeout-sec : Contain the default watchdog timeout in seconds.
++- clock-names : Contain the input clock names.
++- clocks : Phandles to input clocks.
++
++Example:
++	watchdog: watchdog@40310000 {
++		compatible = "sprd,sp9860-wdt";
++		reg = <0 0x40310000 0 0x1000>;
++		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++		timeout-sec = <12>;
++		clock-names = "enable", "rtc_enable";
++		clocks = <&clk_aon_apb_gates1 8>, <&clk_aon_apb_rtc_gates 9>;
++	};
+-- 
+1.9.1
 
-And again, describing your intentions a little better in the commit
-message would make this clearer. Then we could tell which way you
-intended this to work...
-
-Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
