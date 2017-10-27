@@ -1,93 +1,63 @@
-From: jeffy <jeffy.chen@rock-chips.com>
-Subject: Re: [RFC PATCH v8 1/7] dt-bindings: PCI: Add definition of PCIe WAKE#
- irq and PCI irq
-Date: Fri, 27 Oct 2017 11:06:34 +0800
-Message-ID: <59F2A2BA.5030307@rock-chips.com>
-References: <20171026132840.20946-1-jeffy.chen@rock-chips.com> <20171026132840.20946-2-jeffy.chen@rock-chips.com> <20171027023331.GA11665@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171027023331.GA11665@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, rjw@rjwysocki.net, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/2] Add Combo PHY driver for HiSilicon STB SoCs
+Date: Fri, 27 Oct 2017 11:07:29 +0800
+Message-ID: <1509073651-23730-1-git-send-email-shawnguo@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-On 10/27/2017 10:33 AM, Brian Norris wrote:
-> On Thu, Oct 26, 2017 at 09:28:34PM +0800, Jeffy Chen wrote:
->> Add optional interrupts for PCIe WAKE# pin and PCI interrupt pin.
->>
->> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
->> ---
->>
->> Changes in v8:
->> Add optional "pci", and rewrite commit message.
->>
->> Changes in v7: None
->> Changes in v6: None
->> Changes in v5:
->> Move to pci.txt
->>
->> Changes in v3: None
->> Changes in v2: None
->>
->>   Documentation/devicetree/bindings/pci/pci.txt | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
->> index c77981c5dd18..faed405811cd 100644
->> --- a/Documentation/devicetree/bindings/pci/pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/pci.txt
->> @@ -24,3 +24,6 @@ driver implementation may support the following properties:
->>      unsupported link speed, for instance, trying to do training for
->>      unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->>      for gen2, and '1' for gen1. Any other values are invalid.
->> +- interrupts: Interrupt specifier for each name in interrupt-names.
->> +- interrupt-names: May contains "wakeup" for PCIe WAKE# interrupt and "pci"
->> +  for PCI interrupt.
->
-> Similar criticism to what Rob made on patch 4: this file already says "a
-> host bridge driver implementation may support the following properties",
-> so this property is clearly not for child devices. And so having the
-> "PCI interrupt" here doesn't make much sense.
->
-> Similarly, you're documenting "wakeup" here as a host bridge property,
-> but then patch 7 is adding per-device support it seems? That seems
-> wrong.
-oops...so there's no section for PCI device here, maybe i should add a 
-section about "PCI device have standardized Device Tree bindings:" to 
-place it? will do in next version.
+It adds device tree bindings and driver support for Combo PHY device
+which can be found on HiSilicon STB SoCs.
 
+Changes for v4:
+ - Instead of relying on device id, add a new property
+   hisilicon,fixed-mode
+   for combphy device that doesn't support mode select but a fixed phy
+   mode.
+ - Move combphy mode select register bits definition to device tree, as
+   it may vary from one device to another.
 
->
-> In fact, I'm pretty sure this series fails to actually look in the host
-> bridge for the "wakeup" interrupt at all! Did you actually test this?
-actually it could...
+Changes for v3:
+ - Make combphy device be child of peripheral controller and use 'reg'
+   property for mapping combphy configuration registers.
+ - Kill "hisilicon,peripheral-syscon" property, since parent node is
+   just the syscon controller now.
+ - Check combphy id to handle the quirk that combphy0 can not configure
+   mode but always works in USB3 mode.
+ - Unify phy .init and .exit hooks for different combphy instances and
+   work modes, as the only quirk we need to handle is that combphy0 can
+   only work in USB3 mode.
+ - Better naming for clock and reset, 'ref' to 'ref_clk', 'por' to
+   'por_rst'.
 
-static void *of_pci_setup(struct device *dev)
-{
-...
-         device_init_wakeup(dev, false);
+Changes for v2:
+ - Move DT bindings into a separate patch.
+ - Drop the spurious newline from drivers/phy/Makefile.
+ - Use the phy type defines in dt-bindings/phy/phy.h.
+ - Use PTR_ERR_OR_ZERO() for checking return from
+   devm_of_phy_provider_register().
+ - Add USB3 phy support.
 
-         dev_info(dev, "Wakeup IRQ %d\n", irq);
-         return data;
-}
+Jianguo Sun (2):
+  dt-bindings: add bindings doc for hi3798cv200 combphy
+  phy: add combo phy driver for HiSilicon STB SoCs
 
-[    1.546561] OF: PCI:   MEM 0xfa000000..0xfbdfffff -> 0xfa000000
-[    1.553154] OF: PCI:    IO 0xfbe00000..0xfbefffff -> 0xfbe00000
-[    1.560859] rockchip-pcie f8000000.pcie: Wakeup IRQ 64
-[    1.566555] rockchip-pcie f8000000.pcie: PCI host bridge to bus
+ .../bindings/phy/phy-hi3798cv200-combphy.txt       |  57 ++++
+ drivers/phy/hisilicon/Kconfig                      |   9 +
+ drivers/phy/hisilicon/Makefile                     |   1 +
+ drivers/phy/hisilicon/phy-histb-combphy.c          | 289 +++++++++++++++++++++
+ 4 files changed, 356 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+ create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
 
->
-> And again, describing your intentions a little better in the commit
-> message would make this clearer. Then we could tell which way you
-> intended this to work...
-ok, will do in next version...
->
-> Brian
->
->
->
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
