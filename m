@@ -1,87 +1,34 @@
-From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH resend 00/12] staging: typec: tcpci: move out of staging
-Date: Fri, 27 Oct 2017 01:17:28 +0000
-Message-ID: <DB4PR04MB076872D3C7B62C7B7442C1DA895A0@DB4PR04MB0768.eurprd04.prod.outlook.com>
-References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
- <96d37f9b-f04d-f923-ec09-b25fd62a90be@roeck-us.net>
+From: jeffy <jeffy.chen@rock-chips.com>
+Subject: Re: [RFC PATCH v8 4/7] of/irq: Adjust of pci irq parsing for multiple
+ interrupts
+Date: Fri, 27 Oct 2017 10:05:03 +0800
+Message-ID: <59F2944F.9060208@rock-chips.com>
+References: <20171026132840.20946-1-jeffy.chen@rock-chips.com> <20171026132840.20946-5-jeffy.chen@rock-chips.com> <CAL_Jsq+HYL0VPpzD=BYKMJ5-kuxB2Cn5tUF5RRcczUv_fdv_9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <96d37f9b-f04d-f923-ec09-b25fd62a90be-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+HYL0VPpzD=BYKMJ5-kuxB2Cn5tUF5RRcczUv_fdv_9w@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Doug Anderson <dianders@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VlbnRlciwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVu
-dGVyIFJvZWNrIFttYWlsdG86Z3JvZWNrN0BnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVudGVy
-IFJvZWNrDQo+IFNlbnQ6IEZyaWRheSwgT2N0b2JlciAyNywgMjAxNyA4OjQzIEFNDQo+IFRvOiBK
-dW4gTGkgPGp1bi5saUBueHAuY29tPjsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgr
-ZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGhlaWtraS5rcm9nZXJ1c0Bs
-aW51eC5pbnRlbC5jb20NCj4gQ2M6IHl1ZXlhb0Bnb29nbGUuY29tOyBvX2xldmVxdWVAb3Jhbmdl
-LmZyOyBQZXRlciBDaGVuDQo+IDxwZXRlci5jaGVuQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hl
-bmcuZG9uZ0BueHAuY29tPjsgbGludXgtDQo+IHVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggcmVzZW5kIDAwLzEyXSBz
-dGFnaW5nOiB0eXBlYzogdGNwY2k6IG1vdmUgb3V0IG9mIHN0YWdpbmcNCj4gDQo+IFdoYXQgaGFw
-cGVuZWQgd2l0aCB0aGlzIHNlcmllcyA/IERpZCB3ZSBhbGwgZHJvcCB0aGUgYmFsbCA/DQo+IA0K
-DQpJbiBbMV0gUm9iIG5lZWRzIHRoZSB0eXBlYyByZWxhdGVkIGR0IGJpbmRpbmdzIGFuZCBwcm9w
-ZXJ0aWVzIHNob3VsZCBiZSBtb3JlIGNvbXBsZXRlDQphbmQgYmFzZWQgb24gVVNCIGNvbm5lY3Rv
-ciBkZWZpbml0aW9uWzJdKHdoaWNoIGlzIHN0aWxsIGluIGRpc2N1c3Npb24pLCBzbyB0aGlzIHNl
-cmllcyBpcw0KZGVwZW5kZW50IG9uIHRoYXQsIEkgYW0gYnVzeSByZWNlbnRseSwgSSB3aWxsIGNo
-ZWNrIFsyXSB0byBzZWUgaG93IHRvIG1vdmUgZm9yd2FyZCBvbg0KdGhpcywgYW55IGNvbW1lbnRz
-L3Rob3VnaHQgbXVjaCBhcHByZWNpYXRlZC4NCg0KWzFdIGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0
-L2xpc3RzL2xpbnV4LXVzYi9tc2cxNjE0MTIuaHRtbA0KWzJdIGh0dHA6Ly93d3cuc3Bpbmljcy5u
-ZXQvbGlzdHMvZGV2aWNldHJlZS9tc2cxOTc2MDEuaHRtbA0KIA0KVGhhbmtzDQpMaSBKdW4NCg0K
-PiBHdWVudGVyDQo+IA0KPiBPbiAwOS8yNS8yMDE3IDA5OjA1IFBNLCBMaSBKdW4gd3JvdGU6DQo+
-ID4gVGhpcyBwYXRjaCBzZXQgYXR0ZW1wdHMgdG8gbW92ZSB0aGUgdGNwY2kgZHJpdmVyIG91dCBv
-ZiBzdGFnaW5nIGJ5IGZpeA0KPiA+IHNvbWUgdGNwY2kgZHJpdmVyIGlzc3VlcyBhbmQgdmVyaWZp
-ZWQgb24gTlhQIFBUTjUxMTAsIHdoaWNoIGlzIGENCj4gPiBzdGFuZGFyZCB0Y3BjaSB0eXBlYyBw
-b3J0IGNvbnRyb2xsZXIgZGV2aWNlIHdpdGggcG93ZXIgZGVsaXZlcnkNCj4gPiBzdXBwb3J0LCB0
-ZXN0ZWQgcG93ZXIgc291cmNlIGFuZCBzaW5rIHdpdGggZHJwIGNvbmZpZy4NCj4gPg0KPiA+IExp
-IEp1biAoMTIpOg0KPiA+ICAgIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHBvcnQgdHlwZSBh
-bmQgcHJlZmVycmVkIHJvbGUNCj4gPiAgICB1c2I6IHR5cGVjOiBhZGQgYmFzaWMgdHlwZWMgcHJv
-cGVydGllcw0KPiA+ICAgIHN0YWdpbmc6IHR5cGVjOiB0Y3BjaTogYWRkIGRvY3VtZW50YXRpb24g
-Zm9yIHRjcGNpDQo+ID4gICAgc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBzdXBwb3J0IHBvcnQgY29u
-ZmlnIHBhc3NlZCB2aWEgZHQNCj4gPiAgICBzdGFnaW5nOiB0eXBlYzogdGNwY2k6IHJlZ2lzdGVy
-IHBvcnQgYmVmb3JlIHJlcXVlc3QgaXJxDQo+ID4gICAgc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBl
-bmFibGUgdmJ1cyBkZXRlY3Rpb24NCj4gPiAgICB0eXBlYzogdGNwbTogYWRkIHN0YXJ0aW5nIHZh
-bHVlIGZvciBkcnAgdG9nZ2xpbmcNCj4gPiAgICBzdGFnaW5nOiB0eXBlYzogdGNwY2k6IGNvcnJl
-Y3QgZHJwIHRvZ2dsaW5nDQo+ID4gICAgdXNiOiB0eXBlYzogdGNwbTogb25seSBkcml2ZXMgdGhl
-IGNvbm5lY3RlZCBjYyBsaW5lIHdoZW4gYXR0YWNoZWQNCj4gPiAgICBzdGFnaW5nOiB0eXBlYzog
-dGNwY2k6IHVwZGF0ZSBzZXRfY2MgZm9yIGRpZmZlcmVudCBzdGF0ZQ0KPiA+ICAgIHN0YWdpbmc6
-IHR5cGVjOiB0Y3BjaTogT25seSB0b3VjaCB0YXJnZXQgYml0IHdoZW4gZW5hYmxlIHZjb25uDQo+
-ID4gICAgc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBtb3ZlIHRjcGNpIGRyaXZlciBvdXQgb2Ygc3Rh
-Z2luZw0KPiA+DQo+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdHlwZWMtdGNwY2ku
-dHh0ICAgICAgICB8ICAzNiArKysrDQo+ID4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvdXNiL3R5cGVjLnR4dCAgICB8ICA0NiArKysrKw0KPiA+ICAgZHJpdmVycy9zdGFnaW5n
-L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgLQ0KPiA+ICAgZHJpdmVy
-cy9zdGFnaW5nL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQ0KPiA+
-ICAgZHJpdmVycy9zdGFnaW5nL3R5cGVjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAg
-MTQgLS0NCj4gPiAgIGRyaXZlcnMvc3RhZ2luZy90eXBlYy9NYWtlZmlsZSAgICAgICAgICAgICAg
-ICAgICAgIHwgICAxIC0NCj4gPiAgIGRyaXZlcnMvc3RhZ2luZy90eXBlYy9UT0RPICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICA1IC0NCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVjL0tjb25maWcg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsNCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVj
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgIGRyaXZlcnMv
-e3N0YWdpbmcgPT4gdXNifS90eXBlYy90Y3BjaS5jICAgICAgICAgICAgIHwgMTg1ICsrKysrKysr
-KysrKysrKystLS0tLQ0KPiA+ICAgZHJpdmVycy97c3RhZ2luZyA9PiB1c2J9L3R5cGVjL3RjcGNp
-LmggICAgICAgICAgICAgfCAgIDANCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgIDIyICsrLQ0KPiA+ICAgZHJpdmVycy91c2IvdHlwZWMv
-dHlwZWMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNDUgKysrKysNCj4gPiAgIGluY2x1
-ZGUvbGludXgvdXNiL3RjcG0uaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICstDQo+
-ID4gICBpbmNsdWRlL2xpbnV4L3VzYi90eXBlYy5oICAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMiArDQo+ID4gICAxNSBmaWxlcyBjaGFuZ2VkLCAzMDYgaW5zZXJ0aW9ucygrKSwgNzAgZGVs
-ZXRpb25zKC0pDQo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3VzYi90eXBlYy10Y3BjaS50eHQNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLnR4dA0KPiA+ICAg
-ZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc3RhZ2luZy90eXBlYy9LY29uZmlnDQo+ID4gICBk
-ZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zdGFnaW5nL3R5cGVjL01ha2VmaWxlDQo+ID4gICBk
-ZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zdGFnaW5nL3R5cGVjL1RPRE8NCj4gPiAgIHJlbmFt
-ZSBkcml2ZXJzL3tzdGFnaW5nID0+IHVzYn0vdHlwZWMvdGNwY2kuYyAoNzMlKQ0KPiA+ICAgcmVu
-YW1lIGRyaXZlcnMve3N0YWdpbmcgPT4gdXNifS90eXBlYy90Y3BjaS5oICgxMDAlKQ0KPiA+DQoN
-Cg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Rob,
+
+On 10/27/2017 04:02 AM, Rob Herring wrote:
+> Why do you need this patch? You're moving the wakeup handling from the
+> PCI device to the bridge. The bridge device is not PCI interrupts, but
+> a platform device so this function doesn't matter.
+>
+
+because it's possible we have multiple PCI devices with individual WAKE# 
+interrupt.
+
+so Brian suggested we may need to support both of PCI device wakeup 
+handling and the bridge wakeup handling in the pci core(as the ACPI) :)
+
+> Rob
+>
+>
+>
