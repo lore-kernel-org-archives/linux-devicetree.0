@@ -1,34 +1,53 @@
-From: jeffy <jeffy.chen@rock-chips.com>
-Subject: Re: [RFC PATCH v8 4/7] of/irq: Adjust of pci irq parsing for multiple
- interrupts
-Date: Fri, 27 Oct 2017 10:05:03 +0800
-Message-ID: <59F2944F.9060208@rock-chips.com>
-References: <20171026132840.20946-1-jeffy.chen@rock-chips.com> <20171026132840.20946-5-jeffy.chen@rock-chips.com> <CAL_Jsq+HYL0VPpzD=BYKMJ5-kuxB2Cn5tUF5RRcczUv_fdv_9w@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: display/ti: Add optional property to
+ set memory bandwidth limit
+Date: Thu, 26 Oct 2017 21:27:11 -0500
+Message-ID: <20171027022711.624bnvldhfdq4rew@rob-hp-laptop>
+References: <20171020131258.4092-1-peter.ujfalusi@ti.com>
+ <20171020131258.4092-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+HYL0VPpzD=BYKMJ5-kuxB2Cn5tUF5RRcczUv_fdv_9w@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Doug Anderson <dianders@chromium.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171020131258.4092-2-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri, Oct 20, 2017 at 04:12:56PM +0300, Peter Ujfalusi wrote:
+> max-memory-bandwidth can be used to specify the maximum bandwidth dispc
+> can use when reading display data from main memory.
+> 
+> In some SoC (am437x for example) we have memory bandwidth limitation
+> which causes underflow in the display subsystem.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt  | 5 +++++
+>  Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt | 4 ++++
+>  Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt | 4 ++++
+>  Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt | 4 ++++
+>  Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt | 4 ++++
+>  5 files changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
+> index c30f9ec189ed..91279f1060fe 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
+> @@ -47,6 +47,11 @@ Required properties:
+>  - clocks: handle to fclk
+>  - clock-names: "fck"
+>  
+> +Optional properties:
+> +- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
+> +			in bytes per second
 
-On 10/27/2017 04:02 AM, Rob Herring wrote:
-> Why do you need this patch? You're moving the wakeup handling from the
-> PCI device to the bridge. The bridge device is not PCI interrupts, but
-> a platform device so this function doesn't matter.
->
+Can we move this to a common location since we already have the same 
+prop for ARM pl11x.
 
-because it's possible we have multiple PCI devices with individual WAKE# 
-interrupt.
-
-so Brian suggested we may need to support both of PCI device wakeup 
-handling and the bridge wakeup handling in the pci core(as the ACPI) :)
-
-> Rob
->
->
->
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
