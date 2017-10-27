@@ -1,53 +1,31 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [RFC PATCH v8 1/7] dt-bindings: PCI: Add definition of PCIe
- WAKE# irq and PCI irq
-Date: Thu, 26 Oct 2017 22:40:28 -0700
-Message-ID: <20171027054025.GA85582@google.com>
-References: <20171026132840.20946-1-jeffy.chen@rock-chips.com>
- <20171026132840.20946-2-jeffy.chen@rock-chips.com>
- <20171027023331.GA11665@google.com>
- <59F2A2BA.5030307@rock-chips.com>
+From: jeffy <jeffy.chen@rock-chips.com>
+Subject: Re: [RFC PATCH v8 1/7] dt-bindings: PCI: Add definition of PCIe WAKE#
+ irq and PCI irq
+Date: Fri, 27 Oct 2017 13:57:18 +0800
+Message-ID: <59F2CABE.1080702@rock-chips.com>
+References: <20171026132840.20946-1-jeffy.chen@rock-chips.com> <20171026132840.20946-2-jeffy.chen@rock-chips.com> <20171027023331.GA11665@google.com> <59F2A2BA.5030307@rock-chips.com> <20171027054025.GA85582@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <59F2A2BA.5030307@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: jeffy <jeffy.chen@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171027054025.GA85582@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
 Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, rjw@rjwysocki.net, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jeffy,
+Hi Brian,
 
-On Fri, Oct 27, 2017 at 11:06:34AM +0800, Jeffy Chen wrote:
-> On 10/27/2017 10:33 AM, Brian Norris wrote:
-> >In fact, I'm pretty sure this series fails to actually look in the host
-> >bridge for the "wakeup" interrupt at all! Did you actually test this?
-> actually it could...
-> 
-> static void *of_pci_setup(struct device *dev)
-> {
-> ...
->         device_init_wakeup(dev, false);
-> 
->         dev_info(dev, "Wakeup IRQ %d\n", irq);
->         return data;
-> }
-> 
-> [    1.546561] OF: PCI:   MEM 0xfa000000..0xfbdfffff -> 0xfa000000
-> [    1.553154] OF: PCI:    IO 0xfbe00000..0xfbefffff -> 0xfbe00000
-> [    1.560859] rockchip-pcie f8000000.pcie: Wakeup IRQ 64
-> [    1.566555] rockchip-pcie f8000000.pcie: PCI host bridge to bus
+On 10/27/2017 01:40 PM, Brian Norris wrote:
+> Another odd thing about this series is that the interrupt doesn't
+> actually show up in /proc/interrupts, /sys/kernel/debug/gpio, or
+> similar, seemingly because the wakeirq is requested/released every time
+> we suspend/resume. So it's really not that obvious that the interrupt is
+> being configured properly. That's not really a functional problem,
+> necessarily, but it doesn't quite seem ideal.
+>
+right, so maybe we can call dev_pm_set_dedicated_wake_irq() in the 
+setup(), and use device_set_wakeup_enable() to enable/disable it in the 
+set_wakeup()?
 
-Hmm, I think I missed the .setup_host_bridge() stuff. So you do handle
-both. I'll have to take a little closer look tomorrow. But you
-definitely at least need to improve the documentation as mentioned.
-
-Another odd thing about this series is that the interrupt doesn't
-actually show up in /proc/interrupts, /sys/kernel/debug/gpio, or
-similar, seemingly because the wakeirq is requested/released every time
-we suspend/resume. So it's really not that obvious that the interrupt is
-being configured properly. That's not really a functional problem,
-necessarily, but it doesn't quite seem ideal.
-
-Brian
+> Brian
