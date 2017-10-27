@@ -1,49 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
- re-enabling PWM and switching backlight power on
-Date: Fri, 27 Oct 2017 09:38:11 -0500
-Message-ID: <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
-References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
- <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
+Subject: Re: [PATCH] dt-bindings: display: stm32: add pixel clock mandatory
+ property
+Date: Fri, 27 Oct 2017 09:38:15 -0500
+Message-ID: <20171027143815.evbb7rqkgqiol7yo@rob-hp-laptop>
+References: <1509034356-23885-1-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
+In-Reply-To: <1509034356-23885-1-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe Cornu <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mickael Reulier <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Vincent Abriou <vincent.abriou@st.com>, Ludovic Barre <ludovic.barre@st.com>, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Bhumika Goyal <bhumirks@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waﬂmann wrote:
-> When switching the backlight on, the LCD may need some time to adjust
-> to the configured PWM duty cycle. Add a configurable delay between
-> configuring the PWM and enabling the backlight regulator to account
-> for this.
-> 
-> Signed-off-by: Lothar Waﬂmann <LW@KARO-electronics.de>
-> ---
->  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
->  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
->  2 files changed, 23 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> index 764db86..95594c3 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> @@ -17,6 +17,10 @@ Optional properties:
->                 "pwms" property (see PWM binding[0])
->    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
->                    and disables the backlight (see GPIO binding[1])
-> +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
-> +		  and switching PWM on. This may be required to eliminate
-> +		  flicker when switching the PWM on after it has been
-> +		  disabled.
-
-The subject talks about turning on the backlight regulator, but this 
-only talks about the PWM.
-
->  
->  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
->  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+T24gVGh1LCBPY3QgMjYsIDIwMTcgYXQgMDY6MTI6MzZQTSArMDIwMCwgUGhpbGlwcGUgQ29ybnUg
+d3JvdGU6Cj4gQWRkIHRoZSBEUEkvUkdCIGlucHV0IHBpeGVsIGNsb2NrIGluIG1hbmRhdG9yeSBw
+cm9wZXJ0aWVzCj4gYmVjYXVzZSBpdCByZWFsbHkgb2ZmZXJzIGEgYmV0dGVyIHByZWNpc2VuZXNz
+IGZvciB0aW1pbmcKPiBjb21wdXRhdGlvbnMuCj4gTm90ZTogRml4IGFsc28gdGhlIERTSSBwYW5l
+bCBleGFtcGxlIHdoZXJlICJyZWYiICYgInBjbGsiCj4gY2xvY2tzIHdlcmUgc3dhcHBlZC4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+
+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0z
+Mi1sdGRjLnR4dCB8IDYgKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyks
+IDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQKPiBpbmRleCAwMjkyNTIy
+Li45OTgyM2ZiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQKPiBAQCAtMjgsNiArMjgsNyBA
+QCBNYW5kYXRvcnkgcHJvcGVydGllcyBzcGVjaWZpYyB0byBTVE0zMiBEU0k6Cj4gIC0gI3NpemUt
+Y2VsbHM6IFNob3VsZCBiZSA8MD4uCj4gIC0gY29tcGF0aWJsZTogInN0LHN0bTMyLWRzaSIuCj4g
+IC0gY2xvY2stbmFtZXM6Cj4gKyAgLSBEUEkvUkdCIGlucHV0IHBpeGVsIGNsb2NrIHN0cmluZyBu
+YW1lLCBtdXN0IGJlICJweF9jbGsiLgo+ICAgIC0gcGh5IHBsbCByZWZlcmVuY2UgY2xvY2sgc3Ry
+aW5nIG5hbWUsIG11c3QgYmUgInJlZiIuCgpXaGVyZSdzIHBjbGs/CgpUaGUgbmV3IGNsb2NrIHNo
+b3VsZCBiZSBsYXN0IHRvIGJlIGJhY2t3YXJkcyBjb21wYXRpYmxlLgoKPiAgLSByZXNldHM6IHNl
+ZSBbNV0uCj4gIC0gcmVzZXQtbmFtZXM6IHNlZSBbNV0uCj4gQEAgLTk3LDggKzk4LDkgQEAgRXhh
+bXBsZSAyOiBEU0kgcGFuZWwKPiAgCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gIAkJCWNvbXBhdGli
+bGUgPSAic3Qsc3RtMzItZHNpIjsKPiAgCQkJcmVnID0gPDB4NDAwMTZjMDAgMHg4MDA+Owo+IC0J
+CQljbG9ja3MgPSA8JnJjYyAxIENMS19GNDY5X0RTST4sIDwmY2xrX2hzZT47Cj4gLQkJCWNsb2Nr
+LW5hbWVzID0gInJlZiIsICJwY2xrIjsKPiArCQkJY2xvY2tzID0gPCZyY2MgMSBDTEtfRjQ2OV9E
+U0k+LCA8JnJjYyAxIENMS19MQ0Q+LAo+ICsJCQkJIDwmY2xrX2hzZT47Cj4gKwkJCWNsb2NrLW5h
+bWVzID0gInBjbGsiLCAicHhfY2xrIiwgInJlZiI7Cj4gIAkJCXJlc2V0cyA9IDwmcmNjIFNUTTMy
+RjRfQVBCMl9SRVNFVChEU0kpPjsKPiAgCQkJcmVzZXQtbmFtZXMgPSAiYXBiIjsKPiAgCj4gLS0g
+Cj4gMS45LjEKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
