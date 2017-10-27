@@ -1,54 +1,62 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
-Date: Fri, 27 Oct 2017 23:06:48 +0800
-Message-ID: <20171027150658.18509-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRUXZXHQKGQEN4L7SKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Subject: [PATCH v2 01/10] dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
+Date: Fri, 27 Oct 2017 23:06:49 +0800
+Message-ID: <20171027150658.18509-2-icenowy@aosc.io>
+References: <20171027150658.18509-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171027150658.18509-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the SimpleFB on Allwinner SoCs with
-"Display Engine 2.0".
+The DE2 CCU is different on A83T and H3 -- the parent of the clocks on
+A83T is PLL_DE but on H3 it's the DE module clock. This is not noticed
+when I develop the DE2 CCU driver.
 
-PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
+Fix the binding by using different compatibles for A83T and H3, adding
+notes for the PLL_DE usage on A83T, and change the binding example's
+compatible from A83T to H3 (as it specifies the DE module clock).
 
-PATCH 4 adds the pipeline strings for DE2 SimpleFB.
+Fixes: ed74f8a8a679 ("dt-bindings: add binding for the Allwinner DE2 CCU")
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
-for H3/H5 SoCs.
-
-PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
-
-Icenowy Zheng (10):
-  dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
-  clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
-  clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
-  dt-bindings: simplefb-sunxi: add pipelines for DE2
-  ARM: sun8i: h3/h5: add DE2 CCU device node for H3
-  arm64: allwinner: h5: add compatible string for DE2 CCU
-  ARM: sunxi: h3/h5: add simplefb nodes
-  dt-bindings: add binding for A64 DE2 CCU SRAM
-  arm64: allwinner: a64: add DE2 CCU for A64 SoC
-  arm64: allwinner: a64: add simplefb for A64 SoC
-
- .../devicetree/bindings/clock/sun8i-de2.txt        | 10 +++-
- .../bindings/display/simple-framebuffer-sunxi.txt  |  4 ++
- arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 ++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 ++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65 ++++++++++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 ++
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 53 +++++++++++++++++-
- 7 files changed, 178 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+index 631d27cd89d6..f2fa87c4765c 100644
+--- a/Documentation/devicetree/bindings/clock/sun8i-de2.txt
++++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+@@ -4,13 +4,14 @@ Allwinner Display Engine 2.0 Clock Control Binding
+ Required properties :
+ - compatible: must contain one of the following compatibles:
+ 		- "allwinner,sun8i-a83t-de2-clk"
++		- "allwinner,sun8i-h3-de2-clk"
+ 		- "allwinner,sun8i-v3s-de2-clk"
+ 		- "allwinner,sun50i-h5-de2-clk"
+ 
+ - reg: Must contain the registers base address and length
+ - clocks: phandle to the clocks feeding the display engine subsystem.
+ 	  Three are needed:
+-  - "mod": the display engine module clock
++  - "mod": the display engine module clock (on A83T it's the DE PLL)
+   - "bus": the bus clock for the whole display engine subsystem
+ - clock-names: Must contain the clock names described just above
+ - resets: phandle to the reset control for the display engine subsystem.
+@@ -19,7 +20,7 @@ Required properties :
+ 
+ Example:
+ de2_clocks: clock@1000000 {
+-	compatible = "allwinner,sun8i-a83t-de2-clk";
++	compatible = "allwinner,sun8i-h3-de2-clk";
+ 	reg = <0x01000000 0x100000>;
+ 	clocks = <&ccu CLK_BUS_DE>,
+ 		 <&ccu CLK_DE>;
 -- 
 2.13.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
