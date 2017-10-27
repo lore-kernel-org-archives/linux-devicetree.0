@@ -1,58 +1,172 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH RESEND v6 0/6] provide power off support for iMX6 with external PMIC
-Date: Fri, 27 Oct 2017 11:48:42 +0200
-Message-ID: <20171027094848.28365-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?=
+        <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v16 19/32] v4l: async: Ensure only unique fwnodes are
+ registered to notifiers
+Date: Fri, 27 Oct 2017 11:52:27 +0200
+Message-ID: <20171027095227.GA8854@bigcity.dyn.berto.se>
+References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
+ <20171026075342.5760-20-sakari.ailus@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171026075342.5760-20-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Last version of this patch set was send at 20 Jun 2017, this is a rebase against
-kernel v4.14-rc6. Probably this set got lost. If I forgot to address some comments,
-please point me.
+Hi Sakari,
 
-This patch series is providing power off support for Freescale/NXP iMX6 based
-boards with external power management integrated circuit (PMIC).
+Thanks for your patch.
 
-changes:
-v6:
- - rename imx6_pm_poweroff to imx6_pm_stby_poweroff
- - fix "MPIC_STBY_REQ" typo in the comment.
+On 2017-10-26 10:53:29 +0300, Sakari Ailus wrote:
+> While registering a notifier, check that each newly added fwnode is
+> unique, and return an error if it is not. Also check that a newly added
+> notifier does not have the same fwnodes twice.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-async.c | 82 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 77 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
+> index ed539c4fd5dc..b4e88eef195f 100644
+> --- a/drivers/media/v4l2-core/v4l2-async.c
+> +++ b/drivers/media/v4l2-core/v4l2-async.c
+> @@ -308,8 +308,71 @@ static void v4l2_async_notifier_unbind_all_subdevs(
+>  	notifier->parent = NULL;
+>  }
+>  
+> +/* See if an fwnode can be found in a notifier's lists. */
+> +static bool __v4l2_async_notifier_fwnode_has_async_subdev(
+> +	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode)
+> +{
+> +	struct v4l2_async_subdev *asd;
+> +	struct v4l2_subdev *sd;
+> +
+> +	list_for_each_entry(asd, &notifier->waiting, list) {
+> +		if (asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
+> +			continue;
+> +
+> +		if (asd->match.fwnode.fwnode == fwnode)
+> +			return true;
+> +	}
+> +
+> +	list_for_each_entry(sd, &notifier->done, async_list) {
+> +		if (WARN_ON(!sd->asd))
+> +			continue;
+> +
+> +		if (sd->asd->match_type != V4L2_ASYNC_MATCH_FWNODE)
+> +			continue;
+> +
+> +		if (sd->asd->match.fwnode.fwnode == fwnode)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * Find out whether an async sub-device was set up for an fwnode already or
+> + * whether it exists in a given notifier before @this_index.
+> + */
+> +static bool v4l2_async_notifier_fwnode_has_async_subdev(
+> +	struct v4l2_async_notifier *notifier, struct fwnode_handle *fwnode,
+> +	unsigned int this_index)
+> +{
+> +	unsigned int j;
+> +
+> +	lockdep_assert_held(&list_lock);
+> +
+> +	/* Check that an fwnode is not being added more than once. */
+> +	for (j = 0; j < this_index; j++) {
+> +		struct v4l2_async_subdev *asd = notifier->subdevs[this_index];
+> +		struct v4l2_async_subdev *other_asd = notifier->subdevs[j];
+> +
+> +		if (other_asd->match_type == V4L2_ASYNC_MATCH_FWNODE &&
+> +		    asd->match.fwnode.fwnode ==
+> +		    other_asd->match.fwnode.fwnode)
+> +			return true;
+> +	}
+> +
+> +	/* Check than an fwnode did not exist in other notifiers. */
+> +	list_for_each_entry(notifier, &notifier_list, list)
+> +		if (__v4l2_async_notifier_fwnode_has_async_subdev(
+> +			    notifier, fwnode))
+> +			return true;
+> +
+> +	return false;
+> +}
+> +
+>  static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  {
+> +	struct device *dev =
+> +		notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL;
+>  	struct v4l2_async_subdev *asd;
+>  	int ret;
+>  	int i;
+> @@ -320,6 +383,8 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  	INIT_LIST_HEAD(&notifier->waiting);
+>  	INIT_LIST_HEAD(&notifier->done);
+>  
+> +	mutex_lock(&list_lock);
+> +
+>  	for (i = 0; i < notifier->num_subdevs; i++) {
+>  		asd = notifier->subdevs[i];
+>  
+> @@ -327,19 +392,25 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  		case V4L2_ASYNC_MATCH_CUSTOM:
+>  		case V4L2_ASYNC_MATCH_DEVNAME:
+>  		case V4L2_ASYNC_MATCH_I2C:
+> +			break;
+>  		case V4L2_ASYNC_MATCH_FWNODE:
+> +			if (v4l2_async_notifier_fwnode_has_async_subdev(
+> +				    notifier, asd->match.fwnode.fwnode, i)) {
+> +				dev_err(dev,
+> +					"fwnode has already been registered or in notifier's subdev list\n");
+> +				ret = -EEXIST;
+> +				goto out_unlock;
 
-v5:
- - remove useless includes from pm-imx6.c patch
- - add Acked-by to "regulator: pfuze100: add fsl,pmic-stby-poweroff property"
-   patch
+You store the error code in ret before the jump, but in the out_unlock 
+path ret is not considered and 0 is always returned.
 
-v4:
- - update comment in "regulator: pfuze100: add fsl,pmic-stby-poweroff ..."
-   patch
- - add Acked-by to "ARM: imx6q: provide documentation for new ..."
-   patch
+> +			}
+>  			break;
+>  		default:
+> -			dev_err(notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL,
+> -				"Invalid match type %u on %p\n",
+> +			dev_err(dev, "Invalid match type %u on %p\n",
+>  				asd->match_type, asd);
+> -			return -EINVAL;
+> +			ret = -EINVAL;
+> +			goto out_unlock;
 
-v3:
- - set pm_power_off_prepare = NULL on .remove.
- - documentation and spelling fixes.
- - use %pf instead of lookup_symbol_name.
+Same here.
 
-Oleksij Rempel (6):
-  ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff
-    property
-  ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff"
-    is set
-  kernel/reboot.c: export pm_power_off_prepare
-  regulator: pfuze100: add fsl,pmic-stby-poweroff property
-  regulator: pfuze100-regulator: provide pm_power_off_prepare handler
-  ARM: dts: imx6: RIoTboard provide standby on power off option
-
- .../devicetree/bindings/clock/imx6q-clock.txt      |  8 ++
- .../devicetree/bindings/regulator/pfuze100.txt     |  7 ++
- arch/arm/boot/dts/imx6dl-riotboard.dts             |  5 ++
- arch/arm/mach-imx/pm-imx6.c                        | 25 ++++++
- drivers/regulator/pfuze100-regulator.c             | 92 ++++++++++++++++++++++
- kernel/reboot.c                                    |  1 +
- 6 files changed, 138 insertions(+)
+>  		}
+>  		list_add_tail(&asd->list, &notifier->waiting);
+>  	}
+>  
+> -	mutex_lock(&list_lock);
+> -
+>  	ret = v4l2_async_notifier_try_all_subdevs(notifier);
+>  	if (ret)
+>  		goto err_unbind;
+> @@ -351,6 +422,7 @@ static int __v4l2_async_notifier_register(struct v4l2_async_notifier *notifier)
+>  	/* Keep also completed notifiers on the list */
+>  	list_add(&notifier->list, &notifier_list);
+>  
+> +out_unlock:
+>  	mutex_unlock(&list_lock);
+>  
+>  	return 0;
+> -- 
+> 2.11.0
+> 
 
 -- 
-2.11.0
+Regards,
+Niklas Söderlund
