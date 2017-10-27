@@ -1,94 +1,58 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/5] Documentation: Add device tree binding for
- Goldfish PIC driver
-Date: Thu, 26 Oct 2017 22:08:56 -0500
-Message-ID: <20171027030856.a2mahvhipy5vly26@rob-hp-laptop>
+Subject: Re: [PATCH v5 3/5] Documentation: Add device tree binding for
+ Goldfish FB driver
+Date: Thu, 26 Oct 2017 22:10:56 -0500
+Message-ID: <20171027031056.scmky5n5vbbnldmc@rob-hp-laptop>
 References: <1508510055-6167-1-git-send-email-aleksandar.markovic@rt-rk.com>
- <1508510055-6167-2-git-send-email-aleksandar.markovic@rt-rk.com>
+ <1508510055-6167-4-git-send-email-aleksandar.markovic@rt-rk.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1508510055-6167-2-git-send-email-aleksandar.markovic@rt-rk.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1508510055-6167-4-git-send-email-aleksandar.markovic@rt-rk.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
-Cc: linux-mips@linux-mips.org, Miodrag Dinic <miodrag.dinic@mips.com>, Goran Ferenc <goran.ferenc@mips.com>, Aleksandar Markovic <aleksandar.markovic@mips.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@mips.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hogan <james.hogan@mips.com>, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Burton <paul.burton@mips.com>, Petar Jovanovic <petar.jovanovic@mips.com>, Raghu Gandham <raghu.gandham@mips.com>, Randy Dunlap <rdunlap@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Raghu Gandham <raghu.gandham@mips.com>, Aleksandar Markovic <aleksandar.markovic@mips.com>, devicetree@vger.kernel.org, Goran Ferenc <goran.ferenc@mips.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>, Petar Jovanovic <petar.jovanovic@mips.com>, Miodrag Dinic <miodrag.dinic@mips.com>, James Hogan <james.hogan@mips.com>, Douglas Leung <douglas.leung@mips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 04:33:34PM +0200, Aleksandar Markovic wrote:
-> From: Miodrag Dinic <miodrag.dinic@mips.com>
-> 
-> Add documentation for DT binding of Goldfish PIC driver. The compatible
-> string used by OS for binding the driver is "google,goldfish-pic".
-> 
-> Signed-off-by: Miodrag Dinic <miodrag.dinic@mips.com>
-> Signed-off-by: Goran Ferenc <goran.ferenc@mips.com>
-> Signed-off-by: Aleksandar Markovic <aleksandar.markovic@mips.com>
-> ---
->  .../interrupt-controller/google,goldfish-pic.txt   | 30 ++++++++++++++++++++++
->  MAINTAINERS                                        |  5 ++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-> new file mode 100644
-> index 0000000..295bf97
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-> @@ -0,0 +1,30 @@
-> +Android Goldfish PIC
-> +
-> +Android Goldfish programmable interrupt device used by Android
-> +emulator.
-> +
-> +Required properties:
-> +
-> +- compatible : should contain "google,goldfish-pic"
-> +- reg        : <registers mapping>
-> +- interrupts : <interrupt mapping>
-> +
-> +Example for mips when used in cascade mode:
-> +
-> +        cpuintc {
-> +                #interrupt-cells = <0x1>;
-> +                #address-cells = <0>;
-> +                interrupt-controller;
-> +                compatible = "mti,cpu-interrupt-controller";
-> +        };
-> +
-> +        goldfish_pic@1f000000 {
-
-interrupt-controller@...
-
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> +                compatible = "google,goldfish-pic";
-> +                reg = <0x1f000000 0x0 0x1000>;
-> +
-> +                interrupt-controller;
-> +                #interrupt-cells = <0x1>;
-> +
-> +                interrupt-parent = <&cpuintc>;
-> +                interrupts = <0x2>;
-> +        };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4a3de82..4d5108f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -872,6 +872,11 @@ S:	Supported
->  F:	drivers/android/
->  F:	drivers/staging/android/
->  
-> +ANDROID GOLDFISH PIC DRIVER
-> +M:	Miodrag Dinic <miodrag.dinic@mips.com>
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-> +
->  ANDROID GOLDFISH RTC DRIVER
->  M:	Miodrag Dinic <miodrag.dinic@mips.com>
->  S:	Supported
-> -- 
-> 2.7.4
-> 
+T24gRnJpLCBPY3QgMjAsIDIwMTcgYXQgMDQ6MzM6MzZQTSArMDIwMCwgQWxla3NhbmRhciBNYXJr
+b3ZpYyB3cm90ZToKPiBGcm9tOiBBbGVrc2FuZGFyIE1hcmtvdmljIDxhbGVrc2FuZGFyLm1hcmtv
+dmljQG1pcHMuY29tPgo+IAo+IEFkZCBkb2N1bWVudGF0aW9uIGZvciBEVCBiaW5kaW5nIG9mIEdv
+bGRmaXNoIEZCIGRyaXZlci4gVGhlIGNvbXBhdGlibGUKPiBzdHJpbmcgdXNlZCBieSBPUyBmb3Ig
+YmluZGluZyB0aGUgZHJpdmVyIGlzICJnb29nbGUsZ29sZGZpc2gtZmIiLgo+IAo+IFNpZ25lZC1v
+ZmYtYnk6IE1pb2RyYWcgRGluaWMgPG1pb2RyYWcuZGluaWNAbWlwcy5jb20+Cj4gU2lnbmVkLW9m
+Zi1ieTogR29yYW4gRmVyZW5jIDxnb3Jhbi5mZXJlbmNAbWlwcy5jb20+Cj4gU2lnbmVkLW9mZi1i
+eTogQWxla3NhbmRhciBNYXJrb3ZpYyA8YWxla3NhbmRhci5tYXJrb3ZpY0BtaXBzLmNvbT4KPiAt
+LS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9nb29nbGUsZ29sZGZpc2gtZmIu
+dHh0IHwgMTggKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRp
+b25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9nb29nbGUsZ29sZGZpc2gtZmIudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2dvb2dsZSxnb2xkZmlzaC1m
+Yi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9nb29nbGUs
+Z29sZGZpc2gtZmIudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi45
+Y2UwNjE1Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2dvb2dsZSxnb2xkZmlzaC1mYi50eHQKPiBAQCAtMCwwICsxLDE4IEBA
+Cj4gK0FuZHJvaWQgR29sZGZpc2ggZnJhbWVidWZmZXIKPiArCj4gK0FuZHJvaWQgR29sZGZpc2gg
+ZnJhbWVidWZmZXIgZGV2aWNlIHVzZWQgYnkgQW5kcm9pZCBlbXVsYXRvci4KPiArCj4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgY29udGFpbiAiZ29v
+Z2xlLGdvbGRmaXNoLWZiIgo+ICstIHJlZyAgICAgICAgOiA8cmVnaXN0ZXJzIG1hcHBpbmc+Cj4g
+Ky0gaW50ZXJydXB0cyA6IDxpbnRlcnJ1cHQgbWFwcGluZz4KPiArCj4gK0V4YW1wbGU6Cj4gKwo+
+ICsJZ29sZGZpc2hfZmJAMWYwMDgwMDAgewoKVXNlIGdlbmVyaWMgbm9kZSBuYW1lczoKCmRpc3Bs
+YXktY29udHJvbGxlckAuLi4KCldpdGggdGhhdCwKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
+aEBrZXJuZWwub3JnPgoKCj4gKwkJY29tcGF0aWJsZSA9ICJnb29nbGUsZ29sZGZpc2gtZmIiOwo+
+ICsJCWludGVycnVwdHMgPSA8MHgxMD47Cj4gKwkJcmVnID0gPDB4MWYwMDgwMDAgMHgwIDB4MTAw
+PjsKCkFuIGFkZHJlc3Mgb2Ygb25lIGNlbGwgYW5kIHNpemUgb2YgMiBjZWxscyBpcyBzdHJhbmdl
+Li4uCgo+ICsJCWNvbXBhdGlibGUgPSAiZ29vZ2xlLGdvbGRmaXNoLWZiIjsKPiArCX07Cj4gLS0g
+Cj4gMi43LjQKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
