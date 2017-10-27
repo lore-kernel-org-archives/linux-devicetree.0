@@ -1,46 +1,46 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] display: panel: Add Tianma tm070rvhg71 display support
- (800x480)
-Date: Thu, 26 Oct 2017 22:13:36 -0500
-Message-ID: <20171027031336.psu7hn27w2xajyux@rob-hp-laptop>
-References: <1508537403-878-1-git-send-email-lukma@denx.de>
+Subject: Re: [PATCH 3/3] openrisc: dts: Add OpenRISC platform SoC
+Date: Thu, 26 Oct 2017 22:18:33 -0500
+Message-ID: <20171027031833.g6zrlewszok4vksx@rob-hp-laptop>
+References: <20171022024641.28478-1-shorne@gmail.com>
+ <20171022024641.28478-4-shorne@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1508537403-878-1-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20171022024641.28478-4-shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 21, 2017 at 12:10:03AM +0200, Lukasz Majewski wrote:
-> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-> ---
->  .../bindings/display/panel/tianma,tm070rvhg71.txt  |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
+On Sun, Oct 22, 2017 at 11:46:41AM +0900, Stafford Horne wrote:
+> Add devicetree binding documentation for the OpenRISC platform
+> opencores,or1ksim.  This is the main OpenRISC reference platform
+> supporting multiple FPGA SoC's.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
-> new file mode 100644
-> index 0000000..b84217f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
-> @@ -0,0 +1,7 @@
-> +Tianma Micro-electronics TM070RVHG71 7.0" WXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "tianma,tm070rvhg71
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
+> This format is based on some of the mips binding docs as we have
+> similar requirements.
+> 
+> Also, update maintainers so openrisc related binding changes are visible
+> to the openrisc team.
 
-No supplies? Still need to list power-supply here if so, so it is clear 
-that this display has a single supply (or you need to list multiple ones 
-if not).
+Your subject is wrong because this is not a dts patch. Use 
+"dt-bindings: openrisc: ..."
 
-Rob
+> 
+> Suggested-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../bindings/openrisc/opencores/or1ksim.txt        | 39 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt
+
+Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
