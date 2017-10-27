@@ -1,26 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: light: add UVIS25 device bindings
-Date: Fri, 27 Oct 2017 09:37:56 -0500
-Message-ID: <20171027135146.bdif6oy7olndmew4@rob-hp-laptop>
-References: <20171025181609.3803-1-lorenzo.bianconi@st.com>
- <20171025181609.3803-3-lorenzo.bianconi@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v9 5/5] dt-bindings: watchdog: Add bindings for RAVE SP
+ watchdog driver
+Date: Fri, 27 Oct 2017 09:37:58 -0500
+Message-ID: <20171027143758.zmdafu65ykhwlmhg@rob-hp-laptop>
+References: <20171025190421.18415-1-andrew.smirnov@gmail.com>
+ <20171025190421.18415-6-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171025181609.3803-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <20171025190421.18415-6-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 25, 2017 at 08:16:09PM +0200, Lorenzo Bianconi wrote:
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+On Wed, Oct 25, 2017 at 12:04:21PM -0700, Andrey Smirnov wrote:
+> Add Device Tree bindings for RAVE SP watchdog drvier - an MFD cell of
+> parent RAVE SP driver (documented in
+> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+> 
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: cphealy@gmail.com
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > ---
->  .../devicetree/bindings/iio/light/st_uvis25.txt    | 23 ++++++++++++++++++++++
+>  .../bindings/watchdog/zii,rave-sp-wdt.txt          | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
 
-st,uvis25.txt matching the compatible.
-
-Otherwise,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
