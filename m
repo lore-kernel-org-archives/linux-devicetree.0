@@ -1,107 +1,68 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/3] USB: Add document for usb of Hikey960
-Date: Thu, 26 Oct 2017 22:47:27 -0500
-Message-ID: <20171027034727.ssjes3u5ylzkm2pd@rob-hp-laptop>
-References: <20171024060610.10712-1-chenyu56@huawei.com>
- <20171024060610.10712-2-chenyu56@huawei.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH 0/4] Add SimpleFB support for Allwinner H3 SoC
+Date: Fri, 27 Oct 2017 12:07:51 +0800
+Message-ID: <239eed81945193af3af465c7ef0008ca@aosc.io>
+References: <20170911155529.62891-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171024060610.10712-2-chenyu56-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yu Chen <chenyu56-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBGPCZLHQKGQEPQ2UURI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170911155529.62891-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 02:06:08PM +0800, Yu Chen wrote:
-> DT bindings for usb of Hikey960.
-> 
-> Signed-off-by: Yu Chen <chenyu56-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ning Fan <fanning4-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Di Yang <yangdi10-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Rui Li <lirui39-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> 
-> ---
->  .../devicetree/bindings/usb/hisilicon-usb.txt      | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/hisilicon-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/hisilicon-usb.txt b/Documentation/devicetree/bindings/usb/hisilicon-usb.txt
-> new file mode 100644
-> index 000000000000..dc4c460885d6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/hisilicon-usb.txt
+=E5=9C=A8 2017-09-11 23:55=EF=BC=8CIcenowy Zheng =E5=86=99=E9=81=93=EF=BC=
+=9A
+> This patchset adds devicetree-side support of SimpleFB on Allwinner H3
+> SoC.
+>=20
+> The DE2 CCU is initialized and used by the SimpleFB node, in order to
+> furtherly coexist with the DRM code.
+>=20
+> The first patch adds pipelines for DE2 displays in simplefb-sunxi
+> device tree binding.
+>=20
+> The second patch adds DE2 CCU device node for H3 SoC, and the skeleton
+> of the node enters the H3/H5 common DTSI; the H5 support is splited
+> into the third patch, as they will enter different tree.
+>=20
+> The fourth patch finally adds simplefb nodes, using the
+> pipeline strings introduced in the first patch.
+>=20
+> Icenowy Zheng (4):
+>   dt-bindings: simplefb-sunxi: add pipelines for DE2
+>   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+>   arm64: allwinner: h5: add compatible string for DE2 CCU
+>   ARM: sunxi: h3/h5: add simplefb nodes
 
-Should be 3660 specific?
+Maxime,
+as the U-Boot side is applied to u-boot-video, could you take a look at=20
+this
+patchset?
 
-> @@ -0,0 +1,38 @@
-> +* HISILICON USB HUB
+Thanks!
+Icenowy
 
-Looks like a controller, not a hub?
+>=20
+>  .../bindings/display/simple-framebuffer-sunxi.txt  |  4 ++
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 ++
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43=20
+> ++++++++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 ++
+>  4 files changed, 55 insertions(+)
 
-> +
-> +Required properties:
-> +- compatible: One of the specific types :"hisilicon,hi3660-dwc3",
-
-> +			"hisilicon,gpio_hubv1","hisilicon,gpio_hubv2"
-
-What are these?
-
-> +
-> +Optional properties of devices using ISP1301:
-> +- transceiver: phandle of isp1301 - this helps the ISP1301 driver to find the
-> +               ISP1301 instance associated with the respective USB driver
-
-Really? A full-speed transceiver?
-
-> +
-> +Example:
-> +
-> +	hisi_usb@ff200000 {
-
-usb@...
-
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "hisilicon,hi3660-dwc3";
-> +		reg = <0x0 0xff200000 0x0 0x1000
-> +			 0x0 0xff100000 0x0 0x100000>;
-> +		ranges;
-> +		bc_again_flag = <0>;
-
-Not documented. Don't use '_' in property names.
-
-> +
-> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
-> +		eye_diagram_param = <0x1c466e3>;
-> +		eye_diagram_host_param = <0x1c466e3>;
-> +		usb3_phy_cr_param = <0xb80>;
-> +		usb3_phy_host_cr_param = <0x980>;
-> +		usb3_phy_tx_vboost_lvl = <0x5>;
-
-All of these have to be documented.
-
-> +
-> +		dwc3@ff100000 {
-
-Ah, it's a DWC3 controller. No references to the common binding?
-
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0xff100000 0x0 0x100000>;
-> +			interrupts = <0 159 4>, <0 161 4>;
-> +			dr_mode = "otg";
-> +			maximum-speed = "super-speed";
-> +		};
-> +	};
-> \ No newline at end of file
-
-Fix what it says here.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
