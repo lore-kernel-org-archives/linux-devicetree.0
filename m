@@ -1,106 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mailbox: Introduce Hi3660 controller
- binding
-Date: Fri, 27 Oct 2017 09:38:44 -0500
-Message-ID: <20171027143844.uxhl3vbzacvv3z4j@rob-hp-laptop>
-References: <1509084904-2505-1-git-send-email-zhongkaihua@huawei.com>
- <1509084904-2505-2-git-send-email-zhongkaihua@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: add bindings doc for hi3798cv200
+ combphy
+Date: Fri, 27 Oct 2017 09:38:30 -0500
+Message-ID: <20171027142606.zilypg7tuxwy3fj2@rob-hp-laptop>
+References: <1509073651-23730-1-git-send-email-shawnguo@kernel.org>
+ <1509073651-23730-2-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1509084904-2505-2-git-send-email-zhongkaihua@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kaihua Zhong <zhongkaihua@huawei.com>
-Cc: mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, haojian.zhuang@linaro.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
+In-Reply-To: <1509073651-23730-2-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 27, 2017 at 02:15:02PM +0800, Kaihua Zhong wrote:
-> From: Leo Yan <leo.yan@linaro.org>
+On Fri, Oct 27, 2017 at 11:07:30AM +0800, Shawn Guo wrote:
+> From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > 
-> Introduce a binding for the Hi3660 mailbox controller, the mailbox is
-> used within application processor (AP), communication processor (CP),
-> HIFI and MCU, etc.
+> It adds the device tree bindings for PCIE/SATA/USB3 combo PHY found on
+> HiSilicon STB SoCs.
 > 
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Guodong Xu <guodong.xu@linaro.org>
-> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-> Cc: Niranjan Yadla <nyadla@cadence.com>
-> Cc: Raj Pawate <pawateb@cadence.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+>  .../bindings/phy/phy-hi3798cv200-combphy.txt       | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
 > new file mode 100644
-> index 0000000..8a8d7e1
+> index 000000000000..efb6cd5eae04
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
-> @@ -0,0 +1,52 @@
-> +Hisilicon Hi3660 Mailbox Driver
+> +++ b/Documentation/devicetree/bindings/phy/phy-hi3798cv200-combphy.txt
+> @@ -0,0 +1,57 @@
+> +HiSilicon STB PCIE/SATA/USB3 PHY
 
-Bindings are for h/w, not drivers.
+Please add a reference to the parent node binding.
 
-> +
-> +Hisilicon Hi3660 mailbox controller supports up to 32 channels.  Messages
-> +are passed between processors, including application & communication
-> +processors, MCU, HIFI, etc.  Each channel is unidirectional and accessed
-> +by using MMIO registers; it supports maximum to 8 words message.
-> +
-> +Controller
-> +----------
-> +
-> +Required properties:
-> +- compatible:		: Shall be "hisilicon,hi3660-mbox"
-> +- reg:			: Offset and length of the device's register set
-> +- #mbox-cells:		: Must be 3
-> +			  <&phandle channel dst_irq ack_irq>
-> +			    phandle	: Label name of controller
-> +			    channel	: Channel number
-> +			    dst_irq	: Remote interrupt vector
-> +			    ack_irq	: Local interrupt vector
-> +
-> +- interrupts:		: Contains the two IRQ lines for mailbox.
-> +
-> +Example:
-> +
-> +mailbox: mailbox@e896b000 {
-> +	compatible = "hisilicon,hi3660-mbox";
-> +	reg = <0x0 0xe896b000 0x0 0x1000>;
-> +	interrupts = <0x0 0xc0 0x4>,
-> +		     <0x0 0xc1 0x4>;
-> +	#mbox-cells = <3>;
-> +};
-> +
-> +Client
-> +------
-> +
-> +Required properties:
-> +- compatible		: See the client docs
-> +- mboxes		: Standard property to specify a Mailbox (See ./mailbox.txt)
-> +			  Cells must match 'mbox-cells' (See Controller docs above)
-> +
-> +Optional properties
-> +- mbox-names		: Name given to channels seen in the 'mboxes' property.
-> +
-> +Example:
-> +
-> +stub_clock: stub_clock {
+With that,
 
-clock@e896b500
-
-> +	compatible = "hisilicon,hi3660-stub-clk";
-> +	reg = <0x0 0xe896b500 0x0 0x0100>;
-> +	#clock-cells = <1>;
-> +	mbox-names = "mbox-tx";
-
-Don't need -names when there is only one. Plus "mbox-" part is 
-redundant.
-
-> +	mboxes = <&mailbox 13 3 0>;
-> +};
-> -- 
-> 1.9.1
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
