@@ -1,68 +1,112 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH] dt-bindings: display: stm32: add pixel clock mandatory
- property
-Date: Fri, 27 Oct 2017 14:52:21 +0000
-Message-ID: <e7f46e2c-2cd9-bdd4-221a-109cdc9852b1@st.com>
-References: <1509034356-23885-1-git-send-email-philippe.cornu@st.com>
- <20171027143815.evbb7rqkgqiol7yo@rob-hp-laptop>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mailbox: Introduce Hi3660 controller
+ binding
+Date: Fri, 27 Oct 2017 23:02:51 +0800
+Message-ID: <20171027150251.GE29281@leoy-linaro>
+References: <1509084904-2505-1-git-send-email-zhongkaihua@huawei.com>
+ <1509084904-2505-2-git-send-email-zhongkaihua@huawei.com>
+ <20171027143844.uxhl3vbzacvv3z4j@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171027143815.evbb7rqkgqiol7yo@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <E835A4DC6B8AAE42B012BF5A8BE5782C@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171027143844.uxhl3vbzacvv3z4j@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mickael REULIER <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Vincent ABRIOU <vincent.abriou@st.com>, Ludovic BARRE <ludovic.barre@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Bhumika Goyal <bhumirks@gmail.com>
+Cc: Kaihua Zhong <zhongkaihua@huawei.com>, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, haojian.zhuang@linaro.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiAxMC8yNy8yMDE3IDA0OjM4IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCBPY3QgMjYsIDIwMTcgYXQgMDY6MTI6MzZQTSArMDIwMCwgUGhpbGlwcGUgQ29ybnUg
-d3JvdGU6DQo+PiBBZGQgdGhlIERQSS9SR0IgaW5wdXQgcGl4ZWwgY2xvY2sgaW4gbWFuZGF0b3J5
-IHByb3BlcnRpZXMNCj4+IGJlY2F1c2UgaXQgcmVhbGx5IG9mZmVycyBhIGJldHRlciBwcmVjaXNl
-bmVzcyBmb3IgdGltaW5nDQo+PiBjb21wdXRhdGlvbnMuDQo+PiBOb3RlOiBGaXggYWxzbyB0aGUg
-RFNJIHBhbmVsIGV4YW1wbGUgd2hlcmUgInJlZiIgJiAicGNsayINCj4+IGNsb2NrcyB3ZXJlIHN3
-YXBwZWQuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNv
-cm51QHN0LmNvbT4NCj4+IC0tLQ0KPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dCB8IDYgKysrKy0tDQo+PiAgIDEgZmlsZSBjaGFu
-Z2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzIt
-bHRkYy50eHQNCj4+IGluZGV4IDAyOTI1MjIuLjk5ODIzZmIgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dA0K
-Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3Rt
-MzItbHRkYy50eHQNCj4+IEBAIC0yOCw2ICsyOCw3IEBAIE1hbmRhdG9yeSBwcm9wZXJ0aWVzIHNw
-ZWNpZmljIHRvIFNUTTMyIERTSToNCj4+ICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDwwPi4N
-Cj4+ICAgLSBjb21wYXRpYmxlOiAic3Qsc3RtMzItZHNpIi4NCj4+ICAgLSBjbG9jay1uYW1lczoN
-Cj4+ICsgIC0gRFBJL1JHQiBpbnB1dCBwaXhlbCBjbG9jayBzdHJpbmcgbmFtZSwgbXVzdCBiZSAi
-cHhfY2xrIi4NCj4+ICAgICAtIHBoeSBwbGwgcmVmZXJlbmNlIGNsb2NrIHN0cmluZyBuYW1lLCBt
-dXN0IGJlICJyZWYiLg0KPiANCj4gV2hlcmUncyBwY2xrPw0KDQpwY2xrIGlzIGRlc2NyaWJlZCBp
-biB0aGUgZ2VuZXJpYyBwYXJ0IA0KKERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQpIGFzIA0KbWFuZGF0b3J5Lg0KDQpJbiBzdCxz
-dG0zMi1sdGRjLnR4dCAoc3BlY2lmaWMgcGFydCksIEkgaGF2ZSBkb2N1bWVudGVkIHRoYXQgIkZv
-ciBhbGwgDQptYW5kYXRvcnkgcHJvcGVydGllcyAmIG5vZGVzLCBwbGVhc2UgcmVmZXIgdG8gdGhl
-IHJlbGF0ZWQgZG9jdW1lbnRhdGlvbiANCmluIFs1XSIuDQoNCkRvIHlvdSB0aGluayBpdCBpcyBj
-bGVhciBlbm91Z2g/DQoNCj4gDQo+IFRoZSBuZXcgY2xvY2sgc2hvdWxkIGJlIGxhc3QgdG8gYmUg
-YmFja3dhcmRzIGNvbXBhdGlibGUuDQo+IA0KDQpvay4NCg0KTWFueSB0aGFua3MgZm9yIHlvdXIg
-cmV2aWV3IGFuZCB5b3VyIHN1cHBvcnQsDQoNClBoaWxpcHBlIDotKQ0KDQo+PiAgIC0gcmVzZXRz
-OiBzZWUgWzVdLg0KPj4gICAtIHJlc2V0LW5hbWVzOiBzZWUgWzVdLg0KPj4gQEAgLTk3LDggKzk4
-LDkgQEAgRXhhbXBsZSAyOiBEU0kgcGFuZWwNCj4+ICAgCQkJI3NpemUtY2VsbHMgPSA8MD47DQo+
-PiAgIAkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItZHNpIjsNCj4+ICAgCQkJcmVnID0gPDB4NDAw
-MTZjMDAgMHg4MDA+Ow0KPj4gLQkJCWNsb2NrcyA9IDwmcmNjIDEgQ0xLX0Y0NjlfRFNJPiwgPCZj
-bGtfaHNlPjsNCj4+IC0JCQljbG9jay1uYW1lcyA9ICJyZWYiLCAicGNsayI7DQo+PiArCQkJY2xv
-Y2tzID0gPCZyY2MgMSBDTEtfRjQ2OV9EU0k+LCA8JnJjYyAxIENMS19MQ0Q+LA0KPj4gKwkJCQkg
-PCZjbGtfaHNlPjsNCj4+ICsJCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgInB4X2NsayIsICJyZWYi
-Ow0KPj4gICAJCQlyZXNldHMgPSA8JnJjYyBTVE0zMkY0X0FQQjJfUkVTRVQoRFNJKT47DQo+PiAg
-IAkJCXJlc2V0LW5hbWVzID0gImFwYiI7DQo+PiAgIA0KPj4gLS0gDQo+PiAxLjkuMQ0KPj4KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Oct 27, 2017 at 09:38:44AM -0500, Rob Herring wrote:
+> On Fri, Oct 27, 2017 at 02:15:02PM +0800, Kaihua Zhong wrote:
+> > From: Leo Yan <leo.yan@linaro.org>
+> > 
+> > Introduce a binding for the Hi3660 mailbox controller, the mailbox is
+> > used within application processor (AP), communication processor (CP),
+> > HIFI and MCU, etc.
+> > 
+> > Cc: John Stultz <john.stultz@linaro.org>
+> > Cc: Guodong Xu <guodong.xu@linaro.org>
+> > Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+> > Cc: Niranjan Yadla <nyadla@cadence.com>
+> > Cc: Raj Pawate <pawateb@cadence.com>
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  | 52 ++++++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt b/Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+> > new file mode 100644
+> > index 0000000..8a8d7e1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+> > @@ -0,0 +1,52 @@
+> > +Hisilicon Hi3660 Mailbox Driver
+> 
+> Bindings are for h/w, not drivers.
+
+Thanks for reviewing, Rob.
+
+Will fix for this and below comments.
+
+> > +
+> > +Hisilicon Hi3660 mailbox controller supports up to 32 channels.  Messages
+> > +are passed between processors, including application & communication
+> > +processors, MCU, HIFI, etc.  Each channel is unidirectional and accessed
+> > +by using MMIO registers; it supports maximum to 8 words message.
+> > +
+> > +Controller
+> > +----------
+> > +
+> > +Required properties:
+> > +- compatible:		: Shall be "hisilicon,hi3660-mbox"
+> > +- reg:			: Offset and length of the device's register set
+> > +- #mbox-cells:		: Must be 3
+> > +			  <&phandle channel dst_irq ack_irq>
+> > +			    phandle	: Label name of controller
+> > +			    channel	: Channel number
+> > +			    dst_irq	: Remote interrupt vector
+> > +			    ack_irq	: Local interrupt vector
+> > +
+> > +- interrupts:		: Contains the two IRQ lines for mailbox.
+> > +
+> > +Example:
+> > +
+> > +mailbox: mailbox@e896b000 {
+> > +	compatible = "hisilicon,hi3660-mbox";
+> > +	reg = <0x0 0xe896b000 0x0 0x1000>;
+> > +	interrupts = <0x0 0xc0 0x4>,
+> > +		     <0x0 0xc1 0x4>;
+> > +	#mbox-cells = <3>;
+> > +};
+> > +
+> > +Client
+> > +------
+> > +
+> > +Required properties:
+> > +- compatible		: See the client docs
+> > +- mboxes		: Standard property to specify a Mailbox (See ./mailbox.txt)
+> > +			  Cells must match 'mbox-cells' (See Controller docs above)
+> > +
+> > +Optional properties
+> > +- mbox-names		: Name given to channels seen in the 'mboxes' property.
+> > +
+> > +Example:
+> > +
+> > +stub_clock: stub_clock {
+> 
+> clock@e896b500
+> 
+> > +	compatible = "hisilicon,hi3660-stub-clk";
+> > +	reg = <0x0 0xe896b500 0x0 0x0100>;
+> > +	#clock-cells = <1>;
+> > +	mbox-names = "mbox-tx";
+> 
+> Don't need -names when there is only one. Plus "mbox-" part is 
+> redundant.
+> 
+> > +	mboxes = <&mailbox 13 3 0>;
+> > +};
+> > -- 
+> > 1.9.1
+> > 
