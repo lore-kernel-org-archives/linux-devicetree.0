@@ -1,34 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc: stm32: add support for
- diff channels
-Date: Fri, 27 Oct 2017 09:37:29 -0500
-Message-ID: <20171027143729.7oqcps43qvieko4r@rob-hp-laptop>
-References: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
- <1508923665-2274-2-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 3/9] dt-bindings: interrupt-controllers: add
+ compatible string for stm32h7
+Date: Fri, 27 Oct 2017 09:37:54 -0500
+Message-ID: <20171027143754.fct2m3kk5cjc2c7o@rob-hp-laptop>
+References: <1508951465-17152-1-git-send-email-ludovic.Barre@st.com>
+ <1508951465-17152-4-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1508923665-2274-2-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <1508951465-17152-4-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: jic23@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 25, 2017 at 11:27:43AM +0200, Fabrice Gasnier wrote:
-> STM32H7 ADC channels may be configured either as single-ended or
-> differential.
-> Add 'st,adc-diff-channels' property to support differential channels.
-> Differential channels are defined as a pair of positive and negative
-> inputs: vinp & vinn.
+On Wed, Oct 25, 2017 at 07:10:59PM +0200, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> This patch updates stm32-exti documentation with stm32h7-exti
+> compatible string.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 > ---
-> Changes in v2:
-> - Add differential channels example
-> - Add a note on mixed single-ended / differential channels
-> ---
->  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  .../devicetree/bindings/interrupt-controller/st,stm32-exti.txt        | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
