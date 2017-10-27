@@ -1,371 +1,143 @@
-From: Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] mailbox: Add support for Hi3660 mailbox
-Date: Fri, 27 Oct 2017 11:40:59 +0100
-Message-ID: <90d25374-cc83-7f75-eb38-766f0cdb9c53@arm.com>
-References: <1509084904-2505-1-git-send-email-zhongkaihua@huawei.com>
- <1509084904-2505-3-git-send-email-zhongkaihua@huawei.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH 0/4] TI Bluetooth serdev support
+Date: Fri, 27 Oct 2017 05:55:31 -0500
+Message-ID: <CAHCN7xKNWa2yrquvYg41CtTWa7aqETNx_08SPgsxv6QC4GK_Rw@mail.gmail.com>
+References: <20170405183005.20570-1-robh@kernel.org> <CAHCN7xJUxZm1qKAxT0kaK6qoDg+HWOJK7sTH-q9za4HJuUwe8Q@mail.gmail.com>
+ <20170430160430.rmyuo6sdrkrjxjg6@earth> <CAHCN7x+Mq=b6RN-ezU0400W=H=D7DR+Es1FHtT4GyozpVd8ALA@mail.gmail.com>
+ <CAL_JsqKBAPUPRtn+pEtz8B8pCrA=45RkEq6X_0i_HYoWsVmtyw@mail.gmail.com>
+ <20170509044837.oje2tfodytyuuuur@sapphire.tkos.co.il> <CAL_Jsq+wJfepPRbpL-_BWtD2Nyviy0q2UW9s7MrNr392W8D0cA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509084904-2505-3-git-send-email-zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+wJfepPRbpL-_BWtD2Nyviy0q2UW9s7MrNr392W8D0cA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Baruch Siach <baruch@tkos.co.il>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Gustavo Padovan <gustavo@padovan.org>, Marcel Holtmann <marcel@holtmann.org>, Sebastian Reichel <sre@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Eyal Reizer <eyalr@ti.com>, netdev <netdev@vger.kernel.org>, Satish Patel <satish.patel@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kaihua,
+On Tue, May 9, 2017 at 9:14 AM, Rob Herring <robh@kernel.org> wrote:
+> On Mon, May 8, 2017 at 11:48 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+>> Hi Rob,
+>>
+>> On Mon, May 08, 2017 at 04:12:16PM -0500, Rob Herring wrote:
+>>> On Fri, May 5, 2017 at 9:51 AM, Adam Ford <aford173@gmail.com> wrote:
+>>> > On Sun, Apr 30, 2017 at 11:04 AM, Sebastian Reichel <sre@kernel.org> wrote:
+>>> >> On Sun, Apr 30, 2017 at 10:14:20AM -0500, Adam Ford wrote:
+>>> >>> On Wed, Apr 5, 2017 at 1:30 PM, Rob Herring <robh@kernel.org> wrote:
+>>> >>> > This series adds serdev support to the HCI LL protocol used on TI BT
+>>> >>> > modules and enables support on HiKey board with with the WL1835 module.
+>>> >>> > With this the custom TI UIM daemon and btattach are no longer needed.
+>>> >>>
+>>> >>> Without UIM daemon, what instruction do you use to load the BT firmware?
+>>> >>>
+>>> >>> I was thinking 'hciattach' but I was having trouble.  I was hoping you
+>>> >>> might have some insight.
+>>> >>>
+>>> >>>  hciattach -t 30 -s 115200 /dev/ttymxc1 texas 3000000 flow  Just
+>>> >>> returns a timeout.
+>>> >>>
+>>> >>> I modified my i.MX6 device tree per the binding documentation and
+>>> >>> setup the regulators and enable GPIO pins.
+>>> >>
+>>> >> If you configured everything correctly no userspace interaction is
+>>> >> required. The driver should request the firmware automatically once
+>>> >> you power up the bluetooth device.
+>>> >>
+>>> >> Apart from DT changes make sure, that the following options are
+>>> >> enabled and check dmesg for any hints.
+>>> >>
+>>> >> CONFIG_SERIAL_DEV_BUS
+>>> >> CONFIG_SERIAL_DEV_CTRL_TTYPORT
+>>> >> CONFIG_BT_HCIUART
+>>> >> CONFIG_BT_HCIUART_LL
+>>> >
+>>> > I have enabled those flags, and I have updated my device tree.
+>>> > I am testing this on an OMAP3630 (DM3730) board with a WL1283.  I am
+>>> > getting a lot of timeout errors.  I tested this against the original
+>>> > implemention I had in pdata-quirks.c using the ti-st driver, uim & and
+>>> > the btwilink driver.
+>>> >
+>>> > I pulled in some of the newer patches to enable the wl1283-st, but I
+>>> > am obviously missing something.
+>>> >
+>>> > I   58.717651] Bluetooth: hci0: Reading TI version information failed
+>>> > (-110)
+>>> > [   58.724853] Bluetooth: hci0: download firmware failed, retrying...
+>>> > [   60.957641] Bluetooth: hci0 command 0x1001 tx timeout
+>>> > [   68.957641] Bluetooth: hci0: Reading TI version information failed
+>>> > (-110)
+>>> > [   68.964843] Bluetooth: hci0: download firmware failed, retrying...
+>>> > [   69.132171] Bluetooth: Unknown HCI packet type 06
+>>> > [   69.138244] Bluetooth: Unknown HCI packet type 0c
+>>> > [   69.143249] Bluetooth: Unknown HCI packet type 40
+>>> > [   69.148498] Bluetooth: Unknown HCI packet type 20
+>>> > [   69.153533] Bluetooth: Data length is too large
+>>> > [   69.158569] Bluetooth: Unknown HCI packet type a0
+>>> > [   69.163574] Bluetooth: Unknown HCI packet type 00
+>>> > [   69.168731] Bluetooth: Unknown HCI packet type 00
+>>> > [   69.173736] Bluetooth: Unknown HCI packet type 34
+>>> > [   69.178924] Bluetooth: Unknown HCI packet type 91
+>>> > [   71.197631] Bluetooth: hci0 command 0x1001 tx timeout
+>>> > [   79.197662] Bluetooth: hci0: Reading TI version information failed (-110)
+>>>
+>>> There's a bug in serdev_device_write(), so if you have that function
+>>> you need either the fix I sent or the patch to make
+>>> serdev_device_writebuf atomic again. Both are on the linux-serial
+>>> list, but not in any tree yet.
+>>
+>> You refer to the patches below, right?
+>>
+>>   [PATCH] tty: serdev: fix serdev_device_write return value,
+>>   http://www.spinics.net/lists/linux-serial/msg26117.html
+>>
+>>   [PATCH] serdev: Restore serdev_device_write_buf for atomic context,
+>>   http://www.spinics.net/lists/linux-serial/msg26113.html
+>
+> Yes, either one will fix the issue.
 
-On 27/10/17 07:15, Kaihua Zhong wrote:
-> Hi3660 mailbox controller is used to send message within multiple
-> processors, MCU, HIFI, etc.  It supports 32 mailbox channels and every
-> channel can only be used for single transferring direction.  Once the
-> channel is enabled, it needs to specify the destination interrupt and
-> acknowledge interrupt, these two interrupt vectors are used to create
-> the connection between the mailbox and interrupt controllers.
-> 
-> The application processor (or from point of view of kernel) is not the
-> only one master which can launch the data transferring, other
-> processors or MCU/DSP also can kick off the data transferring.  So this
-> driver implements a locking mechanism to support exclusive accessing.
-> 
-> The data transferring supports two modes, one is named as "automatic
-> acknowledge" mode so after send message the kernel doesn't need to wait
-> for acknowledge from remote and directly return; there have another mode
-> is to rely on handling interrupt for acknowledge.
-> 
-> This commit is for initial version driver, which only supports
-> "automatic acknowledge" mode to support CPU clock, which is the only
-> one consumer to use mailbox and has been verified.  Later may enhance
-> this driver for interrupt mode (e.g. for supporting HIFI).
-> 
-> Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Niranjan Yadla <nyadla-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Raj Pawate <pawateb-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Ruyi Wang <wangruyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Kevin Wang <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->   drivers/mailbox/Kconfig          |   8 +
->   drivers/mailbox/Makefile         |   2 +
->   drivers/mailbox/hi3660-mailbox.c | 331 +++++++++++++++++++++++++++++++++++++++
->   3 files changed, 341 insertions(+)
->   create mode 100644 drivers/mailbox/hi3660-mailbox.c
-> 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index c5731e5..4b5d6e9 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -108,6 +108,14 @@ config TI_MESSAGE_MANAGER
->   	  multiple processors within the SoC. Select this driver if your
->   	  platform has support for the hardware block.
->   
-> +config HI3660_MBOX
-> +	tristate "Hi3660 Mailbox"
-> +	depends on ARCH_HISI && OF
-> +	help
-> +	  An implementation of the hi3660 mailbox. It is used to send message
-> +	  between application processors and other processors/MCU/DSP. Select
-> +	  Y here if you want to use Hi3660 mailbox controller.
-> +
->   config HI6220_MBOX
->   	tristate "Hi6220 Mailbox"
->   	depends on ARCH_HISI
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index d54e412..7d1bd51 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -26,6 +26,8 @@ obj-$(CONFIG_TI_MESSAGE_MANAGER) += ti-msgmgr.o
->   
->   obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
->   
-> +obj-$(CONFIG_HI3660_MBOX)	+= hi3660-mailbox.o
-> +
->   obj-$(CONFIG_HI6220_MBOX)	+= hi6220-mailbox.o
->   
->   obj-$(CONFIG_BCM_PDC_MBOX)	+= bcm-pdc-mailbox.o
-> diff --git a/drivers/mailbox/hi3660-mailbox.c b/drivers/mailbox/hi3660-mailbox.c
-> new file mode 100644
-> index 0000000..67df8f8
-> --- /dev/null
-> +++ b/drivers/mailbox/hi3660-mailbox.c
-> @@ -0,0 +1,331 @@
-> +/*
-> + * Hisilicon's Hi3660 mailbox controller driver
-> + *
-> + * Copyright (c) 2017 Hisilicon Limited.
-> + * Copyright (c) 2017 Linaro Limited.
-> + *
-> + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation, version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include "mailbox.h"
-> +
-> +#define MBOX_CHAN_MAX			32
-> +
-> +#define MBOX_RX				(0x0)
-> +#define MBOX_TX				(0x1)
-> +
-> +#define MBOX_BASE(mbox, ch)		((mbox)->base + ((ch) * 0x40))
-> +#define MBOX_SRC_REG			(0x00)
-> +#define MBOX_DST_REG			(0x04)
-> +#define MBOX_DCLR_REG			(0x08)
-> +#define MBOX_DSTAT_REG			(0x0c)
-> +#define MBOX_MODE_REG			(0x10)
-> +#define MBOX_IMASK_REG			(0x14)
-> +#define MBOX_ICLR_REG			(0x18)
-> +#define MBOX_SEND_REG			(0x1c)
-> +#define MBOX_DATA_REG			(0x20)
-> +
-> +#define MBOX_IPC_LOCK_REG		(0xa00)
-> +#define MBOX_IPC_UNLOCK			(0x1acce551)
-> +
-> +#define MBOX_AUTOMATIC_ACK		(1)
-> +
-> +#define MBOX_STATE_IDLE			BIT(4)
-> +#define MBOX_STATE_ACK			BIT(7)
-> +
-> +#define MBOX_MSG_LEN			8
-> +
-> +/**
-> + * Hi3660 mailbox channel device data
-> + *
-> + * A channel can be used for TX or RX, it can trigger remote
-> + * processor interrupt to notify remote processor and can receive
-> + * interrupt if has incoming message.
-> + *
-> + * @dst_irq:	Interrupt vector for remote processor
-> + * @ack_irq:	Interrupt vector for local processor
-> + */
-> +struct hi3660_mbox_dev {
-> +	unsigned int dst_irq;
-> +	unsigned int ack_irq;
-> +};
-> +
-> +/**
-> + * Hi3660 mailbox controller data
-> + *
-> + * Mailbox controller includes 32 channels and can allocate
-> + * channel for message transferring.
-> + *
-> + * @dev:	Device to which it is attached
-> + * @base:	Base address of the register mapping region
-> + * @chan:	Representation of channels in mailbox controller
-> + * @mdev:	Representation of channel device data
-> + * @controller:	Representation of a communication channel controller
-> + */
-> +struct hi3660_mbox {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	struct mbox_chan chan[MBOX_CHAN_MAX];
-> +	struct hi3660_mbox_dev mdev[MBOX_CHAN_MAX];
-> +	struct mbox_controller controller;
-> +};
-> +
-> +static inline struct hi3660_mbox *to_hi3660_mbox(struct mbox_chan *chan)
-> +{
-> +	return container_of(chan->mbox, struct hi3660_mbox, controller);
-> +}
-> +
-> +static int hi3660_mbox_check_state(struct mbox_chan *chan)
-> +{
-> +	unsigned long ch = (unsigned long)chan->con_priv;
-> +	struct hi3660_mbox *mbox = to_hi3660_mbox(chan);
-> +	struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
-> +	void __iomem *base = MBOX_BASE(mbox, ch);
-> +	unsigned long val;
-> +	unsigned int state, ret;
-> +
-> +	/* Mailbox is idle so directly bail out */
-> +	state = readl_relaxed(base + MBOX_MODE_REG);
-> +	if (state & MBOX_STATE_IDLE)
-> +		return 0;
-> +
-> +	/* Wait for acknowledge from remote */
-> +	ret = readx_poll_timeout_atomic(readl_relaxed, base + MBOX_MODE_REG,
-> +			val, (val & MBOX_STATE_ACK), 1000, 300000);
-> +	if (ret) {
-> +		dev_err(mbox->dev, "%s: timeout for receiving ack\n", __func__);
-> +		return ret;
-> +	}
-> +
-> +	/* Ensure channel is released */
-> +	writel_relaxed(0xffffffff, base + MBOX_IMASK_REG);
-> +	writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
-> +	__asm__ volatile ("sev");
+I am finally getting back to testing these on my DM3730 board, since
+it appears most of the patches appear upstream.  I am having trouble
+remembering how to load this.
 
-There is an existing sev() macro for this.
+# modprobe hci_uart
+[   31.639892] Bluetooth: Core ver 2.22
+[   31.643890] NET: Registered protocol family 31
+[   31.648559] Bluetooth: HCI device and connection manager initialized
+[   31.655975] Bluetooth: HCI socket layer initialized
+[   31.661315] Bluetooth: L2CAP socket layer initialized
+[   31.667175] Bluetooth: SCO socket layer initialized
+[   31.700408] Bluetooth: HCI UART driver ver 2.3
+[   31.705108] Bluetooth: HCI UART protocol H4 registered
+[   31.710632] Bluetooth: HCI UART protocol BCSP registered
+[   31.716217] Bluetooth: HCI UART protocol Three-wire (H5) registered
+#
 
-> +	return 0;
-> +}
-> +
-> +static int hi3660_mbox_unlock(struct mbox_chan *chan)
-> +{
-> +	struct hi3660_mbox *mbox = to_hi3660_mbox(chan);
-> +	unsigned int val, retry = 3;
-> +
-> +	do {
-> +		writel_relaxed(MBOX_IPC_UNLOCK, mbox->base + MBOX_IPC_LOCK_REG);
-> +
-> +		val = readl_relaxed(mbox->base + MBOX_IPC_LOCK_REG);
-> +		if (!val)
-> +			break;
-> +
-> +		udelay(10);
-> +	} while (retry--);
-> +
-> +	return (!val) ? 0 : -ETIMEDOUT;
-> +}
-> +
-> +static int hi3660_mbox_acquire_channel(struct mbox_chan *chan)
-> +{
-> +	unsigned long ch = (unsigned long)chan->con_priv;
-> +	struct hi3660_mbox *mbox = to_hi3660_mbox(chan);
-> +	struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
-> +	void __iomem *base = MBOX_BASE(mbox, ch);
-> +	unsigned int val = 0, retry = 10;
-> +
-> +	/*
-> +	 * Hardware locking for exclusive accessing within CPUs
-> +	 * without exclusive monitor mechanism.
-> +	 */
-> +	do {
-> +		val = readl_relaxed(base + MBOX_MODE_REG);
-> +		if (!(val & MBOX_STATE_IDLE)) {
-> +			__asm__ volatile ("wfe");
-> +			continue;
+Unfortunately, any attempt to access the HCI device (ie hciconfig up
+hci0) fail.
 
-So this is going to "wfe" when retry == 0 and the continue statement 
-will take us out of the loop?
+I have those configs enabled:
+CONFIG_SERIAL_DEV_BUS
+CONFIG_SERIAL_DEV_CTRL_TTYPORT
+CONFIG_BT_HCIUART
+CONFIG_BT_HCIUART_LL
 
-Also, there is a wfe() macro for arm and arm64 which could be used here.
+I can see that sysfs shows new files appear:
 
-> +		}
-> +
-> +		/* Check if channel has be acquired */
-> +		writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
-> +		val = readl_relaxed(base + MBOX_SRC_REG) & BIT(mdev->ack_irq);
-> +		if (val)
-> +			break;
-> +
-> +	} while (retry--);
-> +
-> +	return (val) ? 0 : -ETIMEDOUT;
+/sys/class/bluetooth
+/sys/firmware/devicetree/base/ocp@68000000/serial@4806c000/bluetooth
+/sys/firmware/devicetree/base/ocp@68000000/serial@4806c000/bluetooth/compatible
+/sys/firmware/devicetree/base/ocp@68000000/serial@4806c000/bluetooth/enable-gpios
+/sys/firmware/devicetree/base/ocp@68000000/serial@4806c000/bluetooth/name
 
-If timeout occurs while waiting for the MBOX to be idle, val will hold 
-the last value from MBOX_MODE_REG, and if this can be different than 0, 
-this will hide the fact it timed out.
+(and more)
+So it appears to me like it has loaded, and I don't see any errors during load.
 
-Maybe the following would be more appropriate:
+Since this worked under pdata quirks and the older shared transport
+driver and UIM, I'm sure it's software and not hardware.  I just can't
+figure out what I am missing.
 
-return (retry >= 0) ? 0 : -ETIMEDOUT;
+thanks
 
-Also, your do {} while loops for the timeouts falsely give the 
-impression we do "retry" attempts when we actually do "retry + 1" 
-attempts (but I guess it doesn't make a big difference from the 
-functional point of view).
-
-> +}
-> +
-> +static int hi3660_mbox_send(struct mbox_chan *chan, u32 *msg)
-> +{
-> +	unsigned long ch = (unsigned long)chan->con_priv;
-> +	struct hi3660_mbox *mbox = to_hi3660_mbox(chan);
-> +	struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
-> +	void __iomem *base = MBOX_BASE(mbox, ch);
-> +	unsigned int i;
-> +
-> +	/* Clear mask for destination interrupt */
-> +	writel_relaxed(~BIT(mdev->dst_irq), base + MBOX_IMASK_REG);
-> +
-> +	/* Config destination for interrupt vector */
-> +	writel_relaxed(BIT(mdev->dst_irq), base + MBOX_DST_REG);
-> +
-> +	/* Automatic acknowledge mode */
-> +	writel_relaxed(MBOX_AUTOMATIC_ACK, base + MBOX_MODE_REG);
-> +
-> +	/* Fill message data */
-> +	for (i = 0; i < MBOX_MSG_LEN; i++)
-> +		writel_relaxed(msg[i], base + MBOX_DATA_REG + i * 4);
-> +
-> +	/* Trigger data transferring */
-> +	writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SEND_REG);
-> +	return 0;
-> +}
-> +
-> +static int hi3660_mbox_send_data(struct mbox_chan *chan, void *msg)
-> +{
-> +	struct hi3660_mbox *mbox = to_hi3660_mbox(chan);
-> +	int err;
-> +
-> +	err = hi3660_mbox_check_state(chan);
-> +	if (err) {
-> +		dev_err(mbox->dev, "checking state failed\n");
-> +		return err;
-> +	}
-> +
-> +	err = hi3660_mbox_unlock(chan);
-> +	if (err) {
-> +		dev_err(mbox->dev, "unlocking mailbox failed\n");
-> +		return err;
-> +	}
-> +
-> +	err = hi3660_mbox_acquire_channel(chan);
-> +	if (err) {
-> +		dev_err(mbox->dev, "acquiring channel failed\n");
-> +		return err;
-> +	}
-> +
-> +	return hi3660_mbox_send(chan, msg);
-> +}
-> +
-> +static struct mbox_chan_ops hi3660_mbox_ops = {
-> +	.send_data    = hi3660_mbox_send_data,
-> +};
-> +
-> +static struct mbox_chan *hi3660_mbox_xlate(struct mbox_controller *controller,
-> +					   const struct of_phandle_args *spec)
-> +{
-> +	struct hi3660_mbox *mbox = dev_get_drvdata(controller->dev);
-
-nit:
-In to_hi3660_mbox, you use the fact that the mbox_controller structure 
-is part of hi3660_mbox and use container of to retrieve hi3660_mbox.
-
-I think it would be nice to be consistent about this, either use 
-container_of or dev drvdata, but not both.
-
-Cheers,
-
--- 
-Julien Thierry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+adam
+>
+> Rob
