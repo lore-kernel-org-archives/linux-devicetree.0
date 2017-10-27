@@ -1,58 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/5] Documentation: Add device tree binding for
- Goldfish FB driver
-Date: Thu, 26 Oct 2017 22:10:56 -0500
-Message-ID: <20171027031056.scmky5n5vbbnldmc@rob-hp-laptop>
-References: <1508510055-6167-1-git-send-email-aleksandar.markovic@rt-rk.com>
- <1508510055-6167-4-git-send-email-aleksandar.markovic@rt-rk.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] display: panel: Add Tianma tm070rvhg71 display support
+ (800x480)
+Date: Thu, 26 Oct 2017 22:13:36 -0500
+Message-ID: <20171027031336.psu7hn27w2xajyux@rob-hp-laptop>
+References: <1508537403-878-1-git-send-email-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1508510055-6167-4-git-send-email-aleksandar.markovic@rt-rk.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, Raghu Gandham <raghu.gandham@mips.com>, Aleksandar Markovic <aleksandar.markovic@mips.com>, devicetree@vger.kernel.org, Goran Ferenc <goran.ferenc@mips.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>, Petar Jovanovic <petar.jovanovic@mips.com>, Miodrag Dinic <miodrag.dinic@mips.com>, James Hogan <james.hogan@mips.com>, Douglas Leung <douglas.leung@mips.com>
+In-Reply-To: <1508537403-878-1-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjAsIDIwMTcgYXQgMDQ6MzM6MzZQTSArMDIwMCwgQWxla3NhbmRhciBNYXJr
-b3ZpYyB3cm90ZToKPiBGcm9tOiBBbGVrc2FuZGFyIE1hcmtvdmljIDxhbGVrc2FuZGFyLm1hcmtv
-dmljQG1pcHMuY29tPgo+IAo+IEFkZCBkb2N1bWVudGF0aW9uIGZvciBEVCBiaW5kaW5nIG9mIEdv
-bGRmaXNoIEZCIGRyaXZlci4gVGhlIGNvbXBhdGlibGUKPiBzdHJpbmcgdXNlZCBieSBPUyBmb3Ig
-YmluZGluZyB0aGUgZHJpdmVyIGlzICJnb29nbGUsZ29sZGZpc2gtZmIiLgo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IE1pb2RyYWcgRGluaWMgPG1pb2RyYWcuZGluaWNAbWlwcy5jb20+Cj4gU2lnbmVkLW9m
-Zi1ieTogR29yYW4gRmVyZW5jIDxnb3Jhbi5mZXJlbmNAbWlwcy5jb20+Cj4gU2lnbmVkLW9mZi1i
-eTogQWxla3NhbmRhciBNYXJrb3ZpYyA8YWxla3NhbmRhci5tYXJrb3ZpY0BtaXBzLmNvbT4KPiAt
-LS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9nb29nbGUsZ29sZGZpc2gtZmIu
-dHh0IHwgMTggKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRp
-b25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9nb29nbGUsZ29sZGZpc2gtZmIudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2dvb2dsZSxnb2xkZmlzaC1m
-Yi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9nb29nbGUs
-Z29sZGZpc2gtZmIudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi45
-Y2UwNjE1Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2dvb2dsZSxnb2xkZmlzaC1mYi50eHQKPiBAQCAtMCwwICsxLDE4IEBA
-Cj4gK0FuZHJvaWQgR29sZGZpc2ggZnJhbWVidWZmZXIKPiArCj4gK0FuZHJvaWQgR29sZGZpc2gg
-ZnJhbWVidWZmZXIgZGV2aWNlIHVzZWQgYnkgQW5kcm9pZCBlbXVsYXRvci4KPiArCj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgY29udGFpbiAiZ29v
-Z2xlLGdvbGRmaXNoLWZiIgo+ICstIHJlZyAgICAgICAgOiA8cmVnaXN0ZXJzIG1hcHBpbmc+Cj4g
-Ky0gaW50ZXJydXB0cyA6IDxpbnRlcnJ1cHQgbWFwcGluZz4KPiArCj4gK0V4YW1wbGU6Cj4gKwo+
-ICsJZ29sZGZpc2hfZmJAMWYwMDgwMDAgewoKVXNlIGdlbmVyaWMgbm9kZSBuYW1lczoKCmRpc3Bs
-YXktY29udHJvbGxlckAuLi4KCldpdGggdGhhdCwKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
-aEBrZXJuZWwub3JnPgoKCj4gKwkJY29tcGF0aWJsZSA9ICJnb29nbGUsZ29sZGZpc2gtZmIiOwo+
-ICsJCWludGVycnVwdHMgPSA8MHgxMD47Cj4gKwkJcmVnID0gPDB4MWYwMDgwMDAgMHgwIDB4MTAw
-PjsKCkFuIGFkZHJlc3Mgb2Ygb25lIGNlbGwgYW5kIHNpemUgb2YgMiBjZWxscyBpcyBzdHJhbmdl
-Li4uCgo+ICsJCWNvbXBhdGlibGUgPSAiZ29vZ2xlLGdvbGRmaXNoLWZiIjsKPiArCX07Cj4gLS0g
-Cj4gMi43LjQKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Sat, Oct 21, 2017 at 12:10:03AM +0200, Lukasz Majewski wrote:
+> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+> ---
+>  .../bindings/display/panel/tianma,tm070rvhg71.txt  |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>  2 files changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
+> new file mode 100644
+> index 0000000..b84217f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
+> @@ -0,0 +1,7 @@
+> +Tianma Micro-electronics TM070RVHG71 7.0" WXGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "tianma,tm070rvhg71
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+
+No supplies? Still need to list power-supply here if so, so it is clear 
+that this display has a single supply (or you need to list multiple ones 
+if not).
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
