@@ -1,86 +1,84 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 10/10] arm64: allwinner: a64: add simplefb
- for A64 SoC
-Date: Fri, 27 Oct 2017 23:06:58 +0800
-Message-ID: <20171027150658.18509-11-icenowy@aosc.io>
-References: <20171027150658.18509-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v9 06/10] arm64: dts: allwinner: Restore EMAC changes
+Date: Fri, 27 Oct 2017 17:11:14 +0200
+Message-ID: <20171027151114.ax2yhf75lbho2js5@flea>
+References: <20171024175714.15840-1-clabbe.montjoie@gmail.com>
+ <20171024175714.15840-7-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZ4YZXHQKGQEYNVLBOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171027150658.18509-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xamingy2657ieqdv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171024175714.15840-7-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The A64 SoC features two display pipelines, one has a LCD output, the
-other has a HDMI output.
 
-Add support for simplefb for these pipelines on A64 SoC.
+--xamingy2657ieqdv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 31 +++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+On Tue, Oct 24, 2017 at 07:57:10PM +0200, Corentin Labbe wrote:
+> The original dwmac-sun8i DT bindings have some issue on how to handle
+> integrated PHY and was reverted in last RC of 4.13.
+> But now we have a solution so we need to get back that was reverted.
+>=20
+> This patch restore arm64 DT about dwmac-sun8i
+> This reverts commit 87e1f5e8bb4b ("arm64: dts: allwinner: Revert EMAC cha=
+nges")
+>=20
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts   | 16 ++++++++++++++=
+++
+>  .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts    | 15 +++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts  | 17 ++++++++++++++=
++++
+>  .../dts/allwinner/sun50i-a64-sopine-baseboard.dts    | 16 ++++++++++++++=
+++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi        | 20 ++++++++++++++=
+++++++
+>  .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts     | 17 ++++++++++++++=
++++
+>  .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts    | 17 ++++++++++++++=
++++
+>  .../boot/dts/allwinner/sun50i-h5-orangepi-prime.dts  | 17 ++++++++++++++=
++++
+>  8 files changed, 135 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 03a46da0f0fa..65ffd94441a1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -42,9 +42,11 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
-+#include <dt-bindings/clock/sun8i-de2.h>
- #include <dt-bindings/clock/sun50i-a64-ccu.h>
- #include <dt-bindings/clock/sun8i-r-ccu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/sun8i-de2.h>
- #include <dt-bindings/reset/sun50i-a64-ccu.h>
- 
- / {
-@@ -52,6 +54,35 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	chosen {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		framebuffer-lcd {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "mixer0-lcd0";
-+			clocks = <&display_clocks CLK_BUS_MIXER0>,
-+				 <&ccu CLK_BUS_TCON0>, <&ccu CLK_BUS_TCON0>,
-+				 <&display_clocks CLK_MIXER0>,
-+				 <&ccu CLK_TCON0>;
-+			status = "disabled";
-+		};
-+
-+		framebuffer-hdmi {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "mixer1-lcd1-hdmi";
-+			clocks = <&display_clocks CLK_BUS_MIXER1>,
-+				 <&ccu CLK_BUS_TCON1>, <&ccu CLK_BUS_HDMI>,
-+				 <&display_clocks CLK_MIXER1>,
-+				 <&ccu CLK_TCON1>, <&ccu CLK_HDMI>,
-+				 <&ccu CLK_HDMI_DDC>;
-+			status = "disabled";
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.13.6
+Can you split the changes between the A64 and the H5? It's going to be
+difficult to merge otherwise.
+
+(You also forgot to add Florian's Acked-by on your whole serie).
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--xamingy2657ieqdv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZ80ySAAoJEBx+YmzsjxAg90EP/3vi3XRH80OaUyXMehF8q71J
+6FSZo9Heqby0iPuvdjdkwijNy0UWxgYdtdFbRkmDiyb52YcMnPQitJ4khaOCxnkt
+mVdu7LAqQAwio7t4XKvnrXXniT9wG0O/WszKbzy0rhZI7NEdS5Fj6GccqCF9n23L
+Lohy5OL/jz7AxtkJf1juJuYilNHixTRLfq9aSjt9FVrE3KPMvuqy4nVxU1kwM76w
+qjdO91Kw3Kl6V1l6hvcKHA/I+WieoGwJprNRMVcA2ybI58TnBVGjeWw1yH7nD+ES
+gTrvjHUTpDtTxQdwzogFDtvDxezHXxYKho+H2ruif2BYgrt8AAwiGHiPxuZN0cDe
+wJ4AdgZJmnop+QVlpKCl/iBlpVRrwFCCApkT1Bav7xpn66k3g3Ae2aL/bozvdAtP
+UqXG6+K/bDSZo+/I+xTJt4z9+llYjHoFkvmEC6Fj9MT1uhIoWAXH8OCETGU4ss75
+qLxWOjwnXtUtS6F4mOSDU0MGylD0tH/6tPkeSD4KkNzg53Z0E9tdA8S9xMl5Z/tZ
+8Nwbyzvgi9vPovBDx0Mka/l0GaNTdYf9LaJ4aHjc+7K2Ym1w/xX/lvTntSFRjmUe
+hnZ0WW/QG46Kah6k34h6Osu095iiYJUSOlAh04Cc0tk6EnVcIpNNRM6M+jcFS9p7
+GJ4f9QcbtTnXos4+UpoA
+=5gK+
+-----END PGP SIGNATURE-----
+
+--xamingy2657ieqdv--
