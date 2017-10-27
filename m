@@ -1,7 +1,7 @@
 From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 4/6] regulator: pfuze100: add fsl,pmic-stby-poweroff property
-Date: Fri, 27 Oct 2017 11:48:46 +0200
-Message-ID: <20171027094848.28365-5-o.rempel@pengutronix.de>
+Subject: [PATCH v6 6/6] ARM: dts: imx6: RIoTboard provide standby on power off option
+Date: Fri, 27 Oct 2017 11:48:48 +0200
+Message-ID: <20171027094848.28365-7-o.rempel@pengutronix.de>
 References: <20171027094848.28365-1-o.rempel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171027094848.28365-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,32 +10,41 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the new optional "fsl,pmic-stby-poweroff" property.
+This board, as well as some other boards with i.MX6 and a PMIC, uses a
+"PMIC_STBY_REQ" line to notify the PMIC about a state change.
+The PMIC is programmed for a specific state change before triggering the
+line.
+In this case, PMIC_STBY_REQ can be used for stand by, sleep
+and power off modes.
 
 Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/regulator/pfuze100.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6dl-riotboard.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index 444c47831a40..197f1a52e960 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -4,6 +4,13 @@ Required properties:
- - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
- - reg: I2C slave address
+diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
+index 275c6c05219d..574f6b261ecd 100644
+--- a/arch/arm/boot/dts/imx6dl-riotboard.dts
++++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+@@ -90,6 +90,10 @@
+ 	status = "okay";
+ };
  
-+Optional properties:
-+- fsl,pmic-stby-poweroff: if present, configure the PMIC to shutdown all
-+  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
-+  Use this option if the SoC should be powered off by external power
-+  management IC (PMIC) on PMIC_STBY_REQ signal.
-+  As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
++&clks {
++	fsl,pmic-stby-poweroff;
++};
 +
- Required child node:
- - regulators: This is the list of child nodes that specify the regulator
-   initialization data for defined regulators. Please refer to below doc
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+@@ -170,6 +174,7 @@
+ 		reg = <0x08>;
+ 		interrupt-parent = <&gpio5>;
+ 		interrupts = <16 8>;
++		fsl,pmic-stby-poweroff;
+ 
+ 		regulators {
+ 			reg_vddcore: sw1ab {				/* VDDARM_IN */
 -- 
 2.11.0
 
