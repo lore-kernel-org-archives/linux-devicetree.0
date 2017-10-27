@@ -1,38 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: display: stm32: add a 2nd endpoint
-Date: Fri, 27 Oct 2017 09:38:09 -0500
-Message-ID: <20171027143809.ughycmycxmsrwwyp@rob-hp-laptop>
-References: <1509018489-19641-1-git-send-email-philippe.cornu@st.com>
- <1509018489-19641-2-git-send-email-philippe.cornu@st.com>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+ re-enabling PWM and switching backlight power on
+Date: Fri, 27 Oct 2017 09:38:11 -0500
+Message-ID: <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+ <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1509018489-19641-2-git-send-email-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe Cornu <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, Ludovic Barre <ludovic.barre@st.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMjYsIDIwMTcgYXQgMDE6NDg6MDhQTSArMDIwMCwgUGhpbGlwcGUgQ29ybnUg
-d3JvdGU6Cj4gbHRkYyBjYW4gaGF2ZSB1cCB0byAyIGVuZHBvaW50czoKPiAgLSBkcGkgZXh0ZXJu
-YWwgZ3Bpb3M6IGZvciByZ2IgcGFuZWxzIG9yIGV4dGVybmFsIGJyaWRnZSBJQ3MuCj4gIC0gZHBp
-IGludGVybmFsIGlvczogY29ubmVjdGVkIGludGVybmFsbHkgdG8gZHNpLgo+IAo+IE5vdGU6IFJl
-ZmVyIHRvIHRoZSByZWZlcmVuY2UgbWFudWFsIHRvIGtub3cgaWYgdGhlIGRzaSBpcwo+IHByZXNl
-bnQgb24geW91ciBkZXZpY2UuCj4gCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBo
-aWxpcHBlLmNvcm51QHN0LmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQgfCA2ICsrKysrLQo+ICAxIGZpbGUgY2hh
-bmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpBY2tlZC1ieTogUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waﬂmann wrote:
+> When switching the backlight on, the LCD may need some time to adjust
+> to the configured PWM duty cycle. Add a configurable delay between
+> configuring the PWM and enabling the backlight regulator to account
+> for this.
+> 
+> Signed-off-by: Lothar Waﬂmann <LW@KARO-electronics.de>
+> ---
+>  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
+>  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
+>  2 files changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> index 764db86..95594c3 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> @@ -17,6 +17,10 @@ Optional properties:
+>                 "pwms" property (see PWM binding[0])
+>    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+>                    and disables the backlight (see GPIO binding[1])
+> +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
+> +		  and switching PWM on. This may be required to eliminate
+> +		  flicker when switching the PWM on after it has been
+> +		  disabled.
+
+The subject talks about turning on the backlight regulator, but this 
+only talks about the PWM.
+
+>  
+>  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+>  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
