@@ -1,61 +1,46 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH net-next 2/2] bindings: net: stmmac: Add documentation for
- TSN parameters
-Date: Fri, 27 Oct 2017 14:50:05 +0100
-Message-ID: <b4c76843-761c-4a51-f8c5-0e058cfd9929@synopsys.com>
-References: <cover.1508938927.git.joabreu@synopsys.com>
- <ef1d220cf792c74ae278e0200ca4763f9ab62d3e.1508938927.git.joabreu@synopsys.com>
- <c2a4a435-0b0b-4fa3-a69a-280f6d0c6427@gmail.com>
- <23152048-09fe-2950-e1ff-8cf90ca3f465@synopsys.com>
- <20171026090308.GD20299@lunn.ch>
- <867d6d43-9df7-4097-db5a-f2049236394f@synopsys.com>
- <20171026215629.GB8489@lunn.ch>
- <e14b8b79-465b-9cf3-4ecc-52de4781d9c0@synopsys.com>
- <de8781f7-39b1-8ba9-d0d0-ba89834697d3@st.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v9 3/7] mailbox: qcom: Move the apcs struct into a
+ separate header
+Date: Fri, 27 Oct 2017 17:20:58 +0300
+Message-ID: <5bad4c4b-362b-ba9f-3072-1cced7a004dd@linaro.org>
+References: <20170921164940.20343-1-georgi.djakov@linaro.org>
+ <20170921164940.20343-4-georgi.djakov@linaro.org>
+ <20171026042811.GL1575@tuxbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <de8781f7-39b1-8ba9-d0d0-ba89834697d3-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171026042811.GL1575@tuxbook>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, sboyd@codeaurora.org
+Cc: jassisinghbrar@gmail.com, robh+dt@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peppe,
+Hi Bjorn,
 
-On 27-10-2017 13:29, Giuseppe CAVALLARO wrote:
-> Hello
->
-> On 10/27/2017 11:05 AM, Jose Abreu wrote:
->> I think we should take advantage of the fact that this is working
->> and ready to be merged. Its just HW configuration but maybe it
->> can serve as momentum for other drivers to also integrate this?
->
-> Let me propose to have it now in the next-next.
->
-> This support is for dwmac 5.x so no disturb for the common
-> driver APIs and there is no risk to have regressions, IMO.
->
-> IIUC, you already tested it on a real environment that
-> sounds to be very good progress.
+Thanks for reviewing!
 
-Ok, I will drop this documentation patch and the DT parsing and
-send a new version.
+On 10/26/2017 07:28 AM, Bjorn Andersson wrote:
+> On Thu 21 Sep 09:49 PDT 2017, Georgi Djakov wrote:
+> 
+>> Move the structure shared by the APCS IPC device and its subdevices
+>> into a separate header file.
+>>
+> 
+> As you're creating the apcs regmap with devm_regmap_init_mmio() you can
+> just call dev_get_regmap(dev->parent) in your child to get the handle.
 
-Best Regards,
-Jose Miguel Abreu
+Ok, thanks!
 
->
-> Regards
-> Peppe
->
->> Best Regards,
->> Jose Miguel Abreu
->
->
+> 
+> But I would prefer that you just add the clock code to the existing
+> driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This will require an ack from Stephen, and i got the impression that he
+prefers a separate clk driver [1].
+
+Stephen, are you ok with registering the clocks from the apcs mailbox
+driver?
+
+[1] https://lkml.org/lkml/2017/6/26/750
