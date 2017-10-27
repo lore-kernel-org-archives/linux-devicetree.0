@@ -1,123 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 02/10] dt-bindings: net: dwmac-sun8i: update
- documentation about integrated PHY
-Date: Fri, 27 Oct 2017 09:37:10 -0500
-Message-ID: <20171027125621.mlcapjhttyw2j5sy@rob-hp-laptop>
-References: <20171024175714.15840-1-clabbe.montjoie@gmail.com>
- <20171024175714.15840-3-clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: timer: Add andestech atcpit100 timer
+ binding doc
+Date: Fri, 27 Oct 2017 09:37:22 -0500
+Message-ID: <20171027143722.ksokppzvhdrumbnk@rob-hp-laptop>
+References: <1508908333-1809-1-git-send-email-rickchen36@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171024175714.15840-3-clabbe.montjoie@gmail.com>
+In-Reply-To: <1508908333-1809-1-git-send-email-rickchen36@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: rick <rickchen36@gmail.com>
+Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rick <rick@andestech.com>, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 07:57:06PM +0200, Corentin Labbe wrote:
-> This patch add documentation about the MDIO switch used on sun8i-h3-emac
-> for integrated PHY.
-> 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+On Wed, Oct 25, 2017 at 01:12:13PM +0800, rick wrote:
+
+Commit msg?
+
+> Signed-off-by: rick <rickchen36@gmail.com>
+> Signed-off-by: rick <rick@andestech.com>
+
+Need a full name.
+
+> Signed-off-by: Greentime Hu <green.hu@gmail.com>
+
+S-o-b should be in chronological order of who touched the code. And the 
+sender should be last.
+ 
 > ---
->  .../devicetree/bindings/net/dwmac-sun8i.txt        | 145 +++++++++++++++++++--
->  1 file changed, 133 insertions(+), 12 deletions(-)
+>  .../bindings/timer/andestech,atcpit100-timer.txt   |   31 ++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> index 725f3b187886..2600ce9ad3cc 100644
-> --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> @@ -4,18 +4,18 @@ This device is a platform glue layer for stmmac.
->  Please see stmmac.txt for the other unchanged properties.
->  
->  Required properties:
-> -- compatible: should be one of the following string:
-> +- compatible: must be one of the following string:
->  		"allwinner,sun8i-a83t-emac"
->  		"allwinner,sun8i-h3-emac"
->  		"allwinner,sun8i-v3s-emac"
->  		"allwinner,sun50i-a64-emac"
->  - reg: address and length of the register for the device.
->  - interrupts: interrupt for the device
-> -- interrupt-names: should be "macirq"
-> +- interrupt-names: must be "macirq"
->  - clocks: A phandle to the reference clock for this device
-> -- clock-names: should be "stmmaceth"
-> +- clock-names: must be "stmmaceth"
->  - resets: A phandle to the reset control for this device
-> -- reset-names: should be "stmmaceth"
-> +- reset-names: must be "stmmaceth"
->  - phy-mode: See ethernet.txt
->  - phy-handle: See ethernet.txt
->  - #address-cells: shall be 1
-> @@ -39,23 +39,42 @@ Optional properties for the following compatibles:
->  - allwinner,leds-active-low: EPHY LEDs are active low
->  
->  Required child node of emac:
-> -- mdio bus node: should be named mdio
-> +- mdio bus node: with compatible "snps,dwmac-mdio"
-
-It should still be named mdio.
-
->  
->  Required properties of the mdio node:
->  - #address-cells: shall be 1
->  - #size-cells: shall be 0
->  
-> -The device node referenced by "phy" or "phy-handle" should be a child node
-> +The device node referenced by "phy" or "phy-handle" must be a child node
->  of the mdio node. See phy.txt for the generic PHY bindings.
->  
-> -Required properties of the phy node with the following compatibles:
-> +The following compatibles require that the emac node have a mdio-mux child
-> +node called "mdio-mux":
-> +  - "allwinner,sun8i-h3-emac"
-> +  - "allwinner,sun8i-v3s-emac":
-> +Required properties for the mdio-mux node:
-> +  - compatible = "allwinner,sun8i-h3-mdio-mux"
-> +  - mdio-parent-bus: a phandle to EMAC mdio
-> +  - one child mdio for the integrated mdio with the compatible
-> +    "allwinner,sun8i-h3-mdio-internal"
-> +  - one child mdio for the external mdio if present (V3s have none)
-> +Required properties for the mdio-mux children node:
-> +  - reg: 1 for internal MDIO bus, 2 for external MDIO bus
+> diff --git a/Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt b/Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
+> new file mode 100644
+> index 0000000..a87278a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
+> @@ -0,0 +1,31 @@
+> +Andestech ATCPIT100 timer
+> +------------------------------------------------------------------
+> +ATCPIT100 is a generic IP block from Andes Technology, embedded in
+> +Andestech AE3XX platforms and other designs.
 > +
-> +The following compatibles require a PHY node representing the integrated
-> +PHY, under the integrated MDIO bus node if an mdio-mux node is used:
->    - "allwinner,sun8i-h3-emac",
->    - "allwinner,sun8i-v3s-emac":
+> +This timer is a set of compact multi-function timers, which can be
+> +used as pulse width modulators (PWM) as well as simple timers.
 > +
-> +Additional information regarding generic multiplexer properties can be found
-> +at Documentation/devicetree/bindings/net/mdio-mux.txt
+> +It supports up to 4 PIT channels. Each PIT channel is a
+> +multi-function timer and provide the following usage scenarios:
+> +One 32-bit timer
+> +Two 16-bit timers
+> +Four 8-bit timers
+> +One 16-bit PWM
+> +One 16-bit timer and one 8-bit PWM
+> +Two 8-bit timer and one 8-bit PWM
 > +
-> +Required properties of the integrated phy node:
->  - clocks: a phandle to the reference clock for the EPHY
->  - resets: a phandle to the reset control for the EPHY
-> +- Must be a child of the integrated mdio
->  
-> -Example:
-> -
-> +Example with integrated PHY:
->  emac: ethernet@1c0b000 {
->  	compatible = "allwinner,sun8i-h3-emac";
->  	syscon = <&syscon>;
-> @@ -72,13 +91,115 @@ emac: ethernet@1c0b000 {
->  	phy-handle = <&int_mii_phy>;
->  	phy-mode = "mii";
->  	allwinner,leds-active-low;
+> +Required properties:
+> +- compatible	: Should be "andestech,atcpit100"
+> +- reg		: Address and length of the register set
+> +- interrupts	: Reference to the timer interrupt
+> +- clock-frequency : The rate in HZ in input of the Andestech ATCPIT100 timer
 > +
-> +	mdio0: mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +	};
+> +Examples:
 > +
-> +	mdio-mux {
-> +		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
-
-Drop mdio-mux.
-
-With those fixed,
-
-Acked-by: Rob Herring <robh@kernel.org>
+> +timer0: timer@f0400000 {
+> +	compatible = "andestech,atcpit100";
+> +	reg = <0xf0400000 0x1000>;
+> +	interrupts = <2 4>;
+> +	clock-frequency = <30000000>;
+> +};
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
