@@ -1,898 +1,611 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: light: add support to UVIS25 sensor
-Date: Fri, 27 Oct 2017 15:26:09 +0200
-Message-ID: <CAA2SeN+WGorb6t52euEnVYOp+R8Mxa0_Y9eeM0qo6=-MsnZ3EQ@mail.gmail.com>
-References: <20171025181609.3803-1-lorenzo.bianconi@st.com>
- <20171025181609.3803-2-lorenzo.bianconi@st.com> <20171026183540.288dfdea@archlinux>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] watchdog: Add Spreadtrum watchdog driver
+Date: Fri, 27 Oct 2017 06:42:11 -0700
+Message-ID: <bc5dd263-3673-67ed-e42a-5725d1a2bee2@roeck-us.net>
+References: <d1efd94bfbc92b89e246b0b745d976d547b145b6.1509070855.git.eric.long@spreadtrum.com>
+ <b7c53cbdc36c3a4434ad2488a6646f6365cdfe77.1509070855.git.eric.long@spreadtrum.com>
+ <88fc46de-dabf-b702-0c86-a51c26d263e0@roeck-us.net>
+ <20171027075433.GA13942@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171026183540.288dfdea@archlinux>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171027075433.GA13942-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, 25 Oct 2017 20:16:08 +0200
-> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> Really minor English comment to start.
-> add support 'for' UVIS25 sensor
->
-
-Hi Jonathan,
-
-I added regmap support, thanks for the hint, the code is much better :)
-Just wondering how to manage drdy issue in more elegant way.
-As you outlined, the problem is due to the fact the trigger interrupt
-is currently masked
-but st_uvis25_set_enable() in st_uvis25_read_oneshot() actually
-enables interrupt generation
-so during the msleep() we get tons of interrupts if we configured the
-line as IRQ_TYPE_LEVEL_HIGH.
-One possible solution could be to drop trigger support and push data
-to iio buffer directly in main irq thread handler (but in this way we
-are force to use just this kind of trigger).
-What do you think?
-
-Reagrds,
-Lorenzo
-
->
->
->> add support to STMicroelectronics UVIS25 uv sensor
->> http://www.st.com/resource/en/datasheet/uvis25.pdf
+On 10/27/2017 12:54 AM, Eric Long wrote:
+> Hi Guenter,
+> 
+> Thanks for you commonts.
+> 
+> On Thu, Oct 26, 2017 at 10:23:40PM -0700, Guenter Roeck wrote:
+>> On 10/26/2017 07:28 PM, Eric Long wrote:
+>>> This patch adds the watchdog driver for Spreadtrum SC9860 platform.
+>>>
+>>> Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>>> ---
+>>> Change since v2:
+>>>   - Rename all the macors, add SPRD tag at the head of the macro names.
+>>>   - Rename SPRD_WDT_CLK as SPRD_WTC_CNT_STEP.
+>>>   - Remove the code which check timeout value at the wrong place.
+>>>   - Add min/max timeout value limit.
+>>>   - Remove set WDOG_HW_RUNNING status at sprd_wdt_enable().
+>>>   - Add timeout/pretimeout judgment when set them.
+>>>   - Support WATCHDOG_NOWAYOUT status.
+>>>
+>>> Changes since v1:
+>>>   - Use pretimeout instead of own implementation.
+>>>   - Fix timeout loop when loading timeout values.
+>>>   - use the infrastructure to read and set "timeout-sec" property.
+>>>   - Add conditions when start or stop watchdog.
+>>>   - Change the position of enabling watchdog.
+>>>   - Other optimization.
+>>> ---
+>>>   drivers/watchdog/Kconfig    |   8 +
+>>>   drivers/watchdog/Makefile   |   1 +
+>>>   drivers/watchdog/sprd_wdt.c | 415 ++++++++++++++++++++++++++++++++++++++++++++
+>>>   3 files changed, 424 insertions(+)
+>>>   create mode 100644 drivers/watchdog/sprd_wdt.c
+>>>
+>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>> index c722cbf..4a77e17 100644
+>>> --- a/drivers/watchdog/Kconfig
+>>> +++ b/drivers/watchdog/Kconfig
+>>> @@ -787,6 +787,14 @@ config UNIPHIER_WATCHDOG
+>>>   	  To compile this driver as a module, choose M here: the
+>>>   	  module will be called uniphier_wdt.
+>>> +config SPRD_WATCHDOG
+>>> +	tristate "Spreadtrum watchdog support"
+>>> +	depends on ARCH_SPRD || COMPILE_TEST
+>>> +	select WATCHDOG_CORE
+>>> +	help
+>>> +	  Say Y here to include support watchdog timer embedded
+>>> +	  into the Spreadtrum system.
 >>
->> - continuos mode support
->> - i2c support
->> - spi support
->> - trigger mode support
->> - system PM support
->
-> The autoincrement bit in the addresses is a little unusual, but
-> if feels like this could be neater done using regmap than
-> by spinning your own infrastructure.
->
-> If there is no nasty side effect in always setting autoincrement
-> then you should be fine just putting that in write_flag_mask and
-> read_flag_mask.
->
-
-I will do in v2
-
-> I've suggested an alternative for the interrupt handling.
-> Not sure it won't end up more hideous than what you have
-> but worth playing with perhaps.  Tryrenable was always
-> there for triggers to deal with odd race conditions
-> (originally it was a level interrupt connected to an
-> edge sensitive pxa27x input on the first board I had ;)
->
-> Might work here at the cost of an extra few reads.
->
-> Jonathan
+>> Maybe better "supported by" instead of "embedded into". Or at least
+>> "embedded in".
+> 
+> OK, I will fix it.
+>   
+>>> +
+>>>   # AVR32 Architecture
+>>>   config AT32AP700X_WDT
+>>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>>> index 56adf9f..187cca2 100644
+>>> --- a/drivers/watchdog/Makefile
+>>> +++ b/drivers/watchdog/Makefile
+>>> @@ -87,6 +87,7 @@ obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+>>>   obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+>>>   obj-$(CONFIG_STM32_WATCHDOG) += stm32_iwdg.o
+>>>   obj-$(CONFIG_UNIPHIER_WATCHDOG) += uniphier_wdt.o
+>>> +obj-$(CONFIG_SPRD_WATCHDOG) += sprd_wdt.o
+>>>   # AVR32 Architecture
+>>>   obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+>>> diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
+>>> new file mode 100644
+>>> index 0000000..5fc3dde
+>>> --- /dev/null
+>>> +++ b/drivers/watchdog/sprd_wdt.c
+>>> @@ -0,0 +1,415 @@
+>>> +/*
+>>> + * Spreadtrum watchdog driver
+>>> + * Copyright (C) 2017 Spreadtrum - http://www.spreadtrum.com
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or
+>>> + * modify it under the terms of the GNU General Public License
+>>> + * version 2 as published by the Free Software Foundation.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful, but
+>>> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+>>> + * General Public License for more details.
+>>> + */
+>>> +
+>>> +#include <linux/bitops.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/err.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/watchdog.h>
+>>> +
+>>> +#define SPRD_WDT_LOAD_LOW		0x0
+>>> +#define SPRD_WDT_LOAD_HIGH		0x4
+>>> +#define SPRD_WDT_CTRL			0x8
+>>> +#define SPRD_WDT_INT_CLR		0xc
+>>> +#define SPRD_WDT_INT_RAW		0x10
+>>> +#define SPRD_WDT_INT_MSK		0x14
+>>> +#define SPRD_WDT_CNT_LOW		0x18
+>>> +#define SPRD_WDT_CNT_HIGH		0x1c
+>>> +#define SPRD_WDT_LOCK			0x20
+>>> +#define SPRD_WDT_IRQ_LOAD_LOW		0x2c
+>>> +#define SPRD_WDT_IRQ_LOAD_HIGH		0x30
+>>> +
+>>> +/* WDT_CTRL */
+>>> +#define SPRD_WDT_INT_EN_BIT		BIT(0)
+>>> +#define SPRD_WDT_CNT_EN_BIT		BIT(1)
+>>> +#define SPRD_WDT_NEW_VER_EN		BIT(2)
+>>> +#define SPRD_WDT_RST_EN_BIT		BIT(3)
+>>> +
+>>> +/* WDT_INT_CLR */
+>>> +#define SPRD_WDT_INT_CLEAR_BIT		BIT(0)
+>>> +#define SPRD_WDT_RST_CLEAR_BIT		BIT(3)
+>>> +
+>>> +/* WDT_INT_RAW */
+>>> +#define SPRD_WDT_INT_RAW_BIT		BIT(0)
+>>> +#define SPRD_WDT_RST_RAW_BIT		BIT(3)
+>>> +#define SPRD_WDT_LD_BUSY_BIT		BIT(4)
+>>> +
+>>> +/* 1s equale to 32768 counter steps */
 >>
->> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> ---
->>  drivers/iio/light/Kconfig            |  22 +++
->>  drivers/iio/light/Makefile           |   6 +
->>  drivers/iio/light/st_uvis25.h        |  63 +++++++++
->>  drivers/iio/light/st_uvis25_buffer.c | 147 +++++++++++++++++++
->>  drivers/iio/light/st_uvis25_core.c   | 264 +++++++++++++++++++++++++++++++++++
->>  drivers/iio/light/st_uvis25_i2c.c    |  76 ++++++++++
->>  drivers/iio/light/st_uvis25_spi.c    | 109 +++++++++++++++
->>  7 files changed, 687 insertions(+)
->>  create mode 100644 drivers/iio/light/st_uvis25.h
->>  create mode 100644 drivers/iio/light/st_uvis25_buffer.c
->>  create mode 100644 drivers/iio/light/st_uvis25_core.c
->>  create mode 100644 drivers/iio/light/st_uvis25_i2c.c
->>  create mode 100644 drivers/iio/light/st_uvis25_spi.c
+>> equal ?
 >>
->> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
->> index 2356ed9285df..3c5492ec9df6 100644
->> --- a/drivers/iio/light/Kconfig
->> +++ b/drivers/iio/light/Kconfig
->> @@ -334,6 +334,28 @@ config STK3310
->>        Choosing M will build the driver as a module. If so, the module
->>        will be called stk3310.
+> 
+> OK, I will fix it.
+> 
+>>> +#define SPRD_WDT_CNT_STEP		32768
+>>> +
+>>> +#define SPRD_WDT_UNLOCK_KEY		0xe551
+>>> +#define SPRD_WDT_MIN_TIMROUT		3
 >>
->> +config ST_UVIS25
->> +     tristate "STMicroelectronics UVIS25 sensor driver"
->> +     depends on (I2C || SPI)
->> +     select IIO_BUFFER
->> +     select IIO_TRIGGERED_BUFFER
->> +     select ST_UVIS25_I2C if (I2C)
->> +     select ST_UVIS25_SPI if (SPI_MASTER)
->> +     help
->> +       Say yes here to build support for STMicroelectronics UVIS25
->> +       uv sensor
->> +
->> +       To compile this driver as a module, choose M here: the module
->> +       will be called st_uvis25.
->> +
->> +config ST_UVIS25_I2C
->> +     tristate
->> +     depends on ST_UVIS25
->> +
->> +config ST_UVIS25_SPI
->> +     tristate
->> +     depends on ST_UVIS25
->> +
->>  config TCS3414
->>       tristate "TAOS TCS3414 digital color sensor"
->>       depends on I2C
->> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
->> index fa32fa459e2e..971d316cba5f 100644
->> --- a/drivers/iio/light/Makefile
->> +++ b/drivers/iio/light/Makefile
->> @@ -32,6 +32,12 @@ obj-$(CONFIG_RPR0521)              += rpr0521.o
->>  obj-$(CONFIG_SENSORS_TSL2563)        += tsl2563.o
->>  obj-$(CONFIG_SI1145)         += si1145.o
->>  obj-$(CONFIG_STK3310)          += stk3310.o
->> +
->> +st_uvis25-y := st_uvis25_core.o st_uvis25_buffer.o
-> Why bother with the split?  I'd just have one file for both of
-> these.  There isn't enough code to justify it for readability reasons.
->
-> I thought I was going to find it as a config dependency
-> (was going to suggest you always built if it was ;)
->
+>> TIMROUT ot TIMEOUT ?
+>>
+> 
+> OK, I will fix it.
+> 
+>>> +#define SPRD_WDT_MAX_TIMEOUT		60
+>>
+>> Is that really the maximum supported timeout ? Seems a bit low.
+>> Shouldn't it be something like (U32_MAX / SPRD_WDT_CNT_STEP) ?
+>>
+> 
+> It supports the max value like as U32_MAX/SPRD_WDT_CNT_STEP,
+> but it doesn't unnecessary to support so big value, if the system can not
+> response it in 60s, the watchdog could trigger timeout.
+> 
+It is customary to provide the highest possible value here.
+No one is forced to set such high values. You are making a choice for
+others here. But, sure, if you insist; not worth arguing about.
 
-Will do in v2
+>>> +
+>>> +#define SPRD_WDT_CNT_HIGH_VALUE		16
+>>
+>> Maybe name it "SPRD_WDT_CNT_HIGH_SHIFT". It is not really a value,
+>> it is a shift.
+>>
+> 
+> Yes, you are right, _SHIFT will be better.
+>   
+>>> +#define SPRD_WDT_LOW_VALUE_MASK		GENMASK(15, 0)
+>>> +#define SPRD_WDT_CNT_VALUE_MAX		GENMASK(31, 0)
+>>
+>> Does this mask serve a useful purpose ?
+>>
+> 
+> OK, I will remove it, thanks!
+> 
+>>> +#define SPRD_WDT_LOAD_TIMEOUT		1000
+>>> +
+>>> +struct sprd_wdt {
+>>> +	void __iomem *base;
+>>> +	struct watchdog_device wdd;
+>>> +	struct clk *enable;
+>>> +	struct clk *rtc_enable;
+>>> +	unsigned int irq;
+>>> +};
+>>> +
+>>> +static inline struct sprd_wdt *to_sprd_wdt(struct watchdog_device *wdd)
+>>> +{
+>>> +	return container_of(wdd, struct sprd_wdt, wdd);
+>>> +}
+>>> +
+>>> +static inline void sprd_wdt_lock(void __iomem *addr)
+>>> +{
+>>> +	writel_relaxed(0x0, addr + SPRD_WDT_LOCK);
+>>> +}
+>>> +
+>>> +static inline void sprd_wdt_unlock(void __iomem *addr)
+>>> +{
+>>> +	writel_relaxed(SPRD_WDT_UNLOCK_KEY, addr + SPRD_WDT_LOCK);
+>>> +}
+>>> +
+>>> +static inline bool sprd_wdt_is_running(struct sprd_wdt *wdt)
+>>> +{
+>>> +	u32 val;
+>>> +
+>>> +	val = readl_relaxed(wdt->base + SPRD_WDT_CTRL);
+>>> +	return val & SPRD_WDT_NEW_VER_EN;
+>>> +}
+>>> +
+>>> +static irqreturn_t sprd_wdt_isr(int irq, void *dev_id)
+>>> +{
+>>> +	struct sprd_wdt *wdt = (struct sprd_wdt *)dev_id;
+>>> +
+>>> +	sprd_wdt_unlock(wdt->base);
+>>> +	writel_relaxed(SPRD_WDT_INT_CLEAR_BIT, wdt->base + SPRD_WDT_INT_CLR);
+>>> +	sprd_wdt_lock(wdt->base);
+>>> +	watchdog_notify_pretimeout(&wdt->wdd);
+>>> +	return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static u32 sprd_wdt_get_cnt_value(struct sprd_wdt *wdt)
+>>> +{
+>>> +	u32 val;
+>>> +
+>>> +	val = readl_relaxed(wdt->base + SPRD_WDT_CNT_HIGH) <<
+>>> +		SPRD_WDT_CNT_HIGH_VALUE;
+>>> +	val |= readl_relaxed(wdt->base + SPRD_WDT_CNT_LOW) &
+>>> +		SPRD_WDT_LOW_VALUE_MASK;
+>>> +
+>>> +	return val;
+>>> +}
+>>> +
+>>> +static int sprd_wdt_load_value(struct sprd_wdt *wdt, u32 timeout,
+>>> +			       u32 pretimeout)
+>>> +{
+>>> +	u32 val, delay_cnt = 0;
+>>> +	u32 tmr_step = timeout * SPRD_WDT_CNT_STEP;
+>>> +	u32 prtmr_step = pretimeout * SPRD_WDT_CNT_STEP;
+>>> +
+>>> +	sprd_wdt_unlock(wdt->base);
+>>> +	writel_relaxed((tmr_step >> SPRD_WDT_CNT_HIGH_VALUE) &
+>>> +		      SPRD_WDT_LOW_VALUE_MASK, wdt->base + SPRD_WDT_LOAD_HIGH);
+>>> +	writel_relaxed((tmr_step & SPRD_WDT_LOW_VALUE_MASK),
+>>> +		       wdt->base + SPRD_WDT_LOAD_LOW);
+>>> +	writel_relaxed((prtmr_step >> SPRD_WDT_CNT_HIGH_VALUE) &
+>>> +			SPRD_WDT_LOW_VALUE_MASK,
+>>> +		       wdt->base + SPRD_WDT_IRQ_LOAD_HIGH);
+>>> +	writel_relaxed(prtmr_step & SPRD_WDT_LOW_VALUE_MASK,
+>>> +		       wdt->base + SPRD_WDT_IRQ_LOAD_LOW);
+>>> +	sprd_wdt_lock(wdt->base);
+>>> +
+>>> +	/*
+>>> +	 * Waiting the load value operation done,
+>>> +	 * it needs two or three RTC clock cycles.
+>>> +	 */
+>>> +	do {
+>>> +		val = readl_relaxed(wdt->base + SPRD_WDT_INT_RAW);
+>>> +		if (!(val & SPRD_WDT_LD_BUSY_BIT))
+>>> +			break;
+>>> +
+>>> +		cpu_relax();
+>>> +	} while (delay_cnt++ < SPRD_WDT_LOAD_TIMEOUT);
+>>> +
+>>> +	if (delay_cnt >= SPRD_WDT_LOAD_TIMEOUT)
+>>> +		return -EBUSY;
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int sprd_wdt_enable(struct sprd_wdt *wdt)
+>>> +{
+>>> +	u32 val;
+>>> +	int ret;
+>>> +
+>>> +	ret = clk_prepare_enable(wdt->enable);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +	ret = clk_prepare_enable(wdt->rtc_enable);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	sprd_wdt_unlock(wdt->base);
+>>> +	val = readl_relaxed(wdt->base + SPRD_WDT_CTRL);
+>>> +	val |= SPRD_WDT_NEW_VER_EN;
+>>> +	writel_relaxed(val, wdt->base + SPRD_WDT_CTRL);
+>>> +	sprd_wdt_lock(wdt->base);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void sprd_wdt_disable(struct sprd_wdt *wdt)
+>>> +{
+>>> +	sprd_wdt_unlock(wdt->base);
+>>> +	writel_relaxed(0x0, wdt->base + SPRD_WDT_CTRL);
+>>> +	sprd_wdt_lock(wdt->base);
+>>> +
+>>> +	clk_disable_unprepare(wdt->rtc_enable);
+>>> +	clk_disable_unprepare(wdt->enable);
+>>> +}
+>>> +
+>>> +static int sprd_wdt_start(struct watchdog_device *wdd)
+>>> +{
+>>> +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
+>>> +	u32 val;
+>>> +	int ret;
+>>> +
+>>> +	ret = sprd_wdt_load_value(wdt, wdd->timeout, wdd->pretimeout);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	sprd_wdt_unlock(wdt->base);
+>>> +	val = readl_relaxed(wdt->base + SPRD_WDT_CTRL);
+>>> +	val |= SPRD_WDT_CNT_EN_BIT | SPRD_WDT_INT_EN_BIT | SPRD_WDT_RST_EN_BIT;
+>>> +	writel_relaxed(val, wdt->base + SPRD_WDT_CTRL);
+>>> +	sprd_wdt_lock(wdt->base);
+>>> +	set_bit(WDOG_HW_RUNNING, &wdd->status);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int sprd_wdt_stop(struct watchdog_device *wdd)
+>>> +{
+>>> +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
+>>> +	u32 val;
+>>> +
+>>> +	sprd_wdt_unlock(wdt->base);
+>>> +	val = readl_relaxed(wdt->base + SPRD_WDT_CTRL);
+>>> +	val &= ~(SPRD_WDT_CNT_EN_BIT | SPRD_WDT_RST_EN_BIT |
+>>> +		SPRD_WDT_INT_EN_BIT);
+>>> +	writel_relaxed(val, wdt->base + SPRD_WDT_CTRL);
+>>> +	sprd_wdt_lock(wdt->base);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int sprd_wdt_set_timeout(struct watchdog_device *wdd,
+>>> +				u32 timeout)
+>>> +{
+>>> +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
+>>> +
+>>> +	if (timeout == wdd->timeout)
+>>> +		return 0;
+>>> +
+>>> +	wdd->timeout = timeout;
+>>> +
+>>> +	return sprd_wdt_load_value(wdt, timeout, wdd->pretimeout);
+>>> +}
+>>> +
+>>> +static int sprd_wdt_set_pretimeout(struct watchdog_device *wdd,
+>>> +				   u32 new_pretimeout)
+>>> +{
+>>> +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
+>>> +
+>>> +	if (new_pretimeout == wdd->pretimeout)
+>>> +		return 0;
+>>
+>> This is inconsistent. pretimeout == 0 is accepted until it is set
+>> to a non-zero value once, then 0 is no longer accepted. pretimeout==0
+>> should reflect "pretimeout disabled". If that is not possible you
+>> need to set some non-0 default value in the probe function.
+>>
+> 
+> I understand your opinion, I will fix it.
+> 
+>>> +	if (new_pretimeout <= wdd->min_timeout)
+>>> +		return -EINVAL;
+>>
+>> Why is pretimeout == wdd->min_timeout invalid ?
+>>
+> 
+> OK, you are right, it should be pretimeout < min_timeout.
+> 
+>>> +
+>>> +	wdd->pretimeout = new_pretimeout;
+>>> +
+>>> +	return sprd_wdt_load_value(wdt, wdd->timeout, new_pretimeout);
+>>> +}
+>>> +
+>>> +static u32 sprd_wdt_get_timeleft(struct watchdog_device *wdd)
+>>> +{
+>>> +	struct sprd_wdt *wdt = to_sprd_wdt(wdd);
+>>> +	u32 val;
+>>> +
+>>> +	val = sprd_wdt_get_cnt_value(wdt);
+>>> +	val = val / SPRD_WDT_CNT_STEP;
+>>> +
+>>> +	return val;
+>>> +}
+>>> +
+>>> +static const struct watchdog_ops sprd_wdt_ops = {
+>>> +	.owner = THIS_MODULE,
+>>> +	.start = sprd_wdt_start,
+>>> +	.stop = sprd_wdt_stop,
+>>> +	.set_timeout = sprd_wdt_set_timeout,
+>>> +	.set_pretimeout = sprd_wdt_set_pretimeout,
+>>> +	.get_timeleft = sprd_wdt_get_timeleft,
+>>
+>> Just wondering - no heartbeat function ? Having to load the timer
+>> values for each heartbeat is expensive.
+>>
+> 
+> Unfortunately, this watchdog has not RELOAD register.
+>   
+>>> +};
+>>> +
+>>> +static const struct watchdog_info sprd_wdt_info = {
+>>> +	.options = WDIOF_SETTIMEOUT |
+>>> +		   WDIOF_PRETIMEOUT |
+>>> +		   WDIOF_MAGICCLOSE |
+>>> +		   WDIOF_KEEPALIVEPING,
+>>> +	.identity = "Spreadtrum Watchdog Timer",
+>>> +};
+>>> +
+>>> +static int sprd_wdt_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct resource *wdt_res;
+>>> +	struct sprd_wdt *wdt;
+>>> +	int ret;
+>>> +
+>>> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+>>> +	if (!wdt)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	wdt_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +	if (!wdt_res) {
+>>> +		dev_err(&pdev->dev, "failed to memory resource\n");
+>>> +		return -ENOMEM;
+>>> +	}
+>>
+>> Unnecessary error check and message. devm_ioremap_resource()
+>> returns an error if res is NULL.
+>>
+> 
+> OK, I will fix it.
+>   
+>>> +
+>>> +	wdt->base = devm_ioremap_resource(&pdev->dev, wdt_res);
+>>> +	if (IS_ERR(wdt->base))
+>>
+>> Move the error message to here.
+>>
+>>> +		return PTR_ERR(wdt->base);
+>>> +
+>>> +	wdt->enable = devm_clk_get(&pdev->dev, "enable");
+>>> +	if (IS_ERR(wdt->enable)) {
+>>> +		dev_err(&pdev->dev, "can't get the enable clock\n");
+>>> +		return PTR_ERR(wdt->enable);
+>>> +	}
+>>> +
+>>> +	wdt->rtc_enable = devm_clk_get(&pdev->dev, "rtc_enable");
+>>> +	if (IS_ERR(wdt->rtc_enable)) {
+>>> +		dev_err(&pdev->dev, "can't get the rtc enable clock\n");
+>>> +		return PTR_ERR(wdt->rtc_enable);
+>>> +	}
+>>> +
+>>> +	wdt->irq = platform_get_irq(pdev, 0);
+>>> +	if (wdt->irq < 0) {
+>>> +		dev_err(&pdev->dev, "failed to get IRQ resource\n");
+>>> +		return wdt->irq;
+>>> +	}
+>>> +
+>>> +	ret = devm_request_irq(&pdev->dev, wdt->irq, sprd_wdt_isr,
+>>> +			       IRQF_NO_SUSPEND, "sprd-wdt", (void *)wdt);
+>>> +	if (ret) {
+>>> +		dev_err(&pdev->dev, "failed to register irq\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	wdt->wdd.info = &sprd_wdt_info;
+>>> +	wdt->wdd.ops = &sprd_wdt_ops;
+>>> +	wdt->wdd.parent = &pdev->dev;
+>>> +	wdt->wdd.min_timeout = SPRD_WDT_MIN_TIMROUT;
+>>> +	wdt->wdd.max_timeout = SPRD_WDT_MAX_TIMEOUT;
+>>> +
+>> You might want to set wdt->wdd.timeout to a default value.
+>>
+> 
+> OK, I will set a default timeout value in case of no timeout-sec in device-tree.
+>   
+>>> +	ret = sprd_wdt_enable(wdt);
+>>> +	if (ret) {
+>>> +		dev_err(&pdev->dev, "failed to enable wdt\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>
+>> This needs a matching sprd_wdt_disable() call in the remove function.
+>> Best way to handle this would be to add devm_add_action() here.
+>>
+> 
+> If add devm_add_action(), it will be called in the remove function,
+> but this is not our expect, if someone remove this module, we want it just timeout.
+> 
 
->> +obj-$(CONFIG_ST_UVIS25)              += st_uvis25.o
->> +obj-$(CONFIG_ST_UVIS25_I2C)  += st_uvis25_i2c.o
->> +obj-$(CONFIG_ST_UVIS25_SPI)  += st_uvis25_spi.o
->> +
->>  obj-$(CONFIG_TCS3414)                += tcs3414.o
->>  obj-$(CONFIG_TCS3472)                += tcs3472.o
->>  obj-$(CONFIG_TSL2583)                += tsl2583.o
->> diff --git a/drivers/iio/light/st_uvis25.h b/drivers/iio/light/st_uvis25.h
->> new file mode 100644
->> index 000000000000..d444a73e743f
->> --- /dev/null
->> +++ b/drivers/iio/light/st_uvis25.h
->> @@ -0,0 +1,63 @@
->> +/*
->> + * STMicroelectronics uvis25 sensor driver
->> + *
->> + * Copyright 2017 STMicroelectronics Inc.
->> + *
->> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> + *
->> + * Licensed under the GPL-2.
->> + */
->> +
->> +#ifndef ST_UVIS25_H
->> +#define ST_UVIS25_H
->> +
->> +#define ST_UVIS25_DEV_NAME           "uvis25"
->> +
->> +#include <linux/iio/iio.h>
->> +
->> +#define ST_UVIS25_RX_MAX_LENGTH              8
->> +#define ST_UVIS25_TX_MAX_LENGTH              8
->> +
->> +struct st_uvis25_transfer_buffer {
->> +     u8 rx_buf[ST_UVIS25_RX_MAX_LENGTH];
->> +     u8 tx_buf[ST_UVIS25_TX_MAX_LENGTH] ____cacheline_aligned;
->> +};
->> +
->> +struct st_uvis25_transfer_function {
->> +     int (*read)(struct device *dev, u8 addr, int len, u8 *data);
->> +     int (*write)(struct device *dev, u8 addr, int len, u8 *data);
->> +};
->> +
->> +/**
->> + * struct st_uvis25_hw - ST UVIS25 sensor instance
->> + * @dev: Pointer to instance of struct device (I2C or SPI).
->> + * @lock: Mutex to protect read and write operations.
->> + * @trig: The trigger in use by the driver.
->> + * @enabled: Status of the sensor (false->off, true->on).
->> + * @irq: Device interrupt line (I2C or SPI).
->> + * @tf: Transfer function structure used by I/O operations.
->> + * @tb: Transfer buffers used by SPI I/O operations.
->> + */
->> +struct st_uvis25_hw {
->> +     struct device *dev;
->> +
->> +     struct mutex lock;
->> +     struct iio_trigger *trig;
->> +     bool enabled;
->> +     int irq;
->> +
->> +     const struct st_uvis25_transfer_function *tf;
->> +     struct st_uvis25_transfer_buffer tb;
->> +};
->> +
->> +extern const struct dev_pm_ops st_uvis25_pm_ops;
->> +
->> +int st_uvis25_write_with_mask(struct st_uvis25_hw *hw, u8 addr,
->> +                           u8 mask, u8 val);
->> +int st_uvis25_set_enable(struct st_uvis25_hw *hw, bool enable);
->> +int st_uvis25_probe(struct device *dev, int irq,
->> +                 const struct st_uvis25_transfer_function *tf_ops);
->> +int st_uvis25_allocate_buffer(struct iio_dev *iio_dev);
->> +int st_uvis25_allocate_trigger(struct iio_dev *iio_dev);
->> +
->> +#endif /* ST_UVIS25_H */
->> diff --git a/drivers/iio/light/st_uvis25_buffer.c b/drivers/iio/light/st_uvis25_buffer.c
->> new file mode 100644
->> index 000000000000..06b95287ca98
->> --- /dev/null
->> +++ b/drivers/iio/light/st_uvis25_buffer.c
->> @@ -0,0 +1,147 @@
->> +/*
->> + * STMicroelectronics uvis25 sensor driver
->> + *
->> + * Copyright 2017 STMicroelectronics Inc.
->> + *
->> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> + *
->> + * Licensed under the GPL-2.
->> + */
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/device.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/irqreturn.h>
->> +#include <linux/iio/trigger.h>
->> +#include <linux/iio/trigger_consumer.h>
->> +#include <linux/iio/triggered_buffer.h>
->> +#include <linux/iio/buffer.h>
->> +
->> +#include "st_uvis25.h"
->> +
->> +#define ST_UVIS25_REG_CTRL3_ADDR     0x22
->> +#define ST_UVIS25_REG_HL_MASK                BIT(7)
->> +#define ST_UVIS25_REG_STATUS_ADDR    0x27
->> +#define ST_UVIS25_REG_UV_DA_MASK     BIT(0)
->> +
->> +static irqreturn_t st_uvis25_trigger_handler_thread(int irq, void *private)
->> +{
->> +     struct st_uvis25_hw *hw = private;
->> +     u8 status;
->> +     int err;
->> +
->> +     err = hw->tf->read(hw->dev, ST_UVIS25_REG_STATUS_ADDR, sizeof(status),
->> +                        &status);
->> +     if (err < 0)
->> +             return IRQ_HANDLED;
->> +
->> +     if (!(status & ST_UVIS25_REG_UV_DA_MASK))
->> +             return IRQ_NONE;
->> +
->> +     iio_trigger_poll_chained(hw->trig);
->> +
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +int st_uvis25_allocate_trigger(struct iio_dev *iio_dev)
->> +{
->> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +     bool irq_active_low = false;
->> +     unsigned long irq_type;
->> +     int err;
->> +
->> +     irq_type = irqd_get_trigger_type(irq_get_irq_data(hw->irq));
->> +
->> +     switch (irq_type) {
->> +     case IRQF_TRIGGER_HIGH:
->> +     case IRQF_TRIGGER_RISING:
->> +             break;
->> +     case IRQF_TRIGGER_LOW:
->> +     case IRQF_TRIGGER_FALLING:
->> +             irq_active_low = true;
->> +             break;
->> +     default:
->> +             dev_info(hw->dev,
->> +                      "mode %lx unsupported, using IRQF_TRIGGER_RISING\n",
->> +                      irq_type);
->> +             irq_type = IRQF_TRIGGER_RISING;
->> +             break;
->> +     }
->> +
->> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL3_ADDR,
->> +                                     ST_UVIS25_REG_HL_MASK, irq_active_low);
->> +     if (err < 0)
->> +             return err;
->> +
->> +     err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
->> +                                     st_uvis25_trigger_handler_thread,
->> +                                     irq_type | IRQF_ONESHOT,
->> +                                     iio_dev->name, hw);
->> +     if (err) {
->> +             dev_err(hw->dev, "failed to request trigger irq %d\n",
->> +                     hw->irq);
->> +             return err;
->> +     }
->> +
->> +     hw->trig = devm_iio_trigger_alloc(hw->dev, "%s-trigger",
->> +                                       iio_dev->name);
->> +     if (!hw->trig)
->> +             return -ENOMEM;
->> +
->> +     iio_trigger_set_drvdata(hw->trig, iio_dev);
->> +     hw->trig->dev.parent = hw->dev;
->> +
->> +     return devm_iio_trigger_register(hw->dev, hw->trig);
->> +}
->> +
->> +static int st_uvis25_buffer_preenable(struct iio_dev *iio_dev)
->> +{
->> +     return st_uvis25_set_enable(iio_priv(iio_dev), true);
->> +}
->> +
->> +static int st_uvis25_buffer_postdisable(struct iio_dev *iio_dev)
->> +{
->> +     return st_uvis25_set_enable(iio_priv(iio_dev), false);
->> +}
->> +
->> +static const struct iio_buffer_setup_ops st_uvis25_buffer_ops = {
->> +     .preenable = st_uvis25_buffer_preenable,
->> +     .postenable = iio_triggered_buffer_postenable,
->> +     .predisable = iio_triggered_buffer_predisable,
->> +     .postdisable = st_uvis25_buffer_postdisable,
->> +};
->> +
->> +static irqreturn_t st_uvis25_buffer_handler_thread(int irq, void *p)
->> +{
->> +     u8 buffer[ALIGN(sizeof(u8), sizeof(s64)) + sizeof(s64)];
->> +     struct iio_poll_func *pf = p;
->> +     struct iio_dev *iio_dev = pf->indio_dev;
->> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +     int err;
->> +
->> +     err = hw->tf->read(hw->dev, iio_dev->channels[0].address, sizeof(u8),
->> +                        buffer);
->> +     if (err < 0)
->> +             goto out;
->> +
->> +     iio_push_to_buffers_with_timestamp(iio_dev, buffer,
->> +                                        iio_get_time_ns(iio_dev));
->> +
->> +out:
->> +     iio_trigger_notify_done(hw->trig);
->> +
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +int st_uvis25_allocate_buffer(struct iio_dev *iio_dev)
->> +{
->> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +
->> +     return devm_iio_triggered_buffer_setup(hw->dev, iio_dev, NULL,
->> +                                            st_uvis25_buffer_handler_thread,
->> +                                            &st_uvis25_buffer_ops);
->> +}
->> +
->> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
->> +MODULE_DESCRIPTION("STMicroelectronics uvis25 buffer driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/iio/light/st_uvis25_core.c b/drivers/iio/light/st_uvis25_core.c
->> new file mode 100644
->> index 000000000000..08247092dfff
->> --- /dev/null
->> +++ b/drivers/iio/light/st_uvis25_core.c
->> @@ -0,0 +1,264 @@
->> +/*
->> + * STMicroelectronics uvis25 sensor driver
->> + *
->> + * Copyright 2017 STMicroelectronics Inc.
->> + *
->> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> + *
->> + * Licensed under the GPL-2.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/device.h>
->> +#include <linux/iio/sysfs.h>
->> +#include <linux/delay.h>
->> +#include <linux/pm.h>
->> +#include <linux/interrupt.h>
->> +
->> +#include "st_uvis25.h"
->> +
->> +#define ST_UVIS25_REG_WHOAMI_ADDR    0x0f
->> +#define ST_UVIS25_REG_WHOAMI_VAL     0xca
->> +#define ST_UVIS25_REG_CTRL1_ADDR     0x20
->> +#define ST_UVIS25_REG_ODR_MASK               BIT(0)
->> +#define ST_UVIS25_REG_BDU_MASK               BIT(1)
->> +#define ST_UVIS25_REG_CTRL2_ADDR     0x21
->> +#define ST_UVIS25_REG_BOOT_MASK              BIT(7)
->> +
->> +static const struct iio_chan_spec st_uvis25_channels[] = {
->> +     {
->> +             .type = IIO_UVINDEX,
->> +             .address = 0x28,
->> +             .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
->> +             .scan_index = 0,
->> +             .scan_type = {
->> +                     .sign = 'u',
->> +                     .realbits = 8,
->> +                     .storagebits = 8,
->> +             },
->> +     },
->> +     IIO_CHAN_SOFT_TIMESTAMP(1),
->> +};
->> +
->> +static int st_uvis25_check_whoami(struct st_uvis25_hw *hw)
->> +{
->> +     u8 data;
->> +     int err;
->> +
->> +     err = hw->tf->read(hw->dev, ST_UVIS25_REG_WHOAMI_ADDR, sizeof(data),
->> +                        &data);
->> +     if (err < 0) {
->> +             dev_err(hw->dev, "failed to read whoami register\n");
->> +             return err;
->> +     }
->> +
->> +     if (data != ST_UVIS25_REG_WHOAMI_VAL) {
->> +             dev_err(hw->dev, "wrong whoami {%02x vs %02x}\n",
->> +                     data, ST_UVIS25_REG_WHOAMI_VAL);
->> +             return -ENODEV;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +int st_uvis25_write_with_mask(struct st_uvis25_hw *hw, u8 addr, u8 mask, u8 val)
->> +{
->> +     u8 data;
->> +     int err;
->> +
->> +     mutex_lock(&hw->lock);
->
-> This stuff comes for free in regmap...
->
+But that leaves the watchdog enabled even if it was stopped (no call to
+sprd_wdt_disable()).
 
-ack
+Relying on NOWAYOUT would be a better option here. Again, you are
+making a choice for the user.
 
->> +
->> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
->> +     if (err < 0) {
->> +             dev_err(hw->dev, "failed to read %02x register\n", addr);
->> +             goto unlock;
->> +     }
->> +
->> +     data = (data & ~mask) | ((val << __ffs(mask)) & mask);
->> +
->> +     err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
->> +     if (err < 0)
->> +             dev_err(hw->dev, "failed to write %02x register\n", addr);
->> +
->> +unlock:
->> +     mutex_unlock(&hw->lock);
->> +
->> +     return err < 0 ? err : 0;
->> +}
->> +
->> +int st_uvis25_set_enable(struct st_uvis25_hw *hw, bool enable)
->> +{
->> +     int err;
->> +
->> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
->> +                                     ST_UVIS25_REG_ODR_MASK, enable);
->> +     if (err < 0)
->> +             return err;
->> +
->> +     hw->enabled = enable;
->> +
->> +     return 0;
->> +}
->> +
->> +static int st_uvis25_read_oneshot(struct st_uvis25_hw *hw, u8 addr, int *val)
->> +{
->> +     u8 data;
->> +     int err;
->> +
->> +     err = st_uvis25_set_enable(hw, true);
->> +     if (err < 0)
->> +             return err;
->> +
->> +     msleep(1500);
->
-> Could drive this off the interrupt rather than disabling the interrupt?
-> Would that be a little neater (simple completion here).
->
+>>> +	watchdog_set_nowayout(&wdt->wdd, WATCHDOG_NOWAYOUT);
+>>> +	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+>>> +
+>>> +	ret = watchdog_register_device(&wdt->wdd);
+>>
+>> Unfortunately this doesn't work. It leaves interrupts enabled
+>> after the watchdog device is removed in sprd_wdt_remove(),
+>> but the driver will be gone. I would suggest to use
+>> devm_watchdog_register_device() and reorder calls to request
+>> the interrupt after registering the watchdog device. Then you
+>> can drop the remove function entirely.
+>>
+> 
+> Yes, you are right, I understand your opinion, and it is very important,
+> devm_watchdog_register_device() is better. Thanks.
+> 
+>>> +	if (ret) {
+>>> +		sprd_wdt_disable(wdt);
+>>> +		dev_err(&pdev->dev, "failed to register watchdog\n");
+>>> +		return ret;
+>>> +	}
+>>> +	platform_set_drvdata(pdev, wdt);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int sprd_wdt_remove(struct platform_device *pdev)
+>>> +{
+>>> +	struct sprd_wdt *wdt = platform_get_drvdata(pdev);
+>>> +
+>>> +	watchdog_unregister_device(&wdt->wdd);
+>>> +
+>>> +	if (sprd_wdt_is_running(wdt))
+>>> +		dev_crit(&pdev->dev, "Device removed: Expect reboot!\n");
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
+>>> +{
+>>> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
+>>> +	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+>>> +
+>>> +	if (watchdog_active(wdd)) {
+>>> +		sprd_wdt_stop(&wdt->wdd);
+>>> +		sprd_wdt_disable(wdt);
+>>
+>> Are you sure you only want to disable the clocks if the watchdog was active ?
+>> That seems to be a bit inconsistent.
+>>
+> 
+> This watchdog is in always on power domain, if system suspend, it needs to
+> disable it, or it will timeout.
+> 
+That is not what I asked. I asked why it isn't
 
-What do you mean? I did not get you.
+	if (watchdog_active(wdd))
+		sprd_wdt_stop(&wdt->wdd);
 
->> +
->> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
->> +     if (err < 0)
->> +             return err;
->
-> Is there a potential race here if for some reason we managed to
-> got to sleep for another conversion?  I think to be completely
-> safe you need force an additional read after the disable (or
-> will that fail to clear the data ready?
->
+	sprd_wdt_disable(wdt);
 
-We can move the read access after the st_uvis25_set_enable(hw, false)
-in order to avoid an unnecessary read, do you agree?
+instead.
 
->> +
->> +     st_uvis25_set_enable(hw, false);
->> +
->> +     *val = data;
->> +
->> +     return IIO_VAL_INT;
->> +}
->> +
->> +static int st_uvis25_read_raw(struct iio_dev *iio_dev,
->> +                           struct iio_chan_spec const *ch,
->> +                           int *val, int *val2, long mask)
->> +{
->> +     int ret;
->> +
->> +     ret = iio_device_claim_direct_mode(iio_dev);
->> +     if (ret)
->> +             return ret;
->> +
->> +     switch (mask) {
->> +     case IIO_CHAN_INFO_PROCESSED: {
->> +             struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +
->> +             /*
->> +              * mask irq line during oneshot read since the sensor
->> +              * does not export the capability to disable data-ready line
->> +              * in the register map and it is enabled by default.
->> +              * If the line is unmasked during read_raw() it will be set
->> +              * active and never reset since the trigger is disabled
->> +              */
->
-> Nasty but well documented...
->
-> I wonder if there is a nicer way to handle this... If we leave it on
-> the issues is that we end up with the status being checked by the interrupt
-> handler for the trigger (harmless if a waste of time) then the trigger
-> being fired (with nothing associated with it).  No consumers are attached
-> so we call notify done for all of them and finally that will result in
-> a try reenable. You could supply one of those that results in a read
-> to the device.  It think that would always deal with your case of
-> the data ready getting stuck high..
->
-> (Not totally sure though as it's been a while since I dealt with a
-> sensor with this particular issue).
->
->> +             if (hw->irq > 0)
->> +                     disable_irq(hw->irq);
->> +             ret = st_uvis25_read_oneshot(hw, ch->address, val);
->> +             if (hw->irq > 0)
->> +                     enable_irq(hw->irq);
->> +             break;
->> +     }
->> +     default:
->> +             ret = -EINVAL;
->> +             break;
->> +     }
->> +
->> +     iio_device_release_direct_mode(iio_dev);
->> +
->> +     return ret;
->> +}
->> +
->> +static const struct iio_info st_uvis25_info = {
->> +     .read_raw = st_uvis25_read_raw,
->> +};
->> +
->> +static const unsigned long st_uvis25_scan_masks[] = { 0x1, 0x0 };
->> +
->> +static int st_uvis25_init_sensor(struct st_uvis25_hw *hw)
->> +{
->> +     int err;
->> +
->> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL2_ADDR,
->> +                                     ST_UVIS25_REG_BOOT_MASK, 1);
->> +     if (err < 0)
->> +             return err;
->> +
->> +     msleep(2000);
->> +
->> +     return st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
->> +                                      ST_UVIS25_REG_BDU_MASK, 1);
->> +}
->> +
->> +int st_uvis25_probe(struct device *dev, int irq,
->> +                 const struct st_uvis25_transfer_function *tf_ops)
->> +{
->> +     struct st_uvis25_hw *hw;
->> +     struct iio_dev *iio_dev;
->> +     int err;
->> +
->> +     iio_dev = devm_iio_device_alloc(dev, sizeof(*hw));
->> +     if (!iio_dev)
->> +             return -ENOMEM;
->> +
->> +     dev_set_drvdata(dev, (void *)iio_dev);
->> +
->> +     hw = iio_priv(iio_dev);
->> +     hw->dev = dev;
->> +     hw->irq = irq;
->> +     hw->tf = tf_ops;
->> +
->> +     mutex_init(&hw->lock);
->> +
->> +     err = st_uvis25_check_whoami(hw);
->> +     if (err < 0)
->> +             return err;
->> +
->> +     iio_dev->modes = INDIO_DIRECT_MODE;
->> +     iio_dev->dev.parent = hw->dev;
->> +     iio_dev->available_scan_masks = st_uvis25_scan_masks;
->> +     iio_dev->channels = st_uvis25_channels;
->> +     iio_dev->num_channels = ARRAY_SIZE(st_uvis25_channels);
->> +     iio_dev->name = ST_UVIS25_DEV_NAME;
->> +     iio_dev->info = &st_uvis25_info;
->> +
->> +     err = st_uvis25_init_sensor(hw);
->> +     if (err < 0)
->> +             return err;
->> +
->> +     if (hw->irq > 0) {
->> +             err = st_uvis25_allocate_buffer(iio_dev);
->> +             if (err < 0)
->> +                     return err;
->> +
->> +             err = st_uvis25_allocate_trigger(iio_dev);
->> +             if (err)
->> +                     return err;
->> +     }
->> +
->> +     return devm_iio_device_register(hw->dev, iio_dev);
->> +}
->> +EXPORT_SYMBOL(st_uvis25_probe);
->> +
->> +static int __maybe_unused st_uvis25_suspend(struct device *dev)
->> +{
->> +     struct iio_dev *iio_dev = dev_get_drvdata(dev);
->> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +
->> +     return st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
->> +                                      ST_UVIS25_REG_ODR_MASK, 0);
->> +}
->> +
->> +static int __maybe_unused st_uvis25_resume(struct device *dev)
->> +{
->> +     struct iio_dev *iio_dev = dev_get_drvdata(dev);
->> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +     int err = 0;
->> +
->> +     if (hw->enabled)
->> +             err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
->> +                                             ST_UVIS25_REG_ODR_MASK, 1);
->> +
->> +     return err;
->> +}
->> +
->> +const struct dev_pm_ops st_uvis25_pm_ops = {
->> +     SET_SYSTEM_SLEEP_PM_OPS(st_uvis25_suspend, st_uvis25_resume)
->> +};
->> +EXPORT_SYMBOL(st_uvis25_pm_ops);
->> +
->> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
->> +MODULE_DESCRIPTION("STMicroelectronics uvis25 sensor driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/iio/light/st_uvis25_i2c.c b/drivers/iio/light/st_uvis25_i2c.c
->> new file mode 100644
->> index 000000000000..0d70d866a190
->> --- /dev/null
->> +++ b/drivers/iio/light/st_uvis25_i2c.c
->> @@ -0,0 +1,76 @@
->> +/*
->> + * STMicroelectronics uvis25 i2c driver
->> + *
->> + * Copyright 2017 STMicroelectronics Inc.
->> + *
->> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> + *
->> + * Licensed under the GPL-2.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/acpi.h>
->> +#include <linux/i2c.h>
->> +#include <linux/slab.h>
->> +
->> +#include "st_uvis25.h"
->> +
->> +#define I2C_AUTO_INCREMENT   0x80
->> +
->> +static int st_uvis25_i2c_read(struct device *dev, u8 addr, int len, u8 *data)
->> +{
->> +     if (len > 1)
->> +             addr |= I2C_AUTO_INCREMENT;
->> +
->> +     return i2c_smbus_read_i2c_block_data_or_emulated(to_i2c_client(dev),
->> +                                                      addr, len, data);
->> +}
->> +
->> +static int st_uvis25_i2c_write(struct device *dev, u8 addr, int len, u8 *data)
->> +{
->> +     if (len > 1)
->> +             addr |= I2C_AUTO_INCREMENT;
->> +
->> +     return i2c_smbus_write_i2c_block_data(to_i2c_client(dev), addr,
->> +                                           len, data);
->> +}
->> +
->> +static const struct st_uvis25_transfer_function st_uvis25_transfer_fn = {
->> +     .read = st_uvis25_i2c_read,
->> +     .write = st_uvis25_i2c_write,
->> +};
->> +
->> +static int st_uvis25_i2c_probe(struct i2c_client *client,
->> +                            const struct i2c_device_id *id)
->> +{
->> +     return st_uvis25_probe(&client->dev, client->irq,
->> +                            &st_uvis25_transfer_fn);
->> +}
->> +
->> +static const struct of_device_id st_uvis25_i2c_of_match[] = {
->> +     { .compatible = "st,uvis25", },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(of, st_uvis25_i2c_of_match);
->> +
->> +static const struct i2c_device_id st_uvis25_i2c_id_table[] = {
->> +     { ST_UVIS25_DEV_NAME },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(i2c, st_uvis25_i2c_id_table);
->> +
->> +static struct i2c_driver st_uvis25_driver = {
->> +     .driver = {
->> +             .name = "st_uvis25_i2c",
->> +             .pm = &st_uvis25_pm_ops,
->> +             .of_match_table = of_match_ptr(st_uvis25_i2c_of_match),
->> +     },
->> +     .probe = st_uvis25_i2c_probe,
->> +     .id_table = st_uvis25_i2c_id_table,
->> +};
->> +module_i2c_driver(st_uvis25_driver);
->> +
->> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
->> +MODULE_DESCRIPTION("STMicroelectronics uvis25 i2c driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/iio/light/st_uvis25_spi.c b/drivers/iio/light/st_uvis25_spi.c
->> new file mode 100644
->> index 000000000000..be67d9e7564b
->> --- /dev/null
->> +++ b/drivers/iio/light/st_uvis25_spi.c
->> @@ -0,0 +1,109 @@
->> +/*
->> + * STMicroelectronics uvis25 spi driver
->> + *
->> + * Copyright 2017 STMicroelectronics Inc.
->> + *
->> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> + *
->> + * Licensed under the GPL-2.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/spi/spi.h>
->> +#include <linux/slab.h>
->> +
->> +#include "st_uvis25.h"
->> +
->> +#define SENSORS_SPI_READ     0x80
->> +#define SPI_AUTO_INCREMENT   0x40
->> +
->> +static int st_uvis25_spi_read(struct device *dev, u8 addr, int len, u8 *data)
->
-> Hmm.. Maybe a good case for regmap?
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
+>>> +{
+>>> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
+>>> +	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+>>> +	int ret;
+>>> +
+>>> +	if (watchdog_active(wdd)) {
+>>> +		ret = sprd_wdt_enable(wdt);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		ret = sprd_wdt_start(&wdt->wdd);
+>>> +		if (ret) {
+>>> +			sprd_wdt_disable(wdt);
+>>> +			return ret;
+>>> +		}
+>>
+>> This can leave the system in an inconsistent state. Sometimes the wdt may be
+>> disabled, sometimes not.
+>>
+> 
+> If watchdog enable failed, it means there is something wrong in this system.
+>   
 
-ack
+True.
 
->
->> +{
->> +     struct spi_device *spi = to_spi_device(dev);
->> +     struct iio_dev *iio_dev = spi_get_drvdata(spi);
->> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
->> +     int err;
->> +
->> +     struct spi_transfer xfers[] = {
->> +             {
->> +                     .tx_buf = hw->tb.tx_buf,
->> +                     .bits_per_word = 8,
->> +                     .len = 1,
->> +             },
->> +             {
->> +                     .rx_buf = hw->tb.rx_buf,
->> +                     .bits_per_word = 8,
->> +                     .len = len,
->> +             }
->> +     };
->> +
->> +     if (len > 1)
->> +             addr |= SPI_AUTO_INCREMENT;
->> +     hw->tb.tx_buf[0] = addr | SENSORS_SPI_READ;
->> +
->> +     err = spi_sync_transfer(spi, xfers,  ARRAY_SIZE(xfers));
->> +     if (err < 0)
->> +             return err;
->> +
->> +     memcpy(data, hw->tb.rx_buf, len * sizeof(u8));
->> +
->> +     return len;
->> +}
->> +
->> +static int st_uvis25_spi_write(struct device *dev, u8 addr, int len, u8 *data)
->> +{
->> +     struct iio_dev *iio_dev;
->> +     struct st_uvis25_hw *hw;
->> +     struct spi_device *spi;
->> +
->> +     if (len >= ST_UVIS25_TX_MAX_LENGTH)
->> +             return -ENOMEM;
->> +
->> +     spi = to_spi_device(dev);
->> +     iio_dev = spi_get_drvdata(spi);
->> +     hw = iio_priv(iio_dev);
-> Could could just explicitly have the elements of this chain
-> that are used in local variables.
->
-> hw = iio_priv(spi_get_drvdata(spi));
->
-
-not needed with regmap ;)
-
-> up to you though..
->> +
->> +     hw->tb.tx_buf[0] = addr;
->> +     memcpy(&hw->tb.tx_buf[1], data, len);
->> +
->> +     return spi_write(spi, hw->tb.tx_buf, len + 1);
->> +}
->> +
->> +static const struct st_uvis25_transfer_function st_uvis25_transfer_fn = {
->> +     .read = st_uvis25_spi_read,
->> +     .write = st_uvis25_spi_write,
->> +};
->> +
->> +static int st_uvis25_spi_probe(struct spi_device *spi)
->> +{
->> +     return st_uvis25_probe(&spi->dev, spi->irq,
->> +                            &st_uvis25_transfer_fn);
->> +}
->> +
->> +static const struct of_device_id st_uvis25_spi_of_match[] = {
->> +     { .compatible = "st,uvis25", },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(of, st_uvis25_spi_of_match);
->> +
->> +static const struct spi_device_id st_uvis25_spi_id_table[] = {
->> +     { ST_UVIS25_DEV_NAME },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(spi, st_uvis25_spi_id_table);
->> +
->> +static struct spi_driver st_uvis25_driver = {
->> +     .driver = {
->> +             .name = "st_uvis25_spi",
->> +             .pm = &st_uvis25_pm_ops,
->> +             .of_match_table = of_match_ptr(st_uvis25_spi_of_match),
->> +     },
->> +     .probe = st_uvis25_spi_probe,
->> +     .id_table = st_uvis25_spi_id_table,
->> +};
->> +module_spi_driver(st_uvis25_driver);
->> +
->> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
->> +MODULE_DESCRIPTION("STMicroelectronics uvis25 spi driver");
->> +MODULE_LICENSE("GPL v2");
->
-
-
-
--- 
-UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
-unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
-umount; make clean; sleep
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
