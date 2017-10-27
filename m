@@ -1,44 +1,54 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: light: add UVIS25 device bindings
-Date: Fri, 27 Oct 2017 17:03:26 +0200
-Message-ID: <CAA2SeN+m7RbnbBzq8Q2wevVz13Y0zL-oMiu_1d9G5SJULwUvRw@mail.gmail.com>
-References: <20171025181609.3803-1-lorenzo.bianconi@st.com>
- <20171025181609.3803-3-lorenzo.bianconi@st.com> <20171027135146.bdif6oy7olndmew4@rob-hp-laptop>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
+Date: Fri, 27 Oct 2017 23:06:48 +0800
+Message-ID: <20171027150658.18509-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171027135146.bdif6oy7olndmew4@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRUXZXHQKGQEN4L7SKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, Oct 25, 2017 at 08:16:09PM +0200, Lorenzo Bianconi wrote:
->> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/light/st_uvis25.txt    | 23 ++++++++++++++++++++++
->
-> st,uvis25.txt matching the compatible.
+This patchset adds support for the SimpleFB on Allwinner SoCs with
+"Display Engine 2.0".
 
-Hi Rob,
+PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
 
-I did not get you what you mean.
-Thanks. Regards,
+PATCH 4 adds the pipeline strings for DE2 SimpleFB.
 
-Lorenzo
+PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
+for H3/H5 SoCs.
 
->
-> Otherwise,
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
 
+Icenowy Zheng (10):
+  dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
+  clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
+  clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
+  dt-bindings: simplefb-sunxi: add pipelines for DE2
+  ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+  arm64: allwinner: h5: add compatible string for DE2 CCU
+  ARM: sunxi: h3/h5: add simplefb nodes
+  dt-bindings: add binding for A64 DE2 CCU SRAM
+  arm64: allwinner: a64: add DE2 CCU for A64 SoC
+  arm64: allwinner: a64: add simplefb for A64 SoC
 
+ .../devicetree/bindings/clock/sun8i-de2.txt        | 10 +++-
+ .../bindings/display/simple-framebuffer-sunxi.txt  |  4 ++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 ++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 ++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65 ++++++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 ++
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 53 +++++++++++++++++-
+ 7 files changed, 178 insertions(+), 5 deletions(-)
 
 -- 
-UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
-unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
-umount; make clean; sleep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.6
