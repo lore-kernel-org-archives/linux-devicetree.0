@@ -1,78 +1,54 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] display: panel: Add Tianma tm070rvhg71 display support
- (800x480)
-Date: Fri, 27 Oct 2017 10:18:00 +0200
-Message-ID: <20171027101800.5dbfb161@jawa>
-References: <1508537403-878-1-git-send-email-lukma@denx.de>
-        <20171027031336.psu7hn27w2xajyux@rob-hp-laptop>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v16 17/32] v4l: async: Prepare for async sub-device
+ notifiers
+Date: Fri, 27 Oct 2017 11:30:01 +0300
+Message-ID: <20171027083001.4zaeaewb2zyqatu6@valkosipuli.retiisi.org.uk>
+References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
+ <20171026075342.5760-18-sakari.ailus@linux.intel.com>
+ <20171026221051.GK2297@bigcity.dyn.berto.se>
+ <20171027081002.GL2297@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171027031336.psu7hn27w2xajyux@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171027081002.GL2297@bigcity.dyn.berto.se>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-> On Sat, Oct 21, 2017 at 12:10:03AM +0200, Lukasz Majewski wrote:
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> >  .../bindings/display/panel/tianma,tm070rvhg71.txt  |  7 ++++++
-> >  drivers/gpu/drm/panel/panel-simple.c               | 27
-> > ++++++++++++++++++++++ 2 files changed, 34 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
-> > b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
-> > new file mode 100644 index 0000000..b84217f --- /dev/null
-> > +++
-> > b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
-> > @@ -0,0 +1,7 @@ +Tianma Micro-electronics TM070RVHG71 7.0" WXGA TFT
-> > LCD panel +
-> > +Required properties:
-> > +- compatible: should be "tianma,tm070rvhg71
-> > +
-> > +This binding is compatible with the simple-panel binding, which is
-> > specified +in simple-panel.txt in this directory.
+On Fri, Oct 27, 2017 at 10:10:02AM +0200, Niklas Söderlund wrote:
+> > > @@ -151,6 +152,31 @@ static int v4l2_async_match_notify(struct v4l2_async_notifier *notifier,
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +/* Test all async sub-devices in a notifier for a match. */
+> > > +static int v4l2_async_notifier_try_all_subdevs(
+> > > +	struct v4l2_async_notifier *notifier)
+> > > +{
+> > > +	struct v4l2_device *v4l2_dev = notifier->v4l2_dev;
+> > > +	struct v4l2_subdev *sd, *tmp;
+> > > +
+> > > +	list_for_each_entry_safe(sd, tmp, &subdev_list, async_list) {
+> > > +		struct v4l2_async_subdev *asd;
+> > > +		int ret;
+> > > +
+> > > +		asd = v4l2_async_find_match(notifier, sd);
+> > > +		if (!asd)
+> > > +			continue;
+> > > +
+> > > +		ret = v4l2_async_match_notify(notifier, v4l2_dev, sd, asd);
+> > > +		if (ret < 0) {
+> > > +			mutex_unlock(&list_lock);
 > 
-> No supplies? Still need to list power-supply here if so, so it is
-> clear that this display has a single supply (or you need to list
-> multiple ones if not).
+> The mutex should not be unlocked here, as the caller will also unlock it 
+> if ret is none zero. You fix this in 18/32 so the end result is OK but I 
+> think its better to fix this in this patch.
 
-I took the same approach as several other simple panels having
-description in Documentation/devicetree/bindings/display/panel/*
-directory (e.g. innolux,g121i1-l01.txt) .
+Good catch. I've sent v16.1 of these and forgot the change log. There are
+no other changes than fixing this, i.e. the end result is the same.
 
-In the description it is stated that this binding is compatible with
-one documented in the simple-panel.txt, which defines following
-properties:
-
-Required properties:
-- power-supply: regulator to provide the supply voltage
-
-Optional properties:
-- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-- enable-gpios: GPIO pin to enable or disable the panel
-- backlight: phandle of the backlight device attached to the panel
-
-
-Do I need to do something more?
-
-> 
-> Rob
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
