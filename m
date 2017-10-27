@@ -1,119 +1,49 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] media: ov7740: Document device tree bindings
-Date: Fri, 27 Oct 2017 13:59:39 +0300
-Message-ID: <20171027105939.2rxfjfqezexcatc5@valkosipuli.retiisi.org.uk>
-References: <20171027074220.23839-1-wenyou.yang@microchip.com>
- <20171027074220.23839-3-wenyou.yang@microchip.com>
+From: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH 0/4] add CAAM DMA memcpy driver
+Date: Fri, 27 Oct 2017 11:00:18 +0000
+Message-ID: <VI1PR0402MB33422B48B506D7FF6A894AE0985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+References: <20171026100008.32169-1-radu.alexe@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171027074220.23839-3-wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Radu Andrei Alexe <radu.alexe-3arQi8VN3Tc@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org" <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wenyou,
-
-On Fri, Oct 27, 2017 at 03:42:20PM +0800, Wenyou Yang wrote:
-> Add the device tree binding documentation for ov7740 driver and
-> add a new entry of ov7740 to the MAINTAINERS file.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
-> 
-> Changes in v2:
->  - Split off the bindings into a separate patch.
->  - Add a new entry to the MAINTAINERS file.
-> 
->  .../devicetree/bindings/media/i2c/ov7740.txt       | 43 ++++++++++++++++++++++
->  MAINTAINERS                                        |  8 ++++
->  2 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7740.txt b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> new file mode 100644
-> index 000000000000..b306e5aa97bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> @@ -0,0 +1,43 @@
-> +* Omnivision OV7740 CMOS image sensor
-> +
-> +The Omnivision OV7740 image sensor supports multiple output image
-> +size, such as VGA, and QVGA, CIF and any size smaller. It also
-> +supports the RAW RGB and YUV output formats.
-> +
-> +Required Properties:
-> +- compatible: should be "ovti,ov7740"
-> +- clocks: reference to the xvclk input clock.
-> +- clock-names: should be "xvclk".
-> +
-> +Optional Properties:
-> +- reset-gpios: reference to the GPIO connected to the reset_b pin,
-> +  if any. Active low with pull-ip resistor.
-> +- powerdown-gpios: reference to the GPIO connected to the pwdn pin,
-> +  if any. Active high with pull-down resistor.
-> +
-> +The device node must contain one 'port' child node for its digital
-> +output video port, in accordance with the video interface bindings
-> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Could you add there's a single endpoint node as well, and explicitly
-document the relevant properties? E.g. as in
-Documentation/devicetree/bindings/media/i2c/nokia,smia.txt .
-
-> +
-> +Example:
-> +
-> +	i2c1: i2c@fc028000 {
-> +		ov7740: camera@21 {
-> +			compatible = "ovti,ov7740";
-> +			reg = <0x21>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +			clocks = <&isc>;
-> +			clock-names = "xvclk";
-> +			assigned-clocks = <&isc>;
-> +			assigned-clock-rates = <24000000>;
-> +			reset-gpios = <&pioA 43 GPIO_ACTIVE_LOW>;
-> +			powerdown-gpios = <&pioA 44 GPIO_ACTIVE_HIGH>;
-> +
-> +			port {
-> +				ov7740_0: endpoint {
-> +					remote-endpoint = <&isc_0>;
-> +				};
-> +			};
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 90230fe020f3..f0f3f121d1d8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9965,6 +9965,14 @@ S:	Maintained
->  F:	drivers/media/i2c/ov7670.c
->  F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
->  
-> +OMNIVISION OV7740 SENSOR DRIVER
-> +M:	Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> +L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	drivers/media/i2c/ov7740.c
-> +F:	Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> +
->  ONENAND FLASH DRIVER
->  M:	Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->  L:	linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-
-Please put the MAINTAINERS change to the driver patch after the DT binding
-patch.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
+On 10/26/2017 1:01 PM, Radu Alexe wrote:=0A=
+> This patch-set introduces a new DMA memcpy driver based on the DMA=0A=
+> capabilities of the CAAM crypto engine. Because of this dependency the=0A=
+> included commits target various parts of the kernel tree.=0A=
+I don't see the patches on any of the mail lists.=0A=
+If they are moderated, I would expect this to be mentioned in the=0A=
+MAINTAINERS file.=0A=
+=0A=
+> =0A=
+> Patch 1.=0A=
+> Since the CAAM DMA driver is a platform driver it is enabled by a new nod=
+e=0A=
+> in the device tree. This commit adds documentation for the device tree=0A=
+> bindings.=0A=
+> =0A=
+> Patch 2.=0A=
+> This patch adds the "caam-dma" node in the fsl-ls1012a.dtsi file.=0A=
+> =0A=
+> Patch 3.=0A=
+> This commit adds various capabilities in the JR driver of the CAAM that i=
+s=0A=
+> used by the CAAM DMA driver.=0A=
+> =0A=
+> Patch 4.=0A=
+> Adds the CAAM DMA memcpy driver.=0A=
+> =0A=
+> Patch 1 and 3 should be merged by the crypto maintainers, patch 2 by=0A=
+> devicetree maintainers and patch 4 by the DMA maintainers.=0A=
+I would go with all the patches through the dmaengine tree.=0A=
+=0A=
+Horia=0A=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
