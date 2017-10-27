@@ -1,94 +1,87 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: scsi: ufs: add document for hisi-ufs
-Date: Thu, 26 Oct 2017 20:08:46 -0500
-Message-ID: <20171027010846.iiybapc24qpotyyv@rob-hp-laptop>
-References: <20171020085045.7737-1-liwei213@huawei.com>
- <20171020085045.7737-3-liwei213@huawei.com>
+From: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH resend 00/12] staging: typec: tcpci: move out of staging
+Date: Fri, 27 Oct 2017 01:17:28 +0000
+Message-ID: <DB4PR04MB076872D3C7B62C7B7442C1DA895A0@DB4PR04MB0768.eurprd04.prod.outlook.com>
+References: <1506398723-19359-1-git-send-email-jun.li@nxp.com>
+ <96d37f9b-f04d-f923-ec09-b25fd62a90be@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171020085045.7737-3-liwei213@huawei.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Li Wei <liwei213@huawei.com>
-Cc: mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org, guodong.xu@linaro.org, fengbaopeng@hisilicon.com, lihuan41@hisilicon.com, wangyupeng4@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <96d37f9b-f04d-f923-ec09-b25fd62a90be-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <yueyao-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org" <o_leveque-1tsiiZ//OF9QFI55V6+gNQ@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 04:50:42PM +0800, Li Wei wrote:
-> add ufs node document for Hisilicon.
-> 
-> Signed-off-by: Li Wei <liwei213@huawei.com>
-> ---
->  Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-hisi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
-> new file mode 100644
-> index 000000000000..ee114a65143d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
-> @@ -0,0 +1,47 @@
-> +* Hisilicon Universal Flash Storage (UFS) Host Controller
-> +
-> +UFS nodes are defined to describe on-chip UFS hardware macro.
-> +Each UFS Host Controller should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains one of the following -
-> +			"hisilicon,hi3660-ufs" for hisi ufs host controller
-> +			 present on Hi3660 chipset.
-> +- reg               : should contain UFS register address space & UFS SYS CTRL register address,
-> +- interrupt-parent  : interrupt device
-> +- interrupts        : interrupt number
-> +- clocks	        : List of phandle and clock specifier pairs
-> +- clock-names       : List of clock input name strings sorted in the same
-> +		      order as the clocks property. "clk_ref", "clk_phy" is optional
-> +- resets            : reset node register, one reset the clk and the other reset the controller
-> +- reset-names       : describe reset node register
-> +
-> +Optional properties for board device:
-> +- reset-gpio			: specifies to reset devices
-
-reset-gpios is the preferred form.
-
-> +
-> +Example:
-> +
-> +	ufs: ufs@ff3b0000 {
-> +		compatible = "hisilicon,hi3660-ufs", "jedec,ufs-1.1";
-> +		/* 0: HCI standard */
-> +		/* 1: UFS SYS CTRL */
-> +		reg = <0x0 0xff3b0000 0x0 0x1000>,
-> +			<0x0 0xff3b1000 0x0 0x1000>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&crg_ctrl HI3660_CLK_GATE_UFSIO_REF>,
-> +			<&crg_ctrl HI3660_CLK_GATE_UFSPHY_CFG>;
-> +		clock-names = "clk_ref", "clk_phy";
-> +		freq-table-hz = <0 0>, <0 0>;
-
-Not documented.
-
-> +		/* offset: 0x84; bit: 12 */
-> +		/* offset: 0x84; bit: 7  */
-> +		resets = <&crg_rst 0x84 12>,
-> +			<&crg_rst 0x84 7>;
-> +		reset-names = "rst", "assert";
-> +	};
-> +
-> +	&ufs {
-
-Don't show the SoC/Board split in examples. That's just convention, not 
-part of the binding.
-
-> +		reset-gpio = <&gpio18 1 0>;
-> +		status = "okay";
-
-Plus it's wrong because the default is okay.
-
-> +	};
-> +
-> -- 
-> 2.11.0
-> 
+SGkgR3VlbnRlciwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVu
+dGVyIFJvZWNrIFttYWlsdG86Z3JvZWNrN0BnbWFpbC5jb21dIE9uIEJlaGFsZiBPZiBHdWVudGVy
+IFJvZWNrDQo+IFNlbnQ6IEZyaWRheSwgT2N0b2JlciAyNywgMjAxNyA4OjQzIEFNDQo+IFRvOiBK
+dW4gTGkgPGp1bi5saUBueHAuY29tPjsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgr
+ZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGhlaWtraS5rcm9nZXJ1c0Bs
+aW51eC5pbnRlbC5jb20NCj4gQ2M6IHl1ZXlhb0Bnb29nbGUuY29tOyBvX2xldmVxdWVAb3Jhbmdl
+LmZyOyBQZXRlciBDaGVuDQo+IDxwZXRlci5jaGVuQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hl
+bmcuZG9uZ0BueHAuY29tPjsgbGludXgtDQo+IHVzYkB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggcmVzZW5kIDAwLzEyXSBz
+dGFnaW5nOiB0eXBlYzogdGNwY2k6IG1vdmUgb3V0IG9mIHN0YWdpbmcNCj4gDQo+IFdoYXQgaGFw
+cGVuZWQgd2l0aCB0aGlzIHNlcmllcyA/IERpZCB3ZSBhbGwgZHJvcCB0aGUgYmFsbCA/DQo+IA0K
+DQpJbiBbMV0gUm9iIG5lZWRzIHRoZSB0eXBlYyByZWxhdGVkIGR0IGJpbmRpbmdzIGFuZCBwcm9w
+ZXJ0aWVzIHNob3VsZCBiZSBtb3JlIGNvbXBsZXRlDQphbmQgYmFzZWQgb24gVVNCIGNvbm5lY3Rv
+ciBkZWZpbml0aW9uWzJdKHdoaWNoIGlzIHN0aWxsIGluIGRpc2N1c3Npb24pLCBzbyB0aGlzIHNl
+cmllcyBpcw0KZGVwZW5kZW50IG9uIHRoYXQsIEkgYW0gYnVzeSByZWNlbnRseSwgSSB3aWxsIGNo
+ZWNrIFsyXSB0byBzZWUgaG93IHRvIG1vdmUgZm9yd2FyZCBvbg0KdGhpcywgYW55IGNvbW1lbnRz
+L3Rob3VnaHQgbXVjaCBhcHByZWNpYXRlZC4NCg0KWzFdIGh0dHBzOi8vd3d3LnNwaW5pY3MubmV0
+L2xpc3RzL2xpbnV4LXVzYi9tc2cxNjE0MTIuaHRtbA0KWzJdIGh0dHA6Ly93d3cuc3Bpbmljcy5u
+ZXQvbGlzdHMvZGV2aWNldHJlZS9tc2cxOTc2MDEuaHRtbA0KIA0KVGhhbmtzDQpMaSBKdW4NCg0K
+PiBHdWVudGVyDQo+IA0KPiBPbiAwOS8yNS8yMDE3IDA5OjA1IFBNLCBMaSBKdW4gd3JvdGU6DQo+
+ID4gVGhpcyBwYXRjaCBzZXQgYXR0ZW1wdHMgdG8gbW92ZSB0aGUgdGNwY2kgZHJpdmVyIG91dCBv
+ZiBzdGFnaW5nIGJ5IGZpeA0KPiA+IHNvbWUgdGNwY2kgZHJpdmVyIGlzc3VlcyBhbmQgdmVyaWZp
+ZWQgb24gTlhQIFBUTjUxMTAsIHdoaWNoIGlzIGENCj4gPiBzdGFuZGFyZCB0Y3BjaSB0eXBlYyBw
+b3J0IGNvbnRyb2xsZXIgZGV2aWNlIHdpdGggcG93ZXIgZGVsaXZlcnkNCj4gPiBzdXBwb3J0LCB0
+ZXN0ZWQgcG93ZXIgc291cmNlIGFuZCBzaW5rIHdpdGggZHJwIGNvbmZpZy4NCj4gPg0KPiA+IExp
+IEp1biAoMTIpOg0KPiA+ICAgIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHBvcnQgdHlwZSBh
+bmQgcHJlZmVycmVkIHJvbGUNCj4gPiAgICB1c2I6IHR5cGVjOiBhZGQgYmFzaWMgdHlwZWMgcHJv
+cGVydGllcw0KPiA+ICAgIHN0YWdpbmc6IHR5cGVjOiB0Y3BjaTogYWRkIGRvY3VtZW50YXRpb24g
+Zm9yIHRjcGNpDQo+ID4gICAgc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBzdXBwb3J0IHBvcnQgY29u
+ZmlnIHBhc3NlZCB2aWEgZHQNCj4gPiAgICBzdGFnaW5nOiB0eXBlYzogdGNwY2k6IHJlZ2lzdGVy
+IHBvcnQgYmVmb3JlIHJlcXVlc3QgaXJxDQo+ID4gICAgc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBl
+bmFibGUgdmJ1cyBkZXRlY3Rpb24NCj4gPiAgICB0eXBlYzogdGNwbTogYWRkIHN0YXJ0aW5nIHZh
+bHVlIGZvciBkcnAgdG9nZ2xpbmcNCj4gPiAgICBzdGFnaW5nOiB0eXBlYzogdGNwY2k6IGNvcnJl
+Y3QgZHJwIHRvZ2dsaW5nDQo+ID4gICAgdXNiOiB0eXBlYzogdGNwbTogb25seSBkcml2ZXMgdGhl
+IGNvbm5lY3RlZCBjYyBsaW5lIHdoZW4gYXR0YWNoZWQNCj4gPiAgICBzdGFnaW5nOiB0eXBlYzog
+dGNwY2k6IHVwZGF0ZSBzZXRfY2MgZm9yIGRpZmZlcmVudCBzdGF0ZQ0KPiA+ICAgIHN0YWdpbmc6
+IHR5cGVjOiB0Y3BjaTogT25seSB0b3VjaCB0YXJnZXQgYml0IHdoZW4gZW5hYmxlIHZjb25uDQo+
+ID4gICAgc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBtb3ZlIHRjcGNpIGRyaXZlciBvdXQgb2Ygc3Rh
+Z2luZw0KPiA+DQo+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdHlwZWMtdGNwY2ku
+dHh0ICAgICAgICB8ICAzNiArKysrDQo+ID4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdXNiL3R5cGVjLnR4dCAgICB8ICA0NiArKysrKw0KPiA+ICAgZHJpdmVycy9zdGFnaW5n
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgLQ0KPiA+ICAgZHJpdmVy
+cy9zdGFnaW5nL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQ0KPiA+
+ICAgZHJpdmVycy9zdGFnaW5nL3R5cGVjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAg
+MTQgLS0NCj4gPiAgIGRyaXZlcnMvc3RhZ2luZy90eXBlYy9NYWtlZmlsZSAgICAgICAgICAgICAg
+ICAgICAgIHwgICAxIC0NCj4gPiAgIGRyaXZlcnMvc3RhZ2luZy90eXBlYy9UT0RPICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICA1IC0NCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVjL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsNCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVj
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgIGRyaXZlcnMv
+e3N0YWdpbmcgPT4gdXNifS90eXBlYy90Y3BjaS5jICAgICAgICAgICAgIHwgMTg1ICsrKysrKysr
+KysrKysrKystLS0tLQ0KPiA+ICAgZHJpdmVycy97c3RhZ2luZyA9PiB1c2J9L3R5cGVjL3RjcGNp
+LmggICAgICAgICAgICAgfCAgIDANCj4gPiAgIGRyaXZlcnMvdXNiL3R5cGVjL3RjcG0uYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDIyICsrLQ0KPiA+ICAgZHJpdmVycy91c2IvdHlwZWMv
+dHlwZWMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNDUgKysrKysNCj4gPiAgIGluY2x1
+ZGUvbGludXgvdXNiL3RjcG0uaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICstDQo+
+ID4gICBpbmNsdWRlL2xpbnV4L3VzYi90eXBlYy5oICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMiArDQo+ID4gICAxNSBmaWxlcyBjaGFuZ2VkLCAzMDYgaW5zZXJ0aW9ucygrKSwgNzAgZGVs
+ZXRpb25zKC0pDQo+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3VzYi90eXBlYy10Y3BjaS50eHQNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3R5cGVjLnR4dA0KPiA+ICAg
+ZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc3RhZ2luZy90eXBlYy9LY29uZmlnDQo+ID4gICBk
+ZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zdGFnaW5nL3R5cGVjL01ha2VmaWxlDQo+ID4gICBk
+ZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zdGFnaW5nL3R5cGVjL1RPRE8NCj4gPiAgIHJlbmFt
+ZSBkcml2ZXJzL3tzdGFnaW5nID0+IHVzYn0vdHlwZWMvdGNwY2kuYyAoNzMlKQ0KPiA+ICAgcmVu
+YW1lIGRyaXZlcnMve3N0YWdpbmcgPT4gdXNifS90eXBlYy90Y3BjaS5oICgxMDAlKQ0KPiA+DQoN
+Cg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
