@@ -1,108 +1,71 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] livetree: avoid assertion of orphan phandles with
- overlays
-Date: Fri, 27 Oct 2017 16:33:05 +0200
-Message-ID: <20171027143305.GE7115@umbus>
-References: <1508854458-9937-1-git-send-email-t-kristo@ti.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH 1/2] dt-bindings: add binding for A64 DE2
+ CCU with SRAM section
+Date: Fri, 27 Oct 2017 22:33:29 +0800
+Message-ID: <b8c770bdc7a0541b8d1179598d814b75@aosc.io>
+References: <20171014122925.13220-1-icenowy@aosc.io>
+ <20171016091136.b4rnckh2tfi26shx@flea.lan>
+ <d62ac8b8ff9073b886ceaa9ce54e6903@aosc.io>
+ <20171016120912.lxu7rikhffxsu5o4@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cPi+lWm09sJ+d57q"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1508854458-9937-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBO4HZXHQKGQEQW54ALY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171016120912.lxu7rikhffxsu5o4-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---cPi+lWm09sJ+d57q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 24, 2017 at 05:14:18PM +0300, Tero Kristo wrote:
-> Right now, check_interrupts_property fails with overlays, as the phandle
-> for the interrupt-parent can be orphan. Avoid this by allowing the orphan
-> node to pass the assert check.
+=E5=9C=A8 2017-10-16 20:09=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> On Mon, Oct 16, 2017 at 05:41:10PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+>> =E5=9C=A8 2017-10-16 17:11=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
+=BC=9A
+>> > On Sat, Oct 14, 2017 at 08:29:24PM +0800, Icenowy Zheng wrote:
+>> > > A64's Display Engine 2.0 needs a section of SRAM (SRAM C) to be
+>> > > claimed.
+>> >
+>> > Why?
+>>=20
+>> Allwinner didn't document this, but if the SRAM is not claimed, the
+>> DE2 MMIO zone is totally not accessible.
 >=20
-> The process_checks() call is also moved later during init sequence,
-> so that we can use the global variable generate_fixups to check if
-> we are compiling an overlay.
+> Not accessible how? It generates an abort when you access it? It
+> returns 0?
 >=20
-> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-
-Applied, with a bit of a tweak.
-
-> ---
->  dtc.c      | 3 ++-
->  livetree.c | 2 +-
->  2 files changed, 3 insertions(+), 2 deletions(-)
+>> It seems that Allwinner uses the SRAM C in the DE2 internally.
 >=20
-> diff --git a/dtc.c b/dtc.c
-> index 5ed873c..a0f4603 100644
-> --- a/dtc.c
-> +++ b/dtc.c
-> @@ -319,13 +319,14 @@ int main(int argc, char *argv[])
->  		dti->boot_cpuid_phys =3D cmdline_boot_cpuid;
-> =20
->  	fill_fullpaths(dti->dt, "");
-> -	process_checks(force, dti);
-> =20
->  	/* on a plugin, generate by default */
->  	if (dti->dtsflags & DTSF_PLUGIN) {
->  		generate_fixups =3D 1;
->  	}
-> =20
-> +	process_checks(force, dti);
-> +
->  	if (auto_label_aliases)
->  		generate_label_tree(dti, "aliases", false);
-> =20
-> diff --git a/livetree.c b/livetree.c
-> index 6846ad2..d6a7681 100644
-> --- a/livetree.c
-> +++ b/livetree.c
-> @@ -540,7 +540,7 @@ struct node *get_node_by_phandle(struct node *tree, c=
-ell_t phandle)
->  {
->  	struct node *child, *node;
-> =20
-> -	assert((phandle !=3D 0) && (phandle !=3D -1));
-> +	assert((phandle !=3D 0 && (phandle !=3D -1 || generate_fixups =3D=3D 1)=
-));
-> =20
->  	if (tree->phandle =3D=3D phandle) {
->  		if (tree->deleted)
+> Then shouldn't it be tied to all the DE2 devices then? So mixers
+> too. Either way, this should be mentionned in your commit logs. How
+> you're fixing things is much less interesting than why you're doing
+> them. You can tell how you're doing them from your code already.
+
+Yes I checked and when the SRAM is not claimed any part in DE2 memory
+zone can't be accessed.
+
+Should I also add the code that claims the SRAM in the mixer code? Or
+just place the device tree property is enough? (As the mixers depend
+on the DE2 CCU) Or just ignore this?
+
+>=20
+> Maxime
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 --=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---cPi+lWm09sJ+d57q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlnzQ58ACgkQbDjKyiDZ
-s5LZVxAA4uBJCXhyOB7atAcDwrwdGNTM6FwnzS+vIbDdFtZP3XSuhXvnjWV3IX3C
-FxIakIT+/boSXOXH0tabg2f7RSbXHXgKbyzJaQ6Y8qHsOZJ9pHrgaKkdJQx3cSaX
-aDHKycd0IYF3CJ5p3TDCubF6ZvmnLrgRJDGTD4RUoYL/82JB5uABE3azol5vxImw
-avsgFDZa/SyAVM81tn3Ny4pVcUmagZHTs78LZeSBk72/KAur2j0svnh7IJ1upIK2
-swCRqhlWfHULbpHoG0W8HYxBWguHTkSb7RWPw6WBoGwJUEX5/sJCHfBfwAeVIvOr
-k/zObv4f/PfPk/p0VhlXnXjpd6FdRgtg+Vy43nOw/+SKvZwyZ2YABMXKdngzEZYV
-u3vVe7jBKL1lj+b1W1fGrJqQm5ySYDM9kZgy5k/7kXPbtbk76F2eZRAe/YQ7cris
-ydurea5fKdKr1BBo9c83mFR4iRtX4v9IkKNWIwdfz2vO2dfUKycxdduwza4vb6Dj
-gYBTJwonWMdPNr9f/BpPLewvVZUN/0a212r1DApCx6z6Hbd51SzEZwGKcMmhwpUU
-NDQ21Ot5l1+EARgrkzFg1Ozbgyu1g74RbgYGXlB4OZO7V6KKQUwuCzmJF8tr3z7N
-ovDY+Y++Zvudf7AFyfPZx5wUn0FWIAD4xtrNV/TZ4V65VyD5iOw=
-=8oY3
------END PGP SIGNATURE-----
-
---cPi+lWm09sJ+d57q--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
