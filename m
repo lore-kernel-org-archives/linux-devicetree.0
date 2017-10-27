@@ -1,206 +1,898 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?=
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v16 26/32] v4l: fwnode: Add a convenience function for
- registering sensors
-Date: Fri, 27 Oct 2017 15:06:01 +0200
-Message-ID: <20171027130601.GD8854@bigcity.dyn.berto.se>
-References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
- <20171026075342.5760-27-sakari.ailus@linux.intel.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: light: add support to UVIS25 sensor
+Date: Fri, 27 Oct 2017 15:26:09 +0200
+Message-ID: <CAA2SeN+WGorb6t52euEnVYOp+R8Mxa0_Y9eeM0qo6=-MsnZ3EQ@mail.gmail.com>
+References: <20171025181609.3803-1-lorenzo.bianconi@st.com>
+ <20171025181609.3803-2-lorenzo.bianconi@st.com> <20171026183540.288dfdea@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171026075342.5760-27-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171026183540.288dfdea@archlinux>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-10-26 10:53:36 +0300, Sakari Ailus wrote:
-> Add a convenience function for parsing firmware for information on related
-> devices using v4l2_async_notifier_parse_fwnode_sensor_common() registering
-> the notifier and finally the async sub-device itself.
-> 
-> This should be useful for sensor drivers that do not have device specific
-> requirements related to firmware information parsing or the async
-> framework.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> On Wed, 25 Oct 2017 20:16:08 +0200
+> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> Really minor English comment to start.
+> add support 'for' UVIS25 sensor
+>
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Hi Jonathan,
 
-> ---
->  drivers/media/v4l2-core/v4l2-async.c  | 19 ++++++++++++----
->  drivers/media/v4l2-core/v4l2-fwnode.c | 41 +++++++++++++++++++++++++++++++++++
->  include/media/v4l2-async.h            | 22 +++++++++++++++++++
->  include/media/v4l2-subdev.h           |  3 +++
->  4 files changed, 81 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-> index b4e88eef195f..e81a72b8d46e 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -474,19 +474,25 @@ int v4l2_async_subdev_notifier_register(struct v4l2_subdev *sd,
->  }
->  EXPORT_SYMBOL(v4l2_async_subdev_notifier_register);
->  
-> -void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-> +static void __v4l2_async_notifier_unregister(
-> +	struct v4l2_async_notifier *notifier)
->  {
-> -	if (!notifier->v4l2_dev && !notifier->sd)
-> +	if (!notifier || (!notifier->v4l2_dev && !notifier->sd))
->  		return;
->  
-> -	mutex_lock(&list_lock);
-> -
->  	v4l2_async_notifier_unbind_all_subdevs(notifier);
->  
->  	notifier->sd = NULL;
->  	notifier->v4l2_dev = NULL;
->  
->  	list_del(&notifier->list);
-> +}
-> +
-> +void v4l2_async_notifier_unregister(struct v4l2_async_notifier *notifier)
-> +{
-> +	mutex_lock(&list_lock);
-> +
-> +	__v4l2_async_notifier_unregister(notifier);
->  
->  	mutex_unlock(&list_lock);
->  }
-> @@ -596,6 +602,11 @@ void v4l2_async_unregister_subdev(struct v4l2_subdev *sd)
->  {
->  	mutex_lock(&list_lock);
->  
-> +	__v4l2_async_notifier_unregister(sd->subdev_notifier);
-> +	v4l2_async_notifier_cleanup(sd->subdev_notifier);
-> +	kfree(sd->subdev_notifier);
-> +	sd->subdev_notifier = NULL;
-> +
->  	if (sd->asd) {
->  		struct v4l2_async_notifier *notifier = sd->notifier;
->  
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index 1234bd1a2f49..82af608fd626 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -29,6 +29,7 @@
->  
->  #include <media/v4l2-async.h>
->  #include <media/v4l2-fwnode.h>
-> +#include <media/v4l2-subdev.h>
->  
->  enum v4l2_fwnode_bus_type {
->  	V4L2_FWNODE_BUS_TYPE_GUESS = 0,
-> @@ -900,6 +901,46 @@ int v4l2_async_notifier_parse_fwnode_sensor_common(
->  }
->  EXPORT_SYMBOL_GPL(v4l2_async_notifier_parse_fwnode_sensor_common);
->  
-> +int v4l2_async_register_subdev_sensor_common(struct v4l2_subdev *sd)
-> +{
-> +	struct v4l2_async_notifier *notifier;
-> +	int ret;
-> +
-> +	if (WARN_ON(!sd->dev))
-> +		return -ENODEV;
-> +
-> +	notifier = kzalloc(sizeof(*notifier), GFP_KERNEL);
-> +	if (!notifier)
-> +		return -ENOMEM;
-> +
-> +	ret = v4l2_async_notifier_parse_fwnode_sensor_common(sd->dev,
-> +							     notifier);
-> +	if (ret < 0)
-> +		goto out_cleanup;
-> +
-> +	ret = v4l2_async_subdev_notifier_register(sd, notifier);
-> +	if (ret < 0)
-> +		goto out_cleanup;
-> +
-> +	ret = v4l2_async_register_subdev(sd);
-> +	if (ret < 0)
-> +		goto out_unregister;
-> +
-> +	sd->subdev_notifier = notifier;
-> +
-> +	return 0;
-> +
-> +out_unregister:
-> +	v4l2_async_notifier_unregister(notifier);
-> +
-> +out_cleanup:
-> +	v4l2_async_notifier_cleanup(notifier);
-> +	kfree(notifier);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_async_register_subdev_sensor_common);
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Sakari Ailus <sakari.ailus@linux.intel.com>");
->  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
-> diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-> index 8d8cfc3f3100..6152434cbe82 100644
-> --- a/include/media/v4l2-async.h
-> +++ b/include/media/v4l2-async.h
-> @@ -174,6 +174,28 @@ void v4l2_async_notifier_cleanup(struct v4l2_async_notifier *notifier);
->  int v4l2_async_register_subdev(struct v4l2_subdev *sd);
->  
->  /**
-> + * v4l2_async_register_subdev_sensor_common - registers a sensor sub-device to
-> + *					      the asynchronous sub-device
-> + *					      framework and parse set up common
-> + *					      sensor related devices
-> + *
-> + * @sd: pointer to struct &v4l2_subdev
-> + *
-> + * This function is just like v4l2_async_register_subdev() with the exception
-> + * that calling it will also parse firmware interfaces for remote references
-> + * using v4l2_async_notifier_parse_fwnode_sensor_common() and registers the
-> + * async sub-devices. The sub-device is similarly unregistered by calling
-> + * v4l2_async_unregister_subdev().
-> + *
-> + * While registered, the subdev module is marked as in-use.
-> + *
-> + * An error is returned if the module is no longer loaded on any attempts
-> + * to register it.
-> + */
-> +int __must_check v4l2_async_register_subdev_sensor_common(
-> +	struct v4l2_subdev *sd);
-> +
-> +/**
->   * v4l2_async_unregister_subdev - unregisters a sub-device to the asynchronous
->   * 	subdevice framework
->   *
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index e83872078376..ec399c770301 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -793,6 +793,8 @@ struct v4l2_subdev_platform_data {
->   *	list.
->   * @asd: Pointer to respective &struct v4l2_async_subdev.
->   * @notifier: Pointer to the managing notifier.
-> + * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
-> + *		     device using v4l2_device_register_sensor_subdev().
->   * @pdata: common part of subdevice platform data
->   *
->   * Each instance of a subdev driver should create this struct, either
-> @@ -823,6 +825,7 @@ struct v4l2_subdev {
->  	struct list_head async_list;
->  	struct v4l2_async_subdev *asd;
->  	struct v4l2_async_notifier *notifier;
-> +	struct v4l2_async_notifier *subdev_notifier;
->  	struct v4l2_subdev_platform_data *pdata;
->  };
->  
-> -- 
-> 2.11.0
-> 
+I added regmap support, thanks for the hint, the code is much better :)
+Just wondering how to manage drdy issue in more elegant way.
+As you outlined, the problem is due to the fact the trigger interrupt
+is currently masked
+but st_uvis25_set_enable() in st_uvis25_read_oneshot() actually
+enables interrupt generation
+so during the msleep() we get tons of interrupts if we configured the
+line as IRQ_TYPE_LEVEL_HIGH.
+One possible solution could be to drop trigger support and push data
+to iio buffer directly in main irq thread handler (but in this way we
+are force to use just this kind of trigger).
+What do you think?
+
+Reagrds,
+Lorenzo
+
+>
+>
+>> add support to STMicroelectronics UVIS25 uv sensor
+>> http://www.st.com/resource/en/datasheet/uvis25.pdf
+>>
+>> - continuos mode support
+>> - i2c support
+>> - spi support
+>> - trigger mode support
+>> - system PM support
+>
+> The autoincrement bit in the addresses is a little unusual, but
+> if feels like this could be neater done using regmap than
+> by spinning your own infrastructure.
+>
+> If there is no nasty side effect in always setting autoincrement
+> then you should be fine just putting that in write_flag_mask and
+> read_flag_mask.
+>
+
+I will do in v2
+
+> I've suggested an alternative for the interrupt handling.
+> Not sure it won't end up more hideous than what you have
+> but worth playing with perhaps.  Tryrenable was always
+> there for triggers to deal with odd race conditions
+> (originally it was a level interrupt connected to an
+> edge sensitive pxa27x input on the first board I had ;)
+>
+> Might work here at the cost of an extra few reads.
+>
+> Jonathan
+>>
+>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>  drivers/iio/light/Kconfig            |  22 +++
+>>  drivers/iio/light/Makefile           |   6 +
+>>  drivers/iio/light/st_uvis25.h        |  63 +++++++++
+>>  drivers/iio/light/st_uvis25_buffer.c | 147 +++++++++++++++++++
+>>  drivers/iio/light/st_uvis25_core.c   | 264 +++++++++++++++++++++++++++++++++++
+>>  drivers/iio/light/st_uvis25_i2c.c    |  76 ++++++++++
+>>  drivers/iio/light/st_uvis25_spi.c    | 109 +++++++++++++++
+>>  7 files changed, 687 insertions(+)
+>>  create mode 100644 drivers/iio/light/st_uvis25.h
+>>  create mode 100644 drivers/iio/light/st_uvis25_buffer.c
+>>  create mode 100644 drivers/iio/light/st_uvis25_core.c
+>>  create mode 100644 drivers/iio/light/st_uvis25_i2c.c
+>>  create mode 100644 drivers/iio/light/st_uvis25_spi.c
+>>
+>> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+>> index 2356ed9285df..3c5492ec9df6 100644
+>> --- a/drivers/iio/light/Kconfig
+>> +++ b/drivers/iio/light/Kconfig
+>> @@ -334,6 +334,28 @@ config STK3310
+>>        Choosing M will build the driver as a module. If so, the module
+>>        will be called stk3310.
+>>
+>> +config ST_UVIS25
+>> +     tristate "STMicroelectronics UVIS25 sensor driver"
+>> +     depends on (I2C || SPI)
+>> +     select IIO_BUFFER
+>> +     select IIO_TRIGGERED_BUFFER
+>> +     select ST_UVIS25_I2C if (I2C)
+>> +     select ST_UVIS25_SPI if (SPI_MASTER)
+>> +     help
+>> +       Say yes here to build support for STMicroelectronics UVIS25
+>> +       uv sensor
+>> +
+>> +       To compile this driver as a module, choose M here: the module
+>> +       will be called st_uvis25.
+>> +
+>> +config ST_UVIS25_I2C
+>> +     tristate
+>> +     depends on ST_UVIS25
+>> +
+>> +config ST_UVIS25_SPI
+>> +     tristate
+>> +     depends on ST_UVIS25
+>> +
+>>  config TCS3414
+>>       tristate "TAOS TCS3414 digital color sensor"
+>>       depends on I2C
+>> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+>> index fa32fa459e2e..971d316cba5f 100644
+>> --- a/drivers/iio/light/Makefile
+>> +++ b/drivers/iio/light/Makefile
+>> @@ -32,6 +32,12 @@ obj-$(CONFIG_RPR0521)              += rpr0521.o
+>>  obj-$(CONFIG_SENSORS_TSL2563)        += tsl2563.o
+>>  obj-$(CONFIG_SI1145)         += si1145.o
+>>  obj-$(CONFIG_STK3310)          += stk3310.o
+>> +
+>> +st_uvis25-y := st_uvis25_core.o st_uvis25_buffer.o
+> Why bother with the split?  I'd just have one file for both of
+> these.  There isn't enough code to justify it for readability reasons.
+>
+> I thought I was going to find it as a config dependency
+> (was going to suggest you always built if it was ;)
+>
+
+Will do in v2
+
+>> +obj-$(CONFIG_ST_UVIS25)              += st_uvis25.o
+>> +obj-$(CONFIG_ST_UVIS25_I2C)  += st_uvis25_i2c.o
+>> +obj-$(CONFIG_ST_UVIS25_SPI)  += st_uvis25_spi.o
+>> +
+>>  obj-$(CONFIG_TCS3414)                += tcs3414.o
+>>  obj-$(CONFIG_TCS3472)                += tcs3472.o
+>>  obj-$(CONFIG_TSL2583)                += tsl2583.o
+>> diff --git a/drivers/iio/light/st_uvis25.h b/drivers/iio/light/st_uvis25.h
+>> new file mode 100644
+>> index 000000000000..d444a73e743f
+>> --- /dev/null
+>> +++ b/drivers/iio/light/st_uvis25.h
+>> @@ -0,0 +1,63 @@
+>> +/*
+>> + * STMicroelectronics uvis25 sensor driver
+>> + *
+>> + * Copyright 2017 STMicroelectronics Inc.
+>> + *
+>> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * Licensed under the GPL-2.
+>> + */
+>> +
+>> +#ifndef ST_UVIS25_H
+>> +#define ST_UVIS25_H
+>> +
+>> +#define ST_UVIS25_DEV_NAME           "uvis25"
+>> +
+>> +#include <linux/iio/iio.h>
+>> +
+>> +#define ST_UVIS25_RX_MAX_LENGTH              8
+>> +#define ST_UVIS25_TX_MAX_LENGTH              8
+>> +
+>> +struct st_uvis25_transfer_buffer {
+>> +     u8 rx_buf[ST_UVIS25_RX_MAX_LENGTH];
+>> +     u8 tx_buf[ST_UVIS25_TX_MAX_LENGTH] ____cacheline_aligned;
+>> +};
+>> +
+>> +struct st_uvis25_transfer_function {
+>> +     int (*read)(struct device *dev, u8 addr, int len, u8 *data);
+>> +     int (*write)(struct device *dev, u8 addr, int len, u8 *data);
+>> +};
+>> +
+>> +/**
+>> + * struct st_uvis25_hw - ST UVIS25 sensor instance
+>> + * @dev: Pointer to instance of struct device (I2C or SPI).
+>> + * @lock: Mutex to protect read and write operations.
+>> + * @trig: The trigger in use by the driver.
+>> + * @enabled: Status of the sensor (false->off, true->on).
+>> + * @irq: Device interrupt line (I2C or SPI).
+>> + * @tf: Transfer function structure used by I/O operations.
+>> + * @tb: Transfer buffers used by SPI I/O operations.
+>> + */
+>> +struct st_uvis25_hw {
+>> +     struct device *dev;
+>> +
+>> +     struct mutex lock;
+>> +     struct iio_trigger *trig;
+>> +     bool enabled;
+>> +     int irq;
+>> +
+>> +     const struct st_uvis25_transfer_function *tf;
+>> +     struct st_uvis25_transfer_buffer tb;
+>> +};
+>> +
+>> +extern const struct dev_pm_ops st_uvis25_pm_ops;
+>> +
+>> +int st_uvis25_write_with_mask(struct st_uvis25_hw *hw, u8 addr,
+>> +                           u8 mask, u8 val);
+>> +int st_uvis25_set_enable(struct st_uvis25_hw *hw, bool enable);
+>> +int st_uvis25_probe(struct device *dev, int irq,
+>> +                 const struct st_uvis25_transfer_function *tf_ops);
+>> +int st_uvis25_allocate_buffer(struct iio_dev *iio_dev);
+>> +int st_uvis25_allocate_trigger(struct iio_dev *iio_dev);
+>> +
+>> +#endif /* ST_UVIS25_H */
+>> diff --git a/drivers/iio/light/st_uvis25_buffer.c b/drivers/iio/light/st_uvis25_buffer.c
+>> new file mode 100644
+>> index 000000000000..06b95287ca98
+>> --- /dev/null
+>> +++ b/drivers/iio/light/st_uvis25_buffer.c
+>> @@ -0,0 +1,147 @@
+>> +/*
+>> + * STMicroelectronics uvis25 sensor driver
+>> + *
+>> + * Copyright 2017 STMicroelectronics Inc.
+>> + *
+>> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * Licensed under the GPL-2.
+>> + */
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/device.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irqreturn.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +#include <linux/iio/buffer.h>
+>> +
+>> +#include "st_uvis25.h"
+>> +
+>> +#define ST_UVIS25_REG_CTRL3_ADDR     0x22
+>> +#define ST_UVIS25_REG_HL_MASK                BIT(7)
+>> +#define ST_UVIS25_REG_STATUS_ADDR    0x27
+>> +#define ST_UVIS25_REG_UV_DA_MASK     BIT(0)
+>> +
+>> +static irqreturn_t st_uvis25_trigger_handler_thread(int irq, void *private)
+>> +{
+>> +     struct st_uvis25_hw *hw = private;
+>> +     u8 status;
+>> +     int err;
+>> +
+>> +     err = hw->tf->read(hw->dev, ST_UVIS25_REG_STATUS_ADDR, sizeof(status),
+>> +                        &status);
+>> +     if (err < 0)
+>> +             return IRQ_HANDLED;
+>> +
+>> +     if (!(status & ST_UVIS25_REG_UV_DA_MASK))
+>> +             return IRQ_NONE;
+>> +
+>> +     iio_trigger_poll_chained(hw->trig);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +int st_uvis25_allocate_trigger(struct iio_dev *iio_dev)
+>> +{
+>> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +     bool irq_active_low = false;
+>> +     unsigned long irq_type;
+>> +     int err;
+>> +
+>> +     irq_type = irqd_get_trigger_type(irq_get_irq_data(hw->irq));
+>> +
+>> +     switch (irq_type) {
+>> +     case IRQF_TRIGGER_HIGH:
+>> +     case IRQF_TRIGGER_RISING:
+>> +             break;
+>> +     case IRQF_TRIGGER_LOW:
+>> +     case IRQF_TRIGGER_FALLING:
+>> +             irq_active_low = true;
+>> +             break;
+>> +     default:
+>> +             dev_info(hw->dev,
+>> +                      "mode %lx unsupported, using IRQF_TRIGGER_RISING\n",
+>> +                      irq_type);
+>> +             irq_type = IRQF_TRIGGER_RISING;
+>> +             break;
+>> +     }
+>> +
+>> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL3_ADDR,
+>> +                                     ST_UVIS25_REG_HL_MASK, irq_active_low);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
+>> +                                     st_uvis25_trigger_handler_thread,
+>> +                                     irq_type | IRQF_ONESHOT,
+>> +                                     iio_dev->name, hw);
+>> +     if (err) {
+>> +             dev_err(hw->dev, "failed to request trigger irq %d\n",
+>> +                     hw->irq);
+>> +             return err;
+>> +     }
+>> +
+>> +     hw->trig = devm_iio_trigger_alloc(hw->dev, "%s-trigger",
+>> +                                       iio_dev->name);
+>> +     if (!hw->trig)
+>> +             return -ENOMEM;
+>> +
+>> +     iio_trigger_set_drvdata(hw->trig, iio_dev);
+>> +     hw->trig->dev.parent = hw->dev;
+>> +
+>> +     return devm_iio_trigger_register(hw->dev, hw->trig);
+>> +}
+>> +
+>> +static int st_uvis25_buffer_preenable(struct iio_dev *iio_dev)
+>> +{
+>> +     return st_uvis25_set_enable(iio_priv(iio_dev), true);
+>> +}
+>> +
+>> +static int st_uvis25_buffer_postdisable(struct iio_dev *iio_dev)
+>> +{
+>> +     return st_uvis25_set_enable(iio_priv(iio_dev), false);
+>> +}
+>> +
+>> +static const struct iio_buffer_setup_ops st_uvis25_buffer_ops = {
+>> +     .preenable = st_uvis25_buffer_preenable,
+>> +     .postenable = iio_triggered_buffer_postenable,
+>> +     .predisable = iio_triggered_buffer_predisable,
+>> +     .postdisable = st_uvis25_buffer_postdisable,
+>> +};
+>> +
+>> +static irqreturn_t st_uvis25_buffer_handler_thread(int irq, void *p)
+>> +{
+>> +     u8 buffer[ALIGN(sizeof(u8), sizeof(s64)) + sizeof(s64)];
+>> +     struct iio_poll_func *pf = p;
+>> +     struct iio_dev *iio_dev = pf->indio_dev;
+>> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +     int err;
+>> +
+>> +     err = hw->tf->read(hw->dev, iio_dev->channels[0].address, sizeof(u8),
+>> +                        buffer);
+>> +     if (err < 0)
+>> +             goto out;
+>> +
+>> +     iio_push_to_buffers_with_timestamp(iio_dev, buffer,
+>> +                                        iio_get_time_ns(iio_dev));
+>> +
+>> +out:
+>> +     iio_trigger_notify_done(hw->trig);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +int st_uvis25_allocate_buffer(struct iio_dev *iio_dev)
+>> +{
+>> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +
+>> +     return devm_iio_triggered_buffer_setup(hw->dev, iio_dev, NULL,
+>> +                                            st_uvis25_buffer_handler_thread,
+>> +                                            &st_uvis25_buffer_ops);
+>> +}
+>> +
+>> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+>> +MODULE_DESCRIPTION("STMicroelectronics uvis25 buffer driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/iio/light/st_uvis25_core.c b/drivers/iio/light/st_uvis25_core.c
+>> new file mode 100644
+>> index 000000000000..08247092dfff
+>> --- /dev/null
+>> +++ b/drivers/iio/light/st_uvis25_core.c
+>> @@ -0,0 +1,264 @@
+>> +/*
+>> + * STMicroelectronics uvis25 sensor driver
+>> + *
+>> + * Copyright 2017 STMicroelectronics Inc.
+>> + *
+>> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * Licensed under the GPL-2.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/device.h>
+>> +#include <linux/iio/sysfs.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/pm.h>
+>> +#include <linux/interrupt.h>
+>> +
+>> +#include "st_uvis25.h"
+>> +
+>> +#define ST_UVIS25_REG_WHOAMI_ADDR    0x0f
+>> +#define ST_UVIS25_REG_WHOAMI_VAL     0xca
+>> +#define ST_UVIS25_REG_CTRL1_ADDR     0x20
+>> +#define ST_UVIS25_REG_ODR_MASK               BIT(0)
+>> +#define ST_UVIS25_REG_BDU_MASK               BIT(1)
+>> +#define ST_UVIS25_REG_CTRL2_ADDR     0x21
+>> +#define ST_UVIS25_REG_BOOT_MASK              BIT(7)
+>> +
+>> +static const struct iio_chan_spec st_uvis25_channels[] = {
+>> +     {
+>> +             .type = IIO_UVINDEX,
+>> +             .address = 0x28,
+>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+>> +             .scan_index = 0,
+>> +             .scan_type = {
+>> +                     .sign = 'u',
+>> +                     .realbits = 8,
+>> +                     .storagebits = 8,
+>> +             },
+>> +     },
+>> +     IIO_CHAN_SOFT_TIMESTAMP(1),
+>> +};
+>> +
+>> +static int st_uvis25_check_whoami(struct st_uvis25_hw *hw)
+>> +{
+>> +     u8 data;
+>> +     int err;
+>> +
+>> +     err = hw->tf->read(hw->dev, ST_UVIS25_REG_WHOAMI_ADDR, sizeof(data),
+>> +                        &data);
+>> +     if (err < 0) {
+>> +             dev_err(hw->dev, "failed to read whoami register\n");
+>> +             return err;
+>> +     }
+>> +
+>> +     if (data != ST_UVIS25_REG_WHOAMI_VAL) {
+>> +             dev_err(hw->dev, "wrong whoami {%02x vs %02x}\n",
+>> +                     data, ST_UVIS25_REG_WHOAMI_VAL);
+>> +             return -ENODEV;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +int st_uvis25_write_with_mask(struct st_uvis25_hw *hw, u8 addr, u8 mask, u8 val)
+>> +{
+>> +     u8 data;
+>> +     int err;
+>> +
+>> +     mutex_lock(&hw->lock);
+>
+> This stuff comes for free in regmap...
+>
+
+ack
+
+>> +
+>> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
+>> +     if (err < 0) {
+>> +             dev_err(hw->dev, "failed to read %02x register\n", addr);
+>> +             goto unlock;
+>> +     }
+>> +
+>> +     data = (data & ~mask) | ((val << __ffs(mask)) & mask);
+>> +
+>> +     err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
+>> +     if (err < 0)
+>> +             dev_err(hw->dev, "failed to write %02x register\n", addr);
+>> +
+>> +unlock:
+>> +     mutex_unlock(&hw->lock);
+>> +
+>> +     return err < 0 ? err : 0;
+>> +}
+>> +
+>> +int st_uvis25_set_enable(struct st_uvis25_hw *hw, bool enable)
+>> +{
+>> +     int err;
+>> +
+>> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
+>> +                                     ST_UVIS25_REG_ODR_MASK, enable);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     hw->enabled = enable;
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int st_uvis25_read_oneshot(struct st_uvis25_hw *hw, u8 addr, int *val)
+>> +{
+>> +     u8 data;
+>> +     int err;
+>> +
+>> +     err = st_uvis25_set_enable(hw, true);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     msleep(1500);
+>
+> Could drive this off the interrupt rather than disabling the interrupt?
+> Would that be a little neater (simple completion here).
+>
+
+What do you mean? I did not get you.
+
+>> +
+>> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
+>> +     if (err < 0)
+>> +             return err;
+>
+> Is there a potential race here if for some reason we managed to
+> got to sleep for another conversion?  I think to be completely
+> safe you need force an additional read after the disable (or
+> will that fail to clear the data ready?
+>
+
+We can move the read access after the st_uvis25_set_enable(hw, false)
+in order to avoid an unnecessary read, do you agree?
+
+>> +
+>> +     st_uvis25_set_enable(hw, false);
+>> +
+>> +     *val = data;
+>> +
+>> +     return IIO_VAL_INT;
+>> +}
+>> +
+>> +static int st_uvis25_read_raw(struct iio_dev *iio_dev,
+>> +                           struct iio_chan_spec const *ch,
+>> +                           int *val, int *val2, long mask)
+>> +{
+>> +     int ret;
+>> +
+>> +     ret = iio_device_claim_direct_mode(iio_dev);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     switch (mask) {
+>> +     case IIO_CHAN_INFO_PROCESSED: {
+>> +             struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +
+>> +             /*
+>> +              * mask irq line during oneshot read since the sensor
+>> +              * does not export the capability to disable data-ready line
+>> +              * in the register map and it is enabled by default.
+>> +              * If the line is unmasked during read_raw() it will be set
+>> +              * active and never reset since the trigger is disabled
+>> +              */
+>
+> Nasty but well documented...
+>
+> I wonder if there is a nicer way to handle this... If we leave it on
+> the issues is that we end up with the status being checked by the interrupt
+> handler for the trigger (harmless if a waste of time) then the trigger
+> being fired (with nothing associated with it).  No consumers are attached
+> so we call notify done for all of them and finally that will result in
+> a try reenable. You could supply one of those that results in a read
+> to the device.  It think that would always deal with your case of
+> the data ready getting stuck high..
+>
+> (Not totally sure though as it's been a while since I dealt with a
+> sensor with this particular issue).
+>
+>> +             if (hw->irq > 0)
+>> +                     disable_irq(hw->irq);
+>> +             ret = st_uvis25_read_oneshot(hw, ch->address, val);
+>> +             if (hw->irq > 0)
+>> +                     enable_irq(hw->irq);
+>> +             break;
+>> +     }
+>> +     default:
+>> +             ret = -EINVAL;
+>> +             break;
+>> +     }
+>> +
+>> +     iio_device_release_direct_mode(iio_dev);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static const struct iio_info st_uvis25_info = {
+>> +     .read_raw = st_uvis25_read_raw,
+>> +};
+>> +
+>> +static const unsigned long st_uvis25_scan_masks[] = { 0x1, 0x0 };
+>> +
+>> +static int st_uvis25_init_sensor(struct st_uvis25_hw *hw)
+>> +{
+>> +     int err;
+>> +
+>> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL2_ADDR,
+>> +                                     ST_UVIS25_REG_BOOT_MASK, 1);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     msleep(2000);
+>> +
+>> +     return st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
+>> +                                      ST_UVIS25_REG_BDU_MASK, 1);
+>> +}
+>> +
+>> +int st_uvis25_probe(struct device *dev, int irq,
+>> +                 const struct st_uvis25_transfer_function *tf_ops)
+>> +{
+>> +     struct st_uvis25_hw *hw;
+>> +     struct iio_dev *iio_dev;
+>> +     int err;
+>> +
+>> +     iio_dev = devm_iio_device_alloc(dev, sizeof(*hw));
+>> +     if (!iio_dev)
+>> +             return -ENOMEM;
+>> +
+>> +     dev_set_drvdata(dev, (void *)iio_dev);
+>> +
+>> +     hw = iio_priv(iio_dev);
+>> +     hw->dev = dev;
+>> +     hw->irq = irq;
+>> +     hw->tf = tf_ops;
+>> +
+>> +     mutex_init(&hw->lock);
+>> +
+>> +     err = st_uvis25_check_whoami(hw);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     iio_dev->modes = INDIO_DIRECT_MODE;
+>> +     iio_dev->dev.parent = hw->dev;
+>> +     iio_dev->available_scan_masks = st_uvis25_scan_masks;
+>> +     iio_dev->channels = st_uvis25_channels;
+>> +     iio_dev->num_channels = ARRAY_SIZE(st_uvis25_channels);
+>> +     iio_dev->name = ST_UVIS25_DEV_NAME;
+>> +     iio_dev->info = &st_uvis25_info;
+>> +
+>> +     err = st_uvis25_init_sensor(hw);
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     if (hw->irq > 0) {
+>> +             err = st_uvis25_allocate_buffer(iio_dev);
+>> +             if (err < 0)
+>> +                     return err;
+>> +
+>> +             err = st_uvis25_allocate_trigger(iio_dev);
+>> +             if (err)
+>> +                     return err;
+>> +     }
+>> +
+>> +     return devm_iio_device_register(hw->dev, iio_dev);
+>> +}
+>> +EXPORT_SYMBOL(st_uvis25_probe);
+>> +
+>> +static int __maybe_unused st_uvis25_suspend(struct device *dev)
+>> +{
+>> +     struct iio_dev *iio_dev = dev_get_drvdata(dev);
+>> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +
+>> +     return st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
+>> +                                      ST_UVIS25_REG_ODR_MASK, 0);
+>> +}
+>> +
+>> +static int __maybe_unused st_uvis25_resume(struct device *dev)
+>> +{
+>> +     struct iio_dev *iio_dev = dev_get_drvdata(dev);
+>> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +     int err = 0;
+>> +
+>> +     if (hw->enabled)
+>> +             err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
+>> +                                             ST_UVIS25_REG_ODR_MASK, 1);
+>> +
+>> +     return err;
+>> +}
+>> +
+>> +const struct dev_pm_ops st_uvis25_pm_ops = {
+>> +     SET_SYSTEM_SLEEP_PM_OPS(st_uvis25_suspend, st_uvis25_resume)
+>> +};
+>> +EXPORT_SYMBOL(st_uvis25_pm_ops);
+>> +
+>> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+>> +MODULE_DESCRIPTION("STMicroelectronics uvis25 sensor driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/iio/light/st_uvis25_i2c.c b/drivers/iio/light/st_uvis25_i2c.c
+>> new file mode 100644
+>> index 000000000000..0d70d866a190
+>> --- /dev/null
+>> +++ b/drivers/iio/light/st_uvis25_i2c.c
+>> @@ -0,0 +1,76 @@
+>> +/*
+>> + * STMicroelectronics uvis25 i2c driver
+>> + *
+>> + * Copyright 2017 STMicroelectronics Inc.
+>> + *
+>> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * Licensed under the GPL-2.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/acpi.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#include "st_uvis25.h"
+>> +
+>> +#define I2C_AUTO_INCREMENT   0x80
+>> +
+>> +static int st_uvis25_i2c_read(struct device *dev, u8 addr, int len, u8 *data)
+>> +{
+>> +     if (len > 1)
+>> +             addr |= I2C_AUTO_INCREMENT;
+>> +
+>> +     return i2c_smbus_read_i2c_block_data_or_emulated(to_i2c_client(dev),
+>> +                                                      addr, len, data);
+>> +}
+>> +
+>> +static int st_uvis25_i2c_write(struct device *dev, u8 addr, int len, u8 *data)
+>> +{
+>> +     if (len > 1)
+>> +             addr |= I2C_AUTO_INCREMENT;
+>> +
+>> +     return i2c_smbus_write_i2c_block_data(to_i2c_client(dev), addr,
+>> +                                           len, data);
+>> +}
+>> +
+>> +static const struct st_uvis25_transfer_function st_uvis25_transfer_fn = {
+>> +     .read = st_uvis25_i2c_read,
+>> +     .write = st_uvis25_i2c_write,
+>> +};
+>> +
+>> +static int st_uvis25_i2c_probe(struct i2c_client *client,
+>> +                            const struct i2c_device_id *id)
+>> +{
+>> +     return st_uvis25_probe(&client->dev, client->irq,
+>> +                            &st_uvis25_transfer_fn);
+>> +}
+>> +
+>> +static const struct of_device_id st_uvis25_i2c_of_match[] = {
+>> +     { .compatible = "st,uvis25", },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, st_uvis25_i2c_of_match);
+>> +
+>> +static const struct i2c_device_id st_uvis25_i2c_id_table[] = {
+>> +     { ST_UVIS25_DEV_NAME },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, st_uvis25_i2c_id_table);
+>> +
+>> +static struct i2c_driver st_uvis25_driver = {
+>> +     .driver = {
+>> +             .name = "st_uvis25_i2c",
+>> +             .pm = &st_uvis25_pm_ops,
+>> +             .of_match_table = of_match_ptr(st_uvis25_i2c_of_match),
+>> +     },
+>> +     .probe = st_uvis25_i2c_probe,
+>> +     .id_table = st_uvis25_i2c_id_table,
+>> +};
+>> +module_i2c_driver(st_uvis25_driver);
+>> +
+>> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+>> +MODULE_DESCRIPTION("STMicroelectronics uvis25 i2c driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/iio/light/st_uvis25_spi.c b/drivers/iio/light/st_uvis25_spi.c
+>> new file mode 100644
+>> index 000000000000..be67d9e7564b
+>> --- /dev/null
+>> +++ b/drivers/iio/light/st_uvis25_spi.c
+>> @@ -0,0 +1,109 @@
+>> +/*
+>> + * STMicroelectronics uvis25 spi driver
+>> + *
+>> + * Copyright 2017 STMicroelectronics Inc.
+>> + *
+>> + * Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> + *
+>> + * Licensed under the GPL-2.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/spi/spi.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#include "st_uvis25.h"
+>> +
+>> +#define SENSORS_SPI_READ     0x80
+>> +#define SPI_AUTO_INCREMENT   0x40
+>> +
+>> +static int st_uvis25_spi_read(struct device *dev, u8 addr, int len, u8 *data)
+>
+> Hmm.. Maybe a good case for regmap?
+
+ack
+
+>
+>> +{
+>> +     struct spi_device *spi = to_spi_device(dev);
+>> +     struct iio_dev *iio_dev = spi_get_drvdata(spi);
+>> +     struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> +     int err;
+>> +
+>> +     struct spi_transfer xfers[] = {
+>> +             {
+>> +                     .tx_buf = hw->tb.tx_buf,
+>> +                     .bits_per_word = 8,
+>> +                     .len = 1,
+>> +             },
+>> +             {
+>> +                     .rx_buf = hw->tb.rx_buf,
+>> +                     .bits_per_word = 8,
+>> +                     .len = len,
+>> +             }
+>> +     };
+>> +
+>> +     if (len > 1)
+>> +             addr |= SPI_AUTO_INCREMENT;
+>> +     hw->tb.tx_buf[0] = addr | SENSORS_SPI_READ;
+>> +
+>> +     err = spi_sync_transfer(spi, xfers,  ARRAY_SIZE(xfers));
+>> +     if (err < 0)
+>> +             return err;
+>> +
+>> +     memcpy(data, hw->tb.rx_buf, len * sizeof(u8));
+>> +
+>> +     return len;
+>> +}
+>> +
+>> +static int st_uvis25_spi_write(struct device *dev, u8 addr, int len, u8 *data)
+>> +{
+>> +     struct iio_dev *iio_dev;
+>> +     struct st_uvis25_hw *hw;
+>> +     struct spi_device *spi;
+>> +
+>> +     if (len >= ST_UVIS25_TX_MAX_LENGTH)
+>> +             return -ENOMEM;
+>> +
+>> +     spi = to_spi_device(dev);
+>> +     iio_dev = spi_get_drvdata(spi);
+>> +     hw = iio_priv(iio_dev);
+> Could could just explicitly have the elements of this chain
+> that are used in local variables.
+>
+> hw = iio_priv(spi_get_drvdata(spi));
+>
+
+not needed with regmap ;)
+
+> up to you though..
+>> +
+>> +     hw->tb.tx_buf[0] = addr;
+>> +     memcpy(&hw->tb.tx_buf[1], data, len);
+>> +
+>> +     return spi_write(spi, hw->tb.tx_buf, len + 1);
+>> +}
+>> +
+>> +static const struct st_uvis25_transfer_function st_uvis25_transfer_fn = {
+>> +     .read = st_uvis25_spi_read,
+>> +     .write = st_uvis25_spi_write,
+>> +};
+>> +
+>> +static int st_uvis25_spi_probe(struct spi_device *spi)
+>> +{
+>> +     return st_uvis25_probe(&spi->dev, spi->irq,
+>> +                            &st_uvis25_transfer_fn);
+>> +}
+>> +
+>> +static const struct of_device_id st_uvis25_spi_of_match[] = {
+>> +     { .compatible = "st,uvis25", },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, st_uvis25_spi_of_match);
+>> +
+>> +static const struct spi_device_id st_uvis25_spi_id_table[] = {
+>> +     { ST_UVIS25_DEV_NAME },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(spi, st_uvis25_spi_id_table);
+>> +
+>> +static struct spi_driver st_uvis25_driver = {
+>> +     .driver = {
+>> +             .name = "st_uvis25_spi",
+>> +             .pm = &st_uvis25_pm_ops,
+>> +             .of_match_table = of_match_ptr(st_uvis25_spi_of_match),
+>> +     },
+>> +     .probe = st_uvis25_spi_probe,
+>> +     .id_table = st_uvis25_spi_id_table,
+>> +};
+>> +module_spi_driver(st_uvis25_driver);
+>> +
+>> +MODULE_AUTHOR("Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>");
+>> +MODULE_DESCRIPTION("STMicroelectronics uvis25 spi driver");
+>> +MODULE_LICENSE("GPL v2");
+>
+
+
 
 -- 
-Regards,
-Niklas Söderlund
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
