@@ -1,49 +1,86 @@
-From: "Koul, Vinod" <vinod.koul@intel.com>
-Subject: RE: [PATCH 0/4] add CAAM DMA memcpy driver
-Date: Fri, 27 Oct 2017 11:35:57 +0000
-Message-ID: <8D3F6266AEB6384E807C6FFC6FE195E333C52210@BGSMSX107.gar.corp.intel.com>
-References: <20171026100008.32169-1-radu.alexe@nxp.com>
- <VI1PR0402MB33422B48B506D7FF6A894AE0985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V2] panic: add support to update panic_timeout via DT
+Date: Fri, 27 Oct 2017 13:00:06 +0100
+Message-ID: <20171027115957.GA32605@red-moon>
+References: <1509097165-15695-1-git-send-email-jburman@nvidia.com>
+ <20171027095314.GA724@tigerII.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <VI1PR0402MB33422B48B506D7FF6A894AE0985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>, Radu Andrei Alexe <radu.alexe@nxp.com>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171027095314.GA724-doRD9GlggSwB9AHHLWeGtNQXobZC6xk2@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jeetesh Burman <jburman-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bbasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> On 10/26/2017 1:01 PM, Radu Alexe wrote:
-> > This patch-set introduces a new DMA memcpy driver based on the DMA
-> > capabilities of the CAAM crypto engine. Because of this dependency the
-> > included commits target various parts of the kernel tree.
-> I don't see the patches on any of the mail lists.
-> If they are moderated, I would expect this to be mentioned in the
-> MAINTAINERS file.
+[+devicetree, Rob, Frank]
+
+On Fri, Oct 27, 2017 at 06:53:14PM +0900, Sergey Senozhatsky wrote:
+> Cc-ing Andrew on this
 > 
-> >
-> > Patch 1.
-> > Since the CAAM DMA driver is a platform driver it is enabled by a new node
-> > in the device tree. This commit adds documentation for the device tree
-> > bindings.
-> >
-> > Patch 2.
-> > This patch adds the "caam-dma" node in the fsl-ls1012a.dtsi file.
-> >
-> > Patch 3.
-> > This commit adds various capabilities in the JR driver of the CAAM that is
-> > used by the CAAM DMA driver.
-> >
-> > Patch 4.
-> > Adds the CAAM DMA memcpy driver.
-> >
-> > Patch 1 and 3 should be merged by the crypto maintainers, patch 2 by
-> > devicetree maintainers and patch 4 by the DMA maintainers.
-> I would go with all the patches through the dmaengine tree.
+> 
+> v1: lkml.kernel.org/r/1509076662-22253-1-git-send-email-jburman-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+>     lkml.kernel.org/r/20171027080006.GA609-doRD9GlggSwB9AHHLWeGtNQXobZC6xk2@public.gmane.org
+> 
+> v2: lkml.kernel.org/r/1509097165-15695-1-git-send-email-jburman-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+> 
+> 	-ss
+> 
+> On (10/27/17 15:09), Jeetesh Burman wrote:
+> > Add support to set 'panic_timeout' value via dtb to have
+> > control from device tree. This makes sense when you have
+> > multiple platforms support from same defconfig and
+> > differentiated only through device tree blob.
+> > The patch will check for panic time out value coming
+> > from dtb if it exists, otherwise continues with
+> > defconfig provided option.
 
-Good call, but no one CCed dmaengine folks on this series!
+I will let Rob and Frank chime in - as far as I am concerned
+you are (ab)using DT to configure a Linux kernel specific internal
+variable and that's certainly not what DT is there for.
 
--- 
-~Vinod
+Lorenzo
+ 
+> > Signed-off-by: Jeetesh Burman <jburman-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  kernel/panic.c | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index bdd18af..b487331 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/console.h>
+> >  #include <linux/bug.h>
+> >  #include <linux/ratelimit.h>
+> > +#include <linux/of.h>
+> >  
+> >  #define PANIC_TIMER_STEP 100
+> >  #define PANIC_BLINK_SPD 18
+> > @@ -482,9 +483,15 @@ static u64 oops_id;
+> >  
+> >  static int init_oops_id(void)
+> >  {
+> > -	if (!oops_id)
+> > +	struct device_node *np;
+> > +
+> > +	if (!oops_id) {
+> > +		np = of_find_node_by_name(NULL, "panic_timeout");
+> > +		if (np)
+> > +			of_property_read_u32(np, "panic-timeout-value",
+> > +							&panic_timeout);
+> >  		get_random_bytes(&oops_id, sizeof(oops_id));
+> > -	else
+> > +	} else
+> >  		oops_id++;
+> >  
+> >  	return 0;
+> > -- 
+> > 2.1.4
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
