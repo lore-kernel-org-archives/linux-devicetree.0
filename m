@@ -1,111 +1,68 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v16 16/32] v4l: async: Allow async notifier register call
- succeed with no subdevs
-Date: Fri, 27 Oct 2017 16:49:35 +0200
-Message-ID: <20171027144934.jhgvgehf4jblgoet@earth>
-References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
- <20171026075342.5760-17-sakari.ailus@linux.intel.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH] dt-bindings: display: stm32: add pixel clock mandatory
+ property
+Date: Fri, 27 Oct 2017 14:52:21 +0000
+Message-ID: <e7f46e2c-2cd9-bdd4-221a-109cdc9852b1@st.com>
+References: <1509034356-23885-1-git-send-email-philippe.cornu@st.com>
+ <20171027143815.evbb7rqkgqiol7yo@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ezsyaa45ehfhihqy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171026075342.5760-17-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171027143815.evbb7rqkgqiol7yo@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <E835A4DC6B8AAE42B012BF5A8BE5782C@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Mickael REULIER <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Vincent ABRIOU <vincent.abriou@st.com>, Ludovic BARRE <ludovic.barre@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Bhumika Goyal <bhumirks@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---ezsyaa45ehfhihqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Oct 26, 2017 at 10:53:26AM +0300, Sakari Ailus wrote:
-> The information on how many async sub-devices would be bindable to a
-> notifier is typically dependent on information from platform firmware and
-> it's not driver's business to be aware of that.
->=20
-> Many V4L2 main drivers are perfectly usable (and useful) without async
-> sub-devices and so if there aren't any around, just proceed call the
-> notifier's complete callback immediately without registering the notifier
-> itself.
->=20
-> If a driver needs to check whether there are async sub-devices available,
-> it can be done by inspecting the notifier's num_subdevs field which tells
-> the number of async sub-devices.
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Acked-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-
--- Sebastian
-
->  drivers/media/v4l2-core/v4l2-async.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-co=
-re/v4l2-async.c
-> index 46db85685894..1b536d68cedf 100644
-> --- a/drivers/media/v4l2-core/v4l2-async.c
-> +++ b/drivers/media/v4l2-core/v4l2-async.c
-> @@ -180,14 +180,22 @@ int v4l2_async_notifier_register(struct v4l2_device=
- *v4l2_dev,
->  	int ret;
->  	int i;
-> =20
-> -	if (!v4l2_dev || !notifier->num_subdevs ||
-> -	    notifier->num_subdevs > V4L2_MAX_SUBDEVS)
-> +	if (!v4l2_dev || notifier->num_subdevs > V4L2_MAX_SUBDEVS)
->  		return -EINVAL;
-> =20
->  	notifier->v4l2_dev =3D v4l2_dev;
->  	INIT_LIST_HEAD(&notifier->waiting);
->  	INIT_LIST_HEAD(&notifier->done);
-> =20
-> +	if (!notifier->num_subdevs) {
-> +		int ret;
-> +
-> +		ret =3D v4l2_async_notifier_call_complete(notifier);
-> +		notifier->v4l2_dev =3D NULL;
-> +
-> +		return ret;
-> +	}
-> +
->  	for (i =3D 0; i < notifier->num_subdevs; i++) {
->  		asd =3D notifier->subdevs[i];
-> =20
-> --=20
-> 2.11.0
->=20
-
---ezsyaa45ehfhihqy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlnzR34ACgkQ2O7X88g7
-+potRA/+O1su/7Aft1Bt0yrE3vsN07KMRCUTE7u/8NEM8Kqjsu9SOeZXGzi9eLpo
-xgUYqzaamCLyd9jY/kiO1ohHHcXcxCpPV9iwmt576KO+uDORDLwJX8MHWwZrcY4U
-0YTrKCziQYAOAkaOf53n+a3AVz5nDR5bmxXCkdWps89yjVjj3DWAMLPMd2SsLPoM
-FCnnU8rGARHRsC1yzc1+rOL9aGVx7TcU5N+RzYwdvw+S98aZGbLyEi2omUqTpJr7
-Ps8yUmhvnEcZLzc5F5NLoYiX984wTuwGnSi7Lnp8nvN+qspdCSHvbNHk4GBuIzqs
-mu12nwv5z6rZCIvfjcW23pgQa/Rm1tk+CnTW1w3L1o4pFtCqM6HYK81Je2wapEAv
-kobFRi5UYpaZ5h/cA/E17sfhkgCo9qd/R9Ac0SDjYP3JDvAzJmrjyyk98KF7Afby
-GcIAyn8DrfmgMd9lNZqo0/Yo2SCyLC8tpyZ+CQVQVfDN4KYPzUnlXDxB5mXI74+4
-5FIWoXKPWl0/gRJkN4nQn3WdP4Omget7Iodk7GHXj8gv0KN/OpnEcBWRaxs0pyDU
-9oUm1vaUcOy61RUwJkVA/u1j4kZ+Qna5mdQDstOGhzaimulg6/w0uge05V6wysOX
-cTziDKCK9sVb8IpKyMijaNJANUVWBqqH1axxMghsj6Wb8rP5vHU=
-=EOWq
------END PGP SIGNATURE-----
-
---ezsyaa45ehfhihqy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLA0KDQpPbiAxMC8yNy8yMDE3IDA0OjM4IFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVGh1LCBPY3QgMjYsIDIwMTcgYXQgMDY6MTI6MzZQTSArMDIwMCwgUGhpbGlwcGUgQ29ybnUg
+d3JvdGU6DQo+PiBBZGQgdGhlIERQSS9SR0IgaW5wdXQgcGl4ZWwgY2xvY2sgaW4gbWFuZGF0b3J5
+IHByb3BlcnRpZXMNCj4+IGJlY2F1c2UgaXQgcmVhbGx5IG9mZmVycyBhIGJldHRlciBwcmVjaXNl
+bmVzcyBmb3IgdGltaW5nDQo+PiBjb21wdXRhdGlvbnMuDQo+PiBOb3RlOiBGaXggYWxzbyB0aGUg
+RFNJIHBhbmVsIGV4YW1wbGUgd2hlcmUgInJlZiIgJiAicGNsayINCj4+IGNsb2NrcyB3ZXJlIHN3
+YXBwZWQuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNv
+cm51QHN0LmNvbT4NCj4+IC0tLQ0KPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dCB8IDYgKysrKy0tDQo+PiAgIDEgZmlsZSBjaGFu
+Z2VkLCA0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzIt
+bHRkYy50eHQNCj4+IGluZGV4IDAyOTI1MjIuLjk5ODIzZmIgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dA0K
+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3Rt
+MzItbHRkYy50eHQNCj4+IEBAIC0yOCw2ICsyOCw3IEBAIE1hbmRhdG9yeSBwcm9wZXJ0aWVzIHNw
+ZWNpZmljIHRvIFNUTTMyIERTSToNCj4+ICAgLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJlIDwwPi4N
+Cj4+ICAgLSBjb21wYXRpYmxlOiAic3Qsc3RtMzItZHNpIi4NCj4+ICAgLSBjbG9jay1uYW1lczoN
+Cj4+ICsgIC0gRFBJL1JHQiBpbnB1dCBwaXhlbCBjbG9jayBzdHJpbmcgbmFtZSwgbXVzdCBiZSAi
+cHhfY2xrIi4NCj4+ICAgICAtIHBoeSBwbGwgcmVmZXJlbmNlIGNsb2NrIHN0cmluZyBuYW1lLCBt
+dXN0IGJlICJyZWYiLg0KPiANCj4gV2hlcmUncyBwY2xrPw0KDQpwY2xrIGlzIGRlc2NyaWJlZCBp
+biB0aGUgZ2VuZXJpYyBwYXJ0IA0KKERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQpIGFzIA0KbWFuZGF0b3J5Lg0KDQpJbiBzdCxz
+dG0zMi1sdGRjLnR4dCAoc3BlY2lmaWMgcGFydCksIEkgaGF2ZSBkb2N1bWVudGVkIHRoYXQgIkZv
+ciBhbGwgDQptYW5kYXRvcnkgcHJvcGVydGllcyAmIG5vZGVzLCBwbGVhc2UgcmVmZXIgdG8gdGhl
+IHJlbGF0ZWQgZG9jdW1lbnRhdGlvbiANCmluIFs1XSIuDQoNCkRvIHlvdSB0aGluayBpdCBpcyBj
+bGVhciBlbm91Z2g/DQoNCj4gDQo+IFRoZSBuZXcgY2xvY2sgc2hvdWxkIGJlIGxhc3QgdG8gYmUg
+YmFja3dhcmRzIGNvbXBhdGlibGUuDQo+IA0KDQpvay4NCg0KTWFueSB0aGFua3MgZm9yIHlvdXIg
+cmV2aWV3IGFuZCB5b3VyIHN1cHBvcnQsDQoNClBoaWxpcHBlIDotKQ0KDQo+PiAgIC0gcmVzZXRz
+OiBzZWUgWzVdLg0KPj4gICAtIHJlc2V0LW5hbWVzOiBzZWUgWzVdLg0KPj4gQEAgLTk3LDggKzk4
+LDkgQEAgRXhhbXBsZSAyOiBEU0kgcGFuZWwNCj4+ICAgCQkJI3NpemUtY2VsbHMgPSA8MD47DQo+
+PiAgIAkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItZHNpIjsNCj4+ICAgCQkJcmVnID0gPDB4NDAw
+MTZjMDAgMHg4MDA+Ow0KPj4gLQkJCWNsb2NrcyA9IDwmcmNjIDEgQ0xLX0Y0NjlfRFNJPiwgPCZj
+bGtfaHNlPjsNCj4+IC0JCQljbG9jay1uYW1lcyA9ICJyZWYiLCAicGNsayI7DQo+PiArCQkJY2xv
+Y2tzID0gPCZyY2MgMSBDTEtfRjQ2OV9EU0k+LCA8JnJjYyAxIENMS19MQ0Q+LA0KPj4gKwkJCQkg
+PCZjbGtfaHNlPjsNCj4+ICsJCQljbG9jay1uYW1lcyA9ICJwY2xrIiwgInB4X2NsayIsICJyZWYi
+Ow0KPj4gICAJCQlyZXNldHMgPSA8JnJjYyBTVE0zMkY0X0FQQjJfUkVTRVQoRFNJKT47DQo+PiAg
+IAkJCXJlc2V0LW5hbWVzID0gImFwYiI7DQo+PiAgIA0KPj4gLS0gDQo+PiAxLjkuMQ0KPj4KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
