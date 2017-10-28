@@ -1,13 +1,13 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
 Subject: [RESEND PATCH v2 2/2] dt-bindings: power: add amlogic meson power domain bindings
-Date: Sat, 28 Oct 2017 18:36:23 +0200
-Message-ID: <1509208583-30349-3-git-send-email-narmstrong@baylibre.com>
-References: <1509208583-30349-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1509208583-30349-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Date: Sat, 28 Oct 2017 18:40:17 +0200
+Message-ID: <1509208817-30632-3-git-send-email-narmstrong@baylibre.com>
+References: <1509208817-30632-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1509208817-30632-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-pm-owner@vger.kernel.org
 To: khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-pm@lists.linux-foundation.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Acked-by: Rob Herring <robh@kernel.org>
