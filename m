@@ -1,129 +1,71 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: Re: puzzled by online explanation as to how to "overwrite" DT node
-Date: Sat, 28 Oct 2017 04:30:22 -0400 (EDT)
-Message-ID: <alpine.LFD.2.21.1710280413420.7672@localhost.localdomain>
-References: <alpine.LFD.2.21.1710180612160.4201@localhost.localdomain> <CAL_JsqLbMaDaGhsCeCj051_P1s5ORz9SUrANdQAeA-cZ+wr0QA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH v10 0/7] PCI: rockchip: Move PCIe WAKE# handling into pci core
+Date: Sat, 28 Oct 2017 11:07:30 +0200
+Message-ID: <1872710.P2f02irZl9@aspire.rjw.lan>
+References: <20171027072612.26565-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLbMaDaGhsCeCj051_P1s5ORz9SUrANdQAeA-cZ+wr0QA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20171027072612.26565-1-jeffy.chen@rock-chips.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, dianders@chromium.org, Xinming Hu <huxm@marvell.com>, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Kalle Valo <kvalo@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, linux-acpi@vger.kernel.org, linux-rockchip@lists.infradead.org, Nishant Sarmukadam <nishants@marvell.com>, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, Ganapathi Bhat <gbhat@marvell.com>, Frank Rowand <frowand.list@gmail.com>, Len Brown <lenb@kernel.org>, Amitkumar Karwar <amitkarwar@gmail.com>, linux-arm-kernel@lists.infradead.org, net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Oct 2017, Rob Herring wrote:
+On Friday, October 27, 2017 9:26:05 AM CEST Jeffy Chen wrote:
+> 
+> Currently we are handling wake irq in mrvl wifi driver. Move it into
+> pci core.
+> 
+> Tested on my chromebook bob(with cros 4.4 kernel and mrvl wifi).
+> 
+> 
+> Changes in v10:
+> Use device_set_wakeup_capable() instead of device_set_wakeup_enable(),
+> since dedicated wakeirq will be lost in device_set_wakeup_enable(false).
+> 
+> Changes in v9:
+> Add section for PCI devices and rewrite the commit message.
+> Rewrite the commit message.
+> Fix check error in .cleanup().
+> Move dedicated wakeirq setup to setup() callback and use
+> device_set_wakeup_enable() to enable/disable.
+> 
+> Changes in v8:
+> Add optional "pci", and rewrite commit message.
+> Rewrite the commit message.
+> Add pci-of.c and use platform_pm_ops to handle the PCIe WAKE# signal.
+> 
+> Changes in v7:
+> Move PCIE_WAKE handling into pci core.
+> 
+> Changes in v6:
+> Fix device_init_wake error handling, and add some comments.
+> 
+> Changes in v5:
+> Move to pci.txt
+> Use "wakeup" instead of "wake"
+> Rebase.
+> 
+> Changes in v3:
+> Fix error handling.
+> 
+> Changes in v2:
+> Use dev_pm_set_dedicated_wake_irq.
+> 
+> Jeffy Chen (7):
+>   dt-bindings: PCI: Add definition of PCIe WAKE# irq and PCI irq
+>   of/irq: Adjust of_pci_irq parsing for multiple interrupts
+>   mwifiex: Disable wakeup irq handling for pcie
+>   arm64: dts: rockchip: Move PCIe WAKE# irq to pcie driver for Gru
+>   PCI: Make pci_platform_pm_ops's callbacks optional
+>   PCI / PM: Move acpi wakeup code to pci core
+>   PCI / PM: Add support for the PCIe WAKE# signal for OF
 
-> On Wed, Oct 18, 2017 at 11:40 AM, Robert P. J. Day
-> <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org> wrote:
-> >
-> >   (WARNING: sort of newbie alert, but you know that, right? :-)
-> >
-> >   was perusing online tutorial on customizing device trees here:
-> >
-> >     http://developer.toradex.com/device-tree-customization
->
-> Never seen that one.
+Overall, I don't quite like the direction this is going into, but I need to
+have a deeper look.  Which may take some time, so please bear with me.
 
-  apparently, i picked a bad example to ask about, then. :-)
+Thanks,
+Rafael
 
-> > and got a bit confused about the part describing how to (as i read
-> > it) "overwrite" entire nodes.
-> >
-> >   first, part on "overwriting properties" makes perfect sense --
-> > here's an example in that piece about overwriting default USB
-> > mode:
-> >
-> >   &usb0 {
-> >       dr_mode = "host";
-> >   };
-> >
-> > so, as i've always understood it, the above will do one of two
-> > things:
-> >
-> >   1) if that property is not set in the node referenced by that label,
-> >      it will be *added* to what is already there, or
-> >
-> >   2) if that property is already set (to whatever), it will be
-> >      overwritten
-> >
-> > so far, so good?
->
-> Yes.
-
-  right, that was the easy part.
-
-> >   as a special example of that right below that, there's a short
-> > paragraph called "Activating/Deactivating Devices" that uses this
-> > example:
-> >
-> >   &uart4 {
-> >       status = "okay";
-> >   };
-> >
-> > but, really, that's just a special case of the first example so
-> > there's nothing new here. but it's the next section called
-> > "Overwriting nodes" that seems confusing:
-> >
-> >   "Whole nodes can be overwritten by simply redefining them. Like
-> >   overwriting properties, latter definitions overwrite earlier
-> >   definitions."
->
-> I don't think that's right. I think you have to use /delete-node/
-> first.
-
-  right, that was also my limited understanding, so you can
-understand my confusion based on what could be interpreted as a claim
-that entire nodes could be overwritten.
-
-> > wait, what? entire nodes can be overwritten by redefining them?
-> > the example given looks like this:
-> >
-> >   "E.g. to overwrite the pin configuration of Vybrids UART2 (UART_B)
-> >   overwrite the uart2grp node by simply redefining it in your device
-> >   tree ..."
-> >
-> > with the device tree content
-> >
-> >   &iomuxc {
-> >       vf610-colibri {
-> >           pinctrl_uart2: uart2grp {
-> >               fsl,pins = <
-> >                   VF610_PAD_PTD0__UART2_TX        0x21a2
-> >                   VF610_PAD_PTD1__UART2_RX        0x21a1
-> >               >;
-> >           };
-> >           ...
-> >       };
-> >   };
-> >
-> > hang on ... isn't "vf610-colibri" also a "node" in this device
-> > tree? does the above mean that the *entire* vf610-colibri node is
-> > being overwritten? and that i would have to supply the entire new
-> > content of that node, including simply duplicating the rest of the
-> > content that is already there that i want to keep? (is that what
-> > the "..." represents?)
->
-> No, you should get a merged vf610-colibri node with the original
-> contents and any new or overwritten properties from this chunk.
->
-> IOW, only properties are overwritten.
-
-  good, that makes *way* more sense, thanks for clarifying that.
-followup question coming shortly ...
-
-rday
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
