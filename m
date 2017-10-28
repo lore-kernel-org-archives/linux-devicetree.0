@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: meson8b: use stable UART bindings with correct gate clock
-Date: Sat, 28 Oct 2017 14:34:30 +0200
-Message-ID: <20171028123430.7796-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/2] ARM: dts: meson8: use stable UART bindings with correct gate clock
+Date: Sat, 28 Oct 2017 14:34:29 +0200
+Message-ID: <20171028123430.7796-2-martin.blumenstingl@googlemail.com>
 References: <20171028123430.7796-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171028123430.7796-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -16,40 +16,40 @@ This fixes the non-AO UARTs if the bootloader didn't un-gate the clocks.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 16 ++++++++++++----
+ arch/arm/boot/dts/meson8.dtsi | 16 ++++++++++++----
  1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 15ed84441d8d..070a28ec293f 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -242,19 +242,27 @@
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 661287806ead..eb3f8161eef0 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -337,19 +337,27 @@
  };
  
  &uart_AO {
 -	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
++	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
 +	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
  };
  
  &uart_A {
 -	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
++	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
 +	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_UART0>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
  };
  
  &uart_B {
 -	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
++	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
 +	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_UART1>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
  };
  
  &uart_C {
 -	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
++	compatible = "amlogic,meson8-uart", "amlogic,meson-uart";
 +	clocks = <&clkc CLKID_XTAL>, <&clkc CLKID_UART2>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
  };
