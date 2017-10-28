@@ -1,88 +1,52 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v2 2/2] dt-bindings: power: add amlogic meson power domain bindings
-Date: Sat, 28 Oct 2017 18:40:17 +0200
-Message-ID: <1509208817-30632-3-git-send-email-narmstrong@baylibre.com>
-References: <1509208817-30632-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1509208817-30632-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: khilman@baylibre.com, carlo@caione.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] ARM: dts: exynos: fix property values of LDO15/17 for ODROID-XU3/4
+Date: Sat, 28 Oct 2017 13:32:48 -0400
+Message-ID: <20171028173329.15368-1-tobetter@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/power/amlogic,meson-gx-pwrc.txt       | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+From: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
-new file mode 100644
-index 0000000..95ec49a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
-@@ -0,0 +1,61 @@
-+Amlogic Meson Power Controller
-+==============================
-+
-+The Amlogic Meson SoCs embeds an internal Power domain controller.
-+
-+VPU Power Domain
-+----------------
-+
-+The Video Processing Unit power domain is controlled by this power controller,
-+but the domain requires some external resources to meet the correct power
-+sequences.
-+The bindings must respect the power domain bindings as described in the file
-+power_domain.txt
-+
-+Device Tree Bindings:
-+---------------------
-+
-+Required properties:
-+- compatible: should be "amlogic,meson-gx-pwrc-vpu" for the Meson GX SoCs
-+- #power-domain-cells: should be 0
-+- amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
-+- resets: phandles to the reset lines needed for this power demain sequence
-+	as described in ../reset/reset.txt
-+- clocks: from common clock binding: handle to VPU and VAPB clocks
-+- clock-names: from common clock binding: must contain "vpu", "vapb"
-+	corresponding to entry in the clocks property.
-+
-+Parent node should have the following properties :
-+- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
-+- reg: base address and size of the AO system control register space.
-+
-+Example:
-+-------
-+
-+ao_sysctrl: sys-ctrl@0 {
-+	compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
-+	reg =  <0x0 0x0 0x0 0x100>;
-+
-+	pwrc_vpu: power-controller-vpu {
-+		compatible = "amlogic,meson-gx-pwrc-vpu";
-+		#power-domain-cells = <0>;
-+		amlogic,hhi-sysctrl = <&sysctrl>;
-+		resets = <&reset RESET_VIU>,
-+			 <&reset RESET_VENC>,
-+			 <&reset RESET_VCBUS>,
-+			 <&reset RESET_BT656>,
-+			 <&reset RESET_DVIN_RESET>,
-+			 <&reset RESET_RDMA>,
-+			 <&reset RESET_VENCI>,
-+			 <&reset RESET_VENCP>,
-+		 	 <&reset RESET_VDAC>,
-+		 	 <&reset RESET_VDI6>,
-+		 	 <&reset RESET_VENCL>,
-+			 <&reset RESET_VID_LOCK>;
-+		clocks = <&clkc CLKID_VPU>,
-+			 <&clkc CLKID_VAPB>;
-+		clock-names = "vpu", "vapb";
-+	};
-+};
-+
-+
+Looking at the schematic, LDO15 and LDO17 are tied as a power source of a
+builtin network chipset. The voltage on LDO15 is corrected to 3.3V and the
+name of LDO17 is corrected to "vdd_ldo17".
+
+Signed-off-by: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+index a183b56283f8..68780569371d 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -372,8 +372,8 @@
+ 
+ 			ldo15_reg: LDO15 {
+ 				regulator-name = "vdd_ldo15";
+-				regulator-min-microvolt = <3100000>;
+-				regulator-max-microvolt = <3100000>;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 
+@@ -385,7 +385,7 @@
+ 			};
+ 
+ 			ldo17_reg: LDO17 {
+-				regulator-name = "tsp_avdd";
++				regulator-name = "vdd_ldo17";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
 -- 
-2.7.4
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
