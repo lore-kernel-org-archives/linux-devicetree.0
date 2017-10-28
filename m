@@ -1,87 +1,88 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4] pinctrl: Add skew-delay pin config and bindings
-Date: Sat, 28 Oct 2017 15:37:17 +0200
-Message-ID: <20171028133719.27528-2-linus.walleij@linaro.org>
-References: <20171028133719.27528-1-linus.walleij@linaro.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20171028133719.27528-1-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH v2 2/2] dt-bindings: power: add amlogic meson power domain bindings
+Date: Sat, 28 Oct 2017 18:36:23 +0200
+Message-ID: <1509208583-30349-3-git-send-email-narmstrong@baylibre.com>
+References: <1509208583-30349-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1509208583-30349-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-pm@lists.linux-foundation.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some pin controllers (such as the Gemini) can control the
-expected clock skew and output delay on certain pins with a
-sub-nanosecond granularity. This is typically done by shunting
-in a number of double inverters in front of or behind the pin.
-Make it possible to configure this with a generic binding.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 4 ++++
- drivers/pinctrl/pinconf-generic.c                              | 2 ++
- include/linux/pinctrl/pinconf-generic.h                        | 5 +++++
- 3 files changed, 11 insertions(+)
+ .../bindings/power/amlogic,meson-gx-pwrc.txt       | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index 4483cc31e531..ad9bbbba36e9 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -271,6 +271,10 @@ output-high		- set the pin to output mode with high level
- sleep-hardware-state	- indicate this is sleep related state which will be programmed
- 			  into the registers for the sleep state.
- slew-rate		- set the slew rate
-+skew-delay		- this affects the expected clock skew on input pins
-+			  and the delay before latching a value to an output
-+			  pin. Typically indicates how many double-inverters are
-+			  used to delay the signal.
- 
- For example:
- 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 8eaa25c3384f..b4f7f8a458ea 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -49,6 +49,7 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector", true),
- 	PCONFDUMP(PIN_CONFIG_SLEEP_HARDWARE_STATE, "sleep hardware state", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
-+	PCONFDUMP(PIN_CONFIG_SKEW_DELAY, "skew delay", NULL, true),
- };
- 
- static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
-@@ -181,6 +182,7 @@ static const struct pinconf_generic_params dt_params[] = {
- 	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
- 	{ "sleep-hardware-state", PIN_CONFIG_SLEEP_HARDWARE_STATE, 0 },
- 	{ "slew-rate", PIN_CONFIG_SLEW_RATE, 0 },
-+	{ "skew-delay", PIN_CONFIG_SKEW_DELAY, 0 },
- };
- 
- /**
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 5d8bc7f21c2a..ec6dadcc1fde 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -90,6 +90,10 @@
-  * @PIN_CONFIG_SLEW_RATE: if the pin can select slew rate, the argument to
-  *	this parameter (on a custom format) tells the driver which alternative
-  *	slew rate to use.
-+ * @PIN_CONFIG_SKEW_DELAY: if the pin has programmable skew rate (on inputs)
-+ *	or latch delay (on outputs) this parameter (in a custom format)
-+ *	specifies the clock skew or latch delay. It typically controls how
-+ *	many double inverters are put in front of the line.
-  * @PIN_CONFIG_END: this is the last enumerator for pin configurations, if
-  *	you need to pass in custom configurations to the pin controller, use
-  *	PIN_CONFIG_END+1 as the base offset.
-@@ -117,6 +121,7 @@ enum pin_config_param {
- 	PIN_CONFIG_POWER_SOURCE,
- 	PIN_CONFIG_SLEEP_HARDWARE_STATE,
- 	PIN_CONFIG_SLEW_RATE,
-+	PIN_CONFIG_SKEW_DELAY,
- 	PIN_CONFIG_END = 0x7F,
- 	PIN_CONFIG_MAX = 0xFF,
- };
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+new file mode 100644
+index 0000000..95ec49a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-gx-pwrc.txt
+@@ -0,0 +1,61 @@
++Amlogic Meson Power Controller
++==============================
++
++The Amlogic Meson SoCs embeds an internal Power domain controller.
++
++VPU Power Domain
++----------------
++
++The Video Processing Unit power domain is controlled by this power controller,
++but the domain requires some external resources to meet the correct power
++sequences.
++The bindings must respect the power domain bindings as described in the file
++power_domain.txt
++
++Device Tree Bindings:
++---------------------
++
++Required properties:
++- compatible: should be "amlogic,meson-gx-pwrc-vpu" for the Meson GX SoCs
++- #power-domain-cells: should be 0
++- amlogic,hhi-sysctrl: phandle to the HHI sysctrl node
++- resets: phandles to the reset lines needed for this power demain sequence
++	as described in ../reset/reset.txt
++- clocks: from common clock binding: handle to VPU and VAPB clocks
++- clock-names: from common clock binding: must contain "vpu", "vapb"
++	corresponding to entry in the clocks property.
++
++Parent node should have the following properties :
++- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
++- reg: base address and size of the AO system control register space.
++
++Example:
++-------
++
++ao_sysctrl: sys-ctrl@0 {
++	compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
++	reg =  <0x0 0x0 0x0 0x100>;
++
++	pwrc_vpu: power-controller-vpu {
++		compatible = "amlogic,meson-gx-pwrc-vpu";
++		#power-domain-cells = <0>;
++		amlogic,hhi-sysctrl = <&sysctrl>;
++		resets = <&reset RESET_VIU>,
++			 <&reset RESET_VENC>,
++			 <&reset RESET_VCBUS>,
++			 <&reset RESET_BT656>,
++			 <&reset RESET_DVIN_RESET>,
++			 <&reset RESET_RDMA>,
++			 <&reset RESET_VENCI>,
++			 <&reset RESET_VENCP>,
++		 	 <&reset RESET_VDAC>,
++		 	 <&reset RESET_VDI6>,
++		 	 <&reset RESET_VENCL>,
++			 <&reset RESET_VID_LOCK>;
++		clocks = <&clkc CLKID_VPU>,
++			 <&clkc CLKID_VAPB>;
++		clock-names = "vpu", "vapb";
++	};
++};
++
++
 -- 
-2.13.6
-
+2.7.4
