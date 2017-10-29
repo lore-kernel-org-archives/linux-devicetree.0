@@ -1,89 +1,80 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V4 01/12] of: platform: Add of_find_amba_device_by_node()
-Date: Sun, 29 Oct 2017 19:18:49 +0530
-Message-ID: <80731ad75f52781bf1d5fb1a1a211ee59b4a2ffb.1509284255.git.viresh.kumar@linaro.org>
-References: <cover.1509284255.git.viresh.kumar@linaro.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v11 00/10] Add sbs-manager with smbalert support
+Date: Sun, 29 Oct 2017 15:37:24 +0100
+Message-ID: <20171029143724.jz4ok4vjzmsveh6h@earth>
+References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
+ <66235a12-a209-be89-5bfd-dc69b769cab9@electromag.com.au>
+ <20171028225552.4uhsqx6fkurmcn3j@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1509284255.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1509284255.git.viresh.kumar@linaro.org>
-References: <cover.1509284255.git.viresh.kumar@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: nm@ti.com, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Frank Rowand <frowand.list@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, s.hauer@pengutronix.de, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, robdclark@gmail.com, robh+dt@kernel.org, fabio.estevam@nxp.com, Vincent Guittot <vincent.guittot@linaro.org>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6ymbqhjz6yhi3zd3"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171028225552.4uhsqx6fkurmcn3j@ninjato>
+Sender: linux-pm-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Phil Reid <preid@electromag.com.au>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-of_find_device_by_node() works only with platform devices. Lets create
-one for amba devices as well.
 
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/of/platform.c       | 20 ++++++++++++++++++++
- include/linux/of_platform.h |  9 +++++++++
- 2 files changed, 29 insertions(+)
+--6ymbqhjz6yhi3zd3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index ac15d0e3d27d..b38a8e5908a3 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -60,6 +60,26 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
- }
- EXPORT_SYMBOL(of_find_device_by_node);
- 
-+#ifdef CONFIG_ARM_AMBA
-+/**
-+ * of_find_amba_device_by_node - Find the amba_device associated with a node
-+ * @np: Pointer to device tree node
-+ *
-+ * Takes a reference to the embedded struct device which needs to be dropped
-+ * after use.
-+ *
-+ * Returns amba_device pointer, or NULL if not found
-+ */
-+struct amba_device *of_find_amba_device_by_node(struct device_node *np)
-+{
-+	struct device *dev;
-+
-+	dev = bus_find_device(&amba_bustype, NULL, np, of_dev_node_match);
-+	return dev ? to_amba_device(dev) : NULL;
-+}
-+EXPORT_SYMBOL(of_find_amba_device_by_node);
-+#endif
-+
- #ifdef CONFIG_OF_ADDRESS
- /*
-  * The following routines scan a subtree and registers a device for
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 8a561e08bc9e..fbf8a6443885 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -61,6 +61,15 @@ static inline struct platform_device *of_find_device_by_node(struct device_node
- }
- #endif
- 
-+#if defined(CONFIG_OF) && defined(CONFIG_ARM_AMBA)
-+extern struct amba_device *of_find_amba_device_by_node(struct device_node *np);
-+#else
-+static inline struct amba_device *of_find_amba_device_by_node(struct device_node *np)
-+{
-+	return NULL;
-+}
-+#endif
-+
- #ifdef CONFIG_OF_ADDRESS
- /* Platform drivers register/unregister */
- extern struct platform_device *of_device_alloc(struct device_node *np,
--- 
-2.15.0.rc1.236.g92ea95045093
+Hi,
+
+On Sun, Oct 29, 2017 at 12:55:52AM +0200, Wolfram Sang wrote:
+>=20
+> > > Changes from v10
+> > > - i2c: mux: pca954x: Call request irq after adding mux segments
+> > >    Added Peters ack
+> > >    renamed label 'fail_del_adapters' to 'fail_cleanup'
+> >
+> > Any comments on this?
+>=20
+> I just pushed a branch with some minor fixes to my tree [1] so that
+> buildbot can check it. If all goes well, I'll post the patches tomorrow
+> and merge this branch to for-next soon after.
+>=20
+> Thanks for your hard work!
+>=20
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/sbs-m=
+anager
+
+I see some additional commits:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git/commit/?h=3Di=
+2c/sbs-manager&id=3D7b75a22a903e681d920f383f7c952e5420db7e19
+https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git/commit/?h=3Di=
+2c/sbs-manager&id=3D567b0a4a7997406633e26898f68a623637f525c0
+https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git/commit/?h=3Di=
+2c/sbs-manager&id=3Df2b1a502784f996ad2686d7d3f8ad62bfdc89b43
+
+Those are
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+
+-- Sebastian
+
+--6ymbqhjz6yhi3zd3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAln156EACgkQ2O7X88g7
++po7HA//XG5u8zT97rO/LACmNMIQINXfA55jHDs1TGmc5y2CWSCWzyZ5Xsg9jVhg
+Dt0fhK0Ssw7Nd3QJekwn/1TE3hgcFLFlNHpZ0ADifvX6aQTUTp95kdvecLLsnpjq
+fCdxHs7N89CXjzGZddHQplKOsJ8zBJOvceC9PvpDY8dolU7lm0mow+gEBfBJuKtL
+M4uotSUheq1COJFIFOSUtUEyvU213hgcvghOoJi0Ta7Mv++bfhGUXlWgN4UDorf8
+kRmuRZFC6KRWQGwqIEsulsrohI9g1HMO11Vs6EonMR3aMcPvNS3gqYOUBSbpsNd1
+MfVm48dZ3CWFgHAvrTzYGatXLNAp6SNbgY/uo7ax4xPL7XYyNG1KDhm0Uyb5nAHK
+pHWfYjiymKVjkko1yKjczVZcP5tPqXJVPoBx1KDx246tdmohjy2EffDb8/OrmBt3
+p6PQ1c/cKmNNGGGf2zvfacGnifBJrSVX3z4ll5XhWrHZU4gkPyzOkS+elNe51B4g
+ZGv4M3+XkVSHhvbwxf8t+Xq7uLV1EMe8Wq0pVVKACgS80ACmV3eu3zmjvnjlKTQJ
+lylQobb57rOuoYrQw00H3RyrlcIclM1t9ylnd4x6pVEYwl3/mz4H3/t9ZgPc1Efi
+PTuHKKYTLozG7lMv1Q2AVKbDrYCc/uwd//SmK1YNnlZ3Ez/UU0c=
+=Cpv3
+-----END PGP SIGNATURE-----
+
+--6ymbqhjz6yhi3zd3--
