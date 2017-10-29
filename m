@@ -1,80 +1,85 @@
-From: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] dt-binding: timer: document NPCM7xx timer DT bindings
-Date: Sun, 29 Oct 2017 22:49:35 +0200
-Message-ID: <CAP6Zq1jKxvQ6bYF+WbxJEKEPb5J8RSS+bM=nH7L812bXJS7k9Q@mail.gmail.com>
-References: <1506849098-18290-1-git-send-email-tmaimon77@gmail.com>
- <1506849098-18290-3-git-send-email-tmaimon77@gmail.com> <20171010155755.wfklwchg4eg7u6p6@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171010155755.wfklwchg4eg7u6p6@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 01/17] dt-bindings: timer: renesas, cmt: Fix SoC-specific compatible values
+Date: Sun, 29 Oct 2017 22:20:18 +0100
+Message-ID: <1509312035-17368-1-git-send-email-daniel.lezcano@linaro.org>
+References: <c4d8b83b-b884-415b-8c92-b195de1dae7f@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c4d8b83b-b884-415b-8c92-b195de1dae7f@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, daniel.lezcano@linaro.org
+Cc: linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for the delay,
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
+While the new family-specific compatible values introduced by commit
+6f54cc1adcc8957f ("devicetree: bindings: R-Car Gen2 CMT0 and CMT1
+bindings") use the recommended order "<vendor>,<family>-<device>", the
+new SoC-specific compatible values still use the old and deprecated
+order "<vendor>,<device>-<soc>".
 
-On 10 October 2017 at 17:57, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Oct 01, 2017 at 12:11:38PM +0300, Tomer Maimon wrote:
->> Added device tree binding documentation for Nuvoton NPCM7xx timer.
->>
->> Signed-off-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
->>
->> diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
->> new file mode 100644
->> index 000000000000..d1beea901509
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
->> @@ -0,0 +1,25 @@
->> +Nuvoton NPCM7xx timer
->> +
->> +Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
->> +timer counters.
->> +
->> +Required properties:
->> +- compatible      : "nuvoton,npcm7xx-timer" for Poleg NPCM7xx.
->
-> Don't use wildcards in compatible strings. Use SoC specific compatible
-> strings with a fallback (the string for the 1st SoC which the block
-> appeared) if necessary.
->
-The SOC NPCM7xx is now on upstream process, I asked Brendan to modify
-the NPCM7xx device tree to support the clock source driver
+Switch the SoC-specific compatible values to the recommended order while
+there are no upstream users of these compatible values yet.
 
-https://www.spinics.net/lists/arm-kernel/msg614424.html
+Fixes: 7f03a0ecfdc786c1 ("devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings")
+Fixes: 63d9e8ca0dd4bfa4 ("devicetree: bindings: Deprecate property, update example")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../devicetree/bindings/timer/renesas,cmt.txt      | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-and also the arcitecture name
-
-https://www.spinics.net/lists/arm-kernel/msg614059.html
-
->> +- reg             : Offset and length of the register set for the device.
->> +- interrupts      : Contain the timer interrupt with flags for
->> +                    falling edge.
->> +
->> +Required clocking property, have to be one of:
->> +- clocks          : phandle of timer reference clock.
->> +- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
->> +                    timer (usually 25000000).
->> +
->> +Example:
->> +
->> +timer@f0008000 {
->> +    compatible = "nuvoton,npcm7xx-timer";
->> +    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
->> +    reg = <0xf0008000 0x1000>;
->> +    clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +};
->> +
->> --
->> 2.14.1
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+index 6ca6b9e..d740989 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+@@ -20,16 +20,16 @@ Required Properties:
+ 		(CMT1 on sh73a0 and r8a7740)
+ 		This is a fallback for the above renesas,cmt-48-* entries.
+ 
+-    - "renesas,cmt0-r8a73a4" for the 32-bit CMT0 device included in r8a73a4.
+-    - "renesas,cmt1-r8a73a4" for the 48-bit CMT1 device included in r8a73a4.
+-    - "renesas,cmt0-r8a7790" for the 32-bit CMT0 device included in r8a7790.
+-    - "renesas,cmt1-r8a7790" for the 48-bit CMT1 device included in r8a7790.
+-    - "renesas,cmt0-r8a7791" for the 32-bit CMT0 device included in r8a7791.
+-    - "renesas,cmt1-r8a7791" for the 48-bit CMT1 device included in r8a7791.
+-    - "renesas,cmt0-r8a7793" for the 32-bit CMT0 device included in r8a7793.
+-    - "renesas,cmt1-r8a7793" for the 48-bit CMT1 device included in r8a7793.
+-    - "renesas,cmt0-r8a7794" for the 32-bit CMT0 device included in r8a7794.
+-    - "renesas,cmt1-r8a7794" for the 48-bit CMT1 device included in r8a7794.
++    - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
++    - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
++    - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
++    - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
++    - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
++    - "renesas,r8a7791-cmt1" for the 48-bit CMT1 device included in r8a7791.
++    - "renesas,r8a7793-cmt0" for the 32-bit CMT0 device included in r8a7793.
++    - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
++    - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
++    - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
+ 
+     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2.
+     - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2.
+@@ -46,7 +46,7 @@ Required Properties:
+ Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt0-r8a7790", "renesas,rcar-gen2-cmt0";
++		compatible = "renesas,r8a7790-cmt0", "renesas,rcar-gen2-cmt0";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
+@@ -55,7 +55,7 @@ Example: R8A7790 (R-Car H2) CMT0 and CMT1 nodes
+ 	};
+ 
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt1-r8a7790", "renesas,rcar-gen2-cmt1";
++		compatible = "renesas,r8a7790-cmt1", "renesas,rcar-gen2-cmt1";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 121 IRQ_TYPE_LEVEL_HIGH>,
+-- 
+2.7.4
