@@ -1,54 +1,41 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v11 00/10] Add sbs-manager with smbalert support
-Date: Sun, 29 Oct 2017 16:05:27 +0100
-Message-ID: <20171029150525.iqxqwkht4lpgtm5h@ninjato>
-References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
- <66235a12-a209-be89-5bfd-dc69b769cab9@electromag.com.au>
- <20171028225552.4uhsqx6fkurmcn3j@ninjato>
- <20171029143724.jz4ok4vjzmsveh6h@earth>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/9] r8a7745/iwg22d DT rework + serial + HS-USB + IIC
+Date: Sun, 29 Oct 2017 16:12:04 +0100
+Message-ID: <20171029151204.n2dem6j7t6o6ayhf@verge.net.au>
+References: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="un7wrknuri5hnbsu"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171029143724.jz4ok4vjzmsveh6h@earth>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Phil Reid <preid@electromag.com.au>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <1508778570-28795-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 23, 2017 at 06:09:21PM +0100, Fabrizio Castro wrote:
+> This series brings under the same roof a few patches that needed a v2
+> and that are related to either r8a7745 or iwg22d, with the goal of making
+> the merge process as smooth as possible.
+> 
+> Patches [1-4] define a new DT architecture for the iW-RainboW-G22D SODIMM
+> Development Platform to include the configuration with the HDMI daughter
+> board and to define the serial interfaces.
+> 
+> Patches [5-8] add USB function support to the r8a7745 SoC and to the
+> iwg22d board. The patches providing the definition of compatible strings:
+> * "renesas,r8a7745-usb-dmac", and
+> * "renesas,usbhs-r8a7745"
+> (on which these USB patches depend on) have been accepted by the
+> respective maintainers already, but it will take a little bit for the
+> definitions to appear on a renesas-devel tag. For reference:
+> https://patchwork.kernel.org/patch/9990063/
+> https://patchwork.kernel.org/patch/9987411/
+> https://patchwork.kernel.org/patch/9990113/
+> 
+> Patch 9 adds IIC cores to the r8a7745 SoC.
+> 
+> The patches of this series apply smoothly on top of tag:
+> "renesas-devel-20171018-v4.14-rc5".
 
---un7wrknuri5hnbsu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> Those are
->=20
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-
-Cool, thanks!
-
-
---un7wrknuri5hnbsu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAln17jIACgkQFA3kzBSg
-Kbb7gg/9HC28AdQBZdWFv09ECEVMP0J44uw164+mXymfCE1FFkUR5zYmFAc+HdHC
-YWV5I50HHFkxVSgm9s3zixaiiERCNIu0aqUwN3tA8srRsGH2mcOW4FqoeD89rsmT
-rFYHrWjzH0SNKoEja99YOJL4wIV3FDP4tIBqcorHdji84/ZhNp7XacIjLagd2fAi
-Q3qtVqQAj8cFqrAjLvRaASOpDiDK44xHqIvI6ZmHLIF+qvNDVyO66JwVMpKzn/dK
-/k06uX+a7fm1mNZWnB5FP/JVkYjGgCJfoDCVzfDT7gud/hX+23yHS8Rj5odG+GLg
-UR0vDU7+3GFGzgnMkU/06U6l2n9VCHz32IK6pSgmjbQcI2mkns47HJOyU1xOON1N
-AVSbVP3xKupvH/uydoQo7WyxlaalCnLjUjSCXZtcXpFYV0keb9QRIxTHHTtV/R/I
-Zw/xbwNAFGcAJgm3QfLVZ7auN0FbuZIjAeGDV4Ck9z0MYomGrTkSPWUeZNLIQPep
-U9Cq0OkgTPblmoua9KnoKGsd7TeN/O+rDNNTlFLSOICWKmeqZeCnDzoiol8OhAjK
-/E97Hy10mb8FqoFGS1bEXOZrdM7MkHr6UXn5MWExj4TF8qWb0sP0WcCpcQ3AC0jh
-2vonM8WoBHGt9NU+18iVium3U4HXM1HtoawOQEFilpZLLwjpteA=
-=gN+I
------END PGP SIGNATURE-----
-
---un7wrknuri5hnbsu--
+Thanks, applied.
