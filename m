@@ -1,74 +1,73 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v11 02/10] i2c: i2c-smbus: Move i2c_setup_smbus_alert
- from i2c-smbus to i2c-core-smbus
-Date: Sun, 29 Oct 2017 16:44:08 +0100
-Message-ID: <20171029154408.vmjkpj7ybqyrj3ke@ninjato>
-References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
- <1503567070-115646-3-git-send-email-preid@electromag.com.au>
+From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Subject: Re: [PATCH v2 1/3] mtd: spi-nor: stm32-quadspi: Fix uninitialized
+ error return code
+Date: Sun, 29 Oct 2017 18:50:46 +0100
+Message-ID: <ed1ca205-830e-3f5b-e251-8d863a512eda@wedev4u.fr>
+References: <1509030755-19044-1-git-send-email-ludovic.Barre@st.com>
+ <1509030755-19044-2-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3ttwrb3btjf6zwrj"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1503567070-115646-3-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1509030755-19044-2-git-send-email-ludovic.Barre@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ludovic,
 
---3ttwrb3btjf6zwrj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Le 26/10/2017 à 17:12, Ludovic Barre a écrit :
+> From: Geert Uytterhoeven <geert@linux-m68k.org>
+> 
+> With gcc 4.1.2:
+> 
+>     drivers/mtd/spi-nor/stm32-quadspi.c: In function ‘stm32_qspi_tx_poll’:
+>     drivers/mtd/spi-nor/stm32-quadspi.c:230: warning: ‘ret’ may be used uninitialized in this function
+> 
+> Indeed, if stm32_qspi_cmd.len is zero, ret will be uninitialized.
+> This length is passed from outside the driver using the
+> spi_nor.{read,write}{,_reg}() callbacks.
+> 
+> Several functions in drivers/mtd/spi-nor/spi-nor.c (e.g. write_enable(),
+> write_disable(), and erase_chip()) call spi_nor.write_reg() with a zero
+> length.
+> 
+> Fix this by returning an explicit zero on success.
+> 
+> Fixes: 0d43d7ab277a048c ("mtd: spi-nor: add driver for STM32 quad spi flash controller")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Acked-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+I removed your "Signed-off" because I think this is a mistake but kept
+your "Acked-by" tag.
 
-On Thu, Aug 24, 2017 at 05:31:02PM +0800, Phil Reid wrote:
-> In preparation to adding of_i2c_setup_smbus_alert() move
-> i2c_setup_smbus_alert() to core module. of_i2c_setup_smbus_alert()
-> will call i2c_setup_smbus_alert() and this avoid module dependecy issues.
+Applied to the spi-nor/next branch of l2-mtd.
 
-I am not very happy with this but don't want to cause another delay. So,
-I hope we can discuss and fix it incrementally.
+Thanks!
 
-=46rom what it does, I really think both setup_alert functions belong to
-i2c-smbus.c. Three possibilities come to my mind (untested, though):
-
-a) use try_then_request_module somehow
-
-b) add to CONFIG_I2C something like:
-	select I2C_SMBUS if OF
-
-c) get rid of i2c-smbus.c entirely and move it all into the core
-
-Dunno if a) or b) have been tried in the course of this series already?
-
-Kind regards,
-
-   Wolfram
-
-
---3ttwrb3btjf6zwrj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAln190QACgkQFA3kzBSg
-KbahfhAAj0Pjm3wgot/4JAZqwufaZfuMfPpIMEDl2xdcdkPrvgfxPZwdM+JknJQK
-c5tHOoijY1XlSAOwv+E8agjUE2YZpBcPIfSeItV6wHFkhYvzawXG6MpV0irUfrC6
-gwv3OaiWTPmSvCrIvDg/ghirvE7lY4uVJlr/mE2GKzVSsGdjSI+TJmnym6HMx4N6
-XYySJlyQh5aBxddt0XTjNMLprIHhgh9rb88MljL4wdYf7dyhwPwjklTlrwy0WjUY
-A8nG+SoQAl1NnYbGizXZFF4z1NOIsxbUrtU759fovNOgPY5juldvTsUZbpDSKrSB
-T2GzXyAAFUi5o2ImCbdYbu7kr/wgfSmMDQtHhBtTnYBc9/5fCCgRMlQKjhVAkIRi
-n+VAS7On3yyJKGpJTi3g2d5riIkBbD7bEL+RRxWOb+xGdEHqA2udW49HA0INqz1C
-Kpon/MIJeR9mB0kERG/TCFuaqPda5BKZZsxFrOVpFdJl7BOqKhBMuo54Q36cYsMP
-/zns0TjqduNXdf8/9VSIzipWYqAO6NLwYHyv17yjubWTX0Hd/WPirfFr+gNaOxOi
-LYc2+4iQc12G77yHUlOox5cCPLKIN2ZzFd+l51rXsJuxdGobtVFm4+7/4Mkig9fx
-pGRod31OiV838WmSbHADesbdHZiVndsusfMs75ZsLlU91vX/WzE=
-=tsb9
------END PGP SIGNATURE-----
-
---3ttwrb3btjf6zwrj--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/mtd/spi-nor/stm32-quadspi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/stm32-quadspi.c b/drivers/mtd/spi-nor/stm32-quadspi.c
+> index 86c0931..ad6a3e1 100644
+> --- a/drivers/mtd/spi-nor/stm32-quadspi.c
+> +++ b/drivers/mtd/spi-nor/stm32-quadspi.c
+> @@ -240,12 +240,12 @@ static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
+>  						 STM32_QSPI_FIFO_TIMEOUT_US);
+>  		if (ret) {
+>  			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
+> -			break;
+> +			return ret;
+>  		}
+>  		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
+> 
