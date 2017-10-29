@@ -1,73 +1,68 @@
-From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Subject: Re: [PATCH v2 1/3] mtd: spi-nor: stm32-quadspi: Fix uninitialized
- error return code
-Date: Sun, 29 Oct 2017 18:50:46 +0100
-Message-ID: <ed1ca205-830e-3f5b-e251-8d863a512eda@wedev4u.fr>
+From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] mtd: spi-nor: stm32-quadspi: change license text
+Date: Sun, 29 Oct 2017 18:51:25 +0100
+Message-ID: <6d132904-bea7-2ecc-f9d9-73c7cc5f0c3d@wedev4u.fr>
 References: <1509030755-19044-1-git-send-email-ludovic.Barre@st.com>
- <1509030755-19044-2-git-send-email-ludovic.Barre@st.com>
+ <1509030755-19044-4-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1509030755-19044-2-git-send-email-ludovic.Barre@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1509030755-19044-4-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>, Marek Vasut <marek.vasut@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic,
-
 Le 26/10/2017 à 17:12, Ludovic Barre a écrit :
-> From: Geert Uytterhoeven <geert@linux-m68k.org>
+> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > 
-> With gcc 4.1.2:
+> -Change the license text with long template.
+> -Change Copyright to STMicroelectronics.
 > 
->     drivers/mtd/spi-nor/stm32-quadspi.c: In function ‘stm32_qspi_tx_poll’:
->     drivers/mtd/spi-nor/stm32-quadspi.c:230: warning: ‘ret’ may be used uninitialized in this function
-> 
-> Indeed, if stm32_qspi_cmd.len is zero, ret will be uninitialized.
-> This length is passed from outside the driver using the
-> spi_nor.{read,write}{,_reg}() callbacks.
-> 
-> Several functions in drivers/mtd/spi-nor/spi-nor.c (e.g. write_enable(),
-> write_disable(), and erase_chip()) call spi_nor.write_reg() with a zero
-> length.
-> 
-> Fix this by returning an explicit zero on success.
-> 
-> Fixes: 0d43d7ab277a048c ("mtd: spi-nor: add driver for STM32 quad spi flash controller")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Acked-by: Ludovic Barre <ludovic.barre@st.com>
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-I removed your "Signed-off" because I think this is a mistake but kept
-your "Acked-by" tag.
+> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 
-Applied to the spi-nor/next branch of l2-mtd.
+Applied to the spi-nor/next branch of l2-mtd
 
 Thanks!
-
 > ---
->  drivers/mtd/spi-nor/stm32-quadspi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/mtd/spi-nor/stm32-quadspi.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/mtd/spi-nor/stm32-quadspi.c b/drivers/mtd/spi-nor/stm32-quadspi.c
-> index 86c0931..ad6a3e1 100644
+> index 70710be..b3c7f6a 100644
 > --- a/drivers/mtd/spi-nor/stm32-quadspi.c
 > +++ b/drivers/mtd/spi-nor/stm32-quadspi.c
-> @@ -240,12 +240,12 @@ static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
->  						 STM32_QSPI_FIFO_TIMEOUT_US);
->  		if (ret) {
->  			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
-> -			break;
-> +			return ret;
->  		}
->  		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
->  	}
->  
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
+> @@ -1,9 +1,22 @@
+>  /*
+> - * stm32_quadspi.c
+> + * Driver for stm32 quadspi controller
+>   *
+> - * Copyright (C) 2017, Ludovic Barre
+> + * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
+> + * Author(s): Ludovic Barre author <ludovic.barre-qxv4g6HH51o@public.gmane.org>.
+>   *
+> - * License terms: GNU General Public License (GPL), version 2
+> + * License terms: GPL V2.0.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+> + * details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * This program. If not, see <http://www.gnu.org/licenses/>.
+>   */
+>  #include <linux/clk.h>
+>  #include <linux/errno.h>
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
