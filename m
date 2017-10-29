@@ -1,74 +1,78 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 1/3] irqchip/meson-gpio: add support for Meson8 SoCs
-Date: Mon, 30 Oct 2017 00:05:21 +0100
-Message-ID: <20171029230523.7355-2-martin.blumenstingl@googlemail.com>
-References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v16 30/32] ov5670: Add support for flash and lens devices
+Date: Mon, 30 Oct 2017 00:05:43 +0100
+Message-ID: <20171029230543.ccwaj6f66xlhnbd2@earth>
+References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
+ <20171026075342.5760-31-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171029230523.7355-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="prhrm5mdxvum4gt4"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171026075342.5760-31-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Meson8 uses the same GPIO interrupt controller IP block as the other
-Meson SoCs. A total of 134 pins can be spied on, which is the sum of:
-- 22 pins on bank GPIOX
-- 17 pins on bank GPIOY
-- 30 pins on bank GPIODV
-- 10 pins on bank GPIOH
-- 15 pins on bank GPIOZ
-- 7 pins on bank CARD
-- 19 pins on bank BOOT
-- 14 pins in the AO domain
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
- drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
- 2 files changed, 6 insertions(+)
+--prhrm5mdxvum4gt4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
-index 633e21ce4b17..a83f9a5734ca 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
-@@ -10,6 +10,7 @@ number of interrupt exposed depends on the SoC.
- Required properties:
- 
- - compatible : must have "amlogic,meson8-gpio-intc” and either
-+   “amlogic,meson8-gpio-intc” for meson8 SoCs (S802) or
-    “amlogic,meson8b-gpio-intc” for meson8b SoCs (S805) or
-    “amlogic,meson-gxbb-gpio-intc” for GXBB SoCs (S905) or
-    “amlogic,meson-gxl-gpio-intc” for GXL SoCs (S905X, S912)
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index c7cc7e37a23c..a59bdbc0b9bb 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -47,6 +47,10 @@ struct meson_gpio_irq_params {
- 	unsigned int nr_hwirq;
- };
- 
-+static const struct meson_gpio_irq_params meson8_params = {
-+	.nr_hwirq = 134,
-+};
-+
- static const struct meson_gpio_irq_params meson8b_params = {
- 	.nr_hwirq = 119,
- };
-@@ -60,6 +64,7 @@ static const struct meson_gpio_irq_params gxl_params = {
- };
- 
- static const struct of_device_id meson_irq_gpio_matches[] = {
-+	{ .compatible = "amlogic,meson8-gpio-intc", .data = &meson8_params },
- 	{ .compatible = "amlogic,meson8b-gpio-intc", .data = &meson8b_params },
- 	{ .compatible = "amlogic,meson-gxbb-gpio-intc", .data = &gxbb_params },
- 	{ .compatible = "amlogic,meson-gxl-gpio-intc", .data = &gxl_params },
--- 
-2.14.3
+Hi,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Oct 26, 2017 at 10:53:40AM +0300, Sakari Ailus wrote:
+> Parse async sub-devices related to the sensor by switching the async
+> sub-device registration function.
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> ---
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+
+-- Sebastian
+
+>  drivers/media/i2c/ov5670.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+> index a65469f88e36..9f9196568eb8 100644
+> --- a/drivers/media/i2c/ov5670.c
+> +++ b/drivers/media/i2c/ov5670.c
+> @@ -2529,7 +2529,7 @@ static int ov5670_probe(struct i2c_client *client)
+>  	}
+> =20
+>  	/* Async register for subdev */
+> -	ret =3D v4l2_async_register_subdev(&ov5670->sd);
+> +	ret =3D v4l2_async_register_subdev_sensor_common(&ov5670->sd);
+>  	if (ret < 0) {
+>  		err_msg =3D "v4l2_async_register_subdev() error";
+>  		goto error_entity_cleanup;
+> --=20
+> 2.11.0
+>=20
+
+--prhrm5mdxvum4gt4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAln2XscACgkQ2O7X88g7
++prHCg//f6BYT8oYjqpcSI5CAf+iTBTns2wWMGZmm+WXpd+iDzUXw5jJblWiOyZ3
+dZapmwfd+Lj11dGCot7bIgs/K2v5+OfkulkO4fg0SrBF7xy/fmyNoigNxoSwSh+t
+8qT9QX0mh3v+W/P245YqsV374SyWIGmopyA789xW7aRa2XKVgmzfN/okUxcvy4xN
+lsdTKvwuwpUa1BdNHgAF0miYhv4hkN3rTI+GTJkxTKowj0sSZTJo1GZBBWV/6z1r
+rDLfucv/pgWDTh2yNnbMaB/1X9QkSGk0LLBEyrvBTU+YKI3leBe89X32JMNyo/88
+c9PoCOr2++DZRb+27s8z3cZRVZ7b/r2mrqX8+QUU57V3mp+T3BOd0KA3YcmMZINL
+3xjXs8ZtYLlwSQTWWDNhahQQmYr1/kYK+DZGVvkgWdgBt7jt8BKlSUEKbu5jCEWv
+HfaSmrzOK4o6Mctci5dPZFo0Com7BImCCoD5cTtJrUUxVKk69adV6HEJ7Z7agFzT
+sJDE/qYiiYXD10Pnw9gFrvRgcO6G4v6+a5lEjMvaVFTKDOQRYx0nUmskI8TTIB92
+oUexohTxcR0tu9vILW3gaeVC9IvvKWP0ZyJVBjIeCIdI7prZJ/LbXPPxOthlllhr
+v+RYnKuxPOjBVpNBLjXSeT+/NTn96gKUSZ3bec9jsDP5p4NlmEk=
+=TRGE
+-----END PGP SIGNATURE-----
+
+--prhrm5mdxvum4gt4--
