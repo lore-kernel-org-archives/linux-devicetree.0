@@ -1,51 +1,34 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] openrisc: dts: Add OpenRISC platform SoC
-Date: Sun, 29 Oct 2017 20:33:28 +0900
-Message-ID: <20171029113328.GI2694@lianli.shorne-pla.net>
-References: <20171022024641.28478-1-shorne@gmail.com>
- <20171022024641.28478-4-shorne@gmail.com>
- <20171027031833.g6zrlewszok4vksx@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH] ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells
+Date: Sun, 29 Oct 2017 12:49:05 +0100
+Message-ID: <1509277745-6730-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171027031833.g6zrlewszok4vksx@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 10:18:33PM -0500, Rob Herring wrote:
-> On Sun, Oct 22, 2017 at 11:46:41AM +0900, Stafford Horne wrote:
-> > Add devicetree binding documentation for the OpenRISC platform
-> > opencores,or1ksim.  This is the main OpenRISC reference platform
-> > supporting multiple FPGA SoC's.
-> > 
-> > This format is based on some of the mips binding docs as we have
-> > similar requirements.
-> > 
-> > Also, update maintainers so openrisc related binding changes are visible
-> > to the openrisc team.
-> 
-> Your subject is wrong because this is not a dts patch. Use 
-> "dt-bindings: openrisc: ..."
+This patch fixes the DTC warnings about missing property #phy-cells.
 
-I will fix that,  I should have noticed.
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm283x.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > 
-> > Suggested-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../bindings/openrisc/opencores/or1ksim.txt        | 39 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  1 +
-> >  2 files changed, 40 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt
-> 
-> Otherwise,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 431dcfc..6125e03 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -634,5 +634,6 @@
+ 
+ 	usbphy: phy {
+ 		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
+ 	};
+ };
+-- 
+2.7.4
 
-Thank you.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
