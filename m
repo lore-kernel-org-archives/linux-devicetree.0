@@ -1,63 +1,94 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v11 00/10] Add sbs-manager with smbalert support
-Date: Sun, 29 Oct 2017 00:55:52 +0200
-Message-ID: <20171028225552.4uhsqx6fkurmcn3j@ninjato>
-References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
- <66235a12-a209-be89-5bfd-dc69b769cab9@electromag.com.au>
+From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Subject: dtx_diff: "fatal error: imx6qp.dtsi: No such file or directory"
+Date: Sun, 29 Oct 2017 04:52:06 -0400 (EDT)
+Message-ID: <alpine.LFD.2.21.1710290430280.4745@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2fbur4oqmkmbwqoa"
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <66235a12-a209-be89-5bfd-dc69b769cab9-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---2fbur4oqmkmbwqoa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+  not sure why i can't dtx_diff two .dts files if they're located
+outside of a kernel source tree -- the dtx_diff script certainly seems
+to suggest that's possible.
 
+  with my kernel source tree at ~/k/git, i set things up with:
 
-> > Changes from v10
-> > - i2c: mux: pca954x: Call request irq after adding mux segments
-> >    Added Peters ack
-> >    renamed label 'fail_del_adapters' to 'fail_cleanup'
->
-> Any comments on this?
+  $ PATH=$PATH:~/k/git/scripts/dtc
+  $ export ARCH=arm
 
-I just pushed a branch with some minor fixes to my tree [1] so that
-buildbot can check it. If all goes well, I'll post the patches tomorrow
-and merge this branch to for-next soon after.
+  first test, which works just fine (comparing imx6q-sabresd.dts and
+imx6qp-sabresd.dts), first "cd"ing to the top of my kernel source
+git repo:
 
-Thanks for your hard work!
+  $ cd ~/k/git
+  $ dtx_diff arch/arm/boot/dts/imx6q{,p}-sabresd.dts
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/sbs-manager
+appears to work fine, no need to use either of -s or -S to identify
+the source tree since, by default, the script assumes that's where
+you're located.
 
+  next, "cd" down to that dts directory and try the same command
+again:
 
---2fbur4oqmkmbwqoa
-Content-Type: application/pgp-signature; name="signature.asc"
+  $ cd arch/arm/boot/dts
+  $ dtx_diff imx6q{,p}-sabresd.dts
 
------BEGIN PGP SIGNATURE-----
+not surprisingly, it fails:
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAln1CvMACgkQFA3kzBSg
-KbYEKg/9GLYPf1c9cOtA3AshbdWirYrUoluIyujQPoRDzmUvULPewzL2ypOwSSmm
-JMICDdD1kxmjbhlcV62mxOmW85L1+g3/r7hg2KuYjc7RThtAzPqd+FXgqHIVadFN
-EFixxLg5bkznn/YdUNo1uxAhx0jwEWlzqnPm1vOfEYBMBgmHBay96jfzIoE7ua6C
-WXj/MvixqqFmmF2ONFWry+gVQ5/Et5VgtMtvh+lxviIZXv/0hvjRKZPdQjHRERlB
-M5t7BNQEsa1DSYpLS5dINk3jyBnrdunuhTSLk1qILOGjSx/PvxtlTvwDyfvOt+LX
-txWZRjrbGItNuvlkKCRRAGSDMlGPVpScODHJTH+G4E635yHX7MyfuATKQ5lCqwtZ
-lkESX6uAWcDKVU6g6erNWEV62a2kjosywh6G3slxmZZJal8BVEZ/dxHnr0Yzv0cA
-Io2u2bflHGcR2ZsSuvpmhpilCjRxMymgTg30F+gYV8U92Xfylgi1Gsm0sTzlIflI
-RqsFzqZUNmPyaza1raqFSa2KVNStaCjb5c7Jz1bbb2ar+z5Xfm4mlPdXBcUEI3Ma
-EWOwb++eGJZU4jPwbQcWFZfxut5Hh+6q8hXvxKGiGWzp3ptA5v/eOOQQF3ZLZp4W
-ZOMk89MdDuSddiw84T2OmcQxrsQPFabSoIV89tUnI+5DJvpfdf8=
-=Yaje
------END PGP SIGNATURE-----
+In file included from imx6qp.dtsi:43:0,
+                 from imx6qp-sabresd.dts:45:
+imx6q.dtsi:11:50: error: no include path in which to search for dt-bindings/interrupt-controller/irq.h
+ #include <dt-bindings/interrupt-controller/irq.h>
 
---2fbur4oqmkmbwqoa--
+  but either of the following two variations works just fine, since
+you're identifying the location of the source tree git repo (that you
+just happen to be inside of):
+
+  $ dtx_diff -S imx6q{,p}-sabresd.dts
+  $ dtx_diff -s ~/k/git imx6q{,p}-sabresd.dts
+
+however, if i copy those two files to /tmp and try the comparison
+there, even if i identify the same kernel source directory:
+
+  $ cp imx6q{,p}-sabresd.dts /tmp
+  $ cd /tmp
+  $ dtx_diff -s ~/k/git imx6q{,p}-sabresd.dts
+
+ruh roh ...
+
+imx6qp-sabresd.dts:45:10: fatal error: imx6qp.dtsi: No such file or
+directory
+ #include "imx6qp.dtsi"
+          ^~~~~~~~~~~~~
+compilation terminated.
+imx6q-sabresd.dts:15:10: fatal error: imx6q.dtsi: No such file or
+directory
+ #include "imx6q.dtsi"
+          ^~~~~~~~~~~~
+compilation terminated.
+
+  obviously(?), the cpp include path is not being set correctly, but
+why not? i'm checking the dtx_diff script right now to see what's
+going into cpp_flags, but should this not work? should i not be
+allowed to compare two .dts files outside the boundaries of a kernel
+source tree as long as i provide a perfectly kernel source tree for it
+to use? or does one need to manually configure the header file search
+path for this?
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
