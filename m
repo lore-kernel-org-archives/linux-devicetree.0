@@ -1,80 +1,45 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v16 29/32] et8ek8: Add support for flash and lens devices
-Date: Mon, 30 Oct 2017 00:05:17 +0100
-Message-ID: <20171029230517.2wco6qndrffcp65i@earth>
-References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
- <20171026075342.5760-30-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="saa3ztkljw4i7iu7"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171026075342.5760-30-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, pavel@ucw.cz, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: meson8: enable the GPIO interrupt controller
+Date: Mon, 30 Oct 2017 00:05:22 +0100
+Message-ID: <20171029230523.7355-3-martin.blumenstingl@googlemail.com>
+References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171029230523.7355-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This enables the GPIO interrupt controller for the Meson8 SoCs.
+Interrupt support on the GPIOs can be used by the MMC framework to
+detect when an SD card is inserted/removed or by the input framework to
+detect button presses.
 
---saa3ztkljw4i7iu7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm/boot/dts/meson8.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Hi,
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index eb3f8161eef0..bedcbebc2433 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -286,6 +286,11 @@
+ 	clock-names = "stmmaceth";
+ };
+ 
++&gpio_intc {
++	compatible = "amlogic,meson8-gpio-intc", "amlogic,meson-gpio-intc";
++	status = "okay";
++};
++
+ &hwrng {
+ 	compatible = "amlogic,meson8-rng", "amlogic,meson-rng";
+ 	clocks = <&clkc CLKID_RNG0>;
+-- 
+2.14.3
 
-On Thu, Oct 26, 2017 at 10:53:39AM +0300, Sakari Ailus wrote:
-> Parse async sub-devices related to the sensor by switching the async
-> sub-device registration function.
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> ---
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-
--- Sebastian
-
->  drivers/media/i2c/et8ek8/et8ek8_driver.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/i2c/et8ek8/et8ek8_driver.c b/drivers/media/i2c=
-/et8ek8/et8ek8_driver.c
-> index c14f0fd6ded3..e9eff9039ef5 100644
-> --- a/drivers/media/i2c/et8ek8/et8ek8_driver.c
-> +++ b/drivers/media/i2c/et8ek8/et8ek8_driver.c
-> @@ -1453,7 +1453,7 @@ static int et8ek8_probe(struct i2c_client *client,
->  		goto err_mutex;
->  	}
-> =20
-> -	ret =3D v4l2_async_register_subdev(&sensor->subdev);
-> +	ret =3D v4l2_async_register_subdev_sensor_common(&sensor->subdev);
->  	if (ret < 0)
->  		goto err_entity;
-> =20
-> --=20
-> 2.11.0
->=20
-
---saa3ztkljw4i7iu7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAln2Xq0ACgkQ2O7X88g7
-+prAfA/7BueRLgPVMWRA3GhZW+DOcIBwSp/ZHiRAvaJbeYNdXd3pmqVJRVddBXd8
-+BQA1glnh+43nPuJ2YnQDflvw/6pfiA/z9V1fbos4hrHPDASmVnYAc/jBpzS3lxZ
-kH0Ci8BOBctaSTcZZTu6rlR2TBW0mE/Y2znlVzvKDEmDOBwdAIWvXVsT1W+6GxPM
-QEGyyE1R89ktpOQ6qQOIaudYKD92HQWJGkPVWKJFyeWq24fRSEVSP2AQM2bZnu6H
-Mr8kzGd/oT23V6Fekf9J0q4CebQqJIlfsU27hHNwoiVHgy7KahhLg1oCgrgVXtms
-TfMPFRyFIj652w4hqv1KtBC9Trf/NOfZ3EDUVz9vit9h1m1tBNWSHOZTYm+jlFm6
-wSmHhTulgIApgy/ZSklvpKlRB7Jekc0cQFgJAH5mwI/x/WvKfRQ7lMvgTguUvGqE
-WdUZyjNy8nWw66IOn1ZfisY3zo28tY4PBs2uasIKERnjDZPLceH+am8UXahDaVVq
-U2VCMkkJDV0CHmzu71QIed6BBYRGLES+k6QyBQR0xEUioRCRiBDfKcGVKvLL/IX0
-BHp8tcm7v/XVlcwBie9P9cVbelRI7BAn/5DPmHEAGOww7ZrSUnYpUUCTw6mR2E5h
-Xgpf1I+odaU9ofyp45DXjq0P0T3ZzzuhTD72RxcS77DaHYYfVV8=
-=Yqe1
------END PGP SIGNATURE-----
-
---saa3ztkljw4i7iu7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
