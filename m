@@ -1,94 +1,51 @@
-From: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
-Subject: dtx_diff: "fatal error: imx6qp.dtsi: No such file or directory"
-Date: Sun, 29 Oct 2017 04:52:06 -0400 (EDT)
-Message-ID: <alpine.LFD.2.21.1710290430280.4745@localhost.localdomain>
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] openrisc: dts: Add OpenRISC platform SoC
+Date: Sun, 29 Oct 2017 20:33:28 +0900
+Message-ID: <20171029113328.GI2694@lianli.shorne-pla.net>
+References: <20171022024641.28478-1-shorne@gmail.com>
+ <20171022024641.28478-4-shorne@gmail.com>
+ <20171027031833.g6zrlewszok4vksx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171027031833.g6zrlewszok4vksx@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Openrisc <openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 26, 2017 at 10:18:33PM -0500, Rob Herring wrote:
+> On Sun, Oct 22, 2017 at 11:46:41AM +0900, Stafford Horne wrote:
+> > Add devicetree binding documentation for the OpenRISC platform
+> > opencores,or1ksim.  This is the main OpenRISC reference platform
+> > supporting multiple FPGA SoC's.
+> > 
+> > This format is based on some of the mips binding docs as we have
+> > similar requirements.
+> > 
+> > Also, update maintainers so openrisc related binding changes are visible
+> > to the openrisc team.
+> 
+> Your subject is wrong because this is not a dts patch. Use 
+> "dt-bindings: openrisc: ..."
 
-  not sure why i can't dtx_diff two .dts files if they're located
-outside of a kernel source tree -- the dtx_diff script certainly seems
-to suggest that's possible.
+I will fix that,  I should have noticed.
 
-  with my kernel source tree at ~/k/git, i set things up with:
+> > 
+> > Suggested-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../bindings/openrisc/opencores/or1ksim.txt        | 39 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  1 +
+> >  2 files changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/openrisc/opencores/or1ksim.txt
+> 
+> Otherwise,
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-  $ PATH=$PATH:~/k/git/scripts/dtc
-  $ export ARCH=arm
-
-  first test, which works just fine (comparing imx6q-sabresd.dts and
-imx6qp-sabresd.dts), first "cd"ing to the top of my kernel source
-git repo:
-
-  $ cd ~/k/git
-  $ dtx_diff arch/arm/boot/dts/imx6q{,p}-sabresd.dts
-
-appears to work fine, no need to use either of -s or -S to identify
-the source tree since, by default, the script assumes that's where
-you're located.
-
-  next, "cd" down to that dts directory and try the same command
-again:
-
-  $ cd arch/arm/boot/dts
-  $ dtx_diff imx6q{,p}-sabresd.dts
-
-not surprisingly, it fails:
-
-In file included from imx6qp.dtsi:43:0,
-                 from imx6qp-sabresd.dts:45:
-imx6q.dtsi:11:50: error: no include path in which to search for dt-bindings/interrupt-controller/irq.h
- #include <dt-bindings/interrupt-controller/irq.h>
-
-  but either of the following two variations works just fine, since
-you're identifying the location of the source tree git repo (that you
-just happen to be inside of):
-
-  $ dtx_diff -S imx6q{,p}-sabresd.dts
-  $ dtx_diff -s ~/k/git imx6q{,p}-sabresd.dts
-
-however, if i copy those two files to /tmp and try the comparison
-there, even if i identify the same kernel source directory:
-
-  $ cp imx6q{,p}-sabresd.dts /tmp
-  $ cd /tmp
-  $ dtx_diff -s ~/k/git imx6q{,p}-sabresd.dts
-
-ruh roh ...
-
-imx6qp-sabresd.dts:45:10: fatal error: imx6qp.dtsi: No such file or
-directory
- #include "imx6qp.dtsi"
-          ^~~~~~~~~~~~~
-compilation terminated.
-imx6q-sabresd.dts:15:10: fatal error: imx6q.dtsi: No such file or
-directory
- #include "imx6q.dtsi"
-          ^~~~~~~~~~~~
-compilation terminated.
-
-  obviously(?), the cpp include path is not being set correctly, but
-why not? i'm checking the dtx_diff script right now to see what's
-going into cpp_flags, but should this not work? should i not be
-allowed to compare two .dts files outside the boundaries of a kernel
-source tree as long as i provide a perfectly kernel source tree for it
-to use? or does one need to manually configure the header file search
-path for this?
-
-rday
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+Thank you.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
