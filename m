@@ -1,61 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
- re-enabling PWM and switching backlight power on
-Date: Mon, 30 Oct 2017 10:33:34 +0000
-Message-ID: <20171030103334.75ii247j6owrnrdb@dell>
-References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
- <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
- <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
+Date: Mon, 30 Oct 2017 18:44:08 +0800
+Message-ID: <8eba6f36657bee32e60adb6356c15649@aosc.io>
+References: <20171027150658.18509-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6ME3THQKGQELIGHRZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171027150658.18509-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Oct 2017, Rob Herring wrote:
+=E5=9C=A8 2017-10-27 23:06=EF=BC=8CIcenowy Zheng =E5=86=99=E9=81=93=EF=BC=
+=9A
+> This patchset adds support for the SimpleFB on Allwinner SoCs with
+> "Display Engine 2.0".
+>=20
+> PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
+>=20
+> PATCH 4 adds the pipeline strings for DE2 SimpleFB.
+>=20
+> PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
+> for H3/H5 SoCs.
+>=20
+> PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
+>=20
+> Icenowy Zheng (10):
+>   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
+>   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
+>   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
+>   dt-bindings: simplefb-sunxi: add pipelines for DE2
+>   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+>   arm64: allwinner: h5: add compatible string for DE2 CCU
+>   ARM: sunxi: h3/h5: add simplefb nodes
+>   dt-bindings: add binding for A64 DE2 CCU SRAM
 
-> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
-> > When switching the backlight on, the LCD may need some time to adjust
-> > to the configured PWM duty cycle. Add a configurable delay between
-> > configuring the PWM and enabling the backlight regulator to account
-> > for this.
-> > 
-> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
-> > ---
-> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
-> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
-> >  2 files changed, 23 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > index 764db86..95594c3 100644
-> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > @@ -17,6 +17,10 @@ Optional properties:
-> >                 "pwms" property (see PWM binding[0])
-> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-> >                    and disables the backlight (see GPIO binding[1])
-> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
-> > +		  and switching PWM on. This may be required to eliminate
-> > +		  flicker when switching the PWM on after it has been
-> > +		  disabled.
-> 
-> The subject talks about turning on the backlight regulator, but this 
-> only talks about the PWM.
+Sorry, but don't apply the following patches for two
+reasons:
+- the implementation of SRAM claiming in DE2 CCU is
+   forgotten to be sent;
+- the patch that adds DE2 CCU have an error.
 
->From my understanding "switching PWM on" == enabling the regulator.
+>   arm64: allwinner: a64: add DE2 CCU for A64 SoC
+>   arm64: allwinner: a64: add simplefb for A64 SoC
+>=20
+>  .../devicetree/bindings/clock/sun8i-de2.txt        | 10 +++-
+>  .../bindings/display/simple-framebuffer-sunxi.txt  |  4 ++
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 ++
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 ++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65=20
+> ++++++++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 ++
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 53=20
+> +++++++++++++++++-
+>  7 files changed, 178 insertions(+), 5 deletions(-)
 
-I don't see any disparity here.  Or am I missing something?
-
-> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
-> >  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
