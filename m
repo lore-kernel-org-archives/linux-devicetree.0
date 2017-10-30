@@ -1,167 +1,114 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: exynos: add cpu perf counters to Exynos54xx
- boards
-Date: Mon, 30 Oct 2017 21:50:58 +0100
-Message-ID: <20171030205058.xvonrcy4sliltu5c@kozik-lap>
-References: <1508812196-14478-1-git-send-email-mihailescu2m@gmail.com>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Devicetree Workshop Follow Up: Adding hierarchy to
+ arch/arm/boot/dts
+Date: Mon, 30 Oct 2017 13:51:45 -0700
+Message-ID: <20171030205145.5igci4hkbhrnkd4s@us-sjc-wireless-10-16-34-58.amer.corp.natinst.com>
+References: <20171030164626.GA14993@tyrael.ni.corp.natinst.com>
+ <20171030170917.GC27404@n2100.armlinux.org.uk>
+ <20171030181409.6mvjud3yq3kiidfv@us-sjc-wireless-10-16-34-58.amer.corp.natinst.com>
+ <CAL_Jsq+VkULu=1q6aPT9GKQhR2b1V1ATWB5yA6EWAr69xY1_8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1508812196-14478-1-git-send-email-mihailescu2m@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: memeka <mihailescu2m@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Willy Wolff <willy.mh.wolff@gmail.com>
+In-Reply-To: <CAL_Jsq+VkULu=1q6aPT9GKQhR2b1V1ATWB5yA6EWAr69xY1_8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 24, 2017 at 12:59:56PM +1030, memeka wrote:
-> Enable support for ARM Performance Monitoring Units available in Cortex-A7
-> and Cortex-A15 CPU cores for Exynos54xx SoCs (5410, 5420 and 5422/5800).
+Hi Rob,
+
+On Mon, Oct 30, 2017 at 07:51:26PM +0000, Rob Herring wrote:
+> On Mon, Oct 30, 2017 at 1:14 PM, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > Hi Russell,
+> >
+> > On Mon, Oct 30, 2017 at 05:09:17PM +0000, Russell King - ARM Linux wrote:
+> >> On Mon, Oct 30, 2017 at 09:46:26AM -0700, Moritz Fischer wrote:
+> >> > Hi all,
+> >> >
+> >> > as discussed in Prague last week, here's my follow up.
+> >> > A bit of background again as refresher: Some time ago I submitted a
+> >> > patchset adding dts for some of upcoming boards ([1]).
+> >> > Arguments brought up against merging it were that we have too many Zynq
+> >> > based boards already in tree.
 > 
-> The PMUs interrupts are defined in the common exynos54xx.dtsi device tree,
-> but the PMUs are enabled and have their interrupt CPU affinity defined
-> next to each SoC's cpus node.
+> First I've seen this. Are the revX versions long lived? I could see
+> some pushback on having multiple revisions, but adding the board
+> itself seems silly.
+
+Well, RevC were shipped to customer X and are deployed in the field,
+revD has some fixes, customers have them, RevE might have some more
+fixes, meanwhile I need to support all of them. Note how I did not send
+a Rev1, which is the one no customer will ever get hands on.
+
 > 
-> Tested with perf on Odroid XU4 (Exynos5422):
-> armv7_cortex_a7 PMU driver: 5 counters available
-> armv7_cortex_a15 PMU driver: 7 counters available
+> >> > During the Devicetree Workshop we had a brief discussion and most people
+> >> > in the room seemed to be ok with adding the boards, someone suggested
+> >> > (Arnd?) to add vendor subdirectories like in arm64, i.e. something
+> >> > like:
+> >> >
+> >> > arch/arm/boot/dts/xilinx/ni/<board>
+> >> >
+> >> > where Xilinx would be the SoC vendor and NI the integrator.
+> >>
+> >> I utterly hate deep levels of directories, but I think the ARM64
+> >> solution where we /generally/ have one level of additional
+> >> directories under dts is a good compromise.  With 1640 files in
+> >> arch/arm/boot/dts, it does need splitting up.
 > 
-> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-> Signed-off-by: Willy Wolff <willy.mh.wolff@gmail.com>
+> Agreed.
 > 
-> ---
-> Changes since v1:
->  - both Cortex-A7 and Cortex-A15 PMUs are now defined in exynos54xx.dtsi
->  - CPU affinity is defined for each SoC *after* the cpus node entry
->  - PMUs are disabled in exynos54xx.dtsi and enabled for each SoC
->  - cpus labels have been fixed in the interrupt-affinity property for
->    Exynos5410 and Exynos5420 SoCs
+> >> I'm not sure that splitting it by "integrator" is a good idea
+> >> for a single level of directory - using the SoC, SoC group, or
+> >> SoC manufacturer is better.  It needs to be a balance between
+> >> number of subdirectories and number of files in the subdirectory,
+> >> so using guidance and not setting it as a hard and fast rule
+> >> makes sense too.  What is right for one SoC group may not be
+> >> right for another group of SoCs.
+> >
+> > Ok so in our case that would be:
+> >
+> > arch/arm/boot/dts/zynq-*.dts -> arch/arm/boot/dts/xilinx
 > 
-> ---
->  arch/arm/boot/dts/exynos5410.dtsi      |  8 ++++++++
->  arch/arm/boot/dts/exynos5420-cpus.dtsi | 16 ++++++++++++++++
->  arch/arm/boot/dts/exynos5422-cpus.dtsi | 16 ++++++++++++++++
->  arch/arm/boot/dts/exynos54xx.dtsi      | 20 ++++++++++++++++++++
->  4 files changed, 60 insertions(+)
+> Yes. I would like the rule to be "use the SoC vendor prefix".
+> Unfortunately, we haven't quite followed that for arm64 with things
+> like exynos and freescale.
+
+Ok, let's do this then.
 > 
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> index 7eab4bc..f42b04b 100644
-> --- a/arch/arm/boot/dts/exynos5410.dtsi
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -428,4 +428,12 @@
->  	samsung,syscon-phandle = <&pmu_system_controller>;
->  };
->  
-> +&arm_a15_pmu {
-
-Please put it in alphabetical order (against existing overridings by
-labels).
-
-> +	interrupt-affinity = <&cpu0>,
-> +		<&cpu1>,
-
-Please align with <&cpiu0> before. Makes code easier to read.
-
-> +		<&cpu2>,
-> +		<&cpu3>;
-> +	status = "okay";
-> +};
-
-> +
->  #include "exynos5410-pinctrl.dtsi"
-> diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> index 5c052d7..518b7d8 100644
-> --- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-> @@ -124,3 +124,19 @@
->  		};
->  	};
->  };
-> +
-> +&arm_a7_pmu {
-
-Ditto - order and alignment of continuation of lines.
-
-> +	interrupt-affinity = <&cpu4>,
-> +		<&cpu5>,
-> +		<&cpu4>,
-> +		<&cpu5>;
-
-cpu6 and cpu7?
-
-> +	status = "okay";
-> +};
-> +
-> +&arm_a15_pmu {
-> +	interrupt-affinity = <&cpu0>,
-> +		<&cpu1>,
-> +		<&cpu2>,
-> +		<&cpu3>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> index ab4c718..92676be 100644
-> --- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> @@ -131,3 +131,19 @@
->  		};
->  	};
->  };
-> +
-> +&arm_a7_pmu {
-> +	interrupt-affinity = <&cpu0>,
-> +		<&cpu1>,
-> +		<&cpu2>,
-> +		<&cpu3>;
-> +	status = "okay";
-> +};
-> +
-> +&arm_a15_pmu {
-> +	interrupt-affinity = <&cpu4>,
-> +		<&cpu5>,
-> +		<&cpu6>,
-> +		<&cpu7>;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-> index 8ca4fef..f0bd27d 100644
-> --- a/arch/arm/boot/dts/exynos54xx.dtsi
-> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
-> @@ -79,6 +79,26 @@
->  			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
->  		};
->  
-> +		arm_a7_pmu: arm-a7-pmu {
-> +			compatible = "arm,cortex-a7-pmu";
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
-
-Lines alignment.
-
-Best regards,
-Krzysztof
-
-
-> +			status = "disabled";
-> +		};
-> +
-> +		arm_a15_pmu: arm-a15-pmu {
-> +			compatible = "arm,cortex-a15-pmu";
-> +			interrupt-parent = <&combiner>;
-> +			interrupts = <1 2>,
-> +				<7 0>,
-> +				<16 6>,
-> +				<19 2>;
-> +			status = "disabled";
-> +		};
-> +
->  		sss: sss@10830000 {
->  			compatible = "samsung,exynos4210-secss";
->  			reg = <0x10830000 0x300>;
-> -- 
-> 2.7.4
+> > or:
+> >
+> > arch/arm/boot/dts/zynq-*.dts -> arch/arm/boot/dts/zynq
 > 
+> No.
+> 
+> >>
+> >> What I think we should avoid is having to needlessly descend into
+> >> all of the subdirectories, so it needs to be based around the
+> >> Kconfig symbols we're already using.
+> >
+> > So as example only add the arch/arm/boot/dts/xilinx subdirectory based on
+> > CONFIG_ARCH_ZYNQ?
+> 
+> No. Look at arch/arm64/boot/dts/Makefile and you will see why that doesn't work.
+
+Ok, will take a look.
+> 
+> If this can be entirely scripted, I would suggest writing the script
+> and we provide the script to Linus to run just before an -rc1 (or
+> arm-soc folks can run it as long as all dts changes go thru their
+> tree). Also, pay attention that we don't break the
+> devicetree-rebasing.git tree.
+
+Alright, let me see if I can make this work,
+> 
+> Rob
+
+Thanks for your feedback,
+
+Moritz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
