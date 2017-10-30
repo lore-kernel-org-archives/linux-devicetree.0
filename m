@@ -1,140 +1,215 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] HID: i2c-hid: add reset gpio property
-Date: Mon, 30 Oct 2017 14:16:37 -0700
-Message-ID: <20171030211635.GA28190@google.com>
-References: <1509331789-1949-1-git-send-email-hl@rock-chips.com>
- <20171030165753.GA10752@google.com>
- <CAL_JsqKQw7UubSRALsPMUw7rR16xwcSWUzN5wEAqckN7D61Kkg@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
+Date: Mon, 30 Oct 2017 17:07:53 -0500
+Message-ID: <CAL_JsqKi+9yEXRq=XcCG=S8wXmLk9BFCnXWEE9mcf+495j+1sw@mail.gmail.com>
+References: <cover.1509284255.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKQw7UubSRALsPMUw7rR16xwcSWUzN5wEAqckN7D61Kkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Kosina <jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jani.nikula-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1509284255.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Clark <robdclark@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Nishanth Menon <nm@ti.com>, Wei Xu <xuwei5@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 03:15:19PM -0500, Rob Herring wrote:
-> On Mon, Oct 30, 2017 at 11:57 AM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > On Mon, Oct 30, 2017 at 10:49:49AM +0800, Lin Huang wrote:
-> >> --- a/drivers/hid/i2c-hid/i2c-hid.c
-> >> +++ b/drivers/hid/i2c-hid/i2c-hid.c
+On Sun, Oct 29, 2017 at 8:48 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> Hi Greg,
+>
+> Here is V4 of the boot constraints core based on your feedback from V3.
+> We now have support for three platforms (as you suggested) included in
+> this series: Hisilicon, IMX and Qualcomm.
+>
+> I have tested the Hisilicon patches on hikey 9660 board, IMX stuff is
+> tested by Sascha (Pengutronix) on i.MX6 and Qualcomm stuff is tested by
+> Rajendra (Qualcomm) on Dragonboard 410C (This required some more patches
+> related to display driver which Rajendra should be sending separately
+> later on).
+>
+>
+> Problem statement:
+>
+> Some devices are powered ON by the bootloader before the bootloader
+> handovers control to Linux. It maybe important for those devices to keep
+> working until the time a Linux device driver probes the device and
+> reconfigure its resources.
+>
+> A typical example of that can be the LCD controller, which is used by
+> the bootloaders to show image(s) while the platform is booting into
+> Linux.  The LCD controller can be using some resources, like clk,
+> regulators, etc, that are shared between several devices. These shared
+> resources should be configured to satisfy need of all the users.  If
+> another device's (X) driver gets probed before the LCD controller driver
+> in this case, then it may end up disabling or reconfiguring these
+> resources to ranges satisfying the current users (only device X) and
+> that can make the LCD screen unstable.
 
-> >> @@ -793,6 +794,34 @@ struct hid_ll_driver i2c_hid_ll_driver = {
-> >>  };
-> >>  EXPORT_SYMBOL_GPL(i2c_hid_ll_driver);
-> >>
-> >> +static int i2c_hid_hw_power_on(struct i2c_hid *ihid)
-> >> +{
-> >> +     int ret;
-> >> +
-> >> +     ret = regulator_enable(ihid->pdata.supply);
-> >> +     if (ret < 0)
-> >> +             return ret;
-> >> +
-> >> +     if (ihid->pdata.post_power_delay_ms)
-> >> +             msleep(ihid->pdata.post_power_delay_ms);
-> >> +
-> >> +     gpiod_set_value_cansleep(ihid->pdata.reset_gpio, 1);
-> >> +     usleep_range(ihid->pdata.assert_reset_us,
-> >> +                  ihid->pdata.assert_reset_us);
-> 
-> You already ensure that reset is asserted before power on, so why does
-> the post_power_delay_ms not work for you? IIRC, there's already a
-> property for it.
+Would probing the display earlier solve this as that's also something
+people care about (or work-around by initializing the display in the
+bootloader). I guess if the display depends on resources A, B, and C,
+other drivers could still each only depend on one of those and probe
+successfully before the display does. However, the display driver
+would still probe, so you could do something then to enable the
+constraints. That would have the advantage that the driver knows what
+resources it needs even if probe is deferred and you don't need
+special DT bindings nor platform code.
 
-That would be more like the equivalent of the "deassert" delay used a
-few lines below. The "assert" delay would be a different property,
-unless we want to guess at a reasonable value, or else key off something
-like 'compatible'.
+Getting certain drivers/devices to probe first may just require
+ensuring they get inserted at the beginning of the driver and device
+lists which would be a pretty trivial change I think. That's ignoring
+differing initcall levels though.
 
-But otherwise, sure, we could reuse it. We'd then want to modify the
-binding documentation to be less specific to the "vdd-supply" though.
+> Another case can be a debug serial port enabled from the bootloader.
 
-> > What's the point of using the same value on both ends of the range? Does
-> > it make sense to give some padding to this? e.g., from X to X + 10% ?
-> > (Note that reasonable values for this are on the order of a few
-> > milliseconds.)
-> >
-> > Also, the above msleep() has a 'if non-zero' condition on it...but
-> > that's not actually necessary now that I look again, since msleep() and
-> > usleep_range() both handle zero times OK... But it feels a little
-> > inconsistent. We should probably change one or the other sometime.
-> >
-> >> +     gpiod_set_value_cansleep(ihid->pdata.reset_gpio, 0);
-> >> +     usleep_range(ihid->pdata.deassert_reset_us,
-> >> +                  ihid->pdata.deassert_reset_us);
-> >> +
-> >> +     return ret;
-> >> +}
-> >> +
-> >> +static int i2c_hid_hw_power_off(struct i2c_hid *ihid)
-> >> +{
-> >> +     gpiod_set_value_cansleep(ihid->pdata.reset_gpio, 1);
-> >> +
-> >> +     return regulator_disable(ihid->pdata.supply);
-> >> +}
-> >> +
-> >>  static int i2c_hid_init_irq(struct i2c_client *client)
-> >>  {
-> >>       struct i2c_hid *ihid = i2c_get_clientdata(client);
-> >> @@ -934,6 +963,12 @@ static int i2c_hid_of_probe(struct i2c_client *client,
-> >>       if (!ret)
-> >>               pdata->post_power_delay_ms = val;
-> >>
-> >> +     ret = of_property_read_u32(dev->of_node, "assert-reset-us",
-> >> +                                &pdata->assert_reset_us);
-> >> +
-> >> +     ret = of_property_read_u32(dev->of_node, "deassert-reset-us",
-> >> +                                &pdata->deassert_reset_us);
-> >
-> > You need to document these.
-> 
-> I'm not inclined to accept these. Sure, it's only 2 properties. No big
-> deal on their own. However, what about the next device that needs some
-> other delay. Or has another control signal with timing constraints. Or
-> has a clock with specific enable timing. The list goes on... If we
-> wanted to handle all cases of power sequencing in DT, then we'd write
-> something flexible to handle any case. But we don't because DT is not
-> a scripting language. This is why we have compatibles for each
-> specific chip.
+Continuing the above thought, we could just match device nodes against
+stdout-path as we create devices and then set a priority flag or
+something that the driver core would handle.
 
-I feel like we've had this discussion. I think the essence of the
-disagreement was that the maintainer of this driver did not want to
-support a long list of 'compatible' properties for stuff that's
-otherwise all hidden by the ACPI model -- the DT binding doc even refers
-to a Windows/ACPI spec. (A secondary concern was that the I2C subsystem
-still doesn't support multiple compatible strings with modules
-correctly, IIRC.)
+Yes, it's triggered by a specific use case, but I'm not that convinced
+that having things setup by the bootloader and needing a transparent
+hand off is a general case. You've given 2 examples. I can't think of
+many more. One is CAN bus which has realtime servicing requirements,
+but I don't think this series solves that (OOT solutions I've seen
+insert callbacks at random places during kernel init). The other case
+is just things that have no driver at all, but resources need to
+remain enabled. That should just be some platform code to enable those
+things IMO.
 
-I don't really know how to bridge that gap. DT-based platforms are
-inherently not ACPI, and all the device "power on" logic just has to be
-done in the kernel. Unfortunately, some ways of slicing this require
-more burden on driver maintainers...
+> Of course we can have more complex cases where the same resource is
+> getting used by two devices while the kernel boots and the order in
+> which devices get probed wouldn't matter as the other device will surely
+> break then.
+>
+> There are also cases where the resources may not be shared, but the
+> kernel will disable them forcefully as no users may have appeared until
+> a certain point in kernel boot. This makes sure that the resources stay
+> enabled. A wide variety of constraints can be satisfied using the new
+> framework.
 
-> How many devices need this? Do you have cases needing different times?
-> Why can't this time just be fixed in the driver? Is this really timing
-> critical or have really long delays?
+This is only if the driver (or dependent driver) is a module though.
+Is that something we really need to handle?
 
-I don't know how many devices need something like this, but this is a
-pretty common model. I don't see why the next device with a reset pin
-wouldn't be able to reuse the same timing knobs.
+>
+> Proposed solution:
+>
+> This series introduces the concept of "boot-constraints", which are set
+> by platform specific drivers (for now at least) at early init (like
+> subsys_initcall) and the kernel will keep satisfying them until the time
+> driver for such a device is probed (successfully or unsuccessfully).
+> Once the driver is probed, the driver core removes the constraints set
+> for the device. This series implements clk, regulator and PM domain
+> constraints currently.
+>
+> Rebased over: driver-core/master
+> Targeted for: v4.16 (Sending it earlier for reviews mostly)
+>
+> Pushed here:
+> git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/linux.git device/boot-constraints
+>
+> V3->V4:
+> - Added support for imx, hikey and Qcom usecases.
+> - Enhanced boot constraints core to make drivers code easy and handle
+>   complex cases.
+> - Two new patches for OF included to provide APIs to boot constraint
+>   core.
+> - Removed the kernel parameter patch for now.
+> - Don't check return values of debugfs routines.
+> - Moved the boot constraints core from drivers/base/ to drivers/.
+>
+> V2->V3:
+> - Removed DT support as we aren't sure about how to define the bindings
+>   yet.
+> - Added CLK and PM domain constraint types.
+> - A new directory is added for boot constraints, which will also contain
+>   platform specific drivers in future.
+> - Deferred devices are still supported, just that it wouldn't be called
+>   from generic code anymore but platform specific code.
+> - Tested on Qcom 410c dragonboard with display flash screen (Rajendra).
+> - Usual renaming/commit-log-updates/etc changes done.
+>
+> V1->V2:
+> - Add support for setting constraints for devices created from DT.
+> - Allow handling deferred devices earlier then late_init.
+> - Remove 'default y' line from kconfig.
+> - Drop '=" after boot_constraints_disable kernel param.
+> - Dropped the dummy testing patch now.
+>
+> --
+> viresh
+>
+> Rajendra Nayak (1):
+>   boot_constraint: Add Qualcomm display controller constraints
+>
+> Viresh Kumar (11):
+>   of: platform: Add of_find_amba_device_by_node()
+>   of: platform: Make of_platform_bus_create() global
+>   drivers: Add boot constraints core
+>   boot_constraint: Add support for supply constraints
+>   boot_constraint: Add support for clk constraints
+>   boot_constraint: Add support for PM constraints
+>   boot_constraint: Add debugfs support
+>   boot_constraint: Manage deferrable constraints
+>   boot_constraint: Add earlycon helper
+>   boot_constraint: Add support for Hisilicon platforms
+>   boot_constraint: Add support for IMX platform
+>
+>  arch/arm/mach-imx/Kconfig                 |   1 +
+>  arch/arm64/Kconfig.platforms              |   2 +
+>  drivers/Kconfig                           |   2 +
+>  drivers/Makefile                          |   1 +
+>  drivers/base/dd.c                         |  32 +++-
+>  drivers/boot_constraints/Kconfig          |   9 +
+>  drivers/boot_constraints/Makefile         |   7 +
 
-And FWIW, this is still the same "wacom,w9013", just different board
-design. We could theoretically key off the compatible, and list the
-datasheet numbers in the driver; but see my comment above.
+Maintainer for this?
 
-Not sure what you mean about "timing critical"; in this case the values
-are 1ms and 30ms respectively, and they are used at power-on and
-(potentially) system resume. I'm not sure there would be much harm if
-these timings were significantly longer than the datasheet recommends,
-but at some point, excessive delay would cause boot or suspend/resume
-inefficiencies. (Asynchronous probe and suspend/resume can often
-mitigate these inefficiencies.)
+>  drivers/boot_constraints/clk.c            |  73 ++++++++
+>  drivers/boot_constraints/core.c           | 271 ++++++++++++++++++++++++++++++
+>  drivers/boot_constraints/core.h           |  48 ++++++
+>  drivers/boot_constraints/deferrable_dev.c | 235 ++++++++++++++++++++++++++
+>  drivers/boot_constraints/hikey.c          | 145 ++++++++++++++++
+>  drivers/boot_constraints/imx.c            | 113 +++++++++++++
+>  drivers/boot_constraints/pm.c             |  31 ++++
+>  drivers/boot_constraints/qcom.c           | 123 ++++++++++++++
+>  drivers/boot_constraints/serial.c         |  28 +++
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+earlycon really. earlycon doesn't have to be a serial device.
+
+>  drivers/boot_constraints/supply.c         | 107 ++++++++++++
+
+Kind of a mixture of boards and subsystem handlers. Perhaps subsystem
+handlers should go into the subsystems. Then you can get a lot more
+opinions on this. :)
+
+
+>  drivers/clk/imx/clk-imx25.c               |  12 --
+>  drivers/clk/imx/clk-imx27.c               |  13 --
+>  drivers/clk/imx/clk-imx31.c               |  12 --
+>  drivers/clk/imx/clk-imx35.c               |  10 --
+>  drivers/clk/imx/clk-imx51-imx53.c         |  16 --
+>  drivers/clk/imx/clk-imx6q.c               |   8 -
+>  drivers/clk/imx/clk-imx6sl.c              |   8 -
+>  drivers/clk/imx/clk-imx6sx.c              |   8 -
+>  drivers/clk/imx/clk-imx7d.c               |  14 --
+>  drivers/clk/imx/clk.c                     |  38 -----
+>  drivers/clk/imx/clk.h                     |   1 -
+>  drivers/of/platform.c                     |  28 ++-
+>  include/linux/boot_constraint.h           |  74 ++++++++
+>  include/linux/of_platform.h               |  21 +++
+>  31 files changed, 1340 insertions(+), 151 deletions(-)
+>  create mode 100644 drivers/boot_constraints/Kconfig
+>  create mode 100644 drivers/boot_constraints/Makefile
+>  create mode 100644 drivers/boot_constraints/clk.c
+>  create mode 100644 drivers/boot_constraints/core.c
+>  create mode 100644 drivers/boot_constraints/core.h
+>  create mode 100644 drivers/boot_constraints/deferrable_dev.c
+>  create mode 100644 drivers/boot_constraints/hikey.c
+>  create mode 100644 drivers/boot_constraints/imx.c
+>  create mode 100644 drivers/boot_constraints/pm.c
+>  create mode 100644 drivers/boot_constraints/qcom.c
+>  create mode 100644 drivers/boot_constraints/serial.c
+>  create mode 100644 drivers/boot_constraints/supply.c
+>  create mode 100644 include/linux/boot_constraint.h
+>
+> --
+> 2.15.0.rc1.236.g92ea95045093
+>
