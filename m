@@ -1,73 +1,61 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
-Date: Mon, 30 Oct 2017 10:28:05 +0000
-Message-ID: <5c48f76c-d139-76a5-c4e5-ac40cf2bd5ea@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
-	<20171006133203.22803-2-jean-philippe.brucker@arm.com>
-	<A2975661238FB949B60364EF0F2C257439AFD88A@SHSMSX104.ccr.corp.intel.com>
-	<7aaf9851-9546-f34d-1496-cbeea404abbd@arm.com>
-	<20171025180546.GA12356@otc-nc-03>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+ re-enabling PWM and switching backlight power on
+Date: Mon, 30 Oct 2017 10:33:34 +0000
+Message-ID: <20171030103334.75ii247j6owrnrdb@dell>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+ <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
+ <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20171025180546.GA12356@otc-nc-03>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "Raj, Ashok" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/10/17 19:05, Raj, Ashok wrote:
-> Hi Jean
-> 
-> On Mon, Oct 23, 2017 at 01:17:07PM +0100, Jean-Philippe Brucker wrote:
->> On 23/10/17 12:04, Liu, Yi L wrote:
->>>> +	idr_preload(GFP_KERNEL);
->>>> +	spin_lock(&iommu_process_lock);
->>>> +	pasid = idr_alloc_cyclic(&iommu_process_idr, process, domain->min_pasid,
->>>> +				 domain->max_pasid + 1, GFP_ATOMIC);
->>>> +	process->pasid = pasid;
->>>
->>> [Liu, Yi L] If I'm understanding well, here is managing the pasid allocation in iommu
->>> layer instead of vendor iommu driver? Is there strong reason here? I think pasid
->>> management may be better within vendor iommu driver as pasid management
->>> could differ from vendor to vendor.
->>
->> But that's the thing, we're trying to abstract PASID and process
->> management to have it in the core, because there shouldn't be many
->> differences from vendor to vendor. This way we have the allocation code in
->> one place and vendor drivers don't have to copy paste it from other drivers.
-> 
-> I think this makes sense for the native case and also in the vIOMMU
-> if the PASID tables and allocation are completely managed by the guest.
-> 
-> If the vIOMMU requires any co-ordination in how the PASID's are allocated
-> for guest devices there might need to be some control on how these are 
-> allocated that ultimately need to be managed by VMM/Physical IOMMU. For 
-> instance if the PASID space is sparse for e.g
+On Fri, 27 Oct 2017, Rob Herring wrote:
 
-(I don't have your example)
-
-> if we make the PASID allocation as one of the ops, the IOMMU implementation
-> will choose the default function, or if it choose a differnt mechanism it would
-> have that flexibility.
+> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
+> > When switching the backlight on, the LCD may need some time to adjust
+> > to the configured PWM duty cycle. Add a configurable delay between
+> > configuring the PWM and enabling the backlight regulator to account
+> > for this.
+> > 
+> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+> > ---
+> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
+> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
+> >  2 files changed, 23 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > index 764db86..95594c3 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > @@ -17,6 +17,10 @@ Optional properties:
+> >                 "pwms" property (see PWM binding[0])
+> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+> >                    and disables the backlight (see GPIO binding[1])
+> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
+> > +		  and switching PWM on. This may be required to eliminate
+> > +		  flicker when switching the PWM on after it has been
+> > +		  disabled.
 > 
-> Does this make sense?
+> The subject talks about turning on the backlight regulator, but this 
+> only talks about the PWM.
 
-If the PASID space is sparse, maybe we can add a firmware or probe
-mechanism to declare reserved PASIDs, like we have for reserved IOVAs,
-that feeds into the core IOMMU driver. But I agree that we can always let
-vendor drivers implement their own allocator if they need one in the
-future. For the moment it can stay generic.
+>From my understanding "switching PWM on" == enabling the regulator.
 
-Thanks,
-Jean
+I don't see any disparity here.  Or am I missing something?
+
+> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> >  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
