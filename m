@@ -1,8 +1,8 @@
 From: <yinbo.zhu@nxp.com>
 Subject: [PATCH 1/2] mmc: sdhci-of-esdhc: Workaround for reducing the maximum
  speed on ls1021atwr
-Date: Mon, 30 Oct 2017 15:18:58 +0800
-Message-ID: <20171030071858.46132-1-yinbo.zhu@nxp.com>
+Date: Mon, 30 Oct 2017 15:42:19 +0800
+Message-ID: <20171030074219.20214-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
