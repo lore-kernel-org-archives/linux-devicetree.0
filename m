@@ -1,84 +1,83 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/3] mailbox: Add support for Hi3660 mailbox
-Date: Mon, 30 Oct 2017 11:37:32 +0000
-Message-ID: <20171030113732.dajsdj3lcm2qjxke@lakrids.cambridge.arm.com>
-References: <1509084904-2505-1-git-send-email-zhongkaihua@huawei.com>
- <1509084904-2505-3-git-send-email-zhongkaihua@huawei.com>
- <20171027104559.em5n5ogro46ethmq@salmiak>
- <20171030044506.GE31478@leoy-ThinkPad-T440>
- <20171030101940.dtf6rw7alhkn6irf@lakrids.cambridge.arm.com>
- <20171030111313.GF31478@leoy-ThinkPad-T440>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 00/12] mmc: mediatek: add support of mt2701/mt2712
+Date: Mon, 30 Oct 2017 12:39:59 +0100
+Message-ID: <CAPDyKFr+Zc_u=YYhtzF0tRS0Pp08cKkGrJwoGDQympOF4M=HwA@mail.gmail.com>
+References: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171030111313.GF31478@leoy-ThinkPad-T440>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Kaihua Zhong <zhongkaihua@huawei.com>, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, jassisinghbrar@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guodong.xu@linaro.org, haojian.zhuang@linaro.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508118399-21828-1-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 07:13:13PM +0800, Leo Yan wrote:
-> Hi Mark,
-> 
-> On Mon, Oct 30, 2017 at 10:19:40AM +0000, Mark Rutland wrote:
-> > Hi,
-> > 
-> > On Mon, Oct 30, 2017 at 12:45:06PM +0800, Leo Yan wrote:
-> > > On Fri, Oct 27, 2017 at 11:46:00AM +0100, Mark Rutland wrote:
-> > > > On Fri, Oct 27, 2017 at 02:15:03PM +0800, Kaihua Zhong wrote:
-> > > > > +static int hi3660_mbox_check_state(struct mbox_chan *chan)
-> > > > > +{
-> > 
-> > > > > +	/* Ensure channel is released */
-> > > > > +	writel_relaxed(0xffffffff, base + MBOX_IMASK_REG);
-> > > > > +	writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
-> > > > > +	__asm__ volatile ("sev");
-> > > > > +	return 0;
-> > > > > +}
-> > > > 
-> > > > Drivers really shouldn't be using SEV directly (even if via the
-> > > > sev() macro)...
-> > > > 
-> > > > This SEV isn't ordered w.r.t. anything, and it's unclear what
-> > > > ordering you need, so this simply does not work.
-> > > 
-> > > I will leave your questions for Hisilicon colleagues, essentially your
-> > > questions are related with mailbox mechanism.
-> > > 
-> > > But I'd like to firstly get clear your question for "This SEV isn't
-> > > ordered w.r.t. anything". From my understanding, ARMv8 architecture
-> > > natually adds DMB before SEV so all previous register writing
-> > > opreations should be ensured to endpoint before SEV?
-> > 
-> > This is not the case; SEV does not add any implicit memory barrier, and
-> > is not ordered w.r.t. memory accesses.
-> > 
-> > See ARM DDI 0487B.b, page D1-1905, "The Send Event instructions":
-> > 
-> >     The PE is not required to guarantee the ordering of this event with
-> >     respect to the completion of memory accesses by instructions before
-> >     the SEV instruction. Therefore, ARM recommends that software
-> >     includes a DSB instruction before any SEV instruction.
-> 
-> My fault and thanks for explanation.
-> 
-> > Note that a DMB is not sufficient, as SEV is not a memory access.
-> 
-> Understood now, so below code should be safe?
-> 
-> wmb();  -> dsb(st);
-> sev();
+On 16 October 2017 at 03:46, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>   This serial of patches are adding support of mt2701/mt2712.
+> there are many changes and HW improvement between mt8173 and
+> mt2701/mt2712, below is a list of these changes:
+>   1. enlarge CLKDIV bits from 8 to 12
+>   2. remove the PAD_TUNE register and add a new PAD_TUNE0 register
+>   3. add data sync and async fifo feature
+>   4. add busy_check feature
+>   5. add stop_clk fix
+>   6. add enhance_rx support
+>   7. add a seperate CG of source clock
+>
+>   mt2712 supports full of these features, mt2701 supports part of it, and
+> add a "mediatek,latch-ck" to work-around as it do not support stop-clk fix.
+>
+> Note: As Pinctrl/CCF are not ready now, so that current patches do not
+> include DTS part.
+>
+> Changed vs v5:
+>   based on Rob's comments, explain why MT8173 no longer compatible with
+> driver that supports "mediatek,mt8135-mmc", add more clearly description
+> of "mediatek,latch-ck".
+>
+> Changed vs v4:
+>   based on Julien's comment, change the "bool pad_tune0" to "u32 pad_tune_reg".
+>
+> Changed vs v3:
+>   based on Ulf's comments, make the bindings change to be the first patch.
+>
+> Changed vs v2:
+>   based on Matthias's comments, merge binding file changes to one patch,
+> add "hs400_tune" flag in dev_comp.
+>
+> Changed vs v1:
+>   based on Ulf/Rob/Matthias's comments of DTS binding file, make the binding
+> file clearly and fix probe issue.
+>
+>
+> Chaotian Jing (12):
+>   mmc: dt-bindings: Add reg/source_cg/latch-ck for Mediatek MMC bindings
+>   mmc: mediatek: add support of mt2701/mt2712
+>   arm64: dts: mt8173: remove "mediatek,mt8135-mmc" from mmc nodes
+>   mmc: mediatek: make hs400_tune_response only for mt8173
+>   mmc: mediatek: add pad_tune0 support
+>   mmc: mediatek: add async fifo and data tune support
+>   mmc: mediatek: add busy_check support
+>   mmc: mediatek: add stop_clk fix and enhance_rx support
+>   mmc: mediatek: add support of source_cg clock
+>   mmc: mediatek: add latch-ck support
+>   mmc: mediatek: improve eMMC hs400 mode read performance
+>   mmc: mediatek: perfer to use rise edge latching for cmd line
+>
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt |  18 +-
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi         |  12 +-
+>  drivers/mmc/host/mtk-sd.c                        | 283 ++++++++++++++++++++---
+>  3 files changed, 265 insertions(+), 48 deletions(-)
+>
 
-Whether that is safe depends on what you are trying to ensure is
-ordered, and what the other side (with the WFE) is doing.
+Thanks, applied the hole series on my next branch.
 
-For example, my understanding is that in general, WFE is also not
-ordered w.r.t.  memory accesses.
+If Matthias wants to pick/ack the DT change (patch3), I either add his
+ack or drop that patch from my tree.
 
-This is a very subtle part of the architecture, and I'm very much not
-keen on using WFE and SEV outside of architecture code implementing
-locking primitives.
-
-Thanks,
-Mark.
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
