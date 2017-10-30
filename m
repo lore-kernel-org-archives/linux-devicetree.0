@@ -1,62 +1,61 @@
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH v2 00/17] dwc MSI fixes, ARTPEC-6 EP mode support, ARTPEC-7 SoC support
-Date: Mon, 30 Oct 2017 13:42:03 +0100
-Message-ID: <20171030124221.20690-1-niklas.cassel@axis.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 0/4] add CAAM DMA memcpy driver
+Date: Mon, 30 Oct 2017 18:40:04 +0530
+Message-ID: <20171030131004.GD3187@localhost>
+References: <20171026100008.32169-1-radu.alexe@nxp.com>
+ <VI1PR0402MB33422B48B506D7FF6A894AE0985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+ <8D3F6266AEB6384E807C6FFC6FE195E333C52210@BGSMSX107.gar.corp.intel.com>
+ <VI1PR0402MB3342607E09BE48F80E074C14985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB3342607E09BE48F80E074C14985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc: Radu Andrei Alexe <radu.alexe@nxp.com>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a series that adds:
-- PCI endpoint mode support in the ARTPEC-6 driver.
-- ARTPEC-7 SoC support in the ARTPEC-6 driver (the SoCs are very similar).
-- Small fixes for MSI in designware-ep and designware-host,
-  needed to get endpoint mode support working for ARTPEC-6.
+On Fri, Oct 27, 2017 at 12:20:32PM +0000, Horia Geantă wrote:
+> On 10/27/2017 2:36 PM, Koul, Vinod wrote:
+> >> On 10/26/2017 1:01 PM, Radu Alexe wrote:
+> >>> This patch-set introduces a new DMA memcpy driver based on the DMA
+> >>> capabilities of the CAAM crypto engine. Because of this dependency the
+> >>> included commits target various parts of the kernel tree.
+> >> I don't see the patches on any of the mail lists.
+> >> If they are moderated, I would expect this to be mentioned in the
+> >> MAINTAINERS file.
+> >>
+> >>>
+> >>> Patch 1.
+> >>> Since the CAAM DMA driver is a platform driver it is enabled by a new node
+> >>> in the device tree. This commit adds documentation for the device tree
+> >>> bindings.
+> >>>
+> >>> Patch 2.
+> >>> This patch adds the "caam-dma" node in the fsl-ls1012a.dtsi file.
+> >>>
+> >>> Patch 3.
+> >>> This commit adds various capabilities in the JR driver of the CAAM that is
+> >>> used by the CAAM DMA driver.
+> >>>
+> >>> Patch 4.
+> >>> Adds the CAAM DMA memcpy driver.
+> >>>
+> >>> Patch 1 and 3 should be merged by the crypto maintainers, patch 2 by
+> >>> devicetree maintainers and patch 4 by the DMA maintainers.
+> >> I would go with all the patches through the dmaengine tree.
+> > 
+> > Good call, but no one CCed dmaengine folks on this series!
+> > 
+> I see dmaengine@vger.kernel.org Cc-ed on both cover letter and all four
+> patches.
+> It might be that the sender (Radu) is not subscribed and messages are
+> awaiting moderators' approval.
 
-New in V2:
-Capitalized first letter in summary for all patches.
-Moved DT binding changes to self contained patches.
-Fixed all review comments, for detailed changes, see the note for in patch.
-
-Niklas Cassel (17):
-  PCI: dwc: Use DMA-API for allocating MSI data
-  PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
-  PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be
-    writable
-  PCI: designware-ep: Pre-allocate memory for MSI in dw_pcie_ep_init
-  PCI: designware-ep: Remove static keyword from dw_pcie_ep_reset_bar()
-  PCI: designware-ep: Add generic function for raising MSI irq
-  PCI: dwc: dra7xx: Refactor Kconfig and Makefile handling for host/ep
-    mode
-  PCI: dwc: dra7xx: Assign pp->ops in dra7xx_add_pcie_port() rather than
-    in probe
-  PCI: dwc: dra7xx: Add ifdefs for host/ep specific code
-  PCI: dwc: artpec6: Remove unused defines
-  PCI: dwc: artpec6: Use BIT and GENMASK macros
-  PCI: dwc: artpec6: Split artpec6_pcie_establish_link to smaller
-    functions
-  bindings: PCI: artpec: Add support for endpoint mode
-  PCI: dwc: artpec6: Add support for endpoint mode
-  PCI: dwc: Make cpu_addr_fixup take struct dw_pcie as argument
-  bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
-  PCI: dwc: artpec6: Add support for the ARTPEC-7 SoC
-
- .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   5 +-
- drivers/pci/dwc/Kconfig                            |  68 ++--
- drivers/pci/dwc/Makefile                           |   4 +-
- drivers/pci/dwc/pci-dra7xx.c                       |  53 +--
- drivers/pci/dwc/pcie-artpec6.c                     | 416 ++++++++++++++++++---
- drivers/pci/dwc/pcie-designware-ep.c               |  56 ++-
- drivers/pci/dwc/pcie-designware-host.c             |  15 +-
- drivers/pci/dwc/pcie-designware.c                  |   2 +-
- drivers/pci/dwc/pcie-designware.h                  |  22 +-
- 9 files changed, 530 insertions(+), 111 deletions(-)
+I think vger lists are open, maybe sender has some issues with mail as they
+are still not in any archives..
 
 -- 
-2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
