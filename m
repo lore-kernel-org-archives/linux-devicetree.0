@@ -1,62 +1,63 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 05/13] irqchip: add initial support for ompic
-Date: Mon, 30 Oct 2017 13:18:06 +0900
-Message-ID: <20171030041806.GA29237@lianli.shorne-pla.net>
-References: <20171029231123.27281-1-shorne@gmail.com>
- <20171029231123.27281-6-shorne@gmail.com>
- <86mv4974ht.fsf@arm.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH v11 02/10] i2c: i2c-smbus: Move i2c_setup_smbus_alert from
+ i2c-smbus to i2c-core-smbus
+Date: Mon, 30 Oct 2017 12:23:05 +0800
+Message-ID: <1397131b-c22d-9872-dbe0-9b691553cb9e@electromag.com.au>
+References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
+ <1503567070-115646-3-git-send-email-preid@electromag.com.au>
+ <20171029154408.vmjkpj7ybqyrj3ke@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <86mv4974ht.fsf-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171029154408.vmjkpj7ybqyrj3ke@ninjato>
+Content-Language: en-AU
+Sender: linux-pm-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 02:29:18AM +0000, Marc Zyngier wrote:
-> On Mon, Oct 30 2017 at  8:11:15 am GMT, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> >
-> > IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
-> > described in the Multi-core support section of the OpenRISC 1.2
-> > architecture specification:
-> >
-> >   https://github.com/openrisc/doc/raw/master/openrisc-arch-1.2-rev0.pdf
-> >
-> > Each OpenRISC core contains a full interrupt controller which is used in
-> > the SMP architecture for interrupt balancing.  This IPI device, the
-> > ompic, is the only external device required for enabling SMP on
-> > OpenRISC.
-> >
-> > Pending ops are stored in a memory bit mask which can allow multiple
-> > pending operations to be set and serviced at a time. This is mostly
-> > borrowed from the alpha IPI implementation.
-> >
-> > Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> > [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-> > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 29/10/2017 23:44, Wolfram Sang wrote:
+> On Thu, Aug 24, 2017 at 05:31:02PM +0800, Phil Reid wrote:
+>> In preparation to adding of_i2c_setup_smbus_alert() move
+>> i2c_setup_smbus_alert() to core module. of_i2c_setup_smbus_alert()
+>> will call i2c_setup_smbus_alert() and this avoid module dependecy issues.
 > 
-> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> I am not very happy with this but don't want to cause another delay. So,
+> I hope we can discuss and fix it incrementally.
+> 
+>  From what it does, I really think both setup_alert functions belong to
+> i2c-smbus.c. Three possibilities come to my mind (untested, though):
+> 
+> a) use try_then_request_module somehow
+> 
+> b) add to CONFIG_I2C something like:
+> 	select I2C_SMBUS if OF
+> 
+> c) get rid of i2c-smbus.c entirely and move it all into the core
+> 
+> Dunno if a) or b) have been tried in the course of this series already?
+> 
+G'day Wolfram, Thanks for reviewing.
 
-Thanks
+Nope hadn't tried either a) or b).
+a) is not something I was aware of.
+Had a brief play and not sure how to make this work. This gives me the same linking problem.
 
-> Side question: what is your merge strategy for this? I can take it
-> through the irqchip tree as it is standalone, but I'm open to other
-> suggestions.
+A variant of b) was tried by selecting I2C_SMBUS from driver modules having smbalert support,
+but that caused problems if the i2c core was builtin and the driver was a module. But this looks
+to work for me.
 
-For me its easier if I just take it through the openrisc tree, as
-there are dependencies between this series and the irqchip driver.
-If you are ok with that I can make a note to Linus indicating so in
-the pull request.
+A variant of c) with option to exclude the i2c-smbus code still.
+Add i2c-smbus to the i2c-core module by:
+Change Kconfig I2C_SMBUS to a bool
+add i2c-smbus to i2c-core object.
+fixup duplicate init_module calls etc.
+Possibly also rename i2c-smbus to i2c-smbus-alert?
 
-My plan is to send this series during the 4.15 merge window.
+Let me know your preference and I'll put something together.
 
--Stafford
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Regards
+Phil Reid
