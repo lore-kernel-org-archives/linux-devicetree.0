@@ -1,40 +1,69 @@
-From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-Subject: [PATCH RESEND 2/4] arm64: dts: ls1012a: add caam-dma node
-Date: Mon, 30 Oct 2017 15:46:52 +0200
-Message-ID: <20171030134654.13729-3-horia.geanta@nxp.com>
-References: <20171030134654.13729-1-horia.geanta@nxp.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/3] dt-bindings: display/ti: Add optional property to set
+ memory bandwidth limit
+Date: Mon, 30 Oct 2017 15:53:52 +0200
+Message-ID: <1435c3bd-627d-3382-447e-af39fdd137ab@ti.com>
+References: <20171020131258.4092-1-peter.ujfalusi@ti.com>
+ <20171020131258.4092-2-peter.ujfalusi@ti.com>
+ <20171027022711.624bnvldhfdq4rew@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20171030134654.13729-1-horia.geanta@nxp.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Radu Alexe <radu.alexe@nxp.com>
-Cc: dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171027022711.624bnvldhfdq4rew@rob-hp-laptop>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Radu Alexe <radu.alexe@nxp.com>
-
-Signed-off-by: Radu Alexe <radu.alexe@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index df83915d6ea6..f92ecf381cb1 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -197,6 +197,12 @@
- 				interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 
-+			caam-dma {
-+				compatible = "fsl,sec-v5.4-dma",
-+					     "fsl,sec-v5.0-dma",
-+					     "fsl,sec-v4.0-dma";
-+			};
-+
- 			rtic@60000 {
- 				compatible = "fsl,sec-v5.4-rtic",
- 					     "fsl,sec-v5.0-rtic",
--- 
-2.14.2.606.g7451fcd
+Um9iLAoKT24gMTAvMjcvMjAxNyAwNToyNyBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gRnJp
+LCBPY3QgMjAsIDIwMTcgYXQgMDQ6MTI6NTZQTSArMDMwMCwgUGV0ZXIgVWpmYWx1c2kgd3JvdGU6
+Cj4+IG1heC1tZW1vcnktYmFuZHdpZHRoIGNhbiBiZSB1c2VkIHRvIHNwZWNpZnkgdGhlIG1heGlt
+dW0gYmFuZHdpZHRoIGRpc3BjCj4+IGNhbiB1c2Ugd2hlbiByZWFkaW5nIGRpc3BsYXkgZGF0YSBm
+cm9tIG1haW4gbWVtb3J5Lgo+Pgo+PiBJbiBzb21lIFNvQyAoYW00Mzd4IGZvciBleGFtcGxlKSB3
+ZSBoYXZlIG1lbW9yeSBiYW5kd2lkdGggbGltaXRhdGlvbgo+PiB3aGljaCBjYXVzZXMgdW5kZXJm
+bG93IGluIHRoZSBkaXNwbGF5IHN1YnN5c3RlbS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIg
+VWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4KPj4gLS0tCj4+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgIHwgNSArKysr
+Kwo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21h
+cDItZHNzLnR4dCB8IDQgKysrKwo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvdGkvdGksb21hcDMtZHNzLnR4dCB8IDQgKysrKwo+PiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDQtZHNzLnR4dCB8IDQgKysrKwo+
+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDUt
+ZHNzLnR4dCB8IDQgKysrKwo+PiAgNSBmaWxlcyBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspCj4+
+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS90aS90aSxkcmE3LWRzcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQKPj4gaW5kZXggYzMwZjllYzE4OWVkLi45MTI3OWYx
+MDYwZmUgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3RpL3RpLGRyYTctZHNzLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQKPj4gQEAgLTQ3LDYgKzQ3LDEx
+IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICAtIGNsb2NrczogaGFuZGxlIHRvIGZjbGsKPj4g
+IC0gY2xvY2stbmFtZXM6ICJmY2siCj4+ICAKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICst
+IG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1vcnkgdG8g
+ZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAo+PiArCQkJaW4gYnl0ZXMgcGVyIHNlY29uZAo+IAo+IENh
+biB3ZSBtb3ZlIHRoaXMgdG8gYSBjb21tb24gbG9jYXRpb24gc2luY2Ugd2UgYWxyZWFkeSBoYXZl
+IHRoZSBzYW1lIAo+IHByb3AgZm9yIEFSTSBwbDExeC4KClRoaXMgaXMgd2h5IEkgdXNlZCB0aGUg
+c2FtZSBzdHJpbmcgZm9yIHRpLCogYXMgSSBzYXcgdGhhdCBwbDExeCBoYXZlIGl0CmRvY3VtZW50
+ZWQgKHRoZSBkcml2ZXIgaXMgbm90IHN1cHBvcnRpbmcgaXQgYWZhaWssIGl0IGlzIGluIHRoZSBU
+T0RPKS4KCkkgZG9uJ3Qgc2VlIGFueSBnZW5lcmljIGRvY3VtZW50YXRpb24gZm9yIERpc3BsYXks
+IG5vdCBzdXJlIHdoYXQgd291bGQgYmUgdGhlCmJlc3QgcGxhY2UgZm9yIHRoaW5ncyBsaWtlIHRo
+aXMuCgpXaGlsZSBpdCBpcyB0cnVlIHRoYXQgbWVtb3J5IGJhbmR3aWR0aCBsaW1pdCBjYW4gYmUg
+YSBnZW5lcmljIHByb3BlcnR5LCBidXQgaXQKbWlnaHQgKG5vdCBzdXJlIGFib3V0IGl0KSBjYW4g
+YXBwbHkgdG8gZGlmZmVyZW50IGludGVyZmFjZXMgYW1vbmcgZGlmZmVyZW50CnZlbmRvcnMuIFRo
+ZSBkZXZpY2Ugc3BlY2lmaWMgZG9jdW1lbnRhdGlvbiBzaG91bGQgZWl0aGVyIHdheSBuZWVkIHRv
+IG1lbnRpb24KdGhhdCBpdCBzdXBwb3J0cyBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0YXRpb24gb3Ig
+bm90LgoKLS0gClDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFu
+a2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQu
+IEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
