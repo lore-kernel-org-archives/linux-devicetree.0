@@ -1,79 +1,130 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Devicetree Workshop Follow Up: Adding hierarchy to
- arch/arm/boot/dts
-Date: Mon, 30 Oct 2017 11:14:09 -0700
-Message-ID: <20171030181409.6mvjud3yq3kiidfv@us-sjc-wireless-10-16-34-58.amer.corp.natinst.com>
-References: <20171030164626.GA14993@tyrael.ni.corp.natinst.com>
- <20171030170917.GC27404@n2100.armlinux.org.uk>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v9 02/10] dt-bindings: net: dwmac-sun8i: update
+ documentation about integrated PHY
+Date: Mon, 30 Oct 2017 19:35:35 +0100
+Message-ID: <20171030183535.GA16723@Red>
+References: <20171024175714.15840-1-clabbe.montjoie@gmail.com>
+ <20171024175714.15840-3-clabbe.montjoie@gmail.com>
+ <20171027125621.mlcapjhttyw2j5sy@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171030170917.GC27404-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20171027125621.mlcapjhttyw2j5sy@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Mon, Oct 30, 2017 at 05:09:17PM +0000, Russell King - ARM Linux wrote:
-> On Mon, Oct 30, 2017 at 09:46:26AM -0700, Moritz Fischer wrote:
-> > Hi all,
+On Fri, Oct 27, 2017 at 09:37:10AM -0500, Rob Herring wrote:
+> On Tue, Oct 24, 2017 at 07:57:06PM +0200, Corentin Labbe wrote:
+> > This patch add documentation about the MDIO switch used on sun8i-h3-emac
+> > for integrated PHY.
 > > 
-> > as discussed in Prague last week, here's my follow up.
-> > A bit of background again as refresher: Some time ago I submitted a
-> > patchset adding dts for some of upcoming boards ([1]).
-> > Arguments brought up against merging it were that we have too many Zynq
-> > based boards already in tree.
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > ---
+> >  .../devicetree/bindings/net/dwmac-sun8i.txt        | 145 +++++++++++++++++++--
+> >  1 file changed, 133 insertions(+), 12 deletions(-)
 > > 
-> > During the Devicetree Workshop we had a brief discussion and most people
-> > in the room seemed to be ok with adding the boards, someone suggested
-> > (Arnd?) to add vendor subdirectories like in arm64, i.e. something
-> > like:
-> > 
-> > arch/arm/boot/dts/xilinx/ni/<board>
-> > 
-> > where Xilinx would be the SoC vendor and NI the integrator.
+> > diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> > index 725f3b187886..2600ce9ad3cc 100644
+> > --- a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> > +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> > @@ -4,18 +4,18 @@ This device is a platform glue layer for stmmac.
+> >  Please see stmmac.txt for the other unchanged properties.
+> >  
+> >  Required properties:
+> > -- compatible: should be one of the following string:
+> > +- compatible: must be one of the following string:
+> >  		"allwinner,sun8i-a83t-emac"
+> >  		"allwinner,sun8i-h3-emac"
+> >  		"allwinner,sun8i-v3s-emac"
+> >  		"allwinner,sun50i-a64-emac"
+> >  - reg: address and length of the register for the device.
+> >  - interrupts: interrupt for the device
+> > -- interrupt-names: should be "macirq"
+> > +- interrupt-names: must be "macirq"
+> >  - clocks: A phandle to the reference clock for this device
+> > -- clock-names: should be "stmmaceth"
+> > +- clock-names: must be "stmmaceth"
+> >  - resets: A phandle to the reset control for this device
+> > -- reset-names: should be "stmmaceth"
+> > +- reset-names: must be "stmmaceth"
+> >  - phy-mode: See ethernet.txt
+> >  - phy-handle: See ethernet.txt
+> >  - #address-cells: shall be 1
+> > @@ -39,23 +39,42 @@ Optional properties for the following compatibles:
+> >  - allwinner,leds-active-low: EPHY LEDs are active low
+> >  
+> >  Required child node of emac:
+> > -- mdio bus node: should be named mdio
+> > +- mdio bus node: with compatible "snps,dwmac-mdio"
 > 
-> I utterly hate deep levels of directories, but I think the ARM64
-> solution where we /generally/ have one level of additional
-> directories under dts is a good compromise.  With 1640 files in
-> arch/arm/boot/dts, it does need splitting up.
+> It should still be named mdio.
 > 
-> I'm not sure that splitting it by "integrator" is a good idea
-> for a single level of directory - using the SoC, SoC group, or
-> SoC manufacturer is better.  It needs to be a balance between
-> number of subdirectories and number of files in the subdirectory,
-> so using guidance and not setting it as a hard and fast rule
-> makes sense too.  What is right for one SoC group may not be
-> right for another group of SoCs.
-
-Ok so in our case that would be:
-
-arch/arm/boot/dts/zynq-*.dts -> arch/arm/boot/dts/xilinx
-
-or: 
-
-arch/arm/boot/dts/zynq-*.dts -> arch/arm/boot/dts/zynq
+> >  
+> >  Required properties of the mdio node:
+> >  - #address-cells: shall be 1
+> >  - #size-cells: shall be 0
+> >  
+> > -The device node referenced by "phy" or "phy-handle" should be a child node
+> > +The device node referenced by "phy" or "phy-handle" must be a child node
+> >  of the mdio node. See phy.txt for the generic PHY bindings.
+> >  
+> > -Required properties of the phy node with the following compatibles:
+> > +The following compatibles require that the emac node have a mdio-mux child
+> > +node called "mdio-mux":
+> > +  - "allwinner,sun8i-h3-emac"
+> > +  - "allwinner,sun8i-v3s-emac":
+> > +Required properties for the mdio-mux node:
+> > +  - compatible = "allwinner,sun8i-h3-mdio-mux"
+> > +  - mdio-parent-bus: a phandle to EMAC mdio
+> > +  - one child mdio for the integrated mdio with the compatible
+> > +    "allwinner,sun8i-h3-mdio-internal"
+> > +  - one child mdio for the external mdio if present (V3s have none)
+> > +Required properties for the mdio-mux children node:
+> > +  - reg: 1 for internal MDIO bus, 2 for external MDIO bus
+> > +
+> > +The following compatibles require a PHY node representing the integrated
+> > +PHY, under the integrated MDIO bus node if an mdio-mux node is used:
+> >    - "allwinner,sun8i-h3-emac",
+> >    - "allwinner,sun8i-v3s-emac":
+> > +
+> > +Additional information regarding generic multiplexer properties can be found
+> > +at Documentation/devicetree/bindings/net/mdio-mux.txt
+> > +
+> > +Required properties of the integrated phy node:
+> >  - clocks: a phandle to the reference clock for the EPHY
+> >  - resets: a phandle to the reset control for the EPHY
+> > +- Must be a child of the integrated mdio
+> >  
+> > -Example:
+> > -
+> > +Example with integrated PHY:
+> >  emac: ethernet@1c0b000 {
+> >  	compatible = "allwinner,sun8i-h3-emac";
+> >  	syscon = <&syscon>;
+> > @@ -72,13 +91,115 @@ emac: ethernet@1c0b000 {
+> >  	phy-handle = <&int_mii_phy>;
+> >  	phy-mode = "mii";
+> >  	allwinner,leds-active-low;
+> > +
+> > +	mdio0: mdio {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		compatible = "snps,dwmac-mdio";
+> > +	};
+> > +
+> > +	mdio-mux {
+> > +		compatible = "mdio-mux", "allwinner,sun8i-h3-mdio-mux";
 > 
-> What I think we should avoid is having to needlessly descend into
-> all of the subdirectories, so it needs to be based around the
-> Kconfig symbols we're already using.
-
-So as example only add the arch/arm/boot/dts/xilinx subdirectory based on
-CONFIG_ARCH_ZYNQ?
-
+> Drop mdio-mux.
 > 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-> According to speedtest.net: 8.21Mbps down 510kbps up
+> With those fixed,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Cheers,
+Will change what you ask.
 
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Regards
