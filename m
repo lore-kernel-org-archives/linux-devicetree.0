@@ -1,82 +1,62 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH v2 1/3] mtd: spi-nor: stm32-quadspi: Fix uninitialized
- error return code
-Date: Mon, 30 Oct 2017 09:05:03 +0100
-Message-ID: <3dc4ff33-77a3-be2e-c20f-675b800dca2c@st.com>
-References: <1509030755-19044-1-git-send-email-ludovic.Barre@st.com>
- <1509030755-19044-2-git-send-email-ludovic.Barre@st.com>
- <ed1ca205-830e-3f5b-e251-8d863a512eda@wedev4u.fr>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH] mmc: sdhci-of-esdhc: fix eMMC couldn't work after kexec
+Date: Mon, 30 Oct 2017 15:58:52 +0800
+Message-ID: <20171030075852.7695-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ed1ca205-830e-3f5b-e251-8d863a512eda@wedev4u.fr>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Marek Vasut <marek.vasut@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-devel@gforge.freescale.net
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "yinbo.zhu" <yinbo.zhu@nxp.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-thanks Cyrille
+From: "yinbo.zhu" <yinbo.zhu@nxp.com>
 
-indeed, the "Signed-off" on Geert'commit was a mistake
+The bit TB_EN in tuning block control register
+(TBCTL) is not reset by software reset for all.
+So must clear it before initialize eSDHC again.
 
-BR
-Ludo
-On 10/29/2017 06:50 PM, Cyrille Pitchen wrote:
-> Hi Ludovic,
-> 
-> Le 26/10/2017 à 17:12, Ludovic Barre a écrit :
->> From: Geert Uytterhoeven <geert@linux-m68k.org>
->>
->> With gcc 4.1.2:
->>
->>      drivers/mtd/spi-nor/stm32-quadspi.c: In function ‘stm32_qspi_tx_poll’:
->>      drivers/mtd/spi-nor/stm32-quadspi.c:230: warning: ‘ret’ may be used uninitialized in this function
->>
->> Indeed, if stm32_qspi_cmd.len is zero, ret will be uninitialized.
->> This length is passed from outside the driver using the
->> spi_nor.{read,write}{,_reg}() callbacks.
->>
->> Several functions in drivers/mtd/spi-nor/spi-nor.c (e.g. write_enable(),
->> write_disable(), and erase_chip()) call spi_nor.write_reg() with a zero
->> length.
->>
->> Fix this by returning an explicit zero on success.
->>
->> Fixes: 0d43d7ab277a048c ("mtd: spi-nor: add driver for STM32 quad spi flash controller")
->> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
->> Acked-by: Ludovic Barre <ludovic.barre@st.com>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> I removed your "Signed-off" because I think this is a mistake but kept
-> your "Acked-by" tag.
-> 
-> Applied to the spi-nor/next branch of l2-mtd.
-> 
-> Thanks!
-> 
->> ---
->>   drivers/mtd/spi-nor/stm32-quadspi.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mtd/spi-nor/stm32-quadspi.c b/drivers/mtd/spi-nor/stm32-quadspi.c
->> index 86c0931..ad6a3e1 100644
->> --- a/drivers/mtd/spi-nor/stm32-quadspi.c
->> +++ b/drivers/mtd/spi-nor/stm32-quadspi.c
->> @@ -240,12 +240,12 @@ static int stm32_qspi_tx_poll(struct stm32_qspi *qspi,
->>   						 STM32_QSPI_FIFO_TIMEOUT_US);
->>   		if (ret) {
->>   			dev_err(qspi->dev, "fifo timeout (stat:%#x)\n", sr);
->> -			break;
->> +			return ret;
->>   		}
->>   		tx_fifo(buf++, qspi->io_base + QUADSPI_DR);
->>   	}
->>   
->> -	return ret;
->> +	return 0;
->>   }
->>   
->>   static int stm32_qspi_tx_mm(struct stm32_qspi *qspi,
->>
-> 
+Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+---
+ drivers/mmc/host/sdhci-esdhc.h    | 1 +
+ drivers/mmc/host/sdhci-of-esdhc.c | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci-esdhc.h b/drivers/mmc/host/sdhci-esdhc.h
+index 98898a309a36..800ffb3794ef 100644
+--- a/drivers/mmc/host/sdhci-esdhc.h
++++ b/drivers/mmc/host/sdhci-esdhc.h
+@@ -59,6 +59,7 @@
+ /* Tuning Block Control Register */
+ #define ESDHC_TBCTL			0x120
+ #define ESDHC_TB_EN			0x00000004
++#define ESDHC_TB_DIS			(0x1 << 2)
+ 
+ /* Control Register for DMA transfer */
+ #define ESDHC_DMA_SYSCTL		0x40c
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index 4b0f375bdfd8..77ac9dee32a2 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -784,6 +784,9 @@ static void esdhc_init(struct platform_device *pdev, struct sdhci_host *host)
+ 	pltfm_host = sdhci_priv(host);
+ 	esdhc = sdhci_pltfm_priv(pltfm_host);
+ 
++	val = sdhci_readl(host, ESDHC_TBCTL);
++	val &= ~ESDHC_TB_DIS;
++	sdhci_writel(host, val, ESDHC_TBCTL);
+ 	host_ver = sdhci_readw(host, SDHCI_HOST_VERSION);
+ 	esdhc->vendor_ver = (host_ver & SDHCI_VENDOR_VER_MASK) >>
+ 			     SDHCI_VENDOR_VER_SHIFT;
+-- 
+2.14.1
