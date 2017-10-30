@@ -1,355 +1,113 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 3/3] phy: add combo phy driver for HiSilicon STB SoCs
-Date: Mon, 30 Oct 2017 23:15:57 +0800
-Message-ID: <1509376557-7187-4-git-send-email-shawnguo@kernel.org>
-References: <1509376557-7187-1-git-send-email-shawnguo@kernel.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIIHY1IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczogYQ==?=
+        =?UTF-8?B?ZGQgZG9jdW1lbnQgZm9yIGhpc2ktdWZz?=
+Date: Mon, 30 Oct 2017 16:21:55 +0100
+Message-ID: <CAK8P3a37yYDQZpZxmunCdSO83qkqywTME5Xo0k56nWEs2k+=dg@mail.gmail.com>
+References: <20171020085259.8093-1-liwei213@huawei.com> <20171020085259.8093-3-liwei213@huawei.com>
+ <CAK8P3a0z_q-GNc-vSPbovu8yrEQyCGDccoDe16rycW+uOwO4Dw@mail.gmail.com> <1699CE87DE933F49876AD744B5DC140FA321D1@DGGEMM506-MBX.china.huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509376557-7187-1-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1699CE87DE933F49876AD744B5DC140FA321D1-0LhPdUyVHB9548jd+VSckwK1hpo4iccwjNknBlVQO8k@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: "liwei (CM)" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On Tue, Oct 24, 2017 at 11:06 AM, liwei (CM) <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> what's your opinion about my explanation and revision method?
+> I am looking forward to your reply, thanks!
 
-Add combo phy driver for HiSilicon STB SoCs. This phy can be
-used as pcie-phy, sata-phy or usb-phy.
+Sorry for the delay, I was travelling last week.
+> =E5=8F=91=E4=BB=B6=E4=BA=BA: arndbergmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:arndbergmann@=
+gmail.com] =E4=BB=A3=E8=A1=A8 Arnd Bergmann
+> On Fri, Oct 20, 2017 at 10:52 AM, Li Wei <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+>> @@ -0,0 +1,46 @@
+>> +* Hisilicon Universal Flash Storage (UFS) Host Controller
+>> +
+>> +UFS nodes are defined to describe on-chip UFS hardware macro.
+>> +Each UFS Host Controller should have its own node.
+>> +
+>> +Required properties:
+>> +- compatible        : compatible list, contains one of the following -
+>> +                       "hisilicon,hi3660-ufs" for hisi ufs host control=
+ler
+>> +                        present on Hi3660 chipset.
 
-Signed-off-by: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/phy/hisilicon/Kconfig             |   9 +
- drivers/phy/hisilicon/Makefile            |   1 +
- drivers/phy/hisilicon/phy-histb-combphy.c | 289 ++++++++++++++++++++++++++++++
- 3 files changed, 299 insertions(+)
- create mode 100644 drivers/phy/hisilicon/phy-histb-combphy.c
+One more thing I just noticed: you don't describe the device as compatible =
+with
+the ufshcd spec as defined in the generic binding. Shouldn't we have
+both compatible
+strings listed here?
 
-diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-index 6164c4cd0f65..d9afe2b12827 100644
---- a/drivers/phy/hisilicon/Kconfig
-+++ b/drivers/phy/hisilicon/Kconfig
-@@ -11,6 +11,15 @@ config PHY_HI6220_USB
- 
- 	  To compile this driver as a module, choose M here.
- 
-+config PHY_HISTB_COMBPHY
-+	tristate "HiSilicon STB SoCs COMBPHY support"
-+	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the HISILICON STB SoCs COMBPHY.
-+	  If unsure, say N.
-+
- config PHY_HIX5HD2_SATA
- 	tristate "HIX5HD2 SATA PHY Driver"
- 	depends on ARCH_HIX5HD2 && OF && HAS_IOMEM
-diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-index 541b348187a8..5e8e2dfa8c37 100644
---- a/drivers/phy/hisilicon/Makefile
-+++ b/drivers/phy/hisilicon/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
-+obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
- obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-diff --git a/drivers/phy/hisilicon/phy-histb-combphy.c b/drivers/phy/hisilicon/phy-histb-combphy.c
-new file mode 100644
-index 000000000000..5777b3120017
---- /dev/null
-+++ b/drivers/phy/hisilicon/phy-histb-combphy.c
-@@ -0,0 +1,289 @@
-+/*
-+ * COMBPHY driver for HiSilicon STB SoCs
-+ *
-+ * Copyright (C) 2016-2017 HiSilicon Co., Ltd. http://www.hisilicon.com
-+ *
-+ * Authors: Jianguo Sun <sunjianguo1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <dt-bindings/phy/phy.h>
-+
-+#define COMBPHY_MODE_PCIE		0
-+#define COMBPHY_MODE_USB3		1
-+#define COMBPHY_MODE_SATA		2
-+
-+#define COMBPHY_CFG_REG			0x0
-+#define COMBPHY_BYPASS_CODEC		BIT(31)
-+#define COMBPHY_TEST_WRITE		BIT(24)
-+#define COMBPHY_TEST_DATA_SHIFT		20
-+#define COMBPHY_TEST_DATA_MASK		GENMASK(23, 20)
-+#define COMBPHY_TEST_ADDR_SHIFT		12
-+#define COMBPHY_TEST_ADDR_MASK		GENMASK(16, 12)
-+#define COMBPHY_CLKREF_OUT_OEN		BIT(0)
-+
-+struct histb_combphy_mode {
-+	int fixed;
-+	int select;
-+	u32 reg;
-+	u32 shift;
-+	u32 mask;
-+};
-+
-+struct histb_combphy_priv {
-+	void __iomem *mmio;
-+	struct regmap *syscon;
-+	struct reset_control *por_rst;
-+	struct clk *ref_clk;
-+	struct phy *phy;
-+	struct histb_combphy_mode mode;
-+};
-+
-+static void nano_register_write(struct histb_combphy_priv *priv,
-+				u32 addr, u32 data)
-+{
-+	void __iomem *reg = priv->mmio + COMBPHY_CFG_REG;
-+	u32 val;
-+
-+	/* Set up address and data for the write */
-+	val = readl(reg);
-+	val &= ~COMBPHY_TEST_ADDR_MASK;
-+	val |= addr << COMBPHY_TEST_ADDR_SHIFT;
-+	val &= ~COMBPHY_TEST_DATA_MASK;
-+	val |= data << COMBPHY_TEST_DATA_SHIFT;
-+	writel(val, reg);
-+
-+	/* Flip strobe control to trigger the write */
-+	val &= ~COMBPHY_TEST_WRITE;
-+	writel(val, reg);
-+	val |= COMBPHY_TEST_WRITE;
-+	writel(val, reg);
-+}
-+
-+static int is_mode_fixed(struct histb_combphy_mode *mode)
-+{
-+	return (mode->fixed != PHY_NONE) ? true : false;
-+}
-+
-+static int histb_combphy_set_mode(struct histb_combphy_priv *priv)
-+{
-+	struct histb_combphy_mode *mode = &priv->mode;
-+	struct regmap *syscon = priv->syscon;
-+	u32 hw_sel;
-+
-+	if (is_mode_fixed(mode))
-+		return 0;
-+
-+	switch (mode->select) {
-+	case PHY_TYPE_SATA:
-+		hw_sel = COMBPHY_MODE_SATA;
-+		break;
-+	case PHY_TYPE_PCIE:
-+		hw_sel = COMBPHY_MODE_PCIE;
-+		break;
-+	case PHY_TYPE_USB3:
-+		hw_sel = COMBPHY_MODE_USB3;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return regmap_update_bits(syscon, mode->reg, mode->mask,
-+				  hw_sel << mode->shift);
-+}
-+
-+static int histb_combphy_init(struct phy *phy)
-+{
-+	struct histb_combphy_priv *priv = phy_get_drvdata(phy);
-+	u32 val;
-+	int ret;
-+
-+	ret = histb_combphy_set_mode(priv);
-+	if (ret)
-+		return ret;
-+
-+	/* Clear bypass bit to enable encoding/decoding */
-+	val = readl(priv->mmio + COMBPHY_CFG_REG);
-+	val &= ~COMBPHY_BYPASS_CODEC;
-+	writel(val, priv->mmio + COMBPHY_CFG_REG);
-+
-+	ret = clk_prepare_enable(priv->ref_clk);
-+	if (ret)
-+		return ret;
-+
-+	reset_control_deassert(priv->por_rst);
-+
-+	/* Enable EP clock */
-+	val = readl(priv->mmio + COMBPHY_CFG_REG);
-+	val |= COMBPHY_CLKREF_OUT_OEN;
-+	writel(val, priv->mmio + COMBPHY_CFG_REG);
-+
-+	/* Need to wait for EP clock stable */
-+	mdelay(5);
-+
-+	/* Configure nano phy registers as suggested by vendor */
-+	nano_register_write(priv, 0x1, 0x8);
-+	nano_register_write(priv, 0xc, 0x9);
-+	nano_register_write(priv, 0x1a, 0x4);
-+
-+	return 0;
-+}
-+
-+static int histb_combphy_exit(struct phy *phy)
-+{
-+	struct histb_combphy_priv *priv = phy_get_drvdata(phy);
-+	u32 val;
-+
-+	/* Disable EP clock */
-+	val = readl(priv->mmio + COMBPHY_CFG_REG);
-+	val &= ~COMBPHY_CLKREF_OUT_OEN;
-+	writel(val, priv->mmio + COMBPHY_CFG_REG);
-+
-+	reset_control_assert(priv->por_rst);
-+	clk_disable_unprepare(priv->ref_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops histb_combphy_ops = {
-+	.init = histb_combphy_init,
-+	.exit = histb_combphy_exit,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct phy *histb_combphy_xlate(struct device *dev,
-+				       struct of_phandle_args *args)
-+{
-+	struct histb_combphy_priv *priv = dev_get_drvdata(dev);
-+	struct histb_combphy_mode *mode = &priv->mode;
-+
-+	if (args->args_count < 1) {
-+		dev_err(dev, "invalid number of arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	mode->select = args->args[0];
-+
-+	if (mode->select < PHY_TYPE_SATA || mode->select > PHY_TYPE_USB3) {
-+		dev_err(dev, "invalid phy mode select argument\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (is_mode_fixed(mode) && mode->select != mode->fixed) {
-+		dev_err(dev, "mode select %d mismatch fixed phy mode %d\n",
-+			mode->select, mode->fixed);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return priv->phy;
-+}
-+
-+static int histb_combphy_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	struct histb_combphy_priv *priv;
-+	struct device_node *np = dev->of_node;
-+	struct histb_combphy_mode *mode;
-+	struct resource *res;
-+	u32 vals[3];
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->mmio = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->mmio)) {
-+		ret = PTR_ERR(priv->mmio);
-+		return ret;
-+	}
-+
-+	priv->syscon = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(priv->syscon)) {
-+		dev_err(dev, "failed to find peri_ctrl syscon regmap\n");
-+		return PTR_ERR(priv->syscon);
-+	}
-+
-+	mode = &priv->mode;
-+	mode->fixed = PHY_NONE;
-+
-+	ret = of_property_read_u32(np, "hisilicon,fixed-mode", &mode->fixed);
-+	if (ret == 0)
-+		dev_dbg(dev, "found fixed phy mode %d\n", mode->fixed);
-+
-+	ret = of_property_read_u32_array(np, "hisilicon,mode-select-bits",
-+					 vals, ARRAY_SIZE(vals));
-+	if (ret == 0) {
-+		if (is_mode_fixed(mode)) {
-+			dev_err(dev, "found select bits for fixed mode phy\n");
-+			return -EINVAL;
-+		}
-+
-+		mode->reg = vals[0];
-+		mode->shift = vals[1];
-+		mode->mask = vals[2];
-+		dev_dbg(dev, "found mode select bits\n");
-+	} else {
-+		if (!is_mode_fixed(mode)) {
-+			dev_err(dev, "no valid select bits found for non-fixed phy\n");
-+			return -ENODEV;
-+		}
-+	}
-+
-+	priv->ref_clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(priv->ref_clk)) {
-+		dev_err(dev, "failed to find ref clock\n");
-+		return PTR_ERR(priv->ref_clk);
-+	}
-+
-+	priv->por_rst = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(priv->por_rst)) {
-+		dev_err(dev, "failed to get poweron reset\n");
-+		return PTR_ERR(priv->por_rst);
-+	}
-+
-+	priv->phy = devm_phy_create(dev, NULL, &histb_combphy_ops);
-+	if (IS_ERR(priv->phy)) {
-+		dev_err(dev, "failed to create combphy\n");
-+		return PTR_ERR(priv->phy);
-+	}
-+
-+	dev_set_drvdata(dev, priv);
-+	phy_set_drvdata(priv->phy, priv);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, histb_combphy_xlate);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id histb_combphy_of_match[] = {
-+	{ .compatible = "hisilicon,hi3798cv200-combphy" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, histb_combphy_of_match);
-+
-+static struct platform_driver histb_combphy_driver = {
-+	.probe	= histb_combphy_probe,
-+	.driver = {
-+		.name = "combphy",
-+		.of_match_table = histb_combphy_of_match,
-+	},
-+};
-+module_platform_driver(histb_combphy_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon STB COMBPHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+> In particular, I wonder if what you describe as the "UFS SYS CTRL"
+> area corresponds to what Qualcomm have described as their PHY implementat=
+ion. It certainly seems to driver some of the properties that would normall=
+y be associated with a PHY.
+>
+> Liwei:Yes, a part of "UFS SYS CTRL" is associated with a PHY, but from ou=
+r chip colleague that we assure "UFS SYS CTRL" is associated with clk/reset=
+/power on/power off and so on.
+> In fact, in addition to the controller itself, the controller related per=
+iphery are all in this area. So it's not appropriate to put this into a sep=
+arate phy node.
 
+I'm not sure I understand here. Do you mean the reset handle is for
+resetting the PHY rather than the UFS HCD?
+
+> > For the "clock-names" property, you specify "clk_ref", which I assume i=
+s the same as what Qualcomm call "ref_clk". I'd suggest you use the existin=
+g name and add that as the default name in the ufshcd-pltfrm.txt binding do=
+cument.
+>
+> Liwei:" ref_clk " is already in the ufshcd-pltfrm.txt binding document, a=
+nd parse in ufshcd.c, so we will replace "clk_ref" with "ref_clk". I will f=
+ix it in patch v6;
+
+ok
+
+> > The "clk_phy" property appears to be related to the PHY, so it might be=
+ better to have a separate phy node with either just the clk, or with the c=
+lk plus the "UFS SYS CTRL" register area, whichever matches your hardware b=
+etter, and then use teh "phys/phy-names" property to refer to that.
+>
+> Liwei: OK, I will add a separate phy node and fix it in patch v6;
+
+Thanks.
+
+>> The reset handling you describe here (both resets and reset-gpios) appea=
+rs to be completely generic, so I'd suggest adding those to ufshcd-pltfrm.t=
+xt instead of your own binding, to ensure that future drivers use the same =
+identifiers.
+>
+> Liwei: From our soc chip colleague, reset include "rst", "assert" is not =
+generic and related with our soc
+> implementation, you can see ufs_hisi_soc_init() in drivers/scsi/ufs/ufs-h=
+isi.c, the position of rst and assert
+> is very special, it's hard to put it in a generic process;
+
+It seems odd that the ability to reset a device is specific to your
+implementation. What I meant is
+that other implementations may also require a reset, so describing the
+way you refer to this
+into the generic binding would be helpful, to prevent others from
+adding another incompatible
+way to do the same thing.
+
+A lot of generic bindings have a reference to a reset controller that
+if present needs to
+be used before first accessing the device itself.
+
+> reset-gpios is used to solve a defect of the SOC chip reset function and =
+it is not generic , but our chip has been updated, so this is no longer nee=
+ded, and I will remove it in the patch v6;
+
+Ok.
+
+      Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
