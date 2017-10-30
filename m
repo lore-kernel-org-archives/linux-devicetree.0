@@ -1,107 +1,48 @@
-From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3] dt-bindings: mvebu-uart: update documentation with extended UART
-Date: Mon, 30 Oct 2017 15:21:51 +0100
-Message-ID: <20171030142151.26213-1-miquel.raynal@free-electrons.com>
+From: Kim Phillips <kim.phillips-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/4] crypto: caam: add caam-dma node to SEC4.0
+ device tree binding
+Date: Mon, 30 Oct 2017 09:24:24 -0500
+Message-ID: <20171030092424.1279add003c96ced4233bd2d@arm.com>
+References: <20171030134654.13729-1-horia.geanta@nxp.com>
+        <20171030134654.13729-2-horia.geanta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171030134654.13729-2-horia.geanta-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Horia =?UTF-8?B?R2VhbnTEgw==?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Radu Alexe <radu.alexe-3arQi8VN3Tc@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the device tree binding documentation for the Marvell EBU UART,
-in order to allow describing the extended UART IP block, in addition to
-the already supported standard UART IP. This requires adding a new
-compatible string, the introduction of a clocks property, and extensions
-to the interrupts property.
+On Mon, 30 Oct 2017 15:46:51 +0200
+Horia Geantă <horia.geanta-3arQi8VN3Tc@public.gmane.org> wrote:
 
-Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
+> +=====================================================================
+> +CAAM DMA Node
+> +
+> +    Child node of the crypto node that enables the use of the DMA capabilities
+> +    of the CAAM by a stand-alone driver. The only required property is the
+> +    "compatible" property. All the other properties are determined from
+> +    the job rings on which the CAAM DMA driver depends (ex: the number of
+> +    dma-channels is equal to the number of defined job rings).
+> +
+> +  - compatible
+> +      Usage: required
+> +      Value type: <string>
+> +      Definition: Must include "fsl,sec-v4.0-dma"
+> +
+> +EXAMPLE
+> +  caam-dma {
+> +    compatible = "fsl,sec-v5.4-dma",
+> +                 "fsl,sec-v5.0-dma",
+> +                 "fsl,sec-v4.0-dma";
+> +  }
 
-Hi,
+If this isn't describing an aspect of the hardware, then what is it
+doing in the device tree?
 
-This patch was part of a bigger series called "Support armada-37xx second
-UART port" and needed to be adapted.
-
-Changes since v2:
-- Removed the "status" from the examples.
-- Desbribed better the mandatory clock property.
-
-Thank you,
-Miquèl
-
- .../devicetree/bindings/serial/mvebu-uart.txt      | 50 +++++++++++++++++++---
- 1 file changed, 45 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/serial/mvebu-uart.txt b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
-index d37fabe17bd1..2ae2fee7e023 100644
---- a/Documentation/devicetree/bindings/serial/mvebu-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
-@@ -1,13 +1,53 @@
--* Marvell UART : Non standard UART used in some of Marvell EBU SoCs (e.g., Armada-3700)
-+* Marvell UART : Non standard UART used in some of Marvell EBU SoCs
-+                 e.g., Armada-3700.
- 
- Required properties:
--- compatible: "marvell,armada-3700-uart"
-+- compatible:
-+    - "marvell,armada-3700-uart" for the standard variant of the UART
-+      (32 bytes FIFO, no DMA, level interrupts, 8-bit access to the
-+      FIFO, baudrate limited to 230400).
-+    - "marvell,armada-3700-uart-ext" for the extended variant of the
-+      UART (128 bytes FIFO, DMA, front interrupts, 8-bit or 32-bit
-+      accesses to the FIFO, baudrate unlimited by the dividers).
- - reg: offset and length of the register set for the device.
--- interrupts: device interrupt
-+- clocks: UART reference clock used to derive the baudrate. If no clock
-+      is provided (possible only with the "marvell,armada-3700-uart"
-+      compatible string for backward compatibility), it will only work
-+      if the baudrate was initialized by the bootloader and no baudrate
-+      change will then be possible.
-+- interrupts:
-+    - Must contain three elements for the standard variant of the IP
-+      (marvell,armada-3700-uart): "uart-sum", "uart-tx" and "uart-rx",
-+      respectively the UART sum interrupt, the UART TX interrupt and
-+      UART RX interrupt. A corresponding interrupt-names property must
-+      be defined.
-+    - Must contain two elements for the extended variant of the IP
-+      (marvell,armada-3700-uart-ext): "uart-tx" and "uart-rx",
-+      respectively the UART TX interrupt and the UART RX interrupt. A
-+      corresponding interrupts-names property must be defined.
-+    - For backward compatibility reasons, a single element interrupts
-+      property is also supported for the standard variant of the IP,
-+      containing only the UART sum interrupt. This form is deprecated
-+      and should no longer be used.
- 
- Example:
--	serial@12000 {
-+	uart0: serial@12000 {
- 		compatible = "marvell,armada-3700-uart";
- 		reg = <0x12000 0x200>;
--		interrupts = <43>;
-+		clocks = <&xtalclk>;
-+		interrupts =
-+		<GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "uart-sum", "uart-tx", "uart-rx";
-+	};
-+
-+	uart1: serial@12200 {
-+		compatible = "marvell,armada-3700-uart-ext";
-+		reg = <0x12200 0x30>;
-+		clocks = <&xtalclk>;
-+		interrupts =
-+		<GIC_SPI 30 IRQ_TYPE_EDGE_RISING>,
-+		<GIC_SPI 31 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "uart-tx", "uart-rx";
- 	};
--- 
-2.11.0
-
+Kim
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
