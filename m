@@ -1,7 +1,7 @@
 From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH v2 16/17] bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
-Date: Mon, 30 Oct 2017 13:42:19 +0100
-Message-ID: <20171030124221.20690-17-niklas.cassel@axis.com>
+Subject: [PATCH v2 13/17] bindings: PCI: artpec: Add support for endpoint mode
+Date: Mon, 30 Oct 2017 13:42:16 +0100
+Message-ID: <20171030124221.20690-14-niklas.cassel@axis.com>
 References: <20171030124221.20690-1-niklas.cassel@axis.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171030124221.20690-1-niklas.cassel@axis.com>
@@ -10,10 +10,6 @@ To: Niklas Cassel <niklass@axis.com>, Jesper Nilsson <jespern@axis.com>, Bjorn H
 Cc: linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The ARTPEC-6 SoC and the ARTPEC-7 SoC are very similar.
-Unfortunately, some fields in the PCIECFG and PCIESTAT
-register have changed.
-
 Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
@@ -21,19 +17,20 @@ V2:
 * Split out the DT binding change to a self contained patch.
 * Added Rob's ack (from V1). No change to this file since V1.
 
- Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-index 33eef7ae5a23..979dc7b6cfe8 100644
+index 4e4aee4439ea..33eef7ae5a23 100644
 --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-@@ -6,6 +6,8 @@ and thus inherits all the common properties defined in designware-pcie.txt.
+@@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
+ and thus inherits all the common properties defined in designware-pcie.txt.
+ 
  Required properties:
- - compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
- 	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
-+	      "axis,artpec7-pcie", "snps,dw-pcie" for ARTPEC-7 in RC mode;
-+	      "axis,artpec7-pcie-ep", "snps,dw-pcie" for ARTPEC-7 in EP mode;
+-- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
++- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
++	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
  - reg: base addresses and lengths of the PCIe controller (DBI),
  	the PHY controller, and configuration address space.
  - reg-names: Must include the following entries:
