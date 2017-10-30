@@ -1,82 +1,85 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 00/12] mmc: mediatek: add support of mt2701/mt2712
-Date: Mon, 30 Oct 2017 12:39:59 +0100
-Message-ID: <CAPDyKFr+Zc_u=YYhtzF0tRS0Pp08cKkGrJwoGDQympOF4M=HwA@mail.gmail.com>
-References: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 1/5] Documentation: Add device tree binding for Goldfish PIC driver
+Date: Mon, 30 Oct 2017 12:56:32 +0100
+Message-ID: <1509364642-21771-2-git-send-email-aleksandar.markovic@rt-rk.com>
+References: <1509364642-21771-1-git-send-email-aleksandar.markovic@rt-rk.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1508118399-21828-1-git-send-email-chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1509364642-21771-1-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phong LE <ple-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Miodrag Dinic <miodrag.dinic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 October 2017 at 03:46, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->   This serial of patches are adding support of mt2701/mt2712.
-> there are many changes and HW improvement between mt8173 and
-> mt2701/mt2712, below is a list of these changes:
->   1. enlarge CLKDIV bits from 8 to 12
->   2. remove the PAD_TUNE register and add a new PAD_TUNE0 register
->   3. add data sync and async fifo feature
->   4. add busy_check feature
->   5. add stop_clk fix
->   6. add enhance_rx support
->   7. add a seperate CG of source clock
->
->   mt2712 supports full of these features, mt2701 supports part of it, and
-> add a "mediatek,latch-ck" to work-around as it do not support stop-clk fix.
->
-> Note: As Pinctrl/CCF are not ready now, so that current patches do not
-> include DTS part.
->
-> Changed vs v5:
->   based on Rob's comments, explain why MT8173 no longer compatible with
-> driver that supports "mediatek,mt8135-mmc", add more clearly description
-> of "mediatek,latch-ck".
->
-> Changed vs v4:
->   based on Julien's comment, change the "bool pad_tune0" to "u32 pad_tune_reg".
->
-> Changed vs v3:
->   based on Ulf's comments, make the bindings change to be the first patch.
->
-> Changed vs v2:
->   based on Matthias's comments, merge binding file changes to one patch,
-> add "hs400_tune" flag in dev_comp.
->
-> Changed vs v1:
->   based on Ulf/Rob/Matthias's comments of DTS binding file, make the binding
-> file clearly and fix probe issue.
->
->
-> Chaotian Jing (12):
->   mmc: dt-bindings: Add reg/source_cg/latch-ck for Mediatek MMC bindings
->   mmc: mediatek: add support of mt2701/mt2712
->   arm64: dts: mt8173: remove "mediatek,mt8135-mmc" from mmc nodes
->   mmc: mediatek: make hs400_tune_response only for mt8173
->   mmc: mediatek: add pad_tune0 support
->   mmc: mediatek: add async fifo and data tune support
->   mmc: mediatek: add busy_check support
->   mmc: mediatek: add stop_clk fix and enhance_rx support
->   mmc: mediatek: add support of source_cg clock
->   mmc: mediatek: add latch-ck support
->   mmc: mediatek: improve eMMC hs400 mode read performance
->   mmc: mediatek: perfer to use rise edge latching for cmd line
->
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |  18 +-
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi         |  12 +-
->  drivers/mmc/host/mtk-sd.c                        | 283 ++++++++++++++++++++---
->  3 files changed, 265 insertions(+), 48 deletions(-)
->
+From: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
 
-Thanks, applied the hole series on my next branch.
+Add documentation for DT binding of Goldfish PIC driver. The compatible
+string used by OS for binding the driver is "google,goldfish-pic".
 
-If Matthias wants to pick/ack the DT change (patch3), I either add his
-ack or drop that patch from my tree.
+Signed-off-by: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
+Signed-off-by: Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>
+Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../interrupt-controller/google,goldfish-pic.txt   | 30 ++++++++++++++++++++++
+ MAINTAINERS                                        |  5 ++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
 
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+new file mode 100644
+index 0000000..35f7527
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+@@ -0,0 +1,30 @@
++Android Goldfish PIC
++
++Android Goldfish programmable interrupt device used by Android
++emulator.
++
++Required properties:
++
++- compatible : should contain "google,goldfish-pic"
++- reg        : <registers mapping>
++- interrupts : <interrupt mapping>
++
++Example for mips when used in cascade mode:
++
++        cpuintc {
++                #interrupt-cells = <0x1>;
++                #address-cells = <0>;
++                interrupt-controller;
++                compatible = "mti,cpu-interrupt-controller";
++        };
++
++        interrupt-controller@1f000000 {
++                compatible = "google,goldfish-pic";
++                reg = <0x1f000000 0x1000>;
++
++                interrupt-controller;
++                #interrupt-cells = <0x1>;
++
++                interrupt-parent = <&cpuintc>;
++                interrupts = <0x2>;
++        };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4a3de82..4d5108f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -872,6 +872,11 @@ S:	Supported
+ F:	drivers/android/
+ F:	drivers/staging/android/
+ 
++ANDROID GOLDFISH PIC DRIVER
++M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
++S:	Supported
++F:	Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
++
+ ANDROID GOLDFISH RTC DRIVER
+ M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
+ S:	Supported
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
