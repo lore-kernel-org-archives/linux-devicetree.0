@@ -1,53 +1,90 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: exynos: add cpu perf counters to Exynos54xx boards
-Date: Mon, 30 Oct 2017 10:38:38 +0100
-Message-ID: <CAJKOXPekn5JUmjcmcqT6HHQUbd7yCGC9mA-oPcEMRjTL0OvQ3g@mail.gmail.com>
-References: <1508812196-14478-1-git-send-email-mihailescu2m@gmail.com> <CAM3PiRwqS21a-z6L0yqM0stUSnbKY9pdWKGJfpnyePQ3AZJqdw@mail.gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] gpio: gpiolib: Generalise state persistence
+ beyond sleep
+Date: Mon, 30 Oct 2017 09:57:26 +0000
+Message-ID: <20171030095726.a43lpshlyfta4vrq@localhost.localdomain>
+References: <20171030062218.27005-1-andrew@aj.id.au>
+ <20171030062218.27005-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM3PiRwqS21a-z6L0yqM0stUSnbKY9pdWKGJfpnyePQ3AZJqdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171030062218.27005-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marian Mihailescu <mihailescu2m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 10:34 AM, Marian Mihailescu
-<mihailescu2m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi,
->
-> Can I get feedback on this last patch?
+On Mon, Oct 30, 2017 at 04:52:17PM +1030, Andrew Jeffery wrote:
+> General support for state persistence is added to gpiolib with the
+> introduction of a new pinconf parameter to propagate the request to
+> hardware. The existing persistence support for sleep is adapted to
+> include hardware support if the GPIO driver provides it. Persistence
+> continues to be enabled by default; in-kernel consumers can opt out, but
+> userspace (currently) does not have a choice.
+> 
+> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
+> renamed, dropping the SLEEP prefix to reflect that the concept is no
+> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
+> could initially be misinterpreted, so I've further changed the symbols
+> to *_TRANSITORY and *_PERSISTENT to address this.
+> 
+> The sysfs interface is modified only to keep consistency with the
+> chardev interface in enforcing persistence for userspace exports.
+> 
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> ---
+>  /**
+> + * gpiod_set_transitory - Lose or retain GPIO state on suspend or reset
+> + * @desc: descriptor of the GPIO for which to configure persistence
+> + * @transitory: True to lose state on suspend or reset, false for persistence
+> + *
+> + * Returns:
+> + * 0 on success, otherwise a negative error code.
+> + */
+> +int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
+> +{
+> +	struct gpio_chip *chip;
+> +	unsigned long packed;
+> +	int gpio;
+> +	int rc;
+> +
+> +	/* Handle FLAG_TRANSITORY first for suspend case */
+> +	if (transitory)
+> +		set_bit(FLAG_TRANSITORY, &desc->flags);
+> +	else
+> +		clear_bit(FLAG_TRANSITORY, &desc->flags);
+> +
+> +	/* Configure reset persistence if the controller supports it */
 
-Just six days passed... I'll take a look soon, it is not lost. But
-anyway merge window is too close so I am not planning to take anything
-more for upcoming release.
+This comment could use an update.
 
-Best regards.
-Krzysztof
+> +	chip = desc->gdev->chip;
+> +	if (!chip->set_config)
+> +		return 0;
+> +
+> +	packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
+> +					  !transitory);
+> +	gpio = gpio_chip_hwgpio(desc);
+> +	rc = chip->set_config(chip, gpio, packed);
+> +	if (rc == -ENOTSUPP) {
+> +		dev_dbg(&desc->gdev->dev, "Reset tolerance not supported for GPIO %d\n",
+> +				gpio);
 
+And this debug message.
 
->
-> Thanks,
-> Marian
-> Either I've been missing something or nothing has been going on. (K. E. Gordon)
->
->
-> On Tue, Oct 24, 2017 at 12:59 PM, memeka <mihailescu2m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Enable support for ARM Performance Monitoring Units available in Cortex-A7
->> and Cortex-A15 CPU cores for Exynos54xx SoCs (5410, 5420 and 5422/5800).
->>
->> The PMUs interrupts are defined in the common exynos54xx.dtsi device tree,
->> but the PMUs are enabled and have their interrupt CPU affinity defined
->> next to each SoC's cpus node.
->>
->> Tested with perf on Odroid XU4 (Exynos5422):
->> armv7_cortex_a7 PMU driver: 5 counters available
->> armv7_cortex_a15 PMU driver: 7 counters available
->>
->> Suggested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Marian Mihailescu <mihailescu2m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
+> +		return 0;
+> +	}
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_GPL(gpiod_set_transitory);
+> +
+
+Otherwise think this all looks good to me.
+
+Thanks,
+Charles
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
