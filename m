@@ -1,38 +1,48 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] soc: renesas: Identify R-Car M3-W ES1.1
-Date: Mon, 30 Oct 2017 18:29:58 +0100
-Message-ID: <1509384599-28953-3-git-send-email-geert+renesas@glider.be>
-References: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/3] arm64: renesas: Add support for Salvator-XS with R-Car M3-W
+Date: Mon, 30 Oct 2017 18:29:56 +0100
+Message-ID: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The Product Register of R-Car M3-W ES1.1 incorrectly identifies the SoC
-revision as ES2.0.  Add a workaround to fix this.
+	Hi Simon, Magnus,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Is it already known how future revisions will be identified?
----
- drivers/soc/renesas/renesas-soc.c | 3 +++
- 1 file changed, 3 insertions(+)
+This patch series adds support for the version of the Salvator-XS
+development board equipped with an R-Car M3-W SiP.
 
-diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index f8389ed2249f9816..5c7f920ff060957a 100644
---- a/drivers/soc/renesas/renesas-soc.c
-+++ b/drivers/soc/renesas/renesas-soc.c
-@@ -293,6 +293,9 @@ static int __init renesas_soc_init(void)
- 	if (chipid) {
- 		product = readl(chipid);
- 		iounmap(chipid);
-+		/* R-Car M3-W ES1.1 incorrectly identifies as ES2.0 */
-+		if ((product & 0x7fff) == 0x5210)
-+			product ^= 0x11;
- 		if (soc->id && ((product >> 8) & 0xff) != soc->id) {
- 			pr_warn("SoC mismatch (product = 0x%x)\n", product);
- 			return -ENODEV;
+The DT was based on work for the Salvator-X and -XS boards with M3-W
+resp. H3 SiPs.
+
+This has been tested on Salvator-X with R-Car M3-W ES1.1.
+
+Thanks!
+
+Geert Uytterhoeven (3):
+  ARM: shmobile: Document Renesas M3-W-based Salvator-XS board DT
+    bindings
+  soc: renesas: Identify R-Car M3-W ES1.1
+  arm64: dts: renesas: Add support for Salvator-XS with R-Car M3-W
+
+ Documentation/devicetree/bindings/arm/shmobile.txt |  2 +
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ .../arm64/boot/dts/renesas/r8a7796-salvator-xs.dts | 58 ++++++++++++++++++++++
+ drivers/soc/renesas/renesas-soc.c                  |  3 ++
+ 4 files changed, 64 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a7796-salvator-xs.dts
+
 -- 
 2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
