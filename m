@@ -1,40 +1,92 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 3/3] kbuild: clean up *.dtb and *.dtb.S patterns from top-level Makefile
-Date: Tue, 31 Oct 2017 00:33:47 +0900
-Message-ID: <1509377627-11362-4-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH 1/3] .gitignore: sort normal pattern rules alphabetically
+Date: Tue, 31 Oct 2017 00:33:45 +0900
+Message-ID: <1509377627-11362-2-git-send-email-yamada.masahiro@socionext.com>
 References: <1509377627-11362-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1509377627-11362-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: linux-kbuild@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Kaehlcke <mka@chromium.org>, Josh Poimboeuf <jpoimboe@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1509377627-11362-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Vin=C3=ADcius=20Tinti?= <viniciustinti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We need to add "clean-files" in Makfiles to clean up DT blobs, but we
-often miss to do so.
+We are having more and more ignore patterns.  Sort the list
+alphabetically.  We will easily catch duplicated patterns if any.
 
-Since there are no source files that end with .dtb or .dtb.S, so we
-can clean-up those files from the top-level Makefile.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 ---
 
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .gitignore | 42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 63a4c0e..c577c63 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1544,7 +1544,7 @@ clean: $(clean-dirs)
- 	$(call cmd,rmfiles)
- 	@find $(if $(KBUILD_EXTMOD), $(KBUILD_EXTMOD), .) $(RCS_FIND_IGNORE) \
- 		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
--		-o -name '*.ko.*' \
-+		-o -name '*.ko.*' -o -name '*.dtb' -o -name '*.dtb.S' \
- 		-o -name '*.dwo'  \
- 		-o -name '*.su'  \
- 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
+diff --git a/.gitignore b/.gitignore
+index 4f034b8..1cc4b2e 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,38 +7,38 @@
+ # command after changing this file, to see if there are
+ # any tracked files which get ignored after the change.
+ #
+-# Normal rules
++# Normal rules (sorted alphabetically)
+ #
+ .*
++*.a
++*.bin
++*.bz2
++*.c.[012]*.*
++*.dwo
++*.elf
++*.gcno
++*.gz
++*.i
++*.ko
++*.ll
++*.lst
++*.lz4
++*.lzma
++*.lzo
++*.mod.c
+ *.o
+ *.o.*
+-*.a
++*.order
++*.patch
+ *.s
+-*.ko
+ *.so
+ *.so.dbg
+-*.mod.c
+-*.i
+-*.lst
++*.su
+ *.symtypes
+-*.order
+-*.elf
+-*.bin
+ *.tar
+-*.gz
+-*.bz2
+-*.lzma
+ *.xz
+-*.lz4
+-*.lzo
+-*.patch
+-*.gcno
+-*.ll
+-modules.builtin
+ Module.symvers
+-*.dwo
+-*.su
+-*.c.[012]*.*
++modules.builtin
+ 
+ #
+ # Top-level generic files
 -- 
 2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
