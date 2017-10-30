@@ -1,50 +1,34 @@
-From: <yinbo.zhu@nxp.com>
-Subject: [PATCH] ARM: dts: ls1021a: Enable the esdhc
-Date: Mon, 30 Oct 2017 16:08:00 +0800
-Message-ID: <20171030080800.7984-1-yinbo.zhu@nxp.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/5] ARM: meson: enable gpio interrupt controller
+Date: Mon, 30 Oct 2017 09:28:28 +0100
+Message-ID: <7ho9opujir.fsf@baylibre.com>
+References: <20171019120143.20581-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-devel@gforge.freescale.net
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "yinbo.zhu" <yinbo.zhu@nxp.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171019120143.20581-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Thu, 19 Oct 2017 14:01:38 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "yinbo.zhu" <yinbo.zhu@nxp.com>
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-Ls1021a esdhc had been enabled in uboot,
-but it had not been enabled it in kernel,
-So set the esdhc's status to "okay".
+> This patchset enables gpio interrupt controller found on the meson SoC
+> family. ATM, it supports meson8b, gxbb and gxl. The meson8 has been left
+> out because I don't have the documentation of this particular SoC.
+>
+> The last patch uses the interrupts provided by this controller with the
+> external ethernet PHY found on a few platforms.
+>
+> Jerome Brunet (5):
+>   ARM: meson: enable MESON_IRQ_GPIO in Kconfig for meson8b
+>   ARM64: meson: enable MESON_IRQ_GPIO in Kconfig
+>   ARM: dts: meson8b: enable gpio interrupt controller
+>   ARM64: dts: meson-gx: add gpio interrupt controller
+>   ARM64: dts: meson-gx: add external PHY interrupt on some platforms
 
-Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Applied,
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index a8b148ad1dd2..f7946f40d35d 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -228,6 +228,10 @@
- 	};
- };
- 
-+&esdhc {
-+        status = "okay";
-+};
-+
- &sai1 {
- 	status = "okay";
- };
--- 
-2.14.1
+Kevin
