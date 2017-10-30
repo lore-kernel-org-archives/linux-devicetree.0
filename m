@@ -1,61 +1,56 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 0/4] add CAAM DMA memcpy driver
-Date: Mon, 30 Oct 2017 18:40:04 +0530
-Message-ID: <20171030131004.GD3187@localhost>
-References: <20171026100008.32169-1-radu.alexe@nxp.com>
- <VI1PR0402MB33422B48B506D7FF6A894AE0985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
- <8D3F6266AEB6384E807C6FFC6FE195E333C52210@BGSMSX107.gar.corp.intel.com>
- <VI1PR0402MB3342607E09BE48F80E074C14985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+From: =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+Subject: [PATCH RESEND 0/4] add CAAM DMA memcpy driver
+Date: Mon, 30 Oct 2017 15:46:50 +0200
+Message-ID: <20171030134654.13729-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB3342607E09BE48F80E074C14985A0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
 Sender: linux-crypto-owner@vger.kernel.org
-To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc: Radu Andrei Alexe <radu.alexe@nxp.com>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Vinod Koul <vinod.koul@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Radu Alexe <radu.alexe@nxp.com>
+Cc: dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 27, 2017 at 12:20:32PM +0000, Horia Geantă wrote:
-> On 10/27/2017 2:36 PM, Koul, Vinod wrote:
-> >> On 10/26/2017 1:01 PM, Radu Alexe wrote:
-> >>> This patch-set introduces a new DMA memcpy driver based on the DMA
-> >>> capabilities of the CAAM crypto engine. Because of this dependency the
-> >>> included commits target various parts of the kernel tree.
-> >> I don't see the patches on any of the mail lists.
-> >> If they are moderated, I would expect this to be mentioned in the
-> >> MAINTAINERS file.
-> >>
-> >>>
-> >>> Patch 1.
-> >>> Since the CAAM DMA driver is a platform driver it is enabled by a new node
-> >>> in the device tree. This commit adds documentation for the device tree
-> >>> bindings.
-> >>>
-> >>> Patch 2.
-> >>> This patch adds the "caam-dma" node in the fsl-ls1012a.dtsi file.
-> >>>
-> >>> Patch 3.
-> >>> This commit adds various capabilities in the JR driver of the CAAM that is
-> >>> used by the CAAM DMA driver.
-> >>>
-> >>> Patch 4.
-> >>> Adds the CAAM DMA memcpy driver.
-> >>>
-> >>> Patch 1 and 3 should be merged by the crypto maintainers, patch 2 by
-> >>> devicetree maintainers and patch 4 by the DMA maintainers.
-> >> I would go with all the patches through the dmaengine tree.
-> > 
-> > Good call, but no one CCed dmaengine folks on this series!
-> > 
-> I see dmaengine@vger.kernel.org Cc-ed on both cover letter and all four
-> patches.
-> It might be that the sender (Radu) is not subscribed and messages are
-> awaiting moderators' approval.
+From: Radu Alexe <radu.alexe@nxp.com>
 
-I think vger lists are open, maybe sender has some issues with mail as they
-are still not in any archives..
+This patch-set introduces a new DMA memcpy driver based on the DMA
+capabilities of the CAAM crypto engine. Because of this dependency the
+included commits target various parts of the kernel tree.
+
+Patch 1.
+Since the CAAM DMA driver is a platform driver it is enabled by a new node
+in the device tree. This commit adds documentation for the device tree
+bindings.
+
+Patch 2.
+This patch adds the "caam-dma" node in the fsl-ls1012a.dtsi file.
+
+Patch 3.
+This commit adds various capabilities in the JR driver of the CAAM that is
+used by the CAAM DMA driver.
+
+Patch 4.
+Adds the CAAM DMA memcpy driver.
+
+Patch 1 and 3 should be ack-ed by the crypto maintainers, patch 2 by
+devicetree maintainers and patch 4 by the DMA maintainers.
+The intent is to go withh all the patches through the dmaengine tree.
+
+Radu Alexe (4):
+  crypto: caam: add caam-dma node to SEC4.0 device tree binding
+  arm64: dts: ls1012a: add caam-dma node
+  crypto: caam: add functionality used by the caam_dma driver
+  dma: caam: add dma memcpy driver
+
+ .../devicetree/bindings/crypto/fsl-sec4.txt        |  21 +
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     |   6 +
+ drivers/crypto/caam/desc.h                         |   3 +
+ drivers/crypto/caam/jr.c                           |  42 ++
+ drivers/crypto/caam/jr.h                           |   2 +
+ drivers/dma/Kconfig                                |  17 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/caam_dma.c                             | 444 +++++++++++++++++++++
+ 8 files changed, 536 insertions(+)
+ create mode 100644 drivers/dma/caam_dma.c
 
 -- 
-~Vinod
+2.14.2.606.g7451fcd
