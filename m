@@ -1,88 +1,50 @@
-From: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v3 2/3] media: ov7740: Document device tree bindings
-Date: Mon, 30 Oct 2017 09:44:31 +0800
-Message-ID: <20171030014432.24025-3-wenyou.yang@microchip.com>
+From: Wenyou Yang <wenyou.yang@microchip.com>
+Subject: [PATCH v3 3/3] MAINTAINERS: Add a new entry of the ov7740 driver
+Date: Mon, 30 Oct 2017 09:44:32 +0800
+Message-ID: <20171030014432.24025-4-wenyou.yang@microchip.com>
 References: <20171030014432.24025-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171030014432.24025-1-wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171030014432.24025-1-wenyou.yang@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree binding documentation for the ov7740 sensor driver.
+Add a new entry of the ov7740 sensor driver to the MAINTAINERS file.
 
-Signed-off-by: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
 ---
 
 Changes in v3:
- - Explicitly document the "remote-endpoint" property.
+ - Put the MAINTAINERS change to a separate patch.
 
-Changes in v2: None
+Changes in v2:
+ - Split off the bindings into a separate patch.
+ - Add a new entry to the MAINTAINERS file.
 
- .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov7740.txt b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-new file mode 100644
-index 000000000000..af781c3a5f0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-@@ -0,0 +1,47 @@
-+* Omnivision OV7740 CMOS image sensor
+diff --git a/MAINTAINERS b/MAINTAINERS
+index adbf69306e9e..42b93599a0af 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9973,6 +9973,14 @@ S:	Maintained
+ F:	drivers/media/i2c/ov7670.c
+ F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
+ 
++OMNIVISION OV7740 SENSOR DRIVER
++M:	Wenyou Yang <wenyou.yang@microchip.com>
++L:	linux-media@vger.kernel.org
++T:	git git://linuxtv.org/media_tree.git
++S:	Maintained
++F:	drivers/media/i2c/ov7740.c
++F:	Documentation/devicetree/bindings/media/i2c/ov7740.txt
 +
-+The Omnivision OV7740 image sensor supports multiple output image
-+size, such as VGA, and QVGA, CIF and any size smaller. It also
-+supports the RAW RGB and YUV output formats.
-+
-+The common video interfaces bindings (see video-interfaces.txt) should
-+be used to specify link to the image data receiver. The OV7740 device
-+node should contain one 'port' child node with an 'endpoint' subnode.
-+
-+Required Properties:
-+- compatible:	"ovti,ov7740".
-+- reg:		I2C slave address of the sensor.
-+- clocks:	Reference to the xvclk input clock.
-+- clock-names:	"xvclk".
-+
-+Optional Properties:
-+- reset-gpios: Rreference to the GPIO connected to the reset_b pin,
-+  if any. Active low with pull-ip resistor.
-+- powerdown-gpios: Reference to the GPIO connected to the pwdn pin,
-+  if any. Active high with pull-down resistor.
-+
-+Endpoint node mandatory properties:
-+- remote-endpoint: A phandle to the bus receiver's endpoint node.
-+
-+Example:
-+
-+	i2c1: i2c@fc028000 {
-+		ov7740: camera@21 {
-+			compatible = "ovti,ov7740";
-+			reg = <0x21>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_sensor_power &pinctrl_sensor_reset>;
-+			clocks = <&isc>;
-+			clock-names = "xvclk";
-+			assigned-clocks = <&isc>;
-+			assigned-clock-rates = <24000000>;
-+			reset-gpios = <&pioA 43 GPIO_ACTIVE_LOW>;
-+			powerdown-gpios = <&pioA 44 GPIO_ACTIVE_HIGH>;
-+
-+			port {
-+				ov7740_0: endpoint {
-+					remote-endpoint = <&isc_0>;
-+				};
-+			};
-+		};
-+	};
+ ONENAND FLASH DRIVER
+ M:	Kyungmin Park <kyungmin.park@samsung.com>
+ L:	linux-mtd@lists.infradead.org
 -- 
 2.13.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
