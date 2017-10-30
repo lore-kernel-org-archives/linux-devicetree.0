@@ -1,54 +1,40 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mtd: powernv: Support MTD_NO_ERASE
-Date: Mon, 30 Oct 2017 10:23:26 -0500
-Message-ID: <CAL_JsqKr5eh4_OQAaz49XUTSRABCSeU4aeyWMpmv6pmaCyLtSg@mail.gmail.com>
-References: <20170905202339.20732-1-wak@google.com> <20170921095930.4b473f91@bbrezillon>
- <CAPnigKmBujCoKdtXwnK6YsU=YvXM+MaDvDvKpUXEVgHzOC-VEw@mail.gmail.com>
- <8760cbv090.fsf@concordia.ellerman.id.au> <20171016175517.264e710a@bbrezillon>
- <CAL_JsqLBkU9habdOhoQ8ZiM=x87eLmuLrS6ujx32UOv8LHc=EA@mail.gmail.com> <87k1zt82gq.fsf@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87k1zt82gq.fsf-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, William Kennington <wak-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 3/3] kbuild: clean up *.dtb and *.dtb.S patterns from top-level Makefile
+Date: Tue, 31 Oct 2017 00:33:47 +0900
+Message-ID: <1509377627-11362-4-git-send-email-yamada.masahiro@socionext.com>
+References: <1509377627-11362-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1509377627-11362-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: linux-kbuild@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Matthias Kaehlcke <mka@chromium.org>, Josh Poimboeuf <jpoimboe@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 18, 2017 at 12:11 AM, Stewart Smith
-<stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
-> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
->> I'd prefer they be documented in the kernel especially if they are
->> used by the kernel. Of course, there's IBM bindings covered by various
->> ?PAPR specs which wouldn't make sense to duplicate, but I'm guessing
->> what's documented in skiboot are not covered by those specs.
->
-> Correct.
->
-> I don't have an objection to docs being in both places, as long as we
-> could keep both in sync. Would suitable comments in the RST doc files
-> pointing to the skiboot repo as the canonical copy work?
+We need to add "clean-files" in Makfiles to clean up DT blobs, but we
+often miss to do so.
 
-I'm okay if the kernel just references the skiboot doc and when we
-review that, we can review the link. If it's something intended to be
-common (among devices), then I'd like it to be documented within the
-main binding docs (i.e. the kernel ones).
+Since there are no source files that end with .dtb or .dtb.S, so we
+can clean-up those files from the top-level Makefile.
 
-Of course, I will feel differently if everyone wanted to do this or
-the bindings conflict with upstream bindings.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> I'd like to be able to just diff a subtree of kernel and skiboot to see
-> if the docs have diverged.
->
-> We may also need to think of a way to ensure that any of that moving
-> back/forth of edits is done in a way that makes licensing sense too
-> (skiboot is Apache 2.0)
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, that's not the only licensing issue. Any volunteers to clean up
-ambiguous licensing.
+diff --git a/Makefile b/Makefile
+index 63a4c0e..c577c63 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1544,7 +1544,7 @@ clean: $(clean-dirs)
+ 	$(call cmd,rmfiles)
+ 	@find $(if $(KBUILD_EXTMOD), $(KBUILD_EXTMOD), .) $(RCS_FIND_IGNORE) \
+ 		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
+-		-o -name '*.ko.*' \
++		-o -name '*.ko.*' -o -name '*.dtb' -o -name '*.dtb.S' \
+ 		-o -name '*.dwo'  \
+ 		-o -name '*.su'  \
+ 		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
+-- 
+2.7.4
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
