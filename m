@@ -1,50 +1,30 @@
-From: Wenyou Yang <wenyou.yang@microchip.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: Add a new entry of the ov7740 driver
-Date: Mon, 30 Oct 2017 09:44:32 +0800
-Message-ID: <20171030014432.24025-4-wenyou.yang@microchip.com>
-References: <20171030014432.24025-1-wenyou.yang@microchip.com>
+From: jeffy <jeffy.chen@rock-chips.com>
+Subject: Re: [RFC PATCH v8 4/7] of/irq: Adjust of pci irq parsing for multiple
+ interrupts
+Date: Mon, 30 Oct 2017 10:05:51 +0800
+Message-ID: <59F688FF.9020806@rock-chips.com>
+References: <20171026132840.20946-1-jeffy.chen@rock-chips.com> <20171026132840.20946-5-jeffy.chen@rock-chips.com> <20171027143812.5i4vathfjpgld7wk@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171030014432.24025-1-wenyou.yang@microchip.com>
+In-Reply-To: <20171027143812.5i4vathfjpgld7wk@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, briannorris@chromium.org, rjw@rjwysocki.net, dianders@chromium.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new entry of the ov7740 sensor driver to the MAINTAINERS file.
+Hi Rob,
 
-Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
----
+On 10/27/2017 10:38 PM, Rob Herring wrote:
+>> +		prop = of_find_property(dn, "interrupt-names", NULL);
+>> >+		for (name = of_prop_next_string(prop, NULL); name;
+>> >+		     name = of_prop_next_string(prop, name), index++) {
+>> >+			if (!strcmp(name, "pci"))
+>> >+				break;
+> Use of_property_match_string
+>
+i'm trying to find the first unnamed or "pci" named irq in the string 
+array, so cannot use that API:)
 
-Changes in v3:
- - Put the MAINTAINERS change to a separate patch.
-
-Changes in v2:
- - Split off the bindings into a separate patch.
- - Add a new entry to the MAINTAINERS file.
-
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index adbf69306e9e..42b93599a0af 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9973,6 +9973,14 @@ S:	Maintained
- F:	drivers/media/i2c/ov7670.c
- F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
- 
-+OMNIVISION OV7740 SENSOR DRIVER
-+M:	Wenyou Yang <wenyou.yang@microchip.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/ov7740.c
-+F:	Documentation/devicetree/bindings/media/i2c/ov7740.txt
-+
- ONENAND FLASH DRIVER
- M:	Kyungmin Park <kyungmin.park@samsung.com>
- L:	linux-mtd@lists.infradead.org
--- 
-2.13.0
+but will change to of_property_for_each_string as Brian suggested.
