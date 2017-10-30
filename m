@@ -1,61 +1,67 @@
-From: Rick Chen <rickchen36@gmail.com>
-Subject: [PATCH v2 3/3] dt-bindings: timer: Add andestech atcpit100 timer binding doc
-Date: Mon, 30 Oct 2017 13:18:57 +0800
-Message-ID: <1509340737-10225-3-git-send-email-rickchen36@gmail.com>
-References: <1509340737-10225-1-git-send-email-rickchen36@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 05/13] irqchip: add initial support for ompic
+Date: Mon, 30 Oct 2017 06:11:40 +0000
+Message-ID: <86vaix5fmr.fsf@arm.com>
+References: <20171029231123.27281-1-shorne@gmail.com>
+        <20171029231123.27281-6-shorne@gmail.com> <86mv4974ht.fsf@arm.com>
+        <20171030041806.GA29237@lianli.shorne-pla.net>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1509340737-10225-1-git-send-email-rickchen36@gmail.com>
+In-Reply-To: <20171030041806.GA29237@lianli.shorne-pla.net> (Stafford Horne's
+        message of "Mon, 30 Oct 2017 13:18:06 +0900")
 Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rick@andestech.com
-Cc: Rick Chen <rickchen36@gmail.com>, Greentime Hu <green.hu@gmail.com>
+To: Stafford Horne <shorne@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonas Bonn <jonas@southpole.se>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, openrisc@lists.librecores.org
 List-Id: devicetree@vger.kernel.org
 
-Add a document to describe Andestech atcpit100 timer and
-binding information.
+On Mon, Oct 30 2017 at  1:18:06 pm GMT, Stafford Horne <shorne@gmail.com> wrote:
+> On Mon, Oct 30, 2017 at 02:29:18AM +0000, Marc Zyngier wrote:
+>> On Mon, Oct 30 2017 at  8:11:15 am GMT, Stafford Horne <shorne@gmail.com> wrote:
+>> > From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+>> >
+>> > IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
+>> > described in the Multi-core support section of the OpenRISC 1.2
+>> > architecture specification:
+>> >
+>> >   https://github.com/openrisc/doc/raw/master/openrisc-arch-1.2-rev0.pdf
+>> >
+>> > Each OpenRISC core contains a full interrupt controller which is used in
+>> > the SMP architecture for interrupt balancing.  This IPI device, the
+>> > ompic, is the only external device required for enabling SMP on
+>> > OpenRISC.
+>> >
+>> > Pending ops are stored in a memory bit mask which can allow multiple
+>> > pending operations to be set and serviced at a time. This is mostly
+>> > borrowed from the alpha IPI implementation.
+>> >
+>> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> > Acked-by: Rob Herring <robh@kernel.org>
+>> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+>> > [shorne@gmail.com: converted ops to bitmask, wrote commit message]
+>> > Signed-off-by: Stafford Horne <shorne@gmail.com>
+>> 
+>> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+>
+> Thanks
+>
+>> Side question: what is your merge strategy for this? I can take it
+>> through the irqchip tree as it is standalone, but I'm open to other
+>> suggestions.
+>
+> For me its easier if I just take it through the openrisc tree, as
+> there are dependencies between this series and the irqchip driver.
+> If you are ok with that I can make a note to Linus indicating so in
+> the pull request.
 
-Signed-off-by: Greentime Hu <green.hu@gmail.com>
-Signed-off-by: Rick Chen <rickchen36@gmail.com>
----
- .../bindings/timer/andestech,atcpit100-timer.txt   | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
+No problem, that's OK with me.
 
-diff --git a/Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt b/Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
-new file mode 100644
-index 0000000..a87278a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
-@@ -0,0 +1,31 @@
-+Andestech ATCPIT100 timer
-+------------------------------------------------------------------
-+ATCPIT100 is a generic IP block from Andes Technology, embedded in
-+Andestech AE3XX platforms and other designs.
-+
-+This timer is a set of compact multi-function timers, which can be
-+used as pulse width modulators (PWM) as well as simple timers.
-+
-+It supports up to 4 PIT channels. Each PIT channel is a
-+multi-function timer and provide the following usage scenarios:
-+One 32-bit timer
-+Two 16-bit timers
-+Four 8-bit timers
-+One 16-bit PWM
-+One 16-bit timer and one 8-bit PWM
-+Two 8-bit timer and one 8-bit PWM
-+
-+Required properties:
-+- compatible	: Should be "andestech,atcpit100"
-+- reg		: Address and length of the register set
-+- interrupts	: Reference to the timer interrupt
-+- clock-frequency : The rate in HZ in input of the Andestech ATCPIT100 timer
-+
-+Examples:
-+
-+timer0: timer@f0400000 {
-+	compatible = "andestech,atcpit100";
-+	reg = <0xf0400000 0x1000>;
-+	interrupts = <2 4>;
-+	clock-frequency = <30000000>;
-+};
+> My plan is to send this series during the 4.15 merge window.
+
+Make sure this is in -next (when it comes back to life...).
+
+Thanks,
+
+	M.
 -- 
-2.7.4
+Jazz is not dead. It just smells funny.
