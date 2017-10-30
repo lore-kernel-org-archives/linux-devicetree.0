@@ -1,162 +1,84 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v7 usb-next 4/4] dt-bindings: usb: xhci: include the
- roothub and a device in the example
-Date: Mon, 30 Oct 2017 23:59:38 +0100
-Message-ID: <CAFBinCBJuL7J7847ZU0jO=O0WuwNZj_oBT4NO1+ge11dEbQL+w@mail.gmail.com>
-References: <CAFBinCALbByzAiAqTOzGj6XHASGwWX34xg7GKf=Fa6_eiCEnkA@mail.gmail.com>
- <Pine.LNX.4.44L0.1710271550360.1355-100000@iolanthe.rowland.org>
- <CAFBinCBocmr6fywO9vqWu+ngfrbG=FBFqdEvYEBWR84VgMANpw@mail.gmail.com> <CAK8P3a1xdUy7g991MbtrSTYFsM864MQDc61=sLZmfSMwrokCBg@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v6 00/10] rockchip: kevin: Enable edp display
+Date: Tue, 31 Oct 2017 00:01:08 +0100
+Message-ID: <2449324.8EdsLz1NaV@phil>
+References: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1xdUy7g991MbtrSTYFsM864MQDc61=sLZmfSMwrokCBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jeffy Chen <jeffy.chen@rock-chips.com>, seanpaul@chromium.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Romain Perier <romain.perier@collabora.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Kevin Hilman <khilman@baylibre.com>, briannorris@chromium.org, Krzysztof Kozlowski <krzk@kernel.org>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Caesar Wang <wxt@rock-chips.com>, Jose Abreu <Jose.Abreu@synopsys.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@ker>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Mon, Oct 30, 2017 at 3:08 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Sat, Oct 28, 2017 at 3:33 PM, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->> On Fri, Oct 27, 2017 at 9:55 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
->>> On Fri, 27 Oct 2017, Martin Blumenstingl wrote:
->>>> >> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->>>> >> index 5b49ba9f2f9a..20e5ce2b016a 100644
->>>> >> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
->>>> >> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->>>> >> @@ -42,4 +42,27 @@ Example:
->>>> >>               compatible = "generic-xhci";
->>>> >>               reg = <0xf0931000 0x8c8>;
->>>> >>               interrupts = <0x0 0x4e 0x0>;
->>>> >> +
->>>> >> +             #address-cells = <1>;
->>>> >> +             #size-cells = <0>;
->>>> >> +
->>>> >> +             /* see usb-roothub.txt */
->>>> >> +             roothub@0 {
->>>> >> +                     compatible = "usb1d6b,3", "usb1d6b,2";
->>>> >> +                     #address-cells = <1>;
->>>> >> +                     #size-cells = <0>;
->>>> >> +                     reg = <0>;
->>>> >> +
->>>> >> +                     port@1 {
->>>> >> +                             reg = <1>;
->>>> >> +                             phys = <&usb2_phy1>, <&usb3_phy1>;
->>>> >> +                             phy-names = "usb2-phy", "usb3-phy";
->>>> >> +                     };
->>>> >> +             };
->>>> >> +
->>>> >> +             /* see usb-device.txt */
->>>> >> +             hub: genesys@1 {
->
->>> Two things to be aware of:
->>>
->>>     1.  /sys/kernel/debug/usb/devices has an off-by-one error in the
->>>         "Port=" field.  Every value you see should actually be one
->>>         higher than it is.  It has been this way for many, many years
->>>         so we can't fix it now.
->> here's the output of "lsusb -t" (which is easier to read I guess):
->> # lsusb -t
->> /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/0p, 5000M
->> /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/2p, 480M
->>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
->>        |__ Port 3: Dev 3, If 0, Class=Mass Storage, Driver=usb-storage, 480M
->
-> I see two possible problems here:
->
-> * Linux does show the root hub as a parent of the external hub,
->   while the DT shows them as two unrelated children of the host
->   controller. This clearly doesn't reflect the reality, and may come
->   to bite us again later when we try to extend it in some other way.
-ok, I see your point here
-
-> * Listing the root hub as compatible="usb1d6b,3" encodes a Linux
->   implementation detail into the OS-independent DT ABI: The
->   root hub does not actually have this vendor/device ID, it's
->   just something we make up in Linux.
-I see, this would have to be more generic then (compatible =
-"usb-root-hub", etc..)
-however, let's postpone this discussion and evaluate more options (see below)
-
-> I think you mentioned that an earlier version of the patch set
-> did not have the root hub at all but instead listed the PHYs directly
-> under the host controller. Can you summarize what the problem
-> with that approach was?
-this is going on for a while now, I think it started with Rob's
-comment here: [0]
-I do not remember any explicit NACKs on that idea
-
-I took a step back and tried to figure out the
-requirements/constraints again (in no specific order):
-a) we need to initialize multiple PHYs on an xHCI controller
-b) other USB controller implementation already initialize multiple
-PHYs (see [1]) and we must not break these
-c) we need to make sure that we don't get any conflicts when specifying PHYs
-  (for example: if we pass the PHY for the root-hub/controller port 1
-at &usb/device@1 then we may run into a problem where device@1 also
-requires a USB PHY. I'm not sure if such cases exist in real-life
-though)
-d) currently the devicetree phy bindings state that a phy-names
-property is mandatory (see [2], I interpret this as 'we cannot have
-"phys = <...>" without "phy-names = ...'")
-e) existing USB OF helper functions (like of_usb_get_dr_mode_by_phy)
-rely on the fact that the PHY is specified directly at the controller
-f) DT hierarchy should match the reality
-g) ...feel free to name more
-
-defining the PHYs directly under the controller node gives these
-results (my own interpretation):
-a) we can implement this similar to my current patch (the only
-difference would be where the code takes the PHYs from)
-b) I am not familiar with these other drivers, however we might be
-able to fix those by simply removing the "parse all PHYs" code from
-them (and rely on our new code)
-c) I don't see any problems, if a controller needs more than just an
-USB PHY then we could still use the "phy-names" to skip all non USB
-PHYs
-d) we would either have to make phy-names optional for this specific
-use-case or come up with a convention how the phy-names should be
-built for our case
-e) of_usb_get_dr_mode_by_phy and friends would still work - no changes required
-f) hierarchy matches the reality if we define that the root-hub is not
-specified in device-tree (this would mean that we simply treat the
-PHYs as properties of the controller, I'm not aware of any other
-"root-hub" specific properties)
-
-defining the PHYs in a root-hub node gives these results (my own
-interpretation):
-a) that's what this series does
-b) we're not touching the other implementations - however, existing
-.dts files would have to be changed to switch to this new binding
-c) the root-hub is currently separated, so there are no conflicts
-(needs more thoughts though if we need to nest the USB devices below
-the root-hub)
-d) phy-names can be specified easily and non USB PHYs are skipped by
-the current code already
-e) of_usb_get_dr_mode_by_phy and friends would have to be adjusted
-(not part of this series yet)
-f) the root-hub is now described in devicetree but the hierarchy may
-not be correct
-
-could you please let me know if you see more requirements or constraints?
-do you agree with my interpretation of the two possible solutions (and
-even more important: which are the ones you don't agree with)?
-
-> Is it correct that roothub@0/port@1 corresponds to the same
-> connector that genesys@1 is connected to?
-yes, both refer to the same port/connector
-
-
-Regards
-Martin
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001818.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001947.html
-[2] http://elixir.free-electrons.com/linux/v4.13.9/source/Documentation/devicetree/bindings/phy/phy-bindings.txt#L33
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSmVmZnksIFNlYW4sCgpBbSBEb25uZXJzdGFnLCAxOS4gT2t0b2JlciAyMDE3LCAxMTo0ODow
+MiBDRVQgc2NocmllYiBKZWZmeSBDaGVuOgo+IAo+IE1ha2UgZWRwIGRpc3BsYXkgd29ya3Mgb24g
+Y2hyb21lYm9vayBrZXZpbihhdCBsZWFzdCBmb3IgYm9vdCBhbmltYXRpb24pLgo+IAo+IEFsc28g
+c29sdmUgc29tZSBpc3N1ZXMgaSBtZWV0IGR1cmluZyB0aGUgYnJpbmd1cC4KPiAKPiBDaGFuZ2Vz
+IGluIHY2Ogo+IERvbid0IGNoYW5nZSBvcmRlciBvZiByb2NrY2hpcF9kcm1fcHNyX3JlZ2lzdGVy
+KCkuCj4gCj4gQ2hhbmdlcyBpbiB2NToKPiBDYWxsIHRoZSBkZXN0cm95IGhvb2sgaW4gdGhlIGVy
+cm9yIGhhbmRsaW5nIHBhdGggbGlrZSBpbiB1bmJpbmQoKS4KPiBDYWxsIHRoZSBkZXN0cm95IGhv
+b2sgaW4gdGhlIGVycm9yIGhhbmRsaW5nIHBhdGggbGlrZSBpbiB1bmJpbmQoKS4KPiBVcGRhdGUg
+Y2xlYW51cCBvcmRlciBpbiB1bmJpbmQoKS4KPiBBZGQgZGlzYWJsZSB0byB1bmJpbmQoKSwgYW5k
+IGlubGluZSBjbGtfcHJlcGFyZV9lbmFibGUoKSB3aXRoIGJpbmQoKS4KPiAKPiBKZWZmeSBDaGVu
+ICgxMCk6Cj4gICBhcm02NDogZHRzOiByb2NrY2hpcDogRW5hYmxlIGVkcCBkaXNhcGxheSBvbiBr
+ZXZpbgo+ICAgZHJtL3JvY2tjaGlwOiBhbmFsb2dpeF9kcDogUmVtb3ZlIHVubmVjZXNzYXJ5IGlu
+aXQgY29kZQo+ICAgZHJtL2JyaWRnZTogYW5hbG9naXg6IERvIG5vdCB1c2UgZGV2aWNlJ3MgZHJ2
+ZGF0YQo+ICAgZHJtL2JyaWRnZTogYW5hbG9naXhfZHA6IEZpeCBjb25uZWN0b3IgYW5kIGVuY29k
+ZXIgY2xlYW51cAo+ICAgZHJtL3JvY2tjaGlwOiBhbmFsb2dpeF9kcDogQWRkIGEgc2FuaXR5IGNo
+ZWNrIGZvcgo+ICAgICByb2NrY2hpcF9kcm1fcHNyX3JlZ2lzdGVyKCkKPiAgIGRybS9yb2NrY2hp
+cDogZHctbWlwaS1kc2k6IEZpeCBlcnJvciBoYW5kbGluZyBwYXRoCj4gICBkcm0vcm9ja2NoaXA6
+IGlubm9faGRtaTogRml4IGVycm9yIGhhbmRsaW5nIHBhdGgKPiAgIGRybS9icmlkZ2Uvc3lub3Bz
+eXM6IGR3LWhkbWk6IEFkZCBtaXNzaW5nIGJyaWRnZSBkZXRhY2gKPiAgIGRybS9icmlkZ2Uvc3lu
+b3BzeXM6IGR3LWhkbWk6IERvIG5vdCB1c2UgZGV2aWNlJ3MgZHJ2ZGF0YQo+ICAgZHJtL3JvY2tj
+aGlwOiBkd19oZG1pOiBGaXggZXJyb3IgaGFuZGxpbmcgcGF0aAoKQXMgSSB3YXMganVzdCBsb29r
+aW5nIGF0IHRoZSBlZHAgZHRzIGNoYW5nZSBpbiBwYXRjaDEgYWdhaW4sIGRvZXMgdGhpcwpzZXJp
+ZXMgYWxzbyBjb250YWluIGEgZml4IGZvciB0aGUgaXNzdWUgYmVsb3cgWzBdID8KCkknbSBzdGls
+bCBzZWVpbmcgdGhpcyBvbiA0LjE0LXJjNiB3aXRoIHRoZSBtb3N0IHJlY2VudCBkcm0gdHJlZSBt
+ZXJnZWQgaW4uCgoKSGVpa28KClswXQoKWyAgIDI3Ljk2MDEyMF0gQlVHOiBzY2hlZHVsaW5nIHdo
+aWxlIGF0b21pYzoga3dvcmtlci8xOjEvNjgvMHgwMDAwMDAwMgpbICAgMjcuOTc0NDI5XSBNb2R1
+bGVzIGxpbmtlZCBpbjogcm9ja2NoaXBkcm0gZHdfaGRtaSBhbmFsb2dpeF9kcCBkcm1fa21zX2hl
+bHBlciBwYW5lbF9zaW1wbGUgY3JjMzJfY2UgZHJtIGNyY3QxMGRpZl9jZSByb2NrY2hpcF9zYXJh
+ZGMgcHdtX2JsIHB3bV9jcm9zX2VjIHJvY2tjaGlwX3RoZXJtYWwgaXBfdGFibGVzIHhfdGFibApl
+cyBpcHY2IHNtc2M5NXh4IHNtc2M3NXh4IGF4ODgxNzlfMTc4YSBhc2l4IHVzYm5ldCBwaHlfcm9j
+a2NoaXBfcGNpZSBwY2llX3JvY2tjaGlwClsgICAyOC4wMDg3NjldIENQVTogMSBQSUQ6IDY4IENv
+bW06IGt3b3JrZXIvMToxIFRhaW50ZWQ6IEcgICAgICAgIFcgICAgICAgNC4xNC4wLXJjNy0wMzIw
+MS1nMTI0OTA4MTFiMzUzICM1NTkKWyAgIDI4LjAwODc3NF0gSGFyZHdhcmUgbmFtZTogR29vZ2xl
+IEtldmluIChEVCkKWyAgIDI4LjAwODgyNV0gV29ya3F1ZXVlOiBldmVudHMgYW5hbG9naXhfZHBf
+cHNyX3dvcmsgW3JvY2tjaGlwZHJtXQpbICAgMjguMDA4ODI4XSBDYWxsIHRyYWNlOgpbICAgMjgu
+MDA4ODM4XSBbPGZmZmYwMDAwMDgwODhkNjA+XSBkdW1wX2JhY2t0cmFjZSsweDAvMHgzNzgKWyAg
+IDI4LjAwODg0Ml0gWzxmZmZmMDAwMDA4MDg5MGVjPl0gc2hvd19zdGFjaysweDE0LzB4MjAKWyAg
+IDI4LjAwODg0N10gWzxmZmZmMDAwMDA4OWIwNGQ4Pl0gZHVtcF9zdGFjaysweDljLzB4YmMKWyAg
+IDI4LjAwODg1Ml0gWzxmZmZmMDAwMDA4MGVjNGI0Pl0gX19zY2hlZHVsZV9idWcrMHg0Yy8weDcw
+ClsgICAyOC4wMDg4NTZdIFs8ZmZmZjAwMDAwODljNDgyOD5dIF9fc2NoZWR1bGUrMHg1NTgvMHg1
+ZTgKWyAgIDI4LjAwODg1OV0gWzxmZmZmMDAwMDA4OWM0OGYwPl0gc2NoZWR1bGUrMHgzOC8weGEw
+ClsgICAyOC4wMDg4NjRdIFs8ZmZmZjAwMDAwODljODE5ND5dIHNjaGVkdWxlX2hydGltZW91dF9y
+YW5nZV9jbG9jaysweDg0LzB4ZTgKWyAgIDI4LjAwODg2N10gWzxmZmZmMDAwMDA4OWM4MjA4Pl0g
+c2NoZWR1bGVfaHJ0aW1lb3V0X3JhbmdlKzB4MTAvMHgxOApbICAgMjguMDA4ODcwXSBbPGZmZmYw
+MDAwMDg5YzdjNzQ+XSB1c2xlZXBfcmFuZ2UrMHg2NC8weDc4ClsgICAyOC4wMDg4ODJdIFs8ZmZm
+ZjAwMDAwMGVmNTZlND5dIGFuYWxvZ2l4X2RwX3RyYW5zZmVyKzB4MTZjLzB4YTg4IFthbmFsb2dp
+eF9kcF0KWyAgIDI4LjAwODg5MV0gWzxmZmZmMDAwMDAwZWYyMTkwPl0gYW5hbG9naXhfZHBhdXhf
+dHJhbnNmZXIrMHgxMC8weDE4IFthbmFsb2dpeF9kcF0KWyAgIDI4LjAwODk1MF0gWzxmZmZmMDAw
+MDAwZGRiYjFjPl0gZHJtX2RwX2RwY2RfYWNjZXNzKzB4NGMvMHhmOCBbZHJtX2ttc19oZWxwZXJd
+ClsgICAyOC4wMDg5OTRdIFs8ZmZmZjAwMDAwMGRkYmJlND5dIGRybV9kcF9kcGNkX3dyaXRlKzB4
+MWMvMHgyOCBbZHJtX2ttc19oZWxwZXJdClsgICAyOC4wMDkwMDJdIFs8ZmZmZjAwMDAwMGVmMjEz
+MD5dIGFuYWxvZ2l4X2RwX2Rpc2FibGVfcHNyKzB4NjAvMHhiMCBbYW5hbG9naXhfZHBdClsgICAy
+OC4wMDkwMzZdIFs8ZmZmZjAwMDAwMGY4Mzk4Yz5dIGFuYWxvZ2l4X2RwX3Bzcl93b3JrKzB4NGMv
+MHhjMCBbcm9ja2NoaXBkcm1dClsgICAyOC4wMDkwNDBdIFs8ZmZmZjAwMDAwODBkZmY0ND5dIHBy
+b2Nlc3Nfb25lX3dvcmsrMHgxZDQvMHgzNDgKWyAgIDI4LjAwOTA0M10gWzxmZmZmMDAwMDA4MGUw
+MTAwPl0gd29ya2VyX3RocmVhZCsweDQ4LzB4NDcwClsgICAyOC4wMDkwNDhdIFs8ZmZmZjAwMDAw
+ODBlNjNkND5dIGt0aHJlYWQrMHgxMmMvMHgxMzAKWyAgIDI4LjAwOTA1Ml0gWzxmZmZmMDAwMDA4
+MDg0Yjg4Pl0gcmV0X2Zyb21fZm9yaysweDEwLzB4MTgKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
