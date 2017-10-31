@@ -1,53 +1,69 @@
-From: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Subject: [PATCH] dt-bindings: usb: max3421: Interrupt-parent is optional
-Date: Tue, 31 Oct 2017 11:32:57 +0100
-Message-ID: <20171031103257.3707-1-jules.maselbas@grenoble-inp.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: Notes & Slides from Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Tue, 31 Oct 2017 13:03:07 +0200
+Message-ID: <F6E65640-A8DE-43EA-A89D-4302092904FF@konsulko.com>
+References: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Spec List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Hudson <darknighte-p1iUmGEPI8RGBRGhe+f61g@public.gmane.org>, Kanta Vekaria <kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Documentation modification, now interrupt-parent is an optional
-property. Also fix few typos.
+Hi all,
 
-Signed-off-by: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
-Reported-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/maxim,max3421.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> On Oct 30, 2017, at 18:01 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> =
+wrote:
+>=20
+> Thank you to everyone who attended the Devicetree Workshop as part of
+> the 2017 Kernel Summit in Prague last week. I heard lots of good
+> feedback, and I'm already thinking about how to organize next year's
+> gathering.
+>=20
+> Slides and notes have been uploaded to elinux.org. A summary of the
+> topics and next steps still needs to be written. You can find the
+> notes and slides here:
+>=20
+> =
+https://elinux.org/Device_tree_future#Kernel_Summit_2017.2C_Devicetree_Wor=
+kshop
+>=20
+> I also have an audio recording of the entire day, but they are large
+> audio files (100-200MB each) and I haven't decided how to publish them
+> yet.
+>=20
+> Particular thanks to everyone who helped take notes (Sadly, I didn't
+> grab the list of names before they disappeared from Etherpad, so the
+> only person I can thank by name is Julia Lawall who emailed me notes
+> separately). Also thanks to Sean Hudson for taking care of sound and
+> to Frank Roland for running microphones around the room. Finally, a
+> big thank you to the Linux Foundation staff who sorted out all of the
+> hotel logistics for us.
+>=20
+> Please look at the notes to check for accuracy, and I would appreciate
+> any volunteers to help write up the summary for the day.
+>=20
+> I'll post the group photo as soon as I receive it.
+>=20
 
-diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-index 7536c3ab3e5a..8cdbe0c85188 100644
---- a/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-+++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
-@@ -1,17 +1,19 @@
- Maxim Integrated SPI-based USB 2.0 host controller MAX3421E
- 
- Required properties:
-- - compatible: "maxim,max3421"
-+ - compatible: Should be "maxim,max3421"
-  - spi-max-frequency: maximum frequency for this device must not exceed 26 MHz.
-  - reg: chip select number to which this device is connected.
-  - maxim,vbus-en-pin: <GPOUTx ACTIVE_LEVEL>
-    GPOUTx is the number (1-8) of the GPOUT pin of MAX3421E to drive Vbus.
-    ACTIVE_LEVEL is 0 or 1.
-- - interrupt-parent: the phandle of the associated interrupt controller.
-- - interrupts: the interuption line description for the interrupt controller.
-+ - interrupts: the interrupt line description for the interrupt controller.
-    The driver configures MAX3421E for active low level triggered interrupts,
-    configure your interrupt line accordingly.
- 
-+Optional property:
-+ - interrupt-parent: the phandle to the associated interrupt controller.
-+
- Example:
- 
- 	usb@0 {
--- 
-2.14.3
+I=E2=80=99ve taken the liberty of creating a wiki of initial Action =
+Items.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I=E2=80=99m including the initial list here so that we can hash it out, =
+and I=E2=80=99ll
+update with everything that comes up.
+
+https://elinux.org/Device_tree_kernel_summit_2017_action_items
+
+Sorry about the formatting, the markup being used is pretty weird.
+
+> Cheers,
+> g.
+
+Regards
+
+=E2=80=94 Pantelis
