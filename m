@@ -1,51 +1,119 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
-Date: Tue, 31 Oct 2017 01:50:49 +0000
-Message-ID: <8637605bly.fsf@arm.com>
-References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171029230523.7355-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Mon, 30 Oct 2017 00:05:20 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2] iio: adc: aspeed: Deassert reset in probe
+Date: Tue, 31 Oct 2017 12:42:03 +1030
+Message-ID: <20171031021203.18248-1-joel@jms.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Rick Altherr <raltherr@google.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> This is a simple follow-up of two series from Jerome:
-> - "irqchip: meson: add support for the gpio interrupt controller"
-> - "ARM: meson: enable gpio interrupt controller"
->
-> This fills in the missing bits to have GPIO interrupt support on Meson8,
-> which includes:
-> - a new binding in the driver with the correct IRQ number
-> - enabling the GPIO interrupt controller in meson8.dts
-> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
->
->
-> Martin Blumenstingl (3):
->   irqchip/meson-gpio: add support for Meson8 SoCs
->   ARM: dts: meson8: enable the GPIO interrupt controller
->   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
->
->  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
->  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
->  arch/arm/mach-meson/Kconfig                                          | 1 +
->  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
->  4 files changed, 12 insertions(+)
+The ASPEED SoC must deassert a reset in order to use the ADC peripheral.
 
-Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
-happy to queue it if I get an Ack for it. If you'd rather get it through
-via armsoc, let me know.
+The device tree bindings are updated to document the resets phandle, and
+the example is updated to match what is expected for both the reset and
+clock phandle. Note that the bindings should have always had the reset
+controller, as the hardware is unusable without it.
 
-Thanks,
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+v2:
+ - Ensure disabling path unwinds in opposite order as the enable path
+ - Note that the bindings were incorrect without the reset phandle,
+ and for the system to be usable we must update them. No one was
+ (successfully) using these bindings/driver before without out of tree
+ hacks in mach-aspeed, as it would not have worked.
 
-	M.
+ .../devicetree/bindings/iio/adc/aspeed_adc.txt     |  4 +++-
+ drivers/iio/adc/aspeed_adc.c                       | 25 ++++++++++++++++------
+ 2 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+index 674e133b7cd7..034fc2ba100e 100644
+--- a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+@@ -8,6 +8,7 @@ Required properties:
+ - reg: memory window mapping address and length
+ - clocks: Input clock used to derive the sample clock. Expected to be the
+           SoC's APB clock.
++- resets: Reset controller phandle
+ - #io-channel-cells: Must be set to <1> to indicate channels are selected
+                      by index.
+ 
+@@ -15,6 +16,7 @@ Example:
+ 	adc@1e6e9000 {
+ 		compatible = "aspeed,ast2400-adc";
+ 		reg = <0x1e6e9000 0xb0>;
+-		clocks = <&clk_apb>;
++		clocks = <&syscon ASPEED_CLK_APB>;
++		resets = <&syscon ASPEED_RESET_ADC>;
+ 		#io-channel-cells = <1>;
+ 	};
+diff --git a/drivers/iio/adc/aspeed_adc.c b/drivers/iio/adc/aspeed_adc.c
+index 8a958d5f1905..327a49ba1991 100644
+--- a/drivers/iio/adc/aspeed_adc.c
++++ b/drivers/iio/adc/aspeed_adc.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ 
+@@ -53,11 +54,12 @@ struct aspeed_adc_model_data {
+ };
+ 
+ struct aspeed_adc_data {
+-	struct device	*dev;
+-	void __iomem	*base;
+-	spinlock_t	clk_lock;
+-	struct clk_hw	*clk_prescaler;
+-	struct clk_hw	*clk_scaler;
++	struct device		*dev;
++	void __iomem		*base;
++	spinlock_t		clk_lock;
++	struct clk_hw		*clk_prescaler;
++	struct clk_hw		*clk_scaler;
++	struct reset_control	*rst;
+ };
+ 
+ #define ASPEED_CHAN(_idx, _data_reg_addr) {			\
+@@ -217,6 +219,15 @@ static int aspeed_adc_probe(struct platform_device *pdev)
+ 		goto scaler_error;
+ 	}
+ 
++	data->rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
++	if (IS_ERR(data->rst)) {
++		dev_err(&pdev->dev,
++			"invalid or missing reset controller device tree entry");
++		ret = PTR_ERR(data->rst);
++		goto reset_error;
++	}
++	reset_control_deassert(data->rst);
++
+ 	model_data = of_device_get_match_data(&pdev->dev);
+ 
+ 	if (model_data->wait_init_sequence) {
+@@ -263,9 +274,10 @@ static int aspeed_adc_probe(struct platform_device *pdev)
+ 	writel(ASPEED_OPERATION_MODE_POWER_DOWN,
+ 		data->base + ASPEED_REG_ENGINE_CONTROL);
+ 	clk_disable_unprepare(data->clk_scaler->clk);
++reset_error:
++	reset_control_assert(data->rst);
+ clk_enable_error:
+ 	clk_hw_unregister_divider(data->clk_scaler);
+-
+ scaler_error:
+ 	clk_hw_unregister_divider(data->clk_prescaler);
+ 	return ret;
+@@ -280,6 +292,7 @@ static int aspeed_adc_remove(struct platform_device *pdev)
+ 	writel(ASPEED_OPERATION_MODE_POWER_DOWN,
+ 		data->base + ASPEED_REG_ENGINE_CONTROL);
+ 	clk_disable_unprepare(data->clk_scaler->clk);
++	reset_control_assert(data->rst);
+ 	clk_hw_unregister_divider(data->clk_scaler);
+ 	clk_hw_unregister_divider(data->clk_prescaler);
+ 
 -- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.1
