@@ -1,64 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv5 1/2] Add device tree bindings for Altera FPGA Manager GPIO
-Date: Tue, 31 Oct 2017 11:06:01 +0100
-Message-ID: <CACRpkdZb4_pyvDE0UfO+54LKMa1eLvszYzicPknmUmAHPjRzrw@mail.gmail.com>
-References: <AM5PR0701MB2657C7D3D62759DCFCF65048E4450@AM5PR0701MB2657.eurprd07.prod.outlook.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
+Date: Tue, 31 Oct 2017 11:13:57 +0100
+Message-ID: <7h1sljmxp6.fsf@baylibre.com>
+References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
+        <8637605bly.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0701MB2657C7D3D62759DCFCF65048E4450@AM5PR0701MB2657.eurprd07.prod.outlook.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc: Rob Herring <robh@kernel.org>, Christian Lamparter <chunkeey@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8637605bly.fsf-5wv7dgnIgG8@public.gmane.org> (Marc Zyngier's message of "Tue, 31 Oct
+        2017 01:50:49 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 5:28 PM, Bernd Edlinger
-<bernd.edlinger@hotmail.de> wrote:
+Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
 
-> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
-> ---
->  .../bindings/gpio/gpio-altera-fpgamgr.txt          | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
+> On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> This is a simple follow-up of two series from Jerome:
+>> - "irqchip: meson: add support for the gpio interrupt controller"
+>> - "ARM: meson: enable gpio interrupt controller"
+>>
+>> This fills in the missing bits to have GPIO interrupt support on Meson8,
+>> which includes:
+>> - a new binding in the driver with the correct IRQ number
+>> - enabling the GPIO interrupt controller in meson8.dts
+>> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
+>>
+>>
+>> Martin Blumenstingl (3):
+>>   irqchip/meson-gpio: add support for Meson8 SoCs
+>>   ARM: dts: meson8: enable the GPIO interrupt controller
+>>   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
+>>
+>>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
+>>  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
+>>  arch/arm/mach-meson/Kconfig                                          | 1 +
+>>  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
+>>  4 files changed, 12 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
-> new file mode 100644
-> index 0000000..6e2ad47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera-fpgamgr.txt
-> @@ -0,0 +1,43 @@
-> +Altera FPGA Manager GPIO controller bindings
-> +
-> +Required controller properties:
-> +- #address-cells : Should be 1
-> +- #size-cells : Should be 0
-> +- compatible:
-> +  - "altr,fpgamgr-gpio"
-> +- reg: Physical base address and length of the controller's registers.
-> +
-> +The FPGA Manager has two 32-bit ports, one for input and one for output.
-> +
-> +Port properties:
-> +- compatible:
-> +  - "altr,fpgamgr-gpio-output"
-> +  - "altr,fpgamgr-gpio-input"
-> +- #gpio-cells : Should be 2
-> +  - The first cell is the gpio offset number.
-> +  - The second cell is reserved and is currently unused.
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +- reg : Port number, 0 for output, 1 for input.
+> Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
+> happy to queue it if I get an Ack for it. If you'd rather get it through
+> via armsoc, let me know.
 
-Don't do this. Create one device using a compatible
-for each port. Do not create a top-level device containing
-the two ports.
+Can you take the drivers/irqchip and bindings patch (PATCH 1/3) and I'll
+take the rest to avoid conflicts with a bunch of other moving parts we
+have in arch/arm.
 
-If you anyway want a top level device, use "simple-bus"
-or something, not "altr,fpgamgr-gpio".
+For the driver, feel free to add
 
-Only two compatibles/devices:
-> +  - "altr,fpgamgr-gpio-output"
-> +  - "altr,fpgamgr-gpio-input"
+Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+Kevin
 
 
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
