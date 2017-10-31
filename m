@@ -1,57 +1,39 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Add support for the
- r8a77970 wdt
-Date: Tue, 31 Oct 2017 10:22:59 -0700
-Message-ID: <20171031172259.GH28688@roeck-us.net>
-References: <1509378199-19388-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v9 1/8] perf: Export perf_event_update_userpage
+Date: Tue, 31 Oct 2017 17:23:11 +0000
+Message-ID: <20171031172318.11823-2-suzuki.poulose@arm.com>
+References: <20171031172318.11823-1-suzuki.poulose@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1509378199-19388-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20171031172318.11823-1-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 04:43:19PM +0100, Geert Uytterhoeven wrote:
-> Document support for the Watchdog Timer (WDT) Controller in the Renesas
-> R-Car V3M (r8a77970) SoC.  Restore sort order while at it.
-> 
-> No driver update is needed.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Export perf_event_update_userpage() so that PMU driver using them,
+can be built as modules.
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Peter Zilstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+---
+ kernel/events/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> index bf6d1ca58af7d198..74b2f03c151553f5 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> @@ -4,10 +4,11 @@ Required properties:
->  - compatible : Should be "renesas,<soctype>-wdt", and
->  	       "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
->  	       Examples with soctypes are:
-> +	         - "renesas,r7s72100-wdt" (RZ/A1)
->  	         - "renesas,r8a7795-wdt" (R-Car H3)
->  	         - "renesas,r8a7796-wdt" (R-Car M3-W)
-> +	         - "renesas,r8a77970-wdt" (R-Car V3M)
->  	         - "renesas,r8a77995-wdt" (R-Car D3)
-> -	         - "renesas,r7s72100-wdt" (RZ/A1)
->  
->    When compatible with the generic version, nodes must list the SoC-specific
->    version corresponding to the platform first, followed by the generic
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 9d93db81fa36..550015829db8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4982,6 +4982,7 @@ void perf_event_update_userpage(struct perf_event *event)
+ unlock:
+ 	rcu_read_unlock();
+ }
++EXPORT_SYMBOL_GPL(perf_event_update_userpage);
+ 
+ static int perf_mmap_fault(struct vm_fault *vmf)
+ {
+-- 
+2.13.6
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
