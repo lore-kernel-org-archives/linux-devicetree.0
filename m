@@ -1,67 +1,49 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH] iio: adc: aspeed: Deassert reset in probe
-Date: Tue, 31 Oct 2017 11:34:49 +1030
-Message-ID: <CACPK8Xei8nbZ0LfZn+7xfLi2LZroS7Nq7wXBwRy6b5pZkWqzRQ@mail.gmail.com>
-References: <20171030072218.2094-1-joel@jms.id.au> <CA+gwMccGYbx7-oD2ChrFQBr9g=KAF=_nse15kMrWG4XaFvU2pg@mail.gmail.com>
- <CACPK8XcVP=8sXf1rdLFSL1nTDKUwPSGkJ-QhLiHnTB+82AW=ww@mail.gmail.com>
+From: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v4 0/3] media: ov7740: Add a V4L2 sensor-level driver
+Date: Tue, 31 Oct 2017 09:11:42 +0800
+Message-ID: <20171031011146.6899-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XcVP=8sXf1rdLFSL1nTDKUwPSGkJ-QhLiHnTB+82AW=ww@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <philipp.zabel@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rick Altherr <raltherr@google.com>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 31, 2017 at 11:02 AM, Joel Stanley <joel@jms.id.au> wrote:
-> On Tue, Oct 31, 2017 at 2:51 AM, Philipp Zabel <philipp.zabel@gmail.com> wrote:
->> Hi Joel,
->>
->> On Mon, Oct 30, 2017 at 8:22 AM, Joel Stanley <joel@jms.id.au> wrote:
->>> The ASPEED SoC must deassert a reset in order to use the ADC peripheral.
->>>
->>> The device tree bindings are updated to document the resets phandle, and
->>> the example is updated to match what is expected for both the reset and
->>> clock phandle.
->>>
->>> Signed-off-by: Joel Stanley <joel@jms.id.au>
->>> ---
->>>  .../devicetree/bindings/iio/adc/aspeed_adc.txt      |  4 +++-
->>>  drivers/iio/adc/aspeed_adc.c                        | 21 ++++++++++++++++-----
->>>  2 files changed, 19 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
->>> index 674e133b7cd7..034fc2ba100e 100644
->>> --- a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
->>> +++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
->>> @@ -8,6 +8,7 @@ Required properties:
->>>  - reg: memory window mapping address and length
->>>  - clocks: Input clock used to derive the sample clock. Expected to be the
->>>            SoC's APB clock.
->>> +- resets: Reset controller phandle
->>
->> Adding new required properties to existing bindings would break backwards
->> compatibility. In this case, the reset is optional anyway.
->
-> As far as the hardware is concerned (and therefore the bindings), the
-> reset is required.
->
-> To date the only reason the driver worked was an out of tree hack in
-> mach-aspeed. I have written a clk/reset driver and are now working to
-> ensure the drivers work correctly.
->
-> The driver is written to make the reset optional as it's unlikely the
-> clk/reset driver and device tree updates will land this merge window.
-> As we say; the bindings should describe the hardware, not the Linux
-> implementation of the driver.
+Add a Video4Linux2 sensor-level driver for the OmniVision OV7740
+VGA camera image sensor.
 
-I changed my mind. No one would have been able to successfully use
-this driver without out of tree hacks to release the reset, so we are
-not regressing any functionality by requiring the reset controller.
+Changes in v4:
+ - Assign 'val' a initial value to avoid warning: 'val' may be
+   used uninitialized.
+ - Rename REG_REG15 to avoid warning: "REG_REG15" redefined.
 
-I will submit v2 with the controller required, and save any stuffing
-around in the future.
+Changes in v3:
+ - Explicitly document the "remote-endpoint" property.
+ - Put the MAINTAINERS change to a separate patch.
 
-Cheers,
+Changes in v2:
+ - Split off the bindings into a separate patch.
+ - Add a new entry to the MAINTAINERS file.
 
-Joel
+Wenyou Yang (3):
+  media: i2c: Add the ov7740 image sensor driver
+  media: ov7740: Document device tree bindings
+  MAINTAINERS: Add a new entry of the ov7740 driver
+
+ .../devicetree/bindings/media/i2c/ov7740.txt       |   47 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov7740.c                         | 1220 ++++++++++++++++++++
+ 5 files changed, 1284 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+ create mode 100644 drivers/media/i2c/ov7740.c
+
+-- 
+2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
