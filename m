@@ -1,45 +1,51 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am437x-cm-t43: Correct the dmas property of spi0
-Date: Wed, 1 Nov 2017 11:03:40 +0200
-Message-ID: <20171101090340.15708-1-peter.ujfalusi@ti.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: [git:media_tree/master] media: dt: bindings: Add lens-focus binding
+ for image sensors
+Date: Tue, 31 Oct 2017 17:59:24 +0000
+Message-ID: <E1e9p42-0002Zd-Vm@www.linuxtv.org>
+Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
+ <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
+List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
+List-Subscribe: <https://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
+ <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
+Sender: "linuxtv-commits" <linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
+Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The DMA binding for eDMA needs 2 parameters, not 1.
-The second, missing parameter is the tptc to be used for the channel.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am437x-cm-t43.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am437x-cm-t43.dts b/arch/arm/boot/dts/am437x-cm-t43.dts
-index 9e92d480576b..3b9a94c274a7 100644
---- a/arch/arm/boot/dts/am437x-cm-t43.dts
-+++ b/arch/arm/boot/dts/am437x-cm-t43.dts
-@@ -301,8 +301,8 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&spi0_pins>;
--	dmas = <&edma 16
--		&edma 17>;
-+	dmas = <&edma 16 0
-+		&edma 17 0>;
- 	dma-names = "tx0", "rx0";
- 
- 	flash: w25q64cvzpig@0 {
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBhbiBhdXRvbWF0aWMgZ2VuZXJhdGVkIGVtYWlsIHRvIGxldCB5b3Uga25vdyB0aGF0
+IHRoZSBmb2xsb3dpbmcgcGF0Y2ggd2VyZSBxdWV1ZWQ6CgpTdWJqZWN0OiBtZWRpYTogZHQ6IGJp
+bmRpbmdzOiBBZGQgbGVucy1mb2N1cyBiaW5kaW5nIGZvciBpbWFnZSBzZW5zb3JzCkF1dGhvcjog
+IFNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVzQGxpbnV4LmludGVsLmNvbT4KRGF0ZTogICAgRnJp
+IE1hciAzIDE3OjA3OjUxIDIwMTcgLTA1MDAKClRoZSBsZW5zLWZvY3VzIHByb3BlcnR5IGNvbnRh
+aW5zIGEgcGhhbmRsZSB0byB0aGUgbGVucyB2b2ljZSBjb2lsIGRyaXZlcgp0aGF0IGlzIGFzc29j
+aWF0ZWQgdG8gdGhlIHNlbnNvcjsgdHlwaWNhbGx5IGJvdGggYXJlIGNvbnRhaW5lZCBpbiB0aGUg
+c2FtZQpjYW1lcmEgbW9kdWxlLgoKU2lnbmVkLW9mZi1ieTogU2FrYXJpIEFpbHVzIDxzYWthcmku
+YWlsdXNAbGludXguaW50ZWwuY29tPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQWNr
+ZWQtYnk6IFBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3LmN6PgpSZXZpZXdlZC1ieTogU2ViYXN0aWFu
+IFJlaWNoZWwgPHNlYmFzdGlhbi5yZWljaGVsQGNvbGxhYm9yYS5jby51az4KQWNrZWQtYnk6IFJv
+YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CkFja2VkLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMu
+dmVya3VpbEBjaXNjby5jb20+ClNpZ25lZC1vZmYtYnk6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8
+bWNoZWhhYkBzLW9wZW5zb3VyY2UuY29tPgoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dCB8IDIgKysKIDEgZmlsZSBjaGFuZ2VkLCAy
+IGluc2VydGlvbnMoKykKCi0tLQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAppbmRleCBkYzY2ZTMy
+MjQ2OTIuLjM5OTRiMDE0M2RkMSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dApAQCAtODMsNiAr
+ODMsOCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzCiAtIGZsYXNoLWxlZHM6IEFuIGFycmF5IG9mIHBo
+YW5kbGVzLCBlYWNoIHJlZmVycmluZyB0byBhIGZsYXNoIExFRCwgYSBzdWItbm9kZQogICBvZiB0
+aGUgTEVEIGRyaXZlciBkZXZpY2Ugbm9kZS4KIAorLSBsZW5zLWZvY3VzOiBBIHBoYW5kbGUgdG8g
+dGhlIG5vZGUgb2YgdGhlIGZvY3VzIGxlbnMgY29udHJvbGxlci4KKwogCiBPcHRpb25hbCBlbmRw
+b2ludCBwcm9wZXJ0aWVzCiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eHR2LWNvbW1pdHMgbWFp
+bGluZyBsaXN0CmxpbnV4dHYtY29tbWl0c0BsaW51eHR2Lm9yZwpodHRwczovL3d3dy5saW51eHR2
+Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8vbGludXh0di1jb21taXRz
