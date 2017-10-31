@@ -1,139 +1,219 @@
-From: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] iio: adc: aspeed: Deassert reset in probe
-Date: Tue, 31 Oct 2017 12:58:25 +0100
-Message-ID: <CA+gwMcdVpq1P5kWAWzkg2A+Ah-fKyTk0adhGdg4465gkOY3EKA@mail.gmail.com>
-References: <20171031021203.18248-1-joel@jms.id.au>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH RESEND 4/4] dma: caam: add dma memcpy driver
+Date: Tue, 31 Oct 2017 17:34:23 +0530
+Message-ID: <20171031120423.GS3187@localhost>
+References: <20171030134654.13729-1-horia.geanta@nxp.com>
+ <20171030134654.13729-5-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171031021203.18248-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171030134654.13729-5-horia.geanta@nxp.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Radu Alexe <radu.alexe@nxp.com>, dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, Tudor Ambarus <tudor-dan.ambarus@nxp.com>, Rajiv Vishwakarma <rajiv.vishwakarma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 31, 2017 at 3:12 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
-> The ASPEED SoC must deassert a reset in order to use the ADC peripheral.
->
-> The device tree bindings are updated to document the resets phandle, and
-> the example is updated to match what is expected for both the reset and
-> clock phandle. Note that the bindings should have always had the reset
-> controller, as the hardware is unusable without it.
->
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+On Mon, Oct 30, 2017 at 03:46:54PM +0200, Horia Geantă wrote:
 
-It is unfortunate that this has to break DT (theoretical) backwards
-compatibility, but given that the old bindings never worked,
-this is better than to pretend a required reset is optional.
+> @@ -600,6 +600,23 @@ config ZX_DMA
+>  	help
+>  	  Support the DMA engine for ZTE ZX family platform devices.
+>  
+> +config CRYPTO_DEV_FSL_CAAM_DMA
 
-Reviewed-by: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+File is sorted alphabetically
 
-regards
-Philipp
+> +	tristate "CAAM DMA engine support"
+> +	depends on CRYPTO_DEV_FSL_CAAM_JR
+> +	default y
 
-> ---
-> v2:
->  - Ensure disabling path unwinds in opposite order as the enable path
->  - Note that the bindings were incorrect without the reset phandle,
->  and for the system to be usable we must update them. No one was
->  (successfully) using these bindings/driver before without out of tree
->  hacks in mach-aspeed, as it would not have worked.
->
->  .../devicetree/bindings/iio/adc/aspeed_adc.txt     |  4 +++-
->  drivers/iio/adc/aspeed_adc.c                       | 25 ++++++++++++++++------
->  2 files changed, 22 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-> index 674e133b7cd7..034fc2ba100e 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  - reg: memory window mapping address and length
->  - clocks: Input clock used to derive the sample clock. Expected to be the
->            SoC's APB clock.
-> +- resets: Reset controller phandle
->  - #io-channel-cells: Must be set to <1> to indicate channels are selected
->                       by index.
->
-> @@ -15,6 +16,7 @@ Example:
->         adc@1e6e9000 {
->                 compatible = "aspeed,ast2400-adc";
->                 reg = <0x1e6e9000 0xb0>;
-> -               clocks = <&clk_apb>;
-> +               clocks = <&syscon ASPEED_CLK_APB>;
-> +               resets = <&syscon ASPEED_RESET_ADC>;
->                 #io-channel-cells = <1>;
->         };
-> diff --git a/drivers/iio/adc/aspeed_adc.c b/drivers/iio/adc/aspeed_adc.c
-> index 8a958d5f1905..327a49ba1991 100644
-> --- a/drivers/iio/adc/aspeed_adc.c
-> +++ b/drivers/iio/adc/aspeed_adc.c
-> @@ -17,6 +17,7 @@
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->  #include <linux/spinlock.h>
->  #include <linux/types.h>
->
-> @@ -53,11 +54,12 @@ struct aspeed_adc_model_data {
->  };
->
->  struct aspeed_adc_data {
-> -       struct device   *dev;
-> -       void __iomem    *base;
-> -       spinlock_t      clk_lock;
-> -       struct clk_hw   *clk_prescaler;
-> -       struct clk_hw   *clk_scaler;
-> +       struct device           *dev;
-> +       void __iomem            *base;
-> +       spinlock_t              clk_lock;
-> +       struct clk_hw           *clk_prescaler;
-> +       struct clk_hw           *clk_scaler;
-> +       struct reset_control    *rst;
->  };
->
->  #define ASPEED_CHAN(_idx, _data_reg_addr) {                    \
-> @@ -217,6 +219,15 @@ static int aspeed_adc_probe(struct platform_device *pdev)
->                 goto scaler_error;
->         }
->
-> +       data->rst = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> +       if (IS_ERR(data->rst)) {
-> +               dev_err(&pdev->dev,
-> +                       "invalid or missing reset controller device tree entry");
-> +               ret = PTR_ERR(data->rst);
-> +               goto reset_error;
-> +       }
-> +       reset_control_deassert(data->rst);
+why should it be default?
+
+> --- /dev/null
+> +++ b/drivers/dma/caam_dma.c
+> @@ -0,0 +1,444 @@
+> +/*
+> + * caam support for SG DMA
+> + *
+> + * Copyright 2016 Freescale Semiconductor, Inc
+> + * Copyright 2017 NXP
+> + */
+
+that is interesting, no license text?
+
 > +
->         model_data = of_device_get_match_data(&pdev->dev);
->
->         if (model_data->wait_init_sequence) {
-> @@ -263,9 +274,10 @@ static int aspeed_adc_probe(struct platform_device *pdev)
->         writel(ASPEED_OPERATION_MODE_POWER_DOWN,
->                 data->base + ASPEED_REG_ENGINE_CONTROL);
->         clk_disable_unprepare(data->clk_scaler->clk);
-> +reset_error:
-> +       reset_control_assert(data->rst);
->  clk_enable_error:
->         clk_hw_unregister_divider(data->clk_scaler);
-> -
->  scaler_error:
->         clk_hw_unregister_divider(data->clk_prescaler);
->         return ret;
-> @@ -280,6 +292,7 @@ static int aspeed_adc_remove(struct platform_device *pdev)
->         writel(ASPEED_OPERATION_MODE_POWER_DOWN,
->                 data->base + ASPEED_REG_ENGINE_CONTROL);
->         clk_disable_unprepare(data->clk_scaler->clk);
-> +       reset_control_assert(data->rst);
->         clk_hw_unregister_divider(data->clk_scaler);
->         clk_hw_unregister_divider(data->clk_prescaler);
->
-> --
-> 2.14.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interrupt.h>
+
+why do you need this
+
+> +#include <linux/slab.h>
+> +#include <linux/debugfs.h>
+
+i didn't see any debugfs code, why do you need this
+
+alphabetical sort pls
+> +
+> +#include <linux/dmaengine.h>
+> +#include "dmaengine.h"
+> +
+> +#include "../crypto/caam/regs.h"
+> +#include "../crypto/caam/jr.h"
+> +#include "../crypto/caam/error.h"
+> +#include "../crypto/caam/intern.h"
+> +#include "../crypto/caam/desc_constr.h"
+
+ah that puts very hard assumptions on locations of the subsystems. Please do
+not do that and move the required stuff into common header location in
+include/
+
+> +/* This is max chunk size of a DMA transfer. If a buffer is larger than this
+> + * value it is internally broken into chunks of max CAAM_DMA_CHUNK_SIZE bytes
+> + * and for each chunk a DMA transfer request is issued.
+> + * This value is the largest number on 16 bits that is a multiple of 256 bytes
+> + * (the largest configurable CAAM DMA burst size).
+> + */
+
+Kernel comments style we follow is:
+
+/*
+ * this is for
+ * multi line comment
+ */
+
+Pls fix this in the file
+
+> +#define CAAM_DMA_CHUNK_SIZE	65280
+> +
+> +struct caam_dma_sh_desc {
+
+sh?
+
+> +struct caam_dma_ctx {
+> +	struct dma_chan chan;
+> +	struct list_head node;
+> +	struct device *jrdev;
+> +	struct list_head submit_q;
+
+call it pending
+
+> +static struct dma_device *dma_dev;
+> +static struct caam_dma_sh_desc *dma_sh_desc;
+> +static LIST_HEAD(dma_ctx_list);
+
+why do you need so many globals?
+
+> +static dma_cookie_t caam_dma_tx_submit(struct dma_async_tx_descriptor *tx)
+> +{
+> +	struct caam_dma_edesc *edesc = NULL;
+> +	struct caam_dma_ctx *ctx = NULL;
+> +	dma_cookie_t cookie;
+> +
+> +	edesc = container_of(tx, struct caam_dma_edesc, async_tx);
+> +	ctx = container_of(tx->chan, struct caam_dma_ctx, chan);
+> +
+> +	spin_lock_bh(&ctx->edesc_lock);
+
+why _bh, i didnt see any irqs or tasklets here which is actually odd, so
+what is going on
+
+> +
+> +	cookie = dma_cookie_assign(tx);
+> +	list_add_tail(&edesc->node, &ctx->submit_q);
+> +
+> +	spin_unlock_bh(&ctx->edesc_lock);
+> +
+> +	return cookie;
+> +}
+
+we have a virtual channel wrapper where we do the same stuff as above, so
+consider reusing that
+
+> +static void caam_dma_memcpy_init_job_desc(struct caam_dma_edesc *edesc)
+> +{
+> +	u32 *jd = edesc->jd;
+> +	u32 *sh_desc = dma_sh_desc->desc;
+> +	dma_addr_t desc_dma = dma_sh_desc->desc_dma;
+> +
+> +	/* init the job descriptor */
+> +	init_job_desc_shared(jd, desc_dma, desc_len(sh_desc), HDR_REVERSE);
+> +
+> +	/* set SEQIN PTR */
+> +	append_seq_in_ptr(jd, edesc->src_dma, edesc->src_len, 0);
+> +
+> +	/* set SEQOUT PTR */
+> +	append_seq_out_ptr(jd, edesc->dst_dma, edesc->dst_len, 0);
+> +
+> +#ifdef DEBUG
+> +	print_hex_dump(KERN_ERR, "caam dma desc@" __stringify(__LINE__) ": ",
+> +		       DUMP_PREFIX_ADDRESS, 16, 4, jd, desc_bytes(jd), 1);
+
+ah this make you compile kernel. Consider the dynamic printk helpers for
+printing
+
+> +/* This function can be called in an interrupt context */
+> +static void caam_dma_issue_pending(struct dma_chan *chan)
+> +{
+> +	struct caam_dma_ctx *ctx = container_of(chan, struct caam_dma_ctx,
+> +						chan);
+> +	struct caam_dma_edesc *edesc, *_edesc;
+> +
+> +	spin_lock_bh(&ctx->edesc_lock);
+> +	list_for_each_entry_safe(edesc, _edesc, &ctx->submit_q, node) {
+> +		if (caam_jr_enqueue(ctx->jrdev, edesc->jd,
+> +				    caam_dma_done, edesc) < 0)
+
+what does the caam_jr_enqueue() do?
+
+> +static int caam_dma_jr_chan_bind(void)
+> +{
+> +	struct device *jrdev;
+> +	struct caam_dma_ctx *ctx;
+> +	int bonds = 0;
+> +	int i;
+> +
+> +	for (i = 0; i < caam_jr_driver_probed(); i++) {
+> +		jrdev = caam_jridx_alloc(i);
+> +		if (IS_ERR(jrdev)) {
+> +			pr_err("job ring device %d allocation failed\n", i);
+> +			continue;
+> +		}
+> +
+> +		ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +		if (!ctx) {
+> +			caam_jr_free(jrdev);
+> +			continue;
+
+you want to continue?
+
+> +	dma_dev->dev = dev;
+> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
+> +	dma_dev->device_tx_status = dma_cookie_status;
+> +	dma_dev->device_issue_pending = caam_dma_issue_pending;
+> +	dma_dev->device_prep_dma_memcpy = caam_dma_prep_memcpy;
+> +	dma_dev->device_free_chan_resources = caam_dma_free_chan_resources;
+> +
+> +	err = dma_async_device_register(dma_dev);
+> +	if (err) {
+> +		dev_err(dev, "Failed to register CAAM DMA engine\n");
+> +		goto jr_bind_err;
+> +	}
+> +
+> +	dev_info(dev, "caam dma support with %d job rings\n", bonds);
+
+that is very noisy
+
+> +MODULE_LICENSE("Dual BSD/GPL");
+> +MODULE_DESCRIPTION("NXP CAAM support for SG DMA");
+> +MODULE_AUTHOR("NXP Semiconductors");
+
+No MODULE_ALIAS, how did you load the driver
+
+-- 
+~Vinod
