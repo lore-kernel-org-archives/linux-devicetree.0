@@ -1,44 +1,72 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 0/3] GLINK intent preallocation support
-Date: Mon, 30 Oct 2017 21:26:42 -0700
-Message-ID: <20171031042642.GK1275@minitux>
-References: <1509056936-26578-1-git-send-email-clew@codeaurora.org>
+From: =?big5?B?U1ogTGluICiqTKRXtLwp?= <SZ.Lin@moxa.com>
+Subject: [RESEND] ARM: dts: ls1021a: Add support for QSPI with ls1021a SoC
+Date: Tue, 31 Oct 2017 05:58:53 +0000
+Message-ID: <5942081F7727964D830FC876E62CA85601194652AD@MHQMBX01.moxa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1509056936-26578-1-git-send-email-clew@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Chris Lew <clew@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, aneela@codeaurora.org, smaliyap@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: zh-TW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "andy.tang@nxp.com" <andy.tang@nxp.com>, "yi.sheng.lin@nxp.com" <yi.sheng.lin@nxp.com>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, Russell King <linux@armlinux.org.uk>, lkml <linux-kernel@vger.kernel.org>, Minghuan Lian <Minghuan.Lian@nxp.com>, Rob Herring <robh+dt@kernel.org>, Suresh Gupta <suresh.gupta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 26 Oct 15:28 PDT 2017, Chris Lew wrote:
-
-> Intents are used to specify when a channel can receive data from a
-> remoteproc. Add support for channels to customize the size and amount
-> of prequeued intents.
-> 
-> An audio channel might expect to receive 3 packets of size 4k in rapid
-> succession. This change allows the channel to prepare for this data instead
-> of allocating on demand.
-> 
-
-Thanks, tested and applied with some minor modifications to patch 2.
-
-Regards,
-Bjorn
-
-> Chris Lew (3):
->   dt-bindings: soc: qcom: Support GLINK intents
->   rpmsg: glink: Add support to preallocate intents
->   rpmsg: glink: Use best fit intent during tx
-> 
->  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 10 +++++
->  drivers/rpmsg/qcom_glink_native.c                  | 48 +++++++++++++++++-----
->  2 files changed, 47 insertions(+), 11 deletions(-)
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+> > Add QSPI node support, and this function is disabled by default This
+> > setting could be overwritten in board-level definitions
+>
+> Adding Shawn Guo.
+>
+This patch is modified based on https://patchwork.ozlabs.org/patch/492099/. The originator of this patch is Haikun Wang.
+> >
+Signed-off-by: Haikun Wang <haikun.wang@freescale.com>
+> > Signed-off-by: SZ Lin <sz.lin@moxa.com>
+>
+> Acked-by: Li Yang <leoyang.li@nxp.com>
+>
+> > ---
+> >  arch/arm/boot/dts/ls1021a.dtsi | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/ls1021a.dtsi
+> > b/arch/arm/boot/dts/ls1021a.dtsi index 7bb9df2c1460..9da876e47810
+> > 100644
+> > --- a/arch/arm/boot/dts/ls1021a.dtsi
+> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> > @@ -154,6 +154,20 @@
+> >                         big-endian;
+> >                 };
+> >
+> > +               qspi: quadspi@1550000 {
+> > +                       compatible = "fsl,ls1021a-qspi";
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       reg = <0x0 0x1550000 0x0 0x10000>,
+> > +                             <0x0 0x40000000 0x0 0x40000000>;
+> > +                       reg-names = "QuadSPI", "QuadSPI-memory";
+> > +                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clock-names = "qspi_en", "qspi";
+> > +                       clocks = <&clockgen 4 1>, <&clockgen 4 1>;
+> > +                       big-endian;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> >                 esdhc: esdhc@1560000 {
+> >                         compatible = "fsl,esdhc";
+> >                         reg = <0x0 0x1560000 0x0 0x10000>;
+> > --
+> > 2.14.1
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > in the body of a message to majordomo@vger.kernel.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
