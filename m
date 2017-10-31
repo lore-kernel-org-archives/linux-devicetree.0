@@ -1,202 +1,55 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v10 6/8] arm64: dts: allwinner: A64: Restore EMAC changes
-Date: Tue, 31 Oct 2017 09:19:13 +0100
-Message-ID: <20171031081915.18960-7-clabbe.montjoie@gmail.com>
-References: <20171031081915.18960-1-clabbe.montjoie@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171031081915.18960-1-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Fix fifo size for EP 6,7
+Date: Tue, 31 Oct 2017 09:43:01 +0100 (CET)
+Message-ID: <1506055926.93787.1509439381859@email.1und1.de>
+References: <1507371414-21688-1-git-send-email-stefan.wahren@i2se.com>
+ <160210128.18582.1509137904239@email.1und1.de> <871slkw3ms.fsf@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <871slkw3ms.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Minas Harutyunyan <Minas.Harutyunyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The original dwmac-sun8i DT bindings have some issue on how to handle
-integrated PHY and was reverted in last RC of 4.13.
-But now we have a solution so we need to get back that was reverted.
+Hi Eric,
 
-This patch restore arm64 DT about dwmac-sun8i for A64
-This reverts commit 87e1f5e8bb4b ("arm64: dts: allwinner: Revert EMAC changes")
+> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 31. Oktober 2017 um 01:40 geschrieben:
+> 
+> 
+> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+> 
+> >> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 7. Oktober 2017 um 12:16 geschrieben:
+> >> 
+> >> 
+> >> In case the RPi Zero has at least a device connected to the OTG port
+> >> at boot time, the upper limit of tx fifo size for endpoint 6 and 7 is
+> >> also reduced to 512 bytes. So fix this accordingly.
+> >> 
+> >> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> >> Fixes: 1aa1d858f582 ("ARM: dts: bcm283x: Add dtsi for OTG mode")
+> >
+> > gentle ping ...
+> 
+> I've tried to make sense of this a couple of times, but I don't get it:
+> why does EP 6/7 get reduced to 512 bytes in this case?
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts   | 16 ++++++++++++++++
- .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts    | 15 +++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts  | 17 +++++++++++++++++
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts    | 16 ++++++++++++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi        | 20 ++++++++++++++++++++
- 5 files changed, 84 insertions(+)
+i cannot give you an answer for this specific case.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index d347f52e27f6..45bdbfb96126 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -51,6 +51,7 @@
- 	compatible = "sinovoip,bananapi-m64", "allwinner,sun50i-a64";
- 
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 	};
-@@ -69,6 +70,14 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
-@@ -79,6 +88,13 @@
- 	bias-pull-up;
- };
- 
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-index f82ccf332c0f..24f1aac366d6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
-@@ -48,3 +48,18 @@
- 
- 	/* TODO: Camera, touchscreen, etc. */
- };
-+
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index d06e34b5d192..806442d3e846 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -51,6 +51,7 @@
- 	compatible = "pine64,pine64", "allwinner,sun50i-a64";
- 
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-@@ -71,6 +72,15 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rmii_pins>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ext_rmii_phy1>;
-+	status = "okay";
-+
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
-@@ -81,6 +91,13 @@
- 	bias-pull-up;
- };
- 
-+&mdio {
-+	ext_rmii_phy1: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 17ccc12b58df..0eb2acedf8c3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -53,6 +53,7 @@
- 		     "allwinner,sun50i-a64";
- 
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 	};
- 
-@@ -76,6 +77,21 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ext_rgmii_phy>;
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 905af406dbd3..0650a1cda107 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -517,6 +517,26 @@
- 			#size-cells = <0>;
- 		};
- 
-+		emac: ethernet@1c30000 {
-+			compatible = "allwinner,sun50i-a64-emac";
-+			syscon = <&syscon>;
-+			reg = <0x01c30000 0x10000>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&ccu RST_BUS_EMAC>;
-+			reset-names = "stmmaceth";
-+			clocks = <&ccu CLK_BUS_EMAC>;
-+			clock-names = "stmmaceth";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			mdio: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		gic: interrupt-controller@1c81000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x01c81000 0x1000>,
--- 
-2.13.6
+Since the dwc2 databook isn't public, i started a thread on linux-usb [1] about proper fifo size configuration. But i didn't get any reply.
+
+The problem here is there different contraints:
+* the sum of all fifo values must not exceed 3776 bytes
+* each slot have its individual upper limit (available in the BCM2835 datasheet)
+
+During my tests for OTG mode i missed the specific case above. Now my determined limits of 512 for EP 6 and 7 are contrary to the BCM2835 datasheet. Maybe the Synopsys guys have an answer?
+
+Btw the values in the downstream tree also violate the contraints. 
+
+[1] - https://www.spinics.net/lists/linux-usb/msg157200.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
