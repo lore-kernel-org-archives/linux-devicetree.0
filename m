@@ -1,116 +1,51 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v9 2/8] of: Add helper for mapping device node to logical CPU
- number
-Date: Tue, 31 Oct 2017 17:23:12 +0000
-Message-ID: <20171031172318.11823-3-suzuki.poulose@arm.com>
-References: <20171031172318.11823-1-suzuki.poulose@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171031172318.11823-1-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, leo.yan@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, peterz@infradead.org, Jonathan.Cameron@huawei.com, sudeep.holla@arm.com, frowand.list@gmail.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/3] Add clock driver for Actions S900 SoC
+Date: Wed,  1 Nov 2017 01:24:20 +0530
+Message-ID: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a helper to map a device node to a logical CPU number to avoid
-duplication. Currently this is open coded in different places (e.g
-gic-v3, coresight). The helper tries to map device node to a "possible"
-logical CPU id, which may not be online yet. It is the responsibility
-of the user to make sure that the CPU is online. The helper uses
-of_cpu_device_node_get() to retrieve the device node for a given CPU
-(which uses per_cpu data if available else falls back to slower
-of_get_cpu_node()).
+This series adds clock driver for Actions Semi OWL series
+S900 SoC with relevant clock bindings and device tree data.
 
-Cc: devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since V6:
- - Use faster of_cpu_device_node_get instead of of_get_cpu_node(),
-   which now falls back to latter if called in early.
-Changes since V3:
- - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
- - Return -ENODEV on failure than nr_cpus_id
----
- drivers/of/base.c  | 26 ++++++++++++++++++++++++++
- include/linux/of.h |  7 +++++++
- 2 files changed, 33 insertions(+)
+This series also addresses the review comments from previous
+submission happened last year.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 63897531cd75..753c8160a092 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -418,6 +418,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- EXPORT_SYMBOL(of_get_cpu_node);
- 
- /**
-+ * of_cpu_node_to_id: Get the logical CPU number for a given device_node
-+ *
-+ * @cpu_node: Pointer to the device_node for CPU.
-+ *
-+ * Returns the logical CPU number of the given CPU device_node.
-+ * Returns -ENODEV if the CPU is not found.
-+ */
-+int of_cpu_node_to_id(struct device_node *cpu_node)
-+{
-+	int cpu;
-+	bool found = false;
-+	struct device_node *np;
-+
-+	for_each_possible_cpu(cpu) {
-+		np = of_cpu_device_node_get(cpu);
-+		found = (cpu_node == np);
-+		of_node_put(np);
-+		if (found)
-+			return cpu;
-+	}
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL(of_cpu_node_to_id);
-+
-+/**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-  * @compat: required compatible string, NULL or "" for any match
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b240ed69dc96..13eb8bc92c10 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -538,6 +538,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
- 
- bool of_console_check(struct device_node *dn, char *name, int index);
- 
-+extern int of_cpu_node_to_id(struct device_node *np);
-+
- #else /* CONFIG_OF */
- 
- static inline void of_core_init(void)
-@@ -872,6 +874,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
- {
- }
- 
-+static inline int of_cpu_node_to_id(struct device_node *np)
-+{
-+	return -ENODEV;
-+}
-+
- #define of_match_ptr(_ptr)	NULL
- #define of_match_node(_matches, _node)	NULL
- #endif /* CONFIG_OF */
+https://patchwork.kernel.org/patch/9254471/
+
+Driver has been validated on Bubblegum-96 board.
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (3):
+  arm64: dts: actions: add s900 clock controller nodes
+  clk: owl: add clock driver for Actions S900 SoC
+  Documentation: add Actions S900 clock bindings
+
+ .../bindings/clock/actions,s900-clock.txt          |  47 ++
+ MAINTAINERS                                        |   5 +
+ arch/arm64/boot/dts/actions/s900.dtsi              |  19 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/owl/Makefile                           |   2 +
+ drivers/clk/owl/clk-factor.c                       | 270 ++++++++++
+ drivers/clk/owl/clk-pll.c                          | 346 ++++++++++++
+ drivers/clk/owl/clk-s900.c                         | 587 +++++++++++++++++++++
+ drivers/clk/owl/clk.c                              | 318 +++++++++++
+ drivers/clk/owl/clk.h                              | 301 +++++++++++
+ include/dt-bindings/clock/actions,s900-clock.h     | 141 +++++
+ 11 files changed, 2037 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+ create mode 100644 drivers/clk/owl/Makefile
+ create mode 100644 drivers/clk/owl/clk-factor.c
+ create mode 100644 drivers/clk/owl/clk-pll.c
+ create mode 100644 drivers/clk/owl/clk-s900.c
+ create mode 100644 drivers/clk/owl/clk.c
+ create mode 100644 drivers/clk/owl/clk.h
+ create mode 100644 include/dt-bindings/clock/actions,s900-clock.h
+
 -- 
-2.13.6
+2.7.4
