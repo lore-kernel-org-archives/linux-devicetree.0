@@ -1,75 +1,57 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v10 3/8] arm: dts: sunxi: h3/h5: Restore EMAC changes
-Date: Tue, 31 Oct 2017 09:19:10 +0100
-Message-ID: <20171031081915.18960-4-clabbe.montjoie@gmail.com>
-References: <20171031081915.18960-1-clabbe.montjoie@gmail.com>
+From: Eric Long <eric.long@spreadtrum.com>
+Subject: [PATCH v4 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog documentation
+Date: Tue, 31 Oct 2017 16:16:28 +0800
+Message-ID: <2ab9e83ca6c2b3590a50319262d054e346c43244.1509437905.git.eric.long@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171031081915.18960-1-clabbe.montjoie@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: netdev@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: baolin.wang@linaro.org, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, eric.long@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-The original dwmac-sun8i DT bindings have some issue on how to handle
-integrated PHY and was reverted in last RC of 4.13.
-But now we have a solution so we need to get back that was reverted.
+This patch adds the documentation for Spreadtrum watchdog driver.
 
-This patch restore sunxi-h3-h5.dtsi
-This reverts partially commit fe45174b72ae ("arm: dts: sunxi: Revert EMAC changes")
-
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Eric Long <eric.long@spreadtrum.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changes since v3:
+- No updates.
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index c1bd09dab3da..d762098fc589 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -408,6 +408,32 @@
- 			clocks = <&osc24M>;
- 		};
- 
-+		emac: ethernet@1c30000 {
-+			compatible = "allwinner,sun8i-h3-emac";
-+			syscon = <&syscon>;
-+			reg = <0x01c30000 0x10000>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&ccu RST_BUS_EMAC>;
-+			reset-names = "stmmaceth";
-+			clocks = <&ccu CLK_BUS_EMAC>;
-+			clock-names = "stmmaceth";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
+Changes since v2:
+- Add acked tag from Rob.
+
+Changes since v1:
+- No updates.
+---
+ .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+
+diff --git a/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+new file mode 100644
+index 0000000..aeaf3e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+@@ -0,0 +1,19 @@
++Spreadtrum SoCs Watchdog timer
 +
-+			mdio: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				int_mii_phy: ethernet-phy@1 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <1>;
-+					clocks = <&ccu CLK_BUS_EPHY>;
-+					resets = <&ccu RST_BUS_EPHY>;
-+				};
-+			};
-+		};
++Required properties:
++- compatible : Should be "sprd,sp9860-wdt".
++- reg : Specifies base physical address and size of the registers.
++- interrupts : Exactly one interrupt specifier.
++- timeout-sec : Contain the default watchdog timeout in seconds.
++- clock-names : Contain the input clock names.
++- clocks : Phandles to input clocks.
 +
- 		spi0: spi@1c68000 {
- 			compatible = "allwinner,sun8i-h3-spi";
- 			reg = <0x01c68000 0x1000>;
++Example:
++	watchdog: watchdog@40310000 {
++		compatible = "sprd,sp9860-wdt";
++		reg = <0 0x40310000 0 0x1000>;
++		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++		timeout-sec = <12>;
++		clock-names = "enable", "rtc_enable";
++		clocks = <&clk_aon_apb_gates1 8>, <&clk_aon_apb_rtc_gates 9>;
++	};
 -- 
-2.13.6
+1.9.1
