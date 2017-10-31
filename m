@@ -1,96 +1,58 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v10 5/5] dt-bindings: watchdog: Add bindings for RAVE SP
- watchdog driver
-Date: Tue, 31 Oct 2017 10:22:11 -0700
-Message-ID: <20171031172211.GG28688@roeck-us.net>
-References: <20171031163656.24552-1-andrew.smirnov@gmail.com>
- <20171031163656.24552-6-andrew.smirnov@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: watchdog: renesas-wdt: Add support for the
+ r8a77970 wdt
+Date: Tue, 31 Oct 2017 10:22:59 -0700
+Message-ID: <20171031172259.GH28688@roeck-us.net>
+References: <1509378199-19388-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171031163656.24552-6-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+In-Reply-To: <1509378199-19388-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 31, 2017 at 09:36:56AM -0700, Andrey Smirnov wrote:
-> Add Device Tree bindings for RAVE SP watchdog drvier - an MFD cell of
-> parent RAVE SP driver (documented in
-> Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
+On Mon, Oct 30, 2017 at 04:43:19PM +0100, Geert Uytterhoeven wrote:
+> Document support for the Watchdog Timer (WDT) Controller in the Renesas
+> R-Car V3M (r8a77970) SoC.  Restore sort order while at it.
 > 
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: cphealy@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Johan Hovold <johan@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> No driver update is needed.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
 > ---
->  .../bindings/watchdog/zii,rave-sp-wdt.txt          | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-> new file mode 100644
-> index 000000000000..ab16659e781d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-> @@ -0,0 +1,39 @@
-> +Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog Bindings
-> +
-> +RAVE SP watchdog device is a "MFD cell" device corresponding to
-> +watchdog functionality of RAVE Supervisory Processor. It is expected
-> +that its Device Tree node is specified as a child of the node
-> +corresponding to the parent RAVE SP device (as documented in
-> +Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-> +
-> +Required properties:
-> +- compatible:	Should be "zii,rave-sp-watchdog"
-> +
-> +Optional properties:
-> +
-> +- wdt-timeout:	Two byte nvmem cell specified as per
-> +		Documentation/devicetree/bindings/nvmem/nvmem.txt
-> +
-> +Example:
-> +
-> +	rave-sp {
-> +		compatible = "zii,rave-sp-rdu1";
-> +		current-speed = <38400>;
-> +
-> +		eeprom {
-> +			compatible = "zii,pic-main-eeprom";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			wdt_timeout: wdt-timeout@8E {
-> +				reg = <0x8E 2>;
-> +			};
-> +		};
-> +
-> +		watchdog {
-> +			compatible = "zii,rave-sp-watchdog";
-> +			nvmem-cells = <&wdt_timeout>;
-> +			nvmem-cell-names = "wdt-timeout";
-> +		};
-> +	}
-> +
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> index bf6d1ca58af7d198..74b2f03c151553f5 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> @@ -4,10 +4,11 @@ Required properties:
+>  - compatible : Should be "renesas,<soctype>-wdt", and
+>  	       "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
+>  	       Examples with soctypes are:
+> +	         - "renesas,r7s72100-wdt" (RZ/A1)
+>  	         - "renesas,r8a7795-wdt" (R-Car H3)
+>  	         - "renesas,r8a7796-wdt" (R-Car M3-W)
+> +	         - "renesas,r8a77970-wdt" (R-Car V3M)
+>  	         - "renesas,r8a77995-wdt" (R-Car D3)
+> -	         - "renesas,r7s72100-wdt" (RZ/A1)
+>  
+>    When compatible with the generic version, nodes must list the SoC-specific
+>    version corresponding to the platform first, followed by the generic
 > -- 
-> 2.13.6
+> 2.7.4
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
