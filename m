@@ -1,72 +1,35 @@
-From: =?big5?B?U1ogTGluICiqTKRXtLwp?= <SZ.Lin@moxa.com>
-Subject: [RESEND] ARM: dts: ls1021a: Add support for QSPI with ls1021a SoC
-Date: Tue, 31 Oct 2017 05:58:53 +0000
-Message-ID: <5942081F7727964D830FC876E62CA85601194652AD@MHQMBX01.moxa.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 0/3] media: ov7740: Add a V4L2 sensor-level driver
+Date: Tue, 31 Oct 2017 09:40:21 +0200
+Message-ID: <20171031074020.udssku6pazxooa7q@valkosipuli.retiisi.org.uk>
+References: <20171031011146.6899-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: zh-TW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "andy.tang@nxp.com" <andy.tang@nxp.com>, "yi.sheng.lin@nxp.com" <yi.sheng.lin@nxp.com>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, Russell King <linux@armlinux.org.uk>, lkml <linux-kernel@vger.kernel.org>, Minghuan Lian <Minghuan.Lian@nxp.com>, Rob Herring <robh+dt@kernel.org>, Suresh Gupta <suresh.gupta@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171031011146.6899-1-wenyou.yang@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@microchip.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> > Add QSPI node support, and this function is disabled by default This
-> > setting could be overwritten in board-level definitions
->
-> Adding Shawn Guo.
->
-This patch is modified based on https://patchwork.ozlabs.org/patch/492099/. The originator of this patch is Haikun Wang.
-> >
-Signed-off-by: Haikun Wang <haikun.wang@freescale.com>
-> > Signed-off-by: SZ Lin <sz.lin@moxa.com>
->
-> Acked-by: Li Yang <leoyang.li@nxp.com>
->
-> > ---
-> >  arch/arm/boot/dts/ls1021a.dtsi | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/ls1021a.dtsi
-> > b/arch/arm/boot/dts/ls1021a.dtsi index 7bb9df2c1460..9da876e47810
-> > 100644
-> > --- a/arch/arm/boot/dts/ls1021a.dtsi
-> > +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> > @@ -154,6 +154,20 @@
-> >                         big-endian;
-> >                 };
-> >
-> > +               qspi: quadspi@1550000 {
-> > +                       compatible = "fsl,ls1021a-qspi";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <0>;
-> > +                       reg = <0x0 0x1550000 0x0 0x10000>,
-> > +                             <0x0 0x40000000 0x0 0x40000000>;
-> > +                       reg-names = "QuadSPI", "QuadSPI-memory";
-> > +                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clock-names = "qspi_en", "qspi";
-> > +                       clocks = <&clockgen 4 1>, <&clockgen 4 1>;
-> > +                       big-endian;
-> > +                       status = "disabled";
-> > +               };
-> > +
-> >                 esdhc: esdhc@1560000 {
-> >                         compatible = "fsl,esdhc";
-> >                         reg = <0x0 0x1560000 0x0 0x10000>;
-> > --
-> > 2.14.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo@vger.kernel.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
+Hi Wenyou,
+
+On Tue, Oct 31, 2017 at 09:11:42AM +0800, Wenyou Yang wrote:
+> Add a Video4Linux2 sensor-level driver for the OmniVision OV7740
+> VGA camera image sensor.
+
+For the next version, could you rearrange your patches a bit as follows:
+
+1. DT bindings
+2. The driver and MAINTAINERS entry
+
+Putting the MAINTAINERS entry separately from the driver emits a warning
+from checkpatch.pl. Bindings are naturally separate from driver and should
+precede the driver as the driver musn't use undocumented bindings.
+
+Thanks.
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
