@@ -1,290 +1,119 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1] dmaengine: stm32_mdma: activate pack/unpack feature
-Date: Tue, 31 Oct 2017 16:59:34 +0530
-Message-ID: <20171031112934.GN3187@localhost>
-References: <CA+M3ks4EymJ2aR5Fm1G1mTgyiOaGUcQgWMvDp0K4Hvue+M7rbA@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 usb-next 3/4] usb: core: hcd: integrate the PHY
+ roothub wrapper
+Date: Tue, 31 Oct 2017 19:30:24 +0800
+Message-ID: <1509449424.17567.142.camel@mhfsdcap03>
+References: <20171023215718.3446-1-martin.blumenstingl@googlemail.com>
+         <20171023215718.3446-4-martin.blumenstingl@googlemail.com>
+         <89fc89e9-4510-2283-aad4-59eacf5cf925@codeaurora.org>
+         <CAFBinCD0kMkoWT4veoH8ZM7Rj2XwdvuE+tr7mM4n0J86eaOL-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+M3ks4EymJ2aR5Fm1G1mTgyiOaGUcQgWMvDp0K4Hvue+M7rbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAFBinCD0kMkoWT4veoH8ZM7Rj2XwdvuE+tr7mM4n0J86eaOL-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Manu Gautam <mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 04:26:50PM +0200, Benjamin Gaignard wrote:
-> +Arnd since it should also fix 64 bits division issue
+Hi Martin,
 
-Arnd would be back from Prague, so would like to get an ack before I
-apply...
-
+On Tue, 2017-10-31 at 00:10 +0100, Martin Blumenstingl wrote:
+> Hi Manu,
 > 
-> 2017-10-17 15:43 GMT+02:00 Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>:
-> > If source and destination bus width differs pack/unpack MDMA
-> > feature has to be activated for alignment.
-> > This pack/unpack feature implies to have both source/destination address
-> > and buffer length aligned on bus width.
+> thank you for reviewing this!
+> 
+> On Thu, Oct 26, 2017 at 7:42 AM, Manu Gautam <mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > Hi,
 > >
-> > Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
-> > Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-> > ---
-> >  drivers/dma/stm32-mdma.c | 84 ++++++++++++++++++++++++++++--------------------
-> >  1 file changed, 50 insertions(+), 34 deletions(-)
 > >
-> > diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-> > index d3be6bf..daa1602 100644
-> > --- a/drivers/dma/stm32-mdma.c
-> > +++ b/drivers/dma/stm32-mdma.c
-> > @@ -387,14 +387,20 @@ static int stm32_mdma_get_width(struct stm32_mdma_chan *chan,
-> >         }
-> >  }
+> > On 10/24/2017 3:27 AM, Martin Blumenstingl wrote:
+> >> This integrates the PHY roothub wrapper into the core hcd
+> >> infrastructure. Multiple PHYs which are part of the roothub devicetree
+> >> node (which is a sub-node of the sysdev's node) are now managed
+> >> (= powered on/off when needed), by the new usb_phy_roothub code.
+> >>
+> >> One example where this is required is the Amlogic GXL and GXM SoCs:
+> >> They are using a dwc3 USB controller with up to three ports enabled on
+> >> the internal roothub. Using only the top-level "phy" properties does not
+> >> work here since one can only specify one "usb2-phy" and one "usb3-phy",
+> >> while actually at least two "usb2-phy" have to be specified.
+> >>
+> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> >> Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> >> ---
+> >>  drivers/usb/core/hcd.c  | 26 ++++++++++++++++++++++++++
+> >>  include/linux/usb/hcd.h |  1 +
+> >>  2 files changed, 27 insertions(+)
+> >>
+> >> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> >> index 67aa3d039b9b..6ee97222cdad 100644
+> >> --- a/drivers/usb/core/hcd.c
+> >> +++ b/drivers/usb/core/hcd.c
+> >> @@ -50,6 +50,7 @@
+> >>  #include <linux/usb/otg.h>
+> >>
+> >>  #include "usb.h"
+> >> +#include "phy.h"
+> >>
+> >>
+> >>  /*-------------------------------------------------------------------------*/
+> >> @@ -2271,6 +2272,8 @@ int hcd_bus_suspend(struct usb_device *rhdev, pm_message_t msg)
+> >>               usb_set_device_state(rhdev, USB_STATE_SUSPENDED);
+> >>               hcd->state = HC_STATE_SUSPENDED;
+> >>
+> >> +             usb_phy_roothub_power_off(hcd->phy_roothub);
+> >> +
 > >
-> > -static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 tlen)
-> > +static enum dma_slave_buswidth stm32_mdma_get_max_width(dma_addr_t addr,
-> > +                                                       u32 buf_len, u32 tlen)
-> >  {
-> >         enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+> > For system-suspend it should be ok.
+> > But, in case of runtime/auto suspend, I think PHYs shouldn't be powered off.
+> > Should we have check for that like-
 > >
-> >         for (max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
-> >              max_width > DMA_SLAVE_BUSWIDTH_1_BYTE;
-> >              max_width >>= 1) {
-> > -               if (((buf_len % max_width) == 0) && (tlen >= max_width))
-> > +               /*
-> > +                * Address and buffer length both have to be aligned on
-> > +                * bus width
-> > +                */
-> > +               if ((((buf_len | addr) & (max_width - 1)) == 0) &&
-> > +                   tlen >= max_width)
-> >                         break;
-> >         }
+> > if (!PMSG_IS_AUTO(msg))
+> >     usb_phy_roothub_power_off()
 > >
-> > @@ -486,7 +492,8 @@ static void stm32_mdma_set_bus(struct stm32_mdma_device *dmadev, u32 *ctbr,
-> >  static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >                                      enum dma_transfer_direction direction,
-> >                                      u32 *mdma_ccr, u32 *mdma_ctcr,
-> > -                                    u32 *mdma_ctbr, u32 buf_len)
-> > +                                    u32 *mdma_ctbr, dma_addr_t addr,
-> > +                                    u32 buf_len)
-> >  {
-> >         struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-> >         struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
-> > @@ -520,6 +527,9 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >         ctcr &= ~STM32_MDMA_CTCR_LEN2_MSK;
-> >         ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
+I test it after adding "if (!PMSG_IS_AUTO(msg)) ...", the PHYS are not
+powered off in the case of runtime/auto suspend (hcd-bus automatically
+suspend if no devices are attached), but powered off when system enter
+suspend mode by "echo mem > /sys/power/state" etc. 
+So the behavior is the same as the earlier version that the PHYs are
+directly controlled by the host driver, maybe this is a better way for
+backward compatibility.
+
+> > Similar check in hcd_bus_resume?
+> disclaimer: I must admit that I am not very familiar with the PM code
+> and even worse: the platform I'm developing with does not have suspend support
+> 
+> can I take your suggestion and include it in the next version of this
+> series or should we wait for feedback from another developer on this
+> topic?
+> 
 > >
-> > +       /* Disable Pack Enable */
-> > +       ctcr &= ~STM32_MDMA_CTCR_PKE;
-> > +
-> >         /* Check burst size constraints */
-> >         if (src_maxburst * src_addr_width > STM32_MDMA_MAX_BURST ||
-> >             dst_maxburst * dst_addr_width > STM32_MDMA_MAX_BURST) {
-> > @@ -551,6 +561,8 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+> >>               /* Did we race with a root-hub wakeup event? */
+> >>               if (rhdev->do_remote_wakeup) {
+> >>                       char    buffer[6];
+> >> @@ -2307,6 +2310,11 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+> >>               dev_dbg(&rhdev->dev, "skipped %s of dead bus\n", "resume");
+> >>               return 0;
+> >>       }
+> >> +
+> >> +     status = usb_phy_roothub_power_on(hcd->phy_roothub);
+> >> +     if (status)
+> >> +             return status;
+> >> +
 > >
-> >         switch (direction) {
-> >         case DMA_MEM_TO_DEV:
-> > +               dst_addr = chan->dma_config.dst_addr;
-> > +
-> >                 /* Set device data size */
-> >                 dst_bus_width = stm32_mdma_get_width(chan, dst_addr_width);
-> >                 if (dst_bus_width < 0)
-> > @@ -567,7 +579,7 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >                 ctcr |= STM32_MDMA_CTCR_DBURST((ilog2(dst_best_burst)));
-> >
-> >                 /* Set memory data size */
-> > -               src_addr_width = stm32_mdma_get_max_width(buf_len, tlen);
-> > +               src_addr_width = stm32_mdma_get_max_width(addr, buf_len, tlen);
-> >                 chan->mem_width = src_addr_width;
-> >                 src_bus_width = stm32_mdma_get_width(chan, src_addr_width);
-> >                 if (src_bus_width < 0)
-> > @@ -587,15 +599,19 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >                 ctcr |= STM32_MDMA_CTCR_SBURST((ilog2(src_best_burst)));
-> >
-> >                 /* Select bus */
-> > -               dst_addr = chan->dma_config.dst_addr;
-> >                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
-> >                                    dst_addr);
-> >
-> > +               if (dst_bus_width != src_bus_width)
-> > +                       ctcr |= STM32_MDMA_CTCR_PKE;
-> > +
-> >                 /* Set destination address */
-> >                 stm32_mdma_write(dmadev, STM32_MDMA_CDAR(chan->id), dst_addr);
-> >                 break;
-> >
-> >         case DMA_DEV_TO_MEM:
-> > +               src_addr = chan->dma_config.src_addr;
-> > +
-> >                 /* Set device data size */
-> >                 src_bus_width = stm32_mdma_get_width(chan, src_addr_width);
-> >                 if (src_bus_width < 0)
-> > @@ -611,7 +627,7 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >                 ctcr |= STM32_MDMA_CTCR_SBURST((ilog2(src_best_burst)));
-> >
-> >                 /* Set memory data size */
-> > -               dst_addr_width = stm32_mdma_get_max_width(buf_len, tlen);
-> > +               dst_addr_width = stm32_mdma_get_max_width(addr, buf_len, tlen);
-> >                 chan->mem_width = dst_addr_width;
-> >                 dst_bus_width = stm32_mdma_get_width(chan, dst_addr_width);
-> >                 if (dst_bus_width < 0)
-> > @@ -630,10 +646,12 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >                 ctcr |= STM32_MDMA_CTCR_DBURST((ilog2(dst_best_burst)));
-> >
-> >                 /* Select bus */
-> > -               src_addr = chan->dma_config.src_addr;
-> >                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
-> >                                    src_addr);
-> >
-> > +               if (dst_bus_width != src_bus_width)
-> > +                       ctcr |= STM32_MDMA_CTCR_PKE;
-> > +
-> >                 /* Set source address */
-> >                 stm32_mdma_write(dmadev, STM32_MDMA_CSAR(chan->id), src_addr);
-> >                 break;
-> > @@ -719,23 +737,27 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
-> >                         return -EINVAL;
-> >                 }
-> >
-> > -               ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
-> > -                                               &ctbr, sg_dma_len(sg));
-> > -               if (ret < 0)
-> > -                       return ret;
-> > -
-> >                 if (direction == DMA_MEM_TO_DEV) {
-> >                         src_addr = sg_dma_address(sg);
-> >                         dst_addr = dma_config->dst_addr;
-> > +                       ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
-> > +                                                       &ctcr, &ctbr, src_addr,
-> > +                                                       sg_dma_len(sg));
-> >                         stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
-> >                                            src_addr);
-> >                 } else {
-> >                         src_addr = dma_config->src_addr;
-> >                         dst_addr = sg_dma_address(sg);
-> > +                       ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
-> > +                                                       &ctcr, &ctbr, dst_addr,
-> > +                                                       sg_dma_len(sg));
-> >                         stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
-> >                                            dst_addr);
-> >                 }
-> >
-> > +               if (ret < 0)
-> > +                       return ret;
-> > +
-> >                 stm32_mdma_setup_hwdesc(chan, desc, direction, i, src_addr,
-> >                                         dst_addr, sg_dma_len(sg), ctcr, ctbr,
-> >                                         i == sg_len - 1, i == 0, false);
-> > @@ -830,27 +852,29 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
-> >         if (!desc)
-> >                 return NULL;
-> >
-> > -       ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr, &ctbr,
-> > -                                       period_len);
-> > -       if (ret < 0)
-> > -               goto xfer_setup_err;
-> > -
-> > -       /* Enable interrupts */
-> > -       ccr &= ~STM32_MDMA_CCR_IRQ_MASK;
-> > -       ccr |= STM32_MDMA_CCR_TEIE | STM32_MDMA_CCR_CTCIE | STM32_MDMA_CCR_BTIE;
-> > -       desc->ccr = ccr;
-> > -
-> >         /* Select bus */
-> >         if (direction == DMA_MEM_TO_DEV) {
-> >                 src_addr = buf_addr;
-> > +               ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
-> > +                                               &ctbr, src_addr, period_len);
-> >                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_SBUS,
-> >                                    src_addr);
-> >         } else {
-> >                 dst_addr = buf_addr;
-> > +               ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
-> > +                                               &ctbr, dst_addr, period_len);
-> >                 stm32_mdma_set_bus(dmadev, &ctbr, STM32_MDMA_CTBR_DBUS,
-> >                                    dst_addr);
-> >         }
-> >
-> > +       if (ret < 0)
-> > +               goto xfer_setup_err;
-> > +
-> > +       /* Enable interrupts */
-> > +       ccr &= ~STM32_MDMA_CCR_IRQ_MASK;
-> > +       ccr |= STM32_MDMA_CCR_TEIE | STM32_MDMA_CCR_CTCIE | STM32_MDMA_CCR_BTIE;
-> > +       desc->ccr = ccr;
-> > +
-> >         /* Configure hwdesc list */
-> >         for (i = 0; i < count; i++) {
-> >                 if (direction == DMA_MEM_TO_DEV) {
-> > @@ -956,9 +980,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
-> >                 ctcr |= STM32_MDMA_CTCR_TLEN((tlen - 1));
-> >
-> >                 /* Set source best burst size */
-> > -               max_width = stm32_mdma_get_max_width(len, tlen);
-> > -               if (src % max_width)
-> > -                       max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> > +               max_width = stm32_mdma_get_max_width(src, len, tlen);
-> >                 src_bus_width = stm32_mdma_get_width(chan, max_width);
-> >
-> >                 max_burst = tlen / max_width;
-> > @@ -971,9 +993,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
-> >                         STM32_MDMA_CTCR_SINCOS(src_bus_width);
-> >
-> >                 /* Set destination best burst size */
-> > -               max_width = stm32_mdma_get_max_width(len, tlen);
-> > -               if (dest % max_width)
-> > -                       max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> > +               max_width = stm32_mdma_get_max_width(dest, len, tlen);
-> >                 dst_bus_width = stm32_mdma_get_width(chan, max_width);
-> >
-> >                 max_burst = tlen / max_width;
-> > @@ -1014,9 +1034,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
-> >                                            STM32_MDMA_MAX_BLOCK_LEN);
-> >
-> >                         /* Set source best burst size */
-> > -                       max_width = stm32_mdma_get_max_width(len, tlen);
-> > -                       if (src % max_width)
-> > -                               max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> > +                       max_width = stm32_mdma_get_max_width(src, len, tlen);
-> >                         src_bus_width = stm32_mdma_get_width(chan, max_width);
-> >
-> >                         max_burst = tlen / max_width;
-> > @@ -1030,9 +1048,7 @@ stm32_mdma_prep_dma_memcpy(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
-> >                                 STM32_MDMA_CTCR_SINCOS(src_bus_width);
-> >
-> >                         /* Set destination best burst size */
-> > -                       max_width = stm32_mdma_get_max_width(len, tlen);
-> > -                       if (dest % max_width)
-> > -                               max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-> > +                       max_width = stm32_mdma_get_max_width(dest, len, tlen);
-> >                         dst_bus_width = stm32_mdma_get_width(chan, max_width);
-> >
-> >                         max_burst = tlen / max_width;
 > > --
-> > 2.7.4
+> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > a Linux Foundation Collaborative Project
 > >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
 > 
-> 
-> -- 
-> Benjamin Gaignard
-> 
-> Graphic Study Group
-> 
-> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro: Facebook | Twitter | Blog
-> --
-> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards
+> Martin
 
--- 
-~Vinod
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
