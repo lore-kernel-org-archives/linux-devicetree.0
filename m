@@ -1,95 +1,57 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH net v4 2/3] dt-binding: net: sfp binding documentation
-Date: Tue, 31 Oct 2017 09:29:12 +0000
-Message-ID: <20171031092911.GA9463@n2100.armlinux.org.uk>
-References: <b98ac3e8cde5c99489e8dcee9a1d5b8a19face8d.1504776350.git.baruch@tkos.co.il>
- <5b46343b543ad1d2ebbc5be9871def7f92c4dbd8.1504776350.git.baruch@tkos.co.il>
- <d707abea-a9eb-74d0-841f-1ff1fe4153a8@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 3/5] gpio: gpiolib: Add chardev support for
+ maintaining GPIO values on reset
+Date: Tue, 31 Oct 2017 10:59:55 +0100
+Message-ID: <CACRpkdZzr3JHo=AEZejXn0nw0mZo02OWFmmTiUBjgr+bH+NOAw@mail.gmail.com>
+References: <20171020033727.21557-1-andrew@aj.id.au> <20171020033727.21557-4-andrew@aj.id.au>
+ <CACRpkdY4F-ocFxomLEsVyGA0odGooWysQq5MHi9qwUt6E_VDzA@mail.gmail.com>
+ <1508490173.24322.53.camel@aj.id.au> <20171025081454.4avrf57mf33khu7c@localhost.localdomain>
+ <1508976339.13477.5.camel@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d707abea-a9eb-74d0-841f-1ff1fe4153a8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1508976339.13477.5.camel@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Michael Welling <mwelling@emacinc.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joel Stanley <joel@jms.id.au>, Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 08:13:42PM -0700, Florian Fainelli wrote:
-> Hi Baruch,
-> 
-> On 09/07/2017 02:25 AM, Baruch Siach wrote:
-> > diff --git a/Documentation/devicetree/bindings/net/sff,sfp.txt b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > new file mode 100644
-> > index 000000000000..60e970ce10ee
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/sff,sfp.txt
-> > @@ -0,0 +1,76 @@
-> > +Small Form Factor (SFF) Committee Small Form-factor Pluggable (SFP)
-> > +Transceiver
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : must be "sff,sfp"
-> > +
-> > +Optional Properties:
-> > +
-> > +- i2c-bus : phandle of an I2C bus controller for the SFP two wire serial
-> > +  interface
-> 
-> What was the reasoning behind using this property instead of making the
-> SFP a child of the i2c bus directly? Were you thinking that there could
-> be systems where the SFP is not i2c-addresable, but another 2-wire
-> protocol is used instead? This is not particularly wrong per-se I guess,
-> but usually, the parent/child relationship should make that more obvious.
+On Thu, Oct 26, 2017 at 2:05 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-Here's what I said about this exact subject in August:
+> I feel that taking this argument to its logical conclusion leads to
+> never exporting any GPIOs to userspace and doing everything in the
+> kernel.
 
-  What reg= value would you use to identify it?  There's no particular
-  I2C bus address.  There's an EEPROM on the actual module, and there
-  may be a PHY on the I2C bus (some PHYs include I2C as an alternative
-  way to speak to them other than MDIO.)
+That is very much how I feel about things anyways.
+In a recent presentation:
+https://dflund.se/~triad/papers/GPIO-for-Engineers-and-Makers.pdf
 
-  I2C couldn't probe these as they are effectively hotplugged.
+I had the following text:
 
-  However, there's also the question about why it should be a child of
-  the I2C bus - the I2C bus is just a means of communicating with and
-  identifying the module.  You could equally argue that it should be
-  a child of the GPIO controller, because that's how it's controlled.
-  You could also argue that it should be a child of the ethernet
-  interface, since that's the main data path.
+The Rules of Linux Userspace GPIO
+1. You do not access GPIOs from userspace
+2. YOU DO NOT ACCESS GPIOS FROM USERSPACE
+3. Read Documentation/gpio/drivers-on-gpio.txt
+4. Use the character device
 
-The SFP support is basically a driver for a socket which has a
-hot-pluggable device, which may be empty at the time of probing.
-If it's empty, it just has an I2C bus, a bunch of GPIOs and a
-couple of serdes lanes routed to it, which appear on pins on the
-socket.  There is no device that can be detected or probed.
+> If userspace has exported the GPIO and is managing its state,
+> then it can *already* cause very weird hardware behaviour if set wrong.
+> The fact that userspace is controlling the GPIO state and not the
+> kernel already says that the kernel doesn't know how to manage it, so
+> why not expose the option for userspace to set the persistence, given
+> that it should know what it's doing?
 
-There is no I2C bus address of an empty socket.
+People do need to access GPIOs from userspace for things
+like one-off makerspace projects, relays on factory lines,
+fire alarms, door openers etc etc.
 
-When a module is plugged in, then we get some I2C devices appearing.
-These can take one or more I2C bus addresses.  The I2C device
-binding requires that all I2C child nodes specify the bus address
-of their device.  Which address do you choose?
+One-off projects is fine, the user likely has an idea about the
+whole system that is comprehensive. They use the random
+raspberry Pi (etc) development board for this. OK.
 
-Bear in mind that when the socket is empty, as there's no devices
-present, there wouldn't be a device for a driver to bind to, so
-this driver, which deals with the hot-plugging of the socket has
-no device to bind with.
+When we are talking about adding GPIO in mass-market goods
+such as phones and tablets and laptops userspace GPIO
+access become more and more dubious.
 
-Think of the "sff,sfp" driver as a driver for the /socket/ rather
-than the /module/ in the socket.  The SFF specifications give the
-requirements for the signals at the /socket/ and the driver
-implements those requirements.
-
-If drivers are required for the modules (because they have a PHY
-on them) the normal Linux PHY drivers get used for that.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
