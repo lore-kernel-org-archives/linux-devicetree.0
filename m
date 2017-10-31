@@ -1,95 +1,29 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/2] mfd: Add Spreadtrum SC27xx series PMICs driver
-Date: Tue, 31 Oct 2017 15:28:01 +0000
-Message-ID: <20171031152801.njf3ib7lrnu5e3ji@dell>
-References: <c92b97145628e5f8db410d1916da46a4c9fecf8c.1508982713.git.baolin.wang@linaro.org>
- <6f9ec429b84973201dc39aeaa31fb829c345b6e0.1508982713.git.baolin.wang@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
+ magic values
+Date: Tue, 31 Oct 2017 11:02:51 -0500
+Message-ID: <CAL_JsqKr7MsM6iZ_QYO=iCzXNwANEGQGDLFUEwe0Z-p2Z_aMYw@mail.gmail.com>
+References: <cover.1509453284.git.viresh.kumar@linaro.org> <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6f9ec429b84973201dc39aeaa31fb829c345b6e0.1508982713.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Oct 2017, Baolin Wang wrote:
+On Tue, Oct 31, 2017 at 7:47 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On some platforms the exact frequency or voltage may be hidden from the
+> OS by the firmware. Allow such configurations to pass magic values in
+> the "opp-hz" or the "opp-microvolt" properties, which should be
+> interpreted in a platform dependent way.
 
-> This patch adds support for Spreadtrum SC27xx series PMIC MFD core, and It
-> provides communication through the SPI interfaces. The SC27xx series PMICs
-> contains the following 6 major components:
-> - DCDCs
-> - LDOs
-> - Battery management system
-> - Audio codec
-> - User interface function, such as indicator, flash LED
-> - IC level function, such as power on/off, type-c
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> ---
-> Changes since v2:
->  - Add more help information.
->  - Define macros for irq base and irq number.
->  - Use devm_mfd_add_devices() instead of mfd_add_devices(), which means
->  we can remove sprd_pmic_remove().
->  - Rename local variables in sprd_pmic_probe().
-> 
-> Changes since v1:
->  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
->  - Modify compatile string property.
->  - Modify reg property.
->  - Remove redundant 'pmic' label.
->  - Change 'should be' to 'must be' for cells properties.
-> ---
->  drivers/mfd/Kconfig           |   16 +++
->  drivers/mfd/Makefile          |    1 +
->  drivers/mfd/sprd-sc27xx-spi.c |  258 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 275 insertions(+)
->  create mode 100644 drivers/mfd/sprd-sc27xx-spi.c
+Why not a new property for magic values? opp-magic? Don't we want to
+know when we have magic values?
 
-[...]
+Wouldn't magic values in opp-hz get propagated to user space? I can
+see the complaints now. "My 4GHz processor is running at 6Hz!" Just
+like people complain when BogoMIPS is not high enough.
 
-> +static int sprd_pmic_spi_read(void *context,
-> +			      const void *reg, size_t reg_size,
-> +			      void *val, size_t val_size)
-> +{
-> +	struct device *dev = context;
-> +	struct spi_device *spi = to_spi_device(dev);
-> +	u32 rx_buf[2] = { 0 };
-> +	int ret;
-> +
-> +	/* Now we only support one PMIC register to read every time. */
-> +	if (reg_size != sizeof(u32) || val_size != sizeof(u32))
-> +		return -EINVAL;
-> +
-> +	rx_buf[0] = *(u32 *)reg;
-
-I still don't like this.  It's uuuuuugly!
-
-At the very least, please use an interim variable using a nomenclature
-which describes what it is you're trying to achieve.  For instance:
-
-  u32 *addr = reg;
-
-  rx_buf[0] = addr[0];
-
-Or better still ...
-
-  /* Copy address to read from into first element of SPI buffer */
-  memcpy(rx_buf, reg, sizeof(u32));
-
-> +	ret = spi_read(spi, rx_buf, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	memcpy(val, rx_buf, val_size);
-> +	return 0;
-> +}
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Rob
