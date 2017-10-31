@@ -1,64 +1,67 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Fix fifo size for EP 6,7
-Date: Mon, 30 Oct 2017 17:40:59 -0700
-Message-ID: <871slkw3ms.fsf@anholt.net>
-References: <1507371414-21688-1-git-send-email-stefan.wahren@i2se.com> <160210128.18582.1509137904239@email.1und1.de>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH] iio: adc: aspeed: Deassert reset in probe
+Date: Tue, 31 Oct 2017 11:34:49 +1030
+Message-ID: <CACPK8Xei8nbZ0LfZn+7xfLi2LZroS7Nq7wXBwRy6b5pZkWqzRQ@mail.gmail.com>
+References: <20171030072218.2094-1-joel@jms.id.au> <CA+gwMccGYbx7-oD2ChrFQBr9g=KAF=_nse15kMrWG4XaFvU2pg@mail.gmail.com>
+ <CACPK8XcVP=8sXf1rdLFSL1nTDKUwPSGkJ-QhLiHnTB+82AW=ww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <160210128.18582.1509137904239-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XcVP=8sXf1rdLFSL1nTDKUwPSGkJ-QhLiHnTB+82AW=ww@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <philipp.zabel@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Rick Altherr <raltherr@google.com>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 7. Oktober 2017 um 12:16 g=
-eschrieben:
->>=20
->>=20
->> In case the RPi Zero has at least a device connected to the OTG port
->> at boot time, the upper limit of tx fifo size for endpoint 6 and 7 is
->> also reduced to 512 bytes. So fix this accordingly.
->>=20
->> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->> Fixes: 1aa1d858f582 ("ARM: dts: bcm283x: Add dtsi for OTG mode")
+On Tue, Oct 31, 2017 at 11:02 AM, Joel Stanley <joel@jms.id.au> wrote:
+> On Tue, Oct 31, 2017 at 2:51 AM, Philipp Zabel <philipp.zabel@gmail.com> wrote:
+>> Hi Joel,
+>>
+>> On Mon, Oct 30, 2017 at 8:22 AM, Joel Stanley <joel@jms.id.au> wrote:
+>>> The ASPEED SoC must deassert a reset in order to use the ADC peripheral.
+>>>
+>>> The device tree bindings are updated to document the resets phandle, and
+>>> the example is updated to match what is expected for both the reset and
+>>> clock phandle.
+>>>
+>>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>>> ---
+>>>  .../devicetree/bindings/iio/adc/aspeed_adc.txt      |  4 +++-
+>>>  drivers/iio/adc/aspeed_adc.c                        | 21 ++++++++++++++++-----
+>>>  2 files changed, 19 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+>>> index 674e133b7cd7..034fc2ba100e 100644
+>>> --- a/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/aspeed_adc.txt
+>>> @@ -8,6 +8,7 @@ Required properties:
+>>>  - reg: memory window mapping address and length
+>>>  - clocks: Input clock used to derive the sample clock. Expected to be the
+>>>            SoC's APB clock.
+>>> +- resets: Reset controller phandle
+>>
+>> Adding new required properties to existing bindings would break backwards
+>> compatibility. In this case, the reset is optional anyway.
 >
-> gentle ping ...
+> As far as the hardware is concerned (and therefore the bindings), the
+> reset is required.
+>
+> To date the only reason the driver worked was an out of tree hack in
+> mach-aspeed. I have written a clk/reset driver and are now working to
+> ensure the drivers work correctly.
+>
+> The driver is written to make the reset optional as it's unlikely the
+> clk/reset driver and device tree updates will land this merge window.
+> As we say; the bindings should describe the hardware, not the Linux
+> implementation of the driver.
 
-I've tried to make sense of this a couple of times, but I don't get it:
-why does EP 6/7 get reduced to 512 bytes in this case?
+I changed my mind. No one would have been able to successfully use
+this driver without out of tree hacks to release the reset, so we are
+not regressing any functionality by requiring the reset controller.
 
-However, I'm not an expert in the USB stuff, so if you're confident in
-it, I'm willing to apply (once the merge window opens back up)
+I will submit v2 with the controller required, and save any stuffing
+around in the future.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAln3xpsACgkQtdYpNtH8
-nuipHRAAput9DLD1lm0Z1s+MSIYb3f1+ivhTet1z8qsg05wZ+gmEq6nSUq1Fcp49
-MUsTRRufkUnHh+9UHYDYZdvc4b/C7+adRZ8eDV9BwPlB0fWJAqbLCly/k0sr0W6s
-5kfTLeXcDZYDTJwLtuYA6ijTSz8u2i69BmnJOrZhlG9fch/QT7SGDR4BRnZF1S5A
-kqLqJT9MbtzGEIMRfD2TbwQSwXmGQpN/b5/ch2vwFbG0tMUUPUb0sDh0Hvw18b+h
-o079ejNYGJjM7bkPWay+Gm9/iMNjTon2METUpVdxDt0csoy5sOLYklS8qSJqOHVi
-zwI0u1v1f6dxrCOV1Ml2n95w3IuElYt4zMNV2L/AelHpfhdj7Xd3rFWNsMr5fjTP
-fEMTzKwBlmEcOjVU8QrWbg+ZOBfbfAPdVwIMKdsDEo/itmfWsmKOd3eioaSdL++L
-0m+p7RV6vIGSPrMjhyAXA6TsT9lkr+tVsCgHyGypgdrfEoHVQyFTbh7gEyirkb9t
-V0mxK2U9/jMx+xkHkBX08yfsjD5KUxi2yZUuBZEE+B9+EiovB2ZuCT8TCz4oBCbL
-LfDVRraMRvLo2ztI4AaCQOxyFHeL2TcLsc5XZxifgkCVU/dByj8Tuec+UQHIm5/y
-n7U2C8mNHecJaY6k3bQ7VT9CzUFRogFE407DQOKePt+8vkAwH2I=
-=cBFp
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joel
