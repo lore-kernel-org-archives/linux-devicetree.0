@@ -1,51 +1,51 @@
-From: Wenyou Yang <wenyou.yang@microchip.com>
-Subject: [PATCH v4 3/3] MAINTAINERS: Add a new entry of the ov7740 driver
-Date: Tue, 31 Oct 2017 09:11:45 +0800
-Message-ID: <20171031011146.6899-4-wenyou.yang@microchip.com>
-References: <20171031011146.6899-1-wenyou.yang@microchip.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
+Date: Tue, 31 Oct 2017 01:50:49 +0000
+Message-ID: <8637605bly.fsf@arm.com>
+References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171031011146.6899-1-wenyou.yang@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171029230523.7355-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Mon, 30 Oct 2017 00:05:20 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new entry of the ov7740 sensor driver to the MAINTAINERS file.
+On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> This is a simple follow-up of two series from Jerome:
+> - "irqchip: meson: add support for the gpio interrupt controller"
+> - "ARM: meson: enable gpio interrupt controller"
+>
+> This fills in the missing bits to have GPIO interrupt support on Meson8,
+> which includes:
+> - a new binding in the driver with the correct IRQ number
+> - enabling the GPIO interrupt controller in meson8.dts
+> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
+>
+>
+> Martin Blumenstingl (3):
+>   irqchip/meson-gpio: add support for Meson8 SoCs
+>   ARM: dts: meson8: enable the GPIO interrupt controller
+>   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
+>
+>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
+>  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
+>  arch/arm/mach-meson/Kconfig                                          | 1 +
+>  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
+>  4 files changed, 12 insertions(+)
 
-Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
----
+Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
+happy to queue it if I get an Ack for it. If you'd rather get it through
+via armsoc, let me know.
 
-Changes in v4: None
-Changes in v3:
- - Put the MAINTAINERS change to a separate patch.
+Thanks,
 
-Changes in v2:
- - Split off the bindings into a separate patch.
- - Add a new entry to the MAINTAINERS file.
-
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index adbf69306e9e..42b93599a0af 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9973,6 +9973,14 @@ S:	Maintained
- F:	drivers/media/i2c/ov7670.c
- F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
- 
-+OMNIVISION OV7740 SENSOR DRIVER
-+M:	Wenyou Yang <wenyou.yang@microchip.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/ov7740.c
-+F:	Documentation/devicetree/bindings/media/i2c/ov7740.txt
-+
- ONENAND FLASH DRIVER
- M:	Kyungmin Park <kyungmin.park@samsung.com>
- L:	linux-mtd@lists.infradead.org
+	M.
 -- 
-2.13.0
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
