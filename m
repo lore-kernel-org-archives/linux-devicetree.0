@@ -1,46 +1,65 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2] iio: adc: aspeed: Deassert reset in probe
-Date: Wed, 1 Nov 2017 10:15:32 +1030
-Message-ID: <CACPK8Xc1d89MXBjSJw7Jz0oqkCcoxKbymaVDmJq-kHFK6qG0Sw@mail.gmail.com>
-References: <20171031021203.18248-1-joel@jms.id.au> <CA+gwMcdVpq1P5kWAWzkg2A+Ah-fKyTk0adhGdg4465gkOY3EKA@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
+Date: Tue, 31 Oct 2017 23:57:37 +0000
+Message-ID: <86ineu3m6m.fsf@arm.com>
+References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
+        <8637605bly.fsf@arm.com> <7h1sljmxp6.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+gwMcdVpq1P5kWAWzkg2A+Ah-fKyTk0adhGdg4465gkOY3EKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <7h1sljmxp6.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Kevin Hilman's message of "Tue, 31
+        Oct 2017 11:13:57 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 31, 2017 at 10:28 PM, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Oct 31, 2017 at 3:12 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
->> The ASPEED SoC must deassert a reset in order to use the ADC peripheral.
->>
->> The device tree bindings are updated to document the resets phandle, and
->> the example is updated to match what is expected for both the reset and
->> clock phandle. Note that the bindings should have always had the reset
->> controller, as the hardware is unusable without it.
->>
->> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+On Tue, Oct 31 2017 at 11:13:57 am GMT, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
 >
-> It is unfortunate that this has to break DT (theoretical) backwards
-> compatibility, but given that the old bindings never worked,
-> this is better than to pretend a required reset is optional.
+>> On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl
+>> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>>> This is a simple follow-up of two series from Jerome:
+>>> - "irqchip: meson: add support for the gpio interrupt controller"
+>>> - "ARM: meson: enable gpio interrupt controller"
+>>>
+>>> This fills in the missing bits to have GPIO interrupt support on Meson8,
+>>> which includes:
+>>> - a new binding in the driver with the correct IRQ number
+>>> - enabling the GPIO interrupt controller in meson8.dts
+>>> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
+>>>
+>>>
+>>> Martin Blumenstingl (3):
+>>>   irqchip/meson-gpio: add support for Meson8 SoCs
+>>>   ARM: dts: meson8: enable the GPIO interrupt controller
+>>>   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
+>>>
+>>>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
+>>>  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
+>>>  arch/arm/mach-meson/Kconfig                                          | 1 +
+>>>  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
+>>>  4 files changed, 12 insertions(+)
+>>
+>> Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
+>> happy to queue it if I get an Ack for it. If you'd rather get it through
+>> via armsoc, let me know.
 >
-> Reviewed-by: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Can you take the drivers/irqchip and bindings patch (PATCH 1/3) and I'll
+> take the rest to avoid conflicts with a bunch of other moving parts we
+> have in arch/arm.
 
-Thanks. I agree that it's unfortunate; this has been my first time
-working on an ARM SoC and there were few things we could have done
-better in hindsight.
+Sure, no problem.
 
-I've got similar patches for the ASPEED hwmon pwm/tach driver, and the
-i2c driver that I'll send out now.
+> For the driver, feel free to add
+>
+> Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Thanks for the review.
+Thanks,
 
-Cheers,
-
-Joel
+	M.
+-- 
+Jazz is not dead. It just smells funny.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
