@@ -1,46 +1,44 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
-Date: Tue, 31 Oct 2017 12:19:39 +0800
-Message-ID: <1509423579.10793.10.camel@mtkswgap22>
-References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
-         <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 0/3] GLINK intent preallocation support
+Date: Mon, 30 Oct 2017 21:26:42 -0700
+Message-ID: <20171031042642.GK1275@minitux>
+References: <1509056936-26578-1-git-send-email-clew@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1509056936-26578-1-git-send-email-clew@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Chris Lew <clew@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, aneela@codeaurora.org, smaliyap@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thu 26 Oct 15:28 PDT 2017, Chris Lew wrote:
 
-We have 3 root ports in MT7623, but this is a bug in this chip where the
-HW designers wired the IRQs in a nonstandard way. We've tried to
-statically assign the bus portion of the address part in the parent
-interrupt-map before, but this approach cannot handle the case - if we
-attach the device in random order.
-
-Thanks.
-
-On Mon, 2017-10-30 at 13:42 +0100, Arnd Bergmann wrote:
-> On Mon, Oct 23, 2017 at 12:06 AM, Matthias Brugger
-> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> > ----------------------------------------------------------------
-> > - mt76233 add PCIe node
+> Intents are used to specify when a channel can receive data from a
+> remoteproc. Add support for channels to customize the size and amount
+> of prequeued intents.
 > 
-> Could you clarify what the subnodes in the PCI node are for? It seems odd
-> to have "interrupt-map" properties in both the pcie controller and its child
-> nodes, and I want to ensure this is following the standard PCIe binding before
-> I pull it.
-> 
->        Arnd
+> An audio channel might expect to receive 3 packets of size 4k in rapid
+> succession. This change allows the channel to prepare for this data instead
+> of allocating on demand.
 > 
 
+Thanks, tested and applied with some minor modifications to patch 2.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
+
+> Chris Lew (3):
+>   dt-bindings: soc: qcom: Support GLINK intents
+>   rpmsg: glink: Add support to preallocate intents
+>   rpmsg: glink: Use best fit intent during tx
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,glink.txt    | 10 +++++
+>  drivers/rpmsg/qcom_glink_native.c                  | 48 +++++++++++++++++-----
+>  2 files changed, 47 insertions(+), 11 deletions(-)
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
