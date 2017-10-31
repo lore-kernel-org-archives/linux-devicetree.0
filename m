@@ -1,122 +1,147 @@
-From: "liwei (CM)" <liwei213-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSCB2NSAyLzVdIGR0LWJpbmRpbmdzOiBz?=
- =?utf-8?Q?csi:_ufs:_add_document_for_hisi-ufs?=
-Date: Tue, 31 Oct 2017 12:35:14 +0000
-Message-ID: <1699CE87DE933F49876AD744B5DC140FA38352@DGGEMM506-MBS.china.huawei.com>
-References: <20171020085259.8093-1-liwei213@huawei.com>
- <20171020085259.8093-3-liwei213@huawei.com>
- <CAK8P3a0z_q-GNc-vSPbovu8yrEQyCGDccoDe16rycW+uOwO4Dw@mail.gmail.com>
- <1699CE87DE933F49876AD744B5DC140FA321D1@DGGEMM506-MBX.china.huawei.com>
- <CAK8P3a37yYDQZpZxmunCdSO83qkqywTME5Xo0k56nWEs2k+=dg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a37yYDQZpZxmunCdSO83qkqywTME5Xo0k56nWEs2k+=dg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: zh-CN
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [RFC V7 1/2] OPP: Allow OPP table to be used for power-domains
+Date: Tue, 31 Oct 2017 18:17:02 +0530
+Message-ID: <2b244ea0a09deaf50237fb8b7578273a8284499e.1509453284.git.viresh.kumar@linaro.org>
+References: <cover.1509453284.git.viresh.kumar@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1509453284.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1509453284.git.viresh.kumar@linaro.org>
+References: <cover.1509453284.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, robh+dt@kernel.org, rnayak@codeaurora.org, sudeep.holla@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEFybmQNClRoYW5rIHlvdSBmb3IgeW91ciByZXBseS4NCi0tLS0t6YKu5Lu25Y6f5Lu2LS0t
-LS0NCuWPkeS7tuS6ujogYXJuZGJlcmdtYW5uQGdtYWlsLmNvbSBbbWFpbHRvOmFybmRiZXJnbWFu
-bkBnbWFpbC5jb21dIOS7o+ihqCBBcm5kIEJlcmdtYW5uDQrlj5HpgIHml7bpl7Q6IDIwMTflubQx
-MOaciDMw5pelIDIzOjIyDQrmlLbku7bkuro6IGxpd2VpIChDTSkNCuaKhOmAgTogUm9iIEhlcnJp
-bmc7IE1hcmsgUnV0bGFuZDsgeHV3ZWkgKE8pOyBDYXRhbGluIE1hcmluYXM7IFdpbGwgRGVhY29u
-OyBWaW5heWFrIEhvbGlrYXR0aTsgSmFtZXMgRS5KLiBCb3R0b21sZXk7IE1hcnRpbiBLLiBQZXRl
-cnNlbjsgS2V2aW4gSGlsbWFuOyBHcmVnb3J5IENMRU1FTlQ7IFRob21hcyBQZXRhenpvbmk7IE1h
-c2FoaXJvIFlhbWFkYTsgUmlrdSBWb2lwaW87IFRoaWVycnkgUmVkaW5nOyBLcnp5c3p0b2YgS296
-bG93c2tpOyBFcmljIEFuaG9sdDsgRFRNTDsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdDsgTGlu
-dXggQVJNOyBsaW51eC1zY3NpOyBHdW9kb25nIFh1OyBGZW5nYmFvcGVuZyAoa2V2aW4sIEtpcmlu
-IFNvbHV0aW9uIERlcHQpOyBsaWh1YW4gKFopOyB3YW5neXVwZW5nIChBKQ0K5Li76aKYOiBSZTog
-562U5aSNOiBbUEFUQ0ggdjUgMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1l
-bnQgZm9yIGhpc2ktdWZzDQoNCk9uIFR1ZSwgT2N0IDI0LCAyMDE3IGF0IDExOjA2IEFNLCBsaXdl
-aSAoQ00pIDxsaXdlaTIxM0BodWF3ZWkuY29tPiB3cm90ZToNCj4gd2hhdCdzIHlvdXIgb3Bpbmlv
-biBhYm91dCBteSBleHBsYW5hdGlvbiBhbmQgcmV2aXNpb24gbWV0aG9kPw0KPiBJIGFtIGxvb2tp
-bmcgZm9yd2FyZCB0byB5b3VyIHJlcGx5LCB0aGFua3MhDQoNClNvcnJ5IGZvciB0aGUgZGVsYXks
-IEkgd2FzIHRyYXZlbGxpbmcgbGFzdCB3ZWVrLg0KPiDlj5Hku7bkuro6IGFybmRiZXJnbWFubkBn
-bWFpbC5jb20gW21haWx0bzphcm5kYmVyZ21hbm5AZ21haWwuY29tXSDku6PooaggQXJuZCANCj4g
-QmVyZ21hbm4gT24gRnJpLCBPY3QgMjAsIDIwMTcgYXQgMTA6NTIgQU0sIExpIFdlaSA8bGl3ZWky
-MTNAaHVhd2VpLmNvbT4gd3JvdGU6DQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dA0KPj4gQEAgLTAsMCAr
-MSw0NiBAQA0KPj4gKyogSGlzaWxpY29uIFVuaXZlcnNhbCBGbGFzaCBTdG9yYWdlIChVRlMpIEhv
-c3QgQ29udHJvbGxlcg0KPj4gKw0KPj4gK1VGUyBub2RlcyBhcmUgZGVmaW5lZCB0byBkZXNjcmli
-ZSBvbi1jaGlwIFVGUyBoYXJkd2FyZSBtYWNyby4NCj4+ICtFYWNoIFVGUyBIb3N0IENvbnRyb2xs
-ZXIgc2hvdWxkIGhhdmUgaXRzIG93biBub2RlLg0KPj4gKw0KPj4gK1JlcXVpcmVkIHByb3BlcnRp
-ZXM6DQo+PiArLSBjb21wYXRpYmxlICAgICAgICA6IGNvbXBhdGlibGUgbGlzdCwgY29udGFpbnMg
-b25lIG9mIHRoZSBmb2xsb3dpbmcgLQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgImhpc2ls
-aWNvbixoaTM2NjAtdWZzIiBmb3IgaGlzaSB1ZnMgaG9zdCBjb250cm9sbGVyDQo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgcHJlc2VudCBvbiBIaTM2NjAgY2hpcHNldC4NCg0KT25lIG1vcmUg
-dGhpbmcgSSBqdXN0IG5vdGljZWQ6IHlvdSBkb24ndCBkZXNjcmliZSB0aGUgZGV2aWNlIGFzIGNv
-bXBhdGlibGUgd2l0aCB0aGUgdWZzaGNkIHNwZWMgYXMgZGVmaW5lZCBpbiB0aGUgZ2VuZXJpYyBi
-aW5kaW5nLiBTaG91bGRuJ3Qgd2UgaGF2ZSBib3RoIGNvbXBhdGlibGUgc3RyaW5ncyBsaXN0ZWQg
-aGVyZT8NCg0KT2ssIEkgd2lsbCBmaXggaXQgaW4gcGF0Y2ggdjY7DQoNCj4gSW4gcGFydGljdWxh
-ciwgSSB3b25kZXIgaWYgd2hhdCB5b3UgZGVzY3JpYmUgYXMgdGhlICJVRlMgU1lTIENUUkwiDQo+
-IGFyZWEgY29ycmVzcG9uZHMgdG8gd2hhdCBRdWFsY29tbSBoYXZlIGRlc2NyaWJlZCBhcyB0aGVp
-ciBQSFkgaW1wbGVtZW50YXRpb24uIEl0IGNlcnRhaW5seSBzZWVtcyB0byBkcml2ZXIgc29tZSBv
-ZiB0aGUgcHJvcGVydGllcyB0aGF0IHdvdWxkIG5vcm1hbGx5IGJlIGFzc29jaWF0ZWQgd2l0aCBh
-IFBIWS4NCj4NCj4gTGl3ZWk6WWVzLCBhIHBhcnQgb2YgIlVGUyBTWVMgQ1RSTCIgaXMgYXNzb2Np
-YXRlZCB3aXRoIGEgUEhZLCBidXQgZnJvbSBvdXIgY2hpcCBjb2xsZWFndWUgdGhhdCB3ZSBhc3N1
-cmUgIlVGUyBTWVMgQ1RSTCIgaXMgYXNzb2NpYXRlZCB3aXRoIGNsay9yZXNldC9wb3dlciBvbi9w
-b3dlciBvZmYgYW5kIHNvIG9uLg0KPiBJbiBmYWN0LCBpbiBhZGRpdGlvbiB0byB0aGUgY29udHJv
-bGxlciBpdHNlbGYsIHRoZSBjb250cm9sbGVyIHJlbGF0ZWQgcGVyaXBoZXJ5IGFyZSBhbGwgaW4g
-dGhpcyBhcmVhLiBTbyBpdCdzIG5vdCBhcHByb3ByaWF0ZSB0byBwdXQgdGhpcyBpbnRvIGEgc2Vw
-YXJhdGUgcGh5IG5vZGUuDQoNCkknbSBub3Qgc3VyZSBJIHVuZGVyc3RhbmQgaGVyZS4gRG8geW91
-IG1lYW4gdGhlIHJlc2V0IGhhbmRsZSBpcyBmb3IgcmVzZXR0aW5nIHRoZSBQSFkgcmF0aGVyIHRo
-YW4gdGhlIFVGUyBIQ0Q/DQoNCk1heWJlIG15IGRlc2NyaXB0aW9uIGlzIG5vdCBjbGVhciBlbm91
-Z2gsIG91ciBVRlMgaG9zdCBzb2MgaW1wbGVtZW50YXRpb24gY2FuIGJlIGRpdmlkZWQgaW50byB0
-d28gcGFydHM6IFVGUyBjb250cm9sbGVyIGFuZCByZWxhdGVkIHBlcmlwaGVyYWwgY2lyY3VpdCwg
-dGhhdCAiSENJIHN0YW5kYXJkIjwtPiBVRlMgY29udHJvbGxlciwNCiAiVUZTIFNZUyBDVFJMIjwt
-PiByZWxhdGVkIHBlcmlwaGVyYWwgY2lyY3VpdCwgYW5kIFBIWSBpcyBwYXJ0IG9mIHRoZSBwZXJp
-cGhlcmFsIGNpcmN1aXQuIFNvIHRoZSAiVUZTIFNZUyBDVFJMIiBhcmVhIGRvZXMgbm90IGNvcnJl
-c3BvbmQgY29tcGxldGVseSB0byB3aGF0IFF1YWxjb21tIGhhdmUgZGVzY3JpYmVkIGFzIHRoZWly
-IFBIWSBpbXBsZW1lbnRhdGlvbi4NClRoZSByb290IHJlYXNvbiBpcyB0aGF0IG91ciBVRlMgaG9z
-dCBoYWQgbm90IGRpdmlkZWQgaW50byBVRlMgY29udHJvbGxlciBhbmQgUEhZ77ybDQoNCg0KPiA+
-IEZvciB0aGUgImNsb2NrLW5hbWVzIiBwcm9wZXJ0eSwgeW91IHNwZWNpZnkgImNsa19yZWYiLCB3
-aGljaCBJIGFzc3VtZSBpcyB0aGUgc2FtZSBhcyB3aGF0IFF1YWxjb21tIGNhbGwgInJlZl9jbGsi
-LiBJJ2Qgc3VnZ2VzdCB5b3UgdXNlIHRoZSBleGlzdGluZyBuYW1lIGFuZCBhZGQgdGhhdCBhcyB0
-aGUgZGVmYXVsdCBuYW1lIGluIHRoZSB1ZnNoY2QtcGx0ZnJtLnR4dCBiaW5kaW5nIGRvY3VtZW50
-Lg0KPg0KPiBMaXdlaToiIHJlZl9jbGsgIiBpcyBhbHJlYWR5IGluIHRoZSB1ZnNoY2QtcGx0ZnJt
-LnR4dCBiaW5kaW5nIA0KPiBkb2N1bWVudCwgYW5kIHBhcnNlIGluIHVmc2hjZC5jLCBzbyB3ZSB3
-aWxsIHJlcGxhY2UgImNsa19yZWYiIHdpdGggDQo+ICJyZWZfY2xrIi4gSSB3aWxsIGZpeCBpdCBp
-biBwYXRjaCB2NjsNCg0Kb2sNCg0KPiA+IFRoZSAiY2xrX3BoeSIgcHJvcGVydHkgYXBwZWFycyB0
-byBiZSByZWxhdGVkIHRvIHRoZSBQSFksIHNvIGl0IG1pZ2h0IGJlIGJldHRlciB0byBoYXZlIGEg
-c2VwYXJhdGUgcGh5IG5vZGUgd2l0aCBlaXRoZXIganVzdCB0aGUgY2xrLCBvciB3aXRoIHRoZSBj
-bGsgcGx1cyB0aGUgIlVGUyBTWVMgQ1RSTCIgcmVnaXN0ZXIgYXJlYSwgd2hpY2hldmVyIG1hdGNo
-ZXMgeW91ciBoYXJkd2FyZSBiZXR0ZXIsIGFuZCB0aGVuIHVzZSB0ZWggInBoeXMvcGh5LW5hbWVz
-IiBwcm9wZXJ0eSB0byByZWZlciB0byB0aGF0Lg0KPg0KPiBMaXdlaTogT0ssIEkgd2lsbCBhZGQg
-YSBzZXBhcmF0ZSBwaHkgbm9kZSBhbmQgZml4IGl0IGluIHBhdGNoIHY2Ow0KDQpUaGFua3MuDQoN
-Cj4+IFRoZSByZXNldCBoYW5kbGluZyB5b3UgZGVzY3JpYmUgaGVyZSAoYm90aCByZXNldHMgYW5k
-IHJlc2V0LWdwaW9zKSBhcHBlYXJzIHRvIGJlIGNvbXBsZXRlbHkgZ2VuZXJpYywgc28gSSdkIHN1
-Z2dlc3QgYWRkaW5nIHRob3NlIHRvIHVmc2hjZC1wbHRmcm0udHh0IGluc3RlYWQgb2YgeW91ciBv
-d24gYmluZGluZywgdG8gZW5zdXJlIHRoYXQgZnV0dXJlIGRyaXZlcnMgdXNlIHRoZSBzYW1lIGlk
-ZW50aWZpZXJzLg0KPg0KPiBMaXdlaTogRnJvbSBvdXIgc29jIGNoaXAgY29sbGVhZ3VlLCByZXNl
-dCBpbmNsdWRlICJyc3QiLCAiYXNzZXJ0IiBpcyANCj4gbm90IGdlbmVyaWMgYW5kIHJlbGF0ZWQg
-d2l0aCBvdXIgc29jIGltcGxlbWVudGF0aW9uLCB5b3UgY2FuIHNlZSANCj4gdWZzX2hpc2lfc29j
-X2luaXQoKSBpbiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1oaXNpLmMsIHRoZSBwb3NpdGlvbiBvZiAN
-Cj4gcnN0IGFuZCBhc3NlcnQgaXMgdmVyeSBzcGVjaWFsLCBpdCdzIGhhcmQgdG8gcHV0IGl0IGlu
-IGEgZ2VuZXJpYyANCj4gcHJvY2VzczsNCg0KSXQgc2VlbXMgb2RkIHRoYXQgdGhlIGFiaWxpdHkg
-dG8gcmVzZXQgYSBkZXZpY2UgaXMgc3BlY2lmaWMgdG8geW91ciBpbXBsZW1lbnRhdGlvbi4gV2hh
-dCBJIG1lYW50IGlzIHRoYXQgb3RoZXIgaW1wbGVtZW50YXRpb25zIG1heSBhbHNvIHJlcXVpcmUg
-YSByZXNldCwgc28gZGVzY3JpYmluZyB0aGUgd2F5IHlvdSByZWZlciB0byB0aGlzIGludG8gdGhl
-IGdlbmVyaWMgYmluZGluZyB3b3VsZCBiZSBoZWxwZnVsLCB0byBwcmV2ZW50IG90aGVycyBmcm9t
-IGFkZGluZyBhbm90aGVyIGluY29tcGF0aWJsZSB3YXkgdG8gZG8gdGhlIHNhbWUgdGhpbmcuDQoN
-CkEgbG90IG9mIGdlbmVyaWMgYmluZGluZ3MgaGF2ZSBhIHJlZmVyZW5jZSB0byBhIHJlc2V0IGNv
-bnRyb2xsZXIgdGhhdCBpZiBwcmVzZW50IG5lZWRzIHRvIGJlIHVzZWQgYmVmb3JlIGZpcnN0IGFj
-Y2Vzc2luZyB0aGUgZGV2aWNlIGl0c2VsZi4NCg0KSSBtZWFuIG91ciByZXNldCBwcm9jZXNzIGlz
-IHJlYWxseSBzcGVjaWFsLCBidXQgdGhlcmUgaXMgbm8gcGFyc2Ugb2YgdGhpcyAicmVzZXQiIGlu
-IGdlbmVyaWMgZHJpdmVyIGNvZGUgbGlrZSB1ZnNoY2QuYyBvciB1ZnNoY2QtcGx0ZnJtLmM7IEV2
-ZW4gaWYgSSBhZGQgdGhvc2UgdG8gdWZzaGNkLXBsdGZybS50eHQgYW5kIGltcGxlbWVudCB0aGUg
-Y29tbW9uIHBhcnNpbmcgY29kZSwgYnV0IG91ciBzcGVjaWFsIHJlcXVpcmVtZW50cyBhcmUgZGlm
-ZmljdWx0IHRvIHNhdGlzZnk7DQpXaGF0IGRvIHlvdSB0aGluayBhYm91dCBpZiBJIHB1dCBhbGwg
-dGhlIGltcGxlbWVudGF0aW9ucyBvZiByZXNldCBpbiBvdXIgZHJpdmVyIGNvZGUsIGFuZCByZW1v
-dmUgInJlc2V0IiBwcm9wZXJ0eSBoZXJlPw0KDQo+IHJlc2V0LWdwaW9zIGlzIHVzZWQgdG8gc29s
-dmUgYSBkZWZlY3Qgb2YgdGhlIFNPQyBjaGlwIHJlc2V0IGZ1bmN0aW9uIA0KPiBhbmQgaXQgaXMg
-bm90IGdlbmVyaWMgLCBidXQgb3VyIGNoaXAgaGFzIGJlZW4gdXBkYXRlZCwgc28gdGhpcyBpcyBu
-byANCj4gbG9uZ2VyIG5lZWRlZCwgYW5kIEkgd2lsbCByZW1vdmUgaXQgaW4gdGhlIHBhdGNoIHY2
-Ow0KDQpPay4NCg0KICAgICAgQXJuZA0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Power-domains can also have their active states and this patch enhances
+the OPP binding to define those.
+
+The power domains can use the OPP bindings mostly as is. Though there
+are some changes required to support special cases:
+
+- Allow "operating-points-v2" to contain multiple phandles for power
+  domain providers providing multiple domains.
+
+- A new property "power-domain-opp" is added for devices to specify the
+  minimum required OPP of the master domain for the functioning of the
+  device. We can add this property directly to device's node if the
+  device has a fixed minimum OPP requirement from the master power
+  domain. Or we can add this property to each OPP node of the device, if
+  different OPP nodes have different minimum OPP requirement from the
+  master power domain.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ Documentation/devicetree/bindings/opp/opp.txt      | 12 +++++
+ .../devicetree/bindings/power/power_domain.txt     | 62 ++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 9d733af26be7..203e09fe7698 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -45,6 +45,11 @@ Devices supporting OPPs must set their "operating-points-v2" property with
+ phandle to a OPP table in their DT node. The OPP core will use this phandle to
+ find the operating points for the device.
+ 
++This can contain more than one phandle for power domain providers that provide
++multiple power domains. That is, one phandle for each power domain. If only one
++phandle is available, then the same OPP table will be used for all power domains
++provided by the power domain provider.
++
+ If required, this can be extended for SoC vendor specific bindings. Such bindings
+ should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
+ and should have a compatible description like: "operating-points-v2-<vendor>".
+@@ -154,6 +159,13 @@ properties.
+ 
+ - status: Marks the node enabled/disabled.
+ 
++- power-domain-opp: This contains phandle to one of the OPP nodes of the master
++  power domain. This specifies the minimum required OPP of the master domain for
++  the functioning of the device in this OPP (where this property is present).
++  This property can only be set for a device if the device node contains the
++  "power-domains" property. Also, either all or none of the OPP nodes in an OPP
++  table should have it set.
++
+ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 
+ / {
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 14bd9e945ff6..0d8608f2d133 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -40,6 +40,12 @@ phandle arguments (so called PM domain specifiers) of length specified by the
+   domain's idle states. In the absence of this property, the domain would be
+   considered as capable of being powered-on or powered-off.
+ 
++- operating-points-v2 : Phandles to the OPP tables of power domains provided by
++  a power domain provider. If the provider provides a single power domain only
++  or all the power domains provided by the provider have identical OPP tables,
++  then this shall contain a single phandle. Refer to ../opp/opp.txt for more
++  information.
++
+ Example:
+ 
+ 	power: power-controller@12340000 {
+@@ -120,4 +126,60 @@ The node above defines a typical PM domain consumer device, which is located
+ inside a PM domain with index 0 of a power controller represented by a node
+ with the label "power".
+ 
++Optional properties:
++- power-domain-opp: This contains phandle to one of the OPP nodes of the master
++  power domain. This specifies the minimum required OPP of the master domain for
++  the functioning of the device. This property can only be set for a device, if
++  the device node contains the "power-domains" property.
++
++Example:
++- OPP table for domain provider that provides two domains.
++
++	domain0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++
++		domain0_opp_0: opp-1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <975000 970000 985000>;
++		};
++		domain0_opp_1: opp-1100000000 {
++			opp-hz = /bits/ 64 <1100000000>;
++			opp-microvolt = <1000000 980000 1010000>;
++		};
++	};
++
++	domain1_opp_table: opp_table1 {
++		compatible = "operating-points-v2";
++
++		domain1_opp_0: opp-1200000000 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <975000 970000 985000>;
++		};
++		domain1_opp_1: opp-1300000000 {
++			opp-hz = /bits/ 64 <1300000000>;
++			opp-microvolt = <1000000 980000 1010000>;
++		};
++	};
++
++	parent: power-controller@12340000 {
++		compatible = "foo,power-controller";
++		reg = <0x12340000 0x1000>;
++		#power-domain-cells = <1>;
++		operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
++	};
++
++	leaky-device0@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&parent 0>;
++		power-domain-opp = <&domain0_opp_0>;
++	};
++
++	leaky-device1@12350000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12350000 0x1000>;
++		power-domains = <&parent 1>;
++		power-domain-opp = <&domain1_opp_1>;
++	};
++
+ [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
+-- 
+2.15.0.rc1.236.g92ea95045093
