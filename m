@@ -1,70 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regmap: Add hardware spinlock support
-Date: Wed, 1 Nov 2017 10:13:02 +0000
-Message-ID: <20171101101302.fnryw6443xlaq5ch@sirena.co.uk>
-References: <00b91de822135699da81f70c4d2b8fecbc113ab1.1509501110.git.baolin.wang@linaro.org>
+From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 05/13] irqchip: add initial support for ompic
+Date: Wed, 1 Nov 2017 21:17:16 +0900
+Message-ID: <20171101121716.GH29237@lianli.shorne-pla.net>
+References: <20171029231123.27281-1-shorne@gmail.com>
+ <20171029231123.27281-6-shorne@gmail.com>
+ <86mv4974ht.fsf@arm.com>
+ <20171030041806.GA29237@lianli.shorne-pla.net>
+ <86vaix5fmr.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u67jqfrvq3wstb6t"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <00b91de822135699da81f70c4d2b8fecbc113ab1.1509501110.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <86vaix5fmr.fsf-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 30, 2017 at 06:11:40AM +0000, Marc Zyngier wrote:
+> On Mon, Oct 30 2017 at  1:18:06 pm GMT, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Mon, Oct 30, 2017 at 02:29:18AM +0000, Marc Zyngier wrote:
+> >> On Mon, Oct 30 2017 at  8:11:15 am GMT, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> > From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+> >> >
+> >> > IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
+> >> > described in the Multi-core support section of the OpenRISC 1.2
+> >> > architecture specification:
+> >> >
+> >> >   https://github.com/openrisc/doc/raw/master/openrisc-arch-1.2-rev0.pdf
+> >> >
+> >> > Each OpenRISC core contains a full interrupt controller which is used in
+> >> > the SMP architecture for interrupt balancing.  This IPI device, the
+> >> > ompic, is the only external device required for enabling SMP on
+> >> > OpenRISC.
+> >> >
+> >> > Pending ops are stored in a memory bit mask which can allow multiple
+> >> > pending operations to be set and serviced at a time. This is mostly
+> >> > borrowed from the alpha IPI implementation.
+> >> >
+> >> > Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> >> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
+> >> > [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
+> >> > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> 
+> >> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> >
+> > Thanks
+> >
+> >> Side question: what is your merge strategy for this? I can take it
+> >> through the irqchip tree as it is standalone, but I'm open to other
+> >> suggestions.
+> >
+> > For me its easier if I just take it through the openrisc tree, as
+> > there are dependencies between this series and the irqchip driver.
+> > If you are ok with that I can make a note to Linus indicating so in
+> > the pull request.
+> 
+> No problem, that's OK with me.
 
---u67jqfrvq3wstb6t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acknowledged
 
-On Wed, Nov 01, 2017 at 10:11:55AM +0800, Baolin Wang wrote:
-> On some platforms, when reading or writing some special registers through
-> regmap, we should acquire one hardware spinlock to synchronize between
-> the multiple subsystems. Thus this patch adds the hardware spinlock
-> support for regmap.
+> > My plan is to send this series during the 4.15 merge window.
+> 
+> Make sure this is in -next (when it comes back to life...).
 
-The following changes since commit 2bd6bf03f4c1c59381d62c61d03f6cc3fe71f66e:
+Its there now, and it looks like -next is almost back to life.
 
-  Linux 4.14-rc1 (2017-09-16 15:47:51 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-hwspinlock-support
-
-for you to fetch changes up to 8698b9364710e7bac84b3af07dd410e39c8c2e08:
-
-  regmap: Add hardware spinlock support (2017-11-01 10:06:29 +0000)
-
-----------------------------------------------------------------
-regmap: Add hwspinlock support
-
-----------------------------------------------------------------
-Baolin Wang (1):
-      regmap: Add hardware spinlock support
-
- drivers/base/regmap/internal.h |   2 +
- drivers/base/regmap/regmap.c   | 101 ++++++++++++++++++++++++++++++++++-------
- include/linux/regmap.h         |   6 +++
- 3 files changed, 93 insertions(+), 16 deletions(-)
-
---u67jqfrvq3wstb6t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAln5ni0ACgkQJNaLcl1U
-h9AuDgf/fUW8kwdJVDaFbYa7pvur07Xy4byW+hYfOkQV4EmMcZ3Tb7wUzgOaTKP/
-SFP4eK5DOka0ejyp/L1whW47+Z+t9QjarGYonurRPRgYH+D/B9+u40kS4HK1cpuP
-x+3BiFV/7FIC2VTtNb1ZECLAao7oMinMcup03PDgeTN8cPDCc0EcQK6zvP/VNEeB
-16X7UCgSQ8xGOGY1b7w++w5XYNh99Pk/0gMIFBh6U7ThYbZLGiLZlyINMrexbEy3
-wg6FmAC53j/FMUkNxOXhunOZgZ1OOo9/zLgR9Ror8XIrGGenrCy9YSGujpd1VTZO
-o1Sdx8TojKBHXdCtK3EaEHApMtY6YQ==
-=RLmF
------END PGP SIGNATURE-----
-
---u67jqfrvq3wstb6t--
+-Stafford
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
