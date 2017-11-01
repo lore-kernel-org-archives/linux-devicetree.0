@@ -1,67 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/3] media: ov7740: Document device tree bindings
-Date: Wed, 1 Nov 2017 16:51:57 -0500
-Message-ID: <20171101215157.5hemcpuplikvtpqx@rob-hp-laptop>
-References: <20171031011146.6899-1-wenyou.yang@microchip.com>
- <20171031011146.6899-3-wenyou.yang@microchip.com>
+Subject: Re: [PATCH v2] iio: adc: aspeed: Deassert reset in probe
+Date: Wed, 1 Nov 2017 16:54:04 -0500
+Message-ID: <20171101215404.njw5zch55dxwmkgl@rob-hp-laptop>
+References: <20171031021203.18248-1-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171031011146.6899-3-wenyou.yang@microchip.com>
+In-Reply-To: <20171031021203.18248-1-joel@jms.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@microchip.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
+To: Joel Stanley <joel@jms.id.au>
+Cc: Jonathan Cameron <jic23@kernel.org>, Rick Altherr <raltherr@google.com>, Philipp Zabel <philipp.zabel@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 31, 2017 at 09:11:44AM +0800, Wenyou Yang wrote:
-> Add the device tree binding documentation for the ov7740 sensor driver.
+On Tue, Oct 31, 2017 at 12:42:03PM +1030, Joel Stanley wrote:
+> The ASPEED SoC must deassert a reset in order to use the ADC peripheral.
 > 
-> Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
+> The device tree bindings are updated to document the resets phandle, and
+> the example is updated to match what is expected for both the reset and
+> clock phandle. Note that the bindings should have always had the reset
+> controller, as the hardware is unusable without it.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
+> v2:
+>  - Ensure disabling path unwinds in opposite order as the enable path
+>  - Note that the bindings were incorrect without the reset phandle,
+>  and for the system to be usable we must update them. No one was
+>  (successfully) using these bindings/driver before without out of tree
+>  hacks in mach-aspeed, as it would not have worked.
 > 
-> Changes in v4: None
-> Changes in v3:
->  - Explicitly document the "remote-endpoint" property.
-> 
-> Changes in v2: None
-> 
->  .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7740.txt b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> new file mode 100644
-> index 000000000000..af781c3a5f0e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> @@ -0,0 +1,47 @@
-> +* Omnivision OV7740 CMOS image sensor
-> +
-> +The Omnivision OV7740 image sensor supports multiple output image
-> +size, such as VGA, and QVGA, CIF and any size smaller. It also
-> +supports the RAW RGB and YUV output formats.
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should
-> +be used to specify link to the image data receiver. The OV7740 device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Required Properties:
-> +- compatible:	"ovti,ov7740".
-> +- reg:		I2C slave address of the sensor.
-> +- clocks:	Reference to the xvclk input clock.
-> +- clock-names:	"xvclk".
-> +
-> +Optional Properties:
-> +- reset-gpios: Rreference to the GPIO connected to the reset_b pin,
-> +  if any. Active low with pull-ip resistor.
-> +- powerdown-gpios: Reference to the GPIO connected to the pwdn pin,
-> +  if any. Active high with pull-down resistor.
-> +
-> +Endpoint node mandatory properties:
-> +- remote-endpoint: A phandle to the bus receiver's endpoint node.
-
-This is not really necessary. What's required is documenting how many 
-ports and how many endpoints for each port which you have above.
+>  .../devicetree/bindings/iio/adc/aspeed_adc.txt     |  4 +++-
+>  drivers/iio/adc/aspeed_adc.c                       | 25 ++++++++++++++++------
+>  2 files changed, 22 insertions(+), 7 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
