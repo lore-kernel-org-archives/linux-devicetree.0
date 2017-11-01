@@ -1,95 +1,40 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
-Date: Wed, 1 Nov 2017 17:29:31 +1030
-Message-ID: <CACPK8Xcffkh5mXrCyXuDkFWPMPETb5OS2B61x1Oj7FiXhMFi9Q@mail.gmail.com>
-References: <20171101013421.8488-1-joel@jms.id.au> <d70eef8b-385e-4591-17b4-6fde3907df0f@roeck-us.net>
- <20171101020433.GF29237@lianli.shorne-pla.net> <1331f460-d34b-02b2-d41a-3d0ec9543bb5@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/4] Add support rockchip RGB output interface
+Date: Wed,  1 Nov 2017 15:52:33 +0800
+Message-ID: <1509522753-118639-1-git-send-email-hjc@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1331f460-d34b-02b2-d41a-3d0ec9543bb5-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 1, 2017 at 12:44 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On 10/31/2017 07:04 PM, Stafford Horne wrote:
->>
->> On Tue, Oct 31, 2017 at 06:53:15PM -0700, Guenter Roeck wrote:
->>>
->>> On 10/31/2017 06:34 PM, Joel Stanley wrote:
->>>>
->>>> The ASPEED SoC must deassert a reset in order to use the PWM/tach
->>>> peripheral.
->>>>
->>>> The device tree bindings are updated to document the resets phandle, and
->>>> the example is updated to match what is expected for both the reset and
->>>> clock phandle. Note that the bindings should have always had the reset
->>>> controller, as the hardware is unusable without it.
->>>>
->>>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->>>
->>>
->>> Presumably the driver is being used. This change makes it incompatible
->>> with
->>> existing users. This is unacceptable; after all, it is possible that the
->>> device is taken out of reset by ROMMON or BIOS.
->>>
->>> On top of that, the reset controller code is quite strict and issues a
->>> backtrace if CONFIG_RESET_CONTROLLER is not enabled. Yet, there is no
->>> dependency added on RESET_CONTROLLER. You might want to consider making
->>> the new control optional and using
->>> devm_reset_control_get_optional_exclusive().
->>>
->>> The DT change should be a separate patch.
->>>
->>> More comments below.
->>
->>
->> [..]
->>
->>>>         return PTR_ERR_OR_ZERO(hwmon);
->>>>    }
->>>> +static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
->>>> +{
->>>> +       struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
->>>> +
->>>> +       reset_control_deassert(priv->rst);
->>>
->>>
->>> This seems to be quite pointless. Also, did you test this code ?
->>>
->>>> +
->>>> +       return 0;
->>>> +}
->>>> +
->>>>    static const struct of_device_id of_pwm_tacho_match_table[] = {
->>>>         { .compatible = "aspeed,ast2400-pwm-tacho", },
->>>>         { .compatible = "aspeed,ast2500-pwm-tacho", },
->>>> @@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
->>>>    static struct platform_driver aspeed_pwm_tacho_driver = {
->>>>         .probe          = aspeed_pwm_tacho_probe,
->>>> +       .probe          = aspeed_pwm_tacho_remove,
->>
->>
->> Also, this cant be right (should be .remove)?
->>
->
-> Nice. Makes me really wonder what this code would do. Does this even compile
-> ?
+This patches add support rockchip RGB output, Some Rockchip CRTCs, like rv1108,
+can directly output parallel and serial RGB data to panel or to conversion chip.
+So we add this driver to probe encoder and connector to support this case.
 
-It compiled. And booted, but it didn't do much :) I rushed sending out
-the patch a bit, sorry.
+Sandy Huang (4):
+  devicetree/bindings: display: Add doucument for RGB panels
+  devicetree/bindings: display: Add document for rockchip RGB output
+  drm/rockchip: Add support for Rockchip Soc RGB output interface
+  drm/rockchip: vop: Add more RGB output interface type
 
-I've spent today I did some closer testing with a fixed v2 and I do
-get values out of the device. I don't have access to a machine that I
-can see the fans spinning on, so it's hard to know if the values are
-correct. I'll send it out tomorrow with a request for testing.
+ .../bindings/display/panel/panel-rgb.txt           | 116 +++++++
+ .../bindings/display/rockchip/rockchip-rgb.txt     |  72 +++++
+ drivers/gpu/drm/rockchip/Kconfig                   |  11 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_rgb.c            | 344 +++++++++++++++++++++
+ 8 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/panel-rgb.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_rgb.c
 
-Cheers,
+-- 
+2.7.4
 
-Joel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
