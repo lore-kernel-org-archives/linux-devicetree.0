@@ -1,78 +1,59 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Patch v6 1/7] slimbus: Device management on SLIMbus
-Date: Wed, 1 Nov 2017 16:08:06 -0700
-Message-ID: <20171101230806.GD28761@minitux>
-References: <20171006155136.4682-1-srinivas.kandagatla@linaro.org>
- <20171006155136.4682-2-srinivas.kandagatla@linaro.org>
- <20171017062332.GS1165@minitux>
- <1a1d2777-be69-98ca-afba-0ffd0e3dd80f@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1a1d2777-be69-98ca-afba-0ffd0e3dd80f-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gong.chen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kheitke-hxvC4TZJLZFWk0Htik3J/w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 2/2] hwrng: iproc-rng200: Add support for BCM7278
+Date: Wed,  1 Nov 2017 16:20:06 -0700
+Message-ID: <20171101232006.3943-3-f.fainelli@gmail.com>
+References: <20171101232006.3943-1-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171101232006.3943-1-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Martin Kaiser <martin@kaiser.cx>, "open list:HARDWARE RANDOM NUMBER
+        GENERATOR CORE" <linux-crypto@vger.kernel.org>, "open list:OP" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 18 Oct 09:38 PDT 2017, Srinivas Kandagatla wrote:
-> On 17/10/17 07:23, Bjorn Andersson wrote:
-> > On Fri 06 Oct 08:51 PDT 2017, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-[..]
-> > > +static int slim_device_remove(struct device *dev)
-> > > +{
-> > > +	struct slim_device *sbdev;
-> > > +	struct slim_driver *sbdrv;
-> > > +	int status = 0;
-> > > +
-> > > +	sbdev = to_slim_device(dev);
-> > > +	if (!dev->driver)
-> > > +		return 0;
-> > > +
-> > > +	sbdrv = to_slim_driver(dev->driver);
-> > > +	if (sbdrv->remove)
-> > > +		status = sbdrv->remove(sbdev);
-> > > +
-> > > +	mutex_lock(&sbdev->report_lock);
-> > > +	sbdev->notified = false;
-> > > +	if (status == 0)
-> > > +		sbdev->driver = NULL;
-> > > +	mutex_unlock(&sbdev->report_lock);
-> > > +	return status;
-> > 
-> > device_unregister() will call device_del() which will end up in
-> > __device_release_driver() which will call this function. Upon returning
-> > from this function the core expect the bus to have cleaned up after the
-> > dev (normally by calling drv->remove(dev)).
-> > 
-> > It will completely ignore the return value and continue tearing down the
-> > rest of the core resources, e.g. three lines down it will
-> > devres_release_all().
-> > 
-> > 
-> > So you have the option of sleeping, while waiting for stuff to be
-> > aborted/finished and then you need to clean things up.
-> > 
-> > The slim_device object itself will stick around until all references are
-> > dropped though.
-> 
-> So you are suggesting that we make slim_driver remove not return anything?
-> 
+BCM7278 features a RNG200 hardware random number generator block, add
+support for this chip by matching the chip-specific compatible string
+and extending the Kconfig dependencies to allow building on ARCH_BRCMSTB
+(base platform for 7278).
 
-Yes.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/char/hw_random/Kconfig        | 6 +++---
+ drivers/char/hw_random/iproc-rng200.c | 1 +
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Having the opportunity of failing remove() causes driver writers to
-expect that they can fail, with the result of things not being torn
-down properly.
-
-Note that right after remove() returns devm_* resources will be
-released, so anything that is not torn down and for some reason later
-access allocated resources would cause issues.
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 95a031e9eced..f6e3e5abc117 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -100,12 +100,12 @@ config HW_RANDOM_BCM2835
+ 	  If unsure, say Y.
+ 
+ config HW_RANDOM_IPROC_RNG200
+-	tristate "Broadcom iProc RNG200 support"
+-	depends on ARCH_BCM_IPROC
++	tristate "Broadcom iProc/STB RNG200 support"
++	depends on ARCH_BCM_IPROC || ARCH_BRCMSTB
+ 	default HW_RANDOM
+ 	---help---
+ 	  This driver provides kernel-side support for the RNG200
+-	  hardware found on the Broadcom iProc SoCs.
++	  hardware found on the Broadcom iProc and STB SoCs.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called iproc-rng200
+diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_random/iproc-rng200.c
+index 3eaf7cb96d36..8b5a20b35293 100644
+--- a/drivers/char/hw_random/iproc-rng200.c
++++ b/drivers/char/hw_random/iproc-rng200.c
+@@ -220,6 +220,7 @@ static int iproc_rng200_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id iproc_rng200_of_match[] = {
++	{ .compatible = "brcm,bcm7278-rng200", },
+ 	{ .compatible = "brcm,iproc-rng200", },
+ 	{},
+ };
+-- 
+2.9.3
