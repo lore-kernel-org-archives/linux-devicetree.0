@@ -1,115 +1,33 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH 1/4] arm64: dts: qcom: pm8916: fix wcd_codec indentation
-Date: Wed,  1 Nov 2017 13:53:32 -0400
-Message-ID: <20171101175335.22123-2-damien.riegel@savoirfairelinux.com>
-References: <20171101175335.22123-1-damien.riegel@savoirfairelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171101175335.22123-1-damien.riegel@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 2/8] dt-bindings: net: dwmac-sun8i: update
+ documentation about integrated PHY
+Date: Wed, 1 Nov 2017 15:09:56 -0500
+Message-ID: <20171101200956.4q7wmfym4lv2vm34@rob-hp-laptop>
+References: <20171031081915.18960-1-clabbe.montjoie@gmail.com>
+ <20171031081915.18960-3-clabbe.montjoie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171031081915.18960-3-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Indentation did not respect kernel standards, so fix that for the usual
-indent with tabs, align with spaces. While at it, remove some empty
-lines before and after the closing parenthesis of this block.
+On Tue, Oct 31, 2017 at 09:19:09AM +0100, Corentin Labbe wrote:
+> This patch add documentation about the MDIO switch used on sun8i-h3-emac
+> for integrated PHY.
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/dwmac-sun8i.txt        | 147 +++++++++++++++++++--
+>  1 file changed, 135 insertions(+), 12 deletions(-)
 
-Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
----
- arch/arm64/boot/dts/qcom/pm8916.dtsi | 82 ++++++++++++++++++------------------
- 1 file changed, 40 insertions(+), 42 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/pm8916.dtsi b/arch/arm64/boot/dts/qcom/pm8916.dtsi
-index 53deebf9f515..d19f4cb9a5f3 100644
---- a/arch/arm64/boot/dts/qcom/pm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8916.dtsi
-@@ -96,47 +96,45 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--                wcd_codec: codec@f000 {
--                       compatible = "qcom,pm8916-wcd-analog-codec";
--	               reg = <0xf000 0x200>;
--	               reg-names = "pmic-codec-core";
--	               clocks = <&gcc GCC_CODEC_DIGCODEC_CLK>;
--	               clock-names = "mclk";
--	               interrupt-parent = <&spmi_bus>;
--	               interrupts = <0x1 0xf0 0x0 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x1 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x2 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x3 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x4 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x5 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x6 IRQ_TYPE_NONE>,
--	                            <0x1 0xf0 0x7 IRQ_TYPE_NONE>,
--	                            <0x1 0xf1 0x0 IRQ_TYPE_NONE>,
--	                            <0x1 0xf1 0x1 IRQ_TYPE_NONE>,
--	                            <0x1 0xf1 0x2 IRQ_TYPE_NONE>,
--	                            <0x1 0xf1 0x3 IRQ_TYPE_NONE>,
--	                            <0x1 0xf1 0x4 IRQ_TYPE_NONE>,
--	                            <0x1 0xf1 0x5 IRQ_TYPE_NONE>;
--	               interrupt-names = "cdc_spk_cnp_int",
--	                                 "cdc_spk_clip_int",
--	                                 "cdc_spk_ocp_int",
--	                                 "mbhc_ins_rem_det1",
--	                                 "mbhc_but_rel_det",
--	                                 "mbhc_but_press_det",
--	                                 "mbhc_ins_rem_det",
--	                                 "mbhc_switch_int",
--	                                 "cdc_ear_ocp_int",
--	                                 "cdc_hphr_ocp_int",
--	                                 "cdc_hphl_ocp_det",
--	                                 "cdc_ear_cnp_int",
--	                                 "cdc_hphr_cnp_int",
--	                                 "cdc_hphl_cnp_int";
--	               vdd-cdc-io-supply = <&pm8916_l5>;
--	               vdd-cdc-tx-rx-cx-supply = <&pm8916_l5>;
--	               vdd-micbias-supply = <&pm8916_l13>;
--	               #sound-dai-cells = <1>;
--
--                };
--
-+		wcd_codec: codec@f000 {
-+			compatible = "qcom,pm8916-wcd-analog-codec";
-+			reg = <0xf000 0x200>;
-+			reg-names = "pmic-codec-core";
-+			clocks = <&gcc GCC_CODEC_DIGCODEC_CLK>;
-+			clock-names = "mclk";
-+			interrupt-parent = <&spmi_bus>;
-+			interrupts = <0x1 0xf0 0x0 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x1 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x2 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x3 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x4 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x5 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x6 IRQ_TYPE_NONE>,
-+				     <0x1 0xf0 0x7 IRQ_TYPE_NONE>,
-+				     <0x1 0xf1 0x0 IRQ_TYPE_NONE>,
-+				     <0x1 0xf1 0x1 IRQ_TYPE_NONE>,
-+				     <0x1 0xf1 0x2 IRQ_TYPE_NONE>,
-+				     <0x1 0xf1 0x3 IRQ_TYPE_NONE>,
-+				     <0x1 0xf1 0x4 IRQ_TYPE_NONE>,
-+				     <0x1 0xf1 0x5 IRQ_TYPE_NONE>;
-+			interrupt-names = "cdc_spk_cnp_int",
-+					  "cdc_spk_clip_int",
-+					  "cdc_spk_ocp_int",
-+					  "mbhc_ins_rem_det1",
-+					  "mbhc_but_rel_det",
-+					  "mbhc_but_press_det",
-+					  "mbhc_ins_rem_det",
-+					  "mbhc_switch_int",
-+					  "cdc_ear_ocp_int",
-+					  "cdc_hphr_ocp_int",
-+					  "cdc_hphl_ocp_det",
-+					  "cdc_ear_cnp_int",
-+					  "cdc_hphr_cnp_int",
-+					  "cdc_hphl_cnp_int";
-+			vdd-cdc-io-supply = <&pm8916_l5>;
-+			vdd-cdc-tx-rx-cx-supply = <&pm8916_l5>;
-+			vdd-micbias-supply = <&pm8916_l13>;
-+			#sound-dai-cells = <1>;
-+		};
- 	};
- };
--- 
-2.15.0
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
