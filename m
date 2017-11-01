@@ -1,33 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2] of: platform: Create dummy routines for
- !CONFIG_OF_ADDRESS
-Date: Wed, 1 Nov 2017 16:14:58 -0500
-Message-ID: <20171101211458.wo4at67k7sxo5fah@rob-hp-laptop>
-References: <2d798213e4fefc074a66ccb7ab2fc243ee2b1e1a.1509186356.git.viresh.kumar@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: DT best practices for defining multiple closely-related boards
+Date: Wed, 1 Nov 2017 16:24:44 -0500
+Message-ID: <20171101212444.zfor6pfhqwe6ozmh@rob-hp-laptop>
+References: <alpine.LFD.2.21.1710280514300.8772@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2d798213e4fefc074a66ccb7ab2fc243ee2b1e1a.1509186356.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.LFD.2.21.1710280514300.8772-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Robert P. J. Day" <rpjday-L09J2beyid0N/H6P543EQg@public.gmane.org>
+Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 28, 2017 at 03:56:46PM +0530, Viresh Kumar wrote:
-> Few routines don't have their dummy counterparts which results in build
-> failures where these routines are used without CONFIG_OF_ADDRESS
-> enabled.
+On Sat, Oct 28, 2017 at 05:19:23AM -0400, Robert P. J. Day wrote:
 > 
-> Fix those by defining the dummy versions.
+>   much shorter followup to previous note -- if we extend all that to
+> defining, say, two very closely-related boards, the acme "coyote1" and
+> "coyote2", then all i should end up needing (at most) is two new .dts
+> files:
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> V2:
-> - Rebased again latest rc and resolved conflicts.
-> - No comments received on V1.
+>   coyote1.dts
+>   coyote2.dts
 
-What's your user?
+Another option is if your bootloader can distinguish between boards, you 
+fixup the dtb at runtime. Depends if managing mulitple dtbs and firmware 
+images is a pain or not.
 
->  include/linux/of_platform.h | 39 +++++++++++++++++++++++++++++++++------
->  1 file changed, 33 insertions(+), 6 deletions(-)
+> 
+> both of which could include (among other things) common coyote content
+> in:
+> 
+>   coyote.dtsi
+> 
+> and that's it. unless there's something really novel about these
+> boards, all other content should come from kernel-supplied .dtsi
+> files, yes? and, once again, i'm asking since the design i was handed
+> again copies kernel-supplied .dtsi files and modifies them, apparently
+> for no other reason than to remove properties, which should have been
+> done with /delete-property/.
+
+Seems so, but people just copy things for a variety of reasons (laziness 
+primarily).
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
