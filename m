@@ -1,94 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v10 1/7] dt-bindings: PCI: Add definition of PCIe
- WAKE# irq and PCI irq
-Date: Wed, 1 Nov 2017 16:05:41 -0500
-Message-ID: <20171101210541.vacfufnn2ms65xrw@rob-hp-laptop>
-References: <20171027072612.26565-1-jeffy.chen@rock-chips.com>
- <20171027072612.26565-2-jeffy.chen@rock-chips.com>
- <20171027204513.GA105121@google.com>
+Subject: Re: [PATCH v2 08/10] dt-bindings: add binding for A64 DE2 CCU SRAM
+Date: Wed, 1 Nov 2017 16:11:32 -0500
+Message-ID: <20171101211132.jtbhywkudrev4ux3@rob-hp-laptop>
+References: <20171027150658.18509-1-icenowy@aosc.io>
+ <20171027150658.18509-9-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171027204513.GA105121@google.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, tony@atomide.com, shawn.lin@rock-chips.com, rjw@rjwysocki.net, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20171027150658.18509-9-icenowy@aosc.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 27, 2017 at 01:45:17PM -0700, Brian Norris wrote:
-> Hi,
+On Fri, Oct 27, 2017 at 11:06:56PM +0800, Icenowy Zheng wrote:
+> A64's Display Engine 2.0 needs a section of SRAM (SRAM C) to be claimed,
+> otherwise the whole DE2 memory zone cannot be accessed (kept to all 0).
 > 
-> On Fri, Oct 27, 2017 at 03:26:06PM +0800, Jeffy Chen wrote:
-> > We are going to handle PCIe WAKE# pin for PCI bus bridges and PCI
-> > devices in the pci core, so add definitions of the optional PCIe
-> > WAKE# pin for PCI bus bridges and PCI devices.
-> > 
-> > Also add an definition of the optional PCI interrupt pin for PCI
-> > devices to distinguish it from the PCIe WAKE# pin.
-> > 
-> > Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > ---
-> > 
-> > Changes in v10: None
-> > Changes in v9:
-> > Add section for PCI devices and rewrite the commit message.
-> > 
-> > Changes in v8:
-> > Add optional "pci", and rewrite commit message.
-> > 
-> > Changes in v7: None
-> > Changes in v6: None
-> > Changes in v5:
-> > Move to pci.txt
-> > 
-> > Changes in v3: None
-> > Changes in v2: None
-> > 
-> >  Documentation/devicetree/bindings/pci/pci.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> > index c77981c5dd18..d4406d4e15ad 100644
-> > --- a/Documentation/devicetree/bindings/pci/pci.txt
-> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> > @@ -24,3 +24,11 @@ driver implementation may support the following properties:
-> >     unsupported link speed, for instance, trying to do training for
-> >     unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-> >     for gen2, and '1' for gen1. Any other values are invalid.
-> > +- interrupts: Interrupt specifier for each name in interrupt-names.
-> > +- interrupt-names: May contains "wakeup" for PCIe WAKE# interrupt.
+> Add binding for this, in order to make the DE2 CCU able to claim the
+> SRAM and enable access to the DE2 clock and reset registers.
 > 
-> s/contains/contain/
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v2:
+> - Adds description of the situation when the SRAM is not claimed.
 > 
-> > +
-> > +PCI devices have standardized Device Tree bindings:
-> 
-> This line is a little unclear, especially since there *is* an old
-> documented standard, yet the following text is actually introducing new,
-> non-standard additions.
-> 
-> > +
-> > +- interrupts: Interrupt specifier for each name in interrupt-names.
-> > +- interrupt-names: May contains "wakeup" for PCIe WAKE# interrupt and "pci" for
-> 
-> s/contains/contain/
-> 
-> > +  PCI interrupt.
-> 
-> IMO, since you're trying to augment a standardized binding, you need to
-> be a lot clearer here. I expect you should mention the existing standard
-> (that devices may optionally include an 'interrupts' property that
-> represents the legacy PCI interrupt) and how you're augmenting it (that
-> additional interrupts can be supported optionally, but they require a
-> corresponding 'interrupt-names' property).
+>  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-There's an additional complication that I'd guess the wakeup is 
-typically a GPIO line and hence a different parent. We have 2 options 
-there. The first is interrupts-extended which is generally implicitly 
-supported (i.e. we only document interrupts). The second is we already 
-have interrupt-map if we have legacy interrupts and can map to different 
-parents. For this to work, we'd have to use a number >4 for the wakeup 
-interrupts.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
