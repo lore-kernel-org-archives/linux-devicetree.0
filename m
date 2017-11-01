@@ -1,61 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/2] mfd: Add Spreadtrum SC27xx series PMICs driver
-Date: Wed, 1 Nov 2017 09:27:03 +0000
-Message-ID: <20171101092703.i5t7ejuhcs45cchw@dell>
-References: <c92b97145628e5f8db410d1916da46a4c9fecf8c.1509503569.git.baolin.wang@spreadtrum.com>
- <0806380ab2674f78f925b9015e558ffb634f11f1.1509503569.git.baolin.wang@spreadtrum.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] mfd: axp20x: Add axp20x-regulator
+ cell for AXP813
+Date: Wed, 1 Nov 2017 09:28:47 +0000
+Message-ID: <20171101092847.aotaajzhpwqspztf@dell>
+References: <20171018083138.14517-1-wens@csie.org>
+ <20171018083138.14517-2-wens@csie.org>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBUVH43HQKGQEUQQUOTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <0806380ab2674f78f925b9015e558ffb634f11f1.1509503569.git.baolin.wang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+In-Reply-To: <20171018083138.14517-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 01 Nov 2017, Baolin Wang wrote:
+On Wed, 18 Oct 2017, Chen-Yu Tsai wrote:
 
-> This patch adds support for Spreadtrum SC27xx series PMIC MFD core, and It
-> provides communication through the SPI interfaces. The SC27xx series PMICs
-> contains the following 6 major components:
-> - DCDCs
-> - LDOs
-> - Battery management system
-> - Audio codec
-> - User interface function, such as indicator, flash LED
-> - IC level function, such as power on/off, type-c
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> Now that axp20x-regulator supports AXP813, we can add a cell for it
+> to enable it.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> Changes since v3:
->  - Use memcpy() to copy register offset address into SPI buffer.
-> 
-> Changes since v2:
->  - Add more help information.
->  - Define macros for irq base and irq number.
->  - Use devm_mfd_add_devices() instead of mfd_add_devices(), which means
->  we can remove sprd_pmic_remove().
->  - Rename local variables in sprd_pmic_probe().
-> 
-> Changes since v1:
->  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
->  - Modify compatile string property.
->  - Modify reg property.
->  - Remove redundant 'pmic' label.
->  - Change 'should be' to 'must be' for cells properties.
-> ---
->  drivers/mfd/Kconfig           |   16 +++
->  drivers/mfd/Makefile          |    1 +
->  drivers/mfd/sprd-sc27xx-spi.c |  259 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 276 insertions(+)
->  create mode 100644 drivers/mfd/sprd-sc27xx-spi.c
+>  drivers/mfd/axp20x.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
 Applied, thanks.
 
--- 
+--=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
+Linaro.org =E2=94=82 Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
