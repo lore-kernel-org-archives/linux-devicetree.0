@@ -1,332 +1,44 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regmap: Add hardware spinlock support" to the regmap tree
-Date: Wed, 01 Nov 2017 10:07:13 +0000
-Message-ID: <E1e9pvV-0004HF-Hz@debutante>
-References: <00b91de822135699da81f70c4d2b8fecbc113ab1.1509501110.git.baolin.wang@linaro.org>
+From: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] gpio: gpiolib: Generalise state persistence
+ beyond sleep
+Date: Wed, 1 Nov 2017 10:09:53 +0000
+Message-ID: <20171101100953.ye5fp33vxuol5z5a@localhost.localdomain>
+References: <20171101040457.1200-1-andrew@aj.id.au>
+ <20171101040457.1200-2-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <00b91de822135699da81f70c4d2b8fecbc113ab1.1509501110.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171101040457.1200-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Wed, Nov 01, 2017 at 03:04:56PM +1100, Andrew Jeffery wrote:
+> General support for state persistence is added to gpiolib with the
+> introduction of a new pinconf parameter to propagate the request to
+> hardware. The existing persistence support for sleep is adapted to
+> include hardware support if the GPIO driver provides it. Persistence
+> continues to be enabled by default; in-kernel consumers can opt out, but
+> userspace (currently) does not have a choice.
+> 
+> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
+> renamed, dropping the SLEEP prefix to reflect that the concept is no
+> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
+> could initially be misinterpreted, so I've further changed the symbols
+> to *_TRANSITORY and *_PERSISTENT to address this.
+> 
+> The sysfs interface is modified only to keep consistency with the
+> chardev interface in enforcing persistence for userspace exports.
+> 
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> ---
 
-   regmap: Add hardware spinlock support
-
-has been applied to the regmap tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Reviewed-by: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
 
 Thanks,
-Mark
-
->From 8698b9364710e7bac84b3af07dd410e39c8c2e08 Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Wed, 1 Nov 2017 10:11:55 +0800
-Subject: [PATCH] regmap: Add hardware spinlock support
-
-On some platforms, when reading or writing some special registers through
-regmap, we should acquire one hardware spinlock to synchronize between
-the multiple subsystems. Thus this patch adds the hardware spinlock
-support for regmap.
-
-Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/base/regmap/internal.h |   2 +
- drivers/base/regmap/regmap.c   | 101 ++++++++++++++++++++++++++++++++++-------
- include/linux/regmap.h         |   6 +++
- 3 files changed, 93 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/base/regmap/internal.h b/drivers/base/regmap/internal.h
-index 2a4435d76028..8641183cac2f 100644
---- a/drivers/base/regmap/internal.h
-+++ b/drivers/base/regmap/internal.h
-@@ -157,6 +157,8 @@ struct regmap {
- 
- 	struct rb_root range_tree;
- 	void *selector_work_buf;	/* Scratch buffer used for selector */
-+
-+	struct hwspinlock *hwlock;
- };
- 
- struct regcache_ops {
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index b9a779a4a739..999e981a174a 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -20,6 +20,7 @@
- #include <linux/sched.h>
- #include <linux/delay.h>
- #include <linux/log2.h>
-+#include <linux/hwspinlock.h>
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-@@ -413,6 +414,49 @@ static unsigned int regmap_parse_64_native(const void *buf)
- }
- #endif
- 
-+static void regmap_lock_hwlock(void *__map)
-+{
-+	struct regmap *map = __map;
-+
-+	hwspin_lock_timeout(map->hwlock, UINT_MAX);
-+}
-+
-+static void regmap_lock_hwlock_irq(void *__map)
-+{
-+	struct regmap *map = __map;
-+
-+	hwspin_lock_timeout_irq(map->hwlock, UINT_MAX);
-+}
-+
-+static void regmap_lock_hwlock_irqsave(void *__map)
-+{
-+	struct regmap *map = __map;
-+
-+	hwspin_lock_timeout_irqsave(map->hwlock, UINT_MAX,
-+				    &map->spinlock_flags);
-+}
-+
-+static void regmap_unlock_hwlock(void *__map)
-+{
-+	struct regmap *map = __map;
-+
-+	hwspin_unlock(map->hwlock);
-+}
-+
-+static void regmap_unlock_hwlock_irq(void *__map)
-+{
-+	struct regmap *map = __map;
-+
-+	hwspin_unlock_irq(map->hwlock);
-+}
-+
-+static void regmap_unlock_hwlock_irqrestore(void *__map)
-+{
-+	struct regmap *map = __map;
-+
-+	hwspin_unlock_irqrestore(map->hwlock, &map->spinlock_flags);
-+}
-+
- static void regmap_lock_mutex(void *__map)
- {
- 	struct regmap *map = __map;
-@@ -627,6 +671,29 @@ struct regmap *__regmap_init(struct device *dev,
- 		map->lock = config->lock;
- 		map->unlock = config->unlock;
- 		map->lock_arg = config->lock_arg;
-+	} else if (config->hwlock_id) {
-+		map->hwlock = hwspin_lock_request_specific(config->hwlock_id);
-+		if (!map->hwlock) {
-+			ret = -ENXIO;
-+			goto err_map;
-+		}
-+
-+		switch (config->hwlock_mode) {
-+		case HWLOCK_IRQSTATE:
-+			map->lock = regmap_lock_hwlock_irqsave;
-+			map->unlock = regmap_unlock_hwlock_irqrestore;
-+			break;
-+		case HWLOCK_IRQ:
-+			map->lock = regmap_lock_hwlock_irq;
-+			map->unlock = regmap_unlock_hwlock_irq;
-+			break;
-+		default:
-+			map->lock = regmap_lock_hwlock;
-+			map->unlock = regmap_unlock_hwlock;
-+			break;
-+		}
-+
-+		map->lock_arg = map;
- 	} else {
- 		if ((bus && bus->fast_io) ||
- 		    config->fast_io) {
-@@ -729,7 +796,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_write = regmap_format_2_6_write;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 
-@@ -739,7 +806,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_write = regmap_format_4_12_write;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 
-@@ -749,7 +816,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_write = regmap_format_7_9_write;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 
-@@ -759,7 +826,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_write = regmap_format_10_14_write;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 
-@@ -779,13 +846,13 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_reg = regmap_format_16_native;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 
- 	case 24:
- 		if (reg_endian != REGMAP_ENDIAN_BIG)
--			goto err_map;
-+			goto err_hwlock;
- 		map->format.format_reg = regmap_format_24;
- 		break;
- 
-@@ -801,7 +868,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_reg = regmap_format_32_native;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 
-@@ -818,13 +885,13 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.format_reg = regmap_format_64_native;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- #endif
- 
- 	default:
--		goto err_map;
-+		goto err_hwlock;
- 	}
- 
- 	if (val_endian == REGMAP_ENDIAN_NATIVE)
-@@ -853,12 +920,12 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.parse_val = regmap_parse_16_native;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- 	case 24:
- 		if (val_endian != REGMAP_ENDIAN_BIG)
--			goto err_map;
-+			goto err_hwlock;
- 		map->format.format_val = regmap_format_24;
- 		map->format.parse_val = regmap_parse_24;
- 		break;
-@@ -879,7 +946,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.parse_val = regmap_parse_32_native;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- #ifdef CONFIG_64BIT
-@@ -900,7 +967,7 @@ struct regmap *__regmap_init(struct device *dev,
- 			map->format.parse_val = regmap_parse_64_native;
- 			break;
- 		default:
--			goto err_map;
-+			goto err_hwlock;
- 		}
- 		break;
- #endif
-@@ -909,18 +976,18 @@ struct regmap *__regmap_init(struct device *dev,
- 	if (map->format.format_write) {
- 		if ((reg_endian != REGMAP_ENDIAN_BIG) ||
- 		    (val_endian != REGMAP_ENDIAN_BIG))
--			goto err_map;
-+			goto err_hwlock;
- 		map->use_single_write = true;
- 	}
- 
- 	if (!map->format.format_write &&
- 	    !(map->format.format_reg && map->format.format_val))
--		goto err_map;
-+		goto err_hwlock;
- 
- 	map->work_buf = kzalloc(map->format.buf_size, GFP_KERNEL);
- 	if (map->work_buf == NULL) {
- 		ret = -ENOMEM;
--		goto err_map;
-+		goto err_hwlock;
- 	}
- 
- 	if (map->format.format_write) {
-@@ -1041,6 +1108,8 @@ struct regmap *__regmap_init(struct device *dev,
- err_range:
- 	regmap_range_exit(map);
- 	kfree(map->work_buf);
-+err_hwlock:
-+	hwspin_lock_free(map->hwlock);
- err_map:
- 	kfree(map);
- err:
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index 978abfbac617..edc32aac84d7 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -273,6 +273,9 @@ typedef void (*regmap_unlock)(void *);
-  *
-  * @ranges: Array of configuration entries for virtual address ranges.
-  * @num_ranges: Number of range configuration entries.
-+ * @hwlock_id: Specify the hardware spinlock id.
-+ * @hwlock_mode: The hardware spinlock mode, should be HWLOCK_IRQSTATE,
-+ *		 HWLOCK_IRQ or 0.
-  */
- struct regmap_config {
- 	const char *name;
-@@ -317,6 +320,9 @@ struct regmap_config {
- 
- 	const struct regmap_range_cfg *ranges;
- 	unsigned int num_ranges;
-+
-+	unsigned int hwlock_id;
-+	unsigned int hwlock_mode;
- };
- 
- /**
--- 
-2.15.0.rc2
-
+Charles
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
