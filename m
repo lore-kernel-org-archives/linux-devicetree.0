@@ -1,66 +1,94 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
-Date: Tue, 31 Oct 2017 23:57:37 +0000
-Message-ID: <86ineu3m6m.fsf@arm.com>
-References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
-        <8637605bly.fsf@arm.com> <7h1sljmxp6.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7h1sljmxp6.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Kevin Hilman's message of "Tue, 31
-        Oct 2017 11:13:57 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
+Date: Wed,  1 Nov 2017 00:21:32 +0000
+Message-ID: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, linux-mmc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 31 2017 at 11:13:57 am GMT, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
->
->> On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl
->> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->>> This is a simple follow-up of two series from Jerome:
->>> - "irqchip: meson: add support for the gpio interrupt controller"
->>> - "ARM: meson: enable gpio interrupt controller"
->>>
->>> This fills in the missing bits to have GPIO interrupt support on Meson8,
->>> which includes:
->>> - a new binding in the driver with the correct IRQ number
->>> - enabling the GPIO interrupt controller in meson8.dts
->>> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
->>>
->>>
->>> Martin Blumenstingl (3):
->>>   irqchip/meson-gpio: add support for Meson8 SoCs
->>>   ARM: dts: meson8: enable the GPIO interrupt controller
->>>   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
->>>
->>>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
->>>  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
->>>  arch/arm/mach-meson/Kconfig                                          | 1 +
->>>  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
->>>  4 files changed, 12 insertions(+)
->>
->> Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
->> happy to queue it if I get an Ack for it. If you'd rather get it through
->> via armsoc, let me know.
->
-> Can you take the drivers/irqchip and bindings patch (PATCH 1/3) and I'll
-> take the rest to avoid conflicts with a bunch of other moving parts we
-> have in arch/arm.
+The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
+requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
+F_SDH30_ESD_CONTROL control register.
 
-Sure, no problem.
+So let's add an optional property to this device's binding, and
+set the attribute if it is present in the DT node.
 
-> For the driver, feel free to add
->
-> Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt |  2 ++
+ drivers/mmc/host/sdhci_f_sdh30.c                        | 18 +++++++++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
-Thanks,
-
-	M.
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+index de2c53cff4f1..9ad02f743ad0 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+@@ -15,6 +15,8 @@ Required properties:
+ Optional properties:
+ - vqmmc-supply: phandle to the regulator device tree node, mentioned
+   as the VCCQ/VDD_IO supply in the eMMC/SD specs.
++- cmd-dat-delay-select: boolean property indicating that this host requires
++  the CMD_DAT_DELAY control to be enabled.
+ 
+ Example:
+ 
+diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+index 111b66f5439b..00bc2121d607 100644
+--- a/drivers/mmc/host/sdhci_f_sdh30.c
++++ b/drivers/mmc/host/sdhci_f_sdh30.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/delay.h>
+ #include <linux/module.h>
++#include <linux/property.h>
+ #include <linux/clk.h>
+ 
+ #include "sdhci-pltfm.h"
+@@ -45,8 +46,9 @@
+ struct f_sdhost_priv {
+ 	struct clk *clk_iface;
+ 	struct clk *clk;
+-	u32 vendor_hs200;
+ 	struct device *dev;
++	u32 vendor_hs200;
++	bool enable_cmd_dat_delay;
+ };
+ 
+ static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
+@@ -84,10 +86,19 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+ 
+ static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+ {
++	struct f_sdhost_priv *priv = sdhci_priv(host);
++	u32 ctl;
++
+ 	if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
+ 		sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
+ 
+ 	sdhci_reset(host, mask);
++
++	if (priv->enable_cmd_dat_delay) {
++		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
++		ctl |= F_SDH30_CMD_DAT_DELAY;
++		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
++	}
+ }
+ 
+ static const struct sdhci_ops sdhci_f_sdh30_ops = {
+@@ -126,6 +137,11 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+ 	host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+ 			SDHCI_QUIRK2_TUNING_WORK_AROUND;
+ 
++	if (device_property_read_bool(dev, "cmd-dat-delay-select")) {
++		dev_info(dev, "Setting cmd-dat-delay\n");
++		priv->enable_cmd_dat_delay = true;
++	}
++
+ 	ret = mmc_of_parse(host->mmc);
+ 	if (ret)
+ 		goto err;
 -- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
+
