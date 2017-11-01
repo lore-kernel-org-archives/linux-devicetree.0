@@ -1,74 +1,53 @@
-From: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 05/13] irqchip: add initial support for ompic
-Date: Wed, 1 Nov 2017 21:17:16 +0900
-Message-ID: <20171101121716.GH29237@lianli.shorne-pla.net>
-References: <20171029231123.27281-1-shorne@gmail.com>
- <20171029231123.27281-6-shorne@gmail.com>
- <86mv4974ht.fsf@arm.com>
- <20171030041806.GA29237@lianli.shorne-pla.net>
- <86vaix5fmr.fsf@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <86vaix5fmr.fsf-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v2 2/2] dt-binding: timer: document NPCM7xx timer DT bindings
+Date: Wed,  1 Nov 2017 14:16:44 +0200
+Message-ID: <1509538604-8218-3-git-send-email-tmaimon77@gmail.com>
+References: <1509538604-8218-1-git-send-email-tmaimon77@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1509538604-8218-1-git-send-email-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, raltherr@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 06:11:40AM +0000, Marc Zyngier wrote:
-> On Mon, Oct 30 2017 at  1:18:06 pm GMT, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Mon, Oct 30, 2017 at 02:29:18AM +0000, Marc Zyngier wrote:
-> >> On Mon, Oct 30 2017 at  8:11:15 am GMT, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> > From: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> >> >
-> >> > IPI driver for the Open Multi-Processor Interrupt Controller (ompic) as
-> >> > described in the Multi-core support section of the OpenRISC 1.2
-> >> > architecture specification:
-> >> >
-> >> >   https://github.com/openrisc/doc/raw/master/openrisc-arch-1.2-rev0.pdf
-> >> >
-> >> > Each OpenRISC core contains a full interrupt controller which is used in
-> >> > the SMP architecture for interrupt balancing.  This IPI device, the
-> >> > ompic, is the only external device required for enabling SMP on
-> >> > OpenRISC.
-> >> >
-> >> > Pending ops are stored in a memory bit mask which can allow multiple
-> >> > pending operations to be set and serviced at a time. This is mostly
-> >> > borrowed from the alpha IPI implementation.
-> >> >
-> >> > Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> >> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> > Signed-off-by: Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>
-> >> > [shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org: converted ops to bitmask, wrote commit message]
-> >> > Signed-off-by: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> 
-> >> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> >
-> > Thanks
-> >
-> >> Side question: what is your merge strategy for this? I can take it
-> >> through the irqchip tree as it is standalone, but I'm open to other
-> >> suggestions.
-> >
-> > For me its easier if I just take it through the openrisc tree, as
-> > there are dependencies between this series and the irqchip driver.
-> > If you are ok with that I can make a note to Linus indicating so in
-> > the pull request.
-> 
-> No problem, that's OK with me.
+Added device tree binding documentation for Nuvoton NPCM7xx timer.
 
-Acknowledged
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
 
-> > My plan is to send this series during the 4.15 merge window.
-> 
-> Make sure this is in -next (when it comes back to life...).
-
-Its there now, and it looks like -next is almost back to life.
-
--Stafford
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+new file mode 100644
+index 000000000000..d1beea901509
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+@@ -0,0 +1,25 @@
++Nuvoton NPCM7xx timer
++
++Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
++timer counters.
++
++Required properties:
++- compatible      : "nuvoton,npcm7xx-timer" for Poleg NPCM7xx.
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the timer interrupt with flags for
++                    falling edge.
++
++Required clocking property, have to be one of:
++- clocks          : phandle of timer reference clock.
++- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
++                    timer (usually 25000000).
++
++Example:
++
++timer@f0008000 {
++    compatible = "nuvoton,npcm7xx-timer";
++    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++    reg = <0xf0008000 0x1000>;
++    clocks = <&clk NPCM7XX_CLK_TIMER>;
++};
++
+-- 
+2.14.1
