@@ -1,217 +1,333 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH] ARM: sun8i: h2+: add support for Banana Pi M2
- Zero board
-Date: Wed,  1 Nov 2017 17:38:14 +0800
-Message-ID: <20171101093814.19177-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPFM43HQKGQENUALYNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "regmap: Add hardware spinlock support" to the regmap tree
+Date: Wed, 01 Nov 2017 10:07:13 +0000
+Message-ID: <E1e9pvV-0004HF-Hz@debutante>
+References: <00b91de822135699da81f70c4d2b8fecbc113ab1.1509501110.git.baolin.wang@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <00b91de822135699da81f70c4d2b8fecbc113ab1.1509501110.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
-factor and GPIO holes similar to Raspberry Pi Zero.
+The patch
 
-It features:
-- Allwinner H2+ SoC
-- Single-chip (16-bit) 512MiB DDR3 DRAM
-- Ampak AP6212 Wi-Fi/Bluetooth module
-- MicroSD slot
-- Two MicroUSB Type-B ports (one can only be used to power the board and
-  the other features OTG functionality)
-- Two keys, a reset and a GPIO-connected key.
-- HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
-- CSI connector to connect the camera sensor provided by Sinovoip.
+   regmap: Add hardware spinlock support
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+has been applied to the regmap tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 8698b9364710e7bac84b3af07dd410e39c8c2e08 Mon Sep 17 00:00:00 2001
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Wed, 1 Nov 2017 10:11:55 +0800
+Subject: [PATCH] regmap: Add hardware spinlock support
+
+On some platforms, when reading or writing some special registers through
+regmap, we should acquire one hardware spinlock to synchronize between
+the multiple subsystems. Thus this patch adds the hardware spinlock
+support for regmap.
+
+Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                         |   1 +
- .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 156 +++++++++++++++++++++
- 2 files changed, 157 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+ drivers/base/regmap/internal.h |   2 +
+ drivers/base/regmap/regmap.c   | 101 ++++++++++++++++++++++++++++++++++-------
+ include/linux/regmap.h         |   6 +++
+ 3 files changed, 93 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3a5b79fd8198..803dbdf03916 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -930,6 +930,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a83t-bananapi-m3.dtb \
- 	sun8i-a83t-cubietruck-plus.dtb \
- 	sun8i-a83t-tbs-a711.dtb \
-+	sun8i-h2-plus-bananapi-m2-zero.dtb \
- 	sun8i-h2-plus-orangepi-zero.dtb \
- 	sun8i-h3-bananapi-m2-plus.dtb \
- 	sun8i-h3-beelink-x2.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-new file mode 100644
-index 000000000000..414258da4308
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-@@ -0,0 +1,156 @@
-+/*
-+ * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-+ *
-+ * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
-+ *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+diff --git a/drivers/base/regmap/internal.h b/drivers/base/regmap/internal.h
+index 2a4435d76028..8641183cac2f 100644
+--- a/drivers/base/regmap/internal.h
++++ b/drivers/base/regmap/internal.h
+@@ -157,6 +157,8 @@ struct regmap {
+ 
+ 	struct rb_root range_tree;
+ 	void *selector_work_buf;	/* Scratch buffer used for selector */
 +
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-common-regulators.dtsi"
++	struct hwspinlock *hwlock;
+ };
+ 
+ struct regcache_ops {
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index b9a779a4a739..999e981a174a 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -20,6 +20,7 @@
+ #include <linux/sched.h>
+ #include <linux/delay.h>
+ #include <linux/log2.h>
++#include <linux/hwspinlock.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+@@ -413,6 +414,49 @@ static unsigned int regmap_parse_64_native(const void *buf)
+ }
+ #endif
+ 
++static void regmap_lock_hwlock(void *__map)
++{
++	struct regmap *map = __map;
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
++	hwspin_lock_timeout(map->hwlock, UINT_MAX);
++}
 +
-+/ {
-+	model = "Banana Pi BPI-M2-Zero";
-+	compatible = "sinovoip,bpi-m2-zero", "allwinner,sun8i-h2-plus";
++static void regmap_lock_hwlock_irq(void *__map)
++{
++	struct regmap *map = __map;
 +
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
++	hwspin_lock_timeout_irq(map->hwlock, UINT_MAX);
++}
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++static void regmap_lock_hwlock_irqsave(void *__map)
++{
++	struct regmap *map = __map;
 +
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
++	hwspin_lock_timeout_irqsave(map->hwlock, UINT_MAX,
++				    &map->spinlock_flags);
++}
 +
-+		pwr_led {
-+			label = "bananapi-m2-zero:red:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
-+			default-state = "on";
-+		};
-+	};
++static void regmap_unlock_hwlock(void *__map)
++{
++	struct regmap *map = __map;
 +
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
++	hwspin_unlock(map->hwlock);
++}
 +
-+		sw4 {
-+			label = "power";
-+			linux,code = <BTN_0>;
-+			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
++static void regmap_unlock_hwlock_irq(void *__map)
++{
++	struct regmap *map = __map;
 +
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+	};
-+};
++	hwspin_unlock_irq(map->hwlock);
++}
 +
-+&ehci0 {
-+	status = "okay";
-+};
++static void regmap_unlock_hwlock_irqrestore(void *__map)
++{
++	struct regmap *map = __map;
 +
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	/*
-+	 * In different revisions the board have different card detect
-+	 * configuration.
-+	 */
-+	broken-cd;
-+	status = "okay";
-+};
++	hwspin_unlock_irqrestore(map->hwlock, &map->spinlock_flags);
++}
 +
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
+ static void regmap_lock_mutex(void *__map)
+ {
+ 	struct regmap *map = __map;
+@@ -627,6 +671,29 @@ struct regmap *__regmap_init(struct device *dev,
+ 		map->lock = config->lock;
+ 		map->unlock = config->unlock;
+ 		map->lock_arg = config->lock_arg;
++	} else if (config->hwlock_id) {
++		map->hwlock = hwspin_lock_request_specific(config->hwlock_id);
++		if (!map->hwlock) {
++			ret = -ENXIO;
++			goto err_map;
++		}
 +
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&pio>;
-+		interrupts = <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
-+		interrupt-names = "host-wake";
-+	};
-+};
++		switch (config->hwlock_mode) {
++		case HWLOCK_IRQSTATE:
++			map->lock = regmap_lock_hwlock_irqsave;
++			map->unlock = regmap_unlock_hwlock_irqrestore;
++			break;
++		case HWLOCK_IRQ:
++			map->lock = regmap_lock_hwlock_irq;
++			map->unlock = regmap_unlock_hwlock_irq;
++			break;
++		default:
++			map->lock = regmap_lock_hwlock;
++			map->unlock = regmap_unlock_hwlock;
++			break;
++		}
 +
-+&ohci0 {
-+	status = "okay";
-+};
++		map->lock_arg = map;
+ 	} else {
+ 		if ((bus && bus->fast_io) ||
+ 		    config->fast_io) {
+@@ -729,7 +796,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_write = regmap_format_2_6_write;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 
+@@ -739,7 +806,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_write = regmap_format_4_12_write;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 
+@@ -749,7 +816,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_write = regmap_format_7_9_write;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 
+@@ -759,7 +826,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_write = regmap_format_10_14_write;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 
+@@ -779,13 +846,13 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_reg = regmap_format_16_native;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 
+ 	case 24:
+ 		if (reg_endian != REGMAP_ENDIAN_BIG)
+-			goto err_map;
++			goto err_hwlock;
+ 		map->format.format_reg = regmap_format_24;
+ 		break;
+ 
+@@ -801,7 +868,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_reg = regmap_format_32_native;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 
+@@ -818,13 +885,13 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.format_reg = regmap_format_64_native;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ #endif
+ 
+ 	default:
+-		goto err_map;
++		goto err_hwlock;
+ 	}
+ 
+ 	if (val_endian == REGMAP_ENDIAN_NATIVE)
+@@ -853,12 +920,12 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.parse_val = regmap_parse_16_native;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ 	case 24:
+ 		if (val_endian != REGMAP_ENDIAN_BIG)
+-			goto err_map;
++			goto err_hwlock;
+ 		map->format.format_val = regmap_format_24;
+ 		map->format.parse_val = regmap_parse_24;
+ 		break;
+@@ -879,7 +946,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.parse_val = regmap_parse_32_native;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ #ifdef CONFIG_64BIT
+@@ -900,7 +967,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 			map->format.parse_val = regmap_parse_64_native;
+ 			break;
+ 		default:
+-			goto err_map;
++			goto err_hwlock;
+ 		}
+ 		break;
+ #endif
+@@ -909,18 +976,18 @@ struct regmap *__regmap_init(struct device *dev,
+ 	if (map->format.format_write) {
+ 		if ((reg_endian != REGMAP_ENDIAN_BIG) ||
+ 		    (val_endian != REGMAP_ENDIAN_BIG))
+-			goto err_map;
++			goto err_hwlock;
+ 		map->use_single_write = true;
+ 	}
+ 
+ 	if (!map->format.format_write &&
+ 	    !(map->format.format_reg && map->format.format_val))
+-		goto err_map;
++		goto err_hwlock;
+ 
+ 	map->work_buf = kzalloc(map->format.buf_size, GFP_KERNEL);
+ 	if (map->work_buf == NULL) {
+ 		ret = -ENOMEM;
+-		goto err_map;
++		goto err_hwlock;
+ 	}
+ 
+ 	if (map->format.format_write) {
+@@ -1041,6 +1108,8 @@ struct regmap *__regmap_init(struct device *dev,
+ err_range:
+ 	regmap_range_exit(map);
+ 	kfree(map->work_buf);
++err_hwlock:
++	hwspin_lock_free(map->hwlock);
+ err_map:
+ 	kfree(map);
+ err:
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index 978abfbac617..edc32aac84d7 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -273,6 +273,9 @@ typedef void (*regmap_unlock)(void *);
+  *
+  * @ranges: Array of configuration entries for virtual address ranges.
+  * @num_ranges: Number of range configuration entries.
++ * @hwlock_id: Specify the hardware spinlock id.
++ * @hwlock_mode: The hardware spinlock mode, should be HWLOCK_IRQSTATE,
++ *		 HWLOCK_IRQ or 0.
+  */
+ struct regmap_config {
+ 	const char *name;
+@@ -317,6 +320,9 @@ struct regmap_config {
+ 
+ 	const struct regmap_range_cfg *ranges;
+ 	unsigned int num_ranges;
 +
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+	/* USB OTG VBUS is directly connected to 5V without any regulators */
-+	status = "okay";
-+};
++	unsigned int hwlock_id;
++	unsigned int hwlock_mode;
+ };
+ 
+ /**
 -- 
-2.13.6
+2.15.0.rc2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
