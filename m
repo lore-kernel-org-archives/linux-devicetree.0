@@ -1,73 +1,95 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] at24: support eeproms that do not roll over page reads.
-Date: Wed, 1 Nov 2017 14:22:15 +0800
-Message-ID: <201711011406.dHjS3NBX%fengguang.wu@intel.com>
-References: <1509378506-30851-1-git-send-email-svendev@arcx.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
+Date: Wed, 1 Nov 2017 17:29:31 +1030
+Message-ID: <CACPK8Xcffkh5mXrCyXuDkFWPMPETb5OS2B61x1Oj7FiXhMFi9Q@mail.gmail.com>
+References: <20171101013421.8488-1-joel@jms.id.au> <d70eef8b-385e-4591-17b4-6fde3907df0f@roeck-us.net>
+ <20171101020433.GF29237@lianli.shorne-pla.net> <1331f460-d34b-02b2-d41a-3d0ec9543bb5@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1509378506-30851-1-git-send-email-svendev-fuHqz3Nb1YI@public.gmane.org>
+In-Reply-To: <1331f460-d34b-02b2-d41a-3d0ec9543bb5-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, svendev-fuHqz3Nb1YI@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sven,
+On Wed, Nov 1, 2017 at 12:44 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On 10/31/2017 07:04 PM, Stafford Horne wrote:
+>>
+>> On Tue, Oct 31, 2017 at 06:53:15PM -0700, Guenter Roeck wrote:
+>>>
+>>> On 10/31/2017 06:34 PM, Joel Stanley wrote:
+>>>>
+>>>> The ASPEED SoC must deassert a reset in order to use the PWM/tach
+>>>> peripheral.
+>>>>
+>>>> The device tree bindings are updated to document the resets phandle, and
+>>>> the example is updated to match what is expected for both the reset and
+>>>> clock phandle. Note that the bindings should have always had the reset
+>>>> controller, as the hardware is unusable without it.
+>>>>
+>>>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>>>
+>>>
+>>> Presumably the driver is being used. This change makes it incompatible
+>>> with
+>>> existing users. This is unacceptable; after all, it is possible that the
+>>> device is taken out of reset by ROMMON or BIOS.
+>>>
+>>> On top of that, the reset controller code is quite strict and issues a
+>>> backtrace if CONFIG_RESET_CONTROLLER is not enabled. Yet, there is no
+>>> dependency added on RESET_CONTROLLER. You might want to consider making
+>>> the new control optional and using
+>>> devm_reset_control_get_optional_exclusive().
+>>>
+>>> The DT change should be a separate patch.
+>>>
+>>> More comments below.
+>>
+>>
+>> [..]
+>>
+>>>>         return PTR_ERR_OR_ZERO(hwmon);
+>>>>    }
+>>>> +static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +       struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
+>>>> +
+>>>> +       reset_control_deassert(priv->rst);
+>>>
+>>>
+>>> This seems to be quite pointless. Also, did you test this code ?
+>>>
+>>>> +
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>>    static const struct of_device_id of_pwm_tacho_match_table[] = {
+>>>>         { .compatible = "aspeed,ast2400-pwm-tacho", },
+>>>>         { .compatible = "aspeed,ast2500-pwm-tacho", },
+>>>> @@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
+>>>>    static struct platform_driver aspeed_pwm_tacho_driver = {
+>>>>         .probe          = aspeed_pwm_tacho_probe,
+>>>> +       .probe          = aspeed_pwm_tacho_remove,
+>>
+>>
+>> Also, this cant be right (should be .remove)?
+>>
+>
+> Nice. Makes me really wonder what this code would do. Does this even compile
+> ?
 
-Thank you for the patch! Perhaps something to improve:
+It compiled. And booted, but it didn't do much :) I rushed sending out
+the patch a bit, sorry.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.14-rc7]
-[cannot apply to next-20171018]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+I've spent today I did some closer testing with a fixed v2 and I do
+get values out of the device. I don't have access to a machine that I
+can see the fans spinning on, so it's hard to know if the values are
+correct. I'll send it out tomorrow with a request for testing.
 
-url:    https://github.com/0day-ci/linux/commits/Sven-Van-Asbroeck/at24-support-eeproms-that-do-not-roll-over-page-reads/20171101-114231
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+Cheers,
 
-
-sparse warnings: (new ones prefixed by >>)
-
-
-vim +210 drivers/misc/eeprom/at24.c
-
-   185	
-   186	/*
-   187	 * This routine supports chips which consume multiple I2C addresses. It
-   188	 * computes the addressing information to be used for a given r/w request.
-   189	 * Assumes that sanity checks for offset happened at sysfs-layer.
-   190	 *
-   191	 * Slave address and byte offset derive from the offset. Always
-   192	 * set the byte address; on a multi-master board, another master
-   193	 * may have changed the chip's "current" address pointer.
-   194	 *
-   195	 * In case of chips that don't rollover page reads, truncate the count
-   196	 * to the nearest page boundary. This might result in the
-   197	 * at24_eeprom_read_XXX functions reading fewer bytes than requested,
-   198	 * but this is compensated for in at24_read().
-   199	 */
-   200	static struct i2c_client *at24_translate_offset(struct at24_data *at24,
-   201			unsigned int *offset, size_t *count)
-   202	{
-   203		unsigned int i, bits, remainder;
-   204	
-   205		bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
-   206		i = *offset >> bits;
-   207		*offset &= AT24_BITMASK(bits);
-   208		if ((at24->chip.flags & AT24_FLAG_NO_RDROL) && count) {
-   209			remainder = BIT(bits) - *offset;
- > 210			*count = min(*count, remainder);
-   211		}
-   212	
-   213		return at24->client[i];
-   214	}
-   215	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Joel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
