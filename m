@@ -1,129 +1,33 @@
-From: James Morse <james.morse@arm.com>
-Subject: [PATCH 15/13] firmware: arm_sdei: move the frozen flag under the
- spinlock
-Date: Wed,  1 Nov 2017 15:59:41 +0000
-Message-ID: <20171101155941.19432-1-james.morse@arm.com>
-References: <20171017174432.1684-1-james.morse@arm.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] max3421: add devicetree support
+Date: Wed, 1 Nov 2017 17:12:37 +0100
+Message-ID: <20171101161237.GA30588@kroah.com>
+References: <cover.1508108927.git.jules.maselbas@grenoble-inp.org>
+ <cover.1508798984.git.jules.maselbas@grenoble-inp.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20171017174432.1684-1-james.morse@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Loc Ho <lho@apm.com>, kvmarm@lists.cs.columbia.edu
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1508798984.git.jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jules Maselbas <jules.maselbas-l+/54qjP3hgoQXW8ST3Jvw@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-dpm_suspend() calls the freeze/thaw callbacks for hibernate before
-disable_non_bootcpus() takes down secondaries.
+On Tue, Oct 24, 2017 at 01:08:41AM +0200, Jules Maselbas wrote:
+> Hi,
+> 
+> This patchset adds devicetree support to the max3421 driver.
+> Theses modification are based on a previous (unapplied) patch
+> series by Alexander Amelkin [1].
 
-This leads to a fun race where the freeze/thaw callbacks reset the
-SDEI interface (as we may be restoring a kernel with a different
-layout due to KASLR), then the cpu-hotplug callbacks come in to
-save the current state, which has already been reset.
+I've already applied this series, right?  If there were any changes from
+the older patch that I applied, can you send a fix-up patch?
 
-We solve this with a 'frozen' flag that stops the hotplug callback
-from overwriting the saved values.
+thanks,
 
-This patch moves the flag under the 'events' spinlock we take
-in the hotplug callbacks, to avoid depending on cpu-hotplug's
-mechanics to ensure the callback sees the correct value.
-
-Reported-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: James Morse <james.morse@arm.com>
----
- drivers/firmware/arm_sdei.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-index 14b6d170518c..0ae497975064 100644
---- a/drivers/firmware/arm_sdei.c
-+++ b/drivers/firmware/arm_sdei.c
-@@ -78,7 +78,10 @@ struct sdei_event {
- static LIST_HEAD(sdei_events);
- static DEFINE_SPINLOCK(sdei_events_lock);
- 
--/* When frozen, cpu-hotplug notifiers shouldn't unregister/re-register events */
-+/*
-+ * When frozen, cpu-hotplug notifiers shouldn't unregister/re-register events.
-+ * Protected by sdei_events_lock.
-+ */
- static bool frozen;
- 
- /* Private events are registered/enabled via IPI passing one of these */
-@@ -704,13 +707,15 @@ static int sdei_cpuhp_down(unsigned int cpu)
- 	struct sdei_event *event;
- 	struct sdei_crosscall_args arg;
- 
-+
-+	spin_lock(&sdei_events_lock);
- 	if (frozen) {
- 		/* All events unregistered  */
-+		spin_unlock(&sdei_events_lock);
- 		return sdei_mask_local_cpu();
- 	}
- 
- 	/* un-register private events */
--	spin_lock(&sdei_events_lock);
- 	list_for_each_entry(event, &sdei_events, list) {
- 		if (event->type == SDEI_EVENT_TYPE_SHARED)
- 			continue;
-@@ -732,13 +737,14 @@ static int sdei_cpuhp_up(unsigned int cpu)
- 	struct sdei_event *event;
- 	struct sdei_crosscall_args arg;
- 
-+	spin_lock(&sdei_events_lock);
- 	if (frozen) {
- 		/* Events will be re-registered when we thaw. */
-+		spin_unlock(&sdei_events_lock);
- 		return sdei_unmask_local_cpu();
- 	}
- 
- 	/* re-register/enable private events */
--	spin_lock(&sdei_events_lock);
- 	list_for_each_entry(event, &sdei_events, list) {
- 		if (event->type == SDEI_EVENT_TYPE_SHARED)
- 			continue;
-@@ -813,7 +819,10 @@ static int sdei_device_freeze(struct device *dev)
- {
- 	int err;
- 
-+	spin_lock(&sdei_events_lock);
- 	frozen = true;
-+	spin_unlock(&sdei_events_lock);
-+
- 	err = sdei_event_unregister_all();
- 	if (err)
- 		return err;
-@@ -828,7 +837,11 @@ static int sdei_device_thaw(struct device *dev)
- 	sdei_device_resume(dev);
- 
- 	err = sdei_reregister_events();
-+
-+	spin_lock(&sdei_events_lock);
- 	frozen = false;
-+	spin_unlock(&sdei_events_lock);
-+
- 	return err;
- }
- 
-@@ -865,7 +878,9 @@ static int sdei_reboot_notifier(struct notifier_block *nb, unsigned long action,
- 	 * There is now no point trying to unregister private events if we go on
- 	 * to take CPUs offline.
- 	 */
-+	spin_lock(&sdei_events_lock);
- 	frozen = true;
-+	spin_unlock(&sdei_events_lock);
- 
- 	return NOTIFY_OK;
- }
--- 
-2.15.0.rc2
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
