@@ -1,112 +1,46 @@
-From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 2/4] devicetree/bindings: display: Add document for rockchip RGB output
-Date: Wed,  1 Nov 2017 15:52:43 +0800
-Message-ID: <1509522765-118759-1-git-send-email-hjc@rock-chips.com>
-References: <1509522753-118639-1-git-send-email-hjc@rock-chips.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/1] ARM: dts: sunxi: sun8i-h3-nanopi-m1-plus: Add missing regulator
+Date: Wed,  1 Nov 2017 09:03:57 +0100
+Message-ID: <20171101080357.4241-2-clabbe.montjoie@gmail.com>
+References: <20171101080357.4241-1-clabbe.montjoie@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509522753-118639-1-git-send-email-hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20171101080357.4241-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This path add support rv1108 rgb output interface driver.
+This patch add the missing regulator for sun8i-h3-nanopi-m1-plus.
 
-Signed-off-by: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Fixes: ("ARM: dts: sunxi: Restore EMAC changes (boards)")
+Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Changes in v4: None
-Changes in v3:
- move rgb-mode to panel node which describe at:
- Documentation/devicetree/bindings/display/panel/panel-rgb.txt
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Changes in v2:
- 1. rename rockchip,rgb-mode to rgb-mode;
- 2. delete reg for signle endpoint;
- .../bindings/display/rockchip/rockchip-rgb.txt     | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-new file mode 100644
-index 0000000..d91a7bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-@@ -0,0 +1,72 @@
-+Rockchip RV1108 RGB interface
-+================================
-+
-+Required properties:
-+- compatible: matching the soc type:
-+	- "rockchip,rv1108-rgb";
-+
-+Optional properties:
-+- pinctrl-names: must contain a "lcdc" entry.
-+- pinctrl-0: pin control group to be used for this interface.
-+
-+The rgb has two video ports described by:
-+	Documentation/devicetree/bindings/media/video-interfaces.txt
-+Their connections are modeled using the OF graph bindings specified in
-+	Documentation/devicetree/bindings/graph.txt.
-+
-+- video port 0 for the VOP input, the remote endpoint maybe vopb/vopl/vop
-+- video port 1 for either a panel or subsequent encoder
-+
-+the panel described by:
-+	Documentation/devicetree/bindings/display/panel/simple-panel.txt
-+rgb-mode nodes described by:
-+	Documentation/devicetree/bindings/display/panel/panel-rgb.txt
-+Panel other required properties:
-+- ports for remote rgb output.
-+
-+Example:
-+
-+panel: panel {
-+	compatible = "auo,b101ean01";
-+	enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
-+	rgb-mode = "p888";
-+
-+	ports {
-+		panel_in_rgb: endpoint {
-+			remote-endpoint = <&rgb_out_panel>;
-+		};
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+index cfb96da3cfef..0a8b79cf5954 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+@@ -51,6 +51,16 @@
+ 		ethernet1 = &sdio_wifi;
+ 	};
+ 
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
 +	};
-+};
 +
-+For Rockchip RV1108:
-+
-+	rgb: rgb {
-+		compatible = "rockchip,rv1108-rgb";
-+		pinctrl-names = "lcdc";
-+		pinctrl-0 = <&lcdc_ctl>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			rgb_in: port@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				rgb_in_vop: endpoint {
-+					remote-endpoint = <&vop_out_rgb>;
-+				};
-+			};
-+
-+			rgb_out: port@1 {
-+				reg = <1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				rgb_out_panel: endpoint {
-+					remote-endpoint = <&panel_in_rgb>;
-+				};
-+			};
-+		};
-+	};
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
 -- 
-2.7.4
-
+2.13.6
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
