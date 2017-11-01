@@ -1,50 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Input: egalax-ts: Remove leading zero from
- 'egalax-ts@04' notation
-Date: Wed, 1 Nov 2017 16:47:47 -0500
-Message-ID: <20171101214747.qjf5nnvdnbi4jg6a@rob-hp-laptop>
-References: <1509382850-15821-1-git-send-email-marco.franchi@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: shmobile: Document Renesas M3-W-based
+ Salvator-XS board DT bindings
+Date: Wed, 1 Nov 2017 16:49:04 -0500
+Message-ID: <20171101214904.b5adavvirlmphnqn@rob-hp-laptop>
+References: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
+ <1509384599-28953-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1509382850-15821-1-git-send-email-marco.franchi@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Franchi <marco.franchi@nxp.com>
-Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, marcofrk@gmail.com
+In-Reply-To: <1509384599-28953-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 03:00:50PM -0200, Marco Franchi wrote:
-> Improve the binding example by removing the leading 0 from 'egalax-ts@04' 
-> notation, which fix the following build warning:
+On Mon, Oct 30, 2017 at 06:29:57PM +0100, Geert Uytterhoeven wrote:
+> The Renesas Salvator-XS (Salvator-X 2nd version) development board can
+> be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
+> pin-compatible.
 > 
-> Warning (unit_address_format): Node /egalax_ts@04 unit name should not have leading 0s
+> Document board part number and compatible values for the version with
+> R-Car M3-W.
 > 
-> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-> index 49fa14e..707f248 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-> @@ -10,7 +10,7 @@ Required properties:
->  
->  Example:
->  
-> -	egalax_ts@04 {
-> +	egalax_ts@4 {
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-That really should be 'touchscreen@4'.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->  		compatible = "eeti,egalax_ts";
->  		reg = <0x04>;
->  		interrupt-parent = <&gpio1>;
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
