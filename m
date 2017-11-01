@@ -1,70 +1,78 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] arm64: dts: zynqmp: Use SPDX-License-Identifier
-Date: Wed,  1 Nov 2017 13:23:34 +0100
-Message-ID: <d432b970c977750b5c32595ef2c13f16fe92ff16.1509539009.git.michal.simek@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>, monstr@monstr.eu, VNSL Durga <vnsl.durga.challa@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Kedareswara rao Appana <appanad@xilinx.com>, linux-kernel@vger.kernel.org, Alistair Francis <alistair.francis@xilinx.com>, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Stefan Krsmanovic <stefan.krsmanovic@aggios.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier@d>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2] dt-bindings: Input: Remove leading zeros from bindings notation
+Date: Wed, 1 Nov 2017 10:30:43 -0200
+Message-ID: <1509539443-16253-1-git-send-email-marco.franchi@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Follow trend and use the SPDX License description.
+Improve the binding example by removing all the leading zeros to fix the
+following dtc warnings:
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+
+Converted using the following command:
+
+perl -p -i -e 's/\@0+([0-9a-f])/\@$1/g' `find ./Documentation/devicetree/bindings/input "*.txt"`
+
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 ---
+Change since v1:
+- use script to add all the input directory
+- change subject
+- change message log
+ Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt       | 2 +-
+ Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt  | 2 +-
+ Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi | 5 +----
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts      | 5 +----
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi           | 5 +----
- 3 files changed, 3 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi
-index b87b8316f4ac..c85454fc9d7b 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108-clk.dtsi
-@@ -5,10 +5,7 @@
-  *
-  * Michal Simek <michal.simek@xilinx.com>
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-+ * SPDX-License-Identifier: GPL-2.0+
-  */
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 4357e49..1458c31 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -19,7 +19,7 @@ Example:
  
- / {
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index bf552674a834..49bc65e236ba 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -5,10 +5,7 @@
-  *
-  * Michal Simek <michal.simek@xilinx.com>
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-+ * SPDX-License-Identifier: GPL-2.0+
-  */
+ #include <dt-bindings/input/input.h>
  
- /dts-v1/;
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 7665fbddff28..f99fc7c477d5 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -5,10 +5,7 @@
-  *
-  * Michal Simek <michal.simek@xilinx.com>
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-+ * SPDX-License-Identifier: GPL-2.0+
-  */
+-	lradc: lradc@01c22800 {
++	lradc: lradc@1c22800 {
+ 		compatible = "allwinner,sun4i-a10-lradc-keys";
+ 		reg = <0x01c22800 0x100>;
+ 		interrupts = <31>;
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+index 49fa14e..707f248 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+@@ -10,7 +10,7 @@ Required properties:
  
- / {
+ Example:
+ 
+-	egalax_ts@04 {
++	egalax_ts@4 {
+ 		compatible = "eeti,egalax_ts";
+ 		reg = <0x04>;
+ 		interrupt-parent = <&gpio1>;
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+index e67e58b..1649150 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+@@ -21,7 +21,7 @@ Optional properties:
+   each read. Valid values are 1, 4, 8, 16 and 32.
+ 
+ Example:
+-	tsc: tsc@02040000 {
++	tsc: tsc@2040000 {
+ 		compatible = "fsl,imx6ul-tsc";
+ 		reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
+ 		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
 -- 
-1.9.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
