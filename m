@@ -1,69 +1,67 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 0/2] Add support for Hi6220 coresight
-Date: Wed, 01 Nov 2017 16:48:50 +0100
-Message-ID: <150955133019.90597.6277114786385559431@resonance>
-References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
- <20170901013301.GN21656@codeaurora.org>
- <20171007121802.GC23080@leoy-linaro> <59E07FDE.40307@hisilicon.com>
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 11/13] firmware: arm_sdei: add support for CPU private
+ events
+Date: Wed, 01 Nov 2017 15:59:52 +0000
+Message-ID: <59F9EF78.8090107@arm.com>
+References: <20171017174432.1684-1-james.morse@arm.com> <20171017174432.1684-12-james.morse@arm.com> <20171018171959.GJ21820@arm.com> <59EF798A.9000609@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59E07FDE.40307@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>, Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59EF798A.9000609-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Wei Xu (2017-10-13 10:57:02)
-> Hi Leo,
-> =
+Hi Will,
 
-> On 2017/10/7 13:18, Leo Yan wrote:
-> > Hi Stephen, Wei,
-> > =
+On 24/10/17 18:34, James Morse wrote:
+> On 18/10/17 18:19, Will Deacon wrote:
+>> On Tue, Oct 17, 2017 at 06:44:30PM +0100, James Morse wrote:
+>>> Private SDE events are per-cpu, and need to be registered and enabled
+>>> on each CPU.
+>>>
+>>> Hide this detail from the caller by adapting our {,un}register and
+>>> {en,dis}able calls to send an IPI to each CPU if the event is private.
+>>>
+>>> CPU private events are unregistered when the CPU is powered-off, and
+>>> re-registered when the CPU is brought back online. This saves bringing
+>>> secondary cores back online to call private_reset() on shutdown, kexec
+>>> and resume from hibernate.
+> 
+>>> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+>>> index 28e4c4cbb16d..5598d9ba8b5d 100644
+>>> --- a/drivers/firmware/arm_sdei.c
+>>> +++ b/drivers/firmware/arm_sdei.c
+>>> @@ -610,6 +813,7 @@ static int sdei_device_freeze(struct device *dev)
+>>>  {
+>>>  	int err;
+>>>  
+>>> +	frozen = true;
+>>>  	err = sdei_event_unregister_all();
+> 
+>> Are the release semantics from spin_unlock in sdei_event_unregister_all
+>> sufficient for the ordering guarantees you need?
+> 
+> ... ordering ...
+> 
+> The hotplug notifiers don't touch that lock, so at the first level: no.
+> 
+> It looks like I was relying on the cpu-hotplug code using stop-machine for its
+> work, and the spinlocks changing the pre-empt count for this to work. Which is
+> not something I want to debug if it changes!
+> 
+> I'll post a patch changing this bool to a more sensible atomic type.
 
-> > On Thu, Aug 31, 2017 at 06:33:01PM -0700, Stephen Boyd wrote:
-> >> On 09/01, Leo Yan wrote:
-> >>> This patch series adds support for coresight on Hi6220; the first pat=
-ch
-> >>> is to fix coresight PLL so can avoid system hang after we enable
-> >>> coresight, the second patch is to add DT binding according to coresig=
-ht
-> >>> topology.
-> >>>
-> >>> The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
-> >>> can successfully decode ETF and ETB trace data.
-> >>>
-> >>
-> >> I can take the first one and second one goes through arm-soc?
-> > =
+Here I show my ignorance: atomic_t didn't do what I thought. But I do take the
+spinlock inside the hotplug callback, so I'll move the variable in there.
 
-> > Could you pick these two patches for Hi6220 coresight enabling for
-> > this merge window? Or need me resend these two patches?
-> =
 
-> Applied patch 2 into hisilicon dt tree with slight fix.
-> Thanks!
+Thanks,
 
-Cool. Patch #1 applied to clk tree.
-
-Regards,
-Mike
-
-> =
-
-> BR,
-> Wei
-> =
-
-> > =
-
-> > Thanks,
-> > Leo Yan
-> > =
-
-> > .
-> > =
-
->=20
+James
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
