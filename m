@@ -1,53 +1,50 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: [git:media_tree/master] media: dt: bindings: Add a binding for flash
- LED devices associated to a sensor
-Date: Tue, 31 Oct 2017 17:59:03 +0000
-Message-ID: <E1e9p43-0002Zw-1H@www.linuxtv.org>
-Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: mfd: Add Spreadtrum SC27xx PMIC
+ documentation
+Date: Wed, 1 Nov 2017 09:26:49 +0000
+Message-ID: <20171101092649.sarbr64gybx6wmlm@dell>
+References: <c92b97145628e5f8db410d1916da46a4c9fecf8c.1509503569.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
- <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
-List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
-List-Subscribe: <https://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
- <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
-Sender: "linuxtv-commits" <linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c92b97145628e5f8db410d1916da46a4c9fecf8c.1509503569.git.baolin.wang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBhbiBhdXRvbWF0aWMgZ2VuZXJhdGVkIGVtYWlsIHRvIGxldCB5b3Uga25vdyB0aGF0
-IHRoZSBmb2xsb3dpbmcgcGF0Y2ggd2VyZSBxdWV1ZWQ6CgpTdWJqZWN0OiBtZWRpYTogZHQ6IGJp
-bmRpbmdzOiBBZGQgYSBiaW5kaW5nIGZvciBmbGFzaCBMRUQgZGV2aWNlcyBhc3NvY2lhdGVkIHRv
-IGEgc2Vuc29yCkF1dGhvcjogIFNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVzQGxpbnV4LmludGVs
-LmNvbT4KRGF0ZTogICAgRnJpIE1hciAzIDEzOjE0OjAyIDIwMTcgLTA1MDAKCkNhbWVyYSBmbGFz
-aCBkcml2ZXJzIChhbmQgTEVEcykgYXJlIHNlcGFyYXRlIGZyb20gdGhlIHNlbnNvciBkZXZpY2Vz
-IGluCkRULiBJbiBvcmRlciB0byBtYWtlIGFuIGFzc29jaWF0aW9uIGJldHdlZW4gdGhlIHR3bywg
-cHJvdmlkZSB0aGUKYXNzb2NpYXRpb24gaW5mb3JtYXRpb24gdG8gdGhlIHNvZnR3YXJlLgoKU2ln
-bmVkLW9mZi1ieTogU2FrYXJpIEFpbHVzIDxzYWthcmkuYWlsdXNAbGludXguaW50ZWwuY29tPgpD
-YzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQWNrZWQtYnk6IEhhbnMgVmVya3VpbCA8aGFu
-cy52ZXJrdWlsQGNpc2NvLmNvbT4KQWNrZWQtYnk6IFBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3LmN6
-PgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KUmV2aWV3ZWQtYnk6IFNl
-YmFzdGlhbiBSZWljaGVsIDxzZWJhc3RpYW4ucmVpY2hlbEBjb2xsYWJvcmEuY28udWs+ClNpZ25l
-ZC1vZmYtYnk6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYkBzLW9wZW5zb3VyY2UuY29t
-PgoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZh
-Y2VzLnR4dCB8IDggKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKCi0t
-LQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92
-aWRlby1pbnRlcmZhY2VzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAppbmRleCBiZDY0NzQ5MjA1MTAuLmRjNjZlMzIyNDY5
-MiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3Zp
-ZGVvLWludGVyZmFjZXMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dApAQCAtNzYsNiArNzYsMTQgQEAgYXJlIHJlcXVp
-cmVkIGluIGEgcmVsZXZhbnQgcGFyZW50IG5vZGU6CiAJCSAgICBpZGVudGlmaWVyLCBzaG91bGQg
-YmUgMS4KICAtICNzaXplLWNlbGxzICAgIDogc2hvdWxkIGJlIHplcm8uCiAKKworT3B0aW9uYWwg
-cHJvcGVydGllcworLS0tLS0tLS0tLS0tLS0tLS0tLQorCistIGZsYXNoLWxlZHM6IEFuIGFycmF5
-IG9mIHBoYW5kbGVzLCBlYWNoIHJlZmVycmluZyB0byBhIGZsYXNoIExFRCwgYSBzdWItbm9kZQor
-ICBvZiB0aGUgTEVEIGRyaXZlciBkZXZpY2Ugbm9kZS4KKworCiBPcHRpb25hbCBlbmRwb2ludCBw
-cm9wZXJ0aWVzCiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4dHYtY29tbWl0cyBtYWlsaW5n
-IGxpc3QKbGludXh0di1jb21taXRzQGxpbnV4dHYub3JnCmh0dHBzOi8vd3d3LmxpbnV4dHYub3Jn
-L2NnaS1iaW4vbWFpbG1hbi9saXN0aW5mby9saW51eHR2LWNvbW1pdHM=
+On Wed, 01 Nov 2017, Baolin Wang wrote:
+
+> This patch adds the binding documentation for Spreadtrum SC27xx series
+> PMIC device.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> Changes since v3:
+>  - No Updates.
+> 
+> Changes since v2:
+>  - Add acked tag from Rob and Lee.
+> 
+> Changes since v1:
+>  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
+>  - Modify compatile string property.
+>  - Modify reg property.
+>  - Remove redundant 'pmic' label.
+>  - Change 'should be' to 'must be' for cells properties.
+> ---
+>  .../devicetree/bindings/mfd/sprd,sc27xx-pmic.txt   |   40 ++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sprd,sc27xx-pmic.txt
+
+Applied, thanks.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
