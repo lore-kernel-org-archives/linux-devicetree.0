@@ -1,141 +1,93 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
-Date: Wed,  1 Nov 2017 12:04:21 +1030
-Message-ID: <20171101013421.8488-1-joel@jms.id.au>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Mykola Kostenok <c_mykolak@mellanox.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] mfd: Add Spreadtrum SC27xx series PMICs driver
+Date: Wed, 1 Nov 2017 09:37:01 +0800
+Message-ID: <CAMz4ku+3MMoj40=jpKRG=ySojG3+SGLsUqZseziHmzFKJWP=ug@mail.gmail.com>
+References: <c92b97145628e5f8db410d1916da46a4c9fecf8c.1508982713.git.baolin.wang@linaro.org>
+ <6f9ec429b84973201dc39aeaa31fb829c345b6e0.1508982713.git.baolin.wang@linaro.org>
+ <20171031152801.njf3ib7lrnu5e3ji@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171031152801.njf3ib7lrnu5e3ji@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ASPEED SoC must deassert a reset in order to use the PWM/tach
-peripheral.
+Hi Lee,
 
-The device tree bindings are updated to document the resets phandle, and
-the example is updated to match what is expected for both the reset and
-clock phandle. Note that the bindings should have always had the reset
-controller, as the hardware is unusable without it.
+On 31 October 2017 at 23:28, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 26 Oct 2017, Baolin Wang wrote:
+>
+>> This patch adds support for Spreadtrum SC27xx series PMIC MFD core, and It
+>> provides communication through the SPI interfaces. The SC27xx series PMICs
+>> contains the following 6 major components:
+>> - DCDCs
+>> - LDOs
+>> - Battery management system
+>> - Audio codec
+>> - User interface function, such as indicator, flash LED
+>> - IC level function, such as power on/off, type-c
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> ---
+>> Changes since v2:
+>>  - Add more help information.
+>>  - Define macros for irq base and irq number.
+>>  - Use devm_mfd_add_devices() instead of mfd_add_devices(), which means
+>>  we can remove sprd_pmic_remove().
+>>  - Rename local variables in sprd_pmic_probe().
+>>
+>> Changes since v1:
+>>  - Add more documentation to introduce Spreadtrum SC27xx series PMICs.
+>>  - Modify compatile string property.
+>>  - Modify reg property.
+>>  - Remove redundant 'pmic' label.
+>>  - Change 'should be' to 'must be' for cells properties.
+>> ---
+>>  drivers/mfd/Kconfig           |   16 +++
+>>  drivers/mfd/Makefile          |    1 +
+>>  drivers/mfd/sprd-sc27xx-spi.c |  258 +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 275 insertions(+)
+>>  create mode 100644 drivers/mfd/sprd-sc27xx-spi.c
+>
+> [...]
+>
+>> +static int sprd_pmic_spi_read(void *context,
+>> +                           const void *reg, size_t reg_size,
+>> +                           void *val, size_t val_size)
+>> +{
+>> +     struct device *dev = context;
+>> +     struct spi_device *spi = to_spi_device(dev);
+>> +     u32 rx_buf[2] = { 0 };
+>> +     int ret;
+>> +
+>> +     /* Now we only support one PMIC register to read every time. */
+>> +     if (reg_size != sizeof(u32) || val_size != sizeof(u32))
+>> +             return -EINVAL;
+>> +
+>> +     rx_buf[0] = *(u32 *)reg;
+>
+> I still don't like this.  It's uuuuuugly!
+>
+> At the very least, please use an interim variable using a nomenclature
+> which describes what it is you're trying to achieve.  For instance:
+>
+>   u32 *addr = reg;
+>
+>   rx_buf[0] = addr[0];
+>
+> Or better still ...
+>
+>   /* Copy address to read from into first element of SPI buffer */
+>   memcpy(rx_buf, reg, sizeof(u32));
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 14 ++++-------
- drivers/hwmon/aspeed-pwm-tacho.c                   | 27 +++++++++++++++++++---
- 2 files changed, 29 insertions(+), 12 deletions(-)
+OK. I will change it like you suggested in next version. Thanks.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-index 367c8203213b..3ac02988a1a5 100644
---- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -22,8 +22,9 @@ Required properties for pwm-tacho node:
- - compatible : should be "aspeed,ast2400-pwm-tacho" for AST2400 and
- 	       "aspeed,ast2500-pwm-tacho" for AST2500.
- 
--- clocks : a fixed clock providing input clock frequency(PWM
--	   and Fan Tach clock)
-+- clocks : phandle to clock provider with the clock number in the second cell
-+
-+- resets : phandle to reset controller with the reset number in the second cell
- 
- fan subnode format:
- ===================
-@@ -48,19 +49,14 @@ Required properties for each child node:
- 
- Examples:
- 
--pwm_tacho_fixed_clk: fixedclk {
--	compatible = "fixed-clock";
--	#clock-cells = <0>;
--	clock-frequency = <24000000>;
--};
--
- pwm_tacho: pwmtachocontroller@1e786000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	#cooling-cells = <2>;
- 	reg = <0x1E786000 0x1000>;
- 	compatible = "aspeed,ast2500-pwm-tacho";
--	clocks = <&pwm_tacho_fixed_clk>;
-+	clocks = <&syscon ASPEED_CLK_APB>;
-+	resets = <&syscon ASPEED_RESET_PWM>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
- 
-diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-index f914e5f41048..346a4c5952a3 100644
---- a/drivers/hwmon/aspeed-pwm-tacho.c
-+++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -7,19 +7,20 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/gpio/consumer.h>
--#include <linux/delay.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/of_platform.h>
- #include <linux/of_device.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
--#include <linux/sysfs.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/sysfs.h>
- #include <linux/thermal.h>
- 
- /* ASPEED PWM & FAN Tach Register Definition */
-@@ -181,6 +182,7 @@ struct aspeed_cooling_device {
- 
- struct aspeed_pwm_tacho_data {
- 	struct regmap *regmap;
-+	struct reset_control *rst;
- 	unsigned long clk_freq;
- 	bool pwm_present[8];
- 	bool fan_tach_present[16];
-@@ -931,6 +933,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
- 			&aspeed_pwm_tacho_regmap_config);
- 	if (IS_ERR(priv->regmap))
- 		return PTR_ERR(priv->regmap);
-+
-+	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(priv->rst)) {
-+		dev_err(dev,
-+			"missing or invalid reset controller device tree entry");
-+		return PTR_ERR(priv->rst);
-+	}
-+	reset_control_deassert(priv->rst);
-+
- 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
- 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
- 
-@@ -960,6 +971,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
- 	return PTR_ERR_OR_ZERO(hwmon);
- }
- 
-+static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
-+{
-+	struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
-+
-+	reset_control_deassert(priv->rst);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id of_pwm_tacho_match_table[] = {
- 	{ .compatible = "aspeed,ast2400-pwm-tacho", },
- 	{ .compatible = "aspeed,ast2500-pwm-tacho", },
-@@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
- 
- static struct platform_driver aspeed_pwm_tacho_driver = {
- 	.probe		= aspeed_pwm_tacho_probe,
-+	.probe		= aspeed_pwm_tacho_remove,
- 	.driver		= {
- 		.name	= "aspeed_pwm_tacho",
- 		.of_match_table = of_pwm_tacho_match_table,
 -- 
-2.14.1
-
+Baolin.wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
