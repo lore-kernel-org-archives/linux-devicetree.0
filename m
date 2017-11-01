@@ -1,94 +1,141 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
-Date: Wed,  1 Nov 2017 00:21:32 +0000
-Message-ID: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, linux-mmc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
+Date: Wed,  1 Nov 2017 12:04:21 +1030
+Message-ID: <20171101013421.8488-1-joel@jms.id.au>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Mykola Kostenok <c_mykolak@mellanox.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
-requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
-F_SDH30_ESD_CONTROL control register.
+The ASPEED SoC must deassert a reset in order to use the PWM/tach
+peripheral.
 
-So let's add an optional property to this device's binding, and
-set the attribute if it is present in the DT node.
+The device tree bindings are updated to document the resets phandle, and
+the example is updated to match what is expected for both the reset and
+clock phandle. Note that the bindings should have always had the reset
+controller, as the hardware is unusable without it.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt |  2 ++
- drivers/mmc/host/sdhci_f_sdh30.c                        | 18 +++++++++++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 14 ++++-------
+ drivers/hwmon/aspeed-pwm-tacho.c                   | 27 +++++++++++++++++++---
+ 2 files changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-index de2c53cff4f1..9ad02f743ad0 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-@@ -15,6 +15,8 @@ Required properties:
- Optional properties:
- - vqmmc-supply: phandle to the regulator device tree node, mentioned
-   as the VCCQ/VDD_IO supply in the eMMC/SD specs.
-+- cmd-dat-delay-select: boolean property indicating that this host requires
-+  the CMD_DAT_DELAY control to be enabled.
+diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+index 367c8203213b..3ac02988a1a5 100644
+--- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
++++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+@@ -22,8 +22,9 @@ Required properties for pwm-tacho node:
+ - compatible : should be "aspeed,ast2400-pwm-tacho" for AST2400 and
+ 	       "aspeed,ast2500-pwm-tacho" for AST2500.
  
- Example:
+-- clocks : a fixed clock providing input clock frequency(PWM
+-	   and Fan Tach clock)
++- clocks : phandle to clock provider with the clock number in the second cell
++
++- resets : phandle to reset controller with the reset number in the second cell
  
-diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
-index 111b66f5439b..00bc2121d607 100644
---- a/drivers/mmc/host/sdhci_f_sdh30.c
-+++ b/drivers/mmc/host/sdhci_f_sdh30.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/delay.h>
- #include <linux/module.h>
-+#include <linux/property.h>
+ fan subnode format:
+ ===================
+@@ -48,19 +49,14 @@ Required properties for each child node:
+ 
+ Examples:
+ 
+-pwm_tacho_fixed_clk: fixedclk {
+-	compatible = "fixed-clock";
+-	#clock-cells = <0>;
+-	clock-frequency = <24000000>;
+-};
+-
+ pwm_tacho: pwmtachocontroller@1e786000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	#cooling-cells = <2>;
+ 	reg = <0x1E786000 0x1000>;
+ 	compatible = "aspeed,ast2500-pwm-tacho";
+-	clocks = <&pwm_tacho_fixed_clk>;
++	clocks = <&syscon ASPEED_CLK_APB>;
++	resets = <&syscon ASPEED_RESET_PWM>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+ 
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index f914e5f41048..346a4c5952a3 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -7,19 +7,20 @@
+  */
+ 
  #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/errno.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/delay.h>
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/of_platform.h>
+ #include <linux/of_device.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+-#include <linux/sysfs.h>
+ #include <linux/regmap.h>
++#include <linux/reset.h>
++#include <linux/sysfs.h>
+ #include <linux/thermal.h>
  
- #include "sdhci-pltfm.h"
-@@ -45,8 +46,9 @@
- struct f_sdhost_priv {
- 	struct clk *clk_iface;
- 	struct clk *clk;
--	u32 vendor_hs200;
- 	struct device *dev;
-+	u32 vendor_hs200;
-+	bool enable_cmd_dat_delay;
- };
+ /* ASPEED PWM & FAN Tach Register Definition */
+@@ -181,6 +182,7 @@ struct aspeed_cooling_device {
  
- static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
-@@ -84,10 +86,19 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
- 
- static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
- {
-+	struct f_sdhost_priv *priv = sdhci_priv(host);
-+	u32 ctl;
+ struct aspeed_pwm_tacho_data {
+ 	struct regmap *regmap;
++	struct reset_control *rst;
+ 	unsigned long clk_freq;
+ 	bool pwm_present[8];
+ 	bool fan_tach_present[16];
+@@ -931,6 +933,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+ 			&aspeed_pwm_tacho_regmap_config);
+ 	if (IS_ERR(priv->regmap))
+ 		return PTR_ERR(priv->regmap);
 +
- 	if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
- 		sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
- 
- 	sdhci_reset(host, mask);
-+
-+	if (priv->enable_cmd_dat_delay) {
-+		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-+		ctl |= F_SDH30_CMD_DAT_DELAY;
-+		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
++	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(priv->rst)) {
++		dev_err(dev,
++			"missing or invalid reset controller device tree entry");
++		return PTR_ERR(priv->rst);
 +	}
++	reset_control_deassert(priv->rst);
++
+ 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
+ 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
+ 
+@@ -960,6 +971,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+ 	return PTR_ERR_OR_ZERO(hwmon);
  }
  
- static const struct sdhci_ops sdhci_f_sdh30_ops = {
-@@ -126,6 +137,11 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
- 	host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
- 			SDHCI_QUIRK2_TUNING_WORK_AROUND;
- 
-+	if (device_property_read_bool(dev, "cmd-dat-delay-select")) {
-+		dev_info(dev, "Setting cmd-dat-delay\n");
-+		priv->enable_cmd_dat_delay = true;
-+	}
++static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
++{
++	struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
 +
- 	ret = mmc_of_parse(host->mmc);
- 	if (ret)
- 		goto err;
++	reset_control_deassert(priv->rst);
++
++	return 0;
++}
++
+ static const struct of_device_id of_pwm_tacho_match_table[] = {
+ 	{ .compatible = "aspeed,ast2400-pwm-tacho", },
+ 	{ .compatible = "aspeed,ast2500-pwm-tacho", },
+@@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
+ 
+ static struct platform_driver aspeed_pwm_tacho_driver = {
+ 	.probe		= aspeed_pwm_tacho_probe,
++	.probe		= aspeed_pwm_tacho_remove,
+ 	.driver		= {
+ 		.name	= "aspeed_pwm_tacho",
+ 		.of_match_table = of_pwm_tacho_match_table,
 -- 
-2.11.0
+2.14.1
 
