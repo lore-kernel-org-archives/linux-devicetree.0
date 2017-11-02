@@ -1,62 +1,86 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
-Date: Thu, 02 Nov 2017 16:51:29 +0800
-Message-ID: <9bca10cc95d04f87a1122bc582402310@aosc.io>
-References: <20171027150658.18509-1-icenowy@aosc.io>
+From: "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCH 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
+Date: Thu, 2 Nov 2017 08:54:29 +0000
+Message-ID: <VI1PR04MB16150087206A5385F52D163CE85C0@VI1PR04MB1615.eurprd04.prod.outlook.com>
+References: <20171024083045.31135-1-xiaowei.bao@nxp.com>
+ <20171024083045.31135-2-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171027150658.18509-1-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171024083045.31135-2-xiaowei.bao@nxp.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, "hongtao.jia@nxp.com" <hongtao.jia@nxp.com>, Andy Tang <andy.tang@nxp.com>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-10-27 23:06，Icenowy Zheng 写道：
-> This patchset adds support for the SimpleFB on Allwinner SoCs with
-> "Display Engine 2.0".
-> 
-> PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
-> 
-> PATCH 4 adds the pipeline strings for DE2 SimpleFB.
-> 
-> PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
-> for H3/H5 SoCs.
-> 
-> PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
-> 
-> Icenowy Zheng (10):
->   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
->   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
->   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
->   dt-bindings: simplefb-sunxi: add pipelines for DE2
->   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
->   arm64: allwinner: h5: add compatible string for DE2 CCU
->   ARM: sunxi: h3/h5: add simplefb nodes
->   dt-bindings: add binding for A64 DE2 CCU SRAM
->   arm64: allwinner: a64: add DE2 CCU for A64 SoC
->   arm64: allwinner: a64: add simplefb for A64 SoC
+Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
 
-Maxime, could you review and, if possible, apply the H3/5
-part of this patchset?
-
-Thanks!
-Icenowy
-
-> 
->  .../devicetree/bindings/clock/sun8i-de2.txt        | 10 +++-
->  .../bindings/display/simple-framebuffer-sunxi.txt  |  4 ++
->  arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 ++
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 ++++++++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65 
-> ++++++++++++++++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 ++
->  drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 53 
-> +++++++++++++++++-
->  7 files changed, 178 insertions(+), 5 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: Bao Xiaowei [mailto:xiaowei.bao@nxp.com]
+> Sent: Tuesday, October 24, 2017 4:31 PM
+> To: robh+dt@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+> will.deacon@arm.com; bhelgaas@google.com; shawnguo@kernel.org;
+> Madalin-cristian Bucur <madalin.bucur@nxp.com>; Sumit Garg
+> <sumit.garg@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; hongtao.jia@nxp.com;
+> Andy Tang <andy.tang@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+> kishon@ti.com; jingoohan1@gmail.com; pbrobinson@gmail.com;
+> songxiaowei@hisilicon.com; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> pci@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; Z.q. Hou
+> <zhiqiang.hou@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>
+> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Subject: [PATCH 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
+>=20
+> Add the property of inbind and outbind windows number for ep driver.
+>=20
+> add the inband or outband window entry for pcie controller ep driver used=
+ in dts.
+>=20
+> Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 06b5e12d04d8..f8332669663c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -674,6 +674,8 @@
+>  			device_type =3D "pci";
+>  			dma-coherent;
+>  			num-lanes =3D <4>;
+> +			num-ib-windows =3D <6>;
+> +			num-ob-windows =3D <6>;
+>  			bus-range =3D <0x0 0xff>;
+>  			ranges =3D <0x81000000 0x0 0x00000000 0x40
+> 0x00010000 0x0 0x00010000   /* downstream I/O */
+>  				  0x82000000 0x0 0x40000000 0x40
+> 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */ @@ -699,6
+> +701,8 @@
+>  			device_type =3D "pci";
+>  			dma-coherent;
+>  			num-lanes =3D <2>;
+> +			num-ib-windows =3D <6>;
+> +			num-ob-windows =3D <6>;
+>  			bus-range =3D <0x0 0xff>;
+>  			ranges =3D <0x81000000 0x0 0x00000000 0x48
+> 0x00010000 0x0 0x00010000   /* downstream I/O */
+>  				  0x82000000 0x0 0x40000000 0x48
+> 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */ @@ -724,6
+> +728,8 @@
+>  			device_type =3D "pci";
+>  			dma-coherent;
+>  			num-lanes =3D <2>;
+> +			num-ib-windows =3D <6>;
+> +			num-ob-windows =3D <6>;
+>  			bus-range =3D <0x0 0xff>;
+>  			ranges =3D <0x81000000 0x0 0x00000000 0x50
+> 0x00010000 0x0 0x00010000   /* downstream I/O */
+>  				  0x82000000 0x0 0x40000000 0x50
+> 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> --
+> 2.14.1
