@@ -1,51 +1,45 @@
-From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
-Subject: [PATCH v7 3/5] Documentation: Add device tree binding for Goldfish FB driver
-Date: Thu,  2 Nov 2017 17:21:22 +0100
-Message-ID: <1509639716-4787-4-git-send-email-aleksandar.markovic@rt-rk.com>
-References: <1509639716-4787-1-git-send-email-aleksandar.markovic@rt-rk.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH 4/7] MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+Date: Thu, 2 Nov 2017 09:27:01 -0700
+Message-ID: <fc2d71e2-cdd4-1cf8-13b0-ea462b5e7e75@caviumnetworks.com>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-5-david.daney@cavium.com>
+ <d473b10c-ae5d-efa1-7329-de7b68152725@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1509639716-4787-1-git-send-email-aleksandar.markovic@rt-rk.com>
+In-Reply-To: <d473b10c-ae5d-efa1-7329-de7b68152725@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Aleksandar Markovic <aleksandar.markovic@mips.com>, Miodrag Dinic <miodrag.dinic@mips.com>, Goran Ferenc <goran.ferenc@mips.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@mips.com>, dri-devel@lists.freedesktop.org, James Hogan <james.hogan@mips.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, Petar Jovanovic <petar.jovanovic@mips.com>, Raghu Gandham <raghu.gandham@mips.com>, Rob Herring <robh+dt@kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Aleksandar Markovic <aleksandar.markovic@mips.com>
+On 11/01/2017 08:29 PM, Florian Fainelli wrote:
+> Le 11/01/17 à 17:36, David Daney a écrit :
+>> From: Carlos Munoz <cmunoz@cavium.com>
+>>
+>>  From the hardware user manual: "The FPA is a unit that maintains
+>> pools of pointers to free L2/DRAM memory. To provide QoS, the pools
+>> are referenced indirectly through 1024 auras. Both core software
+>> and hardware units allocate and free pointers."
+> 
+> This looks like a possibly similar implement to what
+> drivers/net/ethernet/marvell/mvneta_bm.c, can you see if you can make
+> any use of genpool_* and include/net/hwbm.h here as well?
 
-Add documentation for DT binding of Goldfish FB driver. The compatible
-string used by OS for binding the driver is "google,goldfish-fb".
+Yikes!  Is it permitted to put function definitions that are not "static 
+inline" in header files?
 
-Signed-off-by: Miodrag Dinic <miodrag.dinic@mips.com>
-Signed-off-by: Goran Ferenc <goran.ferenc@mips.com>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic@mips.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/display/google,goldfish-fb.txt  | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/google,goldfish-fb.txt
+The driver currently doesn't use page fragments, so I don't think that 
+the hwbm thing can be used.
 
-diff --git a/Documentation/devicetree/bindings/display/google,goldfish-fb.txt b/Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-new file mode 100644
-index 0000000..751fa9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-@@ -0,0 +1,17 @@
-+Android Goldfish framebuffer
-+
-+Android Goldfish framebuffer device used by Android emulator.
-+
-+Required properties:
-+
-+- compatible : should contain "google,goldfish-fb"
-+- reg        : <registers mapping>
-+- interrupts : <interrupt mapping>
-+
-+Example:
-+
-+	display-controller@1f008000 {
-+		compatible = "google,goldfish-fb";
-+		interrupts = <0x10>;
-+		reg = <0x1f008000 0x100>;
-+	};
--- 
-2.7.4
+Also the FPA unit is used to control RED and back pressure in the PKI 
+(packet input processor), which are features that are features not 
+considered in hwbm.
+
+The OCTEON-III hardware also uses the FPA for non-packet-buffer memory 
+allocations.  So for those, it seems that hwbm is also not a good fit.
+
+David Daney
