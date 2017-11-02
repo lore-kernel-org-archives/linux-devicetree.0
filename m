@@ -1,64 +1,68 @@
-From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Subject: Re: [PATCH v7 2/2] bus: add driver for the Technologic Systems NBUS
-Date: Thu, 2 Nov 2017 10:37:45 -0400
-Message-ID: <b7a79314-66ff-6f09-6e53-aa548286b962@savoirfairelinux.com>
-References: <20171101171433.14445-1-sebastien.bourdelin@savoirfairelinux.com>
- <20171101171433.14445-2-sebastien.bourdelin@savoirfairelinux.com>
- <CACRpkdY4Y9g2PAXbt11e3mSzJk2Bri4WNXm-5dQ2iyTegBNYVw@mail.gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2] iio: adc: aspeed: Deassert reset in probe
+Date: Thu, 2 Nov 2017 14:49:32 +0000
+Message-ID: <20171102144932.00001e17@huawei.com>
+References: <20171031021203.18248-1-joel@jms.id.au>
+        <CA+gwMcdVpq1P5kWAWzkg2A+Ah-fKyTk0adhGdg4465gkOY3EKA@mail.gmail.com>
+        <CACPK8Xc1d89MXBjSJw7Jz0oqkCcoxKbymaVDmJq-kHFK6qG0Sw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY4Y9g2PAXbt11e3mSzJk2Bri4WNXm-5dQ2iyTegBNYVw@mail.gmail.com>
-Content-Language: fr-classic
+In-Reply-To: <CACPK8Xc1d89MXBjSJw7Jz0oqkCcoxKbymaVDmJq-kHFK6qG0Sw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel <kernel@savoirfairelinux.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Featherston <mark@embeddedarm.com>, kris@embeddedarm.com
+To: Joel Stanley <joel@jms.id.au>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Rick Altherr <raltherr@google.com>, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wed, 1 Nov 2017 10:15:32 +1030
+Joel Stanley <joel@jms.id.au> wrote:
 
-On 11/02/2017 10:22 AM, Linus Walleij wrote:
-> On Wed, Nov 1, 2017 at 6:14 PM, Sebastien Bourdelin
-> <sebastien.bourdelin@savoirfairelinux.com> wrote:
+> On Tue, Oct 31, 2017 at 10:28 PM, Philipp Zabel
+> <philipp.zabel@gmail.com> wrote:
+> > On Tue, Oct 31, 2017 at 3:12 AM, Joel Stanley <joel@jms.id.au>
+> > wrote:  
+> >> The ASPEED SoC must deassert a reset in order to use the ADC
+> >> peripheral.
+> >>
+> >> The device tree bindings are updated to document the resets
+> >> phandle, and the example is updated to match what is expected for
+> >> both the reset and clock phandle. Note that the bindings should
+> >> have always had the reset controller, as the hardware is unusable
+> >> without it.
+> >>
+> >> Signed-off-by: Joel Stanley <joel@jms.id.au>  
+> >
+> > It is unfortunate that this has to break DT (theoretical) backwards
+> > compatibility, but given that the old bindings never worked,
+> > this is better than to pretend a required reset is optional.
+> >
+> > Reviewed-by: Philipp Zabel <philipp.zabel@gmail.com>  
 > 
->> This driver implements a GPIOs bit-banged bus, called the NBUS by
->> Technologic Systems. It is used to communicate with the peripherals in
->> the FPGA on the TS-4600 SoM.
->>
->> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Thanks. I agree that it's unfortunate; this has been my first time
+> working on an ARM SoC and there were few things we could have done
+> better in hindsight.
 > 
-> This is still a very nice driver.
+> I've got similar patches for the ASPEED hwmon pwm/tach driver, and the
+> i2c driver that I'll send out now.
+> 
+> Thanks for the review.
+> 
+> Cheers,
+> 
+> Joel
+Hi Joel,
 
-Thanks that's very kind and greatly appreciate.
-> 
-> If you are working on supplemental patches: from the next merge window
-> we will have:
-> 
-> + int gpiod_get_array_value_cansleep(unsigned int array_size,
-> +                                          struct gpio_desc **desc_array,
-> +                                          int *value_array);
-> 
-> See:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel&id=eec1d566cdf94b57e8f5ba9fe60eea214929bcfc
-> 
-> If your GPIO controller also has .get_multiple() implemented it just
-> becomes one register read if you're lucky.
-> 
-Ok, i guess i will not if this is fine like that, i'll see if someone
-suggested some changes.
+IIO is closed for this cycle anyway now.
+Otherwise, series looks good.
 
-> BTW do you have a way upstream for this patch? ARM SoC?
-Honestly i have no idea, do you have a recommandation for this kind of
-bus driver? should i re-submit just this patch to a specific tree?
+Will pick up when back with my main PC as traveling for this week and
+next.
 
-> 
-> Yours,
-> Linus Walleij
-> 
+Thanks,
 
-Thanks again for your inputs.
-
-Best regards,
-Sebastien Bourdelin.
+Jonathan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio"
+> in the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
