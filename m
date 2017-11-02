@@ -1,66 +1,63 @@
-From: "M.h. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 3/3] ARMv8: pcie: make the DWC EP driver support for
- layerscape
-Date: Thu, 2 Nov 2017 09:31:33 +0000
-Message-ID: <VI1PR04MB1615DB65A3A9E50B4B31476CE85C0@VI1PR04MB1615.eurprd04.prod.outlook.com>
-References: <20171024083045.31135-1-xiaowei.bao@nxp.com>
- <20171024083045.31135-4-xiaowei.bao@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH 1/1] of: Make return types of to_of_node and of_fwnode_handle macros consistent
+Date: Thu,  2 Nov 2017 11:57:22 +0200
+Message-ID: <20171102095722.6893-1-sakari.ailus@linux.intel.com>
+References: <2117711.dO2rQLXOup@avalon>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171024083045.31135-4-xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <2117711.dO2rQLXOup@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Madalin-cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>, Sumit Garg <sumit.garg-3arQi8VN3Tc@public.gmane.org>, "Y.b. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, "hongtao.jia-3arQi8VN3Tc@public.gmane.org" <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Xiaowei Bao <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.chehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Minghuan Lian <minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
+to_of_node() macro checks whether the fwnode_handle passed to it is not an
+OF node, and if so, returns NULL in order to be NULL-safe. Otherwise it
+returns the pointer to the OF node which the fwnode_handle contains.
 
-> -----Original Message-----
-> From: Bao Xiaowei [mailto:xiaowei.bao-3arQi8VN3Tc@public.gmane.org]
-> Sent: Tuesday, October 24, 2017 4:31 PM
-> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org;
-> will.deacon-5wv7dgnIgG8@public.gmane.org; bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> Madalin-cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>; Sumit Garg
-> <sumit.garg-3arQi8VN3Tc@public.gmane.org>; Y.b. Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>; hongtao.jia-3arQi8VN3Tc@public.gmane.org;
-> Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>; Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>;
-> kishon-l0cyMroinI0@public.gmane.org; jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
-> songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Z.q. Hou
-> <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>; Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>; M.h. Lian
-> <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
-> Cc: Xiaowei Bao <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
-> Subject: [PATCH 3/3] ARMv8: pcie: make the DWC EP driver support for
-> layerscape
->=20
-> Layerscape pcie controllers support RC or EP mode, Add the EP mode suppor=
-t in
-> Kconfig, the driver will support both RC and EP mode, and the driver is a=
-ble to
-> judge the pcie controllers work on RC or EP mode.
->=20
-> Signed-off-by: Bao Xiaowei <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
-> ---
->  drivers/pci/dwc/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig index
-> 22ec82fcdea2..b5f507795779 100644
-> --- a/drivers/pci/dwc/Kconfig
-> +++ b/drivers/pci/dwc/Kconfig
-> @@ -108,6 +108,7 @@ config PCI_LAYERSCAPE
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select MFD_SYSCON
->  	select PCIE_DW_HOST
-> +	select PCIE_DW_EP
->  	help
->  	  Say Y here if you want PCIe controller support on Layerscape SoCs.
->=20
-> --
-> 2.14.1
+The problem with returning NULL is that its type was void *, which
+sometimes matters. Explicitly return struct device_node * instead.
+
+Make a similar change to of_fwnode_handle() as well.
+
+Fixes: d20dc1493db4 ("of: Support const and non-const use for to_of_node()")
+Fixes: debd3a3b27c7 ("of: Make of_fwnode_handle() safer")
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+Hi Mauro,
+
+Could you check whether this addresses the smatch issue with the xilinx
+driver?
+
+Thanks.
+
+ include/linux/of.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index b240ed69dc96..0651231c115e 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -161,7 +161,7 @@ static inline bool is_of_node(const struct fwnode_handle *fwnode)
+ 		is_of_node(__to_of_node_fwnode) ?			\
+ 			container_of(__to_of_node_fwnode,		\
+ 				     struct device_node, fwnode) :	\
+-			NULL;						\
++			(struct device_node *)NULL;			\
+ 	})
+ 
+ #define of_fwnode_handle(node)						\
+@@ -169,7 +169,8 @@ static inline bool is_of_node(const struct fwnode_handle *fwnode)
+ 		typeof(node) __of_fwnode_handle_node = (node);		\
+ 									\
+ 		__of_fwnode_handle_node ?				\
+-			&__of_fwnode_handle_node->fwnode : NULL;	\
++			&__of_fwnode_handle_node->fwnode :		\
++			(struct fwnode_handle *)NULL;			\
+ 	})
+ 
+ static inline bool of_have_populated_dt(void)
+-- 
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
