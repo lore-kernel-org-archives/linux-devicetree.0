@@ -1,47 +1,49 @@
-From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] bus: add driver for the Technologic Systems NBUS
-Date: Thu, 2 Nov 2017 12:10:27 -0400
-Message-ID: <99814e77-cc83-23be-21f2-04898695fc15@savoirfairelinux.com>
-References: <20171101171433.14445-1-sebastien.bourdelin@savoirfairelinux.com>
- <20171101171433.14445-2-sebastien.bourdelin@savoirfairelinux.com>
- <CACRpkdY4Y9g2PAXbt11e3mSzJk2Bri4WNXm-5dQ2iyTegBNYVw@mail.gmail.com>
- <b7a79314-66ff-6f09-6e53-aa548286b962@savoirfairelinux.com>
- <CACRpkdZajBx0xano2f6art=ROtwysAAVW_9FnCO39+XEfYbwGg@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
+ support.
+Date: Thu, 2 Nov 2017 17:10:16 +0100
+Message-ID: <20171102161016.GH24320@lunn.ch>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-7-david.daney@cavium.com>
+ <20171102124339.GF4772@lunn.ch>
+ <521d6b21-b7f0-66e0-4b49-cf95d83452d1@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZajBx0xano2f6art=ROtwysAAVW_9FnCO39+XEfYbwGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: fr-classic
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel <kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Featherston <mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org>, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <521d6b21-b7f0-66e0-4b49-cf95d83452d1@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 02, 2017 at 08:55:33AM -0700, David Daney wrote:
+> On 11/02/2017 05:43 AM, Andrew Lunn wrote:
+> [...]
+> >>+
+> >>+		i = atomic_inc_return(&pki_id);
+> >>+		pki_dev = platform_device_register_data(&new_dev->dev,
+> >>+							is_mix ? "octeon_mgmt" : "ethernet-mac-pki",
+> >>+							i, &platform_data, sizeof(platform_data));
+> >>+		dev_info(&pdev->dev, "Created %s %u: %p\n",
+> >>+			 is_mix ? "MIX" : "PKI", pki_dev->id, pki_dev);
+> >
+> >Is there any change of these ethernet ports being used to connect to
+> >an Ethernet switch. We have had issues in the past with these sort of
+> >platform devices combined with DSA.
+> >
+> 
+> There are only two possibilities.  The BGX MACs have a multiplexer that
+> allows them to be connected to either the "octeon_mgmt" MIX packet
+> processor, or to the "ethernet-mac-pki" PKI/PKO packet processor.  The SoCs
+> supported by these drivers do not contain any hardware that would be
+> considered an "Ethernet switch".
 
-On 11/02/2017 11:57 AM, Linus Walleij wrote:
-> On Thu, Nov 2, 2017 at 3:37 PM, Sebastien Bourdelin
-> <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org> wrote:
-> 
->>> BTW do you have a way upstream for this patch? ARM SoC?
->>
->> Honestly i have no idea, do you have a recommandation for this kind of
->> bus driver? should i re-submit just this patch to a specific tree?
-> 
-> If this is for an ARM system I would suggest that you just sent
-> the patches to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org with CC to the linux-arm-kernel
-> mailing list and ask the ARM SoC maintainers to apply them directly
-> for the upstream kernel.
-> 
-Ok, i will, thanks again!
+Hi David
 
-> Yours,
-> Linus Walleij
-> 
+I was thinking of an external Ethernet switch. You generally connect
+via RGMII to a port of the switch.
 
-Best Regards,
-Sebastien Bourdelin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://elixir.free-electrons.com/linux/v4.9.60/source/Documentation/networking/dsa/dsa.txt
+
+	Andrew
