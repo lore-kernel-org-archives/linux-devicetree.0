@@ -1,81 +1,56 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Thu, 2 Nov 2017 13:43:39 +0100
-Message-ID: <20171102124339.GF4772@lunn.ch>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/7] dt-bindings: Add Cavium Octeon Common Ethernet
+ Interface.
+Date: Thu, 2 Nov 2017 13:47:19 +0100
+Message-ID: <20171102124719.GG4772@lunn.ch>
 References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-7-david.daney@cavium.com>
+ <20171102003606.19913-2-david.daney@cavium.com>
+ <af0de889-a34b-8346-9eeb-171498cc61ca@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171102003606.19913-7-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
+In-Reply-To: <af0de889-a34b-8346-9eeb-171498cc61ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +static int bgx_probe(struct platform_device *pdev)
-> +{
-> +	struct mac_platform_data platform_data;
-> +	const __be32 *reg;
-> +	u32 port;
-> +	u64 addr;
-> +	struct device_node *child;
-> +	struct platform_device *new_dev;
-> +	struct platform_device *pki_dev;
-> +	int numa_node, interface;
-> +	int i;
-> +	int r = 0;
-> +	char id[64];
-> +	u64 data;
-> +
-> +	reg = of_get_property(pdev->dev.of_node, "reg", NULL);
-> +	addr = of_translate_address(pdev->dev.of_node, reg);
-> +	interface = (addr >> 24) & 0xf;
-> +	numa_node = (addr >> 36) & 0x7;
-> +
-> +	/* Assign 8 CAM entries per LMAC */
-> +	for (i = 0; i < 32; i++) {
-> +		data = i >> 3;
-> +		oct_csr_write(data, BGX_CMR_RX_ADRX_CAM(numa_node, interface, i));
-> +	}
-> +
-> +	for_each_available_child_of_node(pdev->dev.of_node, child) {
-> +		snprintf(id, sizeof(id), "%llx.%u.ethernet-mac",
-> +			 (unsigned long long)addr, port);
-> +		new_dev = of_platform_device_create(child, id, &pdev->dev);
-> +		if (!new_dev) {
-> +			dev_err(&pdev->dev, "Error creating %s\n", id);
-> +			continue;
-> +		}
-> +		platform_data.mac_type = BGX_MAC;
-> +		platform_data.numa_node = numa_node;
-> +		platform_data.interface = interface;
-> +		platform_data.port = port;
-> +		if (is_xcv)
-> +			platform_data.src_type = XCV;
-> +		else
-> +			platform_data.src_type = QLM;
-> +
-> +		/* Add device to the list of created devices so we can remove it
-> +		 * on exit.
-> +		 */
-> +		pdev_item = kmalloc(sizeof(*pdev_item), GFP_KERNEL);
-> +		pdev_item->pdev = new_dev;
-> +		mutex_lock(&pdev_list_lock);
-> +		list_add(&pdev_item->list, &pdev_list);
-> +		mutex_unlock(&pdev_list_lock);
-> +
-> +		i = atomic_inc_return(&pki_id);
-> +		pki_dev = platform_device_register_data(&new_dev->dev,
-> +							is_mix ? "octeon_mgmt" : "ethernet-mac-pki",
-> +							i, &platform_data, sizeof(platform_data));
-> +		dev_info(&pdev->dev, "Created %s %u: %p\n",
-> +			 is_mix ? "MIX" : "PKI", pki_dev->id, pki_dev);
+On Wed, Nov 01, 2017 at 06:09:17PM -0700, Florian Fainelli wrote:
+> On 11/01/2017 05:36 PM, David Daney wrote:
+> > From: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > 
+> > Add bindings for Common Ethernet Interface (BGX) block.
+> > 
+> > Signed-off-by: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Steven J. Hill <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > ---
+> [snip]
+> > +Properties:
+> > +
+> > +- compatible: "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs.
+> > +
+> > +- reg: The index of the interface within the BGX block.
+> > +
+> > +- local-mac-address: Mac address for the interface.
+> > +
+> > +- phy-handle: phandle to the phy node connected to the interface.
+> > +
+> > +- cavium,rx-clk-delay-bypass: Set to <1> to bypass the rx clock delay setting.
+> > +  Needed by the Micrel PHY.
+> 
+> Is not that implied by an appropriate "phy-mode" property already?
 
-Is there any change of these ethernet ports being used to connect to
-an Ethernet switch. We have had issues in the past with these sort of
-platform devices combined with DSA.
+Hi Florian
 
-	 Andrew
+Looking at the driver patch, phy-mode is not used at
+all. of_phy_connect() passes a hard coded SGMII value!
+
+David, you need to fix this.
+
+       Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
