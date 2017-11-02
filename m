@@ -1,62 +1,231 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/7] MIPS: Octeon: Add Free Pointer Unit (FPA) support.
-Date: Thu, 2 Nov 2017 11:04:26 -0700
-Message-ID: <70fa7ec2-3e6d-e420-ff57-b34dc7ec311e@gmail.com>
-References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-5-david.daney@cavium.com>
- <d473b10c-ae5d-efa1-7329-de7b68152725@gmail.com>
- <fc2d71e2-cdd4-1cf8-13b0-ea462b5e7e75@caviumnetworks.com>
+From: Julien Thierry <julien.thierry@arm.com>
+Subject: Re: [PATCH V3 05/11] clk: sprd: add mux clock support
+Date: Thu, 2 Nov 2017 18:11:05 +0000
+Message-ID: <532aed43-03bf-ea26-bdc2-d7deb1093f53@arm.com>
+References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
+ <20171102065626.21835-6-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fc2d71e2-cdd4-1cf8-13b0-ea462b5e7e75-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171102065626.21835-6-chunyan.zhang@spreadtrum.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2017 09:27 AM, David Daney wrote:
-> On 11/01/2017 08:29 PM, Florian Fainelli wrote:
->> Le 11/01/17 à 17:36, David Daney a écrit :
->>> From: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>
->>>  From the hardware user manual: "The FPA is a unit that maintains
->>> pools of pointers to free L2/DRAM memory. To provide QoS, the pools
->>> are referenced indirectly through 1024 auras. Both core software
->>> and hardware units allocate and free pointers."
->>
->> This looks like a possibly similar implement to what
->> drivers/net/ethernet/marvell/mvneta_bm.c, can you see if you can make
->> any use of genpool_* and include/net/hwbm.h here as well?
-> 
-> Yikes!  Is it permitted to put function definitions that are not "static
-> inline" in header files?
+Hi,
 
-Meh well, this is not even ressembling what we initially discussed, so I
-was hoping we could build more interesting features on top of this.
-
+On 02/11/17 06:56, Chunyan Zhang wrote:
+> This patch adds clock multiplexor support for Spreadtrum platforms,
+> the mux clocks also can be found in sprd composite clocks, so
+> provides two helpers that can be reused later on.
 > 
-> The driver currently doesn't use page fragments, so I don't think that
-> the hwbm thing can be used.
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> ---
+>   drivers/clk/sprd/Makefile |  1 +
+>   drivers/clk/sprd/mux.c    | 89 +++++++++++++++++++++++++++++++++++++++++++++++
+>   drivers/clk/sprd/mux.h    | 65 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 155 insertions(+)
+>   create mode 100644 drivers/clk/sprd/mux.c
+>   create mode 100644 drivers/clk/sprd/mux.h
 > 
-> Also the FPA unit is used to control RED and back pressure in the PKI
-> (packet input processor), which are features that are features not
-> considered in hwbm.
+> diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+> index 8cd5592..cee36b5 100644
+> --- a/drivers/clk/sprd/Makefile
+> +++ b/drivers/clk/sprd/Makefile
+> @@ -2,3 +2,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
+>   
+>   clk-sprd-y	+= common.o
+>   clk-sprd-y	+= gate.o
+> +clk-sprd-y	+= mux.o
+> diff --git a/drivers/clk/sprd/mux.c b/drivers/clk/sprd/mux.c
+> new file mode 100644
+> index 0000000..5a344e0
+> --- /dev/null
+> +++ b/drivers/clk/sprd/mux.c
+> @@ -0,0 +1,89 @@
+> +/*
+> + * Spreadtrum multiplexer clock driver
+> + *
+> + * Copyright (C) 2017 Spreadtrum, Inc.
+> + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "mux.h"
+> +
+> +DEFINE_SPINLOCK(sprd_mux_lock);
+> +EXPORT_SYMBOL_GPL(sprd_mux_lock);
+> +
+> +u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
+> +			      const struct sprd_mux_internal *mux)
+> +{
+> +	unsigned int reg;
+> +	u8 parent;
+> +	int num_parents;
+> +	int i;
+> +
+> +	sprd_regmap_read(common->regmap, common->reg, &reg);
+> +	parent = reg >> mux->shift;
+> +	parent &= (1 << mux->width) - 1;
+> +
+> +	if (mux->table) {
+> +		num_parents = clk_hw_get_num_parents(&common->hw);
+> +
+> +		for (i = 0; i < num_parents; i++)
+> +			if (parent == mux->table[i] ||
+> +			    (i < (num_parents - 1) && parent > mux->table[i] &&
+> +			     parent < mux->table[i + 1]))
+> +				return i;
+> +		if (i == num_parents)
+> +			return i - 1;
+
+The if branch is not necessary since you only get there when the loop 
+has finished, so the condition is always true. And the loop can be 
+simplified to:
+
+for (i = 0; i < num_parents - 1; i++)
+	if (parent >= mux->table[i] &&  parent < mux->table[i + 1])
+		return i;
+
+return num_parents;
+
+
+> +	}
+> +
+> +	return parent;
+> +}
+> +EXPORT_SYMBOL_GPL(sprd_mux_helper_get_parent);
+> +
+> +static u8 sprd_mux_get_parent(struct clk_hw *hw)
+> +{
+> +	struct sprd_mux *cm = hw_to_sprd_mux(hw);
+> +
+> +	return sprd_mux_helper_get_parent(&cm->common, &cm->mux);
+> +}
+> +
+> +int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
+> +			       const struct sprd_mux_internal *mux,
+> +			       u8 index)
+> +{
+> +	unsigned long flags = 0;
+> +	unsigned int reg;
+> +
+> +	if (mux->table)
+> +		index = mux->table[index];
+> +
+> +	spin_lock_irqsave(common->lock, flags);
+> +
+> +	sprd_regmap_read(common->regmap, common->reg, &reg);
+> +	reg &= ~GENMASK(mux->width + mux->shift - 1, mux->shift);
+> +	sprd_regmap_write(common->regmap, common->reg,
+> +			  reg | (index << mux->shift));
+> +
+> +	spin_unlock_irqrestore(common->lock, flags);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(sprd_mux_helper_set_parent);
+> +
+> +static int sprd_mux_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +	struct sprd_mux *cm = hw_to_sprd_mux(hw);
+> +
+> +	return sprd_mux_helper_set_parent(&cm->common, &cm->mux, index);
+> +}
+> +
+> +const struct clk_ops sprd_mux_ops = {
+> +	.get_parent = sprd_mux_get_parent,
+> +	.set_parent = sprd_mux_set_parent,
+> +	.determine_rate = __clk_mux_determine_rate,
+> +};
+> +EXPORT_SYMBOL_GPL(sprd_mux_ops);
+
+Same as with the other patch, I'd recommend have one set of ops for 
+direct mux and another one for a mux using a table to map the parents. 
+Keeping functions for both modes separate.
+
+Cheers,
+
+> diff --git a/drivers/clk/sprd/mux.h b/drivers/clk/sprd/mux.h
+> new file mode 100644
+> index 0000000..148ca8c
+> --- /dev/null
+> +++ b/drivers/clk/sprd/mux.h
+> @@ -0,0 +1,65 @@
+> +/*
+> + * Spreadtrum multiplexer clock driver
+> + *
+> + * Copyright (C) 2017 Spreadtrum, Inc.
+> + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +#ifndef _SPRD_MUX_H_
+> +#define _SPRD_MUX_H_
+> +
+> +#include "common.h"
+> +
+> +struct sprd_mux_internal {
+> +	u8		shift;
+> +	u8		width;
+> +	const u8	*table;
+> +};
+> +
+> +struct sprd_mux {
+> +	struct sprd_mux_internal mux;
+> +	struct sprd_clk_common	common;
+> +};
+> +
+> +#define _SPRD_MUX_CLK(_shift, _width, _table)		\
+> +	{						\
+> +		.shift	= _shift,			\
+> +		.width	= _width,			\
+> +		.table	= _table,			\
+> +	}
+> +
+> +#define SPRD_MUX_CLK(_struct, _name, _parents, _table,			\
+> +				     _reg, _shift, _width,		\
+> +				     _flags)				\
+> +	struct sprd_mux _struct = {					\
+> +		.mux	= _SPRD_MUX_CLK(_shift, _width, _table),	\
+> +		.common	= {						\
+> +			.regmap		= NULL,				\
+> +			.reg		= _reg,				\
+> +			.lock		= &sprd_mux_lock,		\
+> +			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
+> +						       _parents,	\
+> +						       &sprd_mux_ops,	\
+> +						       _flags),		\
+> +		}							\
+> +	}
+> +
+> +static inline struct sprd_mux *hw_to_sprd_mux(const struct clk_hw *hw)
+> +{
+> +	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
+> +
+> +	return container_of(common, struct sprd_mux, common);
+> +}
+> +
+> +extern const struct clk_ops sprd_mux_ops;
+> +extern spinlock_t sprd_mux_lock;
+> +
+> +u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
+> +			      const struct sprd_mux_internal *mux);
+> +int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
+> +			       const struct sprd_mux_internal *mux,
+> +			       u8 index);
+> +
+> +#endif /* _SPRD_MUX_H_ */
 > 
-> The OCTEON-III hardware also uses the FPA for non-packet-buffer memory
-> allocations.  So for those, it seems that hwbm is also not a good fit.
 
-OK, let me see if I understand how FPA works, can we say that this is
-more or less a buffer tokenizer in that, you give it a buffer physical
-address and it returns an unique identifier that the FPA uses for actual
-packet passing, transmission and other manipulations?
-
-There were a few funky things in the network driver, I will comment there.
---
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Julien Thierry
