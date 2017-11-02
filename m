@@ -1,49 +1,91 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 1/3] hwmon: (aspeed-pwm-tacho) Sort headers
-Date: Thu,  2 Nov 2017 14:53:47 +1100
-Message-ID: <20171102035349.1902-2-joel@jms.id.au>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH v2 2/3] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
+Date: Thu,  2 Nov 2017 14:53:48 +1100
+Message-ID: <20171102035349.1902-3-joel@jms.id.au>
 References: <20171102035349.1902-1-joel@jms.id.au>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20171102035349.1902-1-joel@jms.id.au>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Mykola Kostenok <c_mykolak@mellanox.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, Patrick Venture <venture@google.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171102035349.1902-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sort the headers in preperation for future changes.
+The ASPEED SoC must deassert a reset in order to use the PWM/tach
+peripheral.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- drivers/hwmon/aspeed-pwm-tacho.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+v2:
+ - Correct horrible mistakes
+ - Boot tested and hwmon sysfs files checked
+---
+ drivers/hwmon/aspeed-pwm-tacho.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-index f914e5f41048..63a95e23ca81 100644
+index 63a95e23ca81..77bb7a4bbed4 100644
 --- a/drivers/hwmon/aspeed-pwm-tacho.c
 +++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -7,19 +7,19 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/gpio/consumer.h>
--#include <linux/delay.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/of_platform.h>
- #include <linux/of_device.h>
-+#include <linux/of_platform.h>
+@@ -19,6 +19,7 @@
+ #include <linux/of_platform.h>
  #include <linux/platform_device.h>
--#include <linux/sysfs.h>
  #include <linux/regmap.h>
-+#include <linux/sysfs.h>
++#include <linux/reset.h>
+ #include <linux/sysfs.h>
  #include <linux/thermal.h>
  
- /* ASPEED PWM & FAN Tach Register Definition */
+@@ -181,6 +182,7 @@ struct aspeed_cooling_device {
+ 
+ struct aspeed_pwm_tacho_data {
+ 	struct regmap *regmap;
++	struct reset_control *rst;
+ 	unsigned long clk_freq;
+ 	bool pwm_present[8];
+ 	bool fan_tach_present[16];
+@@ -931,6 +933,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+ 			&aspeed_pwm_tacho_regmap_config);
+ 	if (IS_ERR(priv->regmap))
+ 		return PTR_ERR(priv->regmap);
++
++	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(priv->rst)) {
++		dev_err(dev,
++			"missing or invalid reset controller device tree entry");
++		return PTR_ERR(priv->rst);
++	}
++	reset_control_deassert(priv->rst);
++
+ 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
+ 	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
+ 
+@@ -960,6 +971,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+ 	return PTR_ERR_OR_ZERO(hwmon);
+ }
+ 
++static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
++{
++	struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
++
++	reset_control_assert(priv->rst);
++
++	return 0;
++}
++
+ static const struct of_device_id of_pwm_tacho_match_table[] = {
+ 	{ .compatible = "aspeed,ast2400-pwm-tacho", },
+ 	{ .compatible = "aspeed,ast2500-pwm-tacho", },
+@@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
+ 
+ static struct platform_driver aspeed_pwm_tacho_driver = {
+ 	.probe		= aspeed_pwm_tacho_probe,
++	.remove 	= aspeed_pwm_tacho_remove,
+ 	.driver		= {
+ 		.name	= "aspeed_pwm_tacho",
+ 		.of_match_table = of_pwm_tacho_match_table,
 -- 
 2.14.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
