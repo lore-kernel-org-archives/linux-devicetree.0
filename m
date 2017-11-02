@@ -1,62 +1,46 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 3/7] MIPS: Octeon: Add a global resource manager.
-Date: Thu, 2 Nov 2017 13:23:27 +0100
-Message-ID: <20171102122327.GE4772@lunn.ch>
-References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-4-david.daney@cavium.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2] of: platform: Create dummy routines for !CONFIG_OF_ADDRESS
+Date: Thu, 2 Nov 2017 07:40:37 -0500
+Message-ID: <CAL_JsqK2GKF-SBhJTceY5j7=J40AH0oPxx4AHzmtw+Wrceeyuw@mail.gmail.com>
+References: <2d798213e4fefc074a66ccb7ab2fc243ee2b1e1a.1509186356.git.viresh.kumar@linaro.org>
+ <20171101211458.wo4at67k7sxo5fah@rob-hp-laptop> <20171102044823.GV4240@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171102003606.19913-4-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20171102044823.GV4240@vireshk-i7>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +static void res_mgr_lock(void)
-> +{
-> +	unsigned int tmp;
-> +	u64 lock = (u64)&res_mgr_info->rlock;
-> +
-> +	__asm__ __volatile__(
-> +		".set noreorder\n"
-> +		"1: ll   %[tmp], 0(%[addr])\n"
-> +		"   bnez %[tmp], 1b\n"
-> +		"   li   %[tmp], 1\n"
-> +		"   sc   %[tmp], 0(%[addr])\n"
-> +		"   beqz %[tmp], 1b\n"
-> +		"   nop\n"
-> +		".set reorder\n" :
-> +		[tmp] "=&r"(tmp) :
-> +		[addr] "r"(lock) :
-> +		"memory");
-> +}
-> +
-> +static void res_mgr_unlock(void)
-> +{
-> +	u64 lock = (u64)&res_mgr_info->rlock;
-> +
-> +	/* Wait until all resource operations finish before unlocking. */
-> +	mb();
-> +	__asm__ __volatile__(
-> +		"sw $0, 0(%[addr])\n" : :
-> +		[addr] "r"(lock) :
-> +		"memory");
-> +
-> +	/* Force a write buffer flush. */
-> +	mb();
-> +}
+On Wed, Nov 1, 2017 at 11:48 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 01-11-17, 16:14, Rob Herring wrote:
+>> On Sat, Oct 28, 2017 at 03:56:46PM +0530, Viresh Kumar wrote:
+>> > Few routines don't have their dummy counterparts which results in build
+>> > failures where these routines are used without CONFIG_OF_ADDRESS
+>> > enabled.
+>> >
+>> > Fix those by defining the dummy versions.
+>> >
+>> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> > V2:
+>> > - Rebased again latest rc and resolved conflicts.
+>> > - No comments received on V1.
+>>
+>> What's your user?
+>
+> It was the previous version of boot constraint core, though I have
+> moved to another helper now.
+>
+> https://marc.info/?l=linux-kernel&m=150157976217258&w=2
+>
+> Wouldn't it be better to define them anyway?
 
-It would be good to add some justification for using your own locks,
-rather than standard linux locks.
+No. As an example, ideally of_device_alloc would be an internal
+function. But we have one user in ibmebus.
 
-Is there anything specific to your hardware in this resource manager?
-I'm just wondering if this should be generic, put somewhere in lib. Or
-maybe there is already something generic, and you should be using it,
-not re-inventing the wheel again.
-
-      Andrew
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
