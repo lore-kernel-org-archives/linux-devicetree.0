@@ -1,92 +1,50 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [INTERNAL][PATCH 4/7] ASoC: stm32: sai: fix stop
- management in isr
-Date: Thu, 2 Nov 2017 16:38:36 +0000
-Message-ID: <dcb5104f-2d32-f51b-16ba-4cdb9f4c5e59@st.com>
-References: <1508418203-16840-1-git-send-email-olivier.moysan@st.com>
- <1508418203-16840-5-git-send-email-olivier.moysan@st.com>
- <s5hmv4ekjr4.wl-tiwai@suse.de>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
+ support.
+Date: Thu, 2 Nov 2017 17:56:05 +0100
+Message-ID: <20171102165605.GJ24320@lunn.ch>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-7-david.daney@cavium.com>
+ <20171102124339.GF4772@lunn.ch>
+ <521d6b21-b7f0-66e0-4b49-cf95d83452d1@caviumnetworks.com>
+ <20171102161016.GH24320@lunn.ch>
+ <0f39046d-dc99-5c05-d918-10952cd20e1b@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <s5hmv4ekjr4.wl-tiwai@suse.de>
-Content-Language: en-US
-Content-ID: <172B85CB8331A3469F89F22D57732EF8@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0f39046d-dc99-5c05-d918-10952cd20e1b-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Takashi,
+> OK, now I think I understand.  Yes, the MAC can be hardwired to a switch.
+> In fact, there are system designs that do exactly that.
+> 
+> We try to handle this case by not having a "phy-handle" property in the
+> device tree.  The link to the remote device (switch IC in this case) is
+> brought up on ndo_open()
 
-Sorry for late answer. I was OoO.
-Ok, I will add a protection on sai->substream accesses.
+O.K, so you totally ignore the Linux way of doing this and hack
+together your own proprietary solution.
+ 
+> There may be opportunities to improve how this works in the future, but the
+> current code is serviceable.
 
-Best regards
-Olivier
+It might be serviceable, but it will never get into mainline. For
+mainline, you need to use DSA.
 
+http://elixir.free-electrons.com/linux/v4.9.60/source/Documentation/networking/dsa/dsa.txt
 
-On 10/26/2017 05:32 PM, Takashi Iwai wrote:
-> On Thu, 19 Oct 2017 15:03:20 +0200,
-> Olivier Moysan wrote:
->>
->> Add check on substream validity.
->>
->> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
->> ---
->>   sound/soc/stm/stm32_sai_sub.c | 12 ++++++++----
->>   1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
->> index 2af397d..815ef10 100644
->> --- a/sound/soc/stm/stm32_sai_sub.c
->> +++ b/sound/soc/stm/stm32_sai_sub.c
->> @@ -184,7 +184,6 @@ static bool stm32_sai_sub_writeable_reg(struct device *dev, unsigned int reg)
->>   static irqreturn_t stm32_sai_isr(int irq, void *devid)
->>   {
->>   	struct stm32_sai_sub_data *sai = (struct stm32_sai_sub_data *)devid;
->> -	struct snd_pcm_substream *substream = sai->substream;
->>   	struct platform_device *pdev = sai->pdev;
->>   	unsigned int sr, imr, flags;
->>   	snd_pcm_state_t status = SNDRV_PCM_STATE_RUNNING;
->> @@ -199,6 +198,11 @@ static irqreturn_t stm32_sai_isr(int irq, void *devid)
->>   	regmap_update_bits(sai->regmap, STM_SAI_CLRFR_REGX, SAI_XCLRFR_MASK,
->>   			   SAI_XCLRFR_MASK);
->>   
->> +	if (!sai->substream) {
->> +		dev_err(&pdev->dev, "Device stopped. Spurious IRQ 0x%x\n", sr);
->> +		return IRQ_NONE;
->> +	}
->> +
->>   	if (flags & SAI_XIMR_OVRUDRIE) {
->>   		dev_err(&pdev->dev, "IRQ %s\n",
->>   			STM_SAI_IS_PLAYBACK(sai) ? "underrun" : "overrun");
->> @@ -227,9 +231,9 @@ static irqreturn_t stm32_sai_isr(int irq, void *devid)
->>   	}
->>   
->>   	if (status != SNDRV_PCM_STATE_RUNNING) {
->> -		snd_pcm_stream_lock(substream);
->> -		snd_pcm_stop(substream, SNDRV_PCM_STATE_XRUN);
->> -		snd_pcm_stream_unlock(substream);
->> +		snd_pcm_stream_lock(sai->substream);
->> +		snd_pcm_stop(sai->substream, SNDRV_PCM_STATE_XRUN);
->> +		snd_pcm_stream_unlock(sai->substream);
-> 
-> Actually changing to sai->substream opens a race, so this chunk is a
-> bad move, at least.  We have no protection of sai->substream in this
-> context, thus it can hit a NULL dereference...
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
+Getting back to my original point, having these platform devices can
+cause issues for DSA. Freescale FMAN has a similar architecture, and
+it took a while to restructure it to make DSA work.
+
+https://www.spinics.net/lists/netdev/msg459394.html
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
