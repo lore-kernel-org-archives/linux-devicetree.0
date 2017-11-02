@@ -1,62 +1,44 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 05/12] hwrng: bcm2835-rng: Use device managed helpers
-Date: Wed,  1 Nov 2017 18:04:01 -0700
-Message-ID: <20171102010408.27736-6-f.fainelli@gmail.com>
-References: <20171102010408.27736-1-f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: Add Cavium Octeon Common Ethernet
+ Interface.
+Date: Wed, 1 Nov 2017 18:09:17 -0700
+Message-ID: <af0de889-a34b-8346-9eeb-171498cc61ca@gmail.com>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-2-david.daney@cavium.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171102010408.27736-1-f.fainelli@gmail.com>
+In-Reply-To: <20171102003606.19913-2-david.daney@cavium.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-crypto@vger.k
+To: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have moved the RNG disabling into a hwrng::cleanup callback,
-we can use the device managed registration operation and remove our
-remove callback since it won't do anything necessary.
+On 11/01/2017 05:36 PM, David Daney wrote:
+> From: Carlos Munoz <cmunoz@cavium.com>
+> 
+> Add bindings for Common Ethernet Interface (BGX) block.
+> 
+> Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+> Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+[snip]
+> +Properties:
+> +
+> +- compatible: "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs.
+> +
+> +- reg: The index of the interface within the BGX block.
+> +
+> +- local-mac-address: Mac address for the interface.
+> +
+> +- phy-handle: phandle to the phy node connected to the interface.
+> +
+> +- cavium,rx-clk-delay-bypass: Set to <1> to bypass the rx clock delay setting.
+> +  Needed by the Micrel PHY.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/char/hw_random/bcm2835-rng.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
-index 4d0356110b1b..67b9bd3be28d 100644
---- a/drivers/char/hw_random/bcm2835-rng.c
-+++ b/drivers/char/hw_random/bcm2835-rng.c
-@@ -138,7 +138,7 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
- 		rng_setup(priv->base);
- 
- 	/* register driver */
--	err = hwrng_register(&priv->rng);
-+	err = devm_hwrng_register(dev, &priv->rng);
- 	if (err)
- 		dev_err(dev, "hwrng registration failed\n");
- 	else
-@@ -147,16 +147,6 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
- 	return err;
- }
- 
--static int bcm2835_rng_remove(struct platform_device *pdev)
--{
--	struct bcm2835_rng_priv *priv = platform_get_drvdata(pdev);
--
--	/* unregister driver */
--	hwrng_unregister(&priv->rng);
--
--	return 0;
--}
--
- MODULE_DEVICE_TABLE(of, bcm2835_rng_of_match);
- 
- static struct platform_driver bcm2835_rng_driver = {
-@@ -165,7 +155,6 @@ static struct platform_driver bcm2835_rng_driver = {
- 		.of_match_table = bcm2835_rng_of_match,
- 	},
- 	.probe		= bcm2835_rng_probe,
--	.remove		= bcm2835_rng_remove,
- };
- module_platform_driver(bcm2835_rng_driver);
- 
+Is not that implied by an appropriate "phy-mode" property already?
 -- 
-2.9.3
+Florian
