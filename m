@@ -1,50 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] gpio: gpiolib: Generalise state persistence
- beyond sleep
-Date: Wed, 1 Nov 2017 19:15:31 -0500
-Message-ID: <20171102001531.6j7isyrcwjjwovho@rob-hp-laptop>
-References: <20171101040457.1200-1-andrew@aj.id.au>
- <20171101040457.1200-2-andrew@aj.id.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] devicetree/bindings: display: Add doucument for
+ RGB panels
+Date: Wed, 1 Nov 2017 19:22:11 -0500
+Message-ID: <20171102002211.4xwcvyav7egubp3p@rob-hp-laptop>
+References: <1509522753-118639-1-git-send-email-hjc@rock-chips.com>
+ <1509522760-118700-1-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171101040457.1200-2-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, frowand.list@gmail.com, joel@jms.id.au, ckeepax@opensource.wolfsonmicro.com, ldewangan@nvidia.com, ryan_chen@aspeedtech.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org
+In-Reply-To: <1509522760-118700-1-git-send-email-hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 03:04:56PM +1100, Andrew Jeffery wrote:
-> General support for state persistence is added to gpiolib with the
-> introduction of a new pinconf parameter to propagate the request to
-> hardware. The existing persistence support for sleep is adapted to
-> include hardware support if the GPIO driver provides it. Persistence
-> continues to be enabled by default; in-kernel consumers can opt out, but
-> userspace (currently) does not have a choice.
+On Wed, Nov 01, 2017 at 03:52:38PM +0800, Sandy Huang wrote:
+> Describe the panel property rgb-mode for parallel and serial
+> RGB output interface, include the connection relations for each
+> mode.
 > 
-> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
-> renamed, dropping the SLEEP prefix to reflect that the concept is no
-> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
-> could initially be misinterpreted, so I've further changed the symbols
-> to *_TRANSITORY and *_PERSISTENT to address this.
-> 
-> The sysfs interface is modified only to keep consistency with the
-> chardev interface in enforcing persistence for userspace exports.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  drivers/gpio/gpiolib-of.c               |  6 ++--
->  drivers/gpio/gpiolib-sysfs.c            | 14 +++++---
->  drivers/gpio/gpiolib.c                  | 61 ++++++++++++++++++++++++++++++---
->  drivers/gpio/gpiolib.h                  |  2 +-
+> Changes:
+>  .../bindings/display/panel/panel-rgb.txt           | 116 +++++++++++++++++++++
+>  1 file changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-rgb.txt
 
->  include/dt-bindings/gpio/gpio.h         |  6 ++--
+There's a couple of attempts to do the same thing[1] and I'm not taking 
+more than 1. I'd suggest you split this from the rest of your series and 
+work out this part separately with others.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
 
->  include/linux/gpio/consumer.h           |  8 +++++
->  include/linux/gpio/machine.h            |  4 +--
->  include/linux/of_gpio.h                 |  2 +-
->  include/linux/pinctrl/pinconf-generic.h |  2 ++
->  9 files changed, 87 insertions(+), 18 deletions(-)
+[1] https://patchwork.kernel.org/patch/9999407/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
