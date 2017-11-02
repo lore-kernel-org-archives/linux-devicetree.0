@@ -1,43 +1,46 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: rng: Document BCM7278 RNG200 compatible
-Date: Wed,  1 Nov 2017 16:20:05 -0700
-Message-ID: <20171101232006.3943-2-f.fainelli@gmail.com>
-References: <20171101232006.3943-1-f.fainelli@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: owl: add clock driver for Actions S900 SoC
+Date: Wed, 1 Nov 2017 19:02:46 -0500
+Message-ID: <20171102000246.rcermsfe7rycrmk3@rob-hp-laptop>
+References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
+ <1509479663-8985-3-git-send-email-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171101232006.3943-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1509479663-8985-3-git-send-email-manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "maintainer:BROADCOM IPROC ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Harald Freudenberger <freude-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>, "open list:HARDWARE RANDOM NUMBER
-        GENERATOR CORE" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OP" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-BCM7278 includes a RGN200 hardware random number generator, document the
-compatible string for that version of the IP.
+On Wed, Nov 01, 2017 at 01:24:22AM +0530, Manivannan Sadhasivam wrote:
+> This patch adds clock driver for Actions Semi OWL
+> series S900 SoC.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  MAINTAINERS                                    |   5 +
+>  drivers/clk/Makefile                           |   1 +
+>  drivers/clk/owl/Makefile                       |   2 +
+>  drivers/clk/owl/clk-factor.c                   | 270 ++++++++++++
+>  drivers/clk/owl/clk-pll.c                      | 346 +++++++++++++++
+>  drivers/clk/owl/clk-s900.c                     | 587 +++++++++++++++++++++++++
+>  drivers/clk/owl/clk.c                          | 318 ++++++++++++++
+>  drivers/clk/owl/clk.h                          | 301 +++++++++++++
 
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+>  include/dt-bindings/clock/actions,s900-clock.h | 141 ++++++
 
-diff --git a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-index e25a456664b9..0014da9145af 100644
---- a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-+++ b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-@@ -1,7 +1,9 @@
- HWRNG support for the iproc-rng200 driver
- 
- Required properties:
--- compatible : "brcm,iproc-rng200"
-+- compatible : Must be one of:
-+	       "brcm,bcm7278-rng200"
-+	       "brcm,iproc-rng200"
- - reg : base address and size of control register block
- 
- Example:
--- 
-2.9.3
+This belongs in the DT binding patch.
 
+>  9 files changed, 1971 insertions(+)
+>  create mode 100644 drivers/clk/owl/Makefile
+>  create mode 100644 drivers/clk/owl/clk-factor.c
+>  create mode 100644 drivers/clk/owl/clk-pll.c
+>  create mode 100644 drivers/clk/owl/clk-s900.c
+>  create mode 100644 drivers/clk/owl/clk.c
+>  create mode 100644 drivers/clk/owl/clk.h
+>  create mode 100644 include/dt-bindings/clock/actions,s900-clock.h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
