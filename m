@@ -1,59 +1,66 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 0/2] Add support for Hi6220 coresight
-Date: Thu, 2 Nov 2017 18:41:08 +0800
-Message-ID: <20171102104108.GC3550@leoy-linaro>
-References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
- <20170901013301.GN21656@codeaurora.org>
- <20171007121802.GC23080@leoy-linaro>
- <59E07FDE.40307@hisilicon.com>
- <150955133019.90597.6277114786385559431@resonance>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
+Date: Thu, 2 Nov 2017 11:48:30 +0100
+Message-ID: <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
+References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
+ <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <150955133019.90597.6277114786385559431@resonance>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 04:48:50PM +0100, Michael Turquette wrote:
-> Quoting Wei Xu (2017-10-13 10:57:02)
-> > Hi Leo,
-> > 
-> > On 2017/10/7 13:18, Leo Yan wrote:
-> > > Hi Stephen, Wei,
-> > > 
-> > > On Thu, Aug 31, 2017 at 06:33:01PM -0700, Stephen Boyd wrote:
-> > >> On 09/01, Leo Yan wrote:
-> > >>> This patch series adds support for coresight on Hi6220; the first patch
-> > >>> is to fix coresight PLL so can avoid system hang after we enable
-> > >>> coresight, the second patch is to add DT binding according to coresight
-> > >>> topology.
-> > >>>
-> > >>> The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
-> > >>> can successfully decode ETF and ETB trace data.
-> > >>>
-> > >>
-> > >> I can take the first one and second one goes through arm-soc?
-> > > 
-> > > Could you pick these two patches for Hi6220 coresight enabling for
-> > > this merge window? Or need me resend these two patches?
-> > 
-> > Applied patch 2 into hisilicon dt tree with slight fix.
-> > Thanks!
-> 
-> Cool. Patch #1 applied to clk tree.
+On 2 November 2017 at 01:12, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 2 November 2017 at 00:08, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Nov 01, 2017 at 12:21:32AM +0000, Ard Biesheuvel wrote:
+>>> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
+>>> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
+>>> F_SDH30_ESD_CONTROL control register.
+>>>
+>>> So let's add an optional property to this device's binding, and
+>>> set the attribute if it is present in the DT node.
+>>>
+>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt |  2 ++
+>>>  drivers/mmc/host/sdhci_f_sdh30.c                        | 18 +++++++++++++++++-
+>>>  2 files changed, 19 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>> index de2c53cff4f1..9ad02f743ad0 100644
+>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>> @@ -15,6 +15,8 @@ Required properties:
+>>>  Optional properties:
+>>>  - vqmmc-supply: phandle to the regulator device tree node, mentioned
+>>>    as the VCCQ/VDD_IO supply in the eMMC/SD specs.
+>>> +- cmd-dat-delay-select: boolean property indicating that this host requires
+>>> +  the CMD_DAT_DELAY control to be enabled.
+>>
+>> Needs a vendor prefix unless this is a standard SDHCI bit (in which
+>> case it should be documented in a common spot).
+>>
+>
+> I suspect this is a non-standard thing, so I'll add the fujitsu prefix. Ulf?
 
-Thanks, Mike and Wei.
+This is specific to the Fujitsu variant.
 
-> Regards,
-> Mike
-> 
-> > 
-> > BR,
-> > Wei
-> > 
-> > > 
-> > > Thanks,
-> > > Leo Yan
+However, what puzzles me is why this bit is needed for the Socionext
+SynQuacer SoC, but not for other SoCs that uses this IP. That seems
+weird (probably wrong).
+
+Moreover, the F_SDH30_CMD_DAT_DELAY register define is already there,
+so I would rather suspect that it's something that did got fully
+implemented. In other words, I don't think you need a new DT binding,
+but rather try to implement it generically for the sdhci-f_sdh30
+driver. Do you think that will work?
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
