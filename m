@@ -1,70 +1,70 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 3/7] MIPS: Octeon: Add a global resource manager.
-Date: Thu, 2 Nov 2017 09:03:42 -0700
-Message-ID: <caeae680-915a-d08c-d220-899db0970328@caviumnetworks.com>
-References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-4-david.daney@cavium.com>
- <20171102122327.GE4772@lunn.ch>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
+Date: Thu, 2 Nov 2017 17:05:31 +0100
+Message-ID: <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
+References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
+ <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+ <1509423579.10793.10.camel@mtkswgap22> <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171102122327.GE4772@lunn.ch>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, David Daney <david.daney@cavium.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e8fdd9a9-ce13-8804-aea0-46becc6f9730-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2017 05:23 AM, Andrew Lunn wrote:
->> +static void res_mgr_lock(void)
->> +{
->> +	unsigned int tmp;
->> +	u64 lock = (u64)&res_mgr_info->rlock;
->> +
->> +	__asm__ __volatile__(
->> +		".set noreorder\n"
->> +		"1: ll   %[tmp], 0(%[addr])\n"
->> +		"   bnez %[tmp], 1b\n"
->> +		"   li   %[tmp], 1\n"
->> +		"   sc   %[tmp], 0(%[addr])\n"
->> +		"   beqz %[tmp], 1b\n"
->> +		"   nop\n"
->> +		".set reorder\n" :
->> +		[tmp] "=&r"(tmp) :
->> +		[addr] "r"(lock) :
->> +		"memory");
->> +}
->> +
->> +static void res_mgr_unlock(void)
->> +{
->> +	u64 lock = (u64)&res_mgr_info->rlock;
->> +
->> +	/* Wait until all resource operations finish before unlocking. */
->> +	mb();
->> +	__asm__ __volatile__(
->> +		"sw $0, 0(%[addr])\n" : :
->> +		[addr] "r"(lock) :
->> +		"memory");
->> +
->> +	/* Force a write buffer flush. */
->> +	mb();
->> +}
-> 
-> It would be good to add some justification for using your own locks,
-> rather than standard linux locks.
+On Thu, Nov 2, 2017 at 12:47 PM, Matthias Brugger
+<matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Arnd,
+>
+> On 10/31/2017 05:19 AM, Ryder Lee wrote:
+>> Hi Arnd,
+>>
+>> We have 3 root ports in MT7623, but this is a bug in this chip where the
+>> HW designers wired the IRQs in a nonstandard way. We've tried to
+>> statically assign the bus portion of the address part in the parent
+>> interrupt-map before, but this approach cannot handle the case - if we
+>> attach the device in random order.
+>>
+>
+> Ryder, please don't top post :)
+>
+>> Thanks.
+>>
+>> On Mon, 2017-10-30 at 13:42 +0100, Arnd Bergmann wrote:
+>>> On Mon, Oct 23, 2017 at 12:06 AM, Matthias Brugger
+>>> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>
+>>>> ----------------------------------------------------------------
+>>>> - mt76233 add PCIe node
+>>>
+>>> Could you clarify what the subnodes in the PCI node are for? It seems odd
+>>> to have "interrupt-map" properties in both the pcie controller and its child
+>>> nodes, and I want to ensure this is following the standard PCIe binding before
+>>> I pull it.
+>>>
+>
+> Arnd, I didn't found the pull request in your next/dt branch.
+> Is there more clarification needed from our side?
 
-Yes, I will add that.
+I'm still unsure about it., this looks like exactly the thing that the top-level
+interrupt-map is supposed to handle fine.
 
+Can you send a pull request for the series without the pci child nodes for the
+moment while we figure out what the exact problem is? We can take
+whatever fix we come up with during the v4.15 -rc cycle then.
 
-> 
-> Is there anything specific to your hardware in this resource manager?
-> I'm just wondering if this should be generic, put somewhere in lib. Or
-> maybe there is already something generic, and you should be using it,
-> not re-inventing the wheel again.
+I would assume that either the parent interrupt-map is wrong, or something
+broke the parser, but that it's not actually something that's wrong in the
+hardware design in a way that we can't already handle in a standard way.
 
-The systems built around this hardware may have other software running 
-on CPUs that are not running the Linux kernel.  The data structures used 
-to arbitrate usage of shared system hardware resources use exactly these 
-locking primitives, so they cannot be changed to use the Linux locking 
-implementation de jour.
+Ryder, can you be more specific how the interrupts are wired up?
+Is there one IRQ per slot that is connected to all of IntA/IntB/IntC/IntD
+and gets propagated through the bridges like that, or is it something else?
+
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
