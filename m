@@ -1,141 +1,95 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] [net-next?] of: add of_property_read_variable_* dummy helpers
-Date: Mon,  6 Nov 2017 14:26:10 +0100
-Message-ID: <20171106132627.150459-1-arnd@arndb.de>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/3] Documentation: add Actions S900 clock bindings
+Date: Fri, 3 Nov 2017 00:17:40 +0530
+Message-ID: <20171102184738.GA16359@linaro.org>
+References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
+ <1509479663-8985-4-git-send-email-manivannan.sadhasivam@linaro.org>
+ <20171102000448.hd3syjfviyy5wwqy@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171102000448.hd3syjfviyy5wwqy@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: netdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, afaerber@suse.de, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Commit a67e9472da42 ("of: Add array read functions with min/max size
-limits") added a new interface for reading variable-length arrays from
-DT properties. One user was added in dsa recently and this causes a
-build error because that code can be built with CONFIG_OF disabled:
+On Wed, Nov 01, 2017 at 07:04:48PM -0500, Rob Herring wrote:
+> On Wed, Nov 01, 2017 at 01:24:23AM +0530, Manivannan Sadhasivam wrote:
+> > This patch adds clock bindings for Actions Semi S900 SoC.
+> 
+> "dt-bindings: clock: " for the subject.
+> 
+> This patch should come before the dts and driver changes.
+>
+Ack. Will incorporate in next revision.
 
-net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
-net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
-
-This adds a dummy functions for of_property_read_variable_u32_array()
-and a few others that had been missing here. I decided to move
-of_property_read_string() and of_property_read_string_helper() in the
-process to make it easier to compare the two sets of function prototypes
-to make sure they match.
-
-Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-DT maintainers: there is currently a build break in the net-next tree
-(from branch "dsa-parsing-stage") because of this, I think the best
-way forward would be to get an Ack for this patch to get picked up
-through the netdev trees.
----
- include/linux/of.h | 62 +++++++++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 50 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 43b5034c6a1e..d3dea1d1e3a9 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -681,12 +681,6 @@ static inline int of_property_count_elems_of_size(const struct device_node *np,
- 	return -ENOSYS;
- }
- 
--static inline int of_property_read_u32_index(const struct device_node *np,
--			const char *propname, u32 index, u32 *out_value)
--{
--	return -ENOSYS;
--}
--
- static inline int of_property_read_u8_array(const struct device_node *np,
- 			const char *propname, u8 *out_values, size_t sz)
- {
-@@ -713,16 +707,14 @@ static inline int of_property_read_u64_array(const struct device_node *np,
- 	return -ENOSYS;
- }
- 
--static inline int of_property_read_string(const struct device_node *np,
--					  const char *propname,
--					  const char **out_string)
-+static inline int of_property_read_u32_index(const struct device_node *np,
-+			const char *propname, u32 index, u32 *out_value)
- {
- 	return -ENOSYS;
- }
- 
--static inline int of_property_read_string_helper(const struct device_node *np,
--						 const char *propname,
--						 const char **out_strs, size_t sz, int index)
-+static inline int of_property_read_u64_index(const struct device_node *np,
-+			const char *propname, u32 index, u64 *out_value)
- {
- 	return -ENOSYS;
- }
-@@ -750,12 +742,51 @@ static inline int of_n_size_cells(struct device_node *np)
- 	return 0;
- }
- 
-+static inline int of_property_read_variable_u8_array(const struct device_node *np,
-+					const char *propname, u8 *out_values,
-+					size_t sz_min, size_t sz_max)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_read_variable_u16_array(const struct device_node *np,
-+					const char *propname, u16 *out_values,
-+					size_t sz_min, size_t sz_max)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_read_variable_u32_array(const struct device_node *np,
-+					const char *propname,
-+					u32 *out_values,
-+					size_t sz_min,
-+					size_t sz_max)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_property_read_u64(const struct device_node *np,
- 				       const char *propname, u64 *out_value)
- {
- 	return -ENOSYS;
- }
- 
-+static inline int of_property_read_variable_u64_array(const struct device_node *np,
-+					const char *propname,
-+					u64 *out_values,
-+					size_t sz_min,
-+					size_t sz_max)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_read_string(const struct device_node *np,
-+					  const char *propname,
-+					  const char **out_string)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_property_match_string(const struct device_node *np,
- 					   const char *propname,
- 					   const char *string)
-@@ -763,6 +794,13 @@ static inline int of_property_match_string(const struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_property_read_string_helper(const struct device_node *np,
-+						 const char *propname,
-+						 const char **out_strs, size_t sz, int index)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline struct device_node *of_parse_phandle(const struct device_node *np,
- 						   const char *phandle_name,
- 						   int index)
--- 
-2.9.0
+Thanks,
+Mani 
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../bindings/clock/actions,s900-clock.txt          | 47 ++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/actions,s900-clock.txt b/Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+> > new file mode 100644
+> > index 0000000..951d6ad
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+> > @@ -0,0 +1,47 @@
+> > +* Actions s900 Clock Controller
+> > +
+> > +The Actions s900 clock controller generates and supplies clock to various
+> > +controllers within the SoC. The clock binding described here is applicable to
+> > +s900 SoC.
+> > +
+> > +Required Properties:
+> > +
+> > +- compatible: should be "actions,s900-clock"
+> > +- reg: physical base address of the controller and length of memory mapped
+> > +  region.
+> > +- #clock-cells: should be 1.
+> > +
+> > +Each clock is assigned an identifier and client nodes can use this identifier
+> > +to specify the clock which they consume.
+> > +
+> > +All available clocks are defined as preprocessor macros in
+> > +dt-bindings/clock/actions,s900-clock.h header and can be used in device
+> > +tree sources.
+> > +
+> > +External clocks:
+> > +
+> > +The hosc clock used as input for the plls is generated outside the SoC. It is
+> > +expected that it is defined using standard clock bindings as "hosc".
+> > +
+> > +Actions s900 Clock Controller also require two more clocks:
+> > + - "losc" - internal low frequency oscillator
+> > + - "diff_24M" - internal differential 24MHz clock
+> > +
+> > +Example: Clock controller node:
+> > +
+> > +        clock: clock-controller@e0160000 {
+> > +		compatible = "actions,s900-clock";
+> > +		reg = <0 0xe0160000 0 0x1000>;
+> > +		#clock-cells = <1>;
+> > +	};
+> > +
+> > +Example: UART controller node that consumes clock generated by the clock
+> > +controller:
+> > +
+> > +	serial5: uart@e012a000 {
+> 
+> serial@...
+> 
+> > +		compatible = "actions,s900-uart", "actions,owl-uart";
+> > +		reg = <0x0 0xe012a000 0x0 0x2000>;
+> > +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&clock CLK_UART5>;
+> > +		clock-names = "uart";
+> > +	};
+> > -- 
+> > 2.7.4
+> > 
