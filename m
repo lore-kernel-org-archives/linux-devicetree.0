@@ -1,66 +1,77 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [RESEND PATCH 1/1] of: Make return types of to_of_node and of_fwnode_handle macros consistent
-Date: Thu,  2 Nov 2017 11:59:18 +0200
-Message-ID: <20171102095918.7041-1-sakari.ailus@linux.intel.com>
-References: <2117711.dO2rQLXOup@avalon>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 18/22] clk: add support for clocks provided by SCMI
+Date: Thu, 2 Nov 2017 10:04:45 +0000
+Message-ID: <c0b80daf-6361-87eb-fde6-a9d6a71e3e82@arm.com>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-19-git-send-email-sudeep.holla@arm.com>
+ <20171102072350.GO30645@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2117711.dO2rQLXOup@avalon>
+In-Reply-To: <20171102072350.GO30645-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(Fixed Mauro's e-mail.)
 
-to_of_node() macro checks whether the fwnode_handle passed to it is not an
-OF node, and if so, returns NULL in order to be NULL-safe. Otherwise it
-returns the pointer to the OF node which the fwnode_handle contains.
 
-The problem with returning NULL is that its type was void *, which
-sometimes matters. Explicitly return struct device_node * instead.
+On 02/11/17 07:23, Stephen Boyd wrote:
+> On 09/28, Sudeep Holla wrote:
+>> On some ARM based systems, a separate Cortex-M based System Control
+>> Processor(SCP) provides the overall power, clock, reset and system
+>> control. System Control and Management Interface(SCMI) Message Protocol
+>> is defined for the communication between the Application Cores(AP)
+>> and the SCP.
+>>
+>> This patch adds support for the clocks provided by SCP using SCMI
+>> protocol.
+>>
+>> Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+> 
+> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
 
-Make a similar change to of_fwnode_handle() as well.
+Thanks
 
-Fixes: d20dc1493db4 ("of: Support const and non-const use for to_of_node()")
-Fixes: debd3a3b27c7 ("of: Make of_fwnode_handle() safer")
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
-Hi Mauro,
+>>  MAINTAINERS            |   2 +-
+>>  drivers/clk/Kconfig    |  10 +++
+>>  drivers/clk/Makefile   |   1 +
+>>  drivers/clk/clk-scmi.c | 210 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 222 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/clk/clk-scmi.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 23ec3471f542..32c184391aee 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -12941,7 +12941,7 @@ M:	Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>>  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>  S:	Maintained
+>>  F:	Documentation/devicetree/bindings/arm/arm,sc[mp]i.txt
+>> -F:	drivers/clk/clk-scpi.c
+>> +F:	drivers/clk/clk-sc[mp]i.c
+> 
+> Is there a lot of copy/paste going on from clk-scpi.c? Maybe it
+> could be consolidated?
+> 
 
-Could you check whether this addresses the smatch issue with the xilinx
-driver?
+Not much apart from the usual driver skeleton. Also SCPI specification
+will not be enhanced any further while SCMI will be. So they will
+deviated in the feature set going further. Even I was thinking of
+merging then together initially but based on some WIP changes to the
+specification, I thought it may not be good idea. But if we think it can
+be merged in future , I will do that for sure(for easy maintenance)
 
-Thanks.
-
- include/linux/of.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b240ed69dc96..0651231c115e 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -161,7 +161,7 @@ static inline bool is_of_node(const struct fwnode_handle *fwnode)
- 		is_of_node(__to_of_node_fwnode) ?			\
- 			container_of(__to_of_node_fwnode,		\
- 				     struct device_node, fwnode) :	\
--			NULL;						\
-+			(struct device_node *)NULL;			\
- 	})
- 
- #define of_fwnode_handle(node)						\
-@@ -169,7 +169,8 @@ static inline bool is_of_node(const struct fwnode_handle *fwnode)
- 		typeof(node) __of_fwnode_handle_node = (node);		\
- 									\
- 		__of_fwnode_handle_node ?				\
--			&__of_fwnode_handle_node->fwnode : NULL;	\
-+			&__of_fwnode_handle_node->fwnode :		\
-+			(struct fwnode_handle *)NULL;			\
- 	})
- 
- static inline bool of_have_populated_dt(void)
 -- 
-2.11.0
-
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
