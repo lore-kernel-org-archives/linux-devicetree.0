@@ -1,74 +1,85 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Thu, 2 Nov 2017 11:31:45 -0700
-Message-ID: <0168761e-cb18-e489-4689-8c9062aa316b@caviumnetworks.com>
-References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-7-david.daney@cavium.com>
- <20171102124339.GF4772@lunn.ch>
- <521d6b21-b7f0-66e0-4b49-cf95d83452d1@caviumnetworks.com>
- <20171102161016.GH24320@lunn.ch>
- <0f39046d-dc99-5c05-d918-10952cd20e1b@caviumnetworks.com>
- <20171102165605.GJ24320@lunn.ch>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
+Date: Thu, 2 Nov 2017 19:47:34 +0100
+Message-ID: <0c3f8521-e0a6-a0d2-45b9-62d7c824818d@gmail.com>
+References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
+ <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+ <1509423579.10793.10.camel@mtkswgap22>
+ <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
+ <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20171102165605.GJ24320@lunn.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2017 09:56 AM, Andrew Lunn wrote:
->> OK, now I think I understand.  Yes, the MAC can be hardwired to a switch.
->> In fact, there are system designs that do exactly that.
+
+
+On 11/02/2017 05:05 PM, Arnd Bergmann wrote:
+> On Thu, Nov 2, 2017 at 12:47 PM, Matthias Brugger
+> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Arnd,
 >>
->> We try to handle this case by not having a "phy-handle" property in the
->> device tree.  The link to the remote device (switch IC in this case) is
->> brought up on ndo_open()
+>> On 10/31/2017 05:19 AM, Ryder Lee wrote:
+>>> Hi Arnd,
+>>>
+>>> We have 3 root ports in MT7623, but this is a bug in this chip where the
+>>> HW designers wired the IRQs in a nonstandard way. We've tried to
+>>> statically assign the bus portion of the address part in the parent
+>>> interrupt-map before, but this approach cannot handle the case - if we
+>>> attach the device in random order.
+>>>
+>>
+>> Ryder, please don't top post :)
+>>
+>>> Thanks.
+>>>
+>>> On Mon, 2017-10-30 at 13:42 +0100, Arnd Bergmann wrote:
+>>>> On Mon, Oct 23, 2017 at 12:06 AM, Matthias Brugger
+>>>> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>
+>>>>> ----------------------------------------------------------------
+>>>>> - mt76233 add PCIe node
+>>>>
+>>>> Could you clarify what the subnodes in the PCI node are for? It seems odd
+>>>> to have "interrupt-map" properties in both the pcie controller and its child
+>>>> nodes, and I want to ensure this is following the standard PCIe binding before
+>>>> I pull it.
+>>>>
+>>
+>> Arnd, I didn't found the pull request in your next/dt branch.
+>> Is there more clarification needed from our side?
 > 
-> O.K, so you totally ignore the Linux way of doing this and hack
-> together your own proprietary solution.
-
-I am going to add handling of the "phy-mode" property, but other than 
-that I don't know what the "Linux way" of specifying a hard MAC-to-MAC 
-connection with no intervening phy devices is.  Wether the remote MAC is 
-a switch, or something else, would seem to be irrelevant.  All we are 
-concerned about in this code is putting the thing into a state where 
-data flows in both directions through the MAC.
-
-A pointer to an existing device tree binding for an Ethernet device that 
-has no (or an optional) phy device would be useful, we can try to do the 
-same.
-
-
->   
->> There may be opportunities to improve how this works in the future, but the
->> current code is serviceable.
+> I'm still unsure about it., this looks like exactly the thing that the top-level
+> interrupt-map is supposed to handle fine.
 > 
-> It might be serviceable, but it will never get into mainline. For
-> mainline, you need to use DSA.
-> 
-> http://elixir.free-electrons.com/linux/v4.9.60/source/Documentation/networking/dsa/dsa.txt
+> Can you send a pull request for the series without the pci child nodes for the
+> moment while we figure out what the exact problem is? We can take
+> whatever fix we come up with during the v4.15 -rc cycle then.
 
+Sure. I'll provide a new tag v4.14-next-dts32-2 without the patch.
+I will send a pull request shortly.
 
-I am truly at a loss here.  That DSA document states:
-
-      Master network devices are regular, unmodified Linux
-      network device drivers for the CPU/management Ethernet
-      interface.
-
-What modification do you suggest I make?
-
+Regards,
+Matthias
 
 > 
-> Getting back to my original point, having these platform devices can
-> cause issues for DSA. Freescale FMAN has a similar architecture, and
-> it took a while to restructure it to make DSA work.
+> I would assume that either the parent interrupt-map is wrong, or something
+> broke the parser, but that it's not actually something that's wrong in the
+> hardware design in a way that we can't already handle in a standard way.
 > 
-> https://www.spinics.net/lists/netdev/msg459394.html
+> Ryder, can you be more specific how the interrupts are wired up?
+> Is there one IRQ per slot that is connected to all of IntA/IntB/IntC/IntD
+> and gets propagated through the bridges like that, or is it something else?
 > 
-> 	Andrew
+>      Arnd
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
