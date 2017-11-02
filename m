@@ -1,58 +1,62 @@
-From: <yamada.masahiro@socionext.com>
-Subject: RE: [PATCH v2] kbuild: clean up *.dtb and *.dtb.S patterns from
- top-level Makefile
-Date: Thu, 2 Nov 2017 08:48:46 +0000
-Message-ID: <bb7c1a637afa47e8943ce494798f957c@SOC-EX01V.e01.socionext.com>
-References: <1509591085-23940-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK8P3a3FoRJeO=TQGMRf6t4-bP8nP6KUEhkCrHP6L8XaF1Ee7g@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
+Date: Thu, 02 Nov 2017 16:51:29 +0800
+Message-ID: <9bca10cc95d04f87a1122bc582402310@aosc.io>
+References: <20171027150658.18509-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3FoRJeO=TQGMRf6t4-bP8nP6KUEhkCrHP6L8XaF1Ee7g@mail.gmail.com>
-Content-Language: ja-JP
-Sender: linux-arch-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: devicetree@vger.kernel.org, robh@kernel.org, linux-arch@vger.kernel.org, linux-mips@linux-mips.org, linux-kbuild@vger.kernel.org, linux@armlinux.org.uk, ralf@linux-mips.org, pantelis.antoniou@gmail.com, mark.rutland@arm.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171027150658.18509-1-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJuZCwNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGFybmRi
-ZXJnbWFubkBnbWFpbC5jb20gW21haWx0bzphcm5kYmVyZ21hbm5AZ21haWwuY29tXSBPbiBCZWhh
-bGYgT2YNCj4gQXJuZCBCZXJnbWFubg0KPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMDIsIDIw
-MTcgNTozOCBQTQ0KPiBUbzogWWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byYIDx5YW1hZGEu
-bWFzYWhpcm9Ac29jaW9uZXh0LmNvbT4NCj4gQ2M6IERUTUwgPGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnPjsgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47DQo+IGxpbnV4LWFyY2ggPGxp
-bnV4LWFyY2hAdmdlci5rZXJuZWwub3JnPjsgb3BlbiBsaXN0OlJBTElOSyBNSVBTDQo+IEFSQ0hJ
-VEVDVFVSRSA8bGludXgtbWlwc0BsaW51eC1taXBzLm9yZz47IExpbnV4IEtidWlsZCBtYWlsaW5n
-IGxpc3QNCj4gPGxpbnV4LWtidWlsZEB2Z2VyLmtlcm5lbC5vcmc+OyBSdXNzZWxsIEtpbmcgPGxp
-bnV4QGFybWxpbnV4Lm9yZy51az47DQo+IFJhbGYgQmFlY2hsZSA8cmFsZkBsaW51eC1taXBzLm9y
-Zz47IFBhbnRlbGlzIEFudG9uaW91DQo+IDxwYW50ZWxpcy5hbnRvbmlvdUBnbWFpbC5jb20+OyBN
-YXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gRnJhbmsgUm93YW5kIDxmcm93
-YW5kLmxpc3RAZ21haWwuY29tPjsgTGludXggQVJNDQo+IDxsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIGtidWlsZDogY2xlYW4g
-dXAgKi5kdGIgYW5kICouZHRiLlMgcGF0dGVybnMgZnJvbQ0KPiB0b3AtbGV2ZWwgTWFrZWZpbGUN
-Cj4gDQo+IE9uIFRodSwgTm92IDIsIDIwMTcgYXQgMzo1MSBBTSwgTWFzYWhpcm8gWWFtYWRhDQo+
-IDx5YW1hZGEubWFzYWhpcm9Ac29jaW9uZXh0LmNvbT4gd3JvdGU6DQo+ID4gV2UgbmVlZCB0byBh
-ZGQgImNsZWFuLWZpbGVzIiBpbiBNYWtmaWxlcyB0byBjbGVhbiB1cCBEVCBibG9icywgYnV0IHdl
-DQo+ID4gb2Z0ZW4gbWlzcyB0byBkbyBzby4NCj4gPg0KPiA+IFNpbmNlIHRoZXJlIGFyZSBubyBz
-b3VyY2UgZmlsZXMgdGhhdCBlbmQgd2l0aCAuZHRiIG9yIC5kdGIuUywgc28gd2UNCj4gPiBjYW4g
-Y2xlYW4tdXAgdGhvc2UgZmlsZXMgZnJvbSB0aGUgdG9wLWxldmVsIE1ha2VmaWxlLg0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogTWFzYWhpcm8gWWFtYWRhIDx5YW1hZGEubWFzYWhpcm9Ac29jaW9u
-ZXh0LmNvbT4NCj4gDQo+IEFja2VkLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0K
-PiANCj4gDQo+IE9uIGEgKGJhcmVseSkgcmVsYXRlZCBub3RlLCBJJ20gc3RydWdnbGluZyB3aXRo
-IGFub3RoZXIgcHJvYmxlbSBpbiB0aGUNCj4gd2F5IHdlIGhhbmRsZQ0KPiB0aGUgLmR0YiBmaWxl
-cyBpbiBhcm02NCB3aGVuIENPTkZJR19PRl9BTExfRFRCUyBpcyBlbmFibGVkOiB3aGVuIGJ1aWxk
-aW5nDQo+IG9uIGEgbG90IG9mIENQVXMsIHdlIHRyeSB0byBidWlsZCB0aGUgc2FtZSBmaWxlcyBm
-cm9tIGJvdGgNCj4gYXJjaC9hcm02NC9ib290L2R0cy9NYWtlZmlsZQ0KPiBhbmQgYXJjaC9hcm02
-NC9ib290L2R0cy8qL01ha2VmaWxlLCB3aGljaCB0aGVuIHJlc3VsdHMgaW4gYSBmYWlsZWQNCj4g
-YnVpbGQgd2hlbiB3cml0aW5nDQo+IHRoZSB0ZW1wb3JhcnkgZmlsZXMuDQo+IA0KPiBJIGhhdmUg
-Y29tZSB1cCB3aXRoIGEgd29ya2Fyb3VuZCB0aGF0IEkgdXNlIGxvY2FsbHksIGJ1dCBpdCBzZWVt
-ZWQgdG9vIHVnbHkNCj4gdG8NCj4gc3VibWl0IHRoYXQgZm9yIGluY2x1c2lvbi4gTWF5YmUgeW91
-IGNhbiBjb21lIHVwIHdpdGggYSBuaWNlciBhIHNvbHV0aW9uDQo+IGZvcg0KPiB0aGlzIGFzIHdl
-bGw/DQo+IA0KPiAgICAgICBBcm5kDQoNClllYWgsIEkgaGFkIGFsc28gbm90aWNlZCB0aGlzIHJh
-Y2UgcHJvYmxlbSBvbiBwYXJhbGxlbCBidWlsZGluZw0Kd2l0aCBDT05GSUdfT0ZfQUxMX0RUQlMu
-DQoNCkkgd2FzIHBsYW5uaW5nIHRvIGRvIGl0DQp3aGVuIEkgY29tZSB1cCB3aXRoIGEgY2xlYW4g
-aW1wbGVtZW50YXRpb24uDQoNCk9uZSBpZGVhIGlzIHRvIGhhbmRsZSBkdGIteSBhbmQgQ09ORklH
-X09GX0FMTF9EVEJTDQpuYXRpdmVseSBpbiBzY3JpcHRzL01ha2VmaWxlLmJ1aWxkIG9yIHNvbWV3
-aGVyZQ0KYXMgc2NyaXB0cy9NYWtlZmlsZS5kdGJpbnN0IGFscmVhZHkgcmVjb2duaXplcyBkdGIt
-eSBhcyBhIHNwZWNpYWwgdmFyaWFibGUuDQoNCg==
+在 2017-10-27 23:06，Icenowy Zheng 写道：
+> This patchset adds support for the SimpleFB on Allwinner SoCs with
+> "Display Engine 2.0".
+> 
+> PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
+> 
+> PATCH 4 adds the pipeline strings for DE2 SimpleFB.
+> 
+> PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
+> for H3/H5 SoCs.
+> 
+> PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
+> 
+> Icenowy Zheng (10):
+>   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
+>   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
+>   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
+>   dt-bindings: simplefb-sunxi: add pipelines for DE2
+>   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
+>   arm64: allwinner: h5: add compatible string for DE2 CCU
+>   ARM: sunxi: h3/h5: add simplefb nodes
+>   dt-bindings: add binding for A64 DE2 CCU SRAM
+>   arm64: allwinner: a64: add DE2 CCU for A64 SoC
+>   arm64: allwinner: a64: add simplefb for A64 SoC
+
+Maxime, could you review and, if possible, apply the H3/5
+part of this patchset?
+
+Thanks!
+Icenowy
+
+> 
+>  .../devicetree/bindings/clock/sun8i-de2.txt        | 10 +++-
+>  .../bindings/display/simple-framebuffer-sunxi.txt  |  4 ++
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    |  4 ++
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 43 ++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 65 
+> ++++++++++++++++++++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       |  4 ++
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.c               | 53 
+> +++++++++++++++++-
+>  7 files changed, 178 insertions(+), 5 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
