@@ -1,92 +1,58 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v6 03/12] arm64: dts: mt8173: remove "mediatek,mt8135-mmc"
- from mmc nodes
-Date: Thu, 2 Nov 2017 12:50:43 +0100
-Message-ID: <b24d12e4-251f-6f79-1ed9-5b52f8f39625@gmail.com>
-References: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
- <1508118399-21828-4-git-send-email-chaotian.jing@mediatek.com>
- <CAPDyKFrRVT8YFXvy3Wuf_jga5oourScOdas34U=YkeLRzHoWMg@mail.gmail.com>
+From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+Subject: Re: [Ksummit-discuss] Notes & Slides from Devicetree Workshop at
+ Kernel Summit Prague (26 Oct 2017)
+Date: Thu, 2 Nov 2017 13:21:17 +0100
+Message-ID: <f5238061-2f6a-ae47-79b4-912401737c7e@suse.com>
+References: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrRVT8YFXvy3Wuf_jga5oourScOdas34U=YkeLRzHoWMg@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Hudson <darknighte-p1iUmGEPI8RGBRGhe+f61g@public.gmane.org>, Kanta Vekaria <kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 10/25/2017 11:11 PM, Ulf Hansson wrote:
-> On 16 October 2017 at 03:46, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
->> devicetree bindings has been updated to support multi-platforms,
->> so that each platform has its owns compatible name.
->> And, this compatible name may used in driver to distinguish with
->> other platform.
->>
->> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+On 10/30/2017 05:01 PM, Grant Likely wrote:
+> Thank you to everyone who attended the Devicetree Workshop as part of
+> the 2017 Kernel Summit in Prague last week. I heard lots of good
+> feedback, and I'm already thinking about how to organize next year's
+> gathering.
 > 
-> Matthias, do you intend to pick this? Else I can do it with your ack...
+> Slides and notes have been uploaded to elinux.org. A summary of the
+> topics and next steps still needs to be written. You can find the
+> notes and slides here:
+> 
+> https://elinux.org/Device_tree_future#Kernel_Summit_2017.2C_Devicetree_Workshop
+> 
+> I also have an audio recording of the entire day, but they are large
+> audio files (100-200MB each) and I haven't decided how to publish them
+> yet.
+> 
+> Particular thanks to everyone who helped take notes (Sadly, I didn't
+> grab the list of names before they disappeared from Etherpad, so the
+> only person I can thank by name is Julia Lawall who emailed me notes
+> separately). Also thanks to Sean Hudson for taking care of sound and
+> to Frank Roland for running microphones around the room. Finally, a
+> big thank you to the Linux Foundation staff who sorted out all of the
+> hotel logistics for us.
+> 
+> Please look at the notes to check for accuracy, and I would appreciate
+> any volunteers to help write up the summary for the day.
+> 
+> I'll post the group photo as soon as I receive it.
 > 
 
-If it's not too late, feel free to take it. Otherwise I will queue it for the
-next merge window:
+You can find the photo here:
 
-Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+https://www.flickr.com/photos/linuxfoundation/38019230622/in/album-72157661789269468/
 
-> Kind regards
-> Uffe
-> 
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++--------
->>  1 file changed, 4 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index b99a273..26396ef 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -682,8 +682,7 @@
->>                 };
->>
->>                 mmc0: mmc@11230000 {
->> -                       compatible = "mediatek,mt8173-mmc",
->> -                                    "mediatek,mt8135-mmc";
->> +                       compatible = "mediatek,mt8173-mmc";
->>                         reg = <0 0x11230000 0 0x1000>;
->>                         interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_LOW>;
->>                         clocks = <&pericfg CLK_PERI_MSDC30_0>,
->> @@ -693,8 +692,7 @@
->>                 };
->>
->>                 mmc1: mmc@11240000 {
->> -                       compatible = "mediatek,mt8173-mmc",
->> -                                    "mediatek,mt8135-mmc";
->> +                       compatible = "mediatek,mt8173-mmc";
->>                         reg = <0 0x11240000 0 0x1000>;
->>                         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
->>                         clocks = <&pericfg CLK_PERI_MSDC30_1>,
->> @@ -704,8 +702,7 @@
->>                 };
->>
->>                 mmc2: mmc@11250000 {
->> -                       compatible = "mediatek,mt8173-mmc",
->> -                                    "mediatek,mt8135-mmc";
->> +                       compatible = "mediatek,mt8173-mmc";
->>                         reg = <0 0x11250000 0 0x1000>;
->>                         interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
->>                         clocks = <&pericfg CLK_PERI_MSDC30_2>,
->> @@ -715,8 +712,7 @@
->>                 };
->>
->>                 mmc3: mmc@11260000 {
->> -                       compatible = "mediatek,mt8173-mmc",
->> -                                    "mediatek,mt8135-mmc";
->> +                       compatible = "mediatek,mt8173-mmc";
->>                         reg = <0 0x11260000 0 0x1000>;
->>                         interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
->>                         clocks = <&pericfg CLK_PERI_MSDC30_3>,
->> --
->> 1.8.1.1.dirty
->>
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
