@@ -1,31 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 2/2] bus: add driver for the Technologic Systems NBUS
-Date: Thu, 2 Nov 2017 16:57:55 +0100
-Message-ID: <CACRpkdZajBx0xano2f6art=ROtwysAAVW_9FnCO39+XEfYbwGg@mail.gmail.com>
-References: <20171101171433.14445-1-sebastien.bourdelin@savoirfairelinux.com>
- <20171101171433.14445-2-sebastien.bourdelin@savoirfairelinux.com>
- <CACRpkdY4Y9g2PAXbt11e3mSzJk2Bri4WNXm-5dQ2iyTegBNYVw@mail.gmail.com> <b7a79314-66ff-6f09-6e53-aa548286b962@savoirfairelinux.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Notes & Slides from Devicetree Workshop at Kernel Summit Prague
+ (26 Oct 2017)
+Date: Thu, 2 Nov 2017 09:02:53 -0700
+Message-ID: <09f89fb1-85d3-4d2b-4cdf-93ce32c5e78a@gmail.com>
+References: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b7a79314-66ff-6f09-6e53-aa548286b962@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel <kernel@savoirfairelinux.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Featherston <mark@embeddedarm.com>, kris@embeddedarm.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sean Hudson <darknighte-p1iUmGEPI8RGBRGhe+f61g@public.gmane.org>, Kanta Vekaria <kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 2, 2017 at 3:37 PM, Sebastien Bourdelin
-<sebastien.bourdelin@savoirfairelinux.com> wrote:
+On 10/30/17 09:01, Grant Likely wrote:
+> Thank you to everyone who attended the Devicetree Workshop as part of
+> the 2017 Kernel Summit in Prague last week. I heard lots of good
+> feedback, and I'm already thinking about how to organize next year's
+> gathering.
+> 
+> Slides and notes have been uploaded to elinux.org. A summary of the
+> topics and next steps still needs to be written. You can find the
+> notes and slides here:
+> 
+> https://elinux.org/Device_tree_future#Kernel_Summit_2017.2C_Devicetree_Workshop
 
->> BTW do you have a way upstream for this patch? ARM SoC?
->
-> Honestly i have no idea, do you have a recommandation for this kind of
-> bus driver? should i re-submit just this patch to a specific tree?
+Grant and I have updated this information several times in the last few days.
+Some added information and slides, some added comments, reformatted the
+etherpad notes for wiki format, etc.
 
-If this is for an ARM system I would suggest that you just sent
-the patches to arm@kernel.org with CC to the linux-arm-kernel
-mailing list and ask the ARM SoC maintainers to apply them directly
-for the upstream kernel.
 
-Yours,
-Linus Walleij
+> I also have an audio recording of the entire day, but they are large
+> audio files (100-200MB each) and I haven't decided how to publish them
+> yet.
+> 
+> Particular thanks to everyone who helped take notes (Sadly, I didn't
+> grab the list of names before they disappeared from Etherpad, so the
+> only person I can thank by name is Julia Lawall who emailed me notes
+> separately). Also thanks to Sean Hudson for taking care of sound and
+> to Frank Roland for running microphones around the room. Finally, a
+> big thank you to the Linux Foundation staff who sorted out all of the
+> hotel logistics for us.
+> 
+> Please look at the notes to check for accuracy, and I would appreciate
+> any volunteers to help write up the summary for the day.
+> 
+> I'll post the group photo as soon as I receive it.
+> 
+> Cheers,
+> g.
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
