@@ -1,112 +1,240 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: input: Add Atmel PTC subsystem
- bindings
-Date: Thu, 2 Nov 2017 10:24:46 +0100
-Message-ID: <20171102092446.ehuilhqtfb7ouses@rfolt0960.corp.atmel.com>
-References: <20171020133121.7992-1-ludovic.desroches@microchip.com>
- <20171020133121.7992-2-ludovic.desroches@microchip.com>
- <20171030230658.csl2sxfrmdcdx3lj@dtor-ws>
+From: "M.h. Lian" <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/3] ARMv8: layerscape: add the pcie ep function support
+Date: Thu, 2 Nov 2017 09:29:20 +0000
+Message-ID: <VI1PR04MB1615D32BA610611E92244B7FE85C0@VI1PR04MB1615.eurprd04.prod.outlook.com>
+References: <20171024083045.31135-1-xiaowei.bao@nxp.com>
+ <20171024083045.31135-3-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171030230658.csl2sxfrmdcdx3lj@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171024083045.31135-3-xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Madalin-cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>, Sumit Garg <sumit.garg-3arQi8VN3Tc@public.gmane.org>, "Y.b. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, "hongtao.jia-3arQi8VN3Tc@public.gmane.org" <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Xiaowei Bao <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hi Xiaowei,
 
-On Mon, Oct 30, 2017 at 04:06:58PM -0700, Dmitry Torokhov wrote:
-> Hi Ludovic,
-> 
-> On Fri, Oct 20, 2017 at 03:31:17PM +0200, Ludovic Desroches wrote:
-> > Add description of the Atmel PTC subsystem bindings.
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/input/atmel,ptc.txt        | 67 ++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/atmel,ptc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/atmel,ptc.txt b/Documentation/devicetree/bindings/input/atmel,ptc.txt
-> > new file mode 100644
-> > index 000000000000..a183fd511e04
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/atmel,ptc.txt
-> > @@ -0,0 +1,67 @@
-> > +Atmel PTC Subsystem
-> > +
-> > +The Atmel Peripheral Touch Controller subsystem offers built-in hardware
-> > +for capacitive touch measurement on sensors that function as buttons, sliders
-> > +and wheels.
-> > +
-> > +1) PTC Subsystem node
-> > +
-> > +Required properties:
-> > +- compatible: 		Must be "atmel,sama5d2-ptc"
-> > +- reg: 			Address, length of the shared memory and ppp registers location
-> > +			and length.
-> > +- clocks: 		Phandlers to the clocks.
-> > +- clock-names: 		Must be "ptc_clk", "ptc_int_osc", "slow_clk".
-> > +- #address-cells:	Must be one. The cell is the button or scroller id.
-> > +- #size-cells: 		Must be zero.
-> > +
-> > +Example:
-> > +	ptc@fc060000 {
-> > +		compatible = "atmel,sama5d2-ptc";
-> > +		reg = <0x00800000 0x10000
-> > +		       0xfc060000 0xcf>;
-> > +		interrupts = <58 IRQ_TYPE_LEVEL_HIGH 7>;
-> > +		clocks = <&ptc_clk>, <&main>, <&clk32k>;
-> > +		clock-names = "ptc_clk", "ptc_int_osc", "slow_clk";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		[ child node definitions... ]
-> > +	};
-> > +
-> > +2) Scroller / buttons subnodes
-> > +
-> > +Subnodes describe the kind of sensors the customer want to use. They have to be
-> > +named according to their function: button, slider or wheel.
-> 
-> I wonder do we really need this? Or we can have a generic:
-> 
-> 	slider@0 {
-> 		reg = <0>;
-> 		linux,type = <EV_ABS>;
-> 		linux,code = <ABS_X>;
-> 	},
-> 	vertical-slider@1 {
-> 		reg = <1>;
-> 		linux,type = <EV_ABS>;
-> 		linux,code = <ABS_Y>;
-> 	},
-> 	wheel@2 {
-> 		reg = <2>;
-> 		linux,type = <EV_ABS>;
-> 		linux,code = <ABS_WHEEL>;
-> 	},
-> 	button@3 {
-> 		reg = <3>;
-> 		linux,type = <EV_KEY>;
-> 		linux,code = <KEY_A>;
-> 	},
-> 	...
-> 
-> I.e. you specify type/code in a generic way.
+Please see my comments inline.
 
-No problem with this approach, I can retrieve the kind of sensors from
-the linux,type property.
+> -----Original Message-----
+> From: Bao Xiaowei [mailto:xiaowei.bao-3arQi8VN3Tc@public.gmane.org]
+> Sent: Tuesday, October 24, 2017 4:31 PM
+> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org;
+> will.deacon-5wv7dgnIgG8@public.gmane.org; bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> Madalin-cristian Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>; Sumit Garg
+> <sumit.garg-3arQi8VN3Tc@public.gmane.org>; Y.b. Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>; hongtao.jia-3arQi8VN3Tc@public.gmane.org;
+> Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>; Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>;
+> kishon-l0cyMroinI0@public.gmane.org; jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Z.q. Hou
+> <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>; Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>; M.h. Lian
+> <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
+> Cc: Xiaowei Bao <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
+> Subject: [PATCH 2/3] ARMv8: layerscape: add the pcie ep function support
+>=20
+> Add the pcie controller ep function support of layerscape base on pcie ep
+> framework.
+>=20
+> Signed-off-by: Bao Xiaowei <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/pci/dwc/pci-layerscape.c | 137
+> +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 131 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/dwc/pci-layerscape.c b/drivers/pci/dwc/pci-layer=
+scape.c
+> index 87fa486bee2c..5c6fa7534a8e 100644
+> --- a/drivers/pci/dwc/pci-layerscape.c
+> +++ b/drivers/pci/dwc/pci-layerscape.c
+> @@ -34,7 +34,12 @@
+>  /* PEX Internal Configuration Registers */
+>  #define PCIE_STRFMR1		0x71c /* Symbol Timer & Filter Mask Register1
+> */
+>=20
+> +#define PCIE_DBI2_BASE		0x1000	/* DBI2 base address*/
+> +#define PCIE_MSI_MSG_DATA_OFF	0x5c	/* MSI Data register address*/
+> +#define PCIE_MSI_OB_SIZE	4096
+> +#define PCIE_MSI_ADDR_OFFSET	(1024 * 1024)
+>  #define PCIE_IATU_NUM		6
+> +#define PCIE_EP_ADDR_SPACE_SIZE 0x100000000
+>=20
+>  struct ls_pcie_drvdata {
+>  	u32 lut_offset;
+> @@ -44,12 +49,20 @@ struct ls_pcie_drvdata {
+>  	const struct dw_pcie_ops *dw_pcie_ops;  };
+>=20
+> +struct ls_pcie_ep {
+> +	dma_addr_t msi_phys_addr;
+> +	void __iomem *msi_virt_addr;
+> +	u64 msi_msg_addr;
+> +	u16 msi_msg_data;
+> +};
+> +
+>  struct ls_pcie {
+>  	struct dw_pcie *pci;
+>  	void __iomem *lut;
+>  	struct regmap *scfg;
+>  	const struct ls_pcie_drvdata *drvdata;
+>  	int index;
+> +	struct ls_pcie_ep *pcie_ep;
+>  };
+>=20
+>  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
+> @@ -263,6 +276,113 @@ static const struct of_device_id ls_pcie_of_match[]=
+ =3D
+> {
+>  	{ },
+>  };
+>=20
+> +static void ls_pcie_raise_msi_irq(struct ls_pcie_ep *pcie_ep) {
+> +	iowrite32(pcie_ep->msi_msg_data, pcie_ep->msi_virt_addr); }
+> +
+> +static void ls_pcie_ep_msi_init(struct dw_pcie_ep *ep) {
+> +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie *pcie =3D to_ls_pcie(pci);
+> +	struct ls_pcie_ep *pcie_ep =3D pcie->pcie_ep;
+> +	struct device *dev =3D pci->dev;
+> +	u32 free_win;
+> +
+> +	pcie_ep->msi_phys_addr =3D ep->phys_base + PCIE_MSI_ADDR_OFFSET;
+> +
+> +	pcie_ep->msi_virt_addr =3D ioremap(pcie_ep->msi_phys_addr,
+> +						PCIE_MSI_OB_SIZE);
+> +	if (!pcie_ep->msi_virt_addr)
+> +		dev_err(dev, "failed to map MSI outbound region\n");
+[Minghuan Lian]  If failed, should return an error?=20
+You may keep the mapping so, just call ioremap() once or call "iounmap" to =
+release mapping after finishing msi test.
+> +
+> +	pcie_ep->msi_msg_addr =3D ioread32(pci->dbi_base +
+> MSI_MESSAGE_ADDR_L32) |
+> +		(((u64)ioread32(pci->dbi_base + MSI_MESSAGE_ADDR_U32)) <<
+> 32);
+> +	pcie_ep->msi_msg_data =3D ioread16(pci->dbi_base +
+> +PCIE_MSI_MSG_DATA_OFF);
+> +
+> +	/* outbound iATU for MSI */
+> +	free_win =3D find_first_zero_bit(&ep->ob_window_map,
+> +					sizeof(ep->ob_window_map));
+> +	if (free_win >=3D ep->num_ob_windows)
+> +		dev_err(pci->dev, "no free outbound window\n");
+> +
+> +	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
+> +					pcie_ep->msi_phys_addr,
+> +					pcie_ep->msi_msg_addr,
+> +					PCIE_MSI_OB_SIZE);
+> +
+> +	set_bit(free_win, &ep->ob_window_map);
+> +	ep->outbound_addr[free_win] =3D pcie_ep->msi_phys_addr; }
+> +
+> +static int ls_pcie_raise_irq(struct dw_pcie_ep *ep,
+> +		enum pci_epc_irq_type type, u8 interrupt_num) {
+> +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie *pcie =3D to_ls_pcie(pci);
+> +	struct ls_pcie_ep *pcie_ep =3D pcie->pcie_ep;
+> +	u32 index;
+> +
+> +	ls_pcie_ep_msi_init(ep);
+> +
+> +	ls_pcie_raise_msi_irq(pcie_ep);
+> +
+> +	for (index =3D 0; index < ep->num_ob_windows; index++) {
+> +		if (ep->outbound_addr[index] =3D=3D pcie_ep->msi_phys_addr)
+> +			break;
+> +	}
+> +
+> +	if (index >=3D ep->num_ob_windows)
+> +		return -1;
+> +
+> +	dw_pcie_disable_atu(pci, index, DW_PCIE_REGION_OUTBOUND);
+> +	clear_bit(index, &ep->ob_window_map);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct dw_pcie_ep_ops pcie_ep_ops =3D {
+> +	.raise_irq =3D ls_pcie_raise_irq,
+> +};
+> +
+> +static int __init ls_add_pcie_ep(struct ls_pcie *pcie,
+> +					struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci =3D pcie->pci;
+> +	struct device *dev =3D pci->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct ls_pcie_ep *pcie_ep;
+> +	struct resource *cfg_res;
+> +	int ret;
+> +
+> +	ep =3D &pci->ep;
+> +	ep->ops =3D &pcie_ep_ops;
+> +
+> +	pcie_ep =3D devm_kzalloc(dev, sizeof(*pcie_ep), GFP_KERNEL);
+> +	if (!pcie_ep)
+> +		return -ENOMEM;
+> +
+> +	pcie->pcie_ep =3D pcie_ep;
+> +
+> +	cfg_res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "config");
+> +	if (cfg_res) {
+> +		ep->phys_base =3D cfg_res->start;
+> +		ep->addr_size =3D PCIE_EP_ADDR_SPACE_SIZE;
+> +	} else {
+> +		dev_err(dev, "missing *config* space\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret =3D dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +
+> +}
+> +
+>  static int __init ls_add_pcie_port(struct ls_pcie *pcie)  {
+>  	struct dw_pcie *pci =3D pcie->pci;
+> @@ -309,16 +429,21 @@ static int __init ls_pcie_probe(struct platform_dev=
+ice
+> *pdev)
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>=20
+> -	pcie->lut =3D pci->dbi_base + pcie->drvdata->lut_offset;
+> +	pci->dbi_base2 =3D pci->dbi_base + PCIE_DBI2_BASE;
+>=20
+> -	if (!ls_pcie_is_bridge(pcie))
+> -		return -ENODEV;
+> +	pcie->lut =3D pci->dbi_base + pcie->drvdata->lut_offset;
+>=20
+>  	platform_set_drvdata(pdev, pcie);
+>=20
+> -	ret =3D ls_add_pcie_port(pcie);
+> -	if (ret < 0)
+> -		return ret;
+> +	if (!ls_pcie_is_bridge(pcie)) {
+> +		ret =3D ls_add_pcie_ep(pcie, pdev);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else {
+> +		ret =3D ls_add_pcie_port(pcie);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+>=20
+>  	return 0;
+>  }
+> --
+> 2.14.1
 
-Can I set both ABS_X and ABS_Y? In the future, we may have a "surface"
-object reporting coordinates for these axes. It seems there are no
-generic helpers to parse the 'linux,code' property, so I assume it won't be a
-problem.
-
-Regards
-
-Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
