@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V3 11/11] arm64: dts: add clocks for SC9860
-Date: Thu, 2 Nov 2017 14:56:26 +0800
-Message-ID: <20171102065626.21835-12-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V3 05/11] clk: sprd: add mux clock support
+Date: Thu, 2 Nov 2017 14:56:20 +0800
+Message-ID: <20171102065626.21835-6-chunyan.zhang@spreadtrum.com>
 References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,161 +12,193 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some clocks on SC9860 are in the same address area with syscon devices,
-those are what have a property of 'sprd,syscon' which would refer to
-syscon devices, others would have a reg property indicated their address
-ranges.
+This patch adds clock multiplexor support for Spreadtrum platforms,
+the mux clocks also can be found in sprd composite clocks, so
+provides two helpers that can be reused later on.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- arch/arm64/boot/dts/sprd/sc9860.dtsi | 115 +++++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/whale2.dtsi |   2 +-
- 2 files changed, 116 insertions(+), 1 deletion(-)
+ drivers/clk/sprd/Makefile |  1 +
+ drivers/clk/sprd/mux.c    | 89 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sprd/mux.h    | 65 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 155 insertions(+)
+ create mode 100644 drivers/clk/sprd/mux.c
+ create mode 100644 drivers/clk/sprd/mux.h
 
-diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-index 7b7d8ce..95746b2 100644
---- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-@@ -7,6 +7,7 @@
-  */
+diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+index 8cd5592..cee36b5 100644
+--- a/drivers/clk/sprd/Makefile
++++ b/drivers/clk/sprd/Makefile
+@@ -2,3 +2,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/sprd,sc9860-clk.h>
- #include "whale2.dtsi"
- 
- / {
-@@ -183,6 +184,120 @@
- 	};
- 
- 	soc {
-+		pmu_gate: pmu-gate {
-+			compatible = "sprd,sc9860-pmu-gate";
-+			sprd,syscon = <&pmu_apb>; /* 0x402b0000 */
-+			clocks = <&ext_26m>;
-+			#clock-cells = <1>;
-+		};
+ clk-sprd-y	+= common.o
+ clk-sprd-y	+= gate.o
++clk-sprd-y	+= mux.o
+diff --git a/drivers/clk/sprd/mux.c b/drivers/clk/sprd/mux.c
+new file mode 100644
+index 0000000..5a344e0
+--- /dev/null
++++ b/drivers/clk/sprd/mux.c
+@@ -0,0 +1,89 @@
++/*
++ * Spreadtrum multiplexer clock driver
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
 +
-+		pll: pll {
-+			compatible = "sprd,sc9860-pll";
-+			sprd,syscon = <&ana_apb>; /* 0x40400000 */
-+			clocks = <&pmu_gate 0>;
-+			#clock-cells = <1>;
-+		};
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
 +
-+		ap_clk: clock-controller@20000000 {
-+			compatible = "sprd,sc9860-ap-clk";
-+			reg = <0 0x20000000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>,
-+				 <&pmu_gate 0>;
-+			#clock-cells = <1>;
-+		};
++#include "mux.h"
 +
-+		aon_prediv: aon-prediv {
-+			compatible = "sprd,sc9860-aon-prediv";
-+			reg = <0 0x402d0000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>,
-+				 <&pmu_gate 0>;
-+			#clock-cells = <1>;
-+		};
++DEFINE_SPINLOCK(sprd_mux_lock);
++EXPORT_SYMBOL_GPL(sprd_mux_lock);
 +
-+		apahb_gate: apahb-gate {
-+			compatible = "sprd,sc9860-apahb-gate";
-+			sprd,syscon = <&ap_ahb>; /* 0x20210000 */
-+			clocks = <&aon_prediv 0>;
-+			#clock-cells = <1>;
-+		};
++u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
++			      const struct sprd_mux_internal *mux)
++{
++	unsigned int reg;
++	u8 parent;
++	int num_parents;
++	int i;
 +
-+		aon_gate: aon-gate {
-+			compatible = "sprd,sc9860-aon-gate";
-+			sprd,syscon = <&aon_apb>; /* 0x402e0000 */
-+			clocks = <&aon_prediv 0>;
-+			#clock-cells = <1>;
-+		};
++	sprd_regmap_read(common->regmap, common->reg, &reg);
++	parent = reg >> mux->shift;
++	parent &= (1 << mux->width) - 1;
 +
-+		aonsecure_clk: clock-controller@40880000 {
-+			compatible = "sprd,sc9860-aonsecure-clk";
-+			reg = <0 0x40880000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	if (mux->table) {
++		num_parents = clk_hw_get_num_parents(&common->hw);
 +
-+		agcp_gate: agcp-gate {
-+			compatible = "sprd,sc9860-agcp-gate";
-+			sprd,syscon = <&agcp_ahb>; /* 0x415e0000 */
-+			clocks = <&aon_prediv 0>;
-+			#clock-cells = <1>;
-+		};
++		for (i = 0; i < num_parents; i++)
++			if (parent == mux->table[i] ||
++			    (i < (num_parents - 1) && parent > mux->table[i] &&
++			     parent < mux->table[i + 1]))
++				return i;
++		if (i == num_parents)
++			return i - 1;
++	}
 +
-+		gpu_clk: clock-controller@60200000 {
-+			compatible = "sprd,sc9860-gpu-clk";
-+			reg = <0 0x60200000 0 0x400>;
-+			clocks = <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	return parent;
++}
++EXPORT_SYMBOL_GPL(sprd_mux_helper_get_parent);
 +
-+		vsp_clk: clock-controller@61000000 {
-+			compatible = "sprd,sc9860-vsp-clk";
-+			reg = <0 0x61000000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++static u8 sprd_mux_get_parent(struct clk_hw *hw)
++{
++	struct sprd_mux *cm = hw_to_sprd_mux(hw);
 +
-+		vsp_gate: vsp-gate {
-+			compatible = "sprd,sc9860-vsp-gate";
-+			sprd,syscon = <&vsp_ahb>; /* 0x61100000 */
-+			clocks = <&vsp_clk 0>;
-+			#clock-cells = <1>;
-+		};
++	return sprd_mux_helper_get_parent(&cm->common, &cm->mux);
++}
 +
-+		cam_clk: clock-controller@62000000 {
-+			compatible = "sprd,sc9860-cam-clk";
-+			reg = <0 0x62000000 0 0x4000>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
++			       const struct sprd_mux_internal *mux,
++			       u8 index)
++{
++	unsigned long flags = 0;
++	unsigned int reg;
 +
-+		cam_gate: cam-gate {
-+			compatible = "sprd,sc9860-cam-gate";
-+			sprd,syscon = <&cam_ahb>; /* 0x62100000 */
-+			clocks = <&cam_clk 0>;
-+			#clock-cells = <1>;
-+		};
++	if (mux->table)
++		index = mux->table[index];
 +
-+		disp_clk: clock-controller@63000000 {
-+			compatible = "sprd,sc9860-disp-clk";
-+			reg = <0 0x63000000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	spin_lock_irqsave(common->lock, flags);
 +
-+		disp_gate: disp-gate {
-+			compatible = "sprd,sc9860-disp-gate";
-+			sprd,syscon = <&disp_ahb>; /* 0x63100000 */
-+			clocks = <&disp_clk 0>;
-+			#clock-cells = <1>;
-+		};
++	sprd_regmap_read(common->regmap, common->reg, &reg);
++	reg &= ~GENMASK(mux->width + mux->shift - 1, mux->shift);
++	sprd_regmap_write(common->regmap, common->reg,
++			  reg | (index << mux->shift));
 +
-+		apapb_gate: apapb-gate {
-+			compatible = "sprd,sc9860-apapb-gate";
-+			sprd,syscon = <&ap_apb>; /* 0x70b00000 */
-+			clocks = <&ap_clk 0>;
-+			#clock-cells = <1>;
-+		};
++	spin_unlock_irqrestore(common->lock, flags);
 +
- 		funnel@10001000 { /* SoC Funnel */
- 			compatible = "arm,coresight-funnel", "arm,primecell";
- 			reg = <0 0x10001000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index a9995fa..206aaf1 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -110,6 +110,6 @@
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
--		clock-output-names = "ext_26m";
-+		clock-output-names = "ext-26m";
- 	};
- };
++	return 0;
++}
++EXPORT_SYMBOL_GPL(sprd_mux_helper_set_parent);
++
++static int sprd_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct sprd_mux *cm = hw_to_sprd_mux(hw);
++
++	return sprd_mux_helper_set_parent(&cm->common, &cm->mux, index);
++}
++
++const struct clk_ops sprd_mux_ops = {
++	.get_parent = sprd_mux_get_parent,
++	.set_parent = sprd_mux_set_parent,
++	.determine_rate = __clk_mux_determine_rate,
++};
++EXPORT_SYMBOL_GPL(sprd_mux_ops);
+diff --git a/drivers/clk/sprd/mux.h b/drivers/clk/sprd/mux.h
+new file mode 100644
+index 0000000..148ca8c
+--- /dev/null
++++ b/drivers/clk/sprd/mux.h
+@@ -0,0 +1,65 @@
++/*
++ * Spreadtrum multiplexer clock driver
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
++
++#ifndef _SPRD_MUX_H_
++#define _SPRD_MUX_H_
++
++#include "common.h"
++
++struct sprd_mux_internal {
++	u8		shift;
++	u8		width;
++	const u8	*table;
++};
++
++struct sprd_mux {
++	struct sprd_mux_internal mux;
++	struct sprd_clk_common	common;
++};
++
++#define _SPRD_MUX_CLK(_shift, _width, _table)		\
++	{						\
++		.shift	= _shift,			\
++		.width	= _width,			\
++		.table	= _table,			\
++	}
++
++#define SPRD_MUX_CLK(_struct, _name, _parents, _table,			\
++				     _reg, _shift, _width,		\
++				     _flags)				\
++	struct sprd_mux _struct = {					\
++		.mux	= _SPRD_MUX_CLK(_shift, _width, _table),	\
++		.common	= {						\
++			.regmap		= NULL,				\
++			.reg		= _reg,				\
++			.lock		= &sprd_mux_lock,		\
++			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
++						       _parents,	\
++						       &sprd_mux_ops,	\
++						       _flags),		\
++		}							\
++	}
++
++static inline struct sprd_mux *hw_to_sprd_mux(const struct clk_hw *hw)
++{
++	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
++
++	return container_of(common, struct sprd_mux, common);
++}
++
++extern const struct clk_ops sprd_mux_ops;
++extern spinlock_t sprd_mux_lock;
++
++u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
++			      const struct sprd_mux_internal *mux);
++int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
++			       const struct sprd_mux_internal *mux,
++			       u8 index);
++
++#endif /* _SPRD_MUX_H_ */
 -- 
 2.7.4
