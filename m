@@ -1,37 +1,60 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v6 2/9] clk: mediatek: Add dt-bindings for MT2712 clocks
-Date: Thu, 2 Nov 2017 01:03:30 -0700
-Message-ID: <20171102080330.GB11011@codeaurora.org>
-References: <1508731840-4231-1-git-send-email-weiyi.lu@mediatek.com>
- <1508731840-4231-3-git-send-email-weiyi.lu@mediatek.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
+Date: Thu, 2 Nov 2017 09:04:12 +0100
+Message-ID: <20171102080412.n3wfabxt2ayswxzp@verge.net.au>
+References: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw@mail.gmail.com>
+ <TY1PR06MB0895612044D5E21BCBFEF46BC0740@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1508731840-4231-3-git-send-email-weiyi.lu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Weiyi Lu <weiyi.lu@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <TY1PR06MB0895612044D5E21BCBFEF46BC0740@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/23, Weiyi Lu wrote:
-> Add MT2712 clock dt-bindings, include topckgen, apmixedsys,
-> infracfg, pericfg, mcucfg and subsystem clocks.
+On Mon, Oct 09, 2017 at 01:45:07PM +0000, Fabrizio Castro wrote:
+> Hello Geert,
 > 
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
+> thank you for your feedback!
+> 
+> >
+> > Hi Fabrizio, Chris,
+> >
+> > On Mon, Oct 9, 2017 at 11:06 AM, Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com> wrote:
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > > --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> > > +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+> > > @@ -11,6 +11,7 @@
+> > >  / {
+> > >         aliases {
+> > >                 serial0 = &scif0;
+> > > +               serial3 = &scifb1;
+> >
+> > Given this port is not labeled "serial3", but called "data uart", you may want
+> > to add a comment to avoid confusion:
+> 
+> It's a little bit confusing, isn't it? The lines related to such
+> interface are named as UART0_x on the carrier board schematic, the
+> section of the schematic that contains the header is named "data uart
+> header", and the board documentation names it explicitly as "UART 3 -
+> /dev/ttySC3 (SCIFB1)".
+> 
+> I don't think there is anything we can do to make this easier for the
+> user really, is there? :D If we decide to add a comment to serial 3, I
+> guess we need to be consistent and add comments for the other serial
+> interfaces too.  If you still prefer having a comment there I'll send a
+> v2 and patch(es) for adding comments to the other interfaces, just let me
+> know.
 
-Applied to clk-next
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I have applied this patch. If a comment is subsequently decided on
+then please send a follow-up patch.
