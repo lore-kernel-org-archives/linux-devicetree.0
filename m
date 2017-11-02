@@ -1,54 +1,59 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH 1/1] ASoC: stm32: sai: fix warning in
-	stm32_sai_set_config()
-Date: Thu, 2 Nov 2017 11:20:09 +0100
-Message-ID: <1509618009-30804-1-git-send-email-olivier.moysan@st.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH 0/2] Add support for Hi6220 coresight
+Date: Thu, 2 Nov 2017 18:41:08 +0800
+Message-ID: <20171102104108.GC3550@leoy-linaro>
+References: <1504226835-2115-1-git-send-email-leo.yan@linaro.org>
+ <20170901013301.GN21656@codeaurora.org>
+ <20171007121802.GC23080@leoy-linaro>
+ <59E07FDE.40307@hisilicon.com>
+ <150955133019.90597.6277114786385559431@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <150955133019.90597.6277114786385559431@resonance>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Li Pengcheng <lipengcheng8@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix uninitialized warning introduced by
-"Move static settings to DAI init" commit
-in stm32_sai_set_config() function.
+On Wed, Nov 01, 2017 at 04:48:50PM +0100, Michael Turquette wrote:
+> Quoting Wei Xu (2017-10-13 10:57:02)
+> > Hi Leo,
+> > 
+> > On 2017/10/7 13:18, Leo Yan wrote:
+> > > Hi Stephen, Wei,
+> > > 
+> > > On Thu, Aug 31, 2017 at 06:33:01PM -0700, Stephen Boyd wrote:
+> > >> On 09/01, Leo Yan wrote:
+> > >>> This patch series adds support for coresight on Hi6220; the first patch
+> > >>> is to fix coresight PLL so can avoid system hang after we enable
+> > >>> coresight, the second patch is to add DT binding according to coresight
+> > >>> topology.
+> > >>>
+> > >>> The patch has been tested on Hikey; By using OpenCSD snapshot mode, it
+> > >>> can successfully decode ETF and ETB trace data.
+> > >>>
+> > >>
+> > >> I can take the first one and second one goes through arm-soc?
+> > > 
+> > > Could you pick these two patches for Hi6220 coresight enabling for
+> > > this merge window? Or need me resend these two patches?
+> > 
+> > Applied patch 2 into hisilicon dt tree with slight fix.
+> > Thanks!
+> 
+> Cool. Patch #1 applied to clk tree.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_sai_sub.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks, Mike and Wei.
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 150ad54..08583b9 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -482,13 +482,13 @@ static int stm32_sai_set_config(struct snd_soc_dai *cpu_dai,
- 	cr1_mask = SAI_XCR1_DS_MASK;
- 	switch (params_format(params)) {
- 	case SNDRV_PCM_FORMAT_S8:
--		cr1 |= SAI_XCR1_DS_SET(SAI_DATASIZE_8);
-+		cr1 = SAI_XCR1_DS_SET(SAI_DATASIZE_8);
- 		break;
- 	case SNDRV_PCM_FORMAT_S16_LE:
--		cr1 |= SAI_XCR1_DS_SET(SAI_DATASIZE_16);
-+		cr1 = SAI_XCR1_DS_SET(SAI_DATASIZE_16);
- 		break;
- 	case SNDRV_PCM_FORMAT_S32_LE:
--		cr1 |= SAI_XCR1_DS_SET(SAI_DATASIZE_32);
-+		cr1 = SAI_XCR1_DS_SET(SAI_DATASIZE_32);
- 		break;
- 	default:
- 		dev_err(cpu_dai->dev, "Data format not supported");
--- 
-1.9.1
+> Regards,
+> Mike
+> 
+> > 
+> > BR,
+> > Wei
+> > 
+> > > 
+> > > Thanks,
+> > > Leo Yan
