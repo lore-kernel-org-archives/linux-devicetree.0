@@ -1,33 +1,76 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] dt-bindings: Input: Remove leading zeros from
- bindings notation
-Date: Wed, 1 Nov 2017 19:25:10 -0500
-Message-ID: <20171102002510.6sea72cgk7jjrqwz@rob-hp-laptop>
-References: <1509539443-16253-1-git-send-email-marco.franchi@nxp.com>
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH 0/7] Cavium OCTEON-III network driver.
+Date: Wed,  1 Nov 2017 17:35:59 -0700
+Message-ID: <20171102003606.19913-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1509539443-16253-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 10:30:43AM -0200, Marco Franchi wrote:
-> Improve the binding example by removing all the leading zeros to fix the
-> following dtc warnings:
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> perl -p -i -e 's/\@0+([0-9a-f])/\@$1/g' `find ./Documentation/devicetree/bindings/input "*.txt"`
+We are adding the Cavium OCTEON-III network driver.  But since
+interacting with the input and output queues is done via special CPU
+local memory, we also need to add support to the MIPS/Octeon
+architecture code.  Aren't SoCs nice in this way?
 
-What about doing this one level up?
+The first five patches add the SoC support needed by the driver, the
+last two add the driver and an entry in MAINTAINERS.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since these touch several subsystems, I would propose merging via
+netdev, but defer to the maintainers if they think something else
+would work better.
+
+A separate pull request was recently done by Steven Hill for the
+firmware required by the driver.
+
+Carlos Munoz (5):
+  dt-bindings: Add Cavium Octeon Common Ethernet Interface.
+  MIPS: Octeon: Enable LMTDMA/LMTST operations.
+  MIPS: Octeon: Add a global resource manager.
+  MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+  netdev: octeon-ethernet: Add Cavium Octeon III support.
+
+David Daney (2):
+  MIPS: Octeon: Automatically provision CVMSEG space.
+  MAINTAINERS: Add entry for
+    drivers/net/ethernet/cavium/octeon/octeon3-*
+
+ .../devicetree/bindings/net/cavium-bgx.txt         |   59 +
+ MAINTAINERS                                        |    6 +
+ arch/mips/cavium-octeon/Kconfig                    |   37 +-
+ arch/mips/cavium-octeon/Makefile                   |    4 +-
+ arch/mips/cavium-octeon/octeon-fpa3.c              |  363 ++++
+ arch/mips/cavium-octeon/resource-mgr.c             |  362 ++++
+ arch/mips/cavium-octeon/setup.c                    |   22 +-
+ .../asm/mach-cavium-octeon/kernel-entry-init.h     |   20 +-
+ arch/mips/include/asm/mipsregs.h                   |    2 +
+ arch/mips/include/asm/octeon/octeon.h              |   47 +-
+ arch/mips/include/asm/processor.h                  |    2 +-
+ arch/mips/kernel/octeon_switch.S                   |    2 -
+ arch/mips/kernel/unaligned.c                       |    3 +
+ arch/mips/mm/tlbex.c                               |   29 +-
+ drivers/net/ethernet/cavium/Kconfig                |   28 +-
+ drivers/net/ethernet/cavium/octeon/Makefile        |    6 +
+ .../net/ethernet/cavium/octeon/octeon3-bgx-nexus.c |  698 +++++++
+ .../net/ethernet/cavium/octeon/octeon3-bgx-port.c  | 2023 +++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-core.c  | 2075 ++++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pki.c   |  833 ++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pko.c   | 1719 ++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-sso.c   |  309 +++
+ drivers/net/ethernet/cavium/octeon/octeon3.h       |  411 ++++
+ 23 files changed, 9005 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+ create mode 100644 arch/mips/cavium-octeon/octeon-fpa3.c
+ create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-nexus.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-core.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pki.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pko.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-sso.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3.h
+
+-- 
+2.13.6
