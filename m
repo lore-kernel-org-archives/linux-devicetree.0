@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V3 07/11] clk: sprd: add composite clock support
-Date: Thu, 2 Nov 2017 14:56:22 +0800
-Message-ID: <20171102065626.21835-8-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V3 08/11] clk: sprd: add adjustable pll support
+Date: Thu, 2 Nov 2017 14:56:23 +0800
+Message-ID: <20171102065626.21835-9-chunyan.zhang@spreadtrum.com>
 References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,153 +12,415 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduced composite driver for Spreadtrum's SoCs. The
-functions of this composite clock simply consist of divider and
-mux clocks.
+Introduced a common adjustable pll clock driver for Spreadtrum SoCs.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- drivers/clk/sprd/Makefile    |  1 +
- drivers/clk/sprd/composite.c | 65 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sprd/composite.h | 49 +++++++++++++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
- create mode 100644 drivers/clk/sprd/composite.c
- create mode 100644 drivers/clk/sprd/composite.h
+ drivers/clk/sprd/Makefile |   1 +
+ drivers/clk/sprd/pll.c    | 268 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sprd/pll.h    | 110 +++++++++++++++++++
+ 3 files changed, 379 insertions(+)
+ create mode 100644 drivers/clk/sprd/pll.c
+ create mode 100644 drivers/clk/sprd/pll.h
 
 diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-index 80e6039..2262e76 100644
+index 2262e76..d693969 100644
 --- a/drivers/clk/sprd/Makefile
 +++ b/drivers/clk/sprd/Makefile
-@@ -4,3 +4,4 @@ clk-sprd-y	+= common.o
- clk-sprd-y	+= gate.o
+@@ -5,3 +5,4 @@ clk-sprd-y	+= gate.o
  clk-sprd-y	+= mux.o
  clk-sprd-y	+= div.o
-+clk-sprd-y	+= composite.o
-diff --git a/drivers/clk/sprd/composite.c b/drivers/clk/sprd/composite.c
+ clk-sprd-y	+= composite.o
++clk-sprd-y	+= pll.o
+diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
 new file mode 100644
-index 0000000..30d5b36
+index 0000000..1fd8d32
 --- /dev/null
-+++ b/drivers/clk/sprd/composite.c
-@@ -0,0 +1,65 @@
++++ b/drivers/clk/sprd/pll.c
+@@ -0,0 +1,268 @@
 +/*
-+ * Spreadtrum composite clock driver
++ * Spreadtrum pll clock driver
 + *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Copyright (C) 2015~2017 Spreadtrum, Inc.
 + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 + *
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
 +
-+#include "composite.h"
++#include "pll.h"
 +
-+DEFINE_SPINLOCK(sprd_comp_lock);
-+EXPORT_SYMBOL_GPL(sprd_comp_lock);
++#define CLK_PLL_1M	1000000
++#define CLK_PLL_10M	(CLK_PLL_1M * 10)
 +
-+static long sprd_comp_round_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long *parent_rate)
++#define pindex(pll, member)		\
++	(pll->factors[member].shift / (8 * sizeof(pll->regs_num)))
++
++#define pshift(pll, member)		\
++	(pll->factors[member].shift % (8 * sizeof(pll->regs_num)))
++
++#define pwidth(pll, member)		\
++	pll->factors[member].width
++
++#define pmask(pll, member)					\
++	((pwidth(pll, member)) ?				\
++	GENMASK(pwidth(pll, member) + pshift(pll, member) - 1,	\
++	pshift(pll, member)) : 0)
++
++#define pinternal(pll, cfg, member)	\
++	(cfg[pindex(pll, member)] & pmask(pll, member))
++
++#define pinternal_val(pll, cfg, member)	\
++	(pinternal(pll, cfg, member) >> pshift(pll, member))
++
++static inline unsigned int
++sprd_pll_read(const struct sprd_pll *pll, u8 index)
 +{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++	const struct sprd_clk_common *common = &pll->common;
++	unsigned int val = 0;
 +
-+	return sprd_div_helper_round_rate(&cc->common, &cc->div,
-+					 rate, parent_rate);
++	if (WARN_ON(index >= pll->regs_num))
++		return 0;
++
++	sprd_regmap_read(common->regmap, common->reg + index * 4, &val);
++
++	return val;
 +}
 +
-+static unsigned long sprd_comp_recalc_rate(struct clk_hw *hw,
++static inline void
++sprd_pll_write(const struct sprd_pll *pll, u8 index,
++				  u32 msk, u32 val)
++{
++	const struct sprd_clk_common *common = &pll->common;
++	unsigned int offset, reg;
++	int ret = 0;
++
++	if (WARN_ON(index >= pll->regs_num))
++		return;
++
++	offset = common->reg + index * 4;
++	ret = sprd_regmap_read(common->regmap, offset, &reg);
++	if (!ret)
++		sprd_regmap_write(common->regmap, offset, (reg & ~msk) | val);
++}
++
++static unsigned long pll_get_refin(const struct sprd_pll *pll)
++{
++	u32 shift, mask, index, refin_id = 3;
++	const unsigned long refin[4] = { 2, 4, 13, 26 };
++
++	if (pwidth(pll, PLL_REFIN)) {
++		index = pindex(pll, PLL_REFIN);
++		shift = pshift(pll, PLL_REFIN);
++		mask = pmask(pll, PLL_REFIN);
++		refin_id = (sprd_pll_read(pll, index) & mask) >> shift;
++		if (refin_id > 3)
++			refin_id = 3;
++	}
++
++	return refin[refin_id];
++}
++
++static u32 pll_get_ibias(u64 rate, const u64 *table)
++{
++	u32 i, num = table[0];
++
++	for (i = 1; i < num + 1; i++)
++		if (rate <= table[i])
++			break;
++
++	return (i == num + 1) ? num : i;
++}
++
++static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
++					   unsigned long parent_rate)
++{
++	u32 *cfg;
++	u32 i, mask, regs_num = pll->regs_num;
++	unsigned long rate, nint, kint = 0;
++	u64 refin;
++	u16 k1, k2;
++
++	cfg = kcalloc(regs_num, sizeof(*cfg), GFP_KERNEL);
++	if (!cfg)
++		return -ENOMEM;
++
++	for (i = 0; i < regs_num; i++)
++		cfg[i] = sprd_pll_read(pll, i);
++
++	refin = pll_get_refin(pll);
++
++	if (pinternal(pll, cfg, PLL_PREDIV))
++		refin = refin * 2;
++
++	if (pwidth(pll, PLL_POSTDIV) &&
++	    ((pll->fflag == 1 && pinternal(pll, cfg, PLL_POSTDIV)) ||
++	     (!pll->fflag && !pinternal(pll, cfg, PLL_POSTDIV))))
++		refin = refin / 2;
++
++	if (!pinternal(pll, cfg, PLL_DIV_S)) {
++		rate = refin * pinternal_val(pll, cfg, PLL_N) * CLK_PLL_10M;
++	} else {
++		nint = pinternal_val(pll, cfg, PLL_NINT);
++		if (pinternal(pll, cfg, PLL_SDM_EN))
++			kint = pinternal_val(pll, cfg, PLL_KINT);
++
++		mask = pmask(pll, PLL_KINT);
++
++		k1 = pll->k1;
++		k2 = pll->k2;
++		rate = DIV_ROUND_CLOSEST_ULL(refin * kint * k1,
++					 ((mask >> __ffs(mask)) + 1)) *
++					 k2 + refin * nint * CLK_PLL_1M;
++	}
++
++	return rate;
++}
++
++#define SPRD_PLL_WRITE_CHECK(pll, i, mask, val)		\
++	(((sprd_pll_read(pll, i) & mask) == val) ? 0 : (-EFAULT))
++
++static int _sprd_pll_set_rate(const struct sprd_pll *pll,
++			      unsigned long rate,
++			      unsigned long parent_rate)
++{
++	struct reg_cfg *cfg;
++	int ret = 0;
++	u32 mask, shift, width, ibias_val, index;
++	u32 regs_num = pll->regs_num, i = 0;
++	unsigned long kint, nint;
++	u64 tmp, refin, fvco = rate;
++
++	cfg = kcalloc(regs_num, sizeof(*cfg), GFP_KERNEL);
++	if (!cfg)
++		return -ENOMEM;
++
++	refin = pll_get_refin(pll);
++
++	mask = pmask(pll, PLL_PREDIV);
++	index = pindex(pll, PLL_PREDIV);
++	width = pwidth(pll, PLL_PREDIV);
++	if (width && (sprd_pll_read(pll, index) & mask))
++		refin = refin * 2;
++
++	mask = pmask(pll, PLL_POSTDIV);
++	index = pindex(pll, PLL_POSTDIV);
++	width = pwidth(pll, PLL_POSTDIV);
++	cfg[index].msk = mask;
++	if (width && ((pll->fflag == 1 && fvco <= pll->fvco) ||
++		      (pll->fflag == 0 && fvco > pll->fvco)))
++		cfg[index].val |= mask;
++
++	if (width && fvco <= pll->fvco)
++		fvco = fvco * 2;
++
++	mask = pmask(pll, PLL_DIV_S);
++	index = pindex(pll, PLL_DIV_S);
++	cfg[index].val |= mask;
++	cfg[index].msk |= mask;
++
++	mask = pmask(pll, PLL_SDM_EN);
++	index = pindex(pll, PLL_SDM_EN);
++	cfg[index].val |= mask;
++	cfg[index].msk |= mask;
++
++	nint = do_div(fvco, refin * CLK_PLL_1M);
++	mask = pmask(pll, PLL_NINT);
++	index = pindex(pll, PLL_NINT);
++	shift = pshift(pll, PLL_NINT);
++	cfg[index].val |= (nint << shift) & mask;
++	cfg[index].msk |= mask;
++
++	mask = pmask(pll, PLL_KINT);
++	index = pindex(pll, PLL_KINT);
++	width = pwidth(pll, PLL_KINT);
++	shift = pshift(pll, PLL_KINT);
++	tmp = fvco - refin * nint * CLK_PLL_1M;
++	tmp = do_div(tmp, 10000) * ((mask >> shift) + 1);
++	kint = DIV_ROUND_CLOSEST_ULL(tmp, refin * 100);
++	cfg[index].val |= (kint << shift) & mask;
++	cfg[index].msk |= mask;
++
++	ibias_val = pll_get_ibias(fvco, pll->itable);
++
++	mask = pmask(pll, PLL_IBIAS);
++	index = pindex(pll, PLL_IBIAS);
++	shift = pshift(pll, PLL_IBIAS);
++	cfg[index].val |= ibias_val << shift & mask;
++	cfg[index].msk |= mask;
++
++	for (i = 0; i < regs_num; i++) {
++		if (cfg[i].msk) {
++			sprd_pll_write(pll, i, cfg[i].msk, cfg[i].val);
++			ret |= SPRD_PLL_WRITE_CHECK(pll, i, cfg[i].msk,
++						   cfg[i].val);
++		}
++	}
++
++	if (!ret)
++		udelay(pll->udelay);
++
++	return ret;
++}
++
++static unsigned long sprd_pll_recalc_rate(struct clk_hw *hw,
 +					  unsigned long parent_rate)
 +{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++	struct sprd_pll *pll = hw_to_sprd_pll(hw);
 +
-+	return sprd_div_helper_recalc_rate(&cc->common, &cc->div, parent_rate);
++	return _sprd_pll_recalc_rate(pll, parent_rate);
 +}
 +
-+static int sprd_comp_set_rate(struct clk_hw *hw, unsigned long rate,
++static int sprd_pll_set_rate(struct clk_hw *hw,
++			     unsigned long rate,
 +			     unsigned long parent_rate)
 +{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++	struct sprd_pll *pll = hw_to_sprd_pll(hw);
 +
-+	return sprd_div_helper_set_rate(&cc->common, &cc->div,
-+				       rate, parent_rate);
++	return _sprd_pll_set_rate(pll, rate, parent_rate);
 +}
 +
-+static u8 sprd_comp_get_parent(struct clk_hw *hw)
++static int sprd_pll_clk_prepare(struct clk_hw *hw)
 +{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++	struct sprd_pll *pll = hw_to_sprd_pll(hw);
 +
-+	return sprd_mux_helper_get_parent(&cc->common, &cc->mux);
++	udelay(pll->udelay);
++
++	return 0;
 +}
 +
-+static int sprd_comp_set_parent(struct clk_hw *hw, u8 index)
++static long sprd_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long *prate)
 +{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_mux_helper_set_parent(&cc->common, &cc->mux, index);
++	return rate;
 +}
 +
-+const struct clk_ops sprd_comp_ops = {
-+	.get_parent	= sprd_comp_get_parent,
-+	.set_parent	= sprd_comp_set_parent,
-+
-+	.round_rate	= sprd_comp_round_rate,
-+	.recalc_rate	= sprd_comp_recalc_rate,
-+	.set_rate	= sprd_comp_set_rate,
++const struct clk_ops sprd_pll_ops = {
++	.prepare = sprd_pll_clk_prepare,
++	.recalc_rate = sprd_pll_recalc_rate,
++	.round_rate = sprd_pll_round_rate,
++	.set_rate = sprd_pll_set_rate,
 +};
-+EXPORT_SYMBOL_GPL(sprd_comp_ops);
-diff --git a/drivers/clk/sprd/composite.h b/drivers/clk/sprd/composite.h
++EXPORT_SYMBOL_GPL(sprd_pll_ops);
+diff --git a/drivers/clk/sprd/pll.h b/drivers/clk/sprd/pll.h
 new file mode 100644
-index 0000000..551f274
+index 0000000..a25b003
 --- /dev/null
-+++ b/drivers/clk/sprd/composite.h
-@@ -0,0 +1,49 @@
++++ b/drivers/clk/sprd/pll.h
+@@ -0,0 +1,110 @@
 +/*
-+ * Spreadtrum composite clock driver
++ * Spreadtrum clock pll configurations
 + *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Copyright (C) 2015~2017 Spreadtrum, Inc.
 + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 + *
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#ifndef _SPRD_COMPOSITE_H_
-+#define _SPRD_COMPOSITE_H_
++#ifndef _SPRD_PLL_H_
++#define _SPRD_PLL_H_
 +
 +#include "common.h"
-+#include "mux.h"
-+#include "div.h"
 +
-+struct sprd_comp {
-+	struct sprd_mux_internal	mux;
-+	struct sprd_div_internal	div;
++struct reg_cfg {
++	u32 val;
++	u32 msk;
++};
++
++struct clk_bit_field {
++	u8 shift;
++	u8 width;
++};
++
++enum {
++	PLL_LOCK_DONE,
++	PLL_DIV_S,
++	PLL_MOD_EN,
++	PLL_SDM_EN,
++	PLL_REFIN,
++	PLL_IBIAS,
++	PLL_N,
++	PLL_NINT,
++	PLL_KINT,
++	PLL_PREDIV,
++	PLL_POSTDIV,
++
++	PLL_FACT_MAX
++};
++
++/*
++ * struct sprd_pll - definition of adjustable pll clock
++ *
++ * @reg:	registers used to set the configuration of pll clock,
++ *		reg[0] shows how many registers this pll clock uses.
++ * @itable:	pll ibias table, itable[0] means how many items this
++ *		table includes
++ * @udelay	delay time after setting rate
++ * @factors	used to calculate the pll clock rate
++ * @fvco:	fvco threshold rate
++ * @fflag:	fvco flag
++ */
++struct sprd_pll {
++	u32 regs_num;
++	const u64 *itable;
++	const struct clk_bit_field *factors;
++	u16 udelay;
++	u16 k1;
++	u16 k2;
++	u16 fflag;
++	u64 fvco;
++
 +	struct sprd_clk_common	common;
 +};
 +
-+#define SPRD_COMP_CLK(_struct, _name, _parent, _reg, _table,		\
-+			_mshift, _mwidth, _dshift, _dwidth, _flags)	\
-+	struct sprd_comp _struct = {					\
-+		.mux	= _SPRD_MUX_CLK(_mshift, _mwidth, _table),	\
-+		.div	= _SPRD_DIV_CLK(_dshift, _dwidth),		\
-+		.common = {						\
++#define SPRD_PLL_WITH_ITABLE_K_FVCO(_struct, _name, _parent, _reg,	\
++				    _regs_num, _itable, _factors,	\
++				    _udelay, _k1, _k2, _fflag, _fvco)	\
++	struct sprd_pll _struct = {					\
++		.regs_num	= _regs_num,				\
++		.itable		= _itable,				\
++		.factors	= _factors,				\
++		.udelay		= _udelay,				\
++		.k1		= _k1,					\
++		.k2		= _k2,					\
++		.fflag		= _fflag,				\
++		.fvco		= _fvco,				\
++		.common		= {					\
 +			.regmap		= NULL,				\
 +			.reg		= _reg,				\
-+			.lock		= &sprd_comp_lock,		\
-+			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
-+						       _parent,		\
-+						       &sprd_comp_ops,	\
-+						       _flags),		\
-+			 }						\
++			.hw.init	= CLK_HW_INIT(_name,		\
++						      _parent,		\
++						      &sprd_pll_ops,	\
++						      0),		\
++		},							\
 +	}
 +
-+static inline struct sprd_comp *hw_to_sprd_comp(const struct clk_hw *hw)
++#define SPRD_PLL_WITH_ITABLE_K(_struct, _name, _parent, _reg,		\
++			       _regs_num, _itable, _factors,		\
++			       _udelay, _k1, _k2)			\
++	SPRD_PLL_WITH_ITABLE_K_FVCO(_struct, _name, _parent, _reg,	\
++				    _regs_num, _itable, _factors,	\
++				    _udelay, _k1, _k2, 0, 0)
++
++#define SPRD_PLL_WITH_ITABLE_1K(_struct, _name, _parent, _reg,		\
++				_regs_num, _itable, _factors, _udelay)	\
++	SPRD_PLL_WITH_ITABLE_K_FVCO(_struct, _name, _parent, _reg,	\
++				    _regs_num, _itable, _factors,	\
++				    _udelay, 1000, 1000, 0, 0)
++
++static inline struct sprd_pll *hw_to_sprd_pll(struct clk_hw *hw)
 +{
 +	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
 +
-+	return container_of(common, struct sprd_comp, common);
++	return container_of(common, struct sprd_pll, common);
 +}
 +
-+extern const struct clk_ops sprd_comp_ops;
-+extern spinlock_t sprd_comp_lock;
++extern const struct clk_ops sprd_pll_ops;
 +
-+#endif /* _SPRD_COMPOSITE_H_ */
++#endif /* _SPRD_PLL_H_ */
 -- 
 2.7.4
