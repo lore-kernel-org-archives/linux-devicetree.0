@@ -1,105 +1,206 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Thu, 2 Nov 2017 11:53:08 -0700
-Message-ID: <bad9f43c-b080-fe40-620e-d1e6e5ab0f75@gmail.com>
-References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-7-david.daney@cavium.com>
- <20171102124339.GF4772@lunn.ch>
- <521d6b21-b7f0-66e0-4b49-cf95d83452d1@caviumnetworks.com>
- <20171102161016.GH24320@lunn.ch>
- <0f39046d-dc99-5c05-d918-10952cd20e1b@caviumnetworks.com>
- <20171102165605.GJ24320@lunn.ch>
- <0168761e-cb18-e489-4689-8c9062aa316b@caviumnetworks.com>
+From: Frank Kunz <mailinglists-IVvsEgr+HHmq7E1W+NwWd16hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH] ARM: sun7i: Add Cubietech Einstein A20 board device-tree
+Date: Thu, 02 Nov 2017 19:59:04 +0100
+Message-ID: <4661874.z7VF5iD9hg@donald>
+References: <20171102143534.19353-1-mailinglists@kunz-im-inter.net> <20171102155736.qab746tkaspfe47n@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0168761e-cb18-e489-4689-8c9062aa316b-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171102155736.qab746tkaspfe47n@flea>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2017 11:31 AM, David Daney wrote:
-> On 11/02/2017 09:56 AM, Andrew Lunn wrote:
->>> OK, now I think I understand.  Yes, the MAC can be hardwired to a
->>> switch.
->>> In fact, there are system designs that do exactly that.
->>>
->>> We try to handle this case by not having a "phy-handle" property in the
->>> device tree.  The link to the remote device (switch IC in this case) is
->>> brought up on ndo_open()
->>
->> O.K, so you totally ignore the Linux way of doing this and hack
->> together your own proprietary solution.
+Am Donnerstag, 2. November 2017, 16:57:36 CET schrieb Maxime Ripard:
+> Hi Frank,
 > 
-> I am going to add handling of the "phy-mode" property, but other than
-> that I don't know what the "Linux way" of specifying a hard MAC-to-MAC
-> connection with no intervening phy devices is.  Wether the remote MAC is
-> a switch, or something else, would seem to be irrelevant.  All we are
-> concerned about in this code is putting the thing into a state where
-> data flows in both directions through the MAC.
+> Thanks for your patch.
+> 
+> On Thu, Nov 02, 2017 at 03:35:34PM +0100, Frank Kunz wrote:
+> > From: Frank Kunz <xxxxxmichl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> > 
+> > The Einstein A20 board is a Allwinner A20 based board with a credit card
+> > form factor.
+> > 
+> > Features:
+> > - Allwinner A20 SoC
+> > - DDR3 1GB RAM
+> > - 8GiB eMMC
+> > - AP6210 wifi/Bluetooth
+> > - RTC
+> > - Micro USB-OTG connector
+> > - UART0 debugging port
+> > - 200 pins stamp hole package
+> > 
+> > Signed-off-by: Frank Kunz <xxxxxmichl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> > ---
+> > 
+> >  arch/arm/boot/dts/Makefile               |   1 +
+> >  arch/arm/boot/dts/sun7i-a20-einstein.dts | 200
+> >  +++++++++++++++++++++++++++++++ 2 files changed, 201 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/sun7i-a20-einstein.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index faf46abaa4a2..f9158400ea0f 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -878,6 +878,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+> > 
+> >  	sun7i-a20-bananapro.dtb \
+> >  	sun7i-a20-cubieboard2.dtb \
+> >  	sun7i-a20-cubietruck.dtb \
+> > 
+> > +	sun7i-a20-einstein.dtb \
+> 
+> I guess it's not that obvious from what company that board is coming
+> from. Could you turn it into cubietech-einstein please?
 
-The canonical way to support that type of connections is to use use a
-fixed-link property describing the link between the two MACs, ideally
-putting the same fixed-link property on both sides.
-
-> 
-> A pointer to an existing device tree binding for an Ethernet device that
-> has no (or an optional) phy device would be useful, we can try to do the
-> same.
-> 
-> 
->>  
->>> There may be opportunities to improve how this works in the future,
->>> but the
->>> current code is serviceable.
->>
->> It might be serviceable, but it will never get into mainline. For
->> mainline, you need to use DSA.
->>
->> http://elixir.free-electrons.com/linux/v4.9.60/source/Documentation/networking/dsa/dsa.txt
->>
-> 
-> 
-> I am truly at a loss here.  That DSA document states:
-> 
->      Master network devices are regular, unmodified Linux
->      network device drivers for the CPU/management Ethernet
->      interface.
-> 
-> What modification do you suggest I make?
-
-If you support normal phy_device and fixed-link devices, you should be
-good as far as using PHYLIB and interfacing with Ethernet switchses
-using DSA for instance. What Andrew is asking you though is to make sure
-that the platform device dance between the bgx drivers and the other
-modules preserves the Device Tree parenting, of_node pointers such that
-a DSA switch, which needs to reference a CPU/management port, has a
-chance to successfully look up that node via of_find_net_device_by_node().
+No problem, I will rename it.
 
 > 
+> >  	sun7i-a20-hummingbird.dtb \
+> >  	sun7i-a20-itead-ibox.dtb \
+> >  	sun7i-a20-i12-tvbox.dtb \
+> > 
+> > diff --git a/arch/arm/boot/dts/sun7i-a20-einstein.dts
+> > b/arch/arm/boot/dts/sun7i-a20-einstein.dts new file mode 100644
+> > index 000000000000..59d46b08f21c
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/sun7i-a20-einstein.dts
+> > @@ -0,0 +1,200 @@
+> > +/*
+> > + * Copyright 2017 Frank Kunz
+> > + *
+> > + * Frank Kunz <xxxxxmichl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This file is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of the
+> > + *     License, or (at your option) any later version.
+> > + *
+> > + *     This file is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "sun7i-a20.dtsi"
+> > +#include "sunxi-common-regulators.dtsi"
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +/ {
+> > +	model = "Cubietech Einstein A20";
+> > +	compatible = "cubietech,einstein-a20", "allwinner,sun7i-a20";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:115200n8";
+> > +	};
+> > +
+> > +	mmc3_pwrseq: mmc3_pwrseq {
+> > +		compatible = "mmc-pwrseq-simple";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&mmc3_pwrseq_pin_ea20>;
 > 
->>
->> Getting back to my original point, having these platform devices can
->> cause issues for DSA. Freescale FMAN has a similar architecture, and
->> it took a while to restructure it to make DSA work.
->>
->> https://www.spinics.net/lists/netdev/msg459394.html
->>
->>     Andrew
->>
+> You don't need those GPIO pinctrl nodes, you can remove all of them.
+
+Fixed.
+
 > 
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +		reset-gpios = <&pio 7 9 GPIO_ACTIVE_LOW>; /* PH9 WIFI-SHDN */
+> > +	};
+> > +};
+> > +
+> > +&cpu0 {
+> > +	cpu-supply = <&reg_dcdc2>;
+> > +};
+> > +
+> > +&ehci0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&i2c0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&i2c0_pins_a>;
+> > +	status = "okay";
+> > +
+> > +	axp209: pmic@34 {
+> > +		reg = <0x34>;
+> > +		interrupt-parent = <&nmi_intc>;
+> > +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> > +	};
+> > +};
+> > +
+> > +&mmc2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc2_pins_a>;
+> > +	vmmc-supply = <&reg_vcc3v3>;
+> 
+> What regulator is this connected to on the PMIC?
 
+Fixed, On the schematic it is finally connected to 3v0.
 
--- 
-Florian
+> 
+> > +	bus-width = <4>;
+> > +	non-removable;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&mmc3 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&mmc3_pins_a>;
+> > +	vmmc-supply = <&reg_vcc3v3>;
+> 
+> Same question here.
+
+Same fix here, connected on schematic to 3v0.
+
+> 
+> Looks good otherwise, thanks!
+> Maxime
+
+Thanks for your feedback, new patch is on the way.
+
+Br,
+Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
