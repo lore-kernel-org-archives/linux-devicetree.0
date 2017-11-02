@@ -1,62 +1,31 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/1] ARM: dts: sunxi: sun8i-h3-nanopi-m1-plus: Add
- missing regulator
-Date: Thu, 2 Nov 2017 09:03:03 +0100
-Message-ID: <20171102080303.75ej6sygyzwuqrf3@flea>
-References: <20171101080357.4241-1-clabbe.montjoie@gmail.com>
- <20171101080357.4241-2-clabbe.montjoie@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v6 1/9] dt-bindings: ARM: Mediatek: Document bindings for
+ MT2712
+Date: Thu, 2 Nov 2017 01:03:25 -0700
+Message-ID: <20171102080325.GA11011@codeaurora.org>
+References: <1508731840-4231-1-git-send-email-weiyi.lu@mediatek.com>
+ <1508731840-4231-2-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ztnmn7rs3kxdsego"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171101080357.4241-2-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1508731840-4231-2-git-send-email-weiyi.lu@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Weiyi Lu <weiyi.lu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+On 10/23, Weiyi Lu wrote:
+> This patch adds the binding documentation for apmixedsys, bdpsys,
+> imgsys, imgsys, infracfg, mcucfg, mfgcfg, mmsys, pericfg, topckgen,
+> vdecsys and vencsys for Mediatek MT2712.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
 
---ztnmn7rs3kxdsego
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to clk-next
 
-On Wed, Nov 01, 2017 at 09:03:57AM +0100, Corentin Labbe wrote:
-> This patch add the missing regulator for sun8i-h3-nanopi-m1-plus.
->=20
-> Fixes: ("ARM: dts: sunxi: Restore EMAC changes (boards)")
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-
-Squashed into your previous commit, please at least make a compile
-test next time.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ztnmn7rs3kxdsego
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ+tE3AAoJEBx+YmzsjxAg6kIQALHIzQggCGtlC0RDfloVzbOX
-YV1znBi6oBIzu2v6gzyRjV/83vQx8BP+mDrhaINGwW4wPxoUfWL4CG08bJlrtcqy
-xtOCQ9Dp9UGuxWwLe3OVQXSB/swm9htHBpvUmRbSMlEGqu0Afx8+vj71JfKDTt2F
-ldwAUol2geFMKei9H96/soJLttKn7jQMBlbVvlDp1zHGNL50gUW5exUJURgY5uf5
-uYG0FF+0aXuaRc0M39hqHfKs9/68F7VdMv4eHvJmMb1PFIcFoGs2dIXS+1fdRjxg
-5OabDzrEDPFpmizEet06QNPsQMNegvdpHwVPf0ICJeyZ6jlynjhquE2VsNGlQH1H
-MjUZ6V31lMztAKyQW747hBcw6aCy/lqmGSTy/3MEo3rkHU2K3iHWRHHWBe8ivtDd
-HuDKz0CSyu3hRSJhm23PeSApglHDo7PBhLhn/7117OstNUsleH6S9czomWC3xq8t
-u9x4438Hcu+dneoCN4uEueKBkdtJmfpfxw4klYk8ZN0hmKio3W4KySdy31D8XQyh
-mRcBBDfXWFMsVBsCN63/9cswX5lfS7pQOqYixWEXf8jqRxQeOt06ZuymTQjvxVtX
-y9EemZnqTZubhXEfKY+trai2UwWzjKS0wz2BDlYxVky+C4O8gWA9K0ujmtCbWxOo
-melyrURP9P64Y3lyVbwE
-=Xdc+
------END PGP SIGNATURE-----
-
---ztnmn7rs3kxdsego--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
