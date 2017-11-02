@@ -1,35 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: fsl: dspi: Add a compatible string
- for ls1088a DSPI
-Date: Wed, 1 Nov 2017 19:14:16 -0500
-Message-ID: <20171102001416.6etwlhfauu7auc7p@rob-hp-laptop>
-References: <20171101034015.41114-1-Zhiqiang.Hou@nxp.com>
- <20171101034015.41114-3-Zhiqiang.Hou@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] gpio: gpiolib: Generalise state persistence
+ beyond sleep
+Date: Wed, 1 Nov 2017 19:15:31 -0500
+Message-ID: <20171102001531.6j7isyrcwjjwovho@rob-hp-laptop>
+References: <20171101040457.1200-1-andrew@aj.id.au>
+ <20171101040457.1200-2-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171101034015.41114-3-Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiqiang Hou <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org
+In-Reply-To: <20171101040457.1200-2-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-gpio@vger.kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, frowand.list@gmail.com, joel@jms.id.au, ckeepax@opensource.wolfsonmicro.com, ldewangan@nvidia.com, ryan_chen@aspeedtech.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 11:40:15AM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+On Wed, Nov 01, 2017 at 03:04:56PM +1100, Andrew Jeffery wrote:
+> General support for state persistence is added to gpiolib with the
+> introduction of a new pinconf parameter to propagate the request to
+> hardware. The existing persistence support for sleep is adapted to
+> include hardware support if the GPIO driver provides it. Persistence
+> continues to be enabled by default; in-kernel consumers can opt out, but
+> userspace (currently) does not have a choice.
 > 
-> Add a new compatible string "fsl,ls1088a-dspi".
+> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
+> renamed, dropping the SLEEP prefix to reflect that the concept is no
+> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
+> could initially be misinterpreted, so I've further changed the symbols
+> to *_TRANSITORY and *_PERSISTENT to address this.
 > 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+> The sysfs interface is modified only to keep consistency with the
+> chardev interface in enforcing persistence for userspace exports.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpio/gpiolib-of.c               |  6 ++--
+>  drivers/gpio/gpiolib-sysfs.c            | 14 +++++---
+>  drivers/gpio/gpiolib.c                  | 61 ++++++++++++++++++++++++++++++---
+>  drivers/gpio/gpiolib.h                  |  2 +-
 
-"dt-bindings: spi: " for the subject. Otherwise,
+>  include/dt-bindings/gpio/gpio.h         |  6 ++--
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  include/linux/gpio/consumer.h           |  8 +++++
+>  include/linux/gpio/machine.h            |  4 +--
+>  include/linux/of_gpio.h                 |  2 +-
+>  include/linux/pinctrl/pinconf-generic.h |  2 ++
+>  9 files changed, 87 insertions(+), 18 deletions(-)
