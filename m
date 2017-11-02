@@ -1,90 +1,64 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: sam9x5: MTD numbering changed
-Date: Thu, 2 Nov 2017 15:36:21 +0100
-Message-ID: <20171102153621.677c6ae8@bbrezillon>
-References: <1509621436.16695.3.camel@gmail.com>
-        <20171102133954.055ce285@bbrezillon>
-        <1509632027.16695.5.camel@gmail.com>
+From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Subject: Re: [PATCH v7 2/2] bus: add driver for the Technologic Systems NBUS
+Date: Thu, 2 Nov 2017 10:37:45 -0400
+Message-ID: <b7a79314-66ff-6f09-6e53-aa548286b962@savoirfairelinux.com>
+References: <20171101171433.14445-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20171101171433.14445-2-sebastien.bourdelin@savoirfairelinux.com>
+ <CACRpkdY4Y9g2PAXbt11e3mSzJk2Bri4WNXm-5dQ2iyTegBNYVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509632027.16695.5.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY4Y9g2PAXbt11e3mSzJk2Bri4WNXm-5dQ2iyTegBNYVw@mail.gmail.com>
+Content-Language: fr-classic
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel <kernel@savoirfairelinux.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Featherston <mark@embeddedarm.com>, kris@embeddedarm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 02 Nov 2017 15:13:47 +0100
-Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Linus,
 
-> Le jeudi 02 novembre 2017 à 13:39 +0100, Boris Brezillon a écrit :
-> > +Nicolas
-> > 
-> > Hi Richard,
-> > 
-> > On Thu, 02 Nov 2017 12:17:16 +0100
-> > Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >   
-> > > Hi,
-> > > 
-> > > I've got an at91sam9g35-cm based board, with 4 partition on the
-> > > spi-
-> > > dataflas and 5 partitions on the NAND flash.
-> > > Before commit 1004a2977bdc ("ARM: dts: at91: Switch to the new NAND
-> > > bindings"),
-> > > the NAND partitions were mtd0-4 and spi-dataflash partitions mtd5-
-> > > 8.
-> > > 
-> > > Since commit 1004a2977bdc ("ARM: dts: at91: Switch to the new NAND
-> > > bindings"),
-> > > the spi-dataflash partitions are discovered before the NAND
-> > > partitions.
-> > > So NAND partition became mtd4-8 and spi-dataflash partition mtd0-3.
-> > > 
-> > > This broke some script that relied on the mtd numbering.
-> > > 
-> > > Updating those scripts to rely on the mtd device name instead of
-> > > number is not really a problem. The real problem is when an older
-> > > script using mtd numbering is run on the new system : I expect dead
-> > > kittens everywhere !  
-> > 
-> > Crap! That was one of the thing I was afraid of when changing the
-> > binding: probe order has an impact on ids assigned to MTD devs, and
-> > since things are not defined at the same place in the DT, it changes
-> > the probe order.
-> >   
-> > > 
-> > > So, I'd like to know if there's a way to force the older numbering
-> > > ?  
-> > 
-> > Reverting the patches is probably the easiest way (and it's easily
-> > backportable). Now, if we want to switch to the new bindings at some
-> > point we'll need to support DT aliases for mtd devs:
-> > 
-> > aliases {
-> > 	mtdX = &flashpartN;
-> > 	mtdY = &flashdevM;
-> > };
-> > 
-> > The problem with this solution is that it only works if all
-> > partitions
-> > are defined in the DT, which is not always the case (they can be
-> > defined
-> > on the command line with mtdparts=).  
-> Yes, and if they are different from the ones declared in
-> at91sam9x5cm.dtsi, they are likely defined with mtdparts=, since AFAIK,
-> we can't remove a declared partitionning.
+On 11/02/2017 10:22 AM, Linus Walleij wrote:
+> On Wed, Nov 1, 2017 at 6:14 PM, Sebastien Bourdelin
+> <sebastien.bourdelin@savoirfairelinux.com> wrote:
 > 
-> I'll disable the ebi and switch back to the old binding in my dts for
-> now.
+>> This driver implements a GPIOs bit-banged bus, called the NBUS by
+>> Technologic Systems. It is used to communicate with the peripherals in
+>> the FPGA on the TS-4600 SoM.
+>>
+>> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> This is still a very nice driver.
 
-There's another trick you can try: move the node definition around to
-try to make the ECC and NAND controller drivers probe before the SPI
-one.
+Thanks that's very kind and greatly appreciate.
+> 
+> If you are working on supplemental patches: from the next merge window
+> we will have:
+> 
+> + int gpiod_get_array_value_cansleep(unsigned int array_size,
+> +                                          struct gpio_desc **desc_array,
+> +                                          int *value_array);
+> 
+> See:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel&id=eec1d566cdf94b57e8f5ba9fe60eea214929bcfc
+> 
+> If your GPIO controller also has .get_multiple() implemented it just
+> becomes one register read if you're lucky.
+> 
+Ok, i guess i will not if this is fine like that, i'll see if someone
+suggested some changes.
 
-It's ugly as hell, but should allow you to keep the new binding.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> BTW do you have a way upstream for this patch? ARM SoC?
+Honestly i have no idea, do you have a recommandation for this kind of
+bus driver? should i re-submit just this patch to a specific tree?
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Thanks again for your inputs.
+
+Best regards,
+Sebastien Bourdelin.
