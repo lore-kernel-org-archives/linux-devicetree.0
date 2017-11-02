@@ -1,206 +1,81 @@
-From: Frank Kunz <mailinglists-IVvsEgr+HHmq7E1W+NwWd16hYfS7NtTn@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun7i: Add Cubietech Einstein A20 board device-tree
-Date: Thu, 02 Nov 2017 19:59:04 +0100
-Message-ID: <4661874.z7VF5iD9hg@donald>
-References: <20171102143534.19353-1-mailinglists@kunz-im-inter.net> <20171102155736.qab746tkaspfe47n@flea>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 00/12] bcm63xx-rng conversion to bcm2835-rng
+Date: Thu, 2 Nov 2017 20:00:40 +0100 (CET)
+Message-ID: <1883956051.127519.1509649240138@email.1und1.de>
+References: <20171102010408.27736-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102155736.qab746tkaspfe47n@flea>
+In-Reply-To: <20171102010408.27736-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Harald Freudenberger <freude-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Mark
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 2. November 2017, 16:57:36 CET schrieb Maxime Ripard:
-> Hi Frank,
-> 
-> Thanks for your patch.
-> 
-> On Thu, Nov 02, 2017 at 03:35:34PM +0100, Frank Kunz wrote:
-> > From: Frank Kunz <xxxxxmichl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > 
-> > The Einstein A20 board is a Allwinner A20 based board with a credit card
-> > form factor.
-> > 
-> > Features:
-> > - Allwinner A20 SoC
-> > - DDR3 1GB RAM
-> > - 8GiB eMMC
-> > - AP6210 wifi/Bluetooth
-> > - RTC
-> > - Micro USB-OTG connector
-> > - UART0 debugging port
-> > - 200 pins stamp hole package
-> > 
-> > Signed-off-by: Frank Kunz <xxxxxmichl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > ---
-> > 
-> >  arch/arm/boot/dts/Makefile               |   1 +
-> >  arch/arm/boot/dts/sun7i-a20-einstein.dts | 200
-> >  +++++++++++++++++++++++++++++++ 2 files changed, 201 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/sun7i-a20-einstein.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index faf46abaa4a2..f9158400ea0f 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -878,6 +878,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
-> > 
-> >  	sun7i-a20-bananapro.dtb \
-> >  	sun7i-a20-cubieboard2.dtb \
-> >  	sun7i-a20-cubietruck.dtb \
-> > 
-> > +	sun7i-a20-einstein.dtb \
-> 
-> I guess it's not that obvious from what company that board is coming
-> from. Could you turn it into cubietech-einstein please?
+Hi Florian,
 
-No problem, I will rename it.
+> Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 2. November 2017 um 02:03 geschrieben:
+> 
+> 
+> Hi,
+> 
+> As it usually happens when there is a fair amount of HW IP block re-use,
+> competing implementations show up. In that case the BCM2835 HWRNG driver and
+> the BCM63xx RNG driver have exactly the same register offsets and this is
+> indeed the same piece of HW.
+> 
+> This patch series first prepares the bcm2835-rng to be more future proof and
+> support newer platforms, and the last part brings in what is necessary to
+> migrate the bcm63xx-rng over to bcm2835-rng. Finally we delete bcm63xx-rng
+> completely.
+> 
+> The reason why BCM2835 RNG was kept over BCM63xx RNG is because the former
+> deals correctly with a warm up count and the number of words available in the
+> FIFO size.
+
+are these the same patches as in this branch [1]?
+
+https://github.com/ffainelli/linux/commits/rng-consolidation
+
+Regards
+Stefan
 
 > 
-> >  	sun7i-a20-hummingbird.dtb \
-> >  	sun7i-a20-itead-ibox.dtb \
-> >  	sun7i-a20-i12-tvbox.dtb \
-> > 
-> > diff --git a/arch/arm/boot/dts/sun7i-a20-einstein.dts
-> > b/arch/arm/boot/dts/sun7i-a20-einstein.dts new file mode 100644
-> > index 000000000000..59d46b08f21c
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/sun7i-a20-einstein.dts
-> > @@ -0,0 +1,200 @@
-> > +/*
-> > + * Copyright 2017 Frank Kunz
-> > + *
-> > + * Frank Kunz <xxxxxmichl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > + *
-> > + * This file is dual-licensed: you can use it either under the terms
-> > + * of the GPL or the X11 license, at your option. Note that this dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> > + *
-> > + *  a) This file is free software; you can redistribute it and/or
-> > + *     modify it under the terms of the GNU General Public License as
-> > + *     published by the Free Software Foundation; either version 2 of the
-> > + *     License, or (at your option) any later version.
-> > + *
-> > + *     This file is distributed in the hope that it will be useful,
-> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + *     GNU General Public License for more details.
-> > + *
-> > + * Or, alternatively,
-> > + *
-> > + *  b) Permission is hereby granted, free of charge, to any person
-> > + *     obtaining a copy of this software and associated documentation
-> > + *     files (the "Software"), to deal in the Software without
-> > + *     restriction, including without limitation the rights to use,
-> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > + *     sell copies of the Software, and to permit persons to whom the
-> > + *     Software is furnished to do so, subject to the following
-> > + *     conditions:
-> > + *
-> > + *     The above copyright notice and this permission notice shall be
-> > + *     included in all copies or substantial portions of the Software.
-> > + *
-> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "sun7i-a20.dtsi"
-> > +#include "sunxi-common-regulators.dtsi"
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +/ {
-> > +	model = "Cubietech Einstein A20";
-> > +	compatible = "cubietech,einstein-a20", "allwinner,sun7i-a20";
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial0:115200n8";
-> > +	};
-> > +
-> > +	mmc3_pwrseq: mmc3_pwrseq {
-> > +		compatible = "mmc-pwrseq-simple";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&mmc3_pwrseq_pin_ea20>;
+> Thanks!
 > 
-> You don't need those GPIO pinctrl nodes, you can remove all of them.
-
-Fixed.
-
+> Florian Fainelli (12):
+>   hwrng: bcm2835-rng: Obtain base register via resource
+>   hwrng: bcm2835-rng: Define a driver private context
+>   hwrng: bcm2835-rng: Move enabling to hwrng::init
+>   hwrng: bcm2835-rng: Implementation cleanup callback
+>   hwrng: bcm2835-rng: Use device managed helpers
+>   hwrng: bcm2835-rng: Rework interrupt masking
+>   hwrng: bcm2835-rng: Manage an optional clock
+>   hwrng: bcm2835-rng: Abstract I/O accessors
+>   hwrng: bcm2835-rng: Add Broadcom MIPS I/O accessors
+>   dt-bindings: rng: Incorporate brcm,bcm6368.txt binding
+>   hwrng: bcm2835-rng: Enable BCM2835 RNG to work on BCM63xx platforms
+>   hwrng: bcm63xx-rng: Remove since bcm2835-rng takes over
 > 
-> > +		reset-gpios = <&pio 7 9 GPIO_ACTIVE_LOW>; /* PH9 WIFI-SHDN */
-> > +	};
-> > +};
-> > +
-> > +&cpu0 {
-> > +	cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> > +&ehci0 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&i2c0 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&i2c0_pins_a>;
-> > +	status = "okay";
-> > +
-> > +	axp209: pmic@34 {
-> > +		reg = <0x34>;
-> > +		interrupt-parent = <&nmi_intc>;
-> > +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> > +	};
-> > +};
-> > +
-> > +&mmc2 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc2_pins_a>;
-> > +	vmmc-supply = <&reg_vcc3v3>;
+>  .../devicetree/bindings/rng/brcm,bcm2835.txt       |  22 ++-
+>  .../devicetree/bindings/rng/brcm,bcm6368.txt       |  17 ---
+>  drivers/char/hw_random/Kconfig                     |  20 +--
+>  drivers/char/hw_random/Makefile                    |   1 -
+>  drivers/char/hw_random/bcm2835-rng.c               | 166 ++++++++++++++-------
+>  drivers/char/hw_random/bcm63xx-rng.c               | 154 -------------------
+>  6 files changed, 139 insertions(+), 241 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm6368.txt
+>  delete mode 100644 drivers/char/hw_random/bcm63xx-rng.c
 > 
-> What regulator is this connected to on the PMIC?
-
-Fixed, On the schematic it is finally connected to 3v0.
-
+> -- 
+> 2.9.3
 > 
-> > +	bus-width = <4>;
-> > +	non-removable;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&mmc3 {
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&mmc3_pins_a>;
-> > +	vmmc-supply = <&reg_vcc3v3>;
 > 
-> Same question here.
-
-Same fix here, connected on schematic to 3v0.
-
-> 
-> Looks good otherwise, thanks!
-> Maxime
-
-Thanks for your feedback, new patch is on the way.
-
-Br,
-Frank
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
