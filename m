@@ -1,112 +1,177 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [RFCv2 PATCH 14/36] iommu/arm-smmu-v3: Add support for
- Substream IDs
-Date: Thu, 2 Nov 2017 12:49:32 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838454887@FRAEML521-MBX.china.huawei.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-15-jean-philippe.brucker@arm.com>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [patch v10 1/4] drivers: jtag: Add JTAG core driver (fwd)
+Date: Thu, 2 Nov 2017 21:06:02 +0800 (CST)
+Message-ID: <alpine.DEB.2.20.1711022104590.2165@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171006133203.22803-15-jean-philippe.brucker@arm.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "xieyisheng (A)" <xieyisheng1@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "rfranz@cavium.com" <rfranz@cavium.com>, "lenb@kernel.org" <lenb@kernel.org>, "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Leizhen (ThunderTown
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+It looks like the return on line 137 belongs after line 138.
 
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-bounces@lists.infradead.org]
-> On Behalf Of Jean-Philippe Brucker
-> Sent: Friday, October 06, 2017 2:32 PM
-> To: linux-arm-kernel@lists.infradead.org; linux-pci@vger.kernel.org; linux-
-> acpi@vger.kernel.org; devicetree@vger.kernel.org; iommu@lists.linux-
-> foundation.org
-> Cc: mark.rutland@arm.com; xieyisheng (A) <xieyisheng1@huawei.com>;
-> Gabriele Paoloni <gabriele.paoloni@huawei.com>; catalin.marinas@arm.com;
-> will.deacon@arm.com; okaya@codeaurora.org; yi.l.liu@intel.com;
-> lorenzo.pieralisi@arm.com; ashok.raj@intel.com; tn@semihalf.com;
-> joro@8bytes.org; rfranz@cavium.com; lenb@kernel.org;
-> jacob.jun.pan@linux.intel.com; alex.williamson@redhat.com;
-> robh+dt@kernel.org; Leizhen (ThunderTown) <thunder.leizhen@huawei.com>;
-> bhelgaas@google.com; dwmw2@infradead.org; liubo (CU)
-> <liubo95@huawei.com>; rjw@rjwysocki.net; robdclark@gmail.com;
-> hanjun.guo@linaro.org; sudeep.holla@arm.com; robin.murphy@arm.com;
-> nwatters@codeaurora.org
-> Subject: [RFCv2 PATCH 14/36] iommu/arm-smmu-v3: Add support for
-> Substream IDs
-> 
-> At the moment, the SMMUv3 driver offers only one stage-1 or stage-2
-> address space to each device. SMMUv3 allows to associate multiple address
-> spaces per device. In addition to the Stream ID (SID), that identifies a
-> device, we can now have Substream IDs (SSID) identifying an address space.
-> In PCIe lingo, SID is called Requester ID (RID) and SSID is called Process
-> Address-Space ID (PASID).
+julia
 
-We had a go with this series on HiSIlicon D05 platform which doesn't have
-support for ssids/ATS/PRI, to make sure it generally works.
+---------- Forwarded message ----------
+Date: Thu, 2 Nov 2017 21:02:22 +0800
+From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: kbuild-JC7UmRfGjtg@public.gmane.org
+Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [patch v10 1/4] drivers: jtag: Add JTAG core driver
 
-But observed the below crash on boot,
+In-Reply-To: <1509365528-28803-2-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+References: <1509365528-28803-2-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-[   16.009084] WARNING: CPU: 59 PID: 391 at mm/page_alloc.c:3883 __alloc_pages_nodemask+0x19c/0xc48
-[   16.026797] Modules linked in:
-[   16.032944] CPU: 59 PID: 391 Comm: kworker/59:1 Not tainted 4.14.0-rc1-159539-ge42aca3 #236
-[...]
-[   16.068206] Workqueue: events deferred_probe_work_func
-[   16.078557] task: ffff8017d38a0000 task.stack: ffff00000b198000
-[   16.090486] PC is at __alloc_pages_nodemask+0x19c/0xc48
-[   16.101013] LR is at __alloc_pages_nodemask+0xe0/0xc48
-[   16.469220] [<ffff000008186b94>] __alloc_pages_nodemask+0x19c/0xc48
-[   16.481854] [<ffff0000081d65b0>] alloc_pages_current+0x80/0xcc
-[   16.493607] [<ffff000008182be8>] __get_free_pages+0xc/0x38
-[   16.504661] [<ffff0000083c4d58>] swiotlb_alloc_coherent+0x64/0x190
-[   16.517117] [<ffff00000809824c>] __dma_alloc+0x110/0x204
-[   16.527820] [<ffff00000858e850>] dmam_alloc_coherent+0x88/0xf0
-[   16.539575] [<ffff000008568884>] arm_smmu_domain_finalise_s1+0x60/0x248
-[   16.552909] [<ffff00000856c104>] arm_smmu_attach_dev+0x264/0x300
-[   16.565013] [<ffff00000855d40c>] __iommu_attach_device+0x48/0x5c
-[   16.577117] [<ffff00000855e698>] iommu_group_add_device+0x144/0x3a4
-[   16.589746] [<ffff00000855ed18>] iommu_group_get_for_dev+0x70/0xf8
-[   16.602201] [<ffff00000856a314>] arm_smmu_add_device+0x1a4/0x418
-[   16.614308] [<ffff00000849dfcc>] iort_iommu_configure+0xf0/0x16c
-[   16.626416] [<ffff000008468c50>] acpi_dma_configure+0x30/0x70
-[   16.637994] [<ffff00000858f00c>] dma_configure+0xa8/0xd4
-[   16.648695] [<ffff00000857706c>] driver_probe_device+0x1a4/0x2dc
-[   16.673081] [<ffff0000085752c8>] bus_for_each_drv+0x54/0x94
-[   16.684307] [<ffff000008576db0>] __device_attach+0xc4/0x12c
-[   16.695533] [<ffff000008577350>] device_initial_probe+0x10/0x18
-[   16.707462] [<ffff0000085762b4>] bus_probe_device+0x90/0x98
+Hi Oleksandr,
 
-After a bit of debug it looks like on platforms where ssid is not supported,
-s1_cfg.num_contexts is set to zero and it eventually results in this crash 
-in,
-arm_smmu_domain_finalise_s1() -->arm_smmu_alloc_cd_tables()-->
-arm_smmu_alloc_cd_leaf_table() as num_leaf_entries is zero.
+I love your patch! Perhaps something to improve:
 
-With the below fix, it works on D05 now,
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.14-rc7]
+[cannot apply to next-20171102]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8ad90e2..51f5821 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2433,7 +2433,10 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain,
-                        domain->min_pasid = 1;
-                        domain->max_pasid = master->num_ssids - 1;
-                        smmu_domain->s1_cfg.num_contexts = master->num_ssids;
-+               } else {
-+                       smmu_domain->s1_cfg.num_contexts = 1;
-                }
-+
-                smmu_domain->s1_cfg.can_stall = master->ste.can_stall;
-                break;
-        case ARM_SMMU_DOMAIN_NESTED:
+url:    https://github.com/0day-ci/linux/commits/Oleksandr-Shamray/JTAG-driver-introduction/20171102-045624
+:::::: branch date: 16 hours ago
+:::::: commit date: 16 hours ago
 
+>> drivers/jtag/jtag.c:142:16-25: ERROR: reference preceded by free on line 138
 
-I am not sure this is right place do this. Please take a look.
+# https://github.com/0day-ci/linux/commit/1a7d120a0e3ba075879bc00ab136c4608f16a2a7
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 1a7d120a0e3ba075879bc00ab136c4608f16a2a7
+vim +142 drivers/jtag/jtag.c
 
-Thanks,
-Shameer
+1a7d120a Oleksandr Shamray 2017-10-30   46
+1a7d120a Oleksandr Shamray 2017-10-30   47  static long jtag_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+1a7d120a Oleksandr Shamray 2017-10-30   48  {
+1a7d120a Oleksandr Shamray 2017-10-30   49  	struct jtag *jtag = file->private_data;
+1a7d120a Oleksandr Shamray 2017-10-30   50  	struct jtag_run_test_idle idle;
+1a7d120a Oleksandr Shamray 2017-10-30   51  	struct jtag_xfer xfer;
+1a7d120a Oleksandr Shamray 2017-10-30   52  	u8 *xfer_data;
+1a7d120a Oleksandr Shamray 2017-10-30   53  	u32 data_size;
+1a7d120a Oleksandr Shamray 2017-10-30   54  	u32 value;
+1a7d120a Oleksandr Shamray 2017-10-30   55  	int err;
+1a7d120a Oleksandr Shamray 2017-10-30   56
+1a7d120a Oleksandr Shamray 2017-10-30   57  	if (!arg)
+1a7d120a Oleksandr Shamray 2017-10-30   58  		return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30   59
+1a7d120a Oleksandr Shamray 2017-10-30   60  	switch (cmd) {
+1a7d120a Oleksandr Shamray 2017-10-30   61  	case JTAG_GIOCFREQ:
+1a7d120a Oleksandr Shamray 2017-10-30   62
+1a7d120a Oleksandr Shamray 2017-10-30   63  		if (jtag->ops->freq_get)
+1a7d120a Oleksandr Shamray 2017-10-30   64  			err = jtag->ops->freq_get(jtag, &value);
+1a7d120a Oleksandr Shamray 2017-10-30   65  		else
+1a7d120a Oleksandr Shamray 2017-10-30   66  			err = -EOPNOTSUPP;
+1a7d120a Oleksandr Shamray 2017-10-30   67  		if (err)
+1a7d120a Oleksandr Shamray 2017-10-30   68  			break;
+1a7d120a Oleksandr Shamray 2017-10-30   69
+1a7d120a Oleksandr Shamray 2017-10-30   70  		if (put_user(value, (__u32 *)arg))
+1a7d120a Oleksandr Shamray 2017-10-30   71  			err = -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30   72  		break;
+1a7d120a Oleksandr Shamray 2017-10-30   73
+1a7d120a Oleksandr Shamray 2017-10-30   74  	case JTAG_SIOCFREQ:
+1a7d120a Oleksandr Shamray 2017-10-30   75  		if (get_user(value, (__u32 *)arg))
+1a7d120a Oleksandr Shamray 2017-10-30   76  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30   77  		if (value == 0)
+1a7d120a Oleksandr Shamray 2017-10-30   78  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30   79
+1a7d120a Oleksandr Shamray 2017-10-30   80  		if (jtag->ops->freq_set)
+1a7d120a Oleksandr Shamray 2017-10-30   81  			err = jtag->ops->freq_set(jtag, value);
+1a7d120a Oleksandr Shamray 2017-10-30   82  		else
+1a7d120a Oleksandr Shamray 2017-10-30   83  			err = -EOPNOTSUPP;
+1a7d120a Oleksandr Shamray 2017-10-30   84  		break;
+1a7d120a Oleksandr Shamray 2017-10-30   85
+1a7d120a Oleksandr Shamray 2017-10-30   86  	case JTAG_IOCRUNTEST:
+1a7d120a Oleksandr Shamray 2017-10-30   87  		if (copy_from_user(&idle, (void *)arg,
+1a7d120a Oleksandr Shamray 2017-10-30   88  				   sizeof(struct jtag_run_test_idle)))
+1a7d120a Oleksandr Shamray 2017-10-30   89  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30   90
+1a7d120a Oleksandr Shamray 2017-10-30   91  		if (idle.mode > JTAG_XFER_SW_MODE)
+1a7d120a Oleksandr Shamray 2017-10-30   92  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30   93
+1a7d120a Oleksandr Shamray 2017-10-30   94  		if (idle.endstate > JTAG_STATE_PAUSEDR)
+1a7d120a Oleksandr Shamray 2017-10-30   95  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30   96
+1a7d120a Oleksandr Shamray 2017-10-30   97  		if (jtag->ops->idle)
+1a7d120a Oleksandr Shamray 2017-10-30   98  			err = jtag->ops->idle(jtag, &idle);
+1a7d120a Oleksandr Shamray 2017-10-30   99  		else
+1a7d120a Oleksandr Shamray 2017-10-30  100  			err = -EOPNOTSUPP;
+1a7d120a Oleksandr Shamray 2017-10-30  101  		break;
+1a7d120a Oleksandr Shamray 2017-10-30  102
+1a7d120a Oleksandr Shamray 2017-10-30  103  	case JTAG_IOCXFER:
+1a7d120a Oleksandr Shamray 2017-10-30  104  		if (copy_from_user(&xfer, (void *)arg,
+1a7d120a Oleksandr Shamray 2017-10-30  105  				   sizeof(struct jtag_xfer)))
+1a7d120a Oleksandr Shamray 2017-10-30  106  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30  107
+1a7d120a Oleksandr Shamray 2017-10-30  108  		if (xfer.length >= JTAG_MAX_XFER_DATA_LEN)
+1a7d120a Oleksandr Shamray 2017-10-30  109  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30  110
+1a7d120a Oleksandr Shamray 2017-10-30  111  		if (xfer.mode > JTAG_XFER_SW_MODE)
+1a7d120a Oleksandr Shamray 2017-10-30  112  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30  113
+1a7d120a Oleksandr Shamray 2017-10-30  114  		if (xfer.type > JTAG_SDR_XFER)
+1a7d120a Oleksandr Shamray 2017-10-30  115  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30  116
+1a7d120a Oleksandr Shamray 2017-10-30  117  		if (xfer.direction > JTAG_WRITE_XFER)
+1a7d120a Oleksandr Shamray 2017-10-30  118  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30  119
+1a7d120a Oleksandr Shamray 2017-10-30  120  		if (xfer.endstate > JTAG_STATE_PAUSEDR)
+1a7d120a Oleksandr Shamray 2017-10-30  121  			return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30  122
+1a7d120a Oleksandr Shamray 2017-10-30  123  		data_size = DIV_ROUND_UP(xfer.length, BITS_PER_BYTE);
+1a7d120a Oleksandr Shamray 2017-10-30  124  		xfer_data = memdup_user(u64_to_user_ptr(xfer.tdio), data_size);
+1a7d120a Oleksandr Shamray 2017-10-30  125
+1a7d120a Oleksandr Shamray 2017-10-30  126  		if (!xfer_data)
+1a7d120a Oleksandr Shamray 2017-10-30  127  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30  128
+1a7d120a Oleksandr Shamray 2017-10-30  129  		if (jtag->ops->xfer) {
+1a7d120a Oleksandr Shamray 2017-10-30  130  			err = jtag->ops->xfer(jtag, &xfer, xfer_data);
+1a7d120a Oleksandr Shamray 2017-10-30  131  		} else {
+1a7d120a Oleksandr Shamray 2017-10-30  132  			kfree(xfer_data);
+1a7d120a Oleksandr Shamray 2017-10-30  133  			return -EOPNOTSUPP;
+1a7d120a Oleksandr Shamray 2017-10-30  134  		}
+1a7d120a Oleksandr Shamray 2017-10-30  135
+1a7d120a Oleksandr Shamray 2017-10-30  136  		if (err) {
+1a7d120a Oleksandr Shamray 2017-10-30  137  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30 @138  			kfree(xfer_data);
+1a7d120a Oleksandr Shamray 2017-10-30  139  		}
+1a7d120a Oleksandr Shamray 2017-10-30  140
+1a7d120a Oleksandr Shamray 2017-10-30  141  		err = copy_to_user(u64_to_user_ptr(xfer.tdio),
+1a7d120a Oleksandr Shamray 2017-10-30 @142  				   (void *)(xfer_data), data_size);
+1a7d120a Oleksandr Shamray 2017-10-30  143
+1a7d120a Oleksandr Shamray 2017-10-30  144  		if (err) {
+1a7d120a Oleksandr Shamray 2017-10-30  145  			kfree(xfer_data);
+1a7d120a Oleksandr Shamray 2017-10-30  146  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30  147  		}
+1a7d120a Oleksandr Shamray 2017-10-30  148
+1a7d120a Oleksandr Shamray 2017-10-30  149  		kfree(xfer_data);
+1a7d120a Oleksandr Shamray 2017-10-30  150  		if (copy_to_user((void *)arg, &xfer, sizeof(struct jtag_xfer)))
+1a7d120a Oleksandr Shamray 2017-10-30  151  			return -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30  152  		break;
+1a7d120a Oleksandr Shamray 2017-10-30  153
+1a7d120a Oleksandr Shamray 2017-10-30  154  	case JTAG_GIOCSTATUS:
+1a7d120a Oleksandr Shamray 2017-10-30  155  		if (jtag->ops->status_get)
+1a7d120a Oleksandr Shamray 2017-10-30  156  			err = jtag->ops->status_get(jtag, &value);
+1a7d120a Oleksandr Shamray 2017-10-30  157  		else
+1a7d120a Oleksandr Shamray 2017-10-30  158  			err = -EOPNOTSUPP;
+1a7d120a Oleksandr Shamray 2017-10-30  159  		if (err)
+1a7d120a Oleksandr Shamray 2017-10-30  160  			break;
+1a7d120a Oleksandr Shamray 2017-10-30  161
+1a7d120a Oleksandr Shamray 2017-10-30  162  		err = put_user(value, (__u32 *)arg);
+1a7d120a Oleksandr Shamray 2017-10-30  163  		if (err)
+1a7d120a Oleksandr Shamray 2017-10-30  164  			err = -EFAULT;
+1a7d120a Oleksandr Shamray 2017-10-30  165  		break;
+1a7d120a Oleksandr Shamray 2017-10-30  166
+1a7d120a Oleksandr Shamray 2017-10-30  167  	default:
+1a7d120a Oleksandr Shamray 2017-10-30  168  		return -EINVAL;
+1a7d120a Oleksandr Shamray 2017-10-30  169  	}
+1a7d120a Oleksandr Shamray 2017-10-30  170  	return err;
+1a7d120a Oleksandr Shamray 2017-10-30  171  }
+1a7d120a Oleksandr Shamray 2017-10-30  172
 
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
