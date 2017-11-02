@@ -1,88 +1,172 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
-Date: Thu, 2 Nov 2017 16:44:47 +0100
-Message-ID: <20171102154447.b5qo3rvu5djxupay@flea>
-References: <20171027150658.18509-1-icenowy@aosc.io>
- <9bca10cc95d04f87a1122bc582402310@aosc.io>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: sam9x5: MTD numbering changed
+Date: Thu, 2 Nov 2017 16:45:55 +0100
+Message-ID: <20171102164555.033dc99b@bbrezillon>
+References: <1509621436.16695.3.camel@gmail.com>
+        <20171102133954.055ce285@bbrezillon>
+        <1509632027.16695.5.camel@gmail.com>
+        <20171102160909.6eee6289@bbrezillon>
+        <1509636493.16695.9.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="766nqwxqmfxoxega"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9bca10cc95d04f87a1122bc582402310-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <1509636493.16695.9.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 02 Nov 2017 16:28:13 +0100
+Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
---766nqwxqmfxoxega
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +Nicolas
+> [its email got lost somehow]
+> Le jeudi 02 novembre 2017 à 16:09 +0100, Boris Brezillon a écrit :
+> > On Thu, 02 Nov 2017 15:13:47 +0100
+> > Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> > > Le jeudi 02 novembre 2017 à 13:39 +0100, Boris Brezillon a écrit :  
+> > > > +Nicolas
+> > > > 
+> > > > Hi Richard,
+> > > > 
+> > > > On Thu, 02 Nov 2017 12:17:16 +0100
+> > > > Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > >     
+> > > > > Hi,
+> > > > > 
+> > > > > I've got an at91sam9g35-cm based board, with 4 partition on the
+> > > > > spi-
+> > > > > dataflas and 5 partitions on the NAND flash.
+> > > > > Before commit 1004a2977bdc ("ARM: dts: at91: Switch to the new
+> > > > > NAND
+> > > > > bindings"),
+> > > > > the NAND partitions were mtd0-4 and spi-dataflash partitions
+> > > > > mtd5-
+> > > > > 8.
+> > > > > 
+> > > > > Since commit 1004a2977bdc ("ARM: dts: at91: Switch to the new
+> > > > > NAND
+> > > > > bindings"),
+> > > > > the spi-dataflash partitions are discovered before the NAND
+> > > > > partitions.
+> > > > > So NAND partition became mtd4-8 and spi-dataflash partition
+> > > > > mtd0-3.
+> > > > > 
+> > > > > This broke some script that relied on the mtd numbering.
+> > > > > 
+> > > > > Updating those scripts to rely on the mtd device name instead
+> > > > > of
+> > > > > number is not really a problem. The real problem is when an
+> > > > > older
+> > > > > script using mtd numbering is run on the new system : I expect
+> > > > > dead
+> > > > > kittens everywhere !    
+> > > > 
+> > > > Crap! That was one of the thing I was afraid of when changing the
+> > > > binding: probe order has an impact on ids assigned to MTD devs,
+> > > > and
+> > > > since things are not defined at the same place in the DT, it
+> > > > changes
+> > > > the probe order.
+> > > >     
+> > > > > 
+> > > > > So, I'd like to know if there's a way to force the older
+> > > > > numbering
+> > > > > ?    
+> > > > 
+> > > > Reverting the patches is probably the easiest way (and it's
+> > > > easily
+> > > > backportable). Now, if we want to switch to the new bindings at
+> > > > some
+> > > > point we'll need to support DT aliases for mtd devs:
+> > > > 
+> > > > aliases {
+> > > > 	mtdX = &flashpartN;
+> > > > 	mtdY = &flashdevM;
+> > > > };
+> > > > 
+> > > > The problem with this solution is that it only works if all
+> > > > partitions
+> > > > are defined in the DT, which is not always the case (they can be
+> > > > defined
+> > > > on the command line with mtdparts=).    
+> > > 
+> > > Yes, and if they are different from the ones declared in
+> > > at91sam9x5cm.dtsi, they are likely defined with mtdparts=, since
+> > > AFAIK,
+> > > we can't remove a declared partitionning.
+> > > 
+> > > I'll disable the ebi and switch back to the old binding in my dts
+> > > for
+> > > now.  
+> > > >     
+> > > > > (I tried poking around the DTS without succès).
+> > > > > 
+> > > > > any idea ?    
+> > > > 
+> > > > I don't have a perfect solution, but the problem you report
+> > > > clearly
+> > > > shows that relying on MTD numbering is unsafe and should be
+> > > > avoided.    
+> > > 
+> > > Clearly, but who doesn't ? ;)
+> > >   
+> > 
+> > Just had a lengthy discussion with Alexandre, and he brought a valid
+> > point: there has never been any guarantee on MTD numbering. Not only
+> > the order of DT nodes have an impact on the probe order, but also the
+> > order in which drivers are linked when creating the kernel image. Yes
+> > these things usually don't change, but I'm not sure it's a good idea
+> > to let user-space apps think it will never change in the future.
+> > 
+> > How about fixing the scripts you were referring to instead of
+> > reverting
+> > the change? What's the blocking point?  
+> 
+> I already fixed the user-space scripts (and actually, they predate the
+> device-tree era, so at that time, relying on MTD numbering wasn't so
+> bad :)).
+> Anyway, here's the blocking point :
+> 
+> We have firmwares with an embedded script to update our boards. (more
+> or less a FW + script in a zip file).
+> Those old firmwares are already in the wild and rely on the old MTD
+> numbering (yes, that's bad).
+> 
+> 
+> So, even if all new scripts are corrected in the new firmwares,
+> downgrading a board with an old firmware/old script will brick the
+> board.
+> So I'll have to detect that and forbid downgrading.
 
-On Thu, Nov 02, 2017 at 04:51:29PM +0800, Icenowy Zheng wrote:
-> =E5=9C=A8 2017-10-27 23:06=EF=BC=8CIcenowy Zheng =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > This patchset adds support for the SimpleFB on Allwinner SoCs with
-> > "Display Engine 2.0".
-> >=20
-> > PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
-> >=20
-> > PATCH 4 adds the pipeline strings for DE2 SimpleFB.
-> >=20
-> > PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
-> > for H3/H5 SoCs.
-> >=20
-> > PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
-> >=20
-> > Icenowy Zheng (10):
-> >   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
-> >   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
-> >   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
-> >   dt-bindings: simplefb-sunxi: add pipelines for DE2
-> >   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
-> >   arm64: allwinner: h5: add compatible string for DE2 CCU
-> >   ARM: sunxi: h3/h5: add simplefb nodes
-> >   dt-bindings: add binding for A64 DE2 CCU SRAM
-> >   arm64: allwinner: a64: add DE2 CCU for A64 SoC
-> >   arm64: allwinner: a64: add simplefb for A64 SoC
->=20
-> Maxime, could you review and, if possible, apply the H3/5
-> part of this patchset?
+Not sure what you refer to when you're talking about 'FW', but I'd
+expect it to contain a kernel [+ a dtb] + a rootfs, so if you're using
+an old "FW+update-script", you will still have the old numbering and
+the old script will work just fine, and if you switch to a newer version
+of the "FW+update-script" based on a 4.13 kernel+dtb you will anyway
+have the updated script. Am I missing something?
 
-This came a bit late, we're too close from the merge window
-now. Please resend them after -rc1 is out.
+> 
+> That's not the end of the world, but if I can find a trick to prevent
+> it, I'll be happier !
+> 
+> 
+> Regards,
+> 
+> Richard
+> 
+> 
+> > 
+> > Regards,
+> > 
+> > Boris  
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---766nqwxqmfxoxega
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZ+z1vAAoJEBx+YmzsjxAgJQYP/RoY+HL7SVN8c/UCknR2nmtj
-1hzOlmcXJs5ZeMxA5H7Mb0Hs/lhhAI8YhGK3y+ChH6VhmkgqtfExjIgKBDGmMpSt
-LKeAP5cg0nDfxu1/XCBCp0u9O4bK0l9epggZ8+/1JjBZ3BuZcXBCcwrD+KqgrZDc
-yvxsphuFBlerJwPOjTlDlpN4czKwYVledLwoC69Ru6/ijT7as55pcypVEK+SnXMH
-vTZBPU4CigL29Ofpr+67SAxe/0Ow+9r+RxyPHdwaWYQUKBMVfyACjlO0uKadzUmB
-aB0C3kp1/6HcUiNRF7+IEXuukidIC1PlH42EJdb2JFb2uRLg44f2wnLx8bmN/4Rr
-AL1dtEXmJ7g3zixKNTa30fpoFXontBub9xYmDXOBuVEwBQtQU1QUWTrTn8IANY1j
-94AcvxkRyPbcqWVsVNFItLdhq5yks/hAv0Rq7kTIGZxF43ZPn0FL55rG2q5lcV6f
-r9N9RYmdw8MooOjipyO43+ZkiXQDCO+ZweOG83FwRnADytvIInJ58BQifLx3mBms
-gYBwYabxO0ZnbwwHaoJAnLaezqiDNb8uhSq2vjvCZJWBkBSBAnKgnesC2VdvBvLQ
-JWJzexem1yNxhcADeMnggSW4TOjJGQCZCNVnUuPmFyRalH0a2eNfQ7rH/cAlSjHo
-gRHUEFSSGpSoQdA6jLeh
-=DTuu
------END PGP SIGNATURE-----
-
---766nqwxqmfxoxega--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
