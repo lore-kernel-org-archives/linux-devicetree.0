@@ -1,42 +1,30 @@
-From: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 2/2] Documentation: fsl: dspi: Add a compatible string for
- ls1088a DSPI
-Date: Thu, 2 Nov 2017 03:12:22 +0000
-Message-ID: <VI1PR0402MB27823B7E70356968D2381FBE845C0@VI1PR0402MB2782.eurprd04.prod.outlook.com>
-References: <20171101034015.41114-1-Zhiqiang.Hou@nxp.com>
- <20171101034015.41114-3-Zhiqiang.Hou@nxp.com>
- <20171102001416.6etwlhfauu7auc7p@rob-hp-laptop>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 4/7] MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+Date: Wed, 1 Nov 2017 20:29:20 -0700
+Message-ID: <d473b10c-ae5d-efa1-7329-de7b68152725@gmail.com>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-5-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102001416.6etwlhfauu7auc7p@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171102003606.19913-5-david.daney@cavium.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHRoZSBhY2shDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmdd
-DQo+IFNlbnQ6IDIwMTfE6jEx1MIyyNUgODoxNA0KPiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhv
-dUBueHAuY29tPg0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtc3BpQHZnZXIua2VybmVsLm9yZzsgYnJvb25pZUBrZXJuZWwub3JnOw0KPiBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgUHJhYmhha2FyIEt1c2h3YWhh
-DQo+IDxwcmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAy
-LzJdIERvY3VtZW50YXRpb246IGZzbDogZHNwaTogQWRkIGEgY29tcGF0aWJsZSBzdHJpbmcgZm9y
-DQo+IGxzMTA4OGEgRFNQSQ0KPiANCj4gT24gV2VkLCBOb3YgMDEsIDIwMTcgYXQgMTE6NDA6MTVB
-TSArMDgwMCwgWmhpcWlhbmcgSG91IHdyb3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8Wmhp
-cWlhbmcuSG91QG54cC5jb20+DQo+ID4NCj4gPiBBZGQgYSBuZXcgY29tcGF0aWJsZSBzdHJpbmcg
-ImZzbCxsczEwODhhLWRzcGkiLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5n
-IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktZnNsLWRzcGkudHh0IHwgMSArDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiANCj4gImR0LWJpbmRpbmdzOiBzcGk6ICIgZm9yIHRo
-ZSBzdWJqZWN0LiBPdGhlcndpc2UsDQoNCkknbGwgcmVjb21wb3NlIHRoZSBzdWJqZWN0IGluIG5l
-eHQgdmVyc2lvbi4NCg0KPiANCj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
-cmc+DQoNClRoYW5rcywNClpoaXFpYW5nDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Le 11/01/17 à 17:36, David Daney a écrit :
+> From: Carlos Munoz <cmunoz@cavium.com>
+> 
+> From the hardware user manual: "The FPA is a unit that maintains
+> pools of pointers to free L2/DRAM memory. To provide QoS, the pools
+> are referenced indirectly through 1024 auras. Both core software
+> and hardware units allocate and free pointers."
+
+This looks like a possibly similar implement to what
+drivers/net/ethernet/marvell/mvneta_bm.c, can you see if you can make
+any use of genpool_* and include/net/hwbm.h here as well?
+-- 
+Florian
