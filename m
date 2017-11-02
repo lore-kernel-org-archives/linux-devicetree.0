@@ -1,81 +1,112 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
-Date: Thu, 2 Nov 2017 09:20:14 +0000
-Message-ID: <TY1PR06MB0895FCBA06AF6FF82E1CF939C05C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw@mail.gmail.com>
- <TY1PR06MB0895612044D5E21BCBFEF46BC0740@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20171102080412.n3wfabxt2ayswxzp@verge.net.au>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: input: Add Atmel PTC subsystem
+ bindings
+Date: Thu, 2 Nov 2017 10:24:46 +0100
+Message-ID: <20171102092446.ehuilhqtfb7ouses@rfolt0960.corp.atmel.com>
+References: <20171020133121.7992-1-ludovic.desroches@microchip.com>
+ <20171020133121.7992-2-ludovic.desroches@microchip.com>
+ <20171030230658.csl2sxfrmdcdx3lj@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102080412.n3wfabxt2ayswxzp-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171030230658.csl2sxfrmdcdx3lj@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
->
-> On Mon, Oct 09, 2017 at 01:45:07PM +0000, Fabrizio Castro wrote:
-> > Hello Geert,
-> >
-> > thank you for your feedback!
-> >
-> > >
-> > > Hi Fabrizio, Chris,
-> > >
-> > > On Mon, Oct 9, 2017 at 11:06 AM, Fabrizio Castro
-> > > <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > > > Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > >
-> > > > --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > > > +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > > > @@ -11,6 +11,7 @@
-> > > >  / {
-> > > >         aliases {
-> > > >                 serial0 =3D &scif0;
-> > > > +               serial3 =3D &scifb1;
-> > >
-> > > Given this port is not labeled "serial3", but called "data uart", you=
- may want
-> > > to add a comment to avoid confusion:
-> >
-> > It's a little bit confusing, isn't it? The lines related to such
-> > interface are named as UART0_x on the carrier board schematic, the
-> > section of the schematic that contains the header is named "data uart
-> > header", and the board documentation names it explicitly as "UART 3 -
-> > /dev/ttySC3 (SCIFB1)".
-> >
-> > I don't think there is anything we can do to make this easier for the
-> > user really, is there? :D If we decide to add a comment to serial 3, I
-> > guess we need to be consistent and add comments for the other serial
-> > interfaces too.  If you still prefer having a comment there I'll send a
-> > v2 and patch(es) for adding comments to the other interfaces, just let =
-me
-> > know.
->
-> I have applied this patch. If a comment is subsequently decided on
-> then please send a follow-up patch.
+Hi Dmitry,
 
-Thank you Simon.
+On Mon, Oct 30, 2017 at 04:06:58PM -0700, Dmitry Torokhov wrote:
+> Hi Ludovic,
+> 
+> On Fri, Oct 20, 2017 at 03:31:17PM +0200, Ludovic Desroches wrote:
+> > Add description of the Atmel PTC subsystem bindings.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/input/atmel,ptc.txt        | 67 ++++++++++++++++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/atmel,ptc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/atmel,ptc.txt b/Documentation/devicetree/bindings/input/atmel,ptc.txt
+> > new file mode 100644
+> > index 000000000000..a183fd511e04
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/atmel,ptc.txt
+> > @@ -0,0 +1,67 @@
+> > +Atmel PTC Subsystem
+> > +
+> > +The Atmel Peripheral Touch Controller subsystem offers built-in hardware
+> > +for capacitive touch measurement on sensors that function as buttons, sliders
+> > +and wheels.
+> > +
+> > +1) PTC Subsystem node
+> > +
+> > +Required properties:
+> > +- compatible: 		Must be "atmel,sama5d2-ptc"
+> > +- reg: 			Address, length of the shared memory and ppp registers location
+> > +			and length.
+> > +- clocks: 		Phandlers to the clocks.
+> > +- clock-names: 		Must be "ptc_clk", "ptc_int_osc", "slow_clk".
+> > +- #address-cells:	Must be one. The cell is the button or scroller id.
+> > +- #size-cells: 		Must be zero.
+> > +
+> > +Example:
+> > +	ptc@fc060000 {
+> > +		compatible = "atmel,sama5d2-ptc";
+> > +		reg = <0x00800000 0x10000
+> > +		       0xfc060000 0xcf>;
+> > +		interrupts = <58 IRQ_TYPE_LEVEL_HIGH 7>;
+> > +		clocks = <&ptc_clk>, <&main>, <&clk32k>;
+> > +		clock-names = "ptc_clk", "ptc_int_osc", "slow_clk";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		[ child node definitions... ]
+> > +	};
+> > +
+> > +2) Scroller / buttons subnodes
+> > +
+> > +Subnodes describe the kind of sensors the customer want to use. They have to be
+> > +named according to their function: button, slider or wheel.
+> 
+> I wonder do we really need this? Or we can have a generic:
+> 
+> 	slider@0 {
+> 		reg = <0>;
+> 		linux,type = <EV_ABS>;
+> 		linux,code = <ABS_X>;
+> 	},
+> 	vertical-slider@1 {
+> 		reg = <1>;
+> 		linux,type = <EV_ABS>;
+> 		linux,code = <ABS_Y>;
+> 	},
+> 	wheel@2 {
+> 		reg = <2>;
+> 		linux,type = <EV_ABS>;
+> 		linux,code = <ABS_WHEEL>;
+> 	},
+> 	button@3 {
+> 		reg = <3>;
+> 		linux,type = <EV_KEY>;
+> 		linux,code = <KEY_A>;
+> 	},
+> 	...
+> 
+> I.e. you specify type/code in a generic way.
 
-Cheers,
-Fab
+No problem with this approach, I can retrieve the kind of sensors from
+the linux,type property.
 
+Can I set both ABS_X and ABS_Y? In the future, we may have a "surface"
+object reporting coordinates for these axes. It seems there are no
+generic helpers to parse the 'linux,code' property, so I assume it won't be a
+problem.
 
+Regards
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ludovic
