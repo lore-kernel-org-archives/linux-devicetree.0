@@ -1,231 +1,82 @@
-From: Julien Thierry <julien.thierry@arm.com>
-Subject: Re: [PATCH V3 04/11] clk: sprd: add gate clock support
-Date: Thu, 2 Nov 2017 17:45:50 +0000
-Message-ID: <5625af45-a071-4abf-88ed-f167abff1b73@arm.com>
-References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
- <20171102065626.21835-5-chunyan.zhang@spreadtrum.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/7] MIPS: Octeon: Add a global resource manager.
+Date: Thu, 2 Nov 2017 10:49:19 -0700
+Message-ID: <6ff04462-88ec-a972-4084-e26ea3cb630a@gmail.com>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-4-david.daney@cavium.com>
+ <20171102122327.GE4772@lunn.ch>
+ <caeae680-915a-d08c-d220-899db0970328@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171102065626.21835-5-chunyan.zhang@spreadtrum.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <caeae680-915a-d08c-d220-899db0970328-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 02/11/17 06:56, Chunyan Zhang wrote:
-> Some clocks on the Spreadtrum's SoCs are just simple gates. Add
-> support for those clocks.
+On 11/02/2017 09:03 AM, David Daney wrote:
+> On 11/02/2017 05:23 AM, Andrew Lunn wrote:
+>>> +static void res_mgr_lock(void)
+>>> +{
+>>> +    unsigned int tmp;
+>>> +    u64 lock = (u64)&res_mgr_info->rlock;
+>>> +
+>>> +    __asm__ __volatile__(
+>>> +        ".set noreorder\n"
+>>> +        "1: ll   %[tmp], 0(%[addr])\n"
+>>> +        "   bnez %[tmp], 1b\n"
+>>> +        "   li   %[tmp], 1\n"
+>>> +        "   sc   %[tmp], 0(%[addr])\n"
+>>> +        "   beqz %[tmp], 1b\n"
+>>> +        "   nop\n"
+>>> +        ".set reorder\n" :
+>>> +        [tmp] "=&r"(tmp) :
+>>> +        [addr] "r"(lock) :
+>>> +        "memory");
+>>> +}
+>>> +
+>>> +static void res_mgr_unlock(void)
+>>> +{
+>>> +    u64 lock = (u64)&res_mgr_info->rlock;
+>>> +
+>>> +    /* Wait until all resource operations finish before unlocking. */
+>>> +    mb();
+>>> +    __asm__ __volatile__(
+>>> +        "sw $0, 0(%[addr])\n" : :
+>>> +        [addr] "r"(lock) :
+>>> +        "memory");
+>>> +
+>>> +    /* Force a write buffer flush. */
+>>> +    mb();
+>>> +}
+>>
+>> It would be good to add some justification for using your own locks,
+>> rather than standard linux locks.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> ---
->   drivers/clk/sprd/Makefile |   1 +
->   drivers/clk/sprd/gate.c   | 106 ++++++++++++++++++++++++++++++++++++++++++++++
->   drivers/clk/sprd/gate.h   |  54 +++++++++++++++++++++++
->   3 files changed, 161 insertions(+)
->   create mode 100644 drivers/clk/sprd/gate.c
->   create mode 100644 drivers/clk/sprd/gate.h
+> Yes, I will add that.
 > 
-> diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-> index 74f4b80..8cd5592 100644
-> --- a/drivers/clk/sprd/Makefile
-> +++ b/drivers/clk/sprd/Makefile
-> @@ -1,3 +1,4 @@
->   obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
->   
->   clk-sprd-y	+= common.o
-> +clk-sprd-y	+= gate.o
-> diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
-> new file mode 100644
-> index 0000000..831ef81
-> --- /dev/null
-> +++ b/drivers/clk/sprd/gate.c
-> @@ -0,0 +1,106 @@
-> +/*
-> + * Spreadtrum gate clock driver
-> + *
-> + * Copyright (C) 2017 Spreadtrum, Inc.
-> + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "gate.h"
-> +
-> +DEFINE_SPINLOCK(sprd_gate_lock);
-> +EXPORT_SYMBOL_GPL(sprd_gate_lock);
-> +
-> +static void sprd_gate_endisable(const struct sprd_gate *sg, u32 en)
-> +{
-> +	const struct sprd_clk_common *common = &sg->common;
-> +	unsigned long flags = 0;
-> +	unsigned int reg;
-> +	int set = sg->flags & CLK_GATE_SET_TO_DISABLE ? 1 : 0;
-> +
-> +	set ^= en;
-> +
-> +	spin_lock_irqsave(common->lock, flags);
-> +
-> +	sprd_regmap_read(common->regmap, common->reg, &reg);
-> +
-> +	if (set)
-> +		reg |= sg->op_bit;
-> +	else
-> +		reg &= ~sg->op_bit;
-> +
-> +	sprd_regmap_write(common->regmap, common->reg, reg);
-> +
-> +	spin_unlock_irqrestore(common->lock, flags);
-> +}
-> +
-> +static void clk_sc_gate_endisable(const struct sprd_gate *sg, u32 en)
-> +{
-> +	const struct sprd_clk_common *common = &sg->common;
-> +	unsigned long flags = 0;
-> +	int set = sg->flags & CLK_GATE_SET_TO_DISABLE ? 1 : 0;
-> +	unsigned int offset;
-> +
-> +	set ^= en;
-> +
-> +	/*
-> +	 * Each set/clear gate clock has three registers:
-> +	 * common->reg			- base register
-> +	 * common->reg + offset		- set register
-> +	 * common->reg + 2 * offset	- clear register
-> +	 */
-> +	offset = set ? sg->sc_offset : sg->sc_offset * 2;
-> +
-> +	spin_lock_irqsave(common->lock, flags);
-> +	sprd_regmap_write(common->regmap, common->reg + offset, sg->op_bit);
-> +	spin_unlock_irqrestore(common->lock, flags);
-> +}
-> +
-> +static void sprd_gate_disable(struct clk_hw *hw)
-> +{
-> +	struct sprd_gate *sg = hw_to_sprd_gate(hw);
-> +
-> +	if (sg->sc_offset)
-> +		clk_sc_gate_endisable(sg, 0);
-> +	else
-> +		sprd_gate_endisable(sg, 0);
-> +}
-> +
-> +static int sprd_gate_enable(struct clk_hw *hw)
-> +{
-> +	struct sprd_gate *sg = hw_to_sprd_gate(hw);
-> +
-> +	if (sg->sc_offset)
-> +		clk_sc_gate_endisable(sg, 1);
-> +	else
-> +		sprd_gate_endisable(sg, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sprd_gate_is_enabled(struct clk_hw *hw)
-> +{
-> +	struct sprd_gate *sg = hw_to_sprd_gate(hw);
-> +	struct sprd_clk_common *common = &sg->common;
-> +	unsigned int reg;
-> +
-> +	sprd_regmap_read(common->regmap, common->reg, &reg);
-> +
-> +	if (sg->flags & CLK_GATE_SET_TO_DISABLE)
-> +		reg ^= sg->op_bit;
-> +
-> +	reg &= sg->op_bit;
-> +
-> +	return reg ? 1 : 0;
-> +}
-> +
-> +const struct clk_ops sprd_gate_ops = {
-> +	.disable	= sprd_gate_disable,
-> +	.enable		= sprd_gate_enable,
-> +	.is_enabled	= sprd_gate_is_enabled,
-> +};
-> +EXPORT_SYMBOL_GPL(sprd_gate_ops);
-
-I think it would be better to have a set of ops for each mode,
-sprd_gate_ops and sprd_sc_gate_ops rather than have each function decide 
-whether it should use set/clear registers or the base registers.
-
-So you can have a macro SPRD_GATE_CLK that doesn't take an sc_offet and 
-selects the sprd_gate_ops and another one that SPRD_SC_GATE_CLK using 
-sprd_sc_gate_ops that takes the sc_offset as parameter.
-
-Also, I feel keeping enable/disable function separate would be nicer 
-instead of having "endisable" functions.
-
-Cheers,
-
-> diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
-> new file mode 100644
-> index 0000000..5aeb53c
-> --- /dev/null
-> +++ b/drivers/clk/sprd/gate.h
-> @@ -0,0 +1,54 @@
-> +/*
-> + * Spreadtrum gate clock driver
-> + *
-> + * Copyright (C) 2017 Spreadtrum, Inc.
-> + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +#ifndef _SPRD_GATE_H_
-> +#define _SPRD_GATE_H_
-> +
-> +#include "common.h"
-> +
-> +struct sprd_gate {
-> +	u32			op_bit;
-> +	u16			flags;
-> +	u16			sc_offset;
-> +
-> +	struct sprd_clk_common	common;
-> +};
-> +
-> +#define SPRD_GATE_CLK(_struct, _name, _parent, _reg, _sc_offset,	\
-> +		      _op_bit, _flags, _gate_flags)			\
-> +	struct sprd_gate _struct = {					\
-> +		.op_bit		= _op_bit,				\
-> +		.sc_offset	= _sc_offset,				\
-> +		.flags		= _gate_flags,				\
-> +		.common	= {						\
-> +			.regmap		= NULL,				\
-> +			.reg		= _reg,				\
-> +			.lock		= &sprd_gate_lock,		\
-> +			.hw.init	= CLK_HW_INIT(_name,		\
-> +						      _parent,		\
-> +						      &sprd_gate_ops,	\
-> +						      _flags),		\
-> +		}							\
-> +	}
-> +
-> +static inline struct sprd_gate *hw_to_sprd_gate(const struct clk_hw *hw)
-> +{
-> +	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
-> +
-> +	return container_of(common, struct sprd_gate, common);
-> +}
-> +
-> +void sprd_gate_helper_disable(struct sprd_clk_common *common, u32 gate);
-> +int sprd_gate_helper_enable(struct sprd_clk_common *common, u32 gate);
-> +int sprd_gate_helper_is_enabled(struct sprd_clk_common *common, u32 gate);
-> +
-> +extern const struct clk_ops sprd_gate_ops;
-> +extern spinlock_t sprd_gate_lock;
-> +
-> +#endif /* _SPRD_GATE_H_ */
 > 
+>>
+>> Is there anything specific to your hardware in this resource manager?
+>> I'm just wondering if this should be generic, put somewhere in lib. Or
+>> maybe there is already something generic, and you should be using it,
+>> not re-inventing the wheel again.
+> 
+> The systems built around this hardware may have other software running
+> on CPUs that are not running the Linux kernel.  The data structures used
+> to arbitrate usage of shared system hardware resources use exactly these
+> locking primitives, so they cannot be changed to use the Linux locking
+> implementation de jour.
 
+Would hwspinlock be a possible option so this is abstracted on the Linux
+side using these locking primitives through the hwspinlock layer which
+in turn does exactly what is above?
 -- 
-Julien Thierry
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
