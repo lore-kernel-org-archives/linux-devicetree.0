@@ -1,56 +1,37 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
- magic values
-Date: Thu, 2 Nov 2017 00:15:33 -0700
-Message-ID: <20171102071533.GM30645@codeaurora.org>
-References: <cover.1509453284.git.viresh.kumar@linaro.org>
- <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
- <CAL_JsqKr7MsM6iZ_QYO=iCzXNwANEGQGDLFUEwe0Z-p2Z_aMYw@mail.gmail.com>
- <CAKohpokvQD4Z6YY6MRG8c+hnsS=Z52X4XhyTgC5FTgf7VuaNmw@mail.gmail.com>
- <CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com>
- <20171101214333.GG30645@codeaurora.org>
- <20171102045155.GX4240@vireshk-i7>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [RESEND RFC PATCH 3/7] clk: sunxi: Add
+ CLK_SET_RATE_PARENT flag for H3 HDMI clock
+Date: Thu, 2 Nov 2017 00:19:42 -0700
+Message-ID: <20171102071942.GN30645@codeaurora.org>
+References: <20170920200124.20457-1-jernej.skrabec@siol.net>
+ <20170920200124.20457-4-jernej.skrabec@siol.net>
+Reply-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDHZXHXDRAMBBE4O5PHQKGQEHOZEL5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171102045155.GX4240@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20170920200124.20457-4-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/02, Viresh Kumar wrote:
-> On 01-11-17, 14:43, Stephen Boyd wrote:
-> > On 11/01, Rob Herring wrote:
-> > > On Tue, Oct 31, 2017 at 9:17 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > On 31 October 2017 at 16:02, Rob Herring <robh+dt@kernel.org> wrote:
-> > > >> Why not a new property for magic values? opp-magic? Don't we want to
-> > > >> know when we have magic values?
-> > > >
-> > > > I have kept a separate property since beginning (domain-performance-state)
-> > > > and moved to using these magic values in the existing field because of the
-> > > > suggestion Kevin gave earlier.
-> > > >
-> > > > https://marc.info/?l=linux-kernel&m=149306082218001&w=2
-> > > >
-> > > > I am not sure what to do now :)
-> > > 
-> > > Okay, I guess reusing the properties is fine.
-> > > 
-> > 
-> > We call them corners on qcom platforms. Any reason we can't keep
-> > using that name? I'd rather not have to keep telling people that
-> > these fake values in some misnamed property is actually a corner.
+On 09/20, Jernej Skrabec wrote:
+> When setting the HDMI clock of H3, the PLL_VIDEO clock needs to be set.
 > 
-> Surely not "corners", as these are platform and OS independent
-> bindings we are talking about here. Even the kernel code shouldn't
-> generally do that. Though your platform specific genpd driver can :)
+> Add CLK_SET_RATE_PARENT flag for H3 HDMI clock.
 > 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
 
-Sorry I'm not following. We're going to need to have platform
-specific code that understands platform specific bindings that
-aren't shoved into the generic OPP bindings.
+Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
