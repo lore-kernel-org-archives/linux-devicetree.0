@@ -1,86 +1,40 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
-Date: Thu, 2 Nov 2017 12:00:24 +0100
-Message-ID: <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com>
-References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
- <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
- <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com> <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v2] ata: fixes kernel crash while tracing ata_eh_link_autopsy event
+Date: Thu,  2 Nov 2017 16:31:07 +0530
+Message-ID: <1509620467-6679-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Sender: linux-scsi-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-+ Vincent Yang (several emails, don't know which works)
+When tracing ata link error event, the kernel crashes when the disk is
+removed due to NULL pointer access by trace_ata_eh_link_autopsy API.
+This occurs as the dev is NULL when the disk disappeared. This patch
+fixes this crash by calling trace_ata_eh_link_autopsy only if "dev"
+is not NULL.
 
-On 2 November 2017 at 11:49, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 2 November 2017 at 10:48, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 2 November 2017 at 01:12, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On 2 November 2017 at 00:08, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On Wed, Nov 01, 2017 at 12:21:32AM +0000, Ard Biesheuvel wrote:
->>>>> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
->>>>> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
->>>>> F_SDH30_ESD_CONTROL control register.
->>>>>
->>>>> So let's add an optional property to this device's binding, and
->>>>> set the attribute if it is present in the DT node.
->>>>>
->>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt |  2 ++
->>>>>  drivers/mmc/host/sdhci_f_sdh30.c                        | 18 +++++++++++++++++-
->>>>>  2 files changed, 19 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->>>>> index de2c53cff4f1..9ad02f743ad0 100644
->>>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->>>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->>>>> @@ -15,6 +15,8 @@ Required properties:
->>>>>  Optional properties:
->>>>>  - vqmmc-supply: phandle to the regulator device tree node, mentioned
->>>>>    as the VCCQ/VDD_IO supply in the eMMC/SD specs.
->>>>> +- cmd-dat-delay-select: boolean property indicating that this host requires
->>>>> +  the CMD_DAT_DELAY control to be enabled.
->>>>
->>>> Needs a vendor prefix unless this is a standard SDHCI bit (in which
->>>> case it should be documented in a common spot).
->>>>
->>>
->>> I suspect this is a non-standard thing, so I'll add the fujitsu prefix. Ulf?
->>
->> This is specific to the Fujitsu variant.
->>
->> However, what puzzles me is why this bit is needed for the Socionext
->> SynQuacer SoC, but not for other SoCs that uses this IP. That seems
->> weird (probably wrong).
->>
->> Moreover, the F_SDH30_CMD_DAT_DELAY register define is already there,
->> so I would rather suspect that it's something that did got fully
->> implemented. In other words, I don't think you need a new DT binding,
->> but rather try to implement it generically for the sdhci-f_sdh30
->> driver. Do you think that will work?
->>
->
-> Do you mean set it unconditionally? That works for me, but I have no
+v2 changes:
+ Removed direct passing "link" pointer instead of "dev" in trace API.
 
-Yes.
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
+ drivers/ata/libata-eh.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-> way of testing whether it still works on other SoCs that use this IP.
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index e4effef..ea20e0e 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -2264,8 +2264,8 @@ static void ata_eh_link_autopsy(struct ata_link *link)
+ 		if (dev->flags & ATA_DFLAG_DUBIOUS_XFER)
+ 			eflags |= ATA_EFLAG_DUBIOUS_XFER;
+ 		ehc->i.action |= ata_eh_speed_down(dev, eflags, all_err_mask);
++		trace_ata_eh_link_autopsy(dev, ehc->i.action, all_err_mask);
+ 	}
+-	trace_ata_eh_link_autopsy(dev, ehc->i.action, all_err_mask);
+ 	DPRINTK("EXIT\n");
+ }
 
-Me neither!
-
-Apparently there are no DTS in the kernel git that uses the
-"fujitsu,mb86s70-sdhci-3.0".
-
-I looped in Vincent Yang, let's hope he can provide us with some more
-information.
-
-Kind regards
-Uffe
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.1
