@@ -1,86 +1,46 @@
-From: "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: RE: [PATCH 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
-Date: Thu, 2 Nov 2017 08:54:29 +0000
-Message-ID: <VI1PR04MB16150087206A5385F52D163CE85C0@VI1PR04MB1615.eurprd04.prod.outlook.com>
-References: <20171024083045.31135-1-xiaowei.bao@nxp.com>
- <20171024083045.31135-2-xiaowei.bao@nxp.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
+ magic values
+Date: Thu, 2 Nov 2017 14:30:33 +0530
+Message-ID: <20171102090033.GZ4240@vireshk-i7>
+References: <cover.1509453284.git.viresh.kumar@linaro.org>
+ <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
+ <CAL_JsqKr7MsM6iZ_QYO=iCzXNwANEGQGDLFUEwe0Z-p2Z_aMYw@mail.gmail.com>
+ <CAKohpokvQD4Z6YY6MRG8c+hnsS=Z52X4XhyTgC5FTgf7VuaNmw@mail.gmail.com>
+ <CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com>
+ <20171101214333.GG30645@codeaurora.org>
+ <20171102045155.GX4240@vireshk-i7>
+ <20171102071533.GM30645@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171024083045.31135-2-xiaowei.bao@nxp.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, "hongtao.jia@nxp.com" <hongtao.jia@nxp.com>, Andy Tang <andy.tang@nxp.com>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171102071533.GM30645@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
+On 02-11-17, 00:15, Stephen Boyd wrote:
+> Sorry I'm not following. We're going to need to have platform
+> specific code that understands platform specific bindings that
+> aren't shoved into the generic OPP bindings.
 
-> -----Original Message-----
-> From: Bao Xiaowei [mailto:xiaowei.bao@nxp.com]
-> Sent: Tuesday, October 24, 2017 4:31 PM
-> To: robh+dt@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
-> will.deacon@arm.com; bhelgaas@google.com; shawnguo@kernel.org;
-> Madalin-cristian Bucur <madalin.bucur@nxp.com>; Sumit Garg
-> <sumit.garg@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; hongtao.jia@nxp.com;
-> Andy Tang <andy.tang@nxp.com>; Leo Li <leoyang.li@nxp.com>;
-> kishon@ti.com; jingoohan1@gmail.com; pbrobinson@gmail.com;
-> songxiaowei@hisilicon.com; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
-> pci@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; Z.q. Hou
-> <zhiqiang.hou@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
-> <minghuan.lian@nxp.com>
-> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Subject: [PATCH 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
->=20
-> Add the property of inbind and outbind windows number for ep driver.
->=20
-> add the inband or outband window entry for pcie controller ep driver used=
- in dts.
->=20
-> Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 06b5e12d04d8..f8332669663c 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -674,6 +674,8 @@
->  			device_type =3D "pci";
->  			dma-coherent;
->  			num-lanes =3D <4>;
-> +			num-ib-windows =3D <6>;
-> +			num-ob-windows =3D <6>;
->  			bus-range =3D <0x0 0xff>;
->  			ranges =3D <0x81000000 0x0 0x00000000 0x40
-> 0x00010000 0x0 0x00010000   /* downstream I/O */
->  				  0x82000000 0x0 0x40000000 0x40
-> 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */ @@ -699,6
-> +701,8 @@
->  			device_type =3D "pci";
->  			dma-coherent;
->  			num-lanes =3D <2>;
-> +			num-ib-windows =3D <6>;
-> +			num-ob-windows =3D <6>;
->  			bus-range =3D <0x0 0xff>;
->  			ranges =3D <0x81000000 0x0 0x00000000 0x48
-> 0x00010000 0x0 0x00010000   /* downstream I/O */
->  				  0x82000000 0x0 0x40000000 0x48
-> 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */ @@ -724,6
-> +728,8 @@
->  			device_type =3D "pci";
->  			dma-coherent;
->  			num-lanes =3D <2>;
-> +			num-ib-windows =3D <6>;
-> +			num-ob-windows =3D <6>;
->  			bus-range =3D <0x0 0xff>;
->  			ranges =3D <0x81000000 0x0 0x00000000 0x50
-> 0x00010000 0x0 0x00010000   /* downstream I/O */
->  				  0x82000000 0x0 0x40000000 0x50
-> 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> --
-> 2.14.1
+At least I am not targeting any platform specific binding right now.
+The way I see this to work is:
+
+- We will reuse earlier bindings and allow opp-hz and opp-microvolt to
+  contain special values (this patch).
+- Platform specific DT entries will put corner numbers in opp-hz (or
+  opp-microvolt) fields.
+- Some platform specific driver (in OPP or genpd) will be used to
+  convert OPP into a performance state (corner) value. Now that can
+  simply read opp-hz (or opp-microvolt) and return its value.
+- OPP core will request for a performance state (code is already
+  merged for that).
+
+And so there is no platform specific binding here. Do you want to do
+this differently ?
+
+-- 
+viresh
