@@ -1,57 +1,62 @@
-From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
-Subject: Re: [Ksummit-discuss] Notes & Slides from Devicetree Workshop at
- Kernel Summit Prague (26 Oct 2017)
-Date: Thu, 2 Nov 2017 13:21:17 +0100
-Message-ID: <f5238061-2f6a-ae47-79b4-912401737c7e@suse.com>
-References: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 3/7] MIPS: Octeon: Add a global resource manager.
+Date: Thu, 2 Nov 2017 13:23:27 +0100
+Message-ID: <20171102122327.GE4772@lunn.ch>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-4-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6tfRByeJrp43Taj166K4Ni0KjmZkC=Xc1pz2=ga6fvDZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20171102003606.19913-4-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Hudson <darknighte-p1iUmGEPI8RGBRGhe+f61g@public.gmane.org>, Kanta Vekaria <kanta.vekaria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> +static void res_mgr_lock(void)
+> +{
+> +	unsigned int tmp;
+> +	u64 lock = (u64)&res_mgr_info->rlock;
+> +
+> +	__asm__ __volatile__(
+> +		".set noreorder\n"
+> +		"1: ll   %[tmp], 0(%[addr])\n"
+> +		"   bnez %[tmp], 1b\n"
+> +		"   li   %[tmp], 1\n"
+> +		"   sc   %[tmp], 0(%[addr])\n"
+> +		"   beqz %[tmp], 1b\n"
+> +		"   nop\n"
+> +		".set reorder\n" :
+> +		[tmp] "=&r"(tmp) :
+> +		[addr] "r"(lock) :
+> +		"memory");
+> +}
+> +
+> +static void res_mgr_unlock(void)
+> +{
+> +	u64 lock = (u64)&res_mgr_info->rlock;
+> +
+> +	/* Wait until all resource operations finish before unlocking. */
+> +	mb();
+> +	__asm__ __volatile__(
+> +		"sw $0, 0(%[addr])\n" : :
+> +		[addr] "r"(lock) :
+> +		"memory");
+> +
+> +	/* Force a write buffer flush. */
+> +	mb();
+> +}
 
+It would be good to add some justification for using your own locks,
+rather than standard linux locks.
 
-On 10/30/2017 05:01 PM, Grant Likely wrote:
-> Thank you to everyone who attended the Devicetree Workshop as part of
-> the 2017 Kernel Summit in Prague last week. I heard lots of good
-> feedback, and I'm already thinking about how to organize next year's
-> gathering.
-> 
-> Slides and notes have been uploaded to elinux.org. A summary of the
-> topics and next steps still needs to be written. You can find the
-> notes and slides here:
-> 
-> https://elinux.org/Device_tree_future#Kernel_Summit_2017.2C_Devicetree_Workshop
-> 
-> I also have an audio recording of the entire day, but they are large
-> audio files (100-200MB each) and I haven't decided how to publish them
-> yet.
-> 
-> Particular thanks to everyone who helped take notes (Sadly, I didn't
-> grab the list of names before they disappeared from Etherpad, so the
-> only person I can thank by name is Julia Lawall who emailed me notes
-> separately). Also thanks to Sean Hudson for taking care of sound and
-> to Frank Roland for running microphones around the room. Finally, a
-> big thank you to the Linux Foundation staff who sorted out all of the
-> hotel logistics for us.
-> 
-> Please look at the notes to check for accuracy, and I would appreciate
-> any volunteers to help write up the summary for the day.
-> 
-> I'll post the group photo as soon as I receive it.
-> 
+Is there anything specific to your hardware in this resource manager?
+I'm just wondering if this should be generic, put somewhere in lib. Or
+maybe there is already something generic, and you should be using it,
+not re-inventing the wheel again.
 
-You can find the photo here:
-
-https://www.flickr.com/photos/linuxfoundation/38019230622/in/album-72157661789269468/
-
-Regards,
-Matthias
+      Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
