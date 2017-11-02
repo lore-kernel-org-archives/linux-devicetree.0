@@ -1,114 +1,107 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/3] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
-Date: Thu, 2 Nov 2017 07:54:06 -0700
-Message-ID: <20171102145406.GA9240@roeck-us.net>
-References: <20171102035349.1902-1-joel@jms.id.au>
- <20171102035349.1902-3-joel@jms.id.au>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: sam9x5: MTD numbering changed
+Date: Thu, 2 Nov 2017 16:09:09 +0100
+Message-ID: <20171102160909.6eee6289@bbrezillon>
+References: <1509621436.16695.3.camel@gmail.com>
+        <20171102133954.055ce285@bbrezillon>
+        <1509632027.16695.5.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171102035349.1902-3-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mykola Kostenok <c_mykolak@mellanox.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, Patrick Venture <venture@google.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1509632027.16695.5.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 02, 2017 at 02:53:48PM +1100, Joel Stanley wrote:
-> The ASPEED SoC must deassert a reset in order to use the PWM/tach
-> peripheral.
+On Thu, 02 Nov 2017 15:13:47 +0100
+Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> Le jeudi 02 novembre 2017 à 13:39 +0100, Boris Brezillon a écrit :
+> > +Nicolas
+> > 
+> > Hi Richard,
+> > 
+> > On Thu, 02 Nov 2017 12:17:16 +0100
+> > Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> > > Hi,
+> > > 
+> > > I've got an at91sam9g35-cm based board, with 4 partition on the
+> > > spi-
+> > > dataflas and 5 partitions on the NAND flash.
+> > > Before commit 1004a2977bdc ("ARM: dts: at91: Switch to the new NAND
+> > > bindings"),
+> > > the NAND partitions were mtd0-4 and spi-dataflash partitions mtd5-
+> > > 8.
+> > > 
+> > > Since commit 1004a2977bdc ("ARM: dts: at91: Switch to the new NAND
+> > > bindings"),
+> > > the spi-dataflash partitions are discovered before the NAND
+> > > partitions.
+> > > So NAND partition became mtd4-8 and spi-dataflash partition mtd0-3.
+> > > 
+> > > This broke some script that relied on the mtd numbering.
+> > > 
+> > > Updating those scripts to rely on the mtd device name instead of
+> > > number is not really a problem. The real problem is when an older
+> > > script using mtd numbering is run on the new system : I expect dead
+> > > kittens everywhere !  
+> > 
+> > Crap! That was one of the thing I was afraid of when changing the
+> > binding: probe order has an impact on ids assigned to MTD devs, and
+> > since things are not defined at the same place in the DT, it changes
+> > the probe order.
+> >   
+> > > 
+> > > So, I'd like to know if there's a way to force the older numbering
+> > > ?  
+> > 
+> > Reverting the patches is probably the easiest way (and it's easily
+> > backportable). Now, if we want to switch to the new bindings at some
+> > point we'll need to support DT aliases for mtd devs:
+> > 
+> > aliases {
+> > 	mtdX = &flashpartN;
+> > 	mtdY = &flashdevM;
+> > };
+> > 
+> > The problem with this solution is that it only works if all
+> > partitions
+> > are defined in the DT, which is not always the case (they can be
+> > defined
+> > on the command line with mtdparts=).  
+> Yes, and if they are different from the ones declared in
+> at91sam9x5cm.dtsi, they are likely defined with mtdparts=, since AFAIK,
+> we can't remove a declared partitionning.
 > 
-Again, you claim that the current driver would not work at all, which
-is simply not correct. It doesn't work if the chip wasn't taken out
-of reset by other means. This doesn't take into account situations and
-hardware where the chip is taken out of reset automatically at boot,
-or by the ROM monitor/BIOS. It assumes that the reset pin can _always_
-be controlled by software.
-
-Similar, it forces the chip into reset when the driver is removed,
-which is even worse. Unload the driver, and no more fan control ?
-Really ? Then why is there an autonomous chip for fan control
-to start with ? This is questionable even if the reset pin is
-optional.
-
-You'll have to make reset handling optional for me to accept it.
-I am quite sure that I said that before.
-
-Guenter
-
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
-> v2:
->  - Correct horrible mistakes
->  - Boot tested and hwmon sysfs files checked
-> ---
->  drivers/hwmon/aspeed-pwm-tacho.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> I'll disable the ebi and switch back to the old binding in my dts for
+> now.
+> >   
+> > > (I tried poking around the DTS without succès).
+> > > 
+> > > any idea ?  
+> > 
+> > I don't have a perfect solution, but the problem you report clearly
+> > shows that relying on MTD numbering is unsafe and should be avoided.  
+> Clearly, but who doesn't ? ;)
 > 
-> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-> index 63a95e23ca81..77bb7a4bbed4 100644
-> --- a/drivers/hwmon/aspeed-pwm-tacho.c
-> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
-> @@ -19,6 +19,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/reset.h>
->  #include <linux/sysfs.h>
->  #include <linux/thermal.h>
->  
-> @@ -181,6 +182,7 @@ struct aspeed_cooling_device {
->  
->  struct aspeed_pwm_tacho_data {
->  	struct regmap *regmap;
-> +	struct reset_control *rst;
->  	unsigned long clk_freq;
->  	bool pwm_present[8];
->  	bool fan_tach_present[16];
-> @@ -931,6 +933,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->  			&aspeed_pwm_tacho_regmap_config);
->  	if (IS_ERR(priv->regmap))
->  		return PTR_ERR(priv->regmap);
-> +
-> +	priv->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(priv->rst)) {
-> +		dev_err(dev,
-> +			"missing or invalid reset controller device tree entry");
-> +		return PTR_ERR(priv->rst);
-> +	}
-> +	reset_control_deassert(priv->rst);
-> +
->  	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
->  	regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
->  
-> @@ -960,6 +971,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->  	return PTR_ERR_OR_ZERO(hwmon);
->  }
->  
-> +static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
-> +{
-> +	struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
-> +
-> +	reset_control_assert(priv->rst);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id of_pwm_tacho_match_table[] = {
->  	{ .compatible = "aspeed,ast2400-pwm-tacho", },
->  	{ .compatible = "aspeed,ast2500-pwm-tacho", },
-> @@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
->  
->  static struct platform_driver aspeed_pwm_tacho_driver = {
->  	.probe		= aspeed_pwm_tacho_probe,
-> +	.remove 	= aspeed_pwm_tacho_remove,
->  	.driver		= {
->  		.name	= "aspeed_pwm_tacho",
->  		.of_match_table = of_pwm_tacho_match_table,
-> -- 
-> 2.14.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Just had a lengthy discussion with Alexandre, and he brought a valid
+point: there has never been any guarantee on MTD numbering. Not only
+the order of DT nodes have an impact on the probe order, but also the
+order in which drivers are linked when creating the kernel image. Yes
+these things usually don't change, but I'm not sure it's a good idea
+to let user-space apps think it will never change in the future.
+
+How about fixing the scripts you were referring to instead of reverting
+the change? What's the blocking point?
+
+Regards,
+
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
