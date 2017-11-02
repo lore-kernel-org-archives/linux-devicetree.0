@@ -1,66 +1,35 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: [PATCH v5 1/2] dt-bindings: Input: add Samsung S6SY761 touchscreen
- binding file
-Date: Thu, 02 Nov 2017 15:07:25 +0900
-Message-ID: <20171102060726.3745-2-andi@etezian.org>
-References: <20171102060726.3745-1-andi@etezian.org>
-        <CGME20171102060735epcas1p2885274174b0936c26741edf29678fc69@epcas1p2.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20171102060726.3745-1-andi@etezian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3] clk: qcom: Elaborate on "active" clocks in the RPM
+ clock bindings
+Date: Wed, 1 Nov 2017 23:46:51 -0700
+Message-ID: <20171102064651.GF30645@codeaurora.org>
+References: <20171013112635.32296-1-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171013112635.32296-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the binding file for the Samsung capacitive multi-touch
-touchscreen S6SY761.
+On 10/13, Linus Walleij wrote:
+> The concept of "active" clocks is just explained in a bried comment in the
+> device driver, let's explain it a bit more in the device tree bindings
+> so everyone understands this.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
 
-Signed-off-by: Andi Shyti <andi@etezian.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/input/touchscreen/samsung,s6sy761.txt | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
+Applied to clk-next
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt b/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
-new file mode 100644
-index 000000000000..d9b7c2ff611e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
-@@ -0,0 +1,34 @@
-+* Samsung S6SY761 touchscreen controller
-+
-+Required properties:
-+- compatible		: must be "samsung,s6sy761"
-+- reg			: I2C slave address, (e.g. 0x48)
-+- interrupt-parent	: the phandle to the interrupt controller which provides
-+			  the interrupt
-+- interrupts		: interrupt specification
-+- avdd-supply		: analogic power supply
-+- vdd-supply		: power supply
-+
-+Optional properties:
-+- touchscreen-size-x	: see touchscreen.txt. This property is embedded in the
-+			  device. If defined it forces a different x resolution.
-+- touchscreen-size-y	: see touchscreen.txt. This property is embedded in the
-+			  device. If defined it forces a different y resolution.
-+
-+Example:
-+
-+i2c@00000000 {
-+
-+	/* ... */
-+
-+	touchscreen@48 {
-+		compatible = "samsung,s6sy761";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpa1>;
-+		interrupts = <1 IRQ_TYPE_NONE>;
-+		avdd-supply = <&ldo30_reg>;
-+		vdd-supply = <&ldo31_reg>;
-+		touchscreen-size-x = <4096>;
-+		touchscreen-size-y = <4096>;
-+	};
-+};
 -- 
-2.14.2
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
