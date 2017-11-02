@@ -1,44 +1,46 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH v10 1/7] dt-bindings: PCI: Add definition of PCIe
- WAKE# irq and PCI irq
-Date: Thu, 2 Nov 2017 14:55:01 -0700
-Message-ID: <20171102215501.GD28152@atomide.com>
-References: <20171027072612.26565-1-jeffy.chen@rock-chips.com>
- <20171027072612.26565-2-jeffy.chen@rock-chips.com>
- <20171027204513.GA105121@google.com>
- <20171101210541.vacfufnn2ms65xrw@rob-hp-laptop>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
+Date: Thu, 2 Nov 2017 22:55:33 +0100
+Message-ID: <CAK8P3a1Bh3_HtzdXgHX5a88uDOehtQnaqYebrOKO2Y8GWW7vhA@mail.gmail.com>
+References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
+ <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+ <1509423579.10793.10.camel@mtkswgap22> <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
+ <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com> <0c3f8521-e0a6-a0d2-45b9-62d7c824818d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171101210541.vacfufnn2ms65xrw@rob-hp-laptop>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Brian Norris <briannorris@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, bhelgaas@google.com, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, rjw@rjwysocki.net, dianders@chromium.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0c3f8521-e0a6-a0d2-45b9-62d7c824818d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh@kernel.org> [171101 21:07]:
-> On Fri, Oct 27, 2017 at 01:45:17PM -0700, Brian Norris wrote:
-> > IMO, since you're trying to augment a standardized binding, you need to
-> > be a lot clearer here. I expect you should mention the existing standard
-> > (that devices may optionally include an 'interrupts' property that
-> > represents the legacy PCI interrupt) and how you're augmenting it (that
-> > additional interrupts can be supported optionally, but they require a
-> > corresponding 'interrupt-names' property).
-> 
-> There's an additional complication that I'd guess the wakeup is 
-> typically a GPIO line and hence a different parent. We have 2 options 
-> there. The first is interrupts-extended which is generally implicitly 
-> supported (i.e. we only document interrupts). The second is we already 
-> have interrupt-map if we have legacy interrupts and can map to different 
-> parents. For this to work, we'd have to use a number >4 for the wakeup 
-> interrupts.
+On Thu, Nov 2, 2017 at 7:47 PM, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>>>
+>>> Arnd, I didn't found the pull request in your next/dt branch.
+>>> Is there more clarification needed from our side?
+>>
+>> I'm still unsure about it., this looks like exactly the thing that the top-level
+>> interrupt-map is supposed to handle fine.
+>>
+>> Can you send a pull request for the series without the pci child nodes for the
+>> moment while we figure out what the exact problem is? We can take
+>> whatever fix we come up with during the v4.15 -rc cycle then.
+>
+> Sure. I'll provide a new tag v4.14-next-dts32-2 without the patch.
+> I will send a pull request shortly.
 
-The wakeup interrupt can also be a separate always on interrupt
-controller in addition to GPIOs. Anyways, the interrupts-extended
-binding works well for these. And the interrupt-names we seem
-to have standardized on are "irq" and "wakeup".
+I was thinking with the patch but without the duplicated interrupt-map
+properties
+(or without the extra child nodes) but dropping the patch works for me too.
 
-Regards,
+I was hoping that we could figure out whether it's a code bug that prevents
+us from just parsing the parent interrupt-map correctly, or whether there is
+something wrong with that map itself.
 
-Tony
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
