@@ -1,60 +1,69 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
-Date: Thu, 2 Nov 2017 09:04:12 +0100
-Message-ID: <20171102080412.n3wfabxt2ayswxzp@verge.net.au>
-References: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw@mail.gmail.com>
- <TY1PR06MB0895612044D5E21BCBFEF46BC0740@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] ARM: sun8i: a83t: Enable
+ AXP813/AXP818 regulators
+Date: Thu, 2 Nov 2017 09:10:45 +0100
+Message-ID: <20171102081045.dnoj2suj2mlo2lyp@flea.lan>
+References: <20171018083138.14517-1-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fheubmp2yzfje5wk"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBENG5PHQKGQEVFUTF6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <TY1PR06MB0895612044D5E21BCBFEF46BC0740@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>
+In-Reply-To: <20171018083138.14517-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 09, 2017 at 01:45:07PM +0000, Fabrizio Castro wrote:
-> Hello Geert,
-> 
-> thank you for your feedback!
-> 
-> >
-> > Hi Fabrizio, Chris,
-> >
-> > On Mon, Oct 9, 2017 at 11:06 AM, Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > > --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > > +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-> > > @@ -11,6 +11,7 @@
-> > >  / {
-> > >         aliases {
-> > >                 serial0 = &scif0;
-> > > +               serial3 = &scifb1;
-> >
-> > Given this port is not labeled "serial3", but called "data uart", you may want
-> > to add a comment to avoid confusion:
-> 
-> It's a little bit confusing, isn't it? The lines related to such
-> interface are named as UART0_x on the carrier board schematic, the
-> section of the schematic that contains the header is named "data uart
-> header", and the board documentation names it explicitly as "UART 3 -
-> /dev/ttySC3 (SCIFB1)".
-> 
-> I don't think there is anything we can do to make this easier for the
-> user really, is there? :D If we decide to add a comment to serial 3, I
-> guess we need to be consistent and add comments for the other serial
-> interfaces too.  If you still prefer having a comment there I'll send a
-> v2 and patch(es) for adding comments to the other interfaces, just let me
-> know.
 
-I have applied this patch. If a comment is subsequently decided on
-then please send a follow-up patch.
+--fheubmp2yzfje5wk
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Wed, Oct 18, 2017 at 04:31:30PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+> 
+> This series was originally name "regulator: axp20x: Add support for
+> AXP813/818 regulators". It adds support for the X-Powers AXP813/818 [1]
+> PMICs' regulators. The series is quite straightforward.
+> 
+> Changes since v1:
+> 
+>   - Regulator driver patches were merged and now dropped from the series
+> 
+>   - Chose simpler names for the regulators
+> 
+>   - Added SDIO WiFi enablement patches
+> 
+> Patch 1 adds a axp20x-regulator cell for AXP813, thereby enabling the
+> regulators.
+> 
+> Patch 2 adds a shared dtsi file for the PMIC. This currently contains
+> a list of regulator nodes, but will be expanded with Quentin's power
+> supply work.
+> 
+> Patches 3 through 5 add regulator nodes to board dts files for the A83T
+> boards that I have. They are not squashed together as each file has
+> substantial additions.
+> 
+> Patch 6 moves the mmc1 pinmux setting over to the dtsi, and sets it by
+> default.
+> 
+> Patches 7 & 8 enable SDIO-based WiFi on the Cubietruck Plus and Banana
+> Pi M3.
+
+Applied patches 2-8, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--fheubmp2yzfje5wk--
