@@ -1,119 +1,193 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [RFCv2 PATCH 14/36] iommu/arm-smmu-v3: Add support for
- Substream IDs
-Date: Thu, 2 Nov 2017 17:02:27 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838454A9B@FRAEML521-MBX.china.huawei.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-15-jean-philippe.brucker@arm.com>
- <5FC3163CFD30C246ABAA99954A238FA838454887@FRAEML521-MBX.china.huawei.com>
- <20171102155152.GA11899@e106794-lin.localdomain>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: sam9x5: MTD numbering changed
+Date: Thu, 2 Nov 2017 18:36:35 +0100
+Message-ID: <CACQ1gAgBc-n_OzOOqy2rYzzRvXUXL6ezTD4FFk6ZZXMtmE4UaQ@mail.gmail.com>
+References: <1509621436.16695.3.camel@gmail.com> <20171102133954.055ce285@bbrezillon>
+ <1509632027.16695.5.camel@gmail.com> <20171102160909.6eee6289@bbrezillon>
+ <1509636493.16695.9.camel@gmail.com> <20171102164555.033dc99b@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171102155152.GA11899@e106794-lin.localdomain>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jean-Philippe Brucker <Jean-Philippe.Brucker@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Mark Rutland <Mark.Rutland@arm.com>, "xieyisheng (A)" <xieyisheng1@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>, joro@8bytes.or
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171102164555.033dc99b@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmVhbi1QaGlsaXBwZSBC
-cnVja2VyIFttYWlsdG86SmVhbi1QaGlsaXBwZS5CcnVja2VyQGFybS5jb21dDQo+IFNlbnQ6IFRo
-dXJzZGF5LCBOb3ZlbWJlciAwMiwgMjAxNyAzOjUyIFBNDQo+IFRvOiBTaGFtZWVyYWxpIEtvbG90
-aHVtIFRob2RpIDxzaGFtZWVyYWxpLmtvbG90aHVtLnRob2RpQGh1YXdlaS5jb20+DQo+IENjOiBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LQ0KPiBhY3BpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc7IGlvbW11QGxpc3RzLmxpbnV4LQ0KPiBmb3VuZGF0aW9uLm9yZzsgTWFyayBSdXRs
-YW5kIDxNYXJrLlJ1dGxhbmRAYXJtLmNvbT47IHhpZXlpc2hlbmcgKEEpDQo+IDx4aWV5aXNoZW5n
-MUBodWF3ZWkuY29tPjsgR2FicmllbGUgUGFvbG9uaQ0KPiA8Z2FicmllbGUucGFvbG9uaUBodWF3
-ZWkuY29tPjsgQ2F0YWxpbiBNYXJpbmFzDQo+IDxDYXRhbGluLk1hcmluYXNAYXJtLmNvbT47IFdp
-bGwgRGVhY29uIDxXaWxsLkRlYWNvbkBhcm0uY29tPjsNCj4gb2theWFAY29kZWF1cm9yYS5vcmc7
-IHlpLmwubGl1QGludGVsLmNvbTsgTG9yZW56byBQaWVyYWxpc2kNCj4gPExvcmVuem8uUGllcmFs
-aXNpQGFybS5jb20+OyBhc2hvay5yYWpAaW50ZWwuY29tOyB0bkBzZW1paGFsZi5jb207DQo+IGpv
-cm9AOGJ5dGVzLm9yZzsgcmZyYW56QGNhdml1bS5jb207IGxlbmJAa2VybmVsLm9yZzsNCj4gamFj
-b2IuanVuLnBhbkBsaW51eC5pbnRlbC5jb207IGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tOw0K
-PiByb2JoK2R0QGtlcm5lbC5vcmc7IExlaXpoZW4gKFRodW5kZXJUb3duKSA8dGh1bmRlci5sZWl6
-aGVuQGh1YXdlaS5jb20+Ow0KPiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBkd213MkBpbmZyYWRlYWQu
-b3JnOyBsaXVibyAoQ1UpDQo+IDxsaXVibzk1QGh1YXdlaS5jb20+OyByandAcmp3eXNvY2tpLm5l
-dDsgcm9iZGNsYXJrQGdtYWlsLmNvbTsNCj4gaGFuanVuLmd1b0BsaW5hcm8ub3JnOyBTdWRlZXAg
-SG9sbGEgPFN1ZGVlcC5Ib2xsYUBhcm0uY29tPjsgUm9iaW4NCj4gTXVycGh5IDxSb2Jpbi5NdXJw
-aHlAYXJtLmNvbT47IG53YXR0ZXJzQGNvZGVhdXJvcmEub3JnOyBMaW51eGFybQ0KPiA8bGludXhh
-cm1AaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogUmU6IFtSRkN2MiBQQVRDSCAxNC8zNl0gaW9tbXUv
-YXJtLXNtbXUtdjM6IEFkZCBzdXBwb3J0IGZvcg0KPiBTdWJzdHJlYW0gSURzDQo+IA0KPiBIaSBT
-aGFtZWVyLA0KPiANCj4gT24gVGh1LCBOb3YgMDIsIDIwMTcgYXQgMTI6NDk6MzJQTSArMDAwMCwg
-U2hhbWVlcmFsaSBLb2xvdGh1bSBUaG9kaSB3cm90ZToNCj4gPiBXZSBoYWQgYSBnbyB3aXRoIHRo
-aXMgc2VyaWVzIG9uIEhpU0lsaWNvbiBEMDUgcGxhdGZvcm0gd2hpY2ggZG9lc24ndCBoYXZlDQo+
-ID4gc3VwcG9ydCBmb3Igc3NpZHMvQVRTL1BSSSwgdG8gbWFrZSBzdXJlIGl0IGdlbmVyYWxseSB3
-b3Jrcy4NCj4gPg0KPiA+IEJ1dCBvYnNlcnZlZCB0aGUgYmVsb3cgY3Jhc2ggb24gYm9vdCwNCj4g
-Pg0KPiA+IFsgICAxNi4wMDkwODRdIFdBUk5JTkc6IENQVTogNTkgUElEOiAzOTEgYXQgbW0vcGFn
-ZV9hbGxvYy5jOjM4ODMNCj4gX19hbGxvY19wYWdlc19ub2RlbWFzaysweDE5Yy8weGM0OA0KPiA+
-IFsgICAxNi4wMjY3OTddIE1vZHVsZXMgbGlua2VkIGluOg0KPiA+IFsgICAxNi4wMzI5NDRdIENQ
-VTogNTkgUElEOiAzOTEgQ29tbToga3dvcmtlci81OToxIE5vdCB0YWludGVkIDQuMTQuMC1yYzEt
-DQo+IDE1OTUzOS1nZTQyYWNhMyAjMjM2DQo+ID4gWy4uLl0NCj4gPiBbICAgMTYuMDY4MjA2XSBX
-b3JrcXVldWU6IGV2ZW50cyBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMNCj4gPiBbICAgMTYuMDc4
-NTU3XSB0YXNrOiBmZmZmODAxN2QzOGEwMDAwIHRhc2suc3RhY2s6IGZmZmYwMDAwMGIxOTgwMDAN
-Cj4gPiBbICAgMTYuMDkwNDg2XSBQQyBpcyBhdCBfX2FsbG9jX3BhZ2VzX25vZGVtYXNrKzB4MTlj
-LzB4YzQ4DQo+ID4gWyAgIDE2LjEwMTAxM10gTFIgaXMgYXQgX19hbGxvY19wYWdlc19ub2RlbWFz
-aysweGUwLzB4YzQ4DQo+ID4gWyAgIDE2LjQ2OTIyMF0gWzxmZmZmMDAwMDA4MTg2Yjk0Pl0gX19h
-bGxvY19wYWdlc19ub2RlbWFzaysweDE5Yy8weGM0OA0KPiA+IFsgICAxNi40ODE4NTRdIFs8ZmZm
-ZjAwMDAwODFkNjViMD5dIGFsbG9jX3BhZ2VzX2N1cnJlbnQrMHg4MC8weGNjDQo+ID4gWyAgIDE2
-LjQ5MzYwN10gWzxmZmZmMDAwMDA4MTgyYmU4Pl0gX19nZXRfZnJlZV9wYWdlcysweGMvMHgzOA0K
-PiA+IFsgICAxNi41MDQ2NjFdIFs8ZmZmZjAwMDAwODNjNGQ1OD5dIHN3aW90bGJfYWxsb2NfY29o
-ZXJlbnQrMHg2NC8weDE5MA0KPiA+IFsgICAxNi41MTcxMTddIFs8ZmZmZjAwMDAwODA5ODI0Yz5d
-IF9fZG1hX2FsbG9jKzB4MTEwLzB4MjA0DQo+ID4gWyAgIDE2LjUyNzgyMF0gWzxmZmZmMDAwMDA4
-NThlODUwPl0gZG1hbV9hbGxvY19jb2hlcmVudCsweDg4LzB4ZjANCj4gPiBbICAgMTYuNTM5NTc1
-XSBbPGZmZmYwMDAwMDg1Njg4ODQ+XQ0KPiBhcm1fc21tdV9kb21haW5fZmluYWxpc2VfczErMHg2
-MC8weDI0OA0KPiA+IFsgICAxNi41NTI5MDldIFs8ZmZmZjAwMDAwODU2YzEwND5dIGFybV9zbW11
-X2F0dGFjaF9kZXYrMHgyNjQvMHgzMDANCj4gPiBbICAgMTYuNTY1MDEzXSBbPGZmZmYwMDAwMDg1
-NWQ0MGM+XSBfX2lvbW11X2F0dGFjaF9kZXZpY2UrMHg0OC8weDVjDQo+ID4gWyAgIDE2LjU3NzEx
-N10gWzxmZmZmMDAwMDA4NTVlNjk4Pl0gaW9tbXVfZ3JvdXBfYWRkX2RldmljZSsweDE0NC8weDNh
-NA0KPiA+IFsgICAxNi41ODk3NDZdIFs8ZmZmZjAwMDAwODU1ZWQxOD5dIGlvbW11X2dyb3VwX2dl
-dF9mb3JfZGV2KzB4NzAvMHhmOA0KPiA+IFsgICAxNi42MDIyMDFdIFs8ZmZmZjAwMDAwODU2YTMx
-ND5dIGFybV9zbW11X2FkZF9kZXZpY2UrMHgxYTQvMHg0MTgNCj4gPiBbICAgMTYuNjE0MzA4XSBb
-PGZmZmYwMDAwMDg0OWRmY2M+XSBpb3J0X2lvbW11X2NvbmZpZ3VyZSsweGYwLzB4MTZjDQo+ID4g
-WyAgIDE2LjYyNjQxNl0gWzxmZmZmMDAwMDA4NDY4YzUwPl0gYWNwaV9kbWFfY29uZmlndXJlKzB4
-MzAvMHg3MA0KPiA+IFsgICAxNi42Mzc5OTRdIFs8ZmZmZjAwMDAwODU4ZjAwYz5dIGRtYV9jb25m
-aWd1cmUrMHhhOC8weGQ0DQo+ID4gWyAgIDE2LjY0ODY5NV0gWzxmZmZmMDAwMDA4NTc3MDZjPl0g
-ZHJpdmVyX3Byb2JlX2RldmljZSsweDFhNC8weDJkYw0KPiA+IFsgICAxNi42NzMwODFdIFs8ZmZm
-ZjAwMDAwODU3NTJjOD5dIGJ1c19mb3JfZWFjaF9kcnYrMHg1NC8weDk0DQo+ID4gWyAgIDE2LjY4
-NDMwN10gWzxmZmZmMDAwMDA4NTc2ZGIwPl0gX19kZXZpY2VfYXR0YWNoKzB4YzQvMHgxMmMNCj4g
-PiBbICAgMTYuNjk1NTMzXSBbPGZmZmYwMDAwMDg1NzczNTA+XSBkZXZpY2VfaW5pdGlhbF9wcm9i
-ZSsweDEwLzB4MTgNCj4gPiBbICAgMTYuNzA3NDYyXSBbPGZmZmYwMDAwMDg1NzYyYjQ+XSBidXNf
-cHJvYmVfZGV2aWNlKzB4OTAvMHg5OA0KPiA+DQo+ID4gQWZ0ZXIgYSBiaXQgb2YgZGVidWcgaXQg
-bG9va3MgbGlrZSBvbiBwbGF0Zm9ybXMgd2hlcmUgc3NpZCBpcyBub3Qgc3VwcG9ydGVkLA0KPiA+
-IHMxX2NmZy5udW1fY29udGV4dHMgaXMgc2V0IHRvIHplcm8gYW5kIGl0IGV2ZW50dWFsbHkgcmVz
-dWx0cyBpbiB0aGlzIGNyYXNoDQo+ID4gaW4sDQo+ID4gYXJtX3NtbXVfZG9tYWluX2ZpbmFsaXNl
-X3MxKCkgLS0+YXJtX3NtbXVfYWxsb2NfY2RfdGFibGVzKCktLT4NCj4gPiBhcm1fc21tdV9hbGxv
-Y19jZF9sZWFmX3RhYmxlKCkgYXMgbnVtX2xlYWZfZW50cmllcyBpcyB6ZXJvLg0KPiA+DQo+ID4g
-V2l0aCB0aGUgYmVsb3cgZml4LCBpdCB3b3JrcyBvbiBEMDUgbm93LA0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUtdjMuYyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNt
-bXUtdjMuYw0KPiA+IGluZGV4IDhhZDkwZTIuLjUxZjU4MjEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9pb21tdS9hcm0tc21tdS12My5jDQo+ID4gKysrIGIvZHJpdmVycy9pb21tdS9hcm0tc21t
-dS12My5jDQo+ID4gQEAgLTI0MzMsNyArMjQzMywxMCBAQCBzdGF0aWMgaW50IGFybV9zbW11X2Rv
-bWFpbl9maW5hbGlzZShzdHJ1Y3QNCj4gaW9tbXVfZG9tYWluICpkb21haW4sDQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgZG9tYWluLT5taW5fcGFzaWQgPSAxOw0KPiA+ICAgICAgICAgICAg
-ICAgICAgICAgICAgIGRvbWFpbi0+bWF4X3Bhc2lkID0gbWFzdGVyLT5udW1fc3NpZHMgLSAxOw0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHNtbXVfZG9tYWluLT5zMV9jZmcubnVtX2NvbnRl
-eHRzID0gbWFzdGVyLT5udW1fc3NpZHM7DQo+ID4gKyAgICAgICAgICAgICAgIH0gZWxzZSB7DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc21tdV9kb21haW4tPnMxX2NmZy5udW1fY29udGV4
-dHMgPSAxOw0KPiA+ICAgICAgICAgICAgICAgICB9DQo+ID4gKw0KPiA+ICAgICAgICAgICAgICAg
-ICBzbW11X2RvbWFpbi0+czFfY2ZnLmNhbl9zdGFsbCA9IG1hc3Rlci0+c3RlLmNhbl9zdGFsbDsN
-Cj4gPiAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gICAgICAgICBjYXNlIEFSTV9TTU1VX0RP
-TUFJTl9ORVNURUQ6DQo+ID4NCj4gPg0KPiA+IEkgYW0gbm90IHN1cmUgdGhpcyBpcyByaWdodCBw
-bGFjZSBkbyB0aGlzLiBQbGVhc2UgdGFrZSBhIGxvb2suDQo+IA0KPiBUaGFua3MgZm9yIHRlc3Rp
-bmcgdGhlIHNlcmllcyBhbmQgcmVwb3J0aW5nIHRoZSBidWcuIEkgYWRkZWQgdGhlDQo+IGZvbGxv
-d2luZyBwYXRjaCB0byBicmFuY2ggc3ZtL2N1cnJlbnQsIGRvZXMgaXQgd29yayBmb3IgeW91Pw0K
-DQpZZXMsIGl0IGRvZXMuDQoNClRoYW5rcywNClNoYW1lZXINCiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvaW9tbXUvYXJtLXNtbXUtdjMuYyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUtdjMuYw0K
-PiBpbmRleCA0MmM4Mzc4NjI0ZWQuLmVkZGE0NjZhZGM4MSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
-cy9pb21tdS9hcm0tc21tdS12My5jDQo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUtdjMu
-Yw0KPiBAQCAtMzE2OSw5ICszMTY5LDcgQEAgc3RhdGljIGludCBhcm1fc21tdV9hZGRfZGV2aWNl
-KHN0cnVjdCBkZXZpY2UgKmRldikNCj4gICAgICAgICAgICAgICAgIH0NCj4gICAgICAgICB9DQo+
-IA0KPiAtICAgICAgIGlmIChzbW11LT5zc2lkX2JpdHMpDQo+IC0gICAgICAgICAgICAgICBtYXN0
-ZXItPm51bV9zc2lkcyA9IDEgPDwgbWluKHNtbXUtPnNzaWRfYml0cywNCj4gLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZndzcGVjLT5udW1fcGFzaWRfYml0cyk7
-DQo+ICsgICAgICAgbWFzdGVyLT5udW1fc3NpZHMgPSAxIDw8IG1pbihzbW11LT5zc2lkX2JpdHMs
-IGZ3c3BlYy0NCj4gPm51bV9wYXNpZF9iaXRzKTsNCj4gDQo+ICAgICAgICAgaWYgKGZ3c3BlYy0+
-Y2FuX3N0YWxsICYmIHNtbXUtPmZlYXR1cmVzICYgQVJNX1NNTVVfRkVBVF9TVEFMTFMpIHsNCj4g
-ICAgICAgICAgICAgICAgIG1hc3Rlci0+Y2FuX2ZhdWx0ID0gdHJ1ZTsNCg0K
+2017-11-02 16:45 GMT+01:00 Boris Brezillon <boris.brezillon@free-electrons.=
+com>:
+> On Thu, 02 Nov 2017 16:28:13 +0100
+> Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> +Nicolas
+>> [its email got lost somehow]
+>> Le jeudi 02 novembre 2017 =C3=A0 16:09 +0100, Boris Brezillon a =C3=A9cr=
+it :
+>> > On Thu, 02 Nov 2017 15:13:47 +0100
+>> > Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >
+>> > > Le jeudi 02 novembre 2017 =C3=A0 13:39 +0100, Boris Brezillon a =C3=
+=A9crit :
+>> > > > +Nicolas
+>> > > >
+>> > > > Hi Richard,
+>> > > >
+>> > > > On Thu, 02 Nov 2017 12:17:16 +0100
+>> > > > Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > > >
+>> > > > > Hi,
+>> > > > >
+>> > > > > I've got an at91sam9g35-cm based board, with 4 partition on the
+>> > > > > spi-
+>> > > > > dataflas and 5 partitions on the NAND flash.
+>> > > > > Before commit 1004a2977bdc ("ARM: dts: at91: Switch to the new
+>> > > > > NAND
+>> > > > > bindings"),
+>> > > > > the NAND partitions were mtd0-4 and spi-dataflash partitions
+>> > > > > mtd5-
+>> > > > > 8.
+>> > > > >
+>> > > > > Since commit 1004a2977bdc ("ARM: dts: at91: Switch to the new
+>> > > > > NAND
+>> > > > > bindings"),
+>> > > > > the spi-dataflash partitions are discovered before the NAND
+>> > > > > partitions.
+>> > > > > So NAND partition became mtd4-8 and spi-dataflash partition
+>> > > > > mtd0-3.
+>> > > > >
+>> > > > > This broke some script that relied on the mtd numbering.
+>> > > > >
+>> > > > > Updating those scripts to rely on the mtd device name instead
+>> > > > > of
+>> > > > > number is not really a problem. The real problem is when an
+>> > > > > older
+>> > > > > script using mtd numbering is run on the new system : I expect
+>> > > > > dead
+>> > > > > kittens everywhere !
+>> > > >
+>> > > > Crap! That was one of the thing I was afraid of when changing the
+>> > > > binding: probe order has an impact on ids assigned to MTD devs,
+>> > > > and
+>> > > > since things are not defined at the same place in the DT, it
+>> > > > changes
+>> > > > the probe order.
+>> > > >
+>> > > > >
+>> > > > > So, I'd like to know if there's a way to force the older
+>> > > > > numbering
+>> > > > > ?
+>> > > >
+>> > > > Reverting the patches is probably the easiest way (and it's
+>> > > > easily
+>> > > > backportable). Now, if we want to switch to the new bindings at
+>> > > > some
+>> > > > point we'll need to support DT aliases for mtd devs:
+>> > > >
+>> > > > aliases {
+>> > > >         mtdX =3D &flashpartN;
+>> > > >         mtdY =3D &flashdevM;
+>> > > > };
+>> > > >
+>> > > > The problem with this solution is that it only works if all
+>> > > > partitions
+>> > > > are defined in the DT, which is not always the case (they can be
+>> > > > defined
+>> > > > on the command line with mtdparts=3D).
+>> > >
+>> > > Yes, and if they are different from the ones declared in
+>> > > at91sam9x5cm.dtsi, they are likely defined with mtdparts=3D, since
+>> > > AFAIK,
+>> > > we can't remove a declared partitionning.
+>> > >
+>> > > I'll disable the ebi and switch back to the old binding in my dts
+>> > > for
+>> > > now.
+>> > > >
+>> > > > > (I tried poking around the DTS without succ=C3=A8s).
+>> > > > >
+>> > > > > any idea ?
+>> > > >
+>> > > > I don't have a perfect solution, but the problem you report
+>> > > > clearly
+>> > > > shows that relying on MTD numbering is unsafe and should be
+>> > > > avoided.
+>> > >
+>> > > Clearly, but who doesn't ? ;)
+>> > >
+>> >
+>> > Just had a lengthy discussion with Alexandre, and he brought a valid
+>> > point: there has never been any guarantee on MTD numbering. Not only
+>> > the order of DT nodes have an impact on the probe order, but also the
+>> > order in which drivers are linked when creating the kernel image. Yes
+>> > these things usually don't change, but I'm not sure it's a good idea
+>> > to let user-space apps think it will never change in the future.
+>> >
+>> > How about fixing the scripts you were referring to instead of
+>> > reverting
+>> > the change? What's the blocking point?
+>>
+>> I already fixed the user-space scripts (and actually, they predate the
+>> device-tree era, so at that time, relying on MTD numbering wasn't so
+>> bad :)).
+>> Anyway, here's the blocking point :
+>>
+>> We have firmwares with an embedded script to update our boards. (more
+>> or less a FW + script in a zip file).
+>> Those old firmwares are already in the wild and rely on the old MTD
+>> numbering (yes, that's bad).
+>>
+>>
+>> So, even if all new scripts are corrected in the new firmwares,
+>> downgrading a board with an old firmware/old script will brick the
+>> board.
+>> So I'll have to detect that and forbid downgrading.
+>
+> Not sure what you refer to when you're talking about 'FW', but I'd
+> expect it to contain a kernel [+ a dtb] + a rootfs, so if you're using
+> an old "FW+update-script", you will still have the old numbering and
+> the old script will work just fine, and if you switch to a newer version
+> of the "FW+update-script" based on a 4.13 kernel+dtb you will anyway
+> have the updated script. Am I missing something?
+
+Ok, let's have an example.
+New firmware : kernel
+4.14+dtb+rootfs+uboot+uboot_env+at91bootstrap+new update script.
+Old firmware : kernel 4.11 + dtb + rootfs + uboot +
+uboot_env+at91bootstrap+old update script.
+
+Let's suppose there's the new firmware on the board (let's call it
+4.14 firmware) :
+MTD0 is the dataflash partition 0 (at91bootstrap)
+MTD1 is the dataflash part1 (uboot)
+MTD2 is the dataflash part2 (ubootenv)
+MTD3 is the dataflash part3 (free space)
+MTD4 is the NAND part 0 (dtb)
+MTD5 is the NAND part 1 (kernel)
+MTD6 is the NAND part 2 (UBI) <- in this one, there're 3 ubifs volumes
+: rootfs/rootfs2/data
+
+The thing is, the update script runs in user-space and updates the
+kernel, dtb, uboot, bootstrap and flashes the rootfs2.
+(on next boot, the rootfs2/rootfs will be atomically swapped)
+So, when downgrading, the old update script is executed on the board,
+under the 4.14 firmware, thinking that MTD0 is the NAND part0 (dtb),
+while it is actually the dataflash part0 (bootstrap).
+=3D> the bootstrap is erased and replaced by the dtb (well, actually, it
+won't even be like that since there will be a mismatch between
+nandwrite/flash_part).
+
+It's not a huge big deal since I have another way to flash all
+partitions from uboot, but this can't be done remotely.
+
+
+>
+>>
+>> That's not the end of the world, but if I can find a trick to prevent
+>> it, I'll be happier !
+>>
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
