@@ -1,64 +1,46 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 3/3] dt-bindings: hwmon: aspeed-pwm-tacho: Add reset node
-Date: Thu,  2 Nov 2017 14:53:49 +1100
-Message-ID: <20171102035349.1902-4-joel@jms.id.au>
-References: <20171102035349.1902-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171102035349.1902-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Mykola Kostenok <c_mykolak@mellanox.com>, Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>, Patrick Venture <venture@google.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2] of: platform: Create dummy routines for
+ !CONFIG_OF_ADDRESS
+Date: Thu, 2 Nov 2017 10:18:23 +0530
+Message-ID: <20171102044823.GV4240@vireshk-i7>
+References: <2d798213e4fefc074a66ccb7ab2fc243ee2b1e1a.1509186356.git.viresh.kumar@linaro.org>
+ <20171101211458.wo4at67k7sxo5fah@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171101211458.wo4at67k7sxo5fah@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The device tree bindings are updated to document the resets phandle, and
-the example is updated to match what is expected for both the reset and
-clock phandle.
+On 01-11-17, 16:14, Rob Herring wrote:
+> On Sat, Oct 28, 2017 at 03:56:46PM +0530, Viresh Kumar wrote:
+> > Few routines don't have their dummy counterparts which results in build
+> > failures where these routines are used without CONFIG_OF_ADDRESS
+> > enabled.
+> > 
+> > Fix those by defining the dummy versions.
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> > V2:
+> > - Rebased again latest rc and resolved conflicts.
+> > - No comments received on V1.
+> 
+> What's your user?
 
-Note that the bindings should have always had the reset controller, as
-the hardware is unusable without it.
+It was the previous version of boot constraint core, though I have
+moved to another helper now.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt         | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+https://marc.info/?l=linux-kernel&m=150157976217258&w=2
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-index 367c8203213b..3ac02988a1a5 100644
---- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -22,8 +22,9 @@ Required properties for pwm-tacho node:
- - compatible : should be "aspeed,ast2400-pwm-tacho" for AST2400 and
- 	       "aspeed,ast2500-pwm-tacho" for AST2500.
- 
--- clocks : a fixed clock providing input clock frequency(PWM
--	   and Fan Tach clock)
-+- clocks : phandle to clock provider with the clock number in the second cell
-+
-+- resets : phandle to reset controller with the reset number in the second cell
- 
- fan subnode format:
- ===================
-@@ -48,19 +49,14 @@ Required properties for each child node:
- 
- Examples:
- 
--pwm_tacho_fixed_clk: fixedclk {
--	compatible = "fixed-clock";
--	#clock-cells = <0>;
--	clock-frequency = <24000000>;
--};
--
- pwm_tacho: pwmtachocontroller@1e786000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 	#cooling-cells = <2>;
- 	reg = <0x1E786000 0x1000>;
- 	compatible = "aspeed,ast2500-pwm-tacho";
--	clocks = <&pwm_tacho_fixed_clk>;
-+	clocks = <&syscon ASPEED_CLK_APB>;
-+	resets = <&syscon ASPEED_RESET_PWM>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
- 
+Wouldn't it be better to define them anyway?
+
 -- 
-2.14.1
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
