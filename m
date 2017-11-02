@@ -1,56 +1,92 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
-Date: Thu, 2 Nov 2017 12:47:05 +0100
-Message-ID: <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
-References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
- <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
- <1509423579.10793.10.camel@mtkswgap22>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v6 03/12] arm64: dts: mt8173: remove "mediatek,mt8135-mmc"
+ from mmc nodes
+Date: Thu, 2 Nov 2017 12:50:43 +0100
+Message-ID: <b24d12e4-251f-6f79-1ed9-5b52f8f39625@gmail.com>
+References: <1508118399-21828-1-git-send-email-chaotian.jing@mediatek.com>
+ <1508118399-21828-4-git-send-email-chaotian.jing@mediatek.com>
+ <CAPDyKFrRVT8YFXvy3Wuf_jga5oourScOdas34U=YkeLRzHoWMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509423579.10793.10.camel@mtkswgap22>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrRVT8YFXvy3Wuf_jga5oourScOdas34U=YkeLRzHoWMg@mail.gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, yong mao <yong.mao@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Heiner Kallweit <hkallweit1@gmail.com>, Phong LE <ple@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On 10/31/2017 05:19 AM, Ryder Lee wrote:
-> Hi Arnd,
-> 
-> We have 3 root ports in MT7623, but this is a bug in this chip where the
-> HW designers wired the IRQs in a nonstandard way. We've tried to
-> statically assign the bus portion of the address part in the parent
-> interrupt-map before, but this approach cannot handle the case - if we
-> attach the device in random order.
-> 
 
-Ryder, please don't top post :)
-
-> Thanks.
-> 
-> On Mon, 2017-10-30 at 13:42 +0100, Arnd Bergmann wrote:
->> On Mon, Oct 23, 2017 at 12:06 AM, Matthias Brugger
->> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> ----------------------------------------------------------------
->>> - mt76233 add PCIe node
+On 10/25/2017 11:11 PM, Ulf Hansson wrote:
+> On 16 October 2017 at 03:46, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
+>> devicetree bindings has been updated to support multi-platforms,
+>> so that each platform has its owns compatible name.
+>> And, this compatible name may used in driver to distinguish with
+>> other platform.
 >>
->> Could you clarify what the subnodes in the PCI node are for? It seems odd
->> to have "interrupt-map" properties in both the pcie controller and its child
->> nodes, and I want to ensure this is following the standard PCIe binding before
->> I pull it.
+>> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> 
+> Matthias, do you intend to pick this? Else I can do it with your ack...
+> 
+
+If it's not too late, feel free to take it. Otherwise I will queue it for the
+next merge window:
+
+Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> Kind regards
+> Uffe
+> 
+>> ---
+>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 12 ++++--------
+>>  1 file changed, 4 insertions(+), 8 deletions(-)
 >>
-
-Arnd, I didn't found the pull request in your next/dt branch.
-Is there more clarification needed from our side?
-
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> index b99a273..26396ef 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>> @@ -682,8 +682,7 @@
+>>                 };
+>>
+>>                 mmc0: mmc@11230000 {
+>> -                       compatible = "mediatek,mt8173-mmc",
+>> -                                    "mediatek,mt8135-mmc";
+>> +                       compatible = "mediatek,mt8173-mmc";
+>>                         reg = <0 0x11230000 0 0x1000>;
+>>                         interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_LOW>;
+>>                         clocks = <&pericfg CLK_PERI_MSDC30_0>,
+>> @@ -693,8 +692,7 @@
+>>                 };
+>>
+>>                 mmc1: mmc@11240000 {
+>> -                       compatible = "mediatek,mt8173-mmc",
+>> -                                    "mediatek,mt8135-mmc";
+>> +                       compatible = "mediatek,mt8173-mmc";
+>>                         reg = <0 0x11240000 0 0x1000>;
+>>                         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
+>>                         clocks = <&pericfg CLK_PERI_MSDC30_1>,
+>> @@ -704,8 +702,7 @@
+>>                 };
+>>
+>>                 mmc2: mmc@11250000 {
+>> -                       compatible = "mediatek,mt8173-mmc",
+>> -                                    "mediatek,mt8135-mmc";
+>> +                       compatible = "mediatek,mt8173-mmc";
+>>                         reg = <0 0x11250000 0 0x1000>;
+>>                         interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
+>>                         clocks = <&pericfg CLK_PERI_MSDC30_2>,
+>> @@ -715,8 +712,7 @@
+>>                 };
+>>
+>>                 mmc3: mmc@11260000 {
+>> -                       compatible = "mediatek,mt8173-mmc",
+>> -                                    "mediatek,mt8135-mmc";
+>> +                       compatible = "mediatek,mt8173-mmc";
+>>                         reg = <0 0x11260000 0 0x1000>;
+>>                         interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_LOW>;
+>>                         clocks = <&pericfg CLK_PERI_MSDC30_3>,
+>> --
+>> 1.8.1.1.dirty
+>>
