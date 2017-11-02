@@ -1,45 +1,69 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH 4/7] MIPS: Octeon: Add Free Pointer Unit (FPA) support.
-Date: Thu, 2 Nov 2017 09:27:01 -0700
-Message-ID: <fc2d71e2-cdd4-1cf8-13b0-ea462b5e7e75@caviumnetworks.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
+ support.
+Date: Thu, 2 Nov 2017 09:37:18 -0700
+Message-ID: <0f39046d-dc99-5c05-d918-10952cd20e1b@caviumnetworks.com>
 References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-5-david.daney@cavium.com>
- <d473b10c-ae5d-efa1-7329-de7b68152725@gmail.com>
+ <20171102003606.19913-7-david.daney@cavium.com>
+ <20171102124339.GF4772@lunn.ch>
+ <521d6b21-b7f0-66e0-4b49-cf95d83452d1@caviumnetworks.com>
+ <20171102161016.GH24320@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d473b10c-ae5d-efa1-7329-de7b68152725@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171102161016.GH24320-g2DYL2Zd6BY@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2017 08:29 PM, Florian Fainelli wrote:
-> Le 11/01/17 à 17:36, David Daney a écrit :
->> From: Carlos Munoz <cmunoz@cavium.com>
+On 11/02/2017 09:10 AM, Andrew Lunn wrote:
+> On Thu, Nov 02, 2017 at 08:55:33AM -0700, David Daney wrote:
+>> On 11/02/2017 05:43 AM, Andrew Lunn wrote:
+>> [...]
+>>>> +
+>>>> +		i = atomic_inc_return(&pki_id);
+>>>> +		pki_dev = platform_device_register_data(&new_dev->dev,
+>>>> +							is_mix ? "octeon_mgmt" : "ethernet-mac-pki",
+>>>> +							i, &platform_data, sizeof(platform_data));
+>>>> +		dev_info(&pdev->dev, "Created %s %u: %p\n",
+>>>> +			 is_mix ? "MIX" : "PKI", pki_dev->id, pki_dev);
+>>>
+>>> Is there any change of these ethernet ports being used to connect to
+>>> an Ethernet switch. We have had issues in the past with these sort of
+>>> platform devices combined with DSA.
+>>>
 >>
->>  From the hardware user manual: "The FPA is a unit that maintains
->> pools of pointers to free L2/DRAM memory. To provide QoS, the pools
->> are referenced indirectly through 1024 auras. Both core software
->> and hardware units allocate and free pointers."
+>> There are only two possibilities.  The BGX MACs have a multiplexer that
+>> allows them to be connected to either the "octeon_mgmt" MIX packet
+>> processor, or to the "ethernet-mac-pki" PKI/PKO packet processor.  The SoCs
+>> supported by these drivers do not contain any hardware that would be
+>> considered an "Ethernet switch".
 > 
-> This looks like a possibly similar implement to what
-> drivers/net/ethernet/marvell/mvneta_bm.c, can you see if you can make
-> any use of genpool_* and include/net/hwbm.h here as well?
+> Hi David
+> 
+> I was thinking of an external Ethernet switch. You generally connect
+> via RGMII to a port of the switch.
+> 
 
-Yikes!  Is it permitted to put function definitions that are not "static 
-inline" in header files?
+OK, now I think I understand.  Yes, the MAC can be hardwired to a 
+switch.  In fact, there are system designs that do exactly that.
 
-The driver currently doesn't use page fragments, so I don't think that 
-the hwbm thing can be used.
+We try to handle this case by not having a "phy-handle" property in the 
+device tree.  The link to the remote device (switch IC in this case) is 
+brought up on ndo_open()
 
-Also the FPA unit is used to control RED and back pressure in the PKI 
-(packet input processor), which are features that are features not 
-considered in hwbm.
+There may be opportunities to improve how this works in the future, but 
+the current code is serviceable.
 
-The OCTEON-III hardware also uses the FPA for non-packet-buffer memory 
-allocations.  So for those, it seems that hwbm is also not a good fit.
+> http://elixir.free-electrons.com/linux/v4.9.60/source/Documentation/networking/dsa/dsa.txt
+> 
+> 	Andrew
+> 
 
-David Daney
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
