@@ -1,61 +1,38 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 18/22] clk: add support for clocks provided by SCMI
-Date: Thu, 2 Nov 2017 00:23:50 -0700
-Message-ID: <20171102072350.GO30645@codeaurora.org>
-References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
- <1506604306-20739-19-git-send-email-sudeep.holla@arm.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: shmobile: Document Renesas M3-W-based
+ Salvator-XS board DT bindings
+Date: Thu, 2 Nov 2017 08:58:25 +0100
+Message-ID: <20171102075825.3hiqwfbxjpqmeayp@verge.net.au>
+References: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
+ <1509384599-28953-2-git-send-email-geert+renesas@glider.be>
+ <20171101214904.b5adavvirlmphnqn@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1506604306-20739-19-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20171101214904.b5adavvirlmphnqn@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28, Sudeep Holla wrote:
-> On some ARM based systems, a separate Cortex-M based System Control
-> Processor(SCP) provides the overall power, clock, reset and system
-> control. System Control and Management Interface(SCMI) Message Protocol
-> is defined for the communication between the Application Cores(AP)
-> and the SCP.
+On Wed, Nov 01, 2017 at 04:49:04PM -0500, Rob Herring wrote:
+> On Mon, Oct 30, 2017 at 06:29:57PM +0100, Geert Uytterhoeven wrote:
+> > The Renesas Salvator-XS (Salvator-X 2nd version) development board can
+> > be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
+> > pin-compatible.
+> > 
+> > Document board part number and compatible values for the version with
+> > R-Car M3-W.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
 > 
-> This patch adds support for the clocks provided by SCP using SCMI
-> protocol.
-> 
-> Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
->  MAINTAINERS            |   2 +-
->  drivers/clk/Kconfig    |  10 +++
->  drivers/clk/Makefile   |   1 +
->  drivers/clk/clk-scmi.c | 210 +++++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 222 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/clk-scmi.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 23ec3471f542..32c184391aee 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12941,7 +12941,7 @@ M:	Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/arm/arm,sc[mp]i.txt
-> -F:	drivers/clk/clk-scpi.c
-> +F:	drivers/clk/clk-sc[mp]i.c
-
-Is there a lot of copy/paste going on from clk-scpi.c? Maybe it
-could be consolidated?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks, applied.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
