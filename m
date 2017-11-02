@@ -1,78 +1,66 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 1/2] pinctrl: Allow a device to indicate when to force a state
-Date: Thu,  2 Nov 2017 16:15:50 -0700
-Message-ID: <20171102231551.16220-2-f.fainelli@gmail.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171102231551.16220-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.cirrus.com, tony@atomide.com, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH] ARM: sun8i: h2+: add support for Banana
+ Pi M2 Zero board
+Date: Fri, 03 Nov 2017 07:53:17 +0800
+Message-ID: <b548b74e04b29ec8c3cddb7cc42f2b4e@aosc.io>
+References: <20171101093814.19177-1-icenowy@aosc.io>
+ <20171102090248.wnvj7dpphn5uqsut@flea>
+ <8327eaeaa12b99f9962a53c9f02ddd6d@aosc.io>
+ <20171102155003.vp7uve4ypyn4sb6j@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171102155003.vp7uve4ypyn4sb6j@flea>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It may happen that a device needs to force applying a state, e.g:
-because it only defines one state of pin states (default) but loses
-power/register contents when entering low power modes. Add a
-pinctrl_dev::flags bitmask to help describe future quirks and define
-PINCTRL_FLG_FORCE_STATE as such a settable flag.
+在 2017-11-02 23:50，Maxime Ripard 写道：
+> On Thu, Nov 02, 2017 at 05:07:30PM +0800, Icenowy Zheng wrote:
+>> > > +&mmc0 {
+>> > > +	pinctrl-names = "default";
+>> > > +	pinctrl-0 = <&mmc0_pins_a>;
+>> > > +	vmmc-supply = <&reg_vcc3v3>;
+>> > > +	bus-width = <4>;
+>> > > +	/*
+>> > > +	 * In different revisions the board have different card detect
+>> > > +	 * configuration.
+>> > > +	 */
+>> >
+>> > Which ones?
+>> 
+>> In the sample batch (1.2V fixed voltage) the card detect is normal
+>> (PF6 low as inserted), however in the final batch (1.1V/1.3V
+>> switchable) it's inverted at PF6 (high as inserted).
+> 
+> Then just use the final version's.
+> 
+>> > > +&usbphy {
+>> > > +	usb0_id_det-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
+>> > > +	/* USB OTG VBUS is directly connected to 5V without any regulators
+>> > > */
+>> >
+>> > So it cannot operate in OTG, but it's host only?
+>> 
+>> It can operate in OTG -- you can power the board via the OTG port,
+>> as the VBUS is not gated from 5V at all, so 5V power at VBUS will
+>> power up the board. Yes, it's a bit unsafe, but the board designer
+>> did it.
+> 
+> What will provide the 5v in the first place then if a USB device is
+> connected to the micro-USB connector?
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pinctrl/core.c | 14 +++++++++++++-
- drivers/pinctrl/core.h |  4 ++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+There're two micro-USB connectors, one is power-only and another is
+OTG. The Vbus of these two connectors are connected together, so
+the external USB device will be powered just by the power input
+from the power-only USB port.
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 4c8d5b23e4d0..c91359d48aa1 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1197,9 +1197,21 @@ int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
- {
- 	struct pinctrl_setting *setting, *setting2;
- 	struct pinctrl_state *old_state = p->state;
-+	bool force = false;
- 	int ret;
- 
--	if (p->state == state)
-+	if (p->state) {
-+		list_for_each_entry(setting, &p->state->settings, node) {
-+			if (setting->pctldev->flags & PINCTRL_FLG_FORCE_STATE)
-+				force = true;
-+		}
-+	}
-+
-+	/* Some controllers may want to force this operation when they define
-+	 * only one set of functions and lose power state, e.g: pinctrl-single
-+	 * with its pinctrl-single,low-power-state-loss property.
-+	 */
-+	if (p->state == state && !force)
- 		return 0;
- 
- 	if (p->state) {
-diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-index 8cf2eba17c8c..8f900e152295 100644
---- a/drivers/pinctrl/core.h
-+++ b/drivers/pinctrl/core.h
-@@ -39,6 +39,7 @@ struct pinctrl_gpio_range;
-  * @hog_sleep: sleep state for pins hogged by this device
-  * @mutex: mutex taken on each pin controller specific action
-  * @device_root: debugfs root for this device
-+ * @flags: feature/quirk flags
-  */
- struct pinctrl_dev {
- 	struct list_head node;
-@@ -63,8 +64,11 @@ struct pinctrl_dev {
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *device_root;
- #endif
-+	unsigned long flags;
- };
- 
-+#define PINCTRL_FLG_FORCE_STATE	(1 << 0)
-+
- /**
-  * struct pinctrl - per-device pin control state holder
-  * @node: global list node
--- 
-2.9.3
+> 
+> Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
