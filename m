@@ -1,51 +1,40 @@
-From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
-Subject: [PATCH v8 3/5] Documentation: Add device tree binding for Goldfish FB driver
-Date: Fri,  3 Nov 2017 18:21:36 +0100
-Message-ID: <1509729730-26621-4-git-send-email-aleksandar.markovic@rt-rk.com>
-References: <1509729730-26621-1-git-send-email-aleksandar.markovic@rt-rk.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
+ suspend/resume
+Date: Fri, 3 Nov 2017 10:33:53 -0700
+Message-ID: <20171103173353.GJ28152@atomide.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <20171103103707.3e5wb3c7foxbuvvg@localhost.localdomain>
+ <20171103161120.GH28152@atomide.com>
+ <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1509729730-26621-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Content-Disposition: inline
+In-Reply-To: <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Aleksandar Markovic <aleksandar.markovic@mips.com>, Miodrag Dinic <miodrag.dinic@mips.com>, Goran Ferenc <goran.ferenc@mips.com>, David Airlie <airlied@linux.ie>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@mips.com>, dri-devel@lists.freedesktop.org, James Hogan <james.hogan@mips.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, Petar Jovanovic <petar.jovanovic@mips.com>, Raghu Gandham <raghu.gandham@mips.com>, Rob Herring <robh+dt@kernel.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Aleksandar Markovic <aleksandar.markovic@mips.com>
+* Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
+> On 11/03/2017 09:11 AM, Tony Lindgren wrote:
+> The pinctrl provider is losing its state, hence these two patches.
 
-Add documentation for DT binding of Goldfish FB driver. The compatible
-string used by OS for binding the driver is "google,goldfish-fb".
+OK
 
-Signed-off-by: Miodrag Dinic <miodrag.dinic@mips.com>
-Signed-off-by: Goran Ferenc <goran.ferenc@mips.com>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic@mips.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/display/google,goldfish-fb.txt  | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/google,goldfish-fb.txt
+> > Anyways, the context lost flag should be managed in the PM core for
+> > the device, so adding linux-pm and Rafael to Cc.
+> 
+> I don't think it's that simple but sure, why not.
 
-diff --git a/Documentation/devicetree/bindings/display/google,goldfish-fb.txt b/Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-new file mode 100644
-index 0000000..751fa9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/google,goldfish-fb.txt
-@@ -0,0 +1,17 @@
-+Android Goldfish framebuffer
-+
-+Android Goldfish framebuffer device used by Android emulator.
-+
-+Required properties:
-+
-+- compatible : should contain "google,goldfish-fb"
-+- reg        : <registers mapping>
-+- interrupts : <interrupt mapping>
-+
-+Example:
-+
-+	display-controller@1f008000 {
-+		compatible = "google,goldfish-fb";
-+		interrupts = <0x10>;
-+		reg = <0x1f008000 0x100>;
-+	};
--- 
-2.7.4
+Just having bool context_lost in struct dev_pm_info would probably
+be enough to allow drivers to deal with it. This flag could then
+be set for a device by power domain related code that knows if
+context got lost.
+
+Anybody got better ideas?
+
+Regards,
+
+Tony
