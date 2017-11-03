@@ -1,116 +1,117 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Fri, 3 Nov 2017 16:48:11 +0100
-Message-ID: <20171103154811.GS24320@lunn.ch>
-References: <20171102003606.19913-1-david.daney@cavium.com>
- <20171102003606.19913-7-david.daney@cavium.com>
- <55d6cf88-7444-42ea-02f1-27efdee2be4b@gmail.com>
- <ee206580-e419-903f-de36-72d5803b1b7b@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [patch v11 0/4] JTAG driver introduction
+Date: Fri,  3 Nov 2017 17:54:05 +0200
+Message-ID: <1509724449-26221-1-git-send-email-oleksandrs@mellanox.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ee206580-e419-903f-de36-72d5803b1b7b-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >>+static char *mix_port;
-> >>+module_param(mix_port, charp, 0444);
-> >>+MODULE_PARM_DESC(mix_port, "Specifies which ports connect to MIX interfaces.");
-> >
-> >Can you derive this from Device Tree /platform data configuration?
-> >
-> >>+
-> >>+static char *pki_port;
-> >>+module_param(pki_port, charp, 0444);
-> >>+MODULE_PARM_DESC(pki_port, "Specifies which ports connect to the PKI.");
-> >
-> >Likewise
-> 
-> The SoC is flexible in how it is configured.  Technically the device tree
-> should only be used to specify information about the physical configuration
-> of the system that cannot be probed for, and this is about policy rather
-> that physical wiring.  That said, we do take the default configuration from
-> the device tree, but give the option here to override via the module command
-> line.
+When a need raise up to use JTAG interface for system's devices
+programming or CPU debugging, usually the user layer
+application implements jtag protocol by bit-bang or using a 
+proprietary connection to vendor hardware.
+This method can be slow and not generic.
+ 
+We propose to implement general JTAG interface and infrastructure
+to communicate with user layer application. In such way, we can
+have the standard JTAG interface core part and separation from
+specific HW implementation.
+This allow new capability to debug the CPU or program system's 
+device via BMC without additional devices nor cost. 
 
-Module parameters are pretty much frowned upon. 
+This patch purpose is to add JTAG master core infrastructure by 
+defining new JTAG class and provide generic JTAG interface
+to allow hardware specific drivers to connect this interface.
+This will enable all JTAG drivers to use the common interface
+part and will have separate for hardware implementation.
 
-You should really try to remove them all, if possible.
+The JTAG (Joint Test Action Group) core driver provides minimal generic
+JTAG interface, which can be used by hardware specific JTAG master
+controllers. By providing common interface for the JTAG controllers,
+user space device programing is hardware independent.
+ 
+Modern SoC which in use for embedded system' equipped with
+internal JTAG master interface.
+This interface is used for programming and debugging system's
+hardware components, like CPLD, FPGA, CPU, voltage and
+industrial controllers.
+Firmware for such devices can be upgraded through JTAG interface during
+Runtime. The JTAG standard support for multiple devices programming,
+is in case their lines are daisy-chained together.
 
-> >>+/* Registers are accessed via xkphys */
-> >>+#define SSO_BASE			0x1670000000000ull
-> >>+#define SSO_ADDR(node)			(SET_XKPHYS + NODE_OFFSET(node) +      \
-> >>+					 SSO_BASE)
-> >>+#define GRP_OFFSET(grp)			((grp) << 16)
-> >>+#define GRP_ADDR(n, g)			(SSO_ADDR(n) + GRP_OFFSET(g))
-> >>+#define SSO_GRP_AQ_CNT(n, g)		(GRP_ADDR(n, g)		   + 0x20000700)
-> >>+
-> >>+#define MIO_PTP_BASE			0x1070000000000ull
-> >>+#define MIO_PTP_ADDR(node)		(SET_XKPHYS + NODE_OFFSET(node) +      \
-> >>+					 MIO_PTP_BASE)
-> >>+#define MIO_PTP_CLOCK_CFG(node)		(MIO_PTP_ADDR(node)		+ 0xf00)
-> >>+#define MIO_PTP_CLOCK_HI(node)		(MIO_PTP_ADDR(node)		+ 0xf10)
-> >>+#define MIO_PTP_CLOCK_COMP(node)	(MIO_PTP_ADDR(node)		+ 0xf18)
-> >
-> >I am sure this will work great on anything but MIPS64 ;)
-> 
-> Sarcasm duly noted.
-> 
-> That said, by definition it is exactly an OCTEON-III/MIPS64, and can never
-> be anything else.  It is known a priori that the hardware and this driver
-> will never be used anywhere else.
+For example, systems which equipped with host CPU, BMC SoC or/and 
+number of programmable devices are capable to connect a pin and
+select system components dynamically for programming and debugging,
+This is using by the BMC which is equipped with internal SoC master
+controller.
+For example:
 
-Please make sure your Kconfig really enforces this. Generally, we
-suggest allowing the driver to be compiled when COMPILE_TEST is set.
-That gives you better compiler test coverage. But it seems like this
-driver won't compile under such conditions.
+BMC JTAG master --> pin selected to CPLDs chain for programming (filed
+upgrade, production) 
+BMC JTAG master --> pin selected to voltage monitors for programming 
+(field upgrade, production) 
+BMC JTAG master --> pin selected to host CPU (on-site debugging 
+and developers debugging)
 
-> >>+static int num_packet_buffers = 768;
-> >>+module_param(num_packet_buffers, int, 0444);
-> >>+MODULE_PARM_DESC(num_packet_buffers,
-> >>+		 "Number of packet buffers to allocate per port.");
-> >
-> >Consider implementing ethtool -g/G for this.
-> 
-> That may be work for a follow-on patch.
+For example, we can have application in user space which using calls
+to JTAG driver executes CPLD programming directly from SVF file
+ 
+The JTAG standard (IEEE 1149.1) defines the next connector pins:
+- TDI (Test Data In);
+- TDO (Test Data Out);
+- TCK (Test Clock);
+- TMS (Test Mode Select);
+- TRST (Test Reset) (Optional);
 
-Then please remove the module parameter now.
+The SoC equipped with JTAG master controller, performs
+device programming on command or vector level. For example
+a file in a standard SVF (Serial Vector Format) that contains
+boundary scan vectors, can be used by sending each vector
+to the JTAG interface and the JTAG controller will execute
+the programming.
 
-> >>+static int rx_queues = 1;
-> >>+module_param(rx_queues, int, 0444);
-> >>+MODULE_PARM_DESC(rx_queues, "Number of RX threads per port.");
-> >
-> >Same thing, can you consider using an ethtool knob for that?
-> 
-> Also may be work for a follow-on patch.
+Initial version provides the system calls set for:
+- SIR (Scan Instruction Register, IEEE 1149.1 Data Register scan);
+- SDR (Scan Data Register, IEEE 1149.1 Instruction Register scan);
+- RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
+  number of clocks.
 
-Ditto
+SoC which are not equipped with JTAG master interface, can be built
+on top of JTAG core driver infrastructure, by applying bit-banging of
+TDI, TDO, TCK and TMS pins within the hardware specific driver.
 
-> >>+/**
-> >>+ * Reads a 64 bit value from the processor local scratchpad memory.
-> >>+ *
-> >>+ * @param offset byte offset into scratch pad to read
-> >>+ *
-> >>+ * @return value read
-> >>+ */
-> >>+static inline u64 scratch_read64(u64 offset)
-> >>+{
-> >>+	return *(u64 *)((long)SCRATCH_BASE + offset);
-> >>+}
-> >
-> >No barriers needed whatsoever?
-> 
-> Nope.
+Oleksandr Shamray (4):
+  drivers: jtag: Add JTAG core driver
+  drivers: jtag: Add Aspeed SoC 24xx and 25xx families JTAG master
+    driver
+  Documentation: jtag: Add bindings for Aspeed SoC 24xx and 25xx
+    families     JTAG master driver
+  Documentation: jtag: Add ABI documentation
 
-Then it would be good to add a comment about why no barrier is
-needed. Otherwise people are going to ask why there is no barrier,
-submit patches adding barriers, etc.
+ Documentation/ABI/testing/jatg-dev                 |   27 +
+ .../devicetree/bindings/jtag/aspeed-jtag.txt       |   18 +
+ Documentation/ioctl/ioctl-number.txt               |    2 +
+ MAINTAINERS                                        |   10 +
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/jtag/Kconfig                               |   29 +
+ drivers/jtag/Makefile                              |    2 +
+ drivers/jtag/jtag-aspeed.c                         |  771 ++++++++++++++++++++
+ drivers/jtag/jtag.c                                |  267 +++++++
+ include/linux/jtag.h                               |   48 ++
+ include/uapi/linux/jtag.h                          |  117 +++
+ 12 files changed, 1294 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/ABI/testing/jatg-dev
+ create mode 100644 Documentation/devicetree/bindings/jtag/aspeed-jtag.txt
+ create mode 100644 drivers/jtag/Kconfig
+ create mode 100644 drivers/jtag/Makefile
+ create mode 100644 drivers/jtag/jtag-aspeed.c
+ create mode 100644 drivers/jtag/jtag.c
+ create mode 100644 include/linux/jtag.h
+ create mode 100644 include/uapi/linux/jtag.h
 
-       Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
