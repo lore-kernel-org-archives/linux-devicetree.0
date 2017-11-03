@@ -1,47 +1,29 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
- suspend/resume
-Date: Fri, 3 Nov 2017 09:11:20 -0700
-Message-ID: <20171103161120.GH28152@atomide.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <20171103103707.3e5wb3c7foxbuvvg@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171103103707.3e5wb3c7foxbuvvg@localhost.localdomain>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 0/2] ARM: dts: exynos: Updates for Odroid HDMI audio
+Date: Fri, 03 Nov 2017 17:43:12 +0100
+Message-ID: <20171103164314.14919-1-s.nawrocki@samsung.com>
+References: <CGME20171103164358epcas2p1556289ae7a9f2e29da932fc24651d592@epcas2p1.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: krzk@kernel.org
+Cc: kgene@kernel.org, mihailescu2m@gmail.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Charles Keepax <ckeepax@opensource.cirrus.com> [171103 10:38]:
-> On Thu, Nov 02, 2017 at 04:15:49PM -0700, Florian Fainelli wrote:
-> > Hello Linus,
-> > 
-> > It's me again, so I have been thinking about the problem originally
-> > reported in: [PATCH fixes v3] pinctrl: Really force states during suspend/resume
-> > 
-> > and other similar patches a while ago, and this new version allows a platform
-> > using pinctrl-single to specify whether its pins are going to lose their state
-> > during a system deep sleep.
-> > 
-> > Note that this is still checked at the pinctrl_select_state() because consumers
-> > of the pinctrl API might be calling this from their suspend/resume functions
-> > and should not have to know whether the provider does lose its pin states.
-> > 
-> 
-> Still feels to me like it should be the providers job to the
-> restore the state rather than expecting the consumer to
-> re-request any state it had. But lets wait and see what Linus
-> thinks.
+These patches are intended for v4.16-rc1 as they depend on the
+HDMI codec patch which is going to be merged in coming merge
+window.
 
-But isn't it the consumer device losing it's state here? Or the
-pinctrl provider losing it's state?
+Sylwester Nawrocki (2):
+  ARM: dts: exynos: Switch to dedicated Odroid-XU3 sound card binding
+  ARM: dts: exynos: Add sound support for Odroid XU4
 
-Anyways, the context lost flag should be managed in the PM core for
-the device, so adding linux-pm and Rafael to Cc.
+ arch/arm/boot/dts/exynos4.dtsi                    |  1 +
+ arch/arm/boot/dts/exynos5420.dtsi                 |  1 +
+ arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 64 ++++++++++++++--------
+ arch/arm/boot/dts/exynos5422-odroidxu4-audio.dtsi | 67 +++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5422-odroidxu4.dts        |  1 +
+ 5 files changed, 111 insertions(+), 23 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu4-audio.dtsi
 
-Regards,
-
-Tony
+--
+2.14.2
