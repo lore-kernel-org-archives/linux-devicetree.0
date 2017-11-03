@@ -1,37 +1,42 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 15/20] firmware: arm_scmi: add device power domain
- support using genpd
-Date: Fri, 3 Nov 2017 14:56:39 +0000
-Message-ID: <3ea7b655-b2d6-4d61-b0c5-bafd96409e31@arm.com>
-References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
- <1509720477-18936-16-git-send-email-sudeep.holla@arm.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 18/22] clk: add support for clocks provided by SCMI
+Date: Fri, 3 Nov 2017 08:12:28 -0700
+Message-ID: <20171103151228.GS11011@codeaurora.org>
+References: <1506604306-20739-1-git-send-email-sudeep.holla@arm.com>
+ <1506604306-20739-19-git-send-email-sudeep.holla@arm.com>
+ <20171102072350.GO30645@codeaurora.org>
+ <c0b80daf-6361-87eb-fde6-a9d6a71e3e82@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509720477-18936-16-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <c0b80daf-6361-87eb-fde6-a9d6a71e3e82-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On 03/11/17 14:47, Sudeep Holla wrote:
-> This patch hooks up the support for device power domain provided by
-> SCMI using the Linux generic power domain infrastructure.
+On 11/02, Sudeep Holla wrote:
 > 
-> Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> On 02/11/17 07:23, Stephen Boyd wrote:
+> > Is there a lot of copy/paste going on from clk-scpi.c? Maybe it
+> > could be consolidated?
+> > 
+> 
+> Not much apart from the usual driver skeleton. Also SCPI specification
+> will not be enhanced any further while SCMI will be. So they will
+> deviated in the feature set going further. Even I was thinking of
+> merging then together initially but based on some WIP changes to the
+> specification, I thought it may not be good idea. But if we think it can
+> be merged in future , I will do that for sure(for easy maintenance)
+> 
 
-Sorry for not adding you Reviewed-by tag along with dev_warn suggestion
-you gave. I seem to have lost that change locally somehow. I have fixed
-it now.
+Ok, no worries from me. Thanks for taking another look.
 
 -- 
-Regards,
-Sudeep
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
