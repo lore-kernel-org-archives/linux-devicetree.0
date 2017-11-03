@@ -1,116 +1,97 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v10 2/8] of: Add helper for mapping device node to logical CPU
- number
-Date: Fri,  3 Nov 2017 17:50:59 +0000
-Message-ID: <20171103175105.23546-3-suzuki.poulose@arm.com>
-References: <20171103175105.23546-1-suzuki.poulose@arm.com>
+From: Iztok Jeras <iztok.jeras-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: device tree overlays
+Date: Fri, 3 Nov 2017 20:43:59 +0100
+Message-ID: <CAAk4mkZNjQ-TA06mrYh_ZU0L4UQp9sLg58V1MGqWJWj=ZR8vMA@mail.gmail.com>
+References: <CAAk4mkZcBEb7o0BA3gh2rEsQiEW18XKUqHUMN1fTf+h5WAXkyA@mail.gmail.com>
+ <CAAk4mkbBvjB4CJq_oeXvJFibus06LF83BF3D2Nw5BuSHLdn+xA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171103175105.23546-1-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, leo.yan@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, peterz@infradead.org, Jonathan.Cameron@huawei.com, sudeep.holla@arm.com, frowand.list@gmail.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAk4mkbBvjB4CJq_oeXvJFibus06LF83BF3D2Nw5BuSHLdn+xA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a helper to map a device node to a logical CPU number to avoid
-duplication. Currently this is open coded in different places (e.g
-gic-v3, coresight). The helper tries to map device node to a "possible"
-logical CPU id, which may not be online yet. It is the responsibility
-of the user to make sure that the CPU is online. The helper uses
-of_cpu_device_node_get() to retrieve the device node for a given CPU
-(which uses per_cpu data if available else falls back to slower
-of_get_cpu_node()).
+Hi Frank,
 
-Cc: devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since V6:
- - Use faster of_cpu_device_node_get instead of of_get_cpu_node(),
-   which now falls back to latter if called in early.
-Changes since V3:
- - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
- - Return -ENODEV on failure than nr_cpus_id
----
- drivers/of/base.c  | 26 ++++++++++++++++++++++++++
- include/linux/of.h |  7 +++++++
- 2 files changed, 33 insertions(+)
+I work for Red Pitaya as Verilog, C, Python, ... coder:
+https://github.com/RedPitaya/RedPitaya
+I will move to another job this month, but I might still code for Red
+Pitaya of maybe PYNQ in my spare time.
+http://www.pynq.io/
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 63897531cd75..753c8160a092 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -418,6 +418,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- EXPORT_SYMBOL(of_get_cpu_node);
- 
- /**
-+ * of_cpu_node_to_id: Get the logical CPU number for a given device_node
-+ *
-+ * @cpu_node: Pointer to the device_node for CPU.
-+ *
-+ * Returns the logical CPU number of the given CPU device_node.
-+ * Returns -ENODEV if the CPU is not found.
-+ */
-+int of_cpu_node_to_id(struct device_node *cpu_node)
-+{
-+	int cpu;
-+	bool found = false;
-+	struct device_node *np;
-+
-+	for_each_possible_cpu(cpu) {
-+		np = of_cpu_device_node_get(cpu);
-+		found = (cpu_node == np);
-+		of_node_put(np);
-+		if (found)
-+			return cpu;
-+	}
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL(of_cpu_node_to_id);
-+
-+/**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-  * @compat: required compatible string, NULL or "" for any match
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b240ed69dc96..13eb8bc92c10 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -538,6 +538,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
- 
- bool of_console_check(struct device_node *dn, char *name, int index);
- 
-+extern int of_cpu_node_to_id(struct device_node *np);
-+
- #else /* CONFIG_OF */
- 
- static inline void of_core_init(void)
-@@ -872,6 +874,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
- {
- }
- 
-+static inline int of_cpu_node_to_id(struct device_node *np)
-+{
-+	return -ENODEV;
-+}
-+
- #define of_match_ptr(_ptr)	NULL
- #define of_match_node(_matches, _node)	NULL
- #endif /* CONFIG_OF */
--- 
-2.13.6
+We have been experimenting with device tree overlays on ZYNQ FPGA for
+about a year now.
+
+I would like to share our experience with you and ask you a few questions.
+
+We started with a patchset for kerner 4.4 this is still part of our
+public release.
+Recently we switched internally to kernel 4.9 patched with a newer patchset.
+https://github.com/RedPitaya/linux-xlnx/commits/branch-redpitaya-v2017.2
+The patchset was easy to apply to Xilinx kernel 2017.1,
+but with the latest Xilinx release 2017.3 there are many conflicts,
+apparently Xilinx started something there and did not finish.
+I will check if the drivers I need are already upstream so I could
+avoid using Xilinx provided kernels.
+
+There are two reasons I would like to use overlays:
+1. switching between FPGA bitstream which require kernel drivers,
+2. I2C/SPI/1-wire drivers over GPIO, I would like to configure them at
+runtime (we are not doing this yet).
+
+We are switching FPGA bitstreams and we currently handled the next
+Xilinx IP related drivers:
+1. UIO drivers
+Work well if loaded at boot or as overlay, we have user space drivers
+with IRQ support.
+2. Xilinx AXI IRQ
+Does not work if loaded as overlay, a kernel developer contractor
+described the issue
+as driver initialization not being compatible with overlay code,
+something about driver init running early.
+He improvised an ugly and hard coded patch:
+https://github.com/RedPitaya/linux-xlnx/commit/592b9c711f11fcfc14100094896fbabf08009f4b
+The driver can now be loaded as overlay, but I would not recommend the
+patch to anyone.
+3. Xilinx AXI DMA
+This driver had many non overlay related bugs in 4.4 but it is fine in 4.9.
+In kernel 4.4 we could not load it entirely from an overlay, so we
+improvised an ugly solution.
+We load the driver in the boot DT but with the status=disabled.
+This prevents the driver code from loading and crashing at boot and
+between FPGA image reloads.
+Then we load an overlay with status=OK to actually enable the driver.
+I might try to load the driver entirely from an overlay next week.
+4. XADC
+I did not test this drivers with overlays yet.
+5. We had a branch, where the overlay was used to load the FPGA bistream,
+it worked, but it meant disabling support for /dev/xdevcfg which would
+need explaining to users.
+Additionally our kernel developer was kind of slow making the changes
+ad we run out of time.
+So now we use overlays but load the FPGA through xdevcfg.
+For my own project I might try loading with fpga_region again.
+
+Questions:
+1. Could you point me to the latest overlay patchset
+or even better a Xilinx kernel repo with overlay patches already applied.
+2. You mentioned in your 2017 talk that dtsi files can be compiled into overlay,
+I understand how, but am not sure I am using the correct dtc:
+https://github.com/RedPitaya/dtc/archive/overlays.tar.gz at some point
+forked from
+https://github.com/pantoniou/dtc/archive/overlays.tar.gz
+How can I check if it works properly, a coworker mentioned that converting dtb
+back into dtc should show fragments, there were no fragments when I tried.
+Which dtc should I use?
+3. Do you know a better approach for loading the AXI IRQ driver with overlays?
+
+I will probably remember further questions later.
+
+Regards,
+Iztok Jeras
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
