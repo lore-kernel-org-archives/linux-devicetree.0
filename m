@@ -1,59 +1,116 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
-Date: Fri, 3 Nov 2017 16:21:33 +0100
-Message-ID: <CAK8P3a1oP98K3mzK3MfFvJ27y5fgYsTnOdPpjukQGXOLAQYhyA@mail.gmail.com>
-References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
- <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
- <1509423579.10793.10.camel@mtkswgap22> <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
- <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
- <1509673038.19220.19.camel@mtkswgap22> <CAK8P3a1doHCH4ucC1AUR5HiH5qvMXeoqsav-9dsvhM2KPh3FNw@mail.gmail.com>
- <1509709967.15691.25.camel@mtkswgap22>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 6/7] netdev: octeon-ethernet: Add Cavium Octeon III
+ support.
+Date: Fri, 3 Nov 2017 16:48:11 +0100
+Message-ID: <20171103154811.GS24320@lunn.ch>
+References: <20171102003606.19913-1-david.daney@cavium.com>
+ <20171102003606.19913-7-david.daney@cavium.com>
+ <55d6cf88-7444-42ea-02f1-27efdee2be4b@gmail.com>
+ <ee206580-e419-903f-de36-72d5803b1b7b@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509709967.15691.25.camel@mtkswgap22>
+Content-Disposition: inline
+In-Reply-To: <ee206580-e419-903f-de36-72d5803b1b7b-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 3, 2017 at 12:52 PM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Fri, 2017-11-03 at 10:40 +0100, Arnd Bergmann wrote:
->> On Fri, Nov 3, 2017 at 2:37 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >>+static char *mix_port;
+> >>+module_param(mix_port, charp, 0444);
+> >>+MODULE_PARM_DESC(mix_port, "Specifies which ports connect to MIX interfaces.");
+> >
+> >Can you derive this from Device Tree /platform data configuration?
+> >
+> >>+
+> >>+static char *pki_port;
+> >>+module_param(pki_port, charp, 0444);
+> >>+MODULE_PARM_DESC(pki_port, "Specifies which ports connect to the PKI.");
+> >
+> >Likewise
+> 
+> The SoC is flexible in how it is configured.  Technically the device tree
+> should only be used to specify information about the physical configuration
+> of the system that cannot be probed for, and this is about policy rather
+> that physical wiring.  That said, we do take the default configuration from
+> the device tree, but give the option here to override via the module command
+> line.
 
->> This should have the exact same effect as what you have in your tree,
->> but if that works,
->> we can merge that version and try to figure out why the kernel thinks
->> they are different.
->
-> I've tried this approach by using the 4-ports network card and got the
-> result:
-> pcieport 0000:00:01.0: assign IRQ: got 220
-> pcieport 0000:00:01.0: assigning IRQ 220
-> pcieport 0000:00:01.0: enabling device (0140 -> 0142)
-> pcieport 0000:00:01.0: enabling bus mastering
-> pcieport 0000:00:01.0: Signaling PME with IRQ 220
-> ....
-> igb 0000:01:00.0: assign IRQ: got 221
-> igb 0000:01:00.0: assigning IRQ 221
-> igb 0000:01:00.1: assign IRQ: got 221
-> igb 0000:01:00.1: assigning IRQ 221
-> igb 0000:01:00.2: assign IRQ: got 221
-> igb 0000:01:00.2: assigning IRQ 221
-> igb 0000:01:00.3: assign IRQ: got 221
-> igb 0000:01:00.3: assigning IRQ 221
->
-> I think slot 1 should share its IRQ (220) with every device in the
-> hierarchy below this root port.
+Module parameters are pretty much frowned upon. 
 
-Agreed, that is what I expected, too. I've looked at the of_pci_irq.c
-in more detail but couldn't come up with what happened. Can you
-try running with this patch or something like that to figure out where
-it takes the wrong turn?
+You should really try to remove them all, if possible.
 
-https://pastebin.com/MrMzwcmw
+> >>+/* Registers are accessed via xkphys */
+> >>+#define SSO_BASE			0x1670000000000ull
+> >>+#define SSO_ADDR(node)			(SET_XKPHYS + NODE_OFFSET(node) +      \
+> >>+					 SSO_BASE)
+> >>+#define GRP_OFFSET(grp)			((grp) << 16)
+> >>+#define GRP_ADDR(n, g)			(SSO_ADDR(n) + GRP_OFFSET(g))
+> >>+#define SSO_GRP_AQ_CNT(n, g)		(GRP_ADDR(n, g)		   + 0x20000700)
+> >>+
+> >>+#define MIO_PTP_BASE			0x1070000000000ull
+> >>+#define MIO_PTP_ADDR(node)		(SET_XKPHYS + NODE_OFFSET(node) +      \
+> >>+					 MIO_PTP_BASE)
+> >>+#define MIO_PTP_CLOCK_CFG(node)		(MIO_PTP_ADDR(node)		+ 0xf00)
+> >>+#define MIO_PTP_CLOCK_HI(node)		(MIO_PTP_ADDR(node)		+ 0xf10)
+> >>+#define MIO_PTP_CLOCK_COMP(node)	(MIO_PTP_ADDR(node)		+ 0xf18)
+> >
+> >I am sure this will work great on anything but MIPS64 ;)
+> 
+> Sarcasm duly noted.
+> 
+> That said, by definition it is exactly an OCTEON-III/MIPS64, and can never
+> be anything else.  It is known a priori that the hardware and this driver
+> will never be used anywhere else.
 
-     Arnd
+Please make sure your Kconfig really enforces this. Generally, we
+suggest allowing the driver to be compiled when COMPILE_TEST is set.
+That gives you better compiler test coverage. But it seems like this
+driver won't compile under such conditions.
+
+> >>+static int num_packet_buffers = 768;
+> >>+module_param(num_packet_buffers, int, 0444);
+> >>+MODULE_PARM_DESC(num_packet_buffers,
+> >>+		 "Number of packet buffers to allocate per port.");
+> >
+> >Consider implementing ethtool -g/G for this.
+> 
+> That may be work for a follow-on patch.
+
+Then please remove the module parameter now.
+
+> >>+static int rx_queues = 1;
+> >>+module_param(rx_queues, int, 0444);
+> >>+MODULE_PARM_DESC(rx_queues, "Number of RX threads per port.");
+> >
+> >Same thing, can you consider using an ethtool knob for that?
+> 
+> Also may be work for a follow-on patch.
+
+Ditto
+
+> >>+/**
+> >>+ * Reads a 64 bit value from the processor local scratchpad memory.
+> >>+ *
+> >>+ * @param offset byte offset into scratch pad to read
+> >>+ *
+> >>+ * @return value read
+> >>+ */
+> >>+static inline u64 scratch_read64(u64 offset)
+> >>+{
+> >>+	return *(u64 *)((long)SCRATCH_BASE + offset);
+> >>+}
+> >
+> >No barriers needed whatsoever?
+> 
+> Nope.
+
+Then it would be good to add a comment about why no barrier is
+needed. Otherwise people are going to ask why there is no barrier,
+submit patches adding barriers, etc.
+
+       Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
