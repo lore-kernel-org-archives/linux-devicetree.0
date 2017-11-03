@@ -1,106 +1,206 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v4 10/20] firmware: arm_scmi: probe and initialise all the supported protocols
-Date: Fri,  3 Nov 2017 14:47:47 +0000
-Message-ID: <1509720477-18936-11-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v4 15/20] firmware: arm_scmi: add device power domain support using genpd
+Date: Fri,  3 Nov 2017 14:47:52 +0000
+Message-ID: <1509720477-18936-16-git-send-email-sudeep.holla@arm.com>
 References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have basic support for all the protocols in the
-specification, let's probe them individually and initialise them.
+This patch hooks up the support for device power domain provided by
+SCMI using the Linux generic power domain infrastructure.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/driver.c | 51 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+ drivers/firmware/Kconfig                   |  13 +++
+ drivers/firmware/arm_scmi/Makefile         |   1 +
+ drivers/firmware/arm_scmi/scmi_pm_domain.c | 140 +++++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+)
+ create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 20d083be474c..11c18ac9816f 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -494,6 +494,21 @@ void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
- 	info->protocols_imp = prot_imp;
- }
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 86ea9d531587..86d2901ad87a 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
+ 	  This protocol library provides interface for all the client drivers
+ 	  making use of the features offered by the SCMI.
  
-+static bool
-+scmi_is_protocol_implemented(const struct scmi_handle *handle, u8 prot_id)
++config ARM_SCMI_POWER_DOMAIN
++	tristate "SCMI power domain driver"
++	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
++	default y
++	select PM_GENERIC_DOMAINS if PM
++	help
++	  This enables support for the SCMI power domains which can be
++	  enabled or disabled via the SCP firmware
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called scmi_pm_domain. Note this may needed early in boot
++	  before rootfs may be available.
++
+ config ARM_SCPI_PROTOCOL
+ 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+ 	depends on ARM || ARM64 || COMPILE_TEST
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 3236890905b9..99e36c580fbc 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -2,3 +2,4 @@ obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
+ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
+ scmi-protocols-y = base.o clock.o perf.o power.o sensors.o
++obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+new file mode 100644
+index 000000000000..d8c9aa6960cf
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+@@ -0,0 +1,140 @@
++/*
++ * SCMI Generic power domain support.
++ *
++ * Copyright (C) 2017 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/pm_domain.h>
++#include <linux/scmi_protocol.h>
++
++struct scmi_pm_domain {
++	struct generic_pm_domain genpd;
++	const struct scmi_handle *handle;
++	const char *name;
++	u32 domain;
++};
++
++#define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
++
++static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
 +{
-+	int i;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
++	int ret;
++	u32 state, ret_state;
++	struct scmi_pm_domain *pd = to_scmi_pd(domain);
++	const struct scmi_power_ops *ops = pd->handle->power_ops;
 +
-+	if (!info->protocols_imp)
-+		return false;
++	if (power_on)
++		state = SCMI_POWER_STATE_GENERIC_ON;
++	else
++		state = SCMI_POWER_STATE_GENERIC_OFF;
 +
-+	for (i = 0; i < MAX_PROTOCOLS_IMP; i++)
-+		if (info->protocols_imp[i] == prot_id)
-+			return true;
-+	return false;
++	ret = ops->state_set(pd->handle, pd->domain, state);
++	if (!ret)
++		ret = ops->state_get(pd->handle, pd->domain, &ret_state);
++	if (!ret && state != ret_state)
++		return -EIO;
++
++	return ret;
 +}
 +
- /**
-  * scmi_handle_get() - Get the  SCMI handle for a device
-  *
-@@ -691,6 +706,23 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
- 	return 0;
- }
- 
-+static inline void
-+scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
-+			    int prot_id)
++static int scmi_pd_power_on(struct generic_pm_domain *domain)
 +{
-+	struct scmi_device *sdev;
++	return scmi_pd_power(domain, true);
++}
 +
-+	sdev = scmi_device_create(np, info->dev, prot_id);
-+	if (!sdev) {
-+		dev_err(info->dev, "failed to create %d protocol device\n",
-+			prot_id);
-+		return;
++static int scmi_pd_power_off(struct generic_pm_domain *domain)
++{
++	return scmi_pd_power(domain, false);
++}
++
++static int scmi_pm_domain_probe(struct scmi_device *sdev)
++{
++	int num_domains, i;
++	struct device *dev = &sdev->dev;
++	struct device_node *np = dev->of_node;
++	struct scmi_pm_domain *scmi_pd;
++	struct genpd_onecell_data *scmi_pd_data;
++	struct generic_pm_domain **domains;
++	const struct scmi_handle *handle = sdev->handle;
++
++	if (!handle || !handle->power_ops)
++		return -ENODEV;
++
++	num_domains = handle->power_ops->num_domains_get(handle);
++	if (num_domains < 0) {
++		dev_err(dev, "number of domains not found\n");
++		return num_domains;
 +	}
 +
-+	/* setup handle now as the transport is ready */
-+	scmi_set_handle(sdev);
-+}
++	scmi_pd = devm_kcalloc(dev, num_domains, sizeof(*scmi_pd), GFP_KERNEL);
++	if (!scmi_pd)
++		return -ENOMEM;
 +
- static int scmi_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -698,7 +730,7 @@ static int scmi_probe(struct platform_device *pdev)
- 	const struct scmi_desc *desc;
- 	struct scmi_info *info;
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
-+	struct device_node *child, *np = dev->of_node;
- 
- 	/* Only mailbox method supported, check for the presence of one */
- 	if (scmi_mailbox_check(np)) {
-@@ -741,6 +773,23 @@ static int scmi_probe(struct platform_device *pdev)
- 	list_add_tail(&info->node, &scmi_list);
- 	mutex_unlock(&scmi_list_mutex);
- 
-+	for_each_available_child_of_node(np, child) {
-+		u32 prot_id;
++	scmi_pd_data = devm_kzalloc(dev, sizeof(*scmi_pd_data), GFP_KERNEL);
++	if (!scmi_pd_data)
++		return -ENOMEM;
 +
-+		if (of_property_read_u32(child, "reg", &prot_id))
-+			continue;
++	domains = devm_kcalloc(dev, num_domains, sizeof(*domains), GFP_KERNEL);
++	if (!domains)
++		return -ENOMEM;
 +
-+		prot_id &= MSG_PROTOCOL_ID_MASK;
++	for (i = 0; i < num_domains; i++, scmi_pd++) {
++		u32 state;
 +
-+		if (!scmi_is_protocol_implemented(handle, prot_id)) {
-+			dev_err(dev, "SCMI protocol %d not implemented\n",
-+				prot_id);
++		domains[i] = &scmi_pd->genpd;
++
++		scmi_pd->domain = i;
++		scmi_pd->handle = handle;
++		scmi_pd->name = handle->power_ops->name_get(handle, i);
++		scmi_pd->genpd.name = scmi_pd->name;
++		scmi_pd->genpd.power_off = scmi_pd_power_off;
++		scmi_pd->genpd.power_on = scmi_pd_power_on;
++
++		if (handle->power_ops->state_get(handle, i, &state)) {
++			dev_dbg(dev, "failed to get state for domain %d\n", i);
 +			continue;
 +		}
 +
-+		scmi_create_protocol_device(child, info, prot_id);
++		pm_genpd_init(&scmi_pd->genpd, NULL,
++			      state == SCMI_POWER_STATE_GENERIC_OFF);
 +	}
 +
- 	return 0;
- }
- 
++	scmi_pd_data->domains = domains;
++	scmi_pd_data->num_domains = num_domains;
++
++	of_genpd_add_provider_onecell(np, scmi_pd_data);
++
++	return 0;
++}
++
++static const struct scmi_device_id scmi_id_table[] = {
++	{ SCMI_PROTOCOL_POWER },
++	{ },
++};
++MODULE_DEVICE_TABLE(scmi, scmi_id_table);
++
++static struct scmi_driver scmi_power_domain_driver = {
++	.name = "scmi-power-domain",
++	.probe = scmi_pm_domain_probe,
++	.id_table = scmi_id_table,
++};
++module_scmi_driver(scmi_power_domain_driver);
++
++MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
++MODULE_DESCRIPTION("ARM SCMI power domain driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
