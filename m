@@ -1,93 +1,106 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] media: ov7740: Document device tree bindings
-Date: Fri, 3 Nov 2017 13:43:58 +0200
-Message-ID: <20171103114358.a2guahtnqyka7t7b@valkosipuli.retiisi.org.uk>
-References: <20171031011146.6899-1-wenyou.yang@microchip.com>
- <20171031011146.6899-3-wenyou.yang@microchip.com>
- <20171101215157.5hemcpuplikvtpqx@rob-hp-laptop>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
+Date: Fri, 3 Nov 2017 19:52:47 +0800
+Message-ID: <1509709967.15691.25.camel@mtkswgap22>
+References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
+         <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+         <1509423579.10793.10.camel@mtkswgap22>
+         <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
+         <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
+         <1509673038.19220.19.camel@mtkswgap22>
+         <CAK8P3a1doHCH4ucC1AUR5HiH5qvMXeoqsav-9dsvhM2KPh3FNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171101215157.5hemcpuplikvtpqx@rob-hp-laptop>
+In-Reply-To: <CAK8P3a1doHCH4ucC1AUR5HiH5qvMXeoqsav-9dsvhM2KPh3FNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, Nov 01, 2017 at 04:51:57PM -0500, Rob Herring wrote:
-> On Tue, Oct 31, 2017 at 09:11:44AM +0800, Wenyou Yang wrote:
-> > Add the device tree binding documentation for the ov7740 sensor driver.
-> > 
-> > Signed-off-by: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> > ---
-> > 
-> > Changes in v4: None
-> > Changes in v3:
-> >  - Explicitly document the "remote-endpoint" property.
-> > 
-> > Changes in v2: None
-> > 
-> >  .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov7740.txt b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> > new file mode 100644
-> > index 000000000000..af781c3a5f0e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
-> > @@ -0,0 +1,47 @@
-> > +* Omnivision OV7740 CMOS image sensor
-> > +
-> > +The Omnivision OV7740 image sensor supports multiple output image
-> > +size, such as VGA, and QVGA, CIF and any size smaller. It also
-> > +supports the RAW RGB and YUV output formats.
-> > +
-> > +The common video interfaces bindings (see video-interfaces.txt) should
-> > +be used to specify link to the image data receiver. The OV7740 device
-> > +node should contain one 'port' child node with an 'endpoint' subnode.
-> > +
-> > +Required Properties:
-> > +- compatible:	"ovti,ov7740".
-> > +- reg:		I2C slave address of the sensor.
-> > +- clocks:	Reference to the xvclk input clock.
-> > +- clock-names:	"xvclk".
-> > +
-> > +Optional Properties:
-> > +- reset-gpios: Rreference to the GPIO connected to the reset_b pin,
-> > +  if any. Active low with pull-ip resistor.
-> > +- powerdown-gpios: Reference to the GPIO connected to the pwdn pin,
-> > +  if any. Active high with pull-down resistor.
-> > +
-> > +Endpoint node mandatory properties:
-> > +- remote-endpoint: A phandle to the bus receiver's endpoint node.
+On Fri, 2017-11-03 at 10:40 +0100, Arnd Bergmann wrote:
+> On Fri, Nov 3, 2017 at 2:37 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> Ryder, can you be more specific how the interrupts are wired up?
+> >> Is there one IRQ per slot that is connected to all of IntA/IntB/IntC/IntD
+> >> and gets propagated through the bridges like that, or is it something else?
+> >
+> > Yes, that's what I mean - we only have one IRQ which is connected to all
+> > INTx for each slot, and I'm not sure if there is any better way to solve
+> > this problem.
 > 
-> This is not really necessary. What's required is documenting how many 
-> ports and how many endpoints for each port which you have above.
+> Ok. Your parent interrupt-map seems entirely reasonable for that case as far
+> as I can tell (maybe someone else can find a problem):
+> 
+> +               interrupt-map-mask = <0xf800 0 0 0>;
+> +               interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193
+> IRQ_TYPE_LEVEL_LOW>,
+> +                               <0x0800 0 0 0 &sysirq GIC_SPI 194
+> IRQ_TYPE_LEVEL_LOW>,
+> +                               <0x1000 0 0 0 &sysirq GIC_SPI 195
+> IRQ_TYPE_LEVEL_LOW>;
+> 
+> However, I can't find any other example of a machine using
+> interrupt-map-mask = <0xf800 0 0 0>; in the kernel tree, so it's possible
+> that we have a parser bug. We do have other boards that list all four
+> interrupts for each slot, and that seems to work fine. Can you try this
+> map in the parent while leaving out the chilren?
+> 
+>                interrupt-map-mask = <0xf800 0 0 7>;
+>                interrupt-map = <0x0000 0 0 1 &sysirq GIC_SPI 193
+> IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0000 0 0 2 &sysirq GIC_SPI
+> 193 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0000 0 0 3 &sysirq GIC_SPI
+> 193 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0000 0 0 4 &sysirq GIC_SPI
+> 193 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0800 0 0 1 &sysirq GIC_SPI
+> 194 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0800 0 0 2 &sysirq GIC_SPI
+> 194 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0800 0 0 3 &sysirq GIC_SPI
+> 194 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x0800 0 0 4 &sysirq GIC_SPI
+> 194 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x1000 0 0 1 &sysirq GIC_SPI
+> 195 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x1000 0 0 2 &sysirq GIC_SPI
+> 195 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x1000 0 0 3 &sysirq GIC_SPI
+> 195 IRQ_TYPE_LEVEL_LOW>,
+>                                         <0x1000 0 0 4 &sysirq GIC_SPI
+> 195 IRQ_TYPE_LEVEL_LOW>;
+> 
+> This should have the exact same effect as what you have in your tree,
+> but if that works,
+> we can merge that version and try to figure out why the kernel thinks
+> they are different.
 
-I actually requested adding that as the practice, as far as I've understood
-it, has been to document all properties relevant for the hardware (apart
-from things such as assigned-clocks etc.).
+I've tried this approach by using the 4-ports network card and got the
+result:
+pcieport 0000:00:01.0: assign IRQ: got 220
+pcieport 0000:00:01.0: assigning IRQ 220
+pcieport 0000:00:01.0: enabling device (0140 -> 0142)
+pcieport 0000:00:01.0: enabling bus mastering
+pcieport 0000:00:01.0: Signaling PME with IRQ 220
+....
+igb 0000:01:00.0: assign IRQ: got 221
+igb 0000:01:00.0: assigning IRQ 221
+igb 0000:01:00.1: assign IRQ: got 221
+igb 0000:01:00.1: assigning IRQ 221
+igb 0000:01:00.2: assign IRQ: got 221
+igb 0000:01:00.2: assigning IRQ 221
+igb 0000:01:00.3: assign IRQ: got 221
+igb 0000:01:00.3: assigning IRQ 221
 
-The port and endpoints have been elaborated above and I think that should
-be fine as-is.
+I think slot 1 should share its IRQ (220) with every device in the
+hierarchy below this root port.
 
-The graph bindings document (referred by video-interfaces.txt) the
-remote-endpoint property in an endpoint as an optional property, however
-you can't really use the sensor if it's not connected to anything. The same
-goes for video-interfaces.txt: remote-endpoint in an endpoint is optional.
+Ryder.
 
-I have no objections removing remote-endpoint here, though, if you think
-it's not relevant here.
 
--- 
-Kind regards,
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
