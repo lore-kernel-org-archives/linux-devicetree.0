@@ -1,137 +1,100 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
-Date: Fri, 3 Nov 2017 13:32:10 +1100
-Message-ID: <CACPK8Xc3Hsj9TD8L2A6e-iCMZp5=HG9aan5m0YsWV-CZHFPo5A@mail.gmail.com>
-References: <20171102035349.1902-1-joel@jms.id.au> <20171102035349.1902-3-joel@jms.id.au>
- <20171102145406.GA9240@roeck-us.net>
+From: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
+Date: Fri, 3 Nov 2017 11:29:05 +0800
+Message-ID: <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ@mail.gmail.com>
+References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
+ <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
+ <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
+ <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com> <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102145406.GA9240-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 3, 2017 at 1:54 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On Thu, Nov 02, 2017 at 02:53:48PM +1100, Joel Stanley wrote:
->> The ASPEED SoC must deassert a reset in order to use the PWM/tach
->> peripheral.
+2017-11-02 19:00 GMT+08:00 Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> + Vincent Yang (several emails, don't know which works)
+>
+> On 2 November 2017 at 11:49, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 2 November 2017 at 10:48, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On 2 November 2017 at 01:12, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On 2 November 2017 at 00:08, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>>> On Wed, Nov 01, 2017 at 12:21:32AM +0000, Ard Biesheuvel wrote:
+>>>>>> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
+>>>>>> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
+>>>>>> F_SDH30_ESD_CONTROL control register.
+>>>>>>
+>>>>>> So let's add an optional property to this device's binding, and
+>>>>>> set the attribute if it is present in the DT node.
+>>>>>>
+>>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt |  2 ++
+>>>>>>  drivers/mmc/host/sdhci_f_sdh30.c                        | 18 +++++++++++++++++-
+>>>>>>  2 files changed, 19 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>>>>> index de2c53cff4f1..9ad02f743ad0 100644
+>>>>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>>>>>> @@ -15,6 +15,8 @@ Required properties:
+>>>>>>  Optional properties:
+>>>>>>  - vqmmc-supply: phandle to the regulator device tree node, mentioned
+>>>>>>    as the VCCQ/VDD_IO supply in the eMMC/SD specs.
+>>>>>> +- cmd-dat-delay-select: boolean property indicating that this host requires
+>>>>>> +  the CMD_DAT_DELAY control to be enabled.
+>>>>>
+>>>>> Needs a vendor prefix unless this is a standard SDHCI bit (in which
+>>>>> case it should be documented in a common spot).
+>>>>>
+>>>>
+>>>> I suspect this is a non-standard thing, so I'll add the fujitsu prefix. Ulf?
+>>>
+>>> This is specific to the Fujitsu variant.
+>>>
+>>> However, what puzzles me is why this bit is needed for the Socionext
+>>> SynQuacer SoC, but not for other SoCs that uses this IP. That seems
+>>> weird (probably wrong).
+>>>
+>>> Moreover, the F_SDH30_CMD_DAT_DELAY register define is already there,
+>>> so I would rather suspect that it's something that did got fully
+>>> implemented. In other words, I don't think you need a new DT binding,
+>>> but rather try to implement it generically for the sdhci-f_sdh30
+>>> driver. Do you think that will work?
+>>>
 >>
-> Again, you claim that the current driver would not work at all, which
-> is simply not correct. It doesn't work if the chip wasn't taken out
-> of reset by other means. This doesn't take into account situations and
-> hardware where the chip is taken out of reset automatically at boot, h
-> or by the ROM monitor/BIOS. It assumes that the reset pin can _always_
-> be controlled by software.
+>> Do you mean set it unconditionally? That works for me, but I have no
+>
+> Yes.
+>
+>> way of testing whether it still works on other SoCs that use this IP.
+>
+> Me neither!
 
-The reset is internal to the SoC. There is no pin to speak of, just a
-wire inside the SoC, so it can always be controlled by software.
-
-There's SoC does not release any resets automatically; the default
-value on boot is for the reset to be asserted and this is not
-configurable.
-
-> Similar, it forces the chip into reset when the driver is removed,
-> which is even worse. Unload the driver, and no more fan control ?
-> Really ? Then why is there an autonomous chip for fan control
-> to start with ? This is questionable even if the reset pin is
-> optional.
-
-Similarly, the PWM/Tach unit is inside the SoC; it's not an external device.
-
-It would be strange to remove the driver and expect the system to keep
-operating normally.
-
-> You'll have to make reset handling optional for me to accept it.
-> I am quite sure that I said that before.
-
-Please reconsider in light of the details above. It does not make any
-sense to build a system without this reset.
-
-Cheers,
-
-Joel
+Hi all, I can not yet get contact with IP owner because it is a
+holiday in Japan.
+Around two years ago, F_SDH30_CMD_DAT_DELAY was a new feature of this IP.
+I will update the latest information as soon as I get it.
 
 >
-> Guenter
+> Apparently there are no DTS in the kernel git that uses the
+> "fujitsu,mb86s70-sdhci-3.0".
+
+Around two years ago, sdhci_f_sdh30_driver was a portion for mb86s70 SoC
+patch series, but finally the patch series did not fully go upstream.
+
+Kind regards
+Vincent
+
 >
->> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->> ---
->> v2:
->>  - Correct horrible mistakes
->>  - Boot tested and hwmon sysfs files checked
->> ---
->>  drivers/hwmon/aspeed-pwm-tacho.c | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>
->> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
->> index 63a95e23ca81..77bb7a4bbed4 100644
->> --- a/drivers/hwmon/aspeed-pwm-tacho.c
->> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/of_platform.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/regmap.h>
->> +#include <linux/reset.h>
->>  #include <linux/sysfs.h>
->>  #include <linux/thermal.h>
->>
->> @@ -181,6 +182,7 @@ struct aspeed_cooling_device {
->>
->>  struct aspeed_pwm_tacho_data {
->>       struct regmap *regmap;
->> +     struct reset_control *rst;
->>       unsigned long clk_freq;
->>       bool pwm_present[8];
->>       bool fan_tach_present[16];
->> @@ -931,6 +933,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->>                       &aspeed_pwm_tacho_regmap_config);
->>       if (IS_ERR(priv->regmap))
->>               return PTR_ERR(priv->regmap);
->> +
->> +     priv->rst = devm_reset_control_get_exclusive(dev, NULL);
->> +     if (IS_ERR(priv->rst)) {
->> +             dev_err(dev,
->> +                     "missing or invalid reset controller device tree entry");
->> +             return PTR_ERR(priv->rst);
->> +     }
->> +     reset_control_deassert(priv->rst);
->> +
->>       regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
->>       regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
->>
->> @@ -960,6 +971,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
->>       return PTR_ERR_OR_ZERO(hwmon);
->>  }
->>
->> +static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
->> +{
->> +     struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
->> +
->> +     reset_control_assert(priv->rst);
->> +
->> +     return 0;
->> +}
->> +
->>  static const struct of_device_id of_pwm_tacho_match_table[] = {
->>       { .compatible = "aspeed,ast2400-pwm-tacho", },
->>       { .compatible = "aspeed,ast2500-pwm-tacho", },
->> @@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
->>
->>  static struct platform_driver aspeed_pwm_tacho_driver = {
->>       .probe          = aspeed_pwm_tacho_probe,
->> +     .remove         = aspeed_pwm_tacho_remove,
->>       .driver         = {
->>               .name   = "aspeed_pwm_tacho",
->>               .of_match_table = of_pwm_tacho_match_table,
->> --
->> 2.14.1
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I looped in Vincent Yang, let's hope he can provide us with some more
+> information.
+>
+> Kind regards
+> Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
