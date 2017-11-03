@@ -1,84 +1,106 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v4 01/20] dt-bindings: mailbox: add support for mailbox client
- shared memory
-Date: Fri,  3 Nov 2017 14:47:38 +0000
-Message-ID: <1509720477-18936-2-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v4 10/20] firmware: arm_scmi: probe and initialise all the supported protocols
+Date: Fri,  3 Nov 2017 14:47:47 +0000
+Message-ID: <1509720477-18936-11-git-send-email-sudeep.holla@arm.com>
 References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Harb Abdulhamid <harba@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jassi Brar <jassisinghbrar@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Roy Franz <roy.franz@cavium.com>, Rob Herring <robh+dt@kernel.org>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Many users of the mailbox controllers depend on the shared memory
-between the two end points to exchange the main data while using simple
-doorbell mechanism to alert the end points of the presence of a message.
+Now that we have basic support for all the protocols in the
+specification, let's probe them individually and initialise them.
 
-This patch defines device tree bindings to represent such shared memory
-in a generic way.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- .../devicetree/bindings/mailbox/mailbox.txt        | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/firmware/arm_scmi/driver.c | 51 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-index be05b9746c69..af8ecee2ac68 100644
---- a/Documentation/devicetree/bindings/mailbox/mailbox.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-@@ -23,6 +23,11 @@ assign appropriate mailbox channel to client drivers.
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 20d083be474c..11c18ac9816f 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -494,6 +494,21 @@ void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
+ 	info->protocols_imp = prot_imp;
+ }
  
- Optional property:
- - mbox-names: List of identifier strings for each mailbox channel.
-+- shmem : List of phandle pointing to the shared memory(SHM) area between the
-+	  users of these mailboxes for IPC, one for each mailbox. This shared
-+	  memory can be part of any memory reserved for the purpose of this
-+	  communication between the mailbox client and the remote.
++static bool
++scmi_is_protocol_implemented(const struct scmi_handle *handle, u8 prot_id)
++{
++	int i;
++	struct scmi_info *info = handle_to_scmi_info(handle);
 +
++	if (!info->protocols_imp)
++		return false;
++
++	for (i = 0; i < MAX_PROTOCOLS_IMP; i++)
++		if (info->protocols_imp[i] == prot_id)
++			return true;
++	return false;
++}
++
+ /**
+  * scmi_handle_get() - Get the  SCMI handle for a device
+  *
+@@ -691,6 +706,23 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
+ 	return 0;
+ }
  
- Example:
- 	pwr_cntrl: power {
-@@ -30,3 +35,26 @@ assign appropriate mailbox channel to client drivers.
- 		mbox-names = "pwr-ctrl", "rpc";
- 		mboxes = <&mailbox 0 &mailbox 1>;
- 	};
++static inline void
++scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
++			    int prot_id)
++{
++	struct scmi_device *sdev;
 +
-+Example with shared memory(shmem):
++	sdev = scmi_device_create(np, info->dev, prot_id);
++	if (!sdev) {
++		dev_err(info->dev, "failed to create %d protocol device\n",
++			prot_id);
++		return;
++	}
 +
-+	sram: sram@50000000 {
-+		compatible = "mmio-sram";
-+		reg = <0x50000000 0x10000>;
++	/* setup handle now as the transport is ready */
++	scmi_set_handle(sdev);
++}
 +
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x50000000 0x10000>;
+ static int scmi_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -698,7 +730,7 @@ static int scmi_probe(struct platform_device *pdev)
+ 	const struct scmi_desc *desc;
+ 	struct scmi_info *info;
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
++	struct device_node *child, *np = dev->of_node;
+ 
+ 	/* Only mailbox method supported, check for the presence of one */
+ 	if (scmi_mailbox_check(np)) {
+@@ -741,6 +773,23 @@ static int scmi_probe(struct platform_device *pdev)
+ 	list_add_tail(&info->node, &scmi_list);
+ 	mutex_unlock(&scmi_list_mutex);
+ 
++	for_each_available_child_of_node(np, child) {
++		u32 prot_id;
 +
-+		cl_shmem: shmem@0 {
-+			compatible = "client-shmem";
-+			reg = <0x0 0x200>;
-+		};
-+	};
++		if (of_property_read_u32(child, "reg", &prot_id))
++			continue;
 +
-+	client@2e000000 {
-+		...
-+		mboxes = <&mailbox 0>;
-+		shmem = <&cl_shmem>;
-+		..
-+	};
++		prot_id &= MSG_PROTOCOL_ID_MASK;
++
++		if (!scmi_is_protocol_implemented(handle, prot_id)) {
++			dev_err(dev, "SCMI protocol %d not implemented\n",
++				prot_id);
++			continue;
++		}
++
++		scmi_create_protocol_device(child, info, prot_id);
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
