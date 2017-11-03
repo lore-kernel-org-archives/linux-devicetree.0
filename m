@@ -1,27 +1,70 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 0/2] ARM: dts: exynos: Updates for Odroid HDMI audio
-Date: Fri, 03 Nov 2017 18:04:15 +0100
-Message-ID: <601cbeda-3aab-f128-6c41-a030b993bf9f@samsung.com>
-References: <CGME20171103164358epcas2p1556289ae7a9f2e29da932fc24651d592@epcas2p1.samsung.com>
-        <20171103164314.14919-1-s.nawrocki@samsung.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH 0/3] dts: Add the property of IB and OB
+Date: Fri, 3 Nov 2017 17:06:58 +0000
+Message-ID: <AM4PR0401MB1699C33E678BB7DD027307568F5D0@AM4PR0401MB1699.eurprd04.prod.outlook.com>
+References: <20171103093115.14915-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20171103164314.14919-1-s.nawrocki@samsung.com>
-Content-language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: kgene@kernel.org, mihailescu2m@gmail.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171103093115.14915-1-xiaowei.bao@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, "hongtao.jia@nxp.com" <hongtao.jia@nxp.com>, Andy Tang <andy.tang@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2017 05:43 PM, Sylwester Nawrocki wrote:
-> These patches are intended for v4.16-rc1 as they depend on the
-> HDMI codec patch which is going to be merged in coming merge
-> window.
-> 
-> Sylwester Nawrocki (2):
->   ARM: dts: exynos: Switch to dedicated Odroid-XU3 sound card binding
->   ARM: dts: exynos: Add sound support for Odroid XU4
 
-Please ignore this patch set, I've sent wrong patches :/, will post v2.
+
+> -----Original Message-----
+> From: Bao Xiaowei [mailto:xiaowei.bao@nxp.com]
+> Sent: Friday, November 03, 2017 4:31 AM
+> To: robh+dt@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+> will.deacon@arm.com; bhelgaas@google.com; shawnguo@kernel.org;
+> Madalin-cristian Bucur <madalin.bucur@nxp.com>; Sumit Garg
+> <sumit.garg@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; hongtao.jia@nxp.com;
+> Andy Tang <andy.tang@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+> kishon@ti.com; jingoohan1@gmail.com; pbrobinson@gmail.com;
+> songxiaowei@hisilicon.com; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> pci@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; Z.q. Hou
+> <zhiqiang.hou@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>
+> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Subject: [PATCH 0/3] dts: Add the property of IB and OB
+
+When you send a v2 series, please include v2 in the title of all patches like "[PATCH v2 0/3]"...
+
+Also the title of this summary email should really be the summary of all 3 patches like "Adding PCIe EP support to ls1046a".
+
+-Leo
+
+
+> 
+> Depend on
+> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fpatchw
+> ork.ozlabs.org%2Fpatch%2F815382%2F&data=02%7C01%7Cleoyang.li%40nxp.c
+> om%7C7db015020c8a414f57e708d522a03165%7C686ea1d3bc2b4c6fa92cd99c
+> 5c301635%7C0%7C0%7C636452993777387982&sdata=19Fmzg%2FOJGl%2Bgizv
+> xfY1yELlFgWKRuZ%2FVNbx49yz2Wk%3D&reserved=0
+> 
+> Bao Xiaowei (3):
+>   ARMv8: dts: ls1046a: add the property of IB and OB
+>   ARMv8: layerscape: add the pcie ep function support
+>   ARMv8: pcie: make the DWC EP driver support for layerscape
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   6 ++
+>  drivers/pci/dwc/Kconfig                        |   1 +
+>  drivers/pci/dwc/pci-layerscape.c               | 122 +++++++++++++++++++++++--
+>  3 files changed, 123 insertions(+), 6 deletions(-)
+> 
+> --
+> 2.14.1
