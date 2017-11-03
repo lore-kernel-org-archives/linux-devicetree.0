@@ -1,77 +1,306 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v4 20/20] cpufreq: scmi: add support for fast frequency switching
-Date: Fri,  3 Nov 2017 14:47:57 +0000
-Message-ID: <1509720477-18936-21-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v4 18/20] hwmon: add support for sensors exported via ARM SCMI
+Date: Fri,  3 Nov 2017 14:47:55 +0000
+Message-ID: <1509720477-18936-19-git-send-email-sudeep.holla@arm.com>
 References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The cpufreq core provides option for drivers to implement fast_switch
-callback which is invoked for frequency switching from interrupt context.
+Create a driver to add support for SoC sensors exported by the System
+Control Processor (SCP) via the System Control and Management Interface
+(SCMI). The supported sensor types is one of voltage, temperature,
+current, and power.
 
-This patch adds support for fast_switch callback in SCMI cpufreq driver
-by making use of polling based SCMI transfer. It also sets the flag
-fast_switch_possible.
+The sensor labels and values provided by the SCP are exported via the
+hwmon sysfs interface.
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/cpufreq/scmi-cpufreq.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/hwmon/Kconfig      |  12 +++
+ drivers/hwmon/Makefile     |   1 +
+ drivers/hwmon/scmi-hwmon.c | 233 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 246 insertions(+)
+ create mode 100644 drivers/hwmon/scmi-hwmon.c
 
-diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-index b1057a13e6a7..91df5013f7b2 100644
---- a/drivers/cpufreq/scmi-cpufreq.c
-+++ b/drivers/cpufreq/scmi-cpufreq.c
-@@ -64,6 +64,19 @@ scmi_cpufreq_set_target(struct cpufreq_policy *policy, unsigned int index)
- 	return perf_ops->freq_set(handle, priv->domain_id, freq, false);
- }
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index d65431417b17..0b75e9a89463 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -321,6 +321,18 @@ config SENSORS_APPLESMC
+ 	  Say Y here if you have an applicable laptop and want to experience
+ 	  the awesome power of applesmc.
  
-+static unsigned int scmi_cpufreq_fast_switch(struct cpufreq_policy *policy,
-+					     unsigned int target_freq)
-+{
-+	struct scmi_data *priv = policy->driver_data;
-+	struct scmi_perf_ops *perf_ops = handle->perf_ops;
++config SENSORS_ARM_SCMI
++	tristate "ARM SCMI Sensors"
++	depends on ARM_SCMI_PROTOCOL
++	depends on THERMAL || !THERMAL_OF
++	help
++	  This driver provides support for temperature, voltage, current
++	  and power sensors available on SCMI based platforms. The actual
++	  number and type of sensors exported depend on the platform.
 +
-+	if (!perf_ops->freq_set(handle, priv->domain_id,
-+				target_freq * 1000, true))
-+		return target_freq;
++	  This driver can also be built as a module.  If so, the module
++	  will be called scmi-hwmon.
++
+ config SENSORS_ARM_SCPI
+ 	tristate "ARM SCPI Sensors"
+ 	depends on ARM_SCPI_PROTOCOL
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index c84d9784be98..a51c2dcef11c 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -44,6 +44,7 @@ obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
+ obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
+ obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
+ obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
++obj-$(CONFIG_SENSORS_ARM_SCMI)	+= scmi-hwmon.o
+ obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
+ obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
+ obj-$(CONFIG_SENSORS_ASPEED)	+= aspeed-pwm-tacho.o
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+new file mode 100644
+index 000000000000..7a0ab768d4b5
+--- /dev/null
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -0,0 +1,233 @@
++/*
++ * System Control and Management Interface(SCMI) based hwmon sensor driver
++ *
++ * Copyright (C) 2017 ARM Ltd.
++ * Sudeep Holla <sudeep.holla@arm.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/hwmon.h>
++#include <linux/module.h>
++#include <linux/scmi_protocol.h>
++#include <linux/slab.h>
++#include <linux/sysfs.h>
++#include <linux/thermal.h>
++
++struct scmi_sensors {
++	const struct scmi_handle *handle;
++	const struct scmi_sensor_info **info[hwmon_max];
++};
++
++static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			   u32 attr, int channel, long *val)
++{
++	int ret;
++	u64 value;
++	const struct scmi_sensor_info *sensor;
++	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
++	const struct scmi_handle *h = scmi_sensors->handle;
++
++	sensor = *(scmi_sensors->info[type] + channel);
++	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
++	if (!ret)
++		*val = value;
++
++	return ret;
++}
++
++static int
++scmi_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
++		       u32 attr, int channel, const char **str)
++{
++	const struct scmi_sensor_info *sensor;
++	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
++
++	sensor = *(scmi_sensors->info[type] + channel);
++	*str = sensor->name;
 +
 +	return 0;
 +}
 +
- static int
- scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
- {
-@@ -167,6 +180,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- 
- 	policy->cpuinfo.transition_latency = latency;
- 
-+	policy->fast_switch_possible = true;
- 	return 0;
- 
- out_free_cpufreq_table:
-@@ -183,6 +197,7 @@ static int scmi_cpufreq_exit(struct cpufreq_policy *policy)
- {
- 	struct scmi_data *priv = policy->driver_data;
- 
-+	policy->fast_switch_possible = false;
- 	cpufreq_cooling_unregister(priv->cdev);
- 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
- 	kfree(priv);
-@@ -226,6 +241,7 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
- 	.verify	= cpufreq_generic_frequency_table_verify,
- 	.attr	= cpufreq_generic_attr,
- 	.target_index	= scmi_cpufreq_set_target,
-+	.fast_switch	= scmi_cpufreq_fast_switch,
- 	.get	= scmi_cpufreq_get_rate,
- 	.init	= scmi_cpufreq_init,
- 	.exit	= scmi_cpufreq_exit,
++static umode_t
++scmi_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
++		      u32 attr, int channel)
++{
++	const struct scmi_sensor_info *sensor;
++	const struct scmi_sensors *scmi_sensors = drvdata;
++
++	sensor = *(scmi_sensors->info[type] + channel);
++	if (sensor && sensor->name)
++		return S_IRUGO;
++
++	return 0;
++}
++
++static const struct hwmon_ops scmi_hwmon_ops = {
++	.is_visible = scmi_hwmon_is_visible,
++	.read = scmi_hwmon_read,
++	.read_string = scmi_hwmon_read_string,
++};
++
++static struct hwmon_chip_info scmi_chip_info = {
++	.ops = &scmi_hwmon_ops,
++	.info = NULL,
++};
++
++static int scmi_hwmon_add_chan_info(struct hwmon_channel_info *scmi_hwmon_chan,
++				    struct device *dev, int num,
++				    enum hwmon_sensor_types type, u32 config)
++{
++	int i;
++	u32 *cfg = devm_kcalloc(dev, num + 1, sizeof(*cfg), GFP_KERNEL);
++
++	if (!cfg)
++		return -ENOMEM;
++
++	scmi_hwmon_chan->type = type;
++	scmi_hwmon_chan->config = cfg;
++	for (i = 0; i < num; i++, cfg++)
++		*cfg = config;
++
++	return 0;
++}
++
++static enum hwmon_sensor_types scmi_types[] = {
++	[TEMPERATURE_C] = hwmon_temp,
++	[VOLTAGE] = hwmon_in,
++	[CURRENT] = hwmon_curr,
++	[POWER] = hwmon_power,
++	[ENERGY] = hwmon_energy,
++};
++
++static u32 hwmon_attributes[] = {
++	[hwmon_chip] = HWMON_C_REGISTER_TZ,
++	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
++	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
++	[hwmon_curr] = HWMON_C_INPUT | HWMON_C_LABEL,
++	[hwmon_power] = HWMON_P_INPUT | HWMON_P_LABEL,
++	[hwmon_energy] = HWMON_E_INPUT | HWMON_E_LABEL,
++};
++
++static int scmi_hwmon_probe(struct scmi_device *sdev)
++{
++	int i, idx;
++	u16 nr_sensors;
++	enum hwmon_sensor_types type;
++	struct scmi_sensors *scmi_sensors;
++	const struct scmi_sensor_info *sensor;
++	int nr_count[hwmon_max] = {0}, nr_types = 0;
++	const struct hwmon_chip_info *chip_info;
++	struct device *hwdev, *dev = &sdev->dev;
++	struct hwmon_channel_info *scmi_hwmon_chan;
++	const struct hwmon_channel_info **ptr_scmi_ci;
++	const struct scmi_handle *handle = sdev->handle;
++
++	if (!handle || !handle->sensor_ops)
++		return -ENODEV;
++
++	nr_sensors = handle->sensor_ops->count_get(handle);
++	if (!nr_sensors)
++		return -EIO;
++
++	scmi_sensors = devm_kzalloc(dev, sizeof(*scmi_sensors), GFP_KERNEL);
++	if (!scmi_sensors)
++		return -ENOMEM;
++
++	scmi_sensors->handle = handle;
++
++	for (i = 0; i < nr_sensors; i++) {
++		sensor = handle->sensor_ops->info_get(handle, i);
++		if (!sensor)
++			return PTR_ERR(sensor);
++
++		switch (sensor->type) {
++		case TEMPERATURE_C:
++		case VOLTAGE:
++		case CURRENT:
++		case POWER:
++		case ENERGY:
++			type = scmi_types[sensor->type];
++			if (!nr_count[type])
++				nr_types++;
++			nr_count[type]++;
++			break;
++		}
++	}
++
++	if (nr_count[hwmon_temp])
++		nr_count[hwmon_chip]++, nr_types++;
++
++	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
++				       GFP_KERNEL);
++	if (!scmi_hwmon_chan)
++		return -ENOMEM;
++
++	ptr_scmi_ci = devm_kcalloc(dev, nr_types + 1, sizeof(*ptr_scmi_ci),
++				   GFP_KERNEL);
++	if (!ptr_scmi_ci)
++		return -ENOMEM;
++
++	scmi_chip_info.info = ptr_scmi_ci;
++	chip_info = &scmi_chip_info;
++
++	for (type = 0; type < hwmon_max && nr_count[type]; type++) {
++		scmi_hwmon_add_chan_info(scmi_hwmon_chan, dev, nr_count[type],
++					 type, hwmon_attributes[type]);
++		*ptr_scmi_ci++ = scmi_hwmon_chan++;
++
++		scmi_sensors->info[type] =
++			devm_kcalloc(dev, nr_count[type],
++				     sizeof(*scmi_sensors->info), GFP_KERNEL);
++		if (!scmi_sensors->info[type])
++			return -ENOMEM;
++	}
++
++	for (i = nr_sensors - 1; i >= 0 ; i--) {
++		sensor = handle->sensor_ops->info_get(handle, i);
++		if (!sensor)
++			continue;
++
++		switch (sensor->type) {
++		case TEMPERATURE_C:
++		case VOLTAGE:
++		case CURRENT:
++		case POWER:
++		case ENERGY:
++			type = scmi_types[sensor->type];
++			idx = --nr_count[type];
++			*(scmi_sensors->info[type] + idx) = sensor;
++			break;
++		}
++	}
++
++	hwdev = devm_hwmon_device_register_with_info(dev, "scmi_sensors",
++						     scmi_sensors, chip_info,
++						     NULL);
++
++	return PTR_ERR_OR_ZERO(hwdev);
++}
++
++static const struct scmi_device_id scmi_id_table[] = {
++	{ SCMI_PROTOCOL_SENSOR },
++	{ },
++};
++MODULE_DEVICE_TABLE(scmi, scmi_id_table);
++
++static struct scmi_driver scmi_hwmon_drv = {
++	.name		= "scmi-hwmon",
++	.probe		= scmi_hwmon_probe,
++	.id_table	= scmi_id_table,
++};
++module_scmi_driver(scmi_hwmon_drv);
++
++MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
++MODULE_DESCRIPTION("ARM SCMI HWMON interface driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
