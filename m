@@ -1,84 +1,137 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
-Date: Fri, 3 Nov 2017 09:37:18 +0800
-Message-ID: <1509673038.19220.19.camel@mtkswgap22>
-References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
-         <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
-         <1509423579.10793.10.camel@mtkswgap22>
-         <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
-         <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] hwmon: (aspeed-pwm-tacho) Deassert reset in probe
+Date: Fri, 3 Nov 2017 13:32:10 +1100
+Message-ID: <CACPK8Xc3Hsj9TD8L2A6e-iCMZp5=HG9aan5m0YsWV-CZHFPo5A@mail.gmail.com>
+References: <20171102035349.1902-1-joel@jms.id.au> <20171102035349.1902-3-joel@jms.id.au>
+ <20171102145406.GA9240@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171102145406.GA9240-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Nov 3, 2017 at 1:54 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Thu, Nov 02, 2017 at 02:53:48PM +1100, Joel Stanley wrote:
+>> The ASPEED SoC must deassert a reset in order to use the PWM/tach
+>> peripheral.
+>>
+> Again, you claim that the current driver would not work at all, which
+> is simply not correct. It doesn't work if the chip wasn't taken out
+> of reset by other means. This doesn't take into account situations and
+> hardware where the chip is taken out of reset automatically at boot, h
+> or by the ROM monitor/BIOS. It assumes that the reset pin can _always_
+> be controlled by software.
 
-On Thu, 2017-11-02 at 17:05 +0100, Arnd Bergmann wrote:
-> On Thu, Nov 2, 2017 at 12:47 PM, Matthias Brugger
-> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Arnd,
-> >
-> > On 10/31/2017 05:19 AM, Ryder Lee wrote:
-> >> Hi Arnd,
-> >>
-> >> We have 3 root ports in MT7623, but this is a bug in this chip where the
-> >> HW designers wired the IRQs in a nonstandard way. We've tried to
-> >> statically assign the bus portion of the address part in the parent
-> >> interrupt-map before, but this approach cannot handle the case - if we
-> >> attach the device in random order.
-> >>
-> >
-> > Ryder, please don't top post :)
+The reset is internal to the SoC. There is no pin to speak of, just a
+wire inside the SoC, so it can always be controlled by software.
 
-Oh. My bad!
+There's SoC does not release any resets automatically; the default
+value on boot is for the reset to be asserted and this is not
+configurable.
 
-> >> Thanks.
-> >>
-> >> On Mon, 2017-10-30 at 13:42 +0100, Arnd Bergmann wrote:
-> >>> On Mon, Oct 23, 2017 at 12:06 AM, Matthias Brugger
-> >>> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>>
-> >>>> ----------------------------------------------------------------
-> >>>> - mt76233 add PCIe node
-> >>>
-> >>> Could you clarify what the subnodes in the PCI node are for? It seems odd
-> >>> to have "interrupt-map" properties in both the pcie controller and its child
-> >>> nodes, and I want to ensure this is following the standard PCIe binding before
-> >>> I pull it.
-> >>>
-> >
-> > Arnd, I didn't found the pull request in your next/dt branch.
-> > Is there more clarification needed from our side?
-> 
-> I'm still unsure about it., this looks like exactly the thing that the top-level
-> interrupt-map is supposed to handle fine.
-> 
-> Can you send a pull request for the series without the pci child nodes for the
-> moment while we figure out what the exact problem is? We can take
-> whatever fix we come up with during the v4.15 -rc cycle then.
-> 
-> I would assume that either the parent interrupt-map is wrong, or something
-> broke the parser, but that it's not actually something that's wrong in the
-> hardware design in a way that we can't already handle in a standard way.
-> 
-> Ryder, can you be more specific how the interrupts are wired up?
-> Is there one IRQ per slot that is connected to all of IntA/IntB/IntC/IntD
-> and gets propagated through the bridges like that, or is it something else?
+> Similar, it forces the chip into reset when the driver is removed,
+> which is even worse. Unload the driver, and no more fan control ?
+> Really ? Then why is there an autonomous chip for fan control
+> to start with ? This is questionable even if the reset pin is
+> optional.
 
-Yes, that's what I mean - we only have one IRQ which is connected to all
-INTx for each slot, and I'm not sure if there is any better way to solve
-this problem. 
+Similarly, the PWM/Tach unit is inside the SoC; it's not an external device.
 
->      Arnd
-> 
+It would be strange to remove the driver and expect the system to keep
+operating normally.
 
+> You'll have to make reset handling optional for me to accept it.
+> I am quite sure that I said that before.
 
+Please reconsider in light of the details above. It does not make any
+sense to build a system without this reset.
+
+Cheers,
+
+Joel
+
+>
+> Guenter
+>
+>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>> ---
+>> v2:
+>>  - Correct horrible mistakes
+>>  - Boot tested and hwmon sysfs files checked
+>> ---
+>>  drivers/hwmon/aspeed-pwm-tacho.c | 21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>
+>> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+>> index 63a95e23ca81..77bb7a4bbed4 100644
+>> --- a/drivers/hwmon/aspeed-pwm-tacho.c
+>> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/of_platform.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/regmap.h>
+>> +#include <linux/reset.h>
+>>  #include <linux/sysfs.h>
+>>  #include <linux/thermal.h>
+>>
+>> @@ -181,6 +182,7 @@ struct aspeed_cooling_device {
+>>
+>>  struct aspeed_pwm_tacho_data {
+>>       struct regmap *regmap;
+>> +     struct reset_control *rst;
+>>       unsigned long clk_freq;
+>>       bool pwm_present[8];
+>>       bool fan_tach_present[16];
+>> @@ -931,6 +933,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+>>                       &aspeed_pwm_tacho_regmap_config);
+>>       if (IS_ERR(priv->regmap))
+>>               return PTR_ERR(priv->regmap);
+>> +
+>> +     priv->rst = devm_reset_control_get_exclusive(dev, NULL);
+>> +     if (IS_ERR(priv->rst)) {
+>> +             dev_err(dev,
+>> +                     "missing or invalid reset controller device tree entry");
+>> +             return PTR_ERR(priv->rst);
+>> +     }
+>> +     reset_control_deassert(priv->rst);
+>> +
+>>       regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE, 0);
+>>       regmap_write(priv->regmap, ASPEED_PTCR_TACH_SOURCE_EXT, 0);
+>>
+>> @@ -960,6 +971,15 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+>>       return PTR_ERR_OR_ZERO(hwmon);
+>>  }
+>>
+>> +static int aspeed_pwm_tacho_remove(struct platform_device *pdev)
+>> +{
+>> +     struct aspeed_pwm_tacho_data *priv = platform_get_drvdata(pdev);
+>> +
+>> +     reset_control_assert(priv->rst);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>>  static const struct of_device_id of_pwm_tacho_match_table[] = {
+>>       { .compatible = "aspeed,ast2400-pwm-tacho", },
+>>       { .compatible = "aspeed,ast2500-pwm-tacho", },
+>> @@ -969,6 +989,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_tacho_match_table);
+>>
+>>  static struct platform_driver aspeed_pwm_tacho_driver = {
+>>       .probe          = aspeed_pwm_tacho_probe,
+>> +     .remove         = aspeed_pwm_tacho_remove,
+>>       .driver         = {
+>>               .name   = "aspeed_pwm_tacho",
+>>               .of_match_table = of_pwm_tacho_match_table,
+>> --
+>> 2.14.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
