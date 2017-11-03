@@ -1,306 +1,300 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v4 18/20] hwmon: add support for sensors exported via ARM SCMI
-Date: Fri,  3 Nov 2017 14:47:55 +0000
-Message-ID: <1509720477-18936-19-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v4 16/20] clk: add support for clocks provided by SCMI
+Date: Fri,  3 Nov 2017 14:47:53 +0000
+Message-ID: <1509720477-18936-17-git-send-email-sudeep.holla@arm.com>
 References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-hwmon@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Create a driver to add support for SoC sensors exported by the System
-Control Processor (SCP) via the System Control and Management Interface
-(SCMI). The supported sensor types is one of voltage, temperature,
-current, and power.
+On some ARM based systems, a separate Cortex-M based System Control
+Processor(SCP) provides the overall power, clock, reset and system
+control. System Control and Management Interface(SCMI) Message Protocol
+is defined for the communication between the Application Cores(AP)
+and the SCP.
 
-The sensor labels and values provided by the SCP are exported via the
-hwmon sysfs interface.
+This patch adds support for the clocks provided by SCP using SCMI
+protocol.
 
-Cc: linux-hwmon@vger.kernel.org
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-clk@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/hwmon/Kconfig      |  12 +++
- drivers/hwmon/Makefile     |   1 +
- drivers/hwmon/scmi-hwmon.c | 233 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 246 insertions(+)
- create mode 100644 drivers/hwmon/scmi-hwmon.c
+ MAINTAINERS            |   2 +-
+ drivers/clk/Kconfig    |  10 +++
+ drivers/clk/Makefile   |   1 +
+ drivers/clk/clk-scmi.c | 213 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 225 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/clk-scmi.c
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index d65431417b17..0b75e9a89463 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -321,6 +321,18 @@ config SENSORS_APPLESMC
- 	  Say Y here if you have an applicable laptop and want to experience
- 	  the awesome power of applesmc.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8ee63627f1ac..1f9004d68ad4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12954,7 +12954,7 @@ M:	Sudeep Holla <sudeep.holla@arm.com>
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/arm/arm,sc[mp]i.txt
+-F:	drivers/clk/clk-scpi.c
++F:	drivers/clk/clk-sc[mp]i.c
+ F:	drivers/cpufreq/scpi-cpufreq.c
+ F:	drivers/firmware/arm_scpi.c
+ F:	drivers/firmware/arm_scmi/
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 1c4e1aa6767e..57c66b22eab8 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -62,6 +62,16 @@ config COMMON_CLK_HI655X
+ 	  multi-function device has one fixed-rate oscillator, clocked
+ 	  at 32KHz.
  
-+config SENSORS_ARM_SCMI
-+	tristate "ARM SCMI Sensors"
-+	depends on ARM_SCMI_PROTOCOL
-+	depends on THERMAL || !THERMAL_OF
-+	help
-+	  This driver provides support for temperature, voltage, current
-+	  and power sensors available on SCMI based platforms. The actual
-+	  number and type of sensors exported depend on the platform.
++config COMMON_CLK_SCMI
++	tristate "Clock driver controlled via SCMI interface"
++	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
++	  ---help---
++	  This driver provides support for clocks that are controlled
++	  by firmware that implements the SCMI interface.
 +
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called scmi-hwmon.
++	  This driver uses SCMI Message Protocol to interact with the
++	  firmware providing all the clock controls.
 +
- config SENSORS_ARM_SCPI
- 	tristate "ARM SCPI Sensors"
- 	depends on ARM_SCPI_PROTOCOL
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index c84d9784be98..a51c2dcef11c 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
- obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
- obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
- obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
-+obj-$(CONFIG_SENSORS_ARM_SCMI)	+= scmi-hwmon.o
- obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
- obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
- obj-$(CONFIG_SENSORS_ASPEED)	+= aspeed-pwm-tacho.o
-diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+ config COMMON_CLK_SCPI
+ 	tristate "Clock driver controlled via SCPI interface"
+ 	depends on ARM_SCPI_PROTOCOL || COMPILE_TEST
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index c99f363826f0..46ad2f2b686a 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -39,6 +39,7 @@ obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
+ obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
+ obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
+ obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
++obj-$(CONFIG_COMMON_CLK_SCMI)           += clk-scmi.o
+ obj-$(CONFIG_COMMON_CLK_SCPI)           += clk-scpi.o
+ obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
+ obj-$(CONFIG_COMMON_CLK_SI514)		+= clk-si514.o
+diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
 new file mode 100644
-index 000000000000..7a0ab768d4b5
+index 000000000000..1e4d7a57779b
 --- /dev/null
-+++ b/drivers/hwmon/scmi-hwmon.c
-@@ -0,0 +1,233 @@
++++ b/drivers/clk/clk-scmi.c
+@@ -0,0 +1,213 @@
 +/*
-+ * System Control and Management Interface(SCMI) based hwmon sensor driver
++ * System Control and Power Interface (SCMI) Protocol based clock driver
 + *
 + * Copyright (C) 2017 ARM Ltd.
-+ * Sudeep Holla <sudeep.holla@arm.com>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
 + *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program. If not, see <http://www.gnu.org/licenses/>.
 + */
 +
-+#include <linux/hwmon.h>
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/of.h>
 +#include <linux/module.h>
 +#include <linux/scmi_protocol.h>
-+#include <linux/slab.h>
-+#include <linux/sysfs.h>
-+#include <linux/thermal.h>
++#include <asm/div64.h>
 +
-+struct scmi_sensors {
++struct scmi_clk {
++	u32 id;
++	struct clk_hw hw;
++	const struct scmi_clock_info *info;
 +	const struct scmi_handle *handle;
-+	const struct scmi_sensor_info **info[hwmon_max];
 +};
 +
-+static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			   u32 attr, int channel, long *val)
++#define to_scmi_clk(clk) container_of(clk, struct scmi_clk, hw)
++
++static unsigned long scmi_clk_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
 +{
 +	int ret;
-+	u64 value;
-+	const struct scmi_sensor_info *sensor;
-+	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
-+	const struct scmi_handle *h = scmi_sensors->handle;
++	u64 rate;
++	struct scmi_clk *clk = to_scmi_clk(hw);
 +
-+	sensor = *(scmi_sensors->info[type] + channel);
-+	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
++	ret = clk->handle->clk_ops->rate_get(clk->handle, clk->id, &rate);
++	if (ret)
++		return 0;
++	return rate;
++}
++
++static long scmi_clk_round_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long *parent_rate)
++{
++	int step;
++	u64 fmin, fmax, ftmp;
++	struct scmi_clk *clk = to_scmi_clk(hw);
++
++	/*
++	 * We can't figure out what rate it will be, so just return the
++	 * rate back to the caller. scmi_clk_recalc_rate() will be called
++	 * after the rate is set and we'll know what rate the clock is
++	 * running at then.
++	 */
++	if (clk->info->rate_discrete)
++		return rate;
++
++	fmin = clk->info->range.min_rate;
++	fmax = clk->info->range.max_rate;
++	if (rate <= fmin)
++		return fmin;
++	else if (rate >= fmax)
++		return fmax;
++
++	ftmp = rate - fmin;
++	ftmp += clk->info->range.step_size - 1; /* to round up */
++	step = do_div(ftmp, clk->info->range.step_size);
++
++	return step * clk->info->range.step_size + fmin;
++}
++
++static int scmi_clk_set_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long parent_rate)
++{
++	struct scmi_clk *clk = to_scmi_clk(hw);
++
++	return clk->handle->clk_ops->rate_set(clk->handle, clk->id, 0, rate);
++}
++
++static int scmi_clk_enable(struct clk_hw *hw)
++{
++	struct scmi_clk *clk = to_scmi_clk(hw);
++
++	return clk->handle->clk_ops->enable(clk->handle, clk->id);
++}
++
++static void scmi_clk_disable(struct clk_hw *hw)
++{
++	struct scmi_clk *clk = to_scmi_clk(hw);
++
++	clk->handle->clk_ops->disable(clk->handle, clk->id);
++}
++
++static const struct clk_ops scmi_clk_ops = {
++	.recalc_rate = scmi_clk_recalc_rate,
++	.round_rate = scmi_clk_round_rate,
++	.set_rate = scmi_clk_set_rate,
++	/*
++	 * We can't provide enable/disable callback as we can't perform the same
++	 * in atomic context. Since the clock framework provides standard API
++	 * clk_prepare_enable that helps cases using clk_enable in non-atomic
++	 * context, it should be fine providing prepare/unprepare.
++	 */
++	.prepare = scmi_clk_enable,
++	.unprepare = scmi_clk_disable,
++};
++
++static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk)
++{
++	int ret;
++	struct clk_init_data init = {
++		.flags = CLK_GET_RATE_NOCACHE,
++		.num_parents = 0,
++		.ops = &scmi_clk_ops,
++		.name = sclk->info->name,
++	};
++
++	sclk->hw.init = &init;
++	ret = devm_clk_hw_register(dev, &sclk->hw);
 +	if (!ret)
-+		*val = value;
-+
++		clk_hw_set_rate_range(&sclk->hw, sclk->info->range.min_rate,
++				      sclk->info->range.max_rate);
 +	return ret;
 +}
 +
-+static int
-+scmi_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+		       u32 attr, int channel, const char **str)
++static int scmi_clocks_probe(struct scmi_device *sdev)
 +{
-+	const struct scmi_sensor_info *sensor;
-+	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
-+
-+	sensor = *(scmi_sensors->info[type] + channel);
-+	*str = sensor->name;
-+
-+	return 0;
-+}
-+
-+static umode_t
-+scmi_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-+		      u32 attr, int channel)
-+{
-+	const struct scmi_sensor_info *sensor;
-+	const struct scmi_sensors *scmi_sensors = drvdata;
-+
-+	sensor = *(scmi_sensors->info[type] + channel);
-+	if (sensor && sensor->name)
-+		return S_IRUGO;
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops scmi_hwmon_ops = {
-+	.is_visible = scmi_hwmon_is_visible,
-+	.read = scmi_hwmon_read,
-+	.read_string = scmi_hwmon_read_string,
-+};
-+
-+static struct hwmon_chip_info scmi_chip_info = {
-+	.ops = &scmi_hwmon_ops,
-+	.info = NULL,
-+};
-+
-+static int scmi_hwmon_add_chan_info(struct hwmon_channel_info *scmi_hwmon_chan,
-+				    struct device *dev, int num,
-+				    enum hwmon_sensor_types type, u32 config)
-+{
-+	int i;
-+	u32 *cfg = devm_kcalloc(dev, num + 1, sizeof(*cfg), GFP_KERNEL);
-+
-+	if (!cfg)
-+		return -ENOMEM;
-+
-+	scmi_hwmon_chan->type = type;
-+	scmi_hwmon_chan->config = cfg;
-+	for (i = 0; i < num; i++, cfg++)
-+		*cfg = config;
-+
-+	return 0;
-+}
-+
-+static enum hwmon_sensor_types scmi_types[] = {
-+	[TEMPERATURE_C] = hwmon_temp,
-+	[VOLTAGE] = hwmon_in,
-+	[CURRENT] = hwmon_curr,
-+	[POWER] = hwmon_power,
-+	[ENERGY] = hwmon_energy,
-+};
-+
-+static u32 hwmon_attributes[] = {
-+	[hwmon_chip] = HWMON_C_REGISTER_TZ,
-+	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
-+	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
-+	[hwmon_curr] = HWMON_C_INPUT | HWMON_C_LABEL,
-+	[hwmon_power] = HWMON_P_INPUT | HWMON_P_LABEL,
-+	[hwmon_energy] = HWMON_E_INPUT | HWMON_E_LABEL,
-+};
-+
-+static int scmi_hwmon_probe(struct scmi_device *sdev)
-+{
-+	int i, idx;
-+	u16 nr_sensors;
-+	enum hwmon_sensor_types type;
-+	struct scmi_sensors *scmi_sensors;
-+	const struct scmi_sensor_info *sensor;
-+	int nr_count[hwmon_max] = {0}, nr_types = 0;
-+	const struct hwmon_chip_info *chip_info;
-+	struct device *hwdev, *dev = &sdev->dev;
-+	struct hwmon_channel_info *scmi_hwmon_chan;
-+	const struct hwmon_channel_info **ptr_scmi_ci;
++	int idx, count, err;
++	struct clk_hw **hws;
++	struct clk_hw_onecell_data *clk_data;
++	struct device *dev = &sdev->dev;
++	struct device_node *np = dev->of_node;
 +	const struct scmi_handle *handle = sdev->handle;
 +
-+	if (!handle || !handle->sensor_ops)
++	if (!handle || !handle->clk_ops)
 +		return -ENODEV;
 +
-+	nr_sensors = handle->sensor_ops->count_get(handle);
-+	if (!nr_sensors)
-+		return -EIO;
-+
-+	scmi_sensors = devm_kzalloc(dev, sizeof(*scmi_sensors), GFP_KERNEL);
-+	if (!scmi_sensors)
-+		return -ENOMEM;
-+
-+	scmi_sensors->handle = handle;
-+
-+	for (i = 0; i < nr_sensors; i++) {
-+		sensor = handle->sensor_ops->info_get(handle, i);
-+		if (!sensor)
-+			return PTR_ERR(sensor);
-+
-+		switch (sensor->type) {
-+		case TEMPERATURE_C:
-+		case VOLTAGE:
-+		case CURRENT:
-+		case POWER:
-+		case ENERGY:
-+			type = scmi_types[sensor->type];
-+			if (!nr_count[type])
-+				nr_types++;
-+			nr_count[type]++;
-+			break;
-+		}
++	count = handle->clk_ops->count_get(handle);
++	if (count < 0) {
++		dev_err(dev, "%s: invalid clock output count\n", np->name);
++		return -EINVAL;
 +	}
 +
-+	if (nr_count[hwmon_temp])
-+		nr_count[hwmon_chip]++, nr_types++;
-+
-+	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
-+				       GFP_KERNEL);
-+	if (!scmi_hwmon_chan)
++	clk_data = devm_kzalloc(dev, sizeof(*clk_data) +
++				sizeof(*clk_data->hws) * count, GFP_KERNEL);
++	if (!clk_data)
 +		return -ENOMEM;
 +
-+	ptr_scmi_ci = devm_kcalloc(dev, nr_types + 1, sizeof(*ptr_scmi_ci),
-+				   GFP_KERNEL);
-+	if (!ptr_scmi_ci)
-+		return -ENOMEM;
++	clk_data->num = count;
++	hws = clk_data->hws;
 +
-+	scmi_chip_info.info = ptr_scmi_ci;
-+	chip_info = &scmi_chip_info;
++	for (idx = 0; idx < count; idx++) {
++		struct scmi_clk *sclk;
 +
-+	for (type = 0; type < hwmon_max && nr_count[type]; type++) {
-+		scmi_hwmon_add_chan_info(scmi_hwmon_chan, dev, nr_count[type],
-+					 type, hwmon_attributes[type]);
-+		*ptr_scmi_ci++ = scmi_hwmon_chan++;
-+
-+		scmi_sensors->info[type] =
-+			devm_kcalloc(dev, nr_count[type],
-+				     sizeof(*scmi_sensors->info), GFP_KERNEL);
-+		if (!scmi_sensors->info[type])
++		sclk = devm_kzalloc(dev, sizeof(*sclk), GFP_KERNEL);
++		if (!sclk)
 +			return -ENOMEM;
-+	}
 +
-+	for (i = nr_sensors - 1; i >= 0 ; i--) {
-+		sensor = handle->sensor_ops->info_get(handle, i);
-+		if (!sensor)
++		sclk->info = handle->clk_ops->info_get(handle, idx);
++		if (!sclk->info) {
++			dev_dbg(dev, "invalid clock info for idx %d\n", idx);
 +			continue;
++		}
 +
-+		switch (sensor->type) {
-+		case TEMPERATURE_C:
-+		case VOLTAGE:
-+		case CURRENT:
-+		case POWER:
-+		case ENERGY:
-+			type = scmi_types[sensor->type];
-+			idx = --nr_count[type];
-+			*(scmi_sensors->info[type] + idx) = sensor;
-+			break;
++		sclk->id = idx;
++		sclk->handle = handle;
++
++		err = scmi_clk_ops_init(dev, sclk);
++		if (err) {
++			dev_err(dev, "failed to register clock %d\n", idx);
++			devm_kfree(dev, sclk);
++			hws[idx] = NULL;
++		} else {
++			dev_dbg(dev, "Registered clock:%s\n", sclk->info->name);
++			hws[idx] = &sclk->hw;
 +		}
 +	}
 +
-+	hwdev = devm_hwmon_device_register_with_info(dev, "scmi_sensors",
-+						     scmi_sensors, chip_info,
-+						     NULL);
++	return of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
++}
 +
-+	return PTR_ERR_OR_ZERO(hwdev);
++static void scmi_clocks_remove(struct scmi_device *sdev)
++{
++	struct device *dev = &sdev->dev;
++	struct device_node *np = dev->of_node;
++
++	of_clk_del_provider(np);
 +}
 +
 +static const struct scmi_device_id scmi_id_table[] = {
-+	{ SCMI_PROTOCOL_SENSOR },
++	{ SCMI_PROTOCOL_CLOCK },
 +	{ },
 +};
 +MODULE_DEVICE_TABLE(scmi, scmi_id_table);
 +
-+static struct scmi_driver scmi_hwmon_drv = {
-+	.name		= "scmi-hwmon",
-+	.probe		= scmi_hwmon_probe,
-+	.id_table	= scmi_id_table,
++static struct scmi_driver scmi_clocks_driver = {
++	.name = "scmi-clocks",
++	.probe = scmi_clocks_probe,
++	.remove = scmi_clocks_remove,
++	.id_table = scmi_id_table,
 +};
-+module_scmi_driver(scmi_hwmon_drv);
++module_scmi_driver(scmi_clocks_driver);
 +
 +MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
-+MODULE_DESCRIPTION("ARM SCMI HWMON interface driver");
++MODULE_DESCRIPTION("ARM SCMI clock driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
