@@ -1,190 +1,154 @@
-From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 8/8] perf: ARM DynamIQ Shared Unit PMU support
-Date: Fri, 3 Nov 2017 14:34:30 +0000
-Message-ID: <bea99cb3-5f4b-962f-2d8d-c2b2364db651@arm.com>
-References: <20171031172318.11823-1-suzuki.poulose@arm.com>
- <20171031172318.11823-9-suzuki.poulose@arm.com>
- <20171103122035.7jvgpn434thjoufr@lakrids.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v4 00/20] firmware: ARM System Control and Management Interface(SCMI) support
+Date: Fri,  3 Nov 2017 14:47:37 +0000
+Message-ID: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171103122035.7jvgpn434thjoufr-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/17 12:20, Mark Rutland wrote:
-> Hi Suzuki,
-> 
-> This looks good, but there are a couple of edge cases I think that we
-> need to handle, as noted below.
-> 
-> On Tue, Oct 31, 2017 at 05:23:18PM +0000, Suzuki K Poulose wrote:
->> Changes since V8:
-> 
->>   - Fill in the "module" field for the PMU to prevent the module unload
->>     when the PMU is active.
-> 
-> Huh. For some reason I thought that was done automatically, but having
-> looked, I see that it is not.
-> 
-> It looks like this is missing from the SPE PMU, and the CCN PMU. Would
-> you mind fixing those up?
-> 
-> The only other PMU that I see affected is the AMD power PMU; I've pinged
-> the maintainer separately.
-> 
-> [...]
-> 
->> +The driver also exposes the CPUs connected to the DSU instance in "associated_cpus".
-> 
-> Just to check, is there a user of this?
-> 
-> I agree that it could be useful, but AFAICT the perf tool won't look at
-> this, so it seems odd to expose it. I'd feel happier punting on exposing
-> that so that we can settle on a common name for this across
-> uncore/system PMUs.
+Hi all,
 
-It allows the user to identify the DSU instance to profile if there are
-multiple DSUs on the system. Also this information can be used to identify
-the "cpu" list that can be provided for -C option.
+ARM System Control and Management Interface(SCMI) is more flexible and
+easily extensible than any of the existing interfaces. Many vendors were
+involved in the making of this formal specification and is now published[1].
 
-> 
-> [...]
-> 
->> +static void dsu_pmu_probe_pmu(void *data)
->> +{
-> 
->> +	/* We can only support upto 31 independent counters */
-> 
-> Nit: s/upto/up to/
-> 
-> [...]
-> 
->> +static void dsu_pmu_init_pmu(struct dsu_pmu *dsu_pmu)
->> +{
->> +	int cpu, rc;
->> +
->> +	cpu = dsu_pmu_get_online_cpu(dsu_pmu);
->> +	/* Defer, if we don't have any active CPUs in the DSU */
->> +	if (cpu >= nr_cpu_ids)
->> +		return;
->> +	rc = smp_call_function_single(cpu, dsu_pmu_probe_pmu, dsu_pmu, 1);
->> +	if (rc)
->> +		return;
->> +	/* Reset the interrupt overflow mask */
->> +	dsu_pmu_get_reset_overflow();
->> +	dsu_pmu_set_active_cpu(cpu, dsu_pmu);
->> +}
-> 
-> I think this can be simplified by only callnig this in the hotplug
-> callback, and not donig the corss-call at all at driver init time. That
-> way, we can do:
-> 
-> static void dsu_pmu_init_pmu(struct dsu_pmu *dsu_pmu)
-> {
-> 	if (dsu_pmu->num_counters == -1)
-> 		dsu_pmu_probe_pmu(dsu_pmu);
-> 	
-> 	dsu_pmu_get_reset_overflow();
-> }
-> 
-> ... which also means we can simplify the prototype of
-> dsu_pmu_probe_pmu().
-> 
-> Note that the dsu_pmu_set_active_cpu() can be factored out to the
-> caller, which is a little clearer, as I suiggest below.
-> 
->> +static int dsu_pmu_device_probe(struct platform_device *pdev)
->> +{
-> 
->> +	/*
->> +	 * We could defer probing the PMU details from the registers until
->> +	 * an associated CPU is online.
->> +	 */
->> +	dsu_pmu_init_pmu(dsu_pmu);
-> 
-> ... then we can drop this line ...
-> 
->> +	platform_set_drvdata(pdev, dsu_pmu);
->> +	rc = cpuhp_state_add_instance(dsu_pmu_cpuhp_state,
->> +						&dsu_pmu->cpuhp_node);
-> 
-> ... as this should set things up if a CPU is already online.
-> 
-> [...]
+There is a strong trend in the industry to provide micro-controllers in
+systems to abstract various power, or other system management tasks.
+These controllers usually have similar interfaces, both in terms of the
+functions that are provided by them, and in terms of how requests are
+communicated to them.
 
-Got it, thats a good idea. I will change it.
+This specification is to standardise and avoid (any further)
+fragmentation in the design of such interface by various vendors.
 
-> 
->> +static int dsu_pmu_cpu_online(unsigned int cpu, struct hlist_node *node)
->> +{
->> +	struct dsu_pmu *dsu_pmu = hlist_entry_safe(node, struct dsu_pmu,
->> +						   cpuhp_node);
->> +
->> +	if (!cpumask_test_cpu(cpu, &dsu_pmu->associated_cpus))
->> +		return 0;
->> +
->> +	/* Initialise the PMU if necessary */
->> +	if (dsu_pmu->num_counters < 0)
->> +		dsu_pmu_init_pmu(dsu_pmu);
->> +	/* Set the active CPU if we don't have one */
->> +	if (cpumask_empty(&dsu_pmu->active_cpu))
->> +		dsu_pmu_set_active_cpu(cpu, dsu_pmu);
->> +	return 0;
->> +}
-> 
-> I don't think this is quite right, as if we've offlined all the
-> associated CPUs, the DSCU itself may have been powered down, and we'll
-> want to reset it when it's brought online.
-> 
-> I think we want this to be:
-> 
-> static int dsu_pmu_cpu_online(unsigned int cpu, struct hlist_node *node)
-> {
-> 	struct dsu_pmu *dsu_pmu = hlist_entry_safe(node, struct dsu_pmu,
-> 						   cpuhp_node);
-> 	
-> 	if (!cpumask_test_cpu(cpu, &dsu_pmu->associated_cpus))
-> 		return 0;
-> 	
-> 	/* If the PMU is already managed, there's nothing to do */
-> 	if (!cpumask_empty(&dsu_pmu->active_cpu))
-> 		return 0;
-> 
-> 	/* Reset the PMU, and take ownership */
-> 	dsu_pmu_init_pmu(dsu_pmu);
-> 	dsu_pmu_set_active_cpu(cpu, dsu_pmu);
-> 	
-> 	return 0;
-> }
-> 
-> [...]
-> 
->> +static int dsu_pmu_cpu_teardown(unsigned int cpu, struct hlist_node *node)
->> +{
-> 
->> +	dsu_pmu_set_active_cpu(dst, dsu_pmu);
->> +	perf_pmu_migrate_context(&dsu_pmu->pmu, cpu, dst);
-> 
-> In other PMU drivers, we do the migrate, then set the active CPU. That
-> shouldn't matter, but for consistency, could we flip these around?
+This patch set is intended to get feedback on the design and structure
+of the code. This is not complete and not fully tested due to
+non-availability of firmware with full feature set at this time.
 
-OK, will flip it.
+It currently doesn't support notification, asynchronous/delayed response,
+perf/power statistics region and sensor register region to name a few.
+I have borrowed some of the ideas of message allocation/management from
+TI SCI.
 
-> 
-> Otherwise, this looks good to me.
-> 
-> With the above changes:
-> 
-> Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Changes:
 
-Thanks for the review. I will post the updated version.
+v3[5]->v4:
+	- Added SCMI protocol bus to enumerate supported protocols as
+	  suggested by Arnd
+	- Dropped the abstraction to mailbox as it may be optional
 
-Suzuki
+v2[4]->v3:
+	- Addressed various comments recieved so far(clock, hwmon and
+	  cpufreq drivers along with scmi drivers)
+	- Hwmon driver now uses core layer to create and manage sysfs
+	  attributes
+	- Added a shim layer to abstract the mailbox interface to support
+	  any custom adaptation required by the controller driver
+	- Simple ARM MHU shim layer using newly added abstraction
+
+v1[3]->v2[4]:
+	- Additional support for polling based DVFS and per protocol
+	  channels
+	- Dependent drivers(clock, hwmon, cpufreq and power domains)
+	- Various other review comments and issued found during testing
+	  addressed
+	- Explicit binding for method dropped as even SMC based method
+	  are adviertised as mailbox
+
+RFC[2]->v1[3]:
+	- Add generic mailbox binding for shared memory(Rob H)
+	- Dropped compatibles per protocol(Suggested by Matt S)
+	- Dropped lot of unnecessary pointer casting(Arnd B)
+	- Dropped packing of structures(Arnd B)
+	- Few other changes/additions based initial testing with firmware
+	  providing SCMI interface to OSPM
+
+--
+Regards,
+Sudeep
+
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
+[2] https://marc.info/?l=linux-kernel&m=149685193627620&w=2
+[3] https://marc.info/?l=linux-arm-kernel&m=149849482623492&w=2
+[4] https://marc.info/?l=devicetree&m=150185763105926&w=2
+[5] https://marc.info/?l=devicetree&m=150660452015351&w=2
+
+Sudeep Holla (20):
+  dt-bindings: mailbox: add support for mailbox client shared memory
+  dt-bindings: arm: add support for ARM System Control and Management
+    Interface(SCMI) protocol
+  firmware: arm_scmi: add basic driver infrastructure for SCMI
+  firmware: arm_scmi: add common infrastructure and support for base
+    protocol
+  firmware: arm_scmi: add scmi protocol bus to enumerate protocol
+    devices
+  firmware: arm_scmi: add initial support for performance protocol
+  firmware: arm_scmi: add initial support for clock protocol
+  firmware: arm_scmi: add initial support for power protocol
+  firmware: arm_scmi: add initial support for sensor protocol
+  firmware: arm_scmi: probe and initialise all the supported protocols
+  firmware: arm_scmi: add support for polling based SCMI transfers
+  firmware: arm_scmi: add option for polling based performance domain
+    operations
+  firmware: arm_scmi: refactor in preparation to support per-protocol
+    channels
+  firmware: arm_scmi: add per-protocol channels support using idr
+    objects
+  firmware: arm_scmi: add device power domain support using genpd
+  clk: add support for clocks provided by SCMI
+  hwmon: (core) Add hwmon_max to hwmon_sensor_types enumeration
+  hwmon: add support for sensors exported via ARM SCMI
+  cpufreq: add support for CPU DVFS based on SCMI message protocol
+  cpufreq: scmi: add support for fast frequency switching
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt | 179 +++++
+ .../devicetree/bindings/mailbox/mailbox.txt        |  28 +
+ MAINTAINERS                                        |  11 +-
+ drivers/clk/Kconfig                                |  10 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-scmi.c                             | 213 +++++
+ drivers/cpufreq/Kconfig.arm                        |  11 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/scmi-cpufreq.c                     | 290 +++++++
+ drivers/firmware/Kconfig                           |  34 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/arm_scmi/Makefile                 |   5 +
+ drivers/firmware/arm_scmi/base.c                   | 293 +++++++
+ drivers/firmware/arm_scmi/bus.c                    | 232 ++++++
+ drivers/firmware/arm_scmi/clock.c                  | 353 ++++++++
+ drivers/firmware/arm_scmi/common.h                 | 116 +++
+ drivers/firmware/arm_scmi/driver.c                 | 895 +++++++++++++++++++++
+ drivers/firmware/arm_scmi/perf.c                   | 530 ++++++++++++
+ drivers/firmware/arm_scmi/power.c                  | 255 ++++++
+ drivers/firmware/arm_scmi/scmi_pm_domain.c         | 140 ++++
+ drivers/firmware/arm_scmi/sensors.c                | 302 +++++++
+ drivers/hwmon/Kconfig                              |  12 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/scmi-hwmon.c                         | 233 ++++++
+ include/linux/hwmon.h                              |   1 +
+ include/linux/scmi_protocol.h                      | 272 +++++++
+ 26 files changed, 4414 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
+ create mode 100644 drivers/clk/clk-scmi.c
+ create mode 100644 drivers/cpufreq/scmi-cpufreq.c
+ create mode 100644 drivers/firmware/arm_scmi/Makefile
+ create mode 100644 drivers/firmware/arm_scmi/base.c
+ create mode 100644 drivers/firmware/arm_scmi/bus.c
+ create mode 100644 drivers/firmware/arm_scmi/clock.c
+ create mode 100644 drivers/firmware/arm_scmi/common.h
+ create mode 100644 drivers/firmware/arm_scmi/driver.c
+ create mode 100644 drivers/firmware/arm_scmi/perf.c
+ create mode 100644 drivers/firmware/arm_scmi/power.c
+ create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
+ create mode 100644 drivers/firmware/arm_scmi/sensors.c
+ create mode 100644 drivers/hwmon/scmi-hwmon.c
+ create mode 100644 include/linux/scmi_protocol.h
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
