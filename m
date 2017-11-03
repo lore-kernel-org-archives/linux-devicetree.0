@@ -1,118 +1,176 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH V3 05/11] clk: sprd: add mux clock support
-Date: Fri, 3 Nov 2017 20:12:42 +0800
-Message-ID: <CAAfSe-tt==o2ZDq=C=pa_oAsA-xG1XMO=Nvd5qbHRTVgPaLBsw@mail.gmail.com>
-References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
- <20171102065626.21835-6-chunyan.zhang@spreadtrum.com> <532aed43-03bf-ea26-bdc2-d7deb1093f53@arm.com>
- <ba6366af-ecae-5f8b-f48b-6f93fbe833c0@arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 8/8] perf: ARM DynamIQ Shared Unit PMU support
+Date: Fri, 3 Nov 2017 12:20:35 +0000
+Message-ID: <20171103122035.7jvgpn434thjoufr@lakrids.cambridge.arm.com>
+References: <20171031172318.11823-1-suzuki.poulose@arm.com>
+ <20171031172318.11823-9-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba6366af-ecae-5f8b-f48b-6f93fbe833c0@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Julien Thierry <julien.thierry@arm.com>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Orson Zhai <orson.zhai@spreadtrum.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171031172318.11823-9-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3 November 2017 at 02:22, Julien Thierry <julien.thierry@arm.com> wrote:
->
->
-> On 02/11/17 18:11, Julien Thierry wrote:
->>
->> Hi,
->>
->> On 02/11/17 06:56, Chunyan Zhang wrote:
->>>
->>> This patch adds clock multiplexor support for Spreadtrum platforms,
->>> the mux clocks also can be found in sprd composite clocks, so
->>> provides two helpers that can be reused later on.
->>>
->>> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
->>> ---
->>>   drivers/clk/sprd/Makefile |  1 +
->>>   drivers/clk/sprd/mux.c    | 89
->>> +++++++++++++++++++++++++++++++++++++++++++++++
->>>   drivers/clk/sprd/mux.h    | 65 ++++++++++++++++++++++++++++++++++
->>>   3 files changed, 155 insertions(+)
->>>   create mode 100644 drivers/clk/sprd/mux.c
->>>   create mode 100644 drivers/clk/sprd/mux.h
->>>
->>> diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
->>> index 8cd5592..cee36b5 100644
->>> --- a/drivers/clk/sprd/Makefile
->>> +++ b/drivers/clk/sprd/Makefile
->>> @@ -2,3 +2,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)    += clk-sprd.o
->>>   clk-sprd-y    += common.o
->>>   clk-sprd-y    += gate.o
->>> +clk-sprd-y    += mux.o
->>> diff --git a/drivers/clk/sprd/mux.c b/drivers/clk/sprd/mux.c
->>> new file mode 100644
->>> index 0000000..5a344e0
->>> --- /dev/null
->>> +++ b/drivers/clk/sprd/mux.c
->>> @@ -0,0 +1,89 @@
->>> +/*
->>> + * Spreadtrum multiplexer clock driver
->>> + *
->>> + * Copyright (C) 2017 Spreadtrum, Inc.
->>> + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
->>> + *
->>> + * SPDX-License-Identifier: GPL-2.0
->>> + */
->>> +
->>> +#include <linux/clk.h>
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/regmap.h>
->>> +
->>> +#include "mux.h"
->>> +
->>> +DEFINE_SPINLOCK(sprd_mux_lock);
->>> +EXPORT_SYMBOL_GPL(sprd_mux_lock);
->>> +
->>> +u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
->>> +                  const struct sprd_mux_internal *mux)
->>> +{
->>> +    unsigned int reg;
->>> +    u8 parent;
->>> +    int num_parents;
->>> +    int i;
->>> +
->>> +    sprd_regmap_read(common->regmap, common->reg, &reg);
->>> +    parent = reg >> mux->shift;
->>> +    parent &= (1 << mux->width) - 1;
->>> +
->>> +    if (mux->table) {
->>> +        num_parents = clk_hw_get_num_parents(&common->hw);
->>> +
->>> +        for (i = 0; i < num_parents; i++)
->>> +            if (parent == mux->table[i] ||
->>> +                (i < (num_parents - 1) && parent > mux->table[i] &&
->>> +                 parent < mux->table[i + 1]))
->>> +                return i;
->>> +        if (i == num_parents)
->>> +            return i - 1;
->>
->>
->> The if branch is not necessary since you only get there when the loop has
->> finished, so the condition is always true. And the loop can be simplified
->> to:
->>
->> for (i = 0; i < num_parents - 1; i++)
->>      if (parent >= mux->table[i] &&  parent < mux->table[i + 1])
->>          return i;
->>
->> return num_parents;
->
->
-> Oops, meant to say "return num_parents - 1;" on that last line.
+Hi Suzuki,
 
-Yes, that makes the code nicer, and thanks to your reminder, I even
-make it more clean by moving the check for 'mux->table' up.
+This looks good, but there are a couple of edge cases I think that we
+need to handle, as noted below.
 
+On Tue, Oct 31, 2017 at 05:23:18PM +0000, Suzuki K Poulose wrote:
+> Changes since V8:
+
+>  - Fill in the "module" field for the PMU to prevent the module unload
+>    when the PMU is active.
+
+Huh. For some reason I thought that was done automatically, but having
+looked, I see that it is not.
+
+It looks like this is missing from the SPE PMU, and the CCN PMU. Would
+you mind fixing those up?
+
+The only other PMU that I see affected is the AMD power PMU; I've pinged
+the maintainer separately.
+
+[...]
+
+> +The driver also exposes the CPUs connected to the DSU instance in "associated_cpus".
+
+Just to check, is there a user of this?
+
+I agree that it could be useful, but AFAICT the perf tool won't look at
+this, so it seems odd to expose it. I'd feel happier punting on exposing
+that so that we can settle on a common name for this across
+uncore/system PMUs.
+
+[...]
+
+> +static void dsu_pmu_probe_pmu(void *data)
+> +{
+
+> +	/* We can only support upto 31 independent counters */
+
+Nit: s/upto/up to/
+
+[...]
+
+> +static void dsu_pmu_init_pmu(struct dsu_pmu *dsu_pmu)
+> +{
+> +	int cpu, rc;
+> +
+> +	cpu = dsu_pmu_get_online_cpu(dsu_pmu);
+> +	/* Defer, if we don't have any active CPUs in the DSU */
+> +	if (cpu >= nr_cpu_ids)
+> +		return;
+> +	rc = smp_call_function_single(cpu, dsu_pmu_probe_pmu, dsu_pmu, 1);
+> +	if (rc)
+> +		return;
+> +	/* Reset the interrupt overflow mask */
+> +	dsu_pmu_get_reset_overflow();
+> +	dsu_pmu_set_active_cpu(cpu, dsu_pmu);
+> +}
+
+I think this can be simplified by only callnig this in the hotplug
+callback, and not donig the corss-call at all at driver init time. That
+way, we can do:
+
+static void dsu_pmu_init_pmu(struct dsu_pmu *dsu_pmu)
+{
+	if (dsu_pmu->num_counters == -1)
+		dsu_pmu_probe_pmu(dsu_pmu);
+	
+	dsu_pmu_get_reset_overflow();
+}
+
+... which also means we can simplify the prototype of
+dsu_pmu_probe_pmu().
+
+Note that the dsu_pmu_set_active_cpu() can be factored out to the
+caller, which is a little clearer, as I suiggest below.
+
+> +static int dsu_pmu_device_probe(struct platform_device *pdev)
+> +{
+
+> +	/*
+> +	 * We could defer probing the PMU details from the registers until
+> +	 * an associated CPU is online.
+> +	 */
+> +	dsu_pmu_init_pmu(dsu_pmu);
+
+... then we can drop this line ...
+
+> +	platform_set_drvdata(pdev, dsu_pmu);
+> +	rc = cpuhp_state_add_instance(dsu_pmu_cpuhp_state,
+> +						&dsu_pmu->cpuhp_node);
+
+... as this should set things up if a CPU is already online.
+
+[...]
+
+> +static int dsu_pmu_cpu_online(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct dsu_pmu *dsu_pmu = hlist_entry_safe(node, struct dsu_pmu,
+> +						   cpuhp_node);
+> +
+> +	if (!cpumask_test_cpu(cpu, &dsu_pmu->associated_cpus))
+> +		return 0;
+> +
+> +	/* Initialise the PMU if necessary */
+> +	if (dsu_pmu->num_counters < 0)
+> +		dsu_pmu_init_pmu(dsu_pmu);
+> +	/* Set the active CPU if we don't have one */
+> +	if (cpumask_empty(&dsu_pmu->active_cpu))
+> +		dsu_pmu_set_active_cpu(cpu, dsu_pmu);
+> +	return 0;
+> +}
+
+I don't think this is quite right, as if we've offlined all the
+associated CPUs, the DSCU itself may have been powered down, and we'll
+want to reset it when it's brought online.
+
+I think we want this to be:
+
+static int dsu_pmu_cpu_online(unsigned int cpu, struct hlist_node *node)
+{
+	struct dsu_pmu *dsu_pmu = hlist_entry_safe(node, struct dsu_pmu,
+						   cpuhp_node);
+	
+	if (!cpumask_test_cpu(cpu, &dsu_pmu->associated_cpus))
+		return 0;
+	
+	/* If the PMU is already managed, there's nothing to do */
+	if (!cpumask_empty(&dsu_pmu->active_cpu))
+		return 0;
+
+	/* Reset the PMU, and take ownership */
+	dsu_pmu_init_pmu(dsu_pmu);
+	dsu_pmu_set_active_cpu(cpu, dsu_pmu);
+	
+	return 0;
+}
+
+[...]
+
+> +static int dsu_pmu_cpu_teardown(unsigned int cpu, struct hlist_node *node)
+> +{
+
+> +	dsu_pmu_set_active_cpu(dst, dsu_pmu);
+> +	perf_pmu_migrate_context(&dsu_pmu->pmu, cpu, dst);
+
+In other PMU drivers, we do the migrate, then set the active CPU. That
+shouldn't matter, but for consistency, could we flip these around?
+
+Otherwise, this looks good to me.
+
+With the above changes:
+
+Reviewed-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
 Thanks,
-Chunyan
-
->
-> --
-> Julien Thierry
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
