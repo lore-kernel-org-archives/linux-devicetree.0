@@ -1,49 +1,59 @@
-From: Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
-Subject: [PACTH v2] arm64: dts: ls1088a: Added dcfg node in ls1088a dtsi
-Date: Fri, 3 Nov 2017 10:17:41 +0530
-Message-ID: <1509684461-7432-1-git-send-email-Ashish.Kumar@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>, Amrita Kumari <amrita.kumari-3arQi8VN3Tc@public.gmane.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v4 0/6] pmbus: Expand fan support and add MAX31785 driver
+Date: Fri,  3 Nov 2017 15:53:00 +1100
+Message-ID: <20171103045306.26448-1-andrew@aj.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add debug configuration node(DCFG) in dtsi, helps guts driver to
-print the following information in kernel boot log
+Hello,
 
-[    0.526649] Machine: LS1088A RDB Board
-[    0.530430] SoC family: QorIQ LS1088A
-[    0.534115] SoC ID: svr:0x87030010, Revision: 1.0
+This series introduces support for the MAX31785 intelligent fan controller, a
+PMBus device providing closed-loop fan control among a number of other
+features. Along the way the series adds support to control fans and create
+virtual pages to the PMBus core, the latter to support some of the more
+annoying design decisions found in the 'A' variant of the chip.
 
-Signed-off-by: Amrita Kumari <amrita.kumari-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Ashish Kumar <Ashish.Kumar-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+This is the fourth spin of the series, v3 can be found here[1].
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index c144d06..b5f2372 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -156,6 +156,12 @@
- 			clocks = <&sysclk>;
- 		};
- 
-+		dcfg: dcfg@1e00000 {
-+			compatible = "fsl,ls1088a-dcfg", "syscon";
-+			reg = <0x0 0x1e00000 0x0 0x10000>;
-+			little-endian;
-+		};
-+
- 		tmu: tmu@1f80000 {
- 			compatible = "fsl,qoriq-tmu";
- 			reg = <0x0 0x1f80000 0x0 0x10000>;
+I've been running aground with the described devicetree bindings in the
+previous iterations, so in order to get *some* support upstream I've gutted the
+documentation and removed the corresponding support from the driver. I'll save
+posting that for a later date once Guenter and I have some input from Rob about
+what direction to take with respect to describing PMBus devices.
+
+As mentioned, adding full support for the features of the MAX31785 requires
+modifications to the PMBus core, so I've split the addition of features into
+separate patches, in the hope that some can be incrementally applied while we
+iterate on the details of any suboptimal parts.
+
+Please review!
+
+Andrew
+
+[1] https://lkml.org/lkml/2017/9/8/4
+
+Andrew Jeffery (6):
+  dt-bindings: pmbus: Add Maxim MAX31785 documentation
+  pmbus: Add driver for Maxim MAX31785 Intelligent Fan Controller
+  pmbus: core: Add fan control support
+  pmbus: max31785: Add fan control
+  pmbus: core: Add virtual page config bit
+  pmbus: max31785: Add dual tachometer support
+
+ .../devicetree/bindings/hwmon/max31785.txt         |  22 ++
+ Documentation/hwmon/max31785                       |  57 ++++
+ drivers/hwmon/pmbus/Kconfig                        |  10 +
+ drivers/hwmon/pmbus/Makefile                       |   1 +
+ drivers/hwmon/pmbus/max31785.c                     | 375 +++++++++++++++++++++
+ drivers/hwmon/pmbus/pmbus.h                        |  31 ++
+ drivers/hwmon/pmbus/pmbus_core.c                   | 236 +++++++++++--
+ 7 files changed, 713 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/max31785.txt
+ create mode 100644 Documentation/hwmon/max31785
+ create mode 100644 drivers/hwmon/pmbus/max31785.c
+
 -- 
-1.7.6.GIT
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
