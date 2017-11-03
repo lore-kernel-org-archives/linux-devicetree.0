@@ -1,65 +1,84 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: sun8i: h2+: add support for Banana
- Pi M2 Zero board
-Date: Fri, 03 Nov 2017 07:53:17 +0800
-Message-ID: <b548b74e04b29ec8c3cddb7cc42f2b4e@aosc.io>
-References: <20171101093814.19177-1-icenowy@aosc.io>
- <20171102090248.wnvj7dpphn5uqsut@flea>
- <8327eaeaa12b99f9962a53c9f02ddd6d@aosc.io>
- <20171102155003.vp7uve4ypyn4sb6j@flea>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
+Date: Fri, 3 Nov 2017 09:37:18 +0800
+Message-ID: <1509673038.19220.19.camel@mtkswgap22>
+References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
+         <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+         <1509423579.10793.10.camel@mtkswgap22>
+         <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
+         <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102155003.vp7uve4ypyn4sb6j@flea>
+In-Reply-To: <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-11-02 23:50，Maxime Ripard 写道：
-> On Thu, Nov 02, 2017 at 05:07:30PM +0800, Icenowy Zheng wrote:
->> > > +&mmc0 {
->> > > +	pinctrl-names = "default";
->> > > +	pinctrl-0 = <&mmc0_pins_a>;
->> > > +	vmmc-supply = <&reg_vcc3v3>;
->> > > +	bus-width = <4>;
->> > > +	/*
->> > > +	 * In different revisions the board have different card detect
->> > > +	 * configuration.
->> > > +	 */
->> >
->> > Which ones?
->> 
->> In the sample batch (1.2V fixed voltage) the card detect is normal
->> (PF6 low as inserted), however in the final batch (1.1V/1.3V
->> switchable) it's inverted at PF6 (high as inserted).
-> 
-> Then just use the final version's.
-> 
->> > > +&usbphy {
->> > > +	usb0_id_det-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
->> > > +	/* USB OTG VBUS is directly connected to 5V without any regulators
->> > > */
->> >
->> > So it cannot operate in OTG, but it's host only?
->> 
->> It can operate in OTG -- you can power the board via the OTG port,
->> as the VBUS is not gated from 5V at all, so 5V power at VBUS will
->> power up the board. Yes, it's a bit unsafe, but the board designer
->> did it.
-> 
-> What will provide the 5v in the first place then if a USB device is
-> connected to the micro-USB connector?
+Hi,
 
-There're two micro-USB connectors, one is power-only and another is
-OTG. The Vbus of these two connectors are connected together, so
-the external USB device will be powered just by the power input
-from the power-only USB port.
+On Thu, 2017-11-02 at 17:05 +0100, Arnd Bergmann wrote:
+> On Thu, Nov 2, 2017 at 12:47 PM, Matthias Brugger
+> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Hi Arnd,
+> >
+> > On 10/31/2017 05:19 AM, Ryder Lee wrote:
+> >> Hi Arnd,
+> >>
+> >> We have 3 root ports in MT7623, but this is a bug in this chip where the
+> >> HW designers wired the IRQs in a nonstandard way. We've tried to
+> >> statically assign the bus portion of the address part in the parent
+> >> interrupt-map before, but this approach cannot handle the case - if we
+> >> attach the device in random order.
+> >>
+> >
+> > Ryder, please don't top post :)
 
+Oh. My bad!
+
+> >> Thanks.
+> >>
+> >> On Mon, 2017-10-30 at 13:42 +0100, Arnd Bergmann wrote:
+> >>> On Mon, Oct 23, 2017 at 12:06 AM, Matthias Brugger
+> >>> <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>>
+> >>>> ----------------------------------------------------------------
+> >>>> - mt76233 add PCIe node
+> >>>
+> >>> Could you clarify what the subnodes in the PCI node are for? It seems odd
+> >>> to have "interrupt-map" properties in both the pcie controller and its child
+> >>> nodes, and I want to ensure this is following the standard PCIe binding before
+> >>> I pull it.
+> >>>
+> >
+> > Arnd, I didn't found the pull request in your next/dt branch.
+> > Is there more clarification needed from our side?
 > 
-> Maxime
+> I'm still unsure about it., this looks like exactly the thing that the top-level
+> interrupt-map is supposed to handle fine.
+> 
+> Can you send a pull request for the series without the pci child nodes for the
+> moment while we figure out what the exact problem is? We can take
+> whatever fix we come up with during the v4.15 -rc cycle then.
+> 
+> I would assume that either the parent interrupt-map is wrong, or something
+> broke the parser, but that it's not actually something that's wrong in the
+> hardware design in a way that we can't already handle in a standard way.
+> 
+> Ryder, can you be more specific how the interrupts are wired up?
+> Is there one IRQ per slot that is connected to all of IntA/IntB/IntC/IntD
+> and gets propagated through the bridges like that, or is it something else?
+
+Yes, that's what I mean - we only have one IRQ which is connected to all
+INTx for each slot, and I'm not sure if there is any better way to solve
+this problem. 
+
+>      Arnd
+> 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
