@@ -1,37 +1,32 @@
-From: max <franziskaollmair-zEAZxJX/x9U@public.gmane.org>
-Subject: =?UTF-8?Q?Ozn=C3=A1men=C3=AD=20v=C3=ADt=C4=9Bz=C5=AF=20!!!?=
-Date: Sat, 04 Nov 2017 09:56:50 +0000
-Message-ID: <48ba5e37d21195d89c9be28c75bfcfa3@iam.cz>
-Reply-To: vaginfo-CZK690njTpI@public.gmane.org
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3] dt-bindings: mvebu-uart: update documentation with
+ extended UART
+Date: Sat, 4 Nov 2017 12:14:35 +0100
+Message-ID: <20171104111435.GB17605@kroah.com>
+References: <20171030142151.26213-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171030142151.26213-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 30, 2017 at 03:21:51PM +0100, Miquel Raynal wrote:
+> Update the device tree binding documentation for the Marvell EBU UART,
+> in order to allow describing the extended UART IP block, in addition to
+> the already supported standard UART IP. This requires adding a new
+> compatible string, the introduction of a clocks property, and extensions
+> to the interrupts property.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
 
-
--- 
-Oznámení vítezu !!!.
-
-Vaše e-mailové ID získalo 150 000,00 eur (Sto padesát tisíc eur) v 
-programu LottoMax International Charity.Ref No Sp
-/179/0-39/44/4-07/ES.Lucky c.9 / 44/15/27 / 49.Pro více informací a 
-reklamace kontaktujte prosím našeho zástupce níže;
-
-Národní agentura postcode S.L
-Paní Jaime Sanchezová
-E-mail: vaginfo-CZK690njTpI@public.gmane.org
-
-
-S vaším plným jménem, adresou, vekem, zamestnáním, telefonními císly 
-Poslat odpoved na tento e-mail: vaginfo-CZK690njTpI@public.gmane.org
-Poznámka: Jedná se o mezinárodní loterijní program. Tento záznam byl 
-automaticky preložen z anglictiny do Ceské republiky.
-
-Gratulace!
+Doesn't apply to my tree :(
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
