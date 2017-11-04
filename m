@@ -1,100 +1,187 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/3] arm64: dts: actions: add s900 clock controller nodes
-Date: Sat, 4 Nov 2017 15:20:37 +0530
-Message-ID: <20171104095037.GC18680@linaro.org>
-References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
- <1509479663-8985-2-git-send-email-manivannan.sadhasivam@linaro.org>
- <a8bd3b8b-190a-6dbf-6976-207baca3030b@suse.de>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Sat, 4 Nov 2017 10:53:31 +0100
+Message-ID: <fbb14b36-73cd-e81f-11f4-26cd488d567d@xs4all.nl>
+References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
+ <1507783506-3884-4-git-send-email-tharvey@gateworks.com>
+ <230ceb18-1d69-7fa8-acb0-c810094f8e50@xs4all.nl>
+ <CAJ+vNU0Z988G+wTfpiSXXOM9QsPj-eRvH=F1b9__8kJ+18xk4g@mail.gmail.com>
+ <a5bd27c9-10e4-b9f5-f0ac-293528fa570e@xs4all.nl>
+ <CAJ+vNU2yHKDf5tCVyj6iw83z0sDuV0ZsZ-=sLfa+fTFbtjVo0A@mail.gmail.com>
+ <5c68003a-380d-d339-718f-47bce64cdae8@xs4all.nl>
+ <CAJ+vNU2a8qtL4hbg5FQamF3WanQG1610QsJv=2cCxpD8OsiQ6w@mail.gmail.com>
+ <CAJ+vNU1ipKzm5AX4HY0ckrBM3aMC1mn0Dp7nQfsjzJcEYgBV5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a8bd3b8b-190a-6dbf-6976-207baca3030b@suse.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJ+vNU1ipKzm5AX4HY0ckrBM3aMC1mn0Dp7nQfsjzJcEYgBV5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-On Sat, Nov 04, 2017 at 04:43:31PM +0800, Andreas Färber wrote:
-> Am 01.11.2017 um 03:54 schrieb Manivannan Sadhasivam:
-> > This patch adds clock controller nodes for Actions Semi s900 SoC
+On 11/04/2017 01:17 AM, Tim Harvey wrote:
+> On Mon, Oct 23, 2017 at 10:05 AM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
+>>
+>> On Fri, Oct 20, 2017 at 9:23 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+>>
+>>>>
+>>>> I see the AVI infoframe has hdmi_quantization_range and
+>>>> hdmi_ycc_quantization_range along with vid_code.
+>>>>
+>>>> I'm not at all clear what to do with this information. Is there
+>>>> anything you see in the datasheet [1] that points to something I need
+>>>> to be doing?
+>>>
+>>> You can ignore hdmi_ycc_quantization_range, it is the hdmi_quantization_range
+>>> that you need to read out.
+>>>
+>>> The TDA can receive the following formats:
+>>>
+>>> RGB Full Range
+>>> RGB Limited Range
+>>> YUV Bt.601 (aka SMPTE 170M)
+>>> YUV Rec.709
+>>>
+>>> The YUV formats are always limited range.
+>>>
+>>> The TDA can transmit RGB and YUV to the SoC. You want RGB to be full range and
+>>> YUV to be limited range. YUV can be either 601 or 709.
+>>>
+>>> So if the TDA transmits RGB then you need to support the following conversions:
+>>>
+>>> RGB Full -> RGB Full
+>>> RGB Limited -> RGB Full
+>>> YUV 601 -> RGB Full
+>>> YUV 709 -> RGB Full
+>>>
+>>> And if the TDA transmits YUV then you need these conversions:
+>>>
+>>> RGB Full -> YUV601 or YUV709
+>>> RGB Limited -> YUV601 or YUV709
+>>> YUV601 -> YUV601
+>>> YUV709 -> YUV709
+>>>
+>>> For the RGB to YUV conversion you have a choice of converting to YUV601 or 709.
+>>> I recommend to either always convert to YUV601 or to let it depend on the resolution
+>>> (SDTV YUV601, HDTV YUV709).
+>>>
+>>
+>> Ok - this is a good explanation that I should be able to follow. I
+>> will make sure to take into account hdmi_quantization_range when I
+>> setup the colorspace conversion matrix for v3.
 > 
-> Please avoid "This patch". Once applied, it's a commit. :)
+> Hans,
 > 
-Ack.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/actions/s900.dtsi | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
-> > index 11406f6..c099ef1 100644
-> > --- a/arch/arm64/boot/dts/actions/s900.dtsi
-> > +++ b/arch/arm64/boot/dts/actions/s900.dtsi
-> > @@ -5,6 +5,7 @@
-> >   */
-> >  
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include <dt-bindings/clock/actions,s900-clock.h>
+> I'm having trouble figuring out the conversion matrix to use between
+> limited and full.
 > 
-> Alphabetical order please.
+> Currently I have the following conversion matrices, the values which
+> came from some old vendor code:
 > 
-Ack.
-> >  
-> >  / {
-> >  	compatible = "actions,s900";
-> > @@ -88,6 +89,24 @@
-> >  		#clock-cells = <0>;
-> >  	};
-> >  
-> > +	losc: losc {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <32768>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	diff_24M: diff_24M {
+>         /* Colorspace conversion matrix coefficients and offsets */
+>         struct color_matrix_coefs {
+>                 /* Input offsets */
+>                 s16 offint1;
+>                 s16 offint2;
+>                 s16 offint3;
+>                 /* Coeficients */
+>                 s16 p11coef;
+>                 s16 p12coef;
+>                 s16 p13coef;
+>                 s16 p21coef;
+>                 s16 p22coef;
+>                 s16 p23coef;
+>                 s16 p31coef;
+>                 s16 p32coef;
+>                 s16 p33coef;
+>                 /* Output offsets */
+>                 s16 offout1;
+>                 s16 offout2;
+>                 s16 offout3;
+>         };
+>         /* Conversion matrixes */
+>         enum {
+>                 ITU709_RGBLIMITED,
+>                 ITU601_RGBLIMITED,
+>                 RGBLIMITED_ITU601,
+>        };
+>        static const struct color_matrix_coefs conv_matrix[] = {
+>                 /* ITU709 -> RGBLimited */
+>                 {
+>                         -256, -2048,  -2048,
+>                         4096, -1875,   -750,
+>                         4096,  6307,      0,
+>                         4096,     0,   7431,
+>                          256,   256,    256,
+>                 },
+>                 /* YUV601 limited -> RGB limited */
+>                 {
+>                         -256, -2048,  -2048,
+>                         4096, -2860,  -1378,
+>                         4096,  5615,      0,
+>                         4096,     0,   7097,
+>                         256,    256,    256,
+>                 },
+>                 /* RGB limited -> ITU601 */
+>                 {
+>                         -256,  -256,   -256,
+>                         2404,  1225,    467,
+>                         -1754, 2095,   -341,
+>                         -1388, -707,   2095,
+>                         256,   2048,   2048,
+>                 },
+>         };
 > 
-> No underscore in node names please - maybe diff-24M or simpler diff24M?
-> Please double-check that name - is it from manual or from schematics?
+> Assuming the above are correct this leaves me missing RGB limitted ->
+> RGB full, YUV601 -> RGB full, YUV709 -> RGB full, and RGB Full ->
+> YUV601.
 > 
-Actually, this name comes from vendor driver and they have used "24M_diff".
-As per DT conventions I renamed it to "diff_24M".
+> I don't have documentation for the registers but I'm assuming the
+> input offset is applied first, then the multiplication by the coef,
+> then the output offset is applied. I'm looking over
+> https://en.wikipedia.org/wiki/YUV for colorspace conversion matrices
+> but I'm unable to figure out how to apply those to the above. Any
+> ideas?
 
-But I'm not clear about that clock. As I said in my reply to Rob's review
-there isn't much documentation also. So, I guess we can name it as diff24M
-for now.
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <24000000>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	clock: clock-controller@e0160000 {
-> > +		compatible = "actions,s900-clock";
-> > +		reg = <0 0xe0160000 0 0x1000>;
-> > +		#clock-cells = <1>;
-> > +	};
-> 
-> This node belongs into the soc node below, ordered by unit address.
-> And maybe there's a better label than "clock"? "clkc" or some official
-> name from the manual?
-> 
-Will use "cmu".
+For the YUV to RGB full conversions all you need to do is to change
+the last row to 0, 0, 0 (since you no longer apply an offset) and
+multiply all matrix coefficients by (255 / 219) to ensure the matrix
+result is in the range [0-255] instead of [0-219].
 
-Thanks,
-Mani
-> > +
-> >  	soc {
-> >  		compatible = "simple-bus";
-> >  		#address-cells = <2>;
-> 
-> Regards,
-> Andreas
-> 
-> -- 
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG Nürnberg)
+For the RGB lim to RGB full conversion you need this matrix:
+
+-256, -256, -256,
+S, 0, 0,
+0, S, 0,
+0, 0, S,
+0, 0, 0
+
+Where S = 4096 * 255 / 219. I'm assuming 4096 equals 1.0 using fixed
+point format.
+
+Actually, looking at the order of the matrix values I suspect it might
+be:
+
+-256, -256, -256,
+0, S, 0,
+0, 0, S,
+S, 0, 0,
+0, 0, 0
+
+You'll have to test this to verify which of the two is the right one.
+
+For RGB Full to YUV you use the RGB lim to YUV values but replace the
+first line by 0, 0, 0 and multiply the 3x3 matrix values with (219 / 255).
+
+That should do it.
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
