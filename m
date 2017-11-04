@@ -1,52 +1,130 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 2/2] devicetree: i2c-hid: Add reset property
-Date: Fri, 3 Nov 2017 21:35:04 -0700
-Message-ID: <CA+ASDXOG1HA2zS9uEi0n2Tza1iGvM0x1cntCy1haOf01Wb__3Q@mail.gmail.com>
-References: <1509418996-25348-1-git-send-email-hl@rock-chips.com> <1509418996-25348-2-git-send-email-hl@rock-chips.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 2/3] clk: owl: add clock driver for Actions S900 SoC
+Date: Sat, 4 Nov 2017 16:36:30 +0800
+Message-ID: <7c87aee4-dde4-ab3d-06b0-75f3686ab5dd@suse.de>
+References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
+ <1509479663-8985-3-git-send-email-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1509418996-25348-2-git-send-email-hl@rock-chips.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Lin Huang <hl@rock-chips.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, jikos@kernel.org, robh@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1509479663-8985-3-git-send-email-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 30, 2017 at 8:03 PM, Lin Huang <hl@rock-chips.com> wrote:
-> Document a "reset" and "assert-reset-us", it can be used for
-> driver control reset property. And reuse post-power-on-delay-ms
-> for deassert reset delay.
->
-> Signed-off-by: Lin Huang <hl@rock-chips.com>
+Hi Mani,
+
+Still on travels, but some quick comments:
+
+Please compare the CC list from my patch series - you seem to be missing
+some Actions Semi people.
+
+Am 01.11.2017 um 03:54 schrieb Manivannan Sadhasivam:
+> This patch adds clock driver for Actions Semi OWL
+> series S900 SoC.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> index 28e8bd8..6ab0eed 100644
-> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> @@ -31,7 +31,9 @@ device-specific compatible properties, which should be used in addition to the
->
->  - vdd-supply: phandle of the regulator that provides the supply voltage.
->  - post-power-on-delay-ms: time required by the device after enabling its regulators
-> -  before it is ready for communication. Must be used with 'vdd-supply'.
-> +  or deassert reset pin before it is ready for communication.
-> +- reset: phandle of the gpio that provides for hid reset pin.
-> +- assert-reset-us: the device require reset assert time.
+>  MAINTAINERS                                    |   5 +
+>  drivers/clk/Makefile                           |   1 +
+>  drivers/clk/owl/Makefile                       |   2 +
+>  drivers/clk/owl/clk-factor.c                   | 270 ++++++++++++
+>  drivers/clk/owl/clk-pll.c                      | 346 +++++++++++++++
+>  drivers/clk/owl/clk-s900.c                     | 587 +++++++++++++++++++++++++
+>  drivers/clk/owl/clk.c                          | 318 ++++++++++++++
+>  drivers/clk/owl/clk.h                          | 301 +++++++++++++
 
-If there was any point in adding the device-specific description
-around "wacom,w9013"...then you should probably mention these
-properties there too. The idea was to document possible properties
-here (where you're adding them already), and to note the property
-names under the devices (or so far, just 1 device) that support them.
-Or IOW, you need an addition like this:
+Taking into account previous arm/DT side comments I received, we should
+use clk/actions/ rather than clk/owl/. We can still use owl- or -owl
+inside actions/ if necessary.
 
- - compatible:
-   * "wacom,w9013" (Wacom W9013 digitizer). Supports:
-     - vdd-supply
-     - post-power-on-delay-ms
-+    - reset-gpios
-+    - assert-reset-us
+>  include/dt-bindings/clock/actions,s900-clock.h | 141 ++++++
+>  9 files changed, 1971 insertions(+)
+>  create mode 100644 drivers/clk/owl/Makefile
+>  create mode 100644 drivers/clk/owl/clk-factor.c
+>  create mode 100644 drivers/clk/owl/clk-pll.c
+>  create mode 100644 drivers/clk/owl/clk-s900.c
+>  create mode 100644 drivers/clk/owl/clk.c
+>  create mode 100644 drivers/clk/owl/clk.h
+>  create mode 100644 include/dt-bindings/clock/actions,s900-clock.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2d3d750..beae8aa 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1098,6 +1098,11 @@ F:	arch/arm/mach-*/
+>  F:	arch/arm/plat-*/
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
+>  
+> +ARM/ACTIONS SEMI SoC CLOCK SUPPORT
+> +L:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Brian
+You're not a mailing list. If you want to be the maintainer (M:), fine
+with me, but I'd like to be CC'ed please - either via R: here or by
+extending the section below.
+
+> +S:	Maintained
+> +F:	drivers/clk/owl/
+
+This is lacking the binding.
+
+> +
+>  ARM/ACTIONS SEMI ARCHITECTURE
+>  M:	Andreas Färber <afaerber@suse.de>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index c99f363..821c1e1 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -75,6 +75,7 @@ endif
+>  obj-y					+= mvebu/
+>  obj-$(CONFIG_ARCH_MXS)			+= mxs/
+>  obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
+> +obj-$(CONFIG_ARCH_ACTIONS)		+= owl/
+>  obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
+>  obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
+>  obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
+> diff --git a/drivers/clk/owl/Makefile b/drivers/clk/owl/Makefile
+> new file mode 100644
+> index 0000000..dbba0af
+> --- /dev/null
+> +++ b/drivers/clk/owl/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-y				+= clk.o clk-pll.o clk-factor.o
+> +obj-$(CONFIG_ARCH_ACTIONS)	+= clk-s900.o
+
+$(CONFIG_ARCH_ACTIONS) is superfluous here.
+
+> diff --git a/drivers/clk/owl/clk-factor.c b/drivers/clk/owl/clk-factor.c
+> new file mode 100644
+> index 0000000..6429acd
+> --- /dev/null
+> +++ b/drivers/clk/owl/clk-factor.c
+> @@ -0,0 +1,270 @@
+> +/*
+> + * Copyright (c) 2014 Actions Semi Inc.
+> + * David Liu <liuwei@actions-semi.com>
+> + *
+> + * Copyright (c) 2017 Linaro Ltd.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License v2 as published by
+> + * the Free Software Foundation.
+
+I had found that S500 code was licensed under GPLv2+ but some S900 parts
+were GPLv2 only. I personally have a bias towards GPLv2+ - any chance we
+can use that here?
+
+Implementation not yet reviewed.
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
