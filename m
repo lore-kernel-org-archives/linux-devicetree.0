@@ -1,144 +1,52 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v2 3/4] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Fri, 3 Nov 2017 17:17:55 -0700
-Message-ID: <CAJ+vNU1ipKzm5AX4HY0ckrBM3aMC1mn0Dp7nQfsjzJcEYgBV5Q@mail.gmail.com>
-References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
- <1507783506-3884-4-git-send-email-tharvey@gateworks.com> <230ceb18-1d69-7fa8-acb0-c810094f8e50@xs4all.nl>
- <CAJ+vNU0Z988G+wTfpiSXXOM9QsPj-eRvH=F1b9__8kJ+18xk4g@mail.gmail.com>
- <a5bd27c9-10e4-b9f5-f0ac-293528fa570e@xs4all.nl> <CAJ+vNU2yHKDf5tCVyj6iw83z0sDuV0ZsZ-=sLfa+fTFbtjVo0A@mail.gmail.com>
- <5c68003a-380d-d339-718f-47bce64cdae8@xs4all.nl> <CAJ+vNU2a8qtL4hbg5FQamF3WanQG1610QsJv=2cCxpD8OsiQ6w@mail.gmail.com>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] clocksource: npcm: add NPCM7xx timer driver
+Date: Fri, 3 Nov 2017 17:28:39 -0700
+Message-ID: <CAFd5g45esV+m1FJyZY=nu_nZpP_1749sYUMmRXfet41Ju+7Vsw@mail.gmail.com>
+References: <1509538604-8218-1-git-send-email-tmaimon77@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAJ+vNU2a8qtL4hbg5FQamF3WanQG1610QsJv=2cCxpD8OsiQ6w@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1509538604-8218-1-git-send-email-tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 23, 2017 at 10:05 AM, Tim Harvey <tharvey@gateworks.com> wrote:
+On Wed, Nov 1, 2017 at 5:16 AM, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Addressed comments from:
+>  - Daniel Lezcano: https://www.spinics.net/lists/devicetree/msg196683.html
 >
-> On Fri, Oct 20, 2017 at 9:23 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> Changes since version 1:
+>  - Rename driver name
+>  - Removing unnecessary dependencies in configuration
+>  - Adding prefix to the macros
+>  - No changes to dt-binding documentation since v1
 >
-> >>
-> >> I see the AVI infoframe has hdmi_quantization_range and
-> >> hdmi_ycc_quantization_range along with vid_code.
-> >>
-> >> I'm not at all clear what to do with this information. Is there
-> >> anything you see in the datasheet [1] that points to something I need
-> >> to be doing?
-> >
-> > You can ignore hdmi_ycc_quantization_range, it is the hdmi_quantization_range
-> > that you need to read out.
-> >
-> > The TDA can receive the following formats:
-> >
-> > RGB Full Range
-> > RGB Limited Range
-> > YUV Bt.601 (aka SMPTE 170M)
-> > YUV Rec.709
-> >
-> > The YUV formats are always limited range.
-> >
-> > The TDA can transmit RGB and YUV to the SoC. You want RGB to be full range and
-> > YUV to be limited range. YUV can be either 601 or 709.
-> >
-> > So if the TDA transmits RGB then you need to support the following conversions:
-> >
-> > RGB Full -> RGB Full
-> > RGB Limited -> RGB Full
-> > YUV 601 -> RGB Full
-> > YUV 709 -> RGB Full
-> >
-> > And if the TDA transmits YUV then you need these conversions:
-> >
-> > RGB Full -> YUV601 or YUV709
-> > RGB Limited -> YUV601 or YUV709
-> > YUV601 -> YUV601
-> > YUV709 -> YUV709
-> >
-> > For the RGB to YUV conversion you have a choice of converting to YUV601 or 709.
-> > I recommend to either always convert to YUV601 or to let it depend on the resolution
-> > (SDTV YUV601, HDTV YUV709).
-> >
+> Asked Brendon to modify NPCM7xx device tree for support NPCM7xx timer driver
+> https://www.spinics.net/lists/arm-kernel/msg614424.html
+
+Rob Herring asks that we keep the device tree binding the same as I have it.
+Unless, there is some part of the conversation that I am missing.
+
 >
-> Ok - this is a good explanation that I should be able to follow. I
-> will make sure to take into account hdmi_quantization_range when I
-> setup the colorspace conversion matrix for v3.
-
-Hans,
-
-I'm having trouble figuring out the conversion matrix to use between
-limited and full.
-
-Currently I have the following conversion matrices, the values which
-came from some old vendor code:
-
-        /* Colorspace conversion matrix coefficients and offsets */
-        struct color_matrix_coefs {
-                /* Input offsets */
-                s16 offint1;
-                s16 offint2;
-                s16 offint3;
-                /* Coeficients */
-                s16 p11coef;
-                s16 p12coef;
-                s16 p13coef;
-                s16 p21coef;
-                s16 p22coef;
-                s16 p23coef;
-                s16 p31coef;
-                s16 p32coef;
-                s16 p33coef;
-                /* Output offsets */
-                s16 offout1;
-                s16 offout2;
-                s16 offout3;
-        };
-        /* Conversion matrixes */
-        enum {
-                ITU709_RGBLIMITED,
-                ITU601_RGBLIMITED,
-                RGBLIMITED_ITU601,
-       };
-       static const struct color_matrix_coefs conv_matrix[] = {
-                /* ITU709 -> RGBLimited */
-                {
-                        -256, -2048,  -2048,
-                        4096, -1875,   -750,
-                        4096,  6307,      0,
-                        4096,     0,   7431,
-                         256,   256,    256,
-                },
-                /* YUV601 limited -> RGB limited */
-                {
-                        -256, -2048,  -2048,
-                        4096, -2860,  -1378,
-                        4096,  5615,      0,
-                        4096,     0,   7097,
-                        256,    256,    256,
-                },
-                /* RGB limited -> ITU601 */
-                {
-                        -256,  -256,   -256,
-                        2404,  1225,    467,
-                        -1754, 2095,   -341,
-                        -1388, -707,   2095,
-                        256,   2048,   2048,
-                },
-        };
-
-Assuming the above are correct this leaves me missing RGB limitted ->
-RGB full, YUV601 -> RGB full, YUV709 -> RGB full, and RGB Full ->
-YUV601.
-
-I don't have documentation for the registers but I'm assuming the
-input offset is applied first, then the multiplication by the coef,
-then the output offset is applied. I'm looking over
-https://en.wikipedia.org/wiki/YUV for colorspace conversion matrices
-but I'm unable to figure out how to apply those to the above. Any
-ideas?
-
-Thanks,
-
-Tim
+> Changes have been tested on the NPCM750 evaluation board.
+>
+> Tomer Maimon (2):
+>   clocksource: npcm: add NPCM7xx timer driver
+>   dt-binding: timer: document NPCM7xx timer DT bindings
+>
+>  .../bindings/timer/nuvoton,npcm7xx-timer.txt       |  25 +++
+>  drivers/clocksource/Kconfig                        |   8 +
+>  drivers/clocksource/Makefile                       |   1 +
+>  drivers/clocksource/npcm7xx-timer.c                | 224 +++++++++++++++++++++
+>  4 files changed, 258 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+>  create mode 100644 drivers/clocksource/npcm7xx-timer.c
+>
+> --
+> 2.14.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
