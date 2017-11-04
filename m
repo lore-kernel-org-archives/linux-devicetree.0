@@ -1,71 +1,127 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 2/3] clk: owl: add clock driver for Actions S900 SoC
-Date: Sat, 4 Nov 2017 17:30:36 +0800
-Message-ID: <25a2e233-f565-8baa-17e2-9c867bbbe9d0@suse.de>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/3] Documentation: add Actions S900 clock bindings
+Date: Sat, 4 Nov 2017 15:11:29 +0530
+Message-ID: <20171104094129.GB18680@linaro.org>
 References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
- <1509479663-8985-3-git-send-email-manivannan.sadhasivam@linaro.org>
- <7c87aee4-dde4-ab3d-06b0-75f3686ab5dd@suse.de>
- <20171104091949.GB14705@linaro.org>
+ <1509479663-8985-4-git-send-email-manivannan.sadhasivam@linaro.org>
+ <5c55d704-6414-13d7-1311-64b425d4404a@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171104091949.GB14705-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5c55d704-6414-13d7-1311-64b425d4404a@suse.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am 04.11.2017 um 17:19 schrieb Manivannan Sadhasivam:
->>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->>> index c99f363..821c1e1 100644
->>> --- a/drivers/clk/Makefile
->>> +++ b/drivers/clk/Makefile
->>> @@ -75,6 +75,7 @@ endif
->>>  obj-y					+= mvebu/
->>>  obj-$(CONFIG_ARCH_MXS)			+= mxs/
->>>  obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
->>> +obj-$(CONFIG_ARCH_ACTIONS)		+= owl/
->>>  obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
->>>  obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
->>>  obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
->>> diff --git a/drivers/clk/owl/Makefile b/drivers/clk/owl/Makefile
->>> new file mode 100644
->>> index 0000000..dbba0af
->>> --- /dev/null
->>> +++ b/drivers/clk/owl/Makefile
->>> @@ -0,0 +1,2 @@
->>> +obj-y				+= clk.o clk-pll.o clk-factor.o
->>> +obj-$(CONFIG_ARCH_ACTIONS)	+= clk-s900.o
->>
->> $(CONFIG_ARCH_ACTIONS) is superfluous here.
->>
-> Okay. Since, we haven't added ARCH_ACTIONS to defconfig yet I intentionally
-> made this conditional compilation.
+Hi Andreas,
+On Sat, Nov 04, 2017 at 04:55:04PM +0800, Andreas Färber wrote:
+> Am 01.11.2017 um 03:54 schrieb Manivannan Sadhasivam:
+> > This patch adds clock bindings for Actions Semi S900 SoC.
 > 
-> Would like a suggestion from you on this!
+> "This patch"
+>
+Ack. 
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../bindings/clock/actions,s900-clock.txt          | 47 ++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/actions,s900-clock.txt b/Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+> > new file mode 100644
+> > index 0000000..951d6ad
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/actions,s900-clock.txt
+> > @@ -0,0 +1,47 @@
+> > +* Actions s900 Clock Controller
+> 
+> Please consistently spell it S900 here and below - it looks especially
+> odd when you upper-case all other words.
+> 
+Ack.
+> > +
+> > +The Actions s900 clock controller generates and supplies clock to various
+> > +controllers within the SoC. The clock binding described here is applicable to
+> > +s900 SoC.
+> > +
+> > +Required Properties:
+> > +
+> > +- compatible: should be "actions,s900-clock"
+> 
+> What about "actions,s900-cmu" as in Clock Management Unit? (manual
+> version 1.0 section 1.5, page 6)
+> 
+"cmu" makes sense, will change it.
+> > +- reg: physical base address of the controller and length of memory mapped
+> > +  region.
+> > +- #clock-cells: should be 1.
+> > +
+> > +Each clock is assigned an identifier and client nodes can use this identifier
+> 
+> ", and"?
+> 
+Ack.
+> > +to specify the clock which they consume.
+> > +
+> > +All available clocks are defined as preprocessor macros in
+> > +dt-bindings/clock/actions,s900-clock.h header and can be used in device
+> > +tree sources.
+> 
+> As Rob pointed out, missing here.
+> 
+Will add this header to dt-bindings patch in next revision.
+> > +
+> > +External clocks:
+> > +
+> > +The hosc clock used as input for the plls is generated outside the SoC. It is
+> > +expected that it is defined using standard clock bindings as "hosc".
+> > +
+> > +Actions s900 Clock Controller also require two more clocks:
+> > + - "losc" - internal low frequency oscillator
+> > + - "diff_24M" - internal differential 24MHz clock
+> > +
+> > +Example: Clock controller node:
+> > +
+> > +        clock: clock-controller@e0160000 {
+> > +		compatible = "actions,s900-clock";
+> > +		reg = <0 0xe0160000 0 0x1000>;
+> > +		#clock-cells = <1>;
+> > +	};
+> 
+> Spaces vs. tab indentation.
+> 
+Ack.
+> Regarding the question in the dts patch, I think cmu would be a better
+> label here and there.
+> 
+Yeah. Will use cmu.
+> > +
+> > +Example: UART controller node that consumes clock generated by the clock
+> > +controller:
+> > +
+> > +	serial5: uart@e012a000 {
+> > +		compatible = "actions,s900-uart", "actions,owl-uart";
+> > +		reg = <0x0 0xe012a000 0x0 0x2000>;
+> > +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&clock CLK_UART5>;
+> > +		clock-names = "uart";
+> 
+> Better not use a clock name here that is not defined in the uart binding.
+> 
+Agree.
 
-My point was that the ../Makefile already uses $(CONFIG_ARCH_ACTIONS),
-so $(CONFIG_ARCH_ACTIONS) can never be n here.
-
-Instead you should probably either use $(CONFIG_ARM64) or better some
-new Kconfig option (CONFIG_CLK_OWL_S900?), so that we don't
-unnecessarily compile S900 on 32-bit arm and S500 on arm64.
-
-Another point: What about S700? Does it need to duplicate clk-s900.c or
-can we share any code between the two?
-
-Cheers,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 NÃ¼rnberg, Germany
-GF: Felix ImendÃ¶rffer, Jane Smithard, Graham Norton
-HRB 21284 (AG NÃ¼rnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mani
+> > +	};
+> 
+> Regards,
+> Andreas
+> 
+> -- 
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+> GF: Felix Imendörffer, Jane Smithard, Graham Norton
+> HRB 21284 (AG Nürnberg)
