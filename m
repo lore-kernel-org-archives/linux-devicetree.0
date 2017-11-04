@@ -1,66 +1,38 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 0/3] Add clock driver for Actions S900 SoC
-Date: Sat, 4 Nov 2017 15:34:04 +0530
-Message-ID: <20171104100404.GA23738@linaro.org>
-References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
- <62797b3b-a622-48a1-9dc5-3cc2b5c7afd3@suse.de>
+From: max <franziskaollmair-zEAZxJX/x9U@public.gmane.org>
+Subject: =?UTF-8?Q?Ozn=C3=A1men=C3=AD=20v=C3=ADt=C4=9Bz=C5=AF=20!!!?=
+Date: Sat, 04 Nov 2017 09:56:50 +0000
+Message-ID: <48ba5e37d21195d89c9be28c75bfcfa3@iam.cz>
+Reply-To: vaginfo-CZK690njTpI@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <62797b3b-a622-48a1-9dc5-3cc2b5c7afd3@suse.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 04, 2017 at 05:05:31PM +0800, Andreas F�rber wrote:
-> Hi Mani,
-> 
-> Am 01.11.2017 um 03:54 schrieb Manivannan Sadhasivam:
-> > This series adds clock driver for Actions Semi OWL series
-> > S900 SoC with relevant clock bindings and device tree data.
-> > 
-> > This series also addresses the review comments from previous
-> > submission happened last year.
-> > 
-> > https://patchwork.kernel.org/patch/9254471/
-> 
-> Interesting - I had searched for any S500/S900 patches before starting
-> to work on this but came up empty on LAKML.
->
-Even I'm also not able to find the patch submission in LKML. But found that
-in patchwork. 
-> It seems you missed at least one review comment from 2016 about the
-> example indentation, so please double-check for anything Stephen already
-> pointed out.
-> 
-Agree. Will incorporate in next revision. Can't blame checkpatch for this ;-)
-> > Driver has been validated on Bubblegum-96 board.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > Manivannan Sadhasivam (3):
-> >   arm64: dts: actions: add s900 clock controller nodes
-> >   clk: owl: add clock driver for Actions S900 SoC
-> >   Documentation: add Actions S900 clock bindings
-> 
-> Please reverse the patch order.
-> 
-Ack.
-> Have you checked S500 code whether the S900 vs. common split is correct?
-> 
-Will look at both S500 and S700.
-> Many thanks for your work on this,
-> 
-I should thank you for getting the SoC support in :-)
 
--Mani
-> Andreas
-> 
-> -- 
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N�rnberg, Germany
-> GF: Felix Imend�rffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG N�rnberg)
+
+-- 
+Oznámení vítezu !!!.
+
+Vaše e-mailové ID získalo 150 000,00 eur (Sto padesát tisíc eur) v 
+programu LottoMax International Charity.Ref No Sp
+/179/0-39/44/4-07/ES.Lucky c.9 / 44/15/27 / 49.Pro více informací a 
+reklamace kontaktujte prosím našeho zástupce níže;
+
+Národní agentura postcode S.L
+Paní Jaime Sanchezová
+E-mail: vaginfo-CZK690njTpI@public.gmane.org
+
+
+S vaším plným jménem, adresou, vekem, zamestnáním, telefonními císly 
+Poslat odpoved na tento e-mail: vaginfo-CZK690njTpI@public.gmane.org
+Poznámka: Jedná se o mezinárodní loterijní program. Tento záznam byl 
+automaticky preložen z anglictiny do Ceské republiky.
+
+Gratulace!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
