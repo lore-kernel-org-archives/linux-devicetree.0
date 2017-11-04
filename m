@@ -1,130 +1,48 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/3] clk: owl: add clock driver for Actions S900 SoC
-Date: Sat, 4 Nov 2017 16:36:30 +0800
-Message-ID: <7c87aee4-dde4-ab3d-06b0-75f3686ab5dd@suse.de>
-References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
- <1509479663-8985-3-git-send-email-manivannan.sadhasivam@linaro.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
+ suspend/resume
+Date: Sat, 4 Nov 2017 08:37:07 +0000
+Message-ID: <20171104083707.gtmnhbrzlqjulwe4@localhost.localdomain>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <20171103103707.3e5wb3c7foxbuvvg@localhost.localdomain>
+ <20171103161120.GH28152@atomide.com>
+ <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com>
+ <20171103173353.GJ28152@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1509479663-8985-3-git-send-email-manivannan.sadhasivam@linaro.org>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171103173353.GJ28152@atomide.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mani,
-
-Still on travels, but some quick comments:
-
-Please compare the CC list from my patch series - you seem to be missing
-some Actions Semi people.
-
-Am 01.11.2017 um 03:54 schrieb Manivannan Sadhasivam:
-> This patch adds clock driver for Actions Semi OWL
-> series S900 SoC.
+On Fri, Nov 03, 2017 at 10:33:53AM -0700, Tony Lindgren wrote:
+> * Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
+> > On 11/03/2017 09:11 AM, Tony Lindgren wrote:
+> > The pinctrl provider is losing its state, hence these two patches.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  MAINTAINERS                                    |   5 +
->  drivers/clk/Makefile                           |   1 +
->  drivers/clk/owl/Makefile                       |   2 +
->  drivers/clk/owl/clk-factor.c                   | 270 ++++++++++++
->  drivers/clk/owl/clk-pll.c                      | 346 +++++++++++++++
->  drivers/clk/owl/clk-s900.c                     | 587 +++++++++++++++++++++++++
->  drivers/clk/owl/clk.c                          | 318 ++++++++++++++
->  drivers/clk/owl/clk.h                          | 301 +++++++++++++
-
-Taking into account previous arm/DT side comments I received, we should
-use clk/actions/ rather than clk/owl/. We can still use owl- or -owl
-inside actions/ if necessary.
-
->  include/dt-bindings/clock/actions,s900-clock.h | 141 ++++++
->  9 files changed, 1971 insertions(+)
->  create mode 100644 drivers/clk/owl/Makefile
->  create mode 100644 drivers/clk/owl/clk-factor.c
->  create mode 100644 drivers/clk/owl/clk-pll.c
->  create mode 100644 drivers/clk/owl/clk-s900.c
->  create mode 100644 drivers/clk/owl/clk.c
->  create mode 100644 drivers/clk/owl/clk.h
->  create mode 100644 include/dt-bindings/clock/actions,s900-clock.h
+> OK
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2d3d750..beae8aa 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1098,6 +1098,11 @@ F:	arch/arm/mach-*/
->  F:	arch/arm/plat-*/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git
->  
-> +ARM/ACTIONS SEMI SoC CLOCK SUPPORT
-> +L:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Anyways, the context lost flag should be managed in the PM core for
+> > > the device, so adding linux-pm and Rafael to Cc.
+> > 
+> > I don't think it's that simple but sure, why not.
+> 
+> Just having bool context_lost in struct dev_pm_info would probably
+> be enough to allow drivers to deal with it. This flag could then
+> be set for a device by power domain related code that knows if
+> context got lost.
+> 
+> Anybody got better ideas?
+> 
 
-You're not a mailing list. If you want to be the maintainer (M:), fine
-with me, but I'd like to be CC'ed please - either via R: here or by
-extending the section below.
+Should the provider driver not know its state will be lost since
+will have had its PM ops called, and it should be aware of the
+state it was in. So doesn't it just need to restore that state on
+resume? Feels a bit like we are over complicating this here.
+Apologies if I am missing some here.
 
-> +S:	Maintained
-> +F:	drivers/clk/owl/
-
-This is lacking the binding.
-
-> +
->  ARM/ACTIONS SEMI ARCHITECTURE
->  M:	Andreas Färber <afaerber@suse.de>
->  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index c99f363..821c1e1 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -75,6 +75,7 @@ endif
->  obj-y					+= mvebu/
->  obj-$(CONFIG_ARCH_MXS)			+= mxs/
->  obj-$(CONFIG_COMMON_CLK_NXP)		+= nxp/
-> +obj-$(CONFIG_ARCH_ACTIONS)		+= owl/
->  obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
->  obj-$(CONFIG_COMMON_CLK_PXA)		+= pxa/
->  obj-$(CONFIG_COMMON_CLK_QCOM)		+= qcom/
-> diff --git a/drivers/clk/owl/Makefile b/drivers/clk/owl/Makefile
-> new file mode 100644
-> index 0000000..dbba0af
-> --- /dev/null
-> +++ b/drivers/clk/owl/Makefile
-> @@ -0,0 +1,2 @@
-> +obj-y				+= clk.o clk-pll.o clk-factor.o
-> +obj-$(CONFIG_ARCH_ACTIONS)	+= clk-s900.o
-
-$(CONFIG_ARCH_ACTIONS) is superfluous here.
-
-> diff --git a/drivers/clk/owl/clk-factor.c b/drivers/clk/owl/clk-factor.c
-> new file mode 100644
-> index 0000000..6429acd
-> --- /dev/null
-> +++ b/drivers/clk/owl/clk-factor.c
-> @@ -0,0 +1,270 @@
-> +/*
-> + * Copyright (c) 2014 Actions Semi Inc.
-> + * David Liu <liuwei@actions-semi.com>
-> + *
-> + * Copyright (c) 2017 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License v2 as published by
-> + * the Free Software Foundation.
-
-I had found that S500 code was licensed under GPLv2+ but some S900 parts
-were GPLv2 only. I personally have a bias towards GPLv2+ - any chance we
-can use that here?
-
-Implementation not yet reviewed.
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Thanks,
+Charles
