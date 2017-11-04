@@ -1,75 +1,44 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Sat, 4 Nov 2017 17:33:54 +0530
-Message-ID: <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
-References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-2-geomatsi@gmail.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across suspend/resume
+Date: Sat, 04 Nov 2017 13:25:43 +0100
+Message-ID: <2452741.VnAOAIxsj2@aspire.rjw.lan>
+References: <20171102231551.16220-1-f.fainelli@gmail.com> <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com> <20171103173353.GJ28152@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171103195855.15283-2-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171103173353.GJ28152-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 4, 2017 at 1:28 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
-> Fix cd-gpio description to enable sdcard detect.
->
-> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> index b6b7a561df8c..a42fd79a62a3 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> @@ -71,7 +71,7 @@
->         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
->         vmmc-supply = <&reg_vcc3v3>;
->         bus-width = <4>;
-> -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
+On Friday, November 3, 2017 6:33:53 PM CET Tony Lindgren wrote:
+> * Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [171103 17:04]:
+> > On 11/03/2017 09:11 AM, Tony Lindgren wrote:
+> > The pinctrl provider is losing its state, hence these two patches.
+> 
+> OK
+> 
+> > > Anyways, the context lost flag should be managed in the PM core for
+> > > the device, so adding linux-pm and Rafael to Cc.
+> > 
+> > I don't think it's that simple but sure, why not.
+> 
+> Just having bool context_lost in struct dev_pm_info would probably
+> be enough to allow drivers to deal with it. This flag could then
+> be set for a device by power domain related code that knows if
+> context got lost.
 
-Was able to detect and do mount with existing dts
+Something like: if the driver sees "context_lost" set, it should restore
+the context to the device from memory?
 
-Log:
-# cat /proc/version
-Linux version 4.13.7 (root@ubuntu) (gcc version 6.4.0 (Buildroot
-2017.11-git-00724-g83af6b3)) #1 SMP PREEMPT Thu Oct 19 00:51:53 CEST
-2017
-# fdisk -l /dev/mmcblk0
-Disk /dev/mmcblk0: 59 GB, 63483936768 bytes, 123992064 sectors
-1937376 cylinders, 4 heads, 16 sectors/track
-Units: cylinders of 64 * 512 = 32768 bytes
+But the it would also need to save the context beforehand, so why not to
+restore it unconditionally on resume?
 
-Device       Boot StartCHS    EndCHS        StartLBA     EndLBA
-Sectors  Size Id Type
-/dev/mmcblk0p1 *  0,15,59     8,56,27           1003     132074
-131072 64.0M  c Win95 FAT32 (LBA)
-Partition 1 does not end on cylinder boundary
-/dev/mmcblk0p2    8,56,28     15,221,57       132075     254954
-122880 60.0M 83 Linux
-Partition 2 does not end on cylinder boundary
-# mount /dev/mmcblk0p1 /mnt/
-# ls /mnt/
-Image                              sun50i-h5-orangepi-zero-plus2.dtb
-boot.scr
-# umount  /mnt/
-# mount /dev/mmcblk0p2 /mnt/
-# ls /mnt/
-bin         lib         lost+found  opt         run         tmp
-dev         lib64       media       proc        sbin        usr
-etc         linuxrc     mnt         root        sys         var
-# umount  /mnt/
+Thanks,
+Rafael
 
-thanks!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
