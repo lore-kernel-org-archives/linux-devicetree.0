@@ -1,95 +1,107 @@
-Return-Path: <SRS0=I6YE=CI=gmail.com=eballetbo@kernel.org>
+Return-Path: <SRS0=sd1/=CC=amarulasolutions.com=jagan@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20171101193307.4pnn6u5keo7o5yut@art_vandelay>
-References: <20171019034812.13768-1-jeffy.chen@rock-chips.com>
- <2449324.8EdsLz1NaV@phil> <59F7FE17.80405@rock-chips.com> <20171101193307.4pnn6u5keo7o5yut@art_vandelay>
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Date: Fri, 10 Nov 2017 13:15:30 +0100
-Message-ID: <CAFqH_501Zvpw+dthWg5Pze5R=T6grVHqz6isy5u+a8R3D7vr1g@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] rockchip: kevin: Enable edp display
-Content-Type: text/plain; charset="UTF-8"
-To: Sean Paul <seanpaul@chromium.org>
-Cc: JeffyChen <jeffy.chen@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Doug Anderson <dianders@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Romain Perier <romain.perier@collabora.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Kevin Hilman <khilman@baylibre.com>, Brian Norris <briannorris@chromium.org>, Krzysztof Kozlowski <krzk@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Matthias Kaehlcke <mka@chromium.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Caesar Wang <wxt@rock-chips.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kerne>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, zain wang <wzz@rock-chips.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, tfiga@chromium.org, linux-renesas-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Kukjin Kim <kgene@kernel.org>, Carlo Caione <carlo@caione.org>, Emil Renner Berthing <kernel@esmil.dk>
+In-Reply-To: <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
+References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-2-geomatsi@gmail.com>
+ <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com> <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Sat, 4 Nov 2017 21:17:48 +0530
+Message-ID: <CAMty3ZCxXUaBf3t=3d7D+RU6rp83oJw8BHADU3TYDeM4Vx_k-w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Content-Type: multipart/alternative; boundary="94eb2c1af6c8cd8e1c055d2a2409"
+To: Sergey Matyukevich <geomatsi@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Dear all,
+--94eb2c1af6c8cd8e1c055d2a2409
+Content-Type: text/plain; charset="UTF-8"
 
-2017-11-01 20:33 GMT+01:00 Sean Paul <seanpaul@chromium.org>:
-> On Tue, Oct 31, 2017 at 12:37:43PM +0800, JeffyChen wrote:
->> Hi Heiko,
->>
->> On 10/31/2017 07:01 AM, Heiko Stuebner wrote:
->> > As I was just looking at the edp dts change in patch1 again, does this
->> > series also contain a fix for the issue below [0] ?
->> >
->> > I'm still seeing this on 4.14-rc6 with the most recent drm tree merged in.
->> >
->> i saw that too, it should due to our psr code...i think Zain has solved
->> these in chromeos kernel, i will ask Zain if he have time to upstream them,
->> or maybe i'll try to upstream them.
+On 04-Nov-2017 9:12 PM, "Sergey Matyukevich" <geomatsi@gmail.com> wrote:
+
+> > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
+> > Fix cd-gpio description to enable sdcard detect.
+> >
+> > Signed-off-by: Sergey Matyukevich <geomatsi@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > index b6b7a561df8c..a42fd79a62a3 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > @@ -71,7 +71,7 @@
+> >         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+> >         vmmc-supply = <&reg_vcc3v3>;
+> >         bus-width = <4>;
+> > -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+> > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
 >
-> You need the patchset where I've refactored the psr locking/workers. I have a
-> version of it based on Heiko's tree at
-> https://cgit.freedesktop.org/~seanpaul/dogwood/log/?h=rk3399-display
->
-> With this kernel, the backlight comes on, but I don't have anything on the
-> display (which is why I didn't post it). I'll try putting this set on top and
-> see what happens.
->
+> Was able to detect and do mount with existing dts
 
-There is a patch in the ML sent by Emil [1], similar to the Sean
-patch, that solves the issue.
+Did you try to boot from sdcard ? I am not able to boot my board from
+sd-card without this change. As I mentioned earlier in my email
+to buildroot mailing list, with mmc debug enabled I see that mmc
+tries to init sd-card when I remove it from the slot.
 
-And I can confirm that the Jeffy's patches + Emil patch makes the
-display work on kevin or current rc8
+Maybe there is a minor differences between h/w versions or batches ?
+What is you board version ? I tested on board v1.0.
 
-[1] https://patchwork.kernel.org/patch/9985237/
 
-Enric
+I'm using same v1.0
 
-> Sean
->
->> >
->> > Heiko
->> >
->> > [0]
->> >
->> > [   27.960120] BUG: scheduling while atomic: kworker/1:1/68/0x00000002
->> > [   27.974429] Modules linked in: rockchipdrm dw_hdmi analogix_dp drm_kms_helper panel_simple crc32_ce drm crct10dif_ce rockchip_saradc pwm_bl pwm_cros_ec rockchip_thermal ip_tables x_tabl
->> > es ipv6 smsc95xx smsc75xx ax88179_178a asix usbnet phy_rockchip_pcie pcie_rockchip
->> > [   28.008769] CPU: 1 PID: 68 Comm: kworker/1:1 Tainted: G        W       4.14.0-rc7-03201-g12490811b353 #559
->> > [   28.008774] Hardware name: Google Kevin (DT)
->> > [   28.008825] Workqueue: events analogix_dp_psr_work [rockchipdrm]
->> > [   28.008828] Call trace:
->> > [   28.008838] [<ffff000008088d60>] dump_backtrace+0x0/0x378
->> > [   28.008842] [<ffff0000080890ec>] show_stack+0x14/0x20
->> > [   28.008847] [<ffff0000089b04d8>] dump_stack+0x9c/0xbc
->> > [   28.008852] [<ffff0000080ec4b4>] __schedule_bug+0x4c/0x70
->> > [   28.008856] [<ffff0000089c4828>] __schedule+0x558/0x5e8
->> > [   28.008859] [<ffff0000089c48f0>] schedule+0x38/0xa0
->> > [   28.008864] [<ffff0000089c8194>] schedule_hrtimeout_range_clock+0x84/0xe8
->> > [   28.008867] [<ffff0000089c8208>] schedule_hrtimeout_range+0x10/0x18
->> > [   28.008870] [<ffff0000089c7c74>] usleep_range+0x64/0x78
->> > [   28.008882] [<ffff000000ef56e4>] analogix_dp_transfer+0x16c/0xa88 [analogix_dp]
->> > [   28.008891] [<ffff000000ef2190>] analogix_dpaux_transfer+0x10/0x18 [analogix_dp]
->> > [   28.008950] [<ffff000000ddbb1c>] drm_dp_dpcd_access+0x4c/0xf8 [drm_kms_helper]
->> > [   28.008994] [<ffff000000ddbbe4>] drm_dp_dpcd_write+0x1c/0x28 [drm_kms_helper]
->> > [   28.009002] [<ffff000000ef2130>] analogix_dp_disable_psr+0x60/0xb0 [analogix_dp]
->> > [   28.009036] [<ffff000000f8398c>] analogix_dp_psr_work+0x4c/0xc0 [rockchipdrm]
->> > [   28.009040] [<ffff0000080dff44>] process_one_work+0x1d4/0x348
->> > [   28.009043] [<ffff0000080e0100>] worker_thread+0x48/0x470
->> > [   28.009048] [<ffff0000080e63d4>] kthread+0x12c/0x130
->> > [   28.009052] [<ffff000008084b88>] ret_from_fork+0x10/0x18
->> >
->> >
->> >
->> >
->>
->>
->
-> --
-> Sean Paul, Software Engineer, Google / Chromium OS
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+--94eb2c1af6c8cd8e1c055d2a2409
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto"><div><br><div class=3D"gmail_extra"><br><div class=3D"gma=
+il_quote">On 04-Nov-2017 9:12 PM, &quot;Sergey Matyukevich&quot; &lt;<a hre=
+f=3D"mailto:geomatsi@gmail.com">geomatsi@gmail.com</a>&gt; wrote:<br type=
+=3D"attribution"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;bor=
+der-left:1px #ccc solid;padding-left:1ex"><div class=3D"quoted-text">&gt; &=
+gt; The sdcard detect pin on orange-pi-zero-plus2 is pulled up.<br>
+&gt; &gt; Fix cd-gpio description to enable sdcard detect.<br>
+&gt; &gt;<br>
+&gt; &gt; Signed-off-by: Sergey Matyukevich &lt;<a href=3D"mailto:geomatsi@=
+gmail.com">geomatsi@gmail.com</a>&gt;<br>
+&gt; &gt; ---<br>
+&gt; &gt;=C2=A0 arch/arm64/boot/dts/allwinner/<wbr>sun50i-h5-orangepi-zero-=
+plus2.<wbr>dts | 2 +-<br>
+&gt; &gt;=C2=A0 1 file changed, 1 insertion(+), 1 deletion(-)<br>
+&gt; &gt;<br>
+&gt; &gt; diff --git a/arch/arm64/boot/dts/<wbr>allwinner/sun50i-h5-orangep=
+i-<wbr>zero-plus2.dts b/arch/arm64/boot/dts/<wbr>allwinner/sun50i-h5-orange=
+pi-<wbr>zero-plus2.dts<br>
+&gt; &gt; index b6b7a561df8c..a42fd79a62a3 100644<br>
+&gt; &gt; --- a/arch/arm64/boot/dts/<wbr>allwinner/sun50i-h5-orangepi-<wbr>=
+zero-plus2.dts<br>
+&gt; &gt; +++ b/arch/arm64/boot/dts/<wbr>allwinner/sun50i-h5-orangepi-<wbr>=
+zero-plus2.dts<br>
+&gt; &gt; @@ -71,7 +71,7 @@<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;mmc0_pins=
+_a&gt;, &lt;&amp;mmc0_cd_pin&gt;;<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0vmmc-supply =3D &lt;&amp;reg_vcc=
+3v3&gt;;<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bus-width =3D &lt;4&gt;;<br>
+&gt; &gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0cd-gpios =3D &lt;&amp;pio 5 6 GPIO_AC=
+TIVE_HIGH&gt;;<br>
+&gt; &gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0cd-gpios =3D &lt;&amp;pio 5 6 GPIO_AC=
+TIVE_LOW&gt;;<br>
+&gt;<br>
+&gt; Was able to detect and do mount with existing dts<br>
+<br>
+</div><div class=3D"quoted-text">Did you try to boot from sdcard ? I am not=
+ able to boot my board from<br>
+sd-card without this change. As I mentioned earlier in my email<br>
+to buildroot mailing list, with mmc debug enabled I see that mmc<br>
+tries to init sd-card when I remove it from the slot.<br>
+<br>
+Maybe there is a minor differences between h/w versions or batches ?<br>
+</div>What is you board version ? I tested on board v1.0.<br></blockquote><=
+/div></div></div><div dir=3D"auto"><br></div><div dir=3D"auto">I&#39;m usin=
+g same v1.0</div><div dir=3D"auto"><div class=3D"gmail_extra"><div class=3D=
+"gmail_quote"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border=
+-left:1px #ccc solid;padding-left:1ex">
+</blockquote></div><br></div></div></div>
+
+--94eb2c1af6c8cd8e1c055d2a2409--
