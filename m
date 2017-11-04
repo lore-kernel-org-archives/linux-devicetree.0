@@ -1,64 +1,60 @@
-From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Sat, 4 Nov 2017 19:22:06 +0300
-Message-ID: <20171104162206.gowih7h7og3fk7rk@speedy.hunter>
-References: <20171103195855.15283-1-geomatsi@gmail.com>
- <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
- <CAMty3ZCxXUaBf3t=3d7D+RU6rp83oJw8BHADU3TYDeM4Vx_k-w@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
+ suspend/resume
+Date: Sat, 4 Nov 2017 10:19:44 -0700
+Message-ID: <7091cb38-e55b-fa20-114e-bd77950ea912@gmail.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com>
+ <20171103173353.GJ28152@atomide.com> <2452741.VnAOAIxsj2@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCxXUaBf3t=3d7D+RU6rp83oJw8BHADU3TYDeM4Vx_k-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <2452741.VnAOAIxsj2@aspire.rjw.lan>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Tony Lindgren <tony@atomide.com>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
-> > > Fix cd-gpio description to enable sdcard detect.
-> > >
-> > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > > index b6b7a561df8c..a42fd79a62a3 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > > @@ -71,7 +71,7 @@
-> > >         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-> > >         vmmc-supply = <&reg_vcc3v3>;
-> > >         bus-width = <4>;
-> > > -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> > > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-> >
-> > Was able to detect and do mount with existing dts
-> 
-> Did you try to boot from sdcard ? I am not able to boot my board from
-> sd-card without this change. As I mentioned earlier in my email
-> to buildroot mailing list, with mmc debug enabled I see that mmc
-> tries to init sd-card when I remove it from the slot.
-> 
-> Maybe there is a minor differences between h/w versions or batches ?
-> What is you board version ? I tested on board v1.0.
-> 
-> 
-> I'm using same v1.0
 
-Ok, lets skip this patch for now.
 
-I will double check v1.0 schematics and my board behavior.
-Though I see that mmc0 dts fragment in u-boot for this board
-also differs from the current kernel one: it uses 'cd-inverted' property.
+On 11/04/2017 05:25 AM, Rafael J. Wysocki wrote:
+> On Friday, November 3, 2017 6:33:53 PM CET Tony Lindgren wrote:
+>> * Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
+>>> On 11/03/2017 09:11 AM, Tony Lindgren wrote:
+>>> The pinctrl provider is losing its state, hence these two patches.
+>>
+>> OK
+>>
+>>>> Anyways, the context lost flag should be managed in the PM core for
+>>>> the device, so adding linux-pm and Rafael to Cc.
+>>>
+>>> I don't think it's that simple but sure, why not.
+>>
+>> Just having bool context_lost in struct dev_pm_info would probably
+>> be enough to allow drivers to deal with it. This flag could then
+>> be set for a device by power domain related code that knows if
+>> context got lost.
+> 
+> Something like: if the driver sees "context_lost" set, it should restore
+> the context to the device from memory?
 
-Regards,
-Sergey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That is what is being proposed here, except that the actual mechanism
+where this matters needs to be in the core pinctrl code, otherwise the
+state (context) is not restored due to a check that attempts not to
+(re)apply a previous state.
+
+> 
+> But the it would also need to save the context beforehand, so why not to
+> restore it unconditionally on resume?
+
+That's what my original attempts did here:
+
+https://patchwork.kernel.org/patch/9598969/
+
+but Linus rightfully requested this to be done differently, hence this
+attempt now to solve it in a slightly more flexible way based on DT
+properties.
+-- 
+Florian
