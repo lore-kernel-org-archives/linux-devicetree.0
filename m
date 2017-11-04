@@ -1,48 +1,85 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
- suspend/resume
-Date: Sat, 4 Nov 2017 08:37:07 +0000
-Message-ID: <20171104083707.gtmnhbrzlqjulwe4@localhost.localdomain>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <20171103103707.3e5wb3c7foxbuvvg@localhost.localdomain>
- <20171103161120.GH28152@atomide.com>
- <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com>
- <20171103173353.GJ28152@atomide.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/3] arm64: dts: actions: add s900 clock controller nodes
+Date: Sat, 4 Nov 2017 16:43:31 +0800
+Message-ID: <a8bd3b8b-190a-6dbf-6976-207baca3030b@suse.de>
+References: <1509479663-8985-1-git-send-email-manivannan.sadhasivam@linaro.org>
+ <1509479663-8985-2-git-send-email-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171103173353.GJ28152@atomide.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1509479663-8985-2-git-send-email-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, rdunlap@infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, liuwei@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 03, 2017 at 10:33:53AM -0700, Tony Lindgren wrote:
-> * Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
-> > On 11/03/2017 09:11 AM, Tony Lindgren wrote:
-> > The pinctrl provider is losing its state, hence these two patches.
-> 
-> OK
-> 
-> > > Anyways, the context lost flag should be managed in the PM core for
-> > > the device, so adding linux-pm and Rafael to Cc.
-> > 
-> > I don't think it's that simple but sure, why not.
-> 
-> Just having bool context_lost in struct dev_pm_info would probably
-> be enough to allow drivers to deal with it. This flag could then
-> be set for a device by power domain related code that knows if
-> context got lost.
-> 
-> Anybody got better ideas?
-> 
+Am 01.11.2017 um 03:54 schrieb Manivannan Sadhasivam:
+> This patch adds clock controller nodes for Actions Semi s900 SoC
 
-Should the provider driver not know its state will be lost since
-will have had its PM ops called, and it should be aware of the
-state it was in. So doesn't it just need to restore that state on
-resume? Feels a bit like we are over complicating this here.
-Apologies if I am missing some here.
+Please avoid "This patch". Once applied, it's a commit. :)
 
-Thanks,
-Charles
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/actions/s900.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
+> index 11406f6..c099ef1 100644
+> --- a/arch/arm64/boot/dts/actions/s900.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s900.dtsi
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/actions,s900-clock.h>
+
+Alphabetical order please.
+
+>  
+>  / {
+>  	compatible = "actions,s900";
+> @@ -88,6 +89,24 @@
+>  		#clock-cells = <0>;
+>  	};
+>  
+> +	losc: losc {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <32768>;
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	diff_24M: diff_24M {
+
+No underscore in node names please - maybe diff-24M or simpler diff24M?
+Please double-check that name - is it from manual or from schematics?
+
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <24000000>;
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	clock: clock-controller@e0160000 {
+> +		compatible = "actions,s900-clock";
+> +		reg = <0 0xe0160000 0 0x1000>;
+> +		#clock-cells = <1>;
+> +	};
+
+This node belongs into the soc node below, ordered by unit address.
+And maybe there's a better label than "clock"? "clkc" or some official
+name from the manual?
+
+> +
+>  	soc {
+>  		compatible = "simple-bus";
+>  		#address-cells = <2>;
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
