@@ -1,70 +1,148 @@
-From: Chip Bilbrey <chip-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org>
-Subject: Re: [v11,1/4] drivers: jtag: Add JTAG core driver
-Date: Sun, 05 Nov 2017 14:32:53 -0800
-Message-ID: <8760aoz78q.fsf@bilbrey.org>
-References: <1509724449-26221-2-git-send-email-oleksandrs@mellanox.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
+Date: Mon,  6 Nov 2017 00:19:08 +0100
+Message-ID: <20171105231909.5599-4-linus.walleij@linaro.org>
+References: <20171105231909.5599-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1509724449-26221-2-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20171105231909.5599-1-linus.walleij@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?q?Antti=20Sepp=C3=A4l=C3=A4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The Realtek SMI family is a set of DSA chips that provide
+switching in routers. This binding just follows the pattern
+set by other switches but with the introduction of an embedded
+irqchip to demux and handle the interrupts fired by the single
+line from the chip.
 
-Oleksandr Shamray writes:
-> diff --git a/include/uapi/linux/jtag.h b/include/uapi/linux/jtag.h
-> new file mode 100644
-> index 0000000..0b25a83
-> --- /dev/null
-> +++ b/include/uapi/linux/jtag.h
-> [...]
-> +/**
-> + * enum jtag_xfer_mode:
-> + *
-> + * @JTAG_XFER_HW_MODE: hardware mode transfer
-> + * @JTAG_XFER_SW_MODE: software mode transfer
-> + */
-> +enum jtag_xfer_mode {
-> +	JTAG_XFER_HW_MODE,
-> +	JTAG_XFER_SW_MODE,
-> +};
+This interrupt construction is similar to how we handle
+interrupt controllers inside PCI bridges etc.
 
-Is this essentially selecting between bit-bang mode or not?  Is there a
-generally applicable reason to select SW mode over HW (or vice versa)?
-This sounds like it's tied to device-specific capability which shouldn't
-be exposed in a generic user API.
+Cc: Antti Seppälä <a.seppala@gmail.com>
+Cc: Roman Yeryomin <roman@advem.lv>
+Cc: Colin Leitner <colin.leitner@googlemail.com>
+Cc: Gabor Juhos <juhosg@openwrt.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ .../devicetree/bindings/net/dsa/realtek-smi.txt    | 104 +++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
 
-> +/**
-> + * struct jtag_xfer - jtag xfer:
-> + *
-> + * @mode: access mode
-> + * @type: transfer type
-> + * @direction: xfer direction
-> + * @length: xfer bits len
-> + * @tdio : xfer data array
-> + * @endir: xfer end state
-> + *
-> + * Structure represents interface to Aspeed JTAG device for jtag sdr xfer
-> + * execution.
-
-Probably should remove the reference to Aspeed here.
-
-> +/* ioctl interface */
-> +#define __JTAG_IOCTL_MAGIC	0xb2
-> +
-> +#define JTAG_IOCRUNTEST	_IOW(__JTAG_IOCTL_MAGIC, 0,\
-> +			     struct jtag_run_test_idle)
-> +#define JTAG_SIOCFREQ	_IOW(__JTAG_IOCTL_MAGIC, 1, unsigned int)
-> +#define JTAG_GIOCFREQ	_IOR(__JTAG_IOCTL_MAGIC, 2, unsigned int)
-> +#define JTAG_IOCXFER	_IOWR(__JTAG_IOCTL_MAGIC, 3, struct jtag_xfer)
-> +#define JTAG_GIOCSTATUS _IOWR(__JTAG_IOCTL_MAGIC, 4, enum jtag_endstate)
-
-I notice the single-open()-per-device lock was dropped by request in an
-earlier revision of your patches, but multiple processes trying to drive
-a single JTAG master could wreak serious havoc if transactions get
-interleaved. Would something like an added JTAG_LOCKCHAIN/UNLOCKCHAIN
-ioctl() for exclusive client access be reasonable to prevent this?
-
--Chip
+diff --git a/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt b/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
+new file mode 100644
+index 000000000000..95e96d49c0be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/realtek-smi.txt
+@@ -0,0 +1,104 @@
++Realtek SMI-based Switches
++==========================
++
++The SMI "Simple Management Interface" is a two-wire protocol using
++bit-banged GPIO that while it reuses the MDIO lines MCK and MDIO does
++not use the MDIO protocol. This binding defines how to specify the
++SMI-based Realtek devices.
++
++Required properties:
++
++- compatible: must be exactly one of:
++      "realtek,rtl8366"
++      "realtek,rtl8369"
++      "realtek,rtl8366rb"
++      "realtek,rtl8366s"
++      "realtek,rtl8367"
++      "realtek,rtl8367b"
++
++Required subnode:
++
++- interrupt-controller
++
++  This defines an interrupt controller with an IRQ line (typically
++  a GPIO) that will demultiplex and handle the interrupt from the single
++  interrupt line coming out of one of the SMI-based chips. It most
++  importantly provides link up/down interrupts to the PHY blocks inside
++  the ASIC.
++
++Required properties of interrupt-controller:
++
++- interrupt: parent interrupt, see interrupt-controller/interrupts.txt
++- interrupt-controller: see interrupt-controller/interrupts.txt
++- #address-cells: should be <0>
++- #interrupt-cells: should be <1>
++
++See net/dsa/dsa.txt for a list of additional required and optional properties
++and subnodes.
++
++
++Examples:
++
++switch {
++	compatible = "realtek,rtl8366rb";
++	reg = <0>;
++	/* 22 = MDIO (has input reads), 21 = MDC (clock, output only) */
++	mdc-gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
++	mdio-gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
++	reset-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
++
++	switch_intc: interrupt-controller {
++		/* GPIO 15 provides the interrupt */
++		interrupt-parent = <&gpio0>;
++		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++	};
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0>;
++		port@0 {
++			reg = <0>;
++			label = "lan0";
++			interrupt-parent = <&switch_intc>;
++			interrupts = <0>;
++		};
++		port@1 {
++			reg = <1>;
++			label = "lan1";
++			interrupt-parent = <&switch_intc>;
++			interrupts = <1>;
++		};
++		port@2 {
++			reg = <2>;
++			label = "lan2";
++			interrupt-parent = <&switch_intc>;
++			interrupts = <2>;
++		};
++		port@3 {
++			reg = <3>;
++			label = "lan3";
++			interrupt-parent = <&switch_intc>;
++			interrupts = <3>;
++		};
++		port@4 {
++			reg = <4>;
++			label = "wan";
++			interrupt-parent = <&switch_intc>;
++			interrupts = <4>;
++		};
++		phy0: port@5 {
++			reg = <5>;
++			label = "cpu";
++			ethernet = <&gmac0>;
++			phy-mode = "rgmii";
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
++	};
++};
+-- 
+2.13.6
