@@ -1,334 +1,189 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 3/5] dt-bindings: arm: Document Socionext MB86S71 and
- Fujitsu F-Cue
-Date: Sat, 4 Nov 2017 20:39:06 +0000
-Message-ID: <CAKv+Gu-m-KYnsgyFBUuez3gRhwPF=_sD4fGpE6BDugzW9NUnsA@mail.gmail.com>
-References: <20170625170020.11791-1-afaerber@suse.de> <20170625170020.11791-4-afaerber@suse.de>
- <20170628164605.2gnvrv4g7jluzyrm@rob-hp-laptop> <CAK7LNATqjOMUajUCYVq=L6wWVTUEc1M7Po+KQ3M3Z=A7+FHX5w@mail.gmail.com>
- <51221840-b08e-45f1-5601-937fb15f3947@suse.de> <CAK7LNASYvdWq5rV6q5Xf4Zqjso3H+XQY9Z6byJgcgfN7wT6fog@mail.gmail.com>
- <a39e3d09-4182-ee54-c855-3817498b306a@suse.de> <CAKv+Gu8fkOhQCx-BsyTkottkk63dohzSqa8RhAgTDcMVcmFbxQ@mail.gmail.com>
- <3327258c-b222-248b-9550-7620a57328f5@suse.de> <CAKv+Gu98dns-VoWF6xc0h_2R7SjcA3+85KVhLyLDgOBenhXJRQ@mail.gmail.com>
- <4d589d7a-2035-085e-17c4-1b88785b59f9@suse.de>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
+Date: Sun, 5 Nov 2017 09:41:52 +0800
+Message-ID: <1509846112.26038.22.camel@mtkswgap22>
+References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
+         <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
+         <1509423579.10793.10.camel@mtkswgap22>
+         <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
+         <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
+         <1509673038.19220.19.camel@mtkswgap22>
+         <CAK8P3a1doHCH4ucC1AUR5HiH5qvMXeoqsav-9dsvhM2KPh3FNw@mail.gmail.com>
+         <1509709967.15691.25.camel@mtkswgap22>
+         <CAK8P3a1oP98K3mzK3MfFvJ27y5fgYsTnOdPpjukQGXOLAQYhyA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d589d7a-2035-085e-17c4-1b88785b59f9@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>, Grant Likely <Grant.Likely@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Satoru OKAMOTO <okamoto.satoru@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Yang Zhang <yang.zhang@96boards.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a1oP98K3mzK3MfFvJ27y5fgYsTnOdPpjukQGXOLAQYhyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4 November 2017 at 20:06, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
-> Am 04.11.2017 um 23:39 schrieb Ard Biesheuvel:
->> On 4 November 2017 at 15:30, Andreas F=C3=A4rber <afaerber@suse.de> wrot=
-e:
->>> Am 04.11.2017 um 22:57 schrieb Ard Biesheuvel:
->>>> On 4 November 2017 at 13:44, Andreas F=C3=A4rber <afaerber@suse.de> wr=
-ote:
->>>>> Hi everyone,
->>>>>
->>>>> The non-building clk driver has been removed for 4.14, but this patch=
-set
->>>>> seems stuck on matters of naming and maintenance...
->>>>>
->>>>> Am 30.06.2017 um 01:18 schrieb Masahiro Yamada:
->>>>>> Hi Andreas,
->>>>>>
->>>>>> 2017-06-29 21:53 GMT+09:00 Andreas F=C3=A4rber <afaerber@suse.de>:
->>>>>>> Hi Masahiro-san,
->>>>>>>
->>>>>>> Am 29.06.2017 um 14:18 schrieb Masahiro Yamada:
->>>>>>>> 2017-06-29 1:46 GMT+09:00 Rob Herring <robh@kernel.org>:
->>>>>>>>> On Sun, Jun 25, 2017 at 07:00:18PM +0200, Andreas F=C3=A4rber wro=
-te:
->>>>>>>>>> For consistency with existing SoC bindings, use "fujitsu,mb86s71=
-" but
->>>>>>>>>> socionext.txt.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>>>>>>>>> ---
->>>>>>>>>>  Documentation/devicetree/bindings/arm/socionext.txt | 17 ++++++=
-+++++++++++
->>>>>>>>>>  1 file changed, 17 insertions(+)
->>>>>>>>>>  create mode 100644 Documentation/devicetree/bindings/arm/socion=
-ext.txt
->>>>>>>>>
->>>>>>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>>>>>> --
->>>>>>>>
->>>>>>>> I do not mind this, but
->>>>>>>> please note there are multiple product lines in Socionext
->>>>>>>> because Socionext merged LSI divisions from Panasonic and Fujitsu.
->>>>>>>>
->>>>>>>> I maintain documents for Socionext UniPhier SoC family
->>>>>>>> (which inherits SoC architecture of Panasonic)
->>>>>>>> in Documentation/devicetree/bindings/arm/uniphier/.
->>>>>>>
->>>>>>> Actually you seemed to be lacking bindings beyond the cache control=
-ler
->>>>>>> for Uniphier:
->>>>>>>
->>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git=
-/tree/Documentation/devicetree/bindings/arm/uniphier
->>>>>>>
->>>>>>> The SoC compatible, e.g. "socionext,uniphier-ld11", needs to be def=
-ined
->>>>>>> somewhere too, as done here. A git-grep for that particular compati=
-ble
->>>>>>> only finds derived clk and reset bindings.
->>>>>>
->>>>>> I can care to send a patch later, but it is off-topic here.
->>>>>
->>>>> [The relevance was that had there been any bindings precedence from
->>>>> UniPhier, it would've influenced my naming choices.]
->>>>>
->>>>>>> Using socionext.txt allows you to add those bindings to a shared fi=
-le;
->>>>>>> if you prefer to host them separately below uniphier/ or as uniphie=
-r.txt
->>>>>>
->>>>>> I was thinking of this way.
->>>>>>
->>>>>> For example, TI has omap/, keystone/, davinci.txt, etc.
->>>>>> in this directory level.
->>>>>>
->>>>>>> do you have a better name suggestion for this one? I was trying to =
-keep
->>>>>>> our options open to later add SC2A11 in socionext.txt, and I also s=
-aw
->>>>>>> some mb8ac300 or so (MB86S7x predecessor?) in downstream sources, s=
-o I
->>>>>>> don't know a good common name for the non-Panasonic parts. And if w=
-e
->>>>>>> take fujitsu.txt for MB86S7x to match the vendor prefix then we wil=
-l
->>>>>>> need a separate file for the new SC2A11 IIUC.
->>>>>>
->>>>>> I have no idea.
->>>>>> Actually, I am not familiar with those SoCs.
->>>>>>
->>>>>> I am not sure if there exists a common name for those Fujitsu-derive=
-d SoCs.
->>>>>> I think a SoC family name will be helpful to avoid proliferating
->>>>>> arch/arm/mach-{mb86s7x,mb8ac300, ...}.
->>>>>>
->>>>>> I see some Socionext guys CC'ed in this mail,
->>>>>> somebody might have information about this.
->>>>>>
->>>>>> As I said before, I do not mind adding socionext.txt
->>>>>> and it seems reasonable enough
->>>>>> if there is no common name for those SoCs.
->>>>>>
->>>>>>> Also if you can tell us where the cut between Fujitsu and Socionext
->>>>>>> should be done, we can certainly adapt. NXP is still adding all the=
-ir
->>>>>>> new SoCs in fsl.txt, it seems.
->>>>>>> (A similar naming issue exists for my not-yet-submitted FM4 patches=
-,
->>>>>>> where it changed owners from Fujitsu to Spansion and then to Cypres=
-s.)
->>>>>>
->>>>>> Right, vendor names are not future-proof in some cases.
->>>>>>
->>>>>> We use "uniphier" because it is convenient to
->>>>>> make a group of SoCs with similar architecture,
->>>>>> and it will work even if UniPhier product lines are sold again in th=
-e
->>>>>> future.  :-)
->>>>>
->>>>> Summarizing: Masahiro-san only wants to maintain the UniPhier family =
-of
->>>>> Socionext SoCs, not this MB86S71. No one from Socionext or Linaro has
->>>>> volunteered as maintainer for these F-Cue MB86S71 patches - that seem=
-s
->>>>> to indicate I'll again have to set up a new repository and start
->>>>> maintaining it myself.
->>>>>
->>>>> Naming it linux-socionext.git wouldn't quite be right due to UniPhier
->>>>> also being Socionext.
->>>>>
->>>>> It's also unclear whether and by whom there may be SC2A11 patches - I
->>>>> hear for now Linaro are maintaining a SynQuacer DT in EDK2, rebelling
->>>>> against linux.git.
->>>>
->>>> Eh, wait, what? "Rebelling against linux.git"? What is that supposed
->>>> to mean exactly?
->>>
->>> Bindings must be submitted to the devicetree mailing list, acked by Rob
->>> and merged into the Linux tree before compatible strings may be used in
->>> Linux drivers or in-tree .dts[i] files. checkpatch.pl checks for that.
->>
->> OK, so where did we deviate from this in your opinion?
->
-> I was very clear which new Socionext 96board platform my remark was
-> about. There not being a socionext.txt file before this patch here hints
-> at there being no official SoC binding defined for any.
->
-> Adding one would require coordinating how to go about these platforms,
-> as unsuccessfully attempted here.
->
-> I was also referring to off-list remarks wrt EDK2 DT vs. Linux, which
-> could've well come from you, given your rant.
+On Fri, 2017-11-03 at 16:21 +0100, Arnd Bergmann wrote:
+> On Fri, Nov 3, 2017 at 12:52 PM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > On Fri, 2017-11-03 at 10:40 +0100, Arnd Bergmann wrote:
+> >> On Fri, Nov 3, 2017 at 2:37 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> 
+> >> This should have the exact same effect as what you have in your tree,
+> >> but if that works,
+> >> we can merge that version and try to figure out why the kernel thinks
+> >> they are different.
+> >
+> > I've tried this approach by using the 4-ports network card and got the
+> > result:
+> > pcieport 0000:00:01.0: assign IRQ: got 220
+> > pcieport 0000:00:01.0: assigning IRQ 220
+> > pcieport 0000:00:01.0: enabling device (0140 -> 0142)
+> > pcieport 0000:00:01.0: enabling bus mastering
+> > pcieport 0000:00:01.0: Signaling PME with IRQ 220
+> > ....
+> > igb 0000:01:00.0: assign IRQ: got 221
+> > igb 0000:01:00.0: assigning IRQ 221
+> > igb 0000:01:00.1: assign IRQ: got 221
+> > igb 0000:01:00.1: assigning IRQ 221
+> > igb 0000:01:00.2: assign IRQ: got 221
+> > igb 0000:01:00.2: assigning IRQ 221
+> > igb 0000:01:00.3: assign IRQ: got 221
+> > igb 0000:01:00.3: assigning IRQ 221
+> >
+> > I think slot 1 should share its IRQ (220) with every device in the
+> > hierarchy below this root port.
+> 
+> Agreed, that is what I expected, too. I've looked at the of_pci_irq.c
+> in more detail but couldn't come up with what happened. Can you
+> try running with this patch or something like that to figure out where
+> it takes the wrong turn?
+> 
+> https://pastebin.com/MrMzwcmw
+> 
 
-I honestly have no idea what you are talking about here. You see
-rebellion and argument where there is none.
+[    4.466527] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
+[    4.472252] pcieport 0000:00:01.0: direct parse found irq
+3747445820:3747445848
+[    4.479515] pcieport 0000:00:01.0: parse pin 1
+[    4.483920] null ppdev, node dfff3744, pin 1
+[    4.488151] null ppdev, parse node dfff3744 pin 1
+[    4.492825] of_irq_parse_raw:  /pcie-controller@1a140000:00000001
+[    4.498885] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
+size=1
+[    4.505530] OF:  -> addrsize=3
+[    4.508569] OF:  -> match=0 (imaplen=92)
+[    4.512481] OF:  -> newintsize=3, newaddrsize=0
+[    4.516969] OF:  -> imaplen=88
+[    4.520007] OF:  -> match=0 (imaplen=84)
+[    4.523899] OF:  -> newintsize=3, newaddrsize=0
+[    4.528400] OF:  -> imaplen=80
+[    4.531425] OF:  -> match=0 (imaplen=76)
+[    4.535317] OF:  -> newintsize=3, newaddrsize=0
+[    4.539817] OF:  -> imaplen=72
+[    4.542842] OF:  -> match=0 (imaplen=68)
+[    4.546734] OF:  -> newintsize=3, newaddrsize=0
+[    4.551234] OF:  -> imaplen=64
+[    4.554259] OF:  -> match=1 (imaplen=60)
+[    4.558151] OF:  -> newintsize=3, newaddrsize=0
+[    4.562651] OF:  -> imaplen=56
+[    4.565676] OF:  -> new parent: /interrupt-controller@10200100
+[    4.571469] OF:  -> got it !
+[    4.574322] null ppdev, parse node dfff3744 irq 0:194
+[    4.579413] pcieport 0000:00:01.0: assign IRQ: got 220
 
->  Note that both the
-> bindings maintainer and one arm-soc maintainer are from Linaro afaik, so
-> you're essentially fighting against your colleagues here...
->
+[    4.613400] igb 0000:01:00.0: swizzle pin 1
+[    4.617551] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
+[    4.623276] igb 0000:01:00.0: parse pin 1
+[    4.627251] pcieport 0000:00:01.0: node dfff3e6c pin 1
+[    4.632359] pcieport 0000:00:01.0: parse node dfff3e6c pin 1
+[    4.637970]
+of_irq_parse_raw:  /pcie-controller@1a140000/pcie@1,0:00000001
+[    4.644807] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
+size=1
+[    4.651463] OF:  -> addrsize=3
+[    4.654491] OF:  -> match=1 (imaplen=92)
+[    4.658404] OF:  -> newintsize=3, newaddrsize=0
+[    4.662893] OF:  -> imaplen=88
+[    4.665917] OF:  -> new parent: /interrupt-controller@10200100
+[    4.671711] OF:  -> got it !
+[    4.674567] pcieport 0000:00:01.0: parse node dfff3e6c irq 0:193
+[    4.680596] igb 0000:01:00.0: assign IRQ: got 221
 
-I am not fighting anyone, but you seem to think we are rebelling.
+[    4.806020] igb 0000:01:00.1: swizzle pin 2
+[    4.810201] pcieport 0000:00:01.0: swizzle found slot 1 pin 2
+[    4.815902] igb 0000:01:00.1: parse pin 2
+[    4.819891] pcieport 0000:00:01.0: node dfff3e6c pin 2
+[    4.824987] pcieport 0000:00:01.0: parse node dfff3e6c pin 2
+[    4.830609]
+of_irq_parse_raw:  /pcie-controller@1a140000/pcie@1,0:00000002
+[    4.837437] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
+size=1
+[    4.844093] OF:  -> addrsize=3
+[    4.847121] OF:  -> match=0 (imaplen=92)
+[    4.851042] OF:  -> newintsize=3, newaddrsize=0
+[    4.855532] OF:  -> imaplen=88
+[    4.858570] OF:  -> match=1 (imaplen=84)
+[    4.862463] OF:  -> newintsize=3, newaddrsize=0
+[    4.866952] OF:  -> imaplen=80
+[    4.869988] OF:  -> new parent: /interrupt-controller@10200100
+[    4.875769] OF:  -> got it !
+[    4.878637] pcieport 0000:00:01.0: parse node dfff3e6c irq 0:193
+[    4.884601] igb 0000:01:00.1: assign IRQ: got 221
 
-The reality is that the platform topology is not finalized yet, and
-submitting and merging what are essentially draft version of DT
-descriptions and then having to update them is something we are trying
-very hard to avoid. There is enough churn in upstream DTs as it is.
 
-> Last but not least pretty much every shipping 96Board to date had a
-> pre-installed DT that did not have official bindings submitted (I don't
-> count the Cello as shipping) and thus later changed incompatibly.
->
+But if I add "interrupt-map properties" in both the pcie controller and
+its child node:
 
-We are working very hard to make sure the upstream bindings and
-drivers in the kernel are in shape to support the SoC we are
-developing firmware support for. When the time comes, we may or may
-not decide to propose the SoC DT for inclusion in the kernel. But
-those are two different things.
+[    4.466979] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
+[    4.472705] pcieport 0000:00:01.0: direct parse found irq
+3747437628:3747437656
+[    4.479969] pcieport 0000:00:01.0: parse pin 1
+[    4.484372] null ppdev, node dfff3570, pin 1
+[    4.488603] null ppdev, parse node dfff3570 pin 1
+[    4.493278] of_irq_parse_raw:  /pcie-controller@1a140000:00000001
+[    4.499338] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
+size=1
+[    4.505983] OF:  -> addrsize=3
+[    4.509023] OF:  -> match=0 (imaplen=20)
+[    4.512935] OF:  -> newintsize=3, newaddrsize=0
+[    4.517424] OF:  -> imaplen=16
+[    4.520464] OF:  -> match=1 (imaplen=12)
+[    4.524356] OF:  -> newintsize=3, newaddrsize=0
+[    4.528857] OF:  -> imaplen=8
+[    4.531797] OF:  -> new parent: /interrupt-controller@10200100
+[    4.537578] OF:  -> got it !
+[    4.540442] null ppdev, parse node dfff3570 irq 0:194
+[    4.545534] pcieport 0000:00:01.0: assign IRQ: got 220
 
-This has nothing to do with 'rebelling against linux.git' (your words)
+[    4.579510] igb 0000:01:00.0: swizzle pin 1
+[    4.583660] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
+[    4.589384] igb 0000:01:00.0: parse pin 1
+[    4.593359] pcieport 0000:00:01.0: node dfff3d34 pin 1
+[    4.598453] pcieport 0000:00:01.0: parse node dfff3d34 pin 1
+[    4.604080]
+of_irq_parse_raw:  /pcie-controller@1a140000/pcie@1,0:00000001
+[    4.610918] OF: of_irq_parse_raw:
+ipar=/pcie-controller@1a140000/pcie@1,0, size=1
+[    4.618337] OF:  -> addrsize=3
+[    4.621377] OF:  -> match=1 (imaplen=4)
+[    4.625193] OF:  -> newintsize=3, newaddrsize=0
+[    4.629695] OF:  -> imaplen=0
+[    4.632633] OF:  -> new parent: /interrupt-controller@10200100
+[    4.638414] OF:  -> got it !
+[    4.641282] pcieport 0000:00:01.0: parse node dfff3d34 irq 0:194
+[    4.647242] igb 0000:01:00.0: assign IRQ: got 220
 
->>> U-Boot only allows import of new .dts files from Linux, too.
->>>
->>> So Linus' linux.git is the location to merge any vendor prefixes and
->>> device tree bindings,
->>
->> Agreed.
->>
->>> as well as the central location for device trees.
->>
->> Why should there be a central location for device trees?
->
-> Because with a .dtsi for SoC and SoM we can share DT code across boards
-> and bootloaders. And at least one .dts is needed for compile-testing it.
-> From a central location files can be either individually copied or
-> potentially aggregated as submodules.
->
-> DT patch reviews have resulted in GIC nodes growing virtualization
-> support for instance, and there have been in-tree refactorings fixing
-> the arch timer's interrupt type iirc. Comparing modeling across vendors
-> is also useful to not live in silos.
->
-> Also considering that drivers are spread over subsystem rather than SoC
-> directories these days, the central location being Linux facilitates
-> checking which platforms have been enabled already and to which degree.
->
+[    4.772710] igb 0000:01:00.1: swizzle pin 2
+[    4.776860] pcieport 0000:00:01.0: swizzle found slot 1 pin 2
+[    4.782583] igb 0000:01:00.1: parse pin 2
+[    4.786559] pcieport 0000:00:01.0: node dfff3d34 pin 2
+[    4.791668] pcieport 0000:00:01.0: parse node dfff3d34 pin 2
+[    4.834485] pcieport 0000:00:01.0: parse node dfff3d34 irq 0:194
+[    4.840460] igb 0000:01:00.1: assign IRQ: got 220
 
-I understand all that. But being able to review SoC DTs is one thing,
-and deciding that the kernel repository shall be the authoritative
-source is another.
+I'm trying to understand what happened in the walking function.
 
-In my view, this argues for having a shared repository, mailing list
-etc between the Linux, u-boot, freebsd and EDK2 communities, because
-it would increase review coverage, and make it easier to push back
-against frivolous DT changes.
+Ryder
 
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/devicetree/bindings
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/arch/arm/boot/dts
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/arch/arm64/boot/dts
->>>
->>> If you're unfamiliar with that, talk to your Linaro colleagues please!
->>
->> Please don't lecture me on this.
->
-> If you ask questions, you may get answers. Blame yourself if you
-> intended them as rhetorical questions.
->
->> The bindings are the contract between the OS and the platform, and I
->> agree that those need to be reviewed and maintained in a central
->> location, and the kernel tree, while not optimal, is a suitable place
->> for that.
->>
->> However, the existence of such contracts means that there is no need
->> to have a central location for device trees, nor should there be a
->> need for distros to ever ship device trees with the kernel. That
->> practice defeats the entire purpose of having contracts in the first
->> place, especially with the pathetic churn we are seeing in device
->> trees that are kept in the kernel.
->
-> Please don't argue with me about these fundamentals. Not my decisions!
->
-> This is not about distros shipping things; there is no openSUSE on these
-> platforms precisely because code is not in central repositories.
->
-
-By 'these platforms' you mean 96boards? Fair point. But please don't
-extrapolate from Hikey (and FYI, Cello has been running mainline Linux
-and EDK2 from the beginning)
-
-> It's rather about three platforms by one vendor all going into different
-> directions: SC2A11 into some seemingly non-mainline EDK2, MB86S71 as
-> vendor kernel / U-Boot tarballs (and my kernel patches here), and
-> UniPhier as only one in mainline kernel and mainline U-Boot.
->
-> Have you ever tried to boot e.g. a HiKey with a DT not from the mainline
-> kernel you are trying to boot? Good luck... Even server vendors
-> occasionally change their device trees with firmware updates.
->
-
-You say that like it's a bad thing. Do you honestly think it is better
-for the OS to pick its own DT from some tarball that shipped with it?
-
-If the kernel driver developers wouldn't keep making backward
-incompatible changes to the bindings, they could actually stabilize to
-the point where it makes even more sense for the platform vendor to
-fix bugs in their DT descriptions.
-
-> Fact is, as platforms get enabled, device trees grow additional nodes
-> and properties. DTs don't fall from skies in some final form for new SoCs=
-.
->
-> Especially not if they keep getting written by volunteers like me - I'm
-> already enabling the fourth 96board because Linaro and its partners keep
-> throwing ~3.10 kernels at users again and again and again, which as I've
-> pointed out at BUD17 is highly annoying! Even more annoying every single
-> time Linaro marketing asks people to join as paying members because
-> Linaro supposedly does so awesome Open Source work and such great
-> 96Boards. Just this Friday again.
-
-Who's ranting now?
-
-Again, please don't extrapolate. For the SynQuacer based platform we
-are involved with, there will be no vendor trees whatsoever. And I
-share your frustration, especially when it comes to HiKey, because
-they claim to implement UEFI (but building your own bootloader from
-some random collection of EDK2 source files !=3D UEFI), and keep trying
-to upstream it.
-
-> Nobody needs Reference Platform kernels if everything just timely gets
-> merged into linux-next and mainline, where code belongs.
-
-Agreed.
-
-> Same for device trees, until the powers that be decide on a different
-> location - which would not change the problem at all: Every review will
-> be regarded as churn by someone else, and some people will always be
-> lazy in submitting patches to whatever widely agreed-upon location, be
-> it kernel drivers or DTs or U-Boot or EDK2 or ATF or something else.
->
-> We wouldn't be having this argument if everything were great with the
-> various non-central 96boards trees and downstream DTs.
->
-
-Everything we need in the kernel and EDK2 will be upstream before the
-product ships, and we are trying to do the same for ARM Trusted
-Firmware, but this is a bit problematic due to the sorry state the
-code is in.
-
-Again, I am not the one who is ranting here. You hit a nerve by
-accusing me of 'rebelling against linux.git' while this is quite the
-opposite of what I am doing.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
