@@ -1,189 +1,253 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [GIT PULL] Mediatek: 32-bit DT update for v4.15
-Date: Sun, 5 Nov 2017 09:41:52 +0800
-Message-ID: <1509846112.26038.22.camel@mtkswgap22>
-References: <c7145c00-b2b9-780c-0bfd-15f7d8a08dd6@gmail.com>
-         <CAK8P3a3NWwoe0mX45WrFONyiHt9eWTTMziEc+rjqSfr5QZv8xQ@mail.gmail.com>
-         <1509423579.10793.10.camel@mtkswgap22>
-         <e8fdd9a9-ce13-8804-aea0-46becc6f9730@gmail.com>
-         <CAK8P3a0+9fChSbObS9boR8okHtO8u8_hr2Te+RjfRD0T54QYWQ@mail.gmail.com>
-         <1509673038.19220.19.camel@mtkswgap22>
-         <CAK8P3a1doHCH4ucC1AUR5HiH5qvMXeoqsav-9dsvhM2KPh3FNw@mail.gmail.com>
-         <1509709967.15691.25.camel@mtkswgap22>
-         <CAK8P3a1oP98K3mzK3MfFvJ27y5fgYsTnOdPpjukQGXOLAQYhyA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v4, 2/6] pmbus: Add driver for Maxim MAX31785 Intelligent Fan
+ Controller
+Date: Sun, 5 Nov 2017 06:08:45 -0800
+Message-ID: <20171105140845.GA23722@roeck-us.net>
+References: <20171103045306.26448-3-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1oP98K3mzK3MfFvJ27y5fgYsTnOdPpjukQGXOLAQYhyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-soc <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171103045306.26448-3-andrew@aj.id.au>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-hwmon@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-11-03 at 16:21 +0100, Arnd Bergmann wrote:
-> On Fri, Nov 3, 2017 at 12:52 PM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > On Fri, 2017-11-03 at 10:40 +0100, Arnd Bergmann wrote:
-> >> On Fri, Nov 3, 2017 at 2:37 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Fri, Nov 03, 2017 at 03:53:02PM +1100, Andrew Jeffery wrote:
+> The Maxim MAX31785 is a PMBus device providing closed-loop, multi-channel fan
+> management with temperature and remote voltage sensing. Various fan control
+> features are provided, including PWM frequency control, temperature hysteresis,
+> dual tachometer measurements, and fan health monitoring.
 > 
-> >> This should have the exact same effect as what you have in your tree,
-> >> but if that works,
-> >> we can merge that version and try to figure out why the kernel thinks
-> >> they are different.
-> >
-> > I've tried this approach by using the 4-ports network card and got the
-> > result:
-> > pcieport 0000:00:01.0: assign IRQ: got 220
-> > pcieport 0000:00:01.0: assigning IRQ 220
-> > pcieport 0000:00:01.0: enabling device (0140 -> 0142)
-> > pcieport 0000:00:01.0: enabling bus mastering
-> > pcieport 0000:00:01.0: Signaling PME with IRQ 220
-> > ....
-> > igb 0000:01:00.0: assign IRQ: got 221
-> > igb 0000:01:00.0: assigning IRQ 221
-> > igb 0000:01:00.1: assign IRQ: got 221
-> > igb 0000:01:00.1: assigning IRQ 221
-> > igb 0000:01:00.2: assign IRQ: got 221
-> > igb 0000:01:00.2: assigning IRQ 221
-> > igb 0000:01:00.3: assign IRQ: got 221
-> > igb 0000:01:00.3: assigning IRQ 221
-> >
-> > I think slot 1 should share its IRQ (220) with every device in the
-> > hierarchy below this root port.
+I updated the above text a little to make it more obvious that "are provided"
+refers to the chip, not (yet) to the driver.
+
+> This patch presents a basic driver using only the existing features of the
+> PMBus subsystem.
 > 
-> Agreed, that is what I expected, too. I've looked at the of_pci_irq.c
-> in more detail but couldn't come up with what happened. Can you
-> try running with this patch or something like that to figure out where
-> it takes the wrong turn?
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+
+Applied to hwmon-next.
+
+> ---
+>  Documentation/hwmon/max31785   |  51 ++++++++++++++++++
+>  drivers/hwmon/pmbus/Kconfig    |  10 ++++
+>  drivers/hwmon/pmbus/Makefile   |   1 +
+>  drivers/hwmon/pmbus/max31785.c | 116 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 178 insertions(+)
+>  create mode 100644 Documentation/hwmon/max31785
+>  create mode 100644 drivers/hwmon/pmbus/max31785.c
 > 
-> https://pastebin.com/MrMzwcmw
-> 
-
-[    4.466527] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
-[    4.472252] pcieport 0000:00:01.0: direct parse found irq
-3747445820:3747445848
-[    4.479515] pcieport 0000:00:01.0: parse pin 1
-[    4.483920] null ppdev, node dfff3744, pin 1
-[    4.488151] null ppdev, parse node dfff3744 pin 1
-[    4.492825] of_irq_parse_raw:  /pcie-controller@1a140000:00000001
-[    4.498885] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
-size=1
-[    4.505530] OF:  -> addrsize=3
-[    4.508569] OF:  -> match=0 (imaplen=92)
-[    4.512481] OF:  -> newintsize=3, newaddrsize=0
-[    4.516969] OF:  -> imaplen=88
-[    4.520007] OF:  -> match=0 (imaplen=84)
-[    4.523899] OF:  -> newintsize=3, newaddrsize=0
-[    4.528400] OF:  -> imaplen=80
-[    4.531425] OF:  -> match=0 (imaplen=76)
-[    4.535317] OF:  -> newintsize=3, newaddrsize=0
-[    4.539817] OF:  -> imaplen=72
-[    4.542842] OF:  -> match=0 (imaplen=68)
-[    4.546734] OF:  -> newintsize=3, newaddrsize=0
-[    4.551234] OF:  -> imaplen=64
-[    4.554259] OF:  -> match=1 (imaplen=60)
-[    4.558151] OF:  -> newintsize=3, newaddrsize=0
-[    4.562651] OF:  -> imaplen=56
-[    4.565676] OF:  -> new parent: /interrupt-controller@10200100
-[    4.571469] OF:  -> got it !
-[    4.574322] null ppdev, parse node dfff3744 irq 0:194
-[    4.579413] pcieport 0000:00:01.0: assign IRQ: got 220
-
-[    4.613400] igb 0000:01:00.0: swizzle pin 1
-[    4.617551] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
-[    4.623276] igb 0000:01:00.0: parse pin 1
-[    4.627251] pcieport 0000:00:01.0: node dfff3e6c pin 1
-[    4.632359] pcieport 0000:00:01.0: parse node dfff3e6c pin 1
-[    4.637970]
-of_irq_parse_raw:  /pcie-controller@1a140000/pcie@1,0:00000001
-[    4.644807] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
-size=1
-[    4.651463] OF:  -> addrsize=3
-[    4.654491] OF:  -> match=1 (imaplen=92)
-[    4.658404] OF:  -> newintsize=3, newaddrsize=0
-[    4.662893] OF:  -> imaplen=88
-[    4.665917] OF:  -> new parent: /interrupt-controller@10200100
-[    4.671711] OF:  -> got it !
-[    4.674567] pcieport 0000:00:01.0: parse node dfff3e6c irq 0:193
-[    4.680596] igb 0000:01:00.0: assign IRQ: got 221
-
-[    4.806020] igb 0000:01:00.1: swizzle pin 2
-[    4.810201] pcieport 0000:00:01.0: swizzle found slot 1 pin 2
-[    4.815902] igb 0000:01:00.1: parse pin 2
-[    4.819891] pcieport 0000:00:01.0: node dfff3e6c pin 2
-[    4.824987] pcieport 0000:00:01.0: parse node dfff3e6c pin 2
-[    4.830609]
-of_irq_parse_raw:  /pcie-controller@1a140000/pcie@1,0:00000002
-[    4.837437] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
-size=1
-[    4.844093] OF:  -> addrsize=3
-[    4.847121] OF:  -> match=0 (imaplen=92)
-[    4.851042] OF:  -> newintsize=3, newaddrsize=0
-[    4.855532] OF:  -> imaplen=88
-[    4.858570] OF:  -> match=1 (imaplen=84)
-[    4.862463] OF:  -> newintsize=3, newaddrsize=0
-[    4.866952] OF:  -> imaplen=80
-[    4.869988] OF:  -> new parent: /interrupt-controller@10200100
-[    4.875769] OF:  -> got it !
-[    4.878637] pcieport 0000:00:01.0: parse node dfff3e6c irq 0:193
-[    4.884601] igb 0000:01:00.1: assign IRQ: got 221
-
-
-But if I add "interrupt-map properties" in both the pcie controller and
-its child node:
-
-[    4.466979] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
-[    4.472705] pcieport 0000:00:01.0: direct parse found irq
-3747437628:3747437656
-[    4.479969] pcieport 0000:00:01.0: parse pin 1
-[    4.484372] null ppdev, node dfff3570, pin 1
-[    4.488603] null ppdev, parse node dfff3570 pin 1
-[    4.493278] of_irq_parse_raw:  /pcie-controller@1a140000:00000001
-[    4.499338] OF: of_irq_parse_raw: ipar=/pcie-controller@1a140000,
-size=1
-[    4.505983] OF:  -> addrsize=3
-[    4.509023] OF:  -> match=0 (imaplen=20)
-[    4.512935] OF:  -> newintsize=3, newaddrsize=0
-[    4.517424] OF:  -> imaplen=16
-[    4.520464] OF:  -> match=1 (imaplen=12)
-[    4.524356] OF:  -> newintsize=3, newaddrsize=0
-[    4.528857] OF:  -> imaplen=8
-[    4.531797] OF:  -> new parent: /interrupt-controller@10200100
-[    4.537578] OF:  -> got it !
-[    4.540442] null ppdev, parse node dfff3570 irq 0:194
-[    4.545534] pcieport 0000:00:01.0: assign IRQ: got 220
-
-[    4.579510] igb 0000:01:00.0: swizzle pin 1
-[    4.583660] pcieport 0000:00:01.0: swizzle found slot 1 pin 1
-[    4.589384] igb 0000:01:00.0: parse pin 1
-[    4.593359] pcieport 0000:00:01.0: node dfff3d34 pin 1
-[    4.598453] pcieport 0000:00:01.0: parse node dfff3d34 pin 1
-[    4.604080]
-of_irq_parse_raw:  /pcie-controller@1a140000/pcie@1,0:00000001
-[    4.610918] OF: of_irq_parse_raw:
-ipar=/pcie-controller@1a140000/pcie@1,0, size=1
-[    4.618337] OF:  -> addrsize=3
-[    4.621377] OF:  -> match=1 (imaplen=4)
-[    4.625193] OF:  -> newintsize=3, newaddrsize=0
-[    4.629695] OF:  -> imaplen=0
-[    4.632633] OF:  -> new parent: /interrupt-controller@10200100
-[    4.638414] OF:  -> got it !
-[    4.641282] pcieport 0000:00:01.0: parse node dfff3d34 irq 0:194
-[    4.647242] igb 0000:01:00.0: assign IRQ: got 220
-
-[    4.772710] igb 0000:01:00.1: swizzle pin 2
-[    4.776860] pcieport 0000:00:01.0: swizzle found slot 1 pin 2
-[    4.782583] igb 0000:01:00.1: parse pin 2
-[    4.786559] pcieport 0000:00:01.0: node dfff3d34 pin 2
-[    4.791668] pcieport 0000:00:01.0: parse node dfff3d34 pin 2
-[    4.834485] pcieport 0000:00:01.0: parse node dfff3d34 irq 0:194
-[    4.840460] igb 0000:01:00.1: assign IRQ: got 220
-
-I'm trying to understand what happened in the walking function.
-
-Ryder
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/hwmon/max31785 b/Documentation/hwmon/max31785
+> new file mode 100644
+> index 000000000000..45fb6093dec2
+> --- /dev/null
+> +++ b/Documentation/hwmon/max31785
+> @@ -0,0 +1,51 @@
+> +Kernel driver max31785
+> +======================
+> +
+> +Supported chips:
+> +  * Maxim MAX31785, MAX31785A
+> +    Prefix: 'max31785' or 'max31785a'
+> +    Addresses scanned: -
+> +    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX31785.pdf
+> +
+> +Author: Andrew Jeffery <andrew@aj.id.au>
+> +
+> +Description
+> +-----------
+> +
+> +The Maxim MAX31785 is a PMBus device providing closed-loop, multi-channel fan
+> +management with temperature and remote voltage sensing. Various fan control
+> +features are provided, including PWM frequency control, temperature hysteresis,
+> +dual tachometer measurements, and fan health monitoring.
+> +
+> +For dual rotor fan configuration, the MAX31785 exposes the slowest rotor of the
+> +two in the fan[1-4]_input attributes.
+> +
+> +Usage Notes
+> +-----------
+> +
+> +This driver does not probe for PMBus devices. You will have to instantiate
+> +devices explicitly.
+> +
+> +Sysfs attributes
+> +----------------
+> +
+> +fan[1-4]_alarm		Fan alarm.
+> +fan[1-4]_fault		Fan fault.
+> +fan[1-4]_input		Fan RPM.
+> +
+> +in[1-6]_crit		Critical maximum output voltage
+> +in[1-6]_crit_alarm	Output voltage critical high alarm
+> +in[1-6]_input		Measured output voltage
+> +in[1-6]_label		"vout[18-23]"
+> +in[1-6]_lcrit		Critical minimum output voltage
+> +in[1-6]_lcrit_alarm	Output voltage critical low alarm
+> +in[1-6]_max		Maximum output voltage
+> +in[1-6]_max_alarm	Output voltage high alarm
+> +in[1-6]_min		Minimum output voltage
+> +in[1-6]_min_alarm	Output voltage low alarm
+> +
+> +temp[1-11]_crit		Critical high temperature
+> +temp[1-11]_crit_alarm	Chip temperature critical high alarm
+> +temp[1-11]_input	Measured temperature
+> +temp[1-11]_max		Maximum temperature
+> +temp[1-11]_max_alarm	Chip temperature high alarm
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index 40019325b517..08479006c7f9 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -114,6 +114,16 @@ config SENSORS_MAX20751
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called max20751.
+>  
+> +config SENSORS_MAX31785
+> +	tristate "Maxim MAX31785 and compatibles"
+> +	default n
+> +	help
+> +	  If you say yes here you get hardware monitoring support for Maxim
+> +	  MAX31785.
+> +
+> +	  This driver can also be built as a module. If so, the module will
+> +	  be called max31785.
+> +
+>  config SENSORS_MAX34440
+>  	tristate "Maxim MAX34440 and compatibles"
+>  	default n
+> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+> index 459a6be3390e..a8bf0e490db9 100644
+> --- a/drivers/hwmon/pmbus/Makefile
+> +++ b/drivers/hwmon/pmbus/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_SENSORS_LTC2978)	+= ltc2978.o
+>  obj-$(CONFIG_SENSORS_LTC3815)	+= ltc3815.o
+>  obj-$(CONFIG_SENSORS_MAX16064)	+= max16064.o
+>  obj-$(CONFIG_SENSORS_MAX20751)	+= max20751.o
+> +obj-$(CONFIG_SENSORS_MAX31785)	+= max31785.o
+>  obj-$(CONFIG_SENSORS_MAX34440)	+= max34440.o
+>  obj-$(CONFIG_SENSORS_MAX8688)	+= max8688.o
+>  obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
+> diff --git a/drivers/hwmon/pmbus/max31785.c b/drivers/hwmon/pmbus/max31785.c
+> new file mode 100644
+> index 000000000000..9313849d5160
+> --- /dev/null
+> +++ b/drivers/hwmon/pmbus/max31785.c
+> @@ -0,0 +1,116 @@
+> +/*
+> + * Copyright (C) 2017 IBM Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include "pmbus.h"
+> +
+> +enum max31785_regs {
+> +	MFR_REVISION		= 0x9b,
+> +};
+> +
+> +#define MAX31785_NR_PAGES		23
+> +
+> +#define MAX31785_FAN_FUNCS \
+> +	(PMBUS_HAVE_FAN12 | PMBUS_HAVE_STATUS_FAN12)
+> +
+> +#define MAX31785_TEMP_FUNCS \
+> +	(PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP)
+> +
+> +#define MAX31785_VOUT_FUNCS \
+> +	(PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT)
+> +
+> +static const struct pmbus_driver_info max31785_info = {
+> +	.pages = MAX31785_NR_PAGES,
+> +
+> +	/* RPM */
+> +	.format[PSC_FAN] = direct,
+> +	.m[PSC_FAN] = 1,
+> +	.b[PSC_FAN] = 0,
+> +	.R[PSC_FAN] = 0,
+> +	.func[0] = MAX31785_FAN_FUNCS,
+> +	.func[1] = MAX31785_FAN_FUNCS,
+> +	.func[2] = MAX31785_FAN_FUNCS,
+> +	.func[3] = MAX31785_FAN_FUNCS,
+> +	.func[4] = MAX31785_FAN_FUNCS,
+> +	.func[5] = MAX31785_FAN_FUNCS,
+> +
+> +	.format[PSC_TEMPERATURE] = direct,
+> +	.m[PSC_TEMPERATURE] = 1,
+> +	.b[PSC_TEMPERATURE] = 0,
+> +	.R[PSC_TEMPERATURE] = 2,
+> +	.func[6]  = MAX31785_TEMP_FUNCS,
+> +	.func[7]  = MAX31785_TEMP_FUNCS,
+> +	.func[8]  = MAX31785_TEMP_FUNCS,
+> +	.func[9]  = MAX31785_TEMP_FUNCS,
+> +	.func[10] = MAX31785_TEMP_FUNCS,
+> +	.func[11] = MAX31785_TEMP_FUNCS,
+> +	.func[12] = MAX31785_TEMP_FUNCS,
+> +	.func[13] = MAX31785_TEMP_FUNCS,
+> +	.func[14] = MAX31785_TEMP_FUNCS,
+> +	.func[15] = MAX31785_TEMP_FUNCS,
+> +	.func[16] = MAX31785_TEMP_FUNCS,
+> +
+> +	.format[PSC_VOLTAGE_OUT] = direct,
+> +	.m[PSC_VOLTAGE_OUT] = 1,
+> +	.b[PSC_VOLTAGE_OUT] = 0,
+> +	.R[PSC_VOLTAGE_OUT] = 0,
+> +	.func[17] = MAX31785_VOUT_FUNCS,
+> +	.func[18] = MAX31785_VOUT_FUNCS,
+> +	.func[19] = MAX31785_VOUT_FUNCS,
+> +	.func[20] = MAX31785_VOUT_FUNCS,
+> +	.func[21] = MAX31785_VOUT_FUNCS,
+> +	.func[22] = MAX31785_VOUT_FUNCS,
+> +};
+> +
+> +static int max31785_probe(struct i2c_client *client,
+> +			  const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct pmbus_driver_info *info;
+> +	s64 ret;
+> +
+> +	info = devm_kzalloc(dev, sizeof(struct pmbus_driver_info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	*info = max31785_info;
+> +
+> +	ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, 255);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return pmbus_do_probe(client, id, info);
+> +}
+> +
+> +static const struct i2c_device_id max31785_id[] = {
+> +	{ "max31785", 0 },
+> +	{ "max31785a", 0 },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, max31785_id);
+> +
+> +static struct i2c_driver max31785_driver = {
+> +	.driver = {
+> +		.name = "max31785",
+> +	},
+> +	.probe = max31785_probe,
+> +	.remove = pmbus_do_remove,
+> +	.id_table = max31785_id,
+> +};
+> +
+> +module_i2c_driver(max31785_driver);
+> +
+> +MODULE_AUTHOR("Andrew Jeffery <andrew@aj.id.au>");
+> +MODULE_DESCRIPTION("PMBus driver for the Maxim MAX31785");
+> +MODULE_LICENSE("GPL");
