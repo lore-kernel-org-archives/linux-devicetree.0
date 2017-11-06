@@ -1,36 +1,60 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 2/4] arm64: dts: qcom: apq8016-sbc: Allow USR4 LED to notify kernel panic
-Date: Mon,  6 Nov 2017 12:38:14 +0530
-Message-ID: <0134cfea0d980093d74617dca4ab5021478eb705.1509951550.git.amit.kucheria@linaro.org>
-References: <cover.1509951550.git.amit.kucheria@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1509951550.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1509951550.git.amit.kucheria@linaro.org>
-References: <cover.1509951550.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: amit.kucheria@linaro.org, linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, xuwei5@hisilicon.com, andy.gross@linaro.org, manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org, timur@codeaurora.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
+Date: Mon, 6 Nov 2017 08:17:58 +0100
+Message-ID: <CAPDyKFp92YTqGNZ8s4mGQOpbmbEKxj9vpL0tj0rB-RbirWKCjw@mail.gmail.com>
+References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
+ <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
+ <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
+ <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com>
+ <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com>
+ <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ@mail.gmail.com> <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Vincent Yang <vincent.cw.yang@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Vincent Yang <vincent.yang@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Blink the LED on a kernel panic.
+[...]
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+>>>>
+>>>> Do you mean set it unconditionally? That works for me, but I have no
+>>>
+>>> Yes.
+>>>
+>>>> way of testing whether it still works on other SoCs that use this IP.
+>>>
+>>> Me neither!
+>>
+>> Hi all, I can not yet get contact with IP owner because it is a
+>> holiday in Japan.
+>> Around two years ago, F_SDH30_CMD_DAT_DELAY was a new feature of this IP.
+>> I will update the latest information as soon as I get it.
+>>
+> I got a response from IP owner.
+> He explains F_SDH30_CMD_DAT_DELAY is intended to adjust signal timing of
+> CMD/DAT lines, and it is necessary to change its value according to
+> SoC/board design.
+> So he advises us to make F_SDH30_CMD_DAT_DELAY adjustable by a DT binding.
+>
+> Kind regards
+> Vincent
+>
+>>>
+>>> Apparently there are no DTS in the kernel git that uses the
+>>> "fujitsu,mb86s70-sdhci-3.0".
+>>
+>> Around two years ago, sdhci_f_sdh30_driver was a portion for mb86s70 SoC
+>> patch series, but finally the patch series did not fully go upstream.
+>>
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 1d63e6b..e4a6850 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -174,6 +174,7 @@
- 				label = "apq8016-sbc:green:user4";
- 				gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
- 				linux,default-trigger = "none";
-+				panic-indicator;
- 				default-state = "off";
- 			};
- 
--- 
-2.7.4
+Vincent, thanks for all the help in this!
+
+Ard, one thing, could you please split the DT doc change into a
+separate patch, preceding the change that actually do the parsing of
+the new binding.
+
+Kind regards
+Uffe
